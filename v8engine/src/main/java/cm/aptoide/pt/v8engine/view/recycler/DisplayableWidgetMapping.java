@@ -30,7 +30,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.App
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppUpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ArticleDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentsReadMoreDisplayable;
+import cm.aptoide.pt.viewRateAndCommentReviews.CommentsReadMoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CompletedDownloadDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ExcludedUpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FeatureDisplayable;
@@ -44,7 +44,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Gri
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreMetaDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.InstalledAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.OtherVersionDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RateAndReviewCommentDisplayable;
+import cm.aptoide.pt.viewRateAndCommentReviews.RateAndReviewCommentDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RollbackDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RowReviewDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ScheduledDownloadDisplayable;
@@ -80,7 +80,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AppBrick
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AppUpdateWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.ArticleWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.CommentWidget;
-import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.CommentsReadMoreWidget;
+import cm.aptoide.pt.viewRateAndCommentReviews.CommentsReadMoreWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.CompletedDownloadWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.ExcludedUpdateWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.FeatureWidget;
@@ -95,7 +95,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridStor
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.InstalledAppWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.OtherVersionWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.ProgressBarWidget;
-import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.RateAndReviewCommentWidget;
+import cm.aptoide.pt.viewRateAndCommentReviews.RateAndReviewCommentWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.RecommendationWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.RollbackWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.RowReviewWidget;
@@ -132,7 +132,7 @@ public class DisplayableWidgetMapping {
     parseMappings(createMapping());
   }
 
-  DisplayableWidgetMapping(Class<? extends Widget> widgetClass,
+  public DisplayableWidgetMapping(Class<? extends Widget> widgetClass,
       Class<? extends Displayable> displayableClass) {
     this.displayableClass = displayableClass;
     this.widgetClass = widgetClass;
@@ -142,14 +142,14 @@ public class DisplayableWidgetMapping {
     return instance;
   }
 
-  private void parseMappings(@NonNull List<DisplayableWidgetMapping> mapping) {
+  protected void parseMappings(@NonNull List<DisplayableWidgetMapping> mapping) {
     for (DisplayableWidgetMapping displayableWidgetMapping : mapping) {
       viewTypeMapping.put(displayableWidgetMapping.newDisplayable().getViewLayout(),
           displayableWidgetMapping);
     }
   }
 
-  private List<DisplayableWidgetMapping> createMapping() {
+  protected List<DisplayableWidgetMapping> createMapping() {
 
     LinkedList<DisplayableWidgetMapping> displayableWidgetMappings = new LinkedList<>();
 
@@ -333,5 +333,29 @@ public class DisplayableWidgetMapping {
       Logger.e(TAG, errMsg, e);
       throw new RuntimeException(errMsg);
     }
+  }
+
+  /**
+   * needed in the partners to get the displayableClass
+   * @return displayableClass
+   */
+  public Class<? extends Displayable> getDisplayableClass() {
+    return displayableClass;
+  }
+
+  /**
+   * needed in the partners to get the widgetClass
+   * @return widgetClass
+   */
+  public Class<? extends Widget> getWidgetClass() {
+    return widgetClass;
+  }
+
+  /**
+   * needed in partners to add it's own displayables/widgets
+   * @return Map of widgets and displayables
+   */
+  public Map<Integer, DisplayableWidgetMapping> getViewTypeMapping() {
+    return viewTypeMapping;
   }
 }

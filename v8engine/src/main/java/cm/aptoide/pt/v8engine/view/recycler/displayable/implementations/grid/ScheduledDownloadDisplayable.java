@@ -8,8 +8,10 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.realm.Scheduled;
+import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SelectableDisplayablePojo;
+import lombok.Getter;
 
 /**
  * created by SithEngineer
@@ -17,12 +19,14 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.SelectableDisplayablePoj
 public class ScheduledDownloadDisplayable extends SelectableDisplayablePojo<Scheduled> {
 
   private static final String TAG = ScheduledDownloadDisplayable.class.getSimpleName();
+  @Getter private InstallManager installManager;
 
   public ScheduledDownloadDisplayable() {
   }
 
-  public ScheduledDownloadDisplayable(Scheduled pojo) {
+  public ScheduledDownloadDisplayable(Scheduled pojo, InstallManager installManager) {
     super(pojo);
+    this.installManager = installManager;
   }
 
   @Override public int getViewLayout() {

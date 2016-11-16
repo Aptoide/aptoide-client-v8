@@ -3,11 +3,10 @@
  * Modified by SithEngineer on 09/08/2016.
  */
 
-package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
+package cm.aptoide.pt.viewRateAndCommentReviews;
 
 import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.fragment.implementations.RateAndReviewsFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 import lombok.Getter;
 
@@ -16,14 +15,14 @@ import lombok.Getter;
  */
 public class CommentsReadMoreDisplayable extends DisplayablePojo<Review> {
 
-  @Getter private RateAndReviewsFragment.CommentAdder commentAdder;
+  @Getter private CommentAdder commentAdder;
   @Getter private int next;
 
   public CommentsReadMoreDisplayable() {
   }
 
   public CommentsReadMoreDisplayable(Review review, int next,
-      RateAndReviewsFragment.CommentAdder commentAdder) {
+      CommentAdder commentAdder) {
     super(review);
     this.commentAdder = commentAdder;
     this.next = next;

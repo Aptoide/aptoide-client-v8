@@ -8,10 +8,8 @@ package cm.aptoide.pt.dataprovider.repository;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.provider.Settings;
-import android.text.TextUtils;
-import cm.aptoide.pt.actions.GenerateClientId;
+import cm.aptoide.pt.actions.AptoideClientUUID;
 import cm.aptoide.pt.crashreports.CrashReports;
-import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 import java.security.SecureRandom;
@@ -21,7 +19,7 @@ import lombok.AllArgsConstructor;
 /**
  * Created by neuro on 11-07-2016.
  */
-@AllArgsConstructor public class IdsRepositoryImpl implements IdsRepository, GenerateClientId {
+@AllArgsConstructor public class IdsRepositoryImpl implements IdsRepository, AptoideClientUUID {
 
   private static final String APTOIDE_CLIENT_UUID = "aptoide_client_uuid";
   private static final String ADVERTISING_ID_CLIENT = "advertisingIdClient";
@@ -32,7 +30,7 @@ import lombok.AllArgsConstructor;
   private final SharedPreferences sharedPreferences;
   private final Context context;
 
-  public String getAptoideClientUUID() {
+  @Override public String getAptoideClientUUID() {
     if (!sharedPreferences.contains(APTOIDE_CLIENT_UUID)) {
       generateAptoideId(sharedPreferences);
     }
@@ -64,7 +62,7 @@ import lombok.AllArgsConstructor;
 
     String gaid = null;
 
-    if (DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable()) {
+    if (DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(context)) {
       try {
         gaid = AdvertisingIdClient.getAdvertisingIdInfo(context).getId();
       } catch (Exception e) {
@@ -107,7 +105,7 @@ import lombok.AllArgsConstructor;
     String androidId = sharedPreferences.getString(ANDROID_ID_CLIENT, null);
 
     if (androidId == null) {
-      androidId = Settings.Secure.getString(DataProvider.getContext().getContentResolver(),
+      androidId = Settings.Secure.getString(context.getContentResolver(),
           Settings.Secure.ANDROID_ID);
       setAndroidId(androidId);
     }
@@ -135,24 +133,5 @@ import lombok.AllArgsConstructor;
     secureRandom.setSeed(deviceId.hashCode());
     secureRandom.nextBytes(data);
     return UUID.nameUUIDFromBytes(data).toString();
-  }
-
-  @Override public String getClientId() {
-
-    String result = getAdvertisingId();
-    if (!TextUtils.isEmpty(result)) {
-      return result;
-    }
-
-    result = Settings.Secure.ANDROID_ID;
-    if (!TextUtils.isEmpty(result)) {
-      return result;
-    }
-
-    result = getAptoideClientUUID();
-    if (!TextUtils.isEmpty(result)) {
-      return result;
-    }
-    return "NoInfo";
   }
 }

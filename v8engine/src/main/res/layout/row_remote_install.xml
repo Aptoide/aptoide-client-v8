@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:src="@drawable/img_tvicon"
+        android:layout_marginTop="6dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="14dp"
+        android:layout_marginBottom="5dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/deviceNameText"
+        android:layout_marginTop="20dp"
+        android:textColor="#ff6600"
+        android:text="BRAVIA 2015"
+        android:textSize="14.1sp" />
+</LinearLayout>

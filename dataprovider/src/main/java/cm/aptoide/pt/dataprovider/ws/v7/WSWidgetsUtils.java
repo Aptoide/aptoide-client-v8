@@ -26,7 +26,7 @@ public class WSWidgetsUtils {
   public static void loadInnerNodes(GetStoreWidgets.WSWidget wsWidget,
       BaseRequestWithStore.StoreCredentials storeCredentials, CountDownLatch countDownLatch,
       boolean refresh, Action1<Throwable> action1, String accessToken, String email,
-      String aptoideClientUUID) {
+      String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid) {
 
     if (isKnownType(wsWidget.getType())) {
 
@@ -57,7 +57,9 @@ public class WSWidgetsUtils {
               action1);
           break;
         case ADS:
-          ioScheduler(GetAdsRequest.ofHomepage(aptoideClientUUID).observe()).subscribe(
+          ioScheduler(
+              GetAdsRequest.ofHomepage(aptoideClientUUID, googlePlayServicesAvailable, oemid)
+              .observe()).subscribe(
               getAdsResponse -> setObjectView(wsWidget, countDownLatch, getAdsResponse), action1);
           break;
         case STORE_META:

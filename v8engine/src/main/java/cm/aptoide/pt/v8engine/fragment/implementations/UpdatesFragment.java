@@ -6,7 +6,14 @@
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+
+import com.trello.rxlifecycle.FragmentEvent;
+
+import java.util.LinkedList;
+import java.util.List;
+
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
@@ -34,11 +41,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Ins
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdatesHeaderDisplayable;
-import com.trello.rxlifecycle.FragmentEvent;
-import java.util.LinkedList;
-import java.util.List;
 import rx.Observable;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -50,13 +53,11 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 
   private List<Displayable> updatesDisplayablesList = new LinkedList<>();
   private List<Displayable> installedDisplayablesList = new LinkedList<>();
-  private Subscription installedSubscription;
-  private Subscription updatesSubscription;
   private InstallManager installManager;
 
+  @NonNull
   public static UpdatesFragment newInstance() {
-    UpdatesFragment fragment = new UpdatesFragment();
-    return fragment;
+    return new UpdatesFragment();
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,8 +69,54 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    fetchUpdates();
-    fetchInstalled();
+    fetchUpdates()
+        .observeOn(AndroidSchedulers.mainThread())
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(updates -> {
+          if (updates.size() == updatesDisplayablesList.size() - 1) {
+            finishLoading();
+          } else {
+            updatesDisplayablesList.clear();
+
+            if (updates.size() > 0) {
+              updatesDisplayablesList.add(
+                  new UpdatesHeaderDisplayable(installManager,
+                      AptoideUtils.StringU.getResString(R.string.updates)
+                  )
+              );
+
+              for (Update update : updates) {
+                updatesDisplayablesList.add(
+                    UpdateDisplayable.create(update, installManager, new DownloadFactory()));
+              }
+            }
+
+            setDisplayables();
+          }
+        }, ex -> {
+          Logger.printException(ex);
+          CrashReports.logException(ex);
+        });
+
+    fetchInstalled()
+        .observeOn(AndroidSchedulers.mainThread())
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(installedApps -> {
+          installedDisplayablesList.clear();
+          installedDisplayablesList.add(new StoreGridHeaderDisplayable(
+              new GetStoreWidgets.WSWidget().setTitle(
+                  AptoideUtils.StringU.getResString(R.string.installed_tab))));
+
+          for (Installed installedApp : installedApps) {
+            installedDisplayablesList.add(new InstalledAppDisplayable(installedApp));
+          }
+          setDisplayables();
+        }, err -> {
+          Logger.e(TAG, "finished loading not being called in fetchInstalled");
+          CrashReports.logException(err);
+          finishLoading();
+        });
+
     // FIXME: 26/10/2016 sithengineer doing concurrent calls with the load(...) and reload() methods
     // TODO: 26/10/2016 sithengineer use ONLY the repositories for updates (1st) and installed (2nd)
     // the repositories are responsible to decide to hit the network (with cache hit or miss), store
@@ -80,19 +127,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
   @Override public void reload() {
     super.reload();
 
-    StoreRepository storeRepository = RepositoryFactory.getRepositoryFor(Store.class);
-    UpdateRepository updateRepository = RepositoryFactory.getRepositoryFor(Update.class);
-    storeRepository.count()
-        .first()
-        .flatMap(numberStores -> {
-          if (numberStores <= 0) {
-            return Observable.error(new RepositoryItemNotFoundException("no stores added"));
-          } else {
-            return Observable.just(numberStores);
-          }
-        })
-        .flatMap(numberStores -> updateRepository.getUpdates(true))
-        .first()
+    reloadData()
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(updates -> {
@@ -113,138 +148,45 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
         });
   }
 
-  private void fetchUpdates() {
-    //if (updatesSubscription == null || updatesSubscription.isUnsubscribed()) {
-    //  updatesSubscription = DeprecatedDatabase.UpdatesQ.getAllSorted(realm, false)
-    //      .asObservable()
-    //      .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-    //      .observeOn(AndroidSchedulers.mainThread())
-    //      .subscribe(updates -> {
-    //
-    //        if (updates.size() == updatesDisplayablesList.size() - 1) {
-    //          finishLoading();
-    //        } else {
-    //          updatesDisplayablesList.clear();
-    //
-    //          if (updates.size() > 0) {
-    //            updatesDisplayablesList.add(new UpdatesHeaderDisplayable(installManager,
-    //                AptoideUtils.StringU.getResString(R.string.updates)));
-    //
-    //            for (Update update : updates) {
-    //              updatesDisplayablesList.add(
-    //                  UpdateDisplayable.create(update, installManager, downloadFactory,
-    //                      downloadManager));
-    //            }
-    //          }
-    //
-    //          setDisplayables();
-    //        }
-    //      }, ex -> {
-    //        Logger.w(TAG, "finished loading not being called in fetchUpdates");
-    //        Logger.printException(ex);
-    //        CrashReports.logException(ex);
-    //      });
-    //}
-
-    if (updatesSubscription == null || updatesSubscription.isUnsubscribed()) {
-      UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
-      updateAccessor.getAllSorted(false)
-          .observeOn(AndroidSchedulers.mainThread())
-          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-          .subscribe(updates -> {
-            if (updates.size() == updatesDisplayablesList.size() - 1) {
-              finishLoading();
-            } else {
-              updatesDisplayablesList.clear();
-
-              if (updates.size() > 0) {
-                updatesDisplayablesList.add(new UpdatesHeaderDisplayable(installManager,
-                    AptoideUtils.StringU.getResString(R.string.updates)));
-
-                for (Update update : updates) {
-                  updatesDisplayablesList.add(
-                      UpdateDisplayable.create(update, installManager, new DownloadFactory()));
-                }
-              }
-
-              setDisplayables();
-            }
-          }, ex -> {
-            Logger.printException(ex);
-            CrashReports.logException(ex);
-          });
-    }
+  private Observable<List<Update>> reloadData() {
+    StoreRepository storeRepository = RepositoryFactory.getRepositoryFor(Store.class);
+    UpdateRepository updateRepository = RepositoryFactory.getRepositoryFor(Update.class);
+    return  storeRepository.count()
+        .first()
+        .flatMap(numberStores -> {
+          if (numberStores <= 0) {
+            return Observable.error(new RepositoryItemNotFoundException("no stores added"));
+          } else {
+            return Observable.just(numberStores);
+          }
+        })
+        .flatMap(numberStores -> updateRepository.getUpdates(true))
+        .first();
   }
 
-  private void fetchInstalled() {
-    if (installedSubscription == null || installedSubscription.isUnsubscribed()) {
-      //RealmResults<Installed> realmResults = DeprecatedDatabase.InstalledQ.getAllSorted(realm);
-      //installedSubscription = realmResults.asObservable()
-      //    .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-      //    .subscribe(installeds -> {
-      //      installedDisplayablesList.clear();
-      //
-      //      installedDisplayablesList.add(new StoreGridHeaderDisplayable(
-      //          new GetStoreWidgets.WSWidget().setTitle(
-      //              AptoideUtils.StringU.getResString(R.string.installed_tab))));
-      //
-      //      RealmResults<Installed> all = realmResults;
-      //      for (int i = 0; i < all.size(); i++) {
-      //        if (!DeprecatedDatabase.UpdatesQ.contains(all.get(i).getPackageName(), false,
-      //            realm)) {
-      //          if (!all.get(i).isSystemApp()) {
-      //            installedDisplayablesList.add(new InstalledAppDisplayable(all.get(i)));
-      //          }
-      //        }
-      //      }
-      //
-      //      setDisplayables();
-      //    }, ex -> {
-      //      Logger.w(TAG, "finished loading not being called in fetchInstalled");
-      //      Logger.printException(ex);
-      //      CrashReports.logException(ex);
-      //    });
-      //
-      //if (realmResults.size() == 0) {
-      //  finishLoading();
-      //}
-      //finishLoading();
+  private Observable<List<Update>> fetchUpdates() {
+    UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
+    return updateAccessor.getAllSorted(false);
+  }
 
-      final UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
-      final InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
-      installedAccessor.getAllSorted()
-          .flatMap(
-              // hack to make stream of changes complete inside this observable
-              listItems -> Observable.from(listItems)
-                  .flatMap(item -> filterUpdates(updateAccessor, item))
-                  .filter(item -> !item.isSystemApp())
-                  .toList()) // filter for installed apps in updates
-          .observeOn(AndroidSchedulers.mainThread())
-          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-          .subscribe(installedApps -> {
-            installedDisplayablesList.clear();
-            installedDisplayablesList.add(new StoreGridHeaderDisplayable(
-                new GetStoreWidgets.WSWidget().setTitle(
-                    AptoideUtils.StringU.getResString(R.string.installed_tab))));
-
-            for (Installed installedApp : installedApps) {
-              installedDisplayablesList.add(new InstalledAppDisplayable(installedApp));
-            }
-            setDisplayables();
-          }, err -> {
-            Logger.e(TAG, "finished loading not being called in fetchInstalled");
-            CrashReports.logException(err);
-            finishLoading();
-          });
-    }
+  private Observable<List<Installed>> fetchInstalled() {
+    final UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
+    final InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
+    return installedAccessor.getAllSorted()
+        .flatMap(
+            // hack to make stream of changes complete inside this observable
+            listItems -> Observable.from(listItems)
+                .flatMap(item -> filterUpdates(updateAccessor, item))
+                .filter(item -> !item.isSystemApp())
+                .toList()); // filter for installed apps in updates
   }
 
   private Observable<Installed> filterUpdates(UpdateAccessor updateAccessor, Installed item) {
-    return updateAccessor.contains(item.getPackageName(), false).flatMap(itemIsContained -> {
-      if (!itemIsContained) {
-        return Observable.just(item);
+    return updateAccessor.contains(item.getPackageName(), false).flatMap(isUpdate -> {
+      if (isUpdate) {
+        return Observable.empty();
       }
-      return Observable.empty();
+      return Observable.just(item);
     });
   }
 

@@ -325,8 +325,8 @@
   <string name="setting_hwspecssum">Hardware Info about your phone</string>
   <string name="setting_appfiltersum">Don\'t show applications that are not compatible with this device</string>
   <string name="setting_appfiltertitle">Filter Applications</string>
-  <string name="setting_category_autoupdate">Aptoide Auto update</string>
-  <string name="setting_category_autoupdate_title">Enable Aptoide auto update</string>
+  <string name="setting_category_autoupdate">%s Auto update</string>
+  <string name="setting_category_autoupdate_title">Enable %s auto update</string>
   <string name="setting_dont_show_mature_content">Show mature content</string>
   <string name="setting_mature_filtering">Adult Content</string>
   <string name="setting_updates">Updates</string>

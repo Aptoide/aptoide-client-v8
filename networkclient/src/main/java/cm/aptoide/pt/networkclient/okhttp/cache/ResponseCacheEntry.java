@@ -5,10 +5,7 @@
 
 package cm.aptoide.pt.networkclient.okhttp.cache;
 
-import android.support.annotation.NonNull;
-import cm.aptoide.pt.logger.Logger;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.List;
@@ -20,16 +17,12 @@ import okhttp3.Protocol;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import okio.Buffer;
 import okio.BufferedSource;
 
-/**
- * @author SithEngineer
- */
-public @Data class RequestCacheEntry {
+public @Data class ResponseCacheEntry {
 
   private static final String DEFAULT_CHARSET = "UTF-8";
-
-  private static final String TAG = RequestCacheEntry.class.getName();
 
   // response data
   private int code;
@@ -39,56 +32,38 @@ public @Data class RequestCacheEntry {
   private String bodyMediaType;
   private Map<String, List<String>> headers;
 
-  public RequestCacheEntry() {
+  // meta data
+  private long validity;
+
+  public ResponseCacheEntry() {
   }
 
-  public RequestCacheEntry(Response response) {
+  public ResponseCacheEntry(Response response, int secondsToPersist) {
 
-    final ResponseBody responseBody = response.body();
+    this.validity = System.currentTimeMillis() + (secondsToPersist * 1000);
 
     this.code = response.code();
     this.message = response.message();
     this.protocol = response.protocol().toString();
     this.headers = response.headers().toMultimap();
+
+    final ResponseBody responseBody = response.body();
     this.bodyMediaType = responseBody.contentType().toString();
 
     Charset charset = Charset.forName(DEFAULT_CHARSET);
     charset = responseBody.contentType().charset(charset);
 
-    BufferedSource source = null;
     try {
-      source = responseBody.source();
-      this.body = source.readString(charset);
-    } catch (IOException e) {
+      // snippet taken from https://github.com/square/okhttp/blob/master/okhttp-logging-interceptor/src/main/java/okhttp3/logging/HttpLoggingInterceptor.java
+      BufferedSource source = responseBody.source();
+      source.request(Long.MAX_VALUE);
+      Buffer buffer = source.buffer();
+      this.body = buffer.clone().readString(charset);
+    } catch (Exception e) {
       e.printStackTrace();
-    } finally {
-      try {
-        source.close();
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
     }
   }
-
-  @NonNull public static RequestCacheEntry fromString(@NonNull String data) {
-    try {
-      return new ObjectMapper().readValue(data, RequestCacheEntry.class);
-    } catch (IOException e) {
-      Logger.e(TAG, "", e);
-    }
-    return null;
-  }
-
-  @Override public String toString() {
-    try {
-      String data = new ObjectMapper().writeValueAsString(this);
-      return data;
-    } catch (JsonProcessingException e) {
-      Logger.e(TAG, "", e);
-    }
-    return null;
-  }
-
+  //@JsonIgnore
   public Response getResponse(Request request) {
     Response.Builder builder = new Response.Builder();
 
@@ -115,5 +90,10 @@ public @Data class RequestCacheEntry {
     builder.request(request);
 
     return builder.build();
+  }
+
+  @JsonIgnore
+  boolean isValid() {
+    return System.currentTimeMillis() <= validity;
   }
 }

@@ -15,7 +15,7 @@ import cm.aptoide.pt.v8engine.fragment.implementations.FragmentTopStores;
 import cm.aptoide.pt.v8engine.fragment.implementations.HomeFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.LatestReviewsFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.OtherVersionsFragment;
-import cm.aptoide.pt.v8engine.fragment.implementations.RateAndReviewsFragment;
+import cm.aptoide.pt.viewRateAndCommentReviews.RateAndReviewsFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.RollbackFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.ScheduledDownloadsFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.ScreenshotsViewerFragment;

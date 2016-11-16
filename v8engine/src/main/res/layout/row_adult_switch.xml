@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="10dp"
+    android:id="@+id/adult_content_layout"
     >
 
   <android.support.v7.widget.SwitchCompat

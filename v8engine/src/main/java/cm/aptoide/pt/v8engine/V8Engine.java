@@ -14,6 +14,7 @@ import android.content.pm.PackageInfo;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
+import android.text.format.DateUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
 import cm.aptoide.pt.actions.UserData;
@@ -21,7 +22,6 @@ import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
-import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
@@ -31,9 +31,9 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.downloadmanager.CacheHelper;
 import cm.aptoide.pt.downloadmanager.DownloadService;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.PRNGFixes;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
@@ -50,14 +50,18 @@ import cm.aptoide.pt.v8engine.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.v8engine.download.TokenHttpClient;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.UpdateRepository;
+import cm.aptoide.pt.v8engine.util.CacheHelper;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.view.recycler.DisplayableWidgetMapping;
 import com.flurry.android.FlurryAgent;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
+import java.io.File;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import lombok.Getter;
+import lombok.Setter;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -66,12 +70,14 @@ import rx.schedulers.Schedulers;
  */
 public abstract class V8Engine extends DataProvider {
 
+  public static final long MONTH_CACHE_TIME = DateUtils.DAY_IN_MILLIS * 30;
   private static final String TAG = V8Engine.class.getName();
-
   @Getter static DownloadService downloadService;
   @Getter private static FragmentProvider fragmentProvider;
   @Getter private static ActivityProvider activityProvider;
   @Getter private static DisplayableWidgetMapping displayableWidgetMapping;
+  @Getter static private CacheHelper cacheHelper;
+  @Setter @Getter private static boolean autoUpdateWasCalled = false;
   private RefWatcher refWatcher;
 
   public static void loadStores() {
@@ -214,6 +220,8 @@ public abstract class V8Engine extends DataProvider {
       }, e -> {
         Logger.e(TAG, e);
       });
+    } else {
+      loadInstalledApps().subscribe();
     }
 
     final int appSignature = SecurityUtils.checkAppSignature(this);
@@ -231,9 +239,20 @@ public abstract class V8Engine extends DataProvider {
 
     final DownloadAccessor downloadAccessor = AccessorFactory.getAccessorFor(Download.class);
     final DownloadManagerSettingsI settingsInterface = new DownloadManagerSettingsI();
+    List<CacheHelper.FolderToManage> folders = new LinkedList<>();
+
+    String cachePath = Application.getConfiguration().getCachePath();
+
+    folders.add(new CacheHelper.FolderToManage(new File(cachePath), DateUtils.HOUR_IN_MILLIS));
+    folders.add(new CacheHelper.FolderToManage(new File(cachePath + "icons/"), MONTH_CACHE_TIME));
+    folders.add(
+        new CacheHelper.FolderToManage(new File(getCacheDir() + "image_manager_disk_cache/"),
+            MONTH_CACHE_TIME));
+
+    cacheHelper = new CacheHelper(settingsInterface.getMaxCacheSize(), folders, new FileUtils());
     AptoideDownloadManager.getInstance()
         .init(this, new DownloadNotificationActionsActionsInterface(), settingsInterface,
-            downloadAccessor, new CacheHelper(downloadAccessor, settingsInterface),
+            downloadAccessor, cacheHelper,
             new FileUtils(action -> Analytics.File.moveFile(action)), new TokenHttpClient(
                 new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this),
                 new UserData() {
@@ -242,6 +261,15 @@ public abstract class V8Engine extends DataProvider {
                   }
                 }));
 
+    cacheHelper.cleanCache()
+        .flatMap(cleaned -> AptoideDownloadManager.getInstance()
+            .invalidateDatabase()
+            .map(success -> cleaned))
+        .subscribe(cleanedSize -> Logger.d(TAG,
+            "cleaned size: " + AptoideUtils.StringU.formatBytes(cleanedSize)), throwable -> {
+          Logger.e(TAG, throwable);
+          CrashReports.logException(throwable);
+        });
     // setupCurrentActivityListener();
 
     //if (BuildConfig.DEBUG) {
@@ -276,22 +304,27 @@ public abstract class V8Engine extends DataProvider {
 
   private Observable<?> loadInstalledApps() {
     return Observable.fromCallable(() -> {
-      InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
-      installedAccessor.removeAll();
+      // remove the current installed apps
+      AccessorFactory.getAccessorFor(Installed.class).removeAll();
 
+      // get the installed apps
       List<PackageInfo> installedApps = AptoideUtils.SystemU.getAllInstalledApps();
-      Logger.d(TAG, "Found " + installedApps.size() + " user installed apps.");
+      Logger.v(TAG, "Found " + installedApps.size() + " user installed apps.");
 
       // Installed apps are inserted in database based on their firstInstallTime. Older comes first.
       Collections.sort(installedApps,
           (lhs, rhs) -> (int) ((lhs.firstInstallTime - rhs.firstInstallTime) / 1000));
 
-      for (PackageInfo packageInfo : installedApps) {
-        Installed installed = new Installed(packageInfo);
-        installedAccessor.insert(installed);
-      }
-      return null;
-    }).subscribeOn(Schedulers.io());
+      // return sorted installed apps
+      return installedApps;
+    })  // transform installation package into Installed table entry and save all the data
+        .flatMapIterable(list -> list)
+        .map(packageInfo -> new Installed(packageInfo))
+        .toList()
+        .doOnNext(list -> {
+          AccessorFactory.getAccessorFor(Installed.class).insertAll(list);
+        })
+        .subscribeOn(Schedulers.io());
   }
 
   //

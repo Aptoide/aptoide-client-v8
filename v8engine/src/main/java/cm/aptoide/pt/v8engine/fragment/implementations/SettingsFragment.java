@@ -169,6 +169,12 @@ public class SettingsFragment extends PreferenceFragmentCompat
       matureChkBox.setChecked(false);
     }
 
+    //set AppStore name
+    findPreference(SettingsConstants.CHECK_AUTO_UPDATE).setTitle(AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate_title,
+        Application.getConfiguration().getMarketName()));
+    findPreference(SettingsConstants.CHECK_AUTO_UPDATE_CATEGORY).setTitle(AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate_title,
+        Application.getConfiguration().getMarketName()));
+
     findPreference(SettingsConstants.ADULT_CHECK_BOX).setOnPreferenceClickListener(
         new Preference.OnPreferenceClickListener() {
           @Override public boolean onPreferenceClick(Preference preference) {

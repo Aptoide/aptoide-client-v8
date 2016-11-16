@@ -20,7 +20,7 @@ import cm.aptoide.pt.model.v3.PaymentResponse;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.okhttp.UserAgentGenerator;
-import cm.aptoide.pt.networkclient.okhttp.cache.RequestCache;
+import cm.aptoide.pt.networkclient.okhttp.cache.PostCacheInterceptor;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import java.io.IOException;
 import retrofit2.adapter.rxjava.HttpException;
@@ -107,13 +107,13 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
 
     @POST("getPushNotifications") @FormUrlEncoded
     Observable<GetPushNotificationsResponse> getPushNotifications(@FieldMap BaseBody arg,
-        @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("addApkFlag") @FormUrlEncoded Observable<GenericResponseV2> addApkFlag(
-        @FieldMap BaseBody arg, @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+        @FieldMap BaseBody arg, @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("getApkInfo") @FormUrlEncoded Observable<PaidApp> getApkInfo(@FieldMap BaseBody args,
-        @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("processInAppBilling") @FormUrlEncoded
     Observable<InAppBillingAvailableResponse> getInAppBillingAvailable(@FieldMap BaseBody args);

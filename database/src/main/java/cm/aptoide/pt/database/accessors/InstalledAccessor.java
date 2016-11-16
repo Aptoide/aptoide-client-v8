@@ -78,6 +78,10 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
     database.insert(installed);
   }
 
+  public void insertAll(List<Installed> installedList) {
+    database.insertAll(installedList);
+  }
+
   public void remove(String packageName) {
     database.delete(Installed.class, Installed.PACKAGE_NAME, packageName);
   }

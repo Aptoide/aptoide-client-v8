@@ -39,7 +39,8 @@
         android:title="@string/setting_appfiltertitle"/>
   </PreferenceCategory>
 
-  <PreferenceCategory android:title="@string/setting_category_autoupdate">
+  <PreferenceCategory android:title="@string/setting_category_autoupdate"
+  android:key="checkautoupdatecategory">
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="checkautoupdate"

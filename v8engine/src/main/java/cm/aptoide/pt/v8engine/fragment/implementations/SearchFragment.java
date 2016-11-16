@@ -247,7 +247,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
     }
   }
 
-  private void subscribedButtonListener() {
+  protected void subscribedButtonListener() {
     selectedButton = 0;
     viewPager.setCurrentItem(0);
     subscribedButton.setBackgroundResource(R.drawable.search_button_background);
@@ -256,7 +256,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
     everywhereButton.setBackgroundResource(0);
   }
 
-  private void everywhereButtonListener() {
+  protected void everywhereButtonListener() {
     selectedButton = 1;
     viewPager.setCurrentItem(1);
     everywhereButton.setBackgroundResource(R.drawable.search_button_background);

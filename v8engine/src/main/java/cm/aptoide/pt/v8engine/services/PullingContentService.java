@@ -134,6 +134,7 @@ public class PullingContentService extends Service {
               resultPendingIntent)
               .setOngoing(false)
               .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
+              .setLargeIcon(BitmapFactory.decodeResource(Application.getContext().getResources(), Application.getConfiguration().getIcon()))
               .setContentTitle(contentTitle)
               .setContentText(contentText)
               .setTicker(tickerText)
@@ -165,6 +166,7 @@ public class PullingContentService extends Service {
               resultPendingIntent)
               .setOngoing(false)
               .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
+              .setLargeIcon(BitmapFactory.decodeResource(Application.getContext().getResources(), Application.getConfiguration().getIcon()))
               .setContentTitle(pushNotification.getTitle())
               .setContentText(pushNotification.getMessage())
               .build();

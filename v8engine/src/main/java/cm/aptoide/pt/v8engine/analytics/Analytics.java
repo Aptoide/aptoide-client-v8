@@ -24,12 +24,14 @@ import com.localytics.android.Localytics;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.zip.ZipFile;
 
+import static cm.aptoide.pt.v8engine.analytics.Analytics.AppViewViewedFrom.containsUnwantedValues;
 import static cm.aptoide.pt.v8engine.analytics.Analytics.Lifecycle.Application.facebookLogger;
 
 /**
@@ -46,6 +48,14 @@ public class Analytics {
   private static final int LOCALYTICS = 1 << 0;
   private static final int FLURRY = 1 << 1;
   private static final int FABRIC = 1 << 2;
+  private static final String[] unwantedValuesList = {
+      "ads-highlighted", "apps-group-trending", "apps-group-local-top-apps",
+      "timeline-your-friends-installs", "apps-group-latest-applications",
+      "apps-group-top-apps-in-this-store", "apps-group-aptoide-publishers",
+      "stores-group-top-stores", "stores-group-featured-stores", "reviews-group-reviews",
+      "apps-group-top-games", "apps-group-top-stores", "apps-group-featured-stores",
+      "apps-group-editors-choice"
+  };
   private static boolean ACTIVATE_LOCALYTICS = BuildConfig.LOCALYTICS_CONFIGURED;
   private static boolean isFirstSession;
 
@@ -108,6 +118,13 @@ public class Analytics {
     }
   }
 
+  private static void logFacebookEvents(String eventName, Bundle parameters) {
+    if (BuildConfig.BUILD_TYPE.equals("debug")) {
+      return;
+    }
+    facebookLogger.logEvent(eventName, parameters);
+  }
+
   private static void logFabricEvent(String event, Map<String, String> map, int flags) {
     if (checkAcceptability(flags, FABRIC)) {
       CustomEvent customEvent = new CustomEvent(event);
@@ -156,11 +173,9 @@ public class Analytics {
         setupDimensions();
 
         //Integrate FacebookSDK
-        if (checkBuildVariant()) {
-          FacebookSdk.sdkInitialize(application);
-          AppEventsLogger.activateApp(application);
-          facebookLogger = AppEventsLogger.newLogger(application);
-        }
+        FacebookSdk.sdkInitialize(application);
+        AppEventsLogger.activateApp(application);
+        facebookLogger = AppEventsLogger.newLogger(application);
 
         Logger.d(TAG, "Localytics session configured");
       }
@@ -637,13 +652,10 @@ public class Analytics {
 
         track(EVENT_NAME, stringObjectHashMap, flags);
 
-        if (checkBuildVariant()) {
-          Bundle parameters = new Bundle();
-          parameters.putString(PACKAGE_NAME, packageName);
-          parameters.putString(TRUSTED_BADGE, trustedBadge);
-          parameters.putString(TYPE, type);
-          facebookLogger.logEvent(EVENT_NAME, parameters);
-        }
+        Bundle parameters = new Bundle();
+        parameters.putString(PACKAGE_NAME, packageName);
+        parameters.putString(TRUSTED_BADGE, trustedBadge);
+        parameters.putString(TYPE, type);
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -729,12 +741,10 @@ public class Analytics {
 
         track(EVENT_NAME, map, ALL);
 
-        if (checkBuildVariant()) {
-          Bundle parameters = new Bundle();
-          parameters.putString(APPLICATION_NAME, app.getPackageName());
-          parameters.putString(APPLICATION_PUBLISHER, app.getDeveloper().getName());
-          facebookLogger.logEvent(EVENT_NAME, parameters);
-        }
+        Bundle parameters = new Bundle();
+        parameters.putString(APPLICATION_NAME, app.getPackageName());
+        parameters.putString(APPLICATION_PUBLISHER, app.getDeveloper().getName());
+        logFacebookEvents(EVENT_NAME, parameters);
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -769,14 +779,14 @@ public class Analytics {
         map.put(PACKAGE_NAME, app.getPackageName());
         map.put(TRUSTED_BADGE, app.getFile().getMalware().getRank().name());
 
-        track(EVENT_NAME, map, ALL);
-
-        if (checkBuildVariant()) {
-          Bundle parameters = new Bundle();
-          parameters.putString(PACKAGE_NAME, app.getPackageName());
-          parameters.putString(TRUSTED_BADGE, app.getFile().getMalware().getRank().name());
-          facebookLogger.logEvent(EVENT_NAME, parameters);
+        if (map.containsKey("Source") && !containsUnwantedValues(map.get("Source"))) {
+          track(EVENT_NAME, map, ALL);
         }
+
+        Bundle parameters = new Bundle();
+        parameters.putString(PACKAGE_NAME, app.getPackageName());
+        parameters.putString(TRUSTED_BADGE, app.getFile().getMalware().getRank().name());
+        logFacebookEvents(EVENT_NAME, parameters);
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -958,18 +968,29 @@ public class Analytics {
           }
         }
         Logger.d("teste", "appViewOpenFrom: " + map);
-        track(APP_VIEWED_OPEN_FROM_EVENT_NAME_KEY, map, FLURRY);
 
-        if (checkBuildVariant()) {
-          Bundle parameters = new Bundle();
-          parameters.putString("Package Name", packageName);
-          parameters.putString("Source", stringForSourceEvent);
-          parameters.putString("Trusted Badge", trustedBadge);
-          parameters.putString("Application Publisher", developerName);
-          facebookLogger.logEvent(APP_VIEWED_OPEN_FROM_EVENT_NAME_KEY, parameters);
+        if (map.containsKey("Source") && !containsUnwantedValues(map.get("Source"))) {
+          track(APP_VIEWED_OPEN_FROM_EVENT_NAME_KEY, map, FLURRY);
         }
+
+        Bundle parameters = new Bundle();
+        parameters.putString("Package Name", packageName);
+        parameters.putString("Source", stringForSourceEvent);
+        parameters.putString("Trusted Badge", trustedBadge);
+        parameters.putString("Application Publisher", developerName);
+        logFacebookEvents(APP_VIEWED_OPEN_FROM_EVENT_NAME_KEY, parameters);
       }
       STEPS.clear();
+    }
+
+    protected static boolean containsUnwantedValues(String source) {
+      String[] sourceArray = source.split("_");
+      for (String step : sourceArray) {
+        if (Arrays.asList(unwantedValuesList).contains(step)) {
+          return true;
+        }
+      }
+      return false;
     }
 
     private static String formatStepsToSingleEvent(ArrayList<String> listOfSteps) {

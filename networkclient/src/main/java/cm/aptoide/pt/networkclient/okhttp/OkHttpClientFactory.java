@@ -5,16 +5,11 @@
 
 package cm.aptoide.pt.networkclient.okhttp;
 
-import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.networkclient.okhttp.cache.RequestCache;
+import cm.aptoide.pt.networkclient.okhttp.cache.PostCacheInterceptor;
 import java.io.File;
-import java.io.IOException;
 import okhttp3.Cache;
-import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 /**
  * Factory for OkHttp Clients creation.
@@ -53,16 +48,16 @@ public class OkHttpClientFactory {
    */
   public static OkHttpClient getSingletonClient(UserAgentGenerator userAgentGenerator) {
     if (httpClientInstance == null) {
-      httpClientInstance = newClient(new File("/"), 10 * 1024 * 1024, new AptoideCacheInterceptor(),
+      httpClientInstance = newClient(new File("/"), 10 * 1024 * 1024, new PostCacheInterceptor(),
           userAgentGenerator);
     }
     return httpClientInstance;
   }
 
+  /*
   private static final class AptoideCacheInterceptor implements Interceptor {
 
-    private final String TAG =
-        OkHttpClientFactory.TAG + "." + AptoideCacheInterceptor.class.getSimpleName();
+    private final String TAG = AptoideCacheInterceptor.class.getSimpleName();
 
     private final RequestCache customCache = new RequestCache();
 
@@ -82,4 +77,5 @@ public class OkHttpClientFactory {
       }
     }
   }
+  */
 }

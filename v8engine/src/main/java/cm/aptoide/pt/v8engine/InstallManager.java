@@ -57,8 +57,8 @@ public class InstallManager {
     context.startService(intent);
   }
 
-  public void removeInstallationFile(Context context, String md5) {
-    stopAllInstallations(context);
+  public void removeInstallationFile(String md5, Context context) {
+    stopInstallation(context, md5);
     aptoideDownloadManager.removeDownload(md5);
   }
 
@@ -76,7 +76,7 @@ public class InstallManager {
   public Observable<List<Progress<Download>>> getInstallationsAsList() {
     return aptoideDownloadManager.getDownloads()
         .observeOn(Schedulers.io())
-        .flatMap(downloadList -> Observable.from(downloadList)
+        .concatMap(downloadList -> Observable.from(downloadList)
             .flatMap(download -> convertToProgress(download))
             .toList());
   }
@@ -116,6 +116,12 @@ public class InstallManager {
   public Observable<Progress<Download>> install(Context context, Download download) {
     return getInstallation(download.getMd5()).first()
         .retryWhen(errors -> createDownloadAndRetry(errors, download))
+        .doOnNext(downloadProgress -> {
+          if (downloadProgress.getRequest().getOverallDownloadStatus() == Download.ERROR) {
+            downloadProgress.getRequest().setOverallDownloadStatus(Download.INVALID_STATUS);
+            downloadAccessor.save(downloadProgress.getRequest());
+          }
+        })
         .flatMap(progress -> installInBackground(context, progress));
   }
 

@@ -41,7 +41,7 @@ import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import cm.aptoide.pt.actions.GenerateClientId;
+import cm.aptoide.pt.actions.AptoideClientUUID;
 import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.permissions.ApkPermission;
@@ -788,7 +788,7 @@ public class AptoideUtils {
           (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
       final NetworkInfo info = manager.getActiveNetworkInfo();
 
-      if (info.getTypeName() != null) {
+      if (info != null && info.getTypeName() != null) {
         switch (info.getType()) {
           case TYPE_ETHERNET:
             return "ethernet";
@@ -1580,7 +1580,8 @@ public class AptoideUtils {
       return false;
     }
 
-    public static String getDefaultUserAgent(GenerateClientId generateClientId, UserData userData) {
+    public static String getDefaultUserAgent(AptoideClientUUID aptoideClientUUID,
+        UserData userData) {
 
       //SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(context);
       //String currentUserId = getUserId();
@@ -1600,8 +1601,8 @@ public class AptoideUtils {
       StringBuilder sb = new StringBuilder(
           "aptoide-" + verString + ";" + SystemU.TERMINAL_INFO + ";" + myscr + ";id:");
 
-      if (generateClientId != null) {
-        sb.append(generateClientId.getClientId());
+      if (aptoideClientUUID != null) {
+        sb.append(aptoideClientUUID.getAptoideClientUUID());
       }
       sb.append(";");
 

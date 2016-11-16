@@ -89,7 +89,7 @@ class DownloadTask extends FileDownloadLargeFileListener {
         break;
       case FileToDownload.GENERIC:
       default:
-        path = AptoideDownloadManager.GENERIC_PATH;
+        path = AptoideDownloadManager.DOWNLOADS_STORAGE_PATH;
         break;
     }
     return path;

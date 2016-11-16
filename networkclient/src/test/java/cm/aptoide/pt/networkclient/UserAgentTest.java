@@ -5,8 +5,7 @@
 
 package cm.aptoide.pt.networkclient;
 
-import cm.aptoide.pt.actions.GenerateClientId;
-import cm.aptoide.pt.actions.UserData;
+import cm.aptoide.pt.actions.AptoideClientUUID;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.okhttp.UserAgentGenerator;
 import cm.aptoide.pt.networkclient.okhttp.UserAgentInterceptor;
@@ -47,20 +46,12 @@ public class UserAgentTest {
 
   @Test public void currentUserAgentForSingletonClient() throws Exception {
 
-    GenerateClientId generateClientId = new GenerateClientId() {
-      @Override public String getClientId() {
-        return "dummy client id";
-      }
-    };
+    AptoideClientUUID aptoideClientUUID = () -> "dummy client id";
 
     final String userData = "user@aptoide.com";
 
     final String expectedUserAgent =
-        AptoideUtils.NetworkUtils.getDefaultUserAgent(generateClientId, new UserData() {
-          @Override public String getUserEmail() {
-            return userData;
-          }
-        });
+        AptoideUtils.NetworkUtils.getDefaultUserAgent(aptoideClientUUID, () -> userData);
 
     MockWebServer server = new MockWebServer();
     server.enqueue(new MockResponse().setBody("OK"));
@@ -85,20 +76,12 @@ public class UserAgentTest {
 
   @Test public void currentUserAgentForNewClient() throws Exception {
 
-    GenerateClientId generateClientId = new GenerateClientId() {
-      @Override public String getClientId() {
-        return "dummy client id";
-      }
-    };
+    AptoideClientUUID aptoideClientUUID = () -> "dummy client id";
 
     final String userData = "user@aptoide.com";
 
     final String expectedUserAgent =
-        AptoideUtils.NetworkUtils.getDefaultUserAgent(generateClientId, new UserData() {
-          @Override public String getUserEmail() {
-            return userData;
-          }
-        });
+        AptoideUtils.NetworkUtils.getDefaultUserAgent(aptoideClientUUID, () -> userData);
 
     MockWebServer server = new MockWebServer();
     server.enqueue(new MockResponse().setBody("OK"));

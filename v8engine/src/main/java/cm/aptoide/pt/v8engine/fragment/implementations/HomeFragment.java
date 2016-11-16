@@ -29,7 +29,6 @@ import cm.aptoide.accountmanager.util.UserCompleteData;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
-import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
@@ -44,6 +43,8 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.interfaces.DrawerFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
+import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.view.BadgeView;
@@ -69,6 +70,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
   private BadgeView updatesBadge;
   @Getter @Setter private Event.Name desiredViewPagerItem = null;
   private ChangeTabReceiver receiver;
+  private UpdateRepository updateRepository;
 
   public static HomeFragment newInstance(String storeName, StoreContext storeContext,
       String storeTheme) {
@@ -79,6 +81,11 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
     HomeFragment fragment = new HomeFragment();
     fragment.setArguments(args);
     return fragment;
+  }
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    updateRepository = RepositoryFactory.getRepositoryFor(Update.class);
   }
 
   private void setupNavigationView() {
@@ -197,8 +204,9 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
     //}
 
     InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
-    Subscription unManagedSubscription = installedAccessor.get(packageName)
+    installedAccessor.get(packageName)
         .observeOn(AndroidSchedulers.mainThread())
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(installedFacebook -> {
           if (installedFacebook == null) {
             ((FragmentShower) getActivity()).pushFragmentV4(
@@ -301,15 +309,13 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
     //      refreshUpdatesBadge(updates.size());
     //    });
 
-    UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
-    Subscription unManagedSubscription = updateAccessor.getAll()
+    updateRepository.getNonExcludedUpdates()
+        .map(updates -> updates.size())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(updates -> {
-          refreshUpdatesBadge(updates.size());
-        }, err -> {
-          Logger.e(TAG, err);
-          CrashReports.logException(err);
+        .subscribe(size -> refreshUpdatesBadge(size), throwable -> {
+          Logger.e(TAG, throwable);
+          CrashReports.logException(throwable);
         });
 
     if (desiredViewPagerItem != null) {

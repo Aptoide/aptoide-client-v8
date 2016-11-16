@@ -98,9 +98,10 @@ android {
       // applicationIdSuffix does not work properly, as the application ID gets changed after the buildFlavor
       applicationIdSuffix ".internal"
 
-      versionName "8.0.0." + getDate()
-      versionCode getVersionCode("../../aptoideProperties/version.properties",
+      Integer value = getVersionCode("../../aptoideProperties/version.properties",
           "INTERNAL_VERSION_CODE")
+      versionName "8.0.1." + getDate()
+      versionCode value
 
       resValue "string", "authenticatorAccountType", APPLICATION_ID + ".internal"
 
@@ -113,9 +114,10 @@ android {
       // applicationIdSuffix does not work properly, as the application ID gets changed after the buildFlavor
       applicationIdSuffix ".dev"
 
-      versionName "8.0.0." + getDate()
-      versionCode getVersionCode("../../aptoideProperties/version.properties",
+      Integer value = getVersionCode("../../aptoideProperties/version.properties",
           "DEV_VERSION_CODE")
+      versionName "8.0.1." + getDate()
+      versionCode value
 
       resValue "string", "authenticatorAccountType", APPLICATION_ID + ".dev"
 
@@ -207,14 +209,14 @@ dependencies {
   //
 
   debugCompile project(path: ':v8engine', configuration: 'debug')
-//  {
-//    exclude(group:"com.android.support", name:"multidex")
-//  }
+  //  {
+  //    exclude(group:"com.android.support", name:"multidex")
+  //  }
 
   releaseCompile project(path: ':v8engine', configuration: 'release')
-//  {
-//    exclude(group:"com.android.support", name:"multidex")
-//  }
+  //  {
+  //    exclude(group:"com.android.support", name:"multidex")
+  //  }
 
   //
   // custom libs in folders
@@ -231,17 +233,17 @@ dependencies {
   testCompile "org.robolectric:robolectric:${ROBOELECTRIC_VERSION}"
   testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
   // Force usage of support annotations in the test app, since it is internally used by the runner module.
-  androidTestCompile ("com.android.support.test:runner:${RUNNER_VERSION}"){
-    exclude group:"com.android.support", module:"support-annotations"
+  androidTestCompile("com.android.support.test:runner:${RUNNER_VERSION}") {
+    exclude group: "com.android.support", module: "support-annotations"
   }
   androidTestCompile "com.android.support.test:rules:${RULES_VERSION}"
-  androidTestCompile ("com.android.support:multidex-instrumentation:${MULTIDEX_VERSION}"){
-    exclude group:"com.android.support", module:"support-annotations"
+  androidTestCompile("com.android.support:multidex-instrumentation:${MULTIDEX_VERSION}") {
+    exclude group: "com.android.support", module: "support-annotations"
   }
   androidTestCompile "com.android.support:support-annotations:${SUPPORT_ANNOTATIONS_LIB_VERSION}"
 
-  compile ("com.android.support:multidex:${MULTIDEX_VERSION}"){
-    exclude group:"com.android.support", module:"support-annotations"
+  compile("com.android.support:multidex:${MULTIDEX_VERSION}") {
+    exclude group: "com.android.support", module: "support-annotations"
   }
 }
 
