@@ -46,6 +46,7 @@ import cm.aptoide.pt.v8engine.configuration.implementation.ActivityProviderImpl;
 import cm.aptoide.pt.v8engine.configuration.implementation.FragmentProviderImpl;
 import cm.aptoide.pt.v8engine.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.v8engine.download.TokenHttpClient;
+import cm.aptoide.pt.v8engine.filemanager.CacheHelper;
 import cm.aptoide.pt.v8engine.filemanager.FileManager;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.UpdateRepository;
@@ -235,7 +236,7 @@ public abstract class V8Engine extends DataProvider {
     FileManager fileManager = FileManager.build();
     AptoideDownloadManager.getInstance()
         .init(this, new DownloadNotificationActionsActionsInterface(),
-            new DownloadManagerSettingsI(), downloadAccessor, fileManager,
+            new DownloadManagerSettingsI(), downloadAccessor, CacheHelper.build(),
             new FileUtils(action -> Analytics.File.moveFile(action)), new TokenHttpClient(
                 new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this),
                 new UserData() {

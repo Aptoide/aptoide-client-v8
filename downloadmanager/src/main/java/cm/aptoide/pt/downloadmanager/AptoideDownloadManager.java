@@ -7,6 +7,7 @@ package cm.aptoide.pt.downloadmanager;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
@@ -15,6 +16,7 @@ import cm.aptoide.pt.downloadmanager.interfaces.CacheManager;
 import cm.aptoide.pt.downloadmanager.interfaces.DownloadNotificationActionsInterface;
 import cm.aptoide.pt.downloadmanager.interfaces.DownloadSettingsInterface;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.util.FileDownloadHelper;
@@ -258,8 +260,12 @@ public class AptoideDownloadManager {
           Logger.d(TAG, "Download with md5 " + download.getMd5() + " started");
         } else {
           isDownloading = false;
-          // TODO: 11/16/16 trinkes make the clean cache subscribe
-          cacheHelper.cleanCache();
+          cacheHelper.cleanCache()
+              .subscribe(cleanedSize -> Logger.d(TAG,
+                  "cleaned size: " + AptoideUtils.StringU.formatBytes(cleanedSize)), throwable -> {
+                Logger.e(TAG, throwable);
+                CrashReports.logException(throwable);
+              });
         }
       }, throwable -> throwable.printStackTrace());
     }
