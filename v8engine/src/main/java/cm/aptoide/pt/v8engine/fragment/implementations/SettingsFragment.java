@@ -32,33 +32,27 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
-import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dialog.AndroidBasicDialog;
-import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagedKeys;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.v8engine.InstallManager;
-import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.dialog.AdultDialog;
-import cm.aptoide.pt.v8engine.install.InstallerFactory;
+import cm.aptoide.pt.v8engine.filemanager.FileManager;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import cm.aptoide.pt.v8engine.util.SettingsConstants;
-import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
+
+import static cm.aptoide.pt.v8engine.filemanager.FileManager.DownloadIsRunningException;
 
 /**
  * Created by fabio on 26-10-2015.
@@ -73,10 +67,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private static boolean isSetingPIN = false;
   protected Toolbar toolbar;
   private Context context;
-  private FileUtils fileUtils;
   private CompositeSubscription subscriptions;
-  private InstallManager installManager;
-  private String[] cacheFolders;
+  private FileManager fileManager;
 
   public static Fragment newInstance() {
     return new SettingsFragment();
@@ -89,16 +81,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    fileUtils = new FileUtils();
+    fileManager = FileManager.build();
     subscriptions = new CompositeSubscription();
-    installManager = new InstallManager(AptoideDownloadManager.getInstance(),
-        new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK),
-        AccessorFactory.getAccessorFor(Download.class),
-        AccessorFactory.getAccessorFor(Installed.class));
-    cacheFolders = new String[] {
-        Application.getContext().getCacheDir().getPath(),
-        Application.getConfiguration().getCachePath()
-    };
   }
 
   @Override public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -233,19 +217,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 getString(R.string.storage_dialog_title),
                 getString(R.string.clear_cache_dialog_message))
                 .filter(eResponse -> eResponse.equals(GenericDialogs.EResponse.YES))
-                .doOnNext(eResponse -> dialog.show())
-                .observeOn(Schedulers.io())
-                .flatMap(eResponse -> checkInstalling())
-                .flatMap(eResponse -> fileUtils.deleteFolder(cacheFolders))
-                .flatMap(deletedSize -> {
-                  if (deletedSize > 0) {
-                    return AptoideDownloadManager.getInstance()
-                        .invalidateDatabase()
-                        .map(success -> deletedSize);
-                  } else {
-                    return Observable.just(deletedSize);
-                  }
-                })
+                .doOnNext(eResponse -> dialog.show()).flatMap(eResponse -> fileManager.clearCache())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnTerminate(() -> dialog.dismiss())
                 .subscribe(deletedSize -> {
@@ -392,22 +364,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
             AptoideUtils.StringU.formatBytes(deletedSize)));
   }
 
-  private Observable<Void> checkInstalling() {
-    return installManager.getInstallationsAsList()
-        .first()
-        .flatMapIterable(progresses -> progresses)
-        .filter(progress -> progress.getState() == Progress.ACTIVE)
-        .toList()
-        .map(progresses -> progresses != null && progresses.size() > 0)
-        .flatMap(isDownload -> {
-          if (isDownload) {
-            return Observable.error(new DownloadIsRunningException());
-          } else {
-            return Observable.just(null);
-          }
-        });
-  }
-
   private Dialog dialogSetAdultPin(final Preference mp) {
     isSetingPIN = true;
 
@@ -433,8 +389,5 @@ public class SettingsFragment extends PreferenceFragmentCompat
     } else {
       dialogSetAdultPin(adultPinPreference).show();// Without Pin
     }
-  }
-
-  class DownloadIsRunningException extends RuntimeException {
   }
 }

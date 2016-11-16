@@ -46,7 +46,7 @@ import cm.aptoide.pt.v8engine.configuration.implementation.ActivityProviderImpl;
 import cm.aptoide.pt.v8engine.configuration.implementation.FragmentProviderImpl;
 import cm.aptoide.pt.v8engine.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.v8engine.download.TokenHttpClient;
-import cm.aptoide.pt.v8engine.filemanager.CacheHelper;
+import cm.aptoide.pt.v8engine.filemanager.FileManager;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
@@ -232,10 +232,10 @@ public abstract class V8Engine extends DataProvider {
     }
 
     final DownloadAccessor downloadAccessor = AccessorFactory.getAccessorFor(Download.class);
-    CacheHelper cacheHelper = CacheHelper.build();
+    FileManager fileManager = FileManager.build();
     AptoideDownloadManager.getInstance()
         .init(this, new DownloadNotificationActionsActionsInterface(),
-            new DownloadManagerSettingsI(), downloadAccessor, cacheHelper,
+            new DownloadManagerSettingsI(), downloadAccessor, fileManager,
             new FileUtils(action -> Analytics.File.moveFile(action)), new TokenHttpClient(
                 new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this),
                 new UserData() {
@@ -244,10 +244,7 @@ public abstract class V8Engine extends DataProvider {
                   }
                 }));
 
-    cacheHelper.cleanCache()
-        .flatMap(cleaned -> AptoideDownloadManager.getInstance()
-            .invalidateDatabase()
-            .map(success -> cleaned))
+    fileManager.cleanCache()
         .subscribe(cleanedSize -> Logger.d(TAG,
             "cleaned size: " + AptoideUtils.StringU.formatBytes(cleanedSize)), throwable -> {
           Logger.e(TAG, throwable);

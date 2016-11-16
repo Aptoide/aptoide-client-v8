@@ -258,6 +258,7 @@ public class AptoideDownloadManager {
           Logger.d(TAG, "Download with md5 " + download.getMd5() + " started");
         } else {
           isDownloading = false;
+          // TODO: 11/16/16 trinkes make the clean cache subscribe
           cacheHelper.cleanCache();
         }
       }, throwable -> throwable.printStackTrace());
