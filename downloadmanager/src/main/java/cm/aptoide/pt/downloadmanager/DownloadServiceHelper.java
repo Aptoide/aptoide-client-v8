@@ -94,7 +94,9 @@ import rx.schedulers.Schedulers;
       Application.getContext().startService(intent);
       return null;
     }).subscribeOn(Schedulers.computation()).subscribe(o -> {
-    }, Throwable::printStackTrace);
+    }, err -> {
+      CrashReports.logException(err);
+    });
   }
 
   /**

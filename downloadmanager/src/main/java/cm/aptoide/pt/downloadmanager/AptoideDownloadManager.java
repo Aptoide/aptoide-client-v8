@@ -198,7 +198,9 @@ public class AptoideDownloadManager {
           }
           downloadAccessor.save(downloads);
           Logger.d(TAG, "Downloads paused");
-        }, Throwable::printStackTrace);
+        }, err -> {
+          CrashReports.logException(err);
+        });
   }
 
   private Observable<Integer> getDownloadStatus(String md5) {
