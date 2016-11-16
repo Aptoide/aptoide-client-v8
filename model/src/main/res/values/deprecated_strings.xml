@@ -342,7 +342,6 @@
   <string name="setting_schdwninstalltitle">Automatic Install</string>
   <string name="setting_clear_memory">Clear Memory</string>
   <string name="clearcontent_title">Remove data and configurations</string>
-  <string name="clearcache_title">Clear cache</string>
   <string name="settings_maxFileCache_sum">Set a maximum size to keep your apk files</string>
   <string name="settings_maxFileCache_title">Download File Cache (MB)</string>
   <string name="change_theme">Change theme</string>

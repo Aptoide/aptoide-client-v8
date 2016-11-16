@@ -14,7 +14,6 @@ public class SettingsConstants {
   public static final CharSequence ADULT_PIN = "Maturepin";
   public static final CharSequence SHOW_ALL_UPDATES = "showAllUpdates";
   public static final CharSequence CLEAR_CACHE = "clearcache";
-  public static final CharSequence CLEAR_RANK = "clearapk";
   public static final CharSequence MAX_FILE_CACHE = "maxFileCache";
   public static final CharSequence ROOT = "root";
   public static final CharSequence HARDWARE_SPECS = "hwspecs";

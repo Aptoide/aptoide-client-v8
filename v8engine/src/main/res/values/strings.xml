@@ -276,11 +276,10 @@
 
   <string name="displayable_social_timeline_similar_to">similar to %1$s</string>
   <string name="download_is_running_error">Download is running, please wait until download finishes.</string>
-  <string name="freed_space">%s MB freed</string>
+  <string name="freed_space">%s freed</string>
   <string name="storage_dialog_title">Clear Aptoide Storage</string>
-  <string name="clear_cache_dialog_message">This will clear all cached files</string>
-  <string name="remove_config_dialog_message">This will clear all your local configurations</string>
-  <string name="clear_data_settings_summary">Deletes all images, apk downloaded, database, icons,…</string>
-  <string name="clear_cache_summary">Deletes icons, images and webservice data</string>
+  <string name="clear_cache_dialog_message">Are you sure you want to delete all icons, images, apk downloaded, obb, webservice data, …</string>
+  <string name="clear_cache_summary">Deletes icons, images, apk downloaded, obb, webservice data, …</string>
+  <string name="clearcache_title">Clear Storage</string>
 
 </resources>

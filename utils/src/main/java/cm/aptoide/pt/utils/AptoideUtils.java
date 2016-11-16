@@ -899,10 +899,12 @@ public class AptoideUtils {
     public static boolean deleteDir(File dir) {
       if (dir != null && dir.isDirectory()) {
         String[] children = dir.list();
-        for (String child : children) {
-          boolean success = deleteDir(new File(dir, child));
-          if (!success) {
-            return false;
+        if (children != null) {
+          for (String child : children) {
+            boolean success = deleteDir(new File(dir, child));
+            if (!success) {
+              return false;
+            }
           }
         }
       }
@@ -1192,6 +1194,8 @@ public class AptoideUtils {
     static final private int baseLineXNotification = 320;
     static final private int baseLineYNotification = 180;
     private static final String AVATAR_STRING = "_avatar";
+    private static final Pattern urlWithDimensionPattern =
+        Pattern.compile("_{1}[1-9]{3}(x|X){1}[1-9]{3}.{1}.{3,4}\\b");
     private static int baseLineScreenshotLand = 256;
     private static int baseLineScreenshotPort = 96;
 
@@ -1458,9 +1462,6 @@ public class AptoideUtils {
       }
       return imageUrl;
     }
-
-    private static final Pattern urlWithDimensionPattern =
-        Pattern.compile("_{1}[1-9]{3}(x|X){1}[1-9]{3}.{1}.{3,4}\\b");
 
     /**
      * Cleans the image URL out of "_widthXheight"

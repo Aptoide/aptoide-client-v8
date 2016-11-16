@@ -13,7 +13,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -50,17 +49,15 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.dialog.AdultDialog;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import cm.aptoide.pt.v8engine.util.SettingsConstants;
-import java.io.File;
-import java.text.DecimalFormat;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -74,15 +71,11 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private static final String TAG = SettingsFragment.class.getSimpleName();
 
   private static boolean isSetingPIN = false;
-  private final String aptoide_path = null;
-  private final String icon_path = aptoide_path + "icons/";
   protected Toolbar toolbar;
-  private boolean unlocked = false;
   private Context context;
   private FileUtils fileUtils;
   private CompositeSubscription subscriptions;
   private InstallManager installManager;
-  private String[] dataAndConfigFolders;
   private String[] cacheFolders;
 
   public static Fragment newInstance() {
@@ -102,15 +95,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
         new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK),
         AccessorFactory.getAccessorFor(Download.class),
         AccessorFactory.getAccessorFor(Installed.class));
-    File file = new File(Application.getContext().getCacheDir().getParent());
-    dataAndConfigFolders = new String[file.list().length + 1];
-    dataAndConfigFolders[0] = Application.getConfiguration().getCachePath();
-    for (int i = 0; i < file.list().length; i++) {
-      dataAndConfigFolders[i + 1] = file.getPath() + "/" + file.list()[i];
-    }
     cacheFolders = new String[] {
         Application.getContext().getCacheDir().getPath(),
-        Application.getConfiguration().getImagesCachePath()
+        Application.getConfiguration().getCachePath()
     };
   }
 
@@ -241,40 +228,12 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 getString(R.string.clear_cache_dialog_message))
                 .filter(eResponse -> eResponse.equals(GenericDialogs.EResponse.YES))
                 .doOnNext(eResponse -> dialog.show())
-                .flatMap(eResponse -> deleteFolder(cacheFolders))
+                .observeOn(Schedulers.io())
+                .flatMap(eResponse -> checkInstalling())
+                .flatMap(eResponse -> fileUtils.deleteFolder(cacheFolders))
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnTerminate(() -> dialog.dismiss())
                 .subscribe(deletedSize -> {
-                  deleteFilesSuccessMessage(deletedSize);
-                }, throwable -> {
-                  deleteFilesErrorMessage(throwable);
-                }));
-            return false;
-          }
-        });
-
-    findPreference(SettingsConstants.CLEAR_RANK).setOnPreferenceClickListener(
-        new Preference.OnPreferenceClickListener() {
-          @Override public boolean onPreferenceClick(Preference preference) {
-            //if (unlocked) {
-            ProgressDialog dialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());
-            subscriptions.add(GenericDialogs.createGenericContinueCancelMessage(getContext(),
-                getString(R.string.storage_dialog_title),
-                getString(R.string.remove_config_dialog_message))
-                .filter(eResponse -> eResponse.equals(GenericDialogs.EResponse.YES))
-                .doOnNext(eResponse -> dialog.show())
-                .flatMap(eResponse -> deleteFolder(dataAndConfigFolders))
-                .doOnNext(deletedSize -> {
-                  PreferenceManager.getDefaultSharedPreferences(getContext())
-                      .edit()
-                      .clear()
-                      .apply();
-                  V8Engine.clearUserData();
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnTerminate(() -> dialog.dismiss())
-                .subscribe(deletedSize -> {
-                  Logger.d(TAG, "onPreferenceClick: " + deletedSize);
                   deleteFilesSuccessMessage(deletedSize);
                 }, throwable -> {
                   deleteFilesErrorMessage(throwable);
@@ -418,7 +377,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
             AptoideUtils.StringU.formatBytes(deletedSize)));
   }
 
-  private Observable<Long> deleteFolder(String... folders) {
+  private Observable<Void> checkInstalling() {
     return installManager.getInstallationsAsList()
         .first()
         .flatMapIterable(progresses -> progresses)
@@ -429,37 +388,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
           if (isDownload) {
             return Observable.error(new DownloadIsRunningException());
           } else {
-            return fileUtils.deleteFolder(folders);
+            return Observable.just(null);
           }
         });
-  }
-
-  private void redrawSizes(Double[] size) {
-    final Context ctx = getContext();
-    if (!Build.DEVICE.equals(AptoideUtils.SystemU.JOLLA_ALIEN_DEVICE)) {
-      findPreference(SettingsConstants.CLEAR_RANK).setSummary(
-          getString(R.string.clearcontent_sum) + " (" +
-              AptoideUtils.StringU.getFormattedString(R.string.cache_using_X_mb,
-                  new DecimalFormat("#.##").format(size[0])) +
-              ")");
-      findPreference(SettingsConstants.CLEAR_CACHE).setSummary(
-          getString(R.string.clearcache_sum) + " (" +
-              AptoideUtils.StringU.getFormattedString(R.string.cache_using_X_mb,
-                  new DecimalFormat("#.##").format(size[1])) + ")");
-    } else {
-      findPreference(SettingsConstants.CLEAR_RANK).setSummary(
-          getString(R.string.clearcontent_sum_jolla)
-              + " ("
-              + AptoideUtils.StringU.getFormattedString(R.string.cache_using_X_mb,
-              new DecimalFormat("#.##").format(size[0]))
-              +
-              ")");
-      findPreference(SettingsConstants.CLEAR_CACHE).setSummary(
-          getString(R.string.clearcache_sum_jolla) + " (" +
-              AptoideUtils.StringU.getFormattedString(R.string.cache_using_X_mb,
-                  new DecimalFormat("#.##").format(size[1])) +
-              ")");
-    }
   }
 
   private Dialog dialogSetAdultPin(final Preference mp) {
