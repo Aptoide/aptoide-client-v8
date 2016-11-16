@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.GetApp;
@@ -125,7 +126,9 @@ import rx.android.schedulers.AndroidSchedulers;
         StoreUtilsProxy.subscribeStore(storeName, getStoreMeta -> {
           ShowMessage.asSnack(itemView,
               AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
-        }, Throwable::printStackTrace);
+        }, err -> {
+          CrashReports.logException(err);
+        });
       };
     }
   }

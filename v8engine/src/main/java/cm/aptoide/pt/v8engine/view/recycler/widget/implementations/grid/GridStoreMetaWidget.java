@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
@@ -153,7 +154,9 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
               ShowMessage.asSnack(itemView,
                   AptoideUtils.StringU.getFormattedString(R.string.store_followed,
                       getStoreMeta.getData().getName()));
-            }, Throwable::printStackTrace);
+            }, err -> {
+              CrashReports.logException(err);
+            });
             handleSubscriptionLogic(getStoreMeta);
           }
         }

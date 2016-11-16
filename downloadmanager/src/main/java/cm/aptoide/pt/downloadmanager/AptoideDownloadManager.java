@@ -7,6 +7,7 @@ package cm.aptoide.pt.downloadmanager;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
@@ -196,7 +197,9 @@ public class AptoideDownloadManager {
           }
           downloadAccessor.save(downloads);
           Logger.d(TAG, "Downloads paused");
-        }, Throwable::printStackTrace);
+        }, err -> {
+          CrashReports.logException(err);
+        });
   }
 
   private Observable<Integer> getDownloadStatus(String md5) {

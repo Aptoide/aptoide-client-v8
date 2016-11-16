@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
+import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
@@ -68,7 +69,9 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
         .map(downloads -> sortDownloads(downloads))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(downloads -> updateUi(downloads), Throwable::printStackTrace);
+        .subscribe(downloads -> updateUi(downloads), err -> {
+          CrashReports.logException(err);
+        });
 
     installManager.getInstallationsAsList()
         .sample(250, TimeUnit.MILLISECONDS)
@@ -77,7 +80,9 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
         .map(downloads -> sortDownloads(downloads))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(downloads -> updateUi(downloads), Throwable::printStackTrace);
+        .subscribe(downloads -> updateUi(downloads), err -> {
+          CrashReports.logException(err);
+        });
   }
 
   private List<Progress<Download>> sortDownloads(List<Progress<Download>> progressList) {
