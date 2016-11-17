@@ -52,7 +52,8 @@ public class TokenHttpClient implements FileDownloadHelper.OkHttpClientCustomMak
       }
     }).addInterceptor(new UserAgentInterceptor(new UserAgentGenerator() {
       @Override public String generateUserAgent() {
-        return AptoideUtils.NetworkUtils.getDefaultUserAgent(aptoideClientUUID, userData);
+        return AptoideUtils.NetworkUtils.getDefaultUserAgent(aptoideClientUUID, userData,
+            AptoideUtils.Core.getDefaultVername());
       }
     })).build();
   }
