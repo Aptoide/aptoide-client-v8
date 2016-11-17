@@ -80,7 +80,6 @@ dependencies {
   testCompile "com.squareup.okhttp3:mockwebserver:${MOCK_WEB_SERVER_VERSION}"
   testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
 
-  //noinspection GradleDependency
   compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
 
   compile "io.reactivex:rxjava:${RXJAVA_VERSION}"
@@ -89,8 +88,6 @@ dependencies {
   compile "com.squareup.retrofit2:retrofit:${RETROFIT_VERSION}"
   compile "com.squareup.retrofit2:adapter-rxjava:${RETROFIT_VERSION}"
   compile "com.squareup.retrofit2:converter-jackson:${RETROFIT_VERSION}"
-
-  compile "com.jakewharton:disklrucache:${JW_LRU_CACHE_VERSION}"
 
   provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
   // Just for lombok not to complain

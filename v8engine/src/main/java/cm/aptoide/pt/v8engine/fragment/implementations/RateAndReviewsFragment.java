@@ -5,66 +5,14 @@
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatRatingBar;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReports;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.accessors.InstalledAccessor;
-import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
-import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.Comment;
-import cm.aptoide.pt.model.v7.GetAppMeta;
-import cm.aptoide.pt.model.v7.ListReviews;
-import cm.aptoide.pt.model.v7.Review;
-import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
-import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.adapters.ReviewsAndCommentsAdapter;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
-import cm.aptoide.pt.v8engine.util.DialogUtils;
-import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
-import cm.aptoide.pt.v8engine.util.StoreUtils;
-import cm.aptoide.pt.v8engine.util.ThemeUtils;
-import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.ProgressBarDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentsReadMoreDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RateAndReviewCommentDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-import rx.Observable;
-import rx.Subscription;
 
 /**
  * Created by sithengineer on 13/05/16.
  */
 public class RateAndReviewsFragment extends GridRecyclerFragment {
 
+  /*
   private static final String TAG = RateAndReviewsFragment.class.getSimpleName();
   private static final String APP_ID = "app_id";
   private static final String PACKAGE_NAME = "package_name";
@@ -249,14 +197,6 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
     inflater.inflate(R.menu.menu_install, menu);
     installMenuItem = menu.findItem(R.id.menu_install);
 
-    //@Cleanup Realm realm = DeprecatedDatabase.get();
-    //Installed installed = DeprecatedDatabase.InstalledQ.get(packageName, realm);
-    ////check if the app is installed
-    //if (installed != null) {
-    //  // app installed... update text
-    //  installMenuItem.setTitle(R.string.open);
-    //}
-
     InstalledAccessor accessor = AccessorFactory.getAccessorFor(Installed.class);
     accessor.get(packageName).subscribe(installed -> {
       if (installed != null) {
@@ -277,7 +217,7 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
     }
     if (itemId == R.id.menu_install) {
       ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
-          .newAppViewFragment(packageName, AppViewFragment.OpenType.OPEN_AND_INSTALL));
+          .newAppViewFragment(packageName, storeName, AppViewFragment.OpenType.OPEN_AND_INSTALL));
       return true;
     }
     return super.onOptionsItemSelected(item);
@@ -311,72 +251,6 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
     recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(false);
   }
-
-	/*
-  private void fetchReviews() {
-		ListReviewsRequest.of(storeName, packageName).observe().map(reviewsResponse -> {
-			List<Review> reviews = reviewsResponse.getDatalist().getList();
-			List<Displayable> displayables = new LinkedList<>();
-			CountDownLatch countDownLatch = new CountDownLatch(reviews.size());
-
-			Observable.from(reviews)
-					.forEach(fullReview -> ListCommentsRequest.of(fullReview.getComments().getView(), fullReview.getId(), 3).execute(listComments -> {
-						fullReview.setCommentList(listComments);
-						countDownLatch.countDown();
-					}, e -> countDownLatch.countDown()));
-
-			try {
-				countDownLatch.await(5, TimeUnit.SECONDS);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			int index = 0;
-			int count = 0;
-			for (final Review review : reviews) {
-				displayables.add(new RateAndReviewCommentDisplayable(new RateAndReviewCommentDisplayable.ReviewWithAppName(appName, review), new CommentAdder
-						(count) {
-					@Override
-					public void addComment(List<Comment> comments) {
-						List<Displayable> displayableList = new ArrayList<>();
-						createDisplayableComments(comments, displayableList);
-						int reviewPosition = getAdapter().getReviewPosition(reviewIndex);
-						displayableList.add(createReadMoreDisplayable(reviewPosition, review));
-						getAdapter().addDisplayables(reviewPosition + 1, displayableList);
-					}
-
-					@Override
-					public void collapseComments() {
-						ReviewsAndCommentsAdapter adapter = getAdapter();
-						int reviewIndex = adapter.getReviewPosition(this.reviewIndex);
-						int nextReview = adapter.getReviewPosition(this.reviewIndex + 1);
-						nextReview = nextReview == -1 ? getAdapter().getItemCount() : nextReview;
-						adapter.removeDisplayables(reviewIndex + 1, nextReview - 1); // the -1 because we don't want to remove the next review,only until the
-						// comment
-						// before the review
-					}
-				}));
-				if (review.getId() == reviewId) {
-					index = count;
-				}
-				if (review.hasComments()) {
-					createDisplayableComments(review.getCommentList().getDatalist().getList(), displayables);
-					displayables.add(createReadMoreDisplayable(count, review));
-				} else {
-					Logger.d(TAG, "this review doesn't have comments");
-				}
-				count++;
-			}
-
-			return displayables;
-		}).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(displayables -> {
-			setDisplayables(displayables);
-			finishLoading();
-			progressBar.setVisibility(View.GONE);
-			//			recyclerView.scrollToPosition(reviewIndex);
-			installMenuItem.setVisible(reviewId >= 0);
-		});
-	}
-	*/
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
@@ -510,4 +384,5 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
       }
     }
   }
+  */
 }

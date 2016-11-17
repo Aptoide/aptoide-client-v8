@@ -3,7 +3,7 @@
  * Modified by SithEngineer on 09/08/2016.
  */
 
-package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
+package cm.aptoide.pt.viewRateAndCommentReviews;
 
 import android.view.View;
 import android.widget.TextView;
@@ -14,7 +14,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
 import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentsReadMoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 

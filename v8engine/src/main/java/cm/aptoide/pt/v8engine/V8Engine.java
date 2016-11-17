@@ -30,7 +30,6 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.downloadmanager.CacheHelper;
 import cm.aptoide.pt.downloadmanager.DownloadService;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.PRNGFixes;
@@ -47,6 +46,8 @@ import cm.aptoide.pt.v8engine.configuration.implementation.ActivityProviderImpl;
 import cm.aptoide.pt.v8engine.configuration.implementation.FragmentProviderImpl;
 import cm.aptoide.pt.v8engine.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.v8engine.download.TokenHttpClient;
+import cm.aptoide.pt.v8engine.filemanager.CacheHelper;
+import cm.aptoide.pt.v8engine.filemanager.FileManager;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
@@ -67,13 +68,12 @@ import rx.schedulers.Schedulers;
 public abstract class V8Engine extends DataProvider {
 
   private static final String TAG = V8Engine.class.getName();
-
   @Getter static DownloadService downloadService;
   @Getter private static FragmentProvider fragmentProvider;
   @Getter private static ActivityProvider activityProvider;
   @Getter private static DisplayableWidgetMapping displayableWidgetMapping;
-  private RefWatcher refWatcher;
   @Setter @Getter private static boolean autoUpdateWasCalled = false;
+  private RefWatcher refWatcher;
 
   public static void loadStores() {
 
@@ -125,7 +125,7 @@ public abstract class V8Engine extends DataProvider {
           @Override public String getUserEmail() {
             return AptoideAccountManager.getUserEmail();
           }
-        }));
+        }, AptoideUtils.Core.getDefaultVername()));
   }
 
   public static void clearUserData() {
@@ -233,10 +233,10 @@ public abstract class V8Engine extends DataProvider {
     }
 
     final DownloadAccessor downloadAccessor = AccessorFactory.getAccessorFor(Download.class);
-    final DownloadManagerSettingsI settingsInterface = new DownloadManagerSettingsI();
+    FileManager fileManager = FileManager.build();
     AptoideDownloadManager.getInstance()
-        .init(this, new DownloadNotificationActionsActionsInterface(), settingsInterface,
-            downloadAccessor, new CacheHelper(downloadAccessor, settingsInterface),
+        .init(this, new DownloadNotificationActionsActionsInterface(),
+            new DownloadManagerSettingsI(), downloadAccessor, CacheHelper.build(),
             new FileUtils(action -> Analytics.File.moveFile(action)), new TokenHttpClient(
                 new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this),
                 new UserData() {
@@ -245,6 +245,12 @@ public abstract class V8Engine extends DataProvider {
                   }
                 }));
 
+    fileManager.cleanCache()
+        .subscribe(cleanedSize -> Logger.d(TAG,
+            "cleaned size: " + AptoideUtils.StringU.formatBytes(cleanedSize)), throwable -> {
+          Logger.e(TAG, throwable);
+          CrashReports.logException(throwable);
+        });
     // setupCurrentActivityListener();
 
     //if (BuildConfig.DEBUG) {

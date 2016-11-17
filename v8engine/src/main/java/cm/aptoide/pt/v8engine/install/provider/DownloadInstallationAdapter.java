@@ -5,9 +5,12 @@
 
 package cm.aptoide.pt.v8engine.install.provider;
 
+import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.v8engine.install.installer.RollbackInstallation;
 import java.io.File;
+import java.util.List;
 
 /**
  * Created by marcelobenites on 7/22/16.
@@ -15,9 +18,11 @@ import java.io.File;
 public class DownloadInstallationAdapter implements RollbackInstallation {
 
   private final Download download;
+  private DownloadAccessor downloadAccessor;
 
-  public DownloadInstallationAdapter(Download download) {
+  public DownloadInstallationAdapter(Download download, DownloadAccessor downloadAccessor) {
     this.download = download;
+    this.downloadAccessor = downloadAccessor;
   }
 
   @Override public String getId() {
@@ -57,7 +62,8 @@ public class DownloadInstallationAdapter implements RollbackInstallation {
   }
 
   @Override public String getMainObbName() {
-    if (download.getFilesToDownload().size() > 1) {
+    if (download.getFilesToDownload().size() > 1
+        && download.getFilesToDownload().get(1).getFileType() == FileToDownload.OBB) {
       return download.getFilesToDownload().get(1).getFileName();
     } else {
       return null;
@@ -65,19 +71,29 @@ public class DownloadInstallationAdapter implements RollbackInstallation {
   }
 
   @Override public String getMainObbPath() {
-    if (download.getFilesToDownload().size() > 1) {
-      return download.getFilesToDownload().get(1).getLink();
+    if (download.getFilesToDownload().size() > 1
+        && download.getFilesToDownload().get(1).getFileType() == FileToDownload.OBB) {
+      return download.getFilesToDownload().get(1).getPath();
     } else {
       return null;
     }
+  }
+
+  @Override public List<FileToDownload> getFiles() {
+    return download.getFilesToDownload();
   }
 
   @Override public long getTimeStamp() {
     return download.getTimeStamp();
   }
 
+  @Override public void save() {
+    downloadAccessor.save(download);
+  }
+
   @Override public String getPatchObbName() {
-    if (download.getFilesToDownload().size() > 2) {
+    if (download.getFilesToDownload().size() > 2
+        && download.getFilesToDownload().get(2).getFileType() == FileToDownload.OBB) {
       return download.getFilesToDownload().get(2).getFileName();
     } else {
       return null;
@@ -85,7 +101,8 @@ public class DownloadInstallationAdapter implements RollbackInstallation {
   }
 
   @Override public String getPatchObbPath() {
-    if (download.getFilesToDownload().size() > 2) {
+    if (download.getFilesToDownload().size() > 2
+        && download.getFilesToDownload().get(2).getFileType() == FileToDownload.OBB) {
       return download.getFilesToDownload().get(2).getLink();
     } else {
       return null;

@@ -5,8 +5,6 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
-import android.content.Context;
-import android.content.ContextWrapper;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -86,10 +84,7 @@ public class RollbackWidget extends Widget<RollbackDisplayable> {
       //			Realm realm = Database.get();
       //			Database.RollbackQ.upadteRollbackWithAction(realm, pojo, Rollback.Action.UPDATE);
 
-      final Context context = view.getContext();
-      ContextWrapper contextWrapper = (ContextWrapper) context;
-      final PermissionRequest permissionRequest =
-          ((PermissionRequest) contextWrapper.getBaseContext());
+      final PermissionRequest permissionRequest = ((PermissionRequest) getContext());
 
       permissionRequest.requestAccessToExternalFileSystem(() -> {
         Rollback.Action action = Rollback.Action.valueOf(pojo.getAction());

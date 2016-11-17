@@ -6,6 +6,8 @@
 package cm.aptoide.pt.v8engine.install.installer;
 
 import android.support.annotation.Nullable;
+import cm.aptoide.pt.database.realm.FileToDownload;
+import java.util.List;
 
 /**
  * Created by trinkes on 9/8/16.
@@ -15,7 +17,6 @@ public interface RollbackInstallation extends Installation {
   String getAppName();
 
   String getIcon();
-
   String downloadLink();
 
   @Nullable String getAltDownloadLink();
@@ -28,5 +29,9 @@ public interface RollbackInstallation extends Installation {
 
   @Nullable String getMainObbPath();
 
+  List<FileToDownload> getFiles();
+
   long getTimeStamp();
+
+  void save();
 }

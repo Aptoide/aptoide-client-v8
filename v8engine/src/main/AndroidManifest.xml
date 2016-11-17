@@ -167,6 +167,8 @@
 
     <service android:name=".InstallService"/>
 
+    <service android:name=".install.InstalledIntentService"/>
+
   </application>
 
 </manifest>

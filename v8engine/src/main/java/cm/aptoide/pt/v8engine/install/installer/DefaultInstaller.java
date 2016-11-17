@@ -11,17 +11,21 @@ import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
+import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.exception.InstallationException;
 import eu.chainfire.libsuperuser.Shell;
 import java.io.File;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -34,10 +38,12 @@ import rx.schedulers.Schedulers;
  */
 @AllArgsConstructor public class DefaultInstaller implements Installer {
 
+  public static final String OBB_FOLDER =
+      Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/obb/";
   private static final String TAG = DefaultInstaller.class.getSimpleName();
-
   @Getter(AccessLevel.PACKAGE) private final PackageManager packageManager;
   private final InstallationProvider installationProvider;
+  private FileUtils fileUtils;
 
   @Override public Observable<Boolean> isInstalled(String md5) {
     return installationProvider.getInstallation(md5)
@@ -51,6 +57,7 @@ import rx.schedulers.Schedulers;
         AptoideUtils.SystemU.isRooted());
     return installationProvider.getInstallation(md5)
         .observeOn(Schedulers.computation())
+        .doOnNext(installation -> moveInstallationFiles(installation))
         .flatMap(installation -> {
           if (isInstalled(installation.getPackageName(), installation.getVersionCode())) {
             return Observable.just(null);
@@ -67,6 +74,20 @@ import rx.schedulers.Schedulers;
           Logger.e(TAG, throwable);
           CrashReports.logException(throwable);
         });
+  }
+
+  private void moveInstallationFiles(RollbackInstallation installation) {
+    List<FileToDownload> files = installation.getFiles();
+    for (int i = 0; i < files.size(); i++) {
+      FileToDownload file = files.get(i);
+      if (file != null && file.getFileType() == FileToDownload.OBB) {
+        String newPath = OBB_FOLDER + installation.getPackageName() + "/";
+        fileUtils.copyFile(file.getPath(), newPath, file.getFileName());
+        FileUtils.removeFile(file.getPath());
+        file.setPath(newPath);
+      }
+    }
+    installation.save();
   }
 
   @Override public Observable<Void> update(Context context, String md5) {

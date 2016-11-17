@@ -13,8 +13,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -37,19 +35,22 @@ import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dialog.AndroidBasicDialog;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagedKeys;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.dialog.AdultDialog;
+import cm.aptoide.pt.v8engine.filemanager.FileManager;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import cm.aptoide.pt.v8engine.util.SettingsConstants;
-import java.io.File;
-import java.text.DecimalFormat;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by fabio on 26-10-2015.
@@ -62,31 +63,24 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private static final String TAG = SettingsFragment.class.getSimpleName();
 
   private static boolean isSetingPIN = false;
-  private final String aptoide_path = null;
-  private final String icon_path = aptoide_path + "icons/";
   protected Toolbar toolbar;
-  private boolean unlocked = false;
   private Context context;
+  private CompositeSubscription subscriptions;
+  private FileManager fileManager;
 
   public static Fragment newInstance() {
     return new SettingsFragment();
   }
 
-  static public boolean deleteDirectory(File path) {
-    if (path.exists()) {
-      File[] files = path.listFiles();
-      if (files == null) {
-        return true;
-      }
-      for (File file : files) {
-        if (file.isDirectory()) {
-          deleteDirectory(file);
-        } else {
-          file.delete();
-        }
-      }
-    }
-    return true;
+  @Override public void onDestroyView() {
+    subscriptions.clear();
+    super.onDestroyView();
+  }
+
+  @Override public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    fileManager = FileManager.build();
+    subscriptions = new CompositeSubscription();
   }
 
   @Override public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -157,6 +151,12 @@ public class SettingsFragment extends PreferenceFragmentCompat
       matureChkBox.setChecked(false);
     }
 
+    //set AppStore name
+    findPreference(SettingsConstants.CHECK_AUTO_UPDATE).setTitle(AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate_title,
+        Application.getConfiguration().getMarketName()));
+    findPreference(SettingsConstants.CHECK_AUTO_UPDATE_CATEGORY).setTitle(AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate_title,
+        Application.getConfiguration().getMarketName()));
+
     findPreference(SettingsConstants.ADULT_CHECK_BOX).setOnPreferenceClickListener(
         new Preference.OnPreferenceClickListener() {
           @Override public boolean onPreferenceClick(Preference preference) {
@@ -210,19 +210,23 @@ public class SettingsFragment extends PreferenceFragmentCompat
     findPreference(SettingsConstants.CLEAR_CACHE).setOnPreferenceClickListener(
         new Preference.OnPreferenceClickListener() {
           @Override public boolean onPreferenceClick(Preference preference) {
-            if (unlocked) {
-              new DeleteDir().execute(new File(icon_path));
-            }
-            return false;
-          }
-        });
-
-    findPreference(SettingsConstants.CLEAR_RANK).setOnPreferenceClickListener(
-        new Preference.OnPreferenceClickListener() {
-          @Override public boolean onPreferenceClick(Preference preference) {
-            if (unlocked) {
-              new DeleteDir().execute(new File(aptoide_path));
-            }
+            ProgressDialog dialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());
+            subscriptions.add(GenericDialogs.createGenericContinueCancelMessage(getContext(),
+                getString(R.string.storage_dialog_title),
+                getString(R.string.clear_cache_dialog_message))
+                .filter(eResponse -> eResponse.equals(GenericDialogs.EResponse.YES))
+                .doOnNext(eResponse -> dialog.show())
+                .flatMap(eResponse -> fileManager.deleteCache())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnTerminate(() -> dialog.dismiss())
+                .subscribe(deletedSize -> {
+                  ShowMessage.asSnack(SettingsFragment.this,
+                      AptoideUtils.StringU.getFormattedString(R.string.freed_space,
+                          AptoideUtils.StringU.formatBytes(deletedSize)));
+                }, throwable -> {
+                  ShowMessage.asSnack(SettingsFragment.this, R.string.error_SYS_1);
+                  throwable.printStackTrace();
+                }));
             return false;
           }
         });
@@ -347,34 +351,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
     }
   }
 
-  private void redrawSizes(Double[] size) {
-    final Context ctx = getContext();
-    if (!Build.DEVICE.equals(AptoideUtils.SystemU.JOLLA_ALIEN_DEVICE)) {
-      findPreference(SettingsConstants.CLEAR_RANK).setSummary(
-          getString(R.string.clearcontent_sum) + " (" +
-              AptoideUtils.StringU.getFormattedString(R.string.cache_using_X_mb,
-                  new DecimalFormat("#.##").format(size[0])) +
-              ")");
-      findPreference(SettingsConstants.CLEAR_CACHE).setSummary(
-          getString(R.string.clearcache_sum) + " (" +
-              AptoideUtils.StringU.getFormattedString(R.string.cache_using_X_mb,
-                  new DecimalFormat("#.##").format(size[1])) + ")");
-    } else {
-      findPreference(SettingsConstants.CLEAR_RANK).setSummary(
-          getString(R.string.clearcontent_sum_jolla)
-              + " ("
-              + AptoideUtils.StringU.getFormattedString(R.string.cache_using_X_mb,
-              new DecimalFormat("#.##").format(size[0]))
-              +
-              ")");
-      findPreference(SettingsConstants.CLEAR_CACHE).setSummary(
-          getString(R.string.clearcache_sum_jolla) + " (" +
-              AptoideUtils.StringU.getFormattedString(R.string.cache_using_X_mb,
-                  new DecimalFormat("#.##").format(size[1])) +
-              ")");
-    }
-  }
-
   private Dialog dialogSetAdultPin(final Preference mp) {
     isSetingPIN = true;
 
@@ -399,70 +375,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
       }).show();
     } else {
       dialogSetAdultPin(adultPinPreference).show();// Without Pin
-    }
-  }
-
-  public class DeleteDir extends AsyncTask<File, Void, Void> {
-
-    ProgressDialog pd;
-
-    @Override protected Void doInBackground(File... params) {
-      deleteDirectory(params[0]);
-      return null;
-    }
-
-    @Override protected void onPreExecute() {
-      super.onPreExecute();
-      pd = new ProgressDialog(context);
-      pd.setMessage(getString(R.string.please_wait));
-      pd.show();
-    }
-
-    @Override protected void onPostExecute(Void result) {
-      super.onPostExecute(result);
-      pd.dismiss();
-      ShowMessage.asSnack(getView(), getString(R.string.clear_cache_sucess));
-      new GetDirSize().execute(new File(aptoide_path), new File(icon_path));
-    }
-  }
-
-  public class GetDirSize extends AsyncTask<File, Void, Double[]> {
-
-    double getDirSize(File dir) {
-      double size = 0;
-      try {
-        if (dir.isFile()) {
-          size = dir.length();
-        } else {
-          File[] subFiles = dir.listFiles();
-          for (File file : subFiles) {
-            if (file.isFile()) {
-              size += file.length();
-            } else {
-              size += this.getDirSize(file);
-            }
-          }
-        }
-      } catch (Exception e) {
-        Logger.printException(e);
-        CrashReports.logException(e);
-      }
-      return size;
-    }
-
-    @Override protected Double[] doInBackground(File... dir) {
-      Double[] sizes = new Double[2];
-
-      for (int i = 0; i != sizes.length; i++) {
-        sizes[i] = this.getDirSize(dir[i]) / 1024 / 1024;
-      }
-      return sizes;
-    }
-
-    @Override protected void onPostExecute(Double[] result) {
-      super.onPostExecute(result);
-      redrawSizes(result);
-      unlocked = true;
     }
   }
 }

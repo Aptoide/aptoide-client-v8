@@ -1,4 +1,4 @@
-package cm.aptoide.pt.networkclient.okhttp.newCache;
+package cm.aptoide.pt.networkclient.okhttp.cache;
 
 /**
  * Created by sithengineer on 28/10/2016.

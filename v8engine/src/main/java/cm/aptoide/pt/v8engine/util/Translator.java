@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.util;
 
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 
 /**
@@ -243,7 +244,7 @@ public class Translator {
         translated = Application.getContext().getString(R.string.apps_for_kids);
         break;
       case "Aptoide Publishers":
-        translated = Application.getContext().getString(R.string.aptoide_publishers);
+        translated = AptoideUtils.StringU.getFormattedString(R.string.aptoide_publishers, Application.getConfiguration().getMarketName());
         break;
       case "Music & Video":
         translated = Application.getContext().getString(R.string.music_video);

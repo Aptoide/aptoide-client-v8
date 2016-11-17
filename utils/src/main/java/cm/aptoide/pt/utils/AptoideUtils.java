@@ -41,7 +41,7 @@ import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import cm.aptoide.pt.actions.GenerateClientId;
+import cm.aptoide.pt.actions.AptoideClientUUID;
 import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.permissions.ApkPermission;
@@ -110,6 +110,18 @@ public class AptoideUtils {
         Logger.e(TAG, e);
         return -1;
       }
+    }
+
+    public static String getDefaultVername() {
+      String verString = "";
+      try {
+        verString =
+            context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+      } catch (PackageManager.NameNotFoundException e) {
+        e.printStackTrace();
+      }
+
+      return "aptoide-" + verString;
     }
 
     public static String filters(boolean hwSpecsFilter) {
@@ -899,10 +911,12 @@ public class AptoideUtils {
     public static boolean deleteDir(File dir) {
       if (dir != null && dir.isDirectory()) {
         String[] children = dir.list();
-        for (String child : children) {
-          boolean success = deleteDir(new File(dir, child));
-          if (!success) {
-            return false;
+        if (children != null) {
+          for (String child : children) {
+            boolean success = deleteDir(new File(dir, child));
+            if (!success) {
+              return false;
+            }
           }
         }
       }
@@ -1192,6 +1206,8 @@ public class AptoideUtils {
     static final private int baseLineXNotification = 320;
     static final private int baseLineYNotification = 180;
     private static final String AVATAR_STRING = "_avatar";
+    private static final Pattern urlWithDimensionPattern =
+        Pattern.compile("_{1}[1-9]{3}(x|X){1}[1-9]{3}.{1}.{3,4}\\b");
     private static int baseLineScreenshotLand = 256;
     private static int baseLineScreenshotPort = 96;
 
@@ -1459,9 +1475,6 @@ public class AptoideUtils {
       return imageUrl;
     }
 
-    private static final Pattern urlWithDimensionPattern =
-        Pattern.compile("_{1}[1-9]{3}(x|X){1}[1-9]{3}.{1}.{3,4}\\b");
-
     /**
      * Cleans the image URL out of "_widthXheight"
      */
@@ -1579,7 +1592,8 @@ public class AptoideUtils {
       return false;
     }
 
-    public static String getDefaultUserAgent(GenerateClientId generateClientId, UserData userData) {
+    public static String getDefaultUserAgent(AptoideClientUUID aptoideClientUUID, UserData userData,
+        String vername) {
 
       //SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(context);
       //String currentUserId = getUserId();
@@ -1588,19 +1602,11 @@ public class AptoideUtils {
       DisplayMetrics displayMetrics = new DisplayMetrics();
       String myscr = displayMetrics.widthPixels + "x" + displayMetrics.heightPixels;
 
-      String verString = "";
-      try {
-        verString =
-            context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
-      } catch (PackageManager.NameNotFoundException e) {
-        e.printStackTrace();
-      }
+      StringBuilder sb =
+          new StringBuilder(vername + ";" + SystemU.TERMINAL_INFO + ";" + myscr + ";id:");
 
-      StringBuilder sb = new StringBuilder(
-          "aptoide-" + verString + ";" + SystemU.TERMINAL_INFO + ";" + myscr + ";id:");
-
-      if (generateClientId != null) {
-        sb.append(generateClientId.getClientId());
+      if (aptoideClientUUID != null) {
+        sb.append(aptoideClientUUID.getAptoideClientUUID());
       }
       sb.append(";");
 

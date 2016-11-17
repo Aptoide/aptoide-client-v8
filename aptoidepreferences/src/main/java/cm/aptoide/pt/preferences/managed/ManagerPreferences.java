@@ -81,7 +81,7 @@ public class ManagerPreferences {
 
   public static long getCacheLimit() {
     String chacheLimit = PreferenceManager.getDefaultSharedPreferences(Application.getContext())
-        .getString(ManagedKeys.MAX_FILE_CACHE, "200");
+        .getString(ManagedKeys.MAX_FILE_CACHE, "300");
     try {
       return Long.parseLong(chacheLimit);
     } catch (Exception e) {
@@ -142,13 +142,13 @@ public class ManagerPreferences {
     Preferences.get().edit().putBoolean(ManagedKeys.DEBUG, debug).apply();
   }
 
-  public static void setNotificationType(String notificationType) {
-    Preferences.get().edit().putString(ManagedKeys.NOTIFICATION_TYPE, notificationType).apply();
-  }
-
   public static String getNotificationType() {
     return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
         .getString(ManagedKeys.NOTIFICATION_TYPE, "");
+  }
+
+  public static void setNotificationType(String notificationType) {
+    Preferences.get().edit().putString(ManagedKeys.NOTIFICATION_TYPE, notificationType).apply();
   }
 
   public static void setAllowRootInstallation(boolean allowRootInstallation) {

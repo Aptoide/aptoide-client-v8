@@ -2,7 +2,7 @@ package cm.aptoide.pt.networkclient;
 
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.networkclient.okhttp.cache.Sha1KeyAlgorithm;
-import cm.aptoide.pt.networkclient.okhttp.newCache.L2Cache;
+import cm.aptoide.pt.networkclient.okhttp.cache.L2Cache;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Vector;

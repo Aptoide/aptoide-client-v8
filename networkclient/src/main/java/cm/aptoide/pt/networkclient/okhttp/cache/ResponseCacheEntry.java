@@ -3,7 +3,7 @@
  * Modified by SithEngineer on 28/04/2016.
  */
 
-package cm.aptoide.pt.networkclient.okhttp.newCache;
+package cm.aptoide.pt.networkclient.okhttp.cache;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.IOException;

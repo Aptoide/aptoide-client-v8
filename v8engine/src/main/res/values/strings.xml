@@ -53,7 +53,7 @@
   <!-- Rollback Fragment -->
   <string name="rollback">Rollback</string>
     <string name="no_rollbacks_msg">Quickly downgrade any app to a previous version and solve incompatibility issues. Keep a log of all your installed
-        apps (via Aptoide) including version and install date.</string>
+        apps (via %s) including version and install date.</string>
 
   <!-- Timeline Fragment -->
   <string name="menu_card_timeline_clear">Clear</string>
@@ -95,7 +95,7 @@
   <string name="other_versions_partial_title_2">versions on different Stores</string>
   <string name="displayable_social_timeline_recommendation_similar_to">based on %1$s</string>
   <string name="displayable_social_timeline_recommendation_similar_and">and</string>
-  <string name="displayable_social_timeline_recommendation_atptoide_team_recommends">Aptoide recommends</string>
+  <string name="displayable_social_timeline_recommendation_atptoide_team_recommends">%s recommends</string>
   <string name="social_facebook_screen_title">Facebook</string>
   <string name="social_twitter_screen_title">Twitter</string>
   <string name="top_comments">Top Comments</string>
@@ -267,7 +267,7 @@
   <string name="latest_applications">Latest Apps</string>
   <string name="top_apps_in_store">Top Apps In This Store</string>
   <string name="apps_for_kids">Apps for Kids</string>
-  <string name="aptoide_publishers">Aptoide Publishers</string>
+  <string name="aptoide_publishers">%s Publishers</string>
   <string name="music_video">Music &amp; Video</string>
   <string name="essential_apps">Essential Apps</string>
   <string name="summer_apps">Summer Apps</string>
@@ -289,5 +289,10 @@
   <string name="downgrade_warning_dialog">By downgrading you may lose app related data and you may be logged out of the app’s account.</string>
 
   <string name="displayable_social_timeline_similar_to">similar to %1$s</string>
+  <string name="freed_space">%s freed</string>
+  <string name="storage_dialog_title">Clear Aptoide Storage</string>
+  <string name="clear_cache_dialog_message">Are you sure you want to delete all icons, images, apk downloaded, obb, webservice data, …</string>
+  <string name="clear_cache_summary">Deletes icons, images, apk downloaded, obb, webservice data, …</string>
+  <string name="clearcache_title">Clear Storage</string>
 
 </resources>

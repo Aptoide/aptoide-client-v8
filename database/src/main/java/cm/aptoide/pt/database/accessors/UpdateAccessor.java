@@ -20,7 +20,7 @@ public class UpdateAccessor extends SimpleAccessor<Update> {
   }
 
   public Observable<Update> get(String packageName, boolean isExcluded) {
-    return Observable.fromCallable(() -> Database.get())
+    return Observable.fromCallable(() -> Database.getInternal())
         .flatMap(realm -> database.findFirst(realm.where(Update.class)
             .equalTo(Update.PACKAGE_NAME, packageName)
             .equalTo(Update.EXCLUDED, isExcluded)))
@@ -46,7 +46,7 @@ public class UpdateAccessor extends SimpleAccessor<Update> {
   }
 
   public Observable<List<Update>> getAll(boolean isExcluded) {
-    return Observable.fromCallable(() -> Database.get())
+    return Observable.fromCallable(() -> Database.getInternal())
         .flatMap(realm -> realm.where(Update.class)
             .equalTo(Update.EXCLUDED, isExcluded)
             .findAll()
@@ -58,7 +58,7 @@ public class UpdateAccessor extends SimpleAccessor<Update> {
   }
 
   public Observable<List<Update>> getAllSorted(boolean isExcluded) {
-    return Observable.fromCallable(() -> Database.get())
+    return Observable.fromCallable(() -> Database.getInternal())
         .flatMap(realm -> realm.where(Update.class)
             .equalTo(Update.EXCLUDED, isExcluded)
             .findAllSorted(Update.LABEL)
@@ -70,7 +70,7 @@ public class UpdateAccessor extends SimpleAccessor<Update> {
   }
 
   public Observable<Boolean> contains(String packageName, boolean isExcluded) {
-    return Observable.fromCallable(() -> Database.get())
+    return Observable.fromCallable(() -> Database.getInternal())
         .flatMap(realm -> Observable.defer(() -> {
           Update update = realm.where(Update.class)
             .equalTo(Update.EXCLUDED, isExcluded)

@@ -274,8 +274,8 @@ public class AppViewFragment extends GridRecyclerFragment
     storeAccessor.getAll()
         .flatMapIterable(list -> list)
         .filter(store -> store != null && store.getStoreId() == storeId)
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .observeOn(AndroidSchedulers.mainThread())
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(store -> {
           adapter.notifyDataSetChanged();
         });
@@ -292,8 +292,8 @@ public class AppViewFragment extends GridRecyclerFragment
 
     final RollbackAccessor rollbackAccessor = AccessorFactory.getAccessorFor(Rollback.class);
     rollbackAccessor.getAll()
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .observeOn(AndroidSchedulers.mainThread())
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(rollbacks -> {
           adapter.notifyDataSetChanged();
         });

@@ -1,7 +1,7 @@
 package cm.aptoide.pt.v8engine.adapters;
 
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RateAndReviewCommentDisplayable;
+import cm.aptoide.pt.viewRateAndCommentReviews.RateAndReviewCommentDisplayable;
 
 /**
  * Created by trinkes on 8/5/16.

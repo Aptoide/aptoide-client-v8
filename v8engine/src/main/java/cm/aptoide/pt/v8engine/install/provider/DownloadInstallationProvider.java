@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.install.provider;
 
+import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.v8engine.install.exception.InstallationException;
@@ -19,11 +20,12 @@ import rx.Observable;
 @AllArgsConstructor public class DownloadInstallationProvider implements InstallationProvider {
 
   private final AptoideDownloadManager downloadManager;
+  private final DownloadAccessor downloadAccessor;
 
   @Override public Observable<RollbackInstallation> getInstallation(String md5) {
     return downloadManager.getDownload(md5).first().flatMap(download -> {
       if (download.getOverallDownloadStatus() == Download.COMPLETED) {
-        return Observable.just(new DownloadInstallationAdapter(download));
+        return Observable.just(new DownloadInstallationAdapter(download, downloadAccessor));
       }
       return Observable.error(new InstallationException("Installation file not available."));
     });

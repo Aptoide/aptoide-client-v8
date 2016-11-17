@@ -30,6 +30,7 @@ import cm.aptoide.pt.v8engine.fragment.BaseLoaderToolbarFragment;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
+import lombok.Getter;
 
 /**
  * Created by sithengineer on 28/06/16.
@@ -38,9 +39,9 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
 
   private static final String TAG = DescriptionFragment.class.getSimpleName();
 
-  private static final String APP_ID = "app_id";
-  private static final String STORE_NAME = "store_name";
-  private static final String STORE_THEME = "store_theme";
+  @Getter private static final String APP_ID = "app_id";
+  @Getter private static final String STORE_NAME = "store_name";
+  @Getter private static final String STORE_THEME = "store_theme";
   private boolean hasAppId = false;
   private long appId;
   private TextView emptyData;
@@ -103,6 +104,7 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
         ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
         bar.setBackgroundDrawable(new ColorDrawable(getActivity().getResources()
             .getColor(StoreThemeEnum.get(storeTheme).getStoreHeader())));
+        bar.setDisplayHomeAsUpEnabled(true);
       }
     }
   }

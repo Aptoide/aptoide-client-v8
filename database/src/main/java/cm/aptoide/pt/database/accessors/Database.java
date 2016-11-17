@@ -110,7 +110,7 @@ public final class Database {
    *
    * @return singleton Realm instance
    */
-  private static Realm getInternal() {
+  protected static Realm getInternal() {
     if (!isInitialized) {
       throw new IllegalStateException("You need to call Database.initialize(Context) first");
     }

@@ -53,18 +53,18 @@ ext {
   //
   // gradle build script vars
   //
-  TARGET_SDK_VERSION = 23
-  COMPILE_SDK_VERSION = 23
+  TARGET_SDK_VERSION = 25
+  COMPILE_SDK_VERSION = 25
   USE_JACK = false // http://tools.android.com/tech-docs/jackandjill
-  BUILD_TOOLS_VERSION = '23.0.3'
+  BUILD_TOOLS_VERSION = '25.0.0'
 
   //
   // gradle build script dependencies versions
   //
 
   // Google Android Support
-  SUPPORT_LIB_VERSION = '24.2.0'
-  SUPPORT_ANNOTATIONS_LIB_VERSION = '24.2.0'
+  SUPPORT_LIB_VERSION = '25.0.1'
+  SUPPORT_ANNOTATIONS_LIB_VERSION = '25.0.1'
 
   // Google Play Services
   PLAY_SERVICES_VERSION = '9.8.0'
@@ -107,9 +107,6 @@ ext {
   // Material tab strip
   MATERIAL_TAB_STRIP_VERSION = '1.1.0'
 
-  // https://github.com/JakeWharton/DiskLruCache
-  JW_LRU_CACHE_VERSION = '2.0.2'
-
   // Glide
   GLIDE_VERSION = '3.7.0'
 
@@ -118,9 +115,6 @@ ext {
 
   // File Downloader lib
   FILE_DOWNLOADER_VERSION = '1.2.1'
-
-  // rounded image lib
-  //ROUNDED_IMG_LIB = '2.2.1'
 
   PAYPAL_SDK = '2.15.0'
 

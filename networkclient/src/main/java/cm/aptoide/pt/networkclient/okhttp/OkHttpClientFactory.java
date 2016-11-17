@@ -5,7 +5,7 @@
 
 package cm.aptoide.pt.networkclient.okhttp;
 
-import cm.aptoide.pt.networkclient.okhttp.newCache.PostCacheInterceptor;
+import cm.aptoide.pt.networkclient.okhttp.cache.PostCacheInterceptor;
 import java.io.File;
 import okhttp3.Cache;
 import okhttp3.Interceptor;
