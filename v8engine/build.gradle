@@ -26,7 +26,6 @@ android {
     buildConfigField "String", "SIXPACK_PASSWORD", "\"" + project.SIXPACK_PASSWORD + "\""
     buildConfigField "String", "SIXPACK_URL", "\"" + project.SIXPACK_URL + "\""
     buildConfigField "String", "GOOGLE_SENDER_ID", "\"" + project.GOOGLE_SENDER_ID + "\""
-    buildConfigField "String", "PAYPAL_KEY", "\"" + project.PAYPAL_KEY + "\""
   }
 
   lintOptions {
@@ -36,8 +35,14 @@ android {
   publishNonDefault true
 
   productFlavors {
-    internal
-    prod
+    internal {
+      buildConfigField "String", "PAYPAL_ENVIRONMENT", "\"" + project.PAYPAL_ENVIRONMENT_SANDBOX + "\""
+      buildConfigField "String", "PAYPAL_KEY", "\"" + project.PAYPAL_SANDBOX_KEY + "\""
+    }
+    prod {
+      buildConfigField "String", "PAYPAL_ENVIRONMENT", "\"" + project.PAYPAL_ENVIRONMENT_LIVE + "\""
+      buildConfigField "String", "PAYPAL_KEY", "\"" + project.PAYPAL_PRODUCTION_KEY + "\""
+    }
   }
 
   buildTypes {
@@ -45,14 +50,12 @@ android {
       minifyEnabled false
       shrinkResources false
       buildConfigField "String", "FLURRY_KEY", "\"" + project.FLURRY_KEY + "\""
-      buildConfigField "String", "PAYPAL_ENVIRONMENT", "\"" + project.PAYPAL_ENVIRONMENT_LIVE + "\""
     }
 
     debug {
       minifyEnabled false
       shrinkResources false
       buildConfigField "String", "FLURRY_KEY", "\"" + project.FLURRY_DEBUG_KEY + "\""
-      buildConfigField "String", "PAYPAL_ENVIRONMENT", "\"" + project.PAYPAL_ENVIRONMENT_MOCK + "\""
     }
   }
 

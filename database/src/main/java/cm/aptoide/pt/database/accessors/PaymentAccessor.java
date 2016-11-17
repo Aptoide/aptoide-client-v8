@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.database.accessors;
 
+import cm.aptoide.pt.database.realm.PaymentAuthorization;
 import cm.aptoide.pt.database.realm.PaymentConfirmation;
 import rx.Observable;
 
@@ -21,11 +22,19 @@ public class PaymentAccessor extends SimpleAccessor<PaymentConfirmation> {
     return database.get(PaymentConfirmation.class, PaymentConfirmation.PRODUCT_ID, productId);
   }
 
+  public Observable<PaymentAuthorization> getPaymentAuthorization(int paymentId) {
+    return database.get(PaymentAuthorization.class, PaymentAuthorization.PAYMENT_ID, paymentId);
+  }
+
   public void delete(int productId) {
     database.delete(PaymentConfirmation.class, PaymentConfirmation.PRODUCT_ID, productId);
   }
 
   public void save(PaymentConfirmation paymentConfirmation) {
     database.insert(paymentConfirmation);
+  }
+
+  public void save(PaymentAuthorization paymentAuthorization) {
+    database.insert(paymentAuthorization);
   }
 }

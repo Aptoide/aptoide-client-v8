@@ -5,6 +5,8 @@
 
 package cm.aptoide.pt.v8engine.payment;
 
+import cm.aptoide.pt.model.v3.ProductPaymentResponse;
+
 /**
  * Created by marcelobenites on 8/10/16.
  */
@@ -15,12 +17,15 @@ public class PaymentConfirmation {
   private final Product product;
   private final Price price;
 
+  private ProductPaymentResponse.Status status;
+
   public PaymentConfirmation(String paymentConfirmationId, int paymentId, Product product,
-      Price price) {
+      Price price, ProductPaymentResponse.Status status) {
     this.paymentConfirmationId = paymentConfirmationId;
     this.paymentId = paymentId;
     this.product = product;
     this.price = price;
+    this.status = status;
   }
 
   public Product getProduct() {
@@ -37,6 +42,18 @@ public class PaymentConfirmation {
 
   public Price getPrice() {
     return price;
+  }
+
+  public ProductPaymentResponse.Status getStatus() {
+    return status;
+  }
+
+  public void setStatus(ProductPaymentResponse.Status status) {
+    this.status = status;
+  }
+
+  public boolean isCompleted() {
+    return ProductPaymentResponse.Status.COMPLETED.equals(status);
   }
 
   @Override public boolean equals(Object o) {

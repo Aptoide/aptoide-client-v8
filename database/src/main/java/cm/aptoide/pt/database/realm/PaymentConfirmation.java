@@ -20,6 +20,7 @@ public class PaymentConfirmation extends RealmObject {
   @PrimaryKey private String paymentConfirmationId;
 
   private int paymentId;
+  private String status;
 
   private double price;
   private String currency;
@@ -43,11 +44,12 @@ public class PaymentConfirmation extends RealmObject {
   public PaymentConfirmation() {
   }
 
-  public PaymentConfirmation(String paymentConfirmationId, int paymentId, double price,
+  public PaymentConfirmation(String paymentConfirmationId, int paymentId, String status, double price,
       String currency, double taxRate, int productId, String icon, String title, String description,
       String priceDescription) {
     this.paymentConfirmationId = paymentConfirmationId;
     this.paymentId = paymentId;
+    this.status = status;
     this.price = price;
     this.currency = currency;
     this.taxRate = taxRate;
@@ -152,5 +154,9 @@ public class PaymentConfirmation extends RealmObject {
 
   public String getDescription() {
     return description;
+  }
+
+  public String getStatus() {
+    return status;
   }
 }
