@@ -9,7 +9,7 @@ import android.content.Context;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.PaymentAccessor;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
-import cm.aptoide.pt.dataprovider.ws.v3.CheckInAppBillingPaymentRequest;
+import cm.aptoide.pt.dataprovider.ws.v3.CheckInAppBillingProductPaymentRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.CheckPaidAppProductPaymentRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.CreateInAppBillingProductPaymentRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.CreatePaidAppProductPaymentRequest;
@@ -156,7 +156,7 @@ public class PaymentRepository {
         paymentId).observe().flatMap(response -> {
       if (response != null && response.isOk()) {
         return Observable.just(
-            new PaymentAuthorization(paymentId, response.getUrl(), response.getRedirectUrl(),
+            new PaymentAuthorization(paymentId, response.getUrl(), response.getSuccessUrl(),
                 response.isAuthorized()));
       }
       return Observable.<PaymentAuthorization>error(
@@ -165,7 +165,7 @@ public class PaymentRepository {
   }
 
   private Observable<PaymentConfirmation> updatePaymentConfirmationWithServerStatus(
-      PaymentConfirmation paymentConfirmation) {
+      PaymentConfirmation paymentConfirmation)  {
     paymentConfirmation.setStatus(ProductPaymentResponse.Status.UNKNOWN);
     return getServerPaymentConfirmation(paymentConfirmation).flatMap(response -> {
       if (response != null && response.isOk()) {
@@ -181,7 +181,7 @@ public class PaymentRepository {
     return Observable.just(paymentConfirmation.getProduct() instanceof InAppBillingProduct)
         .flatMap(isInAppBilling -> {
           if (isInAppBilling) {
-            return CheckInAppBillingPaymentRequest.of(
+            return CheckInAppBillingProductPaymentRequest.of(
                 paymentConfirmation.getPaymentConfirmationId(), paymentConfirmation.getPaymentId(),
                 paymentConfirmation.getProduct().getId(),
                 paymentConfirmation.getPrice().getAmount(),

@@ -14,13 +14,13 @@ import rx.Observable;
  * Created by marcelobenites on 17/10/16.
  */
 
-public class CheckInAppBillingPaymentRequest extends V3<InAppBillingPurchasesResponse> {
+public class CheckInAppBillingProductPaymentRequest extends V3<InAppBillingPurchasesResponse> {
 
-  public CheckInAppBillingPaymentRequest(String baseHost, BaseBody baseBody) {
+  public CheckInAppBillingProductPaymentRequest(String baseHost, BaseBody baseBody) {
     super(baseHost, baseBody);
   }
 
-  public static CheckInAppBillingPaymentRequest of(String paymentConfirmationId, int paymentId, int productId, double price, double taxRate, String currency,
+  public static CheckInAppBillingProductPaymentRequest of(String paymentConfirmationId, int paymentId, int productId, double price, double taxRate, String currency,
       NetworkOperatorManager operatorManager, int apiVersion, String developerPayload,
       String accessToken) {
     final BaseBody args = new BaseBody();
@@ -29,7 +29,7 @@ public class CheckInAppBillingPaymentRequest extends V3<InAppBillingPurchasesRes
     args.put("reqtype", "iabpurchasestatus");
     args.put("apiversion", String.valueOf(apiVersion));
     args.put("developerPayload", developerPayload);
-    return new CheckInAppBillingPaymentRequest(BASE_HOST, args);
+    return new CheckInAppBillingProductPaymentRequest(BASE_HOST, args);
   }
 
   private static void addDefaultValues(String paymentConfirmationId, int paymentId, int productId,
