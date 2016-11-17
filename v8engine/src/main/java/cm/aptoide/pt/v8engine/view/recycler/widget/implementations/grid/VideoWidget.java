@@ -97,8 +97,6 @@ public class VideoWidget extends Widget<VideoDisplayable> {
     media_layout.setOnClickListener(v -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
       Analytics.AppsTimeline.clickOnCard(cardType, Analytics.AppsTimeline.BLANK,
-      knockWithSixpackCredentials(displayable.getAbUrl());
-      Analytics.AppsTimeline.clickOnCard("Video", Analytics.AppsTimeline.BLANK,
           displayable.getVideoTitle(), displayable.getTitle(), Analytics.AppsTimeline.OPEN_VIDEO);
       displayable.getLink().launch(getContext());
       displayable.sendOpenVideoEvent(SendEventRequest.Body.Data.builder()
