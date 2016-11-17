@@ -500,7 +500,7 @@ public class AppViewFragment extends GridRecyclerFragment
           AppViewFragment.this.appAction = appAction;
           MenuItem item = menu.findItem(R.id.menu_schedule);
           if (item != null) {
-            item.setVisible(appAction != AppAction.OPEN);
+            showHideOptionsMenu(item,appAction != AppAction.OPEN);
           }
           if (appAction != AppAction.INSTALL) {
             setUnInstallMenuOptionVisible(() -> new PermissionManager().requestDownloadAccess(
@@ -518,7 +518,7 @@ public class AppViewFragment extends GridRecyclerFragment
     header.setup(getApp);
     setupDisplayables(getApp);
     setupObservables(getApp);
-    showHideMenus(true);
+    showHideOptionsMenu(true);
     setupShare(getApp);
     if (openType == OpenType.OPEN_WITH_INSTALL_POPUP) {
       GenericDialogs.createGenericOkCancelMessage(getContext(),
@@ -550,10 +550,16 @@ public class AppViewFragment extends GridRecyclerFragment
     appName = app.getName();
   }
 
-  private void showHideMenus(boolean visible) {
+  protected void showHideOptionsMenu(MenuItem item, boolean visible){
+    if(item!=null) {
+      item.setVisible(visible);
+    }
+  }
+
+  private void showHideOptionsMenu(boolean visible) {
     for (int i = 0; i < menu.size(); i++) {
       MenuItem item = menu.getItem(i);
-      item.setVisible(visible);
+      showHideOptionsMenu(item,visible);
     }
   }
 
@@ -679,7 +685,7 @@ public class AppViewFragment extends GridRecyclerFragment
 
   @Override public void setUnInstallMenuOptionVisible(@Nullable Action0 unInstallAction) {
     this.unInstallAction = unInstallAction;
-    uninstallMenuItem.setVisible(unInstallAction != null);
+    showHideOptionsMenu(uninstallMenuItem,unInstallAction != null);
   }
 
   public void setupShare(GetApp app) {
