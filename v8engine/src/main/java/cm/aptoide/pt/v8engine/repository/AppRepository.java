@@ -9,18 +9,12 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.dataprovider.ws.v3.CheckProductPaymentRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.GetApkInfoRequest;
-import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.model.v3.PaidApp;
-import cm.aptoide.pt.model.v3.PaymentService;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
-import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.payment.ProductFactory;
-import cm.aptoide.pt.v8engine.payment.product.InAppBillingProduct;
-import cm.aptoide.pt.v8engine.payment.product.PaidAppProduct;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import java.util.List;
@@ -80,62 +74,37 @@ public class AppRepository {
         });
   }
 
-  public Observable<List<PaymentService>> getPaymentServices(long appId, boolean sponsored,
-      String storeName, boolean refresh) {
-    return getPaidApp(appId, sponsored, storeName, refresh).map(
-        paidApp -> paidApp.getPayment().getPaymentServices());
-  }
-
   public Observable<PaidApp> getPaidApp(long appId, boolean sponsored, String storeName,
       boolean refresh) {
     return GetApkInfoRequest.of(appId, operatorManager, sponsored, storeName,
-        AptoideAccountManager.getAccessToken())
-        .observe(refresh)
-        .flatMap(response -> {
-          if (response != null && response.isOk() && response.isPaid()) {
-            return Observable.just(response);
-          } else {
-            return Observable.error(new RepositoryItemNotFoundException(
-                "No paid app found for app id " + appId + " in store " +
-                    storeName));
-          }
-        });
+        AptoideAccountManager.getAccessToken()).observe(refresh).flatMap(response -> {
+      if (response != null && response.isOk() && response.isPaid()) {
+        return Observable.just(response);
+      } else {
+        return Observable.error(new RepositoryItemNotFoundException(
+            "No paid app found for app id " + appId + " in store " +
+                storeName));
+      }
+    });
   }
 
   public Observable<GetApp> getAppFromMd5(String md5, boolean refresh, boolean sponsored) {
-    return  GetAppRequest.ofMd5(md5, AptoideAccountManager.getAccessToken(),
+    return GetAppRequest.ofMd5(md5, AptoideAccountManager.getAccessToken(),
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()).getAptoideClientUUID())
-        .observe(refresh).flatMap(response -> {
-      if (response != null && response.isOk()) {
-        if (response.getNodes().getMeta().getData().isPaid()) {
-          return addPayment(sponsored, response, refresh);
-        } else {
-          return Observable.just(response);
-        }
-      } else {
-        return Observable.error(
-            new RepositoryItemNotFoundException("No app found for app md5" + md5));
-      }
-    });
-  }
-
-  public Observable<Void> savePaymentConfirmation(
-      PaymentConfirmation paymentConfirmation) {
-    return Observable.fromCallable(() -> {
-      final PaidAppProduct product = (PaidAppProduct) paymentConfirmation.getProduct();
-      return CheckProductPaymentRequest.ofPaidApp(paymentConfirmation.getPaymentConfirmationId(),
-          paymentConfirmation.getPaymentId(), product.getId(),
-          paymentConfirmation.getPrice().getAmount(), paymentConfirmation.getPrice().getTaxRate(),
-          paymentConfirmation.getPrice().getCurrency(), operatorManager, product.getStoreName(), AptoideAccountManager.getAccessToken());
-    }).flatMap(request -> request.observe()).flatMap(response -> {
-      if (response != null && response.isOk()) {
-        return Observable.just(null);
-      }
-      return Observable.error(new SecurityException(
-          "Could not save paid app payment confirmation. Server response: " + V3.getErrorMessage(
-              response)));
-    });
+        .observe(refresh)
+        .flatMap(response -> {
+          if (response != null && response.isOk()) {
+            if (response.getNodes().getMeta().getData().isPaid()) {
+              return addPayment(sponsored, response, refresh);
+            } else {
+              return Observable.just(response);
+            }
+          } else {
+            return Observable.error(
+                new RepositoryItemNotFoundException("No app found for app md5" + md5));
+          }
+        });
   }
 
   private Observable<GetApp> addPayment(boolean sponsored, GetApp getApp, boolean refresh) {
@@ -165,4 +134,5 @@ public class AppRepository {
       return Observable.error(throwable);
     });
   }
+
 }

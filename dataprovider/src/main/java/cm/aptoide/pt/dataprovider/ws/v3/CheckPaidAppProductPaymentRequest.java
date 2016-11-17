@@ -6,7 +6,7 @@
 package cm.aptoide.pt.dataprovider.ws.v3;
 
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
-import cm.aptoide.pt.model.v3.BaseV3Response;
+import cm.aptoide.pt.model.v3.ProductPaymentResponse;
 import java.util.Locale;
 import rx.Observable;
 
@@ -15,13 +15,13 @@ import rx.Observable;
  *
  * @author SithEngineer marcelobenites
  */
-public class CheckProductPaymentRequest extends V3<BaseV3Response> {
+public class CheckPaidAppProductPaymentRequest extends V3<ProductPaymentResponse> {
 
-  private CheckProductPaymentRequest(String baseHost, BaseBody baseBody) {
+  private CheckPaidAppProductPaymentRequest(String baseHost, BaseBody baseBody) {
     super(baseHost, baseBody);
   }
 
-  public static CheckProductPaymentRequest ofPaidApp(String paymentConfirmationId, int paymentId,
+  public static CheckPaidAppProductPaymentRequest of(String paymentConfirmationId, int paymentId,
       int productId, double price, double taxRate, String currency,
       NetworkOperatorManager operatorManager, String storeName, String accessToken) {
     final BaseBody args = new BaseBody();
@@ -29,7 +29,7 @@ public class CheckProductPaymentRequest extends V3<BaseV3Response> {
         operatorManager, args, accessToken);
     args.put("reqtype", "apkpurchasestatus");
     args.put("repo", storeName);
-    return new CheckProductPaymentRequest(BASE_HOST, args);
+    return new CheckPaidAppProductPaymentRequest(BASE_HOST, args);
   }
 
   private static void addDefaultValues(String paymentConfirmationId, int paymentId, int productId,
@@ -51,7 +51,7 @@ public class CheckProductPaymentRequest extends V3<BaseV3Response> {
     }
   }
 
-  @Override protected Observable<BaseV3Response> loadDataFromNetwork(Interfaces interfaces,
+  @Override protected Observable<ProductPaymentResponse> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
     return interfaces.checkPaidAppProductPayment(map);
   }

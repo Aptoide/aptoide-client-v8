@@ -6,10 +6,21 @@
 package cm.aptoide.pt.v8engine.repository;
 
 import android.content.Context;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.PaymentAccessor;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
+import cm.aptoide.pt.dataprovider.ws.v3.CheckInAppBillingPaymentRequest;
+import cm.aptoide.pt.dataprovider.ws.v3.CheckPaidAppProductPaymentRequest;
+import cm.aptoide.pt.dataprovider.ws.v3.CreateInAppBillingProductPaymentRequest;
+import cm.aptoide.pt.dataprovider.ws.v3.CreatePaidAppProductPaymentRequest;
+import cm.aptoide.pt.dataprovider.ws.v3.GetProductPurchaseAuthorizationRequest;
+import cm.aptoide.pt.dataprovider.ws.v3.V3;
+import cm.aptoide.pt.model.v3.InAppBillingProductPaymentResponse;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
+import cm.aptoide.pt.model.v3.PaymentService;
+import cm.aptoide.pt.model.v3.ProductPaymentResponse;
 import cm.aptoide.pt.v8engine.payment.Payment;
+import cm.aptoide.pt.v8engine.payment.PaymentAuthorization;
 import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.payment.PaymentFactory;
 import cm.aptoide.pt.v8engine.payment.Price;
@@ -19,6 +30,7 @@ import cm.aptoide.pt.v8engine.payment.PurchaseFactory;
 import cm.aptoide.pt.v8engine.payment.product.AptoideProduct;
 import cm.aptoide.pt.v8engine.payment.product.InAppBillingProduct;
 import cm.aptoide.pt.v8engine.payment.product.PaidAppProduct;
+import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.util.List;
 import rx.Observable;
@@ -50,6 +62,34 @@ public class PaymentRepository {
     this.paymentDatabase = paymentDatabase;
   }
 
+  public Observable<PaymentConfirmation> createPaymentConfirmation(Payment payment) {
+    return createServerPaymentConfirmation(payment).map(
+        response -> new PaymentConfirmation(response.getPaymentConfirmationId(), payment.getId(),
+            payment.getProduct(), payment.getPrice(), response.getPaymentStatus()));
+  }
+
+  public Observable<PaymentConfirmation> getPaymentConfirmation(AptoideProduct product) {
+    return getDatabasePaymentConfirmation(product).flatMap(
+        paymentConfirmation -> updatePaymentConfirmationWithServerStatus(paymentConfirmation));
+  }
+
+  public Observable<Void> savePaymentConfirmation(PaymentConfirmation paymentConfirmation) {
+    return storePaymentConfirmationInDatabase(paymentConfirmation).subscribeOn(Schedulers.io());
+  }
+
+  public Observable<PaymentAuthorization> createPaymentAuthorization(int paymentId) {
+    return createOrGetServerPaymentAuthorization(paymentId);
+  }
+
+  public Observable<PaymentAuthorization> getPaymentAuthorization(int paymentId) {
+    return getDatabasePaymentAuthorization(paymentId).flatMap(
+        paymentAuthorization -> updatePaymentAuthorizationWithServerStatus(paymentAuthorization));
+  }
+
+  public Observable<Void> savePaymentAuthorization(PaymentAuthorization paymentAuthorization) {
+    return storePaymentAuthorizationInDatabase(paymentAuthorization).subscribeOn(Schedulers.io());
+  }
+
   public Observable<Purchase> getPurchase(AptoideProduct product) {
     return Observable.just(product instanceof InAppBillingProduct).flatMap(iab -> {
       if (iab) {
@@ -57,7 +97,7 @@ public class PaymentRepository {
         return inAppBillingRepository.getInAppPurchaseInformation(
             inAppBillingProduct.getApiVersion(), inAppBillingProduct.getPackageName(),
             inAppBillingProduct.getType())
-            .flatMap(purchaseInformation -> getPurchase(purchaseInformation,
+            .flatMap(purchaseInformation -> convertToPurchase(purchaseInformation,
                 inAppBillingProduct.getSku()));
       } else {
         final PaidAppProduct paidAppProduct = (PaidAppProduct) product;
@@ -76,39 +116,95 @@ public class PaymentRepository {
   public Observable<List<Payment>> getPayments(Context context, AptoideProduct product) {
     return Observable.just(product instanceof InAppBillingProduct).flatMap(iab -> {
       if (iab) {
-        return inAppBillingRepository.getPaymentServices(
-            ((InAppBillingProduct) product).getApiVersion(),
+        return getServerInAppBillingPaymentServices(((InAppBillingProduct) product).getApiVersion(),
             ((InAppBillingProduct) product).getPackageName(),
-            ((InAppBillingProduct) product).getSku(), ((InAppBillingProduct) product).getType())
-            .flatMapIterable(paymentServices -> paymentServices)
+            ((InAppBillingProduct) product).getSku(),
+            ((InAppBillingProduct) product).getType()).flatMapIterable(
+            paymentServices -> paymentServices)
             .map(paymentService -> paymentFactory.create(context, paymentService, product))
             .toList();
       } else {
-        return appRepository.getPaymentServices(((PaidAppProduct) product).getAppId(), false,
-            ((PaidAppProduct) product).getStoreName(), true)
-            .flatMapIterable(paymentServices -> paymentServices)
+        return getServerPaidAppPaymentServices(((PaidAppProduct) product).getAppId(), false,
+            ((PaidAppProduct) product).getStoreName(), true).flatMapIterable(
+            paymentServices -> paymentServices)
             .map(paymentService -> paymentFactory.create(context, paymentService, product))
             .toList();
       }
     }).subscribeOn(Schedulers.io());
   }
 
-  public Observable<Void> savePaymentConfirmation(PaymentConfirmation paymentConfirmation) {
-    return storePaymentConfirmationInDatabase(paymentConfirmation).flatMap(
-        processing -> {
-          if (paymentConfirmation.getProduct() instanceof InAppBillingProduct) {
-            return inAppBillingRepository.savePaymentConfirmation(paymentConfirmation);
-          } else {
-            return appRepository.savePaymentConfirmation(paymentConfirmation);
+  private Observable<List<PaymentService>> getServerInAppBillingPaymentServices(int apiVersion,
+      String packageName, String sku, String type) {
+    return inAppBillingRepository.getSKUDetails(apiVersion, packageName, sku, type)
+        .map(response -> response.getPaymentServices());
+  }
+
+  private Observable<List<PaymentService>> getServerPaidAppPaymentServices(long appId,
+      boolean sponsored, String storeName, boolean refresh) {
+    return appRepository.getPaidApp(appId, sponsored, storeName, refresh)
+        .map(paidApp -> paidApp.getPayment().getPaymentServices());
+  }
+
+  private Observable<PaymentAuthorization> updatePaymentAuthorizationWithServerStatus(
+      PaymentAuthorization paymentAuthorization) {
+    return createOrGetServerPaymentAuthorization(paymentAuthorization.getPaymentId()).onErrorReturn(
+        throwable -> paymentAuthorization);
+  }
+
+  private Observable<PaymentAuthorization> createOrGetServerPaymentAuthorization(int paymentId) {
+    return GetProductPurchaseAuthorizationRequest.of(AptoideAccountManager.getAccessToken(),
+        paymentId).observe().flatMap(response -> {
+      if (response != null && response.isOk()) {
+        return Observable.just(
+            new PaymentAuthorization(paymentId, response.getUrl(), response.getRedirectUrl(),
+                response.isAuthorized()));
+      }
+      return Observable.<PaymentAuthorization>error(
+          new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
+    });
+  }
+
+  private Observable<PaymentConfirmation> updatePaymentConfirmationWithServerStatus(
+      PaymentConfirmation paymentConfirmation) {
+    paymentConfirmation.setStatus(ProductPaymentResponse.Status.UNKNOWN);
+    return getServerPaymentConfirmation(paymentConfirmation).flatMap(response -> {
+      if (response != null && response.isOk()) {
+        paymentConfirmation.setStatus(response.getPaymentStatus());
+        return Observable.just(paymentConfirmation);
+      }
+      return Observable.just(paymentConfirmation);
+    }).onErrorReturn(throwable -> paymentConfirmation);
+  }
+
+  private Observable<ProductPaymentResponse> getServerPaymentConfirmation(
+      PaymentConfirmation paymentConfirmation) {
+    return Observable.just(paymentConfirmation.getProduct() instanceof InAppBillingProduct)
+        .flatMap(isInAppBilling -> {
+          if (isInAppBilling) {
+            return CheckInAppBillingPaymentRequest.of(
+                paymentConfirmation.getPaymentConfirmationId(), paymentConfirmation.getPaymentId(),
+                paymentConfirmation.getProduct().getId(),
+                paymentConfirmation.getPrice().getAmount(),
+                paymentConfirmation.getPrice().getTaxRate(),
+                paymentConfirmation.getPrice().getCurrency(), operatorManager,
+                ((InAppBillingProduct) paymentConfirmation.getProduct()).getApiVersion(),
+                ((InAppBillingProduct) paymentConfirmation.getProduct()).getDeveloperPayload(),
+                AptoideAccountManager.getAccessToken())
+                .observe()
+                .cast(ProductPaymentResponse.class);
           }
-        }).subscribeOn(Schedulers.io());
+          return CheckPaidAppProductPaymentRequest.of(
+              paymentConfirmation.getPaymentConfirmationId(), paymentConfirmation.getPaymentId(),
+              paymentConfirmation.getProduct().getId(), paymentConfirmation.getPrice().getAmount(),
+              paymentConfirmation.getPrice().getTaxRate(),
+              paymentConfirmation.getPrice().getCurrency(), operatorManager,
+              ((PaidAppProduct) paymentConfirmation.getProduct()).getStoreName(),
+              AptoideAccountManager.getAccessToken()).observe();
+        });
   }
 
-  public Observable<Void> deletePaymentConfirmation(AptoideProduct product) {
-    return deleteStoredPaymentConfirmation(product.getId()).subscribeOn(Schedulers.io());
-  }
-
-  private Observable<Void> storePaymentConfirmationInDatabase(PaymentConfirmation paymentConfirmation) {
+  private Observable<Void> storePaymentConfirmationInDatabase(
+      PaymentConfirmation paymentConfirmation) {
     return Observable.fromCallable(() -> {
       paymentDatabase.save(convertToStoredPaymentConfirmation(paymentConfirmation));
       return null;
@@ -122,14 +218,40 @@ public class PaymentRepository {
     });
   }
 
-  private Observable<cm.aptoide.pt.database.realm.PaymentConfirmation> getStoredPaymentConfirmation(
-      AptoideProduct product) {
+  private Observable<Void> storePaymentAuthorizationInDatabase(
+      PaymentAuthorization paymentAuthorization) {
+    return Observable.fromCallable(() -> {
+      paymentDatabase.save(convertToStoredPaymentAuthorization(paymentAuthorization));
+      return null;
+    });
+  }
+
+  private cm.aptoide.pt.database.realm.PaymentAuthorization convertToStoredPaymentAuthorization(
+      PaymentAuthorization paymentAuthorization) {
+    return new cm.aptoide.pt.database.realm.PaymentAuthorization(
+        paymentAuthorization.getPaymentId(), paymentAuthorization.getUrl(),
+        paymentAuthorization.getRedirectUrl(), paymentAuthorization.isAuthorized());
+  }
+
+  private Observable<PaymentConfirmation> getDatabasePaymentConfirmation(AptoideProduct product) {
     return paymentDatabase.getPaymentConfirmation(product.getId()).flatMap(paymentConfirmation -> {
       if (paymentConfirmation != null) {
-        return Observable.just(paymentConfirmation);
+        return Observable.just(convertToPaymentConfirmation(paymentConfirmation));
       }
       return Observable.error(new RepositoryItemNotFoundException(
           "No payment confirmation found for product id: " + product.getId()));
+    });
+  }
+
+  private Observable<PaymentAuthorization> getDatabasePaymentAuthorization(int paymentId) {
+    return paymentDatabase.getPaymentAuthorization(paymentId).flatMap(paymentAuthorization -> {
+      if (paymentAuthorization != null) {
+        return Observable.just(new PaymentAuthorization(paymentAuthorization.getPaymentId(),
+            paymentAuthorization.getUrl(), paymentAuthorization.getRedirectUrl(),
+            paymentAuthorization.isAuthorized()));
+      }
+      return Observable.error(new RepositoryItemNotFoundException(
+          "No payment authorization found for payment id: " + paymentId));
     });
   }
 
@@ -138,7 +260,8 @@ public class PaymentRepository {
     return new PaymentConfirmation(paymentConfirmation.getPaymentConfirmationId(),
         paymentConfirmation.getPaymentId(), productFactory.create(paymentConfirmation),
         new Price(paymentConfirmation.getPrice(), paymentConfirmation.getCurrency(),
-            paymentConfirmation.getTaxRate()));
+            paymentConfirmation.getTaxRate()),
+        ProductPaymentResponse.Status.valueOf(paymentConfirmation.getStatus()));
   }
 
   private cm.aptoide.pt.database.realm.PaymentConfirmation convertToStoredPaymentConfirmation(
@@ -146,7 +269,7 @@ public class PaymentRepository {
     cm.aptoide.pt.database.realm.PaymentConfirmation realmObject =
         new cm.aptoide.pt.database.realm.PaymentConfirmation(
             paymentConfirmation.getPaymentConfirmationId(), paymentConfirmation.getPaymentId(),
-            paymentConfirmation.getPrice().getAmount(),
+            paymentConfirmation.getStatus().name(), paymentConfirmation.getPrice().getAmount(),
             paymentConfirmation.getPrice().getCurrency(),
             paymentConfirmation.getPrice().getTaxRate(), paymentConfirmation.getProduct().getId(),
             paymentConfirmation.getProduct().getIcon(), paymentConfirmation.getProduct().getTitle(),
@@ -169,12 +292,11 @@ public class PaymentRepository {
     return realmObject;
   }
 
-  private Observable<Purchase> getPurchase(
+  private Observable<Purchase> convertToPurchase(
       InAppBillingPurchasesResponse.PurchaseInformation purchaseInformation, String sku) {
     return Observable.zip(Observable.from(purchaseInformation.getPurchaseList()),
         Observable.from(purchaseInformation.getSignatureList()), (purchase, signature) -> {
-          if (purchase.getProductId().equals(sku)
-              && purchase.getPurchaseState() == 0) {
+          if (purchase.getProductId().equals(sku) && purchase.getPurchaseState() == 0) {
             return purchaseFactory.create(purchase, signature);
           }
           return null;
@@ -183,5 +305,29 @@ public class PaymentRepository {
         .switchIfEmpty(Observable.error(
             new RepositoryItemNotFoundException("No purchase found for SKU " + sku)))
         .first();
+  }
+
+  private Observable<ProductPaymentResponse> createServerPaymentConfirmation(Payment payment) {
+    return Observable.just(payment.getProduct() instanceof InAppBillingProduct)
+        .flatMap(isInAppBilling -> {
+          if (isInAppBilling) {
+            return createServerInAppBillingPaymentConfirmation(payment.getId(),
+                (InAppBillingProduct) payment.getProduct()).cast(ProductPaymentResponse.class);
+          }
+          return createServerPaidAppPaymentConfirmation(payment.getId(),
+              (PaidAppProduct) payment.getProduct());
+        });
+  }
+
+  private Observable<InAppBillingProductPaymentResponse> createServerInAppBillingPaymentConfirmation(
+      int paymentId, InAppBillingProduct product) {
+    return CreateInAppBillingProductPaymentRequest.of(product.getId(), paymentId, operatorManager,
+        product.getApiVersion(), product.getDeveloperPayload()).observe();
+  }
+
+  private Observable<ProductPaymentResponse> createServerPaidAppPaymentConfirmation(int paymentId,
+      PaidAppProduct product) {
+    return CreatePaidAppProductPaymentRequest.of(product.getId(), paymentId, operatorManager,
+        product.getStoreName()).observe();
   }
 }
