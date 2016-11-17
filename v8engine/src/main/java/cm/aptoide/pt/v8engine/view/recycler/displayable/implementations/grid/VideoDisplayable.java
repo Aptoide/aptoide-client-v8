@@ -38,6 +38,7 @@ import rx.schedulers.Schedulers;
   @Getter private String thumbnailUrl;
   @Getter private String avatarUrl;
   @Getter private long appId;
+  @Getter private String abUrl;
 
   @Getter private List<App> relatedToAppsList;
   private Date date;
@@ -52,11 +53,20 @@ import rx.schedulers.Schedulers;
       SpannableFactory spannableFactory, LinksHandlerFactory linksHandlerFactory,
       TimelineMetricsManager timelineMetricsManager) {
     long appId = 0;
+
+    String abTestingURL = null;
+
+    if (video.getAb() != null
+        && video.getAb().getConversion() != null
+        && video.getAb().getConversion().getUrl() != null) {
+      abTestingURL = video.getAb().getConversion().getUrl();
+    }
+
     return new VideoDisplayable(video.getTitle(),
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, video.getUrl()),
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
             video.getPublisher().getBaseUrl()), video.getPublisher().getName(),
-        video.getThumbnailUrl(), video.getPublisher().getLogoUrl(), appId, video.getApps(),
+        video.getThumbnailUrl(), video.getPublisher().getLogoUrl(), appId, abTestingURL, video.getApps(),
         video.getDate(), dateCalculator, spannableFactory, timelineMetricsManager);
   }
 

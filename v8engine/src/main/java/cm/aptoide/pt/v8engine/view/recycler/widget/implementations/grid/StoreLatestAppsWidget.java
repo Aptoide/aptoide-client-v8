@@ -8,6 +8,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -16,8 +18,16 @@ import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreLatestAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Credentials;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by marcelobenites on 6/21/16.
@@ -79,6 +89,7 @@ public class StoreLatestAppsWidget extends Widget<StoreLatestAppsDisplayable> {
 
     for (View app : apps.keySet()) {
       compositeSubscription.add(RxView.clicks(app).subscribe(click -> {
+        knockWithSixpackCredentials(displayable.getAbUrl());
         String packageName = appsPackages.get(apps.get(app));
         Analytics.AppsTimeline.clickOnCard(cardType, packageName, Analytics.AppsTimeline.BLANK,
             displayable.getStoreName(), Analytics.AppsTimeline.OPEN_APP_VIEW);
@@ -96,6 +107,7 @@ public class StoreLatestAppsWidget extends Widget<StoreLatestAppsDisplayable> {
     }
 
     compositeSubscription.add(RxView.clicks(store).subscribe(click -> {
+      knockWithSixpackCredentials(displayable.getAbUrl());
       Analytics.AppsTimeline.clickOnCard(cardType, Analytics.AppsTimeline.BLANK,
           Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
           Analytics.AppsTimeline.OPEN_STORE);
@@ -108,6 +120,29 @@ public class StoreLatestAppsWidget extends Widget<StoreLatestAppsDisplayable> {
       ((FragmentShower) getContext()).pushFragmentV4(
           V8Engine.getFragmentProvider().newStoreFragment(displayable.getStoreName()));
     }));
+  }
+  //// TODO: 31/08/16 refactor this out of here
+  private void knockWithSixpackCredentials(String url) {
+    if (url == null) {
+      return;
+    }
+
+    String credential = Credentials.basic(BuildConfig.SIXPACK_USER, BuildConfig.SIXPACK_PASSWORD);
+
+    OkHttpClient client = new OkHttpClient();
+
+    Request click = new Request.Builder().url(url).addHeader("authorization", credential).build();
+
+    client.newCall(click).enqueue(new Callback() {
+      @Override public void onFailure(Call call, IOException e) {
+        Logger.d(this.getClass().getSimpleName(), "sixpack request fail " + call.toString());
+      }
+
+      @Override public void onResponse(Call call, Response response) throws IOException {
+        Logger.d(this.getClass().getSimpleName(), "knock success");
+        response.body().close();
+      }
+    });
   }
 
   private void setCardviewMargin(StoreLatestAppsDisplayable displayable) {

@@ -38,6 +38,7 @@ import rx.schedulers.Schedulers;
   @Getter private String thumbnailUrl;
   @Getter private String avatarUrl;
   @Getter private long appId;
+  @Getter private String abUrl;
 
   @Getter private List<App> relatedToAppsList;
   private Date date;
@@ -52,11 +53,24 @@ import rx.schedulers.Schedulers;
       SpannableFactory spannableFactory, LinksHandlerFactory linksHandlerFactory,
       TimelineMetricsManager timelineMetricsManager) {
     long appId = 0;
+    //if (article.getApps() != null && article.getApps().size() > 0) {
+    //  appName = article.getApps().get(0).getName();
+    //  appId = article.getApps().get(0).getId();
+    //}
+
+    String abTestingURL = null;
+
+    if (article.getAb() != null
+        && article.getAb().getConversion() != null
+        && article.getAb().getConversion().getUrl() != null) {
+      abTestingURL = article.getAb().getConversion().getUrl();
+    }
+
     return new ArticleDisplayable(article.getTitle(),
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, article.getUrl()),
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
             article.getPublisher().getBaseUrl()), article.getPublisher().getName(),
-        article.getThumbnailUrl(), article.getPublisher().getLogoUrl(), appId, article.getApps(),
+        article.getThumbnailUrl(), article.getPublisher().getLogoUrl(), appId, abTestingURL, article.getApps(),
         article.getDate(), dateCalculator, spannableFactory, timelineMetricsManager);
   }
 

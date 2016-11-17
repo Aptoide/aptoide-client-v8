@@ -15,15 +15,18 @@ import lombok.Getter;
   @Getter private final String cardId;
   @Getter private final Store store;
   @Getter private final List<App> apps;
+  @Getter private final Ab ab;
+
 
   private Date latestUpdate;
 
   @JsonCreator
   public StoreLatestApps(@JsonProperty("uid") String cardId, @JsonProperty("store") Store store,
-      @JsonProperty("apps") List<App> apps) {
+      @JsonProperty("apps") List<App> apps, @JsonProperty("ab") Ab ab) {
     this.cardId = cardId;
     this.store = store;
     this.apps = apps;
+    this.ab = ab;
   }
 
   public Date getLatestUpdate() {
