@@ -493,6 +493,28 @@ public class AptoideUtils {
       return imageFile;
     }
 
+    /**
+     * get screen size in "pixels", i.e. touchevent/view units.
+     * on my droid 4, this is 360x640 or 540x960
+     * depending on whether the app is in screen compatibility mode
+     * (i.e. targetSdkVersion<=10 in the manifest) or not.
+     */
+    public static String getScreenSizePixels() {
+      Resources resources = context.getResources();
+      Configuration config = resources.getConfiguration();
+      DisplayMetrics dm = resources.getDisplayMetrics();
+      // Note, screenHeightDp isn't reliable
+      // (it seems to be too small by the height of the status bar),
+      // but we assume screenWidthDp is reliable.
+      // Note also, dm.widthPixels,dm.heightPixels aren't reliably pixels
+      // (they get confused when in screen compatibility mode, it seems),
+      // but we assume their ratio is correct.
+      double screenWidthInPixels = (double) config.screenWidthDp * dm.density;
+      double screenHeightInPixels = screenWidthInPixels * dm.heightPixels / dm.widthPixels;
+      return (int) (screenWidthInPixels + .5) + "x" +
+          (int) (screenHeightInPixels + .5);
+    }
+
     public enum Size {
       notfound, small, normal, large, xlarge;
 
