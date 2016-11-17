@@ -12,10 +12,12 @@ import cm.aptoide.pt.model.v7.Datalist;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.listapp.File;
 import cm.aptoide.pt.model.v7.store.Store;
+import cm.aptoide.pt.model.v7.timeline.Ab;
 import cm.aptoide.pt.model.v7.timeline.AppUpdate;
 import cm.aptoide.pt.model.v7.timeline.AppUpdateTimelineItem;
 import cm.aptoide.pt.model.v7.timeline.Article;
 import cm.aptoide.pt.model.v7.timeline.ArticleTimelineItem;
+import cm.aptoide.pt.model.v7.timeline.Conversion;
 import cm.aptoide.pt.model.v7.timeline.Feature;
 import cm.aptoide.pt.model.v7.timeline.FeatureTimelineItem;
 import cm.aptoide.pt.model.v7.timeline.GetUserTimeline;
@@ -409,7 +411,7 @@ public class GetUserTimelineRequestIntegrationTest {
                 getFile(fileVersionName, fileVersionCode, md5, null, null, 0),
                 getStats(appDownloads, getRating(stars, total,
                     Arrays.asList(getVote(5, 2), getVote(4, 0), getVote(3, 0), getVote(2, 0),
-                        getVote(1, 0)))))))));
+                        getVote(1, 0)))))), new Ab(new Conversion("")))));
     testSubscriber.assertValue(getUserTimeline(BaseV7Response.Info.Status.OK, seconds, human,
         getDataList(storeLatestAppsTimelineItems, true, 0, 25, 25, 0, 9, 11)));
     testSubscriber.assertCompleted();
@@ -496,7 +498,7 @@ public class GetUserTimelineRequestIntegrationTest {
             "https://d36eyd5j1kt1m6.cloudfront"
                 + ".net/user-assets/127178/tXbdAxcnnJSp852q/01.png?1461237960",
             "http://blog.aptoide" + ".com/here-have-a-xiaomi-redmi-note-3-pro-on-us/",
-            getDate("UTC", "2016-04-20", "yyyy-MM-dd"), null)));
+            getDate("UTC", "2016-04-20", "yyyy-MM-dd"), null, new Ab(new Conversion("")))));
     testSubscriber.assertValue(
         getUserTimeline(BaseV7Response.Info.Status.OK, 0.0098769664764404, "9 " + "milliseconds",
             getDataList(items, true, 0, 25, 25, 0, 9, 11)));
@@ -571,7 +573,7 @@ public class GetUserTimelineRequestIntegrationTest {
     testSubscriber.assertValueCount(1);
     final List<TimelineItem<TimelineCard>> items = Arrays.asList(new ArticleTimelineItem(
         new Article(id, title, thumbnail, getPublisher(publisher, avatarUrl), url,
-            getDate("UTC", date, "yyyy-MM-dd"), null)));
+            getDate("UTC", date, "yyyy-MM-dd"), null, new Ab(new Conversion("")))));
     testSubscriber.assertValue(getUserTimeline(BaseV7Response.Info.Status.OK, seconds, human,
         getDataList(items, true, 0, 25, 25, 0, 9, 11)));
     testSubscriber.assertCompleted();
@@ -627,7 +629,7 @@ public class GetUserTimelineRequestIntegrationTest {
       String icon, String added, String modified, String updated, String uptype, File file,
       App.Stats stats, Store store) throws ParseException {
     AppUpdate app =
-        (AppUpdate) getApp(new AppUpdate(cardId), id, name, packageName, size, icon, null, added,
+        (AppUpdate) getApp(new AppUpdate(cardId, new Ab(new Conversion(""))), id, name, packageName, size, icon, null, added,
             modified, updated, uptype, file, stats);
     app.setStore(store);
     return app;

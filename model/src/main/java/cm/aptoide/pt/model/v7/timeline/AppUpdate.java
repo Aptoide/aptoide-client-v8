@@ -17,8 +17,10 @@ import lombok.Getter;
 @EqualsAndHashCode(callSuper = false) public class AppUpdate extends App implements TimelineCard {
 
   @Getter private final String cardId;
+  @Getter private final Ab ab;
 
-  @JsonCreator public AppUpdate(@JsonProperty("uid") String cardId) {
+  @JsonCreator public AppUpdate(@JsonProperty("uid") String cardId, @JsonProperty("ab") Ab ab) {
     this.cardId = cardId;
+    this.ab = ab;
   }
 }

@@ -22,6 +22,7 @@ import lombok.Getter;
   @Getter private String storeName;
   @Getter private String avatarUrl;
   @Getter private List<LatestApp> latestApps;
+  @Getter private String abUrl;
 
   private DateCalculator dateCalculator;
   private Date date;
@@ -35,8 +36,15 @@ import lombok.Getter;
     for (App app : storeLatestApps.getApps()) {
       latestApps.add(new LatestApp(app.getId(), app.getIcon(), app.getPackageName()));
     }
+    String abTestingURL = null;
+
+    if (storeLatestApps.getAb() != null
+        && storeLatestApps.getAb().getConversion() != null
+        && storeLatestApps.getAb().getConversion().getUrl() != null) {
+      abTestingURL = storeLatestApps.getAb().getConversion().getUrl();
+    }
     return new StoreLatestAppsDisplayable(storeLatestApps.getStore().getName(),
-        storeLatestApps.getStore().getAvatar(), latestApps, dateCalculator,
+        storeLatestApps.getStore().getAvatar(), latestApps, abTestingURL, dateCalculator,
         storeLatestApps.getLatestUpdate());
   }
 

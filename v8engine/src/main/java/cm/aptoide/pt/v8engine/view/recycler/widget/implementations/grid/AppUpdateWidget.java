@@ -12,6 +12,7 @@ import android.widget.TextView;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -20,6 +21,13 @@ import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppUpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
+import java.io.IOException;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Credentials;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -83,6 +91,31 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
     errorText.setVisibility(View.GONE);
   }
 
+  //// TODO: 31/08/16 refactor this out of here
+  private void knockWithSixpackCredentials(String url) {
+    if (url == null) {
+      return;
+    }
+
+    String credential = Credentials.basic(BuildConfig.SIXPACK_USER, BuildConfig.SIXPACK_PASSWORD);
+
+    OkHttpClient client = new OkHttpClient();
+
+    Request click = new Request.Builder().url(url).addHeader("authorization", credential).build();
+
+    client.newCall(click).enqueue(new Callback() {
+      @Override public void onFailure(Call call, IOException e) {
+        Logger.d(this.getClass().getSimpleName(), "sixpack request fail " + call.toString());
+      }
+
+      @Override public void onResponse(Call call, Response response) throws IOException {
+        Logger.d(this.getClass().getSimpleName(), "knock success");
+        response.body().close();
+      }
+    });
+  }
+
+
   private void setCardviewMargin(AppUpdateDisplayable displayable) {
     CardView.LayoutParams layoutParams =
         new CardView.LayoutParams(CardView.LayoutParams.WRAP_CONTENT,
@@ -99,6 +132,7 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
       subscriptions = new CompositeSubscription();
 
       subscriptions.add(RxView.clicks(store).subscribe(click -> {
+        knockWithSixpackCredentials(displayable.getAbUrl());
         Analytics.AppsTimeline.clickOnCard("App Update", displayable.getPackageName(),
             Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
             Analytics.AppsTimeline.OPEN_STORE);
@@ -112,11 +146,13 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
               throwable -> showDownloadError(displayable)));
 
       subscriptions.add(RxView.clicks(appIcon).subscribe(click -> {
+        knockWithSixpackCredentials(displayable.getAbUrl());
         ((FragmentShower) getContext()).pushFragmentV4(
             V8Engine.getFragmentProvider().newAppViewFragment(displayable.getAppId()));
       }));
 
       subscriptions.add(RxView.clicks(updateButton).flatMap(click -> {
+        knockWithSixpackCredentials(displayable.getAbUrl());
         Analytics.AppsTimeline.clickOnCard("App Update", displayable.getPackageName(),
             Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
             Analytics.AppsTimeline.UPDATE_APP);
