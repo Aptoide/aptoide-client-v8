@@ -23,7 +23,7 @@ public class GetProductPurchaseAuthorizationResponse extends BaseV3Response {
   }
 
   private String url;
-  private String redirectUrl;
+  private String successUrl;
   private Status authorizationStatus;
 
   public boolean isAuthorized() {
