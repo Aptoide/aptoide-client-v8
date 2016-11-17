@@ -111,7 +111,7 @@ ext {
   GLIDE_VERSION = '3.7.0'
 
   // Facebook Android SDK
-  FACEBOOK_ANDROID_SDK_VERSION = '4.16.1'
+  FACEBOOK_ANDROID_SDK_VERSION = '4.17.0'
 
   // File Downloader lib
   FILE_DOWNLOADER_VERSION = '1.2.1'
