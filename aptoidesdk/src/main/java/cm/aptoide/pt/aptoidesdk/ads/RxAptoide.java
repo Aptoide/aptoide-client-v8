@@ -55,7 +55,7 @@ public class RxAptoide {
   private static void setUserAgent() {
     SecurePreferences.setUserAgent(AptoideUtils.NetworkUtils.getDefaultUserAgent(
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext()),
-        () -> null));
+        () -> null, "aptoidesdk-" + BuildConfig.VERSION_NAME));
   }
 
   public static Context getContext() {
