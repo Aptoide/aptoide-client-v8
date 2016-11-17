@@ -175,7 +175,7 @@ public class PullingContentService extends Service {
       final NotificationManager managerNotification = (NotificationManager) Application.getContext()
           .getSystemService(Context.NOTIFICATION_SERVICE);
 
-      if (Build.VERSION.SDK_INT >= 16 && pushNotification.getImages() != null && TextUtils.isEmpty(
+      if (Build.VERSION.SDK_INT >= 16 && Build.VERSION.SDK_INT < 24 && pushNotification.getImages() != null && TextUtils.isEmpty(
           pushNotification.getImages().getIconUrl())) {
 
         String imageUrl = pushNotification.getImages().getBannerUrl();
