@@ -112,6 +112,18 @@ public class AptoideUtils {
       }
     }
 
+    public static String getDefaultVername() {
+      String verString = "";
+      try {
+        verString =
+            context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+      } catch (PackageManager.NameNotFoundException e) {
+        e.printStackTrace();
+      }
+
+      return "aptoide-" + verString;
+    }
+
     public static String filters(boolean hwSpecsFilter) {
       if (!hwSpecsFilter) {
         return null;
@@ -1580,8 +1592,8 @@ public class AptoideUtils {
       return false;
     }
 
-    public static String getDefaultUserAgent(AptoideClientUUID aptoideClientUUID,
-        UserData userData) {
+    public static String getDefaultUserAgent(AptoideClientUUID aptoideClientUUID, UserData userData,
+        String vername) {
 
       //SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(context);
       //String currentUserId = getUserId();
@@ -1590,16 +1602,8 @@ public class AptoideUtils {
       DisplayMetrics displayMetrics = new DisplayMetrics();
       String myscr = displayMetrics.widthPixels + "x" + displayMetrics.heightPixels;
 
-      String verString = "";
-      try {
-        verString =
-            context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
-      } catch (PackageManager.NameNotFoundException e) {
-        e.printStackTrace();
-      }
-
-      StringBuilder sb = new StringBuilder(
-          "aptoide-" + verString + ";" + SystemU.TERMINAL_INFO + ";" + myscr + ";id:");
+      StringBuilder sb =
+          new StringBuilder(vername + ";" + SystemU.TERMINAL_INFO + ";" + myscr + ";id:");
 
       if (aptoideClientUUID != null) {
         sb.append(aptoideClientUUID.getAptoideClientUUID());

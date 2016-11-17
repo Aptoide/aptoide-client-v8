@@ -125,7 +125,7 @@ public abstract class V8Engine extends DataProvider {
           @Override public String getUserEmail() {
             return AptoideAccountManager.getUserEmail();
           }
-        }));
+        }, AptoideUtils.Core.getDefaultVername()));
   }
 
   public static void clearUserData() {
