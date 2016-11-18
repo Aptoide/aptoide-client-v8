@@ -873,8 +873,8 @@ public class Analytics {
   }
 
   public static class Dimensions {
-    public static final String VERTICAL = "smartphone";
-    public static final String PARTNER = "vanilla";
+    public static final String VERTICAL = V8Engine.getConfiguration().getVerticalDimension();
+    public static final String PARTNER = V8Engine.getConfiguration().getPartnerDimension();
     public static final String UNKNOWN = "unknown";
     public static final String APKFY = "Apkfy";
     public static final String WEBSITE = "Website";
