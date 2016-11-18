@@ -65,6 +65,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -100,6 +101,14 @@ public class AptoideUtils {
 
   public static class Core {
     private static final String TAG = "Core";
+    public static String[] supportedOpenGLExtensions = {
+        "GL_OES_compressed_ETC1_RGB8_texture", "GL_OES_compressed_paletted_texture",
+        "GL_AMD_compressed_3DC_texture", "GL_AMD_compressed_ATC_texture",
+        "GL_EXT_texture_compression_latc", "GL_EXT_texture_compression_dxt1",
+        "GL_EXT_texture_compression_s3tc", "GL_ATI_texture_compression_atitc",
+        "GL_IMG_texture_compression_pvrtc"
+    };
+    public static String openGLExtensions = "";
 
     public static int getVerCode() {
       PackageManager manager = context.getPackageManager();
@@ -137,14 +146,6 @@ public class AptoideUtils {
 
       String cpuAbi = SystemU.getAbis();
 
-      int myversionCode = 0;
-      PackageManager manager = context.getPackageManager();
-      try {
-        myversionCode = manager.getPackageInfo(context.getPackageName(), 0).versionCode;
-      } catch (PackageManager.NameNotFoundException ignore) {
-        Logger.e(TAG, ignore);
-      }
-
       String filters =
           (Build.DEVICE.equals("alien_jolla_bionic") ? "apkdwn=myapp&" : "")
               + "maxSdk="
@@ -157,16 +158,29 @@ public class AptoideUtils {
               + "&myCPU="
               + cpuAbi
               + "&myDensity="
-              + density
-              +
-              "&myApt="
-              + myversionCode;
+              + density;
+      filters = addOpenGLExtensions(filters);
 
       return Base64.encodeToString(filters.getBytes(), 0)
           .replace("=", "")
           .replace("/", "*")
           .replace("+", "_")
           .replace("\n", "");
+    }
+
+    private static String addOpenGLExtensions(String filters) {
+      boolean extensionAdded = false;
+      for (String extension : openGLExtensions.split(" ")) {
+        if (Arrays.asList(supportedOpenGLExtensions).contains(extension)) {
+          if (!extensionAdded) {
+            filters += "&myGLTex=" + extension;
+          } else {
+            filters += "," + extension;
+          }
+          extensionAdded = true;
+        }
+      }
+      return filters;
     }
   }
 
