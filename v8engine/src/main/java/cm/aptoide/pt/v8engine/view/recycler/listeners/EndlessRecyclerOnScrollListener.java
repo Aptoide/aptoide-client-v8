@@ -47,6 +47,11 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
     this(baseAdapter, v7request, successRequestListener, errorRequestListener, 6, bypassCache);
   }
 
+  public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(
+      BaseAdapter baseAdapter) {
+    this(baseAdapter, null, null, null, 0, false);
+  }
+
   public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(BaseAdapter baseAdapter,
       V7<T, ? extends Endless> v7request, Action1<T> successRequestListener,
       ErrorRequestListener errorRequestListener, int visibleThreshold, boolean bypassCache) {

@@ -10,7 +10,7 @@ import rx.android.MainThreadSubscription;
 /**
  * Created by marcelobenites on 6/27/16.
  */
-public class EndlessRecyclerViewLoadMoreOnSubscribe implements Observable.OnSubscribe<Void> {
+public class EndlessRecyclerViewLoadMoreOnSubscribe implements Observable.OnSubscribe<Integer> {
 
   private final RecyclerView recyclerView;
   private final BaseAdapter adapter;
@@ -20,14 +20,14 @@ public class EndlessRecyclerViewLoadMoreOnSubscribe implements Observable.OnSubs
     this.adapter = adapter;
   }
 
-  @Override public void call(Subscriber<? super Void> subscriber) {
+  @Override public void call(Subscriber<? super Integer> subscriber) {
     Preconditions.checkUiThread();
 
     final EndlessRecyclerOnScrollListener listener =
-        new EndlessRecyclerOnScrollListener(adapter, null, null, null, 0, false) {
+        new EndlessRecyclerOnScrollListener(adapter) {
           @Override public void onLoadMore(boolean bypassCache) {
             if (!subscriber.isUnsubscribed()) {
-              subscriber.onNext(null);
+              subscriber.onNext(adapter.getItemCount());
             }
           }
         };

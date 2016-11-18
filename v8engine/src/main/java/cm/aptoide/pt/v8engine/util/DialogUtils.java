@@ -27,18 +27,124 @@ import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import java.util.Locale;
+import rx.Observable;
+import rx.Subscriber;
 import rx.functions.Action0;
+import rx.subscriptions.Subscriptions;
 
-/**
- * Created by sithengineer on 25/08/16.
- */
 public class DialogUtils {
 
   private static final String TAG = DialogUtils.class.getSimpleName();
   private static final Locale LOCALE = Locale.getDefault();
+
+  public static Observable<GenericDialogs.EResponse> showRateDialog(@NonNull Activity activity,
+      @NonNull String appName, @NonNull String packageName, @Nullable String storeName) {
+
+    return Observable.create((Subscriber<? super GenericDialogs.EResponse> subscriber) -> {
+
+      if (!AptoideAccountManager.isLoggedIn()) {
+        ShowMessage.asSnack(activity, R.string.you_need_to_be_logged_in, R.string.login,
+            snackView -> {
+              AptoideAccountManager.openAccountManager(activity, false);
+            });
+        subscriber.onNext(GenericDialogs.EResponse.CANCEL);
+        subscriber.onCompleted();
+        return;
+      }
+
+      final View view = LayoutInflater.from(activity).inflate(R.layout.dialog_rate_app, null);
+
+      final TextView titleTextView = (TextView) view.findViewById(R.id.title);
+      final AppCompatRatingBar reviewRatingBar =
+          (AppCompatRatingBar) view.findViewById(R.id.rating_bar);
+      final TextInputLayout titleTextInputLayout =
+          (TextInputLayout) view.findViewById(R.id.input_layout_title);
+      final TextInputLayout reviewTextInputLayout =
+          (TextInputLayout) view.findViewById(R.id.input_layout_review);
+      final Button cancelBtn = (Button) view.findViewById(R.id.cancel_button);
+      final Button rateBtn = (Button) view.findViewById(R.id.rate_button);
+
+      titleTextView.setText(String.format(LOCALE, activity.getString(R.string.rate_app), appName));
+
+      final AlertDialog.Builder builder = new AlertDialog.Builder(activity).setView(view);
+      final AlertDialog dialog = builder.create();
+
+      subscriber.add(Subscriptions.create(() -> {
+        if (dialog != null && dialog.isShowing()) {
+          dialog.dismiss();
+        }
+      }));
+
+      cancelBtn.setOnClickListener(v -> {
+        subscriber.onNext(GenericDialogs.EResponse.CANCEL);
+        subscriber.onCompleted();
+      });
+
+      rateBtn.setOnClickListener(v -> {
+
+        AptoideUtils.SystemU.hideKeyboard(activity);
+
+        final String reviewTitle = titleTextInputLayout.getEditText().getText().toString();
+        final String reviewText = reviewTextInputLayout.getEditText().getText().toString();
+        final int reviewRating = Math.round(reviewRatingBar.getRating());
+
+        if (TextUtils.isEmpty(reviewTitle)) {
+          titleTextInputLayout.setError(AptoideUtils.StringU.getResString(R.string.error_MARG_107));
+          subscriber.onNext(GenericDialogs.EResponse.CANCEL);
+          subscriber.onCompleted();
+          return;
+        }
+
+        titleTextInputLayout.setErrorEnabled(false);
+        dialog.dismiss();
+
+        // WS success listener
+        final SuccessRequestListener<BaseV7Response> successRequestListener = response -> {
+          if (response.isOk()) {
+            Logger.d(TAG, "review added");
+            ShowMessage.asSnack(activity, R.string.review_success);
+            ManagerPreferences.setForceServerRefreshFlag(true);
+            subscriber.onNext(GenericDialogs.EResponse.YES);
+            subscriber.onCompleted();
+          } else {
+            ShowMessage.asSnack(activity, R.string.error_occured);
+            subscriber.onNext(GenericDialogs.EResponse.CANCEL);
+            subscriber.onCompleted();
+          }
+        };
+
+        // WS error listener
+        final ErrorRequestListener errorRequestListener = e -> {
+          Logger.e(TAG, e);
+          ShowMessage.asSnack(activity, R.string.error_occured);
+          subscriber.onNext(GenericDialogs.EResponse.CANCEL);
+          subscriber.onCompleted();
+        };
+
+        // WS call
+        if (storeName != null) {
+          PostReviewRequest.of(storeName, packageName, reviewTitle, reviewText, reviewRating,
+              AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
+              new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+                  DataProvider.getContext()).getAptoideClientUUID())
+              .execute(successRequestListener, errorRequestListener);
+        } else {
+          PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating,
+              AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
+              new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+                  DataProvider.getContext()).getAptoideClientUUID())
+              .execute(successRequestListener, errorRequestListener);
+        }
+      });
+
+      // create and show rating dialog
+      dialog.show();
+    });
+  }
 
   public static void showRateDialog(@NonNull Activity activity, @NonNull String appName,
       @NonNull String packageName, @Nullable String storeName,
@@ -85,8 +191,6 @@ public class DialogUtils {
       }
 
       titleTextInputLayout.setErrorEnabled(false);
-      dialog.dismiss();
-
       dialog.dismiss();
 
       final SuccessRequestListener<BaseV7Response> successRequestListener = response -> {

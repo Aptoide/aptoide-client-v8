@@ -9,30 +9,30 @@ import java.util.List;
 
 public class FullReviewCommentAdder extends CommentAdder {
 
-  private final RateAndReviewsFragment fragment;
+  private final FullCommentAdderView commentAdderView;
   private final Review review;
 
-  public FullReviewCommentAdder(int reviewIndex, RateAndReviewsFragment fragment, Review review) {
+  public FullReviewCommentAdder(int reviewIndex, FullCommentAdderView commentAdderView, Review review) {
     super(reviewIndex);
-    this.fragment = fragment;
+    this.commentAdderView = commentAdderView;
     this.review = review;
   }
 
   @Override public void addComment(List<Comment> comments) {
     List<Displayable> displayableList = new ArrayList<>();
-    fragment.createDisplayableComments(comments, displayableList);
-    int reviewPosition = fragment.getAdapter().getReviewPosition(reviewIndex);
+    commentAdderView.createDisplayableComments(comments, displayableList);
+    int reviewPosition = commentAdderView.getAdapter().getReviewPosition(reviewIndex);
     if (comments.size() > 2) {
-      displayableList.add(fragment.createReadMoreDisplayable(reviewPosition, review));
+      displayableList.add(commentAdderView.createReadMoreDisplayable(reviewPosition, review));
     }
-    fragment.getAdapter().addDisplayables(reviewPosition + 1, displayableList);
+    commentAdderView.getAdapter().addDisplayables(reviewPosition + 1, displayableList);
   }
 
   @Override public void collapseComments() {
-    ReviewsAndCommentsAdapter adapter = fragment.getAdapter();
+    ReviewsAndCommentsAdapter adapter = commentAdderView.getAdapter();
     int reviewIndex = adapter.getReviewPosition(this.reviewIndex);
     int nextReview = adapter.getReviewPosition(this.reviewIndex + 1);
-    nextReview = nextReview == -1 ? fragment.getAdapter().getItemCount() : nextReview;
+    nextReview = nextReview == -1 ? commentAdderView.getAdapter().getItemCount() : nextReview;
     adapter.removeDisplayables(reviewIndex + 1, nextReview - 1);
     // the -1 because we don't want to remove the next review,only until
     // the comment before the review
