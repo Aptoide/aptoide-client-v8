@@ -1615,7 +1615,7 @@ public class AptoideUtils {
     }
 
     public static String getDefaultUserAgent(AptoideClientUUID aptoideClientUUID, UserData userData,
-        String vername) {
+        String vername, String oemid) {
 
       //SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(context);
       //String currentUserId = getUserId();
@@ -1637,6 +1637,9 @@ public class AptoideUtils {
         sb.append(userEmail);
       }
       sb.append(";");
+      if (!TextUtils.isEmpty(oemid)) {
+        sb.append(oemid);
+      }
       return sb.toString();
     }
   }

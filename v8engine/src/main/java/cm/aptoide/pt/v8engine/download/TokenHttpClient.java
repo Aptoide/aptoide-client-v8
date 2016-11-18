@@ -27,10 +27,12 @@ public class TokenHttpClient implements FileDownloadHelper.OkHttpClientCustomMak
 
   private final AptoideClientUUID aptoideClientUUID;
   private final UserData userData;
+  private final String oemid;
 
-  public TokenHttpClient(AptoideClientUUID aptoideClientUUID, UserData userData) {
+  public TokenHttpClient(AptoideClientUUID aptoideClientUUID, UserData userData, String oemid) {
     this.aptoideClientUUID = aptoideClientUUID;
     this.userData = userData;
+    this.oemid = oemid;
   }
 
   @Override public OkHttpClient customMake() {
@@ -53,7 +55,7 @@ public class TokenHttpClient implements FileDownloadHelper.OkHttpClientCustomMak
     }).addInterceptor(new UserAgentInterceptor(new UserAgentGenerator() {
       @Override public String generateUserAgent() {
         return AptoideUtils.NetworkUtils.getDefaultUserAgent(aptoideClientUUID, userData,
-            AptoideUtils.Core.getDefaultVername());
+            AptoideUtils.Core.getDefaultVername(), oemid);
       }
     })).build();
   }
