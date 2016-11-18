@@ -7,6 +7,7 @@ package cm.aptoide.pt.database.accessors;
 
 import android.content.Context;
 import android.text.TextUtils;
+import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.BuildConfig;
 import cm.aptoide.pt.database.schedulers.RealmSchedulers;
 import io.realm.Realm;
@@ -208,31 +209,32 @@ public final class Database {
 
   public <E extends RealmObject> void delete(Class<E> clazz, String key, String value) {
     @Cleanup Realm realm = get();
-    E first = realm.where(clazz).equalTo(key, value).findFirst();
-    if (first != null) {
-      realm.beginTransaction();
-      first.deleteFromRealm();
-      realm.commitTransaction();
-    }
+    E obj = realm.where(clazz).equalTo(key, value).findFirst();
+    deleteObject(realm, obj);
   }
 
   public <E extends RealmObject> void delete(Class<E> clazz, String key, Integer value) {
     @Cleanup Realm realm = get();
-    E first = realm.where(clazz).equalTo(key, value).findFirst();
-    if (first != null) {
-      realm.beginTransaction();
-      first.deleteFromRealm();
-      realm.commitTransaction();
-    }
+    E obj = realm.where(clazz).equalTo(key, value).findFirst();
+    deleteObject(realm, obj);
   }
 
   public <E extends RealmObject> void delete(Class<E> clazz, String key, Long value) {
     @Cleanup Realm realm = get();
-    E first = realm.where(clazz).equalTo(key, value).findFirst();
-    if (first != null) {
-      realm.beginTransaction();
-      first.deleteFromRealm();
-      realm.commitTransaction();
+    E obj = realm.where(clazz).equalTo(key, value).findFirst();
+    deleteObject(realm, obj);
+  }
+
+  private <E extends RealmObject> void deleteObject(Realm realm, E obj) {
+    realm.beginTransaction();
+    try{
+      if (obj != null && obj.isValid()) {
+        obj.deleteFromRealm();
+        realm.commitTransaction();
+      }
+    } catch (Exception ex) {
+      realm.cancelTransaction();
+      CrashReports.logException(ex);
     }
   }
 
