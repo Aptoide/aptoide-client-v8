@@ -13,7 +13,7 @@ public class OpenGLES20Activity extends Activity {
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_main_opengl);
+    setContentView(R.layout.activity_main_open_gl);
 
     SurfaceView surfaceView = (SurfaceView) findViewById(R.id.visualizer);
     surfaceView.setZOrderOnTop(true);
