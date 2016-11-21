@@ -137,7 +137,7 @@ public class L2Cache extends StringBaseCache<Request, Response> {
     int value;
     do {
       value = persistenceCounter.get();
-    } while (persistenceCounter.compareAndSet(value, 0));
+    } while (!persistenceCounter.compareAndSet(value, 0));
 
     isPersisting = false;
   }
