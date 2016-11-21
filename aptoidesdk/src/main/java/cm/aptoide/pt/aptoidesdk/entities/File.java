@@ -1,5 +1,6 @@
 package cm.aptoide.pt.aptoidesdk.entities;
 
+import android.util.Base64;
 import cm.aptoide.pt.aptoidesdk.misc.SdkUtils;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import lombok.Data;
@@ -24,6 +25,7 @@ import lombok.Data;
   }
 
   private static String getQueryString() {
-    return SdkUtils.FileParameters.getDownloadQueryString();
+    return "?" + Base64.encodeToString(SdkUtils.FileParameters.getDownloadQueryString().getBytes(),
+        0).replace("=", "").replace("/", "*").replace("+", "_").replace("\n", "");
   }
 }
