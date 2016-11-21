@@ -754,4 +754,13 @@
     <item name="android:backgroundDimEnabled">false</item>
   </style>
 
+  <style name="AlertTextAppearanceAptoide" parent="@style/Base.Widget.AppCompat.Button">
+    <!-- Set text size and color of title and message here -->
+    <item name="android:textColor">?attr/colorPrimary</item>
+  </style>
+
+  <style name="AlertDialogAptoide" parent="@style/ThemeOverlay.AppCompat.Dialog.Alert">
+    <item name="android:textColor">?attr/titleTextColor</item>
+    <item name="android:buttonStyle">@style/AlertTextAppearanceAptoide</item>
+  </style>
 </resources>
