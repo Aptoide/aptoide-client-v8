@@ -19,8 +19,11 @@ public class ProductPaymentResponse extends BaseV3Response {
   public static enum Status {
     UNKNOWN,
     COMPLETED,
+    CREATED,
     FAILED,
-    CANCELED
+    CANCELED,
+    PROCESSING,
+    PENDING
   }
 
   @JsonProperty("payStatus") private Status paymentStatus;

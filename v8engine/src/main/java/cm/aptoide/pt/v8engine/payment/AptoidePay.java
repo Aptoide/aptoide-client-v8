@@ -5,7 +5,14 @@
 
 package cm.aptoide.pt.v8engine.payment;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.content.ContentResolver;
 import android.content.Context;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.preferences.AptoidePreferencesConfiguration;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentAlreadyProcessedException;
 import cm.aptoide.pt.v8engine.payment.product.AptoideProduct;
 import cm.aptoide.pt.v8engine.repository.PaymentRepository;
@@ -22,6 +29,8 @@ import static rx.Observable.error;
  */
 @AllArgsConstructor public class AptoidePay {
 
+  private final AptoidePreferencesConfiguration configuration;
+  private final AccountManager accountManager;
   private final PaymentRepository paymentRepository;
 
   public Observable<List<Payment>> getProductPayments(Context context, AptoideProduct product) {
@@ -29,7 +38,7 @@ import static rx.Observable.error;
   }
 
   public Observable<Purchase> getPurchase(AptoideProduct product) {
-    return paymentRepository.getPaymentConfirmation(product)
+    return paymentRepository.getPaymentConfirmation(product.getId())
         .first(paymentConfirmation -> paymentConfirmation.isCompleted())
         .flatMap(paymentConfirmation -> paymentRepository.getPurchase(product))
         .onErrorResumeNext(throwable -> {
@@ -48,7 +57,7 @@ import static rx.Observable.error;
             "Product " + payment.getProduct().getId() + " already purchased."));
       }
 
-      return paymentRepository.getPaymentConfirmation((AptoideProduct) payment.getProduct())
+      return paymentRepository.getPaymentConfirmation(payment.getProduct().getId())
           .onErrorResumeNext(confirmationThrowable -> {
             if (confirmationThrowable instanceof RepositoryItemNotFoundException) {
               return processPaymentAndGetConfirmation(payment);
@@ -64,8 +73,23 @@ import static rx.Observable.error;
     return payment.process()
         .flatMap(paymentConfirmation -> paymentRepository.savePaymentConfirmation(
             paymentConfirmation))
-        .flatMap(saved -> paymentRepository.getPaymentConfirmation(
-            (AptoideProduct) payment.getProduct()));
+        .doOnNext(saved -> syncPaymentConfirmationInBackground())
+        .flatMap(saved -> paymentRepository.getPaymentConfirmation(payment.getProduct().getId()));
+  }
+
+  private void syncPaymentConfirmationInBackground() {
+    final Bundle bundle = new Bundle();
+    bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+    bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+    ContentResolver.requestSync(getAccount(), configuration.getSyncAdapterAuthority(), bundle);
+  }
+
+  @NonNull private Account getAccount() {
+    Account[] accounts = accountManager.getAccountsByType(configuration.getAccountType());
+    if (accounts != null && accounts.length > 0) {
+      return accounts[0];
+    }
+    throw new IllegalStateException("User not logged in. Can't complete payment.");
   }
 
   private Observable<Boolean> isProductAlreadyPurchased(AptoideProduct product) {

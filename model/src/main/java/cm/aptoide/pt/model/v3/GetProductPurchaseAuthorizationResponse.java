@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.model.v3;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -23,10 +24,6 @@ public class GetProductPurchaseAuthorizationResponse extends BaseV3Response {
   }
 
   private String url;
-  private String successUrl;
-  private Status authorizationStatus;
-
-  public boolean isAuthorized() {
-    return Status.ACTIVE.equals(authorizationStatus);
-  }
+  @JsonProperty("successUrl") private String successUrl;
+  @JsonProperty("authorizationStatus") private Status authorizationStatus;
 }

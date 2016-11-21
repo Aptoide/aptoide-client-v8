@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.database.realm;
 
+import cm.aptoide.pt.model.v3.ProductPaymentResponse;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -18,17 +19,16 @@ public class PaymentAuthorization extends RealmObject {
   @PrimaryKey private int paymentId;
   private String url;
   private String redirectUrl;
-  private boolean authorized;
+  private String status;
 
   public PaymentAuthorization() {
   }
 
-  public PaymentAuthorization(int paymentId, String url, String redirectUrl,
-      boolean authorized) {
+  public PaymentAuthorization(int paymentId, String url, String redirectUrl, String status) {
     this.paymentId = paymentId;
     this.url = url;
     this.redirectUrl = redirectUrl;
-    this.authorized = authorized;
+    this.status = status;
   }
 
   public int getPaymentId() {
@@ -43,7 +43,7 @@ public class PaymentAuthorization extends RealmObject {
     return redirectUrl;
   }
 
-  public boolean isAuthorized() {
-    return authorized;
+  public String getStatus() {
+    return status;
   }
 }
