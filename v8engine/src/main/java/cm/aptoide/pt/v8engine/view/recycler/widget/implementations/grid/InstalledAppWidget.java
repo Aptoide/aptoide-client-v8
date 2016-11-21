@@ -135,7 +135,7 @@ import java.util.Locale;
 
       dialog.dismiss();
       PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating,
-          AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
+          AptoideAccountManager.getAccessToken(),
           new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
               DataProvider.getContext()).getAptoideClientUUID()).execute(response -> {
         if (response.isOk()) {

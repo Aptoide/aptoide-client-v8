@@ -21,7 +21,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.PostCommentRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.PostCommentForReviewRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SetReviewRatingRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
@@ -136,8 +136,7 @@ import java.util.Locale;
     }
   }
 
-  private void showCommentPopup(final long reviewId, String appName,
-      CommentAdder commentAdder) {
+  private void showCommentPopup(final long reviewId, String appName, CommentAdder commentAdder) {
     final Context ctx = getContext();
     final View view = LayoutInflater.from(ctx).inflate(R.layout.dialog_comment_on_review, null);
 
@@ -167,8 +166,8 @@ import java.util.Locale;
       textInputLayout.setErrorEnabled(false);
       dialog.dismiss();
 
-      PostCommentRequest.of(reviewId, commentOnReviewText, AptoideAccountManager.getAccessToken(),
-          AptoideAccountManager.getUserEmail(),
+      PostCommentForReviewRequest.of(reviewId, commentOnReviewText,
+          AptoideAccountManager.getAccessToken(),
           new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
               DataProvider.getContext()).getAptoideClientUUID()).execute(response -> {
         dialog.dismiss();
@@ -195,8 +194,7 @@ import java.util.Locale;
     dialog.show();
   }
 
-  private void loadCommentsForThisReview(long reviewId, int limit,
-      CommentAdder commentAdder) {
+  private void loadCommentsForThisReview(long reviewId, int limit, CommentAdder commentAdder) {
     ListCommentsRequest.of(reviewId, limit, AptoideAccountManager.getAccessToken(),
         AptoideAccountManager.getUserEmail(),
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
