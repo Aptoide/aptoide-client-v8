@@ -69,6 +69,11 @@ import lombok.experimental.Accessors;
     String impressionUrl;
 
     public static Network fromGetAds(GetAdsResponse.Ad ad) {
+
+      if (ad.getPartner() == null) {
+        return null;
+      }
+
       int adId = ad.getPartner().getInfo().getId();
       String clickUrl = ad.getPartner().getData().getClickUrl();
       String impressionUrl = ad.getPartner().getData().getImpressionUrl();
