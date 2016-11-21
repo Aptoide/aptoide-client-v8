@@ -46,6 +46,7 @@ import rx.Observable;
   private Download download;
   private DateCalculator dateCalculator;
   private long appId;
+  @Getter private String abUrl;
   private InstallManager installManager;
   private PermissionManager permissionManager;
 
@@ -55,11 +56,18 @@ import rx.Observable;
   public static AppUpdateDisplayable from(AppUpdate appUpdate, SpannableFactory spannableFactory,
       DownloadFactory downloadFactory, DateCalculator dateCalculator, InstallManager installManager,
       PermissionManager permissionManager) {
+    String abTestingURL = null;
+
+    if (appUpdate.getAb() != null
+        && appUpdate.getAb().getConversion() != null
+        && appUpdate.getAb().getConversion().getUrl() != null) {
+      abTestingURL = appUpdate.getAb().getConversion().getUrl();
+    }
     return new AppUpdateDisplayable(appUpdate.getIcon(), appUpdate.getStore().getAvatar(),
         appUpdate.getStore().getName(), appUpdate.getAdded(), appUpdate.getFile().getVername(),
         spannableFactory, appUpdate.getName(), appUpdate.getPackageName(),
         downloadFactory.create(appUpdate, Download.ACTION_UPDATE), dateCalculator,
-        appUpdate.getId(), installManager, permissionManager);
+        appUpdate.getId(), abTestingURL, installManager, permissionManager);
   }
 
   public Observable<Progress<Download>> update(Context context) {

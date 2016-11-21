@@ -98,7 +98,7 @@ android {
       // applicationIdSuffix does not work properly, as the application ID gets changed after the buildFlavor
       applicationIdSuffix ".internal"
 
-      versionName "8.0.0." + getDate()
+      versionName "8.0.1." + getDate()
       versionCode getVersionCode("../../aptoideProperties/version.properties",
           "INTERNAL_VERSION_CODE")
 
@@ -113,7 +113,7 @@ android {
       // applicationIdSuffix does not work properly, as the application ID gets changed after the buildFlavor
       applicationIdSuffix ".dev"
 
-      versionName "8.0.0." + getDate()
+      versionName "8.0.1." + getDate()
       versionCode getVersionCode("../../aptoideProperties/version.properties",
           "DEV_VERSION_CODE")
 
@@ -128,7 +128,7 @@ android {
       Integer value = getVersionCode("../../aptoideProperties/version.properties",
           "PROD_VERSION_CODE")
       versionCode value
-      versionName "8.0.1.0"
+      versionName "8.0.1.1"
       resValue "string", "authenticatorAccountType", APPLICATION_ID
     }
   }

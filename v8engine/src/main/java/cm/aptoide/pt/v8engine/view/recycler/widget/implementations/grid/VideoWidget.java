@@ -14,11 +14,20 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.VideoDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
+import java.io.IOException;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Credentials;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -85,20 +94,35 @@ public class VideoWidget extends Widget<VideoDisplayable> {
       media_layout.setForeground(getContext().getResources().getDrawable(R.color.overlay_black));
     }
 
-    //if (getAppButton.getVisibility() != View.GONE && displayable.isGetApp()) {
-    //  getAppButton.setVisibility(View.VISIBLE);
-    //  getAppButton.setText(displayable.getAppText(getContext()));
-    //  getAppButton.setOnClickListener(view -> ((FragmentShower) getContext()).pushFragmentV4(
-    //      V8Engine.getFragmentProvider().newAppViewFragment(displayable.getAppId())));
-    //}
-
-    //		CustomTabsHelper.getInstance()
-    //				.setUpCustomTabsService(displayable.getLink().getUrl(), getContext());
-
     media_layout.setOnClickListener(v -> {
+      knockWithSixpackCredentials(displayable.getAbUrl());
       Analytics.AppsTimeline.clickOnCard("Video", Analytics.AppsTimeline.BLANK,
           displayable.getVideoTitle(), displayable.getTitle(), Analytics.AppsTimeline.OPEN_VIDEO);
       displayable.getLink().launch(getContext());
+    });
+  }
+
+  //// TODO: 31/08/16 refactor this out of here
+  private void knockWithSixpackCredentials(String url) {
+    if (url == null) {
+      return;
+    }
+
+    String credential = Credentials.basic(BuildConfig.SIXPACK_USER, BuildConfig.SIXPACK_PASSWORD);
+
+    OkHttpClient client = new OkHttpClient();
+
+    Request click = new Request.Builder().url(url).addHeader("authorization", credential).build();
+
+    client.newCall(click).enqueue(new Callback() {
+      @Override public void onFailure(Call call, IOException e) {
+        Logger.d(this.getClass().getSimpleName(), "sixpack request fail " + call.toString());
+      }
+
+      @Override public void onResponse(Call call, Response response) throws IOException {
+        Logger.d(this.getClass().getSimpleName(), "knock success");
+        response.body().close();
+      }
     });
   }
 
@@ -137,6 +161,7 @@ public class VideoWidget extends Widget<VideoDisplayable> {
           }));
 
       subscriptions.add(RxView.clicks(videoHeader).subscribe(click -> {
+        knockWithSixpackCredentials(displayable.getAbUrl());
         displayable.getBaseLink().launch(getContext());
         Analytics.AppsTimeline.clickOnCard("Video", Analytics.AppsTimeline.BLANK,
             displayable.getVideoTitle(), displayable.getTitle(),
