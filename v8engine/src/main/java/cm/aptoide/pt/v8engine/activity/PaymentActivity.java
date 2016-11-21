@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.activity;
 
+import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import cm.aptoide.pt.iab.ErrorCodeFactory;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.AptoidePay;
@@ -77,9 +79,9 @@ public class PaymentActivity extends ActivityView implements PaymentView {
     intentFactory = new PurchaseIntentFactory(new ErrorCodeFactory());
 
     final AptoideProduct product = getIntent().getParcelableExtra(PRODUCT_EXTRA);
-    attachPresenter(
-        new PaymentPresenter(this, new AptoidePay(RepositoryFactory.getPaymentRepository(this)),
-            product), savedInstanceState);
+    attachPresenter(new PaymentPresenter(this,
+        new AptoidePay(Application.getConfiguration(), AccountManager.get(getApplicationContext()),
+            RepositoryFactory.getPaymentRepository(this)), product), savedInstanceState);
   }
 
   @Override public void dismiss(Purchase purchase) {

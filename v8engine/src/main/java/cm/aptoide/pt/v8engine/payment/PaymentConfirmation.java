@@ -56,6 +56,11 @@ public class PaymentConfirmation {
     return ProductPaymentResponse.Status.COMPLETED.equals(status);
   }
 
+  public boolean isFailed() {
+    return ProductPaymentResponse.Status.FAILED.equals(status)
+        || ProductPaymentResponse.Status.CANCELED.equals(status);
+  }
+
   @Override public boolean equals(Object o) {
     if (this == o) {
       return true;

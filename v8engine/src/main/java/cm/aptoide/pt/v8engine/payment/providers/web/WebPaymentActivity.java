@@ -28,7 +28,7 @@ public class WebPaymentActivity extends AppCompatActivity {
   public static Intent getIntent(Context context, String url, String resultUrl) {
     final Intent intent = new Intent(context, WebPaymentActivity.class);
     intent.putExtra(EXTRA_AUTHORIZATION_URL, url);
-    intent.putExtra(EXTRA_AUTHORIZATION_RESULT_URL, url);
+    intent.putExtra(EXTRA_AUTHORIZATION_RESULT_URL, resultUrl);
     return intent;
   }
 
