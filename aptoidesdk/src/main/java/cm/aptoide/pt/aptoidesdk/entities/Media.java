@@ -13,22 +13,21 @@ import lombok.Data;
  */
 @Data @AllArgsConstructor public class Media {
 
+  private final String description;
   private final List<Screenshot> screenshots;
 
   public static Media fromGetAppMetaMedia(GetAppMeta.Media getAppMetaMedia) {
 
+    List<Screenshot> screenshots = new LinkedList<>();
+    String description = getAppMetaMedia.getDescription();
+
     if (getAppMetaMedia.getScreenshots() != null) {
-
-      List<Screenshot> screenshots = new LinkedList<>();
-
       for (GetAppMeta.Media.Screenshot screenshot : getAppMetaMedia.getScreenshots()) {
         screenshots.add(Screenshot.fromGetAppMetaMediaScreenshot(screenshot));
       }
-
-      return new Media(screenshots);
     }
 
-    return null;
+    return new Media(description, screenshots);
   }
 
   @Data public static class Screenshot {
