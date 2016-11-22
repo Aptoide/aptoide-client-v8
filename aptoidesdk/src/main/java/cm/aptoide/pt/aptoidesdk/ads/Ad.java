@@ -12,7 +12,7 @@ import lombok.experimental.Accessors;
 /**
  * Created by neuro on 24-10-2016.
  */
-@EqualsAndHashCode @Accessors(chain = true) public class Ad {
+@EqualsAndHashCode public class Ad {
   final long timestamp;
   final long id;
   final Clicks clicks;
@@ -110,16 +110,18 @@ import lombok.experimental.Accessors;
     final String name;
     final String icon;
     final long size;
+    final String description;
 
     @JsonCreator
     public Data(@JsonProperty("appId") long appId, @JsonProperty("packageName") String packageName,
         @JsonProperty("name") String name, @JsonProperty("icon") String icon,
-        @JsonProperty("size") long size) {
+        @JsonProperty("size") long size, @JsonProperty("description") String description) {
       this.appId = appId;
       this.packageName = packageName;
       this.name = name;
       this.icon = icon;
       this.size = size;
+      this.description = description;
     }
 
     public static Data fromGetAds(GetAdsResponse.Ad ad) {
@@ -129,8 +131,9 @@ import lombok.experimental.Accessors;
       String name = data.getName();
       String icon = data.getIcon();
       long size = data.getSize();
+      String description = data.getDescription();
 
-      return new Data(id, packageName, name, icon, size);
+      return new Data(id, packageName, name, icon, size, description);
     }
   }
 }
