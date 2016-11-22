@@ -7,7 +7,7 @@ package cm.aptoide.pt.v8engine.sync;
 
 import android.content.SyncResult;
 import cm.aptoide.pt.v8engine.payment.PaymentAuthorization;
-import cm.aptoide.pt.v8engine.repository.PaymentRepository;
+import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationRepository;
 
 /**
  * Created by marcelobenites on 22/11/16.
@@ -15,23 +15,23 @@ import cm.aptoide.pt.v8engine.repository.PaymentRepository;
 
 public class PaymentAuthorizationSync extends AbstractSync {
 
-  private final PaymentRepository paymentRepository;
+  private final PaymentAuthorizationRepository authorizationRepository;
 
-  public PaymentAuthorizationSync(PaymentRepository paymentRepository) {
-    this.paymentRepository = paymentRepository;
+  public PaymentAuthorizationSync(PaymentAuthorizationRepository authorizationRepository) {
+    this.authorizationRepository = authorizationRepository;
   }
 
   @Override public void sync(SyncResult syncResult) {
-    paymentRepository.getPaymentAuthorizations()
+    authorizationRepository.getPaymentAuthorizations()
         .first()
         .flatMapIterable(paymentAuthorizations -> paymentAuthorizations)
         .flatMap(paymentAuthorization -> {
           if (paymentAuthorization.isCancelled()) {
-            return paymentRepository.removePaymentAuthorization(paymentAuthorization.getPaymentId());
+            return authorizationRepository.removePaymentAuthorization(paymentAuthorization.getPaymentId());
           } else if (!paymentAuthorization.isAuthorized()) {
             rescheduleIncompletedAuthorizationSync(paymentAuthorization, syncResult);
           }
-          return paymentRepository.savePaymentAuthorization(paymentAuthorization);
+          return authorizationRepository.savePaymentAuthorization(paymentAuthorization);
         })
         .toList()
         .onErrorReturn(throwable -> {

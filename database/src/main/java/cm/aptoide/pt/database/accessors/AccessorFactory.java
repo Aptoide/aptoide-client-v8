@@ -8,6 +8,7 @@ package cm.aptoide.pt.database.accessors;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.database.realm.PaymentAuthorization;
 import cm.aptoide.pt.database.realm.PaymentConfirmation;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
@@ -26,7 +27,7 @@ public final class AccessorFactory {
     if (clazz.equals(Scheduled.class)) {
       return (A) new ScheduledAccessor(new Database());
     } else if (clazz.equals(PaymentConfirmation.class)) {
-      return (A) new PaymentAccessor(new Database());
+      return (A) new PaymentConfirmationAccessor(new Database());
     } else if (clazz.equals(Installed.class)) {
       return (A) new InstalledAccessor(new Database());
     } else if (clazz.equals(Download.class)) {
@@ -39,6 +40,8 @@ public final class AccessorFactory {
       return (A) new StoreAccessor(new Database());
     } else if (clazz.equals(StoredMinimalAd.class)) {
       return (A) new StoreMinimalAdAccessor(new Database());
+    } else if (clazz.equals(PaymentAuthorization.class)) {
+      return (A) new PaymentAuthorizationAccessor(new Database());
     }
 
     throw new RuntimeException("Create accessor for class " + clazz.getName());

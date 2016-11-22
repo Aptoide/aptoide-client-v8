@@ -81,7 +81,7 @@ public class PaymentActivity extends ActivityView implements PaymentView {
 
     final AptoideProduct product = getIntent().getParcelableExtra(PRODUCT_EXTRA);
     attachPresenter(new PaymentPresenter(this,
-            new AptoidePay(RepositoryFactory.getPaymentRepository(this),
+            new AptoidePay(RepositoryFactory.getPaymentConfirmationRepository(this),
                 new SyncAdapterBackgroundSync(Application.getConfiguration(),
                     (AccountManager) getSystemService(Context.ACCOUNT_SERVICE))), product),
         savedInstanceState);

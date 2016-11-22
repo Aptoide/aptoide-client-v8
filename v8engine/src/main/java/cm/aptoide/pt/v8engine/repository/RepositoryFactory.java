@@ -9,6 +9,7 @@ import android.content.Context;
 import android.telephony.TelephonyManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.database.realm.PaymentAuthorization;
 import cm.aptoide.pt.database.realm.PaymentConfirmation;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
@@ -51,12 +52,16 @@ public final class RepositoryFactory {
     return new RequestRepository();
   }
 
-  public static PaymentRepository getPaymentRepository(Context context) {
+  public static PaymentAuthorizationRepository getPaymentAuthorizationRepository(Context context){
+    return new PaymentAuthorizationRepository(AccessorFactory.getAccessorFor(PaymentAuthorization.class));
+  }
+
+  public static PaymentConfirmationRepository getPaymentConfirmationRepository(Context context) {
     final NetworkOperatorManager operatorManager = new NetworkOperatorManager(
         (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE));
     final ProductFactory productFactory = new ProductFactory();
 
-    return new PaymentRepository(new AppRepository(operatorManager, productFactory),
+    return new PaymentConfirmationRepository(new AppRepository(operatorManager, productFactory),
         new InAppBillingRepository(operatorManager, productFactory), operatorManager,
         productFactory, new PurchaseFactory(new InAppBillingSerializer()), new PaymentFactory(),
         AccessorFactory.getAccessorFor(PaymentConfirmation.class));

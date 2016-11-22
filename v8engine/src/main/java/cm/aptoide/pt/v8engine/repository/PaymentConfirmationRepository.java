@@ -6,23 +6,18 @@
 package cm.aptoide.pt.v8engine.repository;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.database.accessors.PaymentAccessor;
+import cm.aptoide.pt.database.accessors.PaymentConfirmationAccessor;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.ws.v3.CheckInAppBillingProductPaymentRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.CheckPaidAppProductPaymentRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.CreateInAppBillingProductPaymentRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.CreatePaidAppProductPaymentRequest;
-import cm.aptoide.pt.dataprovider.ws.v3.GetProductPurchaseAuthorizationRequest;
-import cm.aptoide.pt.dataprovider.ws.v3.V3;
-import cm.aptoide.pt.model.v3.GetProductPurchaseAuthorizationResponse;
 import cm.aptoide.pt.model.v3.InAppBillingProductPaymentResponse;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
 import cm.aptoide.pt.model.v3.PaymentService;
 import cm.aptoide.pt.model.v3.ProductPaymentResponse;
 import cm.aptoide.pt.v8engine.payment.Payment;
-import cm.aptoide.pt.v8engine.payment.PaymentAuthorization;
 import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.payment.PaymentFactory;
 import cm.aptoide.pt.v8engine.payment.Price;
@@ -32,7 +27,6 @@ import cm.aptoide.pt.v8engine.payment.PurchaseFactory;
 import cm.aptoide.pt.v8engine.payment.product.AptoideProduct;
 import cm.aptoide.pt.v8engine.payment.product.InAppBillingProduct;
 import cm.aptoide.pt.v8engine.payment.product.PaidAppProduct;
-import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.util.List;
 import rx.Observable;
@@ -41,7 +35,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by marcelobenites on 8/18/16.
  */
-public class PaymentRepository {
+public class PaymentConfirmationRepository {
 
   private final AppRepository appRepository;
   private final InAppBillingRepository inAppBillingRepository;
@@ -49,12 +43,12 @@ public class PaymentRepository {
   private final ProductFactory productFactory;
   private final PurchaseFactory purchaseFactory;
   private final PaymentFactory paymentFactory;
-  private final PaymentAccessor paymentDatabase;
+  private final PaymentConfirmationAccessor paymentDatabase;
 
-  public PaymentRepository(AppRepository appRepository,
+  public PaymentConfirmationRepository(AppRepository appRepository,
       InAppBillingRepository inAppBillingRepository, NetworkOperatorManager operatorManager,
       ProductFactory productFactory, PurchaseFactory purchaseFactory, PaymentFactory paymentFactory,
-      PaymentAccessor paymentDatabase) {
+      PaymentConfirmationAccessor paymentDatabase) {
     this.appRepository = appRepository;
     this.inAppBillingRepository = inAppBillingRepository;
     this.operatorManager = operatorManager;
@@ -89,31 +83,6 @@ public class PaymentRepository {
 
   public Observable<Void> removePaymentConfirmation(String paymentConfirmationId) {
     return deleteStoredPaymentConfirmation(paymentConfirmationId);
-  }
-
-  public Observable<PaymentAuthorization> createPaymentAuthorization(int paymentId) {
-    return createOrGetServerPaymentAuthorization(paymentId);
-  }
-
-  public Observable<PaymentAuthorization> getPaymentAuthorization(int paymentId) {
-    return getDatabasePaymentAuthorization(paymentId).flatMap(
-        paymentAuthorization -> updatePaymentAuthorizationWithServerStatus(paymentAuthorization));
-  }
-
-  public Observable<Void> removePaymentAuthorization(int paymentId) {
-    return deleteStoredPaymentAuthorization(paymentId);
-  }
-
-  public Observable<List<PaymentAuthorization>> getPaymentAuthorizations() {
-    return getDatabasePaymentAuthorizations().flatMap(
-        paymentAuthorizations -> Observable.from(paymentAuthorizations)
-            .flatMap(paymentAuthorization -> updatePaymentAuthorizationWithServerStatus(
-                paymentAuthorization))
-            .toList());
-  }
-
-  public Observable<Void> savePaymentAuthorization(PaymentAuthorization paymentAuthorization) {
-    return storePaymentAuthorizationInDatabase(paymentAuthorization).subscribeOn(Schedulers.io());
   }
 
   public Observable<Purchase> getPurchase(AptoideProduct product) {
@@ -171,25 +140,6 @@ public class PaymentRepository {
         .map(paidApp -> paidApp.getPayment().getPaymentServices());
   }
 
-  private Observable<PaymentAuthorization> updatePaymentAuthorizationWithServerStatus(
-      PaymentAuthorization paymentAuthorization) {
-    return createOrGetServerPaymentAuthorization(paymentAuthorization.getPaymentId()).onErrorReturn(
-        throwable -> paymentAuthorization);
-  }
-
-  private Observable<PaymentAuthorization> createOrGetServerPaymentAuthorization(int paymentId) {
-    return GetProductPurchaseAuthorizationRequest.of(AptoideAccountManager.getAccessToken(),
-        paymentId).observe().flatMap(response -> {
-      if (response != null && response.isOk()) {
-        return Observable.just(
-            new PaymentAuthorization(paymentId, response.getUrl(), response.getSuccessUrl(),
-                response.getAuthorizationStatus()));
-      }
-      return Observable.<PaymentAuthorization>error(
-          new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
-    });
-  }
-
   private Observable<PaymentConfirmation> updatePaymentConfirmationWithServerStatus(
       PaymentConfirmation paymentConfirmation) {
     paymentConfirmation.setStatus(ProductPaymentResponse.Status.UNKNOWN);
@@ -244,28 +194,6 @@ public class PaymentRepository {
     });
   }
 
-  private Observable<Void> deleteStoredPaymentAuthorization(int paymentId) {
-    return Observable.fromCallable(() -> {
-      paymentDatabase.deleteAuthorization(paymentId);
-      return null;
-    });
-  }
-
-  private Observable<Void> storePaymentAuthorizationInDatabase(
-      PaymentAuthorization paymentAuthorization) {
-    return Observable.fromCallable(() -> {
-      paymentDatabase.save(convertToStoredPaymentAuthorization(paymentAuthorization));
-      return null;
-    });
-  }
-
-  private cm.aptoide.pt.database.realm.PaymentAuthorization convertToStoredPaymentAuthorization(
-      PaymentAuthorization paymentAuthorization) {
-    return new cm.aptoide.pt.database.realm.PaymentAuthorization(
-        paymentAuthorization.getPaymentId(), paymentAuthorization.getUrl(),
-        paymentAuthorization.getRedirectUrl(), paymentAuthorization.getStatus().name());
-  }
-
   private Observable<PaymentConfirmation> getDatabasePaymentConfirmation(int productId) {
     return paymentDatabase.getPaymentConfirmation(productId).flatMap(paymentConfirmation -> {
       if (paymentConfirmation != null) {
@@ -280,30 +208,6 @@ public class PaymentRepository {
     return paymentDatabase.getPaymentConfirmations()
         .flatMap(paymentConfirmations -> Observable.from(paymentConfirmations)
             .map(paymentConfirmation -> convertToPaymentConfirmation(paymentConfirmation))
-            .toList());
-  }
-
-  private Observable<PaymentAuthorization> getDatabasePaymentAuthorization(int paymentId) {
-    return paymentDatabase.getPaymentAuthorization(paymentId).flatMap(paymentAuthorization -> {
-      if (paymentAuthorization != null) {
-        return Observable.just(convertToPaymentAuthorization(paymentAuthorization));
-      }
-      return Observable.error(new RepositoryItemNotFoundException(
-          "No payment authorization found for payment id: " + paymentId));
-    });
-  }
-
-  @NonNull private PaymentAuthorization convertToPaymentAuthorization(
-      cm.aptoide.pt.database.realm.PaymentAuthorization paymentAuthorization) {
-    return new PaymentAuthorization(paymentAuthorization.getPaymentId(),
-        paymentAuthorization.getUrl(), paymentAuthorization.getRedirectUrl(),
-        GetProductPurchaseAuthorizationResponse.Status.valueOf(paymentAuthorization.getStatus()));
-  }
-
-  private Observable<List<PaymentAuthorization>> getDatabasePaymentAuthorizations() {
-    return paymentDatabase.getPaymentAuthorizations()
-        .flatMap(paymentAuthorizations -> Observable.from(paymentAuthorizations)
-            .map(paymentAuthorization -> convertToPaymentAuthorization(paymentAuthorization))
             .toList());
   }
 

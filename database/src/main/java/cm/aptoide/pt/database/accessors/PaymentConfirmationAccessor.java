@@ -13,9 +13,9 @@ import rx.Observable;
 /**
  * Created by marcelobenites on 9/1/16.
  */
-public class PaymentAccessor extends SimpleAccessor<PaymentConfirmation> {
+public class PaymentConfirmationAccessor extends SimpleAccessor<PaymentConfirmation> {
 
-  protected PaymentAccessor(Database database) {
+  protected PaymentConfirmationAccessor(Database database) {
     super(database, PaymentConfirmation.class);
   }
 
@@ -27,14 +27,6 @@ public class PaymentAccessor extends SimpleAccessor<PaymentConfirmation> {
     return database.getAll(PaymentConfirmation.class);
   }
 
-  public Observable<PaymentAuthorization> getPaymentAuthorization(int paymentId) {
-    return database.get(PaymentAuthorization.class, PaymentAuthorization.PAYMENT_ID, paymentId);
-  }
-
-  public Observable<List<PaymentAuthorization>> getPaymentAuthorizations() {
-    return database.getAll(PaymentAuthorization.class);
-  }
-
   public void delete(String paymentConfirmationId) {
     database.delete(PaymentConfirmation.class, PaymentConfirmation.PAYMENT_CONFIRMATION_ID,
         paymentConfirmationId);
@@ -42,13 +34,5 @@ public class PaymentAccessor extends SimpleAccessor<PaymentConfirmation> {
 
   public void save(PaymentConfirmation paymentConfirmation) {
     database.insert(paymentConfirmation);
-  }
-
-  public void save(PaymentAuthorization paymentAuthorization) {
-    database.insert(paymentAuthorization);
-  }
-
-  public void deleteAuthorization(int paymentId) {
-    database.delete(PaymentAuthorization.class, PaymentAuthorization.PAYMENT_ID, paymentId);
   }
 }
