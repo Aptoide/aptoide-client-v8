@@ -48,7 +48,7 @@ class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.ReferrerUti
 
   static void extractReferrer(Ad ad, final int retries, boolean broadcastReferrer) {
 
-    String packageName = ad.data.packageName;
+    String packageName = ad.getPackageName();
     long networkId = ad.network.id;
     String clickUrl = ad.network.clickUrl;
 
@@ -157,7 +157,7 @@ class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.ReferrerUti
           Callable<Void> callable = () -> {
             Logger.d("ExtractReferrer", "Sending RegisterAdRefererRequest with value " + success);
 
-            RegisterAdRefererRequest.of(ad.id, ad.data.appId, ad.network.clickUrl, success)
+            RegisterAdRefererRequest.of(ad.id, ad.getAppId(), ad.network.clickUrl, success)
                 .execute();
 
             Logger.d("ExtractReferrer", "Retries left: " + retries);

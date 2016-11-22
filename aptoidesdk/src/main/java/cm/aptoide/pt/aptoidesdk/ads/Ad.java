@@ -2,10 +2,10 @@ package cm.aptoide.pt.aptoidesdk.ads;
 
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
@@ -17,17 +17,48 @@ import lombok.experimental.Accessors;
   final long id;
   final Clicks clicks;
   final Network network;
-  final Data data;
+
+  /**
+   * The appId of this ad.
+   * <br><br><b>Attention!</b><br>
+   * <b>Do not use in conjunction with getApp, use {@link Aptoide#getApp(Ad)} instead.</b>
+   */
+  @Getter final long appId;
+  /**
+   * The package name of this ad.
+   */
+  @Getter final String packageName;
+  /**
+   * The name of this ad.
+   */
+  @Getter final String name;
+  /**
+   * The path ot the icon of this ad.
+   */
+  @Getter final String iconPath;
+  /**
+   * The size of this ad.
+   */
+  @Getter final long size;
+
   String referrer;
 
   @JsonCreator public Ad(@JsonProperty("timestamp") long timestamp, @JsonProperty("id") long id,
       @JsonProperty("clicks") Clicks clicks, @JsonProperty("network") Network network,
-      @JsonProperty("data") Data data) {
+      @JsonProperty("appId") long appId, @JsonProperty("packageName") String packageName,
+      @JsonProperty("name") String name, @JsonProperty("iconPath") String iconPath,
+      @JsonProperty("size") long size) {
+
     this.timestamp = timestamp;
     this.id = id;
     this.clicks = clicks;
     this.network = network;
-    this.data = data;
+
+    this.appId = appId;
+    this.packageName = packageName;
+    this.name = name;
+    this.iconPath = iconPath;
+    this.size = size;
   }
 
   static Ad from(GetAdsResponse.Ad ad) {
@@ -35,31 +66,16 @@ import lombok.experimental.Accessors;
 
     Clicks clicks = Clicks.fromGetAds(ad);
     Network network = Network.fromGetAds(ad);
-    Data data = Data.fromGetAds(ad);
 
-    return new Ad(System.currentTimeMillis(), adId, clicks, network, data);
-  }
+    GetAdsResponse.Data data = ad.getData();
+    long appId = data.getId();
+    String packageName = data.getPackageName();
+    String name = data.getName();
+    String iconPath = data.getIcon();
+    long size = data.getSize();
 
-  /**
-   * @return the name of this app.
-   */
-  @JsonIgnore public String getName() {
-    return data.name;
-  }
-
-  /**
-   *
-   * @return the path ot the icon of this app.
-   */
-  @JsonIgnore public String getIconPath() {
-    return data.icon;
-  }
-
-  /**
-   * @return the size of this app.
-   */
-  @JsonIgnore public long getSize() {
-    return data.size;
+    return new Ad(System.currentTimeMillis(), adId, clicks, network, appId, packageName, name,
+        iconPath, size);
   }
 
   @AllArgsConstructor @NoArgsConstructor @EqualsAndHashCode @lombok.Data @Accessors(chain = true)

@@ -123,7 +123,7 @@ public class RxAptoide {
   }
 
   static Observable<App> getApp(Ad ad) {
-    return getApp(ad.data.appId).map(app -> {
+    return getApp(ad.getAppId()).map(app -> {
       handleAds(ad).subscribe(t -> {
       }, throwable -> Logger.w(TAG, "Error extracting referrer.", throwable));
       return app;

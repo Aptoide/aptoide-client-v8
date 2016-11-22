@@ -61,7 +61,7 @@ public class StoredAdsManager {
 
   public Ad getAd(String packageName) {
     for (Ad ad : ads.values()) {
-      if (ad.data.packageName.equals(packageName)) {
+      if (ad.getPackageName().equals(packageName)) {
         return ad;
       }
     }
@@ -117,7 +117,7 @@ public class StoredAdsManager {
 
   private Long getAdId(String packageName) {
     for (Map.Entry<Long, Ad> adEntry : ads.entrySet()) {
-      if (adEntry.getValue().data.packageName.equals(packageName)) {
+      if (adEntry.getValue().getPackageName().equals(packageName)) {
         return adEntry.getKey();
       }
     }
