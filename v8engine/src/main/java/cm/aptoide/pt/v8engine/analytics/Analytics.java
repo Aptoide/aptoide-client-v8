@@ -1137,4 +1137,19 @@ public class Analytics {
       logFabricEvent(IS_INSTALLATION_TYPE_EVENT_NAME, map, FABRIC);
     }
   }
+
+  public static class AccountEvents {
+
+    public static final String LOGGED_IN_EVENT = "Logged in";
+    public static final String ACTION = "Action";
+    public static final String USER_REGISTERED = "User Registered";
+
+    public static void login(String action) {
+      track(LOGGED_IN_EVENT, ACTION, action, LOCALYTICS);
+    }
+
+    public static void signUp() {
+      track(USER_REGISTERED, LOCALYTICS);
+    }
+  }
 }

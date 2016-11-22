@@ -10,12 +10,19 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.interfaces.ReloadInterface;
 import cm.aptoide.pt.v8engine.layouthandler.LoaderLayoutHandler;
 import cm.aptoide.pt.v8engine.layouthandler.SwipeLoaderLayoutHandler;
+import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 
 /**
  * Created by neuro on 05-05-2016.
  */
-public abstract class GridRecyclerSwipeFragment extends GridRecyclerFragmentWithDecorator
-    implements ReloadInterface {
+public abstract class GridRecyclerSwipeFragment<T extends BaseAdapter>
+    extends GridRecyclerFragmentWithDecorator<T> implements ReloadInterface {
+
+  public GridRecyclerSwipeFragment() { }
+
+  public GridRecyclerSwipeFragment(Class<T> adapterClass) {
+    super(adapterClass);
+  }
 
   @NonNull @Override protected LoaderLayoutHandler createLoaderLayoutHandler() {
     return new SwipeLoaderLayoutHandler(getViewToShowAfterLoadingId(), this);

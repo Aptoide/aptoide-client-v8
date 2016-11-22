@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.filemanager;
 
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.FileUtils;
 import rx.Observable;
@@ -36,7 +37,7 @@ public class FileManager {
   /**
    * deletes expired cache files
    */
-  public Observable<Long> cleanCache() {
+  public Observable<Long> purgeCache() {
     return cacheHelper.cleanCache()
         .flatMap(cleaned -> downloadManager.invalidateDatabase().map(success -> cleaned));
   }
@@ -48,6 +49,8 @@ public class FileManager {
       } else {
         return Observable.just(deletedSize);
       }
+    }).doOnNext(aVoid -> {
+      OkHttpClientFactory.cleanInMemoryCache();
     });
   }
 }

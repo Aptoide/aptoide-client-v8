@@ -82,6 +82,10 @@ public class SignUpActivity extends BaseActivity implements AptoideAccountManage
   @Override public void onRegisterSuccess(Bundle data) {
     ShowMessage.asSnack(content, R.string.user_created);
     setResult(RESULT_OK, new Intent().putExtras(data));
+    Analytics analytics = AptoideAccountManager.getAnalytics();
+    if (analytics != null) {
+      analytics.signUp();
+    }
     finish();
   }
 

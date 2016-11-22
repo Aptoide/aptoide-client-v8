@@ -14,10 +14,10 @@ public class PostCacheInterceptor implements Interceptor {
 
   private final String TAG = PostCacheInterceptor.class.getSimpleName();
 
-  private final L2Cache cache;
+  private final Cache<Request, Response> cache;
 
-  public PostCacheInterceptor() {
-    cache = new L2Cache(new PostCacheKeyAlgorithm());
+  public PostCacheInterceptor(Cache<Request, Response> cache) {
+    this.cache = cache;
   }
 
   @Override public Response intercept(Chain chain) throws IOException {
@@ -27,6 +27,7 @@ public class PostCacheInterceptor implements Interceptor {
     if (!request.method().equalsIgnoreCase("POST")) {
       return chain.proceed(request);
     }
+
     // we shouldn't cache the response if the client explicitly asked us not to
     Headers headers = request.headers();
     if (headers.size() > 0) {

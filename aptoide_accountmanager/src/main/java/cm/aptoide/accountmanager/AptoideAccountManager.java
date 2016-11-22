@@ -54,6 +54,9 @@ import java.lang.ref.WeakReference;
 import java.net.SocketTimeoutException;
 import java.util.List;
 import javax.security.auth.login.LoginException;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.PackagePrivate;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -96,6 +99,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
    * account manager is not fast enough
    */
   private static boolean userIsLoggedIn = isLoggedIn();
+  @Setter @Getter(AccessLevel.PACKAGE) private static Analytics analytics;
   /**
    * private variables
    */
@@ -371,7 +375,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
           if (isSuccess) {
             setAccessTokenOnLocalAccount(oAuth.getAccessToken(), null, SecureKeys.ACCESS_TOKEN);
             AccountManagerPreferences.setLoginMode(mode);
-            getInstance().onLoginSuccess();
+            getInstance().onLoginSuccess(mode);
             if (finalGenericPleaseWaitDialog != null) {
               finalGenericPleaseWaitDialog.dismiss();
             }
@@ -810,9 +814,12 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     mCallback.onLoginFail(reason);
   }
 
-  void onLoginSuccess() {
+  void onLoginSuccess(LoginMode loginType) {
     userIsLoggedIn = true;
     mCallback.onLoginSuccess();
+    if (analytics != null) {
+      analytics.login(loginType.name());
+    }
   }
 
   void sendRemoveLocalAccountBroadcaster() {

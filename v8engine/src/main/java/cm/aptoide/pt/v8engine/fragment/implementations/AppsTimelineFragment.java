@@ -38,6 +38,7 @@ import cm.aptoide.pt.v8engine.repository.TimelineCardFilter;
 import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
 import cm.aptoide.pt.v8engine.repository.TimelineRepository;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
+import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.ProgressBarDisplayable;
@@ -62,7 +63,7 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created by marcelobenites on 6/17/16.
  */
-public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
+public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwipeFragment<T> {
 
   public static final int SEARCH_LIMIT = 20;
   private static final String ACTION_KEY = "ACTION";

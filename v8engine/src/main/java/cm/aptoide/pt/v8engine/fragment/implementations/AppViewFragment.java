@@ -87,6 +87,7 @@ import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
 import cm.aptoide.pt.v8engine.util.referrer.ReferrerUtils;
+import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDescriptionDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDeveloperDisplayable;
@@ -108,7 +109,7 @@ import rx.functions.Action0;
 /**
  * Created by sithengineer on 04/05/16.
  */
-public class AppViewFragment extends GridRecyclerFragment
+public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
     implements Scrollable, AppMenuOptions, Payments {
 
   public static final int VIEW_ID = R.layout.fragment_app_view;
@@ -219,6 +220,10 @@ public class AppViewFragment extends GridRecyclerFragment
 
   public static Fragment newInstance(String packageName, OpenType openType) {
     return newInstance(packageName, null, openType);
+  }
+
+  public AppViewFragment() {
+    super(BaseAdapter.class);
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
