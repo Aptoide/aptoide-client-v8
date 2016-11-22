@@ -48,6 +48,8 @@ public class FileManager {
       } else {
         return Observable.just(deletedSize);
       }
+    }).doOnNext(aVoid -> {
+      // TODO: clean in-memory cache
     });
   }
 }
