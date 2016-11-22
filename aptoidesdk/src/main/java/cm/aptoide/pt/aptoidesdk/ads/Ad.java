@@ -41,13 +41,23 @@ import lombok.experimental.Accessors;
    */
   @Getter final long size;
 
+  /**
+   * The version code of this ad.
+   */
+  @Getter final int vercode;
+  /**
+   * The version name of this ad.
+   */
+  @Getter final String vername;
+
   String referrer;
 
   @JsonCreator public Ad(@JsonProperty("timestamp") long timestamp, @JsonProperty("id") long id,
       @JsonProperty("clicks") Clicks clicks, @JsonProperty("network") Network network,
       @JsonProperty("appId") long appId, @JsonProperty("packageName") String packageName,
       @JsonProperty("name") String name, @JsonProperty("iconPath") String iconPath,
-      @JsonProperty("size") long size) {
+      @JsonProperty("size") long size, @JsonProperty("vercode") int vercode,
+      @JsonProperty("vername") String vername) {
 
     this.timestamp = timestamp;
     this.id = id;
@@ -59,6 +69,9 @@ import lombok.experimental.Accessors;
     this.name = name;
     this.iconPath = iconPath;
     this.size = size;
+
+    this.vercode = vercode;
+    this.vername = vername;
   }
 
   static Ad from(GetAdsResponse.Ad ad) {
@@ -74,8 +87,11 @@ import lombok.experimental.Accessors;
     String iconPath = data.getIcon();
     long size = data.getSize();
 
+    int vercode = data.getVercode();
+    String vername = data.getVername();
+
     return new Ad(System.currentTimeMillis(), adId, clicks, network, appId, packageName, name,
-        iconPath, size);
+        iconPath, size, vercode, vername);
   }
 
   @AllArgsConstructor @NoArgsConstructor @EqualsAndHashCode @lombok.Data @Accessors(chain = true)
