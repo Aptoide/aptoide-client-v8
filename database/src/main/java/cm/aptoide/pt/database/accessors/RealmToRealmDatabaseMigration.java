@@ -167,6 +167,11 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
       if (!downloadSchema.hasField("versionName")) {
         downloadSchema.addField("versionName", String.class);
       }
+
+      RealmObjectSchema paymentConfirmationSchema = schema.create("PaymentConfirmation");
+      paymentConfirmationSchema.addField("status", String.class, FieldAttribute.REQUIRED)
+          .transform(obj -> obj.set("status", "UNKNOWN"));
+      paymentConfirmationSchema.setNullable("status", false);
     }
   }
 }
