@@ -142,7 +142,7 @@
     </service>
 
     <service
-        android:name=".v8engine.payment.PaymentSyncService"
+        android:name=".v8engine.sync.AptoideSyncService"
         android:exported="true"
         android:process=":sync">
       <intent-filter>
