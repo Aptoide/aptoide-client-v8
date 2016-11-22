@@ -5,13 +5,8 @@
 
 package cm.aptoide.pt.v8engine.payment.providers.web;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
-import android.content.ContentResolver;
 import android.content.Context;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import cm.aptoide.pt.preferences.AptoidePreferencesConfiguration;
+import cm.aptoide.pt.v8engine.payment.BackgroundSync;
 import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.PaymentAuthorization;
 import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
@@ -34,12 +29,10 @@ public class WebPayment implements Payment {
   private final Price price;
   private final String description;
   private PaymentRepository paymentRepository;
-  private final AptoidePreferencesConfiguration configuration;
-  private AccountManager accountManager;
+  private BackgroundSync backgroundSync;
 
   public WebPayment(Context context, int id, String type, Product product, Price price,
-      String description, PaymentRepository paymentRepository,
-      AptoidePreferencesConfiguration configuration, AccountManager accountManager) {
+      String description, PaymentRepository paymentRepository, BackgroundSync backgroundSync) {
     this.context = context;
     this.id = id;
     this.type = type;
@@ -47,8 +40,7 @@ public class WebPayment implements Payment {
     this.price = price;
     this.description = description;
     this.paymentRepository = paymentRepository;
-    this.configuration = configuration;
-    this.accountManager = accountManager;
+    this.backgroundSync = backgroundSync;
   }
 
   @Override public int getId() {
@@ -92,25 +84,10 @@ public class WebPayment implements Payment {
             .flatMap(paymentAuthorization -> paymentRepository.savePaymentAuthorization(
                 paymentAuthorization))
             .flatMap(success -> paymentRepository.getPaymentAuthorization(id)
-                .doOnSubscribe(() -> syncPaymentAuthorizationInBackground()));
+                .doOnSubscribe(() -> backgroundSync.schedule()));
       }
       return Observable.<PaymentAuthorization>error(throwable);
     });
-  }
-
-  private void syncPaymentAuthorizationInBackground() {
-    final Bundle bundle = new Bundle();
-    bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-    bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-    ContentResolver.requestSync(getAccount(), configuration.getSyncAdapterAuthority(), bundle);
-  }
-
-  @NonNull private Account getAccount() {
-    Account[] accounts = accountManager.getAccountsByType(configuration.getAccountType());
-    if (accounts != null && accounts.length > 0) {
-      return accounts[0];
-    }
-    throw new IllegalStateException("User not logged in. Can't complete payment.");
   }
 
   private void startWebAuthorizationActivity(String url, String resultUrl) {

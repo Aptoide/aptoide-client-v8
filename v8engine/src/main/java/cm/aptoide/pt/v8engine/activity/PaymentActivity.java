@@ -28,6 +28,7 @@ import cm.aptoide.pt.v8engine.payment.PurchaseIntentFactory;
 import cm.aptoide.pt.v8engine.payment.product.AptoideProduct;
 import cm.aptoide.pt.v8engine.presenter.PaymentPresenter;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
+import cm.aptoide.pt.v8engine.sync.SyncAdapterBackgroundSync;
 import cm.aptoide.pt.v8engine.view.PaymentView;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.ArrayList;
@@ -80,8 +81,10 @@ public class PaymentActivity extends ActivityView implements PaymentView {
 
     final AptoideProduct product = getIntent().getParcelableExtra(PRODUCT_EXTRA);
     attachPresenter(new PaymentPresenter(this,
-        new AptoidePay(Application.getConfiguration(), AccountManager.get(getApplicationContext()),
-            RepositoryFactory.getPaymentRepository(this)), product), savedInstanceState);
+            new AptoidePay(RepositoryFactory.getPaymentRepository(this),
+                new SyncAdapterBackgroundSync(Application.getConfiguration(),
+                    (AccountManager) getSystemService(Context.ACCOUNT_SERVICE))), product),
+        savedInstanceState);
   }
 
   @Override public void dismiss(Purchase purchase) {

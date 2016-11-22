@@ -5,20 +5,12 @@
 
 package cm.aptoide.pt.v8engine.payment;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
-import android.content.ContentResolver;
 import android.content.Context;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.preferences.AptoidePreferencesConfiguration;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentAlreadyProcessedException;
 import cm.aptoide.pt.v8engine.payment.product.AptoideProduct;
 import cm.aptoide.pt.v8engine.repository.PaymentRepository;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.util.List;
-import lombok.AllArgsConstructor;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -27,11 +19,15 @@ import static rx.Observable.error;
 /**
  * Created by marcelobenites on 8/12/16.
  */
-@AllArgsConstructor public class AptoidePay {
+public class AptoidePay {
 
-  private final AptoidePreferencesConfiguration configuration;
-  private final AccountManager accountManager;
   private final PaymentRepository paymentRepository;
+  private BackgroundSync backgroundSync;
+
+  public AptoidePay(PaymentRepository paymentRepository, BackgroundSync backgroundSync) {
+    this.paymentRepository = paymentRepository;
+    this.backgroundSync = backgroundSync;
+  }
 
   public Observable<List<Payment>> getProductPayments(Context context, AptoideProduct product) {
     return paymentRepository.getPayments(context, product);
@@ -73,23 +69,8 @@ import static rx.Observable.error;
     return payment.process()
         .flatMap(paymentConfirmation -> paymentRepository.savePaymentConfirmation(
             paymentConfirmation))
-        .doOnNext(saved -> syncPaymentConfirmationInBackground())
+        .doOnNext(saved -> backgroundSync.schedule())
         .flatMap(saved -> paymentRepository.getPaymentConfirmation(payment.getProduct().getId()));
-  }
-
-  private void syncPaymentConfirmationInBackground() {
-    final Bundle bundle = new Bundle();
-    bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-    bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-    ContentResolver.requestSync(getAccount(), configuration.getSyncAdapterAuthority(), bundle);
-  }
-
-  @NonNull private Account getAccount() {
-    Account[] accounts = accountManager.getAccountsByType(configuration.getAccountType());
-    if (accounts != null && accounts.length > 0) {
-      return accounts[0];
-    }
-    throw new IllegalStateException("User not logged in. Can't complete payment.");
   }
 
   private Observable<Boolean> isProductAlreadyPurchased(AptoideProduct product) {
