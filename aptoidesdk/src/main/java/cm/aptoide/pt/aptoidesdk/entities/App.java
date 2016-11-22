@@ -19,6 +19,7 @@ public class App {
   private final String vername;
 
   private final Media media;
+  private final Developer developer;
 
   private final Store store;
   private final File file;
@@ -35,12 +36,13 @@ public class App {
     String vername = getApp.getNodes().getMeta().getData().getFile().getVername();
 
     Media media = Media.fromGetAppMetaMedia(getApp.getNodes().getMeta().getData().getMedia());
+    Developer developer =
+        Developer.fromGetAppDeveloper(getApp.getNodes().getMeta().getData().getDeveloper());
 
     Store store = Store.from(getApp.getNodes().getMeta().getData().getStore());
     File file = File.from(getApp.getNodes().getMeta().getData().getFile());
 
     return new App(id, name, packageName, iconPath, featuredGraphicPath, vercode, vername, media,
-        store,
-        file);
+        developer, store, file);
   }
 }
