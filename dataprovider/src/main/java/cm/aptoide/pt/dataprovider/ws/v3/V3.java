@@ -19,7 +19,6 @@ import cm.aptoide.pt.model.v3.PaidApp;
 import cm.aptoide.pt.model.v3.PaymentResponse;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
-import cm.aptoide.pt.networkclient.okhttp.UserAgentGenerator;
 import cm.aptoide.pt.networkclient.okhttp.cache.PostCacheInterceptor;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import java.io.IOException;
@@ -46,13 +45,12 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
   }
 
   protected V3(String baseHost, BaseBody baseBody) {
-    super(Interfaces.class,
-        OkHttpClientFactory.getSingletonClient(new UserAgentGenerator() {
-          @Override public String generateUserAgent() {
-            return SecurePreferences.getUserAgent();
-          }
-        }),
-        WebService.getDefaultConverter(), baseHost);
+    super(
+        Interfaces.class,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent()),
+        WebService.getDefaultConverter(),
+        baseHost
+    );
     this.map = baseBody;
   }
 

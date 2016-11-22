@@ -32,7 +32,6 @@ cache-response-directive =
        | "s-maxage" "=" delta-seconds           ; Section 14.9.3 -> interesting
        | cache-extension                        ; Section 14.9.6
 
-
 */
 public class L2Cache extends StringBaseCache<Request, Response> {
   private static final String TAG = L2Cache.class.getName();
@@ -68,7 +67,7 @@ public class L2Cache extends StringBaseCache<Request, Response> {
     cache.clear();
   }
 
-  @Override void put(String key, Response response) {
+  @Override public void put(String key, Response response) {
     int seconds = shouldCacheUntil(response);
     if(seconds>=1){
       cache.put(key, new ResponseCacheEntry(response, seconds));
@@ -112,7 +111,7 @@ public class L2Cache extends StringBaseCache<Request, Response> {
     return 0;
   }
 
-  @Override Response get(String key, Request request) {
+  @Override public Response get(String key, Request request) {
     ResponseCacheEntry response = cache.get(key);
 
     if(persistenceCounter.incrementAndGet()>=MAX_COUNT && response!=null && !isPersisting){
@@ -142,7 +141,7 @@ public class L2Cache extends StringBaseCache<Request, Response> {
     isPersisting = false;
   }
 
-  @Override boolean contains(String key) {
+  @Override public boolean contains(String key) {
     return cache.containsKey(key);
   }
 
@@ -176,9 +175,6 @@ public class L2Cache extends StringBaseCache<Request, Response> {
    */
   private void store() throws IOException {
     File cacheFile = new File(AptoideUtils.getContext().getCacheDir(), CACHE_FILE_NAME);
-
-    String debug = new ObjectMapper().writeValueAsString(cache);
-
     new ObjectMapper().writeValue(cacheFile, cache);
     Logger.d(TAG, "Stored cache file");
   }
@@ -192,5 +188,11 @@ public class L2Cache extends StringBaseCache<Request, Response> {
 
     cache = new ObjectMapper().readValue(cacheFile,  new TypeReference<ConcurrentHashMap<String, ResponseCacheEntry>>(){});
     Logger.d(TAG, "Loaded cache file");
+  }
+
+  public void clean() {
+    if(cache!=null && cache.size()>0) {
+      cache.clear();
+    }
   }
 }

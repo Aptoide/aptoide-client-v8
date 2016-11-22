@@ -246,7 +246,7 @@ public abstract class V8Engine extends DataProvider {
                   }
                 }, getConfiguration().getPartnerId()));
 
-    fileManager.cleanCache()
+    fileManager.purgeCache()
         .subscribe(cleanedSize -> Logger.d(TAG,
             "cleaned size: " + AptoideUtils.StringU.formatBytes(cleanedSize)), throwable -> {
           Logger.e(TAG, throwable);

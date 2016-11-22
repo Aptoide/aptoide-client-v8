@@ -72,6 +72,10 @@ public class RateAndReviewsFragment extends GridRecyclerFragment<ReviewsAndComme
   private RatingBarsLayout ratingBarsLayout;
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
 
+  public RateAndReviewsFragment() {
+    super(ReviewsAndCommentsAdapter.class);
+  }
+
   public static RateAndReviewsFragment newInstance(long appId, String appName, String storeName,
       String packageName, String storeTheme) {
     RateAndReviewsFragment fragment = new RateAndReviewsFragment();

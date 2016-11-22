@@ -12,7 +12,6 @@ import cm.aptoide.accountmanager.util.Filters;
 import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
-import cm.aptoide.pt.networkclient.okhttp.UserAgentGenerator;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
@@ -59,13 +58,11 @@ import rx.Observable;
    * @return the built request
    */
   public static CheckUserCredentialsRequest of(String accessToken) {
-    CheckUserCredentialsRequest request = new CheckUserCredentialsRequest(Application.getContext(),
-        OkHttpClientFactory.getSingletonClient(new UserAgentGenerator() {
-          @Override public String generateUserAgent() {
-            return SecurePreferences.getUserAgent();
-          }
-        }),
-        WebService.getDefaultConverter());
+    CheckUserCredentialsRequest request = new CheckUserCredentialsRequest(
+        Application.getContext(),
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent()),
+        WebService.getDefaultConverter()
+    );
     request.setToken(accessToken);
     return request;
   }
