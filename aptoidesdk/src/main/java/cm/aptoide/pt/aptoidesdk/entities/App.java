@@ -23,6 +23,7 @@ public class App {
 
   private final Store store;
   private final File file;
+  private final Obb obb;
 
   public static App fromGetApp(GetApp getApp) {
 
@@ -41,8 +42,9 @@ public class App {
 
     Store store = Store.from(getApp.getNodes().getMeta().getData().getStore());
     File file = File.from(getApp.getNodes().getMeta().getData().getFile());
+    Obb obb = Obb.from(getApp.getNodes().getMeta().getData().getObb());
 
     return new App(id, name, packageName, iconPath, featuredGraphicPath, vercode, vername, media,
-        developer, store, file);
+        developer, store, file, obb);
   }
 }
