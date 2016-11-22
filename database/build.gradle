@@ -52,6 +52,9 @@ dependencies {
   debugCompile project(path: ':model', configuration: 'debug')
   releaseCompile project(path: ':model', configuration: 'release')
 
+  debugCompile project(path: ':crashreports', configuration: 'debug')
+  releaseCompile project(path: ':crashreports', configuration: 'release')
+
   //
   // custom libs in folders
   //
