@@ -7,8 +7,7 @@ package cm.aptoide.pt.v8engine.sync;
 
 import android.content.SyncResult;
 import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
-import cm.aptoide.pt.v8engine.repository.PaymentRepository;
-import java.io.IOException;
+import cm.aptoide.pt.v8engine.repository.PaymentConfirmationRepository;
 
 /**
  * Created by marcelobenites on 22/11/16.
@@ -16,24 +15,24 @@ import java.io.IOException;
 
 public class PaymentConfirmationSync extends AbstractSync {
 
-  private final PaymentRepository paymentRepository;
+  private final PaymentConfirmationRepository paymentConfirmationRepository;
 
-  public PaymentConfirmationSync(PaymentRepository paymentRepository) {
-    this.paymentRepository = paymentRepository;
+  public PaymentConfirmationSync(PaymentConfirmationRepository paymentConfirmationRepository) {
+    this.paymentConfirmationRepository = paymentConfirmationRepository;
   }
 
   @Override public void sync(SyncResult syncResult) {
-    paymentRepository.getPaymentConfirmations()
+    paymentConfirmationRepository.getPaymentConfirmations()
         .first()
         .flatMapIterable(paymentConfirmations -> paymentConfirmations)
         .flatMap(paymentConfirmation -> {
           if (paymentConfirmation.isFailed()) {
-            return paymentRepository.removePaymentConfirmation(
+            return paymentConfirmationRepository.removePaymentConfirmation(
                 paymentConfirmation.getPaymentConfirmationId());
           } else if (!paymentConfirmation.isCompleted()) {
             rescheduleIncompletedPaymentSync(paymentConfirmation, syncResult);
           }
-          return paymentRepository.savePaymentConfirmation(paymentConfirmation);
+          return paymentConfirmationRepository.savePaymentConfirmation(paymentConfirmation);
         })
         .toList()
         .onErrorReturn(throwable -> {

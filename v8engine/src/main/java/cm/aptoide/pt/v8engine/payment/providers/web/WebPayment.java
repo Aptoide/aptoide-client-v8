@@ -13,7 +13,8 @@ import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.payment.Price;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentFailureException;
-import cm.aptoide.pt.v8engine.repository.PaymentRepository;
+import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationRepository;
+import cm.aptoide.pt.v8engine.repository.PaymentConfirmationRepository;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import rx.Observable;
 
@@ -28,18 +29,21 @@ public class WebPayment implements Payment {
   private final Product product;
   private final Price price;
   private final String description;
-  private PaymentRepository paymentRepository;
-  private BackgroundSync backgroundSync;
+  private final PaymentAuthorizationRepository authorizationRepository;
+  private final PaymentConfirmationRepository confirmationRepository;
+  private final BackgroundSync backgroundSync;
 
   public WebPayment(Context context, int id, String type, Product product, Price price,
-      String description, PaymentRepository paymentRepository, BackgroundSync backgroundSync) {
+      String description, PaymentAuthorizationRepository authorizationRepository,
+      PaymentConfirmationRepository confirmationRepository, BackgroundSync backgroundSync) {
     this.context = context;
     this.id = id;
     this.type = type;
     this.product = product;
     this.price = price;
     this.description = description;
-    this.paymentRepository = paymentRepository;
+    this.authorizationRepository = authorizationRepository;
+    this.confirmationRepository = confirmationRepository;
     this.backgroundSync = backgroundSync;
   }
 
@@ -66,7 +70,7 @@ public class WebPayment implements Payment {
   @Override public Observable<PaymentConfirmation> process() {
     return getOrCreateAuthorization().flatMap(authorization -> {
       if (authorization.isAuthorized()) {
-        return paymentRepository.createPaymentConfirmation(this);
+        return confirmationRepository.createPaymentConfirmation(this);
       } else if (authorization.displayAuthorizationView()) {
         startWebAuthorizationActivity(authorization.getUrl(), authorization.getRedirectUrl());
         return Observable.empty();
@@ -78,12 +82,12 @@ public class WebPayment implements Payment {
   }
 
   private Observable<PaymentAuthorization> getOrCreateAuthorization() {
-    return paymentRepository.getPaymentAuthorization(id).onErrorResumeNext(throwable -> {
+    return authorizationRepository.getPaymentAuthorization(id).onErrorResumeNext(throwable -> {
       if (throwable instanceof RepositoryItemNotFoundException) {
-        return paymentRepository.createPaymentAuthorization(id)
-            .flatMap(paymentAuthorization -> paymentRepository.savePaymentAuthorization(
+        return authorizationRepository.createPaymentAuthorization(id)
+            .flatMap(paymentAuthorization -> authorizationRepository.savePaymentAuthorization(
                 paymentAuthorization))
-            .flatMap(success -> paymentRepository.getPaymentAuthorization(id)
+            .flatMap(success -> authorizationRepository.getPaymentAuthorization(id)
                 .doOnSubscribe(() -> backgroundSync.schedule()));
       }
       return Observable.<PaymentAuthorization>error(throwable);

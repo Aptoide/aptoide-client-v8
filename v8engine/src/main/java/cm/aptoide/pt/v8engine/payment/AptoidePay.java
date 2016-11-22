@@ -8,7 +8,7 @@ package cm.aptoide.pt.v8engine.payment;
 import android.content.Context;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentAlreadyProcessedException;
 import cm.aptoide.pt.v8engine.payment.product.AptoideProduct;
-import cm.aptoide.pt.v8engine.repository.PaymentRepository;
+import cm.aptoide.pt.v8engine.repository.PaymentConfirmationRepository;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.util.List;
 import rx.Observable;
@@ -21,22 +21,22 @@ import static rx.Observable.error;
  */
 public class AptoidePay {
 
-  private final PaymentRepository paymentRepository;
+  private final PaymentConfirmationRepository confirmationRepository;
   private BackgroundSync backgroundSync;
 
-  public AptoidePay(PaymentRepository paymentRepository, BackgroundSync backgroundSync) {
-    this.paymentRepository = paymentRepository;
+  public AptoidePay(PaymentConfirmationRepository confirmationRepository, BackgroundSync backgroundSync) {
+    this.confirmationRepository = confirmationRepository;
     this.backgroundSync = backgroundSync;
   }
 
   public Observable<List<Payment>> getProductPayments(Context context, AptoideProduct product) {
-    return paymentRepository.getPayments(context, product);
+    return confirmationRepository.getPayments(context, product);
   }
 
   public Observable<Purchase> getPurchase(AptoideProduct product) {
-    return paymentRepository.getPaymentConfirmation(product.getId())
+    return confirmationRepository.getPaymentConfirmation(product.getId())
         .first(paymentConfirmation -> paymentConfirmation.isCompleted())
-        .flatMap(paymentConfirmation -> paymentRepository.getPurchase(product))
+        .flatMap(paymentConfirmation -> confirmationRepository.getPurchase(product))
         .onErrorResumeNext(throwable -> {
           if (throwable instanceof RepositoryItemNotFoundException) {
             return Observable.just(null);
@@ -53,7 +53,7 @@ public class AptoidePay {
             "Product " + payment.getProduct().getId() + " already purchased."));
       }
 
-      return paymentRepository.getPaymentConfirmation(payment.getProduct().getId())
+      return confirmationRepository.getPaymentConfirmation(payment.getProduct().getId())
           .onErrorResumeNext(confirmationThrowable -> {
             if (confirmationThrowable instanceof RepositoryItemNotFoundException) {
               return processPaymentAndGetConfirmation(payment);
@@ -61,20 +61,20 @@ public class AptoidePay {
             return Observable.<PaymentConfirmation>error(confirmationThrowable);
           })
           .first(paymentConfirmation -> paymentConfirmation.isCompleted())
-          .flatMap(saved -> paymentRepository.getPurchase((AptoideProduct) payment.getProduct()));
+          .flatMap(saved -> confirmationRepository.getPurchase((AptoideProduct) payment.getProduct()));
     }).subscribeOn(Schedulers.computation());
   }
 
   private Observable<PaymentConfirmation> processPaymentAndGetConfirmation(Payment payment) {
     return payment.process()
-        .flatMap(paymentConfirmation -> paymentRepository.savePaymentConfirmation(
+        .flatMap(paymentConfirmation -> confirmationRepository.savePaymentConfirmation(
             paymentConfirmation))
         .doOnNext(saved -> backgroundSync.schedule())
-        .flatMap(saved -> paymentRepository.getPaymentConfirmation(payment.getProduct().getId()));
+        .flatMap(saved -> confirmationRepository.getPaymentConfirmation(payment.getProduct().getId()));
   }
 
   private Observable<Boolean> isProductAlreadyPurchased(AptoideProduct product) {
-    return paymentRepository.getPurchase(product)
+    return confirmationRepository.getPurchase(product)
         .map(purchase -> true)
         .onErrorResumeNext(throwable -> {
           if (throwable instanceof RepositoryItemNotFoundException) {

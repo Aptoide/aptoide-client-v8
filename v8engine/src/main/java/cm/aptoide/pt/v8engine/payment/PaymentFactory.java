@@ -39,8 +39,11 @@ public class PaymentFactory {
       case BOACOMPRA:
         return new WebPayment(context, paymentService.getId(), paymentService.getShortName(),
             product, getPrice(paymentService.getPrice(), paymentService.getCurrency(),
-            paymentService.getTaxRate()), paymentService.getName(), RepositoryFactory.getPaymentRepository(context), new SyncAdapterBackgroundSync(Application.getConfiguration(),
-            (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE)));
+            paymentService.getTaxRate()), paymentService.getName(),
+            RepositoryFactory.getPaymentAuthorizationRepository(context),
+            RepositoryFactory.getPaymentConfirmationRepository(context),
+            new SyncAdapterBackgroundSync(Application.getConfiguration(),
+                (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE)));
       default:
         throw new IllegalArgumentException(
             "Payment not supported: " + paymentService.getShortName());
