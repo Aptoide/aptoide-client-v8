@@ -220,7 +220,7 @@ class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.ReferrerUti
     return excludedNetworks.remove(packageName);
   }
 
-  private static Boolean hasAds(GetAdsResponse getAdsResponse) {
+  public static Boolean hasAds(GetAdsResponse getAdsResponse) {
     return getAdsResponse != null
         && getAdsResponse.getAds() != null
         && getAdsResponse.getAds().size() > 0

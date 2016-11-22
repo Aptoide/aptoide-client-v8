@@ -52,7 +52,7 @@ public class SdkInstalledBroadcastReceiver extends BroadcastReceiver {
               .getAptoideClientUUID(),
           DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(RxAptoide.getContext()),
           RxAptoide.getOemid())
-          .observe()
+          .observe().filter(ReferrerUtils::hasAds)
           .map(getAdsResponse -> Ad.from(getAdsResponse.getAds().get(0)))
           .observeOn(AndroidSchedulers.mainThread())
           .doOnNext(

@@ -42,9 +42,9 @@ public class RxAptoide {
 
   public static void integrate(Context context, String oemid) {
     AptoideUtils.setContext(context);
-    setUserAgent();
-
     RxAptoide.oemid = oemid;
+    setUserAgent(oemid);
+
     RxAptoide.aptoideClientUUID =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(context),
             context).getAptoideClientUUID();
@@ -52,10 +52,10 @@ public class RxAptoide {
     Logger.setDBG(BuildConfig.DEBUG);
   }
 
-  private static void setUserAgent() {
+  private static void setUserAgent(String oemid) {
     SecurePreferences.setUserAgent(AptoideUtils.NetworkUtils.getDefaultUserAgent(
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext()),
-        () -> null, "aptoidesdk-" + BuildConfig.VERSION_NAME));
+        () -> null, "aptoidesdk-" + BuildConfig.VERSION_NAME, oemid));
   }
 
   public static Context getContext() {
