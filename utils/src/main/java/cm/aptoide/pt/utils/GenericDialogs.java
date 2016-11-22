@@ -70,7 +70,7 @@ public class GenericDialogs {
         subscriber.onCompleted();
       });
       // cleaning up
-      subscriber.add(Subscriptions.create(dialog::dismiss));
+      subscriber.add(Subscriptions.create(()->dialog.dismiss()));
       dialog.show();
     }).subscribeOn(AndroidSchedulers.mainThread());
   }
@@ -116,7 +116,7 @@ public class GenericDialogs {
         subscriber.onCompleted();
       });
       // cleaning up
-      subscriber.add(Subscriptions.create(dialog::dismiss));
+      subscriber.add(Subscriptions.create(()->dialog.dismiss()));
       dialog.show();
     });
   }
@@ -152,7 +152,7 @@ public class GenericDialogs {
         subscriber.onCompleted();
       });
       // cleaning up
-      subscriber.add(Subscriptions.create(dialog::dismiss));
+      subscriber.add(Subscriptions.create(()->dialog.dismiss()));
       dialog.show();
     });
   }

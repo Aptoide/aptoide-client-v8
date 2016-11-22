@@ -112,6 +112,14 @@ public class VanillaConfiguration implements AptoidePreferencesConfiguration {
     return false;
   }
 
+  @Override public String getPartnerDimension() {
+    return "vanilla";
+  }
+
+  @Override public String getVerticalDimension() {
+    return "smartphone";
+  }
+
   @Override public int getDefaultThemeRes() {
     return StoreThemeEnum.get(getDefaultTheme()).getThemeResource();
   }

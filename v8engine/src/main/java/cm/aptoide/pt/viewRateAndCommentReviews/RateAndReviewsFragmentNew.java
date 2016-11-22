@@ -15,20 +15,16 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Review;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.util.schedulers.ConcreteSchedulerProvider;
+import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.adapters.ReviewsAndCommentsAdapter;
@@ -41,19 +37,18 @@ import cm.aptoide.pt.v8engine.util.ThemeUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.ProgressBarDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
+import cm.aptoide.pt.v8engine.view.recycler.listeners.RxEndlessRecyclerView;
 import cm.aptoide.pt.viewRateAndCommentReviews.layout.RatingBarsLayout;
 import cm.aptoide.pt.viewRateAndCommentReviews.layout.RatingTotalsLayout;
-import com.trello.rxlifecycle.FragmentEvent;
+import com.jakewharton.rxbinding.view.RxView;
 import java.util.List;
 import lombok.Getter;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import rx.Observable;
 
-public class RateAndReviewsFragment extends GridRecyclerFragment<ReviewsAndCommentsAdapter>
-    implements FullCommentAdderView<ReviewsAndCommentsAdapter> {
+public class RateAndReviewsFragmentNew extends GridRecyclerFragment<ReviewsAndCommentsAdapter>
+    implements FullCommentAdderView<ReviewsAndCommentsAdapter>, RateAndReviewsView {
 
-  private static final String TAG = RateAndReviewsFragment.class.getSimpleName();
+  private static final String TAG = RateAndReviewsFragmentNew.class.getSimpleName();
   private static final String APP_ID = "app_id";
   private static final String PACKAGE_NAME = "package_name";
   private static final String STORE_NAME = "store_name";
@@ -61,6 +56,7 @@ public class RateAndReviewsFragment extends GridRecyclerFragment<ReviewsAndComme
   private static final String REVIEW_ID = "review_id";
   private static final String STORE_THEME = "store_theme";
 
+  // view data
   private long appId;
   @Getter private long reviewId;
   private String packageName;
@@ -68,13 +64,18 @@ public class RateAndReviewsFragment extends GridRecyclerFragment<ReviewsAndComme
   private String storeTheme;
   @Getter private String appName;
   private MenuItem installMenuItem;
+  // views
   private RatingTotalsLayout ratingTotalsLayout;
   private RatingBarsLayout ratingBarsLayout;
-  private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
+  private FloatingActionButton floatingActionButton;
 
-  public static RateAndReviewsFragment newInstance(long appId, String appName, String storeName,
+  //
+  // static constructors
+  //
+
+  public static RateAndReviewsFragmentNew newInstance(long appId, String appName, String storeName,
       String packageName, String storeTheme) {
-    RateAndReviewsFragment fragment = new RateAndReviewsFragment();
+    RateAndReviewsFragmentNew fragment = new RateAndReviewsFragmentNew();
     Bundle args = new Bundle();
     args.putLong(APP_ID, appId);
     args.putString(APP_NAME, appName);
@@ -85,9 +86,9 @@ public class RateAndReviewsFragment extends GridRecyclerFragment<ReviewsAndComme
     return fragment;
   }
 
-  public static RateAndReviewsFragment newInstance(long appId, String appName, String storeName,
+  public static RateAndReviewsFragmentNew newInstance(long appId, String appName, String storeName,
       String packageName, long reviewId) {
-    RateAndReviewsFragment fragment = new RateAndReviewsFragment();
+    RateAndReviewsFragmentNew fragment = new RateAndReviewsFragmentNew();
     Bundle args = new Bundle();
     args.putLong(APP_ID, appId);
     args.putString(APP_NAME, appName);
@@ -97,6 +98,10 @@ public class RateAndReviewsFragment extends GridRecyclerFragment<ReviewsAndComme
     fragment.setArguments(args);
     return fragment;
   }
+
+  //
+  // base methods
+  //
 
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
@@ -109,9 +114,7 @@ public class RateAndReviewsFragment extends GridRecyclerFragment<ReviewsAndComme
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    Logger.d(TAG, "Other versions should refresh? " + create);
-    fetchRating(refresh);
-    fetchReviews();
+    // ??
   }
 
   @Override public int getContentViewId() {
@@ -120,17 +123,66 @@ public class RateAndReviewsFragment extends GridRecyclerFragment<ReviewsAndComme
 
   @Override public void bindViews(View view) {
     super.bindViews(view);
-    final FloatingActionButton floatingActionButton =
-        (FloatingActionButton) view.findViewById(R.id.fab);
+    floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fab);
     setHasOptionsMenu(true);
 
     ratingTotalsLayout = new RatingTotalsLayout(view);
     ratingBarsLayout = new RatingBarsLayout(view);
+  }
 
-    floatingActionButton.setOnClickListener(v -> {
-      DialogUtils.showRateDialog(getActivity(), appName, packageName, storeName,
-          this::fetchReviews);
-    });
+  //
+  // ???
+  //
+
+  private void setupRating(GetAppMeta.App data) {
+    ratingTotalsLayout.setup(data);
+    ratingBarsLayout.setup(data);
+  }
+
+  public void setupTitle(String title) {
+    super.setupToolbar();
+    if (toolbar != null) {
+      ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+      bar.setTitle(title);
+    }
+  }
+
+  void checkAndRemoveProgressBarDisplayable() {
+    for (int i = 0; i < adapter.getItemCount(); i++) {
+      Displayable displayable = adapter.getDisplayable(i);
+      if (displayable instanceof ProgressBarDisplayable) {
+        adapter.removeDisplayable(i);
+        adapter.notifyItemRemoved(i);
+      }
+    }
+  }
+
+  //
+  // from CommentAdderView
+  //
+
+  @Override @NonNull public CommentsReadMoreDisplayable createReadMoreDisplayable(final int count, Review review) {
+    return new CommentsReadMoreDisplayable(review, review.getCommentList().getDatalist().getNext(),
+        new SimpleReviewCommentAdder(count, this));
+  }
+
+  @Override public void createDisplayableComments(List<Comment> comments, List<Displayable> displayables) {
+    for (final Comment comment : comments) {
+      displayables.add(new CommentDisplayable(comment));
+    }
+  }
+
+  //
+  // MVP methods
+  //
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+
+    final RateAndReviewsPresenter presenter = new RateAndReviewsPresenter(appId, storeName, packageName, this,
+        ConcreteSchedulerProvider.getInstance());
+
+    attachPresenter(presenter, savedInstanceState);
   }
 
   @Override public void setupToolbar() {
@@ -139,6 +191,22 @@ public class RateAndReviewsFragment extends GridRecyclerFragment<ReviewsAndComme
       ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
       bar.setDisplayHomeAsUpEnabled(true);
     }
+  }
+
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    if (storeTheme != null) {
+      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
+      ThemeUtils.setStoreTheme(getActivity(), storeTheme);
+    }
+  }
+
+  @Override public Observable<Void> rateApp() {
+    return RxView.clicks(floatingActionButton);
+  }
+
+  @Override public Observable<GenericDialogs.EResponse> showRateView() {
+    return DialogUtils.showRateDialog(getActivity(), appName, packageName, storeName);
   }
 
   @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
@@ -165,6 +233,7 @@ public class RateAndReviewsFragment extends GridRecyclerFragment<ReviewsAndComme
       return true;
     }
     if (itemId == R.id.menu_install) {
+      // todo Navigator n = new Navigator();
       ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
           .newAppViewFragment(packageName, storeName, AppViewFragment.OpenType.OPEN_AND_INSTALL));
       return true;
@@ -172,89 +241,19 @@ public class RateAndReviewsFragment extends GridRecyclerFragment<ReviewsAndComme
     return super.onOptionsItemSelected(item);
   }
 
-  private void fetchRating(boolean refresh) {
-    GetAppRequest.of(appId, AptoideAccountManager.getAccessToken(),
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID())
-        .observe(refresh)
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(getApp -> {
-          if (getApp.isOk()) {
-            GetAppMeta.App data = getApp.getNodes().getMeta().getData();
-            setupTitle(data.getName());
-            setupRating(data);
-          }
-          finishLoading();
-        }, err -> {
-          CrashReports.logException(err);
-        });
+  @Override public Observable<Integer> nextReviews() {
+    return RxEndlessRecyclerView.loadMore(recyclerView, getAdapter());
   }
 
-  private void setupRating(GetAppMeta.App data) {
-    ratingTotalsLayout.setup(data);
-    ratingBarsLayout.setup(data);
+  @Override public void showNextReviews(int offset, List<Review> reviews) {
+
   }
 
-  private void fetchReviews() {
-    ListReviewsRequest reviewsRequest =
-        ListReviewsRequest.of(storeName, packageName, AptoideAccountManager.getAccessToken(),
-            AptoideAccountManager.getUserEmail(),
-            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                DataProvider.getContext()).getAptoideClientUUID());
+  @Override public void showRating(GetAppMeta.Stats.Rating rating) {
 
-    endlessRecyclerOnScrollListener =
-        new EndlessRecyclerOnScrollListener(this.getAdapter(), reviewsRequest,
-            new ListFullReviewsSuccessRequestListener(this), errorRequestListener);
-    recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
-    endlessRecyclerOnScrollListener.onLoadMore(false);
   }
 
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    if (storeTheme != null) {
-      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
-      ThemeUtils.setStoreTheme(getActivity(), storeTheme);
-    }
-  }
+  @Override public void showError(Throwable err) {
 
-  @NonNull @Override
-  public CommentsReadMoreDisplayable createReadMoreDisplayable(final int count, Review review) {
-    return new CommentsReadMoreDisplayable(review, review.getCommentList().getDatalist().getNext(),
-        new SimpleReviewCommentAdder(count, this));
-  }
-
-  /*
-  public void refreshReviews() {
-    if(endlessRecyclerOnScrollListener!=null) {
-      endlessRecyclerOnScrollListener.onLoadMore(false);
-    }
-  }
-  */
-
-  @Override
-  public void createDisplayableComments(List<Comment> comments, List<Displayable> displayables) {
-    for (final Comment comment : comments) {
-      displayables.add(new CommentDisplayable(comment));
-    }
-  }
-
-  public void setupTitle(String title) {
-    super.setupToolbar();
-    if (toolbar != null) {
-      ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-      bar.setTitle(title);
-    }
-  }
-
-  void checkAndRemoveProgressBarDisplayable() {
-    for (int i = 0; i < adapter.getItemCount(); i++) {
-      Displayable displayable = adapter.getDisplayable(i);
-      if (displayable instanceof ProgressBarDisplayable) {
-        adapter.removeDisplayable(i);
-        adapter.notifyItemRemoved(i);
-      }
-    }
   }
 }

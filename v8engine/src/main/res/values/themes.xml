@@ -113,6 +113,7 @@
     <item name="icTimelineDrawable">@drawable/ic_action_timeline_light</item>
     <item name="icTimelineAccessSecure">@drawable/ic_action_secure_light</item>
     <item name="icAppviewsPencil">@drawable/ic_pencil</item>
+    <item name="alertDialogTheme">@style/AlertDialogAptoide</item>
   </style>
 
   <style name="AptoideThemeDefault" parent="AppBaseTheme">

@@ -49,10 +49,11 @@ public class UserAgentTest {
     AptoideClientUUID aptoideClientUUID = () -> "dummy client id";
 
     final String userData = "user@aptoide.com";
+    final String oemid = "";
 
     final String expectedUserAgent =
         AptoideUtils.NetworkUtils.getDefaultUserAgent(aptoideClientUUID, () -> userData,
-            AptoideUtils.Core.getDefaultVername());
+            AptoideUtils.Core.getDefaultVername(), oemid);
 
     MockWebServer server = new MockWebServer();
     server.enqueue(new MockResponse().setBody("OK"));
@@ -80,10 +81,11 @@ public class UserAgentTest {
     AptoideClientUUID aptoideClientUUID = () -> "dummy client id";
 
     final String userData = "user@aptoide.com";
+    final String oemid = "";
 
     final String expectedUserAgent =
         AptoideUtils.NetworkUtils.getDefaultUserAgent(aptoideClientUUID, () -> userData,
-            AptoideUtils.Core.getDefaultVername());
+            AptoideUtils.Core.getDefaultVername(), oemid);
 
     MockWebServer server = new MockWebServer();
     server.enqueue(new MockResponse().setBody("OK"));

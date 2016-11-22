@@ -72,4 +72,8 @@ public interface AptoidePreferencesConfiguration {
     FACEBOOK,
     GOOGLE
   }
+
+  String getPartnerDimension();
+
+  String getVerticalDimension();
 }

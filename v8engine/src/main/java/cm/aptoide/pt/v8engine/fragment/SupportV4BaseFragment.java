@@ -15,13 +15,12 @@ import android.view.ViewGroup;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.v8engine.interfaces.UiComponentBasics;
-import com.trello.rxlifecycle.components.support.RxFragment;
 import rx.functions.Action0;
 
 /**
  * Created by neuro on 14-04-2016.
  */
-public abstract class SupportV4BaseFragment extends RxFragment
+public abstract class SupportV4BaseFragment extends FragmentView
     implements UiComponentBasics, PermissionRequest {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {

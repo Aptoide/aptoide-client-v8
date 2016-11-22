@@ -40,6 +40,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AccountAnalytcsImp;
 import cm.aptoide.pt.v8engine.configuration.ActivityProvider;
 import cm.aptoide.pt.v8engine.configuration.FragmentProvider;
 import cm.aptoide.pt.v8engine.configuration.implementation.ActivityProviderImpl;
@@ -125,7 +126,7 @@ public abstract class V8Engine extends DataProvider {
           @Override public String getUserEmail() {
             return AptoideAccountManager.getUserEmail();
           }
-        }, AptoideUtils.Core.getDefaultVername()));
+        }, AptoideUtils.Core.getDefaultVername(), getConfiguration().getPartnerId()));
   }
 
   public static void clearUserData() {
@@ -243,7 +244,7 @@ public abstract class V8Engine extends DataProvider {
                   @Override public String getUserEmail() {
                     return AptoideAccountManager.getUserEmail();
                   }
-                }));
+                }, getConfiguration().getPartnerId()));
 
     fileManager.cleanCache()
         .subscribe(cleanedSize -> Logger.d(TAG,
@@ -262,6 +263,7 @@ public abstract class V8Engine extends DataProvider {
     SQLiteDatabase db = new SQLiteDatabaseHelper(this).getWritableDatabase();
     db.close();
 
+    AptoideAccountManager.setAnalytics(new AccountAnalytcsImp());
     Logger.d(TAG, "onCreate took " + (System.currentTimeMillis() - l) + " millis.");
   }
 

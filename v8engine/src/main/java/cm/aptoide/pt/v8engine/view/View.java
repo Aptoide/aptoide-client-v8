@@ -18,16 +18,17 @@ import rx.Observable;
  */
 public interface View {
 
-  @NonNull @CheckResult <T> LifecycleTransformer<T> bindUntilEvent(@NonNull View.Event event);
+  @NonNull @CheckResult <T> LifecycleTransformer<T> bindUntilEvent(@NonNull
+      LifecycleEvent lifecycleEvent);
 
-  Observable<Event> getLifecycle();
+  Observable<LifecycleEvent> getLifecycle();
 
   Context getContext();
 
   void attachPresenter(Presenter presenter, Bundle savedInstanceState);
 
   // TODO: Make it simple. We need to abstract implementation details (e.g. Activity and Fragment life cycle events).
-  enum Event {
+  enum LifecycleEvent {
     ATTACH,
     CREATE,
     CREATE_VIEW,
