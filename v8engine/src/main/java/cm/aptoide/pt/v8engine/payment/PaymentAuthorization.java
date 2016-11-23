@@ -11,9 +11,10 @@ package cm.aptoide.pt.v8engine.payment;
 public class PaymentAuthorization {
 
   public enum Status {
-    INITIATED, PENDING, ACTIVE, EXPIRED, CANCELLED,
-    CANCELLED_BY_CHARGEBACK, REJECTED,
+    ACTIVE,
+    INITIATED,
     PAYMENT_METHOD_CHANGE,
+    PENDING,
     PENDING_PAYMENT_METHOD
   }
 
@@ -45,15 +46,9 @@ public class PaymentAuthorization {
     return Status.ACTIVE.equals(status);
   }
 
-  public boolean displayAuthorizationView() {
-    return Status.INITIATED.equals(status);
-  }
-
-  public boolean isCancelled() {
-    return Status.CANCELLED.equals(status)
-        || Status.CANCELLED_BY_CHARGEBACK.equals(status)
-        || Status.EXPIRED.equals(status)
-        || Status.REJECTED.equals(status);
+  public boolean isPending() {
+    return Status.PENDING.equals(status)
+        || Status.PENDING_PAYMENT_METHOD.equals(status);
   }
 
   public Status getStatus() {

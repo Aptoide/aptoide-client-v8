@@ -8,14 +8,11 @@ package cm.aptoide.pt.v8engine.payment.providers.web;
 import android.content.Context;
 import cm.aptoide.pt.v8engine.payment.BackgroundSync;
 import cm.aptoide.pt.v8engine.payment.Payment;
-import cm.aptoide.pt.v8engine.payment.PaymentAuthorization;
 import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.payment.Price;
 import cm.aptoide.pt.v8engine.payment.Product;
-import cm.aptoide.pt.v8engine.payment.exception.PaymentFailureException;
 import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationRepository;
 import cm.aptoide.pt.v8engine.repository.PaymentConfirmationRepository;
-import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import rx.Observable;
 
 /**
@@ -68,29 +65,16 @@ public class WebPayment implements Payment {
   }
 
   @Override public Observable<PaymentConfirmation> process() {
-    return getOrCreateAuthorization().flatMap(authorization -> {
+    return authorizationRepository.getPaymentAuthorization(id).flatMap(authorization -> {
       if (authorization.isAuthorized()) {
         return confirmationRepository.createPaymentConfirmation(this);
-      } else if (authorization.displayAuthorizationView()) {
-        startWebAuthorizationActivity(authorization.getUrl(), authorization.getRedirectUrl());
+      } else if (authorization.isPending()) {
         return Observable.empty();
-      } else if (authorization.isCancelled()) {
-        return Observable.error(new PaymentFailureException("Authorization Failed."));
+      } else {
+        startWebAuthorizationActivity(authorization.getUrl(), authorization.getRedirectUrl());
+        backgroundSync.schedule();
+        return Observable.empty();
       }
-      return Observable.error(new PaymentFailureException("Invalid authorization status."));
-    });
-  }
-
-  private Observable<PaymentAuthorization> getOrCreateAuthorization() {
-    return authorizationRepository.getPaymentAuthorization(id).onErrorResumeNext(throwable -> {
-      if (throwable instanceof RepositoryItemNotFoundException) {
-        return authorizationRepository.createPaymentAuthorization(id)
-            .flatMap(paymentAuthorization -> authorizationRepository.savePaymentAuthorization(
-                paymentAuthorization))
-            .flatMap(success -> authorizationRepository.getPaymentAuthorization(id)
-                .doOnSubscribe(() -> backgroundSync.schedule()));
-      }
-      return Observable.<PaymentAuthorization>error(throwable);
     });
   }
 
