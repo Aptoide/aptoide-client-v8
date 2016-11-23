@@ -51,6 +51,7 @@ class AptoideLoginUtils {
         if (activity != null) {
           activity.startActivityForResult(signup, REQ_SIGNUP);
         }
+
       }
     });
   }

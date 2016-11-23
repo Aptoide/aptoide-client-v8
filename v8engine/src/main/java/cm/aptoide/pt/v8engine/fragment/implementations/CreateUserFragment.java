@@ -9,8 +9,10 @@ import cm.aptoide.pt.v8engine.fragment.BaseToolbarFragment;
 
 public class CreateUserFragment extends BaseToolbarFragment {
 
-
-
+  public static CreateUserFragment newInstance() {
+    CreateUserFragment createUserFragment = new CreateUserFragment();
+    return createUserFragment;
+  }
 
   @Override public int getContentViewId() {
     return R.layout.fragment_create_user;

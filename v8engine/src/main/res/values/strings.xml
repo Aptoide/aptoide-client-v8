@@ -297,7 +297,7 @@
 
   <!--Create user fragment-->
   <string name="create_user_title">Create a User Profile</string>
-  <string name="create_user_header"><b>Create your User Profile</b> so that you're able to rate, comment and share apps with your friends</string>
+  <string name="create_user_header"><b>Create your User Profile</b> so that you\'re able to rate, comment and share apps with your friends</string>
   <string name="create_user_take_picture">Take a picture for your profile</string>
   <string name="create_user_random_photo">Or use random photo</string>
   <string name="create_user_choose_username">Choose your username</string>
@@ -315,7 +315,7 @@
   <string name="create_store_title">Create Your Store</string>
   <string name="create_store_header"><b>Create your store</b> and share your apps selection with %s community. <b>Give it a try</b></string>
   <string name="create_store_name">Choose a name for your %s Store</string>
-  <string name="create_store_name_inserted">Your Store's name</string>
+  <string name="create_store_name_inserted">Your Store\'s name</string>
   <string name="create_store_theme">Store Theme</string>
   <string name="create_store_create">Create Store</string>
   <string name="create_store_skip">Skip</string>

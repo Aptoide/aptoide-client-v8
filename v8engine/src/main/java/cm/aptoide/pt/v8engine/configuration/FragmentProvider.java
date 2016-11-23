@@ -93,4 +93,6 @@ public interface FragmentProvider {
   Fragment newSocialFragment(String socialUrl, String pageTitle);
 
   Fragment newSettingsFragment();
+
+  Fragment newCreateUserFragment();
 }
