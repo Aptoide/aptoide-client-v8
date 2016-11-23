@@ -16,16 +16,6 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class ProductPaymentResponse extends BaseV3Response {
 
-  public static enum Status {
-    UNKNOWN,
-    COMPLETED,
-    CREATED,
-    FAILED,
-    CANCELED,
-    PROCESSING,
-    PENDING
-  }
-
-  @JsonProperty("payStatus") private Status paymentStatus;
+  @JsonProperty("payStatus") private String paymentStatus;
   @JsonProperty("orderId") private String paymentConfirmationId;
 }

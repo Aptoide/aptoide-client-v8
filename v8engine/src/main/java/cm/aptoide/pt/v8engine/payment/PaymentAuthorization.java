@@ -5,19 +5,24 @@
 
 package cm.aptoide.pt.v8engine.payment;
 
-import cm.aptoide.pt.model.v3.GetProductPurchaseAuthorizationResponse;
-
 /**
  * Created by marcelobenites on 15/11/16.
  */
 public class PaymentAuthorization {
 
+  public enum Status {
+    INITIATED, PENDING, ACTIVE, EXPIRED, CANCELLED,
+    CANCELLED_BY_CHARGEBACK, REJECTED,
+    PAYMENT_METHOD_CHANGE,
+    PENDING_PAYMENT_METHOD
+  }
+
   private final int paymentId;
   private final String url;
   private final String redirectUrl;
-  private GetProductPurchaseAuthorizationResponse.Status status;
+  private Status status;
 
-  public PaymentAuthorization(int paymentId, String url, String redirectUrl, GetProductPurchaseAuthorizationResponse.Status status) {
+  public PaymentAuthorization(int paymentId, String url, String redirectUrl, Status status) {
     this.paymentId = paymentId;
     this.url = url;
     this.redirectUrl = redirectUrl;
@@ -37,21 +42,22 @@ public class PaymentAuthorization {
   }
 
   public boolean isAuthorized() {
-    return GetProductPurchaseAuthorizationResponse.Status.ACTIVE.equals(status);
+    return Status.ACTIVE.equals(status);
   }
 
   public boolean displayAuthorizationView() {
-    return GetProductPurchaseAuthorizationResponse.Status.INITIATED.equals(status);
+    return Status.INITIATED.equals(status);
   }
 
   public boolean isCancelled() {
-    return GetProductPurchaseAuthorizationResponse.Status.CANCELLED.equals(status)
-        || GetProductPurchaseAuthorizationResponse.Status.CANCELLED_BY_CHARGEBACK.equals(status)
-        || GetProductPurchaseAuthorizationResponse.Status.EXPIRED.equals(status)
-        || GetProductPurchaseAuthorizationResponse.Status.REJECTED.equals(status);
+    return Status.CANCELLED.equals(status)
+        || Status.CANCELLED_BY_CHARGEBACK.equals(status)
+        || Status.EXPIRED.equals(status)
+        || Status.REJECTED.equals(status);
   }
 
-  public GetProductPurchaseAuthorizationResponse.Status getStatus() {
+  public Status getStatus() {
     return status;
   }
+
 }

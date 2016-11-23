@@ -61,7 +61,7 @@ public class PaymentConfirmationRepository {
   public Observable<PaymentConfirmation> createPaymentConfirmation(Payment payment) {
     return createServerPaymentConfirmation(payment).map(
         response -> new PaymentConfirmation(response.getPaymentConfirmationId(), payment.getId(),
-            payment.getProduct(), payment.getPrice(), response.getPaymentStatus()));
+            payment.getProduct(), payment.getPrice(), PaymentConfirmation.Status.valueOf(response.getPaymentStatus())));
   }
 
   public Observable<List<PaymentConfirmation>> getPaymentConfirmations() {
@@ -142,10 +142,10 @@ public class PaymentConfirmationRepository {
 
   private Observable<PaymentConfirmation> updatePaymentConfirmationWithServerStatus(
       PaymentConfirmation paymentConfirmation) {
-    paymentConfirmation.setStatus(ProductPaymentResponse.Status.UNKNOWN);
+    paymentConfirmation.setStatus(PaymentConfirmation.Status.UNKNOWN);
     return getServerPaymentConfirmation(paymentConfirmation).flatMap(response -> {
       if (response != null && response.isOk()) {
-        paymentConfirmation.setStatus(response.getPaymentStatus());
+        paymentConfirmation.setStatus(PaymentConfirmation.Status.valueOf(response.getPaymentStatus()));
         return Observable.just(paymentConfirmation);
       }
       return Observable.just(paymentConfirmation);
@@ -217,7 +217,7 @@ public class PaymentConfirmationRepository {
         paymentConfirmation.getPaymentId(), productFactory.create(paymentConfirmation),
         new Price(paymentConfirmation.getPrice(), paymentConfirmation.getCurrency(),
             paymentConfirmation.getTaxRate()),
-        ProductPaymentResponse.Status.valueOf(paymentConfirmation.getStatus()));
+        PaymentConfirmation.Status.valueOf(paymentConfirmation.getStatus()));
   }
 
   private cm.aptoide.pt.database.realm.PaymentConfirmation convertToStoredPaymentConfirmation(

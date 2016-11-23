@@ -16,14 +16,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class GetProductPurchaseAuthorizationResponse extends BaseV3Response {
 
-  public enum Status {
-    INITIATED, PENDING, ACTIVE, EXPIRED, CANCELLED,
-    CANCELLED_BY_CHARGEBACK, REJECTED,
-    PAYMENT_METHOD_CHANGE,
-    PENDING_PAYMENT_METHOD
-  }
-
   private String url;
   @JsonProperty("successUrl") private String successUrl;
-  @JsonProperty("authorizationStatus") private Status authorizationStatus;
+  @JsonProperty("authorizationStatus") private String authorizationStatus;
 }
