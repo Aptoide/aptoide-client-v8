@@ -15,6 +15,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.link.Link;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
+import cm.aptoide.pt.v8engine.repository.SocialRepository;
 import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -45,13 +46,14 @@ import rx.schedulers.Schedulers;
   private DateCalculator dateCalculator;
   private SpannableFactory spannableFactory;
   private TimelineMetricsManager timelineMetricsManager;
+  private SocialRepository socialRepository;
 
   public ArticleDisplayable() {
   }
 
   public static ArticleDisplayable from(Article article, DateCalculator dateCalculator,
       SpannableFactory spannableFactory, LinksHandlerFactory linksHandlerFactory,
-      TimelineMetricsManager timelineMetricsManager) {
+      TimelineMetricsManager timelineMetricsManager, SocialRepository socialRepository) {
     long appId = 0;
     //if (article.getApps() != null && article.getApps().size() > 0) {
     //  appName = article.getApps().get(0).getName();
@@ -71,7 +73,7 @@ import rx.schedulers.Schedulers;
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
             article.getPublisher().getBaseUrl()), article.getPublisher().getName(),
         article.getThumbnailUrl(), article.getPublisher().getLogoUrl(), appId, abTestingURL, article.getApps(),
-        article.getDate(), dateCalculator, spannableFactory, timelineMetricsManager);
+        article.getDate(), dateCalculator, spannableFactory, timelineMetricsManager, socialRepository);
   }
 
   public Observable<List<Installed>> getRelatedToApplication() {
@@ -129,6 +131,14 @@ import rx.schedulers.Schedulers;
 
   public void sendOpenArticleEvent(SendEventRequest.Body.Data data, String eventName) {
     timelineMetricsManager.sendEvent(data, eventName);
+  }
+
+  public void like() {
+    socialRepository.like();
+  }
+
+  public void share(Context context) {
+    socialRepository.share(context);
   }
 
   @Override public int getViewLayout() {

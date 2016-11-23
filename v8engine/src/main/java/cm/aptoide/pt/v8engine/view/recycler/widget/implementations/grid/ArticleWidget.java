@@ -10,7 +10,9 @@ import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
@@ -23,6 +25,8 @@ import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ArticleDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
+import com.like.LikeButton;
+import com.like.OnLikeListener;
 import java.io.IOException;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -49,6 +53,9 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
   private View articleHeader;
   private ArticleDisplayable displayable;
   private TextView relatedTo;
+  private LinearLayout like;
+  private LinearLayout share;
+  private LikeButton likeButton;
 
   private String appName;
   private String packageName;
@@ -69,6 +76,9 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
     cardView = (CardView) itemView.findViewById(R.id.card);
     articleHeader = itemView.findViewById(R.id.displayable_social_timeline_article_header);
     relatedTo = (TextView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_related_to);
+    like = (LinearLayout) itemView.findViewById(R.id.social_like);
+    share = (LinearLayout) itemView.findViewById(R.id.social_share);
+    likeButton = (LikeButton) itemView.findViewById(R.id.social_like_test);
   }
 
   @Override public void bindView(ArticleDisplayable displayable) {
@@ -146,6 +156,23 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
               .build())
           .build(), AptoideAnalytics.OPEN_BLOG);
     }));
+
+    compositeSubscription.add(RxView.clicks(share).subscribe(click -> {
+      displayable.share(getContext());
+    }, throwable -> throwable.printStackTrace()));
+
+    compositeSubscription.add(RxView.clicks(like).subscribe(click -> {
+    }, (throwable) -> throwable.printStackTrace()));
+
+    likeButton.setOnLikeListener(new OnLikeListener() {
+      @Override public void liked(LikeButton likeButton) {
+        Toast.makeText(getContext(), "LIKED", Toast.LENGTH_SHORT).show();
+      }
+
+      @Override public void unLiked(LikeButton likeButton) {
+        Toast.makeText(getContext(), "UNLIKED", Toast.LENGTH_SHORT).show();
+      }
+    });
   }
 
   //// TODO: 31/08/16 refactor this out of here

@@ -30,7 +30,6 @@
           android:layout_marginStart="12.7dp"
           android:layout_marginTop="14dp"
           tools:ignore="contentDescription"
-          tools:src="@drawable/img_people_mockup"
           />
 
       <TextView
@@ -203,7 +202,7 @@
         android:id="@+id/partial_social_timeline_thumbnail_divider2"
         android:layout_width="match_parent"
         android:layout_height="0.7dp"
-        android:layout_marginBottom="25dp"
+        android:layout_marginBottom="5dp"
         android:layout_marginEnd="12dp"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="15dp"
@@ -211,6 +210,8 @@
         android:background="@color/timeline_separator"
         android:visibility="visible"
         />
+
+    <include layout="@layout/social_bar_timeline" />
   </LinearLayout>
 </android.support.v7.widget.CardView>
 
