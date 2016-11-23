@@ -23,29 +23,15 @@ public class PaymentAuthorizationSync extends AbstractSync {
 
   @Override public void sync(SyncResult syncResult) {
     authorizationRepository.getPaymentAuthorizations()
-        .first()
         .flatMapIterable(paymentAuthorizations -> paymentAuthorizations)
-        .flatMap(paymentAuthorization -> {
-          if (paymentAuthorization.isCancelled()) {
-            return authorizationRepository.removePaymentAuthorization(paymentAuthorization.getPaymentId());
-          } else if (!paymentAuthorization.isAuthorized()) {
-            rescheduleIncompletedAuthorizationSync(paymentAuthorization, syncResult);
+        .doOnNext(paymentAuthorization -> {
+          if (!paymentAuthorization.isAuthorized()) {
+            rescheduleSync(syncResult);
           }
-          return authorizationRepository.savePaymentAuthorization(paymentAuthorization);
         })
         .toList()
-        .onErrorReturn(throwable -> {
-          rescheduleOrCancelSync(syncResult, throwable);
-          return null;
-        })
+        .onErrorReturn(throwable -> null)
         .toBlocking()
         .firstOrDefault(null);
-  }
-
-  private void rescheduleIncompletedAuthorizationSync(PaymentAuthorization paymentAuthorization,
-      SyncResult syncResult) {
-    if (!paymentAuthorization.isAuthorized()) {
-      rescheduleSync(syncResult);
-    }
   }
 }
