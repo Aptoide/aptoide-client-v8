@@ -5,22 +5,30 @@
 
 package cm.aptoide.pt.v8engine.payment;
 
-import cm.aptoide.pt.model.v3.ProductPaymentResponse;
-
 /**
  * Created by marcelobenites on 8/10/16.
  */
 public class PaymentConfirmation {
+
+  public static enum Status {
+    UNKNOWN,
+    COMPLETED,
+    CREATED,
+    FAILED,
+    CANCELED,
+    PROCESSING,
+    PENDING
+  }
 
   private final String paymentConfirmationId;
   private final int paymentId;
   private final Product product;
   private final Price price;
 
-  private ProductPaymentResponse.Status status;
+  private Status status;
 
   public PaymentConfirmation(String paymentConfirmationId, int paymentId, Product product,
-      Price price, ProductPaymentResponse.Status status) {
+      Price price, Status status) {
     this.paymentConfirmationId = paymentConfirmationId;
     this.paymentId = paymentId;
     this.product = product;
@@ -44,21 +52,21 @@ public class PaymentConfirmation {
     return price;
   }
 
-  public ProductPaymentResponse.Status getStatus() {
+  public Status getStatus() {
     return status;
   }
 
-  public void setStatus(ProductPaymentResponse.Status status) {
+  public void setStatus(Status status) {
     this.status = status;
   }
 
   public boolean isCompleted() {
-    return ProductPaymentResponse.Status.COMPLETED.equals(status);
+    return Status.COMPLETED.equals(status);
   }
 
   public boolean isFailed() {
-    return ProductPaymentResponse.Status.FAILED.equals(status)
-        || ProductPaymentResponse.Status.CANCELED.equals(status);
+    return Status.FAILED.equals(status)
+        || Status.CANCELED.equals(status);
   }
 
   @Override public boolean equals(Object o) {

@@ -10,7 +10,6 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.PaymentAuthorizationAccessor;
 import cm.aptoide.pt.dataprovider.ws.v3.GetProductPurchaseAuthorizationRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
-import cm.aptoide.pt.model.v3.GetProductPurchaseAuthorizationResponse;
 import cm.aptoide.pt.v8engine.payment.PaymentAuthorization;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
@@ -62,7 +61,7 @@ public class PaymentAuthorizationRepository implements Repository {
       if (response != null && response.isOk()) {
         return Observable.just(
             new PaymentAuthorization(paymentId, response.getUrl(), response.getSuccessUrl(),
-                response.getAuthorizationStatus()));
+                PaymentAuthorization.Status.valueOf(response.getAuthorizationStatus())));
       }
       return Observable.<PaymentAuthorization>error(
           new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
@@ -104,7 +103,7 @@ public class PaymentAuthorizationRepository implements Repository {
       cm.aptoide.pt.database.realm.PaymentAuthorization paymentAuthorization) {
     return new PaymentAuthorization(paymentAuthorization.getPaymentId(),
         paymentAuthorization.getUrl(), paymentAuthorization.getRedirectUrl(),
-        GetProductPurchaseAuthorizationResponse.Status.valueOf(paymentAuthorization.getStatus()));
+        PaymentAuthorization.Status.valueOf(paymentAuthorization.getStatus()));
   }
 
   private Observable<List<PaymentAuthorization>> getDatabasePaymentAuthorizations() {
