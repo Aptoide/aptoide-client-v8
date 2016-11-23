@@ -19,26 +19,33 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.SearchPagerAdapter;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.analytics.abtesting.ABTest;
+import cm.aptoide.pt.v8engine.analytics.abtesting.ABTestManager;
+import cm.aptoide.pt.v8engine.analytics.abtesting.SearchTabOptions;
 import cm.aptoide.pt.v8engine.fragment.BasePagerToolbarFragment;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import java.util.List;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by neuro on 01-06-2016.
  */
 public class SearchFragment extends BasePagerToolbarFragment {
-
+  private static final String TAG = SearchFragment.class.getSimpleName();
   private String query;
 
   transient private boolean hasSubscribedResults;
@@ -138,7 +145,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
     }
   }
 
-  private void handleFinishLoading() {
+  private void handleFinishLoading(boolean create) {
 
     if (!shouldFinishLoading) {
       shouldFinishLoading = true;
@@ -146,11 +153,40 @@ public class SearchFragment extends BasePagerToolbarFragment {
       setupButtonVisibility();
       setupButtonsListeners();
       setupViewPager();
-      finishLoading();
+      if (create) {
+        //only show the search results after choosing the tab to show
+        setupAbTest().compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW))
+            .subscribe(setup -> finishLoading(), throwable -> {
+              CrashReports.logException(throwable);
+              Logger.e(TAG, throwable);
+              finishLoading();
+            });
+      } else {
+        finishLoading();
+      }
     }
   }
 
-  protected void executeSearchRequests(String storeName) {
+  private Observable<Void> setupAbTest() {
+    if (hasSubscribedResults && hasEverywhereResults) {
+      ABTest<SearchTabOptions> searchAbTest =
+          ABTestManager.getInstance().get(ABTestManager.SEARCH_TAB_TEST);
+      return searchAbTest.participate()
+          .observeOn(AndroidSchedulers.mainThread())
+          .map(experiment -> setTabAccordingAbTest(searchAbTest));
+    } else {
+      return Observable.just(null);
+    }
+  }
+
+  private Void setTabAccordingAbTest(ABTest<SearchTabOptions> searchAbTest) {
+    if (searchAbTest.alternative().chooseTab() == 1) {
+      everywhereButtonListener(false);
+    }
+    return null;
+  }
+
+  protected void executeSearchRequests(String storeName, boolean create) {
     Analytics.Search.searchTerm(query);
 
     if (storeName != null) {
@@ -165,10 +201,10 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
         if (list != null && list.size() > 0) {
           hasSubscribedResults = true;
-          handleFinishLoading();
+          handleFinishLoading(create);
         } else {
           hasSubscribedResults = false;
-          handleFinishLoading();
+          handleFinishLoading(create);
         }
       }, e -> finishLoading());
     } else {
@@ -180,10 +216,10 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
         if (list != null && list.size() > 0) {
           hasSubscribedResults = true;
-          handleFinishLoading();
+          handleFinishLoading(create);
         } else {
           hasSubscribedResults = false;
-          handleFinishLoading();
+          handleFinishLoading(create);
         }
       }, e -> finishLoading());
 
@@ -196,10 +232,10 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
         if (list != null && list.size() > 0) {
           hasEverywhereResults = true;
-          handleFinishLoading();
+          handleFinishLoading(create);
         } else {
           hasEverywhereResults = false;
-          handleFinishLoading();
+          handleFinishLoading(create);
         }
       }, e -> finishLoading());
 
@@ -233,7 +269,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
     if (currentItem == 0) {
       subscribedButtonListener();
     } else if (currentItem == 1) {
-      everywhereButtonListener();
+      everywhereButtonListener(true);
     }
   }
 
@@ -243,7 +279,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
     }
 
     if (hasEverywhereResults) {
-      everywhereButton.setOnClickListener(v -> everywhereButtonListener());
+      everywhereButton.setOnClickListener(v -> everywhereButtonListener(true));
     }
   }
 
@@ -256,13 +292,14 @@ public class SearchFragment extends BasePagerToolbarFragment {
     everywhereButton.setBackgroundResource(0);
   }
 
-  protected void everywhereButtonListener() {
+  protected Void everywhereButtonListener(boolean smoothScroll) {
     selectedButton = 1;
-    viewPager.setCurrentItem(1);
+    viewPager.setCurrentItem(1, smoothScroll);
     everywhereButton.setBackgroundResource(R.drawable.search_button_background);
     everywhereButton.setTextColor(getResources().getColor(R.color.white));
     subscribedButton.setTextColor(getResources().getColor(R.color.app_view_gray));
     subscribedButton.setBackgroundResource(0);
+    return null;
   }
 
   @Override public int getContentViewId() {
@@ -321,9 +358,9 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     if (create) {
-      executeSearchRequests(storeName);
+      executeSearchRequests(storeName, create);
     } else {
-      handleFinishLoading();
+      handleFinishLoading(create);
     }
   }
 
