@@ -10,7 +10,7 @@ import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.model.v7.listapp.App;
-import cm.aptoide.pt.model.v7.timeline.Article;
+import cm.aptoide.pt.model.v7.timeline.SocialArticle;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.link.Link;
@@ -28,11 +28,11 @@ import rx.Observable;
 import rx.schedulers.Schedulers;
 
 /**
- * Created by marcelobenites on 6/17/16.
+ * Created by jdandrade on 23/11/2016.
  */
-@AllArgsConstructor public class ArticleDisplayable extends Displayable {
 
-  @Getter private String cardId;
+@AllArgsConstructor public class SocialArticleDisplayable extends Displayable {
+
   @Getter private String articleTitle;
   @Getter private Link link;
   @Getter private Link developerLink;
@@ -49,12 +49,13 @@ import rx.schedulers.Schedulers;
   private TimelineMetricsManager timelineMetricsManager;
   private SocialRepository socialRepository;
 
-  public ArticleDisplayable() {
+  public SocialArticleDisplayable() {
   }
 
-  public static ArticleDisplayable from(Article article, DateCalculator dateCalculator,
-      SpannableFactory spannableFactory, LinksHandlerFactory linksHandlerFactory,
-      TimelineMetricsManager timelineMetricsManager, SocialRepository socialRepository) {
+  public static SocialArticleDisplayable from(SocialArticle socialArticle,
+      DateCalculator dateCalculator, SpannableFactory spannableFactory,
+      LinksHandlerFactory linksHandlerFactory, TimelineMetricsManager timelineMetricsManager,
+      SocialRepository socialRepository) {
     long appId = 0;
     //if (article.getApps() != null && article.getApps().size() > 0) {
     //  appName = article.getApps().get(0).getName();
@@ -63,19 +64,19 @@ import rx.schedulers.Schedulers;
 
     String abTestingURL = null;
 
-    if (article.getAb() != null
-        && article.getAb().getConversion() != null
-        && article.getAb().getConversion().getUrl() != null) {
-      abTestingURL = article.getAb().getConversion().getUrl();
+    if (socialArticle.getAb() != null
+        && socialArticle.getAb().getConversion() != null
+        && socialArticle.getAb().getConversion().getUrl() != null) {
+      abTestingURL = socialArticle.getAb().getConversion().getUrl();
     }
 
-    return new ArticleDisplayable(article.getCardId(), article.getTitle(),
-        linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, article.getUrl()),
+    return new SocialArticleDisplayable(socialArticle.getTitle(),
+        linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, socialArticle.getUrl()),
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
-            article.getPublisher().getBaseUrl()), article.getPublisher().getName(),
-        article.getThumbnailUrl(), article.getPublisher().getLogoUrl(), appId, abTestingURL,
-        article.getApps(), article.getDate(), dateCalculator, spannableFactory,
-        timelineMetricsManager, socialRepository);
+            socialArticle.getPublisher().getBaseUrl()), socialArticle.getPublisher().getName(),
+        socialArticle.getThumbnailUrl(), socialArticle.getPublisher().getLogoUrl(), appId,
+        abTestingURL, socialArticle.getApps(), socialArticle.getDate(), dateCalculator,
+        spannableFactory, timelineMetricsManager, socialRepository);
   }
 
   public Observable<List<Installed>> getRelatedToApplication() {
@@ -139,13 +140,11 @@ import rx.schedulers.Schedulers;
     socialRepository.like();
   }
 
-  public void share(Context context, String cardType) {
-    socialRepository.share(context, cardType, relatedToAppsList, link.getUrl(), articleTitle,
-        thumbnailUrl, title, developerLink.getUrl(), avatarUrl, date, cardId, "");
+  public void share(Context context) {
   }
 
   @Override public int getViewLayout() {
-    return R.layout.displayable_social_timeline_article;
+    return R.layout.displayable_social_timeline_social_article;
   }
 
   @Override protected Configs getConfig() {

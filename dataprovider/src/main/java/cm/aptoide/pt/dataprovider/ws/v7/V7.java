@@ -248,5 +248,8 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
     Observable<BaseV7Response> addEvent(@Path(value = "name") String name,
         @Path(value = "action") String action, @Path(value = "context") String context,
         @Body SendEventRequest.Body body);
+
+    @POST("{email}") Observable<BaseV7Response> shareCard(@Body ShareCardRequest.Body body,
+        @Path(value = "email") String email);
   }
 }

@@ -30,7 +30,6 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.App
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppUpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ArticleDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentDisplayable;
-import cm.aptoide.pt.viewRateAndCommentReviews.CommentsReadMoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CompletedDownloadDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ExcludedUpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FeatureDisplayable;
@@ -44,13 +43,13 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Gri
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreMetaDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.InstalledAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.OtherVersionDisplayable;
-import cm.aptoide.pt.viewRateAndCommentReviews.RateAndReviewCommentDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RollbackDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RowReviewDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ScheduledDownloadDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SearchAdDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SearchDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SimilarDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SocialArticleDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreLatestAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SubscribedStoreDisplayable;
@@ -80,7 +79,6 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AppBrick
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AppUpdateWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.ArticleWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.CommentWidget;
-import cm.aptoide.pt.viewRateAndCommentReviews.CommentsReadMoreWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.CompletedDownloadWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.ExcludedUpdateWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.FeatureWidget;
@@ -95,7 +93,6 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridStor
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.InstalledAppWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.OtherVersionWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.ProgressBarWidget;
-import cm.aptoide.pt.viewRateAndCommentReviews.RateAndReviewCommentWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.RecommendationWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.RollbackWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.RowReviewWidget;
@@ -103,12 +100,17 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.Schedule
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SearchAdWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SearchWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SimilarWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SocialArticleWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.StoreGridHeaderWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.StoreLatestAppsWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SubscribedStoreWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.UpdateWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.UpdatesHeaderWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.VideoWidget;
+import cm.aptoide.pt.viewRateAndCommentReviews.CommentsReadMoreDisplayable;
+import cm.aptoide.pt.viewRateAndCommentReviews.CommentsReadMoreWidget;
+import cm.aptoide.pt.viewRateAndCommentReviews.RateAndReviewCommentDisplayable;
+import cm.aptoide.pt.viewRateAndCommentReviews.RateAndReviewCommentWidget;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -214,6 +216,8 @@ public class DisplayableWidgetMapping {
         new DisplayableWidgetMapping(SimilarWidget.class, SimilarDisplayable.class));
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(RecommendationWidget.class, RecommendationDisplayable.class));
+    displayableWidgetMappings.add(
+        new DisplayableWidgetMapping(SocialArticleWidget.class, SocialArticleDisplayable.class));
 
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(RollbackWidget.class, RollbackDisplayable.class));
@@ -337,6 +341,7 @@ public class DisplayableWidgetMapping {
 
   /**
    * needed in the partners to get the displayableClass
+   *
    * @return displayableClass
    */
   public Class<? extends Displayable> getDisplayableClass() {
@@ -345,6 +350,7 @@ public class DisplayableWidgetMapping {
 
   /**
    * needed in the partners to get the widgetClass
+   *
    * @return widgetClass
    */
   public Class<? extends Widget> getWidgetClass() {
@@ -353,6 +359,7 @@ public class DisplayableWidgetMapping {
 
   /**
    * needed in partners to add it's own displayables/widgets
+   *
    * @return Map of widgets and displayables
    */
   public Map<Integer, DisplayableWidgetMapping> getViewTypeMapping() {

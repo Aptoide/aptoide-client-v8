@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 01/08/2016.
- */
-
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.graphics.Typeface;
@@ -22,7 +17,7 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ArticleDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SocialArticleDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 import com.like.LikeButton;
@@ -37,12 +32,12 @@ import okhttp3.Response;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
- * Created by marcelobenites on 6/17/16.
+ * Created by jdandrade on 23/11/2016.
  */
-public class ArticleWidget extends Widget<ArticleDisplayable> {
 
-  private final String cardType = "Article";
-  private final String cardTypeForRequest = "ARTICLE";
+public class SocialArticleWidget extends Widget<SocialArticleDisplayable> {
+
+  private final String cardType = "Social Article";
   private TextView title;
   private TextView subtitle;
   private ImageView image;
@@ -52,7 +47,7 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
   private Button getAppButton;
   private CardView cardView;
   private View articleHeader;
-  private ArticleDisplayable displayable;
+  private SocialArticleDisplayable displayable;
   private TextView relatedTo;
   private LinearLayout like;
   private LinearLayout share;
@@ -61,7 +56,7 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
   private String appName;
   private String packageName;
 
-  public ArticleWidget(View itemView) {
+  public SocialArticleWidget(View itemView) {
     super(itemView);
   }
 
@@ -82,7 +77,7 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
     likeButton = (LikeButton) itemView.findViewById(R.id.social_like_test);
   }
 
-  @Override public void bindView(ArticleDisplayable displayable) {
+  @Override public void bindView(SocialArticleDisplayable displayable) {
     this.displayable = displayable;
     title.setText(displayable.getTitle());
     subtitle.setText(displayable.getTimeSinceLastUpdate(getContext()));
@@ -93,7 +88,7 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
     setCardviewMargin(displayable);
     ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
     ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
-
+    likeButton.setLiked(false);
     //relatedTo.setText(displayable.getAppRelatedToText(getContext(), appName));
 
     if (getAppButton.getVisibility() != View.GONE && displayable.isGetApp(appName)) {
@@ -159,7 +154,7 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
     }));
 
     compositeSubscription.add(RxView.clicks(share).subscribe(click -> {
-      displayable.share(getContext(), cardType);
+      displayable.share(getContext());
     }, throwable -> throwable.printStackTrace()));
 
     compositeSubscription.add(RxView.clicks(like).subscribe(click -> {
@@ -200,7 +195,7 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
     });
   }
 
-  private void setCardviewMargin(ArticleDisplayable displayable) {
+  private void setCardviewMargin(SocialArticleDisplayable displayable) {
     CardView.LayoutParams layoutParams =
         new CardView.LayoutParams(CardView.LayoutParams.WRAP_CONTENT,
             CardView.LayoutParams.WRAP_CONTENT);

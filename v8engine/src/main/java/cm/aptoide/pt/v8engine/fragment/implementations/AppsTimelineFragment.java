@@ -34,6 +34,7 @@ import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.repository.PackageRepository;
+import cm.aptoide.pt.v8engine.repository.SocialRepository;
 import cm.aptoide.pt.v8engine.repository.TimelineCardFilter;
 import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
 import cm.aptoide.pt.v8engine.repository.TimelineRepository;
@@ -83,6 +84,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
   private InstallManager installManager;
   private PermissionManager permissionManager;
   private TimelineMetricsManager timelineMetricsManager;
+  private SocialRepository socialRepository;
 
   public static AppsTimelineFragment newInstance(String action) {
     AppsTimelineFragment fragment = new AppsTimelineFragment();
@@ -109,6 +111,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
         AccessorFactory.getAccessorFor(Download.class),
         AccessorFactory.getAccessorFor(Installed.class));
     timelineMetricsManager = new TimelineMetricsManager();
+    socialRepository = new SocialRepository();
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
@@ -303,7 +306,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
       LinksHandlerFactory linksHandlerFactory) {
     if (card instanceof Article) {
       return ArticleDisplayable.from((Article) card, dateCalculator, spannableFactory,
-          linksHandlerFactory, timelineMetricsManager);
+          linksHandlerFactory, timelineMetricsManager, socialRepository);
     } else if (card instanceof Video) {
       return VideoDisplayable.from((Video) card, dateCalculator, spannableFactory,
           linksHandlerFactory, timelineMetricsManager);
