@@ -5,13 +5,17 @@
 
 package cm.aptoide.pt.v8engine.payment.providers.web;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import cm.aptoide.pt.v8engine.R;
 
 /**
@@ -32,7 +36,7 @@ public class WebPaymentActivity extends AppCompatActivity {
     return intent;
   }
 
-  @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
+  @SuppressLint("SetJavaScriptEnabled") @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_boa_compra_authorization);
 
@@ -43,10 +47,12 @@ public class WebPaymentActivity extends AppCompatActivity {
 
       webView = (WebView) findViewById(R.id.activity_boa_compra_authorization_web_view);
       webView.getSettings().setJavaScriptEnabled(true);
-      webView.setWebChromeClient(new WebChromeClient() {
-        @Override public void onProgressChanged(WebView view, int progress) {
-          super.onProgressChanged(view, progress);
-          if (progress == 100 && view.getUrl().equals(resultUrl)) {
+      webView.setWebChromeClient(new WebChromeClient());
+      webView.setWebViewClient(new WebViewClient() {
+
+        @Override public void onPageFinished(WebView view, String url) {
+          super.onPageFinished(view, url);
+          if (url.equals(resultUrl)) {
             finish();
           }
         }
@@ -59,6 +65,8 @@ public class WebPaymentActivity extends AppCompatActivity {
 
   @Override protected void onDestroy() {
     super.onDestroy();
-    webView.setWebChromeClient(null);
+    ((ViewGroup) webView.getParent()).removeView(webView);
+    webView.setWebViewClient(null);
+    webView.destroy();
   }
 }
