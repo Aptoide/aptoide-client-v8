@@ -36,7 +36,9 @@ public abstract class Widget<T extends Displayable> extends RecyclerView.ViewHol
   public abstract void bindView(T displayable);
 
   public void unbindView() {
-    compositeSubscription.clear();
+    if(compositeSubscription!=null && !compositeSubscription.isUnsubscribed()) {
+      compositeSubscription.clear();
+    }
   }
 
   public FragmentActivity getContext() {

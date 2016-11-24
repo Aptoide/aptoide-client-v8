@@ -127,6 +127,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
           //case getApkComments:
         case getAds:
         case listStores:
+        case listStoreComments:
         case listReviews:
           return true;
       }
@@ -251,7 +252,6 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
   private Subscription caseGetStore(String url,
       BaseRequestWithStore.StoreCredentials storeCredentials, boolean refresh) {
     return GetStoreRequest.ofAction(url, storeCredentials, AptoideAccountManager.getAccessToken(),
-        AptoideAccountManager.getUserEmail(),
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()).getAptoideClientUUID())
         .observe(refresh)

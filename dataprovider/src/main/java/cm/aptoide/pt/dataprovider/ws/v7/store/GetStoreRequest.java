@@ -13,8 +13,6 @@ import cm.aptoide.pt.model.v7.store.GetStore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import okhttp3.OkHttpClient;
-import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -31,14 +29,8 @@ import rx.Observable;
     this.url = url;
   }
 
-  private GetStoreRequest(String url, OkHttpClient httpClient, Converter.Factory converterFactory,
-      String baseHost, Body body) {
-    super(body, httpClient, converterFactory, baseHost);
-    this.url = url;
-  }
-
   public static GetStoreRequest of(StoreCredentials storeCredentials, StoreContext storeContext,
-      String accessToken, String email, String aptoideClientUUID) {
+      String accessToken, String aptoideClientUUID) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
     final Body body = new Body(storeCredentials, WidgetsArgs.createDefault());
@@ -48,7 +40,7 @@ import rx.Observable;
   }
 
   public static GetStoreRequest ofAction(String url, StoreCredentials storeCredentials,
-      String accessToken, String email, String aptoideClientUUID) {
+      String accessToken, String aptoideClientUUID) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
     final Body body = new Body(storeCredentials, WidgetsArgs.createDefault());

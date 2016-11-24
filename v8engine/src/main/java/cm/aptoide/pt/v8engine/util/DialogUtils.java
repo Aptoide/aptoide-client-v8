@@ -128,13 +128,13 @@ public class DialogUtils {
         // WS call
         if (storeName != null) {
           PostReviewRequest.of(storeName, packageName, reviewTitle, reviewText, reviewRating,
-              AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
+              AptoideAccountManager.getAccessToken(),
               new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                   DataProvider.getContext()).getAptoideClientUUID())
               .execute(successRequestListener, errorRequestListener);
         } else {
           PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating,
-              AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
+              AptoideAccountManager.getAccessToken(),
               new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                   DataProvider.getContext()).getAptoideClientUUID())
               .execute(successRequestListener, errorRequestListener);
@@ -213,13 +213,13 @@ public class DialogUtils {
 
       if (storeName != null) {
         PostReviewRequest.of(storeName, packageName, reviewTitle, reviewText, reviewRating,
-            AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
+            AptoideAccountManager.getAccessToken(),
             new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                 DataProvider.getContext()).getAptoideClientUUID())
             .execute(successRequestListener, errorRequestListener);
       } else {
         PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating,
-            AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
+            AptoideAccountManager.getAccessToken(),
             new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                 DataProvider.getContext()).getAptoideClientUUID())
             .execute(successRequestListener, errorRequestListener);

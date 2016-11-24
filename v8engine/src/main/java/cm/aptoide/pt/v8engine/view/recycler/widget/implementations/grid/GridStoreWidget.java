@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
-import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -29,15 +28,12 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 @Displayables({ GridStoreDisplayable.class }) public class GridStoreWidget
     extends Widget<GridStoreDisplayable> {
 
-  private static final String TAG = GridStoreWidget.class.getSimpleName();
-
   private ImageView storeAvatar;
   private TextView storeName;
   private TextView storeUnsubscribe;
   private LinearLayout storeLayout;
   private TextView storeSubscribers;
   private TextView storeDownloads;
-  //private LinearLayout infoLayout;
 
   public GridStoreWidget(View itemView) {
     super(itemView);
@@ -55,7 +51,6 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
   @Override public void bindView(GridStoreDisplayable gridStoreDisplayable) {
 
-    final Context context = itemView.getContext();
     final Store store = gridStoreDisplayable.getPojo();
 
     storeName.setText(store.getName());
