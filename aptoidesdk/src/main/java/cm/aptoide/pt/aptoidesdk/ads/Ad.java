@@ -17,7 +17,6 @@ import lombok.experimental.Accessors;
   final long id;
   final Clicks clicks;
   final Network network;
-
   /**
    * The appId of this ad.
    * <br><br><b>Attention!</b><br>
@@ -40,7 +39,6 @@ import lombok.experimental.Accessors;
    * The size of this ad.
    */
   @Getter final long size;
-
   /**
    * The version code of this ad.
    */
@@ -49,7 +47,6 @@ import lombok.experimental.Accessors;
    * The version name of this ad.
    */
   @Getter final String vername;
-
   String referrer;
 
   @JsonCreator public Ad(@JsonProperty("timestamp") long timestamp, @JsonProperty("id") long id,

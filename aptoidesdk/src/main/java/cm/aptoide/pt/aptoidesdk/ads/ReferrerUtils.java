@@ -116,6 +116,7 @@ class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.ReferrerUti
               if (broadcastReferrer) {
                 broadcastReferrer(packageName, referrer);
               } else {
+                ad.referrer = referrer;
                 saveAd(ad);
               }
 
