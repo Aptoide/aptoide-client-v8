@@ -6,25 +6,27 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="160dp"
+    android:layout_height="110dp"
+    android:layout_gravity="center_vertical|center_horizontal"
     android:background="@drawable/white_border_square"
     android:orientation="vertical"
+    android:gravity="center_vertical"
     >
 
   <!-- its not useless: it's the store layout background color container -->
-  <LinearLayout
-      android:id="@+id/store_main_layout_row"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:layout_margin="2dp"
-      android:gravity="center"
-      android:orientation="vertical"
-      >
+  <!--<LinearLayout-->   <!--android:id="@+id/store_main_layout_row"-->
+      <!--android:layout_width="match_parent"-->
+      <!--android:layout_height="match_parent"-->
+      <!--android:layout_margin="2dp"-->
+      <!--android:gravity="center"-->
+      <!--android:orientation="vertical"-->
+      <!--&gt;-->
 
     <FrameLayout
+        android:id="@+id/store_main_layout_row"
         android:layout_width="68dp"
         android:layout_height="68dp"
-        android:layout_gravity="center_horizontal"
+        android:layout_gravity="center_horizontal|center_vertical"
         >
 
       <ImageView
@@ -56,100 +58,114 @@
 
     </FrameLayout>
 
-    <TextView
-        android:id="@+id/store_name_row"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:ellipsize="end"
-        android:gravity="center_horizontal"
-        android:maxLines="1"
-        android:padding="4dp"
-        android:singleLine="true"
-        android:text="@string/apps"
-        android:textColor="?attr/storesTextColor"
-        android:textSize="18sp"
-        />
-
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:paddingLeft="4dp"
-        android:paddingRight="4dp"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal|center_vertical"
+        android:layout_marginTop="8dp"
         >
 
-      <LinearLayout
-          android:id="@+id/store_layout_subscribers"
+      <ImageView
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_centerInParent="true"
-          android:orientation="horizontal"
-          >
-
-
-        <!-- DELETED android:background="@drawable/user" BECAUSE user.xml IS STILL a VectorDrawable
-        will be re-added when converted to vectorAsset // Vector Asset replaced with png file for compatibility
-        issues -->
-        <ImageView
-            android:layout_width="14dp"
-            android:layout_height="14dp"
-            android:background="@drawable/ic_user_icon"
-            />
-
-        <TextView
-            android:id="@+id/store_subscribers"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="4dp"
-            android:paddingRight="8dp"
-            android:text="2345"
-            android:textColor="?attr/storesTextColor"
-            android:textSize="10sp"
-            />
-
-
-        <ImageView
-            android:layout_width="14dp"
-            android:layout_height="14dp"
-            android:background="@drawable/ic_download_icon"
-            />
-
-        <TextView
-            android:id="@+id/store_downloads"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="4dp"
-            android:paddingRight="8dp"
-            android:text="42656"
-            android:textColor="?attr/storesTextColor"
-            android:textSize="10sp"
-            />
-
-      </LinearLayout>
-
-      <!--  android:drawableLeft="@drawable/close" not included because since it's a png file it needs a certain size, and can't be done inside the textview -->
-      <TextView
-          android:id="@+id/store_unsubscribe_row"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_centerInParent="true"
-          android:layout_gravity="center_horizontal"
-          android:layout_marginTop="4dp"
-          android:background="@drawable/rounded_corners_dark"
-          android:drawableLeft="@drawable/ic_close_white"
-          android:drawablePadding="4dp"
-          android:gravity="center_vertical"
-          android:padding="6dp"
-          android:text="@string/unfollow"
-          android:textColor="?attr/storesTextColor"
-          android:textSize="12sp"
+          android:src="@drawable/icon_store"
           />
 
-    </RelativeLayout>
+      <TextView
+          android:id="@+id/store_name_row"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="5.7dp"
+          android:ellipsize="end"
+          android:maxLines="1"
+          android:singleLine="true"
+          android:textSize="12sp"
+          android:textColor="@color/followed_stores_store_name_color"
+          android:text="@string/apps"
+          />
+
+    </LinearLayout>
+    <!--<RelativeLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center_horizontal"-->
+        <!--android:paddingLeft="4dp"-->
+        <!--android:paddingRight="4dp"-->
+        <!--android:paddingTop="4dp"-->
+        <!--&gt;-->
+
+      <!--<LinearLayout-->
+          <!--android:id="@+id/store_layout_subscribers"-->
+          <!--android:layout_width="wrap_content"-->
+          <!--android:layout_height="wrap_content"-->
+          <!--android:layout_centerInParent="true"-->
+          <!--android:orientation="horizontal"-->
+          <!--&gt;-->
+
+
+        <!--&lt;!&ndash; DELETED android:background="@drawable/user" BECAUSE user.xml IS STILL a VectorDrawable-->
+        <!--will be re-added when converted to vectorAsset // Vector Asset replaced with png file for compatibility-->
+        <!--issues &ndash;&gt;-->
+        <!--<ImageView-->
+            <!--android:layout_width="12dp"-->
+            <!--android:layout_height="12dp"-->
+            <!--android:background="@drawable/ic_user_icon"-->
+            <!--/>-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/store_subscribers"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:paddingLeft="4dp"-->
+            <!--android:paddingRight="8dp"-->
+            <!--android:text="2345"-->
+            <!--android:textColor="?attr/storesTextColor"-->
+            <!--android:textSize="10sp"-->
+            <!--/>-->
+
+
+        <!--<ImageView-->
+            <!--android:layout_width="12dp"-->
+            <!--android:layout_height="12dp"-->
+            <!--android:background="@drawable/ic_download_icon"-->
+            <!--/>-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/store_downloads"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:paddingLeft="4dp"-->
+            <!--android:paddingRight="8dp"-->
+            <!--android:text="42656"-->
+            <!--android:textColor="?attr/storesTextColor"-->
+            <!--android:textSize="10sp"-->
+            <!--/>-->
+
+      <!--</LinearLayout>-->
+
+      <!--&lt;!&ndash;  android:drawableLeft="@drawable/close" not included because since it's a png file it needs a certain size, and can't be done inside the textview &ndash;&gt;-->
+      <!--<TextView-->
+          <!--android:id="@+id/store_unsubscribe_row"-->
+          <!--android:layout_width="wrap_content"-->
+          <!--android:layout_height="wrap_content"-->
+          <!--android:layout_centerInParent="true"-->
+          <!--android:layout_gravity="center_horizontal"-->
+          <!--android:layout_marginTop="4dp"-->
+          <!--android:background="@drawable/rounded_corners_dark"-->
+          <!--android:drawableLeft="@drawable/ic_close_white"-->
+          <!--android:drawablePadding="4dp"-->
+          <!--android:gravity="center_vertical"-->
+          <!--android:padding="6dp"-->
+          <!--android:text="@string/unfollow"-->
+          <!--android:textColor="?attr/storesTextColor"-->
+          <!--android:textSize="12sp"-->
+          <!--/>-->
+
+    <!--</RelativeLayout>-->
 
 
     <!--  android:drawableLeft="@drawable/close" not included because since it's a png file it needs a certain size, and can't be done inside the textview -->
-  </LinearLayout>
+  <!--</LinearLayout>-->
 </LinearLayout>

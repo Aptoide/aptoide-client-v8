@@ -295,4 +295,7 @@
   <string name="clear_cache_summary">Deletes icons, images, apk downloaded, obb, webservice data, …</string>
   <string name="clearcache_title">Clear Storage</string>
 
+  <!-- Stores tab -->
+  <string name="recommended_stores">Recommended Stores</string>
+
 </resources>
