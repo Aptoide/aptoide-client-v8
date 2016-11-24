@@ -320,4 +320,7 @@
   <string name="create_store_create">Create Store</string>
   <string name="create_store_skip">Skip</string>
 
+  <!-- Stores tab -->
+  <string name="recommended_stores">Recommended Stores</string>
+
 </resources>

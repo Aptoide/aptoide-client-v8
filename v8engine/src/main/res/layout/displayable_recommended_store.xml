@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-    android:id="@+id/recommended_store_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/recommended_store_layout"
     android:layout_width="match_parent"
-    android:layout_height="126dp">
+    android:layout_height="126dp"
+    android:gravity="center_vertical|center"
+    android:layout_centerVertical="true"
+  >
 
   <!-- can be follow or open?! -->
 
@@ -24,8 +27,6 @@
       android:id="@+id/recommended_store_avatar"
       android:layout_width="68dp"
       android:layout_height="68dp"
-      android:layout_gravity="center_horizontal"
-      android:layout_centerVertical="false"
       android:layout_alignParentLeft="false"
       android:layout_marginLeft="11dp"
       android:layout_marginTop="15dp"
@@ -60,36 +61,47 @@
 
   </FrameLayout>
 
-
-  <TextView
-      android:id="@+id/category_one"
+  <LinearLayout
+      android:id="@+id/recommended_store_categories"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginLeft="9dp"
-      android:layout_marginRight="7dp"
-      android:background="@drawable/oval_rectangle_shape"
-      android:text="@string/role_playing"
-      android:layout_alignParentBottom="true"
-      android:layout_marginBottom="11dp"
-      />
+      android:layout_below="@id/recommended_store_avatar"
+      android:layout_marginTop="8.7dp"
+      android:orientation="horizontal"
+      >
 
-  <TextView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_alignParentBottom="true"
-      android:layout_marginRight="7dp"
-      android:layout_toRightOf="@id/category_one"
-      android:background="@drawable/oval_rectangle_shape"
-      android:text="@string/games"
-      android:layout_marginBottom="11dp"
-      />
+    <TextView
+        android:id="@+id/category_one"
+        android:layout_width="wrap_content"
+        android:layout_height="21dp"
+        android:layout_marginLeft="9dp"
+        android:layout_marginRight="7dp"
+        android:background="@drawable/oval_rectangle_shape"
+        android:layout_marginBottom="11dp"
+        android:gravity="center_vertical"
+        android:textSize="9sp"
+        android:text="@string/role_playing"
+        />
+
+    <TextView
+        android:id="@+id/category_two"
+        android:layout_width="wrap_content"
+        android:layout_height="21dp"
+        android:layout_marginRight="7dp"
+        android:background="@drawable/oval_rectangle_shape"
+        android:layout_marginBottom="11dp"
+        android:gravity="center_vertical"
+        android:textSize="9sp"
+        android:text="@string/games"
+        />
+
+  </LinearLayout>
 
   <LinearLayout
       android:id="@+id/recommended_store_info"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      android:layout_centerVertical="false"
       android:layout_alignParentRight="false"
       android:layout_toRightOf="@+id/recommended_store_avatar"
       android:layout_marginLeft="9dp"
@@ -116,7 +128,8 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginLeft="10dp"
-          android:text="Store name"
+          android:textColor="@color/followed_stores_store_name_color"
+          android:text="@string/apps"
           />
 
     </LinearLayout>
@@ -127,7 +140,6 @@
         android:orientation="horizontal"
         >
 
-      3
       <ImageView
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
@@ -140,6 +152,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginLeft="10dp"
+          android:textColor="@color/recommended_stores_numbers_color"
           android:text="xxx"
           />
 
@@ -163,6 +176,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginLeft="10dp"
+          android:textColor="@color/recommended_stores_numbers_color"
           android:text="xxxx"
           />
 

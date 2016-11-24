@@ -6,9 +6,11 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -33,10 +35,10 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
   private ImageView storeAvatar;
   private TextView storeName;
-  private TextView storeUnsubscribe;
-  private LinearLayout storeLayout;
-  private TextView storeSubscribers;
-  private TextView storeDownloads;
+  //private TextView storeUnsubscribe;
+  private FrameLayout storeLayout;
+  //private TextView storeSubscribers;
+  //private TextView storeDownloads;
   //private LinearLayout infoLayout;
 
   public GridStoreWidget(View itemView) {
@@ -46,10 +48,10 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
   @Override protected void assignViews(View itemView) {
     storeAvatar = (ImageView) itemView.findViewById(R.id.store_avatar_row);
     storeName = (TextView) itemView.findViewById(R.id.store_name_row);
-    storeUnsubscribe = (TextView) itemView.findViewById(R.id.store_unsubscribe_row);
-    storeLayout = (LinearLayout) itemView.findViewById(R.id.store_main_layout_row);
-    storeSubscribers = (TextView) itemView.findViewById(R.id.store_subscribers);
-    storeDownloads = (TextView) itemView.findViewById(R.id.store_downloads);
+    //storeUnsubscribe = (TextView) itemView.findViewById(R.id.store_unsubscribe_row);
+    storeLayout = (FrameLayout) itemView.findViewById(R.id.store_main_layout_row);
+    //storeSubscribers = (TextView) itemView.findViewById(R.id.store_subscribers);
+    //storeDownloads = (TextView) itemView.findViewById(R.id.store_downloads);
     //infoLayout = (LinearLayout) itemView.findViewById(R.id.store_layout_subscribers);
   }
 
@@ -59,14 +61,14 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
     final Store store = gridStoreDisplayable.getPojo();
 
     storeName.setText(store.getName());
-    storeDownloads.setText(AptoideUtils.StringU.withSuffix(store.getStats().getDownloads()));
-    storeSubscribers.setText(AptoideUtils.StringU.withSuffix(store.getStats().getSubscribers()));
+    //storeDownloads.setText(AptoideUtils.StringU.withSuffix(store.getStats().getDownloads()));
+    //storeSubscribers.setText(AptoideUtils.StringU.withSuffix(store.getStats().getSubscribers()));
 
     // in order to re-use the row_store_item layout, we hide the unsubscribe button and
     // increase the padding
-    storeUnsubscribe.setVisibility(View.GONE);
+    //storeUnsubscribe.setVisibility(View.GONE);
 
-    storeLayout.setBackgroundColor(StoreThemeEnum.get(store).getStoreHeaderInt());
+    storeLayout.setBackgroundColor(Color.WHITE);
     storeLayout.setOnClickListener(
         v -> FragmentUtils.replaceFragmentV4((FragmentActivity) v.getContext(),
             V8Engine.getFragmentProvider()
