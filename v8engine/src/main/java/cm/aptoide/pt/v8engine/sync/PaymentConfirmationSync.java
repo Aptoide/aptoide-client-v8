@@ -40,7 +40,7 @@ public class PaymentConfirmationSync extends AbstractSync {
           return null;
         })
         .toBlocking()
-        .firstOrDefault(null);
+        .subscribe();
   }
 
   private void rescheduleIncompletedPaymentSync(PaymentConfirmation paymentConfirmation,
