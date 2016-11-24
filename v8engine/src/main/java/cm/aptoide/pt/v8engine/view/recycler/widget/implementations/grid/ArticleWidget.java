@@ -42,6 +42,7 @@ import rx.android.schedulers.AndroidSchedulers;
 public class ArticleWidget extends Widget<ArticleDisplayable> {
 
   private final String cardType = "Article";
+  private final String cardTypeForRequest = "ARTICLE";
   private TextView title;
   private TextView subtitle;
   private ImageView image;
@@ -158,7 +159,7 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
     }));
 
     compositeSubscription.add(RxView.clicks(share).subscribe(click -> {
-      displayable.share(getContext());
+      displayable.share(getContext(), cardType);
     }, throwable -> throwable.printStackTrace()));
 
     compositeSubscription.add(RxView.clicks(like).subscribe(click -> {

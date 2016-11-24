@@ -32,6 +32,7 @@ import rx.schedulers.Schedulers;
  */
 @AllArgsConstructor public class ArticleDisplayable extends Displayable {
 
+  @Getter private String cardId;
   @Getter private String articleTitle;
   @Getter private Link link;
   @Getter private Link developerLink;
@@ -68,12 +69,13 @@ import rx.schedulers.Schedulers;
       abTestingURL = article.getAb().getConversion().getUrl();
     }
 
-    return new ArticleDisplayable(article.getTitle(),
+    return new ArticleDisplayable(article.getCardId(), article.getTitle(),
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, article.getUrl()),
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
             article.getPublisher().getBaseUrl()), article.getPublisher().getName(),
-        article.getThumbnailUrl(), article.getPublisher().getLogoUrl(), appId, abTestingURL, article.getApps(),
-        article.getDate(), dateCalculator, spannableFactory, timelineMetricsManager, socialRepository);
+        article.getThumbnailUrl(), article.getPublisher().getLogoUrl(), appId, abTestingURL,
+        article.getApps(), article.getDate(), dateCalculator, spannableFactory,
+        timelineMetricsManager, socialRepository);
   }
 
   public Observable<List<Installed>> getRelatedToApplication() {
@@ -137,8 +139,9 @@ import rx.schedulers.Schedulers;
     socialRepository.like();
   }
 
-  public void share(Context context) {
-    socialRepository.share(context);
+  public void share(Context context, String cardType) {
+    socialRepository.share(context, cardType, relatedToAppsList, link.getUrl(), articleTitle,
+        thumbnailUrl, title, developerLink.getUrl(), avatarUrl, date, cardId, "");
   }
 
   @Override public int getViewLayout() {
