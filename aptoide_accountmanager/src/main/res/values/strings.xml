@@ -70,4 +70,31 @@
   <!-- WIZARD -->
   <string name="wizard_skip"><b>SKIP</b></string>
 
+
+  <!--Create user fragment-->
+  <string name="create_user_title">Create a User Profile</string>
+  <string name="create_user_header"><b>Create your User Profile</b> so that you\'re able to rate, comment and share apps with your friends</string>
+  <string name="create_user_take_picture">Take a picture for your profile</string>
+  <string name="create_user_random_photo">Or use random photo</string>
+  <string name="create_user_choose_username">Choose your username</string>
+  <string name="create_user_username">User name</string>
+  <string name="create_user_hint">Will appear when you rate, comment and share apps.</string>
+  <string name="create_user_create_button">Create Profile</string>
+
+  <!--User interests fragment -->
+  <string name="user_interests_title">Your Interests</string>
+  <string name="user_interests_header"><b>Show us your interests</b> and help us to find the best apps for you</string>
+  <string name="user_interests_adult_gambling">Adult &amp; Gambling</string>
+  <string name="user_interests_photography_video">Photography &amp; Video</string>
+  <string name="next">Next</string>
+
+  <!--Create Store fragment-->
+  <string name="create_store_title">Create Your Store</string>
+  <string name="create_store_header"><b>Create your store</b> and share your apps selection with %s community. <b>Give it a try</b></string>
+  <string name="create_store_name">Choose a name for your %s Store</string>
+  <string name="create_store_name_inserted">Your Store\'s name</string>
+  <string name="create_store_theme">Store Theme</string>
+  <string name="create_store_create">Create Store</string>
+  <string name="create_store_skip">Skip</string>
+
 </resources>

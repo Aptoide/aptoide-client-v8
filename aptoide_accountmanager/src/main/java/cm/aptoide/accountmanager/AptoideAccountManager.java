@@ -26,6 +26,7 @@ import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import cm.aptoide.accountmanager.CreateUserActivity;
 import cm.aptoide.accountmanager.util.UserCompleteData;
 import cm.aptoide.accountmanager.ws.AptoideWsV3Exception;
 import cm.aptoide.accountmanager.ws.ChangeUserRepoSubscriptionRequest;
@@ -143,7 +144,8 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
       if (extras != null) {
         intent.putExtras(extras);
       }
-      context.startActivity(intent);
+      //Intent intent = new Intent(getContext(), CreateUserActivity.class);
+      //context.startActivity(intent);
     }
   }
 
@@ -808,6 +810,14 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 
   void onLoginFail(String reason) {
     mCallback.onLoginFail(reason);
+  }
+
+  void onLoginSuccess(String loginOrigin) {
+    onLoginSuccess();
+    if (loginOrigin.equals("signup")) {
+      Intent intent = new Intent(getContext(), CreateUserActivity.class);
+      getContext().startActivity(intent);
+    }
   }
 
   void onLoginSuccess() {

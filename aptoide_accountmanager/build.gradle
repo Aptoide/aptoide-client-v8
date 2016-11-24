@@ -87,6 +87,12 @@ dependencies {
   debugCompile project(path: ':dataprovider', configuration: 'debug')
   releaseCompile project(path: ':dataprovider', configuration: 'release')
 
+  debugCompile project(path: ':imageloader', configuration: 'debug')
+  releaseCompile project(path: ':imageloader', configuration: 'release')
+
+  debugCompile project(path: ':database', configuration: 'debug')
+  releaseCompile project(path: ':database', configuration: 'release')
+
   //
   // custom libs in folders
   //
@@ -98,6 +104,9 @@ dependencies {
   //
 
   testCompile "junit:junit:${JUNIT_VERSION}"
+
+  //Also present in v8engine
+  compile "com.jakewharton.rxbinding:rxbinding:${JW_RX_BINDING_VERSION}"
 
   //noinspection GradleDependency
   compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"

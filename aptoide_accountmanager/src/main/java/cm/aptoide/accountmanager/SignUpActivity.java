@@ -27,6 +27,8 @@ public class SignUpActivity extends BaseActivity implements AptoideAccountManage
   private Button hidePasswordButton;
   private View content;
 
+  private String SIGNUP = "signup";
+
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(getLayoutId());
@@ -81,6 +83,7 @@ public class SignUpActivity extends BaseActivity implements AptoideAccountManage
 
   @Override public void onRegisterSuccess(Bundle data) {
     ShowMessage.asSnack(content, R.string.user_created);
+    data.putString(AptoideLoginUtils.APTOIDE_LOGIN_FROM, SIGNUP);
     setResult(RESULT_OK, new Intent().putExtras(data));
     finish();
   }
