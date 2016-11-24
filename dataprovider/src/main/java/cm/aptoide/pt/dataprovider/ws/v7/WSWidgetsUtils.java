@@ -5,18 +5,15 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import android.support.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreDisplaysRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.Type;
+import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.concurrent.CountDownLatch;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by neuro on 27-04-2016.
@@ -37,42 +34,46 @@ public class WSWidgetsUtils {
       }
       switch (wsWidget.getType()) {
         case APPS_GROUP:
-          ioScheduler(
-              ListAppsRequest.ofAction(url, storeCredentials, accessToken, email, aptoideClientUUID)
-                  .observe(refresh))
-              .subscribe(
-              listApps -> setObjectView(wsWidget, countDownLatch, listApps), action1);
+          ListAppsRequest.ofAction(url, storeCredentials, accessToken, email, aptoideClientUUID)
+              .observe(refresh)
+              .compose(AptoideUtils.ObservableU.applySchedulers())
+              .subscribe(listApps -> setObjectView(wsWidget, countDownLatch, listApps), action1);
           break;
         case STORES_GROUP:
-          ioScheduler(ListStoresRequest.ofAction(url, accessToken, email, aptoideClientUUID)
-              .observe(refresh)).subscribe(
-              listStores -> setObjectView(wsWidget, countDownLatch, listStores), action1);
+          ListStoresRequest.ofAction(url, accessToken, email, aptoideClientUUID)
+              .observe(refresh)
+              .compose(AptoideUtils.ObservableU.applySchedulers())
+              .subscribe(listStores -> setObjectView(wsWidget, countDownLatch, listStores),
+                  action1);
           break;
         case DISPLAYS:
-          ioScheduler(GetStoreDisplaysRequest.ofAction(url, storeCredentials, accessToken, email,
+          GetStoreDisplaysRequest.ofAction(url, storeCredentials, accessToken, email,
               aptoideClientUUID)
-              .observe(refresh))
+              .observe(refresh)
+              .compose(AptoideUtils.ObservableU.applySchedulers())
               .subscribe(
-              getStoreDisplays -> setObjectView(wsWidget, countDownLatch, getStoreDisplays),
-              action1);
+                  getStoreDisplays -> setObjectView(wsWidget, countDownLatch, getStoreDisplays),
+                  action1);
           break;
         case ADS:
-          ioScheduler(
-              GetAdsRequest.ofHomepage(aptoideClientUUID, googlePlayServicesAvailable, oemid)
-              .observe()).subscribe(
-              getAdsResponse -> setObjectView(wsWidget, countDownLatch, getAdsResponse), action1);
+          GetAdsRequest.ofHomepage(aptoideClientUUID, googlePlayServicesAvailable, oemid)
+              .observe()
+              .compose(AptoideUtils.ObservableU.applySchedulers())
+              .subscribe(getAdsResponse -> setObjectView(wsWidget, countDownLatch, getAdsResponse),
+                  action1);
           break;
         case STORE_META:
-          ioScheduler(GetStoreMetaRequest.ofAction(url, storeCredentials, accessToken, email,
-              aptoideClientUUID)
-              .observe(refresh)).subscribe(
-              getStoreMeta -> setObjectView(wsWidget, countDownLatch, getStoreMeta), action1);
+          GetStoreMetaRequest.ofAction(url, storeCredentials, accessToken, email, aptoideClientUUID)
+              .observe(refresh)
+              .compose(AptoideUtils.ObservableU.applySchedulers())
+              .subscribe(getStoreMeta -> setObjectView(wsWidget, countDownLatch, getStoreMeta),
+                  action1);
           break;
         case REVIEWS_GROUP:
-          ioScheduler(
-              ListFullReviewsRequest.ofAction(url, refresh, accessToken, email, aptoideClientUUID)
-              .observe(refresh)).subscribe(
-              reviews -> setObjectView(wsWidget, countDownLatch, reviews), action1);
+          ListFullReviewsRequest.ofAction(url, refresh, accessToken, email, aptoideClientUUID)
+              .observe(refresh)
+              .compose(AptoideUtils.ObservableU.applySchedulers())
+              .subscribe(reviews -> setObjectView(wsWidget, countDownLatch, reviews), action1);
           break;
         default:
           // In case a known enum is not implemented
@@ -82,10 +83,6 @@ public class WSWidgetsUtils {
       // Case we don't have the enum defined we still need to countDown the latch
       countDownLatch.countDown();
     }
-  }
-
-  private static <T> Observable<T> ioScheduler(@NonNull Observable<T> observable) {
-    return observable.observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io());
   }
 
   private static void setObjectView(GetStoreWidgets.WSWidget wsWidget,

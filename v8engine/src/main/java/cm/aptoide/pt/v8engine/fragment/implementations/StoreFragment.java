@@ -135,7 +135,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     if (create || getStore == null) {
       GetStoreRequest.of(StoreUtils.getStoreCredentials(storeName), storeContext,
-          AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
+          AptoideAccountManager.getAccessToken(),
           new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
               DataProvider.getContext()).getAptoideClientUUID())
           .observe(refresh)

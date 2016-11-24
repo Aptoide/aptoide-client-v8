@@ -34,6 +34,7 @@ import lombok.experimental.Accessors;
     //getApkComments,
     getUserTimeline,
     listReviews,
+    listStoreComments,
 
     // Client
     myStores,
@@ -47,6 +48,7 @@ import lombok.experimental.Accessors;
     // Displays
     facebook,
     twitch,
+    twitter,
     youtube,
 
     // v3
