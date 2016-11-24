@@ -75,6 +75,7 @@
   <dimen name="custom_snackbar_height">44dp</dimen>
   <dimen name="flag_width">84dp</dimen>
   <dimen name="appview_vertical_margin">4dp</dimen>
+  <dimen name="appview_vertical_margin_first">8dp</dimen>
   <dimen name="appview_header_side_margin">10dp</dimen>
   <dimen name="appview_header_bottom_margin">11dp</dimen>
   <dimen name="appview_badge_icon_size">9dp</dimen>
