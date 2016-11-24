@@ -8,20 +8,20 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="50dp"
-        android:onClick="adsClick"
-        android:text="Ads" />
-
+        android:onClick="appsClick"
+        android:text="Apps"
+        />
     <Button
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:onClick="searchClick"
         android:text="Search" />
-
     <Button
         android:layout_width="wrap_content"
         android:layout_height="50dp"
-        android:onClick="appsClick"
-        android:text="Apps" />
+        android:onClick="adsClick"
+        android:text="Ads"
+        />
 
     <TextView
         android:id="@+id/tv"
@@ -29,5 +29,24 @@
         android:layout_height="wrap_content"
         android:paddingTop="20dp"
         android:text="Hello, please press one of the buttons" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        >
+
+        <include
+            layout="@layout/app_layout"
+            android:id="@+id/app1"
+            />
+        <include
+            layout="@layout/app_layout"
+            android:id="@+id/app2"
+            />
+
+    </LinearLayout>
 
 </LinearLayout>
