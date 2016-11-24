@@ -40,6 +40,6 @@ import lombok.AllArgsConstructor;
   }
 
   public Intent createFromCancellation() {
-    return new Intent().putExtra(BillingBinder.RESPONSE_CODE, BillingBinder.RESULT_USER_CANCELED);
+    return new Intent().putExtra(BillingBinder.RESPONSE_CODE, BillingBinder.RESULT_USER_CANCELLED);
   }
 }

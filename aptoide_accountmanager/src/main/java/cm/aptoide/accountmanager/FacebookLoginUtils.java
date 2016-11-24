@@ -142,7 +142,7 @@ class FacebookLoginUtils {
      */
     @Override public void onCancel() {
       AptoideAccountManager.getInstance()
-          .onLoginFail(Application.getContext().getString(R.string.user_canceled));
+          .onLoginFail(Application.getContext().getString(R.string.user_cancelled));
     }
 
     /**
