@@ -23,6 +23,7 @@ public class PaymentAuthorizationSync extends AbstractSync {
 
   @Override public void sync(SyncResult syncResult) {
     authorizationRepository.getPaymentAuthorizations()
+        .first()
         .flatMapIterable(paymentAuthorizations -> paymentAuthorizations)
         .doOnNext(paymentAuthorization -> {
           if (!paymentAuthorization.isAuthorized()) {
@@ -32,6 +33,6 @@ public class PaymentAuthorizationSync extends AbstractSync {
         .toList()
         .onErrorReturn(throwable -> null)
         .toBlocking()
-        .firstOrDefault(null);
+        .subscribe();
   }
 }
