@@ -66,7 +66,8 @@ public interface FragmentProvider {
 
   Fragment newSubscribedStoresFragment();
 
-  Fragment newSearchPagerTabFragment(String query, boolean subscribedStores);
+  Fragment newSearchPagerTabFragment(String query, boolean subscribedStores,
+      boolean hasMultipleFragments);
 
   Fragment newSearchPagerTabFragment(String query, String storeName);
 

@@ -29,6 +29,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import rx.functions.Action0;
 
 /**
  * Created by neuro on 01-06-2016.
@@ -65,7 +66,7 @@ import java.util.Locale;
   }
 
   @Override public void bindView(SearchDisplayable displayable) {
-
+    Action0 clickCallback = displayable.getClickCallback();
     ListSearchApps.SearchAppsApp pojo = displayable.getPojo();
 
     overflowImageView.setOnClickListener(view -> {
@@ -75,7 +76,9 @@ import java.util.Locale;
       MenuItem menuItem = popup.getMenu().findItem(R.id.versions);
       menuItem.setVisible(pojo.isHasVersions());
       menuItem.setOnMenuItemClickListener(menuItem1 -> {
-
+        if (clickCallback != null) {
+          clickCallback.call();
+        }
         ListSearchApps.SearchAppsApp searchAppsApp = displayable.getPojo();
         String name = searchAppsApp.getName();
         String icon = searchAppsApp.getIcon();
@@ -87,6 +90,9 @@ import java.util.Locale;
       });
       menuItem = popup.getMenu().findItem(R.id.go_to_store);
       menuItem.setOnMenuItemClickListener(menuItem12 -> {
+        if (clickCallback != null) {
+          clickCallback.call();
+        }
         FragmentUtils.replaceFragmentV4(getContext(), V8Engine.getFragmentProvider()
             .newStoreFragment(pojo.getStore().getName(),
                 pojo.getStore().getAppearance().getTheme()));
@@ -148,10 +154,14 @@ import java.util.Locale;
       icTrustedImageView.setVisibility(View.GONE);
     }
 
-    itemView.setOnClickListener(v -> FragmentUtils.replaceFragmentV4(getContext(),
-        V8Engine.getFragmentProvider()
-            .newAppViewFragment(pojo.getId(), pojo.getStore().getAppearance().getTheme(),
-                pojo.getStore().getName())));
+    itemView.setOnClickListener(v -> {
+      if (clickCallback != null) {
+        clickCallback.call();
+      }
+      FragmentUtils.replaceFragmentV4(getContext(), V8Engine.getFragmentProvider()
+          .newAppViewFragment(pojo.getId(), pojo.getStore().getAppearance().getTheme(),
+              pojo.getStore().getName()));
+    });
   }
 
   @Override public void unbindView() {

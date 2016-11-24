@@ -41,6 +41,7 @@ import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AccountAnalytcsImp;
+import cm.aptoide.pt.v8engine.analytics.abtesting.ABTestManager;
 import cm.aptoide.pt.v8engine.configuration.ActivityProvider;
 import cm.aptoide.pt.v8engine.configuration.FragmentProvider;
 import cm.aptoide.pt.v8engine.configuration.implementation.ActivityProviderImpl;
@@ -262,6 +263,15 @@ public abstract class V8Engine extends DataProvider {
     // FIXME: 24/08/16 sithengineer the following line should be removed when no more SQLite -> Realm migration is needed
     SQLiteDatabase db = new SQLiteDatabaseHelper(this).getWritableDatabase();
     db.close();
+
+    ABTestManager.getInstance()
+        .initialize(new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            this).getAptoideClientUUID())
+        .subscribe(success -> {
+        }, throwable -> {
+          Logger.d(TAG, "An error has occurred when initializing the ABTestManager");
+          CrashReports.logException(throwable);
+        });
 
     AptoideAccountManager.setAnalytics(new AccountAnalytcsImp());
     Logger.d(TAG, "onCreate took " + (System.currentTimeMillis() - l) + " millis.");
