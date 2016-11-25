@@ -21,7 +21,7 @@ public class ErrorCodeFactory {
     int errorCode = BillingBinder.RESULT_ERROR;
 
     if (throwable instanceof PaymentCancellationException) {
-      errorCode = BillingBinder.RESULT_USER_CANCELED;
+      errorCode = BillingBinder.RESULT_USER_CANCELLED;
     }
 
     if (throwable instanceof PaymentAlreadyProcessedException) {

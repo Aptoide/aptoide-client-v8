@@ -159,25 +159,21 @@ public class Analytics {
 
       public static void onCreate(android.app.Application application) {
 
+        //Integrate FacebookSDK
+        FacebookSdk.sdkInitialize(application);
+        AppEventsLogger.activateApp(application);
+        facebookLogger = AppEventsLogger.newLogger(application);
         SharedPreferences sPref =
             PreferenceManager.getDefaultSharedPreferences(application.getBaseContext());
         ACTIVATE_LOCALYTICS =
             ACTIVATE_LOCALYTICS && (sPref.getBoolean(Constants.IS_LOCALYTICS_ENABLE_KEY, false));
         isFirstSession = sPref.getBoolean(Constants.IS_LOCALYTICS_FIRST_SESSION, false);
-        if (!ACTIVATE_LOCALYTICS && !isFirstSession) {
-          return;
+        if (ACTIVATE_LOCALYTICS || isFirstSession) {
+          // Integrate Localytics
+          Localytics.autoIntegrate(application);
+          setupDimensions();
+          Logger.d(TAG, "Localytics session configured");
         }
-
-        // Integrate Localytics
-        Localytics.autoIntegrate(application);
-        setupDimensions();
-
-        //Integrate FacebookSDK
-        FacebookSdk.sdkInitialize(application);
-        AppEventsLogger.activateApp(application);
-        facebookLogger = AppEventsLogger.newLogger(application);
-
-        Logger.d(TAG, "Localytics session configured");
       }
 
       private static void setupDimensions() {
