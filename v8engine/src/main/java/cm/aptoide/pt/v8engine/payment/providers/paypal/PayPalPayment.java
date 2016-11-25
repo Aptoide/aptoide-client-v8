@@ -5,19 +5,17 @@
 
 package cm.aptoide.pt.v8engine.payment.providers.paypal;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.annotation.NonNull;
-import android.support.v4.content.LocalBroadcastManager;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
-import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.payment.Price;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentCancellationException;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentFailureException;
+import cm.aptoide.pt.v8engine.payment.providers.AbstractPayment;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 import java.util.Locale;
 import rx.Observable;
@@ -25,7 +23,7 @@ import rx.Observable;
 /**
  * Created by marcelobenites on 8/10/16.
  */
-public class PayPalPayment implements Payment {
+public class PayPalPayment extends AbstractPayment {
 
   public static final String PAYMENT_RESULT_ACTION =
       "cm.aptoide.pt.v8engine.payment.service.action.PAYMENT_RESULT";
@@ -39,44 +37,15 @@ public class PayPalPayment implements Payment {
   public static final int PAYMENT_STATUS_CANCELLED = 2;
 
   private final Context context;
-  private final int id;
-  private final String type;
-  private final String name;
-  private final String sign;
-  private final Price price;
   private final PayPalConfiguration configuration;
   private final PayPalConverter converter;
-  private final Product product;
-  private String methodLabel;
 
   public PayPalPayment(Context context, int id, String type, String name, String sign, Price price,
       PayPalConfiguration configuration, PayPalConverter converter, Product product, String methodLabel) {
+    super(id, type, product, price, String.format(Locale.getDefault(), "%s - %.2f %s", methodLabel, price.getAmount(), sign));
     this.context = context;
-    this.id = id;
-    this.type = type;
-    this.name = name;
-    this.sign = sign;
-    this.price = price;
     this.configuration = configuration;
     this.converter = converter;
-    this.product = product;
-    this.methodLabel = methodLabel;
-  }
-
-  @Override public int getId() {
-    return id;
-  }
-
-  @Override public String getType() {
-    return type;
-  }
-
-  @Override public Price getPrice() {
-    return price;
-  }
-
-  @Override public String getDescription() {
-    return String.format(Locale.getDefault(), "%s - %.2f %s", methodLabel, price.getAmount(), sign);
   }
 
   @Override public Observable<PaymentConfirmation> process() {
@@ -84,17 +53,14 @@ public class PayPalPayment implements Payment {
     paymentResultFilter.addAction(PAYMENT_RESULT_ACTION);
     return Observable.create(
         new BroadcastRegisterOnSubscribe(context, paymentResultFilter, null, null))
-        .doOnSubscribe(() -> startPayPalActivity())
+        .doOnSubscribe(() -> startPayPalActivity(getPrice(),   getProduct()))
         .filter(intent -> isPaymentConfirmationIntent(intent))
-        .flatMap(intent -> convertToPaymentConfirmation(intent));
-  }
-
-  @Override public Product getProduct() {
-    return product;
+        .flatMap(intent -> convertToPaymentConfirmation(intent, getId(), getProduct(), getPrice()));
   }
 
   @NonNull
-  private Observable<PaymentConfirmation> convertToPaymentConfirmation(Intent intent) {
+  private Observable<PaymentConfirmation> convertToPaymentConfirmation(Intent intent, int id,
+      Product product, Price price) {
     final com.paypal.android.sdk.payments.PaymentConfirmation payPalConfirmation;
     switch (intent.getIntExtra(PAYMENT_STATUS_EXTRA, PAYMENT_STATUS_FAILED)) {
       case PAYMENT_STATUS_OK:
@@ -120,7 +86,7 @@ public class PayPalPayment implements Payment {
         && intent.hasExtra(PAYMENT_STATUS_EXTRA);
   }
 
-  private void startPayPalActivity() {
+  private void startPayPalActivity(Price price, Product product) {
     context.startActivity(PayPalPaymentActivity.getIntent(context,
         converter.convertToPayPal(price.getAmount(), price.getCurrency(), product.getTitle()),
         configuration));
