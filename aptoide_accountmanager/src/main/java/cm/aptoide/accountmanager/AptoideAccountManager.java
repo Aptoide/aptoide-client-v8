@@ -377,7 +377,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
           if (isSuccess) {
             setAccessTokenOnLocalAccount(oAuth.getAccessToken(), null, SecureKeys.ACCESS_TOKEN);
             AccountManagerPreferences.setLoginMode(mode);
-            getInstance().onLoginSuccess(mode);
+            getInstance().onLoginSuccess(mode, "");
             if (finalGenericPleaseWaitDialog != null) {
               finalGenericPleaseWaitDialog.dismiss();
             }
@@ -816,11 +816,15 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     mCallback.onLoginFail(reason);
   }
 
-  void onLoginSuccess(LoginMode loginType) {
+  void onLoginSuccess(LoginMode loginType, String loginOrigin) {
     userIsLoggedIn = true;
     mCallback.onLoginSuccess();
     if (analytics != null) {
       analytics.login(loginType.name());
+    }
+    if (loginOrigin.equals("signup")) {
+      Intent intent = new Intent(getContext(), CreateUserActivity.class);
+      getContext().startActivity(intent);
     }
   }
 
