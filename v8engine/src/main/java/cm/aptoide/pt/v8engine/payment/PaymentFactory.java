@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import cm.aptoide.pt.model.v3.PaymentService;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.BuildConfig;
+import cm.aptoide.pt.v8engine.payment.providers.dummy.DummyPayment;
 import cm.aptoide.pt.v8engine.payment.providers.web.WebPayment;
 import cm.aptoide.pt.v8engine.payment.providers.paypal.PayPalConverter;
 import cm.aptoide.pt.v8engine.payment.providers.paypal.PayPalPayment;
@@ -26,6 +27,7 @@ public class PaymentFactory {
 
   public static final String PAYPAL = "paypal";
   public static final String BOACOMPRA = "boacompra";
+  public static final String DUMMY = "dummy";
   private Account account;
 
   public Payment create(Context context, PaymentService paymentService, Product product) {
@@ -43,7 +45,12 @@ public class PaymentFactory {
             RepositoryFactory.getPaymentAuthorizationRepository(context),
             RepositoryFactory.getPaymentConfirmationRepository(context),
             new SyncAdapterBackgroundSync(Application.getConfiguration(),
-                (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE)));
+            (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE)));
+      case DUMMY:
+        return new DummyPayment(paymentService.getId(), paymentService.getShortName(), product,
+            getPrice(paymentService.getPrice(), paymentService.getCurrency(),
+                paymentService.getTaxRate()), paymentService.getName(),
+            RepositoryFactory.getPaymentConfirmationRepository(context));
       default:
         throw new IllegalArgumentException(
             "Payment not supported: " + paymentService.getShortName());
