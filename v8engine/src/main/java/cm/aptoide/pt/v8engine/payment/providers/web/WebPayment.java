@@ -7,10 +7,10 @@ package cm.aptoide.pt.v8engine.payment.providers.web;
 
 import android.content.Context;
 import cm.aptoide.pt.v8engine.payment.BackgroundSync;
-import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.payment.Price;
 import cm.aptoide.pt.v8engine.payment.Product;
+import cm.aptoide.pt.v8engine.payment.providers.AbstractPayment;
 import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationRepository;
 import cm.aptoide.pt.v8engine.repository.PaymentConfirmationRepository;
 import rx.Observable;
@@ -18,14 +18,9 @@ import rx.Observable;
 /**
  * Created by marcelobenites on 14/10/16.
  */
-public class WebPayment implements Payment {
+public class WebPayment extends AbstractPayment {
 
   private final Context context;
-  private final int id;
-  private final String type;
-  private final Product product;
-  private final Price price;
-  private final String description;
   private final PaymentAuthorizationRepository authorizationRepository;
   private final PaymentConfirmationRepository confirmationRepository;
   private final BackgroundSync backgroundSync;
@@ -33,39 +28,15 @@ public class WebPayment implements Payment {
   public WebPayment(Context context, int id, String type, Product product, Price price,
       String description, PaymentAuthorizationRepository authorizationRepository,
       PaymentConfirmationRepository confirmationRepository, BackgroundSync backgroundSync) {
+    super(id, type, product, price, description);
     this.context = context;
-    this.id = id;
-    this.type = type;
-    this.product = product;
-    this.price = price;
-    this.description = description;
     this.authorizationRepository = authorizationRepository;
     this.confirmationRepository = confirmationRepository;
     this.backgroundSync = backgroundSync;
   }
 
-  @Override public int getId() {
-    return id;
-  }
-
-  @Override public String getType() {
-    return type;
-  }
-
-  @Override public Product getProduct() {
-    return product;
-  }
-
-  @Override public Price getPrice() {
-    return price;
-  }
-
-  @Override public String getDescription() {
-    return description;
-  }
-
   @Override public Observable<PaymentConfirmation> process() {
-    return authorizationRepository.getPaymentAuthorization(id).flatMap(authorization -> {
+    return authorizationRepository.getPaymentAuthorization(getId()).flatMap(authorization -> {
       if (authorization.isAuthorized()) {
         return confirmationRepository.createPaymentConfirmation(this);
       } else if (authorization.isPending()) {
