@@ -80,6 +80,10 @@
   <string name="create_user_username">User name</string>
   <string name="create_user_hint">Will appear when you rate, comment and share apps.</string>
   <string name="create_user_create_button">Create Profile</string>
+  <string name="create_user_dialog_camera">Take Photo</string>
+  <string name="create_user_dialog_gallery">Choose From Gallery</string>
+  <string name="create_user_dialog_cancel">Cancel</string>
+  <string name="create_user_dialog_title">Choose Avatar Origin</string>
 
   <!--User interests fragment -->
   <string name="user_interests_title">Your Interests</string>

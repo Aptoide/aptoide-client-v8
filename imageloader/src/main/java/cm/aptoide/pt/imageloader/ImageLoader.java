@@ -8,6 +8,7 @@ package cm.aptoide.pt.imageloader;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
@@ -105,6 +106,13 @@ public class ImageLoader {
   public static void loadWithCircleTransform(String url, ImageView imageView) {
     Glide.with(Application.getContext())
         .load(AptoideUtils.IconSizeU.generateSizeStoreString(url))
+        .transform(new CircleTransform(Application.getContext()))
+        .into(imageView);
+  }
+
+  public static void loadWithCircleTransform(Uri url, ImageView imageView) {
+    Glide.with(Application.getContext())
+        .load(url.toString())
         .transform(new CircleTransform(Application.getContext()))
         .into(imageView);
   }

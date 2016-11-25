@@ -140,12 +140,12 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     if (userIsLoggedIn) {
       context.startActivity(new Intent(context, MyAccountActivity.class));
     } else {
-      final Intent intent = new Intent(context, LoginActivity.class);
-      if (extras != null) {
-        intent.putExtras(extras);
-      }
-      //Intent intent = new Intent(getContext(), CreateUserActivity.class);
-      //context.startActivity(intent);
+      //final Intent intent = new Intent(context, LoginActivity.class);
+      //if (extras != null) {
+      //  intent.putExtras(extras);
+      //}
+      Intent intent = new Intent(getContext(), CreateUserActivity.class);
+      context.startActivity(intent);
     }
   }
 

@@ -2,23 +2,17 @@ package cm.aptoide.accountmanager;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.Nullable;
-import android.support.v4.content.FileProvider;
 import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.ToolbarWidgetWrapper;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import cm.aptoide.accountmanager.BaseActivity;
-import cm.aptoide.accountmanager.R;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.logger.Logger;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.RxTextView;
 import java.io.File;
@@ -42,6 +36,10 @@ public class CreateUserActivity extends BaseActivity {
   private Subscription mInsertedUsername;
   private Subscription mAvatarSubscription;
   private Subscription mButtonSubscription;
+
+  private String aptoideUserAvatar = "aptoide_user_avatar.png";
+
+  private String TAG = "STORAGE";
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -102,8 +100,21 @@ public class CreateUserActivity extends BaseActivity {
   private void dispatchTakePictureIntent() {
     Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
     if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+      takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, getPhotoFileUri(createAvatarPhotoName()));
       startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
     }
+  }
+
+  private Uri getPhotoFileUri(String fileName) {
+    //if (Environment.getExternalStorageDirectory().equals(Environment.MEDIA_MOUNTED)) {
+      File storageDir = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "aptoide");
+      if (!storageDir.exists() && !storageDir.mkdirs()) {
+        Logger.d(TAG, "Failed to create directory");
+      }
+
+      return Uri.fromFile(new File(storageDir.getPath() + File.separator + fileName));
+    //}
+    //return null;
   }
 
   //private void dispatchTakePictureIntent() {
@@ -131,27 +142,14 @@ public class CreateUserActivity extends BaseActivity {
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-      Bundle extras = data.getExtras();
-      Bitmap imageBitmap = (Bitmap) extras.get("data");
-      mAvatar.setImageBitmap(imageBitmap);
+      Uri avatarUrl = getPhotoFileUri(createAvatarPhotoName());
+      ImageLoader.loadWithCircleTransform(avatarUrl, mAvatar);
     }
   }
 
-  String mCurrentPhotoPath;
-
-  private File createImageFile() throws IOException {
-    // Create an image file name
-    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-    String imageFileName = "JPEG_" + timeStamp + "_";
-    File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-    File image = File.createTempFile(
-        imageFileName,  /* prefix */
-        ".jpg",         /* suffix */
-        storageDir      /* directory */
-    );
-
-    // Save a file: path for use with ACTION_VIEW intents
-    mCurrentPhotoPath = image.getAbsolutePath();
-    return image;
+  private String createAvatarPhotoName() {
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-mm-yyyy");
+    String output = aptoideUserAvatar /*+ simpleDateFormat.toString()*/;
+    return output;
   }
 }
