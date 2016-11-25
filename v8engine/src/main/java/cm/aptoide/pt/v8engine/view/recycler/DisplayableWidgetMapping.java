@@ -42,6 +42,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Gri
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreMetaDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.InstalledAppDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.LatestStoreCommentsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.OtherVersionDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RollbackDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RowReviewDisplayable;
@@ -91,6 +92,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridDisp
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridStoreMetaWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridStoreWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.InstalledAppWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.LatestStoreCommentsWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.OtherVersionWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.ProgressBarWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.RecommendationWidget;
@@ -267,27 +269,39 @@ public class DisplayableWidgetMapping {
 
     displayableWidgetMappings.add(new DisplayableWidgetMapping(AppViewSuggestedAppsWidget.class,
         AppViewSuggestedAppsDisplayable.class));
+
     displayableWidgetMappings.add(new DisplayableWidgetMapping(AppViewSuggestedAppWidget.class,
         AppViewSuggestedAppDisplayable.class));
 
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(OtherVersionWidget.class, OtherVersionDisplayable.class));
+
     displayableWidgetMappings.add(new DisplayableWidgetMapping(RateAndReviewCommentWidget.class,
         RateAndReviewCommentDisplayable.class));
+
     displayableWidgetMappings.add(new DisplayableWidgetMapping(ScheduledDownloadWidget.class,
         ScheduledDownloadDisplayable.class));
+
     displayableWidgetMappings.add(new DisplayableWidgetMapping(CompletedDownloadWidget.class,
         CompletedDownloadDisplayable.class));
+
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(ActiveDownloadWidget.class, ActiveDownloadDisplayable.class));
+
     displayableWidgetMappings.add(new DisplayableWidgetMapping(ActiveDownloadsHeaderWidget.class,
         ActiveDownloadsHeaderDisplayable.class));
+
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(RowReviewWidget.class, RowReviewDisplayable.class));
+
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(CommentWidget.class, CommentDisplayable.class));
+
     displayableWidgetMappings.add(new DisplayableWidgetMapping((CommentsReadMoreWidget.class),
         CommentsReadMoreDisplayable.class));
+
+    displayableWidgetMappings.add(new DisplayableWidgetMapping((LatestStoreCommentsWidget.class),
+        LatestStoreCommentsDisplayable.class));
 
     return displayableWidgetMappings;
   }

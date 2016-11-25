@@ -196,7 +196,6 @@ import java.util.Locale;
 
   private void loadCommentsForThisReview(long reviewId, int limit, CommentAdder commentAdder) {
     ListCommentsRequest.of(reviewId, limit, AptoideAccountManager.getAccessToken(),
-        AptoideAccountManager.getUserEmail(),
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()).getAptoideClientUUID()).execute(listComments -> {
       if (listComments.isOk()) {

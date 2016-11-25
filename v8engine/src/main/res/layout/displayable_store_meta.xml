@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    style="?attr/backgroundCard"
-    tools:background="@color/red_700"
+    android:background="@drawable/dialog_bg_2"
+    tools:backgroundTint="@color/red_700"
     >
 
   <RelativeLayout
@@ -111,6 +111,7 @@
   android:background="#33000000"
   -->
   <LinearLayout
+      android:id="@+id/descriptionContent"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:orientation="vertical"
@@ -131,6 +132,7 @@
         android:maxLines="2"
         android:padding="@dimen/row_store_vertical_delimiter"
         android:textSize="12sp"
+        android:textColor="@color/white"
         tools:text="In this store you can download free Android apps using the Aptoide client for download and etc ipsus lorem ipsus lorem ipsus lorem ipsus"
         />
 
