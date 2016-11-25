@@ -39,6 +39,7 @@ public class WSWidgetsUtils {
               .compose(AptoideUtils.ObservableU.applySchedulers())
               .subscribe(listApps -> setObjectView(wsWidget, countDownLatch, listApps), action1);
           break;
+
         case STORES_GROUP:
           ListStoresRequest.ofAction(url, accessToken, email, aptoideClientUUID)
               .observe(refresh)
@@ -46,6 +47,7 @@ public class WSWidgetsUtils {
               .subscribe(listStores -> setObjectView(wsWidget, countDownLatch, listStores),
                   action1);
           break;
+
         case DISPLAYS:
           GetStoreDisplaysRequest.ofAction(url, storeCredentials, accessToken, email,
               aptoideClientUUID)
@@ -55,6 +57,7 @@ public class WSWidgetsUtils {
                   getStoreDisplays -> setObjectView(wsWidget, countDownLatch, getStoreDisplays),
                   action1);
           break;
+
         case ADS:
           GetAdsRequest.ofHomepage(aptoideClientUUID, googlePlayServicesAvailable, oemid)
               .observe()
@@ -62,6 +65,7 @@ public class WSWidgetsUtils {
               .subscribe(getAdsResponse -> setObjectView(wsWidget, countDownLatch, getAdsResponse),
                   action1);
           break;
+
         case STORE_META:
           GetStoreMetaRequest.ofAction(url, storeCredentials, accessToken, email, aptoideClientUUID)
               .observe(refresh)
@@ -69,6 +73,15 @@ public class WSWidgetsUtils {
               .subscribe(getStoreMeta -> setObjectView(wsWidget, countDownLatch, getStoreMeta),
                   action1);
           break;
+
+        case STORE_LATEST_COMMENTS:
+          ListCommentsRequest.ofAction(url, storeCredentials, accessToken, aptoideClientUUID)
+              .observe(refresh)
+              .compose(AptoideUtils.ObservableU.applySchedulers())
+              .subscribe(listComments -> setObjectView(wsWidget, countDownLatch, listComments),
+                  action1);
+          break;
+
         case REVIEWS_GROUP:
           ListFullReviewsRequest.ofAction(url, refresh, accessToken, email, aptoideClientUUID)
               .observe(refresh)

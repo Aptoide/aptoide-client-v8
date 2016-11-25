@@ -2,7 +2,10 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.text.TextUtils;
 import android.view.View;
@@ -41,6 +44,7 @@ import rx.functions.Action1;
 public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
 
   private View containerLayout;
+  private View descriptionContentLayout;
   private ImageView image;
   private TextView name;
   private TextView description;
@@ -58,6 +62,7 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
 
   @Override protected void assignViews(View itemView) {
     containerLayout = itemView.findViewById(R.id.outter_layout);
+    descriptionContentLayout = itemView.findViewById(R.id.descriptionContent);
     image = (ImageView) itemView.findViewById(R.id.image);
     name = (TextView) itemView.findViewById(R.id.name);
     description = (TextView) itemView.findViewById(R.id.description);
@@ -73,8 +78,16 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
   private void showStoreData(cm.aptoide.pt.model.v7.store.Store store, StoreThemeEnum theme,
       Context context) {
 
-    @ColorInt int color = context.getResources().getColor(theme.getStoreHeader());
-    containerLayout.setBackgroundColor(color);
+    @ColorInt int color = getColorOrDefault(theme, context);
+    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+      Drawable d = context.getDrawable(R.drawable.dialog_bg_2);
+      d.setColorFilter(color, PorterDuff.Mode.SRC_IN);
+      containerLayout.setBackground(d);
+    } else {
+      Drawable d = context.getResources().getDrawable(R.drawable.dialog_bg_2);
+      d.setColorFilter(color, PorterDuff.Mode.SRC_IN);
+      containerLayout.setBackgroundDrawable(d);
+    }
     subscribeButton.setTextColor(color);
 
     name.setText(store.getName());
@@ -83,6 +96,14 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
         NumberFormat.getNumberInstance(Locale.getDefault()).format(store.getStats().getApps()));
     downloadsCount.setText(AptoideUtils.StringU.withSuffix(store.getStats().getDownloads()));
     subscribersCount.setText(AptoideUtils.StringU.withSuffix(store.getStats().getSubscribers()));
+  }
+
+  private int getColorOrDefault(StoreThemeEnum theme, Context context) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      return context.getResources().getColor(theme.getStoreHeader(), context.getTheme());
+    } else {
+      return context.getResources().getColor(theme.getStoreHeader());
+    }
   }
 
   private void showStoreImage(cm.aptoide.pt.model.v7.store.Store store, Context context) {
@@ -100,45 +121,44 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
     }
   }
 
-  private void setupSocialChannelButtons(cm.aptoide.pt.model.v7.store.Store store) {
-    List<cm.aptoide.pt.model.v7.store.Store.SocialChannel> socialChannels =
-        store.getSocialChannels();
-    if (socialChannels == null || socialChannels.isEmpty()) return;
+  private void setupSocialChannelButtons(
+      List<cm.aptoide.pt.model.v7.store.Store.SocialChannel> socialChannels) {
+    if (socialChannels == null || socialChannels.isEmpty()) {
+      return;
+    }
 
-    compositeSubscription.add(
-        Observable.from(socialChannels).flatMap( socialChannel -> {
-          Event.Name eventName = socialChannel.getEvent().getName();
+    compositeSubscription.add(Observable.from(socialChannels).flatMap(socialChannel -> {
+      Event.Name eventName = socialChannel.getEvent().getName();
 
-          switch (eventName) {
-            // uncomment for further development
-            //case facebook:
-            //  youtubeButton.setBackgroundResource( ?? );
-            //  youtubeButton.setClickable(true);
-            //  youtubeButton.setVisibility(View.VISIBLE);
-            //  return RxView.clicks(youtubeButton).map(aVoid -> socialChannel);
+      switch (eventName) {
+        // uncomment for further development
+        //case facebook:
+        //  youtubeButton.setBackgroundResource( ?? );
+        //  youtubeButton.setClickable(true);
+        //  youtubeButton.setVisibility(View.VISIBLE);
+        //  return RxView.clicks(youtubeButton).map(aVoid -> socialChannel);
 
-            case youtube:
-              youtubeButton.setClickable(true);
-              youtubeButton.setVisibility(View.VISIBLE);
-              return RxView.clicks(youtubeButton).map(aVoid -> socialChannel);
+        case youtube:
+          youtubeButton.setClickable(true);
+          youtubeButton.setVisibility(View.VISIBLE);
+          return RxView.clicks(youtubeButton).map(aVoid -> socialChannel);
 
-            case twitch:
-              twitchButton.setClickable(true);
-              twitchButton.setVisibility(View.VISIBLE);
-              return RxView.clicks(twitchButton).map(aVoid -> socialChannel);
+        case twitch:
+          twitchButton.setClickable(true);
+          twitchButton.setVisibility(View.VISIBLE);
+          return RxView.clicks(twitchButton).map(aVoid -> socialChannel);
 
-            case twitter:
-              twitterButton.setClickable(true);
-              twitterButton.setVisibility(View.VISIBLE);
-              return RxView.clicks(twitterButton).map(aVoid -> socialChannel);
+        case twitter:
+          twitterButton.setClickable(true);
+          twitterButton.setVisibility(View.VISIBLE);
+          return RxView.clicks(twitterButton).map(aVoid -> socialChannel);
 
-            default:
-              return Observable.empty();
-          }
-        }).subscribe(socialChannel -> {
-          handleEvent(socialChannel);
-        })
-    );
+        default:
+          return Observable.empty();
+      }
+    }).subscribe(socialChannel -> {
+      handleEvent(socialChannel);
+    }));
   }
 
   private Action1<Void> handleEvent(
@@ -170,7 +190,15 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
     compositeSubscription.add(RxView.clicks(subscribeButton)
         .subscribe(handleSubscriptionLogic(new StoreWrapper(store, isStoreSubscribed))));
 
-    setupSocialChannelButtons(store);
+    List<cm.aptoide.pt.model.v7.store.Store.SocialChannel> socialChannels =
+        store.getSocialChannels();
+    setupSocialChannelButtons(socialChannels);
+
+    // if there is no channels nor description, hide that area
+    if ((socialChannels == null || socialChannels.isEmpty()) && TextUtils.isEmpty(
+        store.getAppearance().getDescription())) {
+      descriptionContentLayout.setVisibility(View.GONE);
+    }
   }
 
   @Override public void unbindView() {
