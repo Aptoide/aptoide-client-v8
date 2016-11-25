@@ -1,11 +1,21 @@
 package cm.aptoide.accountmanager;
 
+import android.Manifest;
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,9 +26,7 @@ import cm.aptoide.pt.logger.Logger;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.RxTextView;
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import rx.Subscription;
 import rx.functions.Action1;
 
@@ -36,6 +44,9 @@ public class CreateUserActivity extends BaseActivity {
   private Subscription mInsertedUsername;
   private Subscription mAvatarSubscription;
   private Subscription mButtonSubscription;
+
+  static final int CALL_CAMERA_CODE = 1046;
+  static final int REQUEST_IMAGE_CAPTURE = 1;
 
   private String aptoideUserAvatar = "aptoide_user_avatar.png";
 
@@ -82,9 +93,9 @@ public class CreateUserActivity extends BaseActivity {
           }
         });
     mAvatarSubscription = RxView.clicks(mUserAvatar)
-        .subscribe(click -> {dispatchTakePictureIntent();});
+        .subscribe(click -> chooseAvatarSource());
     mButtonSubscription = RxView.clicks(mCreateButton)
-        .subscribe(click -> {});
+        .subscribe(click -> {finish();});
   }
 
   @Override protected void onDestroy() {
@@ -94,8 +105,27 @@ public class CreateUserActivity extends BaseActivity {
     mButtonSubscription.unsubscribe();
   }
 
-  static final int REQUEST_IMAGE_CAPTURE = 1;
-  static final int REQUEST_TAKE_PHOTO = 1;
+  private void chooseAvatarSource() {
+    final Dialog dialog = new Dialog(this);
+    dialog.setContentView(R.layout.dialog_choose_avatar_layout);
+    dialog.setTitle(R.string.create_user_dialog_title);
+    RxView.clicks(dialog.findViewById(R.id.button_camera))
+        .subscribe(click -> dispatchTakePictureIntent());
+    RxView.clicks(dialog.findViewById(R.id.button_gallery))
+        .subscribe(click -> callGallery());
+    RxView.clicks(dialog.findViewById(R.id.button_cancel))
+        .subscribe(click -> dialog.dismiss());
+    dialog.show();
+  }
+
+  private void callGallery() {
+    checkPermission(getApplicationContext());
+    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+    if (intent.resolveActivity(getPackageManager()) != null) {
+      startActivityForResult(intent, CALL_CAMERA_CODE);
+    }
+
+  }
 
   private void dispatchTakePictureIntent() {
     Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -106,8 +136,8 @@ public class CreateUserActivity extends BaseActivity {
   }
 
   private Uri getPhotoFileUri(String fileName) {
-    //if (Environment.getExternalStorageDirectory().equals(Environment.MEDIA_MOUNTED)) {
-      File storageDir = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "aptoide");
+   // if (Environment.getExternalStorageDirectory().equals(Environment.MEDIA_MOUNTED)) {
+      File storageDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), ",aptoide");
       if (!storageDir.exists() && !storageDir.mkdirs()) {
         Logger.d(TAG, "Failed to create directory");
       }
@@ -117,32 +147,14 @@ public class CreateUserActivity extends BaseActivity {
     //return null;
   }
 
-  //private void dispatchTakePictureIntent() {
-   // Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-    // Ensure that there's a camera activity to handle the intent
-    //if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-      // Create the File where the photo should go
-      //File photoFile = null;
-      //try {
-      //  photoFile = createImageFile();
-      //} catch (IOException ex) {
-        // Error occurred while creating the File
-      //}
-      // Continue only if the File was successfully created
-      //if (photoFile != null) {
-       // Uri photoURI = FileProvider.getUriForFile(this,
-         //   "com.example.android.fileprovider",
-       //     photoFile);
-       // takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-       // startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-      //}
-    //}
-  //}
 
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
       Uri avatarUrl = getPhotoFileUri(createAvatarPhotoName());
+      ImageLoader.loadWithCircleTransform(avatarUrl, mAvatar);
+    } else if (requestCode == CALL_CAMERA_CODE) {
+      Uri avatarUrl = data.getData();
       ImageLoader.loadWithCircleTransform(avatarUrl, mAvatar);
     }
   }
@@ -151,5 +163,36 @@ public class CreateUserActivity extends BaseActivity {
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-mm-yyyy");
     String output = aptoideUserAvatar /*+ simpleDateFormat.toString()*/;
     return output;
+  }
+
+  public static boolean checkPermission(final Context context)
+  {
+    int currentAPIVersion = Build.VERSION.SDK_INT;
+    if(currentAPIVersion>=android.os.Build.VERSION_CODES.M)
+    {
+      if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+          AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
+          alertBuilder.setCancelable(true);
+          alertBuilder.setTitle("Permission necessary");
+          alertBuilder.setMessage("External storage permission is necessary");
+          alertBuilder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+            @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+            public void onClick(DialogInterface dialog, int which) {
+              ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 123);
+            }
+          });
+          AlertDialog alert = alertBuilder.create();
+          alert.show();
+        } else {
+          ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 123);
+        }
+        return false;
+      } else {
+        return true;
+      }
+    } else {
+      return true;
+    }
   }
 }
