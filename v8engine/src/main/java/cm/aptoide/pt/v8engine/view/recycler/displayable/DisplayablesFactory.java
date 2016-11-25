@@ -28,6 +28,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Gri
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridDisplayDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreMetaDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.LatestStoreCommentsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RowReviewDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
 import java.util.ArrayList;
@@ -81,6 +82,9 @@ public class DisplayablesFactory {
             break;
           case STORE_META:
             displayables.add(new GridStoreMetaDisplayable((GetStoreMeta) wsWidget.getViewObject()));
+            break;
+          case STORE_LATEST_COMMENTS:
+            displayables.add(new LatestStoreCommentsDisplayable());
             break;
           case REVIEWS_GROUP:
             ListFullReviews reviewsList = (ListFullReviews) wsWidget.getViewObject();

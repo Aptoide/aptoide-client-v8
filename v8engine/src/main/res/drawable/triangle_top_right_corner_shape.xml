@@ -4,7 +4,7 @@
     <rotate
       android:fromDegrees="-45"
       android:pivotX="10%"
-      android:pivotY="-102%"
+      android:pivotY="-70%"
       android:toDegrees="45">
       <shape android:shape="rectangle">
         <stroke

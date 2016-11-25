@@ -354,6 +354,8 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
         case getStoreWidgets:
           caseGetStoreWidgets(url, StoreUtils.getStoreCredentialsFromUrl(url), refresh);
           break;
+        case listStoreComments:
+          caseListStoreComments(url, refresh);
         case listReviews:
           caseListReviews(url, refresh);
           break;
@@ -375,6 +377,10 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
       }
       //setDisplayables(displayables);
     }
+  }
+
+  private void caseListStoreComments(String url, boolean refresh) {
+    // TODO: 25/11/2016 sithengineer  
   }
 
   private void caseListReviews(String url, boolean refresh) {
