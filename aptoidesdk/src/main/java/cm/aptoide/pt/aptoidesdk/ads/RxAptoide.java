@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.aptoidesdk.BuildConfig;
 import cm.aptoide.pt.aptoidesdk.entities.App;
+import cm.aptoide.pt.aptoidesdk.entities.EntitiesFactory;
 import cm.aptoide.pt.aptoidesdk.entities.SearchResult;
 import cm.aptoide.pt.aptoidesdk.parser.Parsers;
 import cm.aptoide.pt.aptoidesdk.proxys.GetAdsProxy;
@@ -76,13 +77,12 @@ public class RxAptoide {
 
   static Observable<App> getApp(String packageName, String storeName) {
     return getAppProxy.getApp(packageName, storeName, aptoideClientUUID)
-        .map(App::fromGetApp)
+        .map(EntitiesFactory::createApp)
         .onErrorReturn(throwable -> null);
   }
 
   static Observable<App> getApp(long appId) {
-    return getAppProxy.getApp(appId, aptoideClientUUID)
-        .map(App::fromGetApp)
+    return getAppProxy.getApp(appId, aptoideClientUUID).map(EntitiesFactory::createApp)
         .onErrorReturn(throwable -> null);
   }
 

@@ -1,5 +1,6 @@
 package cm.aptoide.pt.aptoidesdk.parser;
 
+import cm.aptoide.pt.aptoidesdk.entities.EntitiesFactory;
 import cm.aptoide.pt.aptoidesdk.entities.SearchResult;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import java.util.LinkedList;
@@ -18,7 +19,7 @@ public class Parsers {
     return searchAppsObservable.flatMap(listSearchApps -> {
       LinkedList<SearchResult> searchResults = new LinkedList<>();
       for (ListSearchApps.SearchAppsApp searchAppsApp : listSearchApps.getDatalist().getList()) {
-        searchResults.add(SearchResult.from(searchAppsApp));
+        searchResults.add(EntitiesFactory.createSearchResult(searchAppsApp));
       }
 
       return Observable.from(searchResults).toList();
@@ -29,7 +30,7 @@ public class Parsers {
 
     LinkedList<SearchResult> searchResults = new LinkedList<>();
     for (ListSearchApps.SearchAppsApp searchAppsApp : listSearchApps.getDatalist().getList()) {
-      searchResults.add(SearchResult.from(searchAppsApp));
+      searchResults.add(EntitiesFactory.createSearchResult(searchAppsApp));
     }
 
     return searchResults;
