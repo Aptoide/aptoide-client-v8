@@ -1,5 +1,6 @@
 package cm.aptoide.pt.aptoidesdk.ads;
 
+import cm.aptoide.pt.aptoidesdk.Ad;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -12,7 +13,7 @@ import lombok.experimental.Accessors;
 /**
  * Created by neuro on 24-10-2016.
  */
-@EqualsAndHashCode public class Ad {
+@EqualsAndHashCode public class AptoideAd implements Ad {
   final long timestamp;
   final long id;
   final Clicks clicks;
@@ -49,7 +50,8 @@ import lombok.experimental.Accessors;
   @Getter final String vername;
   String referrer;
 
-  @JsonCreator public Ad(@JsonProperty("timestamp") long timestamp, @JsonProperty("id") long id,
+  @JsonCreator
+  public AptoideAd(@JsonProperty("timestamp") long timestamp, @JsonProperty("id") long id,
       @JsonProperty("clicks") Clicks clicks, @JsonProperty("network") Network network,
       @JsonProperty("appId") long appId, @JsonProperty("packageName") String packageName,
       @JsonProperty("name") String name, @JsonProperty("iconPath") String iconPath,
@@ -71,7 +73,7 @@ import lombok.experimental.Accessors;
     this.vername = vername;
   }
 
-  static Ad from(GetAdsResponse.Ad ad) {
+  static AptoideAd from(GetAdsResponse.Ad ad) {
     long adId = ad.getInfo().getAdId();
 
     Clicks clicks = Clicks.fromGetAds(ad);
@@ -87,7 +89,8 @@ import lombok.experimental.Accessors;
     int vercode = data.getVercode();
     String vername = data.getVername();
 
-    return new Ad(System.currentTimeMillis(), adId, clicks, network, appId, packageName, name,
+    return new AptoideAd(System.currentTimeMillis(), adId, clicks, network, appId, packageName,
+        name,
         iconPath, size, vercode, vername);
   }
 

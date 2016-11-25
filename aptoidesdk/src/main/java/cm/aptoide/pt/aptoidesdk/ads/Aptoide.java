@@ -1,6 +1,7 @@
 package cm.aptoide.pt.aptoidesdk.ads;
 
 import android.content.Context;
+import cm.aptoide.pt.aptoidesdk.Ad;
 import cm.aptoide.pt.aptoidesdk.entities.App;
 import cm.aptoide.pt.aptoidesdk.entities.SearchResult;
 import java.util.List;
@@ -20,7 +21,7 @@ public class Aptoide {
    * @return App info.
    */
   public static App getApp(Ad ad) {
-    return RxAptoide.getApp(ad).toBlocking().first();
+    return RxAptoide.getApp((AptoideAd) ad).toBlocking().first();
   }
 
   /**

@@ -41,7 +41,7 @@ public class SdkInstalledBroadcastReceiver extends BroadcastReceiver {
 
   private void checkAndBroadcastReferrer(String packageName) {
 
-    Ad ad = getAndRemoveStoredAd(packageName);
+    AptoideAd ad = getAndRemoveStoredAd(packageName);
     if (ad != null) {
       ReferrerUtils.broadcastReferrer(packageName, ad.referrer);
       ReferrerUtils.knockCpi(ad);
@@ -53,7 +53,7 @@ public class SdkInstalledBroadcastReceiver extends BroadcastReceiver {
           DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(RxAptoide.getContext()),
           RxAptoide.getOemid())
           .observe().filter(ReferrerUtils::hasAds)
-          .map(getAdsResponse -> Ad.from(getAdsResponse.getAds().get(0)))
+          .map(getAdsResponse -> AptoideAd.from(getAdsResponse.getAds().get(0)))
           .observeOn(AndroidSchedulers.mainThread())
           .doOnNext(
               minimalAd -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES, true))
@@ -62,7 +62,7 @@ public class SdkInstalledBroadcastReceiver extends BroadcastReceiver {
     }
   }
 
-  private Ad getAndRemoveStoredAd(String packageName) {
+  private AptoideAd getAndRemoveStoredAd(String packageName) {
     return StoredAdsManager.getInstance(RxAptoide.getContext()).removeAd(packageName);
   }
 }

@@ -4,13 +4,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
-
-import java.util.List;
-
-import cm.aptoide.pt.aptoidesdk.ads.Ad;
+import cm.aptoide.pt.aptoidesdk.Ad;
 import cm.aptoide.pt.aptoidesdk.ads.Aptoide;
 import cm.aptoide.pt.aptoidesdk.entities.App;
 import cm.aptoide.pt.aptoidesdk.entities.SearchResult;
+import java.util.List;
 
 /**
  * Created by neuro on 28-10-2016.

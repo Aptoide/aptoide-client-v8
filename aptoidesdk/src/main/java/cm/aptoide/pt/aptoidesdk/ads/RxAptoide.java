@@ -2,6 +2,7 @@ package cm.aptoide.pt.aptoidesdk.ads;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import cm.aptoide.pt.aptoidesdk.Ad;
 import cm.aptoide.pt.aptoidesdk.BuildConfig;
 import cm.aptoide.pt.aptoidesdk.entities.App;
 import cm.aptoide.pt.aptoidesdk.entities.EntitiesFactory;
@@ -122,7 +123,7 @@ public class RxAptoide {
         .onErrorReturn(throwable -> new LinkedList<>());
   }
 
-  static Observable<App> getApp(Ad ad) {
+  static Observable<App> getApp(AptoideAd ad) {
     return getApp(ad.getAppId()).map(app -> {
       handleAds(ad).subscribe(t -> {
       }, throwable -> Logger.w(TAG, "Error extracting referrer.", throwable));
@@ -130,7 +131,7 @@ public class RxAptoide {
     });
   }
 
-  @NonNull private static Observable<Object> handleAds(Ad ad) {
+  @NonNull private static Observable<Object> handleAds(AptoideAd ad) {
     return Observable.fromCallable(() -> {
       ReferrerUtils.knockCpc(ad);
       return new Object();

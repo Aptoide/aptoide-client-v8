@@ -31,7 +31,7 @@ public class StoredAdsManager {
   private static double AD_EXPIRATION_IN_MILLIS = 5 * 60 * 1000;
   private SharedPreferences sharedPreferences;
 
-  private Map<Long, Ad> ads;
+  private Map<Long, AptoideAd> ads;
 
   protected StoredAdsManager(Context context) {
     sharedPreferences = SecurePreferencesImplementation.getInstance(context);
@@ -50,7 +50,7 @@ public class StoredAdsManager {
     return instance;
   }
 
-  public void addAd(Ad ad) {
+  public void addAd(AptoideAd ad) {
     ads.put(ad.id, ad);
     save();
   }
@@ -59,8 +59,8 @@ public class StoredAdsManager {
     return getAd(packageName) != null;
   }
 
-  public Ad getAd(String packageName) {
-    for (Ad ad : ads.values()) {
+  public AptoideAd getAd(String packageName) {
+    for (AptoideAd ad : ads.values()) {
       if (ad.getPackageName().equals(packageName)) {
         return ad;
       }
@@ -74,7 +74,7 @@ public class StoredAdsManager {
       String string = sharedPreferences.getString(ADS_REFERRERS_KEY, null);
 
       if (string != null) {
-        ads = objectMapper.readValue(string, new TypeReference<HashMap<Long, Ad>>() {
+        ads = objectMapper.readValue(string, new TypeReference<HashMap<Long, AptoideAd>>() {
         });
         removeOldAds(ads);
       } else {
@@ -97,26 +97,26 @@ public class StoredAdsManager {
     }
   }
 
-  private void removeOldAds(Map<Long, Ad> ads) {
+  private void removeOldAds(Map<Long, AptoideAd> ads) {
 
-    Iterator<Ad> iterator = ads.values().iterator();
+    Iterator<AptoideAd> iterator = ads.values().iterator();
 
     while (iterator.hasNext()) {
-      Ad ad = iterator.next();
+      AptoideAd ad = iterator.next();
       if (System.currentTimeMillis() - ad.timestamp > AD_EXPIRATION_IN_MILLIS) {
         iterator.remove();
       }
     }
   }
 
-  public Ad removeAd(String packageName) {
-    Ad ad = ads.remove(getAdId(packageName));
+  public AptoideAd removeAd(String packageName) {
+    AptoideAd ad = ads.remove(getAdId(packageName));
     save();
     return ad;
   }
 
   private Long getAdId(String packageName) {
-    for (Map.Entry<Long, Ad> adEntry : ads.entrySet()) {
+    for (Map.Entry<Long, AptoideAd> adEntry : ads.entrySet()) {
       if (adEntry.getValue().getPackageName().equals(packageName)) {
         return adEntry.getKey();
       }
@@ -136,7 +136,7 @@ public class StoredAdsManager {
     return ads.size();
   }
 
-  public Collection<Ad> getAll() {
+  public Collection<AptoideAd> getAll() {
     return ads.values();
   }
 

@@ -18,6 +18,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import cm.aptoide.pt.aptoidesdk.Ad;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
@@ -46,7 +47,7 @@ class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.ReferrerUti
 
   private static final String TAG = ReferrerUtils.class.getSimpleName();
 
-  static void extractReferrer(Ad ad, final int retries, boolean broadcastReferrer) {
+  static void extractReferrer(AptoideAd ad, final int retries, boolean broadcastReferrer) {
 
     String packageName = ad.getPackageName();
     long networkId = ad.network.id;
@@ -128,7 +129,7 @@ class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.ReferrerUti
           return false;
         }
 
-        private void saveAd(Ad ad) {
+        private void saveAd(AptoideAd ad) {
           StoredAdsManager.getInstance(RxAptoide.getContext()).addAd(ad);
         }
 
@@ -142,16 +143,17 @@ class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.ReferrerUti
           }
         }
 
-        private ScheduledFuture<Void> postponeReferrerExtraction(Ad ad, int delta, int retries) {
+        private ScheduledFuture<Void> postponeReferrerExtraction(AptoideAd ad, int delta,
+            int retries) {
           return postponeReferrerExtraction(ad, delta, false, retries);
         }
 
-        private ScheduledFuture<Void> postponeReferrerExtraction(Ad ad, int delta,
+        private ScheduledFuture<Void> postponeReferrerExtraction(AptoideAd ad, int delta,
             boolean success) {
           return postponeReferrerExtraction(ad, delta, success, 0);
         }
 
-        private ScheduledFuture<Void> postponeReferrerExtraction(Ad ad, int delta,
+        private ScheduledFuture<Void> postponeReferrerExtraction(AptoideAd ad, int delta,
             final boolean success, final int retries) {
           Logger.d("ExtractReferrer", "Referrer postponed " + delta + " seconds.");
 
@@ -183,8 +185,8 @@ class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.ReferrerUti
                         return hasAds;
                       })
                       .observeOn(AndroidSchedulers.mainThread())
-                      .subscribe(
-                          getAdsResponse -> extractReferrer(Ad.from(getAdsResponse.getAds().get(0)),
+                      .subscribe(getAdsResponse -> extractReferrer(
+                          AptoideAd.from(getAdsResponse.getAds().get(0)),
                               retries - 1, broadcastReferrer), CrashReports::logException);
                 } else {
                   // A lista de excluded networks deve ser limpa a cada "ronda"
@@ -251,36 +253,36 @@ class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.ReferrerUti
     // TODO: 28-07-2016 Baikova referrer broadcasted.
   }
 
-  static void knockCpc(Ad minimalAd) {
+  static void knockCpc(AptoideAd minimalAd) {
     // TODO: 28-07-2016 Baikova clicked on ad.
     knock(minimalAd.clicks.cpcUrl);
   }
 
-  static void knockCpd(Ad minimalAd) {
+  static void knockCpd(AptoideAd minimalAd) {
     // TODO: 28-07-2016 Baikova clicked on download button.
     knock(minimalAd.clicks.cpdUrl);
   }
 
-  static void knockCpi(Ad minimalAd) {
+  static void knockCpi(AptoideAd minimalAd) {
     // TODO: 28-07-2016 Baikova ad installed.
     knock(minimalAd.clicks.cpiUrl);
   }
 
   // FIXME: 29-07-2016 neuro so wrong...
-  static void knockImpression(Ad ad) {
+  static void knockImpression(AptoideAd ad) {
     if (isImpressionUrlPresent(ad)) {
       knock(ad.network.impressionUrl);
     }
   }
 
-  private static boolean isImpressionUrlPresent(Ad ad) {
+  private static boolean isImpressionUrlPresent(AptoideAd ad) {
     return ad != null && ad.network != null && ad.network.impressionUrl != null;
   }
 
   static List<Ad> parse(GetAdsResponse getAdsResponse) {
     LinkedList<Ad> ads = new LinkedList<>();
     for (GetAdsResponse.Ad ad : getAdsResponse.getAds()) {
-      ads.add(Ad.from(ad));
+      ads.add(AptoideAd.from(ad));
     }
 
     return ads;
