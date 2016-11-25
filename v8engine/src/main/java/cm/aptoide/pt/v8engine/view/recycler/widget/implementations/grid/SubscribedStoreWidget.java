@@ -6,10 +6,12 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.ColorInt;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -40,9 +42,9 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
   private ImageView storeAvatar;
   private TextView storeName;
-  private TextView storeUnsubscribe;
-  private LinearLayout storeLayout;
-  private View infoLayout;
+  //private TextView storeUnsubscribe;
+  private FrameLayout storeLayout;
+  //private View infoLayout;
 
   public SubscribedStoreWidget(View itemView) {
     super(itemView);
@@ -51,10 +53,10 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
   @Override protected void assignViews(View itemView) {
     storeAvatar = (ImageView) itemView.findViewById(R.id.store_avatar_row);
     storeName = (TextView) itemView.findViewById(R.id.store_name_row);
-    storeUnsubscribe = (TextView) itemView.findViewById(R.id.store_unsubscribe_row);
-    storeLayout = (LinearLayout) itemView.findViewById(R.id.store_main_layout_row);
-    infoLayout = itemView.findViewById(R.id.store_layout_subscribers);
-    storeUnsubscribe.setText(R.string.unfollow);
+    //storeUnsubscribe = (TextView) itemView.findViewById(R.id.store_unsubscribe_row);
+    storeLayout = (FrameLayout) itemView.findViewById(R.id.store_main_layout_row);
+    //infoLayout = itemView.findViewById(R.id.store_layout_subscribers);
+    //storeUnsubscribe.setText(R.string.unfollow);
   }
 
   @Override public void bindView(SubscribedStoreDisplayable displayable) {
@@ -63,11 +65,11 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
     final Store store = displayable.getPojo();
 
     storeName.setText(store.getStoreName());
-    infoLayout.setVisibility(View.GONE);
+    //infoLayout.setVisibility(View.GONE);
 
     @ColorInt int color =
         context.getResources().getColor(StoreThemeEnum.get(store.getTheme()).getStoreHeader());
-    storeLayout.setBackgroundColor(color);
+    storeLayout.setBackgroundColor(Color.WHITE);
     storeLayout.setOnClickListener(
         v -> FragmentUtils.replaceFragmentV4((FragmentActivity) v.getContext(),
             V8Engine.getFragmentProvider()
@@ -80,31 +82,31 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
       ImageLoader.loadWithCircleTransform(store.getIconPath(), storeAvatar);
     }
 
-    storeUnsubscribe.setOnClickListener(v -> {
-      compositeSubscription.add(
-          GenericDialogs.createGenericYesNoCancelMessage(itemView.getContext(),
-              displayable.getPojo().getStoreName(),
-              AptoideUtils.StringU.getFormattedString(R.string.unfollow_yes_no))
-              .subscribe(eResponse -> {
-                switch (eResponse) {
-                  case YES:
-
-                    if (AptoideAccountManager.isLoggedIn()) {
-                      AptoideAccountManager.unsubscribeStore(store.getStoreName());
-                    }
-
-                    //@Cleanup Realm realm = DeprecatedDatabase.get();
-                    //DeprecatedDatabase.StoreQ.delete(store.getStoreId(), realm);
-                    StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
-                    storeAccessor.remove(store.getStoreId());
-
-                    break;
-                }
-              }, e -> {
-                Logger.e(TAG, e);
-                CrashReports.logException(e);
-              }));
-    });
+    //storeUnsubscribe.setOnClickListener(v -> {
+    //  compositeSubscription.add(
+    //      GenericDialogs.createGenericYesNoCancelMessage(itemView.getContext(),
+    //          displayable.getPojo().getStoreName(),
+    //          AptoideUtils.StringU.getFormattedString(R.string.unfollow_yes_no))
+    //          .subscribe(eResponse -> {
+    //            switch (eResponse) {
+    //              case YES:
+    //
+    //                if (AptoideAccountManager.isLoggedIn()) {
+    //                  AptoideAccountManager.unsubscribeStore(store.getStoreName());
+    //                }
+    //
+    //                //@Cleanup Realm realm = DeprecatedDatabase.get();
+    //                //DeprecatedDatabase.StoreQ.delete(store.getStoreId(), realm);
+    //                StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
+    //                storeAccessor.remove(store.getStoreId());
+    //
+    //                break;
+    //            }
+    //          }, e -> {
+    //            Logger.e(TAG, e);
+    //            CrashReports.logException(e);
+    //          }));
+    //});
   }
 
   @Override public void unbindView() {

@@ -158,5 +158,12 @@
   <color name="appstimeline_grey">#4d4d4d</color>
   <color name="appstimeline_recommends_title">#ff7200</color>
 
+  <!-- Create stores colors -->
+  <color name="create_store_edit_text_background">#f5f5f5</color>
+  <color name="create_store_edit_text_color">#9c999999</color>
+  <color name="create_store_title_color">#545454</color>
+  <color name="create_store_hint_color">#7e7e7e</color>
+  <color name="followed_stores_store_name_color">#5c5c5c</color>
+  <color name="recommended_stores_numbers_color">#aaaaaa</color>
 
 </resources>
