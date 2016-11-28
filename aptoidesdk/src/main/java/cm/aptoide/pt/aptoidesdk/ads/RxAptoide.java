@@ -75,6 +75,13 @@ public class RxAptoide {
   }
 
   static Observable<App> getApp(String packageName, String storeName) {
+    getAdsProxy.getAds(packageName, aptoideClientUUID)
+        .filter(ReferrerUtils::hasAds)
+        .map(ReferrerUtils::parse)
+        .doOnNext(ads -> handleAds(ads.get(0)))
+        .onErrorReturn(throwable -> new LinkedList<>())
+        .subscribe();
+
     return getAppProxy.getApp(packageName, storeName, aptoideClientUUID)
         .map(App::fromGetApp)
         .onErrorReturn(throwable -> null);
@@ -83,6 +90,12 @@ public class RxAptoide {
   static Observable<App> getApp(long appId) {
     return getAppProxy.getApp(appId, aptoideClientUUID)
         .map(App::fromGetApp)
+        .doOnNext(app -> getAdsProxy.getAds(app.getPackageName(), aptoideClientUUID)
+            .filter(ReferrerUtils::hasAds)
+            .map(ReferrerUtils::parse)
+            .doOnNext(ads -> handleAds(ads.get(0)))
+            .onErrorReturn(throwable -> new LinkedList<>())
+            .subscribe())
         .onErrorReturn(throwable -> null);
   }
 
