@@ -24,6 +24,7 @@ import cm.aptoide.pt.model.v7.timeline.Feature;
 import cm.aptoide.pt.model.v7.timeline.Recommendation;
 import cm.aptoide.pt.model.v7.timeline.Similar;
 import cm.aptoide.pt.model.v7.timeline.SocialArticle;
+import cm.aptoide.pt.model.v7.timeline.SocialVideo;
 import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.model.v7.timeline.Video;
@@ -51,6 +52,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Dat
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FeatureDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SimilarDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SocialArticleDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SocialVideoDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreLatestAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.VideoDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.listeners.RxEndlessRecyclerView;
@@ -314,6 +316,9 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
           linksHandlerFactory, timelineMetricsManager);
     } else if (card instanceof SocialArticle) {
       return SocialArticleDisplayable.from(((SocialArticle) card), dateCalculator, spannableFactory,
+          linksHandlerFactory, timelineMetricsManager, socialRepository);
+    } else if (card instanceof SocialVideo) {
+      return SocialVideoDisplayable.from(((SocialVideo) card), dateCalculator, spannableFactory,
           linksHandlerFactory, timelineMetricsManager, socialRepository);
     } else if (card instanceof Feature) {
       return FeatureDisplayable.from((Feature) card, dateCalculator, spannableFactory);

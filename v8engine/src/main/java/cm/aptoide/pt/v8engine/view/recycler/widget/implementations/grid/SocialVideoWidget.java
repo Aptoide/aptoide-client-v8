@@ -1,32 +1,23 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 01/08/2016.
- */
-
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.graphics.Typeface;
+import android.os.Build;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ArticleDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SocialVideoDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
-import com.like.LikeButton;
-import com.like.OnLikeListener;
 import java.io.IOException;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -37,30 +28,27 @@ import okhttp3.Response;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
- * Created by marcelobenites on 6/17/16.
+ * Created by jdandrade on 28/11/2016.
  */
-public class ArticleWidget extends Widget<ArticleDisplayable> {
-
-  private final String cardType = "Article";
+public class SocialVideoWidget extends Widget<SocialVideoDisplayable> {
+  private String cardType = "Social Video";
   private TextView title;
   private TextView subtitle;
   private ImageView image;
-  private TextView articleTitle;
+  private TextView videoTitle;
   private ImageView thumbnail;
   private View url;
   private Button getAppButton;
+  private ImageView play_button;
+  private FrameLayout media_layout;
   private CardView cardView;
-  private View articleHeader;
-  private ArticleDisplayable displayable;
+  private SocialVideoDisplayable displayable;
+  private View videoHeader;
   private TextView relatedTo;
-  private LinearLayout like;
-  private LinearLayout share;
-  private LikeButton likeButton;
-
   private String appName;
   private String packageName;
 
-  public ArticleWidget(View itemView) {
+  public SocialVideoWidget(View itemView) {
     super(itemView);
   }
 
@@ -68,57 +56,51 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
     title = (TextView) itemView.findViewById(R.id.card_title);
     subtitle = (TextView) itemView.findViewById(R.id.card_subtitle);
     image = (ImageView) itemView.findViewById(R.id.card_image);
-    articleTitle = (TextView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_title);
+    play_button = (ImageView) itemView.findViewById(R.id.play_button);
+    media_layout = (FrameLayout) itemView.findViewById(R.id.media_layout);
+    videoTitle = (TextView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_title);
     thumbnail = (ImageView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_image);
     url = itemView.findViewById(R.id.partial_social_timeline_thumbnail);
     getAppButton =
         (Button) itemView.findViewById(R.id.partial_social_timeline_thumbnail_get_app_button);
     cardView = (CardView) itemView.findViewById(R.id.card);
-    articleHeader = itemView.findViewById(R.id.displayable_social_timeline_article_header);
+    videoHeader = itemView.findViewById(R.id.displayable_social_timeline_video_header);
     relatedTo = (TextView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_related_to);
-    like = (LinearLayout) itemView.findViewById(R.id.social_like);
-    share = (LinearLayout) itemView.findViewById(R.id.social_share);
-    likeButton = (LikeButton) itemView.findViewById(R.id.social_like_test);
   }
 
-  @Override public void bindView(ArticleDisplayable displayable) {
+  @Override public void bindView(SocialVideoDisplayable displayable) {
     this.displayable = displayable;
-    title.setText(displayable.getTitle());
-    subtitle.setText(displayable.getTimeSinceLastUpdate(getContext()));
     Typeface typeFace =
         Typeface.createFromAsset(getContext().getAssets(), "fonts/DroidSerif-Regular.ttf");
-    articleTitle.setTypeface(typeFace);
-    articleTitle.setText(displayable.getArticleTitle());
+    title.setText(displayable.getTitle());
+    subtitle.setText(displayable.getTimeSinceLastUpdate(getContext()));
+    videoTitle.setTypeface(typeFace);
+    videoTitle.setText(displayable.getVideoTitle());
     setCardviewMargin(displayable);
     ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
     ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
+    play_button.setVisibility(View.VISIBLE);
 
-    //relatedTo.setText(displayable.getAppRelatedToText(getContext(), appName));
-
-    if (getAppButton.getVisibility() != View.GONE && displayable.isGetApp(appName)) {
-      getAppButton.setVisibility(View.VISIBLE);
-      getAppButton.setText(displayable.getAppText(getContext(), appName));
-      getAppButton.setOnClickListener(view -> ((FragmentShower) getContext()).pushFragmentV4(
-          V8Engine.getFragmentProvider().newAppViewFragment(displayable.getAppId())));
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      media_layout.setForeground(
+          getContext().getResources().getDrawable(R.color.overlay_black, getContext().getTheme()));
+    } else {
+      media_layout.setForeground(getContext().getResources().getDrawable(R.color.overlay_black));
     }
 
-    //		CustomTabsHelper.getInstance()
-    //				.setUpCustomTabsService(displayable.getLink().getUrl(), getContext());
-
-    url.setOnClickListener(v -> {
+    media_layout.setOnClickListener(v -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
-      displayable.getLink().launch(getContext());
       Analytics.AppsTimeline.clickOnCard(cardType, Analytics.AppsTimeline.BLANK,
-          displayable.getArticleTitle(), displayable.getTitle(),
-          Analytics.AppsTimeline.OPEN_ARTICLE);
-      displayable.sendOpenArticleEvent(SendEventRequest.Body.Data.builder()
+          displayable.getVideoTitle(), displayable.getTitle(), Analytics.AppsTimeline.OPEN_VIDEO);
+      displayable.getLink().launch(getContext());
+      displayable.sendOpenVideoEvent(SendEventRequest.Body.Data.builder()
           .cardType(cardType)
           .source(displayable.getTitle())
           .specific(SendEventRequest.Body.Specific.builder()
               .url(displayable.getLink().getUrl())
               .app(packageName)
               .build())
-          .build(), AptoideAnalytics.OPEN_ARTICLE);
+          .build(), AptoideAnalytics.OPEN_VIDEO);
     });
 
     compositeSubscription.add(displayable.getRelatedToApplication()
@@ -131,48 +113,48 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
             setAppNameToFirstLinkedApp();
           }
           if (appName != null) {
-            relatedTo.setText(displayable.getAppRelatedToText(getContext(), appName));
+            relatedTo.setText(displayable.getAppRelatedText(getContext(), appName));
           }
         }, throwable -> {
           setAppNameToFirstLinkedApp();
           if (appName != null) {
-            relatedTo.setText(displayable.getAppRelatedToText(getContext(), appName));
+            relatedTo.setText(displayable.getAppRelatedText(getContext(), appName));
           }
           throwable.printStackTrace();
         }));
 
-    compositeSubscription.add(RxView.clicks(articleHeader).subscribe(click -> {
+    compositeSubscription.add(RxView.clicks(videoHeader).subscribe(click -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
-      displayable.getDeveloperLink().launch(getContext());
+      displayable.getBaseLink().launch(getContext());
       Analytics.AppsTimeline.clickOnCard(cardType, Analytics.AppsTimeline.BLANK,
-          displayable.getArticleTitle(), displayable.getTitle(),
-          Analytics.AppsTimeline.OPEN_ARTICLE_HEADER);
-      displayable.sendOpenArticleEvent(SendEventRequest.Body.Data.builder()
+          displayable.getVideoTitle(), displayable.getTitle(),
+          Analytics.AppsTimeline.OPEN_VIDEO_HEADER);
+      displayable.sendOpenVideoEvent(SendEventRequest.Body.Data.builder()
           .cardType(cardType)
           .source(displayable.getTitle())
           .specific(SendEventRequest.Body.Specific.builder()
-              .url(displayable.getDeveloperLink().getUrl())
+              .url(displayable.getBaseLink().getUrl())
               .app(packageName)
               .build())
-          .build(), AptoideAnalytics.OPEN_BLOG);
+          .build(), AptoideAnalytics.OPEN_CHANNEL);
     }));
+  }
 
-    compositeSubscription.add(RxView.clicks(share).subscribe(click -> {
-      displayable.share(getContext(), cardType.toUpperCase());
-    }, throwable -> throwable.printStackTrace()));
+  private void setCardviewMargin(SocialVideoDisplayable displayable) {
+    CardView.LayoutParams layoutParams =
+        new CardView.LayoutParams(CardView.LayoutParams.WRAP_CONTENT,
+            CardView.LayoutParams.WRAP_CONTENT);
+    layoutParams.setMargins(displayable.getMarginWidth(getContext(),
+        getContext().getResources().getConfiguration().orientation), 0,
+        displayable.getMarginWidth(getContext(),
+            getContext().getResources().getConfiguration().orientation), 30);
+    cardView.setLayoutParams(layoutParams);
+  }
 
-    compositeSubscription.add(RxView.clicks(like).subscribe(click -> {
-    }, (throwable) -> throwable.printStackTrace()));
-
-    likeButton.setOnLikeListener(new OnLikeListener() {
-      @Override public void liked(LikeButton likeButton) {
-        Toast.makeText(getContext(), "LIKED", Toast.LENGTH_SHORT).show();
-      }
-
-      @Override public void unLiked(LikeButton likeButton) {
-        Toast.makeText(getContext(), "UNLIKED", Toast.LENGTH_SHORT).show();
-      }
-    });
+  private void setAppNameToFirstLinkedApp() {
+    if (!displayable.getRelatedToAppsList().isEmpty()) {
+      appName = displayable.getRelatedToAppsList().get(0).getName();
+    }
   }
 
   //// TODO: 31/08/16 refactor this out of here
@@ -197,22 +179,5 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
         response.body().close();
       }
     });
-  }
-
-  private void setCardviewMargin(ArticleDisplayable displayable) {
-    CardView.LayoutParams layoutParams =
-        new CardView.LayoutParams(CardView.LayoutParams.WRAP_CONTENT,
-            CardView.LayoutParams.WRAP_CONTENT);
-    layoutParams.setMargins(displayable.getMarginWidth(getContext(),
-        getContext().getResources().getConfiguration().orientation), 0,
-        displayable.getMarginWidth(getContext(),
-            getContext().getResources().getConfiguration().orientation), 30);
-    cardView.setLayoutParams(layoutParams);
-  }
-
-  private void setAppNameToFirstLinkedApp() {
-    if (!displayable.getRelatedToAppsList().isEmpty()) {
-      appName = displayable.getRelatedToAppsList().get(0).getName();
-    }
   }
 }

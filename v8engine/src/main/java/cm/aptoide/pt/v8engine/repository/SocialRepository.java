@@ -41,7 +41,7 @@ public class SocialRepository {
             case YES:
               Toast.makeText(context, "Sharing card with your followers...", Toast.LENGTH_SHORT)
                   .show();
-              ShareCardRequest.of("ARTICLE", relatedToAppsList, url, articleTitle, thumbnailUrl,
+              ShareCardRequest.of(cardType, relatedToAppsList, url, articleTitle, thumbnailUrl,
                   title, developerLinkUrl, avatarUrl, date, cardId, ownerHash,
                   AptoideAccountManager.getAccessToken(),
                   new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
