@@ -50,7 +50,7 @@ public class Aptoide {
    * @param appId appId.
    * @return App info.
    */
-  private static App getApp(long appId) {
+  public static App getApp(long appId) {
     return RxAptoide.getApp(appId).toBlocking().first();
   }
 
