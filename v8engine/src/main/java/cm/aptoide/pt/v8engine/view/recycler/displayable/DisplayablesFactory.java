@@ -11,6 +11,7 @@ import cm.aptoide.pt.model.v7.FullReview;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.Layout;
 import cm.aptoide.pt.model.v7.ListApps;
+import cm.aptoide.pt.model.v7.ListComments;
 import cm.aptoide.pt.model.v7.ListFullReviews;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.GetStoreDisplays;
@@ -28,9 +29,9 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Gri
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridDisplayDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreMetaDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.LatestStoreCommentsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RowReviewDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreLatestCommentsDisplayable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -83,9 +84,6 @@ public class DisplayablesFactory {
           case STORE_META:
             displayables.add(new GridStoreMetaDisplayable((GetStoreMeta) wsWidget.getViewObject()));
             break;
-          case STORE_LATEST_COMMENTS:
-            displayables.add(new LatestStoreCommentsDisplayable());
-            break;
           case REVIEWS_GROUP:
             ListFullReviews reviewsList = (ListFullReviews) wsWidget.getViewObject();
             if (reviewsList != null
@@ -93,6 +91,15 @@ public class DisplayablesFactory {
                 && reviewsList.getDatalist().getList().size() > 0) {
               displayables.add(new StoreGridHeaderDisplayable(wsWidget));
               displayables.add(createReviewsDisplayables(reviewsList));
+            }
+            break;
+          case STORE_LATEST_COMMENTS:
+            ListComments comments = (ListComments) wsWidget.getViewObject();
+            if (comments != null
+                && comments.getDatalist() != null
+                && comments.getDatalist().getList().size() > 0) {
+              displayables.add(new StoreGridHeaderDisplayable(wsWidget));
+              displayables.add(new StoreLatestCommentsDisplayable(comments.getDatalist().getList()));
             }
             break;
         }
@@ -106,8 +113,7 @@ public class DisplayablesFactory {
     List<FullReview> reviews = listFullReviews.getDatalist().getList();
     final List<Displayable> displayables = new ArrayList<>(reviews.size());
     for (int i = 0; i < reviews.size(); i++) {
-      FullReview review = reviews.get(i);
-      displayables.add(new RowReviewDisplayable(review, false));
+      displayables.add(new RowReviewDisplayable(reviews.get(i)));
     }
 
     return new DisplayableGroup(displayables);
