@@ -3,12 +3,7 @@ package cm.aptoide.pt.aptoidesdk.ads;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
-import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
-import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by neuro on 24-10-2016.
@@ -45,20 +40,6 @@ public class SdkInstalledBroadcastReceiver extends BroadcastReceiver {
     if (ad != null) {
       ReferrerUtils.broadcastReferrer(packageName, ad.referrer);
       ReferrerUtils.knockCpi(ad);
-    } else {
-      GetAdsRequest.ofSecondInstall(packageName,
-          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-              RxAptoide.getContext())
-              .getAptoideClientUUID(),
-          DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(RxAptoide.getContext()),
-          RxAptoide.getOemid())
-          .observe().filter(ReferrerUtils::hasAds)
-          .map(getAdsResponse -> Ad.from(getAdsResponse.getAds().get(0)))
-          .observeOn(AndroidSchedulers.mainThread())
-          .doOnNext(
-              minimalAd -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES, true))
-          .subscribe(ad1 -> {
-          }, throwable -> Logger.e(TAG, throwable));
     }
   }
 
