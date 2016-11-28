@@ -437,6 +437,10 @@
     <item name="android:windowTitleSize">@dimen/text_size_large</item>
   </style>
 
+  <style name="AppViewWidgetFirst"  parent="@style/AppViewWidget">
+    <item name="android:layout_marginTop">@dimen/appview_vertical_margin_first</item>
+  </style>
+
   <style name="AppViewWidget">
     <item name="android:layout_marginTop">@dimen/appview_vertical_margin</item>
     <item name="android:layout_marginBottom">@dimen/appview_vertical_margin</item>

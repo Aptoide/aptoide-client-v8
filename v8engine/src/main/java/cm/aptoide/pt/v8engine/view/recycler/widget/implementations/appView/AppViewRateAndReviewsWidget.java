@@ -9,6 +9,7 @@ import android.content.Context;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +46,7 @@ import java.util.List;
 
   private static final String TAG = AppViewRateAndReviewsWidget.class.getSimpleName();
   private static final int MAX_COMMENTS = 3;
+  public static final long TIME_BETWEEN_SCROLL = DateUtils.SECOND_IN_MILLIS;
 
   private View emptyReviewsLayout;
   private View ratingLayout;
@@ -146,7 +148,7 @@ import java.util.List;
         final int count = i + 1;
         topReviewsList.postDelayed(() -> {
           topReviewsList.smoothScrollToPosition(count);
-        }, count * 1700);
+        }, count * TIME_BETWEEN_SCROLL);
       }
     } else {
       Logger.w(TAG, "Not enough top reviews to do paging animation.");
