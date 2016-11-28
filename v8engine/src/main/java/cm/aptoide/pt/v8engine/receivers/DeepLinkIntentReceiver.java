@@ -154,7 +154,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
       String[] strings = uri.split("-");
       long id = Long.parseLong(strings[strings.length - 1].split("\\.myapp")[0]);
 
-      startFromAppView(id);
+      startFromAppView(id, false);
     } else if (uri.startsWith("http://webservices.aptoide.com")) {
       /** refactored to remove org.apache libs */
       Map<String, String> params = null;
@@ -177,7 +177,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
         if (uid != null) {
           try {
             long id = Long.parseLong(uid);
-            startFromAppView(id);
+            startFromAppView(id, true);
           } catch (NumberFormatException e) {
             CrashReports.logException(e);
             Logger.printException(e);
@@ -239,7 +239,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
         //old version only with app id
         try {
           long id = Long.parseLong(split[0]);
-          startFromAppView(id);
+          startFromAppView(id, false);
           return;
         } catch (NumberFormatException e) {
           CrashReports.logException(e);
@@ -264,11 +264,12 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
     startActivity(intent);
   }
 
-  public void startFromAppView(long id) {
+  public void startFromAppView(long id, boolean showPopup) {
     Intent i = new Intent(this, startClass);
 
     i.putExtra(DeepLinksTargets.APP_VIEW_FRAGMENT, true);
     i.putExtra(DeepLinksKeys.APP_ID_KEY, id);
+    i.putExtra(DeepLinksKeys.SHOW_AUTO_INSTALL_POPUP, showPopup);
 
     startActivity(i);
   }

@@ -162,6 +162,10 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
   private AppAction appAction = AppAction.OPEN;
   private InstalledRepository installedRepository;
 
+  public AppViewFragment() {
+    super(BaseAdapter.class);
+  }
+
   public static AppViewFragment newInstance(String packageName, String storeName,
       OpenType openType) {
     Bundle bundle = new Bundle();
@@ -184,9 +188,10 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
     return fragment;
   }
 
-  public static AppViewFragment newInstance(long appId) {
+  public static AppViewFragment newInstance(long appId, OpenType openType) {
     Bundle bundle = new Bundle();
     bundle.putLong(BundleKeys.APP_ID.name(), appId);
+    bundle.putSerializable(BundleKeys.SHOULD_INSTALL.name(), openType);
 
     AppViewFragment fragment = new AppViewFragment();
     fragment.setArguments(bundle);
@@ -220,10 +225,6 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
 
   public static Fragment newInstance(String packageName, OpenType openType) {
     return newInstance(packageName, null, openType);
-  }
-
-  public AppViewFragment() {
-    super(BaseAdapter.class);
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
