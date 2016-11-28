@@ -19,7 +19,7 @@ public class GetAdsProxy {
 
   public Observable<GetAdsResponse> getAds(int limit, boolean mature, String aptoideClientUUID) {
     return GetAdsRequest.of(ADS_LOCATION, DEFAULT_KEYWORD, limit, aptoideClientUUID,
-        DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(RxAptoide.getContext()),
+        isGooglePlayServicesAvailable(),
         RxAptoide.getOemid()).observe();
   }
 
@@ -27,7 +27,7 @@ public class GetAdsProxy {
       List<String> keywords) {
     return GetAdsRequest.of(ADS_LOCATION,
         AptoideUtils.StringU.join(keywords, ",") + "," + "__null__", limit, aptoideClientUUID,
-        DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(RxAptoide.getContext()),
+        isGooglePlayServicesAvailable(),
         RxAptoide.getOemid()).observe();
   }
 
@@ -35,13 +35,22 @@ public class GetAdsProxy {
       List<String> keywords) {
     return GetAdsRequest.of(ADS_LOCATION,
         AptoideUtils.StringU.join(keywords, ",") + "," + "__null__", limit, aptoideClientUUID,
-        DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(RxAptoide.getContext()),
+        isGooglePlayServicesAvailable(),
         RxAptoide.getOemid()).observe();
   }
 
   public Observable<GetAdsResponse> getAds(int limit, String aptoideClientUUID) {
     return GetAdsRequest.of(ADS_LOCATION, DEFAULT_KEYWORD, limit, aptoideClientUUID,
-        DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(RxAptoide.getContext()),
+        isGooglePlayServicesAvailable(),
         RxAptoide.getOemid()).observe();
+  }
+
+  public Observable<GetAdsResponse> getAds(String packageName, String aptoideClientUUID) {
+    return GetAdsRequest.ofAppviewOrganic(packageName, null, aptoideClientUUID,
+        isGooglePlayServicesAvailable(), RxAptoide.getOemid()).setLocation(ADS_LOCATION).observe();
+  }
+
+  private boolean isGooglePlayServicesAvailable() {
+    return DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(RxAptoide.getContext());
   }
 }
