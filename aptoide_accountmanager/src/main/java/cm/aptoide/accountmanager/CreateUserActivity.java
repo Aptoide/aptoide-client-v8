@@ -54,6 +54,7 @@ public class CreateUserActivity extends BaseActivity {
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(getLayoutId());
+    mSubscriptions = new CompositeSubscription();
     bindViews();
     setupToolbar();
     setupListeners();

@@ -149,14 +149,14 @@
           android:layout_marginTop="8.7dp"
           android:background="@color/create_store_edit_text_background"
           android:textColor="@color/create_store_edit_text_color"
-          android:text="@string/create_user_username"
+          android:hint="@string/create_user_username"
           android:layout_marginRight="15dp"
           />
 
       <TextView
           android:layout_marginTop="10.3dp"
           android:layout_width="230.3dp"
-          android:layout_height="9.7dp"
+          android:layout_height="wrap_content"
           android:textSize="9.8sp"
           android:textColor="@color/create_store_hint_color"
           android:text="@string/create_user_hint"
