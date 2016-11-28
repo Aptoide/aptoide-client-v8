@@ -20,9 +20,10 @@ public class CreatePaidAppProductPaymentRequest extends V3<ProductPaymentRespons
   }
 
   public static CreatePaidAppProductPaymentRequest of(int productId, int paymentId,
-      NetworkOperatorManager operatorManager, String store) {
+      NetworkOperatorManager operatorManager, String store, String accessToken) {
     BaseBody body = new BaseBody();
     body.put("productid", String.valueOf(productId));
+    body.put("access_token", accessToken);
     body.put("payType", String.valueOf(paymentId));
     body.put("reqType", "rest");
     body.put("repo", store);

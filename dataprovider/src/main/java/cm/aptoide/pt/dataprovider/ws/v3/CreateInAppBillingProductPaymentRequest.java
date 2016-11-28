@@ -19,9 +19,10 @@ public class CreateInAppBillingProductPaymentRequest extends V3<InAppBillingProd
   }
 
   public static CreateInAppBillingProductPaymentRequest of(int productId, int paymentId,
-      NetworkOperatorManager operatorManager, int apiVersion, String developerPayload) {
+      NetworkOperatorManager operatorManager, String developerPayload, String accessToken) {
     BaseBody body = new BaseBody();
     body.put("productid", String.valueOf(productId));
+    body.put("access_token", accessToken);
     body.put("payType", String.valueOf(paymentId));
     body.put("reqType", "rest");
 
@@ -29,7 +30,6 @@ public class CreateInAppBillingProductPaymentRequest extends V3<InAppBillingProd
       body.put("simcc", operatorManager.getSimCountryISO());
     }
 
-    body.put("apiversion", String.valueOf(apiVersion));
     body.put("developerPayload", developerPayload);
 
     return new CreateInAppBillingProductPaymentRequest(BASE_HOST, body);
@@ -37,6 +37,6 @@ public class CreateInAppBillingProductPaymentRequest extends V3<InAppBillingProd
 
   @Override protected Observable<InAppBillingProductPaymentResponse> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return null;
+    return interfaces.createInAppBillingProductPayment(map);
   }
 }
