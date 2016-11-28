@@ -29,6 +29,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import rx.Subscription;
 import rx.functions.Action1;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by pedroribeiro on 24/11/16.
@@ -41,9 +42,7 @@ public class CreateUserActivity extends BaseActivity {
   private EditText mUsername;
   private Button mCreateButton;
   private ImageView mAvatar;
-  private Subscription mInsertedUsername;
-  private Subscription mAvatarSubscription;
-  private Subscription mButtonSubscription;
+  private CompositeSubscription mSubscriptions;
 
   static final int CALL_CAMERA_CODE = 1046;
   static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -86,35 +85,36 @@ public class CreateUserActivity extends BaseActivity {
   }
 
   private void setupListeners() {
-    mInsertedUsername = RxTextView.textChanges(mUsername)
-        .subscribe(new Action1<CharSequence>() {
-          @Override public void call(CharSequence input) {
+    mSubscriptions.add(RxTextView.textChanges(mUsername).subscribe(new Action1<CharSequence>() {
+      @Override public void call(CharSequence input) {
 
-          }
-        });
-    mAvatarSubscription = RxView.clicks(mUserAvatar)
-        .subscribe(click -> chooseAvatarSource());
-    mButtonSubscription = RxView.clicks(mCreateButton)
-        .subscribe(click -> {finish();});
+      }
+    }));
+    mSubscriptions.add(RxView.clicks(mUserAvatar).subscribe(click -> chooseAvatarSource()));
+    mSubscriptions.add(RxView.clicks(mCreateButton).subscribe(click -> {
+      finish();
+    }));
   }
 
   @Override protected void onDestroy() {
     super.onDestroy();
-    mInsertedUsername.unsubscribe();
-    mAvatarSubscription.unsubscribe();
-    mButtonSubscription.unsubscribe();
+    mSubscriptions.clear();
   }
 
   private void chooseAvatarSource() {
     final Dialog dialog = new Dialog(this);
     dialog.setContentView(R.layout.dialog_choose_avatar_layout);
     dialog.setTitle(R.string.create_user_dialog_title);
-    RxView.clicks(dialog.findViewById(R.id.button_camera))
-        .subscribe(click -> dispatchTakePictureIntent());
-    RxView.clicks(dialog.findViewById(R.id.button_gallery))
-        .subscribe(click -> callGallery());
-    RxView.clicks(dialog.findViewById(R.id.button_cancel))
-        .subscribe(click -> dialog.dismiss());
+    mSubscriptions.add(RxView.clicks(dialog.findViewById(R.id.button_camera)).subscribe(click -> {
+      dispatchTakePictureIntent();
+      dialog.dismiss();
+    }));
+    mSubscriptions.add(RxView.clicks(dialog.findViewById(R.id.button_gallery)).subscribe(click -> {
+      callGallery();
+      dialog.dismiss();
+    }));
+    mSubscriptions.add(RxView.clicks(dialog.findViewById(R.id.button_cancel))
+        .subscribe(click -> dialog.dismiss()));
     dialog.show();
   }
 
