@@ -59,8 +59,7 @@ public class PaymentConfirmationRepository {
   }
 
   public Observable<PaymentConfirmation> createPaymentConfirmation(Payment payment) {
-    return createServerPaymentConfirmation(payment).map(
-        response -> new PaymentConfirmation(response.getPaymentConfirmationId(), payment.getId(),
+    return createServerPaymentConfirmation(payment).map(response -> new PaymentConfirmation(response.getPaymentConfirmationId(), payment.getId(),
             payment.getProduct(), payment.getPrice(), PaymentConfirmation.Status.valueOf(response.getPaymentStatus())));
   }
 
@@ -278,12 +277,13 @@ public class PaymentConfirmationRepository {
   private Observable<InAppBillingProductPaymentResponse> createServerInAppBillingPaymentConfirmation(
       int paymentId, InAppBillingProduct product) {
     return CreateInAppBillingProductPaymentRequest.of(product.getId(), paymentId, operatorManager,
-        product.getApiVersion(), product.getDeveloperPayload()).observe();
+        product.getDeveloperPayload(),
+        AptoideAccountManager.getAccessToken()).observe();
   }
 
   private Observable<ProductPaymentResponse> createServerPaidAppPaymentConfirmation(int paymentId,
       PaidAppProduct product) {
     return CreatePaidAppProductPaymentRequest.of(product.getId(), paymentId, operatorManager,
-        product.getStoreName()).observe();
+        product.getStoreName(), AptoideAccountManager.getAccessToken()).observe();
   }
 }
