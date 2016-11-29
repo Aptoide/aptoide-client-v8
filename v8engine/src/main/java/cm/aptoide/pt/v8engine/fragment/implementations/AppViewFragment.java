@@ -309,7 +309,7 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
     // TODO: 27-05-2016 neuro install actions, not present in v7
   }
 
-  private void setupDisplayables(GetApp getApp) {
+  protected LinkedList<Displayable> setupDisplayables(GetApp getApp) {
     LinkedList<Displayable> displayables = new LinkedList<>();
 
     GetAppMeta.App app = getApp.getNodes().getMeta().getData();
@@ -333,7 +333,7 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
     }
     displayables.add(new AppViewDeveloperDisplayable(getApp));
 
-    setDisplayables(displayables);
+    return displayables;
   }
 
   private boolean hasDescription(GetAppMeta.Media media) {
@@ -525,7 +525,7 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
         });
 
     header.setup(getApp);
-    setupDisplayables(getApp);
+    setDisplayables(setupDisplayables(getApp));
     setupObservables(getApp);
     showHideOptionsMenu(true);
     setupShare(getApp);
