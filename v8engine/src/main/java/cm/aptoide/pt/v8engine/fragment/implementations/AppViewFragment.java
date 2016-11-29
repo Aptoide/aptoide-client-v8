@@ -233,9 +233,7 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
         AccessorFactory.getAccessorFor(Installed.class));
 
     productFactory = new ProductFactory();
-    appRepository = new AppRepository(new NetworkOperatorManager(
-        (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE)),
-        productFactory);
+    appRepository = new AppRepository(new NetworkOperatorManager((TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE)));
     adsRepository = new AdsRepository();
     installedRepository = RepositoryFactory.getInstalledRepository();
   }

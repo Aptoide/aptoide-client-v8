@@ -30,12 +30,9 @@ import rx.Observable;
 public class InAppBillingRepository {
 
   private final NetworkOperatorManager operatorManager;
-  private final ProductFactory productFactory;
 
-  public InAppBillingRepository(NetworkOperatorManager operatorManager,
-      ProductFactory productFactory) {
+  public InAppBillingRepository(NetworkOperatorManager operatorManager) {
     this.operatorManager = operatorManager;
-    this.productFactory = productFactory;
   }
 
   public Observable<Void> getInAppBilling(int apiVersion, String packageName, String type) {

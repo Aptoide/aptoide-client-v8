@@ -45,7 +45,7 @@ public class PaymentFactory {
             RepositoryFactory.getPaymentAuthorizationRepository(context),
             RepositoryFactory.getPaymentConfirmationRepository(context),
             new SyncAdapterBackgroundSync(Application.getConfiguration(),
-            (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE)));
+                (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE)));
       case DUMMY:
         return new DummyPayment(paymentService.getId(), paymentService.getShortName(), product,
             getPrice(paymentService.getPrice(), paymentService.getCurrency(),
