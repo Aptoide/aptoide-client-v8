@@ -15,4 +15,4 @@ include ':v8engine',
     ':database',
     ':imageloader',
     ':downloadmanager',
-    ':partners-v8'
+    ':Partners-v8'
