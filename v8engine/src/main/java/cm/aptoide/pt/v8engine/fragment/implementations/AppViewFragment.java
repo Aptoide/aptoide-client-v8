@@ -15,6 +15,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
@@ -59,6 +60,7 @@ import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Malware;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -307,7 +309,7 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
     // TODO: 27-05-2016 neuro install actions, not present in v7
   }
 
-  private void setupDisplayables(GetApp getApp) {
+  protected LinkedList<Displayable> setupDisplayables(GetApp getApp) {
     LinkedList<Displayable> displayables = new LinkedList<>();
 
     GetAppMeta.App app = getApp.getNodes().getMeta().getData();
@@ -331,7 +333,7 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
     }
     displayables.add(new AppViewDeveloperDisplayable(getApp));
 
-    setDisplayables(displayables);
+    return displayables;
   }
 
   private boolean hasDescription(GetAppMeta.Media media) {
@@ -423,8 +425,9 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
       unInstallAction.call();
       return true;
     } else if (i == R.id.menu_remote_install){
-	    android.support.v4.app.DialogFragment newFragment = RemoteInstallDialog.newInstance(appId);
-	    newFragment.show(getActivity().getSupportFragmentManager(), RemoteInstallDialog.class.getSimpleName());
+      DialogFragment newFragment = RemoteInstallDialog.newInstance(appId);
+      newFragment.show(getActivity().getSupportFragmentManager(),
+          RemoteInstallDialog.class.getSimpleName());
     }
 
     return super.onOptionsItemSelected(item);
@@ -522,7 +525,7 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
         });
 
     header.setup(getApp);
-    setupDisplayables(getApp);
+    setDisplayables(setupDisplayables(getApp));
     setupObservables(getApp);
     showHideOptionsMenu(true);
     setupShare(getApp);
@@ -650,7 +653,9 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
             DataProvider.getContext()).getAptoideClientUUID(),
         DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(V8Engine.getContext()),
         getApp1.getNodes().getMeta().getData().getPackageName(),
-        DataProvider.getConfiguration().getPartnerId()).observe().map(getAdsResponse -> {
+        DataProvider.getConfiguration().getPartnerId(), SecurePreferences.isAdultSwitchActive())
+        .observe()
+        .map(getAdsResponse -> {
       if (AdRepository.validAds(getAdsResponse)) {
         suggestedAds = getAdsResponse.getAds();
       }

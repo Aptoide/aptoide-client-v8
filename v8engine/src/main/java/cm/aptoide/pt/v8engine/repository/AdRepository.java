@@ -11,6 +11,7 @@ import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.V8Engine;
 import java.util.List;
@@ -38,7 +39,7 @@ public class AdRepository {
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()).getAptoideClientUUID(),
         DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(V8Engine.getContext()),
-        DataProvider.getConfiguration().getPartnerId())
+        DataProvider.getConfiguration().getPartnerId(), SecurePreferences.isAdultSwitchActive())
         .observe()
         .map(response -> response.getAds())
         .flatMap(ads -> {
