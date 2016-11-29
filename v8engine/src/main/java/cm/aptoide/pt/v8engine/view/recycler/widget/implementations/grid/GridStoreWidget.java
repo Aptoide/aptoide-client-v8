@@ -10,13 +10,11 @@ import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.store.Store;
-import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
@@ -36,7 +34,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
   private ImageView storeAvatar;
   private TextView storeName;
   //private TextView storeUnsubscribe;
-  private FrameLayout storeLayout;
+  private LinearLayout storeLayout;
   //private TextView storeSubscribers;
   //private TextView storeDownloads;
   //private LinearLayout infoLayout;
@@ -49,7 +47,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
     storeAvatar = (ImageView) itemView.findViewById(R.id.store_avatar_row);
     storeName = (TextView) itemView.findViewById(R.id.store_name_row);
     //storeUnsubscribe = (TextView) itemView.findViewById(R.id.store_unsubscribe_row);
-    storeLayout = (FrameLayout) itemView.findViewById(R.id.store_main_layout_row);
+    storeLayout = (LinearLayout) itemView.findViewById(R.id.store_main_layout_row);
     //storeSubscribers = (TextView) itemView.findViewById(R.id.store_subscribers);
     //storeDownloads = (TextView) itemView.findViewById(R.id.store_downloads);
     //infoLayout = (LinearLayout) itemView.findViewById(R.id.store_layout_subscribers);
@@ -76,9 +74,11 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
                     store.getAppearance().getTheme())));
 
     if (store.getId() == -1 || TextUtils.isEmpty(store.getAvatar())) {
-      ImageLoader.loadWithCircleTransform(R.drawable.ic_avatar_apps, storeAvatar);
+      ImageLoader.loadWithShadowCircleTransform(R.drawable.ic_avatar_apps, storeAvatar,
+          StoreThemeEnum.get(store).getStoreHeaderInt());
     } else {
-      ImageLoader.loadWithCircleTransform(store.getAvatar(), storeAvatar);
+      ImageLoader.loadWithShadowCircleTransform(store.getAvatar(), storeAvatar,
+          StoreThemeEnum.get(store).getStoreHeaderInt());
     }
   }
 
