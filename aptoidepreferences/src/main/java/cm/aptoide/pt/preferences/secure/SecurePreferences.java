@@ -95,10 +95,6 @@ public class SecurePreferences {
         .getBoolean(SecureKeys.IS_TIMELINE_ACTIVE, false);
   }
 
-  public static int getMatureSwitch() {
-    return isAdultSwitchActive() ? 1 : 0;
-  }
-
   public static void setAdultSwitch(boolean active) {
     SecurePreferencesImplementation.getInstance()
         .edit()
@@ -111,16 +107,16 @@ public class SecurePreferences {
         .getBoolean(SecureKeys.ADULT_CONTENT_SWITCH, false);
   }
 
+  public static boolean isRootDialogShowed() {
+    return SecurePreferencesImplementation.getInstance()
+        .getBoolean(SecureKeys.ROOT_DIALOG_ShOWED, false);
+  }
+
   public static void setRootDialogShowed(boolean displayed) {
     SecurePreferencesImplementation.getInstance()
         .edit()
         .putBoolean(SecureKeys.ROOT_DIALOG_ShOWED, displayed)
         .apply();
-  }
-
-  public static boolean isRootDialogShowed() {
-    return SecurePreferencesImplementation.getInstance()
-        .getBoolean(SecureKeys.ROOT_DIALOG_ShOWED, false);
   }
 
   public static String getUserAgent() {

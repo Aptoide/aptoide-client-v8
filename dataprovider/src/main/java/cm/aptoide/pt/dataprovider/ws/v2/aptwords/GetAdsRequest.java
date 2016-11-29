@@ -48,32 +48,37 @@ import rx.Observable;
   private String repo;
   private String categories;
   private String excludedNetworks;
+  private boolean mature;
 
-  private GetAdsRequest(String aptoideClientUUID, boolean googlePlayServicesAvailable,
-      String oemid) {
+  private GetAdsRequest(String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid,
+      boolean mature) {
     super(client);
     this.aptoideClientUUID = aptoideClientUUID;
     this.googlePlayServicesAvailable = googlePlayServicesAvailable;
     this.oemid = oemid;
+    this.mature = mature;
   }
 
   public static GetAdsRequest of(Location location, String keyword, Integer limit,
-      String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid) {
-    return new GetAdsRequest(aptoideClientUUID, googlePlayServicesAvailable, oemid).setLocation(
+      String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid, boolean mature) {
+    return new GetAdsRequest(aptoideClientUUID, googlePlayServicesAvailable, oemid,
+        mature).setLocation(
         location)
         .setKeyword(keyword)
         .setLimit(limit);
   }
 
   private static GetAdsRequest of(Location location, Integer limit, String aptoideClientUUID,
-      boolean googlePlayServicesAvailable, String oemid) {
-    return of(location, "__NULL__", limit, aptoideClientUUID, googlePlayServicesAvailable, oemid);
+      boolean googlePlayServicesAvailable, String oemid, boolean mature) {
+    return of(location, "__NULL__", limit, aptoideClientUUID, googlePlayServicesAvailable, oemid,
+        mature);
   }
 
   private static GetAdsRequest ofPackageName(Location location, String packageName,
-      String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid) {
+      String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid, boolean mature) {
     GetAdsRequest getAdsRequest =
-        of(location, 1, aptoideClientUUID, googlePlayServicesAvailable, oemid).setPackageName(
+        of(location, 1, aptoideClientUUID, googlePlayServicesAvailable, oemid,
+            mature).setPackageName(
             packageName);
 
     // Add excluded networks
@@ -86,23 +91,23 @@ import rx.Observable;
   }
 
   public static GetAdsRequest ofHomepage(String aptoideClientUUID,
-      boolean googlePlayServicesAvailable, String oemid) {
+      boolean googlePlayServicesAvailable, String oemid, boolean mature) {
     // TODO: 09-06-2016 neuro limit based on max colums
     return of(Location.homepage, Type.ADS.getPerLineCount(), aptoideClientUUID,
-        googlePlayServicesAvailable, oemid);
+        googlePlayServicesAvailable, oemid, mature);
   }
 
   public static GetAdsRequest ofHomepageMore(String aptoideClientUUID,
-      boolean googlePlayServicesAvailable, String oemid) {
+      boolean googlePlayServicesAvailable, String oemid, boolean mature) {
     // TODO: 09-06-2016 neuro limit based on max colums
-    return of(Location.homepage, 50, aptoideClientUUID, googlePlayServicesAvailable, oemid);
+    return of(Location.homepage, 50, aptoideClientUUID, googlePlayServicesAvailable, oemid, mature);
   }
 
   public static GetAdsRequest ofAppviewOrganic(String packageName, String storeName,
-      String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid) {
+      String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid, boolean mature) {
 
     GetAdsRequest getAdsRequest = ofPackageName(Location.appview, packageName, aptoideClientUUID,
-        googlePlayServicesAvailable, oemid);
+        googlePlayServicesAvailable, oemid, mature);
 
     getAdsRequest.setRepo(storeName);
 
@@ -110,10 +115,11 @@ import rx.Observable;
   }
 
   public static GetAdsRequest ofAppviewSuggested(List<String> keywords, String aptoideClientUUID,
-      boolean googlePlayServicesAvailable, String excludedPackage, String oemid) {
+      boolean googlePlayServicesAvailable, String excludedPackage, String oemid, boolean mature) {
 
     GetAdsRequest getAdsRequest =
-        of(Location.middleappview, 3, aptoideClientUUID, googlePlayServicesAvailable, oemid);
+        of(Location.middleappview, 3, aptoideClientUUID, googlePlayServicesAvailable, oemid,
+            mature);
 
     getAdsRequest.setExcludedPackage(excludedPackage)
         .setKeyword(AptoideUtils.StringU.join(keywords, ",") + "," + "__null__");
@@ -122,20 +128,21 @@ import rx.Observable;
   }
 
   public static GetAdsRequest ofSearch(String query, String aptoideClientUUID,
-      boolean googlePlayServicesAvailable, String oemid) {
-    return of(Location.search, query, 1, aptoideClientUUID, googlePlayServicesAvailable, oemid);
+      boolean googlePlayServicesAvailable, String oemid, boolean mature) {
+    return of(Location.search, query, 1, aptoideClientUUID, googlePlayServicesAvailable, oemid,
+        mature);
   }
 
   public static GetAdsRequest ofSecondInstall(String packageName, String aptoideClientUUID,
-      boolean googlePlayServicesAvailable, String oemid) {
+      boolean googlePlayServicesAvailable, String oemid, boolean mature) {
     return ofPackageName(Location.secondinstall, packageName, aptoideClientUUID,
-        googlePlayServicesAvailable, oemid);
+        googlePlayServicesAvailable, oemid, mature);
   }
 
   public static GetAdsRequest ofSecondTry(String packageName, String aptoideClientUUID,
-      boolean googlePlayServicesAvailable, String oemid) {
+      boolean googlePlayServicesAvailable, String oemid, boolean mature) {
     return ofPackageName(Location.secondtry, packageName, aptoideClientUUID,
-        googlePlayServicesAvailable, oemid);
+        googlePlayServicesAvailable, oemid, mature);
   }
 
   @Override protected Observable<GetAdsResponse> loadDataFromNetwork(Interfaces interfaces,
@@ -165,7 +172,7 @@ import rx.Observable;
     parameters.put("excluded_pkg", getExcludedPackages());
 
     parameters.put("limit", String.valueOf(limit));
-    parameters.put("get_mature", Integer.toString(SecurePreferences.getMatureSwitch()));
+    parameters.put("get_mature", Integer.toString(mature ? 1 : 0));
     parameters.put("app_pkg", packageName);
     parameters.put("app_store", repo);
     parameters.put("filter_pkg", "true");

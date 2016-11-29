@@ -17,6 +17,7 @@ import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -116,7 +117,8 @@ public class InstalledIntentService extends IntentService {
                 new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                     DataProvider.getContext()).getAptoideClientUUID(),
                 DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(
-                    V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId())
+                    V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId(),
+                SecurePreferences.isAdultSwitchActive())
                 .observe()
                 .map(getAdsResponse -> MinimalAd.from(getAdsResponse.getAds().get(0)))
                 .observeOn(AndroidSchedulers.mainThread())

@@ -15,6 +15,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
@@ -59,6 +60,7 @@ import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Malware;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -423,8 +425,9 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
       unInstallAction.call();
       return true;
     } else if (i == R.id.menu_remote_install){
-	    android.support.v4.app.DialogFragment newFragment = RemoteInstallDialog.newInstance(appId);
-	    newFragment.show(getActivity().getSupportFragmentManager(), RemoteInstallDialog.class.getSimpleName());
+      DialogFragment newFragment = RemoteInstallDialog.newInstance(appId);
+      newFragment.show(getActivity().getSupportFragmentManager(),
+          RemoteInstallDialog.class.getSimpleName());
     }
 
     return super.onOptionsItemSelected(item);
@@ -650,7 +653,9 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
             DataProvider.getContext()).getAptoideClientUUID(),
         DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(V8Engine.getContext()),
         getApp1.getNodes().getMeta().getData().getPackageName(),
-        DataProvider.getConfiguration().getPartnerId()).observe().map(getAdsResponse -> {
+        DataProvider.getConfiguration().getPartnerId(), SecurePreferences.isAdultSwitchActive())
+        .observe()
+        .map(getAdsResponse -> {
       if (AdRepository.validAds(getAdsResponse)) {
         suggestedAds = getAdsResponse.getAds();
       }
