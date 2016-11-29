@@ -20,7 +20,8 @@ import cm.aptoide.pt.iab.InAppBillingSerializer;
 import cm.aptoide.pt.v8engine.payment.PaymentFactory;
 import cm.aptoide.pt.v8engine.payment.ProductFactory;
 import cm.aptoide.pt.v8engine.payment.PurchaseFactory;
-
+import cm.aptoide.pt.v8engine.payment.product.AptoideProduct;
+import cm.aptoide.pt.v8engine.payment.product.InAppBillingProduct;
 
 /**
  * Created by sithengineer on 02/09/16.
@@ -52,14 +53,26 @@ public final class RepositoryFactory {
     return new PaymentAuthorizationRepository(AccessorFactory.getAccessorFor(PaymentAuthorization.class));
   }
 
-  public static PaymentConfirmationRepository getPaymentConfirmationRepository(Context context) {
-    final NetworkOperatorManager operatorManager = new NetworkOperatorManager(
-        (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE));
-    final ProductFactory productFactory = new ProductFactory();
+  public static ProductRepository getProductRepository(Context context, AptoideProduct product) {
+    final PurchaseFactory purchaseFactory = new PurchaseFactory(new InAppBillingSerializer());
+    final PaymentFactory paymentFactory = new PaymentFactory();
+    final NetworkOperatorManager operatorManager = getNetworkOperatorManager(context);
+    if (product instanceof InAppBillingProduct) {
+      return new InAppBillingProductRepository(new InAppBillingRepository(operatorManager),
+          purchaseFactory, paymentFactory);
+    } else {
+      return new PaidAppProductRepository(new AppRepository(operatorManager), purchaseFactory,
+          paymentFactory);
+    }
+  }
 
-    return new PaymentConfirmationRepository(new AppRepository(operatorManager, productFactory),
-        new InAppBillingRepository(operatorManager, productFactory), operatorManager,
-        productFactory, new PurchaseFactory(new InAppBillingSerializer()), new PaymentFactory(),
+  public static PaymentConfirmationRepository getPaymentConfirmationRepository(Context context) {
+    return new PaymentConfirmationRepository(getNetworkOperatorManager(context), new ProductFactory(),
         AccessorFactory.getAccessorFor(PaymentConfirmation.class));
+  }
+
+  private static NetworkOperatorManager getNetworkOperatorManager(Context context) {
+    return new NetworkOperatorManager(
+        (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE));
   }
 }

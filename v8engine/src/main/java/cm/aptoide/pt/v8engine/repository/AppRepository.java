@@ -14,10 +14,8 @@ import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.model.v3.PaidApp;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
-import cm.aptoide.pt.v8engine.payment.ProductFactory;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
-import java.util.List;
 import rx.Observable;
 
 /**
@@ -26,15 +24,13 @@ import rx.Observable;
 public class AppRepository {
 
   private final NetworkOperatorManager operatorManager;
-  private final ProductFactory productFactory;
 
-  public AppRepository(NetworkOperatorManager operatorManager, ProductFactory productFactory) {
+  public AppRepository(NetworkOperatorManager operatorManager) {
     this.operatorManager = operatorManager;
-    this.productFactory = productFactory;
   }
 
-  public Observable<GetApp> getApp(long appId, boolean refresh, boolean sponsored, String storeName,
-      String packageName) {
+  public Observable<GetApp> getApp(long appId, boolean refresh, boolean sponsored,
+      String storeName, String packageName) {
     return GetAppRequest.of(appId, storeName, StoreUtils.getStoreCredentials(storeName),
         AptoideAccountManager.getAccessToken(),
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),

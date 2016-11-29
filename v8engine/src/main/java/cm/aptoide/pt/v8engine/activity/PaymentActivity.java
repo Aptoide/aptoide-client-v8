@@ -26,7 +26,10 @@ import cm.aptoide.pt.v8engine.payment.AptoidePay;
 import cm.aptoide.pt.v8engine.payment.Purchase;
 import cm.aptoide.pt.v8engine.payment.PurchaseIntentFactory;
 import cm.aptoide.pt.v8engine.payment.product.AptoideProduct;
+import cm.aptoide.pt.v8engine.payment.product.InAppBillingProduct;
 import cm.aptoide.pt.v8engine.presenter.PaymentPresenter;
+import cm.aptoide.pt.v8engine.repository.InAppBillingProductRepository;
+import cm.aptoide.pt.v8engine.repository.ProductRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.sync.SyncAdapterBackgroundSync;
 import cm.aptoide.pt.v8engine.view.PaymentView;
@@ -81,10 +84,10 @@ public class PaymentActivity extends ActivityView implements PaymentView {
 
     final AptoideProduct product = getIntent().getParcelableExtra(PRODUCT_EXTRA);
     attachPresenter(new PaymentPresenter(this,
-            new AptoidePay(RepositoryFactory.getPaymentConfirmationRepository(this),
-                new SyncAdapterBackgroundSync(Application.getConfiguration(),
-                    (AccountManager) getSystemService(Context.ACCOUNT_SERVICE))), product),
-        savedInstanceState);
+        new AptoidePay(RepositoryFactory.getPaymentConfirmationRepository(this),
+            new SyncAdapterBackgroundSync(Application.getConfiguration(),
+                (AccountManager) getSystemService(Context.ACCOUNT_SERVICE)),
+            RepositoryFactory.getProductRepository(this, product)), product), savedInstanceState);
   }
 
   @Override public void dismiss(Purchase purchase) {
