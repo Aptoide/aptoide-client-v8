@@ -17,6 +17,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.LinkedList;
 import java.util.List;
 import rx.Observable;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -75,12 +76,7 @@ public class RxAptoide {
   }
 
   static Observable<App> getApp(String packageName, String storeName) {
-    getAdsProxy.getAds(packageName, aptoideClientUUID)
-        .filter(ReferrerUtils::hasAds)
-        .map(ReferrerUtils::parse)
-        .doOnNext(ads -> handleAds(ads.get(0)))
-        .onErrorReturn(throwable -> new LinkedList<>())
-        .subscribe();
+    handleOrganicAds(packageName);
 
     return getAppProxy.getApp(packageName, storeName, aptoideClientUUID)
         .map(App::fromGetApp)
@@ -89,13 +85,7 @@ public class RxAptoide {
 
   static Observable<App> getApp(long appId) {
     return getAppProxy.getApp(appId, aptoideClientUUID)
-        .map(App::fromGetApp)
-        .doOnNext(app -> getAdsProxy.getAds(app.getPackageName(), aptoideClientUUID)
-            .filter(ReferrerUtils::hasAds)
-            .map(ReferrerUtils::parse)
-            .doOnNext(ads -> handleAds(ads.get(0)))
-            .onErrorReturn(throwable -> new LinkedList<>())
-            .subscribe())
+        .map(App::fromGetApp).doOnNext(app -> handleOrganicAds(app.getPackageName()))
         .onErrorReturn(throwable -> null);
   }
 
@@ -141,6 +131,15 @@ public class RxAptoide {
       }, throwable -> Logger.w(TAG, "Error extracting referrer.", throwable));
       return app;
     });
+  }
+
+  private static Subscription handleOrganicAds(String packageName) {
+    return getAdsProxy.getAds(packageName, aptoideClientUUID)
+        .filter(ReferrerUtils::hasAds)
+        .map(ReferrerUtils::parse)
+        .doOnNext(ads -> handleAds(ads.get(0)))
+        .onErrorReturn(throwable -> new LinkedList<>())
+        .subscribe();
   }
 
   @NonNull private static Observable<Object> handleAds(Ad ad) {
