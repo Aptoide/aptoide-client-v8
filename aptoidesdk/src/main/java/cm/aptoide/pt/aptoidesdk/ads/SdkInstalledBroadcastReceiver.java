@@ -36,14 +36,14 @@ public class SdkInstalledBroadcastReceiver extends BroadcastReceiver {
 
   private void checkAndBroadcastReferrer(String packageName) {
 
-    Ad ad = getAndRemoveStoredAd(packageName);
+    AptoideAd ad = getAndRemoveStoredAd(packageName);
     if (ad != null) {
       ReferrerUtils.broadcastReferrer(packageName, ad.referrer);
       ReferrerUtils.knockCpi(ad);
     }
   }
 
-  private Ad getAndRemoveStoredAd(String packageName) {
+  private AptoideAd getAndRemoveStoredAd(String packageName) {
     return StoredAdsManager.getInstance(RxAptoide.getContext()).removeAd(packageName);
   }
 }

@@ -2,7 +2,7 @@ package cm.aptoide.pt.aptoidesdk;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
-import cm.aptoide.pt.aptoidesdk.ads.Ad;
+import cm.aptoide.pt.aptoidesdk.ads.AptoideAd;
 import cm.aptoide.pt.aptoidesdk.ads.Aptoide;
 import cm.aptoide.pt.aptoidesdk.ads.StoredAdsManager;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -27,8 +27,8 @@ public class StoredAdsTests {
     Aptoide.integrate(context, "dummyoem");
     List<Ad> ads = Aptoide.getAds(3, false);
 
-    Ad ad1 = ads.get(0);
-    Ad ad2 = ads.get(1);
+    AptoideAd ad1 = (AptoideAd) ads.get(0);
+    AptoideAd ad2 = (AptoideAd) ads.get(1);
 
     Assert.assertEquals(0, storedAdsManager.size());
     storedAdsManager.addAd(ad1);
@@ -52,18 +52,18 @@ public class StoredAdsTests {
     storedAdsManager = StoredAdsManager.getInstance(context);
   }
 
-  private void assertAdsPresent(Ad... ads) {
-    for (Ad ad : ads) {
+  private void assertAdsPresent(AptoideAd... ads) {
+    for (AptoideAd ad : ads) {
       if (!assertAdPresent(ad)) {
         throw new RuntimeException("Ad " + ad.getName() + " not present in StoredAdsManager!");
       }
     }
   }
 
-  private boolean assertAdPresent(Ad ad) {
-    Collection<Ad> all = storedAdsManager.getAll();
+  private boolean assertAdPresent(AptoideAd ad) {
+    Collection<AptoideAd> all = storedAdsManager.getAll();
 
-    for (Ad tmp : all) {
+    for (AptoideAd tmp : all) {
       if (tmp.equals(ad)) {
         return true;
       }

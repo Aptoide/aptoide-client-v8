@@ -2,8 +2,10 @@ package cm.aptoide.pt.aptoidesdk.ads;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import cm.aptoide.pt.aptoidesdk.Ad;
 import cm.aptoide.pt.aptoidesdk.BuildConfig;
 import cm.aptoide.pt.aptoidesdk.entities.App;
+import cm.aptoide.pt.aptoidesdk.entities.EntitiesFactory;
 import cm.aptoide.pt.aptoidesdk.entities.SearchResult;
 import cm.aptoide.pt.aptoidesdk.parser.Parsers;
 import cm.aptoide.pt.aptoidesdk.proxys.GetAdsProxy;
@@ -79,13 +81,13 @@ public class RxAptoide {
     handleOrganicAds(packageName);
 
     return getAppProxy.getApp(packageName, storeName, aptoideClientUUID)
-        .map(App::fromGetApp)
+        .map(EntitiesFactory::createApp)
         .onErrorReturn(throwable -> null);
   }
 
   static Observable<App> getApp(long appId) {
     return getAppProxy.getApp(appId, aptoideClientUUID)
-        .map(App::fromGetApp).doOnNext(app -> handleOrganicAds(app.getPackageName()))
+        .map(EntitiesFactory::createApp).doOnNext(app -> handleOrganicAds(app.getPackageName()))
         .onErrorReturn(throwable -> null);
   }
 
@@ -125,7 +127,7 @@ public class RxAptoide {
         .onErrorReturn(throwable -> new LinkedList<>());
   }
 
-  static Observable<App> getApp(Ad ad) {
+  static Observable<App> getApp(AptoideAd ad) {
     return getApp(ad.getAppId()).map(app -> {
       handleAds(ad).subscribe(t -> {
       }, throwable -> Logger.w(TAG, "Error extracting referrer.", throwable));
@@ -136,13 +138,12 @@ public class RxAptoide {
   private static Subscription handleOrganicAds(String packageName) {
     return getAdsProxy.getAds(packageName, aptoideClientUUID)
         .filter(ReferrerUtils::hasAds)
-        .map(ReferrerUtils::parse)
-        .doOnNext(ads -> handleAds(ads.get(0)))
+        .map(ReferrerUtils::parse).doOnNext(ads -> handleAds((AptoideAd) ads.get(0)))
         .onErrorReturn(throwable -> new LinkedList<>())
         .subscribe();
   }
 
-  @NonNull private static Observable<Object> handleAds(Ad ad) {
+  @NonNull private static Observable<Object> handleAds(AptoideAd ad) {
     return Observable.fromCallable(() -> {
       ReferrerUtils.knockCpc(ad);
       return new Object();
