@@ -88,7 +88,11 @@ public class FragmentProviderImpl implements FragmentProvider {
   }
 
   @Override public Fragment newAppViewFragment(long appId) {
-    return AppViewFragment.newInstance(appId);
+    return AppViewFragment.newInstance(appId, AppViewFragment.OpenType.OPEN_ONLY);
+  }
+
+  @Override public Fragment newAppViewFragment(long appId, AppViewFragment.OpenType openType) {
+    return AppViewFragment.newInstance(appId, openType);
   }
 
   @Override public Fragment newAppViewFragment(long appId, String storeTheme, String storeName) {

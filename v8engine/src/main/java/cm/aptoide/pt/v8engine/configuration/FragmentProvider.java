@@ -39,6 +39,8 @@ public interface FragmentProvider {
 
   Fragment newAppViewFragment(String md5);
 
+  Fragment newAppViewFragment(long appId, AppViewFragment.OpenType openType);
+
   Fragment newAppViewFragment(long appId);
 
   Fragment newAppViewFragment(long appId, String storeTheme, String storeName);

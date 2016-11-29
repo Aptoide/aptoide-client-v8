@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v2.aptwords;
 
+import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.util.referrer.ReferrerUtils;
 import cm.aptoide.pt.dataprovider.ws.Api;
@@ -13,6 +14,7 @@ import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.networkclient.okhttp.UserAgentGenerator;
 import cm.aptoide.pt.networkclient.okhttp.UserAgentInterceptor;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.List;
@@ -150,7 +152,12 @@ import rx.Observable;
     parameters.put("partners", "1-3,5-10");
     parameters.put("keywords", keyword);
     parameters.put("oem_id", oemid);
-
+    if (ManagerPreferences.isDebug()) {
+      String forceCountry = ManagerPreferences.getForceCountry();
+      if (!TextUtils.isEmpty(forceCountry)) {
+        parameters.put("country", forceCountry);
+      }
+    }
     if (googlePlayServicesAvailable) {
       parameters.put("flag", "gms");
     }
