@@ -44,4 +44,9 @@ public interface Ad {
    * The version name of this ad.
    */
   String getVername();
+
+  /**
+   * The description of this ad.
+   */
+  String getDescription();
 }

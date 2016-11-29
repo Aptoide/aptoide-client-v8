@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
 /**
  * Created by neuro on 24-10-2016.
  */
-@EqualsAndHashCode public class AptoideAd implements Ad {
+@EqualsAndHashCode class AptoideAd implements Ad {
   final long timestamp;
   final long id;
   final Clicks clicks;
@@ -48,6 +48,11 @@ import lombok.experimental.Accessors;
    * The version name of this ad.
    */
   @Getter final String vername;
+  /**
+   * The description of this ad.
+   */
+  @Getter final String description;
+
   String referrer;
 
   @JsonCreator
@@ -56,7 +61,7 @@ import lombok.experimental.Accessors;
       @JsonProperty("appId") long appId, @JsonProperty("packageName") String packageName,
       @JsonProperty("name") String name, @JsonProperty("iconPath") String iconPath,
       @JsonProperty("size") long size, @JsonProperty("vercode") int vercode,
-      @JsonProperty("vername") String vername) {
+      @JsonProperty("vername") String vername, @JsonProperty("description") String description) {
 
     this.timestamp = timestamp;
     this.id = id;
@@ -71,6 +76,7 @@ import lombok.experimental.Accessors;
 
     this.vercode = vercode;
     this.vername = vername;
+    this.description = description;
   }
 
   static AptoideAd from(GetAdsResponse.Ad ad) {
@@ -89,9 +95,10 @@ import lombok.experimental.Accessors;
     int vercode = data.getVercode();
     String vername = data.getVername();
 
+    String description = data.getDescription();
+
     return new AptoideAd(System.currentTimeMillis(), adId, clicks, network, appId, packageName,
-        name,
-        iconPath, size, vercode, vername);
+        name, iconPath, size, vercode, vername, description);
   }
 
   @AllArgsConstructor @NoArgsConstructor @EqualsAndHashCode @lombok.Data @Accessors(chain = true)
