@@ -28,7 +28,7 @@ import lombok.Getter;
 /**
  * Created by marcelobenites on 7/8/16.
  */
-@AllArgsConstructor public class SimilarDisplayable extends Displayable {
+@AllArgsConstructor public class SimilarDisplayable extends CardDisplayable {
 
   @Getter private int avatarResource;
   @Getter private int titleResource;
@@ -85,20 +85,6 @@ import lombok.Getter;
         ContextCompat.getColor(context, R.color.appstimeline_recommends_title), aptoide);
   }
 
-  public int getMarginWidth(Context context, int orientation) {
-    if (!context.getResources().getBoolean(R.bool.is_this_a_tablet_device)) {
-      return 0;
-    }
-
-    int width = AptoideUtils.ScreenU.getCachedDisplayWidth(orientation);
-
-    if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-      return (int) (width * 0.2);
-    } else {
-      return (int) (width * 0.1);
-    }
-  }
-
   public Spannable getSimilarAppsText(Context context) {
     StringBuilder similarAppsText = new StringBuilder(
         context.getString(R.string.displayable_social_timeline_similar_to,
@@ -134,10 +120,6 @@ import lombok.Getter;
 
   @Override public int getViewLayout() {
     return R.layout.displayable_social_timeline_similar;
-  }
-
-  @Override protected Configs getConfig() {
-    return new Configs(1, true);
   }
 
   public String getSimilarToAppPackageName() {

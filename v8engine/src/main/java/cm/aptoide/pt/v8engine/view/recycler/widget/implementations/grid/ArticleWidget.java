@@ -22,6 +22,7 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ArticleDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
@@ -39,7 +40,7 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created by marcelobenites on 6/17/16.
  */
-public class ArticleWidget extends Widget<ArticleDisplayable> {
+public class ArticleWidget extends CardWidget<ArticleDisplayable> {
 
   private final String cardType = "Article";
   private TextView title;
@@ -89,7 +90,7 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
         Typeface.createFromAsset(getContext().getAssets(), "fonts/DroidSerif-Regular.ttf");
     articleTitle.setTypeface(typeFace);
     articleTitle.setText(displayable.getArticleTitle());
-    setCardviewMargin(displayable);
+    setCardviewMargin(displayable, cardView);
     ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
     ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
 
@@ -173,41 +174,6 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
         Toast.makeText(getContext(), "UNLIKED", Toast.LENGTH_SHORT).show();
       }
     });
-  }
-
-  //// TODO: 31/08/16 refactor this out of here
-  private void knockWithSixpackCredentials(String url) {
-    if (url == null) {
-      return;
-    }
-
-    String credential = Credentials.basic(BuildConfig.SIXPACK_USER, BuildConfig.SIXPACK_PASSWORD);
-
-    OkHttpClient client = new OkHttpClient();
-
-    Request click = new Request.Builder().url(url).addHeader("authorization", credential).build();
-
-    client.newCall(click).enqueue(new Callback() {
-      @Override public void onFailure(Call call, IOException e) {
-        Logger.d(this.getClass().getSimpleName(), "sixpack request fail " + call.toString());
-      }
-
-      @Override public void onResponse(Call call, Response response) throws IOException {
-        Logger.d(this.getClass().getSimpleName(), "knock success");
-        response.body().close();
-      }
-    });
-  }
-
-  private void setCardviewMargin(ArticleDisplayable displayable) {
-    CardView.LayoutParams layoutParams =
-        new CardView.LayoutParams(CardView.LayoutParams.WRAP_CONTENT,
-            CardView.LayoutParams.WRAP_CONTENT);
-    layoutParams.setMargins(displayable.getMarginWidth(getContext(),
-        getContext().getResources().getConfiguration().orientation), 0,
-        displayable.getMarginWidth(getContext(),
-            getContext().getResources().getConfiguration().orientation), 30);
-    cardView.setLayoutParams(layoutParams);
   }
 
   private void setAppNameToFirstLinkedApp() {

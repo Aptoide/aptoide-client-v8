@@ -12,27 +12,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.RecommendationDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
-import java.io.IOException;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Credentials;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RecommendationDisplayable;
 
 /**
  * Created by marcelobenites on 7/8/16.
  */
-public class RecommendationWidget extends Widget<RecommendationDisplayable> {
+public class RecommendationWidget extends CardWidget<RecommendationDisplayable> {
 
   private final String cardType = "Recommendation";
   private TextView title;
@@ -75,7 +65,7 @@ public class RecommendationWidget extends Widget<RecommendationDisplayable> {
     title.setText(displayable.getStyledTitle(getContext()));
     subtitle.setText(displayable.getTimeSinceRecommendation(getContext()));
 
-    setCardviewMargin(displayable);
+    setCardviewMargin(displayable, cardView);
 
     ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarResource(), image);
 
@@ -104,41 +94,6 @@ public class RecommendationWidget extends Widget<RecommendationDisplayable> {
       ((FragmentShower) getContext()).pushFragmentV4(
           V8Engine.getFragmentProvider().newAppViewFragment(displayable.getAppId()));
     });
-  }
-
-  //// TODO: 31/08/16 refactor this out of here
-  private void knockWithSixpackCredentials(String url) {
-    if (url == null) {
-      return;
-    }
-
-    String credential = Credentials.basic(BuildConfig.SIXPACK_USER, BuildConfig.SIXPACK_PASSWORD);
-
-    OkHttpClient client = new OkHttpClient();
-
-    Request click = new Request.Builder().url(url).addHeader("authorization", credential).build();
-
-    client.newCall(click).enqueue(new Callback() {
-      @Override public void onFailure(Call call, IOException e) {
-        Logger.d(this.getClass().getSimpleName(), "sixpack request fail " + call.toString());
-      }
-
-      @Override public void onResponse(Call call, Response response) throws IOException {
-        Logger.d(this.getClass().getSimpleName(), "knock success");
-        response.body().close();
-      }
-    });
-  }
-
-  private void setCardviewMargin(RecommendationDisplayable displayable) {
-    CardView.LayoutParams layoutParams =
-        new CardView.LayoutParams(CardView.LayoutParams.WRAP_CONTENT,
-            CardView.LayoutParams.WRAP_CONTENT);
-    layoutParams.setMargins(displayable.getMarginWidth(getContext(),
-        getContext().getResources().getConfiguration().orientation), 0,
-        displayable.getMarginWidth(getContext(),
-            getContext().getResources().getConfiguration().orientation), 30);
-    cardView.setLayoutParams(layoutParams);
   }
 
   @Override public void unbindView() {

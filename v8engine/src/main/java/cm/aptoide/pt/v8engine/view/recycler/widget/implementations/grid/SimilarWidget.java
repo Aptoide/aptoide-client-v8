@@ -32,7 +32,7 @@ import okhttp3.Response;
 /**
  * Created by marcelobenites on 7/8/16.
  */
-public class SimilarWidget extends Widget<SimilarDisplayable> {
+public class SimilarWidget extends CardWidget<SimilarDisplayable> {
 
   private final String cardType = "Similar";
   private TextView title;
@@ -75,7 +75,7 @@ public class SimilarWidget extends Widget<SimilarDisplayable> {
     title.setText(displayable.getStyledTitle(getContext()));
     subtitle.setText(displayable.getTimeSinceRecommendation(getContext()));
 
-    setCardviewMargin(displayable);
+    setCardviewMargin(displayable, cardView);
 
     ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarResource(), image);
 
@@ -104,41 +104,6 @@ public class SimilarWidget extends Widget<SimilarDisplayable> {
       ((FragmentShower) getContext()).pushFragmentV4(
           V8Engine.getFragmentProvider().newAppViewFragment(displayable.getAppId()));
     });
-  }
-
-  //// TODO: 31/08/16 refactor this out of here
-  private void knockWithSixpackCredentials(String url) {
-    if (url == null) {
-      return;
-    }
-
-    String credential = Credentials.basic(BuildConfig.SIXPACK_USER, BuildConfig.SIXPACK_PASSWORD);
-
-    OkHttpClient client = new OkHttpClient();
-
-    Request click = new Request.Builder().url(url).addHeader("authorization", credential).build();
-
-    client.newCall(click).enqueue(new Callback() {
-      @Override public void onFailure(Call call, IOException e) {
-        Logger.d(this.getClass().getSimpleName(), "sixpack request fail " + call.toString());
-      }
-
-      @Override public void onResponse(Call call, Response response) throws IOException {
-        Logger.d(this.getClass().getSimpleName(), "knock success");
-        response.body().close();
-      }
-    });
-  }
-
-  private void setCardviewMargin(SimilarDisplayable displayable) {
-    CardView.LayoutParams layoutParams =
-        new CardView.LayoutParams(CardView.LayoutParams.WRAP_CONTENT,
-            CardView.LayoutParams.WRAP_CONTENT);
-    layoutParams.setMargins(displayable.getMarginWidth(getContext(),
-        getContext().getResources().getConfiguration().orientation), 0,
-        displayable.getMarginWidth(getContext(),
-            getContext().getResources().getConfiguration().orientation), 30);
-    cardView.setLayoutParams(layoutParams);
   }
 
   @Override public void unbindView() {

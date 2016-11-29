@@ -30,7 +30,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by marcelobenites on 6/17/16.
  */
-@AllArgsConstructor public class ArticleDisplayable extends Displayable {
+@AllArgsConstructor public class ArticleDisplayable extends CardDisplayable {
 
   @Getter private String cardId;
   @Getter private String articleTitle;
@@ -97,20 +97,6 @@ import rx.schedulers.Schedulers;
     return Observable.just(null);
   }
 
-  public int getMarginWidth(Context context, int orientation) {
-    if (!context.getResources().getBoolean(R.bool.is_this_a_tablet_device)) {
-      return 0;
-    }
-
-    int width = AptoideUtils.ScreenU.getCachedDisplayWidth(orientation);
-
-    if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-      return (int) (width * 0.2);
-    } else {
-      return (int) (width * 0.1);
-    }
-  }
-
   public String getTimeSinceLastUpdate(Context context) {
     return dateCalculator.getTimeSinceDate(context, date);
   }
@@ -146,9 +132,5 @@ import rx.schedulers.Schedulers;
 
   @Override public int getViewLayout() {
     return R.layout.displayable_social_timeline_article;
-  }
-
-  @Override protected Configs getConfig() {
-    return new Configs(1, true);
   }
 }

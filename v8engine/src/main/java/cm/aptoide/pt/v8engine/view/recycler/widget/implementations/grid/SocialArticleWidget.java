@@ -35,7 +35,7 @@ import rx.android.schedulers.AndroidSchedulers;
  * Created by jdandrade on 23/11/2016.
  */
 
-public class SocialArticleWidget extends Widget<SocialArticleDisplayable> {
+public class SocialArticleWidget extends CardWidget<SocialArticleDisplayable> {
 
   private final String cardType = "Social Article";
   private TextView title;
@@ -85,7 +85,7 @@ public class SocialArticleWidget extends Widget<SocialArticleDisplayable> {
         Typeface.createFromAsset(getContext().getAssets(), "fonts/DroidSerif-Regular.ttf");
     articleTitle.setTypeface(typeFace);
     articleTitle.setText(displayable.getArticleTitle());
-    setCardviewMargin(displayable);
+    setCardviewMargin(displayable, cardView);
     ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
     ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
     likeButton.setLiked(false);
@@ -169,41 +169,6 @@ public class SocialArticleWidget extends Widget<SocialArticleDisplayable> {
         Toast.makeText(getContext(), "UNLIKED", Toast.LENGTH_SHORT).show();
       }
     });
-  }
-
-  //// TODO: 31/08/16 refactor this out of here
-  private void knockWithSixpackCredentials(String url) {
-    if (url == null) {
-      return;
-    }
-
-    String credential = Credentials.basic(BuildConfig.SIXPACK_USER, BuildConfig.SIXPACK_PASSWORD);
-
-    OkHttpClient client = new OkHttpClient();
-
-    Request click = new Request.Builder().url(url).addHeader("authorization", credential).build();
-
-    client.newCall(click).enqueue(new Callback() {
-      @Override public void onFailure(Call call, IOException e) {
-        Logger.d(this.getClass().getSimpleName(), "sixpack request fail " + call.toString());
-      }
-
-      @Override public void onResponse(Call call, Response response) throws IOException {
-        Logger.d(this.getClass().getSimpleName(), "knock success");
-        response.body().close();
-      }
-    });
-  }
-
-  private void setCardviewMargin(SocialArticleDisplayable displayable) {
-    CardView.LayoutParams layoutParams =
-        new CardView.LayoutParams(CardView.LayoutParams.WRAP_CONTENT,
-            CardView.LayoutParams.WRAP_CONTENT);
-    layoutParams.setMargins(displayable.getMarginWidth(getContext(),
-        getContext().getResources().getConfiguration().orientation), 0,
-        displayable.getMarginWidth(getContext(),
-            getContext().getResources().getConfiguration().orientation), 30);
-    cardView.setLayoutParams(layoutParams);
   }
 
   private void setAppNameToFirstLinkedApp() {

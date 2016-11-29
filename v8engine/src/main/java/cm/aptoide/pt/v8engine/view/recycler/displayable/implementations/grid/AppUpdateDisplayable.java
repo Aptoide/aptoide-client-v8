@@ -33,7 +33,7 @@ import rx.Observable;
 /**
  * Created by marcelobenites on 6/17/16.
  */
-@AllArgsConstructor public class AppUpdateDisplayable extends Displayable {
+@AllArgsConstructor public class AppUpdateDisplayable extends CardDisplayable {
 
   @Getter private String appIconUrl;
   @Getter private String storeIconUrl;
@@ -96,20 +96,6 @@ import rx.Observable;
             && downloadProgress.getRequest().getMd5().equals(download.getMd5())));
   }
 
-  public int getMarginWidth(Context context, int orientation) {
-    if (!context.getResources().getBoolean(R.bool.is_this_a_tablet_device)) {
-      return 0;
-    }
-
-    int width = AptoideUtils.ScreenU.getCachedDisplayWidth(orientation);
-
-    if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-      return (int) (width * 0.2);
-    } else {
-      return (int) (width * 0.1);
-    }
-  }
-
   public Spannable getAppTitle(Context context) {
     return spannableFactory.createColorSpan(appName, ContextCompat.getColor(context, R.color.black),
         appName);
@@ -153,10 +139,6 @@ import rx.Observable;
 
   @Override public int getViewLayout() {
     return R.layout.displayable_social_timeline_app_update;
-  }
-
-  @Override protected Configs getConfig() {
-    return new Configs(1, true);
   }
 
   public long getAppId() {

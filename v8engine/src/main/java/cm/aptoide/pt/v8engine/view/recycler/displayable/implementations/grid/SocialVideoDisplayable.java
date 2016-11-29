@@ -30,7 +30,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by jdandrade on 28/11/2016.
  */
-@AllArgsConstructor public class SocialVideoDisplayable extends Displayable {
+@AllArgsConstructor public class SocialVideoDisplayable extends CardDisplayable {
   @Getter private String videoTitle;
   @Getter private Link link;
   @Getter private Link baseLink;
@@ -109,24 +109,6 @@ import rx.schedulers.Schedulers;
 
   @Override public int getViewLayout() {
     return R.layout.displayable_social_timeline_social_video;
-  }
-
-  @Override protected Configs getConfig() {
-    return new Configs(1, true);
-  }
-
-  public int getMarginWidth(Context context, int orientation) {
-    if (!context.getResources().getBoolean(R.bool.is_this_a_tablet_device)) {
-      return 0;
-    }
-
-    int width = AptoideUtils.ScreenU.getCachedDisplayWidth(orientation);
-
-    if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-      return (int) (width * 0.2);
-    } else {
-      return (int) (width * 0.1);
-    }
   }
 
   public void sendOpenVideoEvent(SendEventRequest.Body.Data data, String eventName) {

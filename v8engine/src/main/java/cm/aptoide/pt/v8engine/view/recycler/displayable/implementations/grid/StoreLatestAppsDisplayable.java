@@ -1,14 +1,11 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
-import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,7 +16,7 @@ import lombok.Getter;
 /**
  * Created by marcelobenites on 6/17/16.
  */
-@AllArgsConstructor public class StoreLatestAppsDisplayable extends Displayable {
+@AllArgsConstructor public class StoreLatestAppsDisplayable extends CardDisplayable {
 
   @Getter private String storeName;
   @Getter private String avatarUrl;
@@ -58,24 +55,6 @@ import lombok.Getter;
 
   @Override public int getViewLayout() {
     return R.layout.displayable_social_timeline_store_latest_apps;
-  }
-
-  @Override protected Configs getConfig() {
-    return new Configs(1, true);
-  }
-
-  public int getMarginWidth(Context context, int orientation) {
-    if (!context.getResources().getBoolean(R.bool.is_this_a_tablet_device)) {
-      return 0;
-    }
-
-    int width = AptoideUtils.ScreenU.getCachedDisplayWidth(orientation);
-
-    if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-      return (int) (width * 0.2); // 20 % margins if landscape
-    } else {
-      return (int) (width * 0.1); // 10 % margins if portrait
-    }
   }
 
   public void sendClickEvent(SendEventRequest.Body.Data data, String eventName) {

@@ -56,17 +56,17 @@ public class ShareCardRequest extends V7<BaseV7Response, ShareCardRequest.Body> 
     }
 
     @lombok.Data @AllArgsConstructor private class CardData {
-      private String type;
-      private List<App> packages;
-      private String url;
-      private String title;
-      private String thumbnailurl;
-      private String publisherid;
-      private String publisherurl;
-      private String publisherlogo;
-      private Date date;
-      private String cardId;
-      private String ownerHash;
+        private String type;
+        private List<App> packages;
+        private String url;
+        private String title;
+        private String thumbnailurl;
+        private String publisherid;
+        private String publisherurl;
+        private String publisherlogo;
+        private Date date;
+        private String cardId;
+        private String ownerHash;
     }
   }
 }
