@@ -9,7 +9,11 @@ import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-@EqualsAndHashCode(exclude = { "store", "apps", "latestUpdate" }) public class StoreLatestApps
+/**
+ * Created by jdandrade on 29/11/2016.
+ */
+
+@EqualsAndHashCode(exclude = { "store", "apps", "latestUpdate" }) public class SocialStoreLatestApps
     implements TimelineCard {
 
   @Getter private final String cardId;
@@ -19,9 +23,9 @@ import lombok.Getter;
 
   private Date latestUpdate;
 
-  @JsonCreator
-  public StoreLatestApps(@JsonProperty("uid") String cardId, @JsonProperty("store") Store store,
-      @JsonProperty("apps") List<App> apps, @JsonProperty("ab") Ab ab) {
+  @JsonCreator public SocialStoreLatestApps(@JsonProperty("uid") String cardId,
+      @JsonProperty("store") Store store, @JsonProperty("apps") List<App> apps,
+      @JsonProperty("ab") Ab ab) {
     this.cardId = cardId;
     this.store = store;
     this.apps = apps;

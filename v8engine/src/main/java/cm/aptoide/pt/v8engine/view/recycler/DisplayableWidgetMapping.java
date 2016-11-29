@@ -8,7 +8,6 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.ProgressBarDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RecommendationDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewCommentsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDescriptionDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDeveloperDisplayable;
@@ -49,6 +48,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Off
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.OtherVersionDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RecommendedStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RecommendedStoreWidget;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RecommendationDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RollbackDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RowReviewDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ScheduledDownloadDisplayable;
@@ -56,6 +56,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Sea
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SearchDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SimilarDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SocialArticleDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SocialStoreLatestAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreAddCommentDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SocialVideoDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
@@ -112,6 +113,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SearchAd
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SearchWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SimilarWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SocialArticleWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SocialStoreLatestAppsWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SocialVideoWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.StoreAddCommentWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.StoreGridHeaderWidget;
@@ -234,6 +236,8 @@ public class DisplayableWidgetMapping {
         new DisplayableWidgetMapping(SocialArticleWidget.class, SocialArticleDisplayable.class));
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(SocialVideoWidget.class, SocialVideoDisplayable.class));
+    displayableWidgetMappings.add(new DisplayableWidgetMapping(SocialStoreLatestAppsWidget.class,
+        SocialStoreLatestAppsDisplayable.class));
 
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(RollbackWidget.class, RollbackDisplayable.class));
