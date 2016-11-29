@@ -130,15 +130,16 @@ class DownloadTask extends FileDownloadLargeFileListener {
         BaseDownloadTask baseDownloadTask =
             FileDownloader.getImpl().create(fileToDownload.getLink());
         baseDownloadTask.setTag(APTOIDE_DOWNLOAD_TASK_TAG_KEY, this);
+        if (fileToDownload.getFileName().endsWith(".temp")) {
+          fileToDownload.setFileName(fileToDownload.getFileName().replace(".temp", ""));
+        }
         fileToDownload.setDownloadId(baseDownloadTask.setListener(this)
             .setCallbackProgressTimes(AptoideDownloadManager.PROGRESS_MAX_VALUE)
             .setPath(AptoideDownloadManager.DOWNLOADS_STORAGE_PATH + fileToDownload.getFileName())
             .asInQueueTask()
             .enqueue());
         fileToDownload.setPath(AptoideDownloadManager.DOWNLOADS_STORAGE_PATH);
-        if (!fileToDownload.getFileName().endsWith(".temp")) {
-          fileToDownload.setFileName(fileToDownload.getFileName() + ".temp");
-        }
+        fileToDownload.setFileName(fileToDownload.getFileName() + ".temp");
       }
 
       if (isSerial) {

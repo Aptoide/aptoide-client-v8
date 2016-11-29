@@ -32,6 +32,7 @@ import cm.aptoide.pt.model.v7.ListFullReviews;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.model.v7.store.Store;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
@@ -185,7 +186,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()).getAptoideClientUUID(),
         DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(V8Engine.getContext()),
-        DataProvider.getConfiguration().getPartnerId())
+        DataProvider.getConfiguration().getPartnerId(), SecurePreferences.isAdultSwitchActive())
         .execute(getAdsResponse -> {
       List<GetAdsResponse.Ad> list = getAdsResponse.getAds();
 
@@ -272,7 +273,8 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
                   new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                       DataProvider.getContext()).getAptoideClientUUID(),
                   DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(
-                      V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId()));
+                      V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId(),
+                  SecurePreferences.isAdultSwitchActive()));
 
           try {
             countDownLatch.await(5, TimeUnit.SECONDS);
@@ -313,7 +315,8 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
                   new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                       DataProvider.getContext()).getAptoideClientUUID(),
                   DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(
-                      V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId()));
+                      V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId(),
+                  SecurePreferences.isAdultSwitchActive()));
 
           try {
             countDownLatch.await();

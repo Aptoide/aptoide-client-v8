@@ -15,7 +15,6 @@ import cm.aptoide.pt.v8engine.fragment.implementations.FragmentTopStores;
 import cm.aptoide.pt.v8engine.fragment.implementations.HomeFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.LatestReviewsFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.OtherVersionsFragment;
-import cm.aptoide.pt.viewRateAndCommentReviews.RateAndReviewsFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.RollbackFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.ScheduledDownloadsFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.ScreenshotsViewerFragment;
@@ -29,6 +28,7 @@ import cm.aptoide.pt.v8engine.fragment.implementations.StoreGridRecyclerFragment
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreTabGridRecyclerFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.SubscribedStoresFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.UpdatesFragment;
+import cm.aptoide.pt.viewRateAndCommentReviews.RateAndReviewsFragment;
 import java.util.ArrayList;
 
 /**
@@ -88,7 +88,11 @@ public class FragmentProviderImpl implements FragmentProvider {
   }
 
   @Override public Fragment newAppViewFragment(long appId) {
-    return AppViewFragment.newInstance(appId);
+    return AppViewFragment.newInstance(appId, AppViewFragment.OpenType.OPEN_ONLY);
+  }
+
+  @Override public Fragment newAppViewFragment(long appId, AppViewFragment.OpenType openType) {
+    return AppViewFragment.newInstance(appId, openType);
   }
 
   @Override public Fragment newAppViewFragment(long appId, String storeTheme, String storeName) {
@@ -144,8 +148,9 @@ public class FragmentProviderImpl implements FragmentProvider {
     return SubscribedStoresFragment.newInstance();
   }
 
-  @Override public Fragment newSearchPagerTabFragment(String query, boolean subscribedStores) {
-    return SearchPagerTabFragment.newInstance(query, subscribedStores);
+  @Override public Fragment newSearchPagerTabFragment(String query, boolean subscribedStores,
+      boolean hasMultipleFragments) {
+    return SearchPagerTabFragment.newInstance(query, subscribedStores, hasMultipleFragments);
   }
 
   @Override public Fragment newSearchPagerTabFragment(String query, String storeName) {

@@ -38,17 +38,21 @@ public class SearchPagerAdapter extends FragmentStatePagerAdapter {
     } else {
       if (getCount() > 1) {
         if (position == 0) {
-          return V8Engine.getFragmentProvider().newSearchPagerTabFragment(query, true);
+          return V8Engine.getFragmentProvider()
+              .newSearchPagerTabFragment(query, true, getCount() > 1);
         } else if (position == 1) {
-          return V8Engine.getFragmentProvider().newSearchPagerTabFragment(query, false);
+          return V8Engine.getFragmentProvider()
+              .newSearchPagerTabFragment(query, false, getCount() > 1);
         } else {
           throw new IllegalArgumentException("SearchPagerAdapter should have 2 and only 2 pages!");
         }
       } else {
         if (hasSubscribedResults) {
-          return V8Engine.getFragmentProvider().newSearchPagerTabFragment(query, true);
+          return V8Engine.getFragmentProvider()
+              .newSearchPagerTabFragment(query, true, getCount() > 1);
         } else {
-          return V8Engine.getFragmentProvider().newSearchPagerTabFragment(query, false);
+          return V8Engine.getFragmentProvider()
+              .newSearchPagerTabFragment(query, false, getCount() > 1);
         }
       }
     }

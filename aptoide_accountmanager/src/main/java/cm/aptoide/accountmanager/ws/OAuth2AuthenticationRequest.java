@@ -6,10 +6,10 @@
 package cm.aptoide.accountmanager.ws;
 
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
+import cm.aptoide.pt.preferences.Application;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -30,7 +30,8 @@ public class OAuth2AuthenticationRequest extends v3accountManager<OAuth> {
   private String grantType;
   private String refreshToken;
 
-  public OAuth2AuthenticationRequest() { }
+  public OAuth2AuthenticationRequest() {
+  }
 
   public OAuth2AuthenticationRequest(OkHttpClient httpClient, Converter.Factory converterFactory) {
     super(httpClient, converterFactory);
@@ -80,10 +81,9 @@ public class OAuth2AuthenticationRequest extends v3accountManager<OAuth> {
       parameters.put("refresh_token", refreshToken);
     }
 
-    //		// TODO: 25-04-2016 neuro oemId :)
-    //		if(Aptoide.getConfiguration().getExtraId().length()>0){
-    //			parameters.put("oem_id", Aptoide.getConfiguration().getExtraId());
-    //		}
+    if (!TextUtils.isEmpty(Application.getConfiguration().getExtraId())) {
+      parameters.put("oem_id", Application.getConfiguration().getExtraId());
+    }
 
     return interfaces.oauth2Authentication(parameters);
   }

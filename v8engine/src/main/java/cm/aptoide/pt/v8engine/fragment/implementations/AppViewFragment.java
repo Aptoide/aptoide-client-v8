@@ -15,6 +15,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
@@ -59,6 +60,7 @@ import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Malware;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -87,6 +89,7 @@ import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
 import cm.aptoide.pt.v8engine.util.referrer.ReferrerUtils;
+import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDescriptionDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDeveloperDisplayable;
@@ -108,7 +111,7 @@ import rx.functions.Action0;
 /**
  * Created by sithengineer on 04/05/16.
  */
-public class AppViewFragment extends GridRecyclerFragment
+public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
     implements Scrollable, AppMenuOptions, Payments {
 
   public static final int VIEW_ID = R.layout.fragment_app_view;
@@ -161,6 +164,10 @@ public class AppViewFragment extends GridRecyclerFragment
   private AppAction appAction = AppAction.OPEN;
   private InstalledRepository installedRepository;
 
+  public AppViewFragment() {
+    super(BaseAdapter.class);
+  }
+
   public static AppViewFragment newInstance(String packageName, String storeName,
       OpenType openType) {
     Bundle bundle = new Bundle();
@@ -183,9 +190,10 @@ public class AppViewFragment extends GridRecyclerFragment
     return fragment;
   }
 
-  public static AppViewFragment newInstance(long appId) {
+  public static AppViewFragment newInstance(long appId, OpenType openType) {
     Bundle bundle = new Bundle();
     bundle.putLong(BundleKeys.APP_ID.name(), appId);
+    bundle.putSerializable(BundleKeys.SHOULD_INSTALL.name(), openType);
 
     AppViewFragment fragment = new AppViewFragment();
     fragment.setArguments(bundle);
@@ -369,7 +377,7 @@ public class AppViewFragment extends GridRecyclerFragment
           load(true, true, null);
         } else {
           Logger.i(TAG, "The user canceled.");
-          ShowMessage.asSnack(header.badge, R.string.user_canceled);
+          ShowMessage.asSnack(header.badge, R.string.user_cancelled);
         }
       } else {
         Logger.i(TAG,
@@ -417,8 +425,9 @@ public class AppViewFragment extends GridRecyclerFragment
       unInstallAction.call();
       return true;
     } else if (i == R.id.menu_remote_install){
-	    android.support.v4.app.DialogFragment newFragment = RemoteInstallDialog.newInstance(appId);
-	    newFragment.show(getActivity().getSupportFragmentManager(), RemoteInstallDialog.class.getSimpleName());
+      DialogFragment newFragment = RemoteInstallDialog.newInstance(appId);
+      newFragment.show(getActivity().getSupportFragmentManager(),
+          RemoteInstallDialog.class.getSimpleName());
     }
 
     return super.onOptionsItemSelected(item);
@@ -644,7 +653,9 @@ public class AppViewFragment extends GridRecyclerFragment
             DataProvider.getContext()).getAptoideClientUUID(),
         DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(V8Engine.getContext()),
         getApp1.getNodes().getMeta().getData().getPackageName(),
-        DataProvider.getConfiguration().getPartnerId()).observe().map(getAdsResponse -> {
+        DataProvider.getConfiguration().getPartnerId(), SecurePreferences.isAdultSwitchActive())
+        .observe()
+        .map(getAdsResponse -> {
       if (AdRepository.validAds(getAdsResponse)) {
         suggestedAds = getAdsResponse.getAds();
       }

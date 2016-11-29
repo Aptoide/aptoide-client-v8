@@ -4,7 +4,7 @@ package cm.aptoide.pt.networkclient.okhttp.cache;
  * Created by sithengineer on 28/10/2016.
  */
 
-abstract class StringBaseCache<K, V> extends Cache<K, V, String> {
+abstract class StringBaseCache<K, V> extends BaseCache<K, V, String> {
 
   StringBaseCache(KeyAlgorithm<K, String> keyAlgorithm) {
     super(keyAlgorithm);

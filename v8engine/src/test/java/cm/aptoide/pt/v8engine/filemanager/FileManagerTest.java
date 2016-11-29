@@ -39,7 +39,7 @@ public class FileManagerTest {
     FileManager fileManager = new FileManager(cacheHelper, fileUtils, folders, downloadManager);
 
     TestSubscriber<Long> subscriber = TestSubscriber.create();
-    fileManager.cleanCache().subscribe(subscriber);
+    fileManager.purgeCache().subscribe(subscriber);
     subscriber.awaitTerminalEvent();
     assertSubscriber(subscriber, 10L);
     verify(cacheHelper, times(1)).cleanCache();

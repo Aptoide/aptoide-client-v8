@@ -127,9 +127,9 @@ import rx.android.schedulers.AndroidSchedulers;
         }, throwable -> throwable.printStackTrace()));
 
     compositeSubscription.add(displayable.getUpdates()
-        .filter(
-            downloadProgress -> downloadProgress.getRequest().getMd5() == displayable.getDownload()
-                .getMd5())
+        .filter(downloadProgress -> downloadProgress.getRequest()
+            .getMd5()
+            .equals(displayable.getDownload().getMd5()))
         .map(downloadProgress -> displayable.isDownloadingOrInstalling(downloadProgress))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(shouldShow -> showProgress(shouldShow),

@@ -20,10 +20,10 @@ import cm.aptoide.pt.v8engine.view.recycler.base.BaseGridLayoutManager;
 public abstract class GridRecyclerFragment<T extends BaseAdapter>
     extends BaseRecyclerViewFragment<T> {
 
-  private final Class<T> adapterClass;
+  private final Class<? extends BaseAdapter> adapterClass;
 
   public GridRecyclerFragment() {
-    this(null);
+    this.adapterClass = BaseAdapter.class;
   }
 
   public GridRecyclerFragment(Class<T> adapterClass) {
@@ -35,16 +35,15 @@ public abstract class GridRecyclerFragment<T extends BaseAdapter>
   }
 
   @Override protected T createAdapter() {
-    if (adapterClass != null) {
-      try {
-        return adapterClass.getConstructor().newInstance();
-      } catch (Exception e) {
-        e.printStackTrace();
-        CrashReports.logException(e);
-      }
+    try {
+      return (T) adapterClass.getConstructor().newInstance();
+    } catch (Exception e) {
+      e.printStackTrace();
+      CrashReports.logException(e);
     }
-    // default case
-    return (T) new BaseAdapter();
+
+    // default case. code should never reach here
+    return null;
   }
 
   @Override protected RecyclerView.LayoutManager createLayoutManager() {

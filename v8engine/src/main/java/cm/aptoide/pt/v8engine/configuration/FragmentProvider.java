@@ -39,6 +39,8 @@ public interface FragmentProvider {
 
   Fragment newAppViewFragment(String md5);
 
+  Fragment newAppViewFragment(long appId, AppViewFragment.OpenType openType);
+
   Fragment newAppViewFragment(long appId);
 
   Fragment newAppViewFragment(long appId, String storeTheme, String storeName);
@@ -66,7 +68,8 @@ public interface FragmentProvider {
 
   Fragment newSubscribedStoresFragment();
 
-  Fragment newSearchPagerTabFragment(String query, boolean subscribedStores);
+  Fragment newSearchPagerTabFragment(String query, boolean subscribedStores,
+      boolean hasMultipleFragments);
 
   Fragment newSearchPagerTabFragment(String query, String storeName);
 

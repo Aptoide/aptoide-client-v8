@@ -5,7 +5,9 @@
 
 package cm.aptoide.pt.networkclient.okhttp;
 
+import cm.aptoide.pt.networkclient.okhttp.cache.L2Cache;
 import cm.aptoide.pt.networkclient.okhttp.cache.PostCacheInterceptor;
+import cm.aptoide.pt.networkclient.okhttp.cache.PostCacheKeyAlgorithm;
 import java.io.File;
 import okhttp3.Cache;
 import okhttp3.Interceptor;
@@ -21,9 +23,11 @@ public class OkHttpClientFactory {
 
   private static final String TAG = OkHttpClientFactory.class.getName();
   private static OkHttpClient httpClientInstance;
+  private static L2Cache cache;
 
-  public static OkHttpClient newClient(File cacheDirectory, int cacheMaxSize,
-      Interceptor interceptor, UserAgentGenerator userAgentGenerator) {
+  static OkHttpClient newClient(File cacheDirectory, int cacheMaxSize, Interceptor interceptor,
+      UserAgentGenerator userAgentGenerator) {
+
     OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
 
     //		if (BuildConfig.DEBUG) {
@@ -31,16 +35,15 @@ public class OkHttpClientFactory {
     //		}
 
     clientBuilder.cache(new Cache(cacheDirectory, cacheMaxSize)); // 10 MiB
-
     clientBuilder.addInterceptor(interceptor);
-
     clientBuilder.addInterceptor(new UserAgentInterceptor(userAgentGenerator));
 
     return clientBuilder.build();
   }
 
   public static OkHttpClient newClient(UserAgentGenerator userAgentGenerator) {
-    return new OkHttpClient.Builder().addInterceptor(new UserAgentInterceptor(userAgentGenerator)).build();
+    return new OkHttpClient.Builder().addInterceptor(new UserAgentInterceptor(userAgentGenerator))
+        .build();
   }
 
   /**
@@ -48,34 +51,18 @@ public class OkHttpClientFactory {
    */
   public static OkHttpClient getSingletonClient(UserAgentGenerator userAgentGenerator) {
     if (httpClientInstance == null) {
-      httpClientInstance = newClient(new File("/"), 10 * 1024 * 1024, new PostCacheInterceptor(),
-          userAgentGenerator);
+      cache = new L2Cache(new PostCacheKeyAlgorithm());
+      httpClientInstance =
+          newClient(new File("/"), 10 * 1024 * 1024, new PostCacheInterceptor(cache),
+              userAgentGenerator);
     }
     return httpClientInstance;
   }
 
-  /*
-  private static final class AptoideCacheInterceptor implements Interceptor {
-
-    private final String TAG = AptoideCacheInterceptor.class.getSimpleName();
-
-    private final RequestCache customCache = new RequestCache();
-
-    @Override public Response intercept(Chain chain) throws IOException {
-      Request request = chain.request();
-      Response response = customCache.get(request);
-
-      HttpUrl httpUrl = request.url();
-      if (response != null) {
-
-        Logger.v(TAG, String.format("cache hit '%s'", httpUrl));
-        return response;
-      } else {
-
-        Logger.v(TAG, String.format("cache miss '%s'", httpUrl));
-        return customCache.put(request, chain.proceed(request));
-      }
+  // FIXME: inject cache or cache cleaning policy instead of exposing a method like this
+  public static void cleanInMemoryCache() {
+    if(cache!=null) {
+      cache.clean();
     }
   }
-  */
 }
