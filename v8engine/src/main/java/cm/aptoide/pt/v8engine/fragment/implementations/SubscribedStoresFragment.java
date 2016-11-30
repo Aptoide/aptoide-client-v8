@@ -12,6 +12,7 @@ import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.dataprovider.ws.v7.MyStoreRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragmentWithDecorator;
@@ -74,6 +75,8 @@ public class SubscribedStoresFragment extends GridRecyclerFragmentWithDecorator 
     //  //displayables.add(new AddMoreStoresDisplayable());
     //  setDisplayables(displayables);
     //});
+
+    MyStoreRequest.of().execute(myStore -> Logger.d(TAG, "this is a test" + myStore));
 
     StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
     Subscription unManagedSubscription = storeAccessor.getAll()
