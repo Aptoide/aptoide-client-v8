@@ -17,5 +17,5 @@ import lombok.EqualsAndHashCode;
 public class ProductPaymentResponse extends BaseV3Response {
 
   @JsonProperty("payStatus") private String paymentStatus;
-  @JsonProperty("orderId") private String paymentConfirmationId;
+  @JsonProperty("paykey") private String paymentConfirmationId;
 }
