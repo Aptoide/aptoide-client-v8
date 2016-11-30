@@ -46,11 +46,15 @@ public class RxAptoide {
   public static void integrate(Context context, String oemid) {
     AptoideUtils.setContext(context);
     RxAptoide.oemid = oemid;
-    setUserAgent(oemid);
 
-    RxAptoide.aptoideClientUUID =
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(context),
-            context).getAptoideClientUUID();
+    Observable.defer(() -> {
+      setUserAgent(oemid);
+      RxAptoide.aptoideClientUUID =
+          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(context),
+              context).getAptoideClientUUID();
+      return null;
+    }).subscribeOn(Schedulers.io()).subscribe(o -> {
+    }, Throwable::printStackTrace);
 
     Logger.setDBG(BuildConfig.DEBUG);
   }
