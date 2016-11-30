@@ -4,6 +4,9 @@ import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.timeline.Article;
+import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
+import cm.aptoide.pt.model.v7.timeline.Video;
+import cm.aptoide.pt.networkclient.WebService;
 import java.util.Date;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -49,10 +52,45 @@ public class ShareCardRequest extends V7<BaseV7Response, ShareCardRequest.Body> 
         BASE_HOST);
   }
 
-  public static ShareCardRequest of(ShareCardRequest.Body body, String ownerHash,
+  public static ShareCardRequest ofVideo(Video video, String cardType, String ownerHash,
       String accessToken, String aptoideClientUUID, String userEmail) {
     email = userEmail;
+    ShareCardRequest.Body body = new ShareCardRequest.Body(ShareCardRequest.Body.CardData.builder()
+        .type(cardType)
+        .packages(video.getApps())
+        .url(video.getUrl())
+        .title(video.getUrl())
+        .thumbnailurl(video.getThumbnailUrl())
+        .publisherid(video.getPublisher().getName())
+        .publisherurl(video.getPublisher().getBaseUrl())
+        .publisherlogo(video.getPublisher().getLogoUrl())
+        .date(video.getDate())
+        .cardId(video.getCardId())
+        .ownerHash(ownerHash)
+        .build());
+
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+    return new ShareCardRequest((ShareCardRequest.Body) decorator.decorate(body, accessToken),
+        BASE_HOST);
+  }
+
+  public static ShareCardRequest ofStoreLatestApps(StoreLatestApps storeLatestApps, String cardType,
+      String ownerHash, String accessToken, String aptoideClientUUID, String userEmail) {
+    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+    email = userEmail;
+    ShareCardRequest.Body body = new ShareCardRequest.Body(ShareCardRequest.Body.CardData.builder()
+        .type(cardType)
+        .packages(storeLatestApps.getApps())
+        //.url(video.getUrl())
+        //.title(video.getUrl())
+        //.thumbnailurl(video.getThumbnailUrl())
+        //.publisherid(video.getPublisher().getName())
+        //.publisherurl(video.getPublisher().getBaseUrl())
+        //.publisherlogo(video.getPublisher().getLogoUrl())
+        //.date(video.getDate())
+        //.cardId(video.getCardId())
+        //.ownerHash(ownerHash)
+        .build());
     return new ShareCardRequest((ShareCardRequest.Body) decorator.decorate(body, accessToken),
         BASE_HOST);
   }

@@ -13,6 +13,7 @@ import cm.aptoide.pt.model.v7.timeline.Video;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.link.Link;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
+import cm.aptoide.pt.v8engine.repository.SocialRepository;
 import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ import rx.schedulers.Schedulers;
  */
 @AllArgsConstructor public class VideoDisplayable extends CardDisplayable {
 
+  private Video video;
   @Getter private String videoTitle;
   @Getter private Link link;
   @Getter private Link baseLink;
@@ -42,13 +44,14 @@ import rx.schedulers.Schedulers;
   private DateCalculator dateCalculator;
   private SpannableFactory spannableFactory;
   private TimelineMetricsManager timelineMetricsManager;
+  private SocialRepository socialRepository;
 
   public VideoDisplayable() {
   }
 
   public static VideoDisplayable from(Video video, DateCalculator dateCalculator,
       SpannableFactory spannableFactory, LinksHandlerFactory linksHandlerFactory,
-      TimelineMetricsManager timelineMetricsManager) {
+      TimelineMetricsManager timelineMetricsManager, SocialRepository socialRepository) {
     long appId = 0;
 
     String abTestingURL = null;
@@ -59,12 +62,13 @@ import rx.schedulers.Schedulers;
       abTestingURL = video.getAb().getConversion().getUrl();
     }
 
-    return new VideoDisplayable(video.getTitle(),
+    return new VideoDisplayable(video, video.getTitle(),
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, video.getUrl()),
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
             video.getPublisher().getBaseUrl()), video.getPublisher().getName(),
         video.getThumbnailUrl(), video.getPublisher().getLogoUrl(), appId, abTestingURL,
-        video.getApps(), video.getDate(), dateCalculator, spannableFactory, timelineMetricsManager);
+        video.getApps(), video.getDate(), dateCalculator, spannableFactory, timelineMetricsManager,
+        socialRepository);
   }
 
   public Observable<List<Installed>> getRelatedToApplication() {
@@ -111,6 +115,6 @@ import rx.schedulers.Schedulers;
   }
 
   @Override public void share(Context context, String cardType) {
-
+    socialRepository.share(video, cardType, "");
   }
 }

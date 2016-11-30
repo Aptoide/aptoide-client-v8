@@ -129,18 +129,5 @@ import rx.schedulers.Schedulers;
 
   @Override public void share(Context context, String cardType) {
     socialRepository.share(article, cardType, "");
-    //ShareCardRequest.Body body = new ShareCardRequest.Body(ShareCardRequest.Body.CardData.builder()
-    //    .type(cardType)
-    //    .packages(relatedToAppsList)
-    //    .url(link.getUrl())
-    //    .title(articleTitle)
-    //    .thumbnailurl(thumbnailUrl)
-    //    .publisherid(title)
-    //    .publisherurl(developerLink.getUrl())
-    //    .publisherlogo(avatarUrl)
-    //    .date(date)
-    //    .cardId(cardId)
-    //    .build());
-    //socialRepository.share(body, cardType, "");
   }
 }

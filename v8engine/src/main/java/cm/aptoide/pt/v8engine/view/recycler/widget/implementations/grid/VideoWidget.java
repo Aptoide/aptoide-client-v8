@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
@@ -43,6 +44,7 @@ public class VideoWidget extends CardWidget<VideoDisplayable> {
   private TextView relatedTo;
   private String appName;
   private String packageName;
+  private LinearLayout share;
 
   public VideoWidget(View itemView) {
     super(itemView);
@@ -62,6 +64,7 @@ public class VideoWidget extends CardWidget<VideoDisplayable> {
     cardView = (CardView) itemView.findViewById(R.id.card);
     videoHeader = itemView.findViewById(R.id.displayable_social_timeline_video_header);
     relatedTo = (TextView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_related_to);
+    share = (LinearLayout) itemView.findViewById(R.id.social_share);
   }
 
   @Override public void bindView(VideoDisplayable displayable) {
@@ -134,6 +137,10 @@ public class VideoWidget extends CardWidget<VideoDisplayable> {
               .build())
           .build(), AptoideAnalytics.OPEN_CHANNEL);
     }));
+
+    compositeSubscription.add(RxView.clicks(share)
+        .subscribe(click -> shareCard(displayable, cardType),
+            throwable -> throwable.printStackTrace()));
   }
 
   private void setAppNameToFirstLinkedApp() {

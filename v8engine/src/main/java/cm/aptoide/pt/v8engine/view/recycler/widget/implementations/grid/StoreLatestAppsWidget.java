@@ -34,6 +34,7 @@ public class StoreLatestAppsWidget extends CardWidget<StoreLatestAppsDisplayable
   private Map<View, Long> apps;
   private Map<Long, String> appsPackages;
   private CardView cardView;
+  private LinearLayout share;
 
   public StoreLatestAppsWidget(View itemView) {
     super(itemView);
@@ -54,6 +55,7 @@ public class StoreLatestAppsWidget extends CardWidget<StoreLatestAppsDisplayable
         R.id.displayable_social_timeline_store_latest_apps_container);
     cardView =
         (CardView) itemView.findViewById(R.id.displayable_social_timeline_store_latest_apps_card);
+    share = (LinearLayout) itemView.findViewById(R.id.social_share);
   }
 
   @Override public void bindView(StoreLatestAppsDisplayable displayable) {
@@ -109,5 +111,9 @@ public class StoreLatestAppsWidget extends CardWidget<StoreLatestAppsDisplayable
       ((FragmentShower) getContext()).pushFragmentV4(
           V8Engine.getFragmentProvider().newStoreFragment(displayable.getStoreName()));
     }));
+
+    //compositeSubscription.add(RxView.clicks(share)
+    //    .subscribe(click -> shareCard(displayable, cardType.replace(" ", "_")),
+    //        throwable -> throwable.printStackTrace()));
   }
 }

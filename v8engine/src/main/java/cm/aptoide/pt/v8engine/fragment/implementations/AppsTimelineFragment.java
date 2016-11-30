@@ -315,7 +315,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
           linksHandlerFactory, timelineMetricsManager, socialRepository);
     } else if (card instanceof Video) {
       return VideoDisplayable.from((Video) card, dateCalculator, spannableFactory,
-          linksHandlerFactory, timelineMetricsManager);
+          linksHandlerFactory, timelineMetricsManager, socialRepository);
     } else if (card instanceof SocialArticle) {
       return SocialArticleDisplayable.from(((SocialArticle) card), dateCalculator, spannableFactory,
           linksHandlerFactory, timelineMetricsManager, socialRepository);
@@ -329,7 +329,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
       return FeatureDisplayable.from((Feature) card, dateCalculator, spannableFactory);
     } else if (card instanceof StoreLatestApps) {
       return StoreLatestAppsDisplayable.from((StoreLatestApps) card, dateCalculator,
-          timelineMetricsManager);
+          timelineMetricsManager, socialRepository);
     } else if (card instanceof AppUpdate) {
       return AppUpdateDisplayable.from((AppUpdate) card, spannableFactory, downloadFactory,
           dateCalculator, installManager, permissionManager, timelineMetricsManager);
