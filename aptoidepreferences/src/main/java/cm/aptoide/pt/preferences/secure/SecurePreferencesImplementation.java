@@ -47,8 +47,7 @@ public class SecurePreferencesImplementation implements SharedPreferences {
   // change to SC if using Spongycastle crypto libraries
   private static final String PROVIDER = "BC";
 
-  private static final SharedPreferences instance =
-      new SecurePreferencesImplementation(Application.getContext());
+  private static SharedPreferences instance;
   private static SharedPreferences sFile;
   private static byte[] sKey;
 
@@ -76,6 +75,18 @@ public class SecurePreferencesImplementation implements SharedPreferences {
   }
 
   public static SharedPreferences getInstance() {
+    return getInstance(Application.getContext());
+  }
+
+  public static SharedPreferences getInstance(Context context) {
+    if (instance == null) {
+      synchronized (SecurePreferencesImplementation.class) {
+        if (instance == null) {
+          instance = new SecurePreferencesImplementation(context);
+        }
+      }
+    }
+
     return instance;
   }
 

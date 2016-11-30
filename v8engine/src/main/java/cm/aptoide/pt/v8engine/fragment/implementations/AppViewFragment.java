@@ -44,7 +44,9 @@ import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
@@ -57,6 +59,7 @@ import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Malware;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.SimpleSubscriber;
@@ -67,6 +70,7 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.activity.PaymentActivity;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.dialog.DialogBadgeV7;
+import cm.aptoide.pt.v8engine.dialog.RemoteInstallDialog;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
@@ -83,6 +87,7 @@ import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
 import cm.aptoide.pt.v8engine.util.referrer.ReferrerUtils;
+import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDescriptionDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDeveloperDisplayable;
@@ -104,7 +109,7 @@ import rx.functions.Action0;
 /**
  * Created by sithengineer on 04/05/16.
  */
-public class AppViewFragment extends GridRecyclerFragment
+public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
     implements Scrollable, AppMenuOptions, Payments {
 
   public static final int VIEW_ID = R.layout.fragment_app_view;
@@ -215,6 +220,10 @@ public class AppViewFragment extends GridRecyclerFragment
 
   public static Fragment newInstance(String packageName, OpenType openType) {
     return newInstance(packageName, null, openType);
+  }
+
+  public AppViewFragment() {
+    super(BaseAdapter.class);
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -365,7 +374,7 @@ public class AppViewFragment extends GridRecyclerFragment
           load(true, true, null);
         } else {
           Logger.i(TAG, "The user canceled.");
-          ShowMessage.asSnack(header.badge, R.string.user_canceled);
+          ShowMessage.asSnack(header.badge, R.string.user_cancelled);
         }
       } else {
         Logger.i(TAG,
@@ -412,6 +421,9 @@ public class AppViewFragment extends GridRecyclerFragment
     } else if (i == R.id.menu_uninstall && unInstallAction != null) {
       unInstallAction.call();
       return true;
+    } else if (i == R.id.menu_remote_install){
+	    android.support.v4.app.DialogFragment newFragment = RemoteInstallDialog.newInstance(appId);
+	    newFragment.show(getActivity().getSupportFragmentManager(), RemoteInstallDialog.class.getSimpleName());
     }
 
     return super.onOptionsItemSelected(item);
@@ -487,31 +499,31 @@ public class AppViewFragment extends GridRecyclerFragment
     }
 
     // useful data for the schedule updates menu option
-    installAction()
-        .observeOn(AndroidSchedulers.mainThread())
+    installAction().observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(appAction -> {
-      AppViewFragment.this.appAction = appAction;
-      MenuItem item = menu.findItem(R.id.menu_schedule);
-      if (item != null) {
-        item.setVisible(appAction != AppAction.OPEN);
-      }
-      if (appAction != AppAction.INSTALL) {
-        setUnInstallMenuOptionVisible(
-            () -> new PermissionManager().requestDownloadAccess((PermissionRequest) getContext())
-                .flatMap(success -> installManager.uninstall(getContext(), packageName))
+          AppViewFragment.this.appAction = appAction;
+          MenuItem item = menu.findItem(R.id.menu_schedule);
+          if (item != null) {
+            showHideOptionsMenu(item,appAction != AppAction.OPEN);
+          }
+          if (appAction != AppAction.INSTALL) {
+            setUnInstallMenuOptionVisible(() -> new PermissionManager().requestDownloadAccess(
+                (PermissionRequest) getContext())
+                .flatMap(success -> installManager.uninstall(getContext(), packageName,
+                    app.getFile().getVername()))
                 .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
                 .subscribe(aVoid -> {
                 }, throwable -> throwable.printStackTrace()));
-      } else {
-        setUnInstallMenuOptionVisible(null);
-      }
-    });
+          } else {
+            setUnInstallMenuOptionVisible(null);
+          }
+        });
 
     header.setup(getApp);
     setupDisplayables(getApp);
     setupObservables(getApp);
-    showHideMenus(true);
+    showHideOptionsMenu(true);
     setupShare(getApp);
     if (openType == OpenType.OPEN_WITH_INSTALL_POPUP) {
       GenericDialogs.createGenericOkCancelMessage(getContext(),
@@ -543,10 +555,16 @@ public class AppViewFragment extends GridRecyclerFragment
     appName = app.getName();
   }
 
-  private void showHideMenus(boolean visible) {
+  protected void showHideOptionsMenu(MenuItem item, boolean visible){
+    if(item!=null) {
+      item.setVisible(visible);
+    }
+  }
+
+  private void showHideOptionsMenu(boolean visible) {
     for (int i = 0; i < menu.size(); i++) {
       MenuItem item = menu.getItem(i);
-      item.setVisible(visible);
+      showHideOptionsMenu(item,visible);
     }
   }
 
@@ -626,7 +644,12 @@ public class AppViewFragment extends GridRecyclerFragment
   @NonNull private Observable<GetApp> manageSuggestedAds(GetApp getApp1) {
     List<String> keywords = getApp1.getNodes().getMeta().getData().getMedia().getKeywords();
 
-    return GetAdsRequest.ofAppviewSuggested(keywords).observe().map(getAdsResponse -> {
+    return GetAdsRequest.ofAppviewSuggested(keywords,
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext()).getAptoideClientUUID(),
+        DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(V8Engine.getContext()),
+        getApp1.getNodes().getMeta().getData().getPackageName(),
+        DataProvider.getConfiguration().getPartnerId()).observe().map(getAdsResponse -> {
       if (AdRepository.validAds(getAdsResponse)) {
         suggestedAds = getAdsResponse.getAds();
       }
@@ -667,7 +690,7 @@ public class AppViewFragment extends GridRecyclerFragment
 
   @Override public void setUnInstallMenuOptionVisible(@Nullable Action0 unInstallAction) {
     this.unInstallAction = unInstallAction;
-    uninstallMenuItem.setVisible(unInstallAction != null);
+    showHideOptionsMenu(uninstallMenuItem,unInstallAction != null);
   }
 
   public void setupShare(GetApp app) {

@@ -8,12 +8,12 @@ import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.widget.BaseWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
 /**
  * Created by trinkes on 8/4/16.
  */
-public class CommentWidget extends BaseWidget<CommentDisplayable> {
+public class CommentWidget extends Widget<CommentDisplayable> {
 
   private ImageView userAvatar;
   private TextView userName;

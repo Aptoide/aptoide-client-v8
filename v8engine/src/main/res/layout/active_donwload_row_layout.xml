@@ -9,25 +9,19 @@
 
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/row_app_download_indicator"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true"
+    android:layout_marginBottom="2dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:layout_marginTop="2dp"
+    android:padding="5dp"
+    style="?attr/backgroundCard"
     >
-
-  <RelativeLayout
-      android:id="@+id/row_app_download_indicator"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_alignParentBottom="true"
-      android:layout_alignParentLeft="true"
-      android:layout_alignParentStart="true"
-      android:layout_marginBottom="2dp"
-      android:layout_marginLeft="5dp"
-      android:layout_marginRight="5dp"
-      android:layout_marginTop="2dp"
-      android:padding="5dp"
-      style="?attr/backgroundCard"
-      >
-
 
     <ImageView
         android:id="@+id/app_icon"
@@ -39,7 +33,7 @@
         />
 
     <LinearLayout
-        android:layout_width="0dip"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_gravity="center_vertical"
@@ -56,11 +50,11 @@
 
       <TextView
           android:id="@+id/app_name"
-          android:layout_width="fill_parent"
+          android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:ellipsize="end"
           android:maxLines="1"
-          android:text=""
+          tools:text="Application Name"
           android:textAppearance="?android:attr/textAppearanceMedium"
           />
 
@@ -84,6 +78,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
+            tools:text="128kbps"
             />
 
         <TextView
@@ -98,6 +93,7 @@
             android:layout_toStartOf="@id/progress"
             android:ellipsize="end"
             android:maxLines="1"
+            tools:text="30min"
             />
 
         <TextView
@@ -107,6 +103,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_gravity="left"
+            tools:text="80%"
             />
       </RelativeLayout>
 
@@ -114,7 +111,7 @@
 
     <View
         android:id="@+id/view"
-        android:layout_width="1dip"
+        android:layout_width="1dp"
         android:layout_height="50dp"
         android:layout_centerVertical="true"
         android:layout_margin="5dp"
@@ -127,17 +124,15 @@
         android:id="@+id/pause_cancel_button"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:padding="5dp"
+        android:layout_margin="5dp"
+        android:scaleType="center"
+        android:layout_gravity="center"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_gravity="center"
-        android:layout_margin="5dp"
         android:contentDescription="@null"
         android:foreground="?attr/selectableItemBackground"
-        android:padding="5dp"
-        android:scaleType="center"
         android:src="@drawable/media_pause"
         />
-  </RelativeLayout>
-
 </RelativeLayout>

@@ -134,6 +134,7 @@ public class PullingContentService extends Service {
               resultPendingIntent)
               .setOngoing(false)
               .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
+              .setLargeIcon(BitmapFactory.decodeResource(Application.getContext().getResources(), Application.getConfiguration().getIcon()))
               .setContentTitle(contentTitle)
               .setContentText(contentText)
               .setTicker(tickerText)
@@ -165,6 +166,7 @@ public class PullingContentService extends Service {
               resultPendingIntent)
               .setOngoing(false)
               .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
+              .setLargeIcon(BitmapFactory.decodeResource(Application.getContext().getResources(), Application.getConfiguration().getIcon()))
               .setContentTitle(pushNotification.getTitle())
               .setContentText(pushNotification.getMessage())
               .build();
@@ -173,7 +175,7 @@ public class PullingContentService extends Service {
       final NotificationManager managerNotification = (NotificationManager) Application.getContext()
           .getSystemService(Context.NOTIFICATION_SERVICE);
 
-      if (Build.VERSION.SDK_INT >= 16 && pushNotification.getImages() != null && TextUtils.isEmpty(
+      if (Build.VERSION.SDK_INT >= 16 && Build.VERSION.SDK_INT < 24 && pushNotification.getImages() != null && TextUtils.isEmpty(
           pushNotification.getImages().getIconUrl())) {
 
         String imageUrl = pushNotification.getImages().getBannerUrl();

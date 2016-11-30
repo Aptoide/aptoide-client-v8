@@ -55,11 +55,7 @@ public class SearchAdWidget extends Widget<SearchAdDisplayable> {
     });
   }
 
-  @Override public void onViewAttached() {
-
-  }
-
-  @Override public void onViewDetached() {
+  @Override public void unbindView() {
 
   }
 }

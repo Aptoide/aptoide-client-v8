@@ -21,5 +21,7 @@ public interface Installation {
 
   int getVersionCode();
 
+  String getVersionName();
+
   File getFile();
 }

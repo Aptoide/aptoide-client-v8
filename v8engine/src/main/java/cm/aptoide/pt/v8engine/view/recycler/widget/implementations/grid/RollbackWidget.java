@@ -5,8 +5,6 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
-import android.content.Context;
-import android.content.ContextWrapper;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -20,7 +18,6 @@ import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RollbackDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import java.text.DateFormat;
-import rx.subscriptions.CompositeSubscription;
 
 import static android.text.format.DateFormat.getTimeFormat;
 
@@ -36,7 +33,6 @@ public class RollbackWidget extends Widget<RollbackDisplayable> {
   private TextView appUpdateVersion;
   private TextView appState;
   private TextView rollbackAction;
-  private CompositeSubscription compositeSubscription;
 
   public RollbackWidget(View itemView) {
     super(itemView);
@@ -52,10 +48,6 @@ public class RollbackWidget extends Widget<RollbackDisplayable> {
 
   @Override public void bindView(RollbackDisplayable displayable) {
     final Rollback pojo = displayable.getPojo();
-
-    if (compositeSubscription == null || compositeSubscription.isUnsubscribed()) {
-      compositeSubscription = new CompositeSubscription();
-    }
 
     ImageLoader.load(pojo.getIcon(), appIcon);
     appName.setText(pojo.getAppName());
@@ -92,10 +84,7 @@ public class RollbackWidget extends Widget<RollbackDisplayable> {
       //			Realm realm = Database.get();
       //			Database.RollbackQ.upadteRollbackWithAction(realm, pojo, Rollback.Action.UPDATE);
 
-      final Context context = view.getContext();
-      ContextWrapper contextWrapper = (ContextWrapper) context;
-      final PermissionRequest permissionRequest =
-          ((PermissionRequest) contextWrapper.getBaseContext());
+      final PermissionRequest permissionRequest = ((PermissionRequest) getContext());
 
       permissionRequest.requestAccessToExternalFileSystem(() -> {
         Rollback.Action action = Rollback.Action.valueOf(pojo.getAction());
@@ -107,9 +96,10 @@ public class RollbackWidget extends Widget<RollbackDisplayable> {
             //only if the app is installed
             //ShowMessage.asSnack(view, R.string.uninstall_msg);
             ShowMessage.asSnack(view, R.string.uninstall);
-            displayable.uninstall(getContext(), displayable.getDownloadFromPojo())
-                .subscribe(uninstalled -> {
-                }, throwable -> throwable.printStackTrace());
+            compositeSubscription.add(
+                displayable.uninstall(getContext(), displayable.getDownloadFromPojo())
+                    .subscribe(uninstalled -> {
+                    }, throwable -> throwable.printStackTrace()));
             break;
 
           case UNINSTALL:
@@ -124,15 +114,5 @@ public class RollbackWidget extends Widget<RollbackDisplayable> {
         Logger.e(TAG, "unable to access to external FS");
       });
     });
-  }
-
-  @Override public void onViewAttached() {
-
-  }
-
-  @Override public void onViewDetached() {
-    if (compositeSubscription != null) {
-      compositeSubscription.unsubscribe();
-    }
   }
 }

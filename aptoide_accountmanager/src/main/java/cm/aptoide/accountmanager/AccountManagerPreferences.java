@@ -36,11 +36,11 @@ class AccountManagerPreferences {
     return SecurePreferences.getString(SecureKeys.USER_EMAIL);
   }
 
-  static void setUserName(String userName) {
+  static void setUserEmail(String userName) {
     SecurePreferences.putString(SecureKeys.USER_EMAIL, userName);
   }
 
-  static void removeUserName() {
+  static void removeUserEmail() {
     SecurePreferences.remove(SecureKeys.USER_EMAIL);
   }
 

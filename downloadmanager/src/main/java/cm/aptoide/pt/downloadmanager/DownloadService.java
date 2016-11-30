@@ -55,7 +55,9 @@ import rx.subscriptions.CompositeSubscription;
         downloadManager.startDownload(download)
             .first()
             .subscribe(downloadFromRealm -> Logger.d(TAG,
-                "startDownload called with: md5 = [" + md5 + "]"), Throwable::printStackTrace);
+                "startDownload called with: md5 = [" + md5 + "]"), err -> {
+              CrashReports.logException(err);
+            });
         setupNotifications();
       }));
       return;
@@ -100,7 +102,9 @@ import rx.subscriptions.CompositeSubscription;
             CrashReports.logException(e);
           }
         }
-      }, Throwable::printStackTrace);
+      }, err -> {
+        CrashReports.logException(err);
+      });
     }
     return START_STICKY;
   }
@@ -122,7 +126,9 @@ import rx.subscriptions.CompositeSubscription;
           .subscribe(downloads -> {
             Logger.d(TAG, "Download service is stopping");
             stopSelf();
-          }, Throwable::printStackTrace);
+          }, err -> {
+            CrashReports.logException(err);
+          });
       subscriptions.add(stopMechanismSubscription);
     }
   }
@@ -173,7 +179,9 @@ import rx.subscriptions.CompositeSubscription;
 
       notificationUpdateSubscription =
           downloadManager.getCurrentDownload().distinctUntilChanged().subscribe(download -> {
-          }, Throwable::printStackTrace);
+          }, err -> {
+            CrashReports.logException(err);
+          });
       subscriptions.add(notificationUpdateSubscription);
     }
   }

@@ -11,12 +11,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ArticleDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -29,13 +31,13 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by marcelobenites on 6/17/16.
  */
 public class ArticleWidget extends Widget<ArticleDisplayable> {
 
+  private final String cardType = "Article";
   private TextView title;
   private TextView subtitle;
   private ImageView image;
@@ -44,12 +46,12 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
   private View url;
   private Button getAppButton;
   private CardView cardView;
-  private CompositeSubscription subscriptions;
   private View articleHeader;
   private ArticleDisplayable displayable;
   private TextView relatedTo;
 
   private String appName;
+  private String packageName;
 
   public ArticleWidget(View itemView) {
     super(itemView);
@@ -96,10 +98,54 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
     url.setOnClickListener(v -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
       displayable.getLink().launch(getContext());
-      Analytics.AppsTimeline.clickOnCard("Article", Analytics.AppsTimeline.BLANK,
+      Analytics.AppsTimeline.clickOnCard(cardType, Analytics.AppsTimeline.BLANK,
           displayable.getArticleTitle(), displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_ARTICLE);
+      displayable.sendOpenArticleEvent(SendEventRequest.Body.Data.builder()
+          .cardType(cardType)
+          .source(displayable.getTitle())
+          .specific(SendEventRequest.Body.Specific.builder()
+              .url(displayable.getLink().getUrl())
+              .app(packageName)
+              .build())
+          .build(), AptoideAnalytics.OPEN_ARTICLE);
     });
+
+    compositeSubscription.add(displayable.getRelatedToApplication()
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(installeds -> {
+          if (installeds != null && !installeds.isEmpty()) {
+            appName = installeds.get(0).getName();
+            packageName = installeds.get(0).getPackageName();
+          } else {
+            setAppNameToFirstLinkedApp();
+          }
+          if (appName != null) {
+            relatedTo.setText(displayable.getAppRelatedToText(getContext(), appName));
+          }
+        }, throwable -> {
+          setAppNameToFirstLinkedApp();
+          if (appName != null) {
+            relatedTo.setText(displayable.getAppRelatedToText(getContext(), appName));
+          }
+          throwable.printStackTrace();
+        }));
+
+    compositeSubscription.add(RxView.clicks(articleHeader).subscribe(click -> {
+      knockWithSixpackCredentials(displayable.getAbUrl());
+      displayable.getDeveloperLink().launch(getContext());
+      Analytics.AppsTimeline.clickOnCard(cardType, Analytics.AppsTimeline.BLANK,
+          displayable.getArticleTitle(), displayable.getTitle(),
+          Analytics.AppsTimeline.OPEN_ARTICLE_HEADER);
+      displayable.sendOpenArticleEvent(SendEventRequest.Body.Data.builder()
+          .cardType(cardType)
+          .source(displayable.getTitle())
+          .specific(SendEventRequest.Body.Specific.builder()
+              .url(displayable.getDeveloperLink().getUrl())
+              .app(packageName)
+              .build())
+          .build(), AptoideAnalytics.OPEN_BLOG);
+    }));
   }
 
   //// TODO: 31/08/16 refactor this out of here
@@ -126,7 +172,6 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
     });
   }
 
-
   private void setCardviewMargin(ArticleDisplayable displayable) {
     CardView.LayoutParams layoutParams =
         new CardView.LayoutParams(CardView.LayoutParams.WRAP_CONTENT,
@@ -138,51 +183,9 @@ public class ArticleWidget extends Widget<ArticleDisplayable> {
     cardView.setLayoutParams(layoutParams);
   }
 
-  @Override public void onViewAttached() {
-    if (subscriptions == null) {
-      subscriptions = new CompositeSubscription();
-
-      subscriptions.add(displayable.getRelatedToApplication()
-          .observeOn(AndroidSchedulers.mainThread())
-          .subscribe(installeds -> {
-            if (installeds != null && !installeds.isEmpty()) {
-              appName = installeds.get(0).getName();
-            } else {
-              setAppNameToFirstLinkedApp();
-            }
-            if (appName != null) {
-              relatedTo.setText(displayable.getAppRelatedToText(getContext(), appName));
-            }
-          }, throwable -> {
-            setAppNameToFirstLinkedApp();
-            if (appName != null) {
-              relatedTo.setText(displayable.getAppRelatedToText(getContext(), appName));
-            }
-            throwable.printStackTrace();
-          }));
-
-      subscriptions.add(RxView.clicks(articleHeader).subscribe(click -> {
-        knockWithSixpackCredentials(displayable.getAbUrl());
-        displayable.getDeveloperLink().launch(getContext());
-        Analytics.AppsTimeline.clickOnCard("Article", Analytics.AppsTimeline.BLANK,
-            displayable.getArticleTitle(), displayable.getTitle(),
-            Analytics.AppsTimeline.OPEN_ARTICLE_HEADER);
-      }));
-    }
-  }
-
   private void setAppNameToFirstLinkedApp() {
     if (!displayable.getRelatedToAppsList().isEmpty()) {
       appName = displayable.getRelatedToAppsList().get(0).getName();
-    }
-  }
-
-  @Override public void onViewDetached() {
-    url.setOnClickListener(null);
-    getAppButton.setOnClickListener(null);
-    if (subscriptions != null) {
-      subscriptions.unsubscribe();
-      subscriptions = null;
     }
   }
 }

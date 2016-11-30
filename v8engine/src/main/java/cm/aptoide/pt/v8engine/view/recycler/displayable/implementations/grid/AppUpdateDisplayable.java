@@ -14,13 +14,14 @@ import android.text.TextUtils;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.model.v7.timeline.AppUpdate;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -49,13 +50,14 @@ import rx.Observable;
   @Getter private String abUrl;
   private InstallManager installManager;
   private PermissionManager permissionManager;
+  private TimelineMetricsManager timelineMetricsManager;
 
   public AppUpdateDisplayable() {
   }
 
   public static AppUpdateDisplayable from(AppUpdate appUpdate, SpannableFactory spannableFactory,
       DownloadFactory downloadFactory, DateCalculator dateCalculator, InstallManager installManager,
-      PermissionManager permissionManager) {
+      PermissionManager permissionManager, TimelineMetricsManager timelineMetricsManager) {
     String abTestingURL = null;
 
     if (appUpdate.getAb() != null
@@ -67,13 +69,13 @@ import rx.Observable;
         appUpdate.getStore().getName(), appUpdate.getAdded(), appUpdate.getFile().getVername(),
         spannableFactory, appUpdate.getName(), appUpdate.getPackageName(),
         downloadFactory.create(appUpdate, Download.ACTION_UPDATE), dateCalculator,
-        appUpdate.getId(), abTestingURL, installManager, permissionManager);
+        appUpdate.getId(), abTestingURL,installManager, permissionManager, timelineMetricsManager);
   }
 
   public Observable<Progress<Download>> update(Context context) {
-    if (installManager.showWarning() ) {
-      GenericDialogs.createGenericYesNoCancelMessage(context, null
-          , AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog) )
+    if (installManager.showWarning()) {
+      GenericDialogs.createGenericYesNoCancelMessage(context, null,
+          AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog))
           .subscribe(eResponse -> {
             switch (eResponse) {
               case YES:
@@ -171,5 +173,9 @@ import rx.Observable;
 
   public boolean isDownloading(Progress<Download> downloadProgress) {
     return installManager.isDownloading(downloadProgress);
+  }
+
+  public void sendClickEvent(SendEventRequest.Body.Data data, String eventName) {
+    timelineMetricsManager.sendEvent(data, eventName);
   }
 }

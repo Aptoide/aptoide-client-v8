@@ -62,8 +62,8 @@ public class InstallManager {
     aptoideDownloadManager.removeDownload(md5);
   }
 
-  public Observable<Void> uninstall(Context context, String packageName) {
-    return installer.uninstall(context, packageName);
+  public Observable<Void> uninstall(Context context, String packageName, String versionName) {
+    return installer.uninstall(context, packageName, versionName);
   }
 
   public Observable<Progress<Download>> getInstallations() {

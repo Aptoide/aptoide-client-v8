@@ -19,6 +19,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.pt.model.v7.Malware;
+import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import lombok.Getter;
 
@@ -85,8 +87,9 @@ public class InstallWarningDialog {
     // We need a placeholder for the span image in order to avoid it from disappearing in case
     // it is the last character in the line. It happens in when device orientation changes.
     final String placeholder = "[placeholder]";
-    final String stringText = contentView.getContext()
+    final String stringTextTemp = contentView.getContext()
         .getString(R.string.dialog_install_warning_credibility_text, placeholder);
+    final String stringText = stringTextTemp.replaceFirst("Aptoide",Application.getConfiguration().getMarketName());
     final SpannableString text = new SpannableString(stringText);
 
     final int placeholderIndex = stringText.indexOf(placeholder);

@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
@@ -72,7 +73,8 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
     //subscribedBool = DeprecatedDatabase.StoreQ.get(getStoreMeta.getData().getId(), realm) != null;
 
     StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
-    subscribedBool = storeAccessor.get(getStoreMeta.getData().getId()).toBlocking().firstOrDefault(null) != null;
+    subscribedBool =
+        storeAccessor.get(getStoreMeta.getData().getId()).toBlocking().firstOrDefault(null) != null;
 
     this.theme = StoreThemeEnum.get(getStoreMeta.getData().getAppearance().getTheme());
 
@@ -105,11 +107,7 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
     handleSubscriptionLogic(getStoreMeta);
   }
 
-  @Override public void onViewAttached() {
-
-  }
-
-  @Override public void onViewDetached() {
+  @Override public void unbindView() {
 
   }
 
@@ -156,7 +154,9 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
               ShowMessage.asSnack(itemView,
                   AptoideUtils.StringU.getFormattedString(R.string.store_followed,
                       getStoreMeta.getData().getName()));
-            }, Throwable::printStackTrace);
+            }, err -> {
+              CrashReports.logException(err);
+            });
             handleSubscriptionLogic(getStoreMeta);
           }
         }

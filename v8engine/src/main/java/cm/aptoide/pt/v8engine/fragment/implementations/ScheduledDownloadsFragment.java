@@ -282,8 +282,7 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
         .flatMap(downloadItem -> installManager.install(context, downloadItem)
             .filter(downloadProgress -> downloadProgress.getState() == Progress.DONE)
             .doOnNext(success -> scheduledDownloadRepository.deleteScheduledDownload(
-                downloadItem.getMd5()))
-        )
+                downloadItem.getMd5())))
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(aVoid -> {
           Logger.i(TAG, "finished installing scheduled downloads");

@@ -53,7 +53,7 @@ public class RollbackDisplayable extends DisplayablePojo<Rollback> {
 
   public Observable<Void> uninstall(Context context, Download appDownload) {
     return installManager.uninstall(context,
-        appDownload.getFilesToDownload().get(0).getPackageName());
+        appDownload.getFilesToDownload().get(0).getPackageName(), appDownload.getVersionName());
   }
 
   public void downgrade(FragmentShower context) {

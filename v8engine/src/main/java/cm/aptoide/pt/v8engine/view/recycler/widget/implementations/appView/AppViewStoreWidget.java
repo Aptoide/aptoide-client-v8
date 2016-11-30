@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.GetApp;
@@ -30,7 +31,6 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import java.util.Locale;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by sithengineer on 10/05/16.
@@ -43,12 +43,10 @@ import rx.subscriptions.CompositeSubscription;
   private TextView storeNumberUsersView;
   private Button followButton;
   private View storeLayout;
-  private CompositeSubscription subscription;
   private StoreRepository storeRepository;
 
   public AppViewStoreWidget(View itemView) {
     super(itemView);
-    subscription = new CompositeSubscription();
     storeRepository = new StoreRepository(
         AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Store.class));
   }
@@ -63,14 +61,6 @@ import rx.subscriptions.CompositeSubscription;
 
   @Override public void bindView(AppViewStoreDisplayable displayable) {
     setupStoreInfo(displayable.getPojo());
-  }
-
-  @Override public void onViewAttached() {
-
-  }
-
-  @Override public void onViewDetached() {
-    subscription.clear();
   }
 
   private void setupStoreInfo(GetApp getApp) {
@@ -101,7 +91,7 @@ import rx.subscriptions.CompositeSubscription;
     storeLayout.setOnClickListener(new Listeners().newOpenStoreListener(itemView, store.getName(),
         store.getAppearance().getTheme()));
 
-    subscription.add(storeRepository.isSubscribed(store.getId())
+    compositeSubscription.add(storeRepository.isSubscribed(store.getId())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(isSubscribed -> {
           if (isSubscribed) {
@@ -136,7 +126,9 @@ import rx.subscriptions.CompositeSubscription;
         StoreUtilsProxy.subscribeStore(storeName, getStoreMeta -> {
           ShowMessage.asSnack(itemView,
               AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
-        }, Throwable::printStackTrace);
+        }, err -> {
+          CrashReports.logException(err);
+        });
       };
     }
   }

@@ -13,7 +13,7 @@ public final class RxEndlessRecyclerView {
     new AssertionError("No instances!");
   }
 
-  public static Observable<Void> loadMore(RecyclerView recyclerView, BaseAdapter adapter) {
+  public static Observable<Integer> loadMore(RecyclerView recyclerView, BaseAdapter adapter) {
     return Observable.create(new EndlessRecyclerViewLoadMoreOnSubscribe(recyclerView, adapter));
   }
 }

@@ -22,6 +22,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppVersionsRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
@@ -29,6 +31,7 @@ import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.util.AppBarStateChangeListener;
@@ -37,6 +40,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Oth
 import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Getter;
 
 /**
  * Created by sithengineer on 05/07/16.
@@ -45,9 +49,9 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
 
   private static final String TAG = OtherVersionsFragment.class.getSimpleName();
 
-  private static final String APP_NAME = "app_name";
-  private static final String APP_IMG_URL = "app_img_url";
-  private static final String APP_PACKAGE = "app_package";
+  @Getter private static final String APP_NAME = "app_name";
+  @Getter private static final String APP_IMG_URL = "app_img_url";
+  @Getter private static final String APP_PACKAGE = "app_package";
   // vars
   private String appName;
   private String appImgUrl;
@@ -84,8 +88,11 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     Logger.d(TAG, "Other versions should refresh? " + create);
 
-    fetchOtherVersions();
+    fetchOtherVersions(new ArrayList<>());
+    setHeader();
+  }
 
+  protected void setHeader(){
     if (header != null) {
       header.setImage(appImgUrl);
       setTitle(appName);
@@ -143,7 +150,7 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
     return super.onOptionsItemSelected(item);
   }
 
-  private void fetchOtherVersions() {
+  protected void fetchOtherVersions(List<String> storeNames) {
 
     final SuccessRequestListener<ListAppVersions> otherVersionsSuccessRequestListener =
         listAppVersions -> {
@@ -156,9 +163,11 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
         };
 
     endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(this.getAdapter(),
-        ListAppVersionsRequest.of(appPackge, AptoideAccountManager.getAccessToken(),
-            AptoideAccountManager.getUserEmail()),
-            otherVersionsSuccessRequestListener, errorRequestListener);
+        ListAppVersionsRequest.of(appPackge, storeNames, AptoideAccountManager.getAccessToken(),
+            AptoideAccountManager.getUserEmail(),
+            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+                DataProvider.getContext()).getAptoideClientUUID()),
+        otherVersionsSuccessRequestListener, errorRequestListener);
 
     recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(false);

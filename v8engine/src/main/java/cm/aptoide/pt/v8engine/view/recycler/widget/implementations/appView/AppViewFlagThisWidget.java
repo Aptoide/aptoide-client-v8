@@ -83,11 +83,7 @@ import java.util.Map;
     }
   }
 
-  @Override public void onViewAttached() {
-
-  }
-
-  @Override public void onViewDetached() {
+  @Override public void unbindView() {
 
   }
 
@@ -128,8 +124,7 @@ import java.util.Map;
       final GetAppMeta.GetAppMetaFile.Flags.Vote.Type type = viewIdTypeMap.get(v.getId());
 
       AddApkFlagRequest.of(storeName, md5, type.name().toLowerCase(),
-          AptoideAccountManager.getAccessToken())
-          .execute(response -> {
+          AptoideAccountManager.getAccessToken()).execute(response -> {
         if (response.isOk() && !response.hasErrors()) {
           boolean voteSubmitted = false;
           switch (type) {

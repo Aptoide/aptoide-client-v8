@@ -11,9 +11,13 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     style="@style/AppViewWidget"
+
     >
 
-  <include layout="@layout/separator_horizontal"/>
+  <include
+      layout="@layout/separator_horizontal"
+      android:id="@+id/top_separator_horizontal"
+      />
 
   <LinearLayout
       android:id="@+id/store_layout"
@@ -29,6 +33,7 @@
       >
 
     <LinearLayout
+        android:id="@+id/app_store_layout"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="2"
@@ -113,6 +118,9 @@
 
   </LinearLayout>
 
-  <include layout="@layout/separator_horizontal"/>
+  <include
+      layout="@layout/separator_horizontal"
+      android:id="@+id/bottom_separator_horizontal"
+      />
 
 </LinearLayout>

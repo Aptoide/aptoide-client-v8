@@ -23,18 +23,17 @@ public abstract class ActivityView extends RxAppCompatActivity implements View {
 
   private Presenter presenter;
 
-  @NonNull @Override public final <T> LifecycleTransformer<T> bindUntilEvent(@NonNull Event event) {
-    return RxLifecycle.bindUntilEvent(getLifecycle(), event);
+  @NonNull @Override public final <T> LifecycleTransformer<T> bindUntilEvent(@NonNull
+      LifecycleEvent lifecycleEvent) {
+    return RxLifecycle.bindUntilEvent(getLifecycle(), lifecycleEvent);
   }
 
   @Override public Context getContext() {
     return this;
   }
 
-  @Override public Observable<Event> getLifecycle() {
-    return lifecycle().map(event -> {
-      return convertToEvent(event);
-    });
+  @Override public Observable<LifecycleEvent> getLifecycle() {
+    return lifecycle().map(event -> convertToEvent(event));
   }
 
   @Override public void attachPresenter(Presenter presenter, Bundle savedInstanceState) {
@@ -50,20 +49,20 @@ public abstract class ActivityView extends RxAppCompatActivity implements View {
     super.onSaveInstanceState(outState);
   }
 
-  @NonNull private Event convertToEvent(ActivityEvent event) {
+  @NonNull private LifecycleEvent convertToEvent(ActivityEvent event) {
     switch (event) {
       case CREATE:
-        return Event.CREATE;
+        return LifecycleEvent.CREATE;
       case START:
-        return Event.START;
+        return LifecycleEvent.START;
       case RESUME:
-        return Event.RESUME;
+        return LifecycleEvent.RESUME;
       case PAUSE:
-        return Event.PAUSE;
+        return LifecycleEvent.PAUSE;
       case STOP:
-        return Event.STOP;
+        return LifecycleEvent.STOP;
       case DESTROY:
-        return Event.DESTROY;
+        return LifecycleEvent.DESTROY;
       default:
         throw new IllegalStateException("Unrecognized event: " + event.name());
     }

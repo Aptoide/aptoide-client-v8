@@ -7,15 +7,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="cm.aptoide.pt.v8engine">
 
-  <permission
-      android:name="cm.aptoide.pt.permission.BILLING"
-      android:label="Make internal payments"
-      android:protectionLevel="normal"/>
 
   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
   <uses-permission android:name="android.permission.INSTALL_PACKAGES"/>
 
-  <uses-sdk
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+
+    <uses-sdk
       android:minSdkVersion="15"
       tools:overrideLibrary="com.paypal.android.sdk.payments"
       />
@@ -132,6 +131,7 @@
     <receiver android:name=".receivers.LoginBroadcastReceiver">
       <intent-filter>
         <action android:name="${applicationId}.accountmanager.broadcast.login"/>
+        <action android:name="${applicationId}.accountmanager.broadcast.logout"/>
       </intent-filter>
     </receiver>
 
@@ -155,16 +155,6 @@
 
 
     <receiver android:name=".link.customtabs.CustomTabNativeReceiver"/>
-
-    <service
-        android:name="cm.aptoide.pt.iab.InAppBillingService"
-        android:exported="true"
-        android:permission="cm.aptoide.pt.permission.BILLING">
-
-      <intent-filter>
-        <action android:name="cm.aptoide.pt.iab.action.BIND"/>
-      </intent-filter>
-    </service>
 
     <receiver
         android:name=".receivers.NetworkStateReceiver"

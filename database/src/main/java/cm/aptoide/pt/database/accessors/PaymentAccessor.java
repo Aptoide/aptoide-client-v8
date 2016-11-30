@@ -26,6 +26,6 @@ public class PaymentAccessor extends SimpleAccessor<PaymentConfirmation> {
   }
 
   public void save(PaymentConfirmation paymentConfirmation) {
-    database.save(paymentConfirmation);
+    database.insert(paymentConfirmation);
   }
 }

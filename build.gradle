@@ -32,6 +32,7 @@ allprojects {
     jcenter()
     maven { url 'https://maven.fabric.io/public' }
     maven { url 'http://maven.localytics.com/public' }
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
   }
 }
 
@@ -53,18 +54,18 @@ ext {
   //
   // gradle build script vars
   //
-  TARGET_SDK_VERSION = 23
-  COMPILE_SDK_VERSION = 23
+  TARGET_SDK_VERSION = 25
+  COMPILE_SDK_VERSION = 25
   USE_JACK = false // http://tools.android.com/tech-docs/jackandjill
-  BUILD_TOOLS_VERSION = '23.0.3'
+  BUILD_TOOLS_VERSION = '25.0.0'
 
   //
   // gradle build script dependencies versions
   //
 
   // Google Android Support
-  SUPPORT_LIB_VERSION = '24.2.0'
-  SUPPORT_ANNOTATIONS_LIB_VERSION = '24.2.0'
+  SUPPORT_LIB_VERSION = '25.0.1'
+  SUPPORT_ANNOTATIONS_LIB_VERSION = '25.0.1'
 
   // Google Play Services
   PLAY_SERVICES_VERSION = '9.8.0'
@@ -84,14 +85,14 @@ ext {
   RETROFIT_VERSION = '2.1.0'
 
   // Test
-  MOCK_WEB_SERVER_VERSION = '3.3.1'
+  MOCK_WEB_SERVER_VERSION = '3.4.1'
   JUNIT_VERSION = '4.12'
   MOCKITO_CORE_VERSION = '1.10.19'
   ROBOELECTRIC_VERSION = '3.1.1'
   EXPRESSO_VERSION = '2.2.2'
   RUNNER_VERSION = '0.5'
   RULES_VERSION = '0.5'
-  MOCKWEBSERVER_VERSION = '3.4.1'
+  POWER_MOCK_CORE_VERSION = '1.6.2'
 
   // Leak Canary
   LEAK_CANARY_VERSION = '1.5'
@@ -107,20 +108,14 @@ ext {
   // Material tab strip
   MATERIAL_TAB_STRIP_VERSION = '1.1.0'
 
-  // https://github.com/JakeWharton/DiskLruCache
-  JW_LRU_CACHE_VERSION = '2.0.2'
-
   // Glide
   GLIDE_VERSION = '3.7.0'
 
   // Facebook Android SDK
-  FACEBOOK_ANDROID_SDK_VERSION = '4.16.1'
+  FACEBOOK_ANDROID_SDK_VERSION = '4.17.0'
 
   // File Downloader lib
   FILE_DOWNLOADER_VERSION = '1.2.1'
-
-  // rounded image lib
-  //ROUNDED_IMG_LIB = '2.2.1'
 
   PAYPAL_SDK = '2.15.0'
 

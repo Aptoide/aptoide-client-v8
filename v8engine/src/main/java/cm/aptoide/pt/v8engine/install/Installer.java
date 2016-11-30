@@ -16,5 +16,5 @@ public interface Installer {
 
   Observable<Void> downgrade(Context context, String md5);
 
-  Observable<Void> uninstall(Context context, String packageName);
+  Observable<Void> uninstall(Context context, String packageName, String versionName);
 }

@@ -50,15 +50,15 @@ public class PaymentPresenter implements Presenter {
   @Override public void present() {
 
     view.getLifecycle()
-        .filter(event -> View.Event.RESUME.equals(event))
+        .filter(event -> View.LifecycleEvent.RESUME.equals(event))
         .flatMap(resumed -> Observable.merge(login(), cancellationSelection()))
-        .compose(view.bindUntilEvent(View.Event.DESTROY))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
 
     view.getLifecycle()
-        .filter(event -> View.Event.CREATE.equals(event))
+        .filter(event -> View.LifecycleEvent.CREATE.equals(event))
         .flatMap(created -> pay())
-        .compose(view.bindUntilEvent(View.Event.DESTROY))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
   }
 
@@ -199,6 +199,6 @@ public class PaymentPresenter implements Presenter {
   @NonNull private Observable<Void> cancellationSelection() {
     return view.cancellationSelection()
         .doOnNext(cancellation -> view.dismiss())
-        .compose(view.bindUntilEvent(View.Event.PAUSE));
+        .compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE));
   }
 }

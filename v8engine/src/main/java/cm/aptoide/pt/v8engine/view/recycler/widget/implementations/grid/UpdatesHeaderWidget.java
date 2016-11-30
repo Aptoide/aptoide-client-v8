@@ -9,15 +9,11 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.downloadmanager.DownloadServiceHelper;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.v8engine.Progress;
@@ -29,7 +25,6 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Upd
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import java.util.ArrayList;
 import rx.Observable;
-import rx.Subscription;
 import rx.schedulers.Schedulers;
 
 /**
@@ -40,7 +35,6 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
   private static final String TAG = UpdatesHeaderWidget.class.getSimpleName();
   private TextView title;
   private Button more;
-  private Subscription subscription;
 
   public UpdatesHeaderWidget(View itemView) {
     super(itemView);
@@ -84,7 +78,7 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
     more.setOnClickListener((view) -> {
       ((PermissionRequest) getContext()).requestAccessToExternalFileSystem(() -> {
         UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
-        subscription =
+        compositeSubscription.add(
             updateAccessor.getAll(false)
                 .first()
                 .observeOn(Schedulers.io())
@@ -101,10 +95,9 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
                     .install(UpdatesHeaderWidget.this.getContext(), download))
                 .toList()
                 .flatMap(observables -> Observable.merge(observables))
-                .filter(downloading -> downloading.getState()== Progress.DONE)
-                .subscribe(
-                    aVoid -> Logger.i(TAG, "Update task completed"),
-                    throwable -> throwable.printStackTrace());
+                .filter(downloading -> downloading.getState() == Progress.DONE)
+                .subscribe(aVoid -> Logger.i(TAG, "Update task completed"),
+                    throwable -> throwable.printStackTrace()));
       }, () -> {
       });
 
@@ -114,15 +107,5 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
       getContext().sendBroadcast(intent);
       Analytics.Updates.updateAll();
     });
-  }
-
-  @Override public void onViewAttached() {
-
-  }
-
-  @Override public void onViewDetached() {
-    if (subscription != null) {
-      subscription.unsubscribe();
-    }
   }
 }

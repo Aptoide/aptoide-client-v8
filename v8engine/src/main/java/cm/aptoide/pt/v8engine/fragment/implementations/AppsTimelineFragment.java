@@ -35,8 +35,10 @@ import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.repository.PackageRepository;
 import cm.aptoide.pt.v8engine.repository.TimelineCardFilter;
+import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
 import cm.aptoide.pt.v8engine.repository.TimelineRepository;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
+import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.ProgressBarDisplayable;
@@ -61,7 +63,7 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created by marcelobenites on 6/17/16.
  */
-public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
+public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwipeFragment<T> {
 
   public static final int SEARCH_LIMIT = 20;
   private static final String ACTION_KEY = "ACTION";
@@ -78,9 +80,9 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
   private PackageRepository packageRepository;
   private List<String> packages;
   private Installer installer;
-  private AccessorFactory accessorFactory;
   private InstallManager installManager;
   private PermissionManager permissionManager;
+  private TimelineMetricsManager timelineMetricsManager;
 
   public static AppsTimelineFragment newInstance(String action) {
     AppsTimelineFragment fragment = new AppsTimelineFragment();
@@ -103,10 +105,10 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
     timelineRepository = new TimelineRepository(getArguments().getString(ACTION_KEY),
         new TimelineCardFilter(new TimelineCardFilter.TimelineCardDuplicateFilter(new HashSet<>()),
             AccessorFactory.getAccessorFor(Installed.class)));
-    accessorFactory = new AccessorFactory();
     installManager = new InstallManager(AptoideDownloadManager.getInstance(), installer,
         AccessorFactory.getAccessorFor(Download.class),
         AccessorFactory.getAccessorFor(Installed.class));
+    timelineMetricsManager = new TimelineMetricsManager();
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
@@ -201,7 +203,7 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
         .flatMap(datalist -> Observable.just(datalist)
             .flatMapIterable(dataList -> dataList.getList())
             .map(card -> cardToDisplayable(card, dateCalculator, spannableFactory, downloadFactory,
-                linksHandlerFactory, accessorFactory))
+                linksHandlerFactory))
             .toList()
             .map(list -> createDisplayableDataList(datalist, list)));
   }
@@ -298,25 +300,27 @@ public class AppsTimelineFragment extends GridRecyclerSwipeFragment {
 
   @NonNull private Displayable cardToDisplayable(TimelineCard card, DateCalculator dateCalculator,
       SpannableFactory spannableFactory, DownloadFactory downloadFactory,
-      LinksHandlerFactory linksHandlerFactory, AccessorFactory accessorFactory) {
+      LinksHandlerFactory linksHandlerFactory) {
     if (card instanceof Article) {
       return ArticleDisplayable.from((Article) card, dateCalculator, spannableFactory,
-          linksHandlerFactory, accessorFactory);
+          linksHandlerFactory, timelineMetricsManager);
     } else if (card instanceof Video) {
       return VideoDisplayable.from((Video) card, dateCalculator, spannableFactory,
-          linksHandlerFactory, accessorFactory);
+          linksHandlerFactory, timelineMetricsManager);
     } else if (card instanceof Feature) {
       return FeatureDisplayable.from((Feature) card, dateCalculator, spannableFactory);
     } else if (card instanceof StoreLatestApps) {
-      return StoreLatestAppsDisplayable.from((StoreLatestApps) card, dateCalculator);
+      return StoreLatestAppsDisplayable.from((StoreLatestApps) card, dateCalculator,
+          timelineMetricsManager);
     } else if (card instanceof AppUpdate) {
       return AppUpdateDisplayable.from((AppUpdate) card, spannableFactory, downloadFactory,
-          dateCalculator, installManager, permissionManager);
+          dateCalculator, installManager, permissionManager, timelineMetricsManager);
     } else if (card instanceof Recommendation) {
-      return RecommendationDisplayable.from((Recommendation) card, dateCalculator,
-          spannableFactory);
+      return RecommendationDisplayable.from((Recommendation) card, dateCalculator, spannableFactory,
+          timelineMetricsManager);
     } else if (card instanceof Similar) {
-      return SimilarDisplayable.from((Similar) card, dateCalculator, spannableFactory);
+      return SimilarDisplayable.from((Similar) card, dateCalculator, spannableFactory,
+          timelineMetricsManager);
     }
     throw new IllegalArgumentException(
         "Only articles, features, store latest apps, app updates, videos, recommendations and similar cards supported.");

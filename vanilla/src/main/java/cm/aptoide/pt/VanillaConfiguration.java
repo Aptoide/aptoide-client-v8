@@ -8,6 +8,7 @@ package cm.aptoide.pt;
 import android.os.Environment;
 import cm.aptoide.pt.preferences.AptoidePreferencesConfiguration;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 
 /**
  * Created by neuro on 10-05-2016.
@@ -23,6 +24,7 @@ public class VanillaConfiguration implements AptoidePreferencesConfiguration {
   private static final String AUTO_UPDATE_URL = "http://imgs.aptoide.com/latest_version_v8.xml";
   private static final String MARKETNAME = "Aptoide";
   private static final String DEFAULT_STORE = "apps";
+  private static final String FEEDBACK_EMAIL = "support@aptoide.com";
 
   @Override public String getAppId() {
     return APP_ID;
@@ -99,5 +101,30 @@ public class VanillaConfiguration implements AptoidePreferencesConfiguration {
 
   @Override public String getDefaultTheme() {
     return "default";
+  }
+
+  @Override public boolean isLoginAvailable(SocialLogin loginType) {
+    switch (loginType) {
+      case FACEBOOK:
+      case GOOGLE:
+        return true;
+    }
+    return false;
+  }
+
+  @Override public String getPartnerDimension() {
+    return "vanilla";
+  }
+
+  @Override public String getVerticalDimension() {
+    return "smartphone";
+  }
+
+  @Override public int getDefaultThemeRes() {
+    return StoreThemeEnum.get(getDefaultTheme()).getThemeResource();
+  }
+
+  @Override public String getFeedbackEmail() {
+    return FEEDBACK_EMAIL;
   }
 }

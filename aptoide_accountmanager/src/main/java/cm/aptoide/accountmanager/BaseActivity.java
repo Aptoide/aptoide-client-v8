@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import cm.aptoide.pt.preferences.Application;
 
 /**
  * Created by trinkes on 4/18/16.
@@ -15,6 +16,7 @@ public abstract class BaseActivity extends AppCompatActivity {
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setTitle(getActivityTitle());
+    getTheme().applyStyle(Application.getConfiguration().getDefaultThemeRes(), true);
   }
 
   protected abstract String getActivityTitle();

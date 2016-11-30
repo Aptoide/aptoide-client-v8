@@ -26,7 +26,7 @@ import rx.Observable;
 
   // Response result codes
   public static final int RESULT_OK = 0;
-  public static final int RESULT_USER_CANCELED = 1;
+  public static final int RESULT_USER_CANCELLED = 1;
   public static final int RESULT_SERVICE_UNAVAILABLE = 2;
   public static final int RESULT_BILLING_UNAVAILABLE = 3;
   public static final int RESULT_ITEM_UNAVAILABLE = 4;

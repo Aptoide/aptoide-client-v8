@@ -64,11 +64,7 @@ public class GridAppListWidget extends Widget<GridAppListDisplayable> {
     ImageLoader.load(app.getIcon(), icon);
   }
 
-  @Override public void onViewAttached() {
-
-  }
-
-  @Override public void onViewDetached() {
+  @Override public void unbindView() {
 
   }
 }

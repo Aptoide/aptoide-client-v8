@@ -41,7 +41,8 @@ import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import cm.aptoide.pt.actions.GenerateClientId;
+import cm.aptoide.pt.actions.AptoideClientUUID;
+import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.permissions.ApkPermission;
 import java.io.BufferedReader;
@@ -64,6 +65,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -99,6 +101,14 @@ public class AptoideUtils {
 
   public static class Core {
     private static final String TAG = "Core";
+    public static String[] supportedOpenGLExtensions = {
+        "GL_OES_compressed_ETC1_RGB8_texture", "GL_OES_compressed_paletted_texture",
+        "GL_AMD_compressed_3DC_texture", "GL_AMD_compressed_ATC_texture",
+        "GL_EXT_texture_compression_latc", "GL_EXT_texture_compression_dxt1",
+        "GL_EXT_texture_compression_s3tc", "GL_ATI_texture_compression_atitc",
+        "GL_IMG_texture_compression_pvrtc"
+    };
+    public static String openGLExtensions = "";
 
     public static int getVerCode() {
       PackageManager manager = context.getPackageManager();
@@ -109,6 +119,18 @@ public class AptoideUtils {
         Logger.e(TAG, e);
         return -1;
       }
+    }
+
+    public static String getDefaultVername() {
+      String verString = "";
+      try {
+        verString =
+            context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+      } catch (PackageManager.NameNotFoundException e) {
+        e.printStackTrace();
+      }
+
+      return "aptoide-" + verString;
     }
 
     public static String filters(boolean hwSpecsFilter) {
@@ -124,14 +146,6 @@ public class AptoideUtils {
 
       String cpuAbi = SystemU.getAbis();
 
-      int myversionCode = 0;
-      PackageManager manager = context.getPackageManager();
-      try {
-        myversionCode = manager.getPackageInfo(context.getPackageName(), 0).versionCode;
-      } catch (PackageManager.NameNotFoundException ignore) {
-        Logger.e(TAG, ignore);
-      }
-
       String filters =
           (Build.DEVICE.equals("alien_jolla_bionic") ? "apkdwn=myapp&" : "")
               + "maxSdk="
@@ -144,16 +158,29 @@ public class AptoideUtils {
               + "&myCPU="
               + cpuAbi
               + "&myDensity="
-              + density
-              +
-              "&myApt="
-              + myversionCode;
+              + density;
+      filters = addOpenGLExtensions(filters);
 
       return Base64.encodeToString(filters.getBytes(), 0)
           .replace("=", "")
           .replace("/", "*")
           .replace("+", "_")
           .replace("\n", "");
+    }
+
+    private static String addOpenGLExtensions(String filters) {
+      boolean extensionAdded = false;
+      for (String extension : openGLExtensions.split(" ")) {
+        if (Arrays.asList(supportedOpenGLExtensions).contains(extension)) {
+          if (!extensionAdded) {
+            filters += "&myGLTex=" + extension;
+          } else {
+            filters += "," + extension;
+          }
+          extensionAdded = true;
+        }
+      }
+      return filters;
     }
   }
 
@@ -478,6 +505,28 @@ public class AptoideUtils {
         return null;
       }
       return imageFile;
+    }
+
+    /**
+     * get screen size in "pixels", i.e. touchevent/view units.
+     * on my droid 4, this is 360x640 or 540x960
+     * depending on whether the app is in screen compatibility mode
+     * (i.e. targetSdkVersion<=10 in the manifest) or not.
+     */
+    public static String getScreenSizePixels() {
+      Resources resources = context.getResources();
+      Configuration config = resources.getConfiguration();
+      DisplayMetrics dm = resources.getDisplayMetrics();
+      // Note, screenHeightDp isn't reliable
+      // (it seems to be too small by the height of the status bar),
+      // but we assume screenWidthDp is reliable.
+      // Note also, dm.widthPixels,dm.heightPixels aren't reliably pixels
+      // (they get confused when in screen compatibility mode, it seems),
+      // but we assume their ratio is correct.
+      double screenWidthInPixels = (double) config.screenWidthDp * dm.density;
+      double screenHeightInPixels = screenWidthInPixels * dm.heightPixels / dm.widthPixels;
+      return (int) (screenWidthInPixels + .5) + "x" +
+          (int) (screenHeightInPixels + .5);
     }
 
     public enum Size {
@@ -898,10 +947,12 @@ public class AptoideUtils {
     public static boolean deleteDir(File dir) {
       if (dir != null && dir.isDirectory()) {
         String[] children = dir.list();
-        for (String child : children) {
-          boolean success = deleteDir(new File(dir, child));
-          if (!success) {
-            return false;
+        if (children != null) {
+          for (String child : children) {
+            boolean success = deleteDir(new File(dir, child));
+            if (!success) {
+              return false;
+            }
           }
         }
       }
@@ -1191,6 +1242,8 @@ public class AptoideUtils {
     static final private int baseLineXNotification = 320;
     static final private int baseLineYNotification = 180;
     private static final String AVATAR_STRING = "_avatar";
+    private static final Pattern urlWithDimensionPattern =
+        Pattern.compile("_{1}[1-9]{3}(x|X){1}[1-9]{3}.{1}.{3,4}\\b");
     private static int baseLineScreenshotLand = 256;
     private static int baseLineScreenshotPort = 96;
 
@@ -1458,9 +1511,6 @@ public class AptoideUtils {
       return imageUrl;
     }
 
-    private static final Pattern urlWithDimensionPattern =
-        Pattern.compile("_{1}[1-9]{3}(x|X){1}[1-9]{3}.{1}.{3,4}\\b");
-
     /**
      * Cleans the image URL out of "_widthXheight"
      */
@@ -1578,7 +1628,8 @@ public class AptoideUtils {
       return false;
     }
 
-    public static String getDefaultUserAgent(GenerateClientId generateClientId, String email) {
+    public static String getDefaultUserAgent(AptoideClientUUID aptoideClientUUID, UserData userData,
+        String vername, String oemid) {
 
       //SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(context);
       //String currentUserId = getUserId();
@@ -1587,26 +1638,22 @@ public class AptoideUtils {
       DisplayMetrics displayMetrics = new DisplayMetrics();
       String myscr = displayMetrics.widthPixels + "x" + displayMetrics.heightPixels;
 
-      String verString = "";
-      try {
-        verString =
-            context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
-      } catch (PackageManager.NameNotFoundException e) {
-        e.printStackTrace();
-      }
+      StringBuilder sb =
+          new StringBuilder(vername + ";" + SystemU.TERMINAL_INFO + ";" + myscr + ";id:");
 
-      StringBuilder sb = new StringBuilder(
-          "aptoide-" + verString + ";" + SystemU.TERMINAL_INFO + ";" + myscr + ";id:");
-
-      if (generateClientId != null) {
-        sb.append(generateClientId.getClientId());
+      if (aptoideClientUUID != null) {
+        sb.append(aptoideClientUUID.getAptoideClientUUID());
       }
       sb.append(";");
 
-      if (email != null) {
-        sb.append(email);
+      String userEmail = userData.getUserEmail();
+      if (!TextUtils.isEmpty(userEmail)) {
+        sb.append(userEmail);
       }
       sb.append(";");
+      if (!TextUtils.isEmpty(oemid)) {
+        sb.append(oemid);
+      }
       return sb.toString();
     }
   }

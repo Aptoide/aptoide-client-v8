@@ -39,7 +39,8 @@
         android:title="@string/setting_appfiltertitle"/>
   </PreferenceCategory>
 
-  <PreferenceCategory android:title="@string/setting_category_autoupdate">
+  <PreferenceCategory android:title="@string/setting_category_autoupdate"
+  android:key="checkautoupdatecategory">
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="checkautoupdate"
@@ -96,10 +97,8 @@
   </PreferenceCategory>
   <PreferenceCategory android:title="@string/setting_clear_memory">
     <Preference
-        android:key="clearapk"
-        android:title="@string/clearcontent_title"/>
-    <Preference
         android:key="clearcache"
+        android:summary="@string/clear_cache_summary"
         android:title="@string/clearcache_title"/>
 
     <EditTextPreference

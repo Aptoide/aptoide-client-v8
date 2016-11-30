@@ -25,7 +25,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.util.UserInfo;
+import cm.aptoide.accountmanager.util.UserCompleteData;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
@@ -204,8 +204,9 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
     //}
 
     InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
-    Subscription unManagedSubscription = installedAccessor.get(packageName)
+    installedAccessor.get(packageName)
         .observeOn(AndroidSchedulers.mainThread())
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(installedFacebook -> {
           if (installedFacebook == null) {
             ((FragmentShower) getActivity()).pushFragmentV4(
@@ -241,12 +242,12 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
       userEmail.setVisibility(View.VISIBLE);
       userUsername.setVisibility(View.VISIBLE);
 
-      UserInfo userInfo = AptoideAccountManager.getUserInfo();
-      userEmail.setText(userInfo.getUserEmail());
-      userUsername.setText(userInfo.getUserName());
+      UserCompleteData userCompleteData = AptoideAccountManager.getUserData();
+      userEmail.setText(userCompleteData.getUserEmail());
+      userUsername.setText(userCompleteData.getUserName());
 
-      ImageLoader.loadWithCircleTransformAndPlaceHolder(userInfo.getUserAvatar(), userAvatarImage,
-          R.drawable.user_account_white);
+      ImageLoader.loadWithCircleTransformAndPlaceHolder(userCompleteData.getUserAvatar(),
+          userAvatarImage, R.drawable.user_account_white);
 
       //String userAvatarUri = userInfo.getUserAvatar();
       //if (URLUtil.isValidUrl(userAvatarUri)) {
@@ -267,6 +268,8 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
 
     userEmail.setVisibility(View.GONE);
     userUsername.setVisibility(View.GONE);
+
+    ImageLoader.load(R.drawable.user_account_white, userAvatarImage);
   }
 
   //	@Override

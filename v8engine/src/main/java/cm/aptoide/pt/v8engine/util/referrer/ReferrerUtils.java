@@ -25,13 +25,16 @@ import cm.aptoide.pt.database.accessors.StoreMinimalAdAccessor;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.util.referrer.SimpleTimedFuture;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.RegisterAdRefererRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.v8engine.V8Engine;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -88,7 +91,9 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
           RelativeLayout.LayoutParams.MATCH_PARENT));
 
       AptoideUtils.ThreadU.runOnIoThread(() -> {
-        internalClickUrl[0] = DataproviderUtils.AdNetworksUtils.parseMacros(clickUrl);
+        internalClickUrl[0] = DataproviderUtils.AdNetworksUtils.parseMacros(clickUrl,
+            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+                DataProvider.getContext()));
         clickUrlFuture.set(internalClickUrl[0]);
         Logger.d("ExtractReferrer", "Parsed clickUrl: " + internalClickUrl[0]);
       });
@@ -174,14 +179,19 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
               try {
 
                 if (retries > 0) {
-                  GetAdsRequest.ofSecondTry(packageName)
-                      .observe().filter((getAdsResponse1) -> {
-                    Boolean hasAds = hasAds(getAdsResponse1);
-                    if (!hasAds) {
-                      clearExcludedNetworks(packageName);
-                    }
-                    return hasAds;
-                  })
+                  GetAdsRequest.ofSecondTry(packageName,
+                      new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+                          DataProvider.getContext()).getAptoideClientUUID(),
+                      DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(
+                          V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId())
+                      .observe()
+                      .filter((getAdsResponse1) -> {
+                        Boolean hasAds = hasAds(getAdsResponse1);
+                        if (!hasAds) {
+                          clearExcludedNetworks(packageName);
+                        }
+                        return hasAds;
+                      })
                       .observeOn(AndroidSchedulers.mainThread())
                       .subscribe(getAdsResponse -> extractReferrer(
                           MinimalAd.from(getAdsResponse.getAds().get(0)), retries - 1,

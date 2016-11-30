@@ -58,9 +58,11 @@ import rx.Observable;
    * @return the built request
    */
   public static CheckUserCredentialsRequest of(String accessToken) {
-    CheckUserCredentialsRequest request = new CheckUserCredentialsRequest(Application.getContext(),
-        OkHttpClientFactory.getSingletonClient(SecurePreferences.getUserAgent()),
-        WebService.getDefaultConverter());
+    CheckUserCredentialsRequest request = new CheckUserCredentialsRequest(
+        Application.getContext(),
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent()),
+        WebService.getDefaultConverter()
+    );
     request.setToken(accessToken);
     return request;
   }

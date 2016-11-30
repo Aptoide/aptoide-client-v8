@@ -21,7 +21,7 @@ import okio.Buffer;
  * <li>URL</li>
  * </ol>
  */
-public class Sha1KeyAlgorithm implements KeyAlgorithm {
+public class Sha1KeyAlgorithm implements KeyAlgorithm<Request, String> {
 
   private static final String TAG = Sha1KeyAlgorithm.class.getName();
 

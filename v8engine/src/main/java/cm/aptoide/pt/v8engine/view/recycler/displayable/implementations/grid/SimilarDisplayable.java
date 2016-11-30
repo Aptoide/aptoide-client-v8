@@ -10,10 +10,13 @@ import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
+import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.timeline.Similar;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import java.util.ArrayList;
@@ -36,19 +39,23 @@ import lombok.Getter;
   @Getter private String abUrl;
 
   private List<String> similarAppsNames;
+  private List<String> similarAppsPackageNames;
   private Date date;
   private Date timestamp;
   private DateCalculator dateCalculator;
   private SpannableFactory spannableFactory;
+  private TimelineMetricsManager timelineMetricsManager;
 
   public SimilarDisplayable() {
   }
 
   public static Displayable from(Similar similar, DateCalculator dateCalculator,
-      SpannableFactory spannableFactory) {
+      SpannableFactory spannableFactory, TimelineMetricsManager timelineMetricsManager) {
     final List<String> similarAppsNames = new ArrayList<>();
+    final List<String> similarAppsPackageNames = new ArrayList<>();
     for (App similarApp : similar.getSimilarApps()) {
       similarAppsNames.add(similarApp.getName());
+      similarAppsPackageNames.add(similarApp.getPackageName());
     }
 
     String abTestingURL = null;
@@ -59,21 +66,22 @@ import lombok.Getter;
       abTestingURL = similar.getAb().getConversion().getUrl();
     }
 
-    return new SimilarDisplayable(R.mipmap.ic_launcher,
+    return new SimilarDisplayable(Application.getConfiguration().getIcon(),
         R.string.displayable_social_timeline_recommendation_atptoide_team_recommends,
         similar.getRecommendedApp().getId(), similar.getRecommendedApp().getPackageName(),
         similar.getRecommendedApp().getName(), similar.getRecommendedApp().getIcon(), abTestingURL,
-        similarAppsNames, similar.getRecommendedApp().getUpdated(), similar.getTimestamp(),
-        dateCalculator, spannableFactory);
+        similarAppsNames, similarAppsPackageNames, similar.getRecommendedApp().getUpdated(),
+        similar.getTimestamp(), dateCalculator, spannableFactory, timelineMetricsManager);
   }
 
-  public String getTitle(Context context) {
-    return context.getString(titleResource);
+  public String getTitle() {
+    return AptoideUtils.StringU.getFormattedString(titleResource,
+        Application.getConfiguration().getMarketName());
   }
 
   public Spannable getStyledTitle(Context context) {
-    String aptoide = "Aptoide";
-    return spannableFactory.createColorSpan(context.getString(titleResource),
+    String aptoide = Application.getConfiguration().getMarketName();
+    return spannableFactory.createColorSpan(getTitle(),
         ContextCompat.getColor(context, R.color.appstimeline_recommends_title), aptoide);
   }
 
@@ -130,5 +138,16 @@ import lombok.Getter;
 
   @Override protected Configs getConfig() {
     return new Configs(1, true);
+  }
+
+  public String getSimilarToAppPackageName() {
+    if (similarAppsPackageNames.size() != 0) {
+      return similarAppsPackageNames.get(0);
+    }
+    return "";
+  }
+
+  public void sendClickEvent(SendEventRequest.Body.Data data, String eventName) {
+    timelineMetricsManager.sendEvent(data, eventName);
   }
 }

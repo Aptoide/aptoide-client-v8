@@ -30,11 +30,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
     // TODO
   }
 
-  @Override public void onViewAttached() {
-
-  }
-
-  @Override public void onViewDetached() {
+  @Override public void unbindView() {
 
   }
 }

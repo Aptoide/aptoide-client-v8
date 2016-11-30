@@ -19,6 +19,7 @@ import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
@@ -97,8 +98,7 @@ public class RollbackFragment extends GridRecyclerFragment {
     emptyData = (TextView) view.findViewById(R.id.empty_data);
     setHasOptionsMenu(true);
 
-    installManager =
-        new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
+    installManager = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
   }
 
   @UiThread private void fetchRollbacks() {
@@ -110,7 +110,8 @@ public class RollbackFragment extends GridRecyclerFragment {
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(rollbacks -> {
           if (rollbacks == null || rollbacks.isEmpty()) {
-            emptyData.setText(R.string.no_rollbacks_msg);
+            emptyData.setText(AptoideUtils.StringU.getFormattedString(R.string.no_rollbacks_msg,
+                Application.getConfiguration().getMarketName()));
             emptyData.setVisibility(View.VISIBLE);
           } else {
             emptyData.setVisibility(View.GONE);

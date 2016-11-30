@@ -13,7 +13,10 @@ import cm.aptoide.pt.model.v7.BaseV7EndlessResponse;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.ProgressBarDisplayable;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListener {
 
@@ -23,7 +26,6 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
   private final V7<? extends BaseV7EndlessResponse, ? extends Endless> v7request;
   private final Action1 successRequestListener;
 
-  private boolean loading;
   private int visibleThreshold;
   // The minimum amount of items to have below your current scroll position before load
   private boolean bypassCache;
@@ -31,6 +33,7 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
   private int total;
   private int offset;
   private boolean stableData = false;
+  private Subscription subscription;
 
   public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(BaseAdapter baseAdapter,
       V7<T, ? extends Endless> v7request, Action1<T> successRequestListener,
@@ -42,6 +45,11 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
       V7<T, ? extends Endless> v7request, Action1<T> successRequestListener,
       ErrorRequestListener errorRequestListener, boolean bypassCache) {
     this(baseAdapter, v7request, successRequestListener, errorRequestListener, 6, bypassCache);
+  }
+
+  public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(
+      BaseAdapter baseAdapter) {
+    this(baseAdapter, null, null, null, 0, false);
   }
 
   public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(BaseAdapter baseAdapter,
@@ -72,38 +80,39 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
     boolean isOverVisibleThreshold =
         ((lastVisibleItemPosition + visibleThreshold) == (totalItemCount - 1));
 
-    return !loading && (hasMoreElements || offset == 0) && (isOverLastPosition
+    boolean isLoading = subscription != null && !subscription.isUnsubscribed();
+    return !isLoading && (hasMoreElements || offset == 0) && (isOverLastPosition
         || isOverVisibleThreshold);
   }
 
-  // Protected against in the constructor, hopefully..
-  @SuppressWarnings("unchecked") public void onLoadMore(boolean bypassCache) {
-    loading = true;
+  public void onLoadMore(boolean bypassCache) {
     adapter.addDisplayable(new ProgressBarDisplayable());
+    subscription = v7request.observe(bypassCache)
+        .observeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(response -> {
+          if (adapter.getItemCount() > 0) {
+            adapter.popDisplayable();
+          }
 
-    v7request.execute(response -> {
-      if (adapter.getItemCount() > 0) {
-        adapter.popDisplayable();
-      }
+          if (response.hasData()) {
 
-      if (response.hasData()) {
+            stableData = response.hasStableTotal();
+            if (stableData) {
+              total = response.getTotal();
+              offset = response.getNextSize();
+            } else {
+              total += response.getTotal();
+              offset += response.getNextSize();
+            }
+            v7request.getBody().setOffset(offset);
+          }
 
-        stableData = response.hasStableTotal();
-        if (stableData) {
-          total = response.getTotal();
-          offset = response.getNextSize();
-        } else {
-          total += response.getTotal();
-          offset += response.getNextSize();
-        }
-        v7request.getBody().setOffset(offset);
-      }
+          // FIXME: 17/08/16 sithengineer use response.getList() instead
 
-      // FIXME: 17/08/16 sithengineer use response.getList() instead
-
-      successRequestListener.call(response);
-
-      loading = false;
-    }, errorRequestListener, bypassCache);
+          successRequestListener.call(response);
+        }, error -> {
+          errorRequestListener.onError(error);
+        });
   }
 }

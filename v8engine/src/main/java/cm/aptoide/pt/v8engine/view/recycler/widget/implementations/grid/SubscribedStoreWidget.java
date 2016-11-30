@@ -81,36 +81,33 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
     }
 
     storeUnsubscribe.setOnClickListener(v -> {
-      GenericDialogs.createGenericYesNoCancelMessage(itemView.getContext(),
-          displayable.getPojo().getStoreName(),
-          AptoideUtils.StringU.getFormattedString(R.string.unfollow_yes_no))
-          .subscribe(eResponse -> {
-            switch (eResponse) {
-              case YES:
+      compositeSubscription.add(
+          GenericDialogs.createGenericYesNoCancelMessage(itemView.getContext(),
+              displayable.getPojo().getStoreName(),
+              AptoideUtils.StringU.getFormattedString(R.string.unfollow_yes_no))
+              .subscribe(eResponse -> {
+                switch (eResponse) {
+                  case YES:
 
-                if (AptoideAccountManager.isLoggedIn()) {
-                  AptoideAccountManager.unsubscribeStore(store.getStoreName());
+                    if (AptoideAccountManager.isLoggedIn()) {
+                      AptoideAccountManager.unsubscribeStore(store.getStoreName());
+                    }
+
+                    //@Cleanup Realm realm = DeprecatedDatabase.get();
+                    //DeprecatedDatabase.StoreQ.delete(store.getStoreId(), realm);
+                    StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
+                    storeAccessor.remove(store.getStoreId());
+
+                    break;
                 }
-
-                //@Cleanup Realm realm = DeprecatedDatabase.get();
-                //DeprecatedDatabase.StoreQ.delete(store.getStoreId(), realm);
-                StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
-                storeAccessor.remove(store.getStoreId());
-
-                break;
-            }
-          }, e -> {
-            Logger.e(TAG, e);
-            CrashReports.logException(e);
-          });
+              }, e -> {
+                Logger.e(TAG, e);
+                CrashReports.logException(e);
+              }));
     });
   }
 
-  @Override public void onViewAttached() {
-
-  }
-
-  @Override public void onViewDetached() {
+  @Override public void unbindView() {
 
   }
 }

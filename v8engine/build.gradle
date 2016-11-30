@@ -44,7 +44,7 @@ android {
       configureLocalytics delegate, localProperties.LOCALYTICS_RELEASE_KEY
       configurePayPal delegate, localProperties.PAYPAL_KEY, localProperties.PAYPAL_ENVIRONMENT_LIVE
       configureSixpackCredentials delegate, localProperties.SIXPACK_USER,
-          localProperties.SIXPACK_PASSWORD
+          localProperties.SIXPACK_PASSWORD, localProperties.SIXPACK_URL
       def googleSenderId = localProperties.GOOGLE_SENDER_ID
       buildConfigField "String", "GOOGLE_SENDER_ID", "\"" + googleSenderId.toString() + "\""
     }
@@ -56,7 +56,7 @@ android {
       configureLocalytics delegate, localProperties.LOCALYTICS_DEBUG_KEY
       configurePayPal delegate, localProperties.PAYPAL_KEY, localProperties.PAYPAL_ENVIRONMENT_MOCK
       configureSixpackCredentials delegate, localProperties.SIXPACK_USER,
-          localProperties.SIXPACK_PASSWORD
+          localProperties.SIXPACK_PASSWORD, localProperties.SIXPACK_URL
       def googleSenderId = localProperties.GOOGLE_SENDER_ID
       buildConfigField "String", "GOOGLE_SENDER_ID", "\"" + googleSenderId.toString() + "\""
     }
@@ -75,14 +75,17 @@ android {
 
 }
 
-void configureSixpackCredentials(androidDelegate, user, password) {
+void configureSixpackCredentials(androidDelegate, user, password, url) {
   boolean userExists = user != null
   boolean passwordExists = password != null
+  boolean urlExists = url != null
 
   androidDelegate.buildConfigField "String", "SIXPACK_USER",
       "\"" + (userExists ? user.toString() : "") + "\""
   androidDelegate.buildConfigField "String", "SIXPACK_PASSWORD",
       "\"" + (passwordExists ? password.toString() : "") + "\""
+  androidDelegate.buildConfigField "String", "SIXPACK_URL",
+      "\"" + (urlExists ? url.toString() : "") + "\""
 }
 
 void configureFlurry(androidDelegate, key) {
@@ -213,6 +216,14 @@ dependencies {
   compile "com.google.android.gms:play-services-ads:${PLAY_SERVICES_VERSION}"
   compile "com.google.android.gms:play-services-gcm:${PLAY_SERVICES_VERSION}"
 
-  // Flurry Android sdk
+    // Flurry Android sdk
   compile "com.flurry.android:analytics:${FLURRY_VERSION}"
+
+  // Remote install
+  compile 'org.slf4j:slf4j-simple:1.7.21'
+  compile 'org.slf4j:slf4j-api:1.7.21'
+  compile 'org.jmdns:jmdns:3.5.1'
+
+  //  Sixpack
+  compile 'com.seatgeek:sixpack-java:0.4-SNAPSHOT'
 }

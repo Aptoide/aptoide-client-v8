@@ -5,12 +5,9 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -33,10 +30,9 @@ import rx.Observable;
     super(body, httpClient, converterFactory, baseHost);
   }
 
-  public static GetAppRequest of(String packageName, String storeName, String accessToken) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()));
+  public static GetAppRequest of(String packageName, String storeName, String accessToken,
+      String aptoideClientUUID) {
+    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
@@ -45,20 +41,16 @@ import rx.Observable;
             accessToken));
   }
 
-  public static GetAppRequest of(long appId, String accessToken) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()));
+  public static GetAppRequest of(long appId, String accessToken, String aptoideClientUUID) {
+    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
     return new GetAppRequest(BASE_HOST,
         (Body) decorator.decorate(new Body(appId, forceServerRefresh), accessToken));
   }
 
-  public static GetAppRequest ofMd5(String md5, String accessToken) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()));
+  public static GetAppRequest ofMd5(String md5, String accessToken, String aptoideClientUUID) {
+    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
     return new GetAppRequest(BASE_HOST,
@@ -66,10 +58,9 @@ import rx.Observable;
   }
 
   public static GetAppRequest of(long appId, String storeName,
-      BaseRequestWithStore.StoreCredentials storeCredentials, String accessToken) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()));
+      BaseRequestWithStore.StoreCredentials storeCredentials, String accessToken,
+      String aptoideClientUUID) {
+    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 

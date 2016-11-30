@@ -6,12 +6,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreLatestAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -32,6 +34,7 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class StoreLatestAppsWidget extends Widget<StoreLatestAppsDisplayable> {
 
+  private final String cardType = "Latest Apps";
   private final LayoutInflater inflater;
   private TextView title;
   private TextView subtitle;
@@ -41,7 +44,6 @@ public class StoreLatestAppsWidget extends Widget<StoreLatestAppsDisplayable> {
   private StoreLatestAppsDisplayable displayable;
   private Map<View, Long> apps;
   private Map<Long, String> appsPackages;
-  private CompositeSubscription subscriptions;
   private CardView cardView;
 
   public StoreLatestAppsWidget(View itemView) {
@@ -84,8 +86,41 @@ public class StoreLatestAppsWidget extends Widget<StoreLatestAppsDisplayable> {
       apps.put(latestAppView, latestApp.getAppId());
       appsPackages.put(latestApp.getAppId(), latestApp.getPackageName());
     }
-  }
 
+    for (View app : apps.keySet()) {
+      compositeSubscription.add(RxView.clicks(app).subscribe(click -> {
+        knockWithSixpackCredentials(displayable.getAbUrl());
+        String packageName = appsPackages.get(apps.get(app));
+        Analytics.AppsTimeline.clickOnCard(cardType, packageName, Analytics.AppsTimeline.BLANK,
+            displayable.getStoreName(), Analytics.AppsTimeline.OPEN_APP_VIEW);
+        displayable.sendClickEvent(SendEventRequest.Body.Data.builder()
+            .cardType(cardType)
+            .source(AptoideAnalytics.SOURCE_APTOIDE)
+            .specific(SendEventRequest.Body.Specific.builder()
+                .app(packageName)
+                .store(displayable.getStoreName())
+                .build())
+            .build(), AptoideAnalytics.OPEN_APP);
+        ((FragmentShower) getContext()).pushFragmentV4(
+            V8Engine.getFragmentProvider().newAppViewFragment(apps.get(app)));
+      }));
+    }
+
+    compositeSubscription.add(RxView.clicks(store).subscribe(click -> {
+      knockWithSixpackCredentials(displayable.getAbUrl());
+      Analytics.AppsTimeline.clickOnCard(cardType, Analytics.AppsTimeline.BLANK,
+          Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
+          Analytics.AppsTimeline.OPEN_STORE);
+      displayable.sendClickEvent(SendEventRequest.Body.Data.builder()
+          .cardType(cardType)
+          .source(AptoideAnalytics.SOURCE_APTOIDE)
+          .specific(
+              SendEventRequest.Body.Specific.builder().store(displayable.getStoreName()).build())
+          .build(), AptoideAnalytics.OPEN_STORE);
+      ((FragmentShower) getContext()).pushFragmentV4(
+          V8Engine.getFragmentProvider().newStoreFragment(displayable.getStoreName()));
+    }));
+  }
   //// TODO: 31/08/16 refactor this out of here
   private void knockWithSixpackCredentials(String url) {
     if (url == null) {
@@ -119,38 +154,5 @@ public class StoreLatestAppsWidget extends Widget<StoreLatestAppsDisplayable> {
         displayable.getMarginWidth(getContext(),
             getContext().getResources().getConfiguration().orientation), 30);
     cardView.setLayoutParams(layoutParams);
-  }
-
-  @Override public void onViewAttached() {
-    if (subscriptions == null) {
-      subscriptions = new CompositeSubscription();
-
-      for (View app : apps.keySet()) {
-        subscriptions.add(RxView.clicks(app).subscribe(click -> {
-          knockWithSixpackCredentials(displayable.getAbUrl());
-          Analytics.AppsTimeline.clickOnCard("Latest Apps", appsPackages.get(apps.get(app)),
-              Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
-              Analytics.AppsTimeline.OPEN_APP_VIEW);
-          ((FragmentShower) getContext()).pushFragmentV4(
-              V8Engine.getFragmentProvider().newAppViewFragment(apps.get(app)));
-        }));
-      }
-
-      subscriptions.add(RxView.clicks(store).subscribe(click -> {
-        knockWithSixpackCredentials(displayable.getAbUrl());
-        Analytics.AppsTimeline.clickOnCard("Latest Apps", Analytics.AppsTimeline.BLANK,
-            Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
-            Analytics.AppsTimeline.OPEN_STORE);
-        ((FragmentShower) getContext()).pushFragmentV4(
-            V8Engine.getFragmentProvider().newStoreFragment(displayable.getStoreName()));
-      }));
-    }
-  }
-
-  @Override public void onViewDetached() {
-    if (subscriptions != null) {
-      subscriptions.unsubscribe();
-      subscriptions = null;
-    }
   }
 }

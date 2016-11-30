@@ -9,6 +9,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.networkclient.okhttp.UserAgentGenerator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -46,12 +47,12 @@ public abstract class WebService<T, U> {
 
   private Retrofit retrofit;
 
-  protected WebService(Class<T> clazz, String userAgent, Converter.Factory converterFactory,
+  protected WebService(Class<T> clazz, UserAgentGenerator userAgentGenerator, Converter.Factory converterFactory,
       String baseHost) {
     this.converterFactory = converterFactory;
     this.clazz = clazz;
     this.baseHost = baseHost;
-    this.httpClient = OkHttpClientFactory.getSingletonClient(userAgent);
+    this.httpClient = OkHttpClientFactory.getSingletonClient(userAgentGenerator);
   }
 
   protected WebService(Class<T> clazz, OkHttpClient httpClient, Converter.Factory converterFactory,

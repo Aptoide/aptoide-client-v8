@@ -33,7 +33,8 @@ import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.model.v7.timeline.GetUserTimeline;
 import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.cache.RequestCache;
+import cm.aptoide.pt.networkclient.okhttp.UserAgentGenerator;
+import cm.aptoide.pt.networkclient.okhttp.cache.PostCacheInterceptor;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -61,13 +62,20 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
   private boolean accessTokenRetry = false;
 
   protected V7(B body, String baseHost) {
-    super(Interfaces.class, SecurePreferences.getUserAgent(), WebService.getDefaultConverter(),
-        baseHost);
+    super(Interfaces.class, new UserAgentGenerator() {
+      @Override public String generateUserAgent() {
+        return SecurePreferences.getUserAgent();
+      }
+    }, WebService.getDefaultConverter(), baseHost);
     this.body = body;
   }
 
   protected V7(B body, Converter.Factory converterFactory, String baseHost) {
-    super(Interfaces.class, SecurePreferences.getUserAgent(), converterFactory, baseHost);
+    super(Interfaces.class, new UserAgentGenerator() {
+      @Override public String generateUserAgent() {
+        return SecurePreferences.getUserAgent();
+      }
+    }, converterFactory, baseHost);
     this.body = body;
   }
 
@@ -146,83 +154,88 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
   public interface Interfaces {
 
     @POST("getApp") Observable<GetApp> getApp(@Body GetAppRequest.Body body,
-        @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("listApps{url}") Observable<ListApps> listApps(
         @Path(value = "url", encoded = true) String path, @Body ListAppsRequest.Body body,
-        @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("listAppsUpdates") Observable<ListAppsUpdates> listAppsUpdates(
         @Body ListAppsUpdatesRequest.Body body,
-        @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("getStore{url}") Observable<GetStore> getStore(
         @Path(value = "url", encoded = true) String path, @Body GetStoreRequest.Body body,
-        @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("getStoreDisplays{url}") Observable<GetStoreDisplays> getStoreDisplays(
         @Path(value = "url", encoded = true) String path, @Body GetStoreDisplaysRequest.Body body,
-        @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("getStoreWidgets{url}") Observable<GetStoreWidgets> getStoreWidgets(
         @Path(value = "url", encoded = true) String path, @Body GetStoreWidgetsRequest.Body body,
-        @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("listStores/sort/{sort}/limit/{limit}") Observable<ListStores> listTopStores(
         @Path(value = "sort", encoded = true) String sort,
         @Path(value = "limit", encoded = true) int limit, @Body ListStoresRequest.Body body,
-        @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("listStores{url}") Observable<ListStores> listStores(
         @Path(value = "url", encoded = true) String path, @Body ListStoresRequest.Body body,
-        @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("getStoreMeta{url}") Observable<GetStoreMeta> getStoreMeta(
         @Path(value = "url", encoded = true) String path, @Body GetStoreMetaRequest.Body body,
-        @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("listSearchApps") Observable<ListSearchApps> listSearchApps(
         @Body ListSearchAppsRequest.Body body,
-        @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST Observable<GetUserTimeline> getUserTimeline(@Url String url,
         @Body GetUserTimelineRequest.Body body,
-        @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("listAppVersions") Observable<ListAppVersions> listAppVersions(
         @Body ListAppVersionsRequest.Body body,
-        @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("listReviews") Observable<ListReviews> listReviews(@Body ListReviewsRequest.Body body,
-        @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("listFullReviews") Observable<ListFullReviews> listFullReviews(
         @Body ListFullReviewsRequest.Body body,
-        @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("listFullReviews{url}") Observable<ListFullReviews> listFullReviews(
         @Path(value = "url", encoded = true) String path, @Body ListFullReviewsRequest.Body body,
-        @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("listComments") Observable<ListComments> listComments(@Body ListCommentsRequest.Body body,
-        @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("listFullComments") Observable<ListFullComments> listFullComments(
         @Body ListFullCommentsRequest.Body body,
-        @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST Observable<ListComments> listComments(@Url String url,
         @Body ListCommentsRequest.Body body,
-        @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("setReview") Observable<BaseV7Response> postReview(@Body PostReviewRequest.Body body,
-        @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("setComment") Observable<BaseV7Response> postComment(@Body PostCommentRequest.Body body,
-        @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("setReviewVote") Observable<BaseV7Response> setReviewVote(
         @Body SetReviewRatingRequest.Body body,
-        @Header(RequestCache.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("user/addEvent/name={name}/action={action}/context={context}")
+    Observable<BaseV7Response> addEvent(@Path(value = "name") String name,
+        @Path(value = "action") String action, @Path(value = "context") String context,
+        @Body SendEventRequest.Body body);
   }
 }

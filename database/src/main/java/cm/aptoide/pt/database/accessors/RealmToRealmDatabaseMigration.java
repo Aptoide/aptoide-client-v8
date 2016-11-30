@@ -155,5 +155,18 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
 
       Logger.w(TAG, "DB migrated to version " + oldVersion);
     }
+
+    if (oldVersion == 8078) {
+      RealmObjectSchema downloadSchema = schema.get("FileToDownload");
+
+      if (!downloadSchema.hasField("versionName")) {
+        downloadSchema.addField("versionName", String.class);
+      }
+
+      downloadSchema = schema.get("Download");
+      if (!downloadSchema.hasField("versionName")) {
+        downloadSchema.addField("versionName", String.class);
+      }
+    }
   }
 }

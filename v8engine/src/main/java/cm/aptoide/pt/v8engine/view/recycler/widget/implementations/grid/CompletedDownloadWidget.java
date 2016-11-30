@@ -22,7 +22,6 @@ import com.jakewharton.rxbinding.view.RxView;
 import java.util.concurrent.TimeUnit;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by trinkes on 7/18/16.
@@ -32,14 +31,14 @@ import rx.subscriptions.CompositeSubscription;
 
   private static final String TAG = CompletedDownloadWidget.class.getSimpleName();
 
+  private Progress<Download> downloadProgress;
+  private CompletedDownloadDisplayable displayable;
+
   private TextView appName;
   private ImageView appIcon;
   private TextView status;
   private ImageView resumeDownloadButton;
   private ImageView cancelDownloadButton;
-  private CompositeSubscription subscriptions;
-  private Progress<Download> downloadProgress;
-  private CompletedDownloadDisplayable displayable;
 
   public CompletedDownloadWidget(View itemView) {
     super(itemView);
@@ -61,50 +60,38 @@ import rx.subscriptions.CompositeSubscription;
       ImageLoader.load(downloadProgress.getRequest().getIcon(), appIcon);
     }
     status.setText(downloadProgress.getRequest().getStatusName(itemView.getContext()));
-  }
 
-  @Override public void onViewAttached() {
-    if (subscriptions == null || subscriptions.isUnsubscribed()) {
-      subscriptions = new CompositeSubscription();
+    compositeSubscription.add(RxView.clicks(itemView)
+        .flatMap(click -> displayable.downloadStatus()
+            .filter(status -> status == Download.COMPLETED)
+            .flatMap(status -> displayable.installOrOpenDownload(getContext(),
+                (PermissionRequest) getContext())))
+        .retry()
+        .subscribe(success -> {
+        }, throwable -> throwable.printStackTrace()));
 
-      subscriptions.add(RxView.clicks(itemView)
-          .flatMap(click -> displayable.downloadStatus()
-              .filter(status -> status == Download.COMPLETED)
-              .flatMap(status -> displayable.installOrOpenDownload(getContext(),
-                  (PermissionRequest) getContext())))
-          .retry()
-          .subscribe(success -> {
-          }, throwable -> throwable.printStackTrace()));
+    compositeSubscription.add(RxView.clicks(resumeDownloadButton)
+        .flatMap(click -> displayable.downloadStatus()
+            .filter(status -> status == Download.PAUSED || status == Download.ERROR)
+            .flatMap(status -> displayable.resumeDownload(getContext(),
+                (PermissionRequest) getContext())))
+        .retry()
+        .subscribe(success -> {
+        }, throwable -> throwable.printStackTrace()));
 
-      subscriptions.add(RxView.clicks(resumeDownloadButton)
-          .flatMap(click -> displayable.downloadStatus()
-              .filter(status -> status == Download.PAUSED || status == Download.ERROR)
-              .flatMap(status -> displayable.resumeDownload(getContext(),
-                  (PermissionRequest) getContext())))
-          .retry()
-          .subscribe(success -> {
-          }, throwable -> throwable.printStackTrace()));
+    compositeSubscription.add(RxView.clicks(cancelDownloadButton)
+        .subscribe(click -> displayable.removeDownload(getContext())));
 
-      subscriptions.add(RxView.clicks(cancelDownloadButton)
-          .subscribe(click -> displayable.removeDownload(getContext())));
-
-      subscriptions.add(displayable.downloadStatus()
-          .observeOn(Schedulers.computation())
-          .sample(1, TimeUnit.SECONDS)
-          .observeOn(AndroidSchedulers.mainThread())
-          .subscribe(downloadStatus -> {
-            if (downloadStatus == Download.PAUSED || downloadStatus == Download.ERROR) {
-              resumeDownloadButton.setVisibility(View.VISIBLE);
-            } else {
-              resumeDownloadButton.setVisibility(View.GONE);
-            }
-          }, throwable -> Logger.e(TAG, throwable)));
-    }
-  }
-
-  @Override public void onViewDetached() {
-    if (subscriptions != null) {
-      subscriptions.unsubscribe();
-    }
+    compositeSubscription.add(displayable.downloadStatus()
+        .observeOn(Schedulers.computation())
+        .sample(1, TimeUnit.SECONDS)
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(downloadStatus -> {
+          if (downloadStatus == Download.PAUSED || downloadStatus == Download.ERROR) {
+            resumeDownloadButton.setVisibility(View.VISIBLE);
+          } else {
+            resumeDownloadButton.setVisibility(View.GONE);
+          }
+        }, throwable -> Logger.e(TAG, throwable)));
   }
 }

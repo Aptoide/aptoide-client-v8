@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.IntentFilter;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -55,7 +54,6 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by sithengineer on 06/05/16.
@@ -93,8 +91,8 @@ import rx.subscriptions.CompositeSubscription;
   //private DownloadServiceHelper downloadServiceHelper;
   private PermissionRequest permissionRequest;
   private InstallManager installManager;
-  private CompositeSubscription subscriptions;
   private boolean isUpdate;
+  private boolean triedInstall;
 
   //private Subscription subscribe;
   //private long appID;
@@ -123,9 +121,6 @@ import rx.subscriptions.CompositeSubscription;
 
   @Override public void bindView(AppViewInstallDisplayable displayable) {
     displayable.setInstallButton(actionButton);
-    if (subscriptions == null || subscriptions.isUnsubscribed()) {
-      subscriptions = new CompositeSubscription();
-    }
 
     AptoideDownloadManager downloadManager = AptoideDownloadManager.getInstance();
     downloadManager.initDownloadService(getContext());
@@ -147,7 +142,7 @@ import rx.subscriptions.CompositeSubscription;
       fragmentShower.pushFragmentV4(fragment);
     });
 
-    subscriptions.add(
+    compositeSubscription.add(
         displayable.getState().observeOn(AndroidSchedulers.mainThread()).subscribe(widgetState -> {
           switch (widgetState.getButtonState()) {
             case AppViewInstallDisplayable.ACTION_INSTALLING:
@@ -161,6 +156,9 @@ import rx.subscriptions.CompositeSubscription;
               //App not installed
               setDownloadBarVisible(false, displayable, widgetState.getProgress(), currentApp);
               setupInstallOrBuyButton(displayable, getApp);
+              if (widgetState.getProgress() != null) {
+                downloadStatusUpdate(widgetState.getProgress(), currentApp);
+              }
               ((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(null);
               break;
             case AppViewInstallDisplayable.ACTION_DOWNGRADE:
@@ -196,39 +194,17 @@ import rx.subscriptions.CompositeSubscription;
       latestAvailableLayout.setVisibility(View.GONE);
     }
 
-    ContextWrapper ctx = (ContextWrapper) versionName.getContext();
-    permissionRequest = ((PermissionRequest) ctx.getBaseContext());
+    permissionRequest = ((PermissionRequest) getContext());
+  }
+
+  @Override public void unbindView() {
+    super.unbindView();
+    triedInstall = false;
   }
 
   private void setupActionButton(@StringRes int text, View.OnClickListener onClickListener) {
     actionButton.setText(text);
     actionButton.setOnClickListener(onClickListener);
-  }
-
-  @Override public void onViewAttached() {
-    /*subscribe = AptoideDownloadManager.getInstance().getDownloads()
-        .map(downloads -> {
-					for (int i = 0; i < downloads.size(); i++) {
-						if (downloads.get(i).getAppId() == appID && (downloads.get(i).getOverallDownloadStatus()
-								== Download.PROGRESS
-								|| downloads.get(i).getOverallDownloadStatus() == Download.PAUSED)) {
-
-							return true;
-						}
-					}
-					return false;
-				})
-				.distinctUntilChanged()
-				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(showControllers -> {
-				}, throwable -> throwable.printStackTrace());*/
-  }
-
-  @Override public void onViewDetached() {
-    actionButton.setOnClickListener(null);
-    actionPause.setOnClickListener(null);
-    actionCancel.setOnClickListener(null);
-    subscriptions.clear();
   }
 
   private void setupInstallOrBuyButton(AppViewInstallDisplayable displayable, GetApp getApp) {
@@ -258,8 +234,9 @@ import rx.subscriptions.CompositeSubscription;
           installOrUpgradeListener(app, getApp.getNodes().getVersions(), displayable));
       if (displayable.isShouldInstall()) {
         actionButton.postDelayed(() -> {
-          if (displayable.isVisible()) {
+          if (displayable.isVisible() && !triedInstall) {
             actionButton.performClick();
+            triedInstall = true;
           }
         }, 1000);
       }
@@ -269,9 +246,7 @@ import rx.subscriptions.CompositeSubscription;
   private View.OnClickListener downgradeListener(final GetAppMeta.App app) {
     return view -> {
       final Context context = view.getContext();
-      ContextWrapper contextWrapper = (ContextWrapper) context;
-      final PermissionRequest permissionRequest =
-          ((PermissionRequest) contextWrapper.getBaseContext());
+      final PermissionRequest permissionRequest = (PermissionRequest) getContext();
 
       permissionRequest.requestAccessToExternalFileSystem(() -> {
 
@@ -288,12 +263,13 @@ import rx.subscriptions.CompositeSubscription;
                   DownloadFactory factory = new DownloadFactory();
                   Download appDownload = factory.create(app, Download.ACTION_DOWNGRADE);
                   showRootInstallWarningPopup(context);
-                  subscriptions.add(new PermissionManager().requestDownloadAccess(permissionRequest)
-                      .flatMap(success -> installManager.install(getContext(), appDownload))
-                      .observeOn(AndroidSchedulers.mainThread())
-                      .subscribe(progress -> {
-                        Logger.d(TAG, "Installing");
-                      }, throwable -> Logger.e(TAG, throwable)));
+                  compositeSubscription.add(
+                      new PermissionManager().requestDownloadAccess(permissionRequest)
+                          .flatMap(success -> installManager.install(getContext(), appDownload))
+                          .observeOn(AndroidSchedulers.mainThread())
+                          .subscribe(progress -> {
+                            Logger.d(TAG, "Installing");
+                          }, throwable -> Logger.e(TAG, throwable)));
                   Analytics.Rollback.downgradeDialogContinue();
                 } else {
                   Analytics.Rollback.downgradeDialogCancel();
@@ -308,7 +284,7 @@ import rx.subscriptions.CompositeSubscription;
 
   private void showRootInstallWarningPopup(Context context) {
     if (installManager.showWarning()) {
-      GenericDialogs.createGenericYesNoCancelMessage(context, null,
+      compositeSubscription.add(GenericDialogs.createGenericYesNoCancelMessage(context, null,
           AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog))
           .subscribe(eResponses -> {
             switch (eResponses) {
@@ -319,14 +295,15 @@ import rx.subscriptions.CompositeSubscription;
                 installManager.rootInstallAllowed(false);
                 break;
             }
-          });
+          }));
     }
   }
 
   private void showMessageOKCancel(String message,
       SimpleSubscriber<GenericDialogs.EResponse> subscriber) {
-    GenericDialogs.createGenericContinueCancelMessage(getContext(), "", message)
-        .subscribe(subscriber);
+    compositeSubscription.add(
+        GenericDialogs.createGenericContinueCancelMessage(getContext(), "", message)
+            .subscribe(subscriber));
   }
 
   public View.OnClickListener installOrUpgradeListener(GetAppMeta.App app,
@@ -348,7 +325,7 @@ import rx.subscriptions.CompositeSubscription;
 
       showRootInstallWarningPopup(context);
 
-      subscriptions.add(permissionManager.requestDownloadAccess(permissionRequest)
+      compositeSubscription.add(permissionManager.requestDownloadAccess(permissionRequest)
           .flatMap(success -> permissionManager.requestExternalStoragePermission(permissionRequest))
           .flatMap(success -> installManager.install(getContext(),
               new DownloadFactory().create(displayable.getPojo().getNodes().getMeta().getData(),
@@ -398,12 +375,16 @@ import rx.subscriptions.CompositeSubscription;
   private void downloadStatusUpdate(@NonNull Progress<Download> progress, GetAppMeta.App app) {
     switch (progress.getRequest().getOverallDownloadStatus()) {
       case Download.PAUSED: {
-        updateDownloadProgress(progress);
+        actionResume.setVisibility(View.VISIBLE);
+        actionPause.setVisibility(View.GONE);
         break;
       }
       case Download.IN_QUEUE:
       case Download.PROGRESS: {
-        updateDownloadProgress(progress);
+        actionResume.setVisibility(View.GONE);
+        actionPause.setVisibility(View.VISIBLE);
+        downloadProgress.setProgress(progress.getCurrent());
+        textProgress.setText(progress.getCurrent() + "%");
         break;
       }
       case Download.ERROR: {
@@ -423,18 +404,6 @@ import rx.subscriptions.CompositeSubscription;
     }
   }
 
-  private void updateDownloadProgress(@NonNull Progress<Download> progress) {
-    if (progress.getRequest().getOverallDownloadStatus() == Download.PAUSED) {
-      actionResume.setVisibility(View.VISIBLE);
-      actionPause.setVisibility(View.GONE);
-    } else {
-      actionResume.setVisibility(View.GONE);
-      actionPause.setVisibility(View.VISIBLE);
-    }
-    downloadProgress.setProgress(progress.getCurrent());
-    textProgress.setText(progress.getCurrent() + "%");
-  }
-
   private void setupDownloadControls(GetAppMeta.App app, Progress<Download> progress,
       AppViewInstallDisplayable displayable) {
     String md5 = app.getMd5();
@@ -449,7 +418,7 @@ import rx.subscriptions.CompositeSubscription;
 
     actionResume.setOnClickListener(view -> {
       PermissionManager permissionManager = new PermissionManager();
-      subscriptions.add(permissionManager.requestDownloadAccess(permissionRequest)
+      compositeSubscription.add(permissionManager.requestDownloadAccess(permissionRequest)
           .flatMap(permissionGranted -> permissionManager.requestExternalStoragePermission(
               (PermissionRequest) getContext()))
           .flatMap(success -> installManager.install(getContext(),

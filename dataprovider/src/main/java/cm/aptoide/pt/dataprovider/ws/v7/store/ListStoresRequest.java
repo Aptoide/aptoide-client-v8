@@ -6,14 +6,11 @@
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
 import android.text.TextUtils;
-import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.store.ListStores;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -50,10 +47,8 @@ public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
   }
 
   public static ListStoresRequest ofTopStores(int offset, int limit, String accessToken,
-      String email) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()));
+      String email, String aptoideClientUUID) {
+    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
     final Body baseBody = new Body();
     baseBody.setOffset(offset);
@@ -61,10 +56,9 @@ public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
     return new ListStoresRequest((Body) decorator.decorate(baseBody, accessToken), BASE_HOST);
   }
 
-  public static ListStoresRequest ofAction(String url, String accessToken, String email) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()));
+  public static ListStoresRequest ofAction(String url, String accessToken, String email,
+      String aptoideClientUUID) {
+    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
     return new ListStoresRequest(url.replace("listStores", ""),
         (Body) decorator.decorate(new Body(), accessToken), BASE_HOST);

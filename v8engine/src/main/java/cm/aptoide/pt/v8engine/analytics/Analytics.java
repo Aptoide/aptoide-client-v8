@@ -3,29 +3,36 @@ package cm.aptoide.pt.v8engine.analytics;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
-import cm.aptoide.pt.logger.Logger;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.Constants;
 import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepository;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.V8Engine;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
 import com.localytics.android.Localytics;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.zip.ZipFile;
+
+import static cm.aptoide.pt.v8engine.analytics.Analytics.AppViewViewedFrom.containsUnwantedValues;
+import static cm.aptoide.pt.v8engine.analytics.Analytics.Lifecycle.Application.facebookLogger;
 
 /**
  * Created by neuro on 07-05-2015.f
@@ -41,8 +48,20 @@ public class Analytics {
   private static final int LOCALYTICS = 1 << 0;
   private static final int FLURRY = 1 << 1;
   private static final int FABRIC = 1 << 2;
+  private static final String[] unwantedValuesList = {
+      "ads-highlighted", "apps-group-trending", "apps-group-local-top-apps",
+      "timeline-your-friends-installs", "apps-group-latest-applications",
+      "apps-group-top-apps-in-this-store", "apps-group-aptoide-publishers",
+      "stores-group-top-stores", "stores-group-featured-stores", "reviews-group-reviews",
+      "apps-group-top-games", "apps-group-top-stores", "apps-group-featured-stores",
+      "apps-group-editors-choice"
+  };
   private static boolean ACTIVATE_LOCALYTICS = BuildConfig.LOCALYTICS_CONFIGURED;
   private static boolean isFirstSession;
+
+  public static boolean checkBuildVariant() {
+    return BuildConfig.BUILD_TYPE.contains("release") && BuildConfig.FLAVOR.contains("dev");
+  }
 
   /**
    * Verifica se as flags fornecidas constam em accepted.
@@ -99,6 +118,13 @@ public class Analytics {
     }
   }
 
+  private static void logFacebookEvents(String eventName, Bundle parameters) {
+    if (BuildConfig.BUILD_TYPE.equals("debug")) {
+      return;
+    }
+    facebookLogger.logEvent(eventName, parameters);
+  }
+
   private static void logFabricEvent(String event, Map<String, String> map, int flags) {
     if (checkAcceptability(flags, FABRIC)) {
       CustomEvent customEvent = new CustomEvent(event);
@@ -128,22 +154,26 @@ public class Analytics {
   public static class Lifecycle {
 
     public static class Application {
+
+      static AppEventsLogger facebookLogger;
+
       public static void onCreate(android.app.Application application) {
 
+        //Integrate FacebookSDK
+        FacebookSdk.sdkInitialize(application);
+        AppEventsLogger.activateApp(application);
+        facebookLogger = AppEventsLogger.newLogger(application);
         SharedPreferences sPref =
             PreferenceManager.getDefaultSharedPreferences(application.getBaseContext());
         ACTIVATE_LOCALYTICS =
             ACTIVATE_LOCALYTICS && (sPref.getBoolean(Constants.IS_LOCALYTICS_ENABLE_KEY, false));
         isFirstSession = sPref.getBoolean(Constants.IS_LOCALYTICS_FIRST_SESSION, false);
-        if (!ACTIVATE_LOCALYTICS && !isFirstSession) {
-          return;
+        if (ACTIVATE_LOCALYTICS || isFirstSession) {
+          // Integrate Localytics
+          Localytics.autoIntegrate(application);
+          setupDimensions();
+          Logger.d(TAG, "Localytics session configured");
         }
-
-        // Integrate Localytics
-        Localytics.autoIntegrate(application);
-        setupDimensions();
-
-        Logger.d(TAG, "Localytics session configured");
       }
 
       private static void setupDimensions() {
@@ -247,8 +277,8 @@ public class Analytics {
           }
         }
 
-        IdsRepository idsRepository =
-            new IdsRepository(SecurePreferencesImplementation.getInstance(),
+        IdsRepositoryImpl idsRepository =
+            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                 DataProvider.getContext());
 
         String cpuid = idsRepository.getAptoideClientUUID();
@@ -617,6 +647,11 @@ public class Analytics {
         stringObjectHashMap.put(PACKAGE_NAME, packageName);
 
         track(EVENT_NAME, stringObjectHashMap, flags);
+
+        Bundle parameters = new Bundle();
+        parameters.putString(PACKAGE_NAME, packageName);
+        parameters.putString(TRUSTED_BADGE, trustedBadge);
+        parameters.putString(TYPE, type);
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -701,6 +736,11 @@ public class Analytics {
         map.put(APPLICATION_PUBLISHER, app.getDeveloper().getName());
 
         track(EVENT_NAME, map, ALL);
+
+        Bundle parameters = new Bundle();
+        parameters.putString(APPLICATION_NAME, app.getPackageName());
+        parameters.putString(APPLICATION_PUBLISHER, app.getDeveloper().getName());
+        logFacebookEvents(EVENT_NAME, parameters);
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -735,7 +775,14 @@ public class Analytics {
         map.put(PACKAGE_NAME, app.getPackageName());
         map.put(TRUSTED_BADGE, app.getFile().getMalware().getRank().name());
 
-        track(EVENT_NAME, map, ALL);
+        if (map.containsKey("Source") && !containsUnwantedValues(map.get("Source"))) {
+          track(EVENT_NAME, map, ALL);
+        }
+
+        Bundle parameters = new Bundle();
+        parameters.putString(PACKAGE_NAME, app.getPackageName());
+        parameters.putString(TRUSTED_BADGE, app.getFile().getMalware().getRank().name());
+        logFacebookEvents(EVENT_NAME, parameters);
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -822,8 +869,8 @@ public class Analytics {
   }
 
   public static class Dimensions {
-    public static final String VERTICAL = "smartphone";
-    public static final String PARTNER = "vanilla";
+    public static final String VERTICAL = V8Engine.getConfiguration().getVerticalDimension();
+    public static final String PARTNER = V8Engine.getConfiguration().getPartnerDimension();
     public static final String UNKNOWN = "unknown";
     public static final String APKFY = "Apkfy";
     public static final String WEBSITE = "Website";
@@ -917,9 +964,29 @@ public class Analytics {
           }
         }
         Logger.d("teste", "appViewOpenFrom: " + map);
-        track(APP_VIEWED_OPEN_FROM_EVENT_NAME_KEY, map, FLURRY);
+
+        if (map.containsKey("Source") && !containsUnwantedValues(map.get("Source"))) {
+          track(APP_VIEWED_OPEN_FROM_EVENT_NAME_KEY, map, FLURRY);
+        }
+
+        Bundle parameters = new Bundle();
+        parameters.putString("Package Name", packageName);
+        parameters.putString("Source", stringForSourceEvent);
+        parameters.putString("Trusted Badge", trustedBadge);
+        parameters.putString("Application Publisher", developerName);
+        logFacebookEvents(APP_VIEWED_OPEN_FROM_EVENT_NAME_KEY, parameters);
       }
       STEPS.clear();
+    }
+
+    protected static boolean containsUnwantedValues(String source) {
+      String[] sourceArray = source.split("_");
+      for (String step : sourceArray) {
+        if (Arrays.asList(unwantedValuesList).contains(step)) {
+          return true;
+        }
+      }
+      return false;
     }
 
     private static String formatStepsToSingleEvent(ArrayList<String> listOfSteps) {
@@ -1064,6 +1131,21 @@ public class Analytics {
       map.put(CONCAT, String.valueOf(isRootAllowed) + "_" + String.valueOf(isRoot));
 
       logFabricEvent(IS_INSTALLATION_TYPE_EVENT_NAME, map, FABRIC);
+    }
+  }
+
+  public static class AccountEvents {
+
+    public static final String LOGGED_IN_EVENT = "Logged in";
+    public static final String ACTION = "Action";
+    public static final String USER_REGISTERED = "User Registered";
+
+    public static void login(String action) {
+      track(LOGGED_IN_EVENT, ACTION, action, LOCALYTICS);
+    }
+
+    public static void signUp() {
+      track(USER_REGISTERED, LOCALYTICS);
     }
   }
 }

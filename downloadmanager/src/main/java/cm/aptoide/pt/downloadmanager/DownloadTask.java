@@ -89,7 +89,7 @@ class DownloadTask extends FileDownloadLargeFileListener {
         break;
       case FileToDownload.GENERIC:
       default:
-        path = AptoideDownloadManager.GENERIC_PATH;
+        path = AptoideDownloadManager.DOWNLOADS_STORAGE_PATH;
         break;
     }
     return path;
@@ -130,11 +130,16 @@ class DownloadTask extends FileDownloadLargeFileListener {
         BaseDownloadTask baseDownloadTask =
             FileDownloader.getImpl().create(fileToDownload.getLink());
         baseDownloadTask.setTag(APTOIDE_DOWNLOAD_TASK_TAG_KEY, this);
+        if (fileToDownload.getFileName().endsWith(".temp")) {
+          fileToDownload.setFileName(fileToDownload.getFileName().replace(".temp", ""));
+        }
         fileToDownload.setDownloadId(baseDownloadTask.setListener(this)
             .setCallbackProgressTimes(AptoideDownloadManager.PROGRESS_MAX_VALUE)
             .setPath(AptoideDownloadManager.DOWNLOADS_STORAGE_PATH + fileToDownload.getFileName())
-            .ready());
+            .asInQueueTask()
+            .enqueue());
         fileToDownload.setPath(AptoideDownloadManager.DOWNLOADS_STORAGE_PATH);
+        fileToDownload.setFileName(fileToDownload.getFileName() + ".temp");
       }
 
       if (isSerial) {
@@ -287,6 +292,7 @@ class DownloadTask extends FileDownloadLargeFileListener {
   private Observable<Boolean> CheckMd5AndMoveFileToRightPlace(Download download) {
     return Observable.fromCallable(() -> {
       for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
+        fileToDownload.setFileName(fileToDownload.getFileName().replace(".temp", ""));
         if (!TextUtils.isEmpty(fileToDownload.getMd5())) {
           if (!TextUtils.equals(AptoideUtils.AlgorithmU.computeMd5(new File(
                   AptoideDownloadManager.DOWNLOADS_STORAGE_PATH + fileToDownload.getFileName())),

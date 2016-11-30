@@ -6,14 +6,11 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.text.TextUtils;
-import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.ListComments;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -40,50 +37,46 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
   }
 
   public static ListCommentsRequest of(String url, long reviewId, int limit, String storeName,
-      BaseRequestWithStore.StoreCredentials storeCredentials, String accessToken, String email) {
+      BaseRequestWithStore.StoreCredentials storeCredentials, String accessToken, String email,
+      String aptoideClientUUID) {
     Logger.d("lou", "of: A");
     ListCommentsRequest.url = url;
-    return of(reviewId, limit, storeName, storeCredentials, accessToken);
+    return of(reviewId, limit, storeName, storeCredentials, accessToken, aptoideClientUUID);
   }
 
   public static ListCommentsRequest of(long reviewId, int offset, int limit, String accessToken,
-      String email) {
+      String email, String aptoideClientUUID) {
     Logger.d("lou", "of: B");
-    ListCommentsRequest listCommentsRequest = of(reviewId, limit, accessToken, email);
+    ListCommentsRequest listCommentsRequest =
+        of(reviewId, limit, accessToken, email, aptoideClientUUID);
     listCommentsRequest.getBody().setOffset(offset);
     return listCommentsRequest;
   }
 
-  public static ListCommentsRequest of(long reviewId, int limit, String accessToken, String email) {
+  public static ListCommentsRequest of(long reviewId, int limit, String accessToken, String email,
+      String aptoideClientUUID) {
     Logger.d("lou", "of: C");
     //
     //
     //
-    BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()));
+    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
-    IdsRepository idsRepository =
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
     Body body =
         new Body(limit, reviewId, ManagerPreferences.getAndResetForceServerRefresh(), Order.desc);
     return new ListCommentsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
   public static ListCommentsRequest of(long reviewId, int limit, String storeName,
-      BaseRequestWithStore.StoreCredentials storeCredentials, String accessToken) {
+      BaseRequestWithStore.StoreCredentials storeCredentials, String accessToken,
+      String aptoideClientUUID) {
     Logger.d("lou", "of: D");
     //
     //
     //
     String username = storeCredentials.getUsername();
     String password = storeCredentials.getPasswordSha1();
-    BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()));
+    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
-    IdsRepository idsRepository =
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), DataProvider.getContext());
     Body body =
         new Body(limit, reviewId, ManagerPreferences.getAndResetForceServerRefresh(), Order.desc,
             username, password);
@@ -92,6 +85,7 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
 
   @Override protected Observable<ListComments> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
+    //bypassCache is not used, for comments always get new data
     if (TextUtils.isEmpty(url)) {
       return interfaces.listComments(body, true);
     } else {

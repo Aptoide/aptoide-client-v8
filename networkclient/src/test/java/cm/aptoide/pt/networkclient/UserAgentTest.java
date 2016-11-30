@@ -5,8 +5,9 @@
 
 package cm.aptoide.pt.networkclient;
 
-import cm.aptoide.pt.actions.GenerateClientId;
+import cm.aptoide.pt.actions.AptoideClientUUID;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
+import cm.aptoide.pt.networkclient.okhttp.UserAgentGenerator;
 import cm.aptoide.pt.networkclient.okhttp.UserAgentInterceptor;
 import cm.aptoide.pt.utils.AptoideUtils;
 import okhttp3.OkHttpClient;
@@ -30,7 +31,11 @@ public class UserAgentTest {
     String url = server.url("/").toString();
 
     OkHttpClient client = new OkHttpClient();
-    client.networkInterceptors().add(new UserAgentInterceptor("foo/bar"));
+    client.networkInterceptors().add(new UserAgentInterceptor(new UserAgentGenerator() {
+      @Override public String generateUserAgent() {
+        return "foo/bar";
+      }
+    }));
     Request testRequest = new Request.Builder().url(url).build();
     String result = client.newCall(testRequest).execute().body().string();
     assertEquals("OK", result);
@@ -41,16 +46,14 @@ public class UserAgentTest {
 
   @Test public void currentUserAgentForSingletonClient() throws Exception {
 
-    GenerateClientId generateClientId = new GenerateClientId() {
-      @Override public String getClientId() {
-        return "dummy client id";
-      }
-    };
+    AptoideClientUUID aptoideClientUUID = () -> "dummy client id";
 
-    String userData = "user@aptoide.com";
+    final String userData = "user@aptoide.com";
+    final String oemid = "";
 
     final String expectedUserAgent =
-        AptoideUtils.NetworkUtils.getDefaultUserAgent(generateClientId, userData);
+        AptoideUtils.NetworkUtils.getDefaultUserAgent(aptoideClientUUID, () -> userData,
+            AptoideUtils.Core.getDefaultVername(), oemid);
 
     MockWebServer server = new MockWebServer();
     server.enqueue(new MockResponse().setBody("OK"));
@@ -58,7 +61,7 @@ public class UserAgentTest {
     String url = server.url("/").toString();
 
     Request testRequest = new Request.Builder().url(url).build();
-    String result = OkHttpClientFactory.getSingletonClient(userData)
+    String result = OkHttpClientFactory.getSingletonClient(() -> userData)
         .newCall(testRequest)
         .execute()
         .body()
@@ -71,16 +74,14 @@ public class UserAgentTest {
 
   @Test public void currentUserAgentForNewClient() throws Exception {
 
-    GenerateClientId generateClientId = new GenerateClientId() {
-      @Override public String getClientId() {
-        return "dummy client id";
-      }
-    };
+    AptoideClientUUID aptoideClientUUID = () -> "dummy client id";
 
-    String userData = "user@aptoide.com";
+    final String userData = "user@aptoide.com";
+    final String oemid = "";
 
     final String expectedUserAgent =
-        AptoideUtils.NetworkUtils.getDefaultUserAgent(generateClientId, userData);
+        AptoideUtils.NetworkUtils.getDefaultUserAgent(aptoideClientUUID, () -> userData,
+            AptoideUtils.Core.getDefaultVername(), oemid);
 
     MockWebServer server = new MockWebServer();
     server.enqueue(new MockResponse().setBody("OK"));
@@ -88,7 +89,11 @@ public class UserAgentTest {
     String url = server.url("/").toString();
 
     Request testRequest = new Request.Builder().url(url).build();
-    String result = OkHttpClientFactory.newClient(userData)
+    String result = OkHttpClientFactory.newClient(new UserAgentGenerator() {
+      @Override public String generateUserAgent() {
+        return userData;
+      }
+    })
         .newCall(testRequest)
         .execute()
         .body()

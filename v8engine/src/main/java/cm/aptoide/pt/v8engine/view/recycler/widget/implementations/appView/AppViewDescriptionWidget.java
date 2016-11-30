@@ -12,14 +12,13 @@ import android.widget.TextView;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.implementations.DescriptionFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDescriptionDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
-import rx.Subscription;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by sithengineer on 10/05/16.
@@ -31,8 +30,6 @@ import rx.subscriptions.CompositeSubscription;
   private Button readMoreBtn;
   private String storeName;
   private String storeTheme;
-  private Subscription buttonSubscription;
-  private CompositeSubscription subscriptions;
   private GetAppMeta.Media media;
   private GetAppMeta.App app;
 
@@ -53,38 +50,26 @@ import rx.subscriptions.CompositeSubscription;
 
     if (!TextUtils.isEmpty(media.getDescription())) {
       descriptionTextView.setText(AptoideUtils.HtmlU.parse(media.getDescription()));
-      buttonSubscription = RxView.clicks(readMoreBtn).subscribe(click -> {
-        ((FragmentShower) getContext()).pushFragmentV4(
-            DescriptionFragment.newInstance(app.getId(), storeName, storeTheme));
-      });
+      compositeSubscription.add(RxView.clicks(readMoreBtn).subscribe(click -> {
+        ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
+            .newDescriptionFragment(app.getId(), storeName, storeTheme));
+      }));
     } else {
       // only show "default" description if the app doesn't have one
       descriptionTextView.setText(R.string.description_not_available);
       readMoreBtn.setVisibility(View.GONE);
     }
-  }
 
-  @Override public void onViewAttached() {
-    if (subscriptions == null) {
-      subscriptions = new CompositeSubscription();
-      if (!TextUtils.isEmpty(media.getDescription())) {
-        descriptionTextView.setText(AptoideUtils.HtmlU.parse(media.getDescription()));
-        subscriptions.add(RxView.clicks(readMoreBtn).subscribe(click -> {
-          ((FragmentShower) getContext()).pushFragmentV4(
-              DescriptionFragment.newInstance(app.getId(), storeName, storeTheme));
-        }));
-      } else {
-        // only show "default" description if the app doesn't have one
-        descriptionTextView.setText(R.string.description_not_available);
-        readMoreBtn.setVisibility(View.GONE);
-      }
-    }
-  }
-
-  @Override public void onViewDetached() {
-    if (subscriptions != null) {
-      subscriptions.unsubscribe();
-      subscriptions = null;
+    if (!TextUtils.isEmpty(media.getDescription())) {
+      descriptionTextView.setText(AptoideUtils.HtmlU.parse(media.getDescription()));
+      compositeSubscription.add(RxView.clicks(readMoreBtn).subscribe(click -> {
+        ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
+            .newDescriptionFragment(app.getId(), storeName, storeTheme));
+      }));
+    } else {
+      // only show "default" description if the app doesn't have one
+      descriptionTextView.setText(R.string.description_not_available);
+      readMoreBtn.setVisibility(View.GONE);
     }
   }
 }

@@ -325,8 +325,8 @@
   <string name="setting_hwspecssum">Hardware Info about your phone</string>
   <string name="setting_appfiltersum">Don\'t show applications that are not compatible with this device</string>
   <string name="setting_appfiltertitle">Filter Applications</string>
-  <string name="setting_category_autoupdate">Aptoide Auto update</string>
-  <string name="setting_category_autoupdate_title">Enable Aptoide auto update</string>
+  <string name="setting_category_autoupdate">%s Auto update</string>
+  <string name="setting_category_autoupdate_title">Enable %s auto update</string>
   <string name="setting_dont_show_mature_content">Show mature content</string>
   <string name="setting_mature_filtering">Adult Content</string>
   <string name="setting_updates">Updates</string>
@@ -340,9 +340,8 @@
   <string name="setting_allUpdates_filtering">Filter Updates</string>
   <string name="setting_schdwninstallsum">Install scheduled downloads automatically when a WiFi connection is present</string>
   <string name="setting_schdwninstalltitle">Automatic Install</string>
-  <string name="setting_clear_memory">Clear Memory</string>
+  <string name="setting_clear_memory">Storage</string>
   <string name="clearcontent_title">Remove data and configurations</string>
-  <string name="clearcache_title">Clear cache</string>
   <string name="settings_maxFileCache_sum">Set a maximum size to keep your apk files</string>
   <string name="settings_maxFileCache_title">Download File Cache (MB)</string>
   <string name="change_theme">Change theme</string>

@@ -9,6 +9,7 @@ import android.content.Context;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,12 +18,15 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Review;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -42,6 +46,7 @@ import java.util.List;
 
   private static final String TAG = AppViewRateAndReviewsWidget.class.getSimpleName();
   private static final int MAX_COMMENTS = 3;
+  public static final long TIME_BETWEEN_SCROLL = DateUtils.SECOND_IN_MILLIS;
 
   private View emptyReviewsLayout;
   private View ratingLayout;
@@ -114,7 +119,7 @@ import java.util.List;
     View.OnClickListener commentsOnClickListener = v -> {
       ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
           .newRateAndReviewsFragment(app.getId(), app.getName(), app.getStore().getName(),
-              app.getPackageName()));
+              app.getPackageName(), app.getStore().getAppearance().getTheme()));
     };
     readAllButton.setOnClickListener(commentsOnClickListener);
     commentsLayout.setOnClickListener(commentsOnClickListener);
@@ -129,10 +134,7 @@ import java.util.List;
     loadReviews();
   }
 
-  @Override public void onViewAttached() {
-  }
-
-  @Override public void onViewDetached() {
+  @Override public void unbindView() {
   }
 
   private void loadReviews() {
@@ -146,7 +148,7 @@ import java.util.List;
         final int count = i + 1;
         topReviewsList.postDelayed(() -> {
           topReviewsList.smoothScrollToPosition(count);
-        }, count * 1700);
+        }, count * TIME_BETWEEN_SCROLL);
       }
     } else {
       Logger.w(TAG, "Not enough top reviews to do paging animation.");
@@ -155,8 +157,9 @@ import java.util.List;
 
   public void loadTopReviews(String storeName, String packageName) {
     ListReviewsRequest.ofTopReviews(storeName, packageName, MAX_COMMENTS,
-        AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail())
-        .execute(listReviews -> {
+        AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext()).getAptoideClientUUID()).execute(listReviews -> {
 
           List<Review> reviews = listReviews.getDatalist().getList();
           if (reviews == null || reviews.isEmpty()) {

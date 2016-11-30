@@ -250,9 +250,8 @@ public class GetUserTimelineRequestIntegrationTest {
                     ".com/apps/com-anishu-homebudget-lite-39-18849509" +
                     "-4401f53566e6402e3ae6f69f89518c65.apk", "http://pool.apk.aptoide" + "" +
                     ".com/apps/alt/Y29tLWFuaXNodS1ob21lYnVkZ2V0LWxpdGUtMzktMTg4NDk1MDktNDQwMWY1MzU2NmU2NDAyZTNhZTZmNjlmODk1MThjNjU.apk",
-                2372649), getStats(1073, getRating(3, 2,
-                Arrays.asList(getVote(5, 1), getVote(4, 0), getVote(3, 0), getVote(2, 0),
-                    getVote(1, 1)))), getStore(15, "apps", "http://pool.img.aptoide" +
+                2372649), getStats(1073, getRating(3, 2)),
+            getStore(15, "apps", "http://pool.img.aptoide" +
                     ".com/apps/815872daa4e7a55f93cb3692aff65e31_ravatar" + ".jpg", null, null,
                 getAppearance("Aptoide Official App Store",
                     DataProvider.getConfiguration().getDefaultTheme()),
@@ -409,9 +408,7 @@ public class GetUserTimelineRequestIntegrationTest {
             getApp(new App(), appId, appName, packageName, size, icon, graphic, appAdded,
                 appModified, appUpdated, uptype,
                 getFile(fileVersionName, fileVersionCode, md5, null, null, 0),
-                getStats(appDownloads, getRating(stars, total,
-                    Arrays.asList(getVote(5, 2), getVote(4, 0), getVote(3, 0), getVote(2, 0),
-                        getVote(1, 0)))))), new Ab(new Conversion("")))));
+                getStats(appDownloads, getRating(stars, total)))), new Ab(new Conversion("")))));
     testSubscriber.assertValue(getUserTimeline(BaseV7Response.Info.Status.OK, seconds, human,
         getDataList(storeLatestAppsTimelineItems, true, 0, 25, 25, 0, 9, 11)));
     testSubscriber.assertCompleted();
@@ -661,12 +658,10 @@ public class GetUserTimelineRequestIntegrationTest {
     return stats;
   }
 
-  @NonNull
-  private App.Stats.Rating getRating(int avg, int total, List<App.Stats.Rating.Vote> votes) {
+  @NonNull private App.Stats.Rating getRating(int avg, int total) {
     App.Stats.Rating rating = new App.Stats.Rating();
     rating.setAvg(avg);
     rating.setTotal(total);
-    rating.setVotes(votes);
     return rating;
   }
 
@@ -758,13 +753,6 @@ public class GetUserTimelineRequestIntegrationTest {
     SimpleDateFormat df = new SimpleDateFormat(dateFormat);
     df.setTimeZone(TimeZone.getTimeZone(timezone));
     return df.parse(date);
-  }
-
-  private App.Stats.Rating.Vote getVote(int value, int count) {
-    App.Stats.Rating.Vote vote = new App.Stats.Rating.Vote();
-    vote.setValue(value);
-    vote.setCount(count);
-    return vote;
   }
 
   private Publisher getPublisher(String publisher, String avatarUrl) {

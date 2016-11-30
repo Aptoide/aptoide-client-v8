@@ -61,4 +61,19 @@ public interface AptoidePreferencesConfiguration {
   boolean isAlwaysUpdate();
 
   String getDefaultTheme();
+
+  int getDefaultThemeRes();
+
+  String getFeedbackEmail();
+
+  boolean isLoginAvailable(SocialLogin login);
+
+  enum SocialLogin {
+    FACEBOOK,
+    GOOGLE
+  }
+
+  String getPartnerDimension();
+
+  String getVerticalDimension();
 }

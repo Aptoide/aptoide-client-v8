@@ -112,7 +112,7 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
    */
   public Integer getEventNamePosition(Event.Name name) {
     final Integer integer = availableEventsMap.get(name);
-    if (integer  == null) {
+    if (integer == null) {
       return -1;
     }
     return integer;

@@ -2,7 +2,6 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.support.v4.app.FragmentActivity;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.InstallManager;
@@ -37,9 +36,9 @@ public class UpdatesHeaderDisplayable extends Displayable {
   }
 
   public Observable<Progress<Download>> install(FragmentActivity context, Download download) {
-    if (installManager.showWarning() ) {
-      GenericDialogs.createGenericYesNoCancelMessage(context, null
-          , AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog) )
+    if (installManager.showWarning()) {
+      GenericDialogs.createGenericYesNoCancelMessage(context, null,
+          AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog))
           .subscribe(eResponse -> {
             switch (eResponse) {
               case YES:
@@ -50,6 +49,7 @@ public class UpdatesHeaderDisplayable extends Displayable {
                 break;
             }
           });
-    }    return installManager.install(context, download);
+    }
+    return installManager.install(context, download);
   }
 }

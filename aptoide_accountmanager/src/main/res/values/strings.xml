@@ -6,6 +6,7 @@
   <string name="link_device_webinstall">Link account with Webinstall</string>
   <string name="register">Sign Up</string>
   <string name="login">Login</string>
+  <string name="login_successful">Successful login</string>
   <string name="forgot_passwd">Forgot password?</string>
   <string name="fields_cannot_empty">Please check your email and password.</string>
   <string name="unknown_error">Unknown Error</string>
@@ -28,7 +29,7 @@
   <string name="facebook_email_permission_regected_message">Aptoide needs your email to make an
         account
     </string>
-  <string name="user_canceled">Canceled by user</string>
+  <string name="user_cancelled">Cancelled by user</string>
 
   <!--errors-->
   <string name="error_occured">An error occurred. Please try again</string>

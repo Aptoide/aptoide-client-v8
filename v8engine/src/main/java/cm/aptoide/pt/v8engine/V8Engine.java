@@ -5,7 +5,10 @@
 
 package cm.aptoide.pt.v8engine;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.database.sqlite.SQLiteDatabase;
@@ -13,6 +16,7 @@ import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
+import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
@@ -24,9 +28,8 @@ import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.repository.IdsRepository;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.downloadmanager.CacheHelper;
 import cm.aptoide.pt.downloadmanager.DownloadService;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.PRNGFixes;
@@ -37,12 +40,16 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AccountAnalytcsImp;
+import cm.aptoide.pt.v8engine.analytics.abtesting.ABTestManager;
 import cm.aptoide.pt.v8engine.configuration.ActivityProvider;
 import cm.aptoide.pt.v8engine.configuration.FragmentProvider;
 import cm.aptoide.pt.v8engine.configuration.implementation.ActivityProviderImpl;
 import cm.aptoide.pt.v8engine.configuration.implementation.FragmentProviderImpl;
 import cm.aptoide.pt.v8engine.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.v8engine.download.TokenHttpClient;
+import cm.aptoide.pt.v8engine.filemanager.CacheHelper;
+import cm.aptoide.pt.v8engine.filemanager.FileManager;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
@@ -63,13 +70,12 @@ import rx.schedulers.Schedulers;
 public abstract class V8Engine extends DataProvider {
 
   private static final String TAG = V8Engine.class.getName();
-
   @Getter static DownloadService downloadService;
   @Getter private static FragmentProvider fragmentProvider;
   @Getter private static ActivityProvider activityProvider;
   @Getter private static DisplayableWidgetMapping displayableWidgetMapping;
-  private RefWatcher refWatcher;
   @Setter @Getter private static boolean autoUpdateWasCalled = false;
+  private RefWatcher refWatcher;
 
   public static void loadStores() {
 
@@ -111,11 +117,23 @@ public abstract class V8Engine extends DataProvider {
 
   public static void loadUserData() {
     loadStores();
+    regenerateUserAgent();
+  }
+
+  private static void regenerateUserAgent() {
+    SecurePreferences.setUserAgent(AptoideUtils.NetworkUtils.getDefaultUserAgent(
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext()),
+        new UserData() {
+          @Override public String getUserEmail() {
+            return AptoideAccountManager.getUserEmail();
+          }
+        }, AptoideUtils.Core.getDefaultVername(), getConfiguration().getPartnerId()));
   }
 
   public static void clearUserData() {
     AccessorFactory.getAccessorFor(Store.class).removeAll();
     StoreUtils.subscribeStore(getConfiguration().getDefaultStore(), null, null);
+    regenerateUserAgent();
   }
 
   public static RefWatcher getRefWatcher(Context context) {
@@ -155,9 +173,14 @@ public abstract class V8Engine extends DataProvider {
 
     generateAptoideUUID().subscribe();
 
-    SecurePreferences.setUserAgent(AptoideUtils.NetworkUtils.getDefaultUserAgent(
-        new IdsRepository(SecurePreferencesImplementation.getInstance(), this),
-        AptoideAccountManager.getUserEmail()));
+    regenerateUserAgent();
+
+    IntentFilter intentFilter = new IntentFilter(AptoideAccountManager.LOGIN);
+    intentFilter.addAction(AptoideAccountManager.LOGOUT);
+    this.registerReceiver(new BroadcastReceiver() {
+      @Override public void onReceive(Context context, Intent intent) {
+      }
+    }, intentFilter);
 
     SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(this);
     Analytics.LocalyticsSessionControl.firstSession(sPref);
@@ -212,14 +235,24 @@ public abstract class V8Engine extends DataProvider {
     }
 
     final DownloadAccessor downloadAccessor = AccessorFactory.getAccessorFor(Download.class);
-    final DownloadManagerSettingsI settingsInterface = new DownloadManagerSettingsI();
+    FileManager fileManager = FileManager.build();
     AptoideDownloadManager.getInstance()
-        .init(this, new DownloadNotificationActionsActionsInterface(), settingsInterface,
-            downloadAccessor, new CacheHelper(downloadAccessor, settingsInterface),
+        .init(this, new DownloadNotificationActionsActionsInterface(),
+            new DownloadManagerSettingsI(), downloadAccessor, CacheHelper.build(),
             new FileUtils(action -> Analytics.File.moveFile(action)), new TokenHttpClient(
-                new IdsRepository(SecurePreferencesImplementation.getInstance(), this),
-                AptoideAccountManager.getUserEmail()));
+                new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this),
+                new UserData() {
+                  @Override public String getUserEmail() {
+                    return AptoideAccountManager.getUserEmail();
+                  }
+                }, getConfiguration().getPartnerId()));
 
+    fileManager.purgeCache()
+        .subscribe(cleanedSize -> Logger.d(TAG,
+            "cleaned size: " + AptoideUtils.StringU.formatBytes(cleanedSize)), throwable -> {
+          Logger.e(TAG, throwable);
+          CrashReports.logException(throwable);
+        });
     // setupCurrentActivityListener();
 
     //if (BuildConfig.DEBUG) {
@@ -231,6 +264,16 @@ public abstract class V8Engine extends DataProvider {
     SQLiteDatabase db = new SQLiteDatabaseHelper(this).getWritableDatabase();
     db.close();
 
+    ABTestManager.getInstance()
+        .initialize(new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            this).getAptoideClientUUID())
+        .subscribe(success -> {
+        }, throwable -> {
+          Logger.d(TAG, "An error has occurred when initializing the ABTestManager");
+          CrashReports.logException(throwable);
+        });
+
+    AptoideAccountManager.setAnalytics(new AccountAnalytcsImp());
     Logger.d(TAG, "onCreate took " + (System.currentTimeMillis() - l) + " millis.");
   }
 
@@ -248,7 +291,7 @@ public abstract class V8Engine extends DataProvider {
 
   Observable<String> generateAptoideUUID() {
     return Observable.fromCallable(
-        () -> new IdsRepository(SecurePreferencesImplementation.getInstance(),
+        () -> new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             this).getAptoideClientUUID()).subscribeOn(Schedulers.computation());
   }
 

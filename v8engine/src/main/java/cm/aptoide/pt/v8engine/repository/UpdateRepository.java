@@ -6,9 +6,11 @@ import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.database.schedulers.RealmSchedulers;
+import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
 import cm.aptoide.pt.model.v7.listapp.App;
-import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import java.util.Collections;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -36,18 +38,31 @@ import rx.schedulers.Schedulers;
         .map(store -> store.getStoreId())
         .toList()
         .flatMap(storeIds -> getNetworkUpdates(storeIds, bypassCache))
-        .flatMapIterable(listAppsUpdates -> listAppsUpdates.getList())
-        .flatMap(app -> saveUpdate(app))
-        .flatMap(success -> getStoredUpdates());
+        .flatMap(updates -> {
+          if (!updates.isEmpty()) {
+            // network fetch succeeded. remove local non-excluded updates
+            // and save the new updates
+            return removeNonExcluded().flatMapIterable(aVoid -> updates)
+                .flatMap(app -> saveUpdate(app))
+                .toList();
+          }
+          // there was a network error
+          return Observable.just(null);
+        })
+        // return the local (non-excluded) updates
+        .flatMap(aVoid -> getStoredUpdates());
   }
 
-  private Observable<ListAppsUpdates> getNetworkUpdates(List<Long> storeIds, boolean bypassCache) {
+  private Observable<List<App>> getNetworkUpdates(List<Long> storeIds, boolean bypassCache) {
     return ListAppsUpdatesRequest.of(storeIds, AptoideAccountManager.getAccessToken(),
-        AptoideAccountManager.getUserEmail()).observe(bypassCache).onErrorReturn(throwable -> {
-      ListAppsUpdates listAppsUpdates = new ListAppsUpdates();
-      listAppsUpdates.setList(Collections.emptyList());
-      return listAppsUpdates;
-    });
+        AptoideAccountManager.getUserEmail(),
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext()).getAptoideClientUUID()).observe(bypassCache).map(result -> {
+      if (result.isOk()) {
+        return result.getList();
+      }
+      return Collections.<App>emptyList();
+    }).onErrorReturn(throwable -> Collections.emptyList());
   }
 
   @NonNull private Observable<Void> saveUpdate(App app) {
@@ -82,12 +97,33 @@ import rx.schedulers.Schedulers;
     return updateAccessor.getAll();
   }
 
-  public void remove(Update update) {
-    updateAccessor.remove(update.getPackageName());
+  private Observable<Void> removeNonExcluded() {
+    return getStoredUpdates().first()
+        .flatMapIterable(list -> list)
+        .doOnNext(update -> remove(update))
+        .toList()
+        .map(list -> null);
   }
 
-  public void remove(String packageName) {
-    updateAccessor.remove(packageName);
+  public Observable<Void> removeAll() {
+    return Observable.fromCallable(() -> {
+      updateAccessor.removeAll();
+      return null;
+    });
+  }
+
+  public Observable<Void> remove(Update update) {
+    return Observable.fromCallable(() -> {
+      updateAccessor.remove(update.getPackageName());
+      return null;
+    });
+  }
+
+  public Observable<Void> remove(String packageName) {
+    return Observable.fromCallable(() -> {
+      updateAccessor.remove(packageName);
+      return null;
+    });
   }
 
   public Observable<List<Update>> getNonExcludedUpdates() {

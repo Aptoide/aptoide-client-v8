@@ -10,13 +10,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="56dp"
-    style="@style/AppViewWidget"
+    style="@style/AppViewWidgetFirst"
     >
-  <!-- progress bar while installing -->
+
+  <!-- progress bar while installing + actions: pause/resume/stop-->
   <RelativeLayout
       android:id="@+id/download_progress_layout"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
+      android:layout_height="match_parent"
       android:layout_gravity="center_vertical"
       android:orientation="horizontal"
       android:padding="7dp"
@@ -118,11 +119,12 @@
 
   </RelativeLayout>
 
-  <!-- install latest version buttons -->
+  <!-- other versions + latest version + install/update/downgrade/open buttons -->
   <RelativeLayout
       android:id="@+id/install_and_latest_version_layout"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
+      android:gravity="center_vertical"
       android:visibility="visible"
       tools:visibility="visible"
       >
@@ -143,6 +145,7 @@
         />
 
     <LinearLayout
+        android:id="@+id/versions_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
@@ -169,6 +172,7 @@
 
       <include
           layout="@layout/separator_vertical"
+          android:id="@+id/version_separator_vertical"
           android:layout_width="1dp"
           android:layout_height="match_parent"
           android:layout_marginEnd="14dp"
@@ -178,6 +182,7 @@
           />
 
       <LinearLayout
+          android:id="@+id/latest_version_layout"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
           android:layout_marginEnd="10dp"
@@ -229,7 +234,7 @@
             >
 
           <ImageView
-              android:layout_width="9dp"
+              android:layout_width="8dp"
               android:layout_height="wrap_content"
               android:src="@drawable/ic_appview_version"
               android:tint="@color/green_tint_default"

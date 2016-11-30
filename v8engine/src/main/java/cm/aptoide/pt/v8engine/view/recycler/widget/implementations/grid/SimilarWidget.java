@@ -10,12 +10,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SimilarDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -32,6 +34,7 @@ import okhttp3.Response;
  */
 public class SimilarWidget extends Widget<SimilarDisplayable> {
 
+  private final String cardType = "Similar";
   private TextView title;
   private TextView subtitle;
   private ImageView image;
@@ -88,8 +91,16 @@ public class SimilarWidget extends Widget<SimilarDisplayable> {
       knockWithSixpackCredentials(displayable.getAbUrl());
 
       Analytics.AppsTimeline.clickOnCard("Similar", displayable.getPackageName(),
-          Analytics.AppsTimeline.BLANK, displayable.getTitle(getContext()),
+          Analytics.AppsTimeline.BLANK, displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_APP_VIEW);
+      displayable.sendClickEvent(SendEventRequest.Body.Data.builder()
+          .cardType(cardType)
+          .source(AptoideAnalytics.SOURCE_APTOIDE)
+          .specific(SendEventRequest.Body.Specific.builder()
+              .app(displayable.getPackageName())
+              .similar_to(displayable.getSimilarToAppPackageName())
+              .build())
+          .build(), AptoideAnalytics.OPEN_APP);
       ((FragmentShower) getContext()).pushFragmentV4(
           V8Engine.getFragmentProvider().newAppViewFragment(displayable.getAppId()));
     });
@@ -130,11 +141,7 @@ public class SimilarWidget extends Widget<SimilarDisplayable> {
     cardView.setLayoutParams(layoutParams);
   }
 
-  @Override public void onViewAttached() {
-
-  }
-
-  @Override public void onViewDetached() {
+  @Override public void unbindView() {
 
   }
 }

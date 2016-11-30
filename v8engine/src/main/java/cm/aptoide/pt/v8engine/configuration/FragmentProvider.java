@@ -66,7 +66,8 @@ public interface FragmentProvider {
 
   Fragment newSubscribedStoresFragment();
 
-  Fragment newSearchPagerTabFragment(String query, boolean subscribedStores);
+  Fragment newSearchPagerTabFragment(String query, boolean subscribedStores,
+      boolean hasMultipleFragments);
 
   Fragment newSearchPagerTabFragment(String query, String storeName);
 
@@ -83,7 +84,7 @@ public interface FragmentProvider {
   Fragment newScheduledDownloadsFragment(ScheduledDownloadsFragment.OpenMode openMode);
 
   Fragment newRateAndReviewsFragment(long appId, String appName, String storeName,
-      String packageName);
+      String packageName, String storeTheme);
 
   Fragment newRateAndReviewsFragment(long appId, String appName, String storeName,
       String packageName, long reviewId);

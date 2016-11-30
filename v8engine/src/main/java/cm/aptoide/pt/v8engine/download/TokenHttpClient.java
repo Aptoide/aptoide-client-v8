@@ -6,7 +6,9 @@
 package cm.aptoide.pt.v8engine.download;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.actions.GenerateClientId;
+import cm.aptoide.pt.actions.AptoideClientUUID;
+import cm.aptoide.pt.actions.UserData;
+import cm.aptoide.pt.networkclient.okhttp.UserAgentGenerator;
 import cm.aptoide.pt.networkclient.okhttp.UserAgentInterceptor;
 import cm.aptoide.pt.utils.AptoideUtils;
 import com.liulishuo.filedownloader.util.FileDownloadHelper;
@@ -23,12 +25,14 @@ import okhttp3.Response;
  */
 public class TokenHttpClient implements FileDownloadHelper.OkHttpClientCustomMaker {
 
-  private final GenerateClientId generateClientId;
-  private final String email;
+  private final AptoideClientUUID aptoideClientUUID;
+  private final UserData userData;
+  private final String oemid;
 
-  public TokenHttpClient(GenerateClientId generateClientId, String email) {
-    this.generateClientId = generateClientId;
-    this.email = email;
+  public TokenHttpClient(AptoideClientUUID aptoideClientUUID, UserData userData, String oemid) {
+    this.aptoideClientUUID = aptoideClientUUID;
+    this.userData = userData;
+    this.oemid = oemid;
   }
 
   @Override public OkHttpClient customMake() {
@@ -48,9 +52,11 @@ public class TokenHttpClient implements FileDownloadHelper.OkHttpClientCustomMak
 
         return chain.proceed(request);
       }
-    })
-        .addInterceptor(new UserAgentInterceptor(
-            AptoideUtils.NetworkUtils.getDefaultUserAgent(generateClientId, email)))
-        .build();
+    }).addInterceptor(new UserAgentInterceptor(new UserAgentGenerator() {
+      @Override public String generateUserAgent() {
+        return AptoideUtils.NetworkUtils.getDefaultUserAgent(aptoideClientUUID, userData,
+            AptoideUtils.Core.getDefaultVername(), oemid);
+      }
+    })).build();
   }
 }

@@ -33,7 +33,6 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by neuro on 17-05-2016.
@@ -54,7 +53,6 @@ import rx.subscriptions.CompositeSubscription;
   private UpdateDisplayable displayable;
   private LinearLayout updateLayout;
   private ProgressBar progressBar;
-  private CompositeSubscription subscriptions;
 
   private UpdateRepository updateRepository;
 
@@ -83,11 +81,7 @@ import rx.subscriptions.CompositeSubscription;
     final String packageName = updateDisplayable.getPackageName();
     final InstalledAccessor accessor = AccessorFactory.getAccessorFor(Installed.class);
 
-    if (subscriptions == null || subscriptions.isUnsubscribed()) {
-      subscriptions = new CompositeSubscription();
-    }
-
-    subscriptions.add(accessor.get(packageName)
+    compositeSubscription.add(accessor.get(packageName)
         .first()
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(installed -> installedVernameTextView.setText(installed.getVersionName()),
@@ -106,14 +100,14 @@ import rx.subscriptions.CompositeSubscription;
           .setNegativeButton(R.string.no, null)
           .setPositiveButton(R.string.yes, (dialog, which) -> {
             if (which == DialogInterface.BUTTON_POSITIVE) {
-              updateRepository.setExcluded(packageName, true)
+              compositeSubscription.add(updateRepository.setExcluded(packageName, true)
                   .subscribe(success -> Logger.d(TAG,
                       String.format("Update with package name %s was excluded", packageName)),
                       throwable -> {
                         ShowMessage.asSnack(getContext(), R.string.unknown_error);
                         Logger.e(TAG, throwable);
                         CrashReports.logException(throwable);
-                      });
+                      }));
             }
             dialog.dismiss();
           });
@@ -124,30 +118,22 @@ import rx.subscriptions.CompositeSubscription;
     };
 
     updateRowRelativeLayout.setOnLongClickListener(longClickListener);
-  }
 
-  @Override public void onViewAttached() {
-    subscriptions.add(RxView.clicks(updateButtonLayout)
+    compositeSubscription.add(RxView.clicks(updateButtonLayout)
         .flatMap(
             click -> displayable.downloadAndInstall(getContext(), (PermissionRequest) getContext()))
         .retry()
         .subscribe(o -> {
         }, throwable -> throwable.printStackTrace()));
 
-    subscriptions.add(displayable.getUpdates()
-        .filter(
-            downloadProgress -> downloadProgress.getRequest().getMd5() == displayable.getDownload()
-                .getMd5())
+    compositeSubscription.add(displayable.getUpdates()
+        .filter(downloadProgress -> downloadProgress.getRequest()
+            .getMd5()
+            .equals(displayable.getDownload().getMd5()))
         .map(downloadProgress -> displayable.isDownloadingOrInstalling(downloadProgress))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(shouldShow -> showProgress(shouldShow),
             throwable -> throwable.printStackTrace()));
-  }
-
-  @Override public void onViewDetached() {
-    if (subscriptions != null && !subscriptions.isUnsubscribed()) {
-      subscriptions.unsubscribe();
-    }
   }
 
   @UiThread private void showProgress(Boolean showProgress) {
