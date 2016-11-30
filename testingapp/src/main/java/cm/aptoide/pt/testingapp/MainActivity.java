@@ -71,21 +71,9 @@ public class MainActivity extends AppCompatActivity {
     tv = (TextView) findViewById(R.id.tv);
 
     Aptoide.integrate(this, "dummyoem");
-    List<Ad> ads = Aptoide.getAds(10);
 
-    final int POS = 1;
-
-    if (ads != null && ads.size() > POS) {
-      Ad ad = ads.get(POS);
-      App app = Aptoide.getApp(ad);
-
-      String path = app.getFile().getPath();
-
-      IntentFilter filter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
-      registerReceiver(downloadReceiver, filter);
-
-      //downloadData(app.getFile().getPath());
-    }
+    IntentFilter filter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
+    registerReceiver(downloadReceiver, filter);
   }
 
   private void bindViews() {
