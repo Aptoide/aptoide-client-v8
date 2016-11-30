@@ -154,7 +154,7 @@ import rx.Observable;
     parameters.put("lang", Api.LANG);
     parameters.put("cpuid", aptoideClientUUID);
     parameters.put("aptvercode", Integer.toString(AptoideUtils.Core.getVerCode()));
-    parameters.put("location", "native-aptoide:" + location);
+    parameters.put("location", location.toString());
     parameters.put("type", "1-3");
     parameters.put("partners", "1-3,5-10");
     parameters.put("keywords", keyword);
@@ -208,12 +208,22 @@ import rx.Observable;
   }
 
   public enum Location {
-    homepage,
-    appview,
-    middleappview,
-    search,
-    secondinstall,
-    secondtry,
-    aptoidesdk
+    homepage("native-aptoide:homepage"),
+    appview("native-aptoide:appview"),
+    middleappview("native-aptoide:middleappview"),
+    search("native-aptoide:search"),
+    secondinstall("native-aptoide:secondinstall"),
+    secondtry("native-aptoide:secondtry"),
+    aptoidesdk("sdk-aptoide:generic");
+
+    private final String value;
+
+    Location(String value) {
+      this.value = value;
+    }
+
+    @Override public String toString() {
+      return value;
+    }
   }
 }
