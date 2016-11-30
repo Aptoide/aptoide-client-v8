@@ -111,4 +111,8 @@ import rx.schedulers.Schedulers;
   public void sendOpenVideoEvent(SendEventRequest.Body.Data data, String eventName) {
     timelineMetricsManager.sendEvent(data, eventName);
   }
+
+  @Override public void share(Context context, String cardType) {
+
+  }
 }

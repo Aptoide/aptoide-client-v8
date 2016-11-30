@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
@@ -131,5 +130,9 @@ import lombok.Getter;
 
   public void sendClickEvent(SendEventRequest.Body.Data data, String eventName) {
     timelineMetricsManager.sendEvent(data, eventName);
+  }
+
+  @Override public void share(Context context, String cardType) {
+
   }
 }

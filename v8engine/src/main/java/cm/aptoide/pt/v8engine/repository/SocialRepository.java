@@ -1,20 +1,13 @@
 package cm.aptoide.pt.v8engine.repository;
 
-import android.app.Activity;
-import android.content.Context;
-import android.widget.Toast;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.ShareCardRequest;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.listapp.App;
+import cm.aptoide.pt.model.v7.timeline.Article;
+import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
-import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.v8engine.R;
-import java.util.Date;
-import java.util.List;
 import rx.schedulers.Schedulers;
 
 /**
@@ -25,39 +18,18 @@ public class SocialRepository {
 
   }
 
-  public void share(Context context, String cardType, List<App> relatedToAppsList, String url,
-      String articleTitle, String thumbnailUrl, String title, String developerLinkUrl,
-      String avatarUrl, Date date, String cardId, String ownerHash) {
-    if (!AptoideAccountManager.isLoggedIn()) {
-      ShowMessage.asSnack((Activity) context, R.string.you_need_to_be_logged_in, R.string.login,
-          snackView -> {
-            AptoideAccountManager.openAccountManager(snackView.getContext());
-          });
-      return;
+  public void share(TimelineCard timelineCard, String cardType, String ownerHash) {
+    if (timelineCard instanceof Article) {
+      ShareCardRequest.ofArticle((Article) timelineCard, cardType, ownerHash,
+          AptoideAccountManager.getAccessToken(),
+          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+              DataProvider.getContext()).getAptoideClientUUID(),
+          AptoideAccountManager.getUserEmail())
+          .observe()
+          .observeOn(Schedulers.io())
+          .subscribe(baseV7Response -> Logger.d(this.getClass().getSimpleName(),
+              baseV7Response.toString()));
     }
-    GenericDialogs.createGenericShareCancelMessage(context, "", "Share card with your followers?")
-        .subscribe(eResponse -> {
-          switch (eResponse) {
-            case YES:
-              Toast.makeText(context, "Sharing card with your followers...", Toast.LENGTH_SHORT)
-                  .show();
-              ShareCardRequest.of(cardType, relatedToAppsList, url, articleTitle, thumbnailUrl,
-                  title, developerLinkUrl, avatarUrl, date, cardId, ownerHash,
-                  AptoideAccountManager.getAccessToken(),
-                  new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                      DataProvider.getContext()).getAptoideClientUUID(),
-                  AptoideAccountManager.getUserEmail())
-                  .observe()
-                  .observeOn(Schedulers.io())
-                  .subscribe(baseV7Response -> Logger.d(this.getClass().getSimpleName(),
-                      baseV7Response.toString()));
-              break;
-            case NO:
-            case CANCEL:
-            default:
-              break;
-          }
-        });
   }
 
   public void like() {

@@ -129,4 +129,8 @@ import rx.schedulers.Schedulers;
   @Override public int getViewLayout() {
     return R.layout.displayable_social_timeline_social_article;
   }
+
+  @Override public void share(Context context, String cardType) {
+
+  }
 }

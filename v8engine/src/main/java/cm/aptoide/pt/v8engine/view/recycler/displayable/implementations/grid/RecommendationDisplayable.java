@@ -134,4 +134,8 @@ import lombok.Getter;
   public void sendClickEvent(SendEventRequest.Body.Data data, String eventName) {
     timelineMetricsManager.sendEvent(data, eventName);
   }
+
+  @Override public void share(Context context, String cardType) {
+
+  }
 }

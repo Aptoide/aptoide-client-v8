@@ -2,8 +2,13 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.support.v7.widget.CardView;
 import android.view.View;
+import android.widget.Toast;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.utils.GenericDialogs;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.BuildConfig;
+import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CardDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -57,5 +62,29 @@ public abstract class CardWidget<T extends Displayable> extends Widget<T> {
         displayable.getMarginWidth(getContext(),
             getContext().getResources().getConfiguration().orientation), 30);
     cardView.setLayoutParams(layoutParams);
+  }
+
+  public void shareCard(CardDisplayable displayable, String cardType) {
+    if (!AptoideAccountManager.isLoggedIn()) {
+      ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
+          snackView -> {
+            AptoideAccountManager.openAccountManager(snackView.getContext());
+          });
+      return;
+    }
+    GenericDialogs.createGenericShareCancelMessage(getContext(), "",
+        "Share card with your followers?").subscribe(eResponse -> {
+      switch (eResponse) {
+        case YES:
+          Toast.makeText(getContext(), "Sharing card with your followers...", Toast.LENGTH_SHORT)
+              .show();
+          displayable.share(getContext(), cardType.toUpperCase());
+          break;
+        case NO:
+        case CANCEL:
+        default:
+          break;
+      }
+    });
   }
 }

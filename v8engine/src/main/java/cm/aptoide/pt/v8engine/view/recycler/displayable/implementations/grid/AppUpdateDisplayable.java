@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
@@ -23,7 +22,6 @@ import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import java.util.Date;
 import lombok.AllArgsConstructor;
@@ -69,7 +67,7 @@ import rx.Observable;
         appUpdate.getStore().getName(), appUpdate.getAdded(), appUpdate.getFile().getVername(),
         spannableFactory, appUpdate.getName(), appUpdate.getPackageName(),
         downloadFactory.create(appUpdate, Download.ACTION_UPDATE), dateCalculator,
-        appUpdate.getId(), abTestingURL,installManager, permissionManager, timelineMetricsManager);
+        appUpdate.getId(), abTestingURL, installManager, permissionManager, timelineMetricsManager);
   }
 
   public Observable<Progress<Download>> update(Context context) {
@@ -159,5 +157,9 @@ import rx.Observable;
 
   public void sendClickEvent(SendEventRequest.Body.Data data, String eventName) {
     timelineMetricsManager.sendEvent(data, eventName);
+  }
+
+  @Override public void share(Context context, String cardType) {
+
   }
 }

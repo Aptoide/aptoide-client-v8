@@ -61,6 +61,10 @@ import lombok.Getter;
     timelineMetricsManager.sendEvent(data, eventName);
   }
 
+  @Override public void share(Context context, String cardType) {
+
+  }
+
   @EqualsAndHashCode @AllArgsConstructor public static class LatestApp {
 
     @Getter private final long appId;

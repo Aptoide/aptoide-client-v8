@@ -29,4 +29,6 @@ public abstract class CardDisplayable extends Displayable {
       return (int) (width * 0.1);
     }
   }
+
+  public abstract void share(Context context, String cardType);
 }

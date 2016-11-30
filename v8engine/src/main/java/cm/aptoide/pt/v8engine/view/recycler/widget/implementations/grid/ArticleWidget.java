@@ -15,26 +15,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ArticleDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
-import java.io.IOException;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Credentials;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -159,7 +148,7 @@ public class ArticleWidget extends CardWidget<ArticleDisplayable> {
     }));
 
     compositeSubscription.add(RxView.clicks(share).subscribe(click -> {
-      displayable.share(getContext(), cardType.toUpperCase());
+      shareCard(displayable, cardType);
     }, throwable -> throwable.printStackTrace()));
 
     compositeSubscription.add(RxView.clicks(like).subscribe(click -> {
