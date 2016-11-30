@@ -15,7 +15,7 @@ import rx.Observable;
 public class GetAdsProxy {
 
   private final boolean DEFAULT_MATURE = false;
-  private GetAdsRequest.Location ADS_LOCATION = GetAdsRequest.Location.homepage;
+  private GetAdsRequest.Location ADS_LOCATION = GetAdsRequest.Location.aptoidesdk;
   private String DEFAULT_KEYWORD = "__NULL__";
 
   public Observable<GetAdsResponse> getAds(int limit, boolean mature, String aptoideClientUUID) {
