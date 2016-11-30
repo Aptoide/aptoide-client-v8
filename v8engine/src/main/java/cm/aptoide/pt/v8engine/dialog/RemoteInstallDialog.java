@@ -1,44 +1,37 @@
 package cm.aptoide.pt.v8engine.dialog;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.InsetDrawable;
 import android.net.Uri;
-import android.os.Handler;
-import android.support.v4.app.DialogFragment;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-
-import java.util.ArrayList;
-import java.util.List;
-
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.adapters.ReceiverDeviceAdapter;
 import cm.aptoide.pt.v8engine.remoteinstall.ReceiverDevice;
 import cm.aptoide.pt.v8engine.remoteinstall.RemoteInstallationSenderListener;
 import cm.aptoide.pt.v8engine.remoteinstall.RemoteInstallationSenderManager;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by franciscoaleixo on 18-08-2016.
  */
 public class RemoteInstallDialog extends DialogFragment implements RemoteInstallationSenderListener {
     private final static String APP_ID_TAG = "appid";
-    private enum Error {NO_NETWORK, NO_DEVICES_FOUND}
-
     private ProgressBar pBar;
     private ListView listView;
     private LinearLayout errorLayout;
@@ -46,7 +39,6 @@ public class RemoteInstallDialog extends DialogFragment implements RemoteInstall
     private LinearLayout listLayout;
     private ImageButton refreshBtn;
     private TextView aptoideTVInstalledText;
-
     private RemoteInstallationSenderManager sManager;
     private ReceiverDeviceAdapter adapter;
     private String app;
@@ -66,7 +58,13 @@ public class RemoteInstallDialog extends DialogFragment implements RemoteInstall
         super.onDismiss(dialog);
     }
 
-    @Override
+  @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
+    Dialog dialog = super.onCreateDialog(savedInstanceState);
+    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+    return dialog;
+  }
+
+  @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         app = "" + getArguments().getLong(APP_ID_TAG);
@@ -77,9 +75,11 @@ public class RemoteInstallDialog extends DialogFragment implements RemoteInstall
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Needed for rounded edges
-        InsetDrawable background = (InsetDrawable) getDialog().getWindow().getDecorView().getBackground();
-        background.setAlpha(0);
-
+      if (getDialog() != null
+          && getDialog().getWindow() != null
+          && getDialog().getWindow().getDecorView() != null) {
+        getDialog().getWindow().getDecorView().getBackground().setAlpha(0);
+      }
         View v = inflater.inflate(R.layout.dialog_remote_install, container, false);
         pBar = (ProgressBar) v.findViewById(R.id.progressBar);
         errorLayout = (LinearLayout) v.findViewById(R.id.errorLayout);
@@ -192,4 +192,6 @@ public class RemoteInstallDialog extends DialogFragment implements RemoteInstall
         Toast.makeText(getContext(), R.string.remote_install_fail, Toast.LENGTH_LONG).show();
         dismiss();
     }
+
+  private enum Error {NO_NETWORK, NO_DEVICES_FOUND}
 }

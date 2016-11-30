@@ -5,9 +5,8 @@
 
 package cm.aptoide.accountmanager.ws;
 
+import android.text.TextUtils;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -28,7 +27,8 @@ import rx.Observable;
   private String email;
   private String name;
 
-  CreateUserRequest(){ }
+  CreateUserRequest() {
+  }
 
   CreateUserRequest(OkHttpClient httpClient, Converter.Factory converterFactory) {
     super(httpClient, converterFactory);
@@ -49,7 +49,7 @@ import rx.Observable;
     parameters.put("email", email);
     parameters.put("passhash", passhash);
 
-    if(Application.getConfiguration().getExtraId().length()>0){
+    if (!TextUtils.isEmpty(Application.getConfiguration().getExtraId())) {
       parameters.put("oem_id", Application.getConfiguration().getExtraId());
     }
 

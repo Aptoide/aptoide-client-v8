@@ -374,7 +374,7 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
           load(true, true, null);
         } else {
           Logger.i(TAG, "The user canceled.");
-          ShowMessage.asSnack(header.badge, R.string.user_canceled);
+          ShowMessage.asSnack(header.badge, R.string.user_cancelled);
         }
       } else {
         Logger.i(TAG,

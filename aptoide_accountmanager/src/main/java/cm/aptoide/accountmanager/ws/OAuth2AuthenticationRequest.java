@@ -6,9 +6,8 @@
 package cm.aptoide.accountmanager.ws;
 
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.Application;
 import lombok.Data;
@@ -31,7 +30,8 @@ public class OAuth2AuthenticationRequest extends v3accountManager<OAuth> {
   private String grantType;
   private String refreshToken;
 
-  public OAuth2AuthenticationRequest() { }
+  public OAuth2AuthenticationRequest() {
+  }
 
   public OAuth2AuthenticationRequest(OkHttpClient httpClient, Converter.Factory converterFactory) {
     super(httpClient, converterFactory);
@@ -81,7 +81,7 @@ public class OAuth2AuthenticationRequest extends v3accountManager<OAuth> {
       parameters.put("refresh_token", refreshToken);
     }
 
-    if(Application.getConfiguration().getExtraId().length()>0){
+    if (!TextUtils.isEmpty(Application.getConfiguration().getExtraId())) {
       parameters.put("oem_id", Application.getConfiguration().getExtraId());
     }
 
