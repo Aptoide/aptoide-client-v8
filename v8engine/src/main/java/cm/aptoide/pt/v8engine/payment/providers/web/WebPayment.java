@@ -36,17 +36,19 @@ public class WebPayment extends AbstractPayment {
   }
 
   @Override public Observable<PaymentConfirmation> process() {
-    return authorizationRepository.getPaymentAuthorization(getId()).flatMap(authorization -> {
-      if (authorization.isAuthorized()) {
-        return confirmationRepository.createPaymentConfirmation(this);
-      } else if (authorization.isPending()) {
-        return Observable.empty();
-      } else {
-        startWebAuthorizationActivity(authorization.getUrl(), authorization.getRedirectUrl());
-        backgroundSync.schedule();
-        return Observable.empty();
-      }
-    });
+    return authorizationRepository.getPaymentAuthorization(getId())
+        .distinctUntilChanged(paymentAuthorization -> paymentAuthorization.getStatus())
+        .flatMap(authorization -> {
+          if (authorization.isAuthorized()) {
+            return confirmationRepository.createPaymentConfirmation(this);
+          } else if (authorization.isPending()) {
+            return Observable.empty();
+          } else {
+            startWebAuthorizationActivity(authorization.getUrl(), authorization.getRedirectUrl());
+            backgroundSync.schedule();
+            return Observable.empty();
+          }
+        });
   }
 
   private void startWebAuthorizationActivity(String url, String resultUrl) {
