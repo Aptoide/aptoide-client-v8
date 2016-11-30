@@ -22,7 +22,8 @@ public class PaymentConfirmationSync extends AbstractSync {
   }
 
   @Override public void sync(SyncResult syncResult) {
-    paymentConfirmationRepository.getPaymentConfirmations()
+    try {
+      paymentConfirmationRepository.getPaymentConfirmations()
         .first()
         .flatMapIterable(paymentConfirmations -> paymentConfirmations)
         .flatMap(paymentConfirmation -> {
@@ -41,6 +42,9 @@ public class PaymentConfirmationSync extends AbstractSync {
         })
         .toBlocking()
         .subscribe();
+    } catch (RuntimeException e) {
+      rescheduleSync(syncResult);
+    }
   }
 
   private void rescheduleIncompletedPaymentSync(PaymentConfirmation paymentConfirmation,
