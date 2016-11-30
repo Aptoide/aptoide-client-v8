@@ -22,17 +22,21 @@ public class PaymentAuthorizationSync extends AbstractSync {
   }
 
   @Override public void sync(SyncResult syncResult) {
-    authorizationRepository.getPaymentAuthorizations()
-        .first()
-        .flatMapIterable(paymentAuthorizations -> paymentAuthorizations)
-        .doOnNext(paymentAuthorization -> {
-          if (!paymentAuthorization.isAuthorized()) {
-            rescheduleSync(syncResult);
-          }
-        })
-        .toList()
-        .onErrorReturn(throwable -> null)
-        .toBlocking()
-        .subscribe();
+    try {
+      authorizationRepository.getPaymentAuthorizations()
+          .first()
+          .flatMapIterable(paymentAuthorizations -> paymentAuthorizations)
+          .doOnNext(paymentAuthorization -> {
+            if (!paymentAuthorization.isAuthorized()) {
+              rescheduleSync(syncResult);
+            }
+          })
+          .toList()
+          .onErrorReturn(throwable -> null)
+          .toBlocking()
+          .subscribe();
+    } catch (RuntimeException e) {
+      rescheduleSync(syncResult);
+    }
   }
 }
