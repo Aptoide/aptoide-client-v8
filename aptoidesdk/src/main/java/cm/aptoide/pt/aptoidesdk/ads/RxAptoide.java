@@ -23,13 +23,13 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-import static android.content.ContentValues.TAG;
-
 /**
  * Created by neuro on 10-11-2016.
  */
 
 public class RxAptoide {
+
+  private static final String TAG = RxAptoide.class.getSimpleName();
 
   private static final GetAdsProxy getAdsProxy = new GetAdsProxy();
   private static final ListSearchAppsProxy listSearchAppsProxy = new ListSearchAppsProxy();
@@ -85,6 +85,15 @@ public class RxAptoide {
         .onErrorReturn(throwable -> null);
   }
 
+  static Observable<App> getApp(AptoideAd ad) {
+    handleAds(ad).subscribe(t -> {
+    }, throwable -> Logger.w(TAG, "Error extracting referrer.", throwable));
+
+    return getAppProxy.getApp(ad.getAppId(), aptoideClientUUID)
+        .map(EntitiesFactory::createApp)
+        .onErrorReturn(throwable -> null);
+  }
+
   static Observable<App> getApp(long appId) {
     return getAppProxy.getApp(appId, aptoideClientUUID)
         .map(EntitiesFactory::createApp).doOnNext(app -> handleOrganicAds(app.getPackageName()))
@@ -127,18 +136,11 @@ public class RxAptoide {
         .onErrorReturn(throwable -> new LinkedList<>());
   }
 
-  static Observable<App> getApp(AptoideAd ad) {
-    return getApp(ad.getAppId()).map(app -> {
-      handleAds(ad).subscribe(t -> {
-      }, throwable -> Logger.w(TAG, "Error extracting referrer.", throwable));
-      return app;
-    });
-  }
-
   private static Subscription handleOrganicAds(String packageName) {
     return getAdsProxy.getAds(packageName, aptoideClientUUID)
         .filter(ReferrerUtils::hasAds)
-        .map(ReferrerUtils::parse).doOnNext(ads -> handleAds((AptoideAd) ads.get(0)))
+        .map(ReferrerUtils::parse)
+        .flatMap(ads -> handleAds((AptoideAd) ads.get(0)))
         .onErrorReturn(throwable -> new LinkedList<>())
         .subscribe();
   }
