@@ -78,6 +78,7 @@ public class PaymentConfirmationRepository {
             PaymentConfirmation.Status.valueOf(response.getPaymentStatus()));
         return Observable.just(paymentConfirmation);
       }
+      paymentConfirmation.setStatus(PaymentConfirmation.Status.FAILED);
       return Observable.just(paymentConfirmation);
     }).onErrorReturn(throwable -> paymentConfirmation);
   }
