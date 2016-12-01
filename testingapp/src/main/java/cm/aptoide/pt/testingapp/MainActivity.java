@@ -17,7 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.aptoidesdk.Ad;
-import cm.aptoide.pt.aptoidesdk.ads.Aptoide;
+import cm.aptoide.pt.aptoidesdk.Aptoide;
 import cm.aptoide.pt.aptoidesdk.entities.App;
 import cm.aptoide.pt.aptoidesdk.entities.SearchResult;
 import cm.aptoide.pt.imageloader.ImageLoader;

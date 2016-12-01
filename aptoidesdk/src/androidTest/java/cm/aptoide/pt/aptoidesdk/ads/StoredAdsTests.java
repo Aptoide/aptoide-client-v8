@@ -3,6 +3,7 @@ package cm.aptoide.pt.aptoidesdk.ads;
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import cm.aptoide.pt.aptoidesdk.Ad;
+import cm.aptoide.pt.aptoidesdk.Aptoide;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.Collection;
 import java.util.List;

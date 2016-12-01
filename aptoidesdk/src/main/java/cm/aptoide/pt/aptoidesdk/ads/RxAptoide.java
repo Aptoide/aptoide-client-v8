@@ -81,7 +81,7 @@ public class RxAptoide {
     return oemid;
   }
 
-  static Observable<App> getApp(String packageName, String storeName) {
+  public static Observable<App> getApp(String packageName, String storeName) {
     handleOrganicAds(packageName);
 
     return getAppProxy.getApp(packageName, storeName, aptoideClientUUID)
@@ -89,7 +89,7 @@ public class RxAptoide {
         .onErrorReturn(throwable -> null);
   }
 
-  static Observable<App> getApp(AptoideAd ad) {
+  public static Observable<App> getApp(Ad ad) {
     handleAds(ad).subscribe(t -> {
     }, throwable -> Logger.w(TAG, "Error extracting referrer.", throwable));
 
@@ -98,7 +98,7 @@ public class RxAptoide {
         .onErrorReturn(throwable -> null);
   }
 
-  static Observable<App> getApp(long appId) {
+  public static Observable<App> getApp(long appId) {
     return getAppProxy.getApp(appId, aptoideClientUUID)
         .map(EntitiesFactory::createApp).doOnNext(app -> handleOrganicAds(app.getPackageName()))
         .onErrorReturn(throwable -> null);
@@ -143,13 +143,12 @@ public class RxAptoide {
   private static Subscription handleOrganicAds(String packageName) {
     return getAdsProxy.getAds(packageName, aptoideClientUUID)
         .filter(ReferrerUtils::hasAds)
-        .map(ReferrerUtils::parse)
-        .flatMap(ads -> handleAds((AptoideAd) ads.get(0)))
+        .map(ReferrerUtils::parse).flatMap(ads -> handleAds(ads.get(0)))
         .onErrorReturn(throwable -> new LinkedList<>())
         .subscribe();
   }
 
-  @NonNull private static Observable<Object> handleAds(AptoideAd ad) {
+  @NonNull private static Observable<Object> handleAds(Ad ad) {
     return Observable.fromCallable(() -> {
       ReferrerUtils.knockCpc(ad);
       return new Object();

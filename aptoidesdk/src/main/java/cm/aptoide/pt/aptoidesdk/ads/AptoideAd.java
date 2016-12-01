@@ -1,6 +1,7 @@
 package cm.aptoide.pt.aptoidesdk.ads;
 
 import cm.aptoide.pt.aptoidesdk.Ad;
+import cm.aptoide.pt.aptoidesdk.Aptoide;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

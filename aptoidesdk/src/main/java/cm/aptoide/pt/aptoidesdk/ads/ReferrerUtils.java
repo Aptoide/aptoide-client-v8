@@ -47,11 +47,13 @@ class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.ReferrerUti
 
   private static final String TAG = ReferrerUtils.class.getSimpleName();
 
-  static void extractReferrer(AptoideAd ad, final int retries, boolean broadcastReferrer) {
+  static void extractReferrer(Ad ad, final int retries, boolean broadcastReferrer) {
 
-    String packageName = ad.getPackageName();
-    long networkId = ad.network.id;
-    String clickUrl = ad.network.clickUrl;
+    AptoideAd castedAd = (AptoideAd) ad;
+
+    String packageName = castedAd.getPackageName();
+    long networkId = castedAd.network.id;
+    String clickUrl = castedAd.network.clickUrl;
 
     if (clickUrl == null) {
       Logger.d("ExtractReferrer", "No click_url for packageName " + packageName);
@@ -117,12 +119,12 @@ class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.ReferrerUti
               if (broadcastReferrer) {
                 broadcastReferrer(packageName, referrer);
               } else {
-                ad.referrer = referrer;
-                saveAd(ad);
+                castedAd.referrer = referrer;
+                saveAd(castedAd);
               }
 
               future.cancel(false);
-              postponeReferrerExtraction(ad, 0, true);
+              postponeReferrerExtraction(castedAd, 0, true);
             }
           }
 
@@ -139,7 +141,7 @@ class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.ReferrerUti
           Logger.d("ExtractReferrer", "Openened clickUrl: " + url);
 
           if (future == null) {
-            future = postponeReferrerExtraction(ad, TIME_OUT, retries);
+            future = postponeReferrerExtraction(castedAd, TIME_OUT, retries);
           }
         }
 
@@ -253,9 +255,9 @@ class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.ReferrerUti
     // TODO: 28-07-2016 Baikova referrer broadcasted.
   }
 
-  static void knockCpc(AptoideAd minimalAd) {
+  static void knockCpc(Ad minimalAd) {
     // TODO: 28-07-2016 Baikova clicked on ad.
-    knock(minimalAd.clicks.cpcUrl);
+    knock(((AptoideAd) minimalAd).clicks.cpcUrl);
   }
 
   static void knockCpd(AptoideAd minimalAd) {

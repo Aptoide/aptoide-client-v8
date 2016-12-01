@@ -1,7 +1,5 @@
 package cm.aptoide.pt.aptoidesdk;
 
-import cm.aptoide.pt.aptoidesdk.ads.Aptoide;
-
 /**
  * Created by neuro on 25-11-2016.
  */
