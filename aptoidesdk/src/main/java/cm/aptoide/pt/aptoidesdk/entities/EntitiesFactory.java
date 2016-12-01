@@ -62,7 +62,7 @@ public class EntitiesFactory {
 
   public static Media createMedia(GetAppMeta.Media getAppMetaMedia) {
 
-    List<Media.Screenshot> screenshots = new LinkedList<>();
+    List<Screenshot> screenshots = new LinkedList<>();
     String description = getAppMetaMedia.getDescription();
 
     if (getAppMetaMedia.getScreenshots() != null) {
@@ -75,7 +75,7 @@ public class EntitiesFactory {
   }
 
   public @Nullable
-  static Media.Screenshot createScreenShot(GetAppMeta.Media.Screenshot getAppMetaMediaScreenshot) {
+  static Screenshot createScreenShot(GetAppMeta.Media.Screenshot getAppMetaMediaScreenshot) {
 
     if (getAppMetaMediaScreenshot != null) {
 
@@ -83,7 +83,7 @@ public class EntitiesFactory {
       int height = getAppMetaMediaScreenshot.getHeight();
       int width = getAppMetaMediaScreenshot.getWidth();
 
-      return new Media.Screenshot(url, height, width);
+      return new Screenshot(url, height, width);
     }
 
     return null;
@@ -103,7 +103,7 @@ public class EntitiesFactory {
     return obb != null && (obb.getMain() != null || obb.getPatch() != null);
   }
 
-  public static Obb.ObbFile createObbFile(@Nullable cm.aptoide.pt.model.v7.Obb.ObbItem obbItem) {
+  public static ObbFile createObbFile(@Nullable cm.aptoide.pt.model.v7.Obb.ObbItem obbItem) {
 
     if (obbItem == null) {
       return null;
@@ -114,7 +114,7 @@ public class EntitiesFactory {
     String filename = obbItem.getFilename();
     long filesize = obbItem.getFilesize();
 
-    return new Obb.ObbFile(path, md5sum, filename, filesize);
+    return new ObbFile(path, md5sum, filename, filesize);
   }
 
   public static SearchResult createSearchResult(ListSearchApps.SearchAppsApp searchAppsApp) {

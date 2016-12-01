@@ -11,12 +11,4 @@ import lombok.Data;
 
   private final ObbFile main;
   private final ObbFile patch;
-
-  @Data public static final class ObbFile {
-
-    private final String path;
-    private final String md5sum;
-    private final String filename;
-    private final long filesize;
-  }
 }
