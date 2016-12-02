@@ -6,28 +6,37 @@
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
+import android.support.annotation.Nullable;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.accessors.StoreAccessor;
+import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.MyStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
-import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
-import cm.aptoide.pt.model.v7.store.GetStore;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablesFactory;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CreateStoreDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SubscribedStoreDisplayable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 /**
@@ -36,83 +45,69 @@ import rx.schedulers.Schedulers;
 public class SubscribedStoresFragment extends GridRecyclerSwipeFragment {
 
   private static final String TAG = SubscribedStoresFragment.class.getName();
-
-  //private FloatingActionButton addStoreButton;
+  private StoreAccessor storesAccessor;
 
   public static SubscribedStoresFragment newInstance() {
-    SubscribedStoresFragment fragment = new SubscribedStoresFragment();
-    return fragment;
+    return new SubscribedStoresFragment();
   }
 
-  @Override public void setupViews() {
-    super.setupViews();
-
-    //addStoreButton.setOnClickListener(new View.OnClickListener() {
-    //
-    //  public void onClick(View v) {
-    //    new AddStoreDialog().show(((FragmentActivity) getContext()).getSupportFragmentManager(),
-    //        "addStoreDialog");
-    //  }
-    //});
-    /*RxView.clicks(addStoreButton).subscribe(view ->{
-      new AddStoreDialog().show(((FragmentActivity) getContext())
-					.getSupportFragmentManager(), "addStoreDialog");
-		});*/
-
-    recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-      @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-        /*Log.d("lou",dy+"");
-        if (dy > 0 && addStoreButton.getTranslationY() > 0 && addStoreButton.isShown()) {
-					addStoreButton.setTranslationY(addStoreButton.getTranslationY()+dy);
-				}*/
-      }
-    });
+  private Observable<List<Displayable>> loadStores() {
+    return Observable.zip(loadFromNetwokStores(true), loadStoresFromDb(),
+        (networkDisplayables, dbDisplayables) -> {
+          dbDisplayables.addAll(networkDisplayables);
+          int i;
+          for (i = 0; i < dbDisplayables.size(); i++) {
+            Displayable displayable = dbDisplayables.get(i);
+            if (displayable instanceof CreateStoreDisplayable) {
+              dbDisplayables.remove(displayable);
+              dbDisplayables.add(0, displayable);
+            }
+          }
+          return dbDisplayables;
+        }).subscribeOn(Schedulers.computation());
   }
 
   @Override public void reload() {
     super.reload();
-    loadStores(true);
+    loadStores().first().subscribe(displayables -> setDisplayables(displayables), err -> {
+      Logger.e(TAG, err);
+      CrashReports.logException(err);
+    });
+  }
+
+  private Observable<List<Displayable>> loadStoresFromDb() {
+    return storesAccessor.getAll().observeOn(AndroidSchedulers.mainThread()).map(stores -> {
+      LinkedList<Displayable> displayables = new LinkedList<>();
+      if (stores.size() > 0) {
+        displayables.add(new StoreGridHeaderDisplayable(
+            // TODO: 02/12/2016 trinkes extract
+            new GetStoreWidgets.WSWidget().setTitle("Followed Stores")));
+      }
+      for (Store store : stores) {
+        displayables.add(new SubscribedStoreDisplayable(store));
+      }
+      return displayables;
+    });
+  }
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    storesAccessor = AccessorFactory.getAccessorFor(Store.class);
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-
-    //Observable<RealmResults<Store>> realmResultsObservable =
-    //    DeprecatedDatabase.StoreQ.getAll(realm).asObservable();
-    //realmResultsObservable.compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW)).subscribe(stores -> {
-    //  LinkedList<Displayable> displayables = new LinkedList<>();
-    //  for (Store store : stores) {
-    //    displayables.add(new SubscribedStoreDisplayable(store));
-    //  }
-    //  // Add the final row as a button
-    //  //displayables.add(new AddMoreStoresDisplayable());
-    //  setDisplayables(displayables);
-    //});
     if (!refresh) {
-      loadStores(false);
+      loadStores().first().subscribe(displayables -> setDisplayables(displayables), err -> {
+        Logger.e(TAG, err);
+        CrashReports.logException(err);
+      });
     }
-
-    //StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
-    //Subscription unManagedSubscription = storeAccessor.getAll()
-    //    .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-    //    .observeOn(AndroidSchedulers.mainThread())
-    //    .subscribe(stores -> {
-    //      LinkedList<Displayable> displayables = new LinkedList<>();
-    //      for (Store store : stores) {
-    //        displayables.add(new SubscribedStoreDisplayable(store));
-    //      }
-    //      // Add the final row as a button
-    //      //displayables.add(new AddMoreStoresDisplayable());
-    //      setDisplayables(displayables);
-    //    }, err -> {
-    //      Logger.e(TAG, err);
-    //      CrashReports.logException(err);
-    //    });
   }
 
-  private void loadStores(boolean refresh) {
-    MyStoreRequest.of().observe(refresh).observeOn(Schedulers.io()).subscribe(myStore -> {
+  private Observable<List<Displayable>> loadFromNetwokStores(boolean refresh) {
+    return MyStoreRequest.of().observe(refresh).observeOn(Schedulers.io()).map(myStore -> {
 
-      List displayables = new LinkedList();
+      List<Displayable> displayables = new LinkedList();
       List<GetStoreWidgets.WSWidget> list = myStore.getWidgets().getDatalist().getList();
       // Load sub nodes
       CountDownLatch countDownLatch = new CountDownLatch(list.size());
@@ -138,26 +133,15 @@ public class SubscribedStoresFragment extends GridRecyclerSwipeFragment {
       displayables = DisplayablesFactory.parse(myStore.getWidgets(),
           V8Engine.getConfiguration().getDefaultTheme());
 
-      setDisplayables(displayables);
+      return displayables;
     });
   }
 
-  //@Override public int getContentViewId() {
-  //  return R.layout.store_recycler_fragment;
-  //}
-
-  private Observable<GetStore> caseGetStore(String url,
-      BaseRequestWithStore.StoreCredentials storeCredentials, boolean refresh, String storeTheme) {
-
-    return GetStoreRequest.ofAction(url, storeCredentials, AptoideAccountManager.getAccessToken(),
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID())
-        .observe(refresh)
-        .observeOn(Schedulers.io());
+  @Override public int getContentViewId() {
+    return R.layout.my_stores_layout_fragment;
   }
 
   @Override public void bindViews(View view) {
     super.bindViews(view);
-    //addStoreButton = (FloatingActionButton) view.findViewById(R.id.fabAddStore);
   }
 }

@@ -36,10 +36,10 @@ public abstract class GridRecyclerFragmentWithDecorator<T extends BaseAdapter>
             offset /= 2;
           }
 
-          if (view.getId() == R.id.store_main_layout_row
-              || view.getId() == R.id.store_main_layout_row_subcribed) {
-            offset = 0;
-          }
+          //if (view.getId() == R.id.store_main_layout_row
+          //    || view.getId() == R.id.store_main_layout_row_subcribed) {
+          //  offset = 0;
+          //}
           outRect.set(offset, offset, offset, offset);
         }
       };
