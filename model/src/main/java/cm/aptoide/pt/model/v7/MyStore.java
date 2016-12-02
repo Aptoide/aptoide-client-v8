@@ -1,6 +1,5 @@
 package cm.aptoide.pt.model.v7;
 
-import cm.aptoide.pt.model.v7.store.ListStores;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -10,5 +9,5 @@ import lombok.EqualsAndHashCode;
 
 @Data @EqualsAndHashCode(callSuper = true) public class MyStore extends BaseV7Response {
 
-  ListStores stores;
+  GetStoreWidgets widgets;
 }

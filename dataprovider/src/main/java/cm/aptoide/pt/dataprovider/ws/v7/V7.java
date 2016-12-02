@@ -250,6 +250,10 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
         @Path(value = "action") String action, @Path(value = "context") String context,
         @Body SendEventRequest.Body body);
 
-    @POST("getMyStore") Observable<MyStore> getMyStore();
+    @POST("{email}") Observable<BaseV7Response> shareCard(@Body ShareCardRequest.Body body,
+        @Path(value = "email") String email);
+
+    @POST("getMyStore") Observable<MyStore> getMyStore(
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
   }
 }

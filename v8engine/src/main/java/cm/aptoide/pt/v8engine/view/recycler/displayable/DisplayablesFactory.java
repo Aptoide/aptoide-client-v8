@@ -21,6 +21,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CreateStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FooterDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAdDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAppDisplayable;
@@ -94,6 +95,9 @@ public class DisplayablesFactory {
               displayables.add(new StoreGridHeaderDisplayable(wsWidget));
               displayables.add(createReviewsDisplayables(reviewsList));
             }
+            break;
+          case MY_STORE:
+            displayables.add(new CreateStoreDisplayable());
             break;
         }
       }

@@ -23,7 +23,9 @@ public enum Type {
   STORE_LATEST_COMMENTS(1, true),
 
   //Reviews Screen
-  REVIEWS_GROUP(1, false);
+  REVIEWS_GROUP(1, false),
+  //widget to create the user's store
+  MY_STORE(1, true),;
 
   @Getter private int defaultPerLineCount;
   @Getter private boolean fixedPerLineCount;

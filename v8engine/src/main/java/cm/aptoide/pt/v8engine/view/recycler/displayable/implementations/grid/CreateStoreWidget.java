@@ -1,0 +1,29 @@
+package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
+
+import android.view.View;
+import android.widget.Button;
+import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import com.jakewharton.rxbinding.view.RxView;
+
+/**
+ * Created by trinkes on 02/12/2016.
+ */
+
+public class CreateStoreWidget extends Widget<CreateStoreDisplayable> {
+
+  private Button button;
+
+  public CreateStoreWidget(View itemView) {
+    super(itemView);
+  }
+
+  @Override protected void assignViews(View itemView) {
+    button = (Button) itemView.findViewById(R.id.create_store_action);
+  }
+
+  @Override public void bindView(CreateStoreDisplayable displayable) {
+    RxView.clicks(button).subscribe(aVoid -> ShowMessage.asToast(itemView.getContext(), "pressed"));
+  }
+}

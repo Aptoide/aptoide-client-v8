@@ -18,6 +18,6 @@ public class MyStoreRequest extends V7<MyStore, BaseBody> {
 
   @Override
   protected Observable<MyStore> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-    return interfaces.getMyStore();
+    return interfaces.getMyStore(bypassCache);
   }
 }

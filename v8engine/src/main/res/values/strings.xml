@@ -297,5 +297,7 @@
 
   <!-- Stores tab -->
   <string name="recommended_stores">Recommended Stores</string>
+  <string name="create_store_displayable_message">Created your Store now and start sharing your apps!</string>
+  <string name="create_store_displayable_button">CREATE STORE</string>
 
 </resources>

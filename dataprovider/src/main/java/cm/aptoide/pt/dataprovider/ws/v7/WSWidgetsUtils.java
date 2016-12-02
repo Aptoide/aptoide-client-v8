@@ -88,6 +88,9 @@ public class WSWidgetsUtils {
               .compose(AptoideUtils.ObservableU.applySchedulers())
               .subscribe(reviews -> setObjectView(wsWidget, countDownLatch, reviews), action1);
           break;
+        case MY_STORE:
+          setObjectView(wsWidget, countDownLatch, true);
+          break;
         default:
           // In case a known enum is not implemented
           countDownLatch.countDown();
