@@ -78,9 +78,17 @@ public class PaymentConfirmationRepository {
             PaymentConfirmation.Status.valueOf(response.getPaymentStatus()));
         return Observable.just(paymentConfirmation);
       }
-      paymentConfirmation.setStatus(PaymentConfirmation.Status.FAILED);
+      return deleteStoredPaymentConfirmation(
+          paymentConfirmation.getPaymentConfirmationId()).flatMap(
+          removed -> Observable.<PaymentConfirmation>error(new RepositoryItemNotFoundException(
+              "No valid payment confirmation found in repository for product id "
+                  + paymentConfirmation.getProduct().getId())));
+    }).onErrorResumeNext(throwable -> {
+      if (throwable instanceof RepositoryItemNotFoundException) {
+        return Observable.error(throwable);
+      }
       return Observable.just(paymentConfirmation);
-    }).onErrorReturn(throwable -> paymentConfirmation);
+    });
   }
 
   private Observable<ProductPaymentResponse> getServerPaymentConfirmation(
