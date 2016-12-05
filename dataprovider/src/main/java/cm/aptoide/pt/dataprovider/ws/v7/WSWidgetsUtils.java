@@ -75,7 +75,8 @@ public class WSWidgetsUtils {
           break;
 
         case STORE_LATEST_COMMENTS:
-          ListCommentsRequest.ofAction(url, storeCredentials, accessToken, aptoideClientUUID)
+          ListCommentsRequest.ofAction(url, refresh, storeCredentials, accessToken,
+              aptoideClientUUID)
               .observe(refresh)
               .compose(AptoideUtils.ObservableU.applySchedulers())
               .subscribe(listComments -> setObjectView(wsWidget, countDownLatch, listComments),

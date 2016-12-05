@@ -5,14 +5,10 @@
 
 package cm.aptoide.pt.viewRateAndCommentReviews;
 
-import android.app.AlertDialog;
-import android.content.Context;
 import android.content.res.Resources;
 import android.os.Build;
-import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.AppCompatRatingBar;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -37,6 +33,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import java.util.List;
 import java.util.Locale;
+import rx.Observable;
 
 @Displayables({ RateAndReviewCommentDisplayable.class }) public class RateAndReviewCommentWidget
     extends Widget<RateAndReviewCommentDisplayable> {
@@ -136,62 +133,45 @@ import java.util.Locale;
     }
   }
 
+  private Observable<BaseV7Response> submitComment(long reviewId, String commentOnReviewText) {
+    return PostCommentForReviewRequest.of(reviewId, commentOnReviewText,
+        AptoideAccountManager.getAccessToken(),
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext()).getAptoideClientUUID()).observe();
+  }
+
   private void showCommentPopup(final long reviewId, String appName, CommentAdder commentAdder) {
-    final Context ctx = getContext();
-    final View view = LayoutInflater.from(ctx).inflate(R.layout.dialog_comment_on_review, null);
 
-    final TextView titleTextView = (TextView) view.findViewById(R.id.title);
-    final TextInputLayout textInputLayout =
-        (TextInputLayout) view.findViewById(R.id.input_layout_title);
-    final Button commentBtn = (Button) view.findViewById(R.id.comment_button);
-    final Button cancelBtn = (Button) view.findViewById(R.id.cancel_button);
+    CommentDialogWrapper dialogWrapper = new CommentDialogWrapper();
+    dialogWrapper.build(getContext(), appName);
 
-    titleTextView.setText(appName);
-
-    // build rating dialog
-    final AlertDialog.Builder builder = new AlertDialog.Builder(ctx).setView(view);
-    final AlertDialog dialog = builder.create();
-
-    commentBtn.setOnClickListener(v -> {
-
-      AptoideUtils.SystemU.hideKeyboard(getContext());
-
-      final String commentOnReviewText = textInputLayout.getEditText().getText().toString();
-
-      if (TextUtils.isEmpty(commentOnReviewText)) {
-        textInputLayout.setError(AptoideUtils.StringU.getResString(R.string.error_MARG_107));
+    compositeSubscription.add(dialogWrapper.onCommentButton().filter(inputText -> {
+      AptoideUtils.SystemU.hideKeyboard(RateAndReviewCommentWidget.this.getContext());
+      if (TextUtils.isEmpty(inputText)) {
+        dialogWrapper.enableError(AptoideUtils.StringU.getResString(R.string.error_MARG_107));
+        return false;
+      }
+      dialogWrapper.disableError();
+      return true;
+    }).flatMap(inputText -> submitComment(reviewId, inputText)).subscribe(wsResponse -> {
+      if(wsResponse.isOk()) {
+        ManagerPreferences.setForceServerRefreshFlag(true);
+        commentAdder.collapseComments();
+        loadCommentsForThisReview(reviewId, FULL_COMMENTS_LIMIT, commentAdder);
+        Logger.d(TAG, "comment to review added");
+        ShowMessage.asSnack(getContext(), R.string.comment_submitted);
+        dialogWrapper.dismiss();
         return;
       }
 
-      textInputLayout.setErrorEnabled(false);
-      dialog.dismiss();
+      ShowMessage.asSnack(getContext(), R.string.error_occured);
 
-      PostCommentForReviewRequest.of(reviewId, commentOnReviewText,
-          AptoideAccountManager.getAccessToken(),
-          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-              DataProvider.getContext()).getAptoideClientUUID()).execute(response -> {
-        dialog.dismiss();
-        if (response.isOk()) {
-          ManagerPreferences.setForceServerRefreshFlag(true);
-          commentAdder.collapseComments();
-          loadCommentsForThisReview(reviewId, FULL_COMMENTS_LIMIT, commentAdder);
-          Logger.d(TAG, "comment to review added");
-          ShowMessage.asSnack(getContext(), R.string.comment_submitted);
-        } else {
-          ShowMessage.asSnack(getContext(), R.string.error_occured);
-        }
-      }, e -> {
-        dialog.dismiss();
-        Logger.e(TAG, e);
-        ShowMessage.asSnack(getContext(), R.string.error_occured);
-      });
-    });
+    }, e -> {
+      Logger.e(TAG, e);
+      ShowMessage.asSnack(getContext(), R.string.error_occured);
+    }));
 
-    cancelBtn.setOnClickListener(v -> {
-      dialog.dismiss();
-    });
-
-    dialog.show();
+    dialogWrapper.show();
   }
 
   private void loadCommentsForThisReview(long reviewId, int limit, CommentAdder commentAdder) {

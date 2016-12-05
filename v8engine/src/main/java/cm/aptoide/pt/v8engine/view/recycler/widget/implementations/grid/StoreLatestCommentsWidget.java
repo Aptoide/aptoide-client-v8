@@ -29,7 +29,6 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
     LinearLayoutManager layoutManager = new LinearLayoutManager(recyclerView.getContext());
     layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
     recyclerView.setLayoutManager(layoutManager);
-
     recyclerView.setAdapter(new CommentListAdapter(displayable.getComments()));
   }
 

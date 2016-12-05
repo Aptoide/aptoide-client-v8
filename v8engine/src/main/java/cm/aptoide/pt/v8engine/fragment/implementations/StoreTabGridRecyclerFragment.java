@@ -10,12 +10,14 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListFullReviewsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
@@ -23,11 +25,13 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
+import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.FullReview;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.Layout;
 import cm.aptoide.pt.model.v7.ListApps;
+import cm.aptoide.pt.model.v7.ListComments;
 import cm.aptoide.pt.model.v7.ListFullReviews;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.ListStores;
@@ -42,6 +46,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayableGroup;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablesFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AdultRowDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickListDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAdDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
@@ -186,8 +191,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()).getAptoideClientUUID(),
         DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(V8Engine.getContext()),
-        DataProvider.getConfiguration().getPartnerId())
-        .execute(getAdsResponse -> {
+        DataProvider.getConfiguration().getPartnerId()).execute(getAdsResponse -> {
       List<GetAdsResponse.Ad> list = getAdsResponse.getAds();
 
       displayables = new LinkedList<>();
@@ -355,13 +359,12 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
           caseGetStoreWidgets(url, StoreUtils.getStoreCredentialsFromUrl(url), refresh);
           break;
         case listStoreComments:
-          caseListStoreComments(url, refresh);
+          caseListStoreComments(url, StoreUtils.getStoreCredentialsFromUrl(url), refresh);
+          break;
         case listReviews:
           caseListReviews(url, refresh);
           break;
-        //		break;
         //	case getApkComments:
-        //todo
         //		break;
         case getAds:
           caseGetAds(refresh);
@@ -379,8 +382,71 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
     }
   }
 
-  private void caseListStoreComments(String url, boolean refresh) {
-    // TODO: 25/11/2016 sithengineer  
+  void caseListStoreComments(String url, BaseRequestWithStore.StoreCredentials storeCredentials,
+      boolean refresh) {
+    String aptoideClientUuid = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext()).getAptoideClientUUID();
+
+    ListCommentsRequest listCommentsRequest =
+        ListCommentsRequest.ofAction(url, refresh, storeCredentials,
+            AptoideAccountManager.getAccessToken(), aptoideClientUuid);
+
+    if (storeCredentials.getId() == null) {
+      CrashReports.logException(
+          new IllegalStateException("Current store credentials does not have a store id"));
+    }
+
+    //final long storeId = storeCredentials.getId();
+    final long storeId = 0;
+
+    Action1<ListComments> listCommentsAction = (listComments -> {
+      if (listComments != null
+          && listComments.getDatalist() != null
+          && listComments.getDatalist().getList() != null) {
+        List<Comment> comments = listComments.getDatalist().getList();
+        LinkedList<Displayable> displayables = new LinkedList<>();
+        for (int i = 0; i < comments.size(); i++) {
+          Comment comment = comments.get(i);
+          displayables.add(new CommentDisplayable(
+              new StoreComment(comment, showStoreCommentDialogAndSendComment(storeId, comment))));
+        }
+        this.displayables = new ArrayList<>(comments.size());
+        this.displayables.add(new DisplayableGroup(displayables));
+        addDisplayables(this.displayables);
+      }
+    });
+    recyclerView.clearOnScrollListeners();
+    endlessRecyclerOnScrollListener =
+        new EndlessRecyclerOnScrollListener(this.getAdapter(), listCommentsRequest,
+            listCommentsAction, errorRequestListener, true);
+
+    recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+    endlessRecyclerOnScrollListener.onLoadMore(refresh);
+  }
+
+  public Observable<Boolean> showStoreCommentDialogAndSendComment(final long storeId,
+      @Nullable Comment comment) {
+    // optional method
+    return Observable.empty();
+  }
+
+  // todo adapt instead of mutate
+  public static final class StoreComment extends Comment {
+
+    private final Observable<Boolean> onClickReplyAction;
+
+    StoreComment(Comment comment, Observable<Boolean> onClickReplyAction) {
+      this.setAdded(comment.getAdded());
+      this.setBody(comment.getBody());
+      this.setId(comment.getId());
+      this.setParentReview(comment.getParentReview());
+      this.setUser(comment.getUser());
+      this.onClickReplyAction = onClickReplyAction;
+    }
+
+    public Observable<Boolean> observeReplySubmission() {
+      return onClickReplyAction;
+    }
   }
 
   private void caseListReviews(String url, boolean refresh) {
@@ -389,6 +455,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
             AptoideAccountManager.getUserEmail(),
             new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                 DataProvider.getContext()).getAptoideClientUUID());
+
     Action1<ListFullReviews> listFullReviewsAction = (listFullReviews -> {
       if (listFullReviews != null
           && listFullReviews.getDatalist() != null
@@ -404,10 +471,12 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
         addDisplayables(this.displayables);
       }
     });
+
     recyclerView.clearOnScrollListeners();
     endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(this.getAdapter(), listFullReviewsRequest,
             listFullReviewsAction, errorRequestListener, true);
+
     recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(refresh);
   }

@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 04/08/2016.
- */
-
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.text.TextUtils;
@@ -18,10 +13,6 @@ import lombok.experimental.Accessors;
 import rx.Observable;
 
 /**
- * Created by sithengineer on 20/07/16.
- */
-
-/**
  * http://ws2.aptoide.com/api/7/listFullComments/info/1
  * <p>
  * http://ws2.aptoide.com/api/7/listComments/info/1
@@ -31,14 +22,25 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
   private static final String BASE_HOST = "http://ws2.aptoide.com/api/7/";
   private static String url;
 
-  protected ListCommentsRequest(Body body, String baseHost) {
+  private ListCommentsRequest(Body body, String baseHost) {
     super(body, baseHost);
   }
 
-  public static ListCommentsRequest ofAction(String url, BaseRequestWithStore.StoreCredentials storeCredentials,
-      String accessToken, String aptoideClientUUID) {
+  public static ListCommentsRequest ofAction(String url, boolean refresh,
+      BaseRequestWithStore.StoreCredentials storeCredentials, String accessToken,
+      String aptoideClientUUID) {
     ListCommentsRequest.url = url;
-    return of(storeCredentials, accessToken, aptoideClientUUID);
+    String username = storeCredentials.getUsername();
+    String password = storeCredentials.getPasswordSha1();
+    Body body = new Body(refresh, Order.desc);
+    body.setStore_user(username);
+    body.setStore_pass_sha1(password);
+    // FIXME: 30/11/2016 sithengineer remove the next two line comments
+    //body.setStoreId(storeCredentials.getId());
+    //body.defineCommentType(CommentType.STORE);
+
+    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+    return new ListCommentsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
   public static ListCommentsRequest of(String url, long reviewId, int limit,
@@ -50,8 +52,7 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
 
   public static ListCommentsRequest of(long reviewId, int offset, int limit, String accessToken,
       String aptoideClientUUID) {
-    ListCommentsRequest listCommentsRequest =
-        of(reviewId, limit, accessToken, aptoideClientUUID);
+    ListCommentsRequest listCommentsRequest = of(reviewId, limit, accessToken, aptoideClientUUID);
     listCommentsRequest.getBody().setOffset(offset);
     return listCommentsRequest;
   }
@@ -59,8 +60,8 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
   public static ListCommentsRequest of(long reviewId, int limit, String accessToken,
       String aptoideClientUUID) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-    Body body =
-        new Body(limit, reviewId, ManagerPreferences.getAndResetForceServerRefresh(), Order.desc);
+    Body body = new Body(limit, ManagerPreferences.getAndResetForceServerRefresh(), Order.desc);
+    body.setReviewId(reviewId);
     return new ListCommentsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
@@ -72,21 +73,9 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
     Body body =
-        new Body(limit, reviewId, ManagerPreferences.getAndResetForceServerRefresh(), Order.desc,
-            username, password);
-    return new ListCommentsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
-  }
-
-  public static ListCommentsRequest of(
-      BaseRequestWithStore.StoreCredentials storeCredentials, String accessToken,
-      String aptoideClientUUID) {
-    String username = storeCredentials.getUsername();
-    String password = storeCredentials.getPasswordSha1();
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-
-    Body body =
-        new Body(ManagerPreferences.getAndResetForceServerRefresh(), Order.desc,
-            username, password);
+        new Body(limit, ManagerPreferences.getAndResetForceServerRefresh(), Order.desc, username,
+            password);
+    body.setReviewId(reviewId);
     return new ListCommentsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
@@ -100,46 +89,45 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
     }
   }
 
-  @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) public static class Body
+  @Data @Accessors @EqualsAndHashCode(callSuper = true) public static class Body
       extends BaseBody implements Endless {
 
-    @Getter private Integer limit;
     @Getter @Setter private int offset;
-    //private String lang;
-    //private boolean mature;
+    @Getter private Integer limit;
+    @Getter private boolean refresh;
     private String q = Api.Q;
     private Order order;
-    @Getter private boolean refresh;
-    private String comment_type="REVIEW";
-    private long reviewId;
+    private String comment_type = CommentType.REVIEW.name();
+    private Long reviewId;
+    private Long storeId;
     private String store_user;
     private String store_pass_sha1;
 
-    public Body(int limit, long reviewId, boolean refresh, Order order) {
-
-      this.limit = limit;
-      this.reviewId = reviewId;
+    public Body(boolean refresh, Order order) {
       this.refresh = refresh;
       this.order = order;
     }
 
-    public Body(int limit, long reviewId, boolean refresh, Order order, String username,
-        String password) {
-
+    public Body(int limit, boolean refresh, Order order) {
       this.limit = limit;
-      this.reviewId = reviewId;
+      this.refresh = refresh;
+      this.order = order;
+    }
+
+    public Body(int limit, boolean refresh, Order order, String username, String password) {
+      this.limit = limit;
       this.refresh = refresh;
       this.order = order;
       this.store_user = username;
       this.store_pass_sha1 = password;
     }
 
-    public Body(boolean refresh, Order order, String username, String password) {
-      this.refresh = refresh;
-      this.order = order;
-      this.store_user = username;
-      this.store_pass_sha1 = password;
-      this.comment_type="STORE";
+    void defineCommentType(CommentType commentType){
+      this.comment_type = commentType.name();
     }
+  }
+
+  enum CommentType {
+    REVIEW, STORE
   }
 }

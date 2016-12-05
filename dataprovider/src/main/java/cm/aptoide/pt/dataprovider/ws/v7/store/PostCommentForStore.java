@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 20/07/2016.
- */
-
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
@@ -14,22 +9,26 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import rx.Observable;
 
-/**
- * Created by sithengineer on 20/07/16.
- */
 public class PostCommentForStore extends
     V7<BaseV7Response, PostCommentForStore.Body> {
 
   private static final String BASE_HOST = "http://ws75-primary.aptoide.com/api/7/";
 
-  protected PostCommentForStore(Body body, String baseHost) {
+  private PostCommentForStore(Body body, String baseHost) {
     super(body, baseHost);
   }
 
-  public static PostCommentForStore of(long reviewId, String text, String accessToken,
+  public static PostCommentForStore of(long storeId, String text, String accessToken,
       String aptoideClientUUID) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-    Body body = new Body(reviewId, text);
+    Body body = new Body(storeId, text);
+    return new PostCommentForStore((Body) decorator.decorate(body, accessToken), BASE_HOST);
+  }
+
+  public static PostCommentForStore of(long storeId, long previousCommentId, String text, String accessToken,
+      String aptoideClientUUID) {
+    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+    Body body = new Body(storeId, text);
     return new PostCommentForStore((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
@@ -42,11 +41,17 @@ public class PostCommentForStore extends
       extends BaseBody {
 
     private long storeId;
+    private Long previousCommentId;
     private String body;
 
     public Body(long storeId, String text) {
       this.storeId = storeId;
       this.body = text;
+    }
+
+    public Body(long storeId, String text, long previousCommentId) {
+      this(storeId, text);
+      this.previousCommentId = previousCommentId;
     }
   }
 }

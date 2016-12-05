@@ -99,7 +99,8 @@ public class DisplayablesFactory {
                 && comments.getDatalist() != null
                 && comments.getDatalist().getList().size() > 0) {
               displayables.add(new StoreGridHeaderDisplayable(wsWidget));
-              displayables.add(new StoreLatestCommentsDisplayable(comments.getDatalist().getList()));
+              displayables.add(
+                  new StoreLatestCommentsDisplayable(comments.getDatalist().getList()));
             }
             break;
         }
