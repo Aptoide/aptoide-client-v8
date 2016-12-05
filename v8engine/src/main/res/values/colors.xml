@@ -50,7 +50,8 @@
   <color name="magenta">#ef82ef</color>
   <color name="slategray">#008081</color>
   <color name="seagreen">#2e8b57</color>
-  <color name="silver">#a9a9a9</color>
+  <color name="silver">#c6c6c6</color>
+  <color name="silver_dark">#999999</color>
   <color name="dimgray">#808080</color>
   <color name="yellow">#e9be40</color>
   <color name="crimson">#EF3E42</color>
@@ -121,7 +122,7 @@
   <color name="transparent_white">#CCFFFFFF</color>
   <color name="semi_transparent_black">#55000000</color>
   <color name="light_custom_gray">#ececec</color>
-  <color name="lighter_custom_gray">#cccccc</color>
+  <color name="lighter_custom_gray">#c6c6c6</color>
   <color name="dark_custom_gray">#4c4c4c</color>
   <color name="medium_custom_gray">#c6c7c6</color>
   <color name="screenshots_background_color">#6b6b6b</color>
