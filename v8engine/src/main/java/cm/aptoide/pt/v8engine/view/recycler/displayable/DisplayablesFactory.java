@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.FullReview;
@@ -20,8 +21,10 @@ import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CreateStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FooterDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAdDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAppDisplayable;
@@ -29,6 +32,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Gri
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridDisplayDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreMetaDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.MyStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RowReviewDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreLatestCommentsDisplayable;
@@ -91,6 +95,17 @@ public class DisplayablesFactory {
                 && reviewsList.getDatalist().getList().size() > 0) {
               displayables.add(new StoreGridHeaderDisplayable(wsWidget));
               displayables.add(createReviewsDisplayables(reviewsList));
+            }
+            break;
+          case MY_STORE:
+            if (AptoideAccountManager.isLoggedIn()) {
+              //check if user has store already
+              if ((Boolean) wsWidget.getViewObject()) {
+                // TODO: 05/12/2016 trinkes get the theme from the user's store
+                displayables.add(new MyStoreDisplayable(StoreThemeEnum.APTOIDE_STORE_THEME_RED));
+              } else {
+                displayables.add(new CreateStoreDisplayable());
+              }
             }
             break;
           case STORE_LATEST_COMMENTS:

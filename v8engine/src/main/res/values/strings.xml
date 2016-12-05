@@ -297,5 +297,11 @@
 
   <!-- Stores tab -->
   <string name="recommended_stores">Recommended Stores</string>
+  <string name="create_store_displayable_message">Created your Store now and start sharing your apps!</string>
+  <string name="create_store_displayable_button">CREATE STORE</string>
+  <string name="my_store_created_displayable_message">Your Android App store</string>
+  <string name="create_store_displayable_created_store_message">You’ve just created your Store!</string>
+  <string name="create_store_displayable_explore_message">Enter and explore all the possibilities</string>
+  <string name="create_store_displayable_explore_button">Explore</string>
 
 </resources>

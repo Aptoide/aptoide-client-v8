@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
+import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
@@ -130,6 +131,23 @@ public class ImageLoader {
         .fromResource()
         .load(drawableId)
         .transform(new ShadowCircleTransformation(Application.getContext(), imageView))
+        .into(imageView);
+  }
+
+  public static void loadWithShadowCircleTransform(String url, ImageView imageView,
+      @ColorInt int shadowColor) {
+    Glide.with(Application.getContext())
+        .load(AptoideUtils.IconSizeU.generateSizeStoreString(url))
+        .transform(new ShadowCircleTransformation(Application.getContext(), imageView, shadowColor))
+        .into(imageView);
+  }
+
+  public static void loadWithShadowCircleTransform(@DrawableRes int drawableId, ImageView imageView,
+      @ColorInt int shadowColor) {
+    Glide.with(Application.getContext())
+        .fromResource()
+        .load(drawableId)
+        .transform(new ShadowCircleTransformation(Application.getContext(), imageView, shadowColor))
         .into(imageView);
   }
 

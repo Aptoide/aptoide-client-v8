@@ -13,6 +13,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.v4.content.FileProvider;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.logger.Logger;
@@ -20,6 +21,7 @@ import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.utils.FileUtils;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.exception.InstallationException;
@@ -127,8 +129,24 @@ import rx.schedulers.Schedulers;
 
   private void startInstallIntent(Context context, File file) {
     Intent intent = new Intent(Intent.ACTION_VIEW);
-    intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
-    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+    Uri photoURI = null;
+    //read: https://inthecheesefactory.com/blog/how-to-share-access-to-file-with-fileprovider-on-android-nougat/en
+    if (android.os.Build.VERSION.SDK_INT > 23) {
+      //content://....apk for nougat
+      photoURI =
+          FileProvider.getUriForFile(context, V8Engine.getConfiguration().getAppId() + ".provider",
+              file);
+    } else {
+      //file://....apk for < nougat
+      photoURI = Uri.fromFile(file);
+    }
+    Logger.v(TAG, photoURI.toString());
+
+    intent.setDataAndType(photoURI, "application/vnd.android.package-archive");
+    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+        | Intent.FLAG_GRANT_READ_URI_PERMISSION
+        | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
     context.startActivity(intent);
   }
 

@@ -10,13 +10,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="56dp"
-    style="@style/AppViewWidget"
+    style="@style/AppViewWidgetFirst"
     >
-  <!-- progress bar while installing -->
+
+  <!-- progress bar while installing + actions: pause/resume/stop-->
   <RelativeLayout
       android:id="@+id/download_progress_layout"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
+      android:layout_height="match_parent"
       android:layout_gravity="center_vertical"
       android:orientation="horizontal"
       android:padding="7dp"
@@ -118,11 +119,12 @@
 
   </RelativeLayout>
 
-  <!-- install latest version buttons -->
+  <!-- other versions + latest version + install/update/downgrade/open buttons -->
   <RelativeLayout
       android:id="@+id/install_and_latest_version_layout"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
+      android:gravity="center_vertical"
       android:visibility="visible"
       tools:visibility="visible"
       >
@@ -232,7 +234,7 @@
             >
 
           <ImageView
-              android:layout_width="9dp"
+              android:layout_width="8dp"
               android:layout_height="wrap_content"
               android:src="@drawable/ic_appview_version"
               android:tint="@color/green_tint_default"

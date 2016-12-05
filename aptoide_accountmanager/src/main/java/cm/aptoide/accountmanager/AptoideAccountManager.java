@@ -104,6 +104,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
   /**
    * private variables
    */
+
   private ILoginInterface mCallback;
   private WeakReference<Context> mContextWeakReference;
 
@@ -824,6 +825,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     }
     if (loginOrigin.equals("signup")) {
       Intent intent = new Intent(getContext(), CreateUserActivity.class);
+      intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
       getContext().startActivity(intent);
     }
   }
