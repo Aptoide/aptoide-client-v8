@@ -8,7 +8,10 @@ package cm.aptoide.accountmanager.ws;
 import android.content.res.Configuration;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
+import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import com.fasterxml.jackson.databind.deser.std.UntypedObjectDeserializer;
@@ -93,6 +96,9 @@ import rx.Observable;
     parameters.put("mode", "json");
     parameters.put("email", email);
     parameters.put("passhash", passhash);
+    parameters.put("aptoide_uid",
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext()).getAptoideClientUUID());
 
     if (!TextUtils.isEmpty(Application.getConfiguration().getExtraId())) {
       parameters.put("oem_id", Application.getConfiguration().getExtraId());

@@ -22,9 +22,11 @@
 
     <com.like.LikeButton
       android:id="@+id/social_like_test"
-      android:layout_width="22dp"
+      android:layout_width="23dp"
       android:layout_height="21dp"
-      app:icon_size="17dp"
+      app:icon_size="18dp"
+      app:unlike_drawable="@drawable/heart_offf"
+      app:like_drawable="@drawable/heart_on"
       app:liked="false"
       app:icon_type="heart" />
     <!--<ImageView-->
