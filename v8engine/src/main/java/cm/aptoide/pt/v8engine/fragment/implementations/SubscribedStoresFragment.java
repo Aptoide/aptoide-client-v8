@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReports;
@@ -29,8 +30,10 @@ import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablesFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CreateStoreDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.MyStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SubscribedStoreDisplayable;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -58,7 +61,8 @@ public class SubscribedStoresFragment extends GridRecyclerSwipeFragment {
           int i;
           for (i = 0; i < dbDisplayables.size(); i++) {
             Displayable displayable = dbDisplayables.get(i);
-            if (displayable instanceof CreateStoreDisplayable) {
+            if (displayable instanceof CreateStoreDisplayable
+                || displayable instanceof MyStoreDisplayable) {
               dbDisplayables.remove(displayable);
               dbDisplayables.add(0, displayable);
             }
@@ -122,7 +126,8 @@ public class SubscribedStoresFragment extends GridRecyclerSwipeFragment {
               new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                   DataProvider.getContext()).getAptoideClientUUID(),
               DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(
-                  V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId()));
+                  V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId(),
+              !TextUtils.isEmpty(AptoideAccountManager.getUserData().getUserRepo())));
 
       try {
         countDownLatch.await(5, TimeUnit.SECONDS);
@@ -134,6 +139,10 @@ public class SubscribedStoresFragment extends GridRecyclerSwipeFragment {
           V8Engine.getConfiguration().getDefaultTheme());
 
       return displayables;
+    }).onErrorReturn(throwable -> {
+      CrashReports.logException(throwable);
+      Logger.e(TAG, "loadFromNetwokStores: " + throwable);
+      return Collections.emptyList();
     });
   }
 

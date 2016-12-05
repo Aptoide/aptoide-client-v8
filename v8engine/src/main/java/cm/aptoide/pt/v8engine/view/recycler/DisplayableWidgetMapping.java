@@ -45,6 +45,8 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Gri
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreMetaDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.InstalledAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.LatestStoreCommentsDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.MyStoreDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.MyStoreWidget;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.OtherVersionDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RollbackDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RowReviewDisplayable;
@@ -307,6 +309,9 @@ public class DisplayableWidgetMapping {
 
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping((CreateStoreWidget.class), CreateStoreDisplayable.class));
+
+    displayableWidgetMappings.add(
+        new DisplayableWidgetMapping((MyStoreWidget.class), MyStoreDisplayable.class));
 
     return displayableWidgetMappings;
   }

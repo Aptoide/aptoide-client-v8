@@ -23,7 +23,8 @@ public class WSWidgetsUtils {
   public static void loadInnerNodes(GetStoreWidgets.WSWidget wsWidget,
       BaseRequestWithStore.StoreCredentials storeCredentials, CountDownLatch countDownLatch,
       boolean refresh, Action1<Throwable> action1, String accessToken, String email,
-      String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid) {
+      String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid,
+      boolean userHasRepo) {
 
     if (isKnownType(wsWidget.getType())) {
 
@@ -89,7 +90,7 @@ public class WSWidgetsUtils {
               .subscribe(reviews -> setObjectView(wsWidget, countDownLatch, reviews), action1);
           break;
         case MY_STORE:
-          setObjectView(wsWidget, countDownLatch, true);
+          setObjectView(wsWidget, countDownLatch, userHasRepo);
           break;
         default:
           // In case a known enum is not implemented

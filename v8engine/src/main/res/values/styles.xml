@@ -173,6 +173,19 @@
     <item name="android:textColor">@color/orange_700</item>
   </style>
 
+  <style name="StoreWhiteButton" parent="WidgetButtonCustom">
+    <item name="android:layout_width">80dp</item>
+    <item name="android:layout_height">33dp</item>
+    <item name="android:layout_marginEnd">13dp</item>
+    <item name="android:layout_marginRight">13dp</item>
+    <item name="android:background">@drawable/rounded_corners_white</item>
+    <item name="android:gravity">center</item>
+    <item name="android:padding">@dimen/row_store_vertical_half_delimiter</item>
+    <item name="android:textAlignment">center</item>
+    <item name="android:textColor">?attr/inverseTextColor</item>
+    <item name="android:textSize">12sp</item>
+  </style>
+
   <style name="WidgetButtonCustom" parent="@android:style/Widget.Button">
     <item name="android:layout_width">wrap_content</item>
     <item name="android:layout_height">wrap_content</item>

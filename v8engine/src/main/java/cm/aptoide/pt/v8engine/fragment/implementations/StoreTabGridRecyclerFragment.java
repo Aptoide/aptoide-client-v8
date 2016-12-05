@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
@@ -272,7 +273,8 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
                   new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                       DataProvider.getContext()).getAptoideClientUUID(),
                   DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(
-                      V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId()));
+                      V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId(),
+                  !TextUtils.isEmpty(AptoideAccountManager.getUserData().getUserRepo())));
 
           try {
             countDownLatch.await(5, TimeUnit.SECONDS);
@@ -313,7 +315,8 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
                   new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                       DataProvider.getContext()).getAptoideClientUUID(),
                   DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(
-                      V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId()));
+                      V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId(),
+                  !TextUtils.isEmpty(AptoideAccountManager.getUserData().getUserRepo())));
 
           try {
             countDownLatch.await();
