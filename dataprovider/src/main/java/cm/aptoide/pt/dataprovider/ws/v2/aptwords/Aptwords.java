@@ -22,7 +22,7 @@ import rx.Observable;
  */
 abstract class Aptwords<U> extends WebService<Aptwords.Interfaces, U> {
 
-  private static final String BASE_URL = BuildConfig.APTOIDE_WEB_SERVICES_SCHEME + "://" + BuildConfig.APTOIDE_WEB_SERVICES_APTWORDS_HOST + "/api/2/";
+  private static final String BASE_URL = BuildConfig.APTOIDE_WEB_SERVICES_APTWORDS_SCHEME + "://" + BuildConfig.APTOIDE_WEB_SERVICES_APTWORDS_HOST + "/api/2/";
 
   Aptwords() {
     super(
