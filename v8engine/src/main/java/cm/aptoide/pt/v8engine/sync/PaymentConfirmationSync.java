@@ -30,10 +30,12 @@ public class PaymentConfirmationSync extends AbstractSync {
           if (paymentConfirmation.isFailed()) {
             return paymentConfirmationRepository.removePaymentConfirmation(
                 paymentConfirmation.getPaymentConfirmationId());
-          } else if (!paymentConfirmation.isCompleted()) {
-            rescheduleIncompletedPaymentSync(paymentConfirmation, syncResult);
+          } else {
+            if (!paymentConfirmation.isCompleted()) {
+              rescheduleIncompletedPaymentSync(paymentConfirmation, syncResult);
+            }
+            return paymentConfirmationRepository.savePaymentConfirmation(paymentConfirmation);
           }
-          return paymentConfirmationRepository.savePaymentConfirmation(paymentConfirmation);
         })
         .toList()
         .onErrorReturn(throwable -> {

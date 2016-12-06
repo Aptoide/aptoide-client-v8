@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class GetProductPurchaseAuthorizationResponse extends BaseV3Response {
+public class PurchaseAuthorizationResponse extends BaseV3Response {
 
   private String url;
   @JsonProperty("successUrl") private String successUrl;
