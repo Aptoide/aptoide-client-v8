@@ -19,13 +19,18 @@ import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.Application;
 import java.io.IOException;
 import lombok.Getter;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
 import retrofit2.Converter;
 import retrofit2.adapter.rxjava.HttpException;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.Headers;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
+import retrofit2.http.PartMap;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -107,6 +112,11 @@ public abstract class v3accountManager<U> extends WebService<v3accountManager.In
     @POST("3/createUser") @FormUrlEncoded
     @Headers({ PostCacheInterceptor.BYPASS_HEADER_KEY + ":" + PostCacheInterceptor.BYPASS_HEADER_VALUE })
     Observable<OAuth> createUser(@FieldMap HashMapNotNull<String, String> args);
+
+    @Multipart
+    @POST("3/createUser")
+    @Headers({ PostCacheInterceptor.BYPASS_HEADER_KEY + ":" + PostCacheInterceptor.BYPASS_HEADER_VALUE, "Content-Disposition" })
+    Observable<OAuth> createUserWithFile(@Part("user_avatar") RequestBody user_avatar,@PartMap() HashMapNotNull<String, String> args);
 
     @POST("3/changeUserSettings") @FormUrlEncoded
     @Headers({ PostCacheInterceptor.BYPASS_HEADER_KEY + ":" + PostCacheInterceptor.BYPASS_HEADER_VALUE })

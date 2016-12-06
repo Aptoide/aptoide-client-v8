@@ -378,7 +378,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
           if (isSuccess) {
             setAccessTokenOnLocalAccount(oAuth.getAccessToken(), null, SecureKeys.ACCESS_TOKEN);
             AccountManagerPreferences.setLoginMode(mode);
-            getInstance().onLoginSuccess(mode, "");
+            getInstance().onLoginSuccess(mode, "", "", "");
             if (finalGenericPleaseWaitDialog != null) {
               finalGenericPleaseWaitDialog.dismiss();
             }
@@ -817,7 +817,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     mCallback.onLoginFail(reason);
   }
 
-  void onLoginSuccess(LoginMode loginType, String loginOrigin) {
+  void onLoginSuccess(LoginMode loginType, String loginOrigin, String username, String password) {
     userIsLoggedIn = true;
     mCallback.onLoginSuccess();
     if (analytics != null) {
@@ -826,14 +826,8 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     if (loginOrigin.equals("signup")) {
       Intent intent = new Intent(getContext(), CreateUserActivity.class);
       intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-      getContext().startActivity(intent);
-    }
-  }
-
-  void onLoginSuccess(String loginOrigin) {
-    onLoginSuccess();
-    if (loginOrigin.equals("signup")) {
-      Intent intent = new Intent(getContext(), CreateUserActivity.class);
+      intent.putExtra(AptoideLoginUtils.APTOIDE_LOGIN_USER_NAME_KEY, username);
+      intent.putExtra(AptoideLoginUtils.APTOIDE_LOGIN_PASSWORD_KEY, password);
       getContext().startActivity(intent);
     }
   }

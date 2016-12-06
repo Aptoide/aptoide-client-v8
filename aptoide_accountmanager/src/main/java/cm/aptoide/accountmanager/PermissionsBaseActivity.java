@@ -1,0 +1,133 @@
+package cm.aptoide.accountmanager;
+
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
+
+/**
+ * Created by pedroribeiro on 02/12/16.
+ */
+
+public abstract class PermissionsBaseActivity extends BaseActivity {
+
+  private static final int STORAGE_REQUEST_CODE = 123;
+  private static final int CAMERA_REQUEST_CODE = 124;
+  private static final String TYPE_STORAGE = "storage";
+  private static final String TYPE_CAMERA = "camera";
+
+
+  static final String STORAGE_PERMISSION_GIVEN = "storage_permission_given";
+  static final String CAMERA_PERMISSION_GIVEN = "camera_permission_given";
+  static final String STORAGE_PERMISSION_REQUESTED = "storage_permission_requested";
+  static final String CAMERA_PERMISSION_REQUESTED = "camera_permission_requested";
+
+  @Override protected String getActivityTitle() {
+    return null;
+  }
+
+  @Override int getLayoutId() {
+    return 0;
+  }
+
+  public static String checkAndAskPermission(final AppCompatActivity activity, String type) {
+
+    if(Build.VERSION.SDK_INT>=android.os.Build.VERSION_CODES.M) {
+      /*if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && type.equals(TYPE_STORAGE)) {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+          mSubscriptions.add(GenericDialogs.createGenericContinueCancelMessage(context, "",
+              "Permission for storage")
+              .filter(answer -> (answer.equals(GenericDialogs.EResponse.YES)))
+              .subscribe(answer -> {
+                changePermissionValue(true);
+              }));
+          AndroidBasicDialog dialog = AndroidBasicDialog.build(context);
+          dialog.setMessage("permission test")
+              .setPositiveButton("allow", )
+                ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.READ_EXTERNAL_STORAGE }, 123);
+        } else {
+          ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.READ_EXTERNAL_STORAGE }, 123);
+        }
+      } else if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED & type.equals(TYPE_CAMERA)) {
+          if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
+            mSubscriptions.add(GenericDialogs.createGenericContinueCancelMessage(context, "",
+                "Permission for camera")
+                .filter(answer -> (answer.equals(GenericDialogs.EResponse.YES)))
+                .subscribe(answer -> {
+                  changePermissionValue(true);
+                  ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.CAMERA }, 123);
+                }));
+          } else {
+            ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.CAMERA }, 123);
+          }
+        }*/
+      if (type.equals(TYPE_STORAGE)) {
+        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE)
+            != PackageManager.PERMISSION_GRANTED) {
+
+          // Should we show an explanation?
+          if (ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+
+            ActivityCompat.requestPermissions(activity,
+                new String[] { Manifest.permission.READ_EXTERNAL_STORAGE }, STORAGE_REQUEST_CODE);
+            // Show an explanation to the user *asynchronously* -- don't block
+            // this thread waiting for the user's response! After the user
+            // sees the explanation, try again to request the permission.
+            return STORAGE_PERMISSION_REQUESTED;
+          } else {
+
+            // No explanation needed, we can request the permission.
+
+            ActivityCompat.requestPermissions(activity,
+                new String[] { Manifest.permission.READ_EXTERNAL_STORAGE }, STORAGE_REQUEST_CODE);
+
+            // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+            // app-defined int constant. The callback method gets the
+            // result of the request.
+          }
+        } else {
+          return STORAGE_PERMISSION_GIVEN;
+        }
+      } else if (type.equals(TYPE_CAMERA)) {
+        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.CAMERA)
+            != PackageManager.PERMISSION_GRANTED) {
+
+          // Should we show an explanation?
+          if (ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.CAMERA)) {
+
+            ActivityCompat.requestPermissions(activity,
+                new String[] { Manifest.permission.CAMERA }, CAMERA_REQUEST_CODE);
+            // Show an explanation to the user *asynchronously* -- don't block
+            // this thread waiting for the user's response! After the user
+            // sees the explanation, try again to request the permission.
+            return CAMERA_PERMISSION_REQUESTED;
+          } else {
+
+            // No explanation needed, we can request the permission.
+
+            ActivityCompat.requestPermissions(activity,
+                new String[] { Manifest.permission.CAMERA }, CAMERA_REQUEST_CODE);
+
+            // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+            // app-defined int constant. The callback method gets the
+            // result of the request.
+          }
+        } else {
+          return CAMERA_PERMISSION_GIVEN;
+        }
+      }
+    }
+    return "";
+  }
+
+
+  protected static String createAvatarPhotoName(String avatar) {
+    //SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-mm-yyyy");
+    String output = avatar /*+ simpleDateFormat.toString()*/;
+    return output;
+  }
+
+}

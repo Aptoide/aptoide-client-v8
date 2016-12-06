@@ -20,6 +20,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.GlideBuilder;
 import com.bumptech.glide.load.DecodeFormat;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.NotificationTarget;
 import java.util.concurrent.ExecutionException;
 
@@ -114,6 +115,8 @@ public class ImageLoader {
   public static void loadWithCircleTransform(Uri url, ImageView imageView) {
     Glide.with(Application.getContext())
         .load(url.toString())
+        .diskCacheStrategy(DiskCacheStrategy.NONE)
+        .skipMemoryCache(true)
         .transform(new CircleTransform(Application.getContext()))
         .into(imageView);
   }

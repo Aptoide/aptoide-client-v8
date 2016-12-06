@@ -37,6 +37,7 @@
     <activity android:name=".SignUpActivity"/>
 
     <activity android:name=".CreateUserActivity"/>
+    <activity android:name=".CreateStoreActivity"/>
 
   </application>
 

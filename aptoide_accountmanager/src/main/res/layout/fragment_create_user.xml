@@ -43,6 +43,7 @@
         android:gravity="center_vertical"
         android:paddingLeft="24dp"
         android:paddingRight="23dp"
+        android:textColor="@color/white"
         android:text="@string/create_user_header"
         />
         <!--android:layout_alignParentTop="true"-->
@@ -136,8 +137,7 @@
           android:id="@+id/create_user_choose_username"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginRight="200.3dp"
-          android:textSize="13.9sp"
+          android:textSize="14sp"
           android:textColor="@color/create_store_title_color"
           android:text="@string/create_user_choose_username"
           />
@@ -145,17 +145,20 @@
       <EditText
           android:id="@+id/create_user_username_inserted"
           android:layout_width="match_parent"
-          android:layout_height="43.3dp"
+          android:layout_height="43dp"
           android:layout_marginTop="8.7dp"
+          android:layout_marginRight="15dp"
           android:background="@color/create_store_edit_text_background"
+          android:paddingLeft="12dp"
+          android:padding="8dp"
+          android:textSize="12sp"
           android:textColor="@color/create_store_edit_text_color"
           android:hint="@string/create_user_username"
-          android:layout_marginRight="15dp"
           />
 
       <TextView
           android:layout_marginTop="10.3dp"
-          android:layout_width="230.3dp"
+          android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:textSize="9.8sp"
           android:textColor="@color/create_store_hint_color"
