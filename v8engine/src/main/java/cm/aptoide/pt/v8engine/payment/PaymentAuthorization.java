@@ -15,7 +15,12 @@ public class PaymentAuthorization {
     INITIATED,
     PAYMENT_METHOD_CHANGE,
     PENDING,
-    PENDING_PAYMENT_METHOD
+    PENDING_PAYMENT_METHOD,
+    REJECTED,
+    CANCELLED,
+    EXPIRED,
+    SESSION_EXPIRED,
+    CANCELLED_BY_CHARGEBACK
   }
 
   private final int paymentId;
@@ -49,6 +54,14 @@ public class PaymentAuthorization {
   public boolean isPending() {
     return Status.PENDING.equals(status)
         || Status.PENDING_PAYMENT_METHOD.equals(status);
+  }
+
+  public boolean isCancelled() {
+    return Status.CANCELLED.equals(status)
+        || Status.REJECTED.equals(status)
+        || Status.EXPIRED.equals(status)
+        || Status.SESSION_EXPIRED.equals(status)
+        || Status.CANCELLED_BY_CHARGEBACK.equals(status);
   }
 
   public Status getStatus() {

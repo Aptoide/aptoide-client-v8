@@ -8,11 +8,11 @@ package cm.aptoide.pt.v8engine.sync;
 import android.content.SyncResult;
 import cm.aptoide.pt.v8engine.payment.PaymentAuthorization;
 import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationRepository;
+import rx.Observable;
 
 /**
  * Created by marcelobenites on 22/11/16.
  */
-
 public class PaymentAuthorizationSync extends AbstractSync {
 
   private final PaymentAuthorizationRepository authorizationRepository;
@@ -26,10 +26,15 @@ public class PaymentAuthorizationSync extends AbstractSync {
       authorizationRepository.getPaymentAuthorizations()
           .first()
           .flatMapIterable(paymentAuthorizations -> paymentAuthorizations)
-          .doOnNext(paymentAuthorization -> {
-            if (!paymentAuthorization.isAuthorized()) {
+          .flatMap(paymentAuthorization -> {
+
+            if (paymentAuthorization.isCancelled()) {
+              return authorizationRepository.removePaymentAuthorization(paymentAuthorization.getPaymentId());
+            } else if (!paymentAuthorization.isAuthorized()) {
               rescheduleSync(syncResult);
             }
+
+            return Observable.empty();
           })
           .toList()
           .onErrorReturn(throwable -> null)

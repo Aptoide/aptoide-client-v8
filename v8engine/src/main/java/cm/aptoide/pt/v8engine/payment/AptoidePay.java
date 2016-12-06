@@ -71,8 +71,7 @@ public class AptoidePay {
 
   private Observable<PaymentConfirmation> processPaymentAndGetConfirmation(Payment payment) {
     return payment.process()
-        .flatMap(paymentConfirmation -> confirmationRepository.savePaymentConfirmation(
-            paymentConfirmation))
+        .flatMap(paymentConfirmation -> confirmationRepository.savePaymentConfirmation(paymentConfirmation))
         .doOnNext(saved -> backgroundSync.schedule())
         .flatMap(saved -> confirmationRepository.getPaymentConfirmation(payment.getProduct().getId()));
   }
