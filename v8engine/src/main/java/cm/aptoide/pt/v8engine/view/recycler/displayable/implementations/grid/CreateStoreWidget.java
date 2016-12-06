@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.view.View;
 import android.widget.Button;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -24,6 +25,12 @@ public class CreateStoreWidget extends Widget<CreateStoreDisplayable> {
   }
 
   @Override public void bindView(CreateStoreDisplayable displayable) {
-    RxView.clicks(button).subscribe(aVoid -> ShowMessage.asToast(itemView.getContext(), "pressed"));
+    RxView.clicks(button).subscribe(aVoid -> {
+      if (AptoideAccountManager.isLoggedIn()) {
+        ShowMessage.asToast(itemView.getContext(), "create store");
+      } else {
+        AptoideAccountManager.openAccountManager(getContext());
+      }
+    });
   }
 }

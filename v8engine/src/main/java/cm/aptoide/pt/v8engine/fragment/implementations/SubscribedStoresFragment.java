@@ -39,7 +39,6 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 /**
@@ -54,8 +53,8 @@ public class SubscribedStoresFragment extends GridRecyclerSwipeFragment {
     return new SubscribedStoresFragment();
   }
 
-  private Observable<List<Displayable>> loadStores() {
-    return Observable.zip(loadFromNetwokStores(true), loadStoresFromDb(),
+  private Observable<List<Displayable>> loadStores(boolean refresh) {
+    return Observable.zip(loadFromNetwokStores(refresh), loadStoresFromDb(),
         (networkDisplayables, dbDisplayables) -> {
           dbDisplayables.addAll(networkDisplayables);
           int i;
@@ -71,16 +70,8 @@ public class SubscribedStoresFragment extends GridRecyclerSwipeFragment {
         }).subscribeOn(Schedulers.computation());
   }
 
-  @Override public void reload() {
-    super.reload();
-    loadStores().first().subscribe(displayables -> setDisplayables(displayables), err -> {
-      Logger.e(TAG, err);
-      CrashReports.logException(err);
-    });
-  }
-
   private Observable<List<Displayable>> loadStoresFromDb() {
-    return storesAccessor.getAll().observeOn(AndroidSchedulers.mainThread()).map(stores -> {
+    return storesAccessor.getAll().map(stores -> {
       LinkedList<Displayable> displayables = new LinkedList<>();
       if (stores.size() > 0) {
         displayables.add(new StoreGridHeaderDisplayable(
@@ -100,12 +91,10 @@ public class SubscribedStoresFragment extends GridRecyclerSwipeFragment {
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    if (!refresh) {
-      loadStores().first().subscribe(displayables -> setDisplayables(displayables), err -> {
-        Logger.e(TAG, err);
-        CrashReports.logException(err);
-      });
-    }
+    loadStores(!refresh).subscribe(displayables -> setDisplayables(displayables), err -> {
+      Logger.e(TAG, err);
+      CrashReports.logException(err);
+    });
   }
 
   private Observable<List<Displayable>> loadFromNetwokStores(boolean refresh) {

@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.FullReview;
@@ -100,14 +99,12 @@ public class DisplayablesFactory {
             }
             break;
           case MY_STORE:
-            if (AptoideAccountManager.isLoggedIn()) {
-              //check if user has store already
-              if ((Boolean) wsWidget.getViewObject()) {
-                // TODO: 05/12/2016 trinkes get the theme from the user's store
-                displayables.add(new MyStoreDisplayable(StoreThemeEnum.APTOIDE_STORE_THEME_RED));
-              } else {
-                displayables.add(new CreateStoreDisplayable());
-              }
+            //check if user has store already
+            if ((Boolean) wsWidget.getViewObject()) {
+              // TODO: 05/12/2016 trinkes get the theme from the user's store
+              displayables.add(new MyStoreDisplayable(StoreThemeEnum.APTOIDE_STORE_THEME_RED));
+            } else {
+              displayables.add(new CreateStoreDisplayable());
             }
             break;
         }
