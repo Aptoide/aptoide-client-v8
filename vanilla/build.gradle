@@ -119,7 +119,7 @@ android {
 
     prod {
       versionCode project.PROD_VERSION_CODE.toInteger()
-      versionName "8.0.2.0"
+      versionName "8.0.2.1"
       resValue "string", "authenticatorAccountType", APPLICATION_ID
     }
   }
