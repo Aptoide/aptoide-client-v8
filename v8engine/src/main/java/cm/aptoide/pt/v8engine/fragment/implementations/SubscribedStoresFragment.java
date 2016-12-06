@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
@@ -22,6 +23,9 @@ import cm.aptoide.pt.dataprovider.ws.v7.MyStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
+import cm.aptoide.pt.model.v7.MyStore;
+import cm.aptoide.pt.model.v7.Type;
+import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -29,17 +33,14 @@ import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablesFactory;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CreateStoreDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.MyStoreDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SubscribedStoreDisplayable;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import rx.Observable;
 import rx.schedulers.Schedulers;
+
+import static cm.aptoide.pt.model.v7.store.Store.Appearance;
 
 /**
  * Created by neuro on 11-05-2016.
@@ -51,38 +52,6 @@ public class SubscribedStoresFragment extends GridRecyclerSwipeFragment {
 
   public static SubscribedStoresFragment newInstance() {
     return new SubscribedStoresFragment();
-  }
-
-  private Observable<List<Displayable>> loadStores(boolean refresh) {
-    return Observable.zip(loadFromNetwokStores(refresh), loadStoresFromDb(),
-        (networkDisplayables, dbDisplayables) -> {
-          dbDisplayables.addAll(networkDisplayables);
-          int i;
-          for (i = 0; i < dbDisplayables.size(); i++) {
-            Displayable displayable = dbDisplayables.get(i);
-            if (displayable instanceof CreateStoreDisplayable
-                || displayable instanceof MyStoreDisplayable) {
-              dbDisplayables.remove(displayable);
-              dbDisplayables.add(0, displayable);
-            }
-          }
-          return dbDisplayables;
-        }).subscribeOn(Schedulers.computation());
-  }
-
-  private Observable<List<Displayable>> loadStoresFromDb() {
-    return storesAccessor.getAll().map(stores -> {
-      LinkedList<Displayable> displayables = new LinkedList<>();
-      if (stores.size() > 0) {
-        displayables.add(new StoreGridHeaderDisplayable(
-            // TODO: 02/12/2016 trinkes extract
-            new GetStoreWidgets.WSWidget().setTitle("Followed Stores")));
-      }
-      for (Store store : stores) {
-        displayables.add(new SubscribedStoreDisplayable(store));
-      }
-      return displayables;
-    });
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -97,14 +66,22 @@ public class SubscribedStoresFragment extends GridRecyclerSwipeFragment {
     });
   }
 
-  private Observable<List<Displayable>> loadFromNetwokStores(boolean refresh) {
-    return MyStoreRequest.of().observe(refresh).observeOn(Schedulers.io()).map(myStore -> {
+  private Observable<List<Displayable>> loadStores(boolean refresh) {
+    return loadDataFromNetwork(refresh).flatMap(myStore -> loadLocalSubscribedStores().flatMap(
+        stores -> joinLocalAndRemoteSubscribedStores(myStore, stores))
+        .map(stores -> DisplayablesFactory.parse(myStore.getWidgets(),
+            V8Engine.getConfiguration().getDefaultTheme()))).onErrorReturn(throwable -> {
+      CrashReports.logException(throwable);
+      Logger.e(TAG, "loadStores: " + throwable);
+      return Collections.emptyList();
+    });
+  }
 
-      List<Displayable> displayables = new LinkedList();
+  @NonNull private Observable<MyStore> loadDataFromNetwork(boolean refresh) {
+    return MyStoreRequest.of().observe(refresh).observeOn(Schedulers.io()).map(myStore -> {
       List<GetStoreWidgets.WSWidget> list = myStore.getWidgets().getDatalist().getList();
       // Load sub nodes
       CountDownLatch countDownLatch = new CountDownLatch(list.size());
-
       Observable.from(list)
           .observeOn(Schedulers.io())
           .forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget,
@@ -123,16 +100,34 @@ public class SubscribedStoresFragment extends GridRecyclerSwipeFragment {
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
-
-      displayables = DisplayablesFactory.parse(myStore.getWidgets(),
-          V8Engine.getConfiguration().getDefaultTheme());
-
-      return displayables;
-    }).onErrorReturn(throwable -> {
-      CrashReports.logException(throwable);
-      Logger.e(TAG, "loadFromNetwokStores: " + throwable);
-      return Collections.emptyList();
+      return myStore;
     });
+  }
+
+  @NonNull
+  private Observable<List<cm.aptoide.pt.model.v7.store.Store>> joinLocalAndRemoteSubscribedStores(
+      MyStore myStore, List<cm.aptoide.pt.model.v7.store.Store> stores) {
+    return Observable.from(myStore.getWidgets().getDatalist().getList())
+        .filter(wsWidget -> wsWidget.getType() == Type.MY_STORES_SUBSCRIBED)
+        .map(wsWidget -> ((ListStores) wsWidget.getViewObject()).getDatalist().getList())
+        .map(storeList -> {
+          storeList.addAll(stores);
+          Collections.sort(storeList, (store, t1) -> store.getName().compareTo(t1.getName()));
+          while (storeList.size() > myStore.getWidgets().getDatalist().getCount()) {
+            storeList.remove(storeList.size() - 1);
+          }
+          return storeList;
+        });
+  }
+
+  private Observable<List<cm.aptoide.pt.model.v7.store.Store>> loadLocalSubscribedStores() {
+    return storesAccessor.getAll().flatMap(dbWidgets -> Observable.from(dbWidgets).map(store -> {
+      cm.aptoide.pt.model.v7.store.Store nwStore = new cm.aptoide.pt.model.v7.store.Store();
+      nwStore.setName(store.getStoreName());
+      nwStore.setId(store.getStoreId());
+      nwStore.setAppearance(new Appearance().setTheme(store.getTheme()));
+      return nwStore;
+    }).toList());
   }
 
   @Override public int getContentViewId() {

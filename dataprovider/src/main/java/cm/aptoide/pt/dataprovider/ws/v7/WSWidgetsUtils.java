@@ -42,6 +42,8 @@ public class WSWidgetsUtils {
           break;
 
         case STORES_GROUP:
+        case MY_STORES_SUBSCRIBED:
+        case STORES_RECOMMENDED:
           ListStoresRequest.ofAction(url, accessToken, email, aptoideClientUUID)
               .observe(refresh)
               .compose(AptoideUtils.ObservableU.applySchedulers())

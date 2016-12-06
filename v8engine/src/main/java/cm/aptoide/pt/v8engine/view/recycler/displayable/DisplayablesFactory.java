@@ -58,6 +58,7 @@ public class DisplayablesFactory {
             displayables.add(getApps(wsWidget, storeTheme));
             break;
 
+          case MY_STORES_SUBSCRIBED:
           case STORES_GROUP:
             displayables.add(
                 new StoreGridHeaderDisplayable(wsWidget, storeTheme, wsWidget.getTag()));
@@ -106,6 +107,8 @@ public class DisplayablesFactory {
             } else {
               displayables.add(new CreateStoreDisplayable());
             }
+            break;
+          case STORES_RECOMMENDED:
             break;
         }
       }
