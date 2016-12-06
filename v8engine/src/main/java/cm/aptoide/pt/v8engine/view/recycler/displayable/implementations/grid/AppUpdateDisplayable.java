@@ -162,4 +162,8 @@ import rx.Observable;
   @Override public void share(Context context, String cardType) {
 
   }
+
+  @Override public void like(Context context, String cardType) {
+
+  }
 }

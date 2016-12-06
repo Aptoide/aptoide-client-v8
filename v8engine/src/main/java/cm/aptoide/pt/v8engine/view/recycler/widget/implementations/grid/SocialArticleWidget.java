@@ -41,6 +41,7 @@ public class SocialArticleWidget extends CardWidget<SocialArticleDisplayable> {
   private TextView relatedTo;
   private LinearLayout like;
   private LinearLayout share;
+  private LinearLayout comments;
   private LikeButton likeButton;
 
   private String appName;
@@ -65,6 +66,7 @@ public class SocialArticleWidget extends CardWidget<SocialArticleDisplayable> {
     like = (LinearLayout) itemView.findViewById(R.id.social_like);
     share = (LinearLayout) itemView.findViewById(R.id.social_share);
     likeButton = (LikeButton) itemView.findViewById(R.id.social_like_test);
+    comments = (LinearLayout) itemView.findViewById(R.id.social_comment);
   }
 
   @Override public void bindView(SocialArticleDisplayable displayable) {
@@ -79,6 +81,8 @@ public class SocialArticleWidget extends CardWidget<SocialArticleDisplayable> {
     ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
     ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
     likeButton.setLiked(false);
+    like.setVisibility(View.VISIBLE);
+    comments.setVisibility(View.VISIBLE);
     //relatedTo.setText(displayable.getAppRelatedToText(getContext(), appName));
 
     if (getAppButton.getVisibility() != View.GONE && displayable.isGetApp(appName)) {
@@ -153,6 +157,7 @@ public class SocialArticleWidget extends CardWidget<SocialArticleDisplayable> {
     likeButton.setOnLikeListener(new OnLikeListener() {
       @Override public void liked(LikeButton likeButton) {
         Toast.makeText(getContext(), "LIKED", Toast.LENGTH_SHORT).show();
+        likeCard(displayable, cardType);
       }
 
       @Override public void unLiked(LikeButton likeButton) {

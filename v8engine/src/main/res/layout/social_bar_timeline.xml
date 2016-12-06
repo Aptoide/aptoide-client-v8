@@ -18,22 +18,18 @@
     android:clickable="true"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="5dp">
+    android:padding="5dp"
+    android:visibility="invisible">
 
     <com.like.LikeButton
       android:id="@+id/social_like_test"
       android:layout_width="23dp"
       android:layout_height="21dp"
       app:icon_size="18dp"
-      app:unlike_drawable="@drawable/heart_offf"
+      app:icon_type="heart"
       app:like_drawable="@drawable/heart_on"
       app:liked="false"
-      app:icon_type="heart" />
-    <!--<ImageView-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:src="@drawable/timeline_heart" />-->
-
+      app:unlike_drawable="@drawable/heart_offf" />
 
     <TextView
       android:layout_width="wrap_content"
@@ -42,7 +38,6 @@
       android:text="LIKE"
       android:textSize="8sp"
       tools:text="LIKE" />
-
 
   </LinearLayout>
 
@@ -58,7 +53,8 @@
     android:clickable="true"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="5dp">
+    android:padding="5dp"
+    android:visibility="invisible">
 
     <ImageView
       android:id="@+id/imageView2"

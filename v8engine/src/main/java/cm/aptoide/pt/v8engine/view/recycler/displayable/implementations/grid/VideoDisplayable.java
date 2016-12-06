@@ -117,4 +117,8 @@ import rx.schedulers.Schedulers;
   @Override public void share(Context context, String cardType) {
     socialRepository.share(video, cardType, "");
   }
+
+  @Override public void like(Context context, String cardType) {
+
+  }
 }

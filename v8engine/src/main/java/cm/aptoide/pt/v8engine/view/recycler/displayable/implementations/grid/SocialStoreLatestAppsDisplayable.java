@@ -65,6 +65,10 @@ import lombok.Getter;
 
   }
 
+  @Override public void like(Context context, String cardType) {
+
+  }
+
   @EqualsAndHashCode @AllArgsConstructor public static class LatestApp {
 
     @Getter private final long appId;

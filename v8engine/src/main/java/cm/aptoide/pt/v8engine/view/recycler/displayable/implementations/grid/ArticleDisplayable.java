@@ -119,15 +119,14 @@ import rx.schedulers.Schedulers;
     timelineMetricsManager.sendEvent(data, eventName);
   }
 
-  public void like() {
-    socialRepository.like();
-  }
-
   @Override public int getViewLayout() {
     return R.layout.displayable_social_timeline_article;
   }
 
   @Override public void share(Context context, String cardType) {
     socialRepository.share(article, cardType, "");
+  }
+
+  @Override public void like(Context context, String cardType) {
   }
 }

@@ -268,6 +268,9 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
     @POST("{email}") Observable<BaseV7Response> shareCard(@Body ShareCardRequest.Body body,
         @Path(value = "email") String email);
 
+    @POST("{email}") Observable<BaseV7Response> likeCard(@Body LikeCardRequest.Body body,
+        @Path(value = "email") String email);
+
     @POST("/api/7/my/store/getMeta") Observable<GetStoreMeta> getMyStoreMeta(@Body BaseBody body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 

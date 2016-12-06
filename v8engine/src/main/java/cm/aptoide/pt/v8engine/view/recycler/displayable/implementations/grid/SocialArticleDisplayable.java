@@ -30,6 +30,7 @@ import rx.schedulers.Schedulers;
 
 @AllArgsConstructor public class SocialArticleDisplayable extends CardDisplayable {
 
+  @Getter private SocialArticle socialArticle;
   @Getter private String articleTitle;
   @Getter private Link link;
   @Getter private Link developerLink;
@@ -67,7 +68,7 @@ import rx.schedulers.Schedulers;
       abTestingURL = socialArticle.getAb().getConversion().getUrl();
     }
 
-    return new SocialArticleDisplayable(socialArticle.getTitle(),
+    return new SocialArticleDisplayable(socialArticle, socialArticle.getTitle(),
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, socialArticle.getUrl()),
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
             socialArticle.getPublisher().getBaseUrl()), socialArticle.getPublisher().getName(),
@@ -119,10 +120,6 @@ import rx.schedulers.Schedulers;
     timelineMetricsManager.sendEvent(data, eventName);
   }
 
-  public void like() {
-    socialRepository.like();
-  }
-
   public void share(Context context) {
   }
 
@@ -132,5 +129,9 @@ import rx.schedulers.Schedulers;
 
   @Override public void share(Context context, String cardType) {
 
+  }
+
+  @Override public void like(Context context, String cardType) {
+    socialRepository.like(socialArticle, cardType, "");
   }
 }

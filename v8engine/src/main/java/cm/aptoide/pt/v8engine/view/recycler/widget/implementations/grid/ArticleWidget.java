@@ -153,16 +153,6 @@ public class ArticleWidget extends CardWidget<ArticleDisplayable> {
 
     compositeSubscription.add(RxView.clicks(like).subscribe(click -> {
     }, (throwable) -> throwable.printStackTrace()));
-
-    likeButton.setOnLikeListener(new OnLikeListener() {
-      @Override public void liked(LikeButton likeButton) {
-        Toast.makeText(getContext(), "LIKED", Toast.LENGTH_SHORT).show();
-      }
-
-      @Override public void unLiked(LikeButton likeButton) {
-        Toast.makeText(getContext(), "UNLIKED", Toast.LENGTH_SHORT).show();
-      }
-    });
   }
 
   private void setAppNameToFirstLinkedApp() {
