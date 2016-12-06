@@ -106,7 +106,7 @@ public class CreateUserActivity extends PermissionsBaseActivity {
     }));
     mSubscriptions.add(RxView.clicks(mUserAvatar).subscribe(click -> chooseAvatarSource()));
     mSubscriptions.add(RxView.clicks(mCreateButton).subscribe(click -> {
-      CreateUserRequest.of("true", userEmail, username, userPassword, avatarPath).execute(answer -> {
+      /*CreateUserRequest.of("true", userEmail, username, userPassword, avatarPath).execute(answer -> {
         if (answer.hasErrors()) {
           ShowMessage.asSnack(this, "Error while creating user profile");
           Logger.d(ERROR_TAG, answer.getError_description());
@@ -118,8 +118,13 @@ public class CreateUserActivity extends PermissionsBaseActivity {
           intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
           intent.putExtra("user", username);
           startActivity(intent);
-        }
-      });
+
+        }*/
+      Intent intent = new Intent(this, CreateStoreActivity.class);
+      intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+      intent.putExtra("user", username);
+      startActivity(intent);
+      //});
     }));
   }
 
