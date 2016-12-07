@@ -74,8 +74,8 @@ public class SubscribedStoresFragment extends GridRecyclerSwipeFragment {
   }
 
   private Observable<List<Displayable>> loadStores(boolean refresh) {
-    return loadDataFromNetwork(refresh).flatMap(myStore -> loadLocalSubscribedStores().flatMap(
-        stores -> joinLocalAndRemoteSubscribedStores(myStore.getWidgets(), stores))
+    return loadLocalSubscribedStores().flatMap(stores -> loadDataFromNetwork(refresh).flatMap(
+        myStore -> joinLocalAndRemoteSubscribedStores(myStore.getWidgets(), stores))
         .map(widgets -> DisplayablesFactory.parse(widgets,
             V8Engine.getConfiguration().getDefaultTheme()))).onErrorReturn(throwable -> {
       CrashReports.logException(throwable);
