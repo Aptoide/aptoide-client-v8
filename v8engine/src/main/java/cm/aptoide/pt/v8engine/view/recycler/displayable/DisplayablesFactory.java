@@ -32,6 +32,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Gri
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreMetaDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.LatestStoreCommentsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.MyStoreDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RecommendedStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RowReviewDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
 import java.util.ArrayList;
@@ -109,12 +110,29 @@ public class DisplayablesFactory {
             }
             break;
           case STORES_RECOMMENDED:
+            displayables.add(
+                new StoreGridHeaderDisplayable(wsWidget, storeTheme, wsWidget.getTag()));
+            displayables.add(createRecommendedStores(wsWidget.getViewObject()));
             break;
         }
       }
     }
 
     return displayables;
+  }
+
+  private static Displayable createRecommendedStores(Object viewObject) {
+    ListStores listStores = (ListStores) viewObject;
+    if (listStores == null) {
+      return new EmptyDisplayable();
+    }
+    List<Store> stores = listStores.getDatalist().getList();
+    List<Displayable> displayables = new LinkedList<>();
+    for (Store store : stores) {
+      displayables.add(new RecommendedStoreDisplayable(store));
+    }
+
+    return new DisplayableGroup(displayables);
   }
 
   private static DisplayableGroup createReviewsDisplayables(ListFullReviews listFullReviews) {
