@@ -16,6 +16,8 @@ import android.widget.RelativeLayout;
 import cm.aptoide.accountmanager.ws.CreateUserRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.RxTextView;
@@ -33,7 +35,6 @@ public class CreateUserActivity extends PermissionsBaseActivity {
   private String userPassword;
   private String username;
   private String avatarPath;
-  private File avatar;
   private Boolean UPDATE = true;
 
   private Toolbar mToolbar;
@@ -43,18 +44,10 @@ public class CreateUserActivity extends PermissionsBaseActivity {
   private ImageView mAvatar;
   private CompositeSubscription mSubscriptions;
 
-  static final int REQUEST_CAMERA_CODE = 1046;
-  static final int REQUEST_IMAGE_CAPTURE = 1;
-
   private Boolean result = false;
 
-  private String aptoideUserAvatar = "aptoide_user_avatar.png";
-
-  private String TAG = "STORAGE";
   private String ERROR_TAG = "Error update user";
 
-  private static final int STORAGE_REQUEST_CODE = 123;
-  private static final int CAMERA_REQUEST_CODE = 124;
   private static final String TYPE_STORAGE = "storage";
   private static final String TYPE_CAMERA = "camera";
 
@@ -99,13 +92,15 @@ public class CreateUserActivity extends PermissionsBaseActivity {
   }
 
   private void setupListeners() {
-    mSubscriptions.add(RxTextView.textChanges(mUsername).subscribe(new Action1<CharSequence>() {
+    /*mSubscriptions.add(RxTextView.textChanges(mUsername).subscribe(new Action1<CharSequence>() {
       @Override public void call(CharSequence input) {
         username += input.toString();
       }
-    }));
+    }));*/
     mSubscriptions.add(RxView.clicks(mUserAvatar).subscribe(click -> chooseAvatarSource()));
     mSubscriptions.add(RxView.clicks(mCreateButton).subscribe(click -> {
+      username = mUsername.getText().toString();
+      //TODO: Deal with username being empty
       CreateUserRequest.of("true", userEmail, username, userPassword, avatarPath).execute(answer -> {
         if (answer.hasErrors()) {
           ShowMessage.asSnack(this, "Error while creating user profile");
@@ -128,54 +123,6 @@ public class CreateUserActivity extends PermissionsBaseActivity {
     userPassword = getIntent().getStringExtra(AptoideLoginUtils.APTOIDE_LOGIN_PASSWORD_KEY);
   }
 
-
-  private void chooseAvatarSource() {
-    final Dialog dialog = new Dialog(this);
-    dialog.setContentView(R.layout.dialog_choose_avatar_layout);
-    dialog.setTitle(R.string.create_user_dialog_title);
-    mSubscriptions.add(RxView.clicks(dialog.findViewById(R.id.button_camera)).subscribe(click -> {
-      callPermissionAndAction(TYPE_CAMERA);
-      dialog.dismiss();
-    }));
-    mSubscriptions.add(RxView.clicks(dialog.findViewById(R.id.button_gallery)).subscribe(click -> {
-      callPermissionAndAction(TYPE_STORAGE);
-      dialog.dismiss();
-    }));
-    mSubscriptions.add(RxView.clicks(dialog.findViewById(R.id.button_cancel))
-        .subscribe(click -> dialog.dismiss())
-    );
-    dialog.show();
-  }
-
-  private void callGallery() {
-    if (result) {
-      Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-      if (intent.resolveActivity(getPackageManager()) != null) {
-        startActivityForResult(intent, REQUEST_CAMERA_CODE);
-      }
-    }
-  }
-
-  private void dispatchTakePictureIntent() {
-    if (result) {
-      Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-      if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, getPhotoFileUri(PermissionsBaseActivity.createAvatarPhotoName(aptoideUserAvatar)));
-        startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-      }
-    }
-  }
-
-  private Uri getPhotoFileUri(String fileName) {
-      File storageDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), ".aptoide/user_avatar");
-      if (!storageDir.exists() && !storageDir.mkdirs()) {
-        Logger.d(TAG, "Failed to create directory");
-      }
-      avatar = storageDir;
-      return Uri.fromFile(new File(storageDir.getPath() + File.separator + fileName));
-  }
-
-
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
@@ -185,6 +132,8 @@ public class CreateUserActivity extends PermissionsBaseActivity {
     } else if (requestCode == REQUEST_CAMERA_CODE && resultCode == RESULT_OK) {
         Uri avatarUrl = data.getData();
         ImageLoader.loadWithCircleTransform(avatarUrl, mAvatar);
+        FileUtils fileUtils = new FileUtils();
+        fileUtils.copyFile(avatarUrl.toString(), Application.getConfiguration().getUserAvatarCachePath(), aptoideUserAvatar);
         avatarPath = avatarUrl.toString();
     }
   }
@@ -304,26 +253,11 @@ public class CreateUserActivity extends PermissionsBaseActivity {
     }
   }
 
-  private void changePermissionValue(boolean b) {
-    result = b;
-  }
 
   private void saveUserDataOnPreferences() {
     AccountManagerPreferences.setUserAvatar(avatarPath);
     AccountManagerPreferences.setUserNickName(username);
   }
 
-  private void callPermissionAndAction(String type) {
-    String result = PermissionsBaseActivity.checkAndAskPermission(CreateUserActivity.this, type);
-    switch (result) {
-      case PermissionsBaseActivity.CAMERA_PERMISSION_GIVEN:
-        changePermissionValue(true);
-        dispatchTakePictureIntent();
-        break;
-      case PermissionsBaseActivity.STORAGE_PERMISSION_GIVEN:
-        changePermissionValue(true);
-        callGallery();
-        break;
-    }
-  }
+
 }

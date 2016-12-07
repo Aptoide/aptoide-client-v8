@@ -115,8 +115,8 @@ public abstract class v3accountManager<U> extends WebService<v3accountManager.In
 
     @Multipart
     @POST("3/createUser")
-    @Headers({ PostCacheInterceptor.BYPASS_HEADER_KEY + ":" + PostCacheInterceptor.BYPASS_HEADER_VALUE, "Content-Disposition" })
-    Observable<OAuth> createUserWithFile(@Part("user_avatar") RequestBody user_avatar,@PartMap() HashMapNotNull<String, String> args);
+    @Headers({ PostCacheInterceptor.BYPASS_HEADER_KEY + ":" + PostCacheInterceptor.BYPASS_HEADER_VALUE})
+    Observable<OAuth> createUserWithFile(@Part MultipartBody.Part user_avatar,@PartMap() HashMapNotNull<String, RequestBody> args);
 
     @POST("3/changeUserSettings") @FormUrlEncoded
     @Headers({ PostCacheInterceptor.BYPASS_HEADER_KEY + ":" + PostCacheInterceptor.BYPASS_HEADER_VALUE })

@@ -13,6 +13,7 @@ import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import com.fasterxml.jackson.databind.deser.std.UntypedObjectDeserializer;
 import java.io.File;
+import java.util.ArrayList;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -20,6 +21,7 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Converter;
 import rx.Observable;
 
@@ -53,6 +55,46 @@ import rx.Observable;
   @Override
   protected Observable<OAuth> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
 
+    if (update.equals("true")) {
+      HashMapNotNull<String, RequestBody> body = new HashMapNotNull<>();
+
+      String calculatedPasshash;
+      calculatedPasshash = AptoideUtils.AlgorithmU.computeSha1(password);
+      RequestBody mode = createBodyPartFromString("json");
+      //parameters.put("mode", "json");
+      RequestBody email = createBodyPartFromString(getEmail());
+      //parameters.put("email", email);
+      RequestBody passhash = createBodyPartFromString(calculatedPasshash);
+      //parameters.put("passhash", passhash);
+
+      if (!TextUtils.isEmpty(Application.getConfiguration().getExtraId())) {
+        RequestBody oem_id = createBodyPartFromString(Application.getConfiguration().getExtraId());
+        body.put("oem_id", oem_id);
+        //parameters.put("oem_id", Application.getConfiguration().getExtraId());
+      }
+
+      RequestBody hmac = createBodyPartFromString(AptoideUtils.AlgorithmU.computeHmacSha1(getEmail() + calculatedPasshash + getName() + getUpdate(), "bazaar_hmac"));
+      //parameters.put("hmac",
+      //    AptoideUtils.AlgorithmU.computeHmacSha1(email + passhash + name, "bazaar_hmac"));
+
+      RequestBody name = createBodyPartFromString(getName());
+      //parameters.put("name", name);
+      RequestBody update = createBodyPartFromString(getUpdate());
+      //parameters.put("update", update);
+
+      body.put("json", mode);
+      body.put("email", email);
+      body.put("passhash", passhash);
+      body.put("hmac", hmac);
+      body.put("name", name);
+      body.put("update", update);
+      File file = new File(Application.getConfiguration().getUserAvatarCachePath()+ "aptoide_user_avatar.png");
+      RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+      //RequestBody body = RequestBody.create(MediaType.parse("image/*"), file);
+      MultipartBody.Part multipartBody = MultipartBody.Part.createFormData("user_avatar", file.getName(), requestFile);
+      return interfaces.createUserWithFile(multipartBody, body);
+    }
+
     HashMapNotNull<String, String> parameters = new HashMapNotNull<String, String>();
 
     String passhash;
@@ -68,16 +110,12 @@ import rx.Observable;
     parameters.put("hmac",
         AptoideUtils.AlgorithmU.computeHmacSha1(email + passhash + name, "bazaar_hmac"));
 
-    if (update.equals("true")) {
-      parameters.put("name", name);
-      parameters.put("update", update);
-      File file = new File(Application.getConfiguration().getUserAvatarCachePath()+ "aptoide_user_avatar.png");
-      RequestBody body = RequestBody.create(MediaType.parse("image/*"), file);
-      //MultipartBody.Part body = MultipartBody.Part.createFormData("user_avatar", file.getName(), image);
-      return interfaces.createUserWithFile(body, parameters);
-    }
-
     return interfaces.createUser(parameters);
 
   }
+
+  private RequestBody createBodyPartFromString(String string) {
+    return RequestBody.create(MediaType.parse("multipart/form-data"), string);
+  }
+
 }

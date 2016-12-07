@@ -9,6 +9,7 @@ import cm.aptoide.pt.networkclient.okhttp.cache.L2Cache;
 import cm.aptoide.pt.networkclient.okhttp.cache.PostCacheInterceptor;
 import cm.aptoide.pt.networkclient.okhttp.cache.PostCacheKeyAlgorithm;
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 import okhttp3.Cache;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -33,7 +34,9 @@ public class OkHttpClientFactory {
     //		if (BuildConfig.DEBUG) {
     //			clientBuilder.addNetworkInterceptor(new StethoInterceptor());
     //		}
-
+    clientBuilder.connectTimeout(2, TimeUnit.MINUTES);
+    clientBuilder.readTimeout(2, TimeUnit.MINUTES);
+    clientBuilder.writeTimeout(2, TimeUnit.MINUTES);
     clientBuilder.cache(new Cache(cacheDirectory, cacheMaxSize)); // 10 MiB
     clientBuilder.addInterceptor(interceptor);
     clientBuilder.addInterceptor(new UserAgentInterceptor(userAgentGenerator));

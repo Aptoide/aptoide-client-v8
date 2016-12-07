@@ -152,7 +152,7 @@
           android:paddingLeft="12dp"
           android:padding="8dp"
           android:textSize="12sp"
-          android:textColor="@color/create_store_edit_text_color"
+          android:textColor="@color/black"
           android:hint="@string/create_user_username"
           />
 

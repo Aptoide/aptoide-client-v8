@@ -1,12 +1,25 @@
 package cm.aptoide.accountmanager;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import cm.aptoide.pt.logger.Logger;
+import com.jakewharton.rxbinding.view.RxView;
+import java.io.File;
+import rx.subscriptions.CompositeSubscription;
+
+import static cm.aptoide.accountmanager.CreateUserActivity.REQUEST_CAMERA_CODE;
+import static cm.aptoide.accountmanager.CreateUserActivity.REQUEST_IMAGE_CAPTURE;
 
 /**
  * Created by pedroribeiro on 02/12/16.
@@ -14,16 +27,35 @@ import android.support.v7.app.AppCompatActivity;
 
 public abstract class PermissionsBaseActivity extends BaseActivity {
 
-  private static final int STORAGE_REQUEST_CODE = 123;
-  private static final int CAMERA_REQUEST_CODE = 124;
+  protected static final int STORAGE_REQUEST_CODE = 123;
+  protected static final int CAMERA_REQUEST_CODE = 124;
+  static final int REQUEST_CAMERA_CODE = 1046;
+  static final int REQUEST_IMAGE_CAPTURE = 1;
+
   private static final String TYPE_STORAGE = "storage";
   private static final String TYPE_CAMERA = "camera";
-
+  private String TAG = "STORAGE";
+  private File avatar;
+  protected String aptoideUserAvatar = "aptoide_user_avatar.png";
 
   static final String STORAGE_PERMISSION_GIVEN = "storage_permission_given";
   static final String CAMERA_PERMISSION_GIVEN = "camera_permission_given";
   static final String STORAGE_PERMISSION_REQUESTED = "storage_permission_requested";
   static final String CAMERA_PERMISSION_REQUESTED = "camera_permission_requested";
+
+  public boolean result;
+
+  private CompositeSubscription mSubscriptions;
+
+  @Override public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    mSubscriptions = new CompositeSubscription();
+  }
+
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    mSubscriptions.clear();
+  }
 
   @Override protected String getActivityTitle() {
     return null;
@@ -128,6 +160,76 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
     //SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-mm-yyyy");
     String output = avatar /*+ simpleDateFormat.toString()*/;
     return output;
+  }
+
+
+
+
+  public void chooseAvatarSource() {
+    final Dialog dialog = new Dialog(this);
+    dialog.setContentView(R.layout.dialog_choose_avatar_layout);
+    dialog.setTitle(R.string.create_user_dialog_title);
+    mSubscriptions.add(RxView.clicks(dialog.findViewById(R.id.button_camera)).subscribe(click -> {
+      callPermissionAndAction(TYPE_CAMERA);
+      dialog.dismiss();
+    }));
+    mSubscriptions.add(RxView.clicks(dialog.findViewById(R.id.button_gallery)).subscribe(click -> {
+      callPermissionAndAction(TYPE_STORAGE);
+      dialog.dismiss();
+    }));
+    mSubscriptions.add(RxView.clicks(dialog.findViewById(R.id.cancel))
+        .subscribe(click -> dialog.dismiss())
+    );
+    dialog.show();
+  }
+
+  public void callPermissionAndAction(String type) {
+    String result = PermissionsBaseActivity.checkAndAskPermission(PermissionsBaseActivity.this, type);
+    switch (result) {
+      case PermissionsBaseActivity.CAMERA_PERMISSION_GIVEN:
+        changePermissionValue(true);
+        dispatchTakePictureIntent();
+        break;
+      case PermissionsBaseActivity.STORAGE_PERMISSION_GIVEN:
+        changePermissionValue(true);
+        callGallery();
+        break;
+    }
+  }
+
+  public void changePermissionValue(boolean b) {
+    result = b;
+  }
+
+  public void callGallery() {
+    if (result) {
+      Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+      if (intent.resolveActivity(getPackageManager()) != null) {
+        startActivityForResult(intent, REQUEST_CAMERA_CODE);
+      }
+    }
+  }
+
+
+  public void dispatchTakePictureIntent() {
+    if (result) {
+      Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+      if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, getPhotoFileUri(PermissionsBaseActivity.createAvatarPhotoName(aptoideUserAvatar)));
+        startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+      }
+    }
+  }
+
+
+
+  public Uri getPhotoFileUri(String fileName) {
+    File storageDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), ".aptoide/user_avatar");
+    if (!storageDir.exists() && !storageDir.mkdirs()) {
+      Logger.d(TAG, "Failed to create directory");
+    }
+    avatar = storageDir;
+    return Uri.fromFile(new File(storageDir.getPath() + File.separator + fileName));
   }
 
 }
