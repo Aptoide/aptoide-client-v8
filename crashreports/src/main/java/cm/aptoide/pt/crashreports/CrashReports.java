@@ -17,8 +17,6 @@ public class CrashReports {
   private final static String TAG = CrashReports.class.getSimpleName();   //TAG for the logger
   @Setter private static String language;
   //var with the language the app is set to
-  private static boolean fabricConfigured;
-  //var if fabric is configured or not, true by default
 
   /**
    * setup crash reports
@@ -26,10 +24,8 @@ public class CrashReports {
    * @param context context from the class that's calling this method
    */
   public static void setup(Context context) {
-    fabricConfigured = BuildConfig.FABRIC_CONFIGURED;
     Fabric.with(context, new Crashlytics.Builder().core(
-        new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG || !fabricConfigured).build())
-        .build());
+        new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build()).build());
     Logger.d(TAG, "Setup of CrashReports");
   }
 
@@ -118,14 +114,12 @@ public class CrashReports {
      * @param screenName screen name that should be reported to crashReports
      */
     public void addScreenToHistory(String screenName) {
-      if (fabricConfigured) {
-        if (history.size() >= MAX_HISTORY) {
-          history.remove(0);
-        }
-        history.add(screenName);
-        CrashReports.logString(SCREEN_HISTORY, history.toString());
-        Logger.d(TAG, "addScreenToHistory: " + history.toString());
+      if (history.size() >= MAX_HISTORY) {
+        history.remove(0);
       }
+      history.add(screenName);
+      CrashReports.logString(SCREEN_HISTORY, history.toString());
+      Logger.d(TAG, "addScreenToHistory: " + history.toString());
     }
 
     /**

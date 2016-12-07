@@ -25,6 +25,25 @@ android {
 
   publishNonDefault true
 
+  productFlavors {
+    internal {
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_SCHEME", "\"" + project.APTOIDE_WEB_SERVICES_DEVELOPMENT_SCHEME + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_HOST", "\"" + project.APTOIDE_WEB_SERVICES_DEVELOPMENT_HOST + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_V7_HOST", "\"" + project.APTOIDE_WEB_SERVICES_DEVELOPMENT_V7_HOST + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_APTWORDS_HOST", "\"" + project.APTOIDE_WEB_SERVICES_DEVELOPMENT_APTWORDS_HOST + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_APTWORDS_SCHEME", "\"" + project.APTOIDE_WEB_SERVICES_DEVELOPMENT_APTWORDS_SCHEME + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_WRITE_V7_HOST", "\"" + project.APTOIDE_WEB_SERVICES_DEVELOPMENT_WRITE_V7_HOST + "\""
+    }
+    prod {
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_SCHEME", "\"" + project.APTOIDE_WEB_SERVICES_PRODUCTION_SCHEME + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_HOST", "\"" + project.APTOIDE_WEB_SERVICES_PRODUCTION_HOST + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_V7_HOST", "\"" + project.APTOIDE_WEB_SERVICES_PRODUCTION_V7_HOST + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_APTWORDS_HOST", "\"" + project.APTOIDE_WEB_SERVICES_PRODUCTION_APTWORDS_HOST + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_APTWORDS_SCHEME", "\"" + project.APTOIDE_WEB_SERVICES_PRODUCTION_APTWORDS_SCHEME + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_WRITE_V7_HOST", "\"" + project.APTOIDE_WEB_SERVICES_PRODUCTION_WRITE_V7_HOST + "\""
+    }
+  }
+
   buildTypes {
     release {
       minifyEnabled false

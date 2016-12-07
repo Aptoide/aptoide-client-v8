@@ -6,6 +6,7 @@
 package cm.aptoide.pt.dataprovider.ws.v3;
 
 import android.support.annotation.NonNull;
+import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception;
 import cm.aptoide.pt.dataprovider.ws.v2.GenericResponseV2;
@@ -28,14 +29,14 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by sithengineer on 21/07/16.
  */
 public abstract class V3<U> extends WebService<V3.Interfaces, U> {
 
-  protected static final String BASE_HOST = "http://webservices.aptoide.com/webservices/3/";
+  protected static final String BASE_HOST = BuildConfig.APTOIDE_WEB_SERVICES_SCHEME + "://" + BuildConfig.APTOIDE_WEB_SERVICES_HOST + "/webservices/3/";
+
   protected final BaseBody map;
   private final String INVALID_ACCESS_TOKEN_CODE = "invalid_token";
   private boolean accessTokenRetry = false;
@@ -86,7 +87,7 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
               return DataProvider.invalidateAccessToken()
                   .flatMap(s -> {
                     this.map.setAccess_token(s);
-                    return V3.this.observe(bypassCache).observeOn(AndroidSchedulers.mainThread());
+                    return V3.this.observe(bypassCache);
                   });
             }
           } else {
@@ -98,7 +99,7 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
         }
       }
       return Observable.error(throwable);
-    }).observeOn(AndroidSchedulers.mainThread());
+    });
   }
 
   interface Interfaces {

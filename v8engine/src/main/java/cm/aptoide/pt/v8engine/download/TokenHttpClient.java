@@ -9,6 +9,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.AptoideClientUUID;
 import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.networkclient.okhttp.UserAgentGenerator;
+import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.networkclient.okhttp.UserAgentInterceptor;
 import cm.aptoide.pt.utils.AptoideUtils;
 import com.liulishuo.filedownloader.util.FileDownloadHelper;
@@ -43,7 +44,7 @@ public class TokenHttpClient implements FileDownloadHelper.OkHttpClientCustomMak
 
         // Paid apps URLs are actually web services. We need to add token information in order
         // to validate user is allowed to download the app.
-        if (request.url().host().contains("webservices.aptoide.com")) {
+        if (request.url().host().contains(BuildConfig.APTOIDE_WEB_SERVICES_HOST)) {
           request = request.newBuilder()
               .post(RequestBody.create(MediaType.parse("application/json"),
                   "{\"access_token\" : \"" + AptoideAccountManager.getAccessToken() + "\"}"))

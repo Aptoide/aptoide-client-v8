@@ -38,7 +38,7 @@
         android:background="@drawable/button_border_silver"
         android:text="@string/appview_read_all"
         android:textAllCaps="true"
-        android:textColor="@color/silver"
+        android:textColor="@color/silver_dark"
         android:textSize="@dimen/text_size_small"
         />
 
@@ -144,7 +144,7 @@
       android:gravity="center"
       android:text="@string/appview_rate_this_app"
       android:textAllCaps="true"
-      android:textColor="@color/silver"
+      android:textColor="@color/silver_dark"
       android:textSize="@dimen/text_size_small"
       tools:visibility="gone"
       />
@@ -170,7 +170,7 @@
         android:gravity="center"
         android:text="@string/appview_rate_this_app"
         android:textAllCaps="true"
-        android:textColor="@color/silver"
+        android:textColor="@color/silver_dark"
         android:textSize="@dimen/text_size_small"
         android:visibility="invisible"
         />
