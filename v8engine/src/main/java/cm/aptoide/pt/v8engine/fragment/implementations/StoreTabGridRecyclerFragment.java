@@ -53,6 +53,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Gri
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RowReviewDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
+import cm.aptoide.pt.viewRateAndCommentReviews.StoreComment;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -163,7 +164,6 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
   private void caseListStores(String url, boolean refresh) {
     ListStoresRequest listStoresRequest =
         ListStoresRequest.ofAction(url, AptoideAccountManager.getAccessToken(),
-            AptoideAccountManager.getUserEmail(),
             new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                 DataProvider.getContext()).getAptoideClientUUID());
     Action1<ListStores> listStoresAction = listStores -> {
@@ -399,7 +399,10 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
           new IllegalStateException("Current store credentials does not have a store id"));
     }
 
+    // FIXME: 7/12/2016 sithengineer un comment the next lines
     //final long storeId = storeCredentials.getId();
+    //final String storeName = storeCredentials.getName();
+    final String storeName = " ?? ";
     final long storeId = 0;
 
     Action1<ListComments> listCommentsAction = (listComments -> {
@@ -411,7 +414,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
         for (int i = 0; i < comments.size(); i++) {
           Comment comment = comments.get(i);
           displayables.add(new CommentDisplayable(
-              new StoreComment(comment, showStoreCommentDialogAndSendComment(storeId, comment))));
+              new StoreComment(comment, showStoreCommentFragment(storeId, comment, storeName))));
         }
         this.displayables = new ArrayList<>(comments.size());
         this.displayables.add(new DisplayableGroup(displayables));
@@ -427,29 +430,10 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
     endlessRecyclerOnScrollListener.onLoadMore(refresh);
   }
 
-  public Observable<Boolean> showStoreCommentDialogAndSendComment(final long storeId,
-      @Nullable Comment comment) {
-    // optional method
+  public Observable<Void> showStoreCommentFragment(final long storeId,
+      @NonNull Comment comment, String storeName) {
+    // optional method implemented in child classes
     return Observable.empty();
-  }
-
-  // todo adapt instead of mutate
-  public static final class StoreComment extends Comment {
-
-    private final Observable<Boolean> onClickReplyAction;
-
-    StoreComment(Comment comment, Observable<Boolean> onClickReplyAction) {
-      this.setAdded(comment.getAdded());
-      this.setBody(comment.getBody());
-      this.setId(comment.getId());
-      this.setParentReview(comment.getParentReview());
-      this.setUser(comment.getUser());
-      this.onClickReplyAction = onClickReplyAction;
-    }
-
-    public Observable<Boolean> observeReplySubmission() {
-      return onClickReplyAction;
-    }
   }
 
   private void caseListReviews(String url, boolean refresh) {

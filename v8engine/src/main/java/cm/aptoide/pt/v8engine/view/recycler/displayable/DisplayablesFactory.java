@@ -33,6 +33,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Gri
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreMetaDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.MyStoreDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.OfficialAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RowReviewDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreLatestCommentsDisplayable;
@@ -108,7 +109,7 @@ public class DisplayablesFactory {
               }
             }
             break;
-          case STORE_LATEST_COMMENTS:
+          case COMMENTS_GROUP:
             ListComments comments = (ListComments) wsWidget.getViewObject();
             if (comments != null
                 && comments.getDatalist() != null
@@ -117,6 +118,11 @@ public class DisplayablesFactory {
               displayables.add(
                   new StoreLatestCommentsDisplayable(comments.getDatalist().getList()));
             }
+            break;
+
+          case OFFICIAL_APP:
+            // TODO: 7/12/2016 sithengineer
+            displayables.add(new OfficialAppDisplayable());
             break;
         }
       }

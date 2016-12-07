@@ -5,19 +5,20 @@
 
 package cm.aptoide.pt.viewRateAndCommentReviews;
 
+import android.app.FragmentManager;
 import android.content.res.Resources;
 import android.os.Build;
 import android.support.v7.widget.AppCompatRatingBar;
-import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.PostCommentForReviewRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SetReviewRatingRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
@@ -31,6 +32,8 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import com.jakewharton.rxbinding.view.RxView;
+import com.trello.rxlifecycle.FragmentEvent;
 import java.util.List;
 import java.util.Locale;
 import rx.Observable;
@@ -89,26 +92,44 @@ import rx.Observable;
     reviewText.setText(review.getBody());
     reviewDate.setText(DATE_TIME_U.getTimeDiffString(getContext(), review.getAdded().getTime()));
 
-    reply.setOnClickListener(v -> {
+    final CommentAdder commentAdder = displayable.getCommentAdder();
+    final long reviewId = review.getId();
+
+    compositeSubscription.add(RxView.clicks(reply).flatMap(a -> {
       if (AptoideAccountManager.isLoggedIn()) {
-        showCommentPopup(review.getId(), appName, displayable.getCommentAdder());
+        FragmentManager fm = getContext().getFragmentManager();
+        CommentDialogFragment commentDialogFragment =
+            CommentDialogFragment.newInstanceReview(review.getId(), appName);
+        commentDialogFragment.show(fm, "fragment_comment_dialog");
+
+        return commentDialogFragment.lifecycle()
+            .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
+            .doOnNext(b -> {
+              ManagerPreferences.setForceServerRefreshFlag(true);
+              commentAdder.collapseComments();
+              loadCommentsForThisReview(reviewId, FULL_COMMENTS_LIMIT, commentAdder);
+            })
+            .flatMap(event -> Observable.empty());
       } else {
-        ShowMessage.asSnack(ratingBar, R.string.you_need_to_be_logged_in, R.string.login,
-            snackView -> {
+        return ShowMessage.asObservableSnack(ratingBar, R.string.you_need_to_be_logged_in,
+            R.string.login, snackView -> {
               AptoideAccountManager.openAccountManager(snackView.getContext());
             });
       }
-    });
+    }).subscribe(a -> { /* do nothing */ }, err -> {
+      Log.e(TAG, "Exception while showing comment dialog", err);
+      CrashReports.logException(err);
+    }));
 
-    flagHelfull.setOnClickListener(v -> {
+    compositeSubscription.add(RxView.clicks(flagHelfull).subscribe(a -> {
       setReviewRating(review.getId(), true);
-    });
+    }));
 
-    flagNotHelfull.setOnClickListener(v -> {
+    compositeSubscription.add(RxView.clicks(flagNotHelfull).subscribe(a -> {
       setReviewRating(review.getId(), false);
-    });
+    }));
 
-    showHideReplies.setOnClickListener(v -> {
+    compositeSubscription.add(RxView.clicks(showHideReplies).subscribe(a -> {
       if (isCommentsCollapsed) {
         loadCommentsForThisReview(review.getId(), FULL_COMMENTS_LIMIT,
             displayable.getCommentAdder());
@@ -119,7 +140,7 @@ import rx.Observable;
         showHideReplies.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_down_arrow, 0);
         isCommentsCollapsed = true;
       }
-    });
+    }));
 
     final Resources.Theme theme = getContext().getTheme();
     final Resources res = getContext().getResources();
@@ -131,47 +152,6 @@ import rx.Observable;
     } else {
       itemView.setBackgroundColor(res.getColor(color));
     }
-  }
-
-  private Observable<BaseV7Response> submitComment(long reviewId, String commentOnReviewText) {
-    return PostCommentForReviewRequest.of(reviewId, commentOnReviewText,
-        AptoideAccountManager.getAccessToken(),
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID()).observe();
-  }
-
-  private void showCommentPopup(final long reviewId, String appName, CommentAdder commentAdder) {
-
-    CommentDialogWrapper dialogWrapper = new CommentDialogWrapper();
-    dialogWrapper.build(getContext(), appName);
-
-    compositeSubscription.add(dialogWrapper.onCommentButton().filter(inputText -> {
-      AptoideUtils.SystemU.hideKeyboard(RateAndReviewCommentWidget.this.getContext());
-      if (TextUtils.isEmpty(inputText)) {
-        dialogWrapper.enableError(AptoideUtils.StringU.getResString(R.string.error_MARG_107));
-        return false;
-      }
-      dialogWrapper.disableError();
-      return true;
-    }).flatMap(inputText -> submitComment(reviewId, inputText)).subscribe(wsResponse -> {
-      if(wsResponse.isOk()) {
-        ManagerPreferences.setForceServerRefreshFlag(true);
-        commentAdder.collapseComments();
-        loadCommentsForThisReview(reviewId, FULL_COMMENTS_LIMIT, commentAdder);
-        Logger.d(TAG, "comment to review added");
-        ShowMessage.asSnack(getContext(), R.string.comment_submitted);
-        dialogWrapper.dismiss();
-        return;
-      }
-
-      ShowMessage.asSnack(getContext(), R.string.error_occured);
-
-    }, e -> {
-      Logger.e(TAG, e);
-      ShowMessage.asSnack(getContext(), R.string.error_occured);
-    }));
-
-    dialogWrapper.show();
   }
 
   private void loadCommentsForThisReview(long reviewId, int limit, CommentAdder commentAdder) {

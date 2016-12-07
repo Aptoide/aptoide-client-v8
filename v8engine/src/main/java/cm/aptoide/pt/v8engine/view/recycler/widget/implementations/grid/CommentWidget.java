@@ -9,9 +9,9 @@ import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.fragment.implementations.StoreTabGridRecyclerFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import cm.aptoide.pt.viewRateAndCommentReviews.StoreComment;
 import com.jakewharton.rxbinding.view.RxView;
 
 /**
@@ -46,19 +46,15 @@ public class CommentWidget extends Widget<CommentDisplayable> {
         .getTimeDiffString(getContext(), comment.getAdded().getTime()));
     this.comment.setText(comment.getBody());
 
-    if (StoreTabGridRecyclerFragment.StoreComment.class.isAssignableFrom(comment.getClass())) {
-      final StoreTabGridRecyclerFragment.StoreComment storeComment =
-          (StoreTabGridRecyclerFragment.StoreComment) comment;
+    if (StoreComment.class.isAssignableFrom(comment.getClass())) {
+      final StoreComment storeComment = (StoreComment) comment;
       replyLayout.setVisibility(View.VISIBLE);
 
       compositeSubscription.add(RxView.clicks(replyLayout)
-          .flatMap(aVoid -> storeComment.observeReplySubmission()
-              .doOnError( err -> {
-                CrashReports.logException(err);
-                ShowMessage.asSnack(userAvatar, R.string.error_occured);
-              })
-              .flatMap(v -> ShowMessage.asObservableSnack(userAvatar,R.string.comment_submitted))
-          )
+          .flatMap(aVoid -> storeComment.observeReplySubmission().doOnError(err -> {
+            CrashReports.logException(err);
+            ShowMessage.asSnack(userAvatar, R.string.error_occured);
+          }).flatMap(v -> ShowMessage.asObservableSnack(userAvatar, R.string.comment_submitted)))
           .retry()
           .subscribe(aVoid -> { /* nothing else to do */ }));
     }

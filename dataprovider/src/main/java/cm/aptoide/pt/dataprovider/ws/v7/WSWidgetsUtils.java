@@ -42,7 +42,7 @@ public class WSWidgetsUtils {
           break;
 
         case STORES_GROUP:
-          ListStoresRequest.ofAction(url, accessToken, email, aptoideClientUUID)
+          ListStoresRequest.ofAction(url, accessToken, aptoideClientUUID)
               .observe(refresh)
               .compose(AptoideUtils.ObservableU.applySchedulers())
               .subscribe(listStores -> setObjectView(wsWidget, countDownLatch, listStores),
@@ -75,7 +75,7 @@ public class WSWidgetsUtils {
                   action1);
           break;
 
-        case STORE_LATEST_COMMENTS:
+        case COMMENTS_GROUP:
           ListCommentsRequest.ofAction(url, refresh, storeCredentials, accessToken,
               aptoideClientUUID)
               .observe(refresh)
@@ -92,6 +92,12 @@ public class WSWidgetsUtils {
           break;
         case MY_STORE:
           setObjectView(wsWidget, countDownLatch, userHasRepo);
+          break;
+        case OFFICIAL_APP:
+          GetAppRequest.ofAction(url, accessToken, aptoideClientUUID)
+              .observe(refresh)
+              .compose(AptoideUtils.ObservableU.applySchedulers())
+              .subscribe(getApp -> setObjectView(wsWidget, countDownLatch, getApp), action1);
           break;
         default:
           // In case a known enum is not implemented
