@@ -86,6 +86,7 @@ import lombok.EqualsAndHashCode;
     private GetAppMetaFile.Flags flags;
     private List<String> usedFeatures;
     private List<String> usedPermissions;
+    private List<String> tags;
 
     public boolean isGoodApp() {
       return this.flags != null && flags.review != null && flags.review.equalsIgnoreCase(
