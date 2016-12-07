@@ -36,6 +36,7 @@ import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.util.Translator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -282,7 +283,8 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
             e.printStackTrace();
           }
 
-          displayables = DisplayablesFactory.parse(getStore.getNodes().getWidgets(), storeTheme);
+          displayables = DisplayablesFactory.parse(getStore.getNodes().getWidgets(), storeTheme,
+              RepositoryFactory.getRepositoryFor(cm.aptoide.pt.database.realm.Store.class));
 
           // We only want Adult Switch in Home Fragment.
           if (getParentFragment() != null && getParentFragment() instanceof HomeFragment) {
@@ -324,7 +326,8 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
             e.printStackTrace();
           }
 
-          displayables = DisplayablesFactory.parse(getStoreWidgets, storeTheme);
+          displayables = DisplayablesFactory.parse(getStoreWidgets, storeTheme,
+              RepositoryFactory.getRepositoryFor(cm.aptoide.pt.database.realm.Store.class));
           setDisplayables(displayables);
         }, throwable -> finishLoading(throwable));
   }
