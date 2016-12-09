@@ -31,10 +31,11 @@ public class AptoideCrashLogger implements CrashLogger {
    *
    * @param context context from the class that's calling this method
    */
-  @Override public void setup(Context context) {
+  public AptoideCrashLogger setup(Context context) {
     Fabric.with(context, new Crashlytics.Builder().core(
         new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build()).build());
     Logger.d(TAG, "Setup of AptoideCrashLogger");
+    return this;
   }
 
   /**

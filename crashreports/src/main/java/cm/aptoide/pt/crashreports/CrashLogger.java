@@ -1,19 +1,10 @@
 package cm.aptoide.pt.crashreports;
 
-import android.content.Context;
-
 /**
  * Created by neuro on 09-12-2016.
  */
 
 public interface CrashLogger {
-
-  /**
-   * setup crash reports
-   *
-   * @param context context from the class that's calling this method
-   */
-  void setup(Context context);
 
   /**
    * logs exception in crashes
