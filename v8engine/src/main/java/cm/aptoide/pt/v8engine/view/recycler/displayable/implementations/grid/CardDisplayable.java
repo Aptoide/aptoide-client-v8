@@ -30,7 +30,7 @@ public abstract class CardDisplayable extends Displayable {
     }
   }
 
-  public abstract void share(Context context, String cardType);
+  public abstract void share(Context context);
 
-  public abstract void like(Context context, String cardType);
+  public abstract void like(Context context, String cardType, int rating);
 }

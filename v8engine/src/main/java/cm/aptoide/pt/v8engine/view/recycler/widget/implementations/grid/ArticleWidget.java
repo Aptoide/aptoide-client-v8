@@ -12,7 +12,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
@@ -23,7 +22,6 @@ import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ArticleDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
 import com.like.LikeButton;
-import com.like.OnLikeListener;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -148,7 +146,7 @@ public class ArticleWidget extends CardWidget<ArticleDisplayable> {
     }));
 
     compositeSubscription.add(RxView.clicks(share).subscribe(click -> {
-      shareCard(displayable, cardType);
+      shareCard(displayable);
     }, throwable -> throwable.printStackTrace()));
 
     compositeSubscription.add(RxView.clicks(like).subscribe(click -> {

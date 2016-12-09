@@ -2,15 +2,8 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.BaseV7Response;
-import cm.aptoide.pt.model.v7.listapp.App;
-import cm.aptoide.pt.model.v7.timeline.Article;
-import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
-import cm.aptoide.pt.model.v7.timeline.Video;
-import cm.aptoide.pt.networkclient.WebService;
-import java.util.Date;
-import java.util.List;
+import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -22,106 +15,117 @@ import rx.Observable;
 
 public class ShareCardRequest extends V7<BaseV7Response, ShareCardRequest.Body> {
 
-  private static final String BASE_HOST = "http://54.171.127.167/shares/v1.0/";
+  //private static final String BASE_HOST = "http://54.171.127.167/shares/v1.0/";
 
   private static String email;
+  private static String cardId;
+  private static String access_token;
 
   protected ShareCardRequest(ShareCardRequest.Body body, String baseHost) {
     super(body, baseHost);
   }
 
-  public static ShareCardRequest ofArticle(Article article, String cardType, String ownerHash,
-      String accessToken, String aptoideClientUUID, String userEmail) {
-    email = userEmail;
-    ShareCardRequest.Body body = new ShareCardRequest.Body(ShareCardRequest.Body.CardData.builder()
-        //.type(cardType)
-        //.packages(article.getApps())
-        //.url(article.getUrl())
-        //.title(article.getTitle())
-        //.thumbnailurl(article.getThumbnailUrl())
-        //.publisherid(article.getPublisher().getName())
-        //.publisherurl(article.getPublisher().getBaseUrl())
-        //.publisherlogo(article.getPublisher().getLogoUrl())
-        //.date(article.getDate())
-        .cardId(article.getCardId())
-        .ownerHash(ownerHash)
-        .build());
-
+  public static ShareCardRequest of(TimelineCard timelineCard, String accessToken,
+      String aptoideClientUUID) {
+    cardId = timelineCard.getCardId();
+    access_token = accessToken;
+    ShareCardRequest.Body body = new ShareCardRequest.Body(timelineCard.getCardId());
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
     return new ShareCardRequest((ShareCardRequest.Body) decorator.decorate(body, accessToken),
         BASE_HOST);
   }
+  //public static ShareCardRequest ofArticle(Article article, String cardType, String ownerHash,
+  //    String accessToken, String aptoideClientUUID, String userEmail) {
+  //  email = userEmail;
+  //  ShareCardRequest.Body body = new ShareCardRequest.Body(ShareCardRequest.Body.CardData.builder()
+  //      //.type(cardType)
+  //      //.packages(article.getApps())
+  //      //.url(article.getUrl())
+  //      //.title(article.getTitle())
+  //      //.thumbnailurl(article.getThumbnailUrl())
+  //      //.publisherid(article.getPublisher().getName())
+  //      //.publisherurl(article.getPublisher().getBaseUrl())
+  //      //.publisherlogo(article.getPublisher().getLogoUrl())
+  //      //.date(article.getDate())
+  //      .cardId(article.getCardId())
+  //      .ownerHash(ownerHash)
+  //      .build());
+  //
+  //  BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+  //  return new ShareCardRequest((ShareCardRequest.Body) decorator.decorate(body, accessToken),
+  //      BASE_HOST);
+  //}
 
-  public static ShareCardRequest ofVideo(Video video, String cardType, String ownerHash,
-      String accessToken, String aptoideClientUUID, String userEmail) {
-    email = userEmail;
-    ShareCardRequest.Body body = new ShareCardRequest.Body(ShareCardRequest.Body.CardData.builder()
-        .type(cardType)
-        .packages(video.getApps())
-        .url(video.getUrl())
-        .title(video.getUrl())
-        .thumbnailurl(video.getThumbnailUrl())
-        .publisherid(video.getPublisher().getName())
-        .publisherurl(video.getPublisher().getBaseUrl())
-        .publisherlogo(video.getPublisher().getLogoUrl())
-        .date(video.getDate())
-        .cardId(video.getCardId())
-        .ownerHash(ownerHash)
-        .build());
+  //public static ShareCardRequest ofVideo(Video video, String cardType, String ownerHash,
+  //    String accessToken, String aptoideClientUUID, String userEmail) {
+  //  email = userEmail;
+  //  ShareCardRequest.Body body = new ShareCardRequest.Body(ShareCardRequest.Body.CardData.builder()
+  //      .type(cardType)
+  //      .packages(video.getApps())
+  //      .url(video.getUrl())
+  //      .title(video.getUrl())
+  //      .thumbnailurl(video.getThumbnailUrl())
+  //      .publisherid(video.getPublisher().getName())
+  //      .publisherurl(video.getPublisher().getBaseUrl())
+  //      .publisherlogo(video.getPublisher().getLogoUrl())
+  //      .date(video.getDate())
+  //      .cardId(video.getCardId())
+  //      .ownerHash(ownerHash)
+  //      .build());
+  //
+  //  BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+  //  return new ShareCardRequest((ShareCardRequest.Body) decorator.decorate(body, accessToken),
+  //      BASE_HOST);
+  //}
 
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-    return new ShareCardRequest((ShareCardRequest.Body) decorator.decorate(body, accessToken),
-        BASE_HOST);
-  }
-
-  public static ShareCardRequest ofStoreLatestApps(StoreLatestApps storeLatestApps, String cardType,
-      String ownerHash, String accessToken, String aptoideClientUUID, String userEmail) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-    email = userEmail;
-    ShareCardRequest.Body body = new ShareCardRequest.Body(ShareCardRequest.Body.CardData.builder()
-        .type(cardType)
-        .packages(storeLatestApps.getApps())
-        //.url(video.getUrl())
-        //.title(video.getUrl())
-        //.thumbnailurl(video.getThumbnailUrl())
-        //.publisherid(video.getPublisher().getName())
-        //.publisherurl(video.getPublisher().getBaseUrl())
-        //.publisherlogo(video.getPublisher().getLogoUrl())
-        //.date(video.getDate())
-        //.cardId(video.getCardId())
-        //.ownerHash(ownerHash)
-        .build());
-    return new ShareCardRequest((ShareCardRequest.Body) decorator.decorate(body, accessToken),
-        BASE_HOST);
-  }
+  //public static ShareCardRequest ofStoreLatestApps(StoreLatestApps storeLatestApps, String cardType,
+  //    String ownerHash, String accessToken, String aptoideClientUUID, String userEmail) {
+  //  BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+  //  email = userEmail;
+  //  ShareCardRequest.Body body = new ShareCardRequest.Body(ShareCardRequest.Body.CardData.builder()
+  //      .type(cardType)
+  //      .packages(storeLatestApps.getApps())
+  //      //.url(video.getUrl())
+  //      //.title(video.getUrl())
+  //      //.thumbnailurl(video.getThumbnailUrl())
+  //      //.publisherid(video.getPublisher().getName())
+  //      //.publisherurl(video.getPublisher().getBaseUrl())
+  //      //.publisherlogo(video.getPublisher().getLogoUrl())
+  //      //.date(video.getDate())
+  //      //.cardId(video.getCardId())
+  //      //.ownerHash(ownerHash)
+  //      .build());
+  //  return new ShareCardRequest((ShareCardRequest.Body) decorator.decorate(body, accessToken),
+  //      BASE_HOST);
+  //}
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(V7.Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.shareCard(body, email);
+    return interfaces.shareCard(body, cardId, access_token);
   }
 
-  @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) public static class Body
-      extends BaseBody {
+  @AllArgsConstructor @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true)
+  public static class Body extends BaseBody {
 
-    private CardData cardData;
+    private String cardId;
 
-    public Body(CardData cardData) {
-      this.cardData = cardData;
-    }
+    //public Body(CardData cardData) {
+    //  this.cardData = cardData;
+    //}
 
-    @Builder @lombok.Data @AllArgsConstructor public static class CardData {
-      private String type;
-      private List<App> packages;
-      private String url;
-      private String title;
-      private String thumbnailurl;
-      private String publisherid;
-      private String publisherurl;
-      private String publisherlogo;
-      private Date date;
-      private String cardId;
-      private String ownerHash;
-    }
+    //@Builder @lombok.Data @AllArgsConstructor public static class CardData {
+    //  private String type;
+    //  private List<App> packages;
+    //  private String url;
+    //  private String title;
+    //  private String thumbnailurl;
+    //  private String publisherid;
+    //  private String publisherurl;
+    //  private String publisherlogo;
+    //  private Date date;
+    //  private String cardId;
+    //  private String ownerHash;
+    //}
   }
 }
 

@@ -159,11 +159,11 @@ import rx.Observable;
     timelineMetricsManager.sendEvent(data, eventName);
   }
 
-  @Override public void share(Context context, String cardType) {
+  @Override public void share(Context context) {
 
   }
 
-  @Override public void like(Context context, String cardType) {
+  @Override public void like(Context context, String cardType, int rating) {
 
   }
 }

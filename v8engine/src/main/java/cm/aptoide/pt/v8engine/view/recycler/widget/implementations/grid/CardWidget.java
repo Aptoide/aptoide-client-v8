@@ -1,23 +1,16 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.dialog.SharePreviewDialog;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ArticleDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CardDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import java.io.IOException;
@@ -55,7 +48,7 @@ public abstract class CardWidget<T extends Displayable> extends Widget<T> {
       }
 
       @Override public void onResponse(Call call, Response response) throws IOException {
-        Logger.d(this.getClass().getSimpleName(), "knock success");
+        Logger.d(this.getClass().getSimpleName(), "sixpack knock success");
         response.body().close();
       }
     });
@@ -72,8 +65,7 @@ public abstract class CardWidget<T extends Displayable> extends Widget<T> {
     cardView.setLayoutParams(layoutParams);
   }
 
-  @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
-  public void shareCard(CardDisplayable displayable, String cardType) {
+  public void shareCard(CardDisplayable displayable) {
     if (!AptoideAccountManager.isLoggedIn()) {
       ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> {
@@ -82,63 +74,18 @@ public abstract class CardWidget<T extends Displayable> extends Widget<T> {
       return;
     }
 
-    //todo take this out of here!
-    AlertDialog.Builder alertadd = new AlertDialog.Builder(getContext());
-    LayoutInflater factory = LayoutInflater.from(getContext());
-    final View view = factory.inflate(R.layout.displayable_social_timeline_social_article, null);
-    TextView title = (TextView) view.findViewById(R.id.card_title);
-    title.setText(AptoideAccountManager.getUserData().getUserRepo());
-    TextView subtitle = (TextView) view.findViewById(R.id.card_subtitle);
-    subtitle.setText(AptoideAccountManager.getUserData().getUserName());
-    ImageView image = (ImageView) view.findViewById(R.id.card_image);
-    ImageView userAvatar = (ImageView) view.findViewById(R.id.card_user_avatar);
-    TextView articleTitle =
-        (TextView) view.findViewById(R.id.partial_social_timeline_thumbnail_title);
-    articleTitle.setText(((ArticleDisplayable) displayable).getArticleTitle());
-    ImageView thumbnail =
-        (ImageView) view.findViewById(R.id.partial_social_timeline_thumbnail_image);
-    CardView cardView = (CardView) view.findViewById(R.id.card);
-    cardView.setRadius(0);
-    LinearLayout like = (LinearLayout) view.findViewById(R.id.social_like);
-    like.setClickable(false);
-    like.setVisibility(View.VISIBLE);
-    LinearLayout comments = (LinearLayout) view.findViewById(R.id.social_comment);
-    comments.setVisibility(View.VISIBLE);
-    ImageLoader.loadWithShadowCircleTransform(
-        AptoideAccountManager.getUserData().getUserAvatarRepo(), image);
-    ImageLoader.loadWithShadowCircleTransform(AptoideAccountManager.getUserData().getUserAvatar(),
-        userAvatar);
-    TextView relatedTo =
-        (TextView) view.findViewById(R.id.partial_social_timeline_thumbnail_related_to);
-    relatedTo.setVisibility(View.GONE);
-    ImageLoader.load(((ArticleDisplayable) displayable).getThumbnailUrl(), thumbnail);
-    alertadd.setView(view);
-    alertadd.setTitle("You will share: ")
-        .setPositiveButton("Share",
-            (dialogInterface, i) -> Toast.makeText(getContext(), "SHARING...", Toast.LENGTH_SHORT)
-                .show())
+    SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(displayable);
+    AlertDialog.Builder alertDialog = sharePreviewDialog.showPreviewDialog(getContext())
+        .setPositiveButton("Share", (dialogInterface, i) -> {
+          Toast.makeText(getContext(), "SHARING...", Toast.LENGTH_SHORT).show();
+          displayable.share(getContext());
+        })
         .setNegativeButton("CANCEL", (dialogInterface, i) -> {
         });
-
-    alertadd.show();
-
-    //GenericDialogs.createGenericShareCancelMessage(getContext(), "",
-    //    "Share card with your followers?").subscribe(eResponse -> {
-    //  switch (eResponse) {
-    //    case YES:
-    //      Toast.makeText(getContext(), "Sharing card with your followers...", Toast.LENGTH_SHORT)
-    //          .show();
-    //      displayable.share(getContext(), cardType.toUpperCase());
-    //      break;
-    //    case NO:
-    //    case CANCEL:
-    //    default:
-    //      break;
-    //  }
-    //});
+    alertDialog.show();
   }
 
-  public void likeCard(CardDisplayable displayable, String cardType) {
+  public void likeCard(CardDisplayable displayable, String cardType, int rating) {
     if (!AptoideAccountManager.isLoggedIn()) {
       ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> {
@@ -146,6 +93,6 @@ public abstract class CardWidget<T extends Displayable> extends Widget<T> {
           });
       return;
     }
-    displayable.like(getContext(), cardType.toUpperCase());
+    displayable.like(getContext(), cardType.toUpperCase(), rating);
   }
 }

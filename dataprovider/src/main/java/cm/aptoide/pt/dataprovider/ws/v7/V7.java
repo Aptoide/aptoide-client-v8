@@ -265,9 +265,15 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
         @Path(value = "action") String action, @Path(value = "context") String context,
         @Body SendEventRequest.Body body);
 
-    @POST("{email}") Observable<BaseV7Response> shareCard(@Body ShareCardRequest.Body body,
-        @Path(value = "email") String email);
+    @POST("user/shareTimeline/card_uid={cardUid}/access_token={accessToken}")
+    Observable<BaseV7Response> shareCard(@Body ShareCardRequest.Body body,
+        @Path(value = "cardUid") String card_id, @Path(value = "accessToken") String accessToken);
 
+    @POST("review/set/access_token={accessToken}/card_uid={cardUid}/rating={rating}")
+    Observable<BaseV7Response> setReview(@Body LikeCardRequest.Body body,
+        @Path(value = "cardUid") String cardId, @Path(value = "accessToken") String access_token,
+        @Path(value = "rating") String rating,
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
     @POST("{email}") Observable<BaseV7Response> likeCard(@Body LikeCardRequest.Body body,
         @Path(value = "email") String email);
 

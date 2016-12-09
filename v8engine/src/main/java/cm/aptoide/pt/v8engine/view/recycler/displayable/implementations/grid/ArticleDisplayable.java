@@ -123,10 +123,10 @@ import rx.schedulers.Schedulers;
     return R.layout.displayable_social_timeline_article;
   }
 
-  @Override public void share(Context context, String cardType) {
-    socialRepository.share(article, cardType, "");
+  @Override public void share(Context context) {
+    socialRepository.share(article);
   }
 
-  @Override public void like(Context context, String cardType) {
+  @Override public void like(Context context, String cardType, int rating) {
   }
 }

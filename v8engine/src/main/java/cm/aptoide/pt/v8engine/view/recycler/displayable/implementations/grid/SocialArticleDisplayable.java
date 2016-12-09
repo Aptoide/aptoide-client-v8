@@ -8,7 +8,9 @@ import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
+import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.listapp.App;
+import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.model.v7.timeline.SocialArticle;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.link.Link;
@@ -39,6 +41,8 @@ import rx.schedulers.Schedulers;
   @Getter private String avatarUrl;
   @Getter private long appId;
   @Getter private String abUrl;
+  @Getter private Store store;
+  @Getter private Comment.User user;
 
   @Getter private List<App> relatedToAppsList;
   private Date date;
@@ -73,8 +77,9 @@ import rx.schedulers.Schedulers;
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
             socialArticle.getPublisher().getBaseUrl()), socialArticle.getPublisher().getName(),
         socialArticle.getThumbnailUrl(), socialArticle.getPublisher().getLogoUrl(), appId,
-        abTestingURL, socialArticle.getApps(), socialArticle.getDate(), dateCalculator,
-        spannableFactory, timelineMetricsManager, socialRepository);
+        abTestingURL, socialArticle.getStore(), socialArticle.getUser(), socialArticle.getApps(),
+        socialArticle.getDate(), dateCalculator, spannableFactory, timelineMetricsManager,
+        socialRepository);
   }
 
   public Observable<List<Installed>> getRelatedToApplication() {
@@ -120,18 +125,15 @@ import rx.schedulers.Schedulers;
     timelineMetricsManager.sendEvent(data, eventName);
   }
 
-  public void share(Context context) {
-  }
-
   @Override public int getViewLayout() {
     return R.layout.displayable_social_timeline_social_article;
   }
 
-  @Override public void share(Context context, String cardType) {
+  @Override public void share(Context context) {
 
   }
 
-  @Override public void like(Context context, String cardType) {
-    socialRepository.like(socialArticle, cardType, "");
+  @Override public void like(Context context, String cardType, int rating) {
+    socialRepository.like(socialArticle, cardType, "", rating);
   }
 }

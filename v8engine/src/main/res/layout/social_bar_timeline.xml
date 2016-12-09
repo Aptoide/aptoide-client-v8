@@ -7,6 +7,20 @@
   android:background="@color/white">
 
 
+  <TextView
+    android:id="@+id/social_number_of_likes"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:layout_toLeftOf="@+id/social_like"
+    android:layout_toStartOf="@id/social_like"
+    android:text="0"
+    android:textSize="10sp"
+    android:visibility="invisible"
+    tools:text="10"
+
+    />
+
   <LinearLayout
     android:id="@+id/social_like"
     android:layout_width="wrap_content"
@@ -19,7 +33,8 @@
     android:gravity="center"
     android:orientation="vertical"
     android:padding="5dp"
-    android:visibility="invisible">
+    android:visibility="invisible"
+    tools:visibility="visible">
 
     <com.like.LikeButton
       android:id="@+id/social_like_test"

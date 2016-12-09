@@ -7,7 +7,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
@@ -30,7 +29,8 @@ public class SocialArticleWidget extends CardWidget<SocialArticleDisplayable> {
   private final String cardType = "Social Article";
   private TextView title;
   private TextView subtitle;
-  private ImageView image;
+  private ImageView storeAvatar;
+  private ImageView userAvatar;
   private TextView articleTitle;
   private ImageView thumbnail;
   private View url;
@@ -43,7 +43,7 @@ public class SocialArticleWidget extends CardWidget<SocialArticleDisplayable> {
   private LinearLayout share;
   private LinearLayout comments;
   private LikeButton likeButton;
-
+  private TextView numberLikes;
   private String appName;
   private String packageName;
 
@@ -54,7 +54,8 @@ public class SocialArticleWidget extends CardWidget<SocialArticleDisplayable> {
   @Override protected void assignViews(View itemView) {
     title = (TextView) itemView.findViewById(R.id.card_title);
     subtitle = (TextView) itemView.findViewById(R.id.card_subtitle);
-    image = (ImageView) itemView.findViewById(R.id.card_image);
+    storeAvatar = (ImageView) itemView.findViewById(R.id.card_image);
+    userAvatar = (ImageView) itemView.findViewById(R.id.card_user_avatar);
     articleTitle = (TextView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_title);
     thumbnail = (ImageView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_image);
     url = itemView.findViewById(R.id.partial_social_timeline_thumbnail);
@@ -67,23 +68,31 @@ public class SocialArticleWidget extends CardWidget<SocialArticleDisplayable> {
     share = (LinearLayout) itemView.findViewById(R.id.social_share);
     likeButton = (LikeButton) itemView.findViewById(R.id.social_like_test);
     comments = (LinearLayout) itemView.findViewById(R.id.social_comment);
+    numberLikes = (TextView) itemView.findViewById(R.id.social_number_of_likes);
   }
 
   @Override public void bindView(SocialArticleDisplayable displayable) {
     this.displayable = displayable;
-    title.setText(displayable.getTitle());
-    subtitle.setText(displayable.getTimeSinceLastUpdate(getContext()));
+    title.setText(displayable.getStore().getName());
+    subtitle.setText(displayable.getUser().getName());
+
+    //subtitle.setText(displayable.getTimeSinceLastUpdate(getContext()));
     Typeface typeFace =
         Typeface.createFromAsset(getContext().getAssets(), "fonts/DroidSerif-Regular.ttf");
     articleTitle.setTypeface(typeFace);
     articleTitle.setText(displayable.getArticleTitle());
     setCardviewMargin(displayable, cardView);
-    ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
+    ImageLoader.loadWithShadowCircleTransform(displayable.getStore().getAvatar(), storeAvatar);
+    ImageLoader.loadWithShadowCircleTransform(displayable.getUser().getAvatar(), userAvatar);
     ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
     likeButton.setLiked(false);
     like.setVisibility(View.VISIBLE);
     comments.setVisibility(View.VISIBLE);
     //relatedTo.setText(displayable.getAppRelatedToText(getContext(), appName));
+
+    int numberOfLikes = 0;
+    numberLikes.setVisibility(View.VISIBLE);
+    numberLikes.setText(String.valueOf(numberOfLikes));
 
     if (getAppButton.getVisibility() != View.GONE && displayable.isGetApp(appName)) {
       getAppButton.setVisibility(View.VISIBLE);
@@ -156,12 +165,14 @@ public class SocialArticleWidget extends CardWidget<SocialArticleDisplayable> {
 
     likeButton.setOnLikeListener(new OnLikeListener() {
       @Override public void liked(LikeButton likeButton) {
-        Toast.makeText(getContext(), "LIKED", Toast.LENGTH_SHORT).show();
-        likeCard(displayable, cardType);
+        likeCard(displayable, cardType, 1);
+        numberLikes.setVisibility(View.VISIBLE);
+        numberLikes.setText(String.valueOf(numberOfLikes + 1));
       }
 
       @Override public void unLiked(LikeButton likeButton) {
-        Toast.makeText(getContext(), "UNLIKED", Toast.LENGTH_SHORT).show();
+        //likeCard(displayable, cardType, -1);
+        numberLikes.setText("0");
       }
     });
   }

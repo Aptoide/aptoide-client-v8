@@ -63,11 +63,11 @@ import lombok.Getter;
     timelineMetricsManager.sendEvent(data, eventName);
   }
 
-  @Override public void share(Context context, String cardType) {
-    socialRepository.share(storeLatestApps, cardType, "");
+  @Override public void share(Context context) {
+    socialRepository.share(storeLatestApps);
   }
 
-  @Override public void like(Context context, String cardType) {
+  @Override public void like(Context context, String cardType, int rating) {
 
   }
 

@@ -114,11 +114,11 @@ import rx.schedulers.Schedulers;
     timelineMetricsManager.sendEvent(data, eventName);
   }
 
-  @Override public void share(Context context, String cardType) {
-    socialRepository.share(video, cardType, "");
+  @Override public void share(Context context) {
+    socialRepository.share(video);
   }
 
-  @Override public void like(Context context, String cardType) {
+  @Override public void like(Context context, String cardType, int rating) {
 
   }
 }
