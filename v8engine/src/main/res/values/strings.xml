@@ -304,4 +304,14 @@
   <string name="create_store_displayable_explore_message">Enter and explore all the possibilities</string>
   <string name="create_store_displayable_explore_button">Explore</string>
 
+  <!-- stores tab > my store with no apps -->
+  <string name="install_app_outter_pt1">Your store don\'t have applications yet.</string>
+  <string name="install_app_outter_pt2">and upload apps to share them with the world!</string>
+  <string name="install_app_inner">Install %1$s</string>
+  <string name="open_app_inner">Open %1$s</string>
+  <string name="downloads_count">Downloads: %1$s</string>
+  <string name="version_number">Version: %1$s</string>
+  <string name="app_size">Size: %1$s</string>
+  <string name="comment_on_store">Comment %1$s store</string>
+  <string name="word_this">this</string>
 </resources>

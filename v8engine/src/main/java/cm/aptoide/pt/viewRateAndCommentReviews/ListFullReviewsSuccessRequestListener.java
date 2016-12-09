@@ -44,7 +44,7 @@ class ListFullReviewsSuccessRequestListener implements SuccessRequestListener<Li
             3,
             StoreUtils.getStoreCredentials(fragment.getStoreName()),
             AptoideAccountManager.getAccessToken(),
-            aptoideClientUuid
+            aptoideClientUuid, true
         ).observe().subscribeOn(Schedulers.io()) // parallel I/O split point
             .map(listComments -> {
               review.setCommentList(listComments);

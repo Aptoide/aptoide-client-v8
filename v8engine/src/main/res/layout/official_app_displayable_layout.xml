@@ -10,9 +10,9 @@
     tools:layout_marginLeft="5dp"
     tools:layout_marginRight="5dp"
     tools:layout_marginTop="2dp"
-    tools:background="@color/amber"
     >
   <TextView
+      android:id="@+id/install_message"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginLeft="38dp"
@@ -20,9 +20,9 @@
       android:layout_marginRight="38dp"
       android:layout_marginEnd="38dp"
       android:layout_marginTop="26dp"
-      android:text="Your store dont have applications yet. Install Aptoide Uploader and upload apps to share them with the world!"
       android:textAlignment="center"
       android:textSize="14sp"
+      tools:text="@string/install_app_outter_pt1"
       />
   <include
       layout="@layout/separator_vertical"
@@ -56,6 +56,7 @@
       android:layout_height="wrap_content"
       android:layout_toRightOf="@id/app_image"
       android:layout_toEndOf="@id/app_image"
+      android:layout_marginLeft="8dp"
       >
       <TextView
           android:id="@+id/app_name"

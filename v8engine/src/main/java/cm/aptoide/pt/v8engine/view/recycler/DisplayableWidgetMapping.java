@@ -54,6 +54,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Sea
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SearchDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SimilarDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SocialArticleDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreAddCommentDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreLatestAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreLatestCommentsDisplayable;
@@ -108,6 +109,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SearchAd
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SearchWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SimilarWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SocialArticleWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.StoreAddCommentWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.StoreGridHeaderWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.StoreLatestAppsWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.StoreLatestCommentsWidget;
@@ -308,6 +310,9 @@ public class DisplayableWidgetMapping {
 
     displayableWidgetMappings.add(new DisplayableWidgetMapping((StoreLatestCommentsWidget.class),
         StoreLatestCommentsDisplayable.class));
+
+    displayableWidgetMappings.add(new DisplayableWidgetMapping((StoreAddCommentWidget.class),
+        StoreAddCommentDisplayable.class));
 
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping((CreateStoreWidget.class), CreateStoreDisplayable.class));

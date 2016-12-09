@@ -34,6 +34,7 @@ import cm.aptoide.pt.model.v7.Layout;
 import cm.aptoide.pt.model.v7.ListApps;
 import cm.aptoide.pt.model.v7.ListComments;
 import cm.aptoide.pt.model.v7.ListFullReviews;
+import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.model.v7.store.Store;
@@ -266,19 +267,31 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
           // Load sub nodes
           List<GetStoreWidgets.WSWidget> list =
               getStore.getNodes().getWidgets().getDatalist().getList();
+
+          // xxx
+          injectStuff(list, storeCredentials != null ? storeCredentials.getName() : null);
+
           CountDownLatch countDownLatch = new CountDownLatch(list.size());
 
-          Observable.from(list)
-              .forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget,
-                  wsWidget.getView() != null ? StoreUtils.getStoreCredentialsFromUrl(
-                      wsWidget.getView()) : new BaseRequestWithStore.StoreCredentials(),
-                  countDownLatch, refresh, throwable -> countDownLatch.countDown(),
-                  AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
-                  new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                      DataProvider.getContext()).getAptoideClientUUID(),
-                  DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(
-                      V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId(),
-                  !TextUtils.isEmpty(AptoideAccountManager.getUserData().getUserRepo())));
+          Observable.from(list).forEach(wsWidget -> {
+
+            BaseRequestWithStore.StoreCredentials widgetStoreCredentials =
+                wsWidget.getView() != null ? StoreUtils.getStoreCredentialsFromUrlOrNull(
+                    wsWidget.getView()) : storeCredentials;
+
+            if (widgetStoreCredentials == null) {
+              widgetStoreCredentials = storeCredentials;
+            }
+
+            WSWidgetsUtils.loadInnerNodes(wsWidget, widgetStoreCredentials, countDownLatch, refresh,
+                throwable -> countDownLatch.countDown(), AptoideAccountManager.getAccessToken(),
+                AptoideAccountManager.getUserEmail(),
+                new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+                    DataProvider.getContext()).getAptoideClientUUID(),
+                DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(
+                    V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId(),
+                !TextUtils.isEmpty(AptoideAccountManager.getUserData().getUserRepo()));
+          });
 
           try {
             countDownLatch.await(5, TimeUnit.SECONDS);
@@ -294,6 +307,51 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
           }
           setDisplayables(displayables);
         }, throwable -> finishLoading(throwable));
+  }
+
+  // FIXME: 9/12/2016 sithengineer remove this method. xxx
+  private void injectStuff(List<GetStoreWidgets.WSWidget> list, String storeName) {
+    // comments group widget
+    GetStoreWidgets.WSWidget widget1 = new GetStoreWidgets.WSWidget();
+    widget1.setType(Type.COMMENTS_GROUP);
+    widget1.setTitle("Comments on this store");
+    widget1.setTag("apps-group-latest-comments-in-this-store");
+
+    widget1.setView(String.format(
+        "http://ws2.aptoide.com/api/7/listComments/store_name/%s/comment_type=STORE/limit=3/sort=latest/order=desc",
+        TextUtils.isEmpty(storeName) ? "rmota" : storeName));
+    widget1.setData(new GetStoreWidgets.WSWidget.Data().setLayout(Layout.GRID));
+
+    GetStoreWidgets.WSWidget.Action action1 = new GetStoreWidgets.WSWidget.Action();
+    action1.setType("button");
+    action1.setLabel("More");
+    action1.setTag("apps-group-latest-comments-in-this-store");
+
+    Event event1 = new Event();
+    event1.setType(Event.Type.API);
+    event1.setName(Event.Name.listStoreComments);
+    event1.setAction(String.format(
+        "http://ws2.aptoide.com/api/7/listComments/store_name/%s/comment_type=STORE/limit=10/sort=latest/order=desc",
+        TextUtils.isEmpty(storeName) ? "rmota" : storeName));
+    event1.setData(new GetStoreWidgets.WSWidget.Data().setLayout(Layout.GRID));
+    action1.setEvent(event1);
+
+    ArrayList<GetStoreWidgets.WSWidget.Action> actions1 = new ArrayList<>();
+    actions1.add(action1);
+    widget1.setActions(actions1);
+
+    list.add(widget1);
+
+    /*
+    GetStoreWidgets.WSWidget widget2 = new GetStoreWidgets.WSWidget();
+    widget2.setType(Type.OFFICIAL_APP);
+    widget2.setTitle("Official app");
+    widget2.setTag("apps-group-official-app");
+    widget2.setView("http://ws75.aptoide.com/api/7/getApp/app_id=12765245");
+    widget2.setData(new GetStoreWidgets.WSWidget.Data().setLayout(Layout.GRID));
+
+    list.add(widget2);
+    */
   }
 
   private Subscription caseGetStoreWidgets(String url,
@@ -387,11 +445,12 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 
   void caseListStoreComments(String url, BaseRequestWithStore.StoreCredentials storeCredentials,
       boolean refresh) {
+
     String aptoideClientUuid = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext()).getAptoideClientUUID();
 
     ListCommentsRequest listCommentsRequest =
-        ListCommentsRequest.ofAction(url, refresh, storeCredentials,
+        ListCommentsRequest.ofStoreAction(url, refresh, storeCredentials,
             AptoideAccountManager.getAccessToken(), aptoideClientUuid);
 
     if (storeCredentials.getId() == null) {
@@ -399,11 +458,8 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
           new IllegalStateException("Current store credentials does not have a store id"));
     }
 
-    // FIXME: 7/12/2016 sithengineer un comment the next lines
-    //final long storeId = storeCredentials.getId();
-    //final String storeName = storeCredentials.getName();
-    final String storeName = " ?? ";
-    final long storeId = 0;
+    final long storeId = storeCredentials.getId() != null ? storeCredentials.getId() : -1;
+    final String storeName = storeCredentials.getName();
 
     Action1<ListComments> listCommentsAction = (listComments -> {
       if (listComments != null
@@ -430,8 +486,8 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
     endlessRecyclerOnScrollListener.onLoadMore(refresh);
   }
 
-  public Observable<Void> showStoreCommentFragment(final long storeId,
-      @NonNull Comment comment, String storeName) {
+  public Observable<Void> showStoreCommentFragment(final long storeId, @NonNull Comment comment,
+      String storeName) {
     // optional method implemented in child classes
     return Observable.empty();
   }
@@ -439,7 +495,6 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
   private void caseListReviews(String url, boolean refresh) {
     ListFullReviewsRequest listFullReviewsRequest =
         ListFullReviewsRequest.ofAction(url, refresh, AptoideAccountManager.getAccessToken(),
-            AptoideAccountManager.getUserEmail(),
             new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                 DataProvider.getContext()).getAptoideClientUUID());
 

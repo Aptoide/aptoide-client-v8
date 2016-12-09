@@ -19,10 +19,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.Event;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
@@ -108,9 +110,12 @@ public class StoreGridRecyclerFragment extends StoreTabGridRecyclerFragment {
     return super.onCreateView(inflater, container, savedInstanceState);
   }
 
-  private void reloadComments() {
-    // TODO: 5/12/2016 sithengineer
-    Logger.d(TAG, "TODO: reload the comments");
+  private Observable<Void> reloadComments() {
+    return Observable.fromCallable(() -> {
+      ManagerPreferences.setForceServerRefreshFlag(true);
+      super.reload();
+      return null;
+    });
   }
 
   private Observable<Void> showSignInMessage() {
@@ -135,8 +140,7 @@ public class StoreGridRecyclerFragment extends StoreTabGridRecyclerFragment {
         return commentDialogFragment.lifecycle()
             .doOnSubscribe(() -> commentDialogFragment.show(fm, "fragment_comment_dialog"))
             .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
-            .doOnNext(a -> reloadComments())
-            .flatMap(event -> Observable.empty());
+            .flatMap(event -> reloadComments());
       }
 
       return showSignInMessage();
@@ -155,7 +159,7 @@ public class StoreGridRecyclerFragment extends StoreTabGridRecyclerFragment {
 
     final String storeName =
         (storeCredentials != null && !TextUtils.isEmpty(storeCredentials.getName()))
-            ? storeCredentials.getName() : " ?? ";
+            ? storeCredentials.getName() : " ";
 
     RxView.clicks(floatingActionButton)
         .compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW))
@@ -164,7 +168,21 @@ public class StoreGridRecyclerFragment extends StoreTabGridRecyclerFragment {
             FragmentManager fm = StoreGridRecyclerFragment.this.getActivity().getFragmentManager();
             CommentDialogFragment commentDialogFragment =
                 CommentDialogFragment.newInstanceStoreComment(storeId, storeName);
-            commentDialogFragment.show(fm, "fragment_comment_dialog");
+
+            // check if fragment is already visible.
+            if (fm.findFragmentByTag("fragment_comment_dialog_list") != null) return;
+
+            commentDialogFragment.show(fm, "fragment_comment_dialog_list");
+            commentDialogFragment.lifecycle()
+                .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
+                .compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW))
+                .flatMap(event -> reloadComments())
+                .subscribe(b -> {
+                  // does nothing. further optimization needed in this observable
+                }, err -> {
+                  Logger.e(TAG, err);
+                  CrashReports.logException(err);
+                });
           } else {
             ShowMessage.asSnack(StoreGridRecyclerFragment.this.getActivity(),
                 R.string.you_need_to_be_logged_in, R.string.login, snackView -> {

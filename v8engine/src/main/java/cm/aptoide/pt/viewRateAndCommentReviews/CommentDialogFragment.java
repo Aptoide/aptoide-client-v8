@@ -26,13 +26,14 @@ import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.FragmentEvent;
 import com.trello.rxlifecycle.components.RxDialogFragment;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 
 public class CommentDialogFragment extends RxDialogFragment {
 
   private static final String TAG = CommentDialogFragment.class.getName();
 
   private static final String APP_OR_STORE_NAME = "app_or_store_name";
-  private static final String ID = "store_id";
+  private static final String RESOURCE_ID = "resource_id";
   private static final String IS_REVIEW = "is_review";
   private static final String PREVIOUS_COMMENT_ID = "previous_comment_id";
 
@@ -48,9 +49,9 @@ public class CommentDialogFragment extends RxDialogFragment {
   public static CommentDialogFragment newInstanceStoreCommentReply(long storeId,
       long previousCommentId, String storeName) {
     Bundle args = new Bundle();
-    args.putString(APP_OR_STORE_NAME, storeName);
+    args.putString(APP_OR_STORE_NAME, TextUtils.isEmpty(storeName) ? null : storeName);
     args.putBoolean(IS_REVIEW, false);
-    args.putLong(ID, storeId);
+    args.putLong(RESOURCE_ID, storeId);
     args.putLong(PREVIOUS_COMMENT_ID, previousCommentId);
 
     CommentDialogFragment fragment = new CommentDialogFragment();
@@ -62,7 +63,7 @@ public class CommentDialogFragment extends RxDialogFragment {
     Bundle args = new Bundle();
     args.putString(APP_OR_STORE_NAME, appName);
     args.putBoolean(IS_REVIEW, true);
-    args.putLong(ID, id);
+    args.putLong(RESOURCE_ID, id);
 
     CommentDialogFragment fragment = new CommentDialogFragment();
     fragment.setArguments(args);
@@ -73,7 +74,7 @@ public class CommentDialogFragment extends RxDialogFragment {
     Bundle args = new Bundle();
     args.putString(APP_OR_STORE_NAME, storeName);
     args.putBoolean(IS_REVIEW, false);
-    args.putLong(ID, id);
+    args.putLong(RESOURCE_ID, id);
 
     CommentDialogFragment fragment = new CommentDialogFragment();
     fragment.setArguments(args);
@@ -88,7 +89,7 @@ public class CommentDialogFragment extends RxDialogFragment {
     Bundle args = getArguments();
     this.appOrStoreName = args.getString(APP_OR_STORE_NAME);
     this.isReview = args.getBoolean(IS_REVIEW);
-    this.id = args.getLong(ID);
+    this.id = args.getLong(RESOURCE_ID);
 
     if (args.containsKey(PREVIOUS_COMMENT_ID)) {
       this.previousCommentId = args.getLong(PREVIOUS_COMMENT_ID);
@@ -97,13 +98,16 @@ public class CommentDialogFragment extends RxDialogFragment {
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
+
+    loadArguments();
+
     View view = inflater.inflate(R.layout.dialog_comment_on_review, container);
 
-    if (!TextUtils.isEmpty(appOrStoreName)) {
-      TextView titleTextView = (TextView) view.findViewById(R.id.title);
-      titleTextView.setText(appOrStoreName);
-      titleTextView.setVisibility(View.VISIBLE);
-    }
+    TextView titleTextView = (TextView) view.findViewById(R.id.title);
+    titleTextView.setVisibility(View.VISIBLE);
+
+    titleTextView.setText(String.format(getString(R.string.comment_on_store),
+        TextUtils.isEmpty(appOrStoreName) ? getString(R.string.word_this) : appOrStoreName));
 
     Button cancelButton = (Button) view.findViewById(R.id.cancel_button);
     cancelButton.setOnClickListener(a -> CommentDialogFragment.this.dismiss());
@@ -111,7 +115,6 @@ public class CommentDialogFragment extends RxDialogFragment {
     textInputLayout = (TextInputLayout) view.findViewById(R.id.input_layout_title);
     commentButton = (Button) view.findViewById(R.id.comment_button);
 
-    loadArguments();
     setupLogic();
 
     return view;
@@ -123,7 +126,7 @@ public class CommentDialogFragment extends RxDialogFragment {
 
   private String getText() {
     if (textInputLayout != null) {
-      textInputLayout.getEditText().getText().toString();
+      return textInputLayout.getEditText().getEditableText().toString();
     }
     return null;
   }
@@ -164,18 +167,21 @@ public class CommentDialogFragment extends RxDialogFragment {
           disableError();
           return true;
         })
-        .flatMap(inputText -> submitComment(inputText))
+        .flatMap(inputText -> submitComment(inputText).observeOn(AndroidSchedulers.mainThread()))
         .map(wsRespose -> wsRespose.isOk())
+        .doOnError(e -> {
+          Logger.e(TAG, e);
+          ShowMessage.asSnack(CommentDialogFragment.this, R.string.error_occured);
+        })
+        .retry()
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(isOk -> {
           if (isOk) {
             ManagerPreferences.setForceServerRefreshFlag(true);
-            ShowMessage.asSnack(CommentDialogFragment.this, R.string.comment_submitted);
+            this.dismiss();
+            ShowMessage.asSnack(this.getActivity(), R.string.comment_submitted);
             return;
           }
-          ShowMessage.asSnack(CommentDialogFragment.this, R.string.error_occured);
-        }, e -> {
-          Logger.e(TAG, e);
           ShowMessage.asSnack(CommentDialogFragment.this, R.string.error_occured);
         });
   }

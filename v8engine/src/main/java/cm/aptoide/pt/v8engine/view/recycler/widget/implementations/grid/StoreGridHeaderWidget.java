@@ -44,9 +44,11 @@ import java.util.List;
     final GetStoreWidgets.WSWidget pojo = displayable.getPojo();
     final List<GetStoreWidgets.WSWidget.Action> actions = pojo.getActions();
     title.setText(Translator.translate(pojo.getTitle()));
+
     more.setVisibility(
         actions != null && actions.size() > 0 && actions.get(0).getEvent().getName() != null
             ? View.VISIBLE : View.GONE);
+
     more.setOnClickListener((view) -> {
       FragmentUtils.replaceFragmentV4((FragmentActivity) itemView.getContext(),
           V8Engine.getFragmentProvider()

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="78dp"
+    android:background="@drawable/dialog_bg_2"
+    android:weightSum="5"
+    >
+
+  <TextView
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="3"
+      android:text="Be the first to send feedback about this store"
+      android:textSize="14sp"
+      android:textStyle="bold"
+      android:gravity="left|center"
+      android:layout_marginLeft="12dp"
+      android:layout_marginStart="12dp"
+      android:layout_marginRight="20dp"
+      android:layout_marginEnd="20dp"
+      />
+
+  <Button
+      android:id="@+id/comment_store_button"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="2"
+      android:text="Comment store"
+      android:textSize="11sp"
+      android:textAllCaps="true"
+      android:layout_gravity="center"
+      android:layout_marginRight="12dp"
+      android:layout_marginEnd="12dp"
+      />
+
+</LinearLayout>

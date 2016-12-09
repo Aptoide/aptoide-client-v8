@@ -101,7 +101,8 @@ android {
       Integer value = getVersionCode("../../aptoideProperties/version.properties",
           "INTERNAL_VERSION_CODE")
       versionName "8.0.2." + getDate()
-      versionCode value
+      //versionCode value
+      versionCode 8666
 
       resValue "string", "authenticatorAccountType", APPLICATION_ID + ".internal"
 

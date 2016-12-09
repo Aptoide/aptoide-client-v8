@@ -1,15 +1,11 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.text.TextUtils;
+import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.ListComments;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
 import rx.Observable;
 
 /**
@@ -26,48 +22,52 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
     super(body, baseHost);
   }
 
-  public static ListCommentsRequest ofAction(String url, boolean refresh,
+  public static ListCommentsRequest ofStoreAction(String url, boolean refresh,
       BaseRequestWithStore.StoreCredentials storeCredentials, String accessToken,
       String aptoideClientUUID) {
+
     ListCommentsRequest.url = url;
-    String username = storeCredentials.getUsername();
-    String password = storeCredentials.getPasswordSha1();
+
     Body body = new Body(refresh, Order.desc);
-    body.setStore_user(username);
-    body.setStore_pass_sha1(password);
-    // FIXME: 30/11/2016 sithengineer remove the next two line comments
-    //body.setStoreId(storeCredentials.getId());
-    //body.defineCommentType(CommentType.STORE);
+    body.setStore_user(storeCredentials.getUsername());
+    body.setStore_pass_sha1(storeCredentials.getPasswordSha1());
+    body.setStoreId(storeCredentials.getId());
 
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
     return new ListCommentsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
-  public static ListCommentsRequest of(String url, long reviewId, int limit,
+  public static ListCommentsRequest of(String url, long resourceId, int limit,
       BaseRequestWithStore.StoreCredentials storeCredentials, String accessToken,
-      String aptoideClientUUID) {
+      String aptoideClientUUID, boolean isReview) {
     ListCommentsRequest.url = url;
-    return of(reviewId, limit, storeCredentials, accessToken, aptoideClientUUID);
+    return of(resourceId, limit, storeCredentials, accessToken, aptoideClientUUID, isReview);
   }
 
-  public static ListCommentsRequest of(long reviewId, int offset, int limit, String accessToken,
-      String aptoideClientUUID) {
-    ListCommentsRequest listCommentsRequest = of(reviewId, limit, accessToken, aptoideClientUUID);
+  public static ListCommentsRequest of(long resourceId, int offset, int limit, String accessToken,
+      String aptoideClientUUID, boolean isReview) {
+    ListCommentsRequest listCommentsRequest = of(resourceId, limit, accessToken, aptoideClientUUID, isReview);
     listCommentsRequest.getBody().setOffset(offset);
     return listCommentsRequest;
   }
 
-  public static ListCommentsRequest of(long reviewId, int limit, String accessToken,
-      String aptoideClientUUID) {
+  public static ListCommentsRequest of(long resourceId, int limit, String accessToken,
+      String aptoideClientUUID, boolean isReview) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
     Body body = new Body(limit, ManagerPreferences.getAndResetForceServerRefresh(), Order.desc);
-    body.setReviewId(reviewId);
+
+    if(isReview) {
+      body.setReviewId(resourceId);
+    } else{
+      body.setStoreId(resourceId);
+    }
+
     return new ListCommentsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
-  public static ListCommentsRequest of(long reviewId, int limit,
+  public static ListCommentsRequest of(long resourceId, int limit,
       BaseRequestWithStore.StoreCredentials storeCredentials, String accessToken,
-      String aptoideClientUUID) {
+      String aptoideClientUUID, boolean isReview) {
     String username = storeCredentials.getUsername();
     String password = storeCredentials.getPasswordSha1();
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
@@ -75,7 +75,13 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
     Body body =
         new Body(limit, ManagerPreferences.getAndResetForceServerRefresh(), Order.desc, username,
             password);
-    body.setReviewId(reviewId);
+
+    if(isReview) {
+      body.setReviewId(resourceId);
+    } else{
+      body.setStoreId(resourceId);
+    }
+
     return new ListCommentsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
@@ -89,15 +95,14 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
     }
   }
 
-  @Data @Accessors @EqualsAndHashCode(callSuper = true) public static class Body
-      extends BaseBody implements Endless {
+  public static class Body extends BaseBody implements Endless {
 
-    @Getter @Setter private int offset;
-    @Getter private Integer limit;
-    @Getter private boolean refresh;
+    private int offset;
+    private Integer limit;
+    private boolean refresh;
     private String q = Api.Q;
     private Order order;
-    private String comment_type = CommentType.REVIEW.name();
+    private String commentType = CommentType.REVIEW.name();
     private Long reviewId;
     private Long storeId;
     private String store_user;
@@ -122,12 +127,78 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
       this.store_pass_sha1 = password;
     }
 
-    void defineCommentType(CommentType commentType){
-      this.comment_type = commentType.name();
+    @Override public int getOffset() {
+      return offset;
     }
-  }
 
-  enum CommentType {
-    REVIEW, STORE
+    @Override public void setOffset(int offset) {
+      this.offset = offset;
+    }
+
+    @Override public Integer getLimit() {
+      return limit;
+    }
+
+    public boolean isRefresh() {
+      return refresh;
+    }
+
+    public void setRefresh(boolean refresh) {
+      this.refresh = refresh;
+    }
+
+    @Override public String getQ() {
+      return q;
+    }
+
+    @Override public void setQ(String q) {
+      this.q = q;
+    }
+
+    public Order getOrder() {
+      return order;
+    }
+
+    public void setOrder(Order order) {
+      this.order = order;
+    }
+
+    public String getCommentType() {
+      return commentType;
+    }
+
+    public Long getReviewId() {
+      return reviewId;
+    }
+
+    public void setReviewId(Long reviewId) {
+      this.reviewId = reviewId;
+      commentType = CommentType.REVIEW.name();
+    }
+
+    public Long getStoreId() {
+      return storeId;
+    }
+
+    public void setStoreId(Long storeId) {
+      this.storeId = storeId;
+      commentType = CommentType.STORE.name();
+    }
+
+    public String getStore_user() {
+      return store_user;
+    }
+
+    public void setStore_user(String store_user) {
+      this.store_user = store_user;
+    }
+
+    public String getStore_pass_sha1() {
+      return store_pass_sha1;
+    }
+
+    public void setStore_pass_sha1(String store_pass_sha1) {
+      this.store_pass_sha1 = store_pass_sha1;
+    }
   }
 }

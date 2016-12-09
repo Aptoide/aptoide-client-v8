@@ -162,7 +162,7 @@ public class RateAndReviewsFragmentNew extends GridRecyclerFragment<ReviewsAndCo
   //
 
   @Override @NonNull public CommentsReadMoreDisplayable createReadMoreDisplayable(final int count, Review review) {
-    return new CommentsReadMoreDisplayable(review, review.getCommentList().getDatalist().getNext(),
+    return new CommentsReadMoreDisplayable(review.getId(), true, review.getCommentList().getDatalist().getNext(),
         new SimpleReviewCommentAdder(count, this));
   }
 
