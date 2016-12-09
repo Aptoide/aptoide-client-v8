@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="one_account_allowed">Csak egy felhasználói fiók engedélyezett</string>
+    <string name="username">E-mail cím</string>
+    <string name="password">Jelszó</string>
+    <string name="link_device_webinstall">Csatolja a felhasználónevét a webes telepítéssel</string>
+    <string name="register">Feliratkozás</string>
+    <string name="forgot_passwd">Elfelejtette a jelszavát?</string>
+    <string name="fields_cannot_empty">Kérjük ellenőrizze az e-mail címét és a jelszavát.</string>
+    <string name="no_email_and_pass_error_message">Kérjük, adjon meg egy e-mailt és jelszót a regisztrációhoz.</string>
+    <string name="no_pass_error_message">Kérjük, a regisztrációhoz adjon meg egy jelszót.</string>
+    <string name="no_email_error_message">Kérjük, a regisztrációhoz adjon meg egy e-mailt .</string>
+    <string name="password_validation_text">"A jelszónak legalább 8 karakterből kell állnia, és tartalmaznia kell legalább egy betűt és egy számot vagy speciális karaktert (!@#$%*) "</string>
+    <string name="logged_as">Bejelentkezett, mint:</string>
+    <string name="sign_out">Kijelentkezés</string>
+    <string name="error_occured">Hiba történt. Kérjük próbálkozzon újra</string>
+    <string name="ws_error_AUTH_2">Érvénytelen adatok!</string>
+    <string name="ws_error_AUTH_101">Nem tudott bejelentkezni a Google fiókjával.</string>
+    <string name="ws_error_AUTH_103">Sikertelen Facebook-bejelentkezés. Próbálja újra később.</string>
+    <string name="ws_error_MARG_12">Hibás hmac paraméter</string>
+    <string name="ws_error_MARG_109">Hibás email paraméter</string>
+    <string name="ws_error_MARG_110">Hibás passhash paraméter</string>
+    <string name="ws_error_MARG_111">Hibás name paraméter</string>
+    <string name="ws_error_MARG_112">Hibás user-agent paraméter</string>
+    <string name="ws_error_IARG_5">Érvénytelen hmac formátum</string>
+    <string name="ws_error_IARG_106">Az e-mail cím nem érvényes</string>
+    <string name="ws_error_REPO_7">Ez a felhasználó már rendelkezik érvényes repo-val.</string>
+    <string name="ws_error_WOP_11">Az áruházat nem tudtuk létrehozni. Kérjük próbálja újra.</string>
+    </resources>

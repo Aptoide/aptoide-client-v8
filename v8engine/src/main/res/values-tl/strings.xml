@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="developer_website">Website: %s</string>
+    <string name="not_available">Hindi Naaayon (N/A)</string>
+    <string name="developer_email">Email: %s</string>
+    <string name="developer_privacy_policy">Polisiya ng Pagka-pribado: %s</string>
+
+
+    <string name="open">Bukas</string>
+    <string name="button_header_more">mas marami pa</string>
+    <string name="search">Hanapin</string>
+
+    <string name="update">Updeyt</string>
+    <string name="uninstall">Tanggalin sa pagka-instala</string>
+    <string name="downgrade">I-downgrade</string>
+    <string name="menu_select_all">Piliin Lahat</string>
+    <string name="menu_select_none">Piliin ang Wala (None)</string>
+    <string name="clear">Malinaw</string>
+
+    <string name="excluded_updates">Hindi Naisamang Mga Updeyt</string>
+    <string name="no_excluded_updates_msg">"Ang bagong bersyon ng app ay hindi gumagana sa iyong aparato o may ilang tampok ang nawawala? Harangin ang mga app sa pag-uupdeyt.  Pumunta sa tab ng mga Updeyt at pindutin ng matagal (long press) ang app na gusto mong tumigil sa pag-uupdeyt."</string>
+
+    <string name="restore_updates">Ibalik ang mga Updeyt</string>
+    <string name="rollback">Pagbalik</string>
+    <string name="menu_card_timeline_clear">Malinaw</string>
+    <string name="fragment_social_timeline_no_connection">Walang koneksyon ng network</string>
+    <string name="fragment_social_timeline_general_error">Nagkakaroon ng ilang pagkagambala. Kaya mo bang magsubok muli mamaya?</string>
+
+    <string name="displayable_social_timeline_app_update">Updeyt</string>
+    <string name="appview_rate_this_app">Graduhan ang app na ito</string>
+    <string name="needs_license">Kailangan ng Lisensya</string>
+    <string name="virus">Virus</string>
+    <string name="additional_information">Karagdagang Impormasyon</string>
+    <string name="displayable_social_timeline_app_update_updated">Na-updeyt na</string>
+    <string name="displayable_social_timeline_recommendation_similar_and">at</string>
+    <string name="social_facebook_screen_title">Facebook</string>
+    <string name="social_twitter_screen_title">Twitter</string>
+    <string name="title">TITULO</string>
+    <string name="feedback_not_valid">Paki-pasok ang ilang balidong Paksa!</string>
+    <string name="ignore_update">Ignorahin ang Updeyt</string>
+    <string name="added_to_scheduled">Idinagdag sa Menu &gt; Na-iskedyul na mga Download</string>
+    </resources>

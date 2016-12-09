@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="one_account_allowed">Só uma conta é permitida</string>
+    <string name="username">E-mail</string>
+    <string name="password">Senha</string>
+    <string name="link_device_webinstall">Associar conta à instalação web</string>
+    <string name="register">Registrar</string>
+    <string name="forgot_passwd">Esqueceu a senha?</string>
+    <string name="fields_cannot_empty">Por favor, verifique seu e-mail e senha.</string>
+    <string name="unknown_error">Erro desconhecido</string>
+    <string name="no_email_and_pass_error_message">"Por favor, insira um e-mail e senha para
+ se registrar.
+ "</string>
+    <string name="no_pass_error_message">Por favor, insira uma senha para se registrar.</string>
+    <string name="no_email_error_message">Por favor, insira um e-mail para se registrar.</string>
+    <string name="password_validation_text">"A senha deve ter pelo menos 8 caracteres e deve ter
+ pelo menos uma letra e um número ou caracteres especiais (!@#$%*)
+ "</string>
+    <string name="logged_as">Você está logado como:</string>
+    <string name="sign_out">Sair</string>
+    <string name="error_occured">Ocorreu um erro. Por favor, tente novamente</string>
+    <string name="ws_error_AUTH_2">Credenciais inválidas!</string>
+    <string name="ws_error_AUTH_101">Não foi possível fazer login com o Google. Por favor, tente novamente.</string>
+    <string name="ws_error_AUTH_103">Não foi possível fazer login com o Facebook. Por favor, tente novamente.</string>
+    <string name="ws_error_MARG_12">Parâmetro hmac em falta</string>
+    <string name="ws_error_MARG_109">Parâmetro email em falta</string>
+    <string name="ws_error_MARG_110">Parâmetro passhash em falta</string>
+    <string name="ws_error_MARG_111">Parâmetro name em falta</string>
+    <string name="ws_error_MARG_112">Parâmetro user-agent em falta</string>
+    <string name="ws_error_IARG_5">Formato hmac inválido</string>
+    <string name="ws_error_IARG_106">O endereço de e-mail não é válido</string>
+    <string name="ws_error_REPO_7">Este usuário já tem um repositório válido.</string>
+    <string name="ws_error_WOP_11">A loja não pôde ser criada. Por favor, tente novamente.</string>
+    <string name="or">ou</string>
+    <string name="accept_terms">"Ao registrar-se, você concorda com os Termos de Serviço do Aptoide e
+ com a Política de Conteúdo para Desenvolvedores
+ "</string>
+    <string name="default_account_type">cm.aptoide.pt</string>
+
+    <string name="facebook_garant_permission_button">Conceder permissão</string>
+    <string name="facebook_email_permission_regected_message">"O Aptoide precisa do seu e-mail para fazer uma
+ conta
+ "</string>
+    <string name="error_invalid_grant">Nome de usuário e senha inválidos</string>
+    <string name="ws_error_MARG_200">\@string/error_occured</string>
+    <string name="ws_error_MARG_203">\@string/error_occured</string>
+    <string name="ws_error_MARG_204">\@string/error_occured</string>
+    <string name="ws_error_IARG_200">\@string/error_occured</string>
+    <string name="ws_error_AUTH_7">\@string/error_occured</string>
+    <string name="ws_error_AUTH_100">Não foi possível fazer login com o Google. Por favor, verifique sua conta do Google (você pode precisar validar o seu endereço de e-mail)</string>
+    <string name="ws_error_AUTH_102">Não foi possível fazer login com o Facebook. Por favor, verifique sua conta do Facebook (você pode precisar validar o seu endereço de e-mail)</string>
+    <string name="ws_error_invalid_grant">Nome de usuário e senha inválidos</string>
+    <string name="ws_error_IARG_111">Formato passhash inválido</string>
+    <string name="ws_error_REPO_4">O nome da loja é inválido, você só pode usar letras, números ou
+ travessões.</string>
+    <string name="ws_error_REPO_5">O nome da loja deve ter pelo menos 3 caracteres.</string>
+    <string name="ws_error_REPO_6">Este nome de loja já está sendo usado, você precisa escolher
+ outro.</string>
+    <string name="ws_error_WOP_9">O e-mail fornecido já existe no Aptoide</string>
+    <string name="ws_error_WOP_10">O e-mail fornecido ainda não existe no Aptoide</string>
+    <string name="ws_error_QUOTA_2">Limite diário de usuários criados atingido por hoje. Se você precisa que
+ este limite seja aumentado, por favor, entre em contato com o nosso suporte em suport@aptoide.com ou crie mais usuários amanhã</string>
+    <string name="ws_error_AUTH_1">O e-mail ou a senha não são válidos para fazer login (mediante atualização
+ de nome)</string>
+    <string name="login_successful">Login bem-sucedido</string>
+    <string name="user_created">Usuário criado</string>
+    <string name="wizard_skip"><b>PULAR</b></string>
+
+</resources>

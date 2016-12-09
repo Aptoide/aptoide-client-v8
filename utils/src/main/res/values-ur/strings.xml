@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="please_wait">براۓ مہربانی انتظار کريں…</string>
+
+    <string name="WidgetProvider_timestamp_today">آج</string>
+    <string name="WidgetProvider_timestamp_yesterday">گزشتہ روز</string>
+    <string name="WidgetProvider_timestamp_hour_ago">%s گھنٹہ پہلے</string>
+    <string name="WidgetProvider_timestamp_hours_ago">%s گھنٹے پہلے</string>
+    <string name="WidgetProvider_timestamp_minutes_ago">%s منٹ پہلے</string>
+    <string name="WidgetProvider_timestamp_just_now">ابھی ابھی</string>
+    <string name="WidgetProvider_timestamp_weeks_ago">%sہفتے پہلے</string>
+    <string name="WidgetProvider_timestamp_week_ago2">1 ہفتہ پہلے</string>
+    <string name="WidgetProvider_timestamp_days_ago">%s دن پہلے</string>
+    <string name="WidgetProvider_timestamp_month_ago">1 مہینہ پہلے</string>
+    <string name="WidgetProvider_timestamp_months_ago">%s مہینے پہلے</string>
+    <string name="WidgetProvider_timestamp_year_ago">1سال پہلے</string>
+    <string name="WidgetProvider_timestamp_years_ago">%s سال پہلے</string>
+
+</resources>

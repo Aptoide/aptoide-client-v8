@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="please_wait">Prosimo počakajte…</string>
+
+    <string name="WidgetProvider_timestamp_today">Danes</string>
+    <string name="WidgetProvider_timestamp_yesterday">Včeraj</string>
+    <string name="WidgetProvider_timestamp_hour_ago">Pred %s uro</string>
+    <string name="WidgetProvider_timestamp_hours_ago">Pred %s urami</string>
+    <string name="WidgetProvider_timestamp_minutes_ago">Pred %s minutami</string>
+    <string name="WidgetProvider_timestamp_just_now">Ravnokar</string>
+    <string name="WidgetProvider_timestamp_weeks_ago">Pred %s tedni</string>
+    <string name="WidgetProvider_timestamp_week_ago2">Pred 1 tednom</string>
+    <string name="WidgetProvider_timestamp_days_ago">Pred %s dnevi</string>
+    <string name="WidgetProvider_timestamp_month_ago">Pred 1 mesecem</string>
+    <string name="WidgetProvider_timestamp_months_ago">Pred %s meseci</string>
+    <string name="WidgetProvider_timestamp_year_ago">Pred 1 letom</string>
+    <string name="WidgetProvider_timestamp_years_ago">Pred %s letoma/leti</string>
+
+</resources>

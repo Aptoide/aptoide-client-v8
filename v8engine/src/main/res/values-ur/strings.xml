@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="developer_website">ویب سائٹ: %s</string>
+    <string name="not_available">لاگو نہیں</string>
+    <string name="developer_email">ای میل :%s</string>
+    <string name="developer_privacy_policy">پوشیدگی کی پالیسی: %s</string>
+
+
+    <string name="open">کھولنا</string>
+    <string name="button_header_more">مزید</string>
+    <string name="search">تلاش</string>
+
+    <string name="update">اپ ڈیٹ</string>
+    <string name="uninstall">ان انسٹال</string>
+    <string name="downgrade">ڈاؤن گریڈ</string>
+    <string name="menu_select_all">سب کچھ منتخب کریں</string>
+    <string name="menu_select_none">کچھ بھی منتخب نہ کریں</string>
+    <string name="clear">صاف</string>
+
+    <string name="excluded_updates">خارج شدہ اپ ڈیٹس</string>
+    <string name="no_excluded_updates_msg">ایک ایپ کا نئا ورژن آپ کے آلے پر کام نہیں کر رہا یا اس کے کچھ فیچر غائب ہیں؟ ایپس کو اپ ڈیٹ ہونے سے روکیں۔اپ ڈیٹ ٹیب پر جائیں اور جس ایپ کو اپ ڈیٹ ہونے سے روکنا ہے اس کو تھوڑی دیر دبا کر رکھیں۔</string>
+
+    <string name="restore_updates">اپ ڈیٹس بحال کرنا</string>
+    <string name="rollback">رول بیک</string>
+    <string name="menu_card_timeline_clear">صاف</string>
+    <string name="fragment_social_timeline_no_connection">کوئی نیٹ ورک رابطہ نہیں</string>
+    <string name="fragment_social_timeline_general_error">کوئی مسٗلہ ہے؟ کیا آپ بعد ازاں دوبارہ کوشش کریں گے؟</string>
+
+    <string name="displayable_social_timeline_app_update">اپ ڈیٹ</string>
+    <string name="appview_rate_this_app">اس ایپ کی درجہ بندی کریں</string>
+    <string name="needs_license">لائسینس چاہیے</string>
+    <string name="virus">وائرس</string>
+    <string name="additional_information">اضافی معلومات</string>
+    <string name="displayable_social_timeline_app_update_updated">اپ ڈیٹ</string>
+    <string name="displayable_social_timeline_recommendation_similar_and">اور</string>
+    <string name="social_facebook_screen_title">فیس بک</string>
+    <string name="social_twitter_screen_title">ٹوئیٹر</string>
+    <string name="title">عنوان</string>
+    <string name="feedback_not_valid">برائے مہربانی کوئی درست موضوع شامل کریں!</string>
+    <string name="ignore_update">اپ ڈیٹس کو نظرانداز کریں</string>
+    <string name="added_to_scheduled">فہرست میں شامل کردیا گیا &gt; شیڈول ڈاؤن لوڈز</string>
+    </resources>

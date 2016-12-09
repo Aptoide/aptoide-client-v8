@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="WidgetProvider_timestamp_today">ਅਜ</string>
+    <string name="WidgetProvider_timestamp_yesterday">ਕਲ</string>
+    <string name="WidgetProvider_timestamp_hour_ago">"%s ਘਂਟਾ  ਿਪਹਲਾ"</string>
+    <string name="WidgetProvider_timestamp_hours_ago">%s ਘਂਟੇ ਿਪਹਲੇ</string>
+    <string name="WidgetProvider_timestamp_minutes_ago">ਪਲ ਪਿਹਲੇ</string>
+    <string name="WidgetProvider_timestamp_just_now">ਹੋਦੈ ਹੀ</string>
+    <string name="WidgetProvider_timestamp_weeks_ago">"ਹਫਤੇ  ਪਿਹਲੇ"</string>
+    </resources>

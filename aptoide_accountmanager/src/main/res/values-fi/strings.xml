@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="one_account_allowed">Ainoastaan yksi tili sallittu</string>
+    <string name="username">Sähköposti</string>
+    <string name="password">Salasana</string>
+    <string name="link_device_webinstall">Linkitä tili Webinstallin kanssa</string>
+    <string name="register">Rekisteröidy</string>
+    <string name="forgot_passwd">Unohditko salasanasi?</string>
+    <string name="fields_cannot_empty">Tarkista sähköpostiosoitteesi ja salasanasi.</string>
+    <string name="unknown_error">Tuntematon virhe</string>
+    <string name="no_email_and_pass_error_message">"Syötä sähköposti ja salasana
+rekisteröityäksesi.
+ "</string>
+    <string name="no_pass_error_message">Syötä salasana rekisteröityäksesi.</string>
+    <string name="no_email_error_message">Syötä sähköposti rekisteröityäksesi.</string>
+    <string name="password_validation_text">"Salasanan pitää olla ainakin 8 merkkiä pitkä ja siinä pitää
+olla ainakin yksi kirjain sekä yksi numero tai erikoismerkki (!@#$%*)
+ "</string>
+    <string name="logged_as">Olet kirjautunut käyttäjänä:</string>
+    <string name="sign_out">Kirjaudu ulos</string>
+    <string name="error_occured">Tapahtui virhe. Yritä uudelleen</string>
+    <string name="ws_error_AUTH_2">Virheelliset pääsytiedot!</string>
+    <string name="ws_error_AUTH_101">Google-kirjautuminen ei onnistunut. Yritä uudelleen.</string>
+    <string name="ws_error_AUTH_103">Facebook-kirjautuminen ei onnistunut. Yritä uudelleen.</string>
+    <string name="ws_error_MARG_12">Puuttuva hmac-parametri</string>
+    <string name="ws_error_MARG_109">Puuttuva sähköpostiparametri</string>
+    <string name="ws_error_MARG_110">Puuttuva passhash-parametri</string>
+    <string name="ws_error_MARG_111">Puuttuva nimiparametri</string>
+    <string name="ws_error_MARG_112">Puuttuva käyttäjäagenttiparametri</string>
+    <string name="ws_error_IARG_5">Virheellinen hmac-muoto</string>
+    <string name="ws_error_IARG_106">Sähköpostiosoite ei ole kelvollinen</string>
+    <string name="ws_error_REPO_7">Tällä käyttäjällä on jo voimassa oleva varasto.</string>
+    <string name="ws_error_WOP_11">Kauppaa ei voitu luoda. Yritä uudelleen.</string>
+    <string name="or">tai</string>
+    <string name="accept_terms">"Rekisteröitymällä hyväksyt Aptoiden käyttöehdot
+sekä kehittäjien sisältökäytännön
+ "</string>
+    <string name="default_account_type">cm.aptoide.pt</string>
+
+    <string name="facebook_garant_permission_button">Myönnä lupa</string>
+    <string name="facebook_email_permission_regected_message">"Aptoide tarvitsee sähköpostiosoitteesi
+luodakseen tilin
+ "</string>
+    <string name="error_invalid_grant">Virheellinen käyttäjänimi ja salasana -yhdistelmä</string>
+    <string name="ws_error_MARG_200">\@string/error_occured</string>
+    <string name="ws_error_MARG_203">\@string/error_occured</string>
+    <string name="ws_error_MARG_204">\@string/error_occured</string>
+    <string name="ws_error_IARG_200">\@string/error_occured</string>
+    <string name="ws_error_AUTH_7">\@string/error_occured</string>
+    <string name="ws_error_AUTH_100">Kirjautuminen Googlen avulla epäonnistui. Tarkista Google-tilisi (sinun saattaa pitää vahvistaa sähköpostiosoitteesi)</string>
+    <string name="ws_error_AUTH_102">Kirjautuminen Facebookin avulla epäonnistui. Tarkista Facebook-tilisi (sinun saattaa pitää vahvistaa sähköpostiosoitteesi)</string>
+    <string name="ws_error_invalid_grant">Virheellinen käyttäjänimi ja salasana -yhdistelmä</string>
+    <string name="ws_error_IARG_111">Virheellinen passhash-muoto</string>
+    <string name="ws_error_REPO_4">Kaupan nimi on virheellinen, voit käyttää ainoastaan kirjaimia,
+numeroita ja ajatusviivoja.</string>
+    <string name="ws_error_REPO_5">Kaupan nimen pitää olla vähintään kolmen merkin pituinen.</string>
+    <string name="ws_error_REPO_6">Kaupan nimi on jo olemassa, valitse toinen nimi.</string>
+    <string name="ws_error_WOP_9">Annettu sähköpostiosoite löytyy jo Aptoidesta</string>
+    <string name="ws_error_WOP_10">Annettua sähköpostiosoitetta ei vielä löydy Aptoidesta</string>
+    <string name="ws_error_QUOTA_2">Päivittäin luotavien käyttäjien raja täyttyi tälle päivälle. Jos
+ haluat rajan korotusta, ota yhteyttä tukeen osoitteessa support@aptoide.com tai luo lisää käyttäjiä huomenna</string>
+    <string name="ws_error_AUTH_1">Joko sähköpostiosoite tai salasana ei kelpaa kirjautumiseen
+(nimipäivitys)</string>
+    <string name="login_successful">Kirjautuminen onnistui</string>
+    <string name="user_created">Käyttäjä luotu</string>
+
+
+<string name="wizard_skip"><b>OHITA</b></string>
+
+<string name="login">Kirjaudu</string>
+  <string name="user_cancelled">Peruutettu käyttäjän toimesta</string>
+
+  </resources>

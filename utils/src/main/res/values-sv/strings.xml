@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="please_wait">Var god vänta…</string>
+
+    <string name="WidgetProvider_timestamp_today">Idag</string>
+    <string name="WidgetProvider_timestamp_yesterday">Igår</string>
+    <string name="WidgetProvider_timestamp_hour_ago">%s timme sedan</string>
+    <string name="WidgetProvider_timestamp_hours_ago">%s timmar sedan</string>
+    <string name="WidgetProvider_timestamp_minutes_ago">%s minuter sedan</string>
+    <string name="WidgetProvider_timestamp_just_now">Just nu</string>
+    <string name="WidgetProvider_timestamp_weeks_ago">%s veckor sedan</string>
+    <string name="WidgetProvider_timestamp_week_ago2">1 vecka sedan</string>
+    <string name="WidgetProvider_timestamp_days_ago">%s dagar sedan</string>
+    <string name="WidgetProvider_timestamp_month_ago">1 månad sedan</string>
+    <string name="WidgetProvider_timestamp_months_ago">%s månader sedan</string>
+    <string name="WidgetProvider_timestamp_year_ago">1 år sedan</string>
+    <string name="WidgetProvider_timestamp_years_ago">%s år sedan</string>
+
+</resources>

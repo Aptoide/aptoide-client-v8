@@ -1,0 +1,477 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="error_MARG_1">Недостасува продавница</string>
+    <string name="error_MARG_2">Недостасуваат информации за апликацијата</string>
+    <string name="error_MARG_3">Недостасува верзија на апликацијата</string>
+    <string name="error_MARG_4">Недостасуваат податоци за најава</string>
+    <string name="error_MARG_5">Недостасува апликација</string>
+    <string name="error_MARG_6">Недостасуваат MD5 податоци</string>
+    <string name="error_MARG_7">Недостасува параметар за пакетот</string>
+    <string name="error_MARG_8">Недостасува hmac параметарот</string>
+    <string name="error_MARG_9">Недостасува лимит параметарот</string>
+    <string name="error_MARG_10">Недостасува offset параметарот</string>
+    <string name="error_MARG_11">Недостасува параметар за јазик</string>
+    <string name="error_MARG_100">Недостасува име на апликацијата</string>
+    <string name="error_MARG_101">Недостасува опис</string>
+    <string name="error_MARG_102">Недостасува категорија</string>
+    <string name="error_MARG_103">Недостасува оцена</string>
+    <string name="error_MARG_104">Недостасува знаменце</string>
+    <string name="error_MARG_105">Недостасува коментар</string>
+    <string name="error_MARG_106">Недостасува глас</string>
+    <string name="error_MARG_107">Недостасува текст</string>
+    <string name="error_MARG_108">Недостасува like параметарот</string>
+    <string name="error_MARG_109">Недостасува емаил параметар</string>
+    <string name="error_MARG_110">Недостасува passhash параметар</string>
+    <string name="error_MARG_111">Недостасува параметарот име</string>
+    <string name="error_MARG_112">Недостасува параметарот кориснички агент</string>
+    <string name="error_MARG_113">Недостасува hash параметар</string>
+    <string name="error_MARG_200">Грешка при автентикација</string>
+    <string name="error_MARG_201">Невалидна комбинација на корисничко име/лозинка</string>
+    <string name="error_MARG_202">Невалиден токен или корисник/лозинка</string>
+
+    <string name="error_IARG_1">Невалидна продавница</string>
+    <string name="error_IARG_2">Неуспешна најава</string>
+    <string name="error_IARG_3">Невалиден идентификатор</string>
+    <string name="error_IARG_4">Невалидни MD5 податоци</string>
+    <string name="error_IARG_5">Невалиден hmac формат</string>
+    <string name="error_IARG_6">Невалиден јазик</string>
+    <string name="error_IARG_100">Минималниот број на дозволени карактери во коментар е 10</string>
+    <string name="error_IARG_101">Минималниот број на дозволени карактери во одговор на коментар е 10</string>
+    <string name="error_IARG_102">Невалиден аргумент</string>
+    <string name="error_IARG_103">Невалидна категорија</string>
+    <string name="error_IARG_104">Невалидна оцена</string>
+    <string name="error_IARG_105">URL адресата не е валидна</string>
+    <string name="error_IARG_106">Е-маил адресата не е валидна</string>
+    <string name="error_IARG_107">Невалидно знаменце</string>
+    <string name="error_IARG_108">Невалиден коментар</string>
+    <string name="error_IARG_109">Неважечки глас</string>
+    <string name="error_IARG_110">Невалиден одговор на коментар</string>
+    <string name="error_IARG_200">Невалиден токен за најава</string>
+    <string name="error_IARG_201">Невалиден режим за најава</string>
+    <string name="error_IARG_300">Невалидна категорија</string>
+    <string name="error_IARG_301">Невалидна категорија</string>
+    <string name="error_IARG_302">Дадената апликација веќе постои во оваа категорија</string>
+
+    <string name="error_AUTH_1">Невалидни податоци за најава!</string>
+    <string name="error_AUTH_2">Невалидни податоци!</string>
+    <string name="error_AUTH_3">Вашиот профил беше откажан. За било какви прашања обратете се до Aptoide тимот за поддршка.</string>
+    <string name="error_AUTH_4">HMAC проблем со автентикација</string>
+    <string name="error_AUTH_100">Не можете да се најавите со Google. Ве молиме проверете го Вашиот Google профил (можеби ќе треба да ја потврдите Вашата емаил адреса).</string>
+    <string name="error_AUTH_101">Не можете да се најавите со Google. Ве молиме обидете се повторно.</string>
+    <string name="error_AUTH_102">Не можете да се најавите со Facebook. Ве молиме проверете го Вашиот Facebook профил (можеби ќе треба да ја потврдите Вашата емаил адреса).</string>
+    <string name="error_AUTH_103">Не можете да се најавите со Facebook. Ве молиме обидете се повторно.</string>
+
+    <string name="error_WOP_6">За да додадете коментар треба да го внесете Вашето име (ќе биде видливо)</string>
+    <string name="error_WOP_7">Грешка при коментирање</string>
+    <string name="error_WOP_8">Грешка во коментарот за гласање</string>
+    <string name="error_WOP_9">Наведената емаил адреса веќе постои во системот</string>
+    <string name="error_WOP_10">Наведената емаил адреса не постои во системот сеуште</string>
+    <string name="error_WOP_11">Продавницата не може да се креира. Ве молиме обидете се повторно.</string>
+
+    <string name="error_REPO_1">Продавницата не постои.</string>
+    <string name="error_REPO_2">Продавницата е откажана.</string>
+    <string name="error_REPO_3">Продавницата не припаѓа на овој корисник.</string>
+    <string name="error_REPO_4_no_store">Немате креирано продавница со Вашиот профил. Мора да креирате една зa да оставите оцена.</string>
+    <string name="error_REPO_7">Овој корисник веќе има валидна архива.</string>
+
+    <string name="error_APK_1">Не можете да ја отворите оваа апликација со дадените информации</string>
+    <string name="error_APK_4">Не можете да ја отворите оваа апликација</string>
+    <string name="error_APK_Description">Описот не е достапен</string>
+
+    <string name="error_SYS_1">Се случи непозната грешка, Ве молиме обидете се повторно</string>
+    <string name="error_SYS_2">Податоците не се пронајдени, Ве молиме обидете се подоцна</string>
+    <string name="error_SYS_3">Системот е во фаза на одржување, Ве молиме обидете се подоцна</string>
+    <string name="error_SYS_4">Овaa API наредба не е поддржана од тековната верзија</string>
+    <string name="error_SYS_Billing">Плаќањето од апликација не е дозволено на овој уред.</string>
+
+    <string name="error_410">Извинете, бараната апликација не беше пронајдена на овој сервер.</string>
+
+    <string name="please_wait">Ве молиме почекајте…</string>
+    <string name="simple_error_occured">Се случи грешка. </string>
+    <string name="yes">Да</string>
+    <string name="no">Не</string>
+    <string name="feedback_subject">Наслов</string>
+    <string name="feedback_to_write2">Пишете ни тука за да ни ја испратите Вашата оцена…\n\n Ве молиме бидете детални:
+\n Чекори кои сте ги направиле\n Грешки кои ги гледате</string>
+    <string name="feedback_include_logs">Внесете слика од екранот и записници</string>
+    <string name="feedback_no_email">Не е инсталиран емаил клиент!</string>
+    <string name="username_tip">Внесете го Вашиот емаил</string>
+    <string name="store_already_added">Продавницата е веќе додадена!</string>
+    <string name="subscribe_store">Претплатете се на оваа продавница</string>
+    <string name="permissions">Погледнете ги дозволите</string>
+    <string name="permissions_na">Дозволи: Недостапни</string>
+    <string name="additional_permissions">Дополнителни Дозволи</string>
+    <string name="no_permissions_required">Не се потребни дозволи за оваа апликација.</string>
+    <string name="restore">Инсталирајте</string>
+
+    <string name="timeout">Истече времето за конекција</string>
+    <string name="ip_blacklisted">IP на црна листа</string>
+    <string name="connection_error">Нема мрежна конекција</string>
+    <string name="apk_not_found">Apk не е пронајден</string>
+    <string name="invalid_apk">Невалиден apk</string>
+    <string name="remote_in_nospace">немате доволно мемориски простор на Вашиот уред.</string>
+    <string name="server_error">Серверска грешка</string>
+    <string name="paidapp_not_found">Грешка при симнување на апликацијата. Ве молиме обидете се повторно или контактирајте го одделот за поддршка.</string>
+    <string name="sd_error">Не може да се запишува на SD картичка.</string>
+    <string name="sd_error_jolla">Не може да се симне правилно</string>
+    <string name="starting_download">Симнувањето започнува</string>
+    <string name="installing">%s се инсталира…</string>
+    <string name="finished_install">%s е инсталиран.</string>
+    <string name="aptoide_downloading">%s се симнува</string>
+    <string name="remaining_time">преостанато</string>
+    <string name="data_usage_constraint">Симнувањето не е дозволено во Settings &gt; General Download Rules</string>
+    <string name="download_pending">Почекајте</string>
+
+    <string name="download_retry">Обидете се повторно</string>
+    <string name="error503">Уффф… Дали е само до мене или сите ја инсталираат апликацијата истовремено?</string>
+    <string name="having_some_trouble">Имате проблеми. Можете ли да се обидете подоцна?</string>
+
+    <string name="reply">Одговор</string>
+    <string name="vote_down">Гласајте негативно</string>
+    <string name="vote_up">Гласајте позитивно</string>
+    <string name="casting_vote">Пресуден глас…</string>
+    <string name="vote_submitted">Вашиот глас беше успешно доставен</string>
+    <string name="votes">%s гласови</string>
+
+    <string name="reviewed_by">Прегледано од - %s</string>
+    <string name="installed_this">%s го инсталираа ова.</string>
+
+    <string name="adult_pin_wrong">Погрешен пин, обидете се повторно.</string>
+    <string name="request_adult_pin">Внесете го пинот за отклучување</string>
+    <string name="are_you_adult">Дали имате најмалку 21 година?</string>
+    <string name="facebook_logout_and_login">Одјавете се и најавете се со Facebook</string>
+
+    <string name="schDown_nodownloadselect">Не се селектирани превземања</string>
+    <string name="no_sch_downloads">Пребарувате апликации со користење на мобилен интернет, но сакате да ги симните подоцна кога ќе имате wifi конеција? Користете закажани симнувања и променете ги Вашите опции во Settings -&gt; General Download Rules - во WiFi.</string>
+    <string name="schDown_installselected">Инсталирајте ги обележаните</string>
+    <string name="schDown_removeselected">Избришете ги селектираните</string>
+    <string name="schDown_invertselection">Инверзна селекција</string>
+
+    <string name="schDwnBtn">Закажани превземања</string>
+    <string name="schDown_install">Дали сакате да ги инсталирате сите закажани симнувања?</string>
+    <string name="dont_show_again">Не го прикажувај овој дијалог прозорец повторно</string>
+
+    <string name="see_more">Погледнете повеќе</string>
+    <string name="see_less">Погледнете помалку</string>
+    <string name="get_latest">Земете ја најновата верзија</string>
+
+    <string name="installed_tab">Инсталирани</string>
+    <string name="updates_tab">Надградби</string>
+
+    <string name="feedback_send_button">Испратете повратна информација</string>
+
+    <string name="my_account">Мој профил</string>
+    <string name="setting_schdwntitle">Закажани симнувања</string>
+    <string name="settings">Подесувања</string>
+    <string name="facebook">Facebook</string>
+    <string name="twitter">Twitter</string>
+    <string name="backup_apps">Backup апликации</string>
+
+    <string name="menu_context_reparse">Вчитај поново</string>
+    <string name="menu_context_remove">Избриши</string>
+
+    <string name="search_other_stores">Или побарајте други…</string>
+    <string name="see_top_stores">Погледнете ги најдобрите продавници</string>
+    <string name="store_name">Име на продавница</string>
+    <string name="insert_store_name">Внесете име на продавница:</string>
+    <string name="subscribe_pvt_store">Претплатете се на приватна продавница</string>
+
+    <string name="no_excluded_updates">Нема исклучени надградби</string>
+    <string name="no_excluded_updates_selected">Нема селектирани исклучени надградби</string>
+    <string name="exclude_update">Игнорирајте ја надградбата</string>
+    <string name="install_update">Инсталирајте ја надградбата</string>
+
+    <string name="payment_methods">Платете сo:</string>
+    <string name="cancel">Откажи</string>
+    <string name="no_payments_available">Нема достапни уплати.</string>
+    <string name="failed_auth_code">Неуспешна авторизација на профил. Ве молиме обидете се повторно.</string>
+    <string name="error_occured_paying">Се случи грешка. Исплатата не е извршена.</string>
+    <string name="account">Профил</string>
+    <string name="confirm_carrier_payment">"Дали сакате да купите \'{title}\' за {value}? Ќе Ви биде наплатено од Вашиот оператор. "</string>
+    <string name="buy">Купете</string>
+    <string name="billing_result">"Резултатот на трансакцијата е: "</string>
+
+    <string name="change_payment">Назад</string>
+    <string name="rollback_installed">Инсталирани</string>
+    <string name="rollback_uninstalled">Деинсталирани</string>
+    <string name="rollback_updated">Надградени</string>
+    <string name="rollback_downgraded">Вратено на постара верзија</string>
+    <string name="install">Инсталирајте</string>
+    <string name="cannot_uninstall_self">Инсталерот не може да биде деинсталиран.</string>
+    <string name="at_time">во %s</string>
+    <string name="root_access_dialog">Се чини дека имате патека. Дали би сакале да дозволите автоматско инсталирање на апликацијата веднаш по нејзиното симнување?</string>
+    <string name="downgrade_requires_uninstall">Враќањето на постара верзија бара апликацијата да се деинсталира</string>
+
+    <string name="order_popup_title3">Содржина за возрасни</string>
+    <string name="invite_friends">Поканете ги пријателите</string>
+    <string name="timeline_is_empty_send_email">Ние ќе испратиме емаил на оние кои Вие ќе ги изберете</string>
+    <string name="facebook_timeline_friends_invited">Пријателите се поканети!</string>
+    <string name="select_friends_to_invite">Ве молиме селектирајте ги Вашите пријатели за да ги поканите!</string>
+    <string name="facebook_friends_list_using_timeline">веќе користат Aptoide Социјален Времеплов</string>
+    <string name="and">и</string>
+    <string name="more_friends">повеќе</string>
+    <string name="more_reviews">Оцени</string>
+    <string name="more_editors_choice">Повеќе од изборот на уредникот</string>
+    <string name="more_versions">Повеќе верзии</string>
+    <string name="facebook_friends_list_using_timeline_empty">Социјалниот Времеплов Ви овозможува да ги споделите Вашите апликации со Вашите Facebook пријатели. Сакате ли да се придружите на мрежата?</string>
+    <string name="X_download_number">%s долу.</string>
+    <string name="timeline_not_compatible">Оххх... Оваа функција не е компатибилна со Вашата Android верзија</string>
+    <string name="sponsored">Спонзорирани</string>
+    <string name="friends_installs">Инсталирања на Вашите пријатели</string>
+    <string name="recommended_for_you">Препорачани за Вас</string>
+    <string name="highlighted_apps">Нагласени</string>
+    <string name="button_more">повеќе</string>
+    <string name="unhide_post">ОТКРИЈ</string>
+    <string name="hide_post">Сокриј</string>
+    <string name="like">Ми се допаѓа</string>
+    <string name="comment">Коментирај</string>
+    <string name="hide_post_info">Вашите пријатели нема да го видат овoј пост</string>
+    <string name="timeline_like">Ми се допаѓа</string>
+    <string name="likes">Допаѓања</string>
+    <string name="unlike">Не ми се допаѓа</string>
+    <string name="timeline_empty_no_friends_send_email">Се чини дека Вашите пријатели не се најавиле на Aptoide со нивниот Facebook профил. Испратете им емаил за да се најават со нивниот Facebook профил</string>
+    <string name="timeline_empty_send_email_to_friends">Испратете Емаил на пријателите</string>
+    <string name="aptoide_timeline">Aptoide времеплов</string>
+    <string name="timeline_email_invitation">Ве покани да се придружите на неговиот Aptoide социјален времеплов. Бидете поврзани!</string>
+    <string name="timeline_email_how_to_join">Како може да се поврзите на социјалниот времеплов?</string>
+    <string name="timeline_email_step1">1- Симнете ја најновата верзија на Aptoide:</string>
+    <string name="timeline_email_step2">2- Одете на јазичето “социјален времеплов” и придружете се на мрежата</string>
+    <string name="timeline_ad">Предложени апликации од Facebook</string>
+    <string name="facebook_start_timeline">Придружете се на социјалниот времеплов</string>
+    <string name="facebook_join_friends">Дали сакате да им се придружите во социјалниот времеплов?</string>
+    <string name="timeline_is_empty_no_friends">Вашиот времеплов е празен. Најверојатно тоа е затоа што сеуште немате пријатели на Aptoide или затоа што тие немаат постови.</string>
+    <string name="timeline_is_empty_start_invite">Ајде да започнеме со поканување на пријатели:</string>
+
+    <string name="review_get_app">Превземете апликација</string>
+    <string name="review_final_verdict">Конечна одлука</string>
+    <string name="review_speed">Брзина</string>
+    <string name="review_usability">Употребливост</string>
+    <string name="review_addictive">Зависност</string>
+    <string name="review_stability">Стабилност</string>
+    <string name="review_by">Оценето од:\n%s</string>
+    <string name="review_title">Оцени</string>
+    <string name="review_good">Добро</string>
+    <string name="review_bad">Лошо</string>
+    <string name="review_finish">Заврши</string>
+    <string name="review_final_score">Резултат</string>
+    <string name="make_review_title">Оценете</string>
+    <string name="size">Големина</string>
+    <string name="set_sliders">Поставете лизгачи</string>
+    <string name="write_one_pro">Напишете барем една предност</string>
+    <string name="write_one_con">Напишете барем еден недостаток</string>
+    <string name="write_your_final_verdict">Напишете ја Вашата конечна одлука</string>
+    <string name="review_success">Оцената е успешно доставена!</string>
+    <string name="store_privacy">Приватност на продавницата</string>
+    <string name="public_key">јавен</string>
+    <string name="private_key">приватен</string>
+    <string name="store_username">Корисничко име</string>
+    <string name="store_password">Лозинка</string>
+    <string name="upload_app">Прикачете апликација</string>
+    <string name="create_review">Креирајте оцена</string>
+
+    <string name="asksetadultpinmessage">Дали би сакале да поставите пин за да ја отклучите содржината за возрасни?</string>
+    <string name="setpin">Поставете пин</string>
+    <string name="remove_mature_pin_title">Избришете го пинот на содржината за возрасни</string>
+    <string name="remove_mature_pin_summary">Избришете го пинот потребен за да се отклучи содржината за возрасни</string>
+    <string name="set_mature_pin_title">Поставете пин на содржината за возрасни</string>
+    <string name="set_mature_pin_summary">Поставете пин кој ќе биде потребен за отклучување на содржината за возрасни</string>
+    <string name="settings_title_bar">Подесувања</string>
+    <string name="settings_dwn_network_rules">Опции на мобилната мрежа</string>
+    <string name="setting_sum_icon_download_rules">Дозволете им на иконите да се превземаат преку мобилните конекции на податоци</string>
+    <string name="setting_icon_download_rules">Правила за превземање на икони</string>
+    <string name="setting_wifi">WiFi</string>
+    <string name="setting_mobile">Мобилен 3G/4G</string>
+    <string name="setting_3g">3G</string>
+    <string name="setting_4g">4G</string>
+    <string name="setting_ethernet">Етернет</string>
+    <string name="setting_sum_general_download_rules">Превземајте апликации, апликации по избор на уредникот, најдобри апликации и продавници преку мобилен интернет</string>
+    <string name="setting_general_download_rules">Генерални правила за превземање</string>
+    <string name="setting_hwspecstitle">Хардверски спецификации</string>
+    <string name="setting_hwspecssum">Хардверски информации за Вашиот телефон</string>
+    <string name="setting_appfiltersum">Не ги прикажувај апликациите кои не се компатибилни со овој уред</string>
+    <string name="setting_appfiltertitle">Филтрирајте ги апликациите</string>
+    <string name="setting_dont_show_mature_content">Прикажи содржина за возрасни</string>
+    <string name="setting_mature_filtering">Содржина за возрасни</string>
+    <string name="setting_updates">Надградби</string>
+    <string name="update_all">Надградете сѐ</string>
+    <string name="whats_new">Што е ново?</string>
+    <string name="setting_updates_notification_sum">Прикажете ги известувањата за новите надградби</string>
+    <string name="setting_updates_notification_title">Известување за надградби</string>
+    <string name="setting_auto_update_sum">Овозможете им на апликации автоматска надградба</string>
+    <string name="setting_auto_update_title">Овозможете автоматска надградба</string>
+    <string name="show_all_updates">Не ги прикажувајте надградбите за апликациите со различни потписи</string>
+    <string name="setting_allUpdates_filtering">Филтрирајте ги надградбите</string>
+    <string name="setting_schdwninstallsum">Инсталирајте ги закажаните превземања автоматски кога е присутна WiFi конекција</string>
+    <string name="setting_schdwninstalltitle">Автоматско инсталирање</string>
+    <string name="setting_clear_memory">Испразнете ја меморијата</string>
+    <string name="clearcontent_title">Избришете ги податоците и конфигурациите</string>
+    <string name="settings_maxFileCache_sum">Поставете максимална големина за чување на apk датотеките</string>
+    <string name="settings_maxFileCache_title">Превземете ја кеш датотеката (MB)</string>
+    <string name="change_theme">Променете ја темата</string>
+    <string name="theme">Теми</string>
+    <string name="allow_root">Овозможи инсталација со административни привилегии</string>
+    <string name="disable_social_timeline">Оневозможете социјален времеплов</string>
+    <string name="social_timeline_notifications">Известувања за времепловот</string>
+    <string name="about_us">За нас</string>
+    <string name="restart_aptoide">Ве молиме пуштете ја апликацијата одново за да ја промените темата</string>
+    <string name="setting_sdk_version">SDK Верзија</string>
+    <string name="setting_screen_size">Големина на екранот</string>
+    <string name="setting_esgl_version">ESGL Верзија</string>
+    <string name="screenCode">Код на екран</string>
+    <string name="cpuAbi">CPU</string>
+    <string name="about_site">Веб страна:</string>
+    <string name="about_mail">Контакт:</string>
+    <string name="clear_cache_sucess">Содржината е успешно избришана</string>
+    <string name="clearcontent_sum">Ги брише податоците од SD картичката.</string>
+    <string name="cache_using_X_mb">Користење %s MB</string>
+    <string name="clearcache_sum">Бришење на кеш (икони, слики од екрани) од SD картичката.</string>
+    <string name="clearcontent_sum_jolla">Ги бриши податоците</string>
+    <string name="clearcache_sum_jolla">Бришење на кеш (икони, слики од екран)</string>
+    <string name="drawer_social_media_title">Ајде да останеме поврзани</string>
+    <string name="read_more">Прочитајте повеќе</string>
+    <string name="read_less">Погледнете помалку</string>
+    <string name="flag_this_app_good">Добро</string>
+    <string name="flag_this_app_button_text">Означете ја оваа апликација</string>
+    <string name="appview_rating_card_text">Оцена</string>
+    <string name="flag_this_app_need_licence">Потребна е лиценца</string>
+    <string name="flag_this_app_fake">Лажна</string>
+    <string name="flag_this_app_freeze">Замрзната</string>
+    <string name="flag_this_app_virus">Вирус</string>
+    <string name="appview_recommended_for_you_title">Препорачани за Вас</string>
+    <string name="appview_additional_information_title">Дополнителни информации</string>
+    <string name="appview_comment_reply_button_text">Одговор</string>
+    <string name="appview_header_trusted_text">Доверливи</string>
+    <string name="appview_subscribe_store_button_text">Претплати се?</string>
+    <string name="appview_subscribed_store_button_text">Претплатено</string>
+    <string name="appview_rate_this_app_text">Оцени ја оваа апликација</string>
+    <string name="appview_other_versions_in_others_stores">Други верзии во други продавници</string>
+    <string name="appview_rate_Success">Оценета апликација</string>
+    <string name="ignoreUpdateText">Игнорирајте ја надградбата</string>
+    <string name="noIgnoreUpdateText">Новата верзија на апликацијата не работи на Вашиот уред или недостига некоја функција? Блокирајте ги апликациите од надградување. Одете во јазичето за надградби и долго притиснете на апликацијата на која сакате да ги прекинете надградбите.</string>
+    <string name="createReviewButtonText">Креирај
+\nОцени</string>
+    <string name="navigation_drawer_signup_login">Регистрирајте се или најавете се</string>
+    <string name="active">Активни</string>
+    <string name="completed">Завршено</string>
+    <string name="_downloads"> превземања</string>
+    <string name="no_description">Нема опис</string>
+    <string name="description">Опис</string>
+    <string name="version">Верзија</string>
+    <string name="version_placeholder">Верзија: %s</string>
+
+    <string name="results_subscribed">Претплатени продавници</string>
+    <string name="results_in_store">Резултати од пребарувањето во %s продавница</string>
+    <string name="other_stores">Непретплатени продавници</string>
+    <string name="comments">Коментари</string>
+    <string name="reviews">Оцени</string>
+    <string name="store">Продавница</string>
+    <string name="title_caps">НАСЛОВ</string>
+
+    <string name="unsubscribe_yes_no">Дали сте сигурни дека сакате да се отпишете од претплатата?</string>
+    <string name="unsubscribed_">"Отпишување од претплата "</string>
+    <string name="error_occured_uploading">Прво мора да ја прикачите оваа апликација.</string>
+
+    <string name="update_self_title">Достапна надградба</string>
+    <string name="update_self_msg">Постои нова достапна верзија од %s
+\nДали би сакале да надградите?</string>
+    <string name="retrieving_update">Ажурирање на надградби…</string>
+
+    <string name="menu_search_item_go_to_store">Одете во продавница</string>
+    <string name="srch_hint">Барајте апликации…</string>
+
+    <string name="app_trusted">%s е доверлив</string>
+    <string name="app_warning">Предупредување: %s</string>
+    <string name="scanned_with_av">Скенирани со антивирус:</string>
+    <string name="compared_with_another_marketplace">Споредено со друг Android пазар:</string>
+    <string name="application_signature_analysis">Потпис на апликација спореден со програмерски потпис:</string>
+    <string name="application_signature_matched">Потписот на апликацијата се совпаѓа со потписот на програмерот на апликацијата.</string>
+    <string name="application_signature_not_matched">Потписот на апликацијата не се совпаѓа со потписот на програмерот на апликацијата. Апликацијата е сомнителна.</string>
+    <string name="warning">Предупредување</string>
+    <string name="trusted_app">Доверлива апликација</string>
+    <string name="unknown">Непознат</string>
+
+    <string name="reason_third_party">Проверивме дека потписот на апликацијата се совпаѓа со потписот на Google Play Store, затоа бидете сигурни и уживајте во апликацијата.</string>
+    <string name="reason_scanned">Скенирано со AptoideGuard плус 2 други различни антивирусни програми (Zoner 1.8 и Sophos 3.0).</string>
+    <string name="reason_signature">Криптографскиот потпис гарантира дека датотеката е безбедна за инсталирање и не е менувана на било кој начин.</string>
+    <string name="reason_failed">Потписот на апликацијата не се совпаѓа со потписот на програмерот. Апликацијата може да е променета.</string>
+    <string name="reply_to">Одговори на %s</string>
+    <string name="comment_submitted">Вашиот коментар беше успешно доставен</string>
+    <string name="write_your_comment">Напишете го Вашиот коментар</string>
+    <string name="write_a_comment">Напишете коментар</string>
+    <string name="no_comment_be_the_first">Сеуште нема коментари. Бидете првиот!</string>
+
+    <string name="installapp_alrt">Дали сакате да инсталирате:
+\n\n %s?</string>
+
+    <string name="suggested_app">Предложена апликација</string>
+
+    <string name="abTest1_label_1">Превземете апликација</string>
+    <string name="abTest1_label_2">Инсталирајте</string>
+    <string name="abTest1_label_3">Инсталирајте</string>
+
+
+    <string name="notification_timeline_new_likes">Имате %s допаѓања. Проверете во Социјалниот Времеплов!</string>
+    <string name="notification_timeline_new_comments">Имате %s нови коментари. Погледнете во Социјалниот Времеплов!</string>
+    <string name="notification_timeline_activity">Имате %1$s нови коментари и %2$s допаѓања. Проверете во Социјалниот Времеплов!</string>
+    <string name="notification_social_timeline">Aptoide социјален времеплов. Проверете сега!</string>
+    <string name="notification_timeline_posts">Вашите пријатели инсталираа нови апликации!</string>
+
+    <string name="has_updates">%s достапни се нови надградби!</string>
+    <string name="new_updates">Достапни се %s нови надградби!</string>
+    <string name="one_new_update">Достапна е %s нова надградба!</string>
+    <string name="updates_tab_adapter_uninstalled">Деинсталирани</string>
+    <string name="updatesTabAdapterUninstall">Деинсталирај</string>
+    <string name="flag_good">Добро</string>
+    <string name="flag_license">Потребна е лиценца</string>
+    <string name="flag_fake">Лажна</string>
+    <string name="flag_freeze">Замрзната</string>
+    <string name="flag_virus">Вирус</string>
+    <string name="flag_this_app">Означете ја оваа апликација</string>
+    <string name="flag_added">Знаменцето е додадено</string>
+    <string name="skip">Прескокни</string>
+    <string name="wizard_title_01">Добредојдовте во Aptoide</string>
+    <string name="wizard_description_01">Креирајте бесплатен профил и започнете со креирање на Ваша персонализирана Продавница за Апликации.\n\n Пребарувајте продавници по теми и откријте нови и возбудливи апликации.</string>
+    <string name="wizard_title_02">Зголемена безбедност</string>
+    <string name="wizard_description_02">Барајте доверливи беџеви и безбедно симнувајте апликации.\n\n Имате проблеми со компатибилност? Побарајте претходни верзии од апликациите.</string>
+    <string name="wizard_title_03">Нови членови на нашата фамилија</string>
+    <string name="wizard_subtitle_03_1">Aptoide Lite</string>
+    <string name="wizard_description_03_1">за постари уреди и бавна интернет конекција</string>
+    <string name="wizard_subtitle_03_2">Aptoide ТВ</string>
+    <string name="wizard_description_03_2">оптимизирана Продавница за Апликации за Set top boxes и паметни телевизори</string>
+    <string name="wizard_reviews_title">Оцени</string>
+    <string name="wizard_reviews">Сега можете да започнете со оценување на Вашите апликации со Aptoide!</string>
+    <string name="wizard_new_and_improved">Подобрени перформанси!</string>
+    <string name="wizard_new_and_improved_bullet_1">Заштедува батерија</string>
+    <string name="wizard_new_and_improved_bullet_2">Редуцирана искористеност на процесорот и редуциран опсег</string>
+    <string name="wizard_new_and_improved_bullet_3">Користи помалку ресурси</string>
+    <string name="wizard_new_and_improved_bullet_4">Едноставен кориснички интерфејс</string>
+    <string name="wizard_new_homepage">Нов изглед на почетната страна</string>
+    <string name="wizard_new_top">Ново јазиче за најдобрите</string>
+    <string name="subscribe_apps_official_store">Претплатете се за \'apps\' на Aptoide официјалната продавница за апликации</string>
+    <string name="wizard_next">Следно</string>
+    <string name="wizard_prev">Претходно</string>
+    <string name="search_activity_title">\'%s\'</string>
+
+    <string name="share">Сподели</string>
+    <string name="share_on_timeline">Сподели на времеплов</string>
+
+    <string name="search_for_apps">Барајте апликации…</string>
+    <string name="empty_search">Празно пребарување, внесете име на апликацијата за пребарување</string>
+    <string name="manually_reviewed">Загарантирано Одлична апликација: оваа апликација ги помина безбедносните тестови против вируси и напади и не содржи било какви закани</string>
+
+    <string name="no_apps_found">Не се пронајдени апликации со моменталниот филтер</string>
+    <string name="no_search_results_message">Не се пронајдени резултати за Вашето пребарување.
+\nВе молиме пробајте други клучни зборови.</string>
+
+    <string name="developer">Програмер</string>
+    <string name="website">Веб страна: %s</string>
+    <string name="email">Емаил: %s</string>
+    <string name="privacy_policy">Политика за приватност: %s</string>
+    <string name="dialog_version_size">Верзија: %1$s | Големина: %2$s</string>
+    <string name="na">Недостапно</string>
+    <string name="no_email_and_pass_error_message">Ве молиме внесете емаил и лозинка за да се регистрирате.</string>
+    <string name="no_pass_error_message">Ве молиме внесете лозинка за да се регистрирате.</string>
+    <string name="no_email_error_message">Ве молиме внесете емаил за да се регистрирате.</string>
+    <string name="website_copied">Веб страната е копирана во clipboard</string>
+    <string name="email_copied">Емаил адресата е копирана во clipboard</string>
+    <string name="privacy_copied">Линкот за приватност е копиран во clipboard</string>
+    </resources>

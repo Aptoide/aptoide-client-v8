@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="developer_website">Ağ sitesi: %s</string>
+    <string name="not_available">Mevcut değil</string>
+    <string name="developer_email">E-posta: %s</string>
+    <string name="developer_privacy_policy">Gizlilik Politikası: %s</string>
+
+
+    <string name="open">Aç</string>
+    <string name="button_header_more">dahası</string>
+    <string name="search">Ara</string>
+
+    <string name="update">Güncelle</string>
+    <string name="uninstall">Kaldır</string>
+    <string name="downgrade">Eski sürüme dönüş</string>
+    <string name="menu_select_all">Tümünü seç</string>
+    <string name="menu_select_none">Hiçbirini Seçme</string>
+    <string name="clear">Temizle</string>
+
+    <string name="excluded_updates">Dışlanan güncellemeler</string>
+    <string name="no_excluded_updates_msg">Herhangi bir uygulamanın yeni sürümü cihazınızda çalışmıyor ya da işlev eksikliği mi var? Uygulamaların güncellemesini engelleyin. Güncellemeler sekmesine gidin ve güncellemesini engellemek istediğiniz uygulamaya uzun dokunun.</string>
+
+    <string name="restore_updates">Güncellemeleri geri yükle</string>
+    <string name="rollback">Geri al</string>
+    <string name="menu_card_timeline_clear">Temizle</string>
+    <string name="fragment_social_timeline_no_connection">Hiçbir ağ bağlantısı yok</string>
+    <string name="fragment_social_timeline_general_error">Sorun yaşanmakta. Daha sonra deneyebilir misin?</string>
+
+    <string name="displayable_social_timeline_app_update">Güncelle</string>
+    <string name="appview_rate_this_app">Bu uygulamayı değerlendir</string>
+    <string name="needs_license">Lisans Lazım</string>
+    <string name="virus">Virüs</string>
+    <string name="additional_information">Ek bilgi</string>
+    <string name="displayable_social_timeline_app_update_updated">Güncellenmiş</string>
+    <string name="displayable_social_timeline_recommendation_similar_and">ve</string>
+    <string name="social_facebook_screen_title">Facebook</string>
+    <string name="social_twitter_screen_title">Twitter</string>
+    <string name="title">BAŞLIK</string>
+    <string name="feedback_not_valid">Lütfen geçerli bir Mevzu giriniz!</string>
+    <string name="ignore_update">Güncellemeyi Görmezden Gel</string>
+    <string name="added_to_scheduled">Menü &gt; Planlanan İndirmelere eklendi</string>
+    </resources>

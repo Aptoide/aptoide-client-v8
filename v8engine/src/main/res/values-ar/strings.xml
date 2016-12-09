@@ -1,0 +1,255 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="updates_filter_summary">اذا اخترت هذا، لن يتم إعلامك عن إصدارات بيتا.</string>
+    <string name="updates_filter_setting_title">اظهار التحديثات الصادرة المستقرة للتطبيق فقط</string>
+    <string name="unsubscribe">إلغاء الاشتراك</string>
+    <string name="developer_website">الموقع الإلكتروني: %s</string>
+    <string name="not_available">غير متاح</string>
+    <string name="developer_email">البريد الإلكتروني: %s</string>
+    <string name="developer_privacy_policy">سياسة الخصوصية: %s</string>
+
+
+    <string name="open">فتح</string>
+    <string name="button_header_more">المزيد</string>
+    <string name="search">البحث</string>
+
+    <string name="update">تحديث</string>
+    <string name="uninstall">إلغاء التثبيت</string>
+    <string name="downgrade">الرجوع إلى إصدار أقدم</string>
+    <string name="menu_select_all">إختيار الكل</string>
+    <string name="menu_select_none">عدم التحديد</string>
+    <string name="clear">مسح</string>
+
+    <string name="excluded_updates">التحديثات المستثناة</string>
+    <string name="no_excluded_updates_msg">هل الإصدار الجديد من التطبيق لا يعمل على جهازك أو بعض ميزاته
+مفقودة؟ قم بإيقاف تحديث التطبيقات. اذهب إلى علامة تبويب التحديثات واضغط لفترة طويلة على التطبيق الذي تريد إيقاف
+تحديثه.</string>
+
+    <string name="restore_updates">استعادة التحديثات</string>
+    <string name="rollback">التراجع</string>
+    <string name="menu_card_timeline_clear">مسح</string>
+    <string name="fragment_social_timeline_no_connection">لا يوجد اتصال بالشبكة</string>
+    <string name="fragment_social_timeline_general_error">هنالك بعض المشاكل.هل تستطيع المحاولة لاحقاً؟</string>
+
+    <string name="displayable_social_timeline_app_update">تحديث</string>
+    <string name="appview_rate_this_app">قيِّم هذا التطبيق</string>
+    <string name="needs_license">يحتاج إلى ترخيص</string>
+    <string name="virus">فيروس</string>
+    <string name="additional_information">معلومات إضافية</string>
+    <string name="displayable_social_timeline_app_update_updated">مُحدّث</string>
+    <string name="displayable_social_timeline_recommendation_similar_and">و</string>
+    <string name="social_facebook_screen_title">فيسبوك</string>
+    <string name="social_twitter_screen_title">تويتر</string>
+    <string name="title">العنوان</string>
+    <string name="feedback_not_valid">من فضلك ادخل موضوع صالح!</string>
+    <string name="ignore_update">تجاهل التحديث</string>
+    <string name="added_to_scheduled">تمت الإضافة الى القائمة &gt; التحميلات المجدولة</string>
+    <string name="dialog_install_warning_proceed_button">الاستمرار</string>
+    <string name="dialog_install_warning_search_for_trusted_app_button">البحث عن</string>
+    <string name="dialog_install_warning_trusted_app_button">تطبيق موثوق به</string>
+    <string name="dialog_install_warning_careful_text">كن حذراً إذا اخترت تثبيت هذا التطبيق. من المحتمل أنه قد تم العبث به، أو يحتوي على فيروسات أو برامج ضارة.</string>
+    <string name="dialog_install_warning_credibility_text">قبل الاستمرار، تحقق من مصداقية
+المتجر وتعليقات المستخدمين الآخرين.Aptoide يوصيك دائماً بتثبيت %1$s التطبيقات الموثوق بها فقط.</string>
+    <string name="dialog_install_warning_trusted_version_button">الإصدار الموثوق به</string>
+    <string name="dialog_install_warning_get_trusted_version_button">احصل على</string>
+
+  <string name="dark">داكن</string>
+    <string name="light">فاتح</string>
+
+    <string name="aptoide_email">aptoide@aptoide.com</string>
+    <string name="aptoide_url">http://www.aptoide.com/</string>
+
+    <string name="access_to_get_accounts_rationale">تحتاج إلى السماح بالوصول إلى الحصول على حسابات</string>
+    <string name="appview_follow_store_button_text">قم بمتابعة؟</string>
+    <string name="appview_followers_count_text">%1$s متابع</string>
+    <string name="other_versions_downloads_count_text">%1$s تحميل</string>
+
+    <string name="open_apps_manager">فتح مدير التطبيقات</string>
+
+    <string name="no_rollbacks_msg">قم بإرجاع أي تطبيق إلى الإصدار السابق بسرعة وحل مشكلات عدم التوافق. احتفظ بسجل جميع تطبيقاتك
+ المثبتة (من خلال أبتويد) بما في ذلك الإصدار وتاريخ التثبيت.</string>
+
+    <string name="fragment_social_timeline_aptoide_team">فريق أبتويد</string>
+    <string name="displayable_social_timeline_store_latest_apps_headline">هذا المتجر به تطبيقات جديدة</string>
+    <string name="displayable_social_timeline_app_update_name">تطبيق %1$s</string>
+    <string name="displayable_social_timeline_app_has_update">به %1$s</string>
+    <string name="displayable_social_timeline_article_get_app_button">احصل على تطبيق %1$s</string>
+    <string name="displayable_social_timeline_app_update_version">الإصدار %1$s</string>
+    <string name="displayable_social_timeline_app_update_button">تحديث %1$s</string>
+    <string name="appview_other_versions"><u>إصدارات أخرى</u></string>
+    <string name="appview_latest_version_text">الإصدار الأخير</string>
+    <string name="appview_read_all">قراءة الكل &gt;</string>
+    <string name="zero">0</string>
+    <string name="working_well">يعمل جيداً</string>
+    <string name="fake_app">تطبيق وهمي</string>
+    <string name="displayable_social_timeline_app_update_updating">جاري التحديث</string>
+    <string name="displayable_social_timeline_app_update_error">خطأ في التحديث</string>
+
+    <string name="other_versions_partial_title_1">أخرى</string>
+    <string name="other_versions_partial_title_2">إصدارات في متاجر أخرى</string>
+    <string name="displayable_social_timeline_recommendation_similar_to">قائم على %1$s</string>
+    <string name="displayable_social_timeline_recommendation_atptoide_team_recommends">Aptoide يوصي</string>
+    <string name="top_comments">أعلى تعليقات</string>
+    <string name="rate">تقييم</string>
+    <string name="rate_app">تقييم %s</string>
+    <string name="tap_a_star">انقر على النجمة للتقييم</string>
+    <string name="other_versions_on_different_stores">إصدارات أخرى في متاخر أخرى</string>
+    <string name="review_optional">تعليق (اختياري)</string>
+    <string name="thank_you_for_your_opinion">شكراً لك على إبداء رأيك!</string>
+    <string name="five_numeric">5</string>
+    <string name="four_numeric">4</string>
+    <string name="three_numeric">3</string>
+    <string name="two_numeric">2</string>
+    <string name="one_numeric">1</string>
+    <string name="just_reviews">تعليقات فقط</string>
+    <string name="downgrading_msg">خفض الإصدار</string>
+    <string name="updating_msg">جاري التحديث</string>
+    <string name="installing_msg">جاري التثبيت</string>
+    <string name="needs_permission_to_fs">بحاجة إلى تصريح باستخدام نظام ملفات خارجي</string>
+
+    <string name="pause_all_downloads">إيقاف التحميلات</string>
+    <string name="all_stores">جميع المتاجر</string>
+    <string name="followed_stores">المتاجر المتبعة</string>
+    <string name="storage_access_permission_request_message">يرجى السماح بالوصول إلى موقع التخزين بهاتفك حتى يمكننا تحميل وتثبيت هذا التطبيق.</string>
+
+    <string name="wizard_skip"><b>تخطي</b></string>
+    <string name="wizard_welcome_message"><b>مرحباً</b></string>
+    <string name="wizard_sub_title_viewpager_one">ابدأ رحلة <b>آمنة</b>و <b>ممتعة</b>.</string>
+    <string name="wizard_description_part_one_viewpager_one"><b>ابحث عن</b>تطبيقات بها
+علامة الموثوقية من أجل 
+تثبيت آمن.</string>
+    <string name="wizard_description_part_two_viewpager_one"><b>اكتشف</b> التطبيقات التي
+ترغب بها، ولكن
+لم تجدها.</string>
+
+    <string name="wizard_title_viewpager_two"><b>تغذية التطبيقات</b></string>
+    <string name="wizard_sub_title_viewpager_two">احصل على <b>أحدث التطبيقات</b>، اعثر على <b>متاجر مواضيعية</b>
+وادخل على <b>محتوى مخصص.</b></string>
+
+    <string name="wizard_title_viewpager_three"><b>انضم إلى المجتمع</b></string>
+    <string name="wizard_description_part_one_viewpager_three"><b>اتبع</b>أصدقاءك</string>
+    <string name="wizard_description_part_two_viewpager_three"><b>قم بعمل تعليق</b>وتقييم للتطبيقات</string>
+    <string name="wizard_description_part_three_viewpager_three"><b>قم بإنشاء</b>متجرك</string>
+    <string name="wizard_register_now_button">اشترك الأن</string>
+    <string name="wizard_be_a_part_of_aptoide">كن جزءاً من أبتويد!</string>
+    <string name="wizard_or_login"><u>أو سجل الدخول</u></string>
+
+    <string name="you_need_to_be_logged_in">يجب عليك تسجيل الدخول</string>
+    <string name="follow">اتبع</string>
+    <string name="followed">تتابع</string>
+    
+    <string name="appview_good_app_guaranteed">تطبيق جيد مضمون!</string>
+    <string name="appview_good_app_description">"هذا التطبيق اجتاز اختبار الأمن للبرامج الضارة والفيروسات وغيرها من الهجمات الخبيثة ولا
+  يحتوي على أي تهديدات!"</string>
+
+    <string name="unfollow_yes_no">هل أنت متأكد من أنك تريد الغاء المتابعة؟</string>
+    <string name="unfollow">الغاء المتابعة</string>
+    <string name="unfollowing_store_message">الغيت متابعة s%</string>
+    <string name="store_followed">تم متابعة المتجر s%</string>
+
+    <string name="be_the_first_to_rate_this_app">كن الأول لتقييم هذا التطبيق</string>
+    <string name="rate_this_app">اعطاء تقييم لهذا التطبيق</string>
+
+    <string name="flag_results">وضع اشارة للنتائج</string>
+    <string name="helpful">مفيدة</string>
+    <string name="not_helpful">غير مفيدة</string>
+    <string name="description_not_available">لا يوجد وصف متاح لهذا التطبيق</string>
+    <string name="top_stores_fragment_title">المتاجر الافضل</string>
+
+    <string name="home_title">الصفحة الرئيسية</string>
+    <string name="community">المجتمع</string>
+    <string name="stores">المتاجر</string>
+    <string name="updates">التحديثات</string>
+    <string name="social_timeline">صفحة اليوميات الإجتماعية</string>
+    <string name="downloads">التحميلات</string>
+    <string name="latest_reviews">أحدث المراجعات</string>
+    <string name="latest_comments">أحدث التعليقات</string>
+    <string name="action">الأكشن</string>
+    <string name="adventure">المغامرة</string>
+    <string name="all">الكل</string>
+    <string name="applications">تطبيقات</string>
+    <string name="arcade">الأركيد</string>
+    <string name="arcade_action">الأركيد والأكشن</string>
+    <string name="board">ألعاب الطاولة</string>
+    <string name="books_reference">الكتب والمراجع</string>
+    <string name="brain_puzzle">العقل والألغاز</string>
+    <string name="business">الأعمال</string>
+    <string name="card">الورق</string>
+    <string name="cards_casino">الورق والكازينو</string>
+    <string name="casino">الكازينو</string>
+    <string name="casual">العادية</string>
+    <string name="comics">المجلات الهزلية</string>
+    <string name="communication">الاتصالات</string>
+    <string name="demo">النسخ التجريبية</string>
+    <string name="education">التعليم</string>
+    <string name="educational">التعليمية</string>
+    <string name="entertainment">الترفيه</string>
+    <string name="family">الأسرة</string>
+    <string name="finance">التمويل</string>
+    <string name="games">الألعاب</string>
+    <string name="health">الصحة</string>
+    <string name="health_fitness">الصحة واللياقة</string>
+    <string name="highlighted">البارزة</string>
+    <string name="local_top_apps">التطبيقات المحلية الافضل</string>
+    <string name="lifestyle">أسلوب الحياة</string>
+    <string name="media_video">الوسائط والفيديو</string>
+    <string name="medical">طب</string>
+    <string name="multimedia">الوسائط المتعددة</string>
+    <string name="music">الموسيقى</string>
+    <string name="music_audio">الموسيقى والصوت</string>
+    <string name="news_magazines">الأخبار والمجلات</string>
+    <string name="news_weather">الأخبار والطقس</string>
+    <string name="personalization">التخصيص</string>
+    <string name="photography">التصوير</string>
+    <string name="productivity">الإنتاجية</string>
+    <string name="puzzle">الألغاز</string>
+    <string name="racing">السباقات</string>
+    <string name="reference">المرجع</string>
+    <string name="role_playing">لعب الأدوار</string>
+    <string name="simulation">المحاكاة</string>
+    <string name="social">الإجتماعية</string>
+    <string name="software_libraries">مكتبات البرامج</string>
+    <string name="sports">الرياضة</string>
+    <string name="sports_games">الألعاب الرياضية</string>
+    <string name="strategy">الاستراتيجية</string>
+    <string name="themes">المواضيع</string>
+    <string name="tools">الأدوات</string>
+    <string name="top_apps">التطبيقات الافضل</string>
+    <string name="top_games">الألعاب الافضل</string>
+    <string name="transport">النقل</string>
+    <string name="transportation">النقليات</string>
+    <string name="travel">السفر</string>
+    <string name="travel_local">السفر والمحليات</string>
+    <string name="trending">الرائجة</string>
+    <string name="trivia">التوافه</string>
+    <string name="word">الكلمات</string>
+    <string name="libraries_demo">المكتبات والنسخ التجريبية</string>
+    <string name="shopping">التسوق</string>
+    <string name="weather">الطقس</string>
+    <string name="latest_applications">أحدث التطبيقات</string>
+    <string name="top_apps_in_store">التطبيقات الافضل في هذا المتجر</string>
+    <string name="apps_for_kids">تطبيقات للأطفال</string>
+    <string name="aptoide_publishers">ناشرين Aptoide</string>
+    <string name="music_video">الموسيقى والفيديو</string>
+    <string name="essential_apps">تطبيقات أساسية</string>
+    <string name="summer_apps">تطبيقات صيفية</string>
+    <string name="play_it">العبها!</string>
+
+<string name="subscribers">المشتركون</string>
+  <string name="apps">التطبيقات</string>
+
+  <string name="apps_timeline"><b>تغذية التطبيقات</b></string>
+  <string name="displayable_social_timeline_article_related_to">متعلق بـ %1$s</string>
+  <string name="appstimeline_update_app">تطبيق</string>
+  <string name="customtabs_open_native_app">افتح في التطبيق</string>
+
+
+  <string name="fragment_download_no_connection">لم يتم تحميل تطبيقات</string>
+  <string name="fragment_download_no_connection_subtitle">التطبيقات الجديدة سوف تظهر هنا بمجرد أن تبدأ في تحميلها!</string>
+  <string name="newer_version_available">إصدار جديد متاح</string>
+
+  <string name="add_store">إضافة متجر</string>
+  <string name="downgrade_warning_dialog">عند إرجاع التطبيق إلى إصدار سابق فقد تفقد البيانات المتعلقة بالتطبيق وقد يتم تسجيل خروجك من حساب التطبيق.</string>
+
+  <string name="displayable_social_timeline_similar_to">يشبه %1$s</string>
+
+</resources>

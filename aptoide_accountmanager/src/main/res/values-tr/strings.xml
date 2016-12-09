@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="one_account_allowed">Sadece tek bir hesaba izin verilir</string>
+    <string name="username">E-posta</string>
+    <string name="password">Parola</string>
+    <string name="link_device_webinstall">Hesabı Webinstall ile ilişkilendir</string>
+    <string name="register">Kayıt ol</string>
+    <string name="forgot_passwd">Parolanızı unuttunuz mu?</string>
+    <string name="fields_cannot_empty">Lütfen e-postanızı ve parolanızı kontrol ediniz.</string>
+    <string name="no_email_and_pass_error_message">"Lütfen kayıt olmak için e-posta ve şifre giriniz.
+ "</string>
+    <string name="no_pass_error_message">Lütfen kayıt olmak için şifre giriniz.</string>
+    <string name="no_email_error_message">Lütfen kayıt olmak için bir e-posta giriniz.</string>
+    <string name="password_validation_text">"Parolanın asgari 8 karakter içermesi ve en az bir sayı veya özel karakter içermesi gerekmektedir (!@#$%*) "</string>
+    <string name="logged_as">Şu hesapla giriş yaptınız:</string>
+    <string name="sign_out">Çıkış</string>
+    <string name="error_occured">Bir hata meydana geldi, tekrar deneyiniz</string>
+    <string name="ws_error_AUTH_2">Geçersiz kimlik verileri!</string>
+    <string name="ws_error_AUTH_101">Google ile giriş yapılamadı. Lütfen tekrar deneyiniz.</string>
+    <string name="ws_error_AUTH_103">Facebook ile giriş yapılamadı. Lütfen tekrar deneyiniz.</string>
+    <string name="ws_error_MARG_12">Eksik hmac parametresi</string>
+    <string name="ws_error_MARG_109">Eksik e-posta parametresi</string>
+    <string name="ws_error_MARG_110">Eksik parola hash parametresi</string>
+    <string name="ws_error_MARG_111">Eksik isim parametresi</string>
+    <string name="ws_error_MARG_112">Eksik kullanıcı aracısı parametresi</string>
+    <string name="ws_error_IARG_5">Geçersiz hmac formatı</string>
+    <string name="ws_error_IARG_106">E-posta adresi geçerli değil</string>
+    <string name="ws_error_REPO_7">Bu kullanıcının zaten geçerli bir deposu var.</string>
+    <string name="ws_error_WOP_11">Mağaza oluşturulamadı. Lütfen tekrar deneyiniz.</string>
+    <string name="or">veya</string>
+    </resources>

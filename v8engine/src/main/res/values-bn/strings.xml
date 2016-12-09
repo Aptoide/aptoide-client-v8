@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="open">"খোলো "</string>
+    <string name="button_header_more">"আরও "</string>
+    <string name="search">অনুসন্ধান</string>
+
+    <string name="update">আপডেট</string>
+    <string name="uninstall">আনইনস্টল</string>
+    <string name="downgrade">ডাউনগ্রেড</string>
+    <string name="menu_select_all">সব নির্বাচন করুন</string>
+    <string name="clear">"পরিষ্কার করুন "</string>
+
+    <string name="excluded_updates">" বাদ দেওয়া আপডেট "</string>
+    <string name="restore_updates">"আপডেট পুনরুদ্ধার করুন "</string>
+    <string name="rollback">রোলব্যাক</string>
+    <string name="menu_card_timeline_clear">"পরিষ্কার করুন "</string>
+    <string name="fragment_social_timeline_general_error">"আরও সমস্যা দেখা দিয়েছে? আপনি কি কিছুক্ষণ পর আবার চেষ্টা করে দেখবেন? "</string>
+
+    <string name="displayable_social_timeline_app_update">আপডেট</string>
+    <string name="appview_rate_this_app">"এই অ্যাপটি রেট করুন "</string>
+    <string name="virus">ভাইরাস</string>
+    <string name="displayable_social_timeline_app_update_updated">আপডেট করা হয়েছে</string>
+    <string name="displayable_social_timeline_recommendation_similar_and">এবং</string>
+    <string name="feedback_not_valid">অনুগ্রহ করে কিছু বৈধ বিষয় লিখুন!</string>
+    <string name="ignore_update">"আপডেট অগ্রাহ্য করুন "</string>
+    <string name="zero">০</string>
+  <string name="updates">আপডেট সমূহ</string>
+  </resources>

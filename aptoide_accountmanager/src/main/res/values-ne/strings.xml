@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="ws_error_MARG_12">“hmac” प्यारामीटर हराएको छ</string>
+    <string name="ws_error_MARG_109">इमेल प्यारामीटर हराएको छ</string>
+    <string name="ws_error_MARG_110">“passhash” प्यारामीटर हराएको छ</string>
+    <string name="ws_error_MARG_111">नाम प्यारामीटर हराएको छ</string>
+    <string name="ws_error_MARG_112">युजर्-एजेन्ट प्यारामीटर हराएको छ</string>
+    <string name="ws_error_IARG_5">“hmac” को आकार वा स्वरुप गलत छ</string>
+    <string name="ws_error_IARG_106">इमेल एड्रेस गलत छ</string>
+    </resources>

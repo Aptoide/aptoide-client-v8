@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="developer_website">Site: %s</string>
+    <string name="not_available">N/A</string>
+    <string name="developer_email">E-mail: %s</string>
+    <string name="developer_privacy_policy">Politică de confidențialitate: %s</string>
+
+
+    <string name="open">Deschide</string>
+    <string name="button_header_more">mai mult</string>
+    <string name="search">Căutare</string>
+
+    <string name="update">Actualizare</string>
+    <string name="uninstall">Dezinstalare</string>
+    <string name="downgrade">Retrogradare</string>
+    <string name="menu_select_all">Selectează toate</string>
+    <string name="menu_select_none">Nu selecta niciuna</string>
+    <string name="clear">Golire</string>
+
+    <string name="excluded_updates">Actualizări excluse</string>
+    <string name="no_excluded_updates_msg">Noua versiune a unei aplicații nu funcționează pe dispozitivul dvs. sau lipsește vreo caracteristică? Blocați aplicațiile pentru a nu se mai actualiza. Mergeți la Actualizări și apăsați îndelung pe aplicația care doriți să nu se mai actualizeze.</string>
+
+    <string name="restore_updates">Restaurează actualizări</string>
+    <string name="rollback">Revenire la versiunea anterioară</string>
+    <string name="menu_card_timeline_clear">Golire</string>
+    <string name="fragment_social_timeline_no_connection">Fără conexiune de rețea</string>
+    <string name="fragment_social_timeline_general_error">Avem niște probleme. Puteți încerca din nou, mai târziu?</string>
+
+    <string name="displayable_social_timeline_app_update">Actualizare</string>
+    <string name="appview_rate_this_app">Evaluați această aplicație</string>
+    <string name="needs_license">Are nevoie de licență</string>
+    <string name="virus">Virus</string>
+    <string name="additional_information">Informații suplimentare</string>
+    <string name="displayable_social_timeline_app_update_updated">Actualizat</string>
+    <string name="displayable_social_timeline_recommendation_similar_and">și</string>
+    <string name="social_facebook_screen_title">Facebook</string>
+    <string name="social_twitter_screen_title">Twitter</string>
+    <string name="title">TITLU</string>
+    <string name="feedback_not_valid">Vă rugăm introduceți un Subiect valid!</string>
+    <string name="ignore_update">Ignoră actualizare</string>
+    <string name="added_to_scheduled">Adăugat la Menu &gt; Descărcări programate</string>
+    </resources>

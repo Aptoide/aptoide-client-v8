@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="please_wait">Vă rugăm așteptați…</string>
+
+    <string name="WidgetProvider_timestamp_today">Azi</string>
+    <string name="WidgetProvider_timestamp_yesterday">Ieri</string>
+    <string name="WidgetProvider_timestamp_hour_ago">%s oră în urmă</string>
+    <string name="WidgetProvider_timestamp_hours_ago">Cu %s ore în urmă</string>
+    <string name="WidgetProvider_timestamp_minutes_ago">Cu %s minute în urmă</string>
+    <string name="WidgetProvider_timestamp_just_now">Chiar acum</string>
+    <string name="WidgetProvider_timestamp_weeks_ago">Cu %s săptămâni în urmă</string>
+    <string name="WidgetProvider_timestamp_week_ago2">Cu 1 săptămână în urmă</string>
+    <string name="WidgetProvider_timestamp_days_ago">Cu %s zile în urmă</string>
+    <string name="WidgetProvider_timestamp_month_ago">Cu 1 lună în urmă</string>
+    <string name="WidgetProvider_timestamp_months_ago">Cu %s luni în urmă</string>
+    <string name="WidgetProvider_timestamp_year_ago">Cu 1 an în urmă</string>
+    <string name="WidgetProvider_timestamp_years_ago">Cu %s ani în urmă</string>
+
+</resources>

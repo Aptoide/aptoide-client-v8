@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="one_account_allowed">"মাত্র একটি অ্যাকাউন্টের অনুমতি আছে "</string>
+    <string name="username">ই-মেইল</string>
+    <string name="password">পাসওয়ার্ড</string>
+    <string name="link_device_webinstall">"ওয়েবইন্সটলের সাথে  অ্যাকাউন্ট লিংক করুন "</string>
+    <string name="register">সাইন আপ</string>
+    <string name="forgot_passwd">পাসওয়ার্ড ভুলে গেছেন?</string>
+    <string name="fields_cannot_empty">" অনুগ্রহ করে আপনার ই-মেইল এবং পাসওয়ার্ড চেক করুন। "</string>
+    <string name="logged_as">"আপনি লগইন করেছেনঃ "</string>
+    <string name="sign_out">সাইন আউট</string>
+    <string name="error_occured">"একটি সমস্যা দেখা দিয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।  "</string>
+    <string name="ws_error_AUTH_2">"অবৈধ ক্রেডেনশিয়ালস! "</string>
+    <string name="ws_error_AUTH_101">"গুগল দিয়ে লগইন করা যাচ্ছে না। অনুগ্রহ করে আবার চেষ্টা করুন। "</string>
+    <string name="ws_error_AUTH_103">"ফেসবুক দিয়ে লগইন করা যাচ্ছে না। অনুগ্রহ করে আবার চেষ্টা করুন। "</string>
+    <string name="ws_error_MARG_12">"এইচম্যাক প্যারামিটার পাওয়া যাচ্ছে না   "</string>
+    <string name="ws_error_MARG_109">"ই-মেইল প্যারামিটার পাওয়া যাচ্ছে না  "</string>
+    <string name="ws_error_MARG_110">পাসহ্যাশ প্যারামিটার পাওয়া যাচ্ছে না</string>
+    <string name="ws_error_MARG_111">নাম প্যারামিটার পাওয়া যাচ্ছে না</string>
+    <string name="ws_error_MARG_112">ইউজার- এজেন্ট প্যারামিটার পাওয়া যাচ্ছে না</string>
+    <string name="ws_error_IARG_5">"অবৈধ এইচম্যাক ফরম্যাট "</string>
+    <string name="ws_error_IARG_106">"এই ই-মেইম ঠিকানাটি  বৈধ নয় "</string>
+    <string name="ws_error_WOP_11">"ষ্টোর তৈরি করা যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন। "</string>
+    </resources>

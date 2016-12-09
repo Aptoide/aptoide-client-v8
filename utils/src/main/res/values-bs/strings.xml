@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="please_wait">Molimo pričekajte...</string>
+
+    <string name="WidgetProvider_timestamp_today">Danas</string>
+    <string name="WidgetProvider_timestamp_yesterday">Jučer</string>
+    <string name="WidgetProvider_timestamp_hour_ago">prije %s sata</string>
+    <string name="WidgetProvider_timestamp_hours_ago">prije %s sati</string>
+    <string name="WidgetProvider_timestamp_minutes_ago">prije %s minuta</string>
+    <string name="WidgetProvider_timestamp_just_now">Upravo</string>
+    <string name="WidgetProvider_timestamp_weeks_ago">prije %s sedmica</string>
+    </resources>

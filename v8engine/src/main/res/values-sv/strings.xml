@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="developer_website">Webbplats: %s</string>
+    <string name="not_available">Inte tillgänglig</string>
+    <string name="developer_email">E-post: %s</string>
+    <string name="developer_privacy_policy">Sekretesspolicy: %s</string>
+
+
+    <string name="open">Öppna</string>
+    <string name="button_header_more">mer</string>
+    <string name="search">Sök</string>
+
+    <string name="update">Uppdatera</string>
+    <string name="uninstall">Avinstallera</string>
+    <string name="downgrade">Nedgradera</string>
+    <string name="menu_select_all">Välj alla</string>
+    <string name="menu_select_none">Välj inget</string>
+    <string name="clear">Rensa</string>
+
+    <string name="excluded_updates">Exkluderade uppdateringar</string>
+    <string name="no_excluded_updates_msg">Den nya versionen av en app fungerar inte på enheten eller någon funktion saknas. Blockera appar från uppdatering. Gå till \'Updates\'-fliken och tryck länge på appen som du vill stoppa från att uppdateras.</string>
+
+    <string name="restore_updates">Återställ uppdateringar</string>
+    <string name="rollback">Återgång</string>
+    <string name="menu_card_timeline_clear">Rensa</string>
+    <string name="fragment_social_timeline_no_connection">Ingen nätverksanslutning</string>
+    <string name="fragment_social_timeline_general_error">Har lite problem. Kan du försöka igen senare?</string>
+
+    <string name="displayable_social_timeline_app_update">Uppdatera</string>
+    <string name="appview_rate_this_app">Betygsätt den här appen</string>
+    <string name="needs_license">Behöver licens</string>
+    <string name="virus">Virus</string>
+    <string name="additional_information">Ytterligare information</string>
+    <string name="displayable_social_timeline_app_update_updated">Uppdaterad</string>
+    <string name="displayable_social_timeline_recommendation_similar_and">och</string>
+    <string name="social_facebook_screen_title">Facebook</string>
+    <string name="social_twitter_screen_title">Twitter</string>
+    <string name="title">TITEL</string>
+    <string name="feedback_not_valid">Ange ett giltigt Ämne!</string>
+    <string name="ignore_update">Ignorera uppdatering</string>
+    <string name="added_to_scheduled">Lades till i Meny &gt; Schemalagda nedladdningar</string>
+    </resources>

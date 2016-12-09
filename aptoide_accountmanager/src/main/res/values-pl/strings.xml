@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="one_account_allowed">Możesz mieć tylko jedno konto</string>
+    <string name="username">Email</string>
+    <string name="password">Hasło</string>
+    <string name="link_device_webinstall">Połacz konto z Webinstall</string>
+    <string name="register">Zarejestruj</string>
+    <string name="forgot_passwd">Zapomniałeś hasła?</string>
+    <string name="fields_cannot_empty">Prosimy sprawdzić e-mail i hasło.</string>
+    <string name="no_email_and_pass_error_message">"Aby się zarejestrować, wprowadź 
+ email i hasło.
+ "</string>
+    <string name="no_pass_error_message">Aby się zarejestrować, wprowadź hasło.</string>
+    <string name="no_email_error_message">Aby się zarejestrować, wprowadź email.</string>
+    <string name="password_validation_text">"Hasło musi mieć przynajmniej 8 znaków i powinno składać się
+ z przynajmniej jednej litery, jednej cyfry lub znaków specjalnych (!@#$%*)
+ "</string>
+    <string name="logged_as">Zalogowany jako:</string>
+    <string name="sign_out">Wyloguj się</string>
+    <string name="error_occured">Wystąpił błąd. Spróbuj ponownie</string>
+    <string name="ws_error_AUTH_2">Nieprawidłowe referencje!</string>
+    <string name="ws_error_AUTH_101">Nie można połączyć się z Google. Proszę spróbować ponownie.</string>
+    <string name="ws_error_AUTH_103">Nie można połączyć się z Facebook. Proszę spróbować ponownie.</string>
+    <string name="ws_error_MARG_12">Brakujący parametr hmac</string>
+    <string name="ws_error_MARG_109">Brakujący parametr email</string>
+    <string name="ws_error_MARG_110">Brakujący parametr passhash</string>
+    <string name="ws_error_MARG_111">Brakujący parametr name</string>
+    <string name="ws_error_MARG_112">Brakujący parametr user-agent</string>
+    <string name="ws_error_IARG_5">Błędny format hmac</string>
+    <string name="ws_error_IARG_106">Adres e-mail nie jest poprawny</string>
+    <string name="ws_error_REPO_7">Ten użytkownik posiada już ważne repo.</string>
+    <string name="ws_error_WOP_11">Sklep nie może zostać utworzony. Proszę spróbować ponownie.</string>
+    <string name="or">lub</string>
+  <string name="unknown_error">Nieznany błąd</string>
+    <string name="accept_terms">"Rejestrując się, wyrażasz zgodę na Warunki świadczenia usług Aptoide
+ oraz Politykę zawartości dla Deweloperów
+ "</string>
+    <string name="error_invalid_grant">Błędna kombinacja nazwy użytkownika i hasła</string>
+  </resources>

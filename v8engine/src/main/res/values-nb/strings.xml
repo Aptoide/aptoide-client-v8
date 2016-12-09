@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="developer_website">Nettside: %s</string>
+    <string name="not_available">N/A</string>
+    <string name="developer_email">E-post: %s</string>
+    <string name="developer_privacy_policy">Personvern policy: %s</string>
+
+
+    <string name="open">Åpne</string>
+    <string name="button_header_more">mer</string>
+    <string name="search">Søk</string>
+
+    <string name="update">Oppdater</string>
+    <string name="uninstall">Avinstaller</string>
+    <string name="downgrade">Nedgrader</string>
+    <string name="menu_select_all">Velg alle</string>
+    <string name="menu_select_none">Velg ingen</string>
+    <string name="clear">Klarer</string>
+
+    <string name="excluded_updates">Ekskluderte oppdateringer</string>
+    <string name="no_excluded_updates_msg">Den nye versjonen av en app fungerer ikke på din app, eller en funksjon mangler? Blokker apper fra å oppdatere. Gå til Oppdaterings-fanen og trykk og hold inne på appen du ønsker å avbryte oppdateringer på.</string>
+
+    <string name="restore_updates">Gjenopprett oppdateringer</string>
+    <string name="rollback">Rollback</string>
+    <string name="menu_card_timeline_clear">Klarer</string>
+    <string name="fragment_social_timeline_no_connection">Ingen nettverkstilkobling</string>
+    <string name="fragment_social_timeline_general_error">Vi har problemer. Kan du prøve igjen senere?</string>
+
+    <string name="displayable_social_timeline_app_update">Oppdater</string>
+    <string name="appview_rate_this_app">Vurder denne appen</string>
+    <string name="needs_license">Trenger lisens</string>
+    <string name="virus">Virus</string>
+    <string name="additional_information">Ekstra informasjon</string>
+    <string name="displayable_social_timeline_app_update_updated">Oppdatert</string>
+    <string name="displayable_social_timeline_recommendation_similar_and">og</string>
+    <string name="social_facebook_screen_title">Facebook</string>
+    <string name="social_twitter_screen_title">Twitter</string>
+    <string name="title">TITTEL</string>
+    <string name="feedback_not_valid">Vennligst skriv inn et gyldig emne!</string>
+    <string name="ignore_update">Ignorer oppdatering</string>
+    <string name="added_to_scheduled">Lagt til i Meny &gt; Satt opp nedlastninger</string>
+    </resources>

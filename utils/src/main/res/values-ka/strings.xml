@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="please_wait">გთხოვთ დაელოდეთ…</string>
+
+    <string name="WidgetProvider_timestamp_today">დღეს</string>
+    <string name="WidgetProvider_timestamp_yesterday">გუშინ</string>
+    <string name="WidgetProvider_timestamp_hour_ago">%s საათის წინ</string>
+    <string name="WidgetProvider_timestamp_hours_ago">%s საათის წინ</string>
+    <string name="WidgetProvider_timestamp_minutes_ago">%s წუთის წინ</string>
+    <string name="WidgetProvider_timestamp_just_now">ახლახანს</string>
+    <string name="WidgetProvider_timestamp_weeks_ago">%s კვირის წინ</string>
+    <string name="WidgetProvider_timestamp_week_ago2">1 კვირის წინ</string>
+    <string name="WidgetProvider_timestamp_days_ago">%s დღის წინ</string>
+    <string name="WidgetProvider_timestamp_month_ago">1 თვის წინ</string>
+    <string name="WidgetProvider_timestamp_months_ago">%s თვის წინ</string>
+    <string name="WidgetProvider_timestamp_year_ago">1 წლის წინ</string>
+    <string name="WidgetProvider_timestamp_years_ago">%s წლის წინ</string>
+
+<string name="continue_option">გაგრძელება</string>
+
+  </resources>

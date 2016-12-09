@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="error_MARG_1">Tienda no encontrada</string>
+  <string name="error_MARG_2">Información de la aplicación no encontrada</string>
+  <string name="error_MARG_3">Versión de aplicación no encontrada</string>
+  <string name="error_MARG_4">Error en el inicio de sesión</string>
+  <string name="error_MARG_5">Aplicación no encontrada</string>
+  </resources>

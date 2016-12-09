@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="one_account_allowed">Разрешен только один аккаунт</string>
+    <string name="username">Электронная почта</string>
+    <string name="password">Пароль</string>
+    <string name="link_device_webinstall">Связать аккаунт с Webinstall</string>
+    <string name="register">Авторизация</string>
+    <string name="forgot_passwd">Забыли пароль?</string>
+    <string name="fields_cannot_empty">Пожалуйста, проверьте свой email и пароль.</string>
+    <string name="password_validation_text">"Пароль должен быть не менее 8 символов и должен включать в себя
+ как минимум одну букву, один номер или специальный символ (!@#$%*)
+ "</string>
+    <string name="logged_as">Вы вошли как:</string>
+    <string name="sign_out">Выйти</string>
+    <string name="error_occured">Произошла ошибка. Пожалуйста, попробуйте еще раз</string>
+    <string name="ws_error_AUTH_2">Неверные учетные данные!</string>
+    <string name="ws_error_AUTH_101">Не удалось войти в систему с помощью Google. Пожалуйста, попробуйте еще раз.</string>
+    <string name="ws_error_AUTH_103">Не удалось войти в систему с Facebook. Пожалуйста, попробуйте еще раз.</string>
+    <string name="ws_error_MARG_12">Отсутствует hmac параметр</string>
+    <string name="ws_error_MARG_109">Отсутствует параметр электронной почты</string>
+    <string name="ws_error_MARG_110">Отсутствует параметр passhash</string>
+    <string name="ws_error_MARG_111">Отсутствует параметр имени</string>
+    <string name="ws_error_MARG_112">Отсутствует параметр агента пользователя</string>
+    <string name="ws_error_IARG_5">Неверный формат hmac</string>
+    <string name="ws_error_IARG_106">Адрес электронной почты не действителен</string>
+    <string name="ws_error_WOP_11">Магазин не может быть создан. Пожалуйста, попробуйте еще раз.</string>
+    <string name="or">или</string>
+    <string name="unknown_error">Неизвестная ошибка</string>
+    <string name="accept_terms">"При регистрации вы соглашаетесь с условиями использования Aptoide и
+ политикой контента для разработчиков
+ "</string>
+    <string name="no_email_and_pass_error_message">"Пожалуйста введите email и пароль, чтобы
+ зарегистрироваться.
+ "</string>
+    <string name="no_pass_error_message">Пожалуйста, введите пароль, чтобы зарегистрироваться.</string>
+    <string name="no_email_error_message">Чтобы зарегистрироваться, введите email.</string>
+    <string name="default_account_type">cm.aptoide.pt</string>
+
+    <string name="facebook_garant_permission_button">Разрешить</string>
+    <string name="facebook_email_permission_regected_message">"Aptoide нужен ваш email, чтобы создать
+ учетную запись
+ "</string>
+    <string name="error_invalid_grant">Неверная комбинация имени пользователя и пароля</string>
+    <string name="ws_error_MARG_200">\@строка/возникла_ошибка</string>
+    <string name="ws_error_MARG_203">\@строка/возникла_ошибка</string>
+    <string name="ws_error_MARG_204">\@строка/возникла_ошибка</string>
+    <string name="ws_error_IARG_200">\@строка/возникла_ошибка</string>
+    <string name="ws_error_AUTH_7">\@строка/возникла_ошибка</string>
+    <string name="ws_error_AUTH_100">Не удалось авторизоваться с аккаунта Google. Пожалуйста, проверьте Ваш аккаунт (возможно, необходимо подтвердить ваш email )</string>
+    <string name="ws_error_AUTH_102">Не удалось авторизоваться с Facebook. Пожалуйста, проверьте Ваш аккаунт (возможно, необходимо подтвердить ваш email )</string>
+    <string name="ws_error_invalid_grant">Неверная комбинация имени пользователя и пароля</string>
+    <string name="ws_error_IARG_111">Неверный формат passhash</string>
+    <string name="ws_error_REPO_4">Недопустимое имя магазина, вы можете использовать только буквы, цифры или
+ подчеркивание.</string>
+    <string name="ws_error_REPO_7">У данного пользователя уже есть действительный репозиторий.</string>
+    <string name="ws_error_REPO_5">Название магазина должно иметь не менее 3 знаков.</string>
+    <string name="ws_error_REPO_6">Магазин с таким именем уже существует, вам нужно выбрать
+ другое.</string>
+    <string name="ws_error_WOP_9">Этот email уже зарегистрирован в Aptoide</string>
+    <string name="ws_error_WOP_10">Этот email еще не зарегистрирован в Aptoide</string>
+    <string name="ws_error_QUOTA_2">Дневной лимит на создание пользователей исчерпан на сегодня. Если вы хотите
+ увеличить этот лимит – пожалуйста, свяжитесь с поддержкой по адресу support@aptoide.com или добавьте новых пользователей завтра</string>
+    <string name="ws_error_AUTH_1">Неверный E-mail или пароль для учетной записи (после обновления
+ имени)</string>
+    <string name="login_successful">Вход успешно выполнен</string>
+    <string name="user_created">Пользователь создан</string>
+    <string name="wizard_skip"><b> Пропустить</b></string>
+
+</resources>

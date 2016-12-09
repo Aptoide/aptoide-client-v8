@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="one_account_allowed">È permesso un solo account</string>
+    <string name="username">E-mail</string>
+    <string name="password">Password</string>
+    <string name="link_device_webinstall">Collega account con Webinstall</string>
+    <string name="register">Registrati</string>
+    <string name="forgot_passwd">Dimenticato la password?</string>
+    <string name="fields_cannot_empty">Per favore controlla il tuo indirizzo e-mail e la password.</string>
+    <string name="unknown_error">Errore sconosciuto</string>
+    <string name="no_email_and_pass_error_message">"Si prega di inserire indirizzo e-mail e password per
+ registrarsi.
+ "</string>
+    <string name="no_pass_error_message">Inserire una password per registrarsi.</string>
+    <string name="no_email_error_message">Inserire una e-mail per registrarsi.</string>
+    <string name="password_validation_text">"La password deve essere lunga almeno 8 caratteri e dovrebbe
+ contenere almeno una lettera e un numero o caratteri speciali (!@#$%*)
+ "</string>
+    <string name="logged_as">Sei connesso come:</string>
+    <string name="sign_out">Esci</string>
+    <string name="error_occured">Si è verificato un errore. Si prega di riprovare</string>
+    <string name="ws_error_AUTH_2">Credenziali non valide!</string>
+    <string name="ws_error_AUTH_101">Impossibile effettuare il login con Google. Per favore riprova.</string>
+    <string name="ws_error_AUTH_103">Impossibile effettuare il login con Facebook. Per favore riprova.</string>
+    <string name="ws_error_MARG_12">Parametro hmac mancante</string>
+    <string name="ws_error_MARG_109">Parametro email mancante</string>
+    <string name="ws_error_MARG_110">Parametro passhash mancante</string>
+    <string name="ws_error_MARG_111">Parametro nome mancante</string>
+    <string name="ws_error_MARG_112">Parametro user-agent mancante</string>
+    <string name="ws_error_IARG_5">Formato hmac non valido</string>
+    <string name="ws_error_IARG_106">L\'indirizzo e-mail non è valido</string>
+    <string name="ws_error_REPO_7">Questo utente ha già un deposito valido.</string>
+    <string name="ws_error_WOP_11">Lo store non può essere creato. Per favore riprova.</string>
+    <string name="or">oppure</string>
+    <string name="accept_terms">"Registrandoti accetti i Termini di Servizio e
+le Norme dei Contenuti per gli Sviluppatori di Aptoide
+ "</string>
+    <string name="default_account_type">cm.aptoide.PT</string>
+
+    <string name="facebook_garant_permission_button">Concedere l\'autorizzazione</string>
+    <string name="facebook_email_permission_regected_message">"Aptoide ha bisogno della tua e-mail per creare un
+account
+ "</string>
+    <string name="error_invalid_grant">Combinazione nome utente e password non valida</string>
+    <string name="ws_error_MARG_200">\@string/error_occured</string>
+    <string name="ws_error_MARG_203">\@string/error_occured</string>
+    <string name="ws_error_MARG_204">\@string/error_occured</string>
+    <string name="ws_error_IARG_200">\@string/error_occured</string>
+    <string name="ws_error_AUTH_7">\@string/error_occured</string>
+    <string name="ws_error_AUTH_100">Impossibile accedere con Google. Si prega di controllare l\'account Google (potrebbe essere necessario convalidare l\'indirizzo email)</string>
+    <string name="ws_error_AUTH_102">Impossibile accedere con Facebook. Si prega di controllare l\'account Facebook (potrebbe essere necessario convalidare l\'indirizzo email)</string>
+    <string name="ws_error_invalid_grant">Combinazione nome utente e password non valida</string>
+    <string name="ws_error_IARG_111">Formato passhash non valido</string>
+    <string name="ws_error_REPO_4">Il nome dello store non è valido, è possibile utilizzare solo lettere, numeri o
+ trattini.</string>
+    <string name="ws_error_REPO_5">Il nome dello store deve essere lungo almeno 3 caratteri.</string>
+    <string name="ws_error_REPO_6">Il nome dello store è già stato utilizzato, è necessario sceglierne un
+ altro.</string>
+    <string name="ws_error_WOP_9">L\'indirizzo email fornito esiste già in Aptoide</string>
+    <string name="ws_error_WOP_10">L\'indirizzo email fornito non esiste ancora in Aptoide</string>
+    <string name="ws_error_QUOTA_2">Raggiunto il limite giornaliero di utenti creati per oggi. Se si desidera
+ aumentare questo limite si prega di contattare il supporto su suport@aptoide.com o di creare più utenti domani</string>
+    <string name="ws_error_AUTH_1">E-mail o password non validi per effettuare il login (all\'aggiornamento del
+ nome)</string>
+    <string name="login_successful">Login effettuato</string>
+    <string name="user_created">Utente creato</string>
+    <string name="wizard_skip"><b>SALTA</b></string>
+
+</resources>

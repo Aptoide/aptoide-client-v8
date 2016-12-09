@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="open">Hap</string>
+    <string name="search">Kërko</string>
+
+    <string name="update">Aktualizo</string>
+    <string name="uninstall">Ç\'instalo</string>
+    <string name="downgrade">Vjetërso</string>
+    <string name="menu_select_all">Selekto të Gjitha</string>
+    <string name="excluded_updates">Azhornimet e Përjashtuara</string>
+    <string name="restore_updates">Rikthe Azhornimin</string>
+    <string name="rollback">Riktheje</string>
+    <string name="displayable_social_timeline_app_update">Aktualizo</string>
+    <string name="appview_rate_this_app">Vlerëso këtë aplikacion</string>
+    <string name="displayable_social_timeline_app_update_updated">Azhornuar</string>
+    <string name="ignore_update">Injoro Azhornimin</string>
+    </resources>

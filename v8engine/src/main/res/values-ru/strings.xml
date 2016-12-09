@@ -1,0 +1,251 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="open">Открыть</string>
+    <string name="button_header_more">больше</string>
+    <string name="search">Поиск</string>
+
+    <string name="update">Обновить</string>
+    <string name="uninstall">Удалить</string>
+    <string name="downgrade">Понизить версию</string>
+    <string name="menu_select_all">Выбрать все</string>
+    <string name="menu_select_none">Ничего не выбирать</string>
+    <string name="clear">Очистить</string>
+
+    <string name="excluded_updates">Исключенные обновления</string>
+    <string name="restore_updates">Восстановить обновления</string>
+    <string name="rollback">Откат</string>
+    <string name="menu_card_timeline_clear">Очистить</string>
+    <string name="fragment_social_timeline_no_connection">Нет подключения к сети</string>
+    <string name="fragment_social_timeline_general_error">Возникли некоторые проблемы. Вы можете повторить попытку позже?</string>
+
+    <string name="displayable_social_timeline_app_update">Обновить</string>
+    <string name="appview_rate_this_app">Оценить это приложение</string>
+    <string name="needs_license">Нужна Лицензия</string>
+    <string name="virus">Вирус</string>
+    <string name="additional_information">Дополнительная информация</string>
+    <string name="displayable_social_timeline_app_update_updated">Обновлено</string>
+    <string name="displayable_social_timeline_recommendation_similar_and">и</string>
+    <string name="social_facebook_screen_title">Фейсбук</string>
+    <string name="social_twitter_screen_title">Твиттер</string>
+    <string name="title">НАЗВАНИЕ</string>
+    <string name="feedback_not_valid">Пожалуйста, введите правильный заголовок!</string>
+    <string name="ignore_update">Проигнорировать обновление</string>
+    <string name="added_to_scheduled">Добавлено в Меню &gt; Загрузки по Расписанию</string>
+    <string name="wizard_skip"><b> Пропустить</b></string>
+    <string name="dark">Темный</string>
+    <string name="light">Светлый</string>
+
+    <string name="updates_filter_summary">Проверяем, вы не будете уведомляться о Бета-версиях.</string>
+    <string name="updates_filter_setting_title">Показывать мне только обновления стабильных версий приложения</string>
+    <string name="aptoide_email">aptoide@aptoide.com</string>
+    <string name="aptoide_url">http://www.aptoide.com/</string>
+
+    <string name="access_to_get_accounts_rationale">Вам нужно разрешить доступ для Get Accounts</string>
+    <string name="unsubscribe">Отписаться</string>
+    <string name="developer_website">Веб сайт: %s</string>
+    <string name="not_available">Недоступно</string>
+    <string name="developer_email">Имейл: %s</string>
+    <string name="developer_privacy_policy">Политика приватности: %s</string>
+
+
+    <string name="appview_follow_store_button_text">Подписаться?</string>
+    <string name="appview_followers_count_text">%1$s Подписчиков</string>
+    <string name="other_versions_downloads_count_text">%1$s загрузок</string>
+
+    <string name="no_excluded_updates_msg">Новая версия приложения не работает на вашем устройстве или недостает какой-то фичи? Заблокируйте автоматический апдейт. Перейдите в меню апдейтов и долго нажимайте на приложение, обновления которого вы хотите заблокировать.</string>
+
+    <string name="open_apps_manager">Открыть Менеджер приложений</string>
+
+    <string name="no_rollbacks_msg">Имейте возможность быстро откатить любое приложение к его предыдущей версии и решить вопрос совместимости. Сохраните логи всех установленных 
+ через Aptoide приложений, включая версию и дату установки.</string>
+
+    <string name="fragment_social_timeline_aptoide_team">Команда Aptoide</string>
+    <string name="displayable_social_timeline_store_latest_apps_headline">В этом магазине есть новые Приложения</string>
+    <string name="displayable_social_timeline_app_update_name">%1$s Приложения</string>
+    <string name="displayable_social_timeline_app_has_update">есть %1$s</string>
+    <string name="displayable_social_timeline_article_get_app_button">Получить %1$s приложения</string>
+    <string name="displayable_social_timeline_app_update_version">Версия %1$s</string>
+    <string name="displayable_social_timeline_app_update_button">Обновить %1$s</string>
+    <string name="appview_other_versions"><u> 1Другие версии</u> 2</string>
+    <string name="appview_latest_version_text">Последняя версия</string>
+    <string name="appview_read_all">Читать все&gt;</string>
+    <string name="zero">0</string>
+    <string name="working_well">Работает хорошо</string>
+    <string name="fake_app">Фальшивое приложение</string>
+    <string name="displayable_social_timeline_app_update_updating">Обновление</string>
+    <string name="displayable_social_timeline_app_update_error">Ошибка при обновлении</string>
+
+    <string name="other_versions_partial_title_1">Другое</string>
+    <string name="other_versions_partial_title_2">Версия в разных магазинах</string>
+    <string name="displayable_social_timeline_recommendation_similar_to">на основании %1$s</string>
+    <string name="displayable_social_timeline_recommendation_atptoide_team_recommends">Рекомендации Aptoide</string>
+    <string name="top_comments">Топовые комментарии</string>
+    <string name="rate">Оценка</string>
+    <string name="rate_app">"Оценка  %s"</string>
+    <string name="tap_a_star">Нажмите на звезду, чтобы оценить</string>
+    <string name="other_versions_on_different_stores">Другие версии в разных магазинах</string>
+    <string name="review_optional">Отзыв (необязательно)</string>
+    <string name="thank_you_for_your_opinion">Спасибо, что поделились вашим мнением!</string>
+    <string name="five_numeric">5</string>
+    <string name="four_numeric">4</string>
+    <string name="three_numeric">3</string>
+    <string name="two_numeric">2</string>
+    <string name="one_numeric">1</string>
+    <string name="just_reviews">Только отзывы</string>
+    <string name="downgrading_msg">понижение</string>
+    <string name="updating_msg">Апгрейд</string>
+    <string name="installing_msg">Установка</string>
+    <string name="needs_permission_to_fs">Нужно разрешение для использования внешней системы файлов</string>
+
+    <string name="pause_all_downloads">Приостановить загрузку</string>
+    <string name="all_stores">Все магазины</string>
+    <string name="followed_stores">Ваши магазины</string>
+    <string name="storage_access_permission_request_message">Пожалуйста откройте доступ к памяти вашего телефона, чтобы мы могли загрузить и установить приложение.</string>
+
+    <string name="wizard_welcome_message"><b> 1Добро пожаловать!</b> 2</string>
+    <string name="wizard_sub_title_viewpager_one">Начать <b>безопасное</b> 2 и <b>веселоe</b> приключение.</string>
+    <string name="wizard_description_part_one_viewpager_one"><b>Ищите</b> приложения со
+значком \"Проверено\" для 
+безопасной установки.</string>
+    <string name="wizard_description_part_two_viewpager_one"><b> 1Откройте для себя</b> 2 Приложения\nкоторые вы хотели установить,
+\nно не могли найти.</string>
+
+    <string name="wizard_title_viewpager_two"><b>Лента приложений</b></string>
+    <string name="wizard_sub_title_viewpager_two">Скачайте <b> 1 новинки приложений</b> 2, найдите <b> 3тематические магазины</b> 4\nи получите <b> 5 персонализированный контент.</b> 6</string>
+
+    <string name="wizard_title_viewpager_three"><b> 1присоединитесь к сообществу</b> 2</string>
+    <string name="wizard_description_part_one_viewpager_three"><b> 1Подпишись </b> 2 на своих друзей</string>
+    <string name="wizard_description_part_two_viewpager_three"><b> 1Комментируйте</b> 2 и оценивайте приложения</string>
+    <string name="wizard_description_part_three_viewpager_three"><b> 1Cоздайте</b> 2 ваш магазин</string>
+    <string name="wizard_register_now_button">Зарегистрироваться сейчас</string>
+    <string name="wizard_be_a_part_of_aptoide">Присоединиться к Aptoide!</string>
+    <string name="wizard_or_login"><u> 1или Залогиниться </u> 2</string>
+
+    <string name="you_need_to_be_logged_in">Вам нужно залогиниться</string>
+    <string name="follow">Подписаться</string>
+    <string name="followed">Подписка</string>
+    
+    <string name="dialog_install_warning_proceed_button">Продолжить</string>
+    <string name="dialog_install_warning_search_for_trusted_app_button">Искать</string>
+    <string name="dialog_install_warning_trusted_app_button">Проверенное Приложение</string>
+    <string name="dialog_install_warning_careful_text">"Будьте осторожны при скачивании этого приложения. В нем может быть вирус или иной  вредоносный код."</string>
+    <string name="dialog_install_warning_credibility_text">Перед тем как продолжить, проверьте, 
+является ли магазин надежным, посмотрите комментарии пользователей. Мы рекомендуем вам устанавливать только проверенные приложения %1$s.</string>
+    <string name="dialog_install_warning_trusted_version_button">Проверенная версия</string>
+    <string name="dialog_install_warning_get_trusted_version_button">Получить</string>
+<string name="appview_good_app_guaranteed">Хорошее приложение гарантировано!</string>
+    <string name="appview_good_app_description">Эти приложения прошли проверку на вирусы, вредоносный код и другие внедренные атаки и не
+ содержит никаких угроз!</string>
+
+    <string name="unfollow_yes_no">Вы уверены, что хотите отписаться?</string>
+    <string name="unfollow">Отписаться</string>
+    <string name="unfollowing_store_message">Отписка от %s</string>
+    <string name="store_followed">Вы подписались на магазин %s</string>
+
+    <string name="be_the_first_to_rate_this_app">Будьте первым, кто даст оценку этом приложению</string>
+    <string name="rate_this_app">Оценить приложение</string>
+
+    <string name="flag_results">Пометить результаты</string>
+    <string name="helpful">Полезное</string>
+    <string name="not_helpful">Не полезное</string>
+    <string name="description_not_available">Нет описания для этого приложения</string>
+    <string name="top_stores_fragment_title">Лучшие магазины</string>
+
+    <string name="home_title">Домой</string>
+    <string name="community">Сообщество</string>
+    <string name="stores">Магазины</string>
+    <string name="updates">Обновления</string>
+    <string name="social_timeline">Социальная лента</string>
+    <string name="downloads">Загрузки</string>
+    <string name="latest_reviews">Последние отзывы</string>
+    <string name="latest_comments">Последние комментарии</string>
+    <string name="action">Экшен</string>
+    <string name="adventure">Приключения</string>
+    <string name="all">Все</string>
+    <string name="applications">Приложения</string>
+    <string name="arcade">Аркады</string>
+    <string name="arcade_action">Аркады и экшены</string>
+    <string name="board">Настольные</string>
+    <string name="books_reference">Книги и справочники</string>
+    <string name="brain_puzzle">Задачки и паззлы</string>
+    <string name="business">Бизнес</string>
+    <string name="card">Карты</string>
+    <string name="cards_casino">Карты и казино</string>
+    <string name="casino">Казино</string>
+    <string name="casual">Казуальные</string>
+    <string name="comics">Комиксы</string>
+    <string name="communication">Общение</string>
+    <string name="demo">Демо</string>
+    <string name="education">Образование</string>
+    <string name="educational">Образовательные</string>
+    <string name="entertainment">Развлечения</string>
+    <string name="family">Семейные</string>
+    <string name="finance">Финансы</string>
+    <string name="games">Игры</string>
+    <string name="health">Здоровье</string>
+    <string name="health_fitness">Здоровье и фитнес</string>
+    <string name="highlighted">Выделенные</string>
+    <string name="local_top_apps">Лучшие местные приложения</string>
+    <string name="lifestyle">Стиль жизни</string>
+    <string name="media_video">Медиа и видео</string>
+    <string name="medical">Медицинские</string>
+    <string name="multimedia">Мультимедиа</string>
+    <string name="music">Музыка</string>
+    <string name="music_audio">Музыка и аудио</string>
+    <string name="news_magazines">Новости и журналы</string>
+    <string name="news_weather">Новости и погода</string>
+    <string name="personalization">Персонализация</string>
+    <string name="photography">Фотография</string>
+    <string name="productivity">Производительность</string>
+    <string name="puzzle">Головоломка</string>
+    <string name="racing">Гонки</string>
+    <string name="reference">Справочник</string>
+    <string name="role_playing">Ролевые игры</string>
+    <string name="simulation">Симулятор</string>
+    <string name="social">Социальные</string>
+    <string name="software_libraries">Библиотеки ПО</string>
+    <string name="sports">Спорт</string>
+    <string name="sports_games">Спортивные Игры</string>
+    <string name="strategy">Стратегии</string>
+    <string name="themes">Темы</string>
+    <string name="tools">Инструменты</string>
+    <string name="top_apps">Лучшие приложения</string>
+    <string name="top_games">Лучшие игры</string>
+    <string name="transport">Транспорт</string>
+    <string name="transportation">Перевозки</string>
+    <string name="travel">Путешествия</string>
+    <string name="travel_local">Путешествия и местность</string>
+    <string name="trending">В тренде</string>
+    <string name="trivia">Викторины</string>
+    <string name="word">Слова</string>
+    <string name="libraries_demo">Библиотеки и демо</string>
+    <string name="shopping">Покупки</string>
+    <string name="weather">Погода</string>
+    <string name="latest_applications">Последние приложения</string>
+    <string name="top_apps_in_store">Лучшие приложения в этом магазине</string>
+    <string name="apps_for_kids">Приложения для детей</string>
+    <string name="aptoide_publishers">Издатели Aptoide</string>
+    <string name="music_video">Музыка и видео</string>
+    <string name="essential_apps">Основные приложения</string>
+    <string name="summer_apps">Летние приложения</string>
+    <string name="play_it">Игры Play-It!</string>
+
+<string name="subscribers">Подписчики</string>
+  <string name="apps">Приложения</string>
+
+  <string name="apps_timeline"><b>Лента приложений</b></string>
+  <string name="displayable_social_timeline_article_related_to">Связанные с %1$s</string>
+  <string name="appstimeline_update_app">приложение</string>
+  <string name="customtabs_open_native_app">Открыть в приложении</string>
+
+
+  <string name="fragment_download_no_connection">Приложения не загружены</string>
+  <string name="fragment_download_no_connection_subtitle">Новые приложения появятся здесь как только вы начнете загружать их!</string>
+  <string name="newer_version_available">Доступна более новая версия</string>
+
+  <string name="add_store">Добавить магазин</string>
+
+<string name="downgrade_warning_dialog">Откатив версию, вы можете потерять данные приложения и, возможно, выйдете из аккаунта приложения.</string>
+
+  <string name="displayable_social_timeline_similar_to">такое же, как %1$s</string>
+
+</resources>

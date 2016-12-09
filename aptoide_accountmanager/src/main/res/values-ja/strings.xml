@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="one_account_allowed">アカウントは一つだけ持つ事ができます</string>
+    <string name="username">メールアドレス</string>
+    <string name="password">パスワード</string>
+    <string name="link_device_webinstall">アカウントをウェブインストールにリンクさせる</string>
+    <string name="register">サインアップ</string>
+    <string name="forgot_passwd">パスワードをお忘れですか?</string>
+    <string name="fields_cannot_empty">メールアドレスとパスワードを確認してください。</string>
+    <string name="unknown_error">不明なエラー</string>
+    <string name="no_email_and_pass_error_message">"登録するメールアドレスとパスワードを
+入力してください。
+ "</string>
+    <string name="no_pass_error_message">登録するパスワードを入力してください。</string>
+    <string name="no_email_error_message">登録するメールアドレスを入力してください。</string>
+    <string name="password_validation_text">"パスワードは 8 文字以上で、少なくとも 1 つの文字と 1 つの数字、
+または特殊文字 (!@#$%*) にする必要があります
+ "</string>
+    <string name="logged_as">～としてログイン:</string>
+    <string name="sign_out">サインアウト</string>
+    <string name="error_occured">エラーが発生しました。もう一度やり直してください</string>
+    <string name="ws_error_AUTH_2">無効な証明書です！</string>
+    <string name="ws_error_AUTH_101">Googleでログインできません。再度お試しください。</string>
+    <string name="ws_error_AUTH_103">Facebookでログインできません。再度お試しください。</string>
+    <string name="ws_error_MARG_12">不明なhmacパラメーター</string>
+    <string name="ws_error_MARG_109">不明なEメールパラメーター</string>
+    <string name="ws_error_MARG_110">不明なpasshashパラメータ</string>
+    <string name="ws_error_MARG_111">不明な名パラーメーター</string>
+    <string name="ws_error_MARG_112">不明なユーザーエージェントパラメータ</string>
+    <string name="ws_error_IARG_5">無効なhmacフォーマット</string>
+    <string name="ws_error_IARG_106">このEメールアドレスは有効ではありません</string>
+    <string name="ws_error_REPO_7">このユーザーは既に有効なリポジトリがあります。</string>
+    <string name="ws_error_WOP_11">ストアが作成できません。再度お試しください。</string>
+    <string name="or">または</string>
+    <string name="accept_terms">"サインアップすることにより、Aptoide サービス利用規約、
+開発者向けコンテンツポリシーに同意します。
+ "</string>
+    <string name="default_account_type">cm.aptoide.pt</string>
+
+    <string name="facebook_garant_permission_button">アクセス許可を付与する</string>
+    <string name="facebook_email_permission_regected_message">"Aptoide は、あなたのメールアドレスで
+アカウントを作成する必要があります
+ "</string>
+    <string name="error_invalid_grant">ユーザー名とパスワードの組み合わせが無効です</string>
+    <string name="ws_error_MARG_200">\@string/error_occured</string>
+    <string name="ws_error_MARG_203">\@string/error_occured</string>
+    <string name="ws_error_MARG_204">\@string/error_occured</string>
+    <string name="ws_error_IARG_200">\@string/error_occured</string>
+    <string name="ws_error_AUTH_7">\@string/error_occured</string>
+    <string name="ws_error_AUTH_100">Google にログインできませんでした。Google アカウントを確認してください (メールアドレスを確認する必要があります)</string>
+    <string name="ws_error_AUTH_102">Facebook にログインできませんでした。Facebook アカウントを確認してください (メールアドレスを確認する必要があります)</string>
+    <string name="ws_error_invalid_grant">ユーザー名とパスワードの組み合わせが無効です</string>
+    <string name="ws_error_IARG_111">無効な passhash 形式</string>
+    <string name="ws_error_REPO_4">ストア名が無効です。文字、数字、またはハイフンのみ
+使用できます。</string>
+    <string name="ws_error_REPO_5">ストア名は、少なくとも 3 文字必要です。</string>
+    <string name="ws_error_REPO_6">そのストア名は既に使用されています。
+別のものを選択する必要があります。</string>
+    <string name="ws_error_WOP_9">指定されたメールアドレスはすでに Aptoide に存在します</string>
+    <string name="ws_error_WOP_10">指定したメールアドレスはまだ Aptoide に存在しません</string>
+    <string name="ws_error_QUOTA_2">作成されたユーザー数が毎日の上限に達しました。この上限を
+引き上げる必要がある場合、サポート suport@aptoide.com に連絡するか、明日追加のユーザーを作成してください</string>
+    <string name="ws_error_AUTH_1">ログインで、メールアドレスかパスワードのどちらかが
+無効です (名前の更新で)</string>
+    <string name="login_successful">ログインに成功しました</string>
+    <string name="user_created">ユーザーを作成しました</string>
+
+
+<string name="wizard_skip"><b>スキップ</b></string>
+
+<string name="login">ログイン</string>
+  <string name="user_cancelled">ユーザーによってキャンセルされました</string>
+
+  </resources>

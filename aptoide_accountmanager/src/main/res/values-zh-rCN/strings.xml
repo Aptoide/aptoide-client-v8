@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="one_account_allowed">只允许使用一个帐户</string>
+    <string name="username">电子邮件</string>
+    <string name="password">密码</string>
+    <string name="link_device_webinstall">将帐户与Webinstall链接</string>
+    <string name="register">注册</string>
+    <string name="forgot_passwd">忘记密码？</string>
+    <string name="fields_cannot_empty">请检查您的电子邮件和密码。</string>
+    <string name="unknown_error">未知错误</string>
+    <string name="no_email_and_pass_error_message">"请输入注册所用的电子邮件
+和密码。
+ "</string>
+    <string name="no_pass_error_message">请输入注册所需的密码。</string>
+    <string name="no_email_error_message">请输入注册所需的电子邮件。</string>
+    <string name="password_validation_text">"密码必须至少包含8个字符，且至少包括一个字母和
+一个数字或特殊字符(!@#$%*)
+ "</string>
+    <string name="logged_as">您的登录身份为：</string>
+    <string name="sign_out">退出</string>
+    <string name="error_occured">发生错误。请重试</string>
+    <string name="ws_error_AUTH_2">无效凭据！</string>
+    <string name="ws_error_AUTH_101">无法使用Google登录。请重试。</string>
+    <string name="ws_error_AUTH_103">无法使用Facebook登录。请重试。</string>
+    <string name="ws_error_MARG_12">缺少hmac参数</string>
+    <string name="ws_error_MARG_109">缺少电子邮件参数</string>
+    <string name="ws_error_MARG_110">缺少passhash参数</string>
+    <string name="ws_error_MARG_111">缺少名称参数</string>
+    <string name="ws_error_MARG_112">缺少用户代理参数</string>
+    <string name="ws_error_IARG_5">无效的hmac格式</string>
+    <string name="ws_error_IARG_106">电子邮件地址无效</string>
+    <string name="ws_error_REPO_7">此用户已有有效报告。</string>
+    <string name="ws_error_WOP_11">无法创建商店。请重试。</string>
+    <string name="or">或</string>
+    <string name="accept_terms">"注册则表示您同意Aptoide针对开发人员的服务条款
+及内容政策
+ "</string>
+    <string name="default_account_type">cm.aptoide.pt</string>
+
+    <string name="facebook_garant_permission_button">许可权限</string>
+    <string name="facebook_email_permission_regected_message">"Aptoide需要您的电子邮件以创建
+帐户
+ "</string>
+    <string name="error_invalid_grant">用户名和密码组合无效</string>
+    <string name="ws_error_MARG_200">\@string/error_occured</string>
+    <string name="ws_error_MARG_203">\@string/error_occured</string>
+    <string name="ws_error_MARG_204">\@string/error_occured</string>
+    <string name="ws_error_IARG_200">\@string/error_occured</string>
+    <string name="ws_error_AUTH_7">\@string/error_occured</string>
+    <string name="ws_error_AUTH_100">无法使用Google登录。请检查您的Google帐户（您可能需要验证电子邮件地址）</string>
+    <string name="ws_error_AUTH_102">无法使用Facebook登录。请检查您的Facebook帐户（您可能需要验证电子邮件地址）</string>
+    <string name="ws_error_invalid_grant">用户名和密码组合无效</string>
+    <string name="ws_error_IARG_111">无效passhash格式</string>
+    <string name="ws_error_REPO_4">商店名称无效，只可使用字母、数字或
+短线。</string>
+    <string name="ws_error_REPO_5">商店名称的长度必须不短于3个字符。</string>
+    <string name="ws_error_REPO_6">此商店名称已存在，请选择其他
+名称。</string>
+    <string name="ws_error_WOP_9">所提供的电子邮件在Aptoide中已存在</string>
+    <string name="ws_error_WOP_10">所提供的电子邮件在Aptoide中不存在</string>
+    <string name="ws_error_QUOTA_2">今日创建的用户已达每日上限。如果您想要增加额度，
+请通过suport@aptoide.com与技术支持人员联系，或明日创建更多用户</string>
+    <string name="ws_error_AUTH_1">电子邮件或密码无法有效登录（名称
+更新）</string>
+    <string name="login_successful">登录成功</string>
+    <string name="user_created">已创建用户</string>
+    <string name="wizard_skip"><b>跳过</b></string>
+
+<string name="login">登录</string>
+  </resources>

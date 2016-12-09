@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="installed_tab">ਸਤਾਫੀਤ</string>
+    <string name="rollback_installed">ਸਤਾਫੀਤ</string>
+    <string name="like">ਪਸਂਦ</string>
+    <string name="timeline_like">ਪਸਂਦ</string>
+    <string name="comments">ਿਟਪਨੀ</string>
+    <string name="write_your_comment">ਟਿਪਨੀ ਿਲਖੋ</string>
+    <string name="updatesTabAdapterUninstall">ਐਪ ਕਟਨਾ</string>
+    </resources>

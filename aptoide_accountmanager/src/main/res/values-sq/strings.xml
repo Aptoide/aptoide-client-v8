@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="one_account_allowed">Lejohet vetëm një llogari</string>
+    <string name="username">Email</string>
+    <string name="password">Fjalëkalimi</string>
+    <string name="register">Regjistrohu</string>
+    <string name="forgot_passwd">Keni harruar fjalëkalimin?</string>
+    <string name="logged_as">Ju jeni i kyçur si:</string>
+    <string name="sign_out">Dilni</string>
+    <string name="error_occured">Ka ndodhur një gabim. Ju lutem provoni përsëri</string>
+    </resources>

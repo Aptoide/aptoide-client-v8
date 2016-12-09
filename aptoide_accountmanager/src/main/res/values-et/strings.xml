@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="ws_error_AUTH_2">Vigane mandaat!</string>
+    <string name="ws_error_AUTH_101">Google kontoga sisselogimine nurjus. Palun proovi uuesti.</string>
+    <string name="ws_error_AUTH_103">Facebooki kontoga sisselogimine nurjus. Palun proovi uuesti.</string>
+    <string name="ws_error_MARG_12">Puudub HMAC parameeter</string>
+    <string name="ws_error_MARG_109">Puudub e-maili parameeter</string>
+    <string name="ws_error_MARG_110">Puudub passhash parameeter</string>
+    <string name="ws_error_MARG_111">Puudub nime parameeter</string>
+    <string name="ws_error_MARG_112">Puudub user-agent parameeter</string>
+    <string name="ws_error_IARG_5">Vigane hmac vorming</string>
+    <string name="ws_error_IARG_106">E-maili aadress on vigane</string>
+    </resources>

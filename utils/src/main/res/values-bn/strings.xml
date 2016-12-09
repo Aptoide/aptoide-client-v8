@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="please_wait">অনুগ্রহ করে অপেক্ষা করুন ...</string>
+
+    <string name="WidgetProvider_timestamp_today">আজ</string>
+    <string name="WidgetProvider_timestamp_yesterday">গতকাল</string>
+    <string name="WidgetProvider_timestamp_hour_ago">%sঘণ্টা আগে</string>
+    <string name="WidgetProvider_timestamp_hours_ago">%sঘণ্টা আগে</string>
+    <string name="WidgetProvider_timestamp_minutes_ago">%sমিনিট আগে</string>
+    <string name="WidgetProvider_timestamp_just_now">"মাত্র "</string>
+    <string name="WidgetProvider_timestamp_weeks_ago">"সপ্তাহ আগে "</string>
+    </resources>

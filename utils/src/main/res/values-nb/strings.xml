@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="please_wait">Vennligst vent…</string>
+
+    <string name="WidgetProvider_timestamp_today">I dag</string>
+    <string name="WidgetProvider_timestamp_yesterday">I går</string>
+    <string name="WidgetProvider_timestamp_hour_ago">%s timer siden</string>
+    <string name="WidgetProvider_timestamp_hours_ago">%s timer siden</string>
+    <string name="WidgetProvider_timestamp_minutes_ago">%s minutter siden</string>
+    <string name="WidgetProvider_timestamp_just_now">Akkurat nå</string>
+    <string name="WidgetProvider_timestamp_weeks_ago">%s uker siden</string>
+    <string name="WidgetProvider_timestamp_week_ago2">1 uke siden</string>
+    <string name="WidgetProvider_timestamp_days_ago">%s dager siden</string>
+    <string name="WidgetProvider_timestamp_month_ago">1 måned siden</string>
+    <string name="WidgetProvider_timestamp_months_ago">%s måneder siden</string>
+    <string name="WidgetProvider_timestamp_year_ago">1 år siden</string>
+    <string name="WidgetProvider_timestamp_years_ago">%s år siden</string>
+
+</resources>
