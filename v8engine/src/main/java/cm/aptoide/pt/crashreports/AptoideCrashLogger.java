@@ -17,7 +17,7 @@ public class AptoideCrashLogger implements CrashLogger {
   private final static String TAG = AptoideCrashLogger.class.getSimpleName();   //TAG for the logger
   private static final AptoideCrashLogger instance = new AptoideCrashLogger();
   //var with the language the app is set to
-  @Setter private static String language;
+  @Setter private String language;
 
   protected AptoideCrashLogger() {
   }
