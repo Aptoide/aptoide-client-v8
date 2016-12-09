@@ -17,6 +17,7 @@ import android.preference.PreferenceManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
 import cm.aptoide.pt.actions.UserData;
+import cm.aptoide.pt.crashreports.AptoideCrashLogger;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
@@ -147,7 +148,7 @@ public abstract class V8Engine extends DataProvider {
   }
 
   @Override public void onCreate() {
-    CrashReports.setup(this);
+    CrashReports.setup(AptoideCrashLogger.getInstance().setup(this));
     try {
       PRNGFixes.apply();
     } catch (Exception e) {

@@ -17,7 +17,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import cm.aptoide.pt.actions.PermissionRequest;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.AptoideCrashLogger;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -55,7 +55,8 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
     super.onCreate(savedInstanceState);
     // https://fabric.io/downloads/gradle/ndk
     // Fabric.with(this, new Crashlytics(), new CrashlyticsNdk());
-    CrashReports.setLanguage(getResources().getConfiguration().locale.getLanguage());
+    AptoideCrashLogger.getInstance()
+        .setLanguage(getResources().getConfiguration().locale.getLanguage());
 
     setUpAnalytics();
 

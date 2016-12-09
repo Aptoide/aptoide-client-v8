@@ -11,6 +11,7 @@ import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
 import cm.aptoide.accountmanager.ws.responses.GenericResponseV3;
 import cm.aptoide.accountmanager.ws.responses.GetUserRepoSubscription;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
+import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.okhttp.UserAgentGenerator;
@@ -47,13 +48,13 @@ public abstract class v3accountManager<U> extends WebService<v3accountManager.In
           }
         }),
         WebService.getDefaultConverter(),
-        "https://webservices.aptoide.com/webservices/");
+        BuildConfig.APTOIDE_WEB_SERVICES_SCHEME + "://" + BuildConfig.APTOIDE_WEB_SERVICES_HOST + "/webservices/");
     this.map = new BaseBody();
   }
 
   v3accountManager(OkHttpClient httpClient, Converter.Factory converterFactory) {
     super(Interfaces.class, httpClient, converterFactory,
-        "https://webservices.aptoide.com/webservices/");
+        BuildConfig.APTOIDE_WEB_SERVICES_SCHEME + "://" + BuildConfig.APTOIDE_WEB_SERVICES_HOST + "/webservices/");
     this.map = new BaseBody();
   }
 

@@ -47,14 +47,14 @@ android {
 
 dependencies {
   compile fileTree(dir: 'libs', include: ['*.jar'])
-  androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+  androidTestCompile("com.android.support.test.espresso:espresso-core:${EXPRESSO_VERSION}", {
     exclude group: 'com.android.support', module: 'support-annotations'
   })
-  compile 'com.android.support:appcompat-v7:25.0.0'
-  testCompile 'junit:junit:4.12'
+  compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+  testCompile "junit:junit:${JUNIT_VERSION}"
 
   provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
 
-  debugCompile project(path: ':dataprovider', configuration: 'debug')
-  releaseCompile project(path: ':dataprovider', configuration: 'release')
+  debugCompile project(path: ':dataprovider', configuration: 'internalDebug')
+  releaseCompile project(path: ':dataprovider', configuration: 'prodRelease')
 }

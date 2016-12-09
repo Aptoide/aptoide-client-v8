@@ -46,7 +46,7 @@ import java.util.List;
 
   private static final String TAG = AppViewRateAndReviewsWidget.class.getSimpleName();
   private static final int MAX_COMMENTS = 3;
-  public static final long TIME_BETWEEN_SCROLL = DateUtils.SECOND_IN_MILLIS;
+  public static final long TIME_BETWEEN_SCROLL = 2 * DateUtils.SECOND_IN_MILLIS;
 
   private View emptyReviewsLayout;
   private View ratingLayout;
