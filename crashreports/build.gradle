@@ -40,7 +40,4 @@ dependencies {
   releaseCompile project(path: ':utils', configuration: 'release')
 
   provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
-  compile("com.crashlytics.sdk.android:crashlytics:${CRASHLYTICS_VERSION}@aar") {
-    transitive = true;
-  }
 }
