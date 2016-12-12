@@ -5,7 +5,9 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.GetMyStoreMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreDisplaysRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
@@ -23,8 +25,7 @@ public class WSWidgetsUtils {
   public static void loadInnerNodes(GetStoreWidgets.WSWidget wsWidget,
       BaseRequestWithStore.StoreCredentials storeCredentials, CountDownLatch countDownLatch,
       boolean refresh, Action1<Throwable> action1, String accessToken, String email,
-      String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid,
-      boolean userHasRepo) {
+      String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid) {
 
     if (isKnownType(wsWidget.getType())) {
 
@@ -91,8 +92,13 @@ public class WSWidgetsUtils {
               .compose(AptoideUtils.ObservableU.applySchedulers())
               .subscribe(reviews -> setObjectView(wsWidget, countDownLatch, reviews), action1);
           break;
-        case MY_STORE:
-          setObjectView(wsWidget, countDownLatch, userHasRepo);
+        case MY_STORE_META:
+          GetMyStoreMetaRequest.of(accessToken, aptoideClientUUID)
+              .observe(refresh)
+              .compose(AptoideUtils.ObservableU.applySchedulers())
+              .subscribe(getStoreMeta -> setObjectView(wsWidget, countDownLatch, getStoreMeta),
+                  throwable -> setObjectView(wsWidget, countDownLatch,
+                      ((AptoideWsV7Exception) throwable).getBaseResponse()));
           break;
         default:
           // In case a known enum is not implemented

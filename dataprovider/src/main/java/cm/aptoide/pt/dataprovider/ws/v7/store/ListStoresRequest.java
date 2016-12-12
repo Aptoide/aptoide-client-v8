@@ -60,7 +60,11 @@ public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
       String aptoideClientUUID) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
-    return new ListStoresRequest(url.replace("listStores", ""),
+    url = url.replace("listStores", "");
+    if (!url.startsWith("/")) {
+      url = "/" + url;
+    }
+    return new ListStoresRequest(url,
         (Body) decorator.decorate(new Body(), accessToken), BASE_HOST);
   }
 

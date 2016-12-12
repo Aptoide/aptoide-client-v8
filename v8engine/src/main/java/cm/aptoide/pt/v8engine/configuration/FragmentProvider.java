@@ -64,8 +64,6 @@ public interface FragmentProvider {
 
   Fragment newAppsTimelineFragment(String action);
 
-  Fragment newSubscribedStoresFragment();
-
   Fragment newSearchPagerTabFragment(String query, boolean subscribedStores,
       boolean hasMultipleFragments);
 

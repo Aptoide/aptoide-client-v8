@@ -48,7 +48,8 @@ public class MyStoreWidget extends Widget<MyStoreDisplayable> {
   @Override public void bindView(MyStoreDisplayable displayable) {
 
     FragmentActivity context = getContext();
-    @ColorInt int color = getColorOrDefault(displayable.getTheme(), context);
+    @ColorInt int color = getColorOrDefault(
+        StoreThemeEnum.get(displayable.getMeta().getData().getAppearance().getTheme()), context);
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
       Drawable d = context.getDrawable(R.drawable.dialog_bg_2);
       d.setColorFilter(color, PorterDuff.Mode.SRC_IN);

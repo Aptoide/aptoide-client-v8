@@ -25,10 +25,17 @@ public class CreateStoreWidget extends Widget<CreateStoreDisplayable> {
   }
 
   @Override public void bindView(CreateStoreDisplayable displayable) {
+    if (AptoideAccountManager.isLoggedIn()) {
+      button.setText(R.string.create_store_displayable_button);
+    } else {
+      button.setText(R.string.login);
+    }
     RxView.clicks(button).subscribe(aVoid -> {
       if (AptoideAccountManager.isLoggedIn()) {
+        button.setText(R.string.create_store_displayable_button);
         ShowMessage.asToast(itemView.getContext(), "create store");
       } else {
+        button.setText(R.string.login);
         AptoideAccountManager.openAccountManager(getContext());
       }
     });
