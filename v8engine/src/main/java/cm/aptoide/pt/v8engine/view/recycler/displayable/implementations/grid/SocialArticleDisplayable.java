@@ -43,6 +43,7 @@ import rx.schedulers.Schedulers;
   @Getter private String abUrl;
   @Getter private Store store;
   @Getter private Comment.User user;
+  //@Getter private long numberOfLikes;
 
   @Getter private List<App> relatedToAppsList;
   private Date date;

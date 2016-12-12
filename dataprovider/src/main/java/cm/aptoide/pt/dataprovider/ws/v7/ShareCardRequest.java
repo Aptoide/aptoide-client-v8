@@ -34,70 +34,6 @@ public class ShareCardRequest extends V7<BaseV7Response, ShareCardRequest.Body> 
     return new ShareCardRequest((ShareCardRequest.Body) decorator.decorate(body, accessToken),
         BASE_HOST);
   }
-  //public static ShareCardRequest ofArticle(Article article, String cardType, String ownerHash,
-  //    String accessToken, String aptoideClientUUID, String userEmail) {
-  //  email = userEmail;
-  //  ShareCardRequest.Body body = new ShareCardRequest.Body(ShareCardRequest.Body.CardData.builder()
-  //      //.type(cardType)
-  //      //.packages(article.getApps())
-  //      //.url(article.getUrl())
-  //      //.title(article.getTitle())
-  //      //.thumbnailurl(article.getThumbnailUrl())
-  //      //.publisherid(article.getPublisher().getName())
-  //      //.publisherurl(article.getPublisher().getBaseUrl())
-  //      //.publisherlogo(article.getPublisher().getLogoUrl())
-  //      //.date(article.getDate())
-  //      .cardId(article.getCardId())
-  //      .ownerHash(ownerHash)
-  //      .build());
-  //
-  //  BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-  //  return new ShareCardRequest((ShareCardRequest.Body) decorator.decorate(body, accessToken),
-  //      BASE_HOST);
-  //}
-
-  //public static ShareCardRequest ofVideo(Video video, String cardType, String ownerHash,
-  //    String accessToken, String aptoideClientUUID, String userEmail) {
-  //  email = userEmail;
-  //  ShareCardRequest.Body body = new ShareCardRequest.Body(ShareCardRequest.Body.CardData.builder()
-  //      .type(cardType)
-  //      .packages(video.getApps())
-  //      .url(video.getUrl())
-  //      .title(video.getUrl())
-  //      .thumbnailurl(video.getThumbnailUrl())
-  //      .publisherid(video.getPublisher().getName())
-  //      .publisherurl(video.getPublisher().getBaseUrl())
-  //      .publisherlogo(video.getPublisher().getLogoUrl())
-  //      .date(video.getDate())
-  //      .cardId(video.getCardId())
-  //      .ownerHash(ownerHash)
-  //      .build());
-  //
-  //  BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-  //  return new ShareCardRequest((ShareCardRequest.Body) decorator.decorate(body, accessToken),
-  //      BASE_HOST);
-  //}
-
-  //public static ShareCardRequest ofStoreLatestApps(StoreLatestApps storeLatestApps, String cardType,
-  //    String ownerHash, String accessToken, String aptoideClientUUID, String userEmail) {
-  //  BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-  //  email = userEmail;
-  //  ShareCardRequest.Body body = new ShareCardRequest.Body(ShareCardRequest.Body.CardData.builder()
-  //      .type(cardType)
-  //      .packages(storeLatestApps.getApps())
-  //      //.url(video.getUrl())
-  //      //.title(video.getUrl())
-  //      //.thumbnailurl(video.getThumbnailUrl())
-  //      //.publisherid(video.getPublisher().getName())
-  //      //.publisherurl(video.getPublisher().getBaseUrl())
-  //      //.publisherlogo(video.getPublisher().getLogoUrl())
-  //      //.date(video.getDate())
-  //      //.cardId(video.getCardId())
-  //      //.ownerHash(ownerHash)
-  //      .build());
-  //  return new ShareCardRequest((ShareCardRequest.Body) decorator.decorate(body, accessToken),
-  //      BASE_HOST);
-  //}
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(V7.Interfaces interfaces,
       boolean bypassCache) {
@@ -108,24 +44,6 @@ public class ShareCardRequest extends V7<BaseV7Response, ShareCardRequest.Body> 
   public static class Body extends BaseBody {
 
     private String cardId;
-
-    //public Body(CardData cardData) {
-    //  this.cardData = cardData;
-    //}
-
-    //@Builder @lombok.Data @AllArgsConstructor public static class CardData {
-    //  private String type;
-    //  private List<App> packages;
-    //  private String url;
-    //  private String title;
-    //  private String thumbnailurl;
-    //  private String publisherid;
-    //  private String publisherurl;
-    //  private String publisherlogo;
-    //  private Date date;
-    //  private String cardId;
-    //  private String ownerHash;
-    //}
   }
 }
 

@@ -93,7 +93,7 @@ public class SocialArticleWidget extends CardWidget<SocialArticleDisplayable> {
     int numberOfLikes = 0;
     numberLikes.setVisibility(View.VISIBLE);
     numberLikes.setText(String.valueOf(numberOfLikes));
-
+//    numberLikes.setText(Long.toString(displayable.getNumberOfLikes()));
     if (getAppButton.getVisibility() != View.GONE && displayable.isGetApp(appName)) {
       getAppButton.setVisibility(View.VISIBLE);
       getAppButton.setText(displayable.getAppText(getContext(), appName));

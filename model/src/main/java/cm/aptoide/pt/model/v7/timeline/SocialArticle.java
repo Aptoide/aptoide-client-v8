@@ -15,6 +15,7 @@ import lombok.Getter;
 
   @Getter private final Publisher publisher;
   @Getter private final Comment.User user;
+  //@Getter private final long likes;
   @Getter private final Store store;
   @Getter private final String cardId;
   @Getter private final String title;
@@ -24,13 +25,14 @@ import lombok.Getter;
   @Getter private final List<App> apps;
   @Getter private final Ab ab;
 
-  @JsonCreator
-  public SocialArticle(@JsonProperty("uid") String cardId, @JsonProperty("title") String title,
-      @JsonProperty("thumbnail") String thumbnailUrl,
+  //new parameter : @JsonProperty("stats") Review.Stats stats,
+  @JsonCreator public SocialArticle(@JsonProperty("uid") String cardId,
+      @JsonProperty("title") String title, @JsonProperty("thumbnail") String thumbnailUrl,
       @JsonProperty("publisher") Publisher publisher, @JsonProperty("user") Comment.User user,
       @JsonProperty("store") Store store, @JsonProperty("url") String url,
       @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC") @JsonProperty("date") Date date,
       @JsonProperty("apps") List<App> apps, @JsonProperty("ab") Ab ab) {
+    //this.likes = stats.getLikes();
     this.publisher = publisher;
     this.cardId = cardId;
     this.title = title;

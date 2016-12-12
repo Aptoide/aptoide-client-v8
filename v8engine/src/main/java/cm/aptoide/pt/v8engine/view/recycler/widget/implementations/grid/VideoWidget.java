@@ -138,9 +138,9 @@ public class VideoWidget extends CardWidget<VideoDisplayable> {
           .build(), AptoideAnalytics.OPEN_CHANNEL);
     }));
 
-    //compositeSubscription.add(RxView.clicks(share)
-    //    .subscribe(click -> shareCard(displayable, cardType),
-    //        throwable -> throwable.printStackTrace()));
+    compositeSubscription.add(RxView.clicks(share)
+        .subscribe(click -> shareCard(displayable),
+            throwable -> throwable.printStackTrace()));
   }
 
   private void setAppNameToFirstLinkedApp() {

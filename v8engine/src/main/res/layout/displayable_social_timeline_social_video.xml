@@ -24,8 +24,17 @@
         android:id="@+id/card_image"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginLeft="12.7dp"
-        android:layout_marginStart="12.7dp"
+        android:layout_marginLeft="10.7dp"
+        android:layout_marginStart="10.7dp"
+        android:layout_marginTop="14dp"
+        tools:ignore="contentDescription" />
+
+      <ImageView
+        android:id="@+id/card_user_avatar"
+        android:layout_width="27dp"
+        android:layout_height="27dp"
+        android:layout_marginLeft="27.7dp"
+        android:layout_marginStart="27.7dp"
         android:layout_marginTop="14dp"
         tools:ignore="contentDescription" />
 
@@ -200,6 +209,36 @@
       android:visibility="visible" />
 
     <include layout="@layout/social_bar_timeline" />
+
+    <LinearLayout
+      android:id="@+id/social_privacy_terms"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="60dp"
+      android:orientation="horizontal"
+      android:paddingBottom="10dp"
+      android:paddingTop="10dp"
+      android:visibility="gone"
+      tools:visibility="visible">
+
+      <CheckBox
+        android:id="@+id/social_preview_checkbox"
+        style="?android:attr/textAppearanceMedium"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp" />
+
+      <TextView
+        android:id="@+id/social_text_privacy"
+        android:clickable="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="fill"
+        android:layout_marginEnd="15dp"
+        android:layout_marginRight="15dp"
+        android:text="Make my user profile private in Apps Timeline. Only Show/Share store info."
+        android:textColor="@color/almost_black" />
+    </LinearLayout>
   </LinearLayout>
 </android.support.v7.widget.CardView>
 
