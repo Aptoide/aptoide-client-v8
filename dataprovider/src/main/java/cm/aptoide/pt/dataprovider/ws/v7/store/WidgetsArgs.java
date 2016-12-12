@@ -25,7 +25,8 @@ public class WidgetsArgs extends HashMapNotNull<WidgetsArgs.Key, WidgetsArgs.Gri
 
   public static WidgetsArgs createDefault() {
     return new WidgetsArgs().add(Key.APPS_GROUP, Type.APPS_GROUP.getPerLineCount())
-        .add(Key.STORES_GROUP, Type.STORES_GROUP.getPerLineCount());
+        .add(Key.STORES_GROUP, Type.STORES_GROUP.getPerLineCount())
+        .add(Key.MY_STORES_SUBSCRIBED, Type.MY_STORES_SUBSCRIBED.getPerLineCount());
   }
 
   public WidgetsArgs add(Key key, int gridRowSize) {
@@ -37,7 +38,7 @@ public class WidgetsArgs extends HashMapNotNull<WidgetsArgs.Key, WidgetsArgs.Gri
 
   // FIXME Parece me redundante com Type! Confirmar!
   public enum Key {
-    APPS_GROUP, STORES_GROUP
+    APPS_GROUP, MY_STORES_SUBSCRIBED, STORES_GROUP
   }
 
   @Data @AllArgsConstructor protected static class GridSizeObject {
