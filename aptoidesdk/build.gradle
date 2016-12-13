@@ -14,8 +14,8 @@ android {
   defaultConfig {
     minSdkVersion 15
 
-    versionName "0.0.4"
-    versionCode 4
+    versionName "0.0.5"
+    versionCode 5
 
     consumerProguardFiles "proguard-rules.txt"
     proguardFiles "proguard-rules.txt"
