@@ -1,5 +1,6 @@
 package cm.aptoide.accountmanager;
 
+import android.accounts.AccountManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -102,7 +103,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity implements
     mSubscriptions.add(RxView.clicks(mCreateStore).subscribe(click -> {
       storeName = mStoreName.getText().toString();
       //TODO: Make request to create repo and to update it (checkusercredentials and setStore) and add dialog
-      ProgressDialog progressDialog = GenericDialogs.createGenericPleaseWaitDialog(this);
+      ProgressDialog progressDialog = GenericDialogs.createGenericPleaseWaitDialog(this, getApplicationContext().getString(R.string.please_wait_upload));
       progressDialog.show();
       CheckUserCredentialsRequest.of(
           getIntent().getStringExtra(AptoideLoginUtils.APTOIDE_LOGIN_ACCESS_TOKEN_KEY),
@@ -117,7 +118,11 @@ public class CreateStoreActivity extends PermissionsBaseActivity implements
           }
       });
     }));
-    mSubscriptions.add(RxView.clicks(mSkip).subscribe(click -> finish()));
+    mSubscriptions.add(RxView.clicks(mSkip).subscribe(click -> {
+      AptoideAccountManager.refreshAndSaveUserInfoData();
+      //TODO: Broadcast igual ao do signup
+      finish();
+    }));
   }
 
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -170,11 +175,14 @@ public class CreateStoreActivity extends PermissionsBaseActivity implements
           if (answer.getErrors().size() > 0) {
             //TODO: deal with success
             ShowMessage.asSnack(this, "failed");
+            AptoideAccountManager.refreshAndSaveUserInfoData();
             progressDialog.dismiss();
           } else {
             //TODO: deal with failure
             ShowMessage.asSnack(this, "success");
+            AptoideAccountManager.refreshAndSaveUserInfoData();
             progressDialog.dismiss();
+            //TODO: Broadcast igual ao do signup
           }
         });
   }

@@ -105,7 +105,7 @@ public class CreateUserActivity extends PermissionsBaseActivity implements Aptoi
     mSubscriptions.add(RxView.clicks(mUserAvatar).subscribe(click -> chooseAvatarSource()));
     mSubscriptions.add(RxView.clicks(mCreateButton).subscribe(click -> {
       username = mUsername.getText().toString();
-      ProgressDialog pleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(this);
+      ProgressDialog pleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(this, getApplicationContext().getString(R.string.please_wait_upload));
       if (validateProfileData()) {
         pleaseWaitDialog.show();
         CreateUserRequest.of("true", userEmail, username, userPassword, avatarPath).execute(answer -> {
