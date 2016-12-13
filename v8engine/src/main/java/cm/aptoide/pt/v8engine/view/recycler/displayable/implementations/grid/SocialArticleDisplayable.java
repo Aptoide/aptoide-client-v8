@@ -43,7 +43,8 @@ import rx.schedulers.Schedulers;
   @Getter private String abUrl;
   @Getter private Store store;
   @Getter private Comment.User user;
-  //@Getter private long numberOfLikes;
+  @Getter private long numberOfLikes;
+  @Getter private long numberOfComments;
 
   @Getter private List<App> relatedToAppsList;
   private Date date;
@@ -78,9 +79,9 @@ import rx.schedulers.Schedulers;
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
             socialArticle.getPublisher().getBaseUrl()), socialArticle.getPublisher().getName(),
         socialArticle.getThumbnailUrl(), socialArticle.getPublisher().getLogoUrl(), appId,
-        abTestingURL, socialArticle.getStore(), socialArticle.getUser(), socialArticle.getApps(),
-        socialArticle.getDate(), dateCalculator, spannableFactory, timelineMetricsManager,
-        socialRepository);
+        abTestingURL, socialArticle.getStore(), socialArticle.getUser(), socialArticle.getLikes(),
+        socialArticle.getComments(), socialArticle.getApps(), socialArticle.getDate(),
+        dateCalculator, spannableFactory, timelineMetricsManager, socialRepository);
   }
 
   public Observable<List<Installed>> getRelatedToApplication() {

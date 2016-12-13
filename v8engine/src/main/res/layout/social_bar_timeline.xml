@@ -56,6 +56,21 @@
 
   </LinearLayout>
 
+  <TextView
+    android:id="@+id/social_number_of_comments"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:layout_toLeftOf="@+id/social_comment"
+    android:layout_toStartOf="@id/social_comment"
+    android:text="0"
+    android:textSize="10sp"
+    android:visibility="invisible"
+    tools:text="10"
+
+    />
+
+
   <LinearLayout
     android:id="@+id/social_comment"
     android:layout_width="wrap_content"

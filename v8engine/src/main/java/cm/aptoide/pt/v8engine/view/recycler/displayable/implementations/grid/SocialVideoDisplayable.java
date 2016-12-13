@@ -8,6 +8,7 @@ import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
+import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.timeline.SocialVideo;
 import cm.aptoide.pt.v8engine.R;
@@ -36,6 +37,9 @@ import rx.schedulers.Schedulers;
   @Getter private String avatarUrl;
   @Getter private long appId;
   @Getter private String abUrl;
+  @Getter private Comment.User user;
+  @Getter private long numberOfLikes;
+  @Getter private long numberOfComments;
 
   @Getter private List<App> relatedToAppsList;
   private Date date;
@@ -65,6 +69,7 @@ import rx.schedulers.Schedulers;
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
             socialVideo.getPublisher().getBaseUrl()), socialVideo.getPublisher().getName(),
         socialVideo.getThumbnailUrl(), socialVideo.getPublisher().getLogoUrl(), appId, abTestingURL,
+        socialVideo.getUser(), socialVideo.getLikes(), socialVideo.getComments(),
         socialVideo.getApps(), socialVideo.getDate(), dateCalculator, spannableFactory,
         timelineMetricsManager, socialRepository);
   }

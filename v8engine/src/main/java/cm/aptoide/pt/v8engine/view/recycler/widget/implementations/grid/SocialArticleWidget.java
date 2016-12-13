@@ -44,6 +44,7 @@ public class SocialArticleWidget extends CardWidget<SocialArticleDisplayable> {
   private LinearLayout comments;
   private LikeButton likeButton;
   private TextView numberLikes;
+  private TextView numberComments;
   private String appName;
   private String packageName;
 
@@ -69,6 +70,7 @@ public class SocialArticleWidget extends CardWidget<SocialArticleDisplayable> {
     likeButton = (LikeButton) itemView.findViewById(R.id.social_like_test);
     comments = (LinearLayout) itemView.findViewById(R.id.social_comment);
     numberLikes = (TextView) itemView.findViewById(R.id.social_number_of_likes);
+    numberComments = (TextView) itemView.findViewById(R.id.social_number_of_comments);
   }
 
   @Override public void bindView(SocialArticleDisplayable displayable) {
@@ -87,13 +89,14 @@ public class SocialArticleWidget extends CardWidget<SocialArticleDisplayable> {
     ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
     likeButton.setLiked(false);
     like.setVisibility(View.VISIBLE);
+    numberLikes.setVisibility(View.VISIBLE);
+    numberLikes.setText(String.valueOf(displayable.getNumberOfLikes()));
     comments.setVisibility(View.VISIBLE);
+    numberComments.setVisibility(View.VISIBLE);
+    numberComments.setText(String.valueOf(displayable.getNumberOfComments()));
     //relatedTo.setText(displayable.getAppRelatedToText(getContext(), appName));
 
-    int numberOfLikes = 0;
-    numberLikes.setVisibility(View.VISIBLE);
-    numberLikes.setText(String.valueOf(numberOfLikes));
-//    numberLikes.setText(Long.toString(displayable.getNumberOfLikes()));
+    //numberLikes.setText(String.valueOf(numberOfLikes));
     if (getAppButton.getVisibility() != View.GONE && displayable.isGetApp(appName)) {
       getAppButton.setVisibility(View.VISIBLE);
       getAppButton.setText(displayable.getAppText(getContext(), appName));
@@ -166,13 +169,13 @@ public class SocialArticleWidget extends CardWidget<SocialArticleDisplayable> {
     likeButton.setOnLikeListener(new OnLikeListener() {
       @Override public void liked(LikeButton likeButton) {
         likeCard(displayable, cardType, 1);
-        numberLikes.setVisibility(View.VISIBLE);
-        numberLikes.setText(String.valueOf(numberOfLikes + 1));
+        numberLikes.setText(String.valueOf(displayable.getNumberOfLikes() + 1));
       }
 
       @Override public void unLiked(LikeButton likeButton) {
+        likeButton.setLiked(true);
         //likeCard(displayable, cardType, -1);
-        numberLikes.setText("0");
+        //numberLikes.setText("0");
       }
     });
   }

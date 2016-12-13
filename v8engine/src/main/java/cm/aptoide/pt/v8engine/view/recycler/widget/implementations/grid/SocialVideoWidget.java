@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
@@ -15,6 +16,8 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SocialVideoDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
+import com.like.LikeButton;
+import com.like.OnLikeListener;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -24,7 +27,8 @@ public class SocialVideoWidget extends CardWidget<SocialVideoDisplayable> {
   private String cardType = "Social Video";
   private TextView title;
   private TextView subtitle;
-  private ImageView image;
+  private ImageView storeAvatar;
+  private ImageView userAvatar;
   private TextView videoTitle;
   private ImageView thumbnail;
   private View url;
@@ -37,6 +41,12 @@ public class SocialVideoWidget extends CardWidget<SocialVideoDisplayable> {
   private TextView relatedTo;
   private String appName;
   private String packageName;
+  private LinearLayout like;
+  private LinearLayout share;
+  private LinearLayout comments;
+  private LikeButton likeButton;
+  private TextView numberLikes;
+  private TextView numberComments;
 
   public SocialVideoWidget(View itemView) {
     super(itemView);
@@ -45,7 +55,7 @@ public class SocialVideoWidget extends CardWidget<SocialVideoDisplayable> {
   @Override protected void assignViews(View itemView) {
     title = (TextView) itemView.findViewById(R.id.card_title);
     subtitle = (TextView) itemView.findViewById(R.id.card_subtitle);
-    image = (ImageView) itemView.findViewById(R.id.card_image);
+    storeAvatar = (ImageView) itemView.findViewById(R.id.card_image);
     play_button = (ImageView) itemView.findViewById(R.id.play_button);
     media_layout = (FrameLayout) itemView.findViewById(R.id.media_layout);
     videoTitle = (TextView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_title);
@@ -56,6 +66,12 @@ public class SocialVideoWidget extends CardWidget<SocialVideoDisplayable> {
     cardView = (CardView) itemView.findViewById(R.id.card);
     videoHeader = itemView.findViewById(R.id.displayable_social_timeline_video_header);
     relatedTo = (TextView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_related_to);
+    like = (LinearLayout) itemView.findViewById(R.id.social_like);
+    share = (LinearLayout) itemView.findViewById(R.id.social_share);
+    likeButton = (LikeButton) itemView.findViewById(R.id.social_like_test);
+    comments = (LinearLayout) itemView.findViewById(R.id.social_comment);
+    numberLikes = (TextView) itemView.findViewById(R.id.social_number_of_likes);
+    numberComments = (TextView) itemView.findViewById(R.id.social_number_of_comments);
   }
 
   @Override public void bindView(SocialVideoDisplayable displayable) {
@@ -67,10 +83,15 @@ public class SocialVideoWidget extends CardWidget<SocialVideoDisplayable> {
     videoTitle.setTypeface(typeFace);
     videoTitle.setText(displayable.getVideoTitle());
     setCardviewMargin(displayable, cardView);
-    ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
+    ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarUrl(), storeAvatar);
+    ImageLoader.loadWithShadowCircleTransform(displayable.getUser().getAvatar(), userAvatar);
     ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
     play_button.setVisibility(View.VISIBLE);
-
+    numberLikes.setVisibility(View.VISIBLE);
+    numberLikes.setText(String.valueOf(displayable.getNumberOfLikes()));
+    comments.setVisibility(View.VISIBLE);
+    numberComments.setVisibility(View.VISIBLE);
+    numberComments.setText(String.valueOf(displayable.getNumberOfComments()));
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       media_layout.setForeground(
           getContext().getResources().getDrawable(R.color.overlay_black, getContext().getTheme()));
@@ -128,6 +149,18 @@ public class SocialVideoWidget extends CardWidget<SocialVideoDisplayable> {
               .build())
           .build(), AptoideAnalytics.OPEN_CHANNEL);
     }));
+    likeButton.setOnLikeListener(new OnLikeListener() {
+      @Override public void liked(LikeButton likeButton) {
+        likeCard(displayable, cardType, 1);
+        numberLikes.setText(String.valueOf(displayable.getNumberOfLikes() + 1));
+      }
+
+      @Override public void unLiked(LikeButton likeButton) {
+        likeButton.setLiked(true);
+        //likeCard(displayable, cardType, -1);
+        //numberLikes.setText("0");
+      }
+    });
   }
 
   private void setAppNameToFirstLinkedApp() {
