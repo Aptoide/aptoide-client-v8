@@ -1,15 +1,24 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
+import android.util.Pair;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 
-public class OfficialAppDisplayable extends DisplayablePojo<GetApp> {
+public class OfficialAppDisplayable extends Displayable {
 
-  public OfficialAppDisplayable() { }
+  private final Pair<String, GetApp> messageGetApp;
 
-  public OfficialAppDisplayable(GetApp app) {
-    super(app);
+  public OfficialAppDisplayable() {
+    messageGetApp = null;
+  }
+
+  public OfficialAppDisplayable(Pair<String, GetApp> messageGetApp) {
+    this.messageGetApp = messageGetApp;
+  }
+
+  public Pair<String, GetApp> getMessageGetApp() {
+    return messageGetApp;
   }
 
   @Override public int getViewLayout() {

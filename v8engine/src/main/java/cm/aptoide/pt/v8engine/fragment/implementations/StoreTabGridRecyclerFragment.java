@@ -359,7 +359,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
     list.add(widget1);
 
     GetStoreWidgets.WSWidget widget2 = new GetStoreWidgets.WSWidget();
-    widget2.setType(Type.OFFICIAL_APP);
+    widget2.setType(Type.APP_META);
     widget2.setTitle("Official app");
     widget2.setTag("apps-group-official-app");
     widget2.setView("http://ws75.aptoide.com/api/7/getApp/app_id=12765245");
@@ -383,14 +383,16 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
           List<GetStoreWidgets.WSWidget> list = getStoreWidgets.getDatalist().getList();
           CountDownLatch countDownLatch = new CountDownLatch(list.size());
 
+          String aptoideClientUuid =
+              new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+                  DataProvider.getContext()).getAptoideClientUUID();
+
           Observable.from(list)
               .forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget,
                   wsWidget.getView() != null ? StoreUtils.getStoreCredentialsFromUrl(
                       wsWidget.getView()) : new BaseRequestWithStore.StoreCredentials(),
                   countDownLatch, refresh, throwable -> finishLoading(throwable),
-                  AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
-                  new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                      DataProvider.getContext()).getAptoideClientUUID(),
+                  AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(), aptoideClientUuid,
                   DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(
                       V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId(),
                   !TextUtils.isEmpty(AptoideAccountManager.getUserData().getUserRepo())));

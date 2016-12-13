@@ -136,8 +136,14 @@ public class DisplayablesFactory {
             }
             break;
 
-          case OFFICIAL_APP:
-            displayables.add(new OfficialAppDisplayable((GetApp) wsWidget.getViewObject()));
+          case APP_META:
+            GetStoreWidgets.WSWidget.Data dataObj = wsWidget.getData();
+            String message = dataObj.getMessage();
+            displayables.add(
+              new OfficialAppDisplayable(
+                new Pair<String, GetApp>(message, (GetApp) wsWidget.getViewObject())
+              )
+            );
             break;
         }
       }
