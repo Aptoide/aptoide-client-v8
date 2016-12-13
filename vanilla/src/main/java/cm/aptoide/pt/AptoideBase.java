@@ -15,6 +15,7 @@ import cm.aptoide.pt.v8engine.V8Engine;
 public class AptoideBase extends V8Engine {
 
   @Override public void onCreate() {
+    setupCrashReports(BuildConfig.CRASH_REPORTS_DISABLED);
     MultiDex.install(this);
     super.onCreate();
   }
