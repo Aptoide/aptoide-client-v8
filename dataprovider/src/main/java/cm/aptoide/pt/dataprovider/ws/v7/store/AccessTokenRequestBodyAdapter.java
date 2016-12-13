@@ -19,7 +19,7 @@ import okio.BufferedSink;
  * Created by pedroribeiro on 12/12/16.
  */
 
-@AllArgsConstructor public class AccessTokenRequestBodyAdapter implements AccessTokenBody {
+public class AccessTokenRequestBodyAdapter implements AccessTokenBody {
 
   private final BaseBody baseBody;
   private final BaseBodyDecorator decorator;
@@ -27,11 +27,12 @@ import okio.BufferedSink;
   private String accessToken;
   private String storeTheme;
 
-  public AccessTokenRequestBodyAdapter(BaseBody baseBody, BaseBodyDecorator decorator, String storeName, String storeTheme) {
+  public AccessTokenRequestBodyAdapter(BaseBody baseBody, BaseBodyDecorator decorator, String accessToken, String storeName, String storeTheme) {
     this.baseBody = baseBody;
     this.decorator = decorator;
     this.storeName = storeName;
     this.storeTheme = storeTheme;
+    this.accessToken = accessToken;
   }
 
   @Override public String getAccessToken() {
@@ -49,18 +50,16 @@ import okio.BufferedSink;
 
     body.put("store_name", createBodyPartFromString(storeName));
     body.put("store_theme", createBodyPartFromString(storeTheme));
-    body.put("access_token", createBodyPartFromString(baseBody.getAccessToken()));
+    body.put("access_token", createBodyPartFromString(accessToken));
     body.put("aptoide_uid", createBodyPartFromString(baseBody.getAptoideId()));
-    body.put("aptoide_vercode", createBodyPartFromString(String.valueOf(baseBody.getAptoideVercode()))
-      );
+    body.put("aptoide_vercode", createBodyPartFromString(String.valueOf(baseBody.getAptoideVercode())));
 
     body.put("cdn", createBodyPartFromString(baseBody.getCdn()));
     body.put("lang", createBodyPartFromString(baseBody.getLang()));
     body.put("q", createBodyPartFromString(baseBody.getQ()));
     body.put("country", createBodyPartFromString(baseBody.getCountry()));
 
-    body.put("mature", createBodyPartFromString(String.valueOf(baseBody.isMature()))
-      );
+    body.put("mature", createBodyPartFromString(String.valueOf(baseBody.isMature())));
 
     return body;
   }

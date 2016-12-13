@@ -22,21 +22,21 @@ import rx.Observable;
 
   private static final String BASE_HOST = "https://ws75-primary.aptoide.com/api/7/";
 
-  private MultipartBody.Part file;
+  private static MultipartBody.Part multipartBody;
 
 
   protected SetStoreRequest(AccessTokenBody body, String baseHost, MultipartBody.Part file) {
-    super(body, baseHost, file);
+    super(body, baseHost);
   }
 
   public static SetStoreRequest of(String aptoideClientUUID, String accessToken,
       String storeName, String storeTheme, String storeAvatarPath) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
     AccessTokenRequestBodyAdapter body =
-        new AccessTokenRequestBodyAdapter(new BaseBody(), decorator, storeName, storeTheme);
+        new AccessTokenRequestBodyAdapter(new BaseBody(), decorator, accessToken, storeName, storeTheme);
     File file = new File(Application.getConfiguration().getUserAvatarCachePath() + "aptoide_store_avatar.png");
     RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-    MultipartBody.Part multipartBody = MultipartBody.Part.createFormData("store_avatar", file.getName(), requestFile);
+    multipartBody = MultipartBody.Part.createFormData("store_avatar", file.getName(), requestFile);
     return new SetStoreRequest(body, BASE_HOST, multipartBody);
   }
 
@@ -48,6 +48,6 @@ import rx.Observable;
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
 
-    return interfaces.editStore(file, ((AccessTokenRequestBodyAdapter) body).get());
+    return interfaces.editStore(multipartBody, ((AccessTokenRequestBodyAdapter) body).get());
   }
 }
