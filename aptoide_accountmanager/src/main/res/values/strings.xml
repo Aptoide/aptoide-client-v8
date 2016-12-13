@@ -70,4 +70,53 @@
   <!-- WIZARD -->
   <string name="wizard_skip"><b>SKIP</b></string>
 
+  <!--Create user fragment-->
+  <string name="create_user_title">Create a User Profile</string>
+  <string name="create_user_header"><b>Create your User Profile</b> so that you\'re able to rate, comment and share apps with your friends</string>
+  <string name="create_user_take_picture">Take a picture for your profile</string>
+  <string name="create_user_random_photo">Or use random photo</string>
+  <string name="create_user_choose_username">Choose your username</string>
+  <string name="create_user_username">User name</string>
+  <string name="create_user_hint">Appears when you rate, comment and share apps.</string>
+  <string name="create_user_create_button">Create Profile</string>
+  <string name="create_user_dialog_camera">Take Photo</string>
+  <string name="create_user_dialog_gallery">Choose From Gallery</string>
+  <string name="create_user_dialog_cancel">Cancel</string>
+  <string name="create_user_storage_permission"></string>
+  <string name="nothing_inserted">Please insert a username and photo to create your profile</string>
+  <string name="no_username_inserted">Please insert a username to create your profile</string>
+  <string name="no_photo_inserted">Please choose a photo to create your profile</string>
+
+  <!--User interests fragment -->
+  <string name="user_interests_title">Your Interests</string>
+  <string name="user_interests_header"><b>Show us your interests</b> and help us to find the best apps for you</string>
+  <string name="user_interests_adult_gambling">Adult &amp; Gambling</string>
+  <string name="user_interests_photography_video">Photography &amp; Video</string>
+  <string name="next">Next</string>
+
+  <!--Create Store fragment-->
+  <string name="create_store_title">Create Your Store</string>
+  <string name="create_store_header"><b>Create your store</b> and share your apps selection with %s community. <b>Give it a try</b></string>
+  <string name="create_store_name">Choose a name for your %s Store</string>
+  <string name="create_store_name_inserted">Your Store\'s name</string>
+  <string name="create_store_theme">Store Theme</string>
+  <string name="create_store_create">Create Store</string>
+  <string name="create_store_skip">Skip</string>
+  <string name="create_store_choose_image">Choose an image for your store</string>
+
+  <string name="upload_dialog_title">Upload Photo</string>
+  <string name="upload_dialog_photo">Take new Photo</string>
+  <string name="upload_dialog_gallery">Select from gallery</string>
+
+
+  <!--Public/Private-->
+  <string name="create_profile_pub_pri_suc_login">You 're successfully logged in</string>
+  <string name="create_profile_pub_pri_suc_login_sub_text">Your friends are now able to follow you and see your shares on Apps Timeline!</string>
+  <string name="create_profile_pub_pri">Aptoide's Apps Timeline</string>
+  <string name="create_profile_pub_pri_sub_text_1">allows people to follow their friends and family</string>
+  <string name="create_profile_pub_pri_sub_text_2">With Apps Timeline you can share app recommendations and articles with your followers, seeing what you share.</string>
+  <string name="create_profile_pub_pri_sub_text_3">But you an shoose to make your profile private, and lose sharing features.</string>
+  <string name="create_profile_pub_pri_make_priv">Make my profile private</string>
+
+
 </resources>
