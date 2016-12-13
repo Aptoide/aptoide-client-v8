@@ -69,6 +69,8 @@
   <string name="user_created">User Created</string>
   <!-- WIZARD -->
   <string name="wizard_skip"><b>SKIP</b></string>
+  <string name="please_wait_upload">Please wait, we are uploading the photo. This might take a while.</string>
+
 
   <!--Create user fragment-->
   <string name="create_user_title">Create a User Profile</string>
