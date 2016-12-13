@@ -5,7 +5,9 @@
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
+import android.app.FragmentManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -18,30 +20,34 @@ import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReports;
-import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
-import cm.aptoide.pt.dataprovider.ws.v7.store.PostCommentForStore;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
-import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.adapters.CommentsAdapter;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
 import cm.aptoide.pt.v8engine.util.Translator;
-import cm.aptoide.pt.viewRateAndCommentReviews.CommentDialogWrapper;
+import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentDisplayable;
+import cm.aptoide.pt.viewRateAndCommentReviews.CommentDialogFragment;
+import cm.aptoide.pt.viewRateAndCommentReviews.CommentsReadMoreDisplayable;
+import cm.aptoide.pt.viewRateAndCommentReviews.ItemCommentAdderView;
+import cm.aptoide.pt.viewRateAndCommentReviews.SimpleReviewCommentAdder;
 import com.jakewharton.rxbinding.view.RxView;
+import com.trello.rxlifecycle.FragmentEvent;
+import java.util.List;
 import rx.Observable;
 
 /**
  * Created by neuro on 10-05-2016.
  */
-public class StoreGridRecyclerFragment extends StoreTabGridRecyclerFragment {
+public class StoreGridRecyclerFragment extends StoreTabGridRecyclerFragment
+    implements ItemCommentAdderView<Comment, CommentsAdapter<CommentDisplayable>> {
 
   private static final String TAG = StoreGridRecyclerFragment.class.getName();
 
@@ -113,68 +119,41 @@ public class StoreGridRecyclerFragment extends StoreTabGridRecyclerFragment {
     return super.onCreateView(inflater, container, savedInstanceState);
   }
 
-  private void reloadComments() {
-    // TODO: 5/12/2016 sithengineer
+  private Observable<Void> reloadComments() {
+    return Observable.fromCallable(() -> {
+      ManagerPreferences.setForceServerRefreshFlag(true);
+      super.reload();
+      return null;
+    });
   }
 
-  private Observable<BaseV7Response> submitComment(long storeId, @Nullable Comment comment, String inputText) {
-    if(comment!=null) {
-      return PostCommentForStore.of(storeId, comment.getId(), inputText,
-          AptoideAccountManager.getAccessToken(),
-          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-              DataProvider.getContext()).getAptoideClientUUID()).observe();
-    }
-
-    return PostCommentForStore.of(storeId, inputText,
-        AptoideAccountManager.getAccessToken(),
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID()).observe();
+  private Observable<Void> showSignInMessage() {
+    return ShowMessage.asObservableSnack(this.getActivity(), R.string.you_need_to_be_logged_in,
+        R.string.login, snackView -> {
+          AptoideAccountManager.openAccountManager(StoreGridRecyclerFragment.this.getContext());
+        }).flatMap(a -> Observable.empty());
   }
 
-  public Observable<Boolean> showStoreCommentDialogAndSendComment(final long storeId, @Nullable Comment comment) {
+  // Used method for each single reply in the list view and the new comment button
+  @Override public Observable<Void> showStoreCommentFragment(final long storeId,
+      @NonNull Comment comment, String storeName) {
 
-    if (AptoideAccountManager.isLoggedIn()) {
+    return Observable.just(AptoideAccountManager.isLoggedIn()).flatMap(isLoggedIn -> {
 
-      CommentDialogWrapper dialogWrapper = new CommentDialogWrapper();
-      dialogWrapper.build(getContext(), " ?? "); // setup title
+      if (isLoggedIn) {
+        // show fragment CommentDialog
+        FragmentManager fm = StoreGridRecyclerFragment.this.getActivity().getFragmentManager();
+        CommentDialogFragment commentDialogFragment =
+            CommentDialogFragment.newInstanceStoreCommentReply(storeId, comment.getId(), storeName);
 
-      dialogWrapper.onCommentButton()
-          .filter(inputText -> {
-            AptoideUtils.SystemU.hideKeyboard(StoreGridRecyclerFragment.this.getActivity());
-            if (TextUtils.isEmpty(inputText)) {
-              dialogWrapper.enableError(AptoideUtils.StringU.getResString(R.string.error_MARG_107));
-              return false;
-            }
-            dialogWrapper.disableError();
-            return true;
-          })
-          .flatMap(inputText -> submitComment(storeId, comment, inputText))
-          .compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW))
-          .subscribe(wsResponse -> {
-            if (wsResponse.isOk()) {
-              ManagerPreferences.setForceServerRefreshFlag(true);
-              reloadComments();
-              Logger.d(TAG, "comment to review added");
-              ShowMessage.asSnack(StoreGridRecyclerFragment.this,
-                  R.string.comment_submitted);
-              dialogWrapper.dismiss();
-              return;
-            }
+        return commentDialogFragment.lifecycle()
+            .doOnSubscribe(() -> commentDialogFragment.show(fm, "fragment_comment_dialog"))
+            .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
+            .flatMap(event -> reloadComments());
+      }
 
-            ShowMessage.asSnack(StoreGridRecyclerFragment.this, R.string.error_occured);
-          }, e -> {
-            Logger.e(TAG, e);
-            ShowMessage.asSnack(StoreGridRecyclerFragment.this, R.string.error_occured);
-          });
-
-    } else {
-      return ShowMessage.asObservableSnack(this.getActivity(), R.string.you_need_to_be_logged_in, R.string.login,
-          snackView -> {
-            AptoideAccountManager.openAccountManager(StoreGridRecyclerFragment.this.getContext());
-          }).map(a -> false);
-    }
-
-    return Observable.fromCallable(() -> true);
+      return showSignInMessage();
+    });
   }
 
   // special case. this would need a refactoring to be done properly
@@ -182,13 +161,66 @@ public class StoreGridRecyclerFragment extends StoreTabGridRecyclerFragment {
       BaseRequestWithStore.StoreCredentials storeCredentials, boolean refresh) {
     super.caseListStoreComments(url, storeCredentials, refresh);
     floatingActionButton.setVisibility(View.VISIBLE);
+
+    final long storeId =
+        (storeCredentials != null && storeCredentials.getId() != null) ? storeCredentials.getId()
+            : 0;
+
+    final String storeName =
+        (storeCredentials != null && !TextUtils.isEmpty(storeCredentials.getName()))
+            ? storeCredentials.getName() : " ";
+
     RxView.clicks(floatingActionButton)
         .compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW))
-        .flatMap(a -> showStoreCommentDialogAndSendComment(storeCredentials.getId(), null))
-        .subscribe(b -> {
-          /* nothing to do here*/
-        }, err -> {
-          CrashReports.logException(err);
+        .subscribe(a -> {
+          if (AptoideAccountManager.isLoggedIn()) {
+            FragmentManager fm = StoreGridRecyclerFragment.this.getActivity().getFragmentManager();
+            CommentDialogFragment commentDialogFragment =
+                CommentDialogFragment.newInstanceStoreComment(storeId, storeName);
+
+            // check if fragment is already visible.
+            if (fm.findFragmentByTag("fragment_comment_dialog_list") != null) return;
+
+            commentDialogFragment.show(fm, "fragment_comment_dialog_list");
+            commentDialogFragment.lifecycle()
+                .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
+                .compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW))
+                .flatMap(event -> reloadComments())
+                .subscribe(b -> {
+                  // does nothing. further optimization needed in this observable
+                }, err -> {
+                  Logger.e(TAG, err);
+                  CrashReports.logException(err);
+                });
+          } else {
+            ShowMessage.asSnack(StoreGridRecyclerFragment.this.getActivity(),
+                R.string.you_need_to_be_logged_in, R.string.login, snackView -> {
+                  AptoideAccountManager.openAccountManager(snackView.getContext());
+                });
+          }
+        }, e -> {
+          Logger.e(TAG, e);
+          ShowMessage.asSnack(StoreGridRecyclerFragment.this, R.string.error_occured);
         });
+  }
+
+  @Override protected BaseAdapter createAdapter() {
+    return new CommentsAdapter<CommentDisplayable>(CommentDisplayable.class);
+  }
+
+  @Override public CommentsAdapter<CommentDisplayable> getAdapter() {
+    return (CommentsAdapter<CommentDisplayable>) super.getAdapter();
+  }
+
+  @Override public Displayable createReadMoreDisplayable(int itemPosition, Comment item) {
+    return new CommentsReadMoreDisplayable(item.getId(), false, itemPosition + 1,
+        new SimpleReviewCommentAdder(itemPosition, this));
+  }
+
+  @Override
+  public void createDisplayableComments(List<Comment> comments, List<Displayable> displayables) {
+    for (final Comment comment : comments) {
+      displayables.add(new CommentDisplayable(comment));
+    }
   }
 }

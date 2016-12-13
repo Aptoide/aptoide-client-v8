@@ -5,10 +5,13 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
+import android.util.Pair;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.FullReview;
+import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.Layout;
 import cm.aptoide.pt.model.v7.ListApps;
@@ -22,6 +25,7 @@ import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
+import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CreateStoreDisplayable;
@@ -33,8 +37,10 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Gri
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreMetaDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.MyStoreDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.OfficialAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RecommendedStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RowReviewDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreAddCommentDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreLatestCommentsDisplayable;
 import java.util.ArrayList;
@@ -111,15 +117,27 @@ public class DisplayablesFactory {
           case STORES_RECOMMENDED:
             displayables.add(createRecommendedStores(wsWidget, storeTheme));
             break;
-          case STORE_LATEST_COMMENTS:
-            ListComments comments = (ListComments) wsWidget.getViewObject();
+          case COMMENTS_GROUP:
+            Pair<ListComments, BaseRequestWithStore.StoreCredentials> data =
+                (Pair<ListComments, BaseRequestWithStore.StoreCredentials>) wsWidget.getViewObject();
+            ListComments comments = data.first;
             if (comments != null
                 && comments.getDatalist() != null
                 && comments.getDatalist().getList().size() > 0) {
               displayables.add(new StoreGridHeaderDisplayable(wsWidget));
               displayables.add(
-                  new StoreLatestCommentsDisplayable(comments.getDatalist().getList()));
+                  new StoreLatestCommentsDisplayable(data.second.getId(), data.second.getName(),
+                      comments.getDatalist().getList()));
+            } else {
+              displayables.add(new StoreGridHeaderDisplayable(wsWidget));
+              displayables.add(
+                  new StoreAddCommentDisplayable(data.second.getId(), data.second.getName(),
+                      StoreThemeEnum.APTOIDE_STORE_THEME_DEFAULT));
             }
+            break;
+
+          case OFFICIAL_APP:
+            displayables.add(new OfficialAppDisplayable((GetApp) wsWidget.getViewObject()));
             break;
         }
       }

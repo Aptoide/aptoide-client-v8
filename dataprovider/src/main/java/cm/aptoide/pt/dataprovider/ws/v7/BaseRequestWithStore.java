@@ -46,7 +46,7 @@ public abstract class BaseRequestWithStore<U, B extends BaseBodyWithStore> exten
       this.passwordSha1 = null;
     }
 
-    public StoreCredentials(Long id, String username, String passwordSha1) {
+    public StoreCredentials(long id, String username, String passwordSha1) {
       this.name = null;
       this.id = id;
       this.username = username;
@@ -55,6 +55,13 @@ public abstract class BaseRequestWithStore<U, B extends BaseBodyWithStore> exten
 
     public StoreCredentials(String name, String username, String passwordSha1) {
       this.id = null;
+      this.name = name;
+      this.username = username;
+      this.passwordSha1 = passwordSha1;
+    }
+
+    public StoreCredentials(long id, String name, String username, String passwordSha1) {
+      this.id = id;
       this.name = name;
       this.username = username;
       this.passwordSha1 = passwordSha1;

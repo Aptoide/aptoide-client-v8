@@ -45,7 +45,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Gri
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreMetaDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.InstalledAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.MyStoreDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.MyStoreWidget;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.OfficialAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.OtherVersionDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RecommendedStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RecommendedStoreWidget;
@@ -56,6 +56,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Sea
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SearchDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SimilarDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SocialArticleDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreAddCommentDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreLatestAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreLatestCommentsDisplayable;
@@ -98,6 +99,8 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridDisp
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridStoreMetaWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridStoreWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.InstalledAppWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.MyStoreWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.OfficialAppWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.OtherVersionWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.ProgressBarWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.RecommendationWidget;
@@ -108,6 +111,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SearchAd
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SearchWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SimilarWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SocialArticleWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.StoreAddCommentWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.StoreGridHeaderWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.StoreLatestAppsWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.StoreLatestCommentsWidget;
@@ -309,6 +313,9 @@ public class DisplayableWidgetMapping {
     displayableWidgetMappings.add(new DisplayableWidgetMapping((StoreLatestCommentsWidget.class),
         StoreLatestCommentsDisplayable.class));
 
+    displayableWidgetMappings.add(new DisplayableWidgetMapping((StoreAddCommentWidget.class),
+        StoreAddCommentDisplayable.class));
+
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping((CreateStoreWidget.class), CreateStoreDisplayable.class));
 
@@ -317,6 +324,9 @@ public class DisplayableWidgetMapping {
 
     displayableWidgetMappings.add(new DisplayableWidgetMapping((RecommendedStoreWidget.class),
         RecommendedStoreDisplayable.class));
+
+    displayableWidgetMappings.add(
+        new DisplayableWidgetMapping((OfficialAppWidget.class), OfficialAppDisplayable.class));
 
     return displayableWidgetMappings;
   }

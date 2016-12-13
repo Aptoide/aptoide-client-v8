@@ -643,6 +643,11 @@ public class AptoideUtils {
       return String.format(Locale.ENGLISH, "%.1f %sb", bytes / Math.pow(unit, exp), pre);
     }
 
+    /**
+     *
+     * @param bytes file size
+     * @return formatted string for file file showing a Human perceptible file size
+     */
     public static String formatBytes(long bytes) {
       int unit = 1024;
       if (bytes < unit) {
