@@ -316,7 +316,6 @@
   <string name="word_this">this</string>
 
   <!-- social apps timeline -->
-  <string name="social_timeline_share">Share</string>
   <string name="social_timeline_you_will_share">"You will share:"</string>
 
 </resources>

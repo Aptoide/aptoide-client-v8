@@ -29,6 +29,7 @@ import rx.schedulers.Schedulers;
  * Created by jdandrade on 28/11/2016.
  */
 @AllArgsConstructor public class SocialVideoDisplayable extends CardDisplayable {
+  @Getter private SocialVideo socialVideo;
   @Getter private String videoTitle;
   @Getter private Link link;
   @Getter private Link baseLink;
@@ -64,7 +65,7 @@ import rx.schedulers.Schedulers;
       abTestingURL = socialVideo.getAb().getConversion().getUrl();
     }
 
-    return new SocialVideoDisplayable(socialVideo.getTitle(),
+    return new SocialVideoDisplayable(socialVideo, socialVideo.getTitle(),
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, socialVideo.getUrl()),
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
             socialVideo.getPublisher().getBaseUrl()), socialVideo.getPublisher().getName(),
@@ -122,6 +123,6 @@ import rx.schedulers.Schedulers;
   }
 
   @Override public void like(Context context, String cardType, int rating) {
-
+    socialRepository.like(socialVideo, cardType, "", rating);
   }
 }

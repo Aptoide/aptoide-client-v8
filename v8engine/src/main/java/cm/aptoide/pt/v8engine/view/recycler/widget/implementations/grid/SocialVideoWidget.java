@@ -56,6 +56,7 @@ public class SocialVideoWidget extends CardWidget<SocialVideoDisplayable> {
     title = (TextView) itemView.findViewById(R.id.card_title);
     subtitle = (TextView) itemView.findViewById(R.id.card_subtitle);
     storeAvatar = (ImageView) itemView.findViewById(R.id.card_image);
+    userAvatar = (ImageView) itemView.findViewById(R.id.card_user_avatar);
     play_button = (ImageView) itemView.findViewById(R.id.play_button);
     media_layout = (FrameLayout) itemView.findViewById(R.id.media_layout);
     videoTitle = (TextView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_title);
@@ -87,6 +88,7 @@ public class SocialVideoWidget extends CardWidget<SocialVideoDisplayable> {
     ImageLoader.loadWithShadowCircleTransform(displayable.getUser().getAvatar(), userAvatar);
     ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
     play_button.setVisibility(View.VISIBLE);
+    like.setVisibility(View.VISIBLE);
     numberLikes.setVisibility(View.VISIBLE);
     numberLikes.setText(String.valueOf(displayable.getNumberOfLikes()));
     comments.setVisibility(View.VISIBLE);
