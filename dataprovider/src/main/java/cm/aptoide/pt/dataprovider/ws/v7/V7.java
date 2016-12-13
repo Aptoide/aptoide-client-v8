@@ -27,7 +27,6 @@ import cm.aptoide.pt.model.v7.ListFullComments;
 import cm.aptoide.pt.model.v7.ListFullReviews;
 import cm.aptoide.pt.model.v7.ListReviews;
 import cm.aptoide.pt.model.v7.ListSearchApps;
-import cm.aptoide.pt.model.v7.MyStore;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
 import cm.aptoide.pt.model.v7.store.GetStore;
@@ -269,7 +268,11 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
     @POST("{email}") Observable<BaseV7Response> shareCard(@Body ShareCardRequest.Body body,
         @Path(value = "email") String email);
 
-    @POST("getMyStore") Observable<MyStore> getMyStore(
+    @POST("/api/7/my/store/getMeta") Observable<GetStoreMeta> getMyStoreMeta(@Body BaseBody body,
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("/api/7/{url}") Observable<ListStores> getMyStoreList(
+        @Path(value = "url", encoded = true) String path, @Body BaseBody body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @Multipart

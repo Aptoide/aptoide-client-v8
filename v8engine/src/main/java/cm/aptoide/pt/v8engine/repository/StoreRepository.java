@@ -1,6 +1,8 @@
 package cm.aptoide.pt.v8engine.repository;
 
 import cm.aptoide.pt.database.accessors.StoreAccessor;
+import cm.aptoide.pt.database.realm.Store;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import rx.Observable;
 
@@ -17,5 +19,9 @@ import rx.Observable;
 
   public Observable<Long> count() {
     return storeAccessor.count();
+  }
+
+  public Observable<List<Store>> getAll() {
+    return storeAccessor.getAll();
   }
 }

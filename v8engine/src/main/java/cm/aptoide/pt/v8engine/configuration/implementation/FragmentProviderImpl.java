@@ -27,7 +27,6 @@ import cm.aptoide.pt.v8engine.fragment.implementations.SocialFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreGridRecyclerFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreTabGridRecyclerFragment;
-import cm.aptoide.pt.v8engine.fragment.implementations.SubscribedStoresFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.UpdatesFragment;
 import cm.aptoide.pt.viewRateAndCommentReviews.RateAndReviewsFragment;
 import java.util.ArrayList;
@@ -139,10 +138,6 @@ public class FragmentProviderImpl implements FragmentProvider {
 
   @Override public Fragment newAppsTimelineFragment(String action) {
     return AppsTimelineFragment.newInstance(action);
-  }
-
-  @Override public Fragment newSubscribedStoresFragment() {
-    return SubscribedStoresFragment.newInstance();
   }
 
   @Override public Fragment newSearchPagerTabFragment(String query, boolean subscribedStores,

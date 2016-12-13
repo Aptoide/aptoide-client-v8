@@ -25,7 +25,9 @@ public enum Type {
   //Reviews Screen
   REVIEWS_GROUP(1, false),
   //widget to create the user's store
-  MY_STORE(1, true),;
+  MY_STORE_META(1, true),
+  MY_STORES_SUBSCRIBED(3, false),
+  STORES_RECOMMENDED(3, false);
 
   @Getter private int defaultPerLineCount;
   @Getter private boolean fixedPerLineCount;

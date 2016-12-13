@@ -47,6 +47,8 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Ins
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.MyStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.MyStoreWidget;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.OtherVersionDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RecommendedStoreDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RecommendedStoreWidget;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RollbackDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RowReviewDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ScheduledDownloadDisplayable;
@@ -312,6 +314,9 @@ public class DisplayableWidgetMapping {
 
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping((MyStoreWidget.class), MyStoreDisplayable.class));
+
+    displayableWidgetMappings.add(new DisplayableWidgetMapping((RecommendedStoreWidget.class),
+        RecommendedStoreDisplayable.class));
 
     return displayableWidgetMappings;
   }

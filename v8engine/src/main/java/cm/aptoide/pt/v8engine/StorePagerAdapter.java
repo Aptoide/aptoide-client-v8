@@ -120,8 +120,6 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
 
   private Fragment caseClient(Event event) {
     switch (event.getName()) {
-      case myStores:
-        return V8Engine.getFragmentProvider().newSubscribedStoresFragment();
       case myUpdates:
         return V8Engine.getFragmentProvider().newUpdatesFragment();
       case myDownloads:

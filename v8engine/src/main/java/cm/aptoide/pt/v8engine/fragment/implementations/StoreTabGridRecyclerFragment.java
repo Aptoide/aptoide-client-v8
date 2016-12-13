@@ -8,7 +8,6 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReports;
@@ -40,6 +39,7 @@ import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.util.Translator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -277,8 +277,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
                   new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                       DataProvider.getContext()).getAptoideClientUUID(),
                   DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(
-                      V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId(),
-                  !TextUtils.isEmpty(AptoideAccountManager.getUserData().getUserRepo())));
+                      V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId()));
 
           try {
             countDownLatch.await(5, TimeUnit.SECONDS);
@@ -286,7 +285,8 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
             e.printStackTrace();
           }
 
-          displayables = DisplayablesFactory.parse(getStore.getNodes().getWidgets(), storeTheme);
+          displayables = DisplayablesFactory.parse(getStore.getNodes().getWidgets(), storeTheme,
+              RepositoryFactory.getRepositoryFor(cm.aptoide.pt.database.realm.Store.class));
 
           // We only want Adult Switch in Home Fragment.
           if (getParentFragment() != null && getParentFragment() instanceof HomeFragment) {
@@ -319,8 +319,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
                   new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                       DataProvider.getContext()).getAptoideClientUUID(),
                   DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(
-                      V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId(),
-                  !TextUtils.isEmpty(AptoideAccountManager.getUserData().getUserRepo())));
+                      V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId()));
 
           try {
             countDownLatch.await();
@@ -328,7 +327,8 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
             e.printStackTrace();
           }
 
-          displayables = DisplayablesFactory.parse(getStoreWidgets, storeTheme);
+          displayables = DisplayablesFactory.parse(getStoreWidgets, storeTheme,
+              RepositoryFactory.getRepositoryFor(cm.aptoide.pt.database.realm.Store.class));
           setDisplayables(displayables);
         }, throwable -> finishLoading(throwable));
   }
