@@ -34,7 +34,6 @@ import cm.aptoide.pt.model.v7.Layout;
 import cm.aptoide.pt.model.v7.ListApps;
 import cm.aptoide.pt.model.v7.ListComments;
 import cm.aptoide.pt.model.v7.ListFullReviews;
-import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.model.v7.store.Store;
@@ -269,7 +268,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
               getStore.getNodes().getWidgets().getDatalist().getList();
 
           // xxx
-          injectStuff(list, storeCredentials != null ? storeCredentials.getName() : null);
+          //injectStuff(list, storeCredentials != null ? storeCredentials.getName() : null);
 
           CountDownLatch countDownLatch = new CountDownLatch(list.size());
 
@@ -310,6 +309,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
   }
 
   // FIXME: 9/12/2016 sithengineer remove this method. xxx
+  /*
   private void injectStuff(List<GetStoreWidgets.WSWidget> list, String storeName) {
     // comments group widget
     GetStoreWidgets.WSWidget widget1 = new GetStoreWidgets.WSWidget();
@@ -342,7 +342,6 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 
     list.add(widget1);
 
-    /*
     GetStoreWidgets.WSWidget widget2 = new GetStoreWidgets.WSWidget();
     widget2.setType(Type.OFFICIAL_APP);
     widget2.setTitle("Official app");
@@ -351,8 +350,8 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
     widget2.setData(new GetStoreWidgets.WSWidget.Data().setLayout(Layout.GRID));
 
     list.add(widget2);
-    */
   }
+  */
 
   private Subscription caseGetStoreWidgets(String url,
       BaseRequestWithStore.StoreCredentials storeCredentials, boolean refresh) {

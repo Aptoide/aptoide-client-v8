@@ -27,18 +27,27 @@ import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.adapters.CommentsAdapter;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
 import cm.aptoide.pt.v8engine.util.Translator;
+import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentDisplayable;
 import cm.aptoide.pt.viewRateAndCommentReviews.CommentDialogFragment;
+import cm.aptoide.pt.viewRateAndCommentReviews.CommentsReadMoreDisplayable;
+import cm.aptoide.pt.viewRateAndCommentReviews.ItemCommentAdderView;
+import cm.aptoide.pt.viewRateAndCommentReviews.SimpleReviewCommentAdder;
 import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.FragmentEvent;
+import java.util.List;
 import rx.Observable;
 
 /**
  * Created by neuro on 10-05-2016.
  */
-public class StoreGridRecyclerFragment extends StoreTabGridRecyclerFragment {
+public class StoreGridRecyclerFragment extends StoreTabGridRecyclerFragment
+    implements ItemCommentAdderView<Comment, CommentsAdapter<CommentDisplayable>> {
 
   private static final String TAG = StoreGridRecyclerFragment.class.getName();
 
@@ -193,5 +202,25 @@ public class StoreGridRecyclerFragment extends StoreTabGridRecyclerFragment {
           Logger.e(TAG, e);
           ShowMessage.asSnack(StoreGridRecyclerFragment.this, R.string.error_occured);
         });
+  }
+
+  @Override protected BaseAdapter createAdapter() {
+    return new CommentsAdapter<CommentDisplayable>(CommentDisplayable.class);
+  }
+
+  @Override public CommentsAdapter<CommentDisplayable> getAdapter() {
+    return (CommentsAdapter<CommentDisplayable>) super.getAdapter();
+  }
+
+  @Override public Displayable createReadMoreDisplayable(int itemPosition, Comment item) {
+    return new CommentsReadMoreDisplayable(item.getId(), false, itemPosition + 1,
+        new SimpleReviewCommentAdder(itemPosition, this));
+  }
+
+  @Override
+  public void createDisplayableComments(List<Comment> comments, List<Displayable> displayables) {
+    for (final Comment comment : comments) {
+      displayables.add(new CommentDisplayable(comment));
+    }
   }
 }

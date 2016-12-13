@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
- */
-
 package cm.aptoide.pt.viewRateAndCommentReviews;
 
 import android.os.Bundle;
@@ -31,7 +26,7 @@ import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.adapters.ReviewsAndCommentsAdapter;
+import cm.aptoide.pt.v8engine.adapters.CommentsAdapter;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
@@ -50,8 +45,8 @@ import lombok.Getter;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class RateAndReviewsFragment extends GridRecyclerFragment<ReviewsAndCommentsAdapter>
-    implements FullCommentAdderView<ReviewsAndCommentsAdapter> {
+public class RateAndReviewsFragment extends GridRecyclerFragment<CommentsAdapter>
+    implements ItemCommentAdderView<Review, CommentsAdapter> {
 
   private static final String TAG = RateAndReviewsFragment.class.getSimpleName();
   private static final String APP_ID = "app_id";
@@ -73,7 +68,7 @@ public class RateAndReviewsFragment extends GridRecyclerFragment<ReviewsAndComme
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
 
   public RateAndReviewsFragment() {
-    super(ReviewsAndCommentsAdapter.class);
+    super(CommentsAdapter.class);
   }
 
   public static RateAndReviewsFragment newInstance(long appId, String appName, String storeName,
@@ -133,7 +128,7 @@ public class RateAndReviewsFragment extends GridRecyclerFragment<ReviewsAndComme
 
     floatingActionButton.setOnClickListener(v -> {
       DialogUtils.showRateDialog(getActivity(), appName, packageName, storeName,
-          this::fetchReviews);
+          () -> fetchReviews());
     });
   }
 
@@ -224,9 +219,9 @@ public class RateAndReviewsFragment extends GridRecyclerFragment<ReviewsAndComme
   }
 
   @NonNull @Override
-  public CommentsReadMoreDisplayable createReadMoreDisplayable(final int count, Review review) {
-    return new CommentsReadMoreDisplayable(review.getId(), true, review.getCommentList().getDatalist().getNext(),
-        new SimpleReviewCommentAdder(count, this));
+  public CommentsReadMoreDisplayable createReadMoreDisplayable(final int itemPosition, Review review) {
+    return new CommentsReadMoreDisplayable(review.getId(), true,
+        review.getCommentList().getDatalist().getNext(), new SimpleReviewCommentAdder(itemPosition, this));
   }
 
   /*

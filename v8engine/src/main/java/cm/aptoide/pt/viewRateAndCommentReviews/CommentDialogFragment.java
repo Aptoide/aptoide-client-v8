@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.PostCommentForReviewRequest;
@@ -183,6 +184,9 @@ public class CommentDialogFragment extends RxDialogFragment {
             return;
           }
           ShowMessage.asSnack(CommentDialogFragment.this, R.string.error_occured);
+        }, err -> {
+          Logger.e(TAG, err);
+          CrashReports.logException(err);
         });
   }
 
