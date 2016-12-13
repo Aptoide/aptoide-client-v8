@@ -148,7 +148,6 @@ public abstract class V8Engine extends DataProvider {
   }
 
   @Override public void onCreate() {
-    CrashReports.setup(AptoideCrashLogger.getInstance().setup(this));
     try {
       PRNGFixes.apply();
     } catch (Exception e) {
@@ -276,6 +275,10 @@ public abstract class V8Engine extends DataProvider {
 
     AptoideAccountManager.setAnalytics(new AccountAnalytcsImp());
     Logger.d(TAG, "onCreate took " + (System.currentTimeMillis() - l) + " millis.");
+  }
+
+  protected void setupCrashReports(boolean isDisabled) {
+    CrashReports.setup(AptoideCrashLogger.getInstance().setup(this, isDisabled));
   }
 
   protected FragmentProvider createFragmentProvider() {

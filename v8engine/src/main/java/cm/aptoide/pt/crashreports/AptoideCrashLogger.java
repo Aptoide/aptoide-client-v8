@@ -2,7 +2,6 @@ package cm.aptoide.pt.crashreports;
 
 import android.content.Context;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.v8engine.BuildConfig;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import io.fabric.sdk.android.Fabric;
@@ -30,10 +29,11 @@ public class AptoideCrashLogger implements CrashLogger {
    * setup crash reports
    *
    * @param context context from the class that's calling this method
+   * @param isDisabled
    */
-  public AptoideCrashLogger setup(Context context) {
+  public AptoideCrashLogger setup(Context context, boolean isDisabled) {
     Fabric.with(context, new Crashlytics.Builder().core(
-        new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build()).build());
+        new CrashlyticsCore.Builder().disabled(isDisabled).build()).build());
     Logger.d(TAG, "Setup of AptoideCrashLogger");
     return this;
   }
