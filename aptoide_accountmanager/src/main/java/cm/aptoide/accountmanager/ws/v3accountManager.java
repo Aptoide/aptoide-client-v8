@@ -109,14 +109,18 @@ public abstract class v3accountManager<U> extends WebService<v3accountManager.In
     @Headers({ PostCacheInterceptor.BYPASS_HEADER_KEY + ":" + PostCacheInterceptor.BYPASS_HEADER_VALUE })
     Observable<CheckUserCredentialsJson> getUserInfo(@FieldMap HashMapNotNull<String, String> args);
 
+    @FormUrlEncoded @POST("2/checkUserCredentials")
+    @Headers({ PostCacheInterceptor.BYPASS_HEADER_KEY + ":" + PostCacheInterceptor.BYPASS_HEADER_VALUE })
+    Observable<CheckUserCredentialsJson> checkUserCredentials(@FieldMap HashMapNotNull<String, String> args);
+
     @POST("3/createUser") @FormUrlEncoded
     @Headers({ PostCacheInterceptor.BYPASS_HEADER_KEY + ":" + PostCacheInterceptor.BYPASS_HEADER_VALUE })
     Observable<OAuth> createUser(@FieldMap HashMapNotNull<String, String> args);
 
     @Multipart
     @POST("3/createUser")
-    @Headers({ PostCacheInterceptor.BYPASS_HEADER_KEY + ":" + PostCacheInterceptor.BYPASS_HEADER_VALUE, "Content-Disposition" })
-    Observable<OAuth> createUserWithFile(@Part("user_avatar") RequestBody user_avatar,@PartMap() HashMapNotNull<String, String> args);
+    @Headers({ PostCacheInterceptor.BYPASS_HEADER_KEY + ":" + PostCacheInterceptor.BYPASS_HEADER_VALUE})
+    Observable<OAuth> createUserWithFile(@Part MultipartBody.Part user_avatar,@PartMap() HashMapNotNull<String, RequestBody> args);
 
     @POST("3/changeUserSettings") @FormUrlEncoded
     @Headers({ PostCacheInterceptor.BYPASS_HEADER_KEY + ":" + PostCacheInterceptor.BYPASS_HEADER_VALUE })

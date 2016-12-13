@@ -83,8 +83,10 @@
   <string name="create_user_dialog_camera">Take Photo</string>
   <string name="create_user_dialog_gallery">Choose From Gallery</string>
   <string name="create_user_dialog_cancel">Cancel</string>
-  <string name="create_user_dialog_title">Choose Avatar Origin</string>
   <string name="create_user_storage_permission"></string>
+  <string name="nothing_inserted">Please insert a username and photo to create your profile</string>
+  <string name="no_username_inserted">Please insert a username to create your profile</string>
+  <string name="no_photo_inserted">Please choose a photo to create your profile</string>
 
   <!--User interests fragment -->
   <string name="user_interests_title">Your Interests</string>
@@ -102,4 +104,8 @@
   <string name="create_store_create">Create Store</string>
   <string name="create_store_skip">Skip</string>
   <string name="create_store_choose_image">Choose an image for your store</string>
+
+  <string name="upload_dialog_title">Upload Photo</string>
+  <string name="upload_dialog_photo">Take new Photo</string>
+  <string name="upload_dialog_gallery">Select from gallery</string>
 </resources>

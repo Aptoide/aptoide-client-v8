@@ -146,8 +146,7 @@
           android:padding="8dp"
           android:textSize="12sp"
           android:background="@color/create_store_edit_text_background"
-          android:textColor="@color/create_store_edit_text_color"
-          android:text="@string/create_store_name_inserted"
+          android:hint="@string/create_store_name_inserted"
           />
 
       <TextView

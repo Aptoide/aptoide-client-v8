@@ -149,7 +149,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
       if (extras != null) {
         intent.putExtras(extras);
       }
-      //Intent intent = new Intent(getContext(), CreateUserActivity.class);
+      //Intent intent = new Intent(getContext(), CreateStoreActivity.class);
       context.startActivity(intent);
     }
   }
@@ -639,6 +639,21 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
   }
 
   /**
+   * Validate if user credentials are valid
+   *
+   * @return true if credentials are valid, false otherwise.
+   */
+  private static boolean validateUserCredentials(IRegisterUser callback, String username) {
+    boolean toReturn = true;
+    if (username.length() == 0) {
+      callback.onRegisterFail(R.string.no_email_and_pass_error_message);
+      toReturn = false;
+    }
+
+    return toReturn;
+  }
+
+  /**
    * Check if password has at least one letter and one number
    *
    * @param password String with password to check
@@ -828,6 +843,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
       intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
       intent.putExtra(AptoideLoginUtils.APTOIDE_LOGIN_USER_NAME_KEY, username);
       intent.putExtra(AptoideLoginUtils.APTOIDE_LOGIN_PASSWORD_KEY, password);
+      intent.putExtra(AptoideLoginUtils.APTOIDE_LOGIN_ACCESS_TOKEN_KEY, getAccessToken());
       getContext().startActivity(intent);
     }
   }
@@ -906,6 +922,30 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     String getUserPassword();
 
     String getUserEmail();
+  }
+
+  public interface ICreateProfile {
+
+    void onRegisterSuccess();
+
+    void onRegisterFail(@StringRes int reason);
+
+    String getUserUsername();
+
+    String getUserAvatar();
+  }
+
+  public interface ICreateStore {
+
+    void onCreateSuccess(ProgressDialog progressDialog);
+
+    void onCreateFail();
+
+    String getRepoName();
+
+    String getRepoTheme();
+
+    String getRepoAvatar();
   }
 
   /**
