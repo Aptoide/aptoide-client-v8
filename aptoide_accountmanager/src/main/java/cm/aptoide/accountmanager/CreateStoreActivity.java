@@ -17,7 +17,6 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.SetStoreRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
@@ -26,8 +25,6 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.subscriptions.CompositeSubscription;
 
-import static cm.aptoide.accountmanager.CreateUserActivity.REQUEST_CAMERA_CODE;
-import static cm.aptoide.accountmanager.CreateUserActivity.REQUEST_IMAGE_CAPTURE;
 
 /**
  * Created by pedroribeiro on 29/11/16.
@@ -125,7 +122,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity implements
 
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-      Uri avatarUrl = getPhotoFileUri(PermissionsBaseActivity.createAvatarPhotoName(aptoideStoreAvatar));
+      Uri avatarUrl = getPhotoFileUri(PermissionsBaseActivity.createAvatarPhotoName(photoAvatar));
       ImageLoader.loadWithCircleTransform(avatarUrl, mStoreAvatar);
       storeAvatarPath = avatarUrl.toString();
     } else if (requestCode == REQUEST_CAMERA_CODE && resultCode == RESULT_OK) {

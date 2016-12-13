@@ -274,6 +274,6 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
 
     @Multipart
     @POST("store/set") Observable<BaseV7Response> editStore(@Part MultipartBody.Part store_avatar, @Part
-         @PartMap HashMapNotNull<String, RequestBody> body);
+    @PartMap HashMapNotNull<String, RequestBody> body);
   }
 }

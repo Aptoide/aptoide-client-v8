@@ -220,7 +220,7 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
 
   public void dispatchTakePictureIntent(Context context) {
     if (result) {
-      setFileName(context);
+      setFileName();
       Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
       if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, getPhotoFileUri(PermissionsBaseActivity.createAvatarPhotoName(photoAvatar)));
@@ -229,10 +229,10 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
     }
   }
 
-  private void setFileName(Context context) {
-    if (context.equals(CreateUserActivity.class)) {
+  private void setFileName() {
+    if (getActivityTitle().equals("Create user profile")) {
       photoAvatar = "aptoide_user_avatar.png";
-    } else if (context.equals(CreateStoreActivity.class)) {
+    } else if (getActivityTitle().equals("Create Your Store")) {
       photoAvatar = "aptoide_store_avatar.png";
     }
   }

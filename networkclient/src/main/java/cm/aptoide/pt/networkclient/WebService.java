@@ -72,7 +72,6 @@ public abstract class WebService<T, U> {
     this.clazz = clazz;
     this.baseHost = baseHost;
     this.httpClient = OkHttpClientFactory.getSingletonClient(userAgentGenerator);
-    this.file = file;
   }
 
   protected static Converter.Factory getDefaultConverter() {
