@@ -74,7 +74,7 @@ import rx.Observable;
       RequestBody name = createBodyPartFromString(getName());
       RequestBody update = createBodyPartFromString(getUpdate());
 
-      body.put("json", mode);
+      body.put("mode", mode);
       body.put("email", email);
       body.put("passhash", passhash);
       body.put("hmac", hmac);

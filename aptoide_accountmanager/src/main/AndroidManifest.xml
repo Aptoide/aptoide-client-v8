@@ -36,8 +36,16 @@
 
     <activity android:name=".SignUpActivity"/>
 
-    <activity android:name=".CreateUserActivity"/>
-    <activity android:name=".CreateStoreActivity"/>
+    <activity
+        android:name=".CreateUserActivity"
+        android:screenOrientation="nosensor"
+        />
+
+    <activity
+        android:name=".CreateStoreActivity"
+        android:exported="true"
+        android:screenOrientation="nosensor"
+        />
 
   </application>
 
