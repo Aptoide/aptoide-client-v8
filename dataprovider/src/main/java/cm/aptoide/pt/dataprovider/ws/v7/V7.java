@@ -254,5 +254,9 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 
     @POST("/api/7/my/store/getMeta") Observable<GetStoreMeta> getMyStoreMeta(@Body BaseBody body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("/api/7/{url}") Observable<ListStores> getMyStoreList(
+        @Path(value = "url", encoded = true) String path, @Body BaseBody body,
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
   }
 }

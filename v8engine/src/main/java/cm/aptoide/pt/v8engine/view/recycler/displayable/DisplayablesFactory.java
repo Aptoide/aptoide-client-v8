@@ -5,10 +5,8 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
-import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.FullReview;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
@@ -48,7 +46,6 @@ import rx.Observable;
  * Created by neuro on 01-05-2016.
  */
 public class DisplayablesFactory {
-  public static final String USER_DONT_HAVE_STORE_ERROR = "MYSTORE-1";
   private static final String TAG = DisplayablesFactory.class.getSimpleName();
 
   public static List<Displayable> parse(GetStoreWidgets getStoreWidgets, String storeTheme,
@@ -68,9 +65,7 @@ public class DisplayablesFactory {
             break;
 
           case MY_STORES_SUBSCRIBED:
-            displayables.add(
-                new StoreGridHeaderDisplayable(wsWidget, storeTheme, wsWidget.getTag()));
-            displayables.add(getMyStores(wsWidget.getViewObject(), storeRepository));
+            displayables.add(getMyStores(wsWidget, storeRepository, storeTheme));
             break;
           case STORES_GROUP:
             displayables.add(
@@ -116,9 +111,7 @@ public class DisplayablesFactory {
             displayables.addAll(createMyStoreDisplayables(wsWidget.getViewObject()));
             break;
           case STORES_RECOMMENDED:
-            displayables.add(
-                new StoreGridHeaderDisplayable(wsWidget, storeTheme, wsWidget.getTag()));
-            displayables.add(createRecommendedStores(wsWidget.getViewObject()));
+            displayables.add(createRecommendedStores(wsWidget, storeTheme));
             break;
         }
       }
@@ -131,30 +124,27 @@ public class DisplayablesFactory {
     LinkedList<Displayable> displayables = new LinkedList<>();
     if (viewObject instanceof GetStoreMeta) {
       displayables.add(new MyStoreDisplayable(((GetStoreMeta) viewObject)));
-    } else if (shouldAddCreateStore((BaseV7Response) viewObject)) {
+    } else {
       displayables.add(new CreateStoreDisplayable());
     }
     return displayables;
   }
 
-  private static boolean shouldAddCreateStore(BaseV7Response viewObject) {
-    for (BaseV7Response.Error error : viewObject.getErrors()) {
-      if (error.getCode().equals(USER_DONT_HAVE_STORE_ERROR)) {
-        return true;
-      }
-    }
-    return !AptoideAccountManager.isLoggedIn();
-  }
-
-  private static Displayable createRecommendedStores(Object viewObject) {
-    ListStores listStores = (ListStores) viewObject;
+  private static Displayable createRecommendedStores(GetStoreWidgets.WSWidget wsWidget,
+      String storeTheme) {
+    ListStores listStores = (ListStores) wsWidget.getViewObject();
     if (listStores == null) {
       return new EmptyDisplayable();
     }
     List<Store> stores = listStores.getDatalist().getList();
     List<Displayable> displayables = new LinkedList<>();
+    displayables.add(new StoreGridHeaderDisplayable(wsWidget, storeTheme, wsWidget.getTag()));
     for (Store store : stores) {
-      displayables.add(new RecommendedStoreDisplayable(store));
+      if (wsWidget.getData().getLayout() == Layout.LIST) {
+        displayables.add(new RecommendedStoreDisplayable(store));
+      } else {
+        displayables.add(new GridStoreDisplayable(store));
+      }
     }
 
     return new DisplayableGroup(displayables);
@@ -266,12 +256,16 @@ public class DisplayablesFactory {
     return new DisplayableGroup(tmp);
   }
 
-  private static Displayable getMyStores(Object viewObject, StoreRepository storeRepository) {
+  private static Displayable getMyStores(GetStoreWidgets.WSWidget wsWidget,
+      StoreRepository storeRepository, String storeTheme) {
     return new DisplayableGroup(loadLocalSubscribedStores(storeRepository).map(stores -> {
-      ListStores listStores = (ListStores) viewObject;
+      ListStores listStores = (ListStores) wsWidget.getViewObject();
       stores.addAll(listStores.getDatalist().getList());
       Collections.sort(stores, (store, t1) -> store.getName().compareTo(t1.getName()));
       List<Displayable> tmp = new ArrayList<>(stores.size());
+      if (stores.size() > 0) {
+        tmp.add(new StoreGridHeaderDisplayable(wsWidget, storeTheme, wsWidget.getTag()));
+      }
       for (Store store : stores.subList(0, listStores.getDatalist().getCount())) {
         GridStoreDisplayable diplayable = new GridStoreDisplayable(store);
         tmp.add(diplayable);
@@ -289,6 +283,7 @@ public class DisplayablesFactory {
       Store nwStore = new Store();
       nwStore.setName(store.getStoreName());
       nwStore.setId(store.getStoreId());
+      nwStore.setAvatar(store.getIconPath());
       nwStore.setAppearance(new Store.Appearance().setTheme(store.getTheme()));
       return nwStore;
     }).toList());
