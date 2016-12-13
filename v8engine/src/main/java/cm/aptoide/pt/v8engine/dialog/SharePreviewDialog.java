@@ -70,7 +70,7 @@ public class SharePreviewDialog {
 
       privacyText.setOnClickListener(click -> checkBox.toggle());
 
-      alertadd.setTitle("You will share: ");
+      alertadd.setTitle(R.string.social_timeline_you_will_share);
       checkBox.setClickable(true);
       checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
         if (isChecked) {
@@ -121,7 +121,7 @@ public class SharePreviewDialog {
 
       privacyText.setOnClickListener(click -> checkBox.toggle());
 
-      alertadd.setTitle("You will share: ");
+      alertadd.setTitle(R.string.social_timeline_you_will_share);
       checkBox.setClickable(true);
       checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
         if (isChecked) {
@@ -173,7 +173,7 @@ public class SharePreviewDialog {
 
       privacyText.setOnClickListener(click -> checkBox.toggle());
 
-      alertadd.setTitle("You will share: ");
+      alertadd.setTitle(R.string.social_timeline_you_will_share);
       checkBox.setClickable(true);
       checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
         if (isChecked) {

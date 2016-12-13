@@ -76,11 +76,11 @@ public abstract class CardWidget<T extends Displayable> extends Widget<T> {
 
     SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(displayable);
     AlertDialog.Builder alertDialog = sharePreviewDialog.showPreviewDialog(getContext())
-        .setPositiveButton("Share", (dialogInterface, i) -> {
+        .setPositiveButton(R.string.social_timeline_share, (dialogInterface, i) -> {
           Toast.makeText(getContext(), "SHARING...", Toast.LENGTH_SHORT).show();
           displayable.share(getContext());
         })
-        .setNegativeButton("CANCEL", (dialogInterface, i) -> {
+        .setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
         });
     alertDialog.show();
   }
