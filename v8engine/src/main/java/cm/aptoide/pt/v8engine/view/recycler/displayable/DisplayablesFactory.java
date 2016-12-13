@@ -290,16 +290,24 @@ public class DisplayablesFactory {
   private static Displayable getMyStores(GetStoreWidgets.WSWidget wsWidget,
       StoreRepository storeRepository, String storeTheme) {
     return new DisplayableGroup(loadLocalSubscribedStores(storeRepository).map(stores -> {
-      ListStores listStores = (ListStores) wsWidget.getViewObject();
-      stores.addAll(listStores.getDatalist().getList());
-      Collections.sort(stores, (store, t1) -> store.getName().compareTo(t1.getName()));
       List<Displayable> tmp = new ArrayList<>(stores.size());
+      int maxStoresToShow = stores.size();
+      if (wsWidget.getViewObject() instanceof ListStores) {
+        ListStores listStores = (ListStores) wsWidget.getViewObject();
+        stores.addAll(listStores.getDatalist().getList());
+        maxStoresToShow = listStores.getDatalist().getLimit() > stores.size() ? stores.size()
+            : listStores.getDatalist().getLimit();
+      }
+      Collections.sort(stores, (store, t1) -> store.getName().compareTo(t1.getName()));
       if (stores.size() > 0) {
         tmp.add(new StoreGridHeaderDisplayable(wsWidget, storeTheme, wsWidget.getTag()));
       }
-      for (Store store : stores.subList(0, listStores.getDatalist().getCount())) {
-        GridStoreDisplayable diplayable = new GridStoreDisplayable(store);
-        tmp.add(diplayable);
+      List<Store> storeSubList = stores.subList(0, maxStoresToShow);
+      for (int i = 0; i < storeSubList.size(); i++) {
+        if (i == 0 || storeSubList.get(i - 1).getId() != storeSubList.get(i).getId()) {
+          GridStoreDisplayable diplayable = new GridStoreDisplayable(storeSubList.get(i));
+          tmp.add(diplayable);
+        }
       }
       return tmp;
     }).onErrorReturn(throwable -> {
