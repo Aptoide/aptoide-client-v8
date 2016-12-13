@@ -230,7 +230,7 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
   }
 
   private void setFileName() {
-    if (getActivityTitle().equals("Create user profile")) {
+    if (getActivityTitle().equals("Create User Profile")) {
       photoAvatar = "aptoide_user_avatar.png";
     } else if (getActivityTitle().equals("Create Your Store")) {
       photoAvatar = "aptoide_store_avatar.png";

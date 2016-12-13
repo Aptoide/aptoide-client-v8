@@ -27,6 +27,7 @@ import rx.Observable;
 
   protected SetStoreRequest(AccessTokenBody body, String baseHost, MultipartBody.Part file) {
     super(body, baseHost);
+    multipartBody = file;
   }
 
   public static SetStoreRequest of(String aptoideClientUUID, String accessToken,
@@ -47,7 +48,6 @@ import rx.Observable;
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-
     return interfaces.editStore(multipartBody, ((AccessTokenRequestBodyAdapter) body).get());
   }
 }

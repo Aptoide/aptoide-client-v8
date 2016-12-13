@@ -269,7 +269,7 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
         @Path(value = "email") String email);
 
     @Multipart
-    @POST("store/set") Observable<BaseV7Response> editStore(@Part MultipartBody.Part store_avatar, @Part
-    @PartMap HashMapNotNull<String, RequestBody> body);
+    @POST("store/set") Observable<BaseV7Response> editStore(@Part MultipartBody.Part store_avatar,
+        @PartMap HashMapNotNull<String, RequestBody> body);
   }
 }
