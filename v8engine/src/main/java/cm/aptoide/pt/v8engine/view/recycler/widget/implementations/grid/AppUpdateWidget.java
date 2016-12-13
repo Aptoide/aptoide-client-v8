@@ -21,7 +21,6 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppUpdateDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 import java.io.IOException;
 import okhttp3.Call;
@@ -36,7 +35,7 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created by marcelobenites on 6/21/16.
  */
-public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
+public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
 
   private final String cardType = "App Update";
   private TextView appName;
@@ -80,7 +79,7 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
     appName.setText(displayable.getAppTitle(getContext()));
     appUpdate.setText(displayable.getHasUpdateText(getContext()));
     appVersion.setText(displayable.getVersionText(getContext()));
-    setCardviewMargin(displayable);
+    setCardviewMargin(displayable, cardView);
     updateButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.timeline_update_app_dark, 0, 0,
         0);
     updateButton.setText(displayable.getUpdateAppText(getContext()));
@@ -138,41 +137,6 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
     })).observeOn(AndroidSchedulers.mainThread()).subscribe(downloadProgress -> {
       updateInstallProgress(displayable, downloadProgress);
     }, throwable -> showDownloadError(displayable)));
-  }
-
-  //// TODO: 31/08/16 refactor this out of here
-  private void knockWithSixpackCredentials(String url) {
-    if (url == null) {
-      return;
-    }
-
-    String credential = Credentials.basic(BuildConfig.SIXPACK_USER, BuildConfig.SIXPACK_PASSWORD);
-
-    OkHttpClient client = new OkHttpClient();
-
-    Request click = new Request.Builder().url(url).addHeader("authorization", credential).build();
-
-    client.newCall(click).enqueue(new Callback() {
-      @Override public void onFailure(Call call, IOException e) {
-        Logger.d(this.getClass().getSimpleName(), "sixpack request fail " + call.toString());
-      }
-
-      @Override public void onResponse(Call call, Response response) throws IOException {
-        Logger.d(this.getClass().getSimpleName(), "knock success");
-        response.body().close();
-      }
-    });
-  }
-
-  private void setCardviewMargin(AppUpdateDisplayable displayable) {
-    CardView.LayoutParams layoutParams =
-        new CardView.LayoutParams(CardView.LayoutParams.WRAP_CONTENT,
-            CardView.LayoutParams.WRAP_CONTENT);
-    layoutParams.setMargins(displayable.getMarginWidth(getContext(),
-        getContext().getResources().getConfiguration().orientation), 0,
-        displayable.getMarginWidth(getContext(),
-            getContext().getResources().getConfiguration().orientation), 30);
-    cardView.setLayoutParams(layoutParams);
   }
 
   private Void showDownloadError(AppUpdateDisplayable displayable) {

@@ -27,7 +27,7 @@ import cm.aptoide.pt.util.schedulers.ConcreteSchedulerProvider;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.adapters.ReviewsAndCommentsAdapter;
+import cm.aptoide.pt.v8engine.adapters.CommentsAdapter;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
@@ -45,8 +45,8 @@ import java.util.List;
 import lombok.Getter;
 import rx.Observable;
 
-public class RateAndReviewsFragmentNew extends GridRecyclerFragment<ReviewsAndCommentsAdapter>
-    implements FullCommentAdderView<ReviewsAndCommentsAdapter>, RateAndReviewsView {
+public class RateAndReviewsFragmentNew extends GridRecyclerFragment<CommentsAdapter>
+    implements ItemCommentAdderView<Review, CommentsAdapter>, RateAndReviewsView {
 
   private static final String TAG = RateAndReviewsFragmentNew.class.getSimpleName();
   private static final String APP_ID = "app_id";
@@ -161,9 +161,9 @@ public class RateAndReviewsFragmentNew extends GridRecyclerFragment<ReviewsAndCo
   // from CommentAdderView
   //
 
-  @Override @NonNull public CommentsReadMoreDisplayable createReadMoreDisplayable(final int count, Review review) {
-    return new CommentsReadMoreDisplayable(review, review.getCommentList().getDatalist().getNext(),
-        new SimpleReviewCommentAdder(count, this));
+  @Override @NonNull public CommentsReadMoreDisplayable createReadMoreDisplayable(final int itemPosition, Review review) {
+    return new CommentsReadMoreDisplayable(review.getId(), true, review.getCommentList().getDatalist().getNext(),
+        new SimpleReviewCommentAdder(itemPosition, this));
   }
 
   @Override public void createDisplayableComments(List<Comment> comments, List<Displayable> displayables) {

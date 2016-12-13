@@ -1,5 +1,6 @@
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
+import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
@@ -9,8 +10,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import rx.Observable;
 
-public class PostCommentForStore extends
-    V7<BaseV7Response, PostCommentForStore.Body> {
+public class PostCommentForStore extends V7<BaseV7Response, PostCommentForStore.Body> {
 
   private static final String BASE_HOST = "http://ws75-primary.aptoide.com/api/7/";
 
@@ -25,10 +25,10 @@ public class PostCommentForStore extends
     return new PostCommentForStore((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
-  public static PostCommentForStore of(long storeId, long previousCommentId, String text, String accessToken,
-      String aptoideClientUUID) {
+  public static PostCommentForStore of(long storeId, long previousCommentId, String text,
+      String accessToken, String aptoideClientUUID) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-    Body body = new Body(storeId, text);
+    Body body = new Body(storeId, text, previousCommentId);
     return new PostCommentForStore((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
@@ -43,6 +43,7 @@ public class PostCommentForStore extends
     private long storeId;
     private Long previousCommentId;
     private String body;
+    private String commentType = CommentType.STORE.name();
 
     public Body(long storeId, String text) {
       this.storeId = storeId;

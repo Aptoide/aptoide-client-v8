@@ -24,7 +24,7 @@ public class AptoideAnalytics {
     throw new IllegalStateException("You shall not instantiate this class!");
   }
 
-  public static void logEvent(SendEventRequest.Body.Data data, String eventName) {
+  public static void logTimelineEvent(SendEventRequest.Body.Data data, String eventName) {
     SendEventRequest.of(AptoideAccountManager.getAccessToken(), data, eventName)
         .observe()
         .observeOn(Schedulers.io())

@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import lombok.Data;
@@ -43,6 +44,7 @@ public class PostCommentForReviewRequest extends V7<BaseV7Response, PostCommentF
 
     private long reviewId;
     private String body;
+    private String commentType = CommentType.REVIEW.name();
 
     public Body(long reviewId, String text) {
       this.reviewId = reviewId;

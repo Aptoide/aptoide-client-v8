@@ -1,7 +1,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
@@ -11,12 +10,11 @@ import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.timeline.Video;
-import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.link.Link;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
+import cm.aptoide.pt.v8engine.repository.SocialRepository;
 import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,8 +27,9 @@ import rx.schedulers.Schedulers;
 /**
  * Created by jdandrade on 8/10/16.
  */
-@AllArgsConstructor public class VideoDisplayable extends Displayable {
+@AllArgsConstructor public class VideoDisplayable extends CardDisplayable {
 
+  private Video video;
   @Getter private String videoTitle;
   @Getter private Link link;
   @Getter private Link baseLink;
@@ -45,13 +44,14 @@ import rx.schedulers.Schedulers;
   private DateCalculator dateCalculator;
   private SpannableFactory spannableFactory;
   private TimelineMetricsManager timelineMetricsManager;
+  private SocialRepository socialRepository;
 
   public VideoDisplayable() {
   }
 
   public static VideoDisplayable from(Video video, DateCalculator dateCalculator,
       SpannableFactory spannableFactory, LinksHandlerFactory linksHandlerFactory,
-      TimelineMetricsManager timelineMetricsManager) {
+      TimelineMetricsManager timelineMetricsManager, SocialRepository socialRepository) {
     long appId = 0;
 
     String abTestingURL = null;
@@ -62,12 +62,13 @@ import rx.schedulers.Schedulers;
       abTestingURL = video.getAb().getConversion().getUrl();
     }
 
-    return new VideoDisplayable(video.getTitle(),
+    return new VideoDisplayable(video, video.getTitle(),
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, video.getUrl()),
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
             video.getPublisher().getBaseUrl()), video.getPublisher().getName(),
-        video.getThumbnailUrl(), video.getPublisher().getLogoUrl(), appId, abTestingURL, video.getApps(),
-        video.getDate(), dateCalculator, spannableFactory, timelineMetricsManager);
+        video.getThumbnailUrl(), video.getPublisher().getLogoUrl(), appId, abTestingURL,
+        video.getApps(), video.getDate(), dateCalculator, spannableFactory, timelineMetricsManager,
+        socialRepository);
   }
 
   public Observable<List<Installed>> getRelatedToApplication() {
@@ -109,25 +110,15 @@ import rx.schedulers.Schedulers;
     return R.layout.displayable_social_timeline_video;
   }
 
-  @Override protected Configs getConfig() {
-    return new Configs(1, true);
-  }
-
-  public int getMarginWidth(Context context, int orientation) {
-    if (!context.getResources().getBoolean(R.bool.is_this_a_tablet_device)) {
-      return 0;
-    }
-
-    int width = AptoideUtils.ScreenU.getCachedDisplayWidth(orientation);
-
-    if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-      return (int) (width * 0.2);
-    } else {
-      return (int) (width * 0.1);
-    }
-  }
-
   public void sendOpenVideoEvent(SendEventRequest.Body.Data data, String eventName) {
     timelineMetricsManager.sendEvent(data, eventName);
+  }
+
+  @Override public void share(Context context) {
+    socialRepository.share(video);
+  }
+
+  @Override public void like(Context context, String cardType, int rating) {
+
   }
 }

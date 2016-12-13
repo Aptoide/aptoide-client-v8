@@ -7,40 +7,30 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SocialArticleDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
-import java.io.IOException;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Credentials;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by jdandrade on 23/11/2016.
  */
 
-public class SocialArticleWidget extends Widget<SocialArticleDisplayable> {
+public class SocialArticleWidget extends CardWidget<SocialArticleDisplayable> {
 
   private final String cardType = "Social Article";
   private TextView title;
   private TextView subtitle;
-  private ImageView image;
+  private ImageView storeAvatar;
+  private ImageView userAvatar;
   private TextView articleTitle;
   private ImageView thumbnail;
   private View url;
@@ -51,8 +41,10 @@ public class SocialArticleWidget extends Widget<SocialArticleDisplayable> {
   private TextView relatedTo;
   private LinearLayout like;
   private LinearLayout share;
+  private LinearLayout comments;
   private LikeButton likeButton;
-
+  private TextView numberLikes;
+  private TextView numberComments;
   private String appName;
   private String packageName;
 
@@ -63,7 +55,8 @@ public class SocialArticleWidget extends Widget<SocialArticleDisplayable> {
   @Override protected void assignViews(View itemView) {
     title = (TextView) itemView.findViewById(R.id.card_title);
     subtitle = (TextView) itemView.findViewById(R.id.card_subtitle);
-    image = (ImageView) itemView.findViewById(R.id.card_image);
+    storeAvatar = (ImageView) itemView.findViewById(R.id.card_image);
+    userAvatar = (ImageView) itemView.findViewById(R.id.card_user_avatar);
     articleTitle = (TextView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_title);
     thumbnail = (ImageView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_image);
     url = itemView.findViewById(R.id.partial_social_timeline_thumbnail);
@@ -75,22 +68,35 @@ public class SocialArticleWidget extends Widget<SocialArticleDisplayable> {
     like = (LinearLayout) itemView.findViewById(R.id.social_like);
     share = (LinearLayout) itemView.findViewById(R.id.social_share);
     likeButton = (LikeButton) itemView.findViewById(R.id.social_like_test);
+    comments = (LinearLayout) itemView.findViewById(R.id.social_comment);
+    numberLikes = (TextView) itemView.findViewById(R.id.social_number_of_likes);
+    numberComments = (TextView) itemView.findViewById(R.id.social_number_of_comments);
   }
 
   @Override public void bindView(SocialArticleDisplayable displayable) {
     this.displayable = displayable;
-    title.setText(displayable.getTitle());
-    subtitle.setText(displayable.getTimeSinceLastUpdate(getContext()));
+    title.setText(displayable.getStore().getName());
+    subtitle.setText(displayable.getUser().getName());
+
+    //subtitle.setText(displayable.getTimeSinceLastUpdate(getContext()));
     Typeface typeFace =
         Typeface.createFromAsset(getContext().getAssets(), "fonts/DroidSerif-Regular.ttf");
     articleTitle.setTypeface(typeFace);
     articleTitle.setText(displayable.getArticleTitle());
-    setCardviewMargin(displayable);
-    ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
+    setCardviewMargin(displayable, cardView);
+    ImageLoader.loadWithShadowCircleTransform(displayable.getStore().getAvatar(), storeAvatar);
+    ImageLoader.loadWithShadowCircleTransform(displayable.getUser().getAvatar(), userAvatar);
     ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
     likeButton.setLiked(false);
+    like.setVisibility(View.VISIBLE);
+    numberLikes.setVisibility(View.VISIBLE);
+    numberLikes.setText(String.valueOf(displayable.getNumberOfLikes()));
+    comments.setVisibility(View.VISIBLE);
+    numberComments.setVisibility(View.VISIBLE);
+    numberComments.setText(String.valueOf(displayable.getNumberOfComments()));
     //relatedTo.setText(displayable.getAppRelatedToText(getContext(), appName));
 
+    //numberLikes.setText(String.valueOf(numberOfLikes));
     if (getAppButton.getVisibility() != View.GONE && displayable.isGetApp(appName)) {
       getAppButton.setVisibility(View.VISIBLE);
       getAppButton.setText(displayable.getAppText(getContext(), appName));
@@ -162,48 +168,16 @@ public class SocialArticleWidget extends Widget<SocialArticleDisplayable> {
 
     likeButton.setOnLikeListener(new OnLikeListener() {
       @Override public void liked(LikeButton likeButton) {
-        Toast.makeText(getContext(), "LIKED", Toast.LENGTH_SHORT).show();
+        likeCard(displayable, cardType, 1);
+        numberLikes.setText(String.valueOf(displayable.getNumberOfLikes() + 1));
       }
 
       @Override public void unLiked(LikeButton likeButton) {
-        Toast.makeText(getContext(), "UNLIKED", Toast.LENGTH_SHORT).show();
+        likeButton.setLiked(true);
+        //likeCard(displayable, cardType, -1);
+        //numberLikes.setText("0");
       }
     });
-  }
-
-  //// TODO: 31/08/16 refactor this out of here
-  private void knockWithSixpackCredentials(String url) {
-    if (url == null) {
-      return;
-    }
-
-    String credential = Credentials.basic(BuildConfig.SIXPACK_USER, BuildConfig.SIXPACK_PASSWORD);
-
-    OkHttpClient client = new OkHttpClient();
-
-    Request click = new Request.Builder().url(url).addHeader("authorization", credential).build();
-
-    client.newCall(click).enqueue(new Callback() {
-      @Override public void onFailure(Call call, IOException e) {
-        Logger.d(this.getClass().getSimpleName(), "sixpack request fail " + call.toString());
-      }
-
-      @Override public void onResponse(Call call, Response response) throws IOException {
-        Logger.d(this.getClass().getSimpleName(), "knock success");
-        response.body().close();
-      }
-    });
-  }
-
-  private void setCardviewMargin(SocialArticleDisplayable displayable) {
-    CardView.LayoutParams layoutParams =
-        new CardView.LayoutParams(CardView.LayoutParams.WRAP_CONTENT,
-            CardView.LayoutParams.WRAP_CONTENT);
-    layoutParams.setMargins(displayable.getMarginWidth(getContext(),
-        getContext().getResources().getConfiguration().orientation), 0,
-        displayable.getMarginWidth(getContext(),
-            getContext().getResources().getConfiguration().orientation), 30);
-    cardView.setLayoutParams(layoutParams);
   }
 
   private void setAppNameToFirstLinkedApp() {

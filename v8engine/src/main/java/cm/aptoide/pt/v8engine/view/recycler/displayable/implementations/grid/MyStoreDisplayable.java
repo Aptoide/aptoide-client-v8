@@ -1,7 +1,7 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
+import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import lombok.Getter;
 
@@ -10,13 +10,13 @@ import lombok.Getter;
  */
 
 public class MyStoreDisplayable extends Displayable {
-  @Getter private StoreThemeEnum theme;
+  @Getter private GetStoreMeta meta;
 
   public MyStoreDisplayable() {
   }
 
-  public MyStoreDisplayable(StoreThemeEnum theme) {
-    this.theme = theme;
+  public MyStoreDisplayable(GetStoreMeta meta) {
+    this.meta = meta;
   }
 
   @Override public int getViewLayout() {

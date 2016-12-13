@@ -30,6 +30,6 @@ import lombok.EqualsAndHashCode;
   }
 
   @Override protected Configs getConfig() {
-    return new Configs(2, false);
+    return new Configs(3, false);
   }
 }

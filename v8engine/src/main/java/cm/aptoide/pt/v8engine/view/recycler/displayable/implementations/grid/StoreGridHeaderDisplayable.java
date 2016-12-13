@@ -18,8 +18,7 @@ public class StoreGridHeaderDisplayable extends DisplayablePojo<GetStoreWidgets.
   @Getter private String storeTheme;
   @Getter private String tag;
 
-  public StoreGridHeaderDisplayable() {
-  }
+  public StoreGridHeaderDisplayable() { }
 
   public StoreGridHeaderDisplayable(GetStoreWidgets.WSWidget pojo) {
     super(pojo);

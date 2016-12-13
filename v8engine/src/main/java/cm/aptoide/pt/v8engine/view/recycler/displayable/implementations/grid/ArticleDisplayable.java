@@ -1,7 +1,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
@@ -11,13 +10,11 @@ import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.timeline.Article;
-import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.link.Link;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.repository.SocialRepository;
 import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,8 +27,9 @@ import rx.schedulers.Schedulers;
 /**
  * Created by marcelobenites on 6/17/16.
  */
-@AllArgsConstructor public class ArticleDisplayable extends Displayable {
+@AllArgsConstructor public class ArticleDisplayable extends CardDisplayable {
 
+  private Article article;
   @Getter private String cardId;
   @Getter private String articleTitle;
   @Getter private Link link;
@@ -40,8 +38,8 @@ import rx.schedulers.Schedulers;
   @Getter private String thumbnailUrl;
   @Getter private String avatarUrl;
   @Getter private long appId;
-  @Getter private String abUrl;
 
+  @Getter private String abUrl;
   @Getter private List<App> relatedToAppsList;
   private Date date;
   private DateCalculator dateCalculator;
@@ -69,7 +67,7 @@ import rx.schedulers.Schedulers;
       abTestingURL = article.getAb().getConversion().getUrl();
     }
 
-    return new ArticleDisplayable(article.getCardId(), article.getTitle(),
+    return new ArticleDisplayable(article, article.getCardId(), article.getTitle(),
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, article.getUrl()),
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
             article.getPublisher().getBaseUrl()), article.getPublisher().getName(),
@@ -97,20 +95,6 @@ import rx.schedulers.Schedulers;
     return Observable.just(null);
   }
 
-  public int getMarginWidth(Context context, int orientation) {
-    if (!context.getResources().getBoolean(R.bool.is_this_a_tablet_device)) {
-      return 0;
-    }
-
-    int width = AptoideUtils.ScreenU.getCachedDisplayWidth(orientation);
-
-    if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-      return (int) (width * 0.2);
-    } else {
-      return (int) (width * 0.1);
-    }
-  }
-
   public String getTimeSinceLastUpdate(Context context) {
     return dateCalculator.getTimeSinceDate(context, date);
   }
@@ -135,20 +119,14 @@ import rx.schedulers.Schedulers;
     timelineMetricsManager.sendEvent(data, eventName);
   }
 
-  public void like() {
-    socialRepository.like();
-  }
-
-  public void share(Context context, String cardType) {
-    socialRepository.share(context, cardType, relatedToAppsList, link.getUrl(), articleTitle,
-        thumbnailUrl, title, developerLink.getUrl(), avatarUrl, date, cardId, "");
-  }
-
   @Override public int getViewLayout() {
     return R.layout.displayable_social_timeline_article;
   }
 
-  @Override protected Configs getConfig() {
-    return new Configs(1, true);
+  @Override public void share(Context context) {
+    socialRepository.share(article);
+  }
+
+  @Override public void like(Context context, String cardType, int rating) {
   }
 }

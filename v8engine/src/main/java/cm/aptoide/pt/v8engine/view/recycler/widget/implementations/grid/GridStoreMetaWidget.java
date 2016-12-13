@@ -19,7 +19,6 @@ import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.imageloader.CircleTransform;
-import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -128,27 +127,27 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
     }
 
     compositeSubscription.add(Observable.from(socialChannels).flatMap(socialChannel -> {
-      Event.Name eventName = socialChannel.getEvent().getName();
+      cm.aptoide.pt.model.v7.store.Store.SocialChannelType eventType = socialChannel.getType();
 
-      switch (eventName) {
+      switch (eventType) {
         // uncomment for further development
-        //case facebook:
+        //case FACEBOOK:
         //  youtubeButton.setBackgroundResource( ?? );
         //  youtubeButton.setClickable(true);
         //  youtubeButton.setVisibility(View.VISIBLE);
         //  return RxView.clicks(youtubeButton).map(aVoid -> socialChannel);
 
-        case youtube:
+        case YOUTUBE:
           youtubeButton.setClickable(true);
           youtubeButton.setVisibility(View.VISIBLE);
           return RxView.clicks(youtubeButton).map(aVoid -> socialChannel);
 
-        case twitch:
+        case TWITCH:
           twitchButton.setClickable(true);
           twitchButton.setVisibility(View.VISIBLE);
           return RxView.clicks(twitchButton).map(aVoid -> socialChannel);
 
-        case twitter:
+        case TWITTER:
           twitterButton.setClickable(true);
           twitterButton.setVisibility(View.VISIBLE);
           return RxView.clicks(twitterButton).map(aVoid -> socialChannel);
@@ -163,7 +162,7 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
 
   private Action1<Void> handleEvent(
       cm.aptoide.pt.model.v7.store.Store.SocialChannel socialChannel) {
-    final String action = socialChannel.getEvent().getAction();
+    final String action = socialChannel.getUrl();
     if (!TextUtils.isEmpty(action)) {
       Intent i = new Intent(Intent.ACTION_VIEW);
       i.setData(Uri.parse(action));

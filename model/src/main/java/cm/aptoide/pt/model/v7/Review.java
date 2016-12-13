@@ -42,6 +42,8 @@ import lombok.Data;
 
     private float rating;
     private long points;
+    private long likes;
+    private long comments;
   }
 
   @Data public static class Comments {

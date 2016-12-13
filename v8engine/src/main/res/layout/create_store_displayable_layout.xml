@@ -13,14 +13,14 @@
   <TextView
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_centerVertical="true"
       android:layout_toLeftOf="@+id/create_store_action"
-      android:minLines="2"
       android:text="@string/create_store_displayable_message"
       android:textColor="?attr/inverseTextColor"
       />
   <Button
       android:id="@+id/create_store_action"
-      android:layout_width="wrap_content"
+      android:layout_width="125dp"
       android:layout_height="wrap_content"
       android:layout_alignParentRight="true"
       android:layout_centerVertical="true"

@@ -162,7 +162,7 @@ public enum StoreThemeEnum {
   APTOIDE_STORE_THEME_HAPPYBLUE(R.style.AptoideThemeDefaultLightblue, R.color.transparent_lightblue,
       R.color.lightblue, R.drawable.custom_categ_lightsky, R.drawable.gradient_lightsky,
       R.color.lightblue_700, R.drawable.button_border_lightblue, R.drawable.ic_check_light_blue,
-      R.drawable.ic_plus_light_blue);
+      R.drawable.ic_plus_light_blue), ;
 
   private final int color700tint;
   private final int buttonLayout;

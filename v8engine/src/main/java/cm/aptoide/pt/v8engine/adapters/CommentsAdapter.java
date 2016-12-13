@@ -1,32 +1,38 @@
 package cm.aptoide.pt.v8engine.adapters;
 
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
-import cm.aptoide.pt.viewRateAndCommentReviews.RateAndReviewCommentDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 
 /**
  * Created by trinkes on 8/5/16.
  */
-public class ReviewsAndCommentsAdapter extends BaseAdapter {
+public class CommentsAdapter<T extends Displayable> extends BaseAdapter {
+
+  private final Class<T> clazz;
+
+  public CommentsAdapter(Class<T> clazz) {
+    this.clazz = clazz;
+  }
 
   /**
    * Get the review position using the number of the review. For example, if
    * <code>reviewNumber</code> == 2, it will return the third review it finds in
    * <code>displayable</code>.
    *
-   * @param reviewNumber number of the review
+   * @param itemNumber number of the review
    * @return next review's position or -1 if there are no more reviews
    */
-  public int getReviewPosition(int reviewNumber) {
+  public int getItemPosition(int itemNumber) {
     int toReturn = -1;
 
-    int reviewsCounter = 0;
+    int itemsCounter = 0;
     for (int i = 0; i < getItemCount(); i++) {
-      if (getDisplayable(i) instanceof RateAndReviewCommentDisplayable) {
-        if (reviewsCounter == reviewNumber) {
+      if (clazz.isAssignableFrom(getDisplayable(i).getClass())) {
+        if (itemsCounter == itemNumber) {
           toReturn = i;
           break;
         } else {
-          reviewsCounter++;
+          itemsCounter++;
         }
       }
     }
