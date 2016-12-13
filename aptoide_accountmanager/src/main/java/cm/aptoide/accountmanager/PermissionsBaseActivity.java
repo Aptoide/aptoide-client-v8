@@ -36,7 +36,7 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
   private static final String TYPE_CAMERA = "camera";
   private String TAG = "STORAGE";
   private File avatar;
-  protected String aptoideUserAvatar = "aptoide_user_avatar.png";
+  protected static String photoAvatar = "aptoide_user_avatar.png";
 
   static final String STORAGE_PERMISSION_GIVEN = "storage_permission_given";
   static final String CAMERA_PERMISSION_GIVEN = "camera_permission_given";
@@ -131,7 +131,8 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
           if (ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.CAMERA)) {
 
             ActivityCompat.requestPermissions(activity,
-                new String[] { Manifest.permission.CAMERA }, CAMERA_REQUEST_CODE);
+                new String[] { Manifest.permission.CAMERA,
+                    Manifest.permission.READ_EXTERNAL_STORAGE }, CAMERA_REQUEST_CODE);
             // Show an explanation to the user *asynchronously* -- don't block
             // this thread waiting for the user's response! After the user
             // sees the explanation, try again to request the permission.
@@ -141,7 +142,8 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
             // No explanation needed, we can request the permission.
 
             ActivityCompat.requestPermissions(activity,
-                new String[] { Manifest.permission.CAMERA }, CAMERA_REQUEST_CODE);
+                new String[] { Manifest.permission.CAMERA,
+                    Manifest.permission.READ_EXTERNAL_STORAGE  }, CAMERA_REQUEST_CODE);
 
             // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
             // app-defined int constant. The callback method gets the
@@ -151,6 +153,12 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
           return CAMERA_PERMISSION_GIVEN;
         }
       }
+    } else {
+     if (type.equals(TYPE_CAMERA)) {
+       return CAMERA_PERMISSION_GIVEN;
+     } else if (type.equals(TYPE_STORAGE)) {
+       return STORAGE_PERMISSION_GIVEN;
+     }
     }
     return "";
   }
@@ -168,7 +176,6 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
   public void chooseAvatarSource() {
     final Dialog dialog = new Dialog(this);
     dialog.setContentView(R.layout.dialog_choose_avatar_layout);
-    dialog.setTitle(R.string.create_user_dialog_title);
     mSubscriptions.add(RxView.clicks(dialog.findViewById(R.id.button_camera)).subscribe(click -> {
       callPermissionAndAction(TYPE_CAMERA);
       dialog.dismiss();
@@ -188,7 +195,7 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
     switch (result) {
       case PermissionsBaseActivity.CAMERA_PERMISSION_GIVEN:
         changePermissionValue(true);
-        dispatchTakePictureIntent();
+        dispatchTakePictureIntent(getApplicationContext());
         break;
       case PermissionsBaseActivity.STORAGE_PERMISSION_GIVEN:
         changePermissionValue(true);
@@ -211,17 +218,24 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
   }
 
 
-  public void dispatchTakePictureIntent() {
+  public void dispatchTakePictureIntent(Context context) {
     if (result) {
+      setFileName(context);
       Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
       if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, getPhotoFileUri(PermissionsBaseActivity.createAvatarPhotoName(aptoideUserAvatar)));
+        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, getPhotoFileUri(PermissionsBaseActivity.createAvatarPhotoName(photoAvatar)));
         startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
       }
     }
   }
 
-
+  private void setFileName(Context context) {
+    if (context.equals(CreateUserActivity.class)) {
+      photoAvatar = "aptoide_user_avatar.png";
+    } else if (context.equals(CreateStoreActivity.class)) {
+      photoAvatar = "aptoide_store_avatar.png";
+    }
+  }
 
   public Uri getPhotoFileUri(String fileName) {
     File storageDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), ".aptoide/user_avatar");

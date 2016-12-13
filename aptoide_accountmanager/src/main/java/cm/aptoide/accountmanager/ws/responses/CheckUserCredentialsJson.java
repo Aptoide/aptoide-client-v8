@@ -31,4 +31,8 @@ import lombok.Data;
     public String timeline;
     @JsonProperty("matureswitch") public String matureswitch;
   }
+
+  public boolean hasErrors() {
+    return errors != null && errors.size() > 0;
+  }
 }

@@ -61,26 +61,18 @@ import rx.Observable;
       String calculatedPasshash;
       calculatedPasshash = AptoideUtils.AlgorithmU.computeSha1(password);
       RequestBody mode = createBodyPartFromString("json");
-      //parameters.put("mode", "json");
       RequestBody email = createBodyPartFromString(getEmail());
-      //parameters.put("email", email);
       RequestBody passhash = createBodyPartFromString(calculatedPasshash);
-      //parameters.put("passhash", passhash);
 
       if (!TextUtils.isEmpty(Application.getConfiguration().getExtraId())) {
         RequestBody oem_id = createBodyPartFromString(Application.getConfiguration().getExtraId());
         body.put("oem_id", oem_id);
-        //parameters.put("oem_id", Application.getConfiguration().getExtraId());
       }
 
       RequestBody hmac = createBodyPartFromString(AptoideUtils.AlgorithmU.computeHmacSha1(getEmail() + calculatedPasshash + getName() + getUpdate(), "bazaar_hmac"));
-      //parameters.put("hmac",
-      //    AptoideUtils.AlgorithmU.computeHmacSha1(email + passhash + name, "bazaar_hmac"));
 
       RequestBody name = createBodyPartFromString(getName());
-      //parameters.put("name", name);
       RequestBody update = createBodyPartFromString(getUpdate());
-      //parameters.put("update", update);
 
       body.put("json", mode);
       body.put("email", email);
@@ -90,7 +82,6 @@ import rx.Observable;
       body.put("update", update);
       File file = new File(Application.getConfiguration().getUserAvatarCachePath()+ "aptoide_user_avatar.png");
       RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-      //RequestBody body = RequestBody.create(MediaType.parse("image/*"), file);
       MultipartBody.Part multipartBody = MultipartBody.Part.createFormData("user_avatar", file.getName(), requestFile);
       return interfaces.createUserWithFile(multipartBody, body);
     }

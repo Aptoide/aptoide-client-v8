@@ -37,16 +37,22 @@ import cm.aptoide.pt.model.v7.timeline.GetUserTimeline;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.UserAgentGenerator;
 import cm.aptoide.pt.networkclient.okhttp.cache.PostCacheInterceptor;
+import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import lombok.Getter;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
 import retrofit2.Converter;
 import retrofit2.adapter.rxjava.HttpException;
 import retrofit2.http.Body;
 import retrofit2.http.Header;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
+import retrofit2.http.PartMap;
 import retrofit2.http.Path;
 import retrofit2.http.Url;
 import rx.Observable;
@@ -56,9 +62,10 @@ import rx.schedulers.Schedulers;
 /**
  * Created by neuro on 19-04-2016.
  */
-public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces, U> {
+public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Interfaces, U> {
 
   public static final String BASE_HOST = "http://ws75.aptoide.com/api/7/";
+  public static final String BASE_PRIMARY_HOST = "http://ws75-primary.aptoide.com/api/7/";
   @Getter protected final B body;
   private final String INVALID_ACCESS_TOKEN_CODE = "AUTH-2";
   private boolean accessTokenRetry = false;
@@ -69,6 +76,15 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
         return SecurePreferences.getUserAgent();
       }
     }, WebService.getDefaultConverter(), baseHost);
+    this.body = body;
+  }
+
+  protected V7(B body, String baseHost, MultipartBody.Part file) {
+    super(Interfaces.class, new UserAgentGenerator() {
+      @Override public String generateUserAgent() {
+        return SecurePreferences.getUserAgent();
+      }
+    }, WebService.getDefaultConverter(), baseHost, file);
     this.body = body;
   }
 
@@ -251,5 +267,9 @@ public abstract class V7<U, B extends BaseBody> extends WebService<V7.Interfaces
 
     @POST("{email}") Observable<BaseV7Response> shareCard(@Body ShareCardRequest.Body body,
         @Path(value = "email") String email);
+
+    @Multipart
+    @POST("store/set") Observable<BaseV7Response> editStore(@Part MultipartBody.Part store_avatar, @Part
+         @PartMap HashMapNotNull<String, RequestBody> body);
   }
 }
