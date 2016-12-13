@@ -43,6 +43,7 @@ import lombok.experimental.Accessors;
 
       private Layout layout;
       private String icon;
+      private String message;
       private List<Data.Categories> categories; //only present if type": "DISPLAYS"
 
       @lombok.Data public static class Categories {

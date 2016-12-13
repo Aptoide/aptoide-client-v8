@@ -29,7 +29,7 @@ public enum Type {
   MY_STORES_SUBSCRIBED(3, false),
   STORES_RECOMMENDED(3, false),
   MY_STORE(1, true),
-  OFFICIAL_APP(1, true);
+  APP_META(1, true);
 
   @Getter private int defaultPerLineCount;
   @Getter private boolean fixedPerLineCount;

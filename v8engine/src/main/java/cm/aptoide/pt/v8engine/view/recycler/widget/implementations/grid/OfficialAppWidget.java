@@ -5,8 +5,10 @@ import android.support.v4.app.FragmentActivity;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -16,6 +18,7 @@ import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.util.Translator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.OfficialAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
@@ -28,6 +31,7 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
   private TextView installMessage;
   private TextView appName;
   private View appRating;
+  private View verticalSeparator;
   private TextView appDownloads;
   private TextView appVersion;
   private TextView appSize;
@@ -40,6 +44,7 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
     installButton = (Button) itemView.findViewById(R.id.app_install_button);
     installMessage = (TextView) itemView.findViewById(R.id.install_message);
     appName = (TextView) itemView.findViewById(R.id.app_name);
+    verticalSeparator = itemView.findViewById(R.id.vertical_separator);
     appRating = itemView.findViewById(R.id.app_rating);
     appDownloads = (TextView) itemView.findViewById(R.id.app_downloads);
     appVersion = (TextView) itemView.findViewById(R.id.app_version);
@@ -49,8 +54,8 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
   @Override public void bindView(OfficialAppDisplayable displayable) {
 
     final FragmentActivity context = getContext();
-    final GetApp app = displayable.getPojo();
-    final boolean isAppInstalled = isAppInstalled(app);
+    final Pair<String, GetApp> messageAndApp = displayable.getMessageGetApp();
+    final boolean isAppInstalled = isAppInstalled(messageAndApp.second);
 
     int color;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -59,20 +64,26 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
       color = context.getResources().getColor(R.color.default_color);
     }
 
-    final String part1 = context.getString(R.string.install_app_outter_pt1);
-    final String part2 = context.getString(R.string.install_app_outter_pt2);
-
-    final GetAppMeta.App appData = app.getNodes().getMeta().getData();
+    final GetAppMeta.App appData = messageAndApp.second.getNodes().getMeta().getData();
     final String appName = appData.getName();
-    SpannableString middle =
-        new SpannableString(String.format(context.getString(R.string.install_app_inner), appName));
-    middle.setSpan(new ForegroundColorSpan(color), 0, middle.length(), Spanned.SPAN_MARK_MARK);
 
-    SpannableStringBuilder text = new SpannableStringBuilder();
-    text.append(part1);
-    text.append(middle);
-    text.append(part2);
-    installMessage.setText(text);
+    if(!TextUtils.isEmpty(messageAndApp.first)) {
+
+      final String[] parts = Translator.translateToMultiple(messageAndApp.first);
+      SpannableString middle =
+          new SpannableString(String.format(isAppInstalled ? parts[1] : parts[2], appName));
+      middle.setSpan(new ForegroundColorSpan(color), 0, middle.length(), Spanned.SPAN_MARK_MARK);
+
+      SpannableStringBuilder text = new SpannableStringBuilder();
+      text.append(parts[0]);
+      text.append(middle);
+      text.append(parts[1]);
+      installMessage.setText(text);
+
+    } else {
+      installMessage.setVisibility(View.GONE);
+      verticalSeparator.setVisibility(View.GONE);
+    }
 
     this.appName.setText(appName);
     this.appDownloads.setText(String.format(context.getString(R.string.downloads_count),

@@ -124,7 +124,7 @@ public class WSWidgetsUtils {
         case MY_STORE:
           setObjectView(wsWidget, countDownLatch, userHasRepo);
           break;
-        case OFFICIAL_APP:
+        case APP_META:
           GetAppRequest.ofAction(url, accessToken, aptoideClientUuid)
               .observe(refresh)
               .compose(AptoideUtils.ObservableU.applySchedulers())
