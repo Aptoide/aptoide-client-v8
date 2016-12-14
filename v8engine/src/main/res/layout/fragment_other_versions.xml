@@ -158,7 +158,7 @@
             android:text="@string/other_versions_on_different_stores"
             android:textSize="@dimen/text_size_medium"
             android:textStyle="italic"
-            android:textColor="@color/cinza_medio"
+            android:textColor="@color/medium_gray"
             />
 
       </RelativeLayout>

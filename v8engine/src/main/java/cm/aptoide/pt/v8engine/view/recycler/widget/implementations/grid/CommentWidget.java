@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -73,9 +74,9 @@ public class CommentWidget extends Widget<CommentDisplayable> {
 
   private void setLayoutLeftMargin(StoreComment storeComment) {
     final int level = storeComment.getLevel();
-    RelativeLayout.LayoutParams params =
-        (RelativeLayout.LayoutParams) outterLayout.getLayoutParams();
-    int baseMargin = 0;
+    RecyclerView.LayoutParams params =
+        (RecyclerView.LayoutParams) outterLayout.getLayoutParams();
+    int baseMargin;
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
       baseMargin = params.getMarginEnd();
       int startMargin = baseMargin * level;

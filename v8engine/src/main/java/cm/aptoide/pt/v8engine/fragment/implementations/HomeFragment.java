@@ -138,9 +138,12 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
     //  startActivity(i);
     //}
 
+
+
     InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
-    Subscription unManagedSubscription = installedAccessor.get(BACKUP_APPS_PACKAGE_NAME)
+    installedAccessor.get(BACKUP_APPS_PACKAGE_NAME)
         .observeOn(AndroidSchedulers.mainThread())
+        .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .subscribe(installed -> {
           if (installed == null) {
             FragmentUtils.replaceFragmentV4(this.getActivity(), V8Engine.getFragmentProvider()

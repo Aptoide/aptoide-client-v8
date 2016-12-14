@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 28/07/2016.
- */
-
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.support.v4.app.FragmentActivity;
@@ -18,17 +13,13 @@ import cm.aptoide.pt.v8engine.util.Translator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
-import java.util.List;
+import com.jakewharton.rxbinding.view.RxView;
 
-/**
- * Created by sithengineer on 29/04/16.
- */
 @Displayables({ StoreGridHeaderDisplayable.class }) public class StoreGridHeaderWidget
     extends Widget<StoreGridHeaderDisplayable> {
 
   private TextView title;
   private Button more;
-  //private RelativeLayout moreLayout;
 
   public StoreGridHeaderWidget(View itemView) {
     super(itemView);
@@ -37,29 +28,24 @@ import java.util.List;
   @Override protected void assignViews(View itemView) {
     title = (TextView) itemView.findViewById(R.id.title);
     more = (Button) itemView.findViewById(R.id.more);
-    //moreLayout = (RelativeLayout )itemView.findViewById(R.id.more_layout);
   }
 
   @Override public void bindView(StoreGridHeaderDisplayable displayable) {
-    final GetStoreWidgets.WSWidget pojo = displayable.getPojo();
-    final List<GetStoreWidgets.WSWidget.Action> actions = pojo.getActions();
-    title.setText(Translator.translate(pojo.getTitle()));
+    final GetStoreWidgets.WSWidget wsWidget = displayable.getWsWidget();
+    final boolean moreIsVisible = wsWidget.hasActions();
 
-    more.setVisibility(
-        actions != null && actions.size() > 0 && actions.get(0).getEvent().getName() != null
-            ? View.VISIBLE : View.GONE);
+    title.setText(Translator.translate(wsWidget.getTitle()));
 
-    more.setOnClickListener((view) -> {
-      FragmentUtils.replaceFragmentV4((FragmentActivity) itemView.getContext(),
-          V8Engine.getFragmentProvider()
-              .newStoreGridRecyclerFragment(displayable.getPojo().getActions().get(0).getEvent(),
-                  displayable.getPojo().getTitle(), displayable.getStoreTheme(),
-                  displayable.getTag()));
-      Analytics.AppViewViewedFrom.addStepToList(pojo.getTag());
-    });
-  }
+    more.setVisibility(moreIsVisible ? View.VISIBLE : View.GONE);
 
-  @Override public void unbindView() {
-
+    if (moreIsVisible) {
+      compositeSubscription.add(RxView.clicks(more).subscribe(a -> {
+        FragmentUtils.replaceFragmentV4((FragmentActivity) itemView.getContext(),
+            V8Engine.getFragmentProvider()
+                .newStoreGridRecyclerFragment(wsWidget.getActions().get(0).getEvent(),
+                    wsWidget.getTitle(), displayable.getStoreTheme(), displayable.getTag()));
+        Analytics.AppViewViewedFrom.addStepToList(wsWidget.getTag());
+      }));
+    }
   }
 }

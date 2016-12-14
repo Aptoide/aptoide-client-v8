@@ -232,6 +232,10 @@ public class RateAndReviewsFragment extends GridRecyclerFragment<CommentsAdapter
   }
   */
 
+  @Override protected CommentsAdapter createAdapter() {
+    return new CommentsAdapter<>(RateAndReviewCommentDisplayable.class);
+  }
+
   @Override
   public void createDisplayableComments(List<Comment> comments, List<Displayable> displayables) {
     for (final Comment comment : comments) {
