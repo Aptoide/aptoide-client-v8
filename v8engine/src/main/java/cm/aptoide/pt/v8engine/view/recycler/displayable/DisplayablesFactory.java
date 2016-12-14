@@ -182,7 +182,7 @@ public class DisplayablesFactory {
       }
 
       for (App app : apps) {
-        DisplayablePojo<App> diplayable = new GridAppDisplayable(app, wsWidget.getTag());
+        DisplayablePojo<App> diplayable = new GridAppDisplayable(app, wsWidget.getTag(), true);
         displayables.add(diplayable);
       }
     }

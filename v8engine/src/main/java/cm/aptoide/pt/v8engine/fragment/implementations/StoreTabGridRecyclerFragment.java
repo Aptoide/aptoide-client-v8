@@ -226,14 +226,14 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
           default:
             for (App app : list) {
               app.getStore().setAppearance(new Store.Appearance(storeTheme, null));
-              displayables.add(new GridAppDisplayable(app, tag));
+              displayables.add(new GridAppDisplayable(app, tag, false));
             }
             break;
         }
       } else {
         for (App app : list) {
           app.getStore().setAppearance(new Store.Appearance(storeTheme, null));
-          displayables.add(new GridAppDisplayable(app, tag));
+          displayables.add(new GridAppDisplayable(app, tag, false));
         }
       }
 
