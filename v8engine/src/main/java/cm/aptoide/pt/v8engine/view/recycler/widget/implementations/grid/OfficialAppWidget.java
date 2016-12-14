@@ -67,7 +67,7 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
     final GetAppMeta.App appData = messageAndApp.second.getNodes().getMeta().getData();
     final String appName = appData.getName();
 
-    if(!TextUtils.isEmpty(messageAndApp.first)) {
+    if (!TextUtils.isEmpty(messageAndApp.first)) {
 
       final String[] parts = Translator.translateToMultiple(messageAndApp.first);
       SpannableString middle =
@@ -79,7 +79,6 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
       text.append(middle);
       text.append(parts[1]);
       installMessage.setText(text);
-
     } else {
       installMessage.setVisibility(View.GONE);
       verticalSeparator.setVisibility(View.GONE);
@@ -101,7 +100,6 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
 
       // TODO: 7/12/2016 sithengineer
       ShowMessage.asSnack(installButton, "to do");
-
     }, err -> {
       Log.e(TAG, "", err);
       CrashReports.logException(err);
