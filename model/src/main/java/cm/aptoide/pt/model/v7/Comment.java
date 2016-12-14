@@ -18,7 +18,8 @@ import lombok.Data;
   private String body;
   @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", timezone = "UTC") private Date added;
   private User user;
-  private long parentReview;
+  private Long parent;
+  private Long parentReview;
 
   @Data public static class User {
 

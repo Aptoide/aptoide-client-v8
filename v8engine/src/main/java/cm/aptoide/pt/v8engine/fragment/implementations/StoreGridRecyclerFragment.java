@@ -136,7 +136,7 @@ public class StoreGridRecyclerFragment extends StoreTabGridRecyclerFragment
 
   // Used method for each single reply in the list view and the new comment button
   @Override public Observable<Void> showStoreCommentFragment(final long storeId,
-      @NonNull Comment comment, String storeName) {
+      @NonNull CommentNode commentNode, String storeName) {
 
     return Observable.just(AptoideAccountManager.isLoggedIn()).flatMap(isLoggedIn -> {
 
@@ -144,7 +144,7 @@ public class StoreGridRecyclerFragment extends StoreTabGridRecyclerFragment
         // show fragment CommentDialog
         FragmentManager fm = StoreGridRecyclerFragment.this.getActivity().getFragmentManager();
         CommentDialogFragment commentDialogFragment =
-            CommentDialogFragment.newInstanceStoreCommentReply(storeId, comment.getId(), storeName);
+            CommentDialogFragment.newInstanceStoreCommentReply(storeId, commentNode.getComment().getId(), storeName);
 
         return commentDialogFragment.lifecycle()
             .doOnSubscribe(() -> commentDialogFragment.show(fm, "fragment_comment_dialog"))

@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.util.LongSparseArray;
 import android.text.TextUtils;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -393,13 +394,14 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
                   wsWidget.getView() != null ? StoreUtils.getStoreCredentialsFromUrl(
                       wsWidget.getView()) : new BaseRequestWithStore.StoreCredentials(),
                   countDownLatch, refresh, throwable -> finishLoading(throwable),
-                  AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(), aptoideClientUuid,
+                  AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
+                  aptoideClientUuid,
                   DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(
                       V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId(),
                   !TextUtils.isEmpty(AptoideAccountManager.getUserData().getUserRepo())));
 
           try {
-            countDownLatch.await();
+            countDownLatch.await(5, TimeUnit.SECONDS);
           } catch (InterruptedException e) {
             e.printStackTrace();
           }
@@ -485,12 +487,11 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
       if (listComments != null
           && listComments.getDatalist() != null
           && listComments.getDatalist().getList() != null) {
-        List<Comment> comments = listComments.getDatalist().getList();
+        List<CommentNode> comments = transform(listComments.getDatalist().getList());
         LinkedList<Displayable> displayables = new LinkedList<>();
-        for (int i = 0; i < comments.size(); i++) {
-          Comment comment = comments.get(i);
+        for (CommentNode comment : comments) {
           displayables.add(new CommentDisplayable(
-              new StoreComment(comment, showStoreCommentFragment(storeId, comment, storeName))));
+              new StoreComment(comment.getComment(), showStoreCommentFragment(storeId, comment, storeName))));
         }
         this.displayables = new ArrayList<>(comments.size());
         this.displayables.add(new DisplayableGroup(displayables));
@@ -506,8 +507,69 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
     endlessRecyclerOnScrollListener.onLoadMore(refresh);
   }
 
-  public Observable<Void> showStoreCommentFragment(final long storeId, @NonNull Comment comment,
-      String storeName) {
+  private List<CommentNode> transform(List<Comment> list) {
+    LongSparseArray<CommentNode> commentMap = new LongSparseArray<>();
+
+    for (Comment comment : list) {
+      Long commentParent = comment.getParent();
+      if (commentParent != null) {
+        //
+        // has parent
+        //
+        CommentNode commentNode = commentMap.get(commentParent.longValue());
+        if (commentNode == null) {
+          commentNode = new CommentNode();
+        }
+        commentNode.addChild(comment);
+        commentMap.append(commentParent.longValue(), commentNode);
+      } else {
+        //
+        // is a root node
+        //
+        CommentNode commentNode = commentMap.get(comment.getId());
+        if (commentNode == null) {
+          commentMap.append(comment.getId(), new CommentNode(comment));
+        } else {
+          commentNode.setComment(comment);
+        }
+      }
+    }
+
+    ArrayList<CommentNode> commentNodes = new ArrayList<>(commentMap.size());
+    for (int i = 0; i < commentMap.size(); i++) {
+      commentNodes.add(commentMap.valueAt(i));
+    }
+    return commentNodes;
+  }
+
+  class CommentNode {
+    private Comment comment;
+    private final List<Comment> childComments;
+
+    public CommentNode(Comment comment) {
+      this.comment = comment;
+      childComments = new ArrayList<>();
+    }
+
+    public CommentNode() {
+      this(null);
+    }
+
+    public Comment getComment() {
+      return comment;
+    }
+
+    public void setComment(Comment comment) {
+      this.comment = comment;
+    }
+
+    public void addChild(Comment comment) {
+      childComments.add(comment);
+    }
+  }
+
+  public Observable<Void> showStoreCommentFragment(final long storeId,
+      @NonNull CommentNode commentNode, String storeName) {
     // optional method implemented in child classes
     return Observable.empty();
   }
