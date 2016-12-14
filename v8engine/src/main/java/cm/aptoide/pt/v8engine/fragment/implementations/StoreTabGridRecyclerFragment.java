@@ -14,6 +14,7 @@ import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
@@ -23,6 +24,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListFullReviewsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
+import cm.aptoide.pt.dataprovider.ws.v7.store.GetMyStoreListRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
@@ -38,10 +40,12 @@ import cm.aptoide.pt.model.v7.ListFullReviews;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.model.v7.store.Store;
+import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
+import cm.aptoide.pt.v8engine.repository.StoreRepository;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.util.Translator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -53,10 +57,12 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Com
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAdDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RecommendedStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RowReviewDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
 import cm.aptoide.pt.viewRateAndCommentReviews.StoreComment;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -130,6 +136,8 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
     if (name != null) {
       switch (name) {
         case myStores:
+        case getMyStoresSubscribed:
+        case getStoresRecommended:
         case listApps:
         case getStore:
         case getStoreWidgets:
@@ -274,7 +282,6 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
           //injectStuff(list, storeCredentials != null ? storeCredentials.getName() : null);
 
           CountDownLatch countDownLatch = new CountDownLatch(list.size());
-
           Observable.from(list).forEach(wsWidget -> {
 
             BaseRequestWithStore.StoreCredentials widgetStoreCredentials =
@@ -291,8 +298,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
                 new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                     DataProvider.getContext()).getAptoideClientUUID(),
                 DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(
-                    V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId(),
-                !TextUtils.isEmpty(AptoideAccountManager.getUserData().getUserRepo()));
+                    V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId());
           });
           /*
 
@@ -397,8 +403,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
                   AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
                   aptoideClientUuid,
                   DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(
-                      V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId(),
-                  !TextUtils.isEmpty(AptoideAccountManager.getUserData().getUserRepo())));
+                      V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId()));
 
           try {
             countDownLatch.await(5, TimeUnit.SECONDS);
@@ -422,7 +427,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
-    if (create) {
+    if (create || refresh) {
       String url = action != null ? action.replace(V7.BASE_HOST, "") : null;
 
       if (!validateAcceptedName(name)) {
@@ -436,6 +441,10 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
           break;
         case getStore:
           caseGetStore(url, StoreUtils.getStoreCredentialsFromUrl(url), refresh);
+          break;
+        case getStoresRecommended:
+        case getMyStoresSubscribed:
+          caseMyStores(url, refresh);
           break;
         case myStores:
         case getStoreWidgets:
@@ -463,6 +472,54 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
       }
       //setDisplayables(displayables);
     }
+  }
+
+  private void caseMyStores(String url, boolean refresh) {
+    StoreRepository storeRepository =
+        RepositoryFactory.getRepositoryFor(cm.aptoide.pt.database.realm.Store.class);
+    GetMyStoreListRequest request =
+        GetMyStoreListRequest.of(url, AptoideAccountManager.getAccessToken(),
+            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+                DataProvider.getContext()).getAptoideClientUUID());
+
+    Action1<ListStores> listStoresAction =
+        listStores -> addDisplayables(getStoresDisplayable(listStores.getDatalist().getList()));
+
+    ErrorRequestListener errorListener = (throwable) -> {
+      recyclerView.clearOnScrollListeners();
+      LinkedList<String> errorsList = new LinkedList<>();
+      errorsList.add(WSWidgetsUtils.USER_NOT_LOGGED_ERROR);
+      if (WSWidgetsUtils.shouldAddObjectView(errorsList, (AptoideWsV7Exception) throwable)) {
+        DisplayablesFactory.loadLocalSubscribedStores(storeRepository)
+            .compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW))
+            .subscribe(stores -> addDisplayables(getStoresDisplayable(stores)));
+      } else {
+        finishLoading(throwable);
+      }
+    };
+
+    recyclerView.clearOnScrollListeners();
+    endlessRecyclerOnScrollListener =
+        new EndlessRecyclerOnScrollListener(this.getAdapter(), request, listStoresAction,
+            errorListener, refresh);
+
+    recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+    endlessRecyclerOnScrollListener.onLoadMore(refresh);
+  }
+
+  @NonNull private ArrayList<Displayable> getStoresDisplayable(List<Store> list) {
+    ArrayList<Displayable> storesDisplayables = new ArrayList<>(list.size());
+    Collections.sort(list, (store, t1) -> store.getName().compareTo(t1.getName()));
+    for (int i = 0; i < list.size(); i++) {
+      if (i == 0 || list.get(i - 1).getId() != list.get(i).getId()) {
+        if (layout == Layout.LIST) {
+          storesDisplayables.add(new RecommendedStoreDisplayable(list.get(i)));
+        } else {
+          storesDisplayables.add(new GridStoreDisplayable(list.get(i)));
+        }
+      }
+    }
+    return storesDisplayables;
   }
 
   void caseListStoreComments(String url, BaseRequestWithStore.StoreCredentials storeCredentials,

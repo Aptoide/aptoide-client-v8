@@ -46,8 +46,8 @@ public class MyStoreWidget extends Widget<MyStoreDisplayable> {
   @Override public void bindView(MyStoreDisplayable displayable) {
 
     FragmentActivity context = getContext();
-    @ColorInt int color = getColorOrDefault(
-        StoreThemeEnum.get(displayable.getMeta().getData().getAppearance().getTheme()), context);
+    String storeTheme = displayable.getMeta().getData().getAppearance().getTheme();
+    @ColorInt int color = getColorOrDefault(StoreThemeEnum.get(storeTheme), context);
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
       Drawable d = context.getDrawable(R.drawable.dialog_bg_2);
       d.setColorFilter(color, PorterDuff.Mode.SRC_IN);
@@ -65,7 +65,7 @@ public class MyStoreWidget extends Widget<MyStoreDisplayable> {
     storeName.setText(AptoideAccountManager.getUserData().getUserRepo());
     compositeSubscription.add(RxView.clicks(exploreButton)
         .subscribe(click -> ((FragmentShower) context).pushFragmentV4(V8Engine.getFragmentProvider()
-            .newStoreFragment(AptoideAccountManager.getUserData().getUserRepo()))));
+            .newStoreFragment(AptoideAccountManager.getUserData().getUserRepo(), storeTheme))));
   }
 
   private int getColorOrDefault(StoreThemeEnum theme, Context context) {

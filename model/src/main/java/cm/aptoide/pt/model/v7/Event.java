@@ -35,6 +35,8 @@ import lombok.experimental.Accessors;
     getUserTimeline,
     listReviews,
     listComments,
+    getMyStoresSubscribed,
+    getStoresRecommended,
 
     // Client
     myStores,
