@@ -128,6 +128,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
   public static boolean validateAcceptedName(Event.Name name) {
     if (name != null) {
       switch (name) {
+        case myStores:
         case listApps:
         case getStore:
         case getStoreWidgets:
@@ -434,6 +435,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
         case getStore:
           caseGetStore(url, StoreUtils.getStoreCredentialsFromUrl(url), refresh);
           break;
+        case myStores:
         case getStoreWidgets:
           caseGetStoreWidgets(url, StoreUtils.getStoreCredentialsFromUrl(url), refresh);
           break;
