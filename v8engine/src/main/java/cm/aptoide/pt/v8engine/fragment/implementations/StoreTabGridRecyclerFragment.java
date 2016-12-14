@@ -420,7 +420,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
-    if (create) {
+    if (create || refresh) {
       String url = action != null ? action.replace(V7.BASE_HOST, "") : null;
 
       if (!validateAcceptedName(name)) {
