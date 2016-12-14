@@ -49,7 +49,7 @@ ext {
 
   //JW stands for Jake Wharton
 
-  APPLICATION_ID = 'cm.aptoide.partners'
+  APPLICATION_ID = 'com.aptoide.partners'
 
   //
   // gradle build script vars
