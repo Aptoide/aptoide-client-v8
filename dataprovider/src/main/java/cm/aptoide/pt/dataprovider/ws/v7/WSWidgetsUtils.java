@@ -33,7 +33,7 @@ public class WSWidgetsUtils {
   public static void loadInnerNodes(GetStoreWidgets.WSWidget wsWidget,
       BaseRequestWithStore.StoreCredentials storeCredentials, CountDownLatch countDownLatch,
       boolean refresh, Action1<Throwable> action1, String accessToken, String email,
-      String aptoideClientUuid, boolean googlePlayServicesAvailable, String oemid, boolean userHasRepo) {
+      String aptoideClientUuid, boolean googlePlayServicesAvailable, String oemid) {
 
     if (isKnownType(wsWidget.getType())) {
 
@@ -133,8 +133,6 @@ public class WSWidgetsUtils {
                     }
                     action1.call(throwable);
                   });
-        case MY_STORE:
-          setObjectView(wsWidget, countDownLatch, userHasRepo);
           break;
         case APP_META:
           GetAppRequest.ofAction(url, accessToken, aptoideClientUuid)
@@ -152,7 +150,7 @@ public class WSWidgetsUtils {
     }
   }
 
-  private static boolean shouldAddObjectView(List<String> list, AptoideWsV7Exception throwable) {
+  public static boolean shouldAddObjectView(List<String> list, AptoideWsV7Exception throwable) {
     for (BaseV7Response.Error error : throwable.getBaseResponse().getErrors()) {
       if (list.contains(error.getCode())) {
         return true;

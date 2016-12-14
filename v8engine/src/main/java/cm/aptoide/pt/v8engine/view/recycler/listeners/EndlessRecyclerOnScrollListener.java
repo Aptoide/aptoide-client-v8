@@ -112,6 +112,10 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
 
           successRequestListener.call(response);
         }, error -> {
+          //remove spinner if webservice respond with error
+          if (adapter.getItemCount() > 0) {
+            adapter.popDisplayable();
+          }
           errorRequestListener.onError(error);
         });
   }

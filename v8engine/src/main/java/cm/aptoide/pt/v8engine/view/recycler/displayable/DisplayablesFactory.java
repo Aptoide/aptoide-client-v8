@@ -316,7 +316,7 @@ public class DisplayablesFactory {
     }).toBlocking().first());
   }
 
-  private static Observable<List<Store>> loadLocalSubscribedStores(
+  public static Observable<List<Store>> loadLocalSubscribedStores(
       StoreRepository storeRepository) {
     return storeRepository.getAll().flatMap(stores -> Observable.from(stores).map(store -> {
       Store nwStore = new Store();
