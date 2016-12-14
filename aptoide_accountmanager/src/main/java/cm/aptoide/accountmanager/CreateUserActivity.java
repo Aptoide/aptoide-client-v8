@@ -1,13 +1,10 @@
 package cm.aptoide.accountmanager;
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v7.widget.Toolbar;
@@ -19,15 +16,10 @@ import android.widget.RelativeLayout;
 import cm.aptoide.accountmanager.ws.CreateUserRequest;
 import cm.aptoide.accountmanager.ws.ErrorsMapper;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import com.jakewharton.rxbinding.view.RxView;
-import com.jakewharton.rxbinding.widget.RxTextView;
-import java.io.File;
-import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -36,6 +28,7 @@ import rx.subscriptions.CompositeSubscription;
 
 public class CreateUserActivity extends PermissionsBaseActivity implements AptoideAccountManager.ICreateProfile {
 
+  private static final int CREATE_STORE_REQUEST_CODE = 1;
   private String userEmail;
   private String userPassword;
   private String username;
@@ -75,7 +68,7 @@ public class CreateUserActivity extends PermissionsBaseActivity implements Aptoi
   }
 
   @Override int getLayoutId() {
-    return R.layout.fragment_create_user;
+    return R.layout.activity_create_user;
   }
 
   @Override protected void onDestroy() {
@@ -146,6 +139,9 @@ public class CreateUserActivity extends PermissionsBaseActivity implements Aptoi
         FileUtils fileUtils = new FileUtils();
        // fileUtils.copyFile(avatarUrl.toString(), Application.getConfiguration().getUserAvatarCachePath(), aptoideUserAvatar);
         avatarPath = avatarUrl.toString();
+    } else if (requestCode == CREATE_STORE_REQUEST_CODE) {
+      //TODO: Coming from store
+      finish();
     }
   }
 
@@ -185,7 +181,7 @@ public class CreateUserActivity extends PermissionsBaseActivity implements Aptoi
     intent.putExtra(AptoideLoginUtils.APTOIDE_LOGIN_ACCESS_TOKEN_KEY, accessToken);
     intent.putExtra(AptoideLoginUtils.APTOIDE_LOGIN_USER_NAME_KEY, userEmail);
     intent.putExtra(AptoideLoginUtils.APTOIDE_LOGIN_PASSWORD_KEY, userPassword);
-    startActivity(intent);
+    startActivityForResult(intent, CREATE_STORE_REQUEST_CODE);
   }
 
   @Override public void onRegisterFail(@StringRes int reason) {
@@ -212,5 +208,7 @@ public class CreateUserActivity extends PermissionsBaseActivity implements Aptoi
     }
     return true;
   }
+
+
 
 }

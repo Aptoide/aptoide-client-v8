@@ -39,12 +39,14 @@
     <activity
         android:name=".CreateUserActivity"
         android:screenOrientation="nosensor"
+        android:windowSoftInputMode="stateHidden"
         />
 
     <activity
         android:name=".CreateStoreActivity"
         android:exported="true"
         android:screenOrientation="nosensor"
+        android:windowSoftInputMode="stateHidden"
         />
 
   </application>
