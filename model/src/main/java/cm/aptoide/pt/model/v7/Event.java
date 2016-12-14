@@ -34,7 +34,7 @@ import lombok.experimental.Accessors;
     //getApkComments,
     getUserTimeline,
     listReviews,
-    listStoreComments,
+    listComments,
 
     // Client
     myStores,

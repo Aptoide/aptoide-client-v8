@@ -136,7 +136,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
           //case getApkComments:
         case getAds:
         case listStores:
-        case listStoreComments:
+        case listComments:
         case listReviews:
           return true;
       }
@@ -346,7 +346,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 
     Event event1 = new Event();
     event1.setType(Event.Type.API);
-    event1.setName(Event.Name.listStoreComments);
+    event1.setName(Event.Name.listComments);
     event1.setAction(String.format(
         "http://ws2.aptoide.com/api/7/listComments/store_name/%s/comment_type=STORE/limit=10/sort=latest/order=desc",
         TextUtils.isEmpty(storeName) ? "rmota" : storeName));
@@ -439,7 +439,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
         case getStoreWidgets:
           caseGetStoreWidgets(url, StoreUtils.getStoreCredentialsFromUrl(url), refresh);
           break;
-        case listStoreComments:
+        case listComments:
           caseListStoreComments(url, StoreUtils.getStoreCredentialsFromUrl(url), refresh);
           break;
         case listReviews:

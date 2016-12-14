@@ -69,7 +69,7 @@ import rx.android.schedulers.AndroidSchedulers;
   //
   // downloading views
   //
-  private CheckBox shareInTimeline; // FIXME: 27/07/16 sithengineer what does this flag do ??
+  private CheckBox shareInTimeline;
   private ProgressBar downloadProgress;
   private TextView textProgress;
   private ImageView actionResume;

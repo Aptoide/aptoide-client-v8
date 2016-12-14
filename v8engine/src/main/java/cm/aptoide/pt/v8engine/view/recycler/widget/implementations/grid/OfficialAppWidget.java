@@ -1,6 +1,9 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
@@ -11,13 +14,21 @@ import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
+import cm.aptoide.pt.v8engine.repository.InstalledRepository;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
+import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.Translator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.OfficialAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -27,10 +38,11 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
 
   private static final String TAG = OfficialAppWidget.class.getName();
 
+  private ImageView appImage;
   private Button installButton;
   private TextView installMessage;
   private TextView appName;
-  private View appRating;
+  private RatingBar appRating;
   private View verticalSeparator;
   private TextView appDownloads;
   private TextView appVersion;
@@ -41,11 +53,12 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
   }
 
   @Override protected void assignViews(View itemView) {
+    appImage = (ImageView) itemView.findViewById(R.id.app_image);
     installButton = (Button) itemView.findViewById(R.id.app_install_button);
     installMessage = (TextView) itemView.findViewById(R.id.install_message);
     appName = (TextView) itemView.findViewById(R.id.app_name);
     verticalSeparator = itemView.findViewById(R.id.vertical_separator);
-    appRating = itemView.findViewById(R.id.app_rating);
+    appRating = (RatingBar) itemView.findViewById(R.id.app_rating);
     appDownloads = (TextView) itemView.findViewById(R.id.app_downloads);
     appVersion = (TextView) itemView.findViewById(R.id.app_version);
     appSize = (TextView) itemView.findViewById(R.id.app_size);
@@ -71,7 +84,7 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
 
       final String[] parts = Translator.translateToMultiple(messageAndApp.first);
       SpannableString middle =
-          new SpannableString(String.format(isAppInstalled ? parts[1] : parts[2], appName));
+          new SpannableString(String.format(isAppInstalled ? parts[2] : parts[3], appName));
       middle.setSpan(new ForegroundColorSpan(color), 0, middle.length(), Spanned.SPAN_MARK_MARK);
 
       SpannableStringBuilder text = new SpannableStringBuilder();
@@ -84,6 +97,8 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
       verticalSeparator.setVisibility(View.GONE);
     }
 
+    appRating.setRating(appData.getStats().getRating().getAvg());
+
     this.appName.setText(appName);
     this.appDownloads.setText(String.format(context.getString(R.string.downloads_count),
         AptoideUtils.StringU.withSuffix(appData.getStats().getDownloads())));
@@ -94,12 +109,33 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
     this.appSize.setText(String.format(context.getString(R.string.app_size),
         AptoideUtils.StringU.formatBytes(appData.getFile().getFilesize())));
 
+    ImageLoader.load(appData.getIcon(), this.appImage);
+
     // check if app is installed. if it is, show open button
 
-    compositeSubscription.add(RxView.clicks(installButton).subscribe(a -> {
+    // apply button background
+    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+      Drawable d = context.getDrawable(R.drawable.dialog_bg_2);
+      d.setColorFilter(color, PorterDuff.Mode.SRC_IN);
+      installButton.setBackground(d);
+    } else {
+      Drawable d = context.getResources().getDrawable(R.drawable.dialog_bg_2);
+      d.setColorFilter(color, PorterDuff.Mode.SRC_IN);
+      installButton.setBackgroundDrawable(d);
+    }
 
-      // TODO: 7/12/2016 sithengineer
-      ShowMessage.asSnack(installButton, "to do");
+    installButton.setText(getContext().getString( isAppInstalled ? R.string.open : R.string.install));
+
+    compositeSubscription.add(RxView.clicks(installButton).subscribe(a -> {
+      if (isAppInstalled) {
+        AptoideUtils.SystemU.openApp(appData.getPackageName());
+      } else {
+        // show app view to install app
+        Fragment appView = V8Engine.getFragmentProvider()
+            .newAppViewFragment(appData.getPackageName(),
+                AppViewFragment.OpenType.OPEN_AND_INSTALL);
+        FragmentUtils.replaceFragmentV4(this.getContext(), appView);
+      }
     }, err -> {
       Log.e(TAG, "", err);
       CrashReports.logException(err);
@@ -107,8 +143,7 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
   }
 
   private boolean isAppInstalled(GetApp app) {
-    //InstalledRepository installedRepo = RepositoryFactory.getRepositoryFor(Installed.class);
-    //return installedRepo.contains(app.getNodes().getMeta().getData().getPackageName());
-    return false;
+    InstalledRepository installedRepo = RepositoryFactory.getRepositoryFor(Installed.class);
+    return installedRepo.contains(app.getNodes().getMeta().getData().getPackageName());
   }
 }

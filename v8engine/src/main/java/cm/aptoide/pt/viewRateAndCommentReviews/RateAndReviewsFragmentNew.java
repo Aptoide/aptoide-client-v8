@@ -241,6 +241,10 @@ public class RateAndReviewsFragmentNew extends GridRecyclerFragment<CommentsAdap
     return super.onOptionsItemSelected(item);
   }
 
+  @Override protected CommentsAdapter createAdapter() {
+    return new CommentsAdapter<>(RateAndReviewCommentDisplayable.class);
+  }
+
   @Override public Observable<Integer> nextReviews() {
     return RxEndlessRecyclerView.loadMore(recyclerView, getAdapter());
   }

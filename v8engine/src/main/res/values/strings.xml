@@ -318,4 +318,8 @@
   <!-- social apps timeline -->
   <string name="social_timeline_you_will_share">"You will share:"</string>
 
+  <!--  -->
+  <string name="comment_store">Comment Store</string>
+  <string name="be_the_first_to_send_feedback_about_this_store">Be the first to send feedback about this store</string>
+
 </resources>

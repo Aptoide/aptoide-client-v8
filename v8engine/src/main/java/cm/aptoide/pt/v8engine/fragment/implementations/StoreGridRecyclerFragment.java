@@ -205,7 +205,7 @@ public class StoreGridRecyclerFragment extends StoreTabGridRecyclerFragment
   }
 
   @Override protected BaseAdapter createAdapter() {
-    return new CommentsAdapter<CommentDisplayable>(CommentDisplayable.class);
+    return new CommentsAdapter<>(CommentDisplayable.class);
   }
 
   @Override public CommentsAdapter<CommentDisplayable> getAdapter() {
