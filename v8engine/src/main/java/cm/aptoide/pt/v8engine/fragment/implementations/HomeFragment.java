@@ -138,6 +138,8 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
     //  startActivity(i);
     //}
 
+
+
     InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
     Subscription unManagedSubscription = installedAccessor.get(BACKUP_APPS_PACKAGE_NAME)
         .observeOn(AndroidSchedulers.mainThread())
