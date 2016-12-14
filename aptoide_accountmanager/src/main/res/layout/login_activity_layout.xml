@@ -81,7 +81,6 @@
             android:textColor="@color/com_facebook_button_text_color"
             android:elevation="0dp"
             android:text="@string/register"
-            style="?attr/customButtonWhite"
             />
 
         <Button
