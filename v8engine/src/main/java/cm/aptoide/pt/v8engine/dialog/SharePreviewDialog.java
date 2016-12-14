@@ -199,10 +199,10 @@ public class SharePreviewDialog {
       ImageView userAvatar = (ImageView) view.findViewById(R.id.card_user_avatar);
       ImageView appIcon =
           (ImageView) view.findViewById(R.id.displayable_social_timeline_recommendation_icon);
-      TextView appName =
-          (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_name);
-      TextView appSubTitle = (TextView) view.findViewById(
+      TextView appName = (TextView) view.findViewById(
           R.id.displayable_social_timeline_recommendation_similar_apps);
+      TextView appSubTitle =
+          (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_name);
       CardView cardView =
           (CardView) view.findViewById(R.id.displayable_social_timeline_recommendation_card);
       LinearLayout like = (LinearLayout) view.findViewById(R.id.social_like);
@@ -223,7 +223,7 @@ public class SharePreviewDialog {
           .getMeta()
           .getData()
           .getName());
-      appSubTitle.setText("just testing");
+      appSubTitle.setText(R.string.social_timeline_share_dialog_installed_and_recommended);
       cardView.setRadius(0);
       like.setClickable(false);
       like.setOnClickListener(null);

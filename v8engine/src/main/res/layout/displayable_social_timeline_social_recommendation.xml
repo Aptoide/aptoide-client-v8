@@ -108,7 +108,7 @@
 
       <TextView
         android:id="@+id/displayable_social_timeline_recommendation_name"
-        style="@style/Widget.Aptoide.Card.Title.Large.Black"
+        style="@style/Widget.Aptoide.Card.Body"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/displayable_social_timeline_recommendation_icon"
@@ -120,12 +120,11 @@
         android:layout_toRightOf="@+id/displayable_social_timeline_recommendation_icon"
         android:ellipsize="end"
         android:lines="1"
-        android:textColor="@color/black"
         tools:text="Clash Royale" />
 
       <TextView
         android:id="@+id/displayable_social_timeline_recommendation_similar_apps"
-        style="@style/Widget.Aptoide.Card.Body"
+        style="@style/Widget.Aptoide.Card.Title.Large.Black"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/displayable_social_timeline_recommendation_name"
