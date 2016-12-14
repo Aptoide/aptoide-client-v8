@@ -771,6 +771,8 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
 
     @Getter private final TextView fileSize;
 
+    @Getter private final TextView downloadsCountInStore;
+
     @Getter private final TextView downloadsCount;
 
     // ctor
@@ -784,6 +786,7 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
       badge = (ImageView) view.findViewById(R.id.badge_img);
       badgeText = (TextView) view.findViewById(R.id.badge_text);
       fileSize = (TextView) view.findViewById(R.id.file_size);
+      downloadsCountInStore = (TextView) view.findViewById(R.id.downloads_count_in_store);
       downloadsCount = (TextView) view.findViewById(R.id.downloads_count);
     }
 
@@ -853,7 +856,8 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
 
       fileSize.setText(AptoideUtils.StringU.formatBytes(app.getSize()));
 
-      downloadsCount.setText(AptoideUtils.StringU.withSuffix(app.getStats().getDownloads()));
+      downloadsCountInStore.setText(AptoideUtils.StringU.withSuffix(app.getStats().getDownloads()));
+      downloadsCount.setText(AptoideUtils.StringU.withSuffix(app.getStats().getPdownloads()));
 
       @DrawableRes int badgeResId = 0;
       @StringRes int badgeMessageId = 0;
