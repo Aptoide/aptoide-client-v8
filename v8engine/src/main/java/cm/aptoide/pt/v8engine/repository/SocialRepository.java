@@ -5,9 +5,11 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.LikeCardRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ShareCardRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.ShareInstallCardRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewInstallDisplayable;
 import rx.schedulers.Schedulers;
 
 /**
@@ -41,6 +43,17 @@ public class SocialRepository {
         .subscribe(
             baseV7Response -> Logger.d(this.getClass().getSimpleName(), baseV7Response.toString()),
             throwable -> throwable.printStackTrace());
+  }
+
+  public void share(AppViewInstallDisplayable displayable) {
+    String accessToken = AptoideAccountManager.getAccessToken();
+    String aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext()).getAptoideClientUUID();
+    ShareInstallCardRequest.of(
+        displayable.getPojo().getNodes().getMeta().getData().getPackageName(), accessToken,
+        aptoideClientUUID).observe().subscribe(baseV7Response -> {
+      Logger.d(this.getClass().getSimpleName(), baseV7Response.toString());
+    }, throwable -> throwable.printStackTrace());
   }
 }
 
