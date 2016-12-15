@@ -24,6 +24,7 @@ import cm.aptoide.pt.model.v7.timeline.Feature;
 import cm.aptoide.pt.model.v7.timeline.Recommendation;
 import cm.aptoide.pt.model.v7.timeline.Similar;
 import cm.aptoide.pt.model.v7.timeline.SocialArticle;
+import cm.aptoide.pt.model.v7.timeline.SocialInstall;
 import cm.aptoide.pt.model.v7.timeline.SocialStoreLatestApps;
 import cm.aptoide.pt.model.v7.timeline.SocialVideo;
 import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
@@ -53,6 +54,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Fea
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RecommendationDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SimilarDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SocialArticleDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SocialInstallDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SocialStoreLatestAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SocialVideoDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreLatestAppsDisplayable;
@@ -339,6 +341,9 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     } else if (card instanceof Similar) {
       return SimilarDisplayable.from((Similar) card, dateCalculator, spannableFactory,
           timelineMetricsManager);
+    } else if (card instanceof SocialInstall) {
+      return SocialInstallDisplayable.from((SocialInstall) card, timelineMetricsManager,
+          spannableFactory);
     }
     throw new IllegalArgumentException(
         "Only articles, features, store latest apps, app updates, videos, recommendations and similar cards supported.");

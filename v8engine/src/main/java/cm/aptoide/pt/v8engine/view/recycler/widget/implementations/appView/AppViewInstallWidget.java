@@ -20,7 +20,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
@@ -337,13 +336,11 @@ import rx.android.schedulers.AndroidSchedulers;
           .first()
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(progress -> {
-            Toast.makeText(context, "INSTALL CLICKED", Toast.LENGTH_SHORT).show();
             if (AptoideAccountManager.isLoggedIn()) {
 
               SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(displayable);
               AlertDialog.Builder alertDialog = sharePreviewDialog.showPreviewDialog(context)
                   .setPositiveButton(R.string.share, (dialogInterface, i) -> {
-                    Toast.makeText(getContext(), "SHARING...", Toast.LENGTH_SHORT).show();
                     SocialRepository socialRepository = new SocialRepository();
                     socialRepository.share(displayable);
                   })
