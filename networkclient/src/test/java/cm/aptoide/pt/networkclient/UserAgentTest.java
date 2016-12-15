@@ -89,11 +89,7 @@ public class UserAgentTest {
     String url = server.url("/").toString();
 
     Request testRequest = new Request.Builder().url(url).build();
-    String result = OkHttpClientFactory.newClient(new UserAgentGenerator() {
-      @Override public String generateUserAgent() {
-        return userData;
-      }
-    })
+    String result = OkHttpClientFactory.newClient(() -> userData)
         .newCall(testRequest)
         .execute()
         .body()

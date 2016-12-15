@@ -1,105 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:id="@+id/comment_outter_layout"
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="10dp"
-    android:layout_marginLeft="50dp"
-    android:layout_marginStart="50dp"
-    android:layout_marginRight="20dp"
-    android:layout_marginEnd="20dp"
     >
-
-  <ImageView
-      android:id="@+id/user_icon"
-      android:layout_alignParentTop="true"
-      android:layout_alignParentLeft="true"
-      android:layout_alignParentStart="true"
-      android:layout_width="34dp"
-      android:layout_height="34dp"
-      android:src="@drawable/icon_user"
-      />
-
-  <TextView
-      android:id="@+id/user_name"
-      android:layout_width="wrap_content"
+  <RelativeLayout
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginLeft="10.3dp"
-      android:layout_marginStart="10.3dp"
-      android:ellipsize="end"
-      android:maxLines="1"
-      android:textSize="@dimen/text_size_extra_small"
-      android:textStyle="bold"
-      android:layout_marginTop="12dp"
-      android:layout_toRightOf="@id/user_icon"
-      android:layout_toEndOf="@id/user_icon"
-      tools:text="Mary Pollaki"
-      />
-
-  <TextView
-      android:id="@+id/added_date"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginLeft="10dp"
-      android:layout_marginStart="10dp"
-      android:ellipsize="end"
-      android:maxLines="1"
-      android:textSize="@dimen/text_size_extra_small"
-      android:layout_toRightOf="@id/user_name"
-      android:layout_toEndOf="@id/user_name"
-      android:layout_alignTop="@id/user_name"
-      tools:text="3 days ago"
-      />
-
-  <LinearLayout
-      android:id="@+id/reply_layout"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:orientation="horizontal"
-      android:layout_toRightOf="@id/added_date"
-      android:layout_toEndOf="@id/added_date"
-      android:layout_alignTop="@id/added_date"
-      android:layout_alignParentEnd="true"
-      android:layout_alignParentRight="true"
-      android:gravity="right|end"
-      android:visibility="gone"
-      tools:visibility="visible"
+      android:id="@+id/outer_layout"
+      android:paddingEnd="20dp"
+      android:paddingLeft="50dp"
+      android:paddingRight="20dp"
+      android:paddingStart="50dp"
+      android:paddingTop="10dp"
       >
+
     <ImageView
-        android:layout_width="10dp"
-        android:layout_height="10dp"
-        android:src="@drawable/ic_reply"
+        android:id="@+id/user_icon"
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/icon_user"
         />
+
     <TextView
+        android:id="@+id/user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/reply"
-        android:textAllCaps="true"
-        android:textSize="10sp"
+        android:layout_marginLeft="10.3dp"
+        android:layout_marginStart="10.3dp"
+        android:layout_marginTop="12dp"
+        android:layout_toEndOf="@id/user_icon"
+        android:layout_toRightOf="@id/user_icon"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textSize="@dimen/text_size_extra_small"
+        android:textStyle="bold"
+        tools:text="Mary Pollaki"
         />
 
-  </LinearLayout>
+    <TextView
+        android:id="@+id/added_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/user_name"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_toEndOf="@id/user_name"
+        android:layout_toRightOf="@id/user_name"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textSize="@dimen/text_size_extra_small"
+        tools:text="3 days ago"
+        />
 
-  <TextView
-      android:id="@+id/comment"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:layout_alignParentLeft="true"
-      android:layout_below="@id/user_icon"
-      android:layout_marginTop="9dp"
-      android:ellipsize="end"
-      android:textSize="11.3sp"
-      tools:text="O Lorem Ipsum é um texto modelo da indústria tipográfica e de impressão. O Lorem Ipsum tem vindo a ser o texto padrão usado por estas indústrias desde o ano de 1500, quando uma misturou os caracteres de um texto para criar um espécime de livro."
-      />
+    <LinearLayout
+        android:id="@+id/reply_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@id/added_date"
+        android:layout_toEndOf="@id/added_date"
+        android:layout_toRightOf="@id/added_date"
+        android:gravity="right|end"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        tools:visibility="visible"
+        >
+      <ImageView
+          android:layout_width="10dp"
+          android:layout_height="10dp"
+          android:src="@drawable/ic_reply"
+          />
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/reply"
+          android:textAllCaps="true"
+          android:textSize="10sp"
+          />
 
-  <View
-      android:layout_width="match_parent"
-      android:layout_height="1dp"
-      android:layout_below="@+id/comment"
-      android:layout_marginTop="10dp"
-      android:background="@color/comments_footer"
-      />
+    </LinearLayout>
 
-</RelativeLayout>
+    <TextView
+        android:id="@+id/comment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/user_icon"
+        android:layout_marginTop="9dp"
+        android:ellipsize="end"
+        android:textSize="@dimen/text_size_medium_small"
+        tools:text="O Lorem Ipsum é um texto modelo da indústria tipográfica e de impressão. O Lorem Ipsum tem vindo a ser o texto padrão usado por estas indústrias desde o ano de 1500, quando uma misturou os caracteres de um texto para criar um espécime de livro."
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/comment"
+        android:layout_marginTop="10dp"
+        android:background="@color/comments_footer"
+        />
+
+  </RelativeLayout>
+</FrameLayout>
