@@ -31,7 +31,7 @@ public class MyStoresFragment extends StoreTabGridRecyclerFragment {
     if (subscription == null || subscription.isUnsubscribed()) {
       subscription = storeRepository.getAll()
           .observeOn(AndroidSchedulers.mainThread())
-          .compose(bindUntilEvent(LifecycleEvent.DESTROY))
+          .compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW))
           .subscribe(stores -> {
             if (!isFirstLoad[0]) {
               Logger.d(TAG, "Store database changed, reloading...");
@@ -41,6 +41,6 @@ public class MyStoresFragment extends StoreTabGridRecyclerFragment {
             }
           });
     }
-    super.load(create, refresh, savedInstanceState);
+    super.load(create, true, savedInstanceState);
   }
 }
