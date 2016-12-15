@@ -16,7 +16,6 @@ android {
 
   defaultConfig {
     minSdkVersion 9
-    consumerProguardFiles "proguard-rules.txt"
   }
 
   lintOptions {
@@ -27,10 +26,6 @@ android {
 
   buildTypes {
     release {
-      minifyEnabled false
-      shrinkResources false
-    }
-    debug {
       minifyEnabled false
       shrinkResources false
     }
@@ -56,12 +51,8 @@ dependencies {
   //
   // inter-projects dependencies
   //
-
-  debugCompile project(path: ':utils', configuration: 'debug')
-  releaseCompile project(path: ':utils', configuration: 'release')
-
-  debugCompile project(path: ':crashreports', configuration: 'debug')
-  releaseCompile project(path: ':crashreports', configuration: 'release')
+  compile project(path: ':utils', configuration: 'release')
+  compile project(path: ':crashreports', configuration: 'release')
 
   //
   // custom libs in folders
