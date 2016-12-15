@@ -28,7 +28,6 @@ import rx.subscriptions.CompositeSubscription;
 
 public class CreateUserActivity extends PermissionsBaseActivity implements AptoideAccountManager.ICreateProfile {
 
-  private static final int CREATE_STORE_REQUEST_CODE = 1;
   private String userEmail;
   private String userPassword;
   private String username;
@@ -43,6 +42,8 @@ public class CreateUserActivity extends PermissionsBaseActivity implements Aptoi
   private Button mCreateButton;
   private ImageView mAvatar;
   private View content;
+
+  private static int CREATE_USER_REQUEST_CODE = 0; //1:Username and Avatar 2: Username
 
   private CompositeSubscription mSubscriptions;
 
@@ -98,8 +99,29 @@ public class CreateUserActivity extends PermissionsBaseActivity implements Aptoi
     mSubscriptions.add(RxView.clicks(mUserAvatar).subscribe(click -> chooseAvatarSource()));
     mSubscriptions.add(RxView.clicks(mCreateButton).subscribe(click -> {
       username = mUsername.getText().toString();
-      ProgressDialog pleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(this, getApplicationContext().getString(R.string.please_wait_upload));
-      if (validateProfileData()) {
+      validateProfileData();
+      if (CREATE_USER_REQUEST_CODE == 1) {
+        ProgressDialog pleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(this, getApplicationContext().getString(R.string.please_wait_upload));
+        pleaseWaitDialog.show();
+        CreateUserRequest.of("true", userEmail, username, userPassword, avatarPath).execute(answer -> {
+          if (answer.hasErrors()) {
+            if (answer.getErrors() != null && answer.getErrors().size() > 0) {
+              onRegisterFail(ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors().get(0).code));
+              pleaseWaitDialog.dismiss();
+            } else {
+              onRegisterFail(R.string.unknown_error);
+              pleaseWaitDialog.dismiss();
+            }
+          } else {
+            //Successfull update
+            saveUserDataOnPreferences();
+            onRegisterSuccess();
+            pleaseWaitDialog.dismiss();
+          }
+        });
+      } else if (CREATE_USER_REQUEST_CODE == 2) {
+        avatarPath = "";
+        ProgressDialog pleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(this, getApplicationContext().getString(R.string.please_wait));
         pleaseWaitDialog.show();
         CreateUserRequest.of("true", userEmail, username, userPassword, avatarPath).execute(answer -> {
           if (answer.hasErrors()) {
@@ -195,17 +217,18 @@ public class CreateUserActivity extends PermissionsBaseActivity implements Aptoi
     return avatarPath == null ? "" : avatarPath;
   }
 
-  public boolean validateProfileData() {
-    if (getUserUsername().length() == 0) {
-      onRegisterFail(R.string.no_username_inserted);
-      return false;
-    } else if (getUserAvatar().length() == 0) {
-      onRegisterFail(R.string.no_photo_inserted);
-      return false;
-    } else if (getUserAvatar().length() == 0 && getUserUsername().length() == 0) {
+  public int validateProfileData() {
+    if (getUserUsername().length() != 0) {
+      if (getUserAvatar().length() != 0) {
+        CREATE_USER_REQUEST_CODE = 1;
+      } else if (getUserAvatar().length() == 0) {
+        CREATE_USER_REQUEST_CODE = 2;
+      }
+    } else {
+      CREATE_USER_REQUEST_CODE = 0;
       onRegisterFail(R.string.nothing_inserted);
     }
-    return true;
+    return CREATE_USER_REQUEST_CODE;
   }
 
 

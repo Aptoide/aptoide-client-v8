@@ -38,7 +38,7 @@ import rx.Observable;
   private String email;
   private String name;
   private String update = "";
-  private String userAvatarPath;
+  private String userAvatarPath = "";
 
   CreateUserRequest() {
   }
@@ -58,7 +58,9 @@ import rx.Observable;
   @Override
   protected Observable<OAuth> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
 
-    if (update.equals("true")) {
+    HashMapNotNull<String, String> parameters = new HashMapNotNull<String, String>();
+
+    if (update.equals("true") && !userAvatarPath.isEmpty()) {
       HashMapNotNull<String, RequestBody> body = new HashMapNotNull<>();
 
       String calculatedPasshash;
@@ -87,9 +89,11 @@ import rx.Observable;
       RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
       MultipartBody.Part multipartBody = MultipartBody.Part.createFormData("user_avatar", file.getName(), requestFile);
       return interfaces.createUserWithFile(multipartBody, body);
+    } else if(update.equals("true") && userAvatarPath.isEmpty()) {
+      parameters.put("update", update);
+      parameters.put("name", name);
     }
 
-    HashMapNotNull<String, String> parameters = new HashMapNotNull<String, String>();
 
     String passhash;
     passhash = AptoideUtils.AlgorithmU.computeSha1(password);
@@ -104,9 +108,13 @@ import rx.Observable;
       parameters.put("oem_id", Application.getConfiguration().getExtraId());
     }
 
-    parameters.put("hmac",
-        AptoideUtils.AlgorithmU.computeHmacSha1(email + passhash + name, "bazaar_hmac"));
-
+    if (update.equals("true")) {
+      parameters.put("hmac",
+          AptoideUtils.AlgorithmU.computeHmacSha1(email + passhash + name + update, "bazaar_hmac"));
+    } else {
+      parameters.put("hmac",
+          AptoideUtils.AlgorithmU.computeHmacSha1(email + passhash + name, "bazaar_hmac"));
+    }
     return interfaces.createUser(parameters);
 
   }
