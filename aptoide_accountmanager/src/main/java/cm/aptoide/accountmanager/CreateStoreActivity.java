@@ -20,8 +20,10 @@ import cm.aptoide.accountmanager.ws.ErrorsMapper;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.SetStoreRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.SimpleSetStoreRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -86,6 +88,8 @@ public class CreateStoreActivity extends PermissionsBaseActivity implements
   private boolean THEME_CLICKED_FLAG = false;
   private String storeTheme = "";
 
+  private int CREATE_STORE_REQUEST_CODE = 0; //1: all 2: user and theme 3:user
+
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(getLayoutId());
@@ -96,6 +100,11 @@ public class CreateStoreActivity extends PermissionsBaseActivity implements
     setupListeners();
     setupThemeListeners();
     getUserData();
+  }
+
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    mSubscriptions.clear();
   }
 
   @Override protected String getActivityTitle() {
@@ -140,7 +149,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity implements
     mPinkShape = (ImageView) findViewById(R.id.create_store_theme_pink);
     mPinkTick = (ImageView) findViewById(R.id.create_store_theme_check_pink);
     mLimeShape = (ImageView) findViewById(R.id.create_store_theme_lime);
-    mLimeTick = (ImageView) findViewById(R.id.create_store_theme_check_lightblue);
+    mLimeTick = (ImageView) findViewById(R.id.create_store_theme_check_lime);
     mAmberShape = (ImageView) findViewById(R.id.create_store_theme_amber);
     mAmberTick = (ImageView) findViewById(R.id.create_store_theme_check_amber);
     mBrownShape = (ImageView) findViewById(R.id.create_store_theme_brown);
@@ -159,11 +168,12 @@ public class CreateStoreActivity extends PermissionsBaseActivity implements
     mSubscriptions.add(RxView.clicks(mCreateStore).subscribe(click -> {
       storeName = mStoreName.getText().toString();
       //TODO: Make request to create repo and to update it (checkusercredentials and setStore) and add dialog
-      ProgressDialog progressDialog = GenericDialogs.createGenericPleaseWaitDialog(this, getApplicationContext().getString(R.string.please_wait_upload));
-      progressDialog.show();
-      CheckUserCredentialsRequest.of(
-          getIntent().getStringExtra(AptoideLoginUtils.APTOIDE_LOGIN_ACCESS_TOKEN_KEY),
-          storeName, CREATE_STORE_CODE, username, password).execute(answer -> {
+      validateData();
+      if (CREATE_STORE_REQUEST_CODE == 2 || CREATE_STORE_REQUEST_CODE == 2) {
+        ProgressDialog progressDialog = GenericDialogs.createGenericPleaseWaitDialog(this, getApplicationContext().getString(R.string.please_wait_upload));
+        progressDialog.show();
+        CheckUserCredentialsRequest.of(getIntent().getStringExtra(AptoideLoginUtils.APTOIDE_LOGIN_ACCESS_TOKEN_KEY),
+            storeName, CREATE_STORE_CODE, username, password).execute(answer -> {
           if (answer.hasErrors()) {
             if (answer.getErrors() != null && answer.getErrors().size() > 0) {
               onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors().get(0).code));
@@ -172,7 +182,8 @@ public class CreateStoreActivity extends PermissionsBaseActivity implements
           } else {
             onCreateSuccess(progressDialog);
           }
-      });
+        });
+      }
     }));
     mSubscriptions.add(RxView.clicks(mSkip).subscribe(click -> {
       AptoideAccountManager.refreshAndSaveUserInfoData();
@@ -222,24 +233,40 @@ public class CreateStoreActivity extends PermissionsBaseActivity implements
 
   @Override public void onCreateSuccess(ProgressDialog progressDialog) {
     ShowMessage.asSnack(this, "Repo Created");
-    SetStoreRequest.of(
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID(),
-        AptoideAccountManager.getAccessToken(), storeName, storeTheme, storeAvatarPath)
-        .execute(answer -> {
-          if (answer.getErrors().size() > 0) {
-            //TODO: deal with failure
-            onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors().get(0).getCode()));
-            AptoideAccountManager.refreshAndSaveUserInfoData();
-            progressDialog.dismiss();
-            //TODO: Broadcast igual ao do signup
-          } else {
-            ShowMessage.asSnack(this, "success");
-            AptoideAccountManager.refreshAndSaveUserInfoData();
-            progressDialog.dismiss();
-            //TODO: Broadcast igual ao do signup
-          }
-        });
+    if (CREATE_STORE_REQUEST_CODE == 1) {
+      SetStoreRequest.of(new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+              DataProvider.getContext()).getAptoideClientUUID(), AptoideAccountManager.getAccessToken(),
+          storeName, storeTheme, storeAvatarPath).execute(answer -> {
+        if (answer.getErrors().size() > 0) {
+          //TODO: deal with failure
+          onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors().get(0).getCode()));
+          AptoideAccountManager.refreshAndSaveUserInfoData();
+          progressDialog.dismiss();
+          //TODO: Broadcast igual ao do signup
+        } else {
+          ShowMessage.asSnack(this, "success");
+          AptoideAccountManager.refreshAndSaveUserInfoData();
+          progressDialog.dismiss();
+          //TODO: Broadcast igual ao do signup
+        }
+      });
+    } else if (CREATE_STORE_REQUEST_CODE == 2 || CREATE_STORE_REQUEST_CODE == 3) {
+      SimpleSetStoreRequest.of(AptoideAccountManager.getAccessToken(),
+          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+              DataProvider.getContext()).getAptoideClientUUID(),
+          storeName, storeTheme).execute(answer -> {
+        if(answer.getInfo().getStatus().equals(BaseV7Response.Info.Status.OK)) {
+          ShowMessage.asSnack(this, "success");
+          AptoideAccountManager.refreshAndSaveUserInfoData();
+          progressDialog.dismiss();
+          finish();
+        } else {
+          onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors().get(0).getCode()));
+          AptoideAccountManager.refreshAndSaveUserInfoData();
+          progressDialog.dismiss();
+        }
+      });
+    }
   }
 
   @Override public void onCreateFail(@StringRes int reason) {
@@ -366,5 +393,22 @@ public class CreateStoreActivity extends PermissionsBaseActivity implements
       return true;
     }
     return false;
+  }
+
+  private int validateData() {
+    if (getRepoName().length() != 0) {
+      if (getRepoTheme().length() != 0) {
+        if (getRepoAvatar().length() != 0) {
+          CREATE_STORE_REQUEST_CODE = 1;
+        } else {
+          CREATE_STORE_REQUEST_CODE = 2;
+        }
+      } else {
+        CREATE_STORE_REQUEST_CODE = 3;
+      }
+    } else {
+      CREATE_STORE_REQUEST_CODE = 0;
+    }
+    return CREATE_STORE_REQUEST_CODE;
   }
 }
