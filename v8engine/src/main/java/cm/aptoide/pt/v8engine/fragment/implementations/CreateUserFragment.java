@@ -15,7 +15,7 @@ public class CreateUserFragment extends BaseToolbarFragment {
   }
 
   @Override public int getContentViewId() {
-    return R.layout.fragment_create_user;
+    return R.layout.activity_create_user;
   }
 
 }
