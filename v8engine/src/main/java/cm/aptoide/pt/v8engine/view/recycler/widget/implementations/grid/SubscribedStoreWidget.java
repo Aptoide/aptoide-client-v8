@@ -11,19 +11,11 @@ import android.support.annotation.ColorInt;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReports;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
@@ -43,7 +35,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
   private ImageView storeAvatar;
   private TextView storeName;
   //private TextView storeUnsubscribe;
-  private FrameLayout storeLayout;
+  private LinearLayout storeLayout;
   //private View infoLayout;
 
   public SubscribedStoreWidget(View itemView) {
@@ -54,7 +46,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
     storeAvatar = (ImageView) itemView.findViewById(R.id.store_avatar_row);
     storeName = (TextView) itemView.findViewById(R.id.store_name_row);
     //storeUnsubscribe = (TextView) itemView.findViewById(R.id.store_unsubscribe_row);
-    storeLayout = (FrameLayout) itemView.findViewById(R.id.store_main_layout_row);
+    storeLayout = (LinearLayout) itemView.findViewById(R.id.store_main_layout_row);
     //infoLayout = itemView.findViewById(R.id.store_layout_subscribers);
     //storeUnsubscribe.setText(R.string.unfollow);
   }
@@ -77,9 +69,11 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
                     displayable.getPojo().getTheme())));
 
     if (store.getStoreId() == -1 || TextUtils.isEmpty(store.getIconPath())) {
-      ImageLoader.loadWithCircleTransform(R.drawable.ic_avatar_apps, storeAvatar);
+      ImageLoader.loadWithShadowCircleTransform(R.drawable.ic_avatar_apps, storeAvatar,
+          StoreThemeEnum.get(store.getTheme()).getStoreHeaderInt());
     } else {
-      ImageLoader.loadWithCircleTransform(store.getIconPath(), storeAvatar);
+      ImageLoader.loadWithShadowCircleTransform(store.getIconPath(), storeAvatar,
+          StoreThemeEnum.get(store.getTheme()).getStoreHeaderInt());
     }
 
     //storeUnsubscribe.setOnClickListener(v -> {

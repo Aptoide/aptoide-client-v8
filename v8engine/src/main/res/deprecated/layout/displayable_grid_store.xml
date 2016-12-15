@@ -5,167 +5,139 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/store_main_layout_row"
     android:layout_width="match_parent"
     android:layout_height="110dp"
-    android:layout_gravity="center_vertical|center_horizontal"
-    android:background="@drawable/white_border_square"
+    android:gravity="center"
     android:orientation="vertical"
-    android:gravity="center_vertical"
+    style="?attr/backgroundCard"
     >
 
   <!-- its not useless: it's the store layout background color container -->
   <!--<LinearLayout-->   <!--android:id="@+id/store_main_layout_row"-->
-      <!--android:layout_width="match_parent"-->
-      <!--android:layout_height="match_parent"-->
-      <!--android:layout_margin="2dp"-->
-      <!--android:gravity="center"-->
-      <!--android:orientation="vertical"-->
-      <!--&gt;-->
+  <!--android:layout_width="match_parent"-->
+  <!--android:layout_height="match_parent"-->
+  <!--android:layout_margin="2dp"-->
+  <!--android:gravity="center"-->
+  <!--android:orientation="vertical"-->
+  <!--&gt;-->
+  <ImageView
+      android:id="@+id/store_avatar_row"
+      android:layout_width="64dp"
+      android:layout_height="64dp"
+      android:contentDescription="@null"
+      android:scaleType="fitCenter"
+      android:src="@drawable/ic_avatar_apps"
+      />
 
-    <FrameLayout
-        android:id="@+id/store_main_layout_row"
-        android:layout_width="68dp"
-        android:layout_height="68dp"
-        android:layout_gravity="center_horizontal|center_vertical"
-        >
+  <LinearLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
+      android:layout_marginTop="8dp"
+      android:gravity="center_horizontal|center_vertical"
+      android:orientation="horizontal"
+      >
 
-      <ImageView
-          android:layout_width="68dp"
-          android:layout_height="68dp"
-          android:background="@drawable/white_border_circle"
-          android:contentDescription="@null"
-          android:scaleType="fitCenter"
-          />
-
-      <ImageView
-          android:id="@+id/store_avatar_row"
-          android:layout_width="64dp"
-          android:layout_height="64dp"
-          android:layout_marginLeft="2dp"
-          android:layout_marginTop="2dp"
-          android:contentDescription="@null"
-          android:scaleType="fitCenter"
-          android:src="@drawable/ic_avatar_apps"
-          />
-
-      <ImageView
-          android:layout_width="68dp"
-          android:layout_height="68dp"
-          android:background="@drawable/oculo"
-          android:contentDescription="@null"
-          android:scaleType="fitCenter"
-          />
-
-    </FrameLayout>
-
-    <LinearLayout
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:orientation="horizontal"
-        android:gravity="center_horizontal|center_vertical"
-        android:layout_marginTop="8dp"
-        >
+        android:src="@drawable/icon_store"
+        />
 
-      <ImageView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:src="@drawable/icon_store"
-          />
+    <TextView
+        android:id="@+id/store_name_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5.7dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:text="@string/apps"
+        android:textColor="@color/followed_stores_store_name_color"
+        android:textSize="12sp"
+        />
 
-      <TextView
-          android:id="@+id/store_name_row"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginLeft="5.7dp"
-          android:ellipsize="end"
-          android:maxLines="1"
-          android:singleLine="true"
-          android:textSize="12sp"
-          android:textColor="@color/followed_stores_store_name_color"
-          android:text="@string/apps"
-          />
+  </LinearLayout>
+  <!--<RelativeLayout-->
+  <!--android:layout_width="match_parent"-->
+  <!--android:layout_height="wrap_content"-->
+  <!--android:layout_gravity="center_horizontal"-->
+  <!--android:paddingLeft="4dp"-->
+  <!--android:paddingRight="4dp"-->
+  <!--android:paddingTop="4dp"-->
+  <!--&gt;-->
 
-    </LinearLayout>
-    <!--<RelativeLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="center_horizontal"-->
-        <!--android:paddingLeft="4dp"-->
-        <!--android:paddingRight="4dp"-->
-        <!--android:paddingTop="4dp"-->
-        <!--&gt;-->
-
-      <!--<LinearLayout-->
-          <!--android:id="@+id/store_layout_subscribers"-->
-          <!--android:layout_width="wrap_content"-->
-          <!--android:layout_height="wrap_content"-->
-          <!--android:layout_centerInParent="true"-->
-          <!--android:orientation="horizontal"-->
-          <!--&gt;-->
+  <!--<LinearLayout-->
+  <!--android:id="@+id/store_layout_subscribers"-->
+  <!--android:layout_width="wrap_content"-->
+  <!--android:layout_height="wrap_content"-->
+  <!--android:layout_centerInParent="true"-->
+  <!--android:orientation="horizontal"-->
+  <!--&gt;-->
 
 
-        <!--&lt;!&ndash; DELETED android:background="@drawable/user" BECAUSE user.xml IS STILL a VectorDrawable-->
-        <!--will be re-added when converted to vectorAsset // Vector Asset replaced with png file for compatibility-->
-        <!--issues &ndash;&gt;-->
-        <!--<ImageView-->
-            <!--android:layout_width="12dp"-->
-            <!--android:layout_height="12dp"-->
-            <!--android:background="@drawable/ic_user_icon"-->
-            <!--/>-->
+  <!--&lt;!&ndash; DELETED android:background="@drawable/user" BECAUSE user.xml IS STILL a VectorDrawable-->
+  <!--will be re-added when converted to vectorAsset // Vector Asset replaced with png file for compatibility-->
+  <!--issues &ndash;&gt;-->
+  <!--<ImageView-->
+  <!--android:layout_width="12dp"-->
+  <!--android:layout_height="12dp"-->
+  <!--android:background="@drawable/ic_user_icon"-->
+  <!--/>-->
 
-        <!--<TextView-->
-            <!--android:id="@+id/store_subscribers"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:paddingLeft="4dp"-->
-            <!--android:paddingRight="8dp"-->
-            <!--android:text="2345"-->
-            <!--android:textColor="?attr/storesTextColor"-->
-            <!--android:textSize="10sp"-->
-            <!--/>-->
-
-
-        <!--<ImageView-->
-            <!--android:layout_width="12dp"-->
-            <!--android:layout_height="12dp"-->
-            <!--android:background="@drawable/ic_download_icon"-->
-            <!--/>-->
-
-        <!--<TextView-->
-            <!--android:id="@+id/store_downloads"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:paddingLeft="4dp"-->
-            <!--android:paddingRight="8dp"-->
-            <!--android:text="42656"-->
-            <!--android:textColor="?attr/storesTextColor"-->
-            <!--android:textSize="10sp"-->
-            <!--/>-->
-
-      <!--</LinearLayout>-->
-
-      <!--&lt;!&ndash;  android:drawableLeft="@drawable/close" not included because since it's a png file it needs a certain size, and can't be done inside the textview &ndash;&gt;-->
-      <!--<TextView-->
-          <!--android:id="@+id/store_unsubscribe_row"-->
-          <!--android:layout_width="wrap_content"-->
-          <!--android:layout_height="wrap_content"-->
-          <!--android:layout_centerInParent="true"-->
-          <!--android:layout_gravity="center_horizontal"-->
-          <!--android:layout_marginTop="4dp"-->
-          <!--android:background="@drawable/rounded_corners_dark"-->
-          <!--android:drawableLeft="@drawable/ic_close_white"-->
-          <!--android:drawablePadding="4dp"-->
-          <!--android:gravity="center_vertical"-->
-          <!--android:padding="6dp"-->
-          <!--android:text="@string/unfollow"-->
-          <!--android:textColor="?attr/storesTextColor"-->
-          <!--android:textSize="12sp"-->
-          <!--/>-->
-
-    <!--</RelativeLayout>-->
+  <!--<TextView-->
+  <!--android:id="@+id/store_subscribers"-->
+  <!--android:layout_width="wrap_content"-->
+  <!--android:layout_height="wrap_content"-->
+  <!--android:paddingLeft="4dp"-->
+  <!--android:paddingRight="8dp"-->
+  <!--android:text="2345"-->
+  <!--android:textColor="?attr/storesTextColor"-->
+  <!--android:textSize="10sp"-->
+  <!--/>-->
 
 
-    <!--  android:drawableLeft="@drawable/close" not included because since it's a png file it needs a certain size, and can't be done inside the textview -->
+  <!--<ImageView-->
+  <!--android:layout_width="12dp"-->
+  <!--android:layout_height="12dp"-->
+  <!--android:background="@drawable/ic_download_icon"-->
+  <!--/>-->
+
+  <!--<TextView-->
+  <!--android:id="@+id/store_downloads"-->
+  <!--android:layout_width="wrap_content"-->
+  <!--android:layout_height="wrap_content"-->
+  <!--android:paddingLeft="4dp"-->
+  <!--android:paddingRight="8dp"-->
+  <!--android:text="42656"-->
+  <!--android:textColor="?attr/storesTextColor"-->
+  <!--android:textSize="10sp"-->
+  <!--/>-->
+
+  <!--</LinearLayout>-->
+
+  <!--&lt;!&ndash;  android:drawableLeft="@drawable/close" not included because since it's a png file it needs a certain size, and can't be done inside the textview &ndash;&gt;-->
+  <!--<TextView-->
+  <!--android:id="@+id/store_unsubscribe_row"-->
+  <!--android:layout_width="wrap_content"-->
+  <!--android:layout_height="wrap_content"-->
+  <!--android:layout_centerInParent="true"-->
+  <!--android:layout_gravity="center_horizontal"-->
+  <!--android:layout_marginTop="4dp"-->
+  <!--android:background="@drawable/rounded_corners_dark"-->
+  <!--android:drawableLeft="@drawable/ic_close_white"-->
+  <!--android:drawablePadding="4dp"-->
+  <!--android:gravity="center_vertical"-->
+  <!--android:padding="6dp"-->
+  <!--android:text="@string/unfollow"-->
+  <!--android:textColor="?attr/storesTextColor"-->
+  <!--android:textSize="12sp"-->
+  <!--/>-->
+
+  <!--</RelativeLayout>-->
+
+
+  <!--  android:drawableLeft="@drawable/close" not included because since it's a png file it needs a certain size, and can't be done inside the textview -->
   <!--</LinearLayout>-->
 </LinearLayout>

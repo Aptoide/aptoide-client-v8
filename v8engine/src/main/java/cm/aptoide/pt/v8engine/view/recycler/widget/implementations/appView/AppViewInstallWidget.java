@@ -20,6 +20,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
@@ -44,11 +46,13 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.dialog.InstallWarningDialog;
+import cm.aptoide.pt.v8engine.dialog.SharePreviewDialog;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.receivers.AppBoughtReceiver;
+import cm.aptoide.pt.v8engine.repository.SocialRepository;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewInstallDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
@@ -69,7 +73,7 @@ import rx.android.schedulers.AndroidSchedulers;
   //
   // downloading views
   //
-  private CheckBox shareInTimeline; // FIXME: 27/07/16 sithengineer what does this flag do ??
+  private CheckBox shareInTimeline;
   private ProgressBar downloadProgress;
   private TextView textProgress;
   private ImageView actionResume;
@@ -333,6 +337,20 @@ import rx.android.schedulers.AndroidSchedulers;
           .first()
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(progress -> {
+            Toast.makeText(context, "INSTALL CLICKED", Toast.LENGTH_SHORT).show();
+            if (AptoideAccountManager.isLoggedIn()) {
+
+              SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(displayable);
+              AlertDialog.Builder alertDialog = sharePreviewDialog.showPreviewDialog(context)
+                  .setPositiveButton(R.string.share, (dialogInterface, i) -> {
+                    Toast.makeText(getContext(), "SHARING...", Toast.LENGTH_SHORT).show();
+                    SocialRepository socialRepository = new SocialRepository();
+                    socialRepository.share(displayable);
+                  })
+                  .setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
+                  });
+              alertDialog.show();
+            }
             ShowMessage.asSnack(v, installOrUpgradeMsg);
           }, err -> {
             if (err instanceof SecurityException) {

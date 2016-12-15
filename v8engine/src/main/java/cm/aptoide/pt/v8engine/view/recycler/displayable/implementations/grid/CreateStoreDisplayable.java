@@ -3,10 +3,13 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 
-public class LatestStoreCommentsDisplayable extends Displayable {
+/**
+ * Created by trinkes on 02/12/2016.
+ */
 
+public class CreateStoreDisplayable extends Displayable {
   @Override public int getViewLayout() {
-    return R.layout.displayable_grid_latest_store_comments;
+    return R.layout.create_store_displayable_layout;
   }
 
   @Override protected Configs getConfig() {

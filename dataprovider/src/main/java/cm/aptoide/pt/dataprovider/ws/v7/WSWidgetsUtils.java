@@ -5,13 +5,21 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import android.util.Pair;
+import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.GetMyStoreListRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.GetMyStoreMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreDisplaysRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
+import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
+import cm.aptoide.pt.model.v7.ListComments;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.utils.AptoideUtils;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import rx.functions.Action1;
 
@@ -19,11 +27,13 @@ import rx.functions.Action1;
  * Created by neuro on 27-04-2016.
  */
 public class WSWidgetsUtils {
+  public static final String USER_DONT_HAVE_STORE_ERROR = "MYSTORE-1";
+  public static final String USER_NOT_LOGGED_ERROR = "AUTH-5";
 
   public static void loadInnerNodes(GetStoreWidgets.WSWidget wsWidget,
       BaseRequestWithStore.StoreCredentials storeCredentials, CountDownLatch countDownLatch,
       boolean refresh, Action1<Throwable> action1, String accessToken, String email,
-      String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid) {
+      String aptoideClientUuid, boolean googlePlayServicesAvailable, String oemid) {
 
     if (isKnownType(wsWidget.getType())) {
 
@@ -34,14 +44,14 @@ public class WSWidgetsUtils {
       }
       switch (wsWidget.getType()) {
         case APPS_GROUP:
-          ListAppsRequest.ofAction(url, storeCredentials, accessToken, email, aptoideClientUUID)
+          ListAppsRequest.ofAction(url, storeCredentials, accessToken, email, aptoideClientUuid)
               .observe(refresh)
               .compose(AptoideUtils.ObservableU.applySchedulers())
               .subscribe(listApps -> setObjectView(wsWidget, countDownLatch, listApps), action1);
           break;
 
         case STORES_GROUP:
-          ListStoresRequest.ofAction(url, accessToken, email, aptoideClientUUID)
+          ListStoresRequest.ofAction(url, accessToken, aptoideClientUuid)
               .observe(refresh)
               .compose(AptoideUtils.ObservableU.applySchedulers())
               .subscribe(listStores -> setObjectView(wsWidget, countDownLatch, listStores),
@@ -50,7 +60,7 @@ public class WSWidgetsUtils {
 
         case DISPLAYS:
           GetStoreDisplaysRequest.ofAction(url, storeCredentials, accessToken, email,
-              aptoideClientUUID)
+              aptoideClientUuid)
               .observe(refresh)
               .compose(AptoideUtils.ObservableU.applySchedulers())
               .subscribe(
@@ -59,7 +69,7 @@ public class WSWidgetsUtils {
           break;
 
         case ADS:
-          GetAdsRequest.ofHomepage(aptoideClientUUID, googlePlayServicesAvailable, oemid)
+          GetAdsRequest.ofHomepage(aptoideClientUuid, googlePlayServicesAvailable, oemid)
               .observe()
               .compose(AptoideUtils.ObservableU.applySchedulers())
               .subscribe(getAdsResponse -> setObjectView(wsWidget, countDownLatch, getAdsResponse),
@@ -67,26 +77,68 @@ public class WSWidgetsUtils {
           break;
 
         case STORE_META:
-          GetStoreMetaRequest.ofAction(url, storeCredentials, accessToken, email, aptoideClientUUID)
+          GetStoreMetaRequest.ofAction(url, storeCredentials, accessToken, email, aptoideClientUuid)
               .observe(refresh)
               .compose(AptoideUtils.ObservableU.applySchedulers())
               .subscribe(getStoreMeta -> setObjectView(wsWidget, countDownLatch, getStoreMeta),
                   action1);
           break;
 
-        case STORE_LATEST_COMMENTS:
-          ListCommentsRequest.ofAction(url, storeCredentials, accessToken, aptoideClientUUID)
+        case COMMENTS_GROUP:
+          ListCommentsRequest.ofStoreAction(url, refresh, storeCredentials, accessToken,
+              aptoideClientUuid)
               .observe(refresh)
               .compose(AptoideUtils.ObservableU.applySchedulers())
-              .subscribe(listComments -> setObjectView(wsWidget, countDownLatch, listComments),
-                  action1);
+              .subscribe(listComments -> setObjectView(wsWidget, countDownLatch,
+                  new Pair<ListComments, BaseRequestWithStore.StoreCredentials>(listComments,
+                      storeCredentials)), action1);
           break;
 
         case REVIEWS_GROUP:
-          ListFullReviewsRequest.ofAction(url, refresh, accessToken, email, aptoideClientUUID)
+          ListFullReviewsRequest.ofAction(url, refresh, accessToken, aptoideClientUuid)
               .observe(refresh)
               .compose(AptoideUtils.ObservableU.applySchedulers())
               .subscribe(reviews -> setObjectView(wsWidget, countDownLatch, reviews), action1);
+          break;
+        case MY_STORES_SUBSCRIBED:
+        case STORES_RECOMMENDED:
+          GetMyStoreListRequest.of(url, accessToken, aptoideClientUuid)
+              .observe(refresh)
+              .compose(AptoideUtils.ObservableU.applySchedulers())
+              .subscribe(getStoreMeta -> setObjectView(wsWidget, countDownLatch, getStoreMeta),
+                  throwable -> {
+                    LinkedList<String> errorsList = new LinkedList<>();
+                    errorsList.add(USER_NOT_LOGGED_ERROR);
+                    if (shouldAddObjectView(errorsList, (AptoideWsV7Exception) throwable)) {
+                      setObjectView(wsWidget, countDownLatch,
+                          ((AptoideWsV7Exception) throwable).getBaseResponse());
+                      return;
+                    }
+                    action1.call(throwable);
+                  });
+          break;
+        case MY_STORE_META:
+          GetMyStoreMetaRequest.of(accessToken, aptoideClientUuid)
+              .observe(refresh)
+              .compose(AptoideUtils.ObservableU.applySchedulers())
+              .subscribe(getStoreMeta -> setObjectView(wsWidget, countDownLatch, getStoreMeta),
+                  throwable -> {
+                    LinkedList<String> errorsList = new LinkedList<>();
+                    errorsList.add(USER_NOT_LOGGED_ERROR);
+                    errorsList.add(USER_DONT_HAVE_STORE_ERROR);
+                    if (shouldAddObjectView(errorsList, (AptoideWsV7Exception) throwable)) {
+                      setObjectView(wsWidget, countDownLatch,
+                          ((AptoideWsV7Exception) throwable).getBaseResponse());
+                      return;
+                    }
+                    action1.call(throwable);
+                  });
+          break;
+        case APP_META:
+          GetAppRequest.ofAction(url, accessToken, aptoideClientUuid)
+              .observe(refresh)
+              .compose(AptoideUtils.ObservableU.applySchedulers())
+              .subscribe(getApp -> setObjectView(wsWidget, countDownLatch, getApp), action1);
           break;
         default:
           // In case a known enum is not implemented
@@ -96,6 +148,15 @@ public class WSWidgetsUtils {
       // Case we don't have the enum defined we still need to countDown the latch
       countDownLatch.countDown();
     }
+  }
+
+  public static boolean shouldAddObjectView(List<String> list, AptoideWsV7Exception throwable) {
+    for (BaseV7Response.Error error : throwable.getBaseResponse().getErrors()) {
+      if (list.contains(error.getCode())) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private static void setObjectView(GetStoreWidgets.WSWidget wsWidget,

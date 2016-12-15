@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.model.v7.store;
 
-import cm.aptoide.pt.model.v7.Event;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
@@ -26,7 +25,7 @@ import lombok.experimental.Accessors;
   @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", timezone = "UTC") private Date modified;
   private Appearance appearance;
   private Stats stats;
-  @JsonProperty("list") private List<SocialChannel> socialChannels;
+  @JsonProperty("links") private List<SocialChannel> socialChannels;
 
   @Data public static class Stats {
     private int apps;
@@ -40,10 +39,17 @@ import lombok.experimental.Accessors;
   }
 
   @Data public static class SocialChannel {
-    private String label;
-    private String tag;
+    private SocialChannelType type;
+    private String name;
     private String graphic;
-    private String map;
-    private Event event;
+    private String url;
   }
+
+  public enum SocialChannelType {
+    FACEBOOK,
+    TWITTER,
+    YOUTUBE,
+    TWITCH
+  }
+
 }

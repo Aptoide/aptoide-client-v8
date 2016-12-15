@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 02/08/2016.
- */
-
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
@@ -29,12 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 import rx.functions.Action1;
 
-/**
- * Created by sithengineer on 02/08/16.
- */
 public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
-
-  private static final String TAG = LatestReviewsFragment.class.getSimpleName();
   // on v6, 50 was the limit
   private static final int REVIEWS_LIMIT = 25;
   private static final String STORE_ID = "storeId";
@@ -84,7 +74,6 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
       ListFullReviewsRequest listFullReviewsRequest =
           ListFullReviewsRequest.of(storeId, REVIEWS_LIMIT, 0,
               StoreUtils.getStoreCredentials(storeId), AptoideAccountManager.getAccessToken(),
-              AptoideAccountManager.getUserEmail(),
               new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                   DataProvider.getContext()).getAptoideClientUUID());
       Action1<ListFullReviews> listFullReviewsAction = listTopFullReviews -> {
@@ -95,6 +84,7 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
         }
         addDisplayables(displayables);
       };
+
       recyclerView.clearOnScrollListeners();
       endlessRecyclerOnScrollListener =
           new EndlessRecyclerOnScrollListener(this.getAdapter(), listFullReviewsRequest,

@@ -1,7 +1,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
@@ -9,15 +8,15 @@ import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
+import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.listapp.App;
+import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.model.v7.timeline.SocialArticle;
-import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.link.Link;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.repository.SocialRepository;
 import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,8 +30,9 @@ import rx.schedulers.Schedulers;
  * Created by jdandrade on 23/11/2016.
  */
 
-@AllArgsConstructor public class SocialArticleDisplayable extends Displayable {
+@AllArgsConstructor public class SocialArticleDisplayable extends CardDisplayable {
 
+  @Getter private SocialArticle socialArticle;
   @Getter private String articleTitle;
   @Getter private Link link;
   @Getter private Link developerLink;
@@ -41,6 +41,10 @@ import rx.schedulers.Schedulers;
   @Getter private String avatarUrl;
   @Getter private long appId;
   @Getter private String abUrl;
+  @Getter private Store store;
+  @Getter private Comment.User user;
+  @Getter private long numberOfLikes;
+  @Getter private long numberOfComments;
 
   @Getter private List<App> relatedToAppsList;
   private Date date;
@@ -70,13 +74,14 @@ import rx.schedulers.Schedulers;
       abTestingURL = socialArticle.getAb().getConversion().getUrl();
     }
 
-    return new SocialArticleDisplayable(socialArticle.getTitle(),
+    return new SocialArticleDisplayable(socialArticle, socialArticle.getTitle(),
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE, socialArticle.getUrl()),
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
             socialArticle.getPublisher().getBaseUrl()), socialArticle.getPublisher().getName(),
         socialArticle.getThumbnailUrl(), socialArticle.getPublisher().getLogoUrl(), appId,
-        abTestingURL, socialArticle.getApps(), socialArticle.getDate(), dateCalculator,
-        spannableFactory, timelineMetricsManager, socialRepository);
+        abTestingURL, socialArticle.getStore(), socialArticle.getUser(), socialArticle.getLikes(),
+        socialArticle.getComments(), socialArticle.getApps(), socialArticle.getDate(),
+        dateCalculator, spannableFactory, timelineMetricsManager, socialRepository);
   }
 
   public Observable<List<Installed>> getRelatedToApplication() {
@@ -96,20 +101,6 @@ import rx.schedulers.Schedulers;
       //appId = video.getApps().get(0).getId();
     }
     return Observable.just(null);
-  }
-
-  public int getMarginWidth(Context context, int orientation) {
-    if (!context.getResources().getBoolean(R.bool.is_this_a_tablet_device)) {
-      return 0;
-    }
-
-    int width = AptoideUtils.ScreenU.getCachedDisplayWidth(orientation);
-
-    if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-      return (int) (width * 0.2);
-    } else {
-      return (int) (width * 0.1);
-    }
   }
 
   public String getTimeSinceLastUpdate(Context context) {
@@ -136,18 +127,15 @@ import rx.schedulers.Schedulers;
     timelineMetricsManager.sendEvent(data, eventName);
   }
 
-  public void like() {
-    socialRepository.like();
-  }
-
-  public void share(Context context) {
-  }
-
   @Override public int getViewLayout() {
     return R.layout.displayable_social_timeline_social_article;
   }
 
-  @Override protected Configs getConfig() {
-    return new Configs(1, true);
+  @Override public void share(Context context) {
+
+  }
+
+  @Override public void like(Context context, String cardType, int rating) {
+    socialRepository.like(socialArticle, cardType, "", rating);
   }
 }

@@ -44,7 +44,7 @@ class ListFullReviewsSuccessRequestListener implements SuccessRequestListener<Li
             3,
             StoreUtils.getStoreCredentials(fragment.getStoreName()),
             AptoideAccountManager.getAccessToken(),
-            aptoideClientUuid
+            aptoideClientUuid, true
         ).observe().subscribeOn(Schedulers.io()) // parallel I/O split point
             .map(listComments -> {
               review.setCommentList(listComments);
@@ -67,7 +67,7 @@ class ListFullReviewsSuccessRequestListener implements SuccessRequestListener<Li
     for (final Review review : reviews) {
       displayables.add(
           new RateAndReviewCommentDisplayable(new ReviewWithAppName(fragment.getAppName(), review),
-              new FullReviewCommentAdder(count, fragment, review)));
+              new ConcreteItemCommentAdder(count, fragment, review)));
 
       if (review.getId() == fragment.getReviewId()) {
         index = count;
@@ -86,7 +86,7 @@ class ListFullReviewsSuccessRequestListener implements SuccessRequestListener<Li
     fragment.checkAndRemoveProgressBarDisplayable();
     fragment.addDisplayables(displayables);
     if (index >= 0) {
-      fragment.getLayoutManager().scrollToPosition(fragment.getAdapter().getReviewPosition(index));
+      fragment.getLayoutManager().scrollToPosition(fragment.getAdapter().getItemPosition(index));
     }
   }
 }

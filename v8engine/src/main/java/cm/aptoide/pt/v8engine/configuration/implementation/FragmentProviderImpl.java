@@ -15,6 +15,7 @@ import cm.aptoide.pt.v8engine.fragment.implementations.ExcludedUpdatesFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.FragmentTopStores;
 import cm.aptoide.pt.v8engine.fragment.implementations.HomeFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.LatestReviewsFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.MyStoresFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.OtherVersionsFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.RollbackFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.ScheduledDownloadsFragment;
@@ -27,7 +28,6 @@ import cm.aptoide.pt.v8engine.fragment.implementations.SocialFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreGridRecyclerFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreTabGridRecyclerFragment;
-import cm.aptoide.pt.v8engine.fragment.implementations.SubscribedStoresFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.UpdatesFragment;
 import cm.aptoide.pt.viewRateAndCommentReviews.RateAndReviewsFragment;
 import java.util.ArrayList;
@@ -141,8 +141,10 @@ public class FragmentProviderImpl implements FragmentProvider {
     return AppsTimelineFragment.newInstance(action);
   }
 
-  @Override public Fragment newSubscribedStoresFragment() {
-    return SubscribedStoresFragment.newInstance();
+  @Override
+  public Fragment newSubscribedStoresFragment(Event event, String label, String storeTheme,
+      String tag) {
+    return MyStoresFragment.newInstance(event, label, storeTheme, tag);
   }
 
   @Override public Fragment newSearchPagerTabFragment(String query, boolean subscribedStores,

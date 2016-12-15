@@ -3,8 +3,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="300dp"
+    android:layout_height="wrap_content"
     android:background="@drawable/dialog_bg_2"
     >
-
+  <android.support.v7.widget.RecyclerView
+      android:id="@+id/comments"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:scrollbars="none"
+      />
 </LinearLayout>

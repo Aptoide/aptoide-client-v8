@@ -7,6 +7,20 @@
   android:background="@color/white">
 
 
+  <TextView
+    android:id="@+id/social_number_of_likes"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:layout_toLeftOf="@+id/social_like"
+    android:layout_toStartOf="@id/social_like"
+    android:text="0"
+    android:textSize="10sp"
+    android:visibility="invisible"
+    tools:text="10"
+
+    />
+
   <LinearLayout
     android:id="@+id/social_like"
     android:layout_width="wrap_content"
@@ -18,20 +32,19 @@
     android:clickable="true"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="5dp">
+    android:padding="5dp"
+    android:visibility="invisible"
+    tools:visibility="visible">
 
     <com.like.LikeButton
       android:id="@+id/social_like_test"
-      android:layout_width="22dp"
+      android:layout_width="23dp"
       android:layout_height="21dp"
-      app:icon_size="17dp"
+      app:icon_size="18dp"
+      app:icon_type="heart"
+      app:like_drawable="@drawable/heart_on"
       app:liked="false"
-      app:icon_type="heart" />
-    <!--<ImageView-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:src="@drawable/timeline_heart" />-->
-
+      app:unlike_drawable="@drawable/heart_offf" />
 
     <TextView
       android:layout_width="wrap_content"
@@ -41,8 +54,22 @@
       android:textSize="8sp"
       tools:text="LIKE" />
 
-
   </LinearLayout>
+
+  <TextView
+    android:id="@+id/social_number_of_comments"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:layout_toLeftOf="@+id/social_comment"
+    android:layout_toStartOf="@id/social_comment"
+    android:text="0"
+    android:textSize="10sp"
+    android:visibility="invisible"
+    tools:text="10"
+
+    />
+
 
   <LinearLayout
     android:id="@+id/social_comment"
@@ -56,7 +83,8 @@
     android:clickable="true"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="5dp">
+    android:padding="5dp"
+    android:visibility="invisible">
 
     <ImageView
       android:id="@+id/imageView2"

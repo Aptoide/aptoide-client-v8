@@ -20,12 +20,6 @@ import lombok.Getter;
 public abstract class GridRecyclerFragmentWithDecorator<T extends BaseAdapter>
     extends GridRecyclerFragment<T> {
 
-  public GridRecyclerFragmentWithDecorator() { }
-
-  public GridRecyclerFragmentWithDecorator(Class<T> adapterClass) {
-    super(adapterClass);
-  }
-
   @Getter private final RecyclerView.ItemDecoration defaultItemDecoration =
       new RecyclerView.ItemDecoration() {
         @Override public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
@@ -45,6 +39,13 @@ public abstract class GridRecyclerFragmentWithDecorator<T extends BaseAdapter>
           outRect.set(offset, offset, offset, offset);
         }
       };
+
+  public GridRecyclerFragmentWithDecorator() {
+  }
+
+  public GridRecyclerFragmentWithDecorator(Class<T> adapterClass) {
+    super(adapterClass);
+  }
 
   @Override public void setupViews() {
     super.setupViews();

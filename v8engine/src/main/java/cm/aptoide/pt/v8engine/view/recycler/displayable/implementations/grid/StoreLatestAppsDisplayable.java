@@ -1,14 +1,12 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
-import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.repository.SocialRepository;
 import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,23 +17,24 @@ import lombok.Getter;
 /**
  * Created by marcelobenites on 6/17/16.
  */
-@AllArgsConstructor public class StoreLatestAppsDisplayable extends Displayable {
+@AllArgsConstructor public class StoreLatestAppsDisplayable extends CardDisplayable {
 
+  private StoreLatestApps storeLatestApps;
   @Getter private String storeName;
   @Getter private String avatarUrl;
   @Getter private List<LatestApp> latestApps;
   @Getter private String abUrl;
-
   private DateCalculator dateCalculator;
-
   private Date date;
   private TimelineMetricsManager timelineMetricsManager;
+  private SocialRepository socialRepository;
 
   public StoreLatestAppsDisplayable() {
   }
 
   public static StoreLatestAppsDisplayable from(StoreLatestApps storeLatestApps,
-      DateCalculator dateCalculator, TimelineMetricsManager timelineMetricsManager) {
+      DateCalculator dateCalculator, TimelineMetricsManager timelineMetricsManager,
+      SocialRepository socialRepository) {
     final List<LatestApp> latestApps = new ArrayList<>();
     for (App app : storeLatestApps.getApps()) {
       latestApps.add(new LatestApp(app.getId(), app.getIcon(), app.getPackageName()));
@@ -47,9 +46,9 @@ import lombok.Getter;
         && storeLatestApps.getAb().getConversion().getUrl() != null) {
       abTestingURL = storeLatestApps.getAb().getConversion().getUrl();
     }
-    return new StoreLatestAppsDisplayable(storeLatestApps.getStore().getName(),
+    return new StoreLatestAppsDisplayable(storeLatestApps, storeLatestApps.getStore().getName(),
         storeLatestApps.getStore().getAvatar(), latestApps, abTestingURL, dateCalculator,
-        storeLatestApps.getLatestUpdate(), timelineMetricsManager);
+        storeLatestApps.getLatestUpdate(), timelineMetricsManager, socialRepository);
   }
 
   public String getTimeSinceLastUpdate(Context context) {
@@ -60,26 +59,16 @@ import lombok.Getter;
     return R.layout.displayable_social_timeline_store_latest_apps;
   }
 
-  @Override protected Configs getConfig() {
-    return new Configs(1, true);
-  }
-
-  public int getMarginWidth(Context context, int orientation) {
-    if (!context.getResources().getBoolean(R.bool.is_this_a_tablet_device)) {
-      return 0;
-    }
-
-    int width = AptoideUtils.ScreenU.getCachedDisplayWidth(orientation);
-
-    if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-      return (int) (width * 0.2); // 20 % margins if landscape
-    } else {
-      return (int) (width * 0.1); // 10 % margins if portrait
-    }
-  }
-
   public void sendClickEvent(SendEventRequest.Body.Data data, String eventName) {
     timelineMetricsManager.sendEvent(data, eventName);
+  }
+
+  @Override public void share(Context context) {
+    socialRepository.share(storeLatestApps);
+  }
+
+  @Override public void like(Context context, String cardType, int rating) {
+
   }
 
   @EqualsAndHashCode @AllArgsConstructor public static class LatestApp {

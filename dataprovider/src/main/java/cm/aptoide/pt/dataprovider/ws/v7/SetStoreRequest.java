@@ -27,6 +27,7 @@ import rx.Observable;
 
   protected SetStoreRequest(AccessTokenBody body, String baseHost, MultipartBody.Part file) {
     super(body, baseHost);
+    multipartBody = file;
   }
 
   public static SetStoreRequest of(String aptoideClientUUID, String accessToken,
@@ -34,7 +35,7 @@ import rx.Observable;
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
     AccessTokenRequestBodyAdapter body =
         new AccessTokenRequestBodyAdapter(new BaseBody(), decorator, accessToken, storeName, storeTheme);
-    File file = new File(Application.getConfiguration().getUserAvatarCachePath() + "aptoide_store_avatar.png");
+    File file = new File(storeAvatarPath);
     RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
     multipartBody = MultipartBody.Part.createFormData("store_avatar", file.getName(), requestFile);
     return new SetStoreRequest(body, BASE_HOST, multipartBody);
@@ -47,7 +48,6 @@ import rx.Observable;
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-
     return interfaces.editStore(multipartBody, ((AccessTokenRequestBodyAdapter) body).get());
   }
 }

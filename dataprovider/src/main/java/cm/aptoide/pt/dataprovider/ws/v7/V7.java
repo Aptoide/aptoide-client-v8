@@ -265,11 +265,34 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
         @Path(value = "action") String action, @Path(value = "context") String context,
         @Body SendEventRequest.Body body);
 
-    @POST("{email}") Observable<BaseV7Response> shareCard(@Body ShareCardRequest.Body body,
-        @Path(value = "email") String email);
+    @POST("user/shareTimeline/card_uid={cardUid}/access_token={accessToken}")
+    Observable<BaseV7Response> shareCard(@Body ShareCardRequest.Body body,
+        @Path(value = "cardUid") String card_id, @Path(value = "accessToken") String accessToken);
+
+    @POST("user/shareTimeline/package_id={packageName}/access_token={accessToken}")
+    Observable<BaseV7Response> shareInstallCard(@Body ShareInstallCardRequest.Body body,
+        @Path(value = "packageName") String packageName,
+        @Path(value = "accessToken") String access_token);
+
+    @POST("review/set/access_token={accessToken}/card_uid={cardUid}/rating={rating}")
+    Observable<BaseV7Response> setReview(@Body LikeCardRequest.Body body,
+        @Path(value = "cardUid") String cardId, @Path(value = "accessToken") String access_token,
+        @Path(value = "rating") String rating,
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("/api/7/my/store/getMeta") Observable<GetStoreMeta> getMyStoreMeta(@Body BaseBody body,
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("/api/7/{url}") Observable<ListStores> getMyStoreList(
+        @Path(value = "url", encoded = true) String path, @Body BaseBody body,
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @Multipart
-    @POST("store/set") Observable<BaseV7Response> editStore(@Part MultipartBody.Part store_avatar, @Part
-    @PartMap HashMapNotNull<String, RequestBody> body);
+    @POST("store/set") Observable<BaseV7Response> editStore(@Part MultipartBody.Part store_avatar,
+        @PartMap HashMapNotNull<String, RequestBody> body);
+
+    @POST("store/set") Observable<BaseV7Response> editStore(
+        @Body SimpleSetStoreRequest.Body body);
+  }
   }
 }

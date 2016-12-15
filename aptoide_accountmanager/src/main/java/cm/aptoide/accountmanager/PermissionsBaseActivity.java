@@ -27,6 +27,7 @@ import static cm.aptoide.accountmanager.CreateUserActivity.REQUEST_IMAGE_CAPTURE
 
 public abstract class PermissionsBaseActivity extends BaseActivity {
 
+  protected static final int CREATE_STORE_REQUEST_CODE = 1;
   protected static final int STORAGE_REQUEST_CODE = 123;
   protected static final int CAMERA_REQUEST_CODE = 124;
   static final int REQUEST_CAMERA_CODE = 1046;
@@ -230,7 +231,7 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
   }
 
   private void setFileName() {
-    if (getActivityTitle().equals("Create user profile")) {
+    if (getActivityTitle().equals("Create User Profile")) {
       photoAvatar = "aptoide_user_avatar.png";
     } else if (getActivityTitle().equals("Create Your Store")) {
       photoAvatar = "aptoide_store_avatar.png";

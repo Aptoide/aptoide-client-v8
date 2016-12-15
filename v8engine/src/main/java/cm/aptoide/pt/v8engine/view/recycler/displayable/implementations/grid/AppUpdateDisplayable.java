@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
@@ -23,7 +22,6 @@ import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import java.util.Date;
 import lombok.AllArgsConstructor;
@@ -33,7 +31,7 @@ import rx.Observable;
 /**
  * Created by marcelobenites on 6/17/16.
  */
-@AllArgsConstructor public class AppUpdateDisplayable extends Displayable {
+@AllArgsConstructor public class AppUpdateDisplayable extends CardDisplayable {
 
   @Getter private String appIconUrl;
   @Getter private String storeIconUrl;
@@ -69,7 +67,7 @@ import rx.Observable;
         appUpdate.getStore().getName(), appUpdate.getAdded(), appUpdate.getFile().getVername(),
         spannableFactory, appUpdate.getName(), appUpdate.getPackageName(),
         downloadFactory.create(appUpdate, Download.ACTION_UPDATE), dateCalculator,
-        appUpdate.getId(), abTestingURL,installManager, permissionManager, timelineMetricsManager);
+        appUpdate.getId(), abTestingURL, installManager, permissionManager, timelineMetricsManager);
   }
 
   public Observable<Progress<Download>> update(Context context) {
@@ -94,20 +92,6 @@ import rx.Observable;
     return installManager.getInstallations()
         .filter(downloadProgress -> (!TextUtils.isEmpty(downloadProgress.getRequest().getMd5())
             && downloadProgress.getRequest().getMd5().equals(download.getMd5())));
-  }
-
-  public int getMarginWidth(Context context, int orientation) {
-    if (!context.getResources().getBoolean(R.bool.is_this_a_tablet_device)) {
-      return 0;
-    }
-
-    int width = AptoideUtils.ScreenU.getCachedDisplayWidth(orientation);
-
-    if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-      return (int) (width * 0.2);
-    } else {
-      return (int) (width * 0.1);
-    }
   }
 
   public Spannable getAppTitle(Context context) {
@@ -155,10 +139,6 @@ import rx.Observable;
     return R.layout.displayable_social_timeline_app_update;
   }
 
-  @Override protected Configs getConfig() {
-    return new Configs(1, true);
-  }
-
   public long getAppId() {
     return appId;
   }
@@ -177,5 +157,13 @@ import rx.Observable;
 
   public void sendClickEvent(SendEventRequest.Body.Data data, String eventName) {
     timelineMetricsManager.sendEvent(data, eventName);
+  }
+
+  @Override public void share(Context context) {
+
+  }
+
+  @Override public void like(Context context, String cardType, int rating) {
+
   }
 }

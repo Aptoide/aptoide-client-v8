@@ -40,6 +40,11 @@ android {
   compileSdkVersion COMPILE_SDK_VERSION
   buildToolsVersion BUILD_TOOLS_VERSION
 
+  dexOptions {
+    maxProcessCount 2
+    javaMaxHeapSize "4g"
+  }
+
   // keep the "applicationId" var in third place for the jenkins build script hack
   defaultConfig {
     versionName "8.0.0"
@@ -100,7 +105,7 @@ android {
 
       Integer value = getVersionCode("../../aptoideProperties/version.properties",
           "INTERNAL_VERSION_CODE")
-      versionName "8.0.2." + getDate()
+      versionName "8.1.0." + getDate()
       versionCode value
 
       resValue "string", "authenticatorAccountType", APPLICATION_ID + ".internal"
@@ -195,10 +200,6 @@ android {
       //        variant.assemble.dependsOn versionUpdate
       //      }
     }
-  }
-
-  dexOptions {
-    javaMaxHeapSize "2g"
   }
 }
 

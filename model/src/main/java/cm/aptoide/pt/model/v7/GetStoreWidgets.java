@@ -30,8 +30,8 @@ import lombok.experimental.Accessors;
     public static final String STORE_GROUP = "STORES_GROUP";
 
     private Type type;
-    private String tag;
     private String title; // Highlighted, Games, Categories, Timeline, Recommended for you,
+    private String tag;
     // Aptoide Publishers
     private String view;
     // Object that will hold view response.
@@ -39,10 +39,15 @@ import lombok.experimental.Accessors;
     private List<Action> actions;
     private Data data;
 
+    public boolean hasActions() {
+      return (actions != null && actions.size() > 0 && actions.get(0).getEvent().getName() != null);
+    }
+
     @lombok.Data public static class Data {
 
       private Layout layout;
       private String icon;
+      private String message;
       private List<Data.Categories> categories; //only present if type": "DISPLAYS"
 
       @lombok.Data public static class Categories {

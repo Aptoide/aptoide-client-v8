@@ -939,7 +939,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 
     void onCreateSuccess(ProgressDialog progressDialog);
 
-    void onCreateFail();
+    void onCreateFail(@StringRes int reason);
 
     String getRepoName();
 

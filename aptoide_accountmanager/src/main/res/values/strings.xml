@@ -63,12 +63,13 @@
   <string name="ws_error_WOP_10">The email provided does not exist in Aptoide yet</string>
   <string name="ws_error_WOP_11">The store could not be created. Please try again.</string>
     <string name="ws_error_QUOTA_2">Daily limit of created users reached for today. If you need
-        this limit increased please contact support at suport@aptoide.com or create more users tomorrow</string>
+        this limit increased please contact support at support@aptoide.com or create more users tomorrow</string>
     <string name="ws_error_AUTH_1">Either email or password are not valid to login (upon name
         update)</string>
   <string name="user_created">User Created</string>
   <!-- WIZARD -->
   <string name="wizard_skip"><b>SKIP</b></string>
+  <string name="please_wait_upload">Please wait, we are uploading the photo. This might take a while.</string>
 
 
   <!--Create user fragment-->
@@ -84,7 +85,7 @@
   <string name="create_user_dialog_gallery">Choose From Gallery</string>
   <string name="create_user_dialog_cancel">Cancel</string>
   <string name="create_user_storage_permission"></string>
-  <string name="nothing_inserted">Please insert a username and photo to create your profile</string>
+  <string name="nothing_inserted">Please insert a username and a photo(optional) to create your profile</string>
   <string name="no_username_inserted">Please insert a username to create your profile</string>
   <string name="no_photo_inserted">Please choose a photo to create your profile</string>
 

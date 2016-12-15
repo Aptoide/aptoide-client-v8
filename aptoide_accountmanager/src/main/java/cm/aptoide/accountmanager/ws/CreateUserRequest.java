@@ -8,7 +8,10 @@ package cm.aptoide.accountmanager.ws;
 import android.content.res.Configuration;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
+import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import com.fasterxml.jackson.databind.deser.std.UntypedObjectDeserializer;
@@ -35,7 +38,7 @@ import rx.Observable;
   private String email;
   private String name;
   private String update = "";
-  private String userAvatarPath;
+  private String userAvatarPath = "";
 
   CreateUserRequest() {
   }
@@ -55,7 +58,9 @@ import rx.Observable;
   @Override
   protected Observable<OAuth> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
 
-    if (update.equals("true")) {
+    HashMapNotNull<String, String> parameters = new HashMapNotNull<String, String>();
+
+    if (update.equals("true") && !userAvatarPath.isEmpty()) {
       HashMapNotNull<String, RequestBody> body = new HashMapNotNull<>();
 
       String calculatedPasshash;
@@ -74,33 +79,42 @@ import rx.Observable;
       RequestBody name = createBodyPartFromString(getName());
       RequestBody update = createBodyPartFromString(getUpdate());
 
-      body.put("json", mode);
+      body.put("mode", mode);
       body.put("email", email);
       body.put("passhash", passhash);
       body.put("hmac", hmac);
       body.put("name", name);
       body.put("update", update);
-      File file = new File(Application.getConfiguration().getUserAvatarCachePath()+ "aptoide_user_avatar.png");
+      File file = new File(userAvatarPath);
       RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
       MultipartBody.Part multipartBody = MultipartBody.Part.createFormData("user_avatar", file.getName(), requestFile);
       return interfaces.createUserWithFile(multipartBody, body);
+    } else if(update.equals("true") && userAvatarPath.isEmpty()) {
+      parameters.put("update", update);
+      parameters.put("name", name);
     }
 
-    HashMapNotNull<String, String> parameters = new HashMapNotNull<String, String>();
 
     String passhash;
     passhash = AptoideUtils.AlgorithmU.computeSha1(password);
     parameters.put("mode", "json");
     parameters.put("email", email);
     parameters.put("passhash", passhash);
+    parameters.put("aptoide_uid",
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext()).getAptoideClientUUID());
 
     if (!TextUtils.isEmpty(Application.getConfiguration().getExtraId())) {
       parameters.put("oem_id", Application.getConfiguration().getExtraId());
     }
 
-    parameters.put("hmac",
-        AptoideUtils.AlgorithmU.computeHmacSha1(email + passhash + name, "bazaar_hmac"));
-
+    if (update.equals("true")) {
+      parameters.put("hmac",
+          AptoideUtils.AlgorithmU.computeHmacSha1(email + passhash + name + update, "bazaar_hmac"));
+    } else {
+      parameters.put("hmac",
+          AptoideUtils.AlgorithmU.computeHmacSha1(email + passhash + name, "bazaar_hmac"));
+    }
     return interfaces.createUser(parameters);
 
   }
