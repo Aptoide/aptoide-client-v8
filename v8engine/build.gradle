@@ -20,11 +20,8 @@ android {
 
   defaultConfig {
     minSdkVersion 15
-    consumerProguardFiles "proguard-rules.txt"
-    //testInstrumentationRunner "cm.aptoide.pt.v8engine.MultidexAndroidJunitRunner"
+    consumerProguardFiles "proguard-rules-consumer.pro"
 
-    // Enabling multidex support.
-    multiDexEnabled true
     buildConfigField "String", "SIXPACK_USER", "\"" + project.SIXPACK_USER + "\""
     buildConfigField "String", "SIXPACK_PASSWORD", "\"" + project.SIXPACK_PASSWORD + "\""
     buildConfigField "String", "SIXPACK_URL", "\"" + project.SIXPACK_URL + "\""
@@ -78,29 +75,19 @@ dependencies {
   // inter-projects dependencies
   //
 
-  debugCompile project(path: ':database', configuration: 'debug')
-  releaseCompile project(path: ':database', configuration: 'release')
+  compile project(path: ':database', configuration: 'release')
 
-  internalCompile project(path: ':dataprovider', configuration: 'internalDebug')
-  internalCompile project(path: ':aptoide_accountmanager', configuration: 'internalDebug')
+  internalCompile project(path: ':dataprovider', configuration: 'internalRelease')
+  internalCompile project(path: ':aptoide_accountmanager', configuration: 'internalRelease')
 
   prodCompile project(path: ':dataprovider', configuration: 'prodRelease')
   prodCompile project(path: ':aptoide_accountmanager', configuration: 'prodRelease')
 
-  debugCompile project(path: ':utils', configuration: 'debug')
-  releaseCompile project(path: ':utils', configuration: 'release')
-
-  debugCompile project(path: ':utilsdesign', configuration: 'debug')
-  releaseCompile project(path: ':utilsdesign', configuration: 'release')
-
-  debugCompile project(path: ':crashreports', configuration: 'debug')
-  releaseCompile project(path: ':crashreports', configuration: 'release')
-
-  debugCompile project(path: ':imageloader', configuration: 'debug')
-  releaseCompile project(path: ':imageloader', configuration: 'release')
-
-  debugCompile project(path: ':downloadmanager', configuration: 'debug')
-  releaseCompile project(path: ':downloadmanager', configuration: 'release')
+  compile project(path: ':utils', configuration: 'release')
+  compile project(path: ':utilsdesign', configuration: 'release')
+  compile project(path: ':crashreports', configuration: 'release')
+  compile project(path: ':imageloader', configuration: 'release')
+  compile project(path: ':downloadmanager', configuration: 'release')
 
   //
   // custom libs in folders
