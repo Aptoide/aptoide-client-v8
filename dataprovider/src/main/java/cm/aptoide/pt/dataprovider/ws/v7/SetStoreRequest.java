@@ -35,7 +35,7 @@ import rx.Observable;
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
     AccessTokenRequestBodyAdapter body =
         new AccessTokenRequestBodyAdapter(new BaseBody(), decorator, accessToken, storeName, storeTheme);
-    File file = new File(Application.getConfiguration().getUserAvatarCachePath() + "aptoide_store_avatar.png");
+    File file = new File(storeAvatarPath);
     RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
     multipartBody = MultipartBody.Part.createFormData("store_avatar", file.getName(), requestFile);
     return new SetStoreRequest(body, BASE_HOST, multipartBody);
