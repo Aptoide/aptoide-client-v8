@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.LongSparseArray;
-import android.text.TextUtils;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReports;
@@ -86,6 +85,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
   protected String storeTheme;
   private List<Displayable> displayables;
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
+  private StoreRepository storeRepository;
 
   public static StoreTabGridRecyclerFragment newInstance(Event event, String title,
       String storeTheme, String tag) {
@@ -421,6 +421,11 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 
   }
 
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    storeRepository = RepositoryFactory.getRepositoryFor(cm.aptoide.pt.database.realm.Store.class);
+  }
+
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
   }
@@ -513,7 +518,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
     for (int i = 0; i < list.size(); i++) {
       if (i == 0 || list.get(i - 1).getId() != list.get(i).getId()) {
         if (layout == Layout.LIST) {
-          storesDisplayables.add(new RecommendedStoreDisplayable(list.get(i)));
+          storesDisplayables.add(new RecommendedStoreDisplayable(list.get(i), storeRepository));
         } else {
           storesDisplayables.add(new GridStoreDisplayable(list.get(i)));
         }

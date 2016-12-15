@@ -115,7 +115,7 @@ public class DisplayablesFactory {
             displayables.addAll(createMyStoreDisplayables(wsWidget.getViewObject()));
             break;
           case STORES_RECOMMENDED:
-            displayables.add(createRecommendedStores(wsWidget, storeTheme));
+            displayables.add(createRecommendedStores(wsWidget, storeTheme, storeRepository));
             break;
           case COMMENTS_GROUP:
             Pair<ListComments, BaseRequestWithStore.StoreCredentials> data =
@@ -160,7 +160,7 @@ public class DisplayablesFactory {
   }
 
   private static Displayable createRecommendedStores(GetStoreWidgets.WSWidget wsWidget,
-      String storeTheme) {
+      String storeTheme, StoreRepository storeRepository) {
     ListStores listStores = (ListStores) wsWidget.getViewObject();
     if (listStores == null) {
       return new EmptyDisplayable();
@@ -170,7 +170,7 @@ public class DisplayablesFactory {
     displayables.add(new StoreGridHeaderDisplayable(wsWidget, storeTheme, wsWidget.getTag()));
     for (Store store : stores) {
       if (wsWidget.getData().getLayout() == Layout.LIST) {
-        displayables.add(new RecommendedStoreDisplayable(store));
+        displayables.add(new RecommendedStoreDisplayable(store, storeRepository));
       } else {
         displayables.add(new GridStoreDisplayable(store));
       }
