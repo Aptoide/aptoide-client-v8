@@ -17,7 +17,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.PostCommentForStore;
-import cm.aptoide.pt.dataprovider.ws.v7.store.PostReplyForStoreComment;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
@@ -250,10 +249,6 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
 
     @POST("setComment") Observable<BaseV7Response> postStoreComment(
         @Body PostCommentForStore.Body body,
-        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
-
-    @POST("setComment") Observable<BaseV7Response> postStoreCommentReply(
-        @Body PostReplyForStoreComment.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("setReviewVote") Observable<BaseV7Response> setReviewVote(

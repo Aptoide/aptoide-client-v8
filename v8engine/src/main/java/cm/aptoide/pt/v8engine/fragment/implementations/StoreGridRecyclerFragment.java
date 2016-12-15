@@ -6,6 +6,8 @@
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.app.FragmentManager;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -35,6 +37,7 @@ import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentDisplayable;
 import cm.aptoide.pt.viewRateAndCommentReviews.CommentDialogFragment;
+import cm.aptoide.pt.viewRateAndCommentReviews.CommentNode;
 import cm.aptoide.pt.viewRateAndCommentReviews.CommentsReadMoreDisplayable;
 import cm.aptoide.pt.viewRateAndCommentReviews.ItemCommentAdderView;
 import cm.aptoide.pt.viewRateAndCommentReviews.SimpleReviewCommentAdder;
@@ -136,7 +139,7 @@ public class StoreGridRecyclerFragment extends StoreTabGridRecyclerFragment
 
   // Used method for each single reply in the list view and the new comment button
   @Override public Observable<Void> showStoreCommentFragment(final long storeId,
-      @NonNull CommentNode commentNode, String storeName) {
+      final long commentId, String storeName) {
 
     return Observable.just(AptoideAccountManager.isLoggedIn()).flatMap(isLoggedIn -> {
 
@@ -144,7 +147,7 @@ public class StoreGridRecyclerFragment extends StoreTabGridRecyclerFragment
         // show fragment CommentDialog
         FragmentManager fm = StoreGridRecyclerFragment.this.getActivity().getFragmentManager();
         CommentDialogFragment commentDialogFragment =
-            CommentDialogFragment.newInstanceStoreCommentReply(storeId, commentNode.getComment().getId(), storeName);
+            CommentDialogFragment.newInstanceStoreCommentReply(storeId, commentId, storeName);
 
         return commentDialogFragment.lifecycle()
             .doOnSubscribe(() -> commentDialogFragment.show(fm, "fragment_comment_dialog"))
@@ -160,6 +163,14 @@ public class StoreGridRecyclerFragment extends StoreTabGridRecyclerFragment
   @Override void caseListStoreComments(String url,
       BaseRequestWithStore.StoreCredentials storeCredentials, boolean refresh) {
     super.caseListStoreComments(url, storeCredentials, refresh);
+
+    Drawable drawable;
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      drawable = getContext().getDrawable(R.drawable.forma_1);
+    } else {
+      drawable = getActivity().getResources().getDrawable(R.drawable.forma_1);
+    }
+    floatingActionButton.setImageDrawable(drawable);
     floatingActionButton.setVisibility(View.VISIBLE);
 
     final long storeId =

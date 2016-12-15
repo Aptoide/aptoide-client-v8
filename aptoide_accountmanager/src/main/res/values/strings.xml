@@ -59,6 +59,7 @@
   <string name="ws_error_REPO_5">That store name must be at least 3 characters long.</string>
     <string name="ws_error_REPO_6">That store name is already taken, you need to choose another
         one.</string>
+  <string name="ws_error_WOP_3">A store already exists with the same name. Please give another name for your store.</string>
   <string name="ws_error_WOP_9">The email provided already exists in Aptoide</string>
   <string name="ws_error_WOP_10">The email provided does not exist in Aptoide yet</string>
   <string name="ws_error_WOP_11">The store could not be created. Please try again.</string>
