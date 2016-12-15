@@ -5,31 +5,50 @@
     android:layout_height="wrap_content"
     >
   <TextView
-      android:id="@+id/following"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_toLeftOf="@+id/separator"
-      android:gravity="center"
-      tools:text="following 512"
-      />
-
-  <include
-      layout="@layout/separator_vertical"
-      android:id="@+id/separator"
-      android:layout_width="1dp"
-      android:layout_height="wrap_content"
-      android:layout_centerInParent="true"
-      android:layout_marginTop="5dp"
-      android:layout_marginBottom="5dp"
-      android:layout_alignBottom="@+id/following"
-      />
-
-  <TextView
       android:id="@+id/followers"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_toRightOf="@+id/separator"
+      android:layout_toLeftOf="@+id/leftSeparator"
       android:gravity="center"
+      android:paddingBottom="10dp"
+      android:paddingTop="10dp"
+      android:textSize="@dimen/text_size_large"
+      tools:text="following 512"
+      />
+
+  <View
+      xmlns:android="http://schemas.android.com/apk/res/android"
+      android:id="@+id/leftSeparator"
+      android:layout_width="1dp"
+      android:layout_height="20dp"
+      android:layout_centerInParent="true"
+      android:layout_gravity="center"
+      android:layout_marginBottom="5dp"
+      android:layout_marginTop="5dp"
+      android:background="@color/lighter_custom_gray"
+      />
+
+  <View
+      xmlns:android="http://schemas.android.com/apk/res/android"
+      android:id="@+id/rightSeparator"
+      android:layout_width="1dp"
+      android:layout_height="20dp"
+      android:layout_gravity="center"
+      android:layout_marginBottom="5dp"
+      android:layout_marginTop="5dp"
+      android:layout_toRightOf="@+id/leftSeparator"
+      android:background="@color/white"
+      />
+
+  <TextView
+      android:id="@+id/following"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_toRightOf="@+id/rightSeparator"
+      android:gravity="center"
+      android:paddingBottom="10dp"
+      android:paddingTop="10dp"
+      android:textSize="@dimen/text_size_large"
       tools:text="followers 100"
       />
 

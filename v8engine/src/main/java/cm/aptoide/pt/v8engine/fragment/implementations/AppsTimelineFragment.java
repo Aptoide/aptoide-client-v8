@@ -185,11 +185,15 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
   @NonNull private Observable<Datalist<Displayable>> getFreshDisplayables(boolean refresh,
       List<String> packages) {
     return getDisplayableList(packages, 0, refresh).doOnNext(
-        item -> getAdapter().clearDisplayables()).map(displayableDatalist -> {
+        item -> getAdapter().clearDisplayables()).flatMap(displayableDatalist -> {
       if (!displayableDatalist.getList().isEmpty()) {
-        displayableDatalist.getList().add(0, new TimeLineStatsDisplayable());
+        return timelineRepository.getTimelineStats(refresh).map(timelineStats -> {
+          displayableDatalist.getList().add(0, new TimeLineStatsDisplayable(timelineStats));
+          return displayableDatalist;
+        });
+      } else {
+        return Observable.just(displayableDatalist);
       }
-      return displayableDatalist;
     }).doOnUnsubscribe(() -> finishLoading());
   }
 
