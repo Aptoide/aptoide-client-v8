@@ -80,7 +80,7 @@ import rx.Observable;
       body.put("hmac", hmac);
       body.put("name", name);
       body.put("update", update);
-      File file = new File(Application.getConfiguration().getUserAvatarCachePath()+ "aptoide_user_avatar.png");
+      File file = new File(userAvatarPath);
       RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
       MultipartBody.Part multipartBody = MultipartBody.Part.createFormData("user_avatar", file.getName(), requestFile);
       return interfaces.createUserWithFile(multipartBody, body);

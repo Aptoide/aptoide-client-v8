@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v7.widget.Toolbar;
@@ -20,12 +21,18 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.SetStoreRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import com.jakewharton.rxbinding.view.RxView;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.nio.channels.FileChannel;
 import rx.subscriptions.CompositeSubscription;
 
 
@@ -75,7 +82,6 @@ public class CreateStoreActivity extends PermissionsBaseActivity implements
   private String username;
   private String password;
   private String storeAvatarPath;
-  private String aptoideStoreAvatar = "aptoide_user_store_avatar.png";
 
   private boolean THEME_CLICKED_FLAG = false;
   private String storeTheme = "";
@@ -184,8 +190,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity implements
       Uri avatarUrl = data.getData();
       ImageLoader.loadWithCircleTransform(avatarUrl, mStoreAvatar);
       FileUtils fileUtils = new FileUtils();
-//      fileUtils.copyFile(avatarUrl.toString(), Application.getConfiguration().getUserAvatarCachePath(), aptoideStoreAvatar);
-      storeAvatarPath = avatarUrl.toString();
+      storeAvatarPath = fileUtils.getPath(avatarUrl, getApplicationContext());
     }
   }
 

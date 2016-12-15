@@ -137,8 +137,7 @@ public class CreateUserActivity extends PermissionsBaseActivity implements Aptoi
         Uri avatarUrl = data.getData();
         ImageLoader.loadWithCircleTransform(avatarUrl, mAvatar);
         FileUtils fileUtils = new FileUtils();
-       // fileUtils.copyFile(avatarUrl.toString(), Application.getConfiguration().getUserAvatarCachePath(), aptoideUserAvatar);
-        avatarPath = avatarUrl.toString();
+        avatarPath = fileUtils.getPath(avatarUrl, getApplicationContext());
     } else if (requestCode == CREATE_STORE_REQUEST_CODE) {
       //TODO: Coming from store
       finish();
