@@ -87,16 +87,18 @@ public class FragmentProviderImpl implements FragmentProvider {
     return AppViewFragment.newInstance(md5);
   }
 
-  @Override public Fragment newAppViewFragment(long appId) {
-    return AppViewFragment.newInstance(appId, AppViewFragment.OpenType.OPEN_ONLY);
+  @Override public Fragment newAppViewFragment(long appId, String packageName) {
+    return AppViewFragment.newInstance(appId, packageName, AppViewFragment.OpenType.OPEN_ONLY);
   }
 
-  @Override public Fragment newAppViewFragment(long appId, AppViewFragment.OpenType openType) {
-    return AppViewFragment.newInstance(appId, openType);
+  @Override public Fragment newAppViewFragment(long appId, String packageName,
+      AppViewFragment.OpenType openType) {
+    return AppViewFragment.newInstance(appId, packageName, openType);
   }
 
-  @Override public Fragment newAppViewFragment(long appId, String storeTheme, String storeName) {
-    return AppViewFragment.newInstance(appId, storeTheme, storeName);
+  @Override public Fragment newAppViewFragment(long appId, String packageName, String storeTheme,
+      String storeName) {
+    return AppViewFragment.newInstance(appId, packageName, storeTheme, storeName);
   }
 
   @Override public Fragment newAppViewFragment(MinimalAd minimalAd) {
@@ -193,9 +195,9 @@ public class FragmentProviderImpl implements FragmentProvider {
     return RateAndReviewsFragment.newInstance(appId, appName, storeName, packageName, reviewId);
   }
 
-  @Override
-  public Fragment newDescriptionFragment(long appId, String storeName, String storeTheme) {
-    return DescriptionFragment.newInstance(appId, storeName, storeTheme);
+  @Override public Fragment newDescriptionFragment(long appId, String packageName, String storeName,
+      String storeTheme) {
+    return DescriptionFragment.newInstance(appId, packageName, storeName, storeTheme);
   }
 
   @Override public Fragment newSocialFragment(String socialUrl, String pageTitle) {

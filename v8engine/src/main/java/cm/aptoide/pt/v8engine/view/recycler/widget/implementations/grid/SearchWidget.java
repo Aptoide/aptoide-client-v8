@@ -159,7 +159,8 @@ import rx.functions.Action0;
         clickCallback.call();
       }
       FragmentUtils.replaceFragmentV4(getContext(), V8Engine.getFragmentProvider()
-          .newAppViewFragment(pojo.getId(), pojo.getStore().getAppearance().getTheme(),
+          .newAppViewFragment(pojo.getId(), pojo.getPackageName(),
+              pojo.getStore().getAppearance().getTheme(),
               pojo.getStore().getName()));
     });
   }

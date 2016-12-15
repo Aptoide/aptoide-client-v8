@@ -101,8 +101,8 @@ public class RecommendationWidget extends Widget<RecommendationDisplayable> {
               .based_on(displayable.getSimilarAppPackageName())
               .build())
           .build(), AptoideAnalytics.OPEN_APP);
-      ((FragmentShower) getContext()).pushFragmentV4(
-          V8Engine.getFragmentProvider().newAppViewFragment(displayable.getAppId()));
+      ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
+          .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
     });
   }
 

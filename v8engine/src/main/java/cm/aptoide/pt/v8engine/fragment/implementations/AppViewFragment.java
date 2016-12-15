@@ -190,9 +190,10 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
     return fragment;
   }
 
-  public static AppViewFragment newInstance(long appId, OpenType openType) {
+  public static AppViewFragment newInstance(long appId, String packageName, OpenType openType) {
     Bundle bundle = new Bundle();
     bundle.putLong(BundleKeys.APP_ID.name(), appId);
+    bundle.putString(BundleKeys.PACKAGE_NAME.name(), packageName);
     bundle.putSerializable(BundleKeys.SHOULD_INSTALL.name(), openType);
 
     AppViewFragment fragment = new AppViewFragment();
@@ -200,9 +201,11 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
     return fragment;
   }
 
-  public static AppViewFragment newInstance(long appId, String storeTheme, String storeName) {
+  public static AppViewFragment newInstance(long appId, String packageName, String storeTheme,
+      String storeName) {
     Bundle bundle = new Bundle();
     bundle.putLong(BundleKeys.APP_ID.name(), appId);
+    bundle.putString(BundleKeys.PACKAGE_NAME.name(), packageName);
     bundle.putString(BundleKeys.STORE_NAME.name(), storeName);
     bundle.putString(StoreFragment.BundleCons.STORE_THEME, storeTheme);
     AppViewFragment fragment = new AppViewFragment();
@@ -213,6 +216,7 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
   public static AppViewFragment newInstance(MinimalAd minimalAd) {
     Bundle bundle = new Bundle();
     bundle.putLong(BundleKeys.APP_ID.name(), minimalAd.getAppId());
+    bundle.putString(BundleKeys.PACKAGE_NAME.name(), minimalAd.getPackageName());
     bundle.putParcelable(BundleKeys.MINIMAL_AD.name(), minimalAd);
 
     AppViewFragment fragment = new AppViewFragment();
@@ -456,7 +460,7 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
 
     if (appId >= 0) {
       Logger.d(TAG, "loading app info using app ID");
-      subscription = appRepository.getApp(appId, refresh, sponsored, storeName)
+      subscription = appRepository.getApp(appId, refresh, sponsored, storeName, packageName)
           .flatMap(getApp -> manageOrganicAds(getApp))
           .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
           .observeOn(AndroidSchedulers.mainThread())

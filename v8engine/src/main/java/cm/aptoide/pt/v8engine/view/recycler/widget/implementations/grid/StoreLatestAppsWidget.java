@@ -27,7 +27,6 @@ import okhttp3.Credentials;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by marcelobenites on 6/21/16.
@@ -102,7 +101,7 @@ public class StoreLatestAppsWidget extends Widget<StoreLatestAppsDisplayable> {
                 .build())
             .build(), AptoideAnalytics.OPEN_APP);
         ((FragmentShower) getContext()).pushFragmentV4(
-            V8Engine.getFragmentProvider().newAppViewFragment(apps.get(app)));
+            V8Engine.getFragmentProvider().newAppViewFragment(apps.get(app), packageName));
       }));
     }
 

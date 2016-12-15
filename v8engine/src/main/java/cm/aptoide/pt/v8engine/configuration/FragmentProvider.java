@@ -39,11 +39,11 @@ public interface FragmentProvider {
 
   Fragment newAppViewFragment(String md5);
 
-  Fragment newAppViewFragment(long appId, AppViewFragment.OpenType openType);
+  Fragment newAppViewFragment(long appId, String packageName, AppViewFragment.OpenType openType);
 
-  Fragment newAppViewFragment(long appId);
+  Fragment newAppViewFragment(long appId, String packageName);
 
-  Fragment newAppViewFragment(long appId, String storeTheme, String storeName);
+  Fragment newAppViewFragment(long appId, String packageName, String storeTheme, String storeName);
 
   Fragment newAppViewFragment(MinimalAd minimalAd);
 
@@ -91,7 +91,8 @@ public interface FragmentProvider {
   Fragment newRateAndReviewsFragment(long appId, String appName, String storeName,
       String packageName, long reviewId);
 
-  Fragment newDescriptionFragment(long appId, String storeName, String storeTheme);
+  Fragment newDescriptionFragment(long appId, String packageName, String storeName,
+      String storeTheme);
 
   Fragment newSocialFragment(String socialUrl, String pageTitle);
 

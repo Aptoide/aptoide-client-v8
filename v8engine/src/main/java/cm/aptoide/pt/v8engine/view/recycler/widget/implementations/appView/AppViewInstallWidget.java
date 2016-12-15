@@ -349,7 +349,8 @@ import rx.android.schedulers.AndroidSchedulers;
       Fragment fragment;
       if (hasTrustedVersion) {
         // go to app view of the trusted version
-        fragment = V8Engine.getFragmentProvider().newAppViewFragment(trustedVersion.getId());
+        fragment = V8Engine.getFragmentProvider()
+            .newAppViewFragment(trustedVersion.getId(), trustedVersion.getPackageName());
       } else {
         // search for a trusted version
         fragment = V8Engine.getFragmentProvider().newSearchFragment(app.getName(), true);
