@@ -16,12 +16,14 @@ import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.util.CommentOperations;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreLatestCommentsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import cm.aptoide.pt.viewRateAndCommentReviews.CommentDialogFragment;
+import cm.aptoide.pt.viewRateAndCommentReviews.CommentNode;
 import cm.aptoide.pt.viewRateAndCommentReviews.StoreComment;
 import com.trello.rxlifecycle.FragmentEvent;
 import java.util.ArrayList;
@@ -84,12 +86,16 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
     CommentListAdapter(long storeId, @NonNull String storeName, @NonNull List<Comment> comments,
         @NonNull FragmentManager fragmentManager, @NonNull View view,
         Observable<Void> reloadComments) {
-      super();
-      ArrayList<Displayable> displayables = new ArrayList<>(comments.size());
-      for (Comment comment : comments) {
-        displayables.add(new CommentDisplayable(new StoreComment(comment,
-            showStoreCommentFragment(storeId, comment, storeName, fragmentManager, view,
-                reloadComments))));
+
+      final CommentOperations commentOperations = new CommentOperations();
+      List<CommentNode> sortedComments =
+          commentOperations.flattenByDepth(commentOperations.transform(comments));
+
+      ArrayList<Displayable> displayables = new ArrayList<>(sortedComments.size());
+      for (CommentNode commentNode : sortedComments) {
+        displayables.add(new CommentDisplayable(new StoreComment(commentNode,
+            showStoreCommentFragment(storeId, commentNode.getComment(), storeName, fragmentManager,
+                view, reloadComments))));
       }
       addDisplayables(displayables);
     }
