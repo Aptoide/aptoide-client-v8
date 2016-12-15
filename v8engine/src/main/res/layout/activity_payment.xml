@@ -109,7 +109,7 @@
 
     <Button
         android:id="@+id/activity_payment_cancel_button"
-        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+        style="@style/Widget.AppBaseTheme.Button.Borderless.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
