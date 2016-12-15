@@ -58,6 +58,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Soc
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SocialStoreLatestAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SocialVideoDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreLatestAppsDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.TimeLineStatsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.VideoDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.listeners.RxEndlessRecyclerView;
 import com.trello.rxlifecycle.FragmentEvent;
@@ -186,7 +187,16 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
   @NonNull private Observable<Datalist<Displayable>> getFreshDisplayables(boolean refresh,
       List<String> packages) {
     return getDisplayableList(packages, 0, refresh).doOnNext(
-        item -> getAdapter().clearDisplayables()).doOnUnsubscribe(() -> finishLoading());
+        item -> getAdapter().clearDisplayables()).flatMap(displayableDatalist -> {
+      if (!displayableDatalist.getList().isEmpty()) {
+        return timelineRepository.getTimelineStats(refresh).map(timelineStats -> {
+          displayableDatalist.getList().add(0, new TimeLineStatsDisplayable(timelineStats));
+          return displayableDatalist;
+        });
+      } else {
+        return Observable.just(displayableDatalist);
+      }
+    }).doOnUnsubscribe(() -> finishLoading());
   }
 
   @Override public void reload() {
@@ -269,7 +279,6 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
       adapter.addDisplayable(new ProgressBarDisplayable().setFullRow());
     }
   }
-
   private void removeLoading() {
     if (loading) {
       loading = false;
