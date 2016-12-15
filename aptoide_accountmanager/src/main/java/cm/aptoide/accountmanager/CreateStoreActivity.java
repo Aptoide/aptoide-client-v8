@@ -98,6 +98,11 @@ public class CreateStoreActivity extends PermissionsBaseActivity implements
     getUserData();
   }
 
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    mSubscriptions.clear();
+  }
+
   @Override protected String getActivityTitle() {
     return getString(R.string.create_store_title);
   }
