@@ -96,4 +96,6 @@ public interface FragmentProvider {
   Fragment newSettingsFragment();
 
   Fragment newCreateUserFragment();
+
+  Fragment newTimeLineFollowStatsFragment();
 }

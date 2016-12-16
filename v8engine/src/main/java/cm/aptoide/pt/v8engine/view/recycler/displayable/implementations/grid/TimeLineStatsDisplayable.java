@@ -4,6 +4,8 @@ import android.content.Context;
 import cm.aptoide.pt.model.v7.TimelineStats;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 
 /**
@@ -37,5 +39,10 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
     return AptoideUtils.HtmlU.parse(
         String.format(String.valueOf(context.getText(R.string.timeline_followed)),
             getPojo().getData().getFollowing()));
+  }
+
+  public Void followersClick(FragmentShower fragmentShower) {
+    fragmentShower.pushFragmentV4(V8Engine.getFragmentProvider().newTimeLineFollowStatsFragment());
+    return null;
   }
 }

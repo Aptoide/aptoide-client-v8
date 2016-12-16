@@ -19,6 +19,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.PostCommentForStore;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.GetApp;
+import cm.aptoide.pt.model.v7.GetFollowers;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.ListApps;
 import cm.aptoide.pt.model.v7.ListComments;
@@ -288,6 +289,10 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
 
     @POST("/api/7/user/getTimelineStats") Observable<TimelineStats> getTimelineStats(
         @Body BaseBody body, @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("/api/7/user/getFollowers") Observable<GetFollowers> getTimelineFollowers(
+        @Body GetFollowersRequest.Body body,
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("store/set") Observable<BaseV7Response> editStore(@Body SimpleSetStoreRequest.Body body);
   }
