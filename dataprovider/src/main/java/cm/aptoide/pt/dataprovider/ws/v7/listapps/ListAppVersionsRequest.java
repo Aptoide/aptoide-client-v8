@@ -13,6 +13,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
+import java.util.LinkedList;
 import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -111,8 +112,12 @@ import rx.Observable;
     public Body(String packageName, List<String> storeNames,
         HashMapNotNull<String, List<String>> storesAuthMap) {
       this.packageName = packageName;
-      this.storeNames = storeNames;
+      setStoresAuthMap(storesAuthMap);
+    }
+
+    public void setStoresAuthMap(HashMapNotNull<String, List<String>> storesAuthMap) {
       this.storesAuthMap = storesAuthMap;
+      this.storeNames = new LinkedList<>(storesAuthMap.keySet());
     }
   }
 }
