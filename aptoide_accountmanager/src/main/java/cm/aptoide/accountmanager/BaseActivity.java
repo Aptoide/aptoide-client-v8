@@ -13,6 +13,7 @@ import cm.aptoide.pt.preferences.Application;
 public abstract class BaseActivity extends AppCompatActivity{
 
   private static final String TAG = BaseActivity.class.getSimpleName();
+  protected static final int LOGGED_IN_SECOND_STEP_CODE = 126;
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);

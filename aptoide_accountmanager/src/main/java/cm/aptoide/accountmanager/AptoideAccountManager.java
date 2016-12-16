@@ -926,7 +926,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 
   public interface ICreateProfile {
 
-    void onRegisterSuccess();
+    void onRegisterSuccess(ProgressDialog progressDialog);
 
     void onRegisterFail(@StringRes int reason);
 

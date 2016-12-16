@@ -115,7 +115,7 @@ public class CreateUserActivity extends PermissionsBaseActivity implements Aptoi
           } else {
             //Successfull update
             saveUserDataOnPreferences();
-            onRegisterSuccess();
+            onRegisterSuccess(pleaseWaitDialog);
             pleaseWaitDialog.dismiss();
           }
         });
@@ -135,7 +135,7 @@ public class CreateUserActivity extends PermissionsBaseActivity implements Aptoi
           } else {
             //Successfull update
             saveUserDataOnPreferences();
-            onRegisterSuccess();
+            onRegisterSuccess(pleaseWaitDialog);
             pleaseWaitDialog.dismiss();
           }
         });
@@ -184,6 +184,16 @@ public class CreateUserActivity extends PermissionsBaseActivity implements Aptoi
         } else {
           //TODO: Deal with permissions not being given by user
         }
+        break;
+      case USER_PROFILE_CODE:
+        Intent intent = new Intent(this, CreateStoreActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("user", username);
+        intent.putExtra(AptoideLoginUtils.APTOIDE_LOGIN_ACCESS_TOKEN_KEY, accessToken);
+        intent.putExtra(AptoideLoginUtils.APTOIDE_LOGIN_USER_NAME_KEY, userEmail);
+        intent.putExtra(AptoideLoginUtils.APTOIDE_LOGIN_PASSWORD_KEY, userPassword);
+        startActivityForResult(intent, CREATE_STORE_REQUEST_CODE);
+
     }
   }
 
@@ -193,16 +203,12 @@ public class CreateUserActivity extends PermissionsBaseActivity implements Aptoi
     AccountManagerPreferences.setUserNickName(username);
   }
 
-  @Override public void onRegisterSuccess() {
+  @Override public void onRegisterSuccess(ProgressDialog progressDialog) {
     ShowMessage.asSnack(content, R.string.user_created);
     //data.putString(AptoideLoginUtils.APTOIDE_LOGIN_FROM, SIGNUP);
-    Intent intent = new Intent(this, CreateStoreActivity.class);
-    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    intent.putExtra("user", username);
-    intent.putExtra(AptoideLoginUtils.APTOIDE_LOGIN_ACCESS_TOKEN_KEY, accessToken);
-    intent.putExtra(AptoideLoginUtils.APTOIDE_LOGIN_USER_NAME_KEY, userEmail);
-    intent.putExtra(AptoideLoginUtils.APTOIDE_LOGIN_PASSWORD_KEY, userPassword);
-    startActivityForResult(intent, CREATE_STORE_REQUEST_CODE);
+    progressDialog.dismiss();
+    Intent intent = new Intent(this, LoggedInActivity.class);
+    startActivityForResult(intent, USER_PROFILE_CODE);
   }
 
   @Override public void onRegisterFail(@StringRes int reason) {

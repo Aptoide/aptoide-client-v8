@@ -294,5 +294,4 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
     @POST("store/set") Observable<BaseV7Response> editStore(
         @Body SimpleSetStoreRequest.Body body);
   }
-  }
 }

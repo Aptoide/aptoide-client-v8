@@ -30,6 +30,7 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
   protected static final int CREATE_STORE_REQUEST_CODE = 1;
   protected static final int STORAGE_REQUEST_CODE = 123;
   protected static final int CAMERA_REQUEST_CODE = 124;
+  protected static final int USER_PROFILE_CODE = 125;
   static final int REQUEST_CAMERA_CODE = 1046;
   static final int REQUEST_IMAGE_CAPTURE = 1;
 
