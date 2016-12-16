@@ -3,7 +3,9 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import com.jakewharton.rxbinding.view.RxView;
 
 /**
  * Created by trinkes on 15/12/2016.
@@ -26,5 +28,9 @@ public class TimeLineStatsWidget extends Widget<TimeLineStatsDisplayable> {
   @Override public void bindView(TimeLineStatsDisplayable displayable) {
     followers.setText(displayable.getFollowersText(getContext()));
     following.setText(displayable.getFollowingText(getContext()));
+    compositeSubscription.add(RxView.clicks(followers)
+        .subscribe(click -> displayable.followersClick(((FragmentShower) getContext()))));
+    compositeSubscription.add(RxView.clicks(following)
+        .subscribe(click -> displayable.followingClick(((FragmentShower) getContext()))));
   }
 }

@@ -113,7 +113,6 @@
   <string name="upload_dialog_gallery">Select from gallery</string>
   <string name="create_store_store_created">Store created</string>
 
-
   <!--Public/Private-->
   <string name="create_profile_pub_pri_suc_login">You\'re successfully logged in</string>
   <string name="create_profile_pub_pri_suc_login_sub_text">Your friends are now able to follow you and see your shares on Apps Timeline!</string>

@@ -329,6 +329,8 @@
   <string name="social_timeline_share_bar_login">What are your friends installing?</string>
   <string name="social_timeline_share_bar_following">Follow more Stores and connect with your friends.</string>
   <string name="social_timeline_share_bar_followers">Improve your store to have more followers.</string>
+  <string name="social_timeline_followers_fragment_title">%d follower(s)</string>
+  <string name="social_timeline_following_fragment_title">Following %d person(s)</string>
 
 
   <!--  -->
