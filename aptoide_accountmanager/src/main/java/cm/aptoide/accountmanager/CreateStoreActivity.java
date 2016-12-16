@@ -134,6 +134,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity implements
     mHeader = (TextView) findViewById(R.id.create_store_header_textview);
     mChooseNameTitle = (TextView) findViewById(R.id.create_store_choose_name_title);
     mStoreAvatar = (ImageView) findViewById(R.id.create_store_image);
+    content = findViewById(android.R.id.content);
 
     //Theme related views
     mOrangeShape = (ImageView) findViewById(R.id.create_store_theme_orange);
@@ -169,7 +170,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity implements
       storeName = mStoreName.getText().toString();
       //TODO: Make request to create repo and to update it (checkusercredentials and setStore) and add dialog
       validateData();
-      if (CREATE_STORE_REQUEST_CODE == 2 || CREATE_STORE_REQUEST_CODE == 2) {
+      if (CREATE_STORE_REQUEST_CODE == 2 || CREATE_STORE_REQUEST_CODE == 3 || CREATE_STORE_REQUEST_CODE == 1) {
         ProgressDialog progressDialog = GenericDialogs.createGenericPleaseWaitDialog(this, getApplicationContext().getString(R.string.please_wait_upload));
         progressDialog.show();
         CheckUserCredentialsRequest.of(getIntent().getStringExtra(AptoideLoginUtils.APTOIDE_LOGIN_ACCESS_TOKEN_KEY),
@@ -237,17 +238,14 @@ public class CreateStoreActivity extends PermissionsBaseActivity implements
       SetStoreRequest.of(new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
               DataProvider.getContext()).getAptoideClientUUID(), AptoideAccountManager.getAccessToken(),
           storeName, storeTheme, storeAvatarPath).execute(answer -> {
-        if (answer.getErrors().size() > 0) {
-          //TODO: deal with failure
-          onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors().get(0).getCode()));
-          AptoideAccountManager.refreshAndSaveUserInfoData();
-          progressDialog.dismiss();
-          //TODO: Broadcast igual ao do signup
-        } else {
+        if (answer.getInfo().getStatus().equals(BaseV7Response.Info.Status.OK)) {
           ShowMessage.asSnack(this, "success");
           AptoideAccountManager.refreshAndSaveUserInfoData();
           progressDialog.dismiss();
-          //TODO: Broadcast igual ao do signup
+        } else {
+          onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors().get(0).getCode()));
+          AptoideAccountManager.refreshAndSaveUserInfoData();
+          progressDialog.dismiss();
         }
       });
     } else if (CREATE_STORE_REQUEST_CODE == 2 || CREATE_STORE_REQUEST_CODE == 3) {
@@ -406,8 +404,11 @@ public class CreateStoreActivity extends PermissionsBaseActivity implements
       } else {
         CREATE_STORE_REQUEST_CODE = 3;
       }
+    } else if (getRepoAvatar().length() != 0) {
+      CREATE_STORE_REQUEST_CODE = 1;
     } else {
       CREATE_STORE_REQUEST_CODE = 0;
+      onCreateFail(R.string.nothing_inserted);
     }
     return CREATE_STORE_REQUEST_CODE;
   }

@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.dialog;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewInstallDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ArticleDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreLatestAppsDisplayable;
@@ -33,7 +35,8 @@ public class SharePreviewDialog {
     AlertDialog.Builder alertadd = new AlertDialog.Builder(context);
     if (displayable instanceof ArticleDisplayable) {
       LayoutInflater factory = LayoutInflater.from(context);
-      final View view = factory.inflate(R.layout.displayable_social_timeline_social_article, null);
+      final View view =
+          factory.inflate(R.layout.displayable_social_timeline_social_article_preview, null);
 
       TextView title = (TextView) view.findViewById(R.id.card_title);
       TextView subtitle = (TextView) view.findViewById(R.id.card_subtitle);
@@ -55,7 +58,8 @@ public class SharePreviewDialog {
       title.setText(AptoideAccountManager.getUserData().getUserRepo());
       subtitle.setText(AptoideAccountManager.getUserData().getUserName());
       articleTitle.setText(((ArticleDisplayable) displayable).getArticleTitle());
-      cardView.setRadius(0);
+      cardView.setRadius(8);
+      cardView.setCardElevation(10);
       like.setClickable(false);
       like.setOnClickListener(null);
       like.setVisibility(View.VISIBLE);
@@ -85,7 +89,8 @@ public class SharePreviewDialog {
       socialTerms.setVisibility(View.VISIBLE);
     } else if (displayable instanceof VideoDisplayable) {
       LayoutInflater factory = LayoutInflater.from(context);
-      final View view = factory.inflate(R.layout.displayable_social_timeline_social_video, null);
+      final View view =
+          factory.inflate(R.layout.displayable_social_timeline_social_video_preview, null);
 
       TextView title = (TextView) view.findViewById(R.id.card_title);
       TextView subtitle = (TextView) view.findViewById(R.id.card_subtitle);
@@ -107,7 +112,8 @@ public class SharePreviewDialog {
       title.setText(AptoideAccountManager.getUserData().getUserRepo());
       subtitle.setText(AptoideAccountManager.getUserData().getUserName());
       articleTitle.setText(((VideoDisplayable) displayable).getVideoTitle());
-      cardView.setRadius(0);
+      cardView.setRadius(8);
+      cardView.setCardElevation(10);
       like.setClickable(false);
       like.setOnClickListener(null);
       like.setVisibility(View.VISIBLE);
@@ -189,7 +195,7 @@ public class SharePreviewDialog {
     } else if (displayable instanceof AppViewInstallDisplayable) {
       LayoutInflater factory = LayoutInflater.from(context);
       final View view =
-          factory.inflate(R.layout.displayable_social_timeline_social_recommendation, null);
+          factory.inflate(R.layout.displayable_social_timeline_social_install_preview, null);
 
       TextView title =
           (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_card_title);
@@ -210,7 +216,8 @@ public class SharePreviewDialog {
       CheckBox checkBox = (CheckBox) view.findViewById(R.id.social_preview_checkbox);
       LinearLayout socialTerms = (LinearLayout) view.findViewById(R.id.social_privacy_terms);
       TextView privacyText = (TextView) view.findViewById(R.id.social_text_privacy);
-
+      TextView getApp = (TextView) view.findViewById(
+          R.id.displayable_social_timeline_recommendation_get_app_button);
       title.setText(AptoideAccountManager.getUserData().getUserRepo());
       subtitle.setText(AptoideAccountManager.getUserData().getUserName());
       ImageLoader.loadWithShadowCircleTransform(((AppViewInstallDisplayable) displayable).getPojo()
@@ -224,7 +231,15 @@ public class SharePreviewDialog {
           .getData()
           .getName());
       appSubTitle.setText(R.string.social_timeline_share_dialog_installed_and_recommended);
-      cardView.setRadius(0);
+
+      SpannableFactory spannableFactory = new SpannableFactory();
+
+      getApp.setText(spannableFactory.createColorSpan(
+          context.getString(R.string.displayable_social_timeline_article_get_app_button, ""),
+          ContextCompat.getColor(context, R.color.appstimeline_grey), ""));
+
+      cardView.setRadius(8);
+      cardView.setCardElevation(10);
       like.setClickable(false);
       like.setOnClickListener(null);
       like.setVisibility(View.VISIBLE);

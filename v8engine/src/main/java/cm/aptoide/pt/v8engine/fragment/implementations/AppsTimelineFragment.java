@@ -24,6 +24,7 @@ import cm.aptoide.pt.model.v7.timeline.Feature;
 import cm.aptoide.pt.model.v7.timeline.Recommendation;
 import cm.aptoide.pt.model.v7.timeline.Similar;
 import cm.aptoide.pt.model.v7.timeline.SocialArticle;
+import cm.aptoide.pt.model.v7.timeline.SocialInstall;
 import cm.aptoide.pt.model.v7.timeline.SocialStoreLatestApps;
 import cm.aptoide.pt.model.v7.timeline.SocialVideo;
 import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
@@ -53,9 +54,11 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Fea
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RecommendationDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SimilarDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SocialArticleDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SocialInstallDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SocialStoreLatestAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SocialVideoDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreLatestAppsDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.TimeLineStatsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.VideoDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.listeners.RxEndlessRecyclerView;
 import com.trello.rxlifecycle.FragmentEvent;
@@ -184,7 +187,16 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
   @NonNull private Observable<Datalist<Displayable>> getFreshDisplayables(boolean refresh,
       List<String> packages) {
     return getDisplayableList(packages, 0, refresh).doOnNext(
-        item -> getAdapter().clearDisplayables()).doOnUnsubscribe(() -> finishLoading());
+        item -> getAdapter().clearDisplayables()).flatMap(displayableDatalist -> {
+      if (!displayableDatalist.getList().isEmpty()) {
+        return timelineRepository.getTimelineStats(refresh).map(timelineStats -> {
+          displayableDatalist.getList().add(0, new TimeLineStatsDisplayable(timelineStats));
+          return displayableDatalist;
+        });
+      } else {
+        return Observable.just(displayableDatalist);
+      }
+    }).doOnUnsubscribe(() -> finishLoading());
   }
 
   @Override public void reload() {
@@ -267,7 +279,6 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
       adapter.addDisplayable(new ProgressBarDisplayable().setFullRow());
     }
   }
-
   private void removeLoading() {
     if (loading) {
       loading = false;
@@ -339,6 +350,9 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     } else if (card instanceof Similar) {
       return SimilarDisplayable.from((Similar) card, dateCalculator, spannableFactory,
           timelineMetricsManager);
+    } else if (card instanceof SocialInstall) {
+      return SocialInstallDisplayable.from((SocialInstall) card, timelineMetricsManager,
+          spannableFactory);
     }
     throw new IllegalArgumentException(
         "Only articles, features, store latest apps, app updates, videos, recommendations and similar cards supported.");

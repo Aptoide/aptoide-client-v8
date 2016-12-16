@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
@@ -46,7 +47,8 @@ public class MyStoreWidget extends Widget<MyStoreDisplayable> {
   @Override public void bindView(MyStoreDisplayable displayable) {
 
     FragmentActivity context = getContext();
-    String storeTheme = displayable.getMeta().getData().getAppearance().getTheme();
+    Store store = displayable.getMeta().getData();
+    String storeTheme = store.getAppearance().getTheme();
     @ColorInt int color = getColorOrDefault(StoreThemeEnum.get(storeTheme), context);
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
       Drawable d = context.getDrawable(R.drawable.dialog_bg_2);
@@ -59,13 +61,12 @@ public class MyStoreWidget extends Widget<MyStoreDisplayable> {
     }
     exploreButton.setTextColor(color);
 
-    ImageLoader.loadWithShadowCircleTransform(
-        AptoideAccountManager.getUserData().getUserAvatarRepo(), storeIcon);
+    ImageLoader.loadWithShadowCircleTransform(store.getAvatar(), storeIcon);
 
     storeName.setText(AptoideAccountManager.getUserData().getUserRepo());
     compositeSubscription.add(RxView.clicks(exploreButton)
-        .subscribe(click -> ((FragmentShower) context).pushFragmentV4(V8Engine.getFragmentProvider()
-            .newStoreFragment(AptoideAccountManager.getUserData().getUserRepo(), storeTheme))));
+        .subscribe(click -> ((FragmentShower) context).pushFragmentV4(
+            V8Engine.getFragmentProvider().newStoreFragment(store.getName(), storeTheme))));
   }
 
   private int getColorOrDefault(StoreThemeEnum theme, Context context) {

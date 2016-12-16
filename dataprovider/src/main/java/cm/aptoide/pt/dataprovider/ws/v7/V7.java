@@ -27,6 +27,7 @@ import cm.aptoide.pt.model.v7.ListFullComments;
 import cm.aptoide.pt.model.v7.ListFullReviews;
 import cm.aptoide.pt.model.v7.ListReviews;
 import cm.aptoide.pt.model.v7.ListSearchApps;
+import cm.aptoide.pt.model.v7.TimelineStats;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
 import cm.aptoide.pt.model.v7.store.GetStore;
@@ -287,11 +288,13 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
         @Path(value = "url", encoded = true) String path, @Body BaseBody body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @Multipart
-    @POST("store/set") Observable<BaseV7Response> editStore(@Part MultipartBody.Part store_avatar,
-        @PartMap HashMapNotNull<String, RequestBody> body);
+    @Multipart @POST("store/set") Observable<BaseV7Response> editStore(
+        @Part MultipartBody.Part store_avatar, @PartMap HashMapNotNull<String, RequestBody> body);
 
-    @POST("store/set") Observable<BaseV7Response> editStore(
-        @Body SimpleSetStoreRequest.Body body);
+    @POST("/api/7/user/getTimelineStats") Observable<TimelineStats> getTimelineStats(
+        @Body BaseBody body, @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("store/set") Observable<BaseV7Response> editStore(@Body SimpleSetStoreRequest.Body body);
   }
 }
+

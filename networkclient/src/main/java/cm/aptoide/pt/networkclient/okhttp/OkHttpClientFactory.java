@@ -35,8 +35,8 @@ public class OkHttpClientFactory {
     //			clientBuilder.addNetworkInterceptor(new StethoInterceptor());
     //		}
     clientBuilder.connectTimeout(2, TimeUnit.MINUTES);
-    clientBuilder.readTimeout(2, TimeUnit.MINUTES);
     clientBuilder.writeTimeout(2, TimeUnit.MINUTES);
+    clientBuilder.readTimeout(2, TimeUnit.MINUTES);
     clientBuilder.cache(new Cache(cacheDirectory, cacheMaxSize)); // 10 MiB
     clientBuilder.addInterceptor(interceptor);
     clientBuilder.addInterceptor(new UserAgentInterceptor(userAgentGenerator));

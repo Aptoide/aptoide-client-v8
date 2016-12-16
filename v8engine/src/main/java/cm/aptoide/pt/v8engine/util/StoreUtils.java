@@ -219,4 +219,12 @@ public class StoreUtils {
     }
     return storesAuthMap.size() > 0 ? storesAuthMap : null;
   }
+
+  public static void unsubscribeStore(String name) {
+    if (AptoideAccountManager.isLoggedIn()) {
+      AptoideAccountManager.unsubscribeStore(name);
+    }
+    StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
+    storeAccessor.remove(name);
+  }
 }

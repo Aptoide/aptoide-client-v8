@@ -8,8 +8,6 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.util.LongSparseArray;
-import android.text.TextUtils;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReports;
@@ -29,7 +27,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
-import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.FullReview;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
@@ -46,6 +43,7 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
+import cm.aptoide.pt.v8engine.util.CommentOperations;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.util.Translator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -60,6 +58,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Gri
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RecommendedStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RowReviewDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
+import cm.aptoide.pt.viewRateAndCommentReviews.CommentNode;
 import cm.aptoide.pt.viewRateAndCommentReviews.StoreComment;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -86,6 +85,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
   protected String storeTheme;
   private List<Displayable> displayables;
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
+  private StoreRepository storeRepository;
 
   public static StoreTabGridRecyclerFragment newInstance(Event event, String title,
       String storeTheme, String tag) {
@@ -421,6 +421,11 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 
   }
 
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    storeRepository = RepositoryFactory.getRepositoryFor(cm.aptoide.pt.database.realm.Store.class);
+  }
+
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
   }
@@ -513,7 +518,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
     for (int i = 0; i < list.size(); i++) {
       if (i == 0 || list.get(i - 1).getId() != list.get(i).getId()) {
         if (layout == Layout.LIST) {
-          storesDisplayables.add(new RecommendedStoreDisplayable(list.get(i)));
+          storesDisplayables.add(new RecommendedStoreDisplayable(list.get(i), storeRepository));
         } else {
           storesDisplayables.add(new GridStoreDisplayable(list.get(i)));
         }
@@ -540,18 +545,24 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
     final long storeId = storeCredentials.getId() != null ? storeCredentials.getId() : -1;
     final String storeName = storeCredentials.getName();
 
+    final CommentOperations commentOperations = new CommentOperations();
+
     Action1<ListComments> listCommentsAction = (listComments -> {
       if (listComments != null
           && listComments.getDatalist() != null
           && listComments.getDatalist().getList() != null) {
-        List<CommentNode> comments = transform(listComments.getDatalist().getList());
-        LinkedList<Displayable> displayables = new LinkedList<>();
-        for (CommentNode comment : comments) {
-          displayables.add(new CommentDisplayable(
-              new StoreComment(comment.getComment(), showStoreCommentFragment(storeId, comment, storeName))));
+        List<CommentNode> comments = commentOperations.flattenByDepth(
+            commentOperations.transform(listComments.getDatalist().getList()));
+
+        ArrayList<Displayable> displayables = new ArrayList<>(comments.size());
+        for (CommentNode commentNode : comments) {
+          displayables.add(new CommentDisplayable(new StoreComment(commentNode,
+              showStoreCommentFragment(storeId, commentNode.getComment().getId(), storeName))));
         }
-        this.displayables = new ArrayList<>(comments.size());
+
+        this.displayables = new ArrayList<>(displayables.size());
         this.displayables.add(new DisplayableGroup(displayables));
+
         addDisplayables(this.displayables);
       }
     });
@@ -564,69 +575,8 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
     endlessRecyclerOnScrollListener.onLoadMore(refresh);
   }
 
-  private List<CommentNode> transform(List<Comment> list) {
-    LongSparseArray<CommentNode> commentMap = new LongSparseArray<>();
-
-    for (Comment comment : list) {
-      Long commentParent = comment.getParent();
-      if (commentParent != null) {
-        //
-        // has parent
-        //
-        CommentNode commentNode = commentMap.get(commentParent.longValue());
-        if (commentNode == null) {
-          commentNode = new CommentNode();
-        }
-        commentNode.addChild(comment);
-        commentMap.append(commentParent.longValue(), commentNode);
-      } else {
-        //
-        // is a root node
-        //
-        CommentNode commentNode = commentMap.get(comment.getId());
-        if (commentNode == null) {
-          commentMap.append(comment.getId(), new CommentNode(comment));
-        } else {
-          commentNode.setComment(comment);
-        }
-      }
-    }
-
-    ArrayList<CommentNode> commentNodes = new ArrayList<>(commentMap.size());
-    for (int i = 0; i < commentMap.size(); i++) {
-      commentNodes.add(commentMap.valueAt(i));
-    }
-    return commentNodes;
-  }
-
-  class CommentNode {
-    private Comment comment;
-    private final List<Comment> childComments;
-
-    public CommentNode(Comment comment) {
-      this.comment = comment;
-      childComments = new ArrayList<>();
-    }
-
-    public CommentNode() {
-      this(null);
-    }
-
-    public Comment getComment() {
-      return comment;
-    }
-
-    public void setComment(Comment comment) {
-      this.comment = comment;
-    }
-
-    public void addChild(Comment comment) {
-      childComments.add(comment);
-    }
-  }
-
-  public Observable<Void> showStoreCommentFragment(final long storeId,
-      @NonNull CommentNode commentNode, String storeName) {
+  public Observable<Void> showStoreCommentFragment(final long storeId, final long commentId,
+      String storeName) {
     // optional method implemented in child classes
     return Observable.empty();
   }

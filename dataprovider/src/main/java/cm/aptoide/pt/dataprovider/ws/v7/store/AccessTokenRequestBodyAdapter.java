@@ -52,10 +52,14 @@ public class AccessTokenRequestBodyAdapter implements AccessTokenBody {
 
 
     body.put("store_name", createBodyPartFromString(storeName));
-    try {
-      body.put("store_properties", createBodyPartFromString(new JSONObject().put("theme", storeTheme).toString()));
-    } catch (JSONException e) {
-      Logger.e(AccessTokenRequestBodyAdapter.class.getSimpleName(), "Couldn't build store_properties json", e);
+    if (storeTheme.length() > 0) {
+      try {
+        body.put("store_properties",
+            createBodyPartFromString(new JSONObject().put("theme", storeTheme).toString()));
+      } catch (JSONException e) {
+        Logger.e(AccessTokenRequestBodyAdapter.class.getSimpleName(),
+            "Couldn't build store_properties json", e);
+      }
     }
     body.put("store_theme", createBodyPartFromString(storeTheme));
     body.put("access_token", createBodyPartFromString(accessToken));

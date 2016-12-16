@@ -105,6 +105,7 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
     private String commentType = CommentType.REVIEW.name();
     private Long reviewId;
     private Long storeId;
+    private long subLimit = 5;
     private String store_user;
     private String store_pass_sha1;
 
@@ -199,6 +200,14 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
 
     public void setStore_pass_sha1(String store_pass_sha1) {
       this.store_pass_sha1 = store_pass_sha1;
+    }
+
+    public long getSubLimit() {
+      return subLimit;
+    }
+
+    public void setSubLimit(long subLimit) {
+      this.subLimit = subLimit;
     }
   }
 }

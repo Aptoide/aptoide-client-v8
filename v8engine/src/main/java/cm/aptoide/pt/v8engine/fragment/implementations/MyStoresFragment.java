@@ -29,7 +29,7 @@ public class MyStoresFragment extends StoreTabGridRecyclerFragment {
     final boolean[] isFirstLoad = { true };
     StoreRepository storeRepository = RepositoryFactory.getRepositoryFor(Store.class);
     if (subscription == null || subscription.isUnsubscribed()) {
-      subscription = storeRepository.getAll()
+      subscription = storeRepository.getAll().distinct()
           .observeOn(AndroidSchedulers.mainThread())
           .compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW))
           .subscribe(stores -> {

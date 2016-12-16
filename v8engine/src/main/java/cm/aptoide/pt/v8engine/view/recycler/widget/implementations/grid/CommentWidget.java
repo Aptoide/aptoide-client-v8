@@ -1,9 +1,10 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
+import android.os.Build;
+import android.support.annotation.ColorRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.imageloader.ImageLoader;
@@ -23,9 +24,12 @@ import com.jakewharton.rxbinding.view.RxView;
 public class CommentWidget extends Widget<CommentDisplayable> {
 
   private static final String TAG = CommentWidget.class.getName();
+  private static final int MARGIN_IN_DIP = 24;
 
-  private RelativeLayout outterLayout;
+  private final View rootView;
+
   private View replyLayout;
+  private View outerLayout;
   private ImageView userAvatar;
   private TextView userName;
   private TextView date;
@@ -33,11 +37,12 @@ public class CommentWidget extends Widget<CommentDisplayable> {
 
   public CommentWidget(View itemView) {
     super(itemView);
+    rootView = itemView;
   }
 
   @Override protected void assignViews(View itemView) {
-    outterLayout = (RelativeLayout) itemView.findViewById(R.id.comment_outter_layout);
     userAvatar = (ImageView) itemView.findViewById(R.id.user_icon);
+    outerLayout = itemView.findViewById(R.id.outer_layout);
     userName = (TextView) itemView.findViewById(R.id.user_name);
     date = (TextView) itemView.findViewById(R.id.added_date);
     comment = (TextView) itemView.findViewById(R.id.comment);
@@ -55,36 +60,52 @@ public class CommentWidget extends Widget<CommentDisplayable> {
 
     if (StoreComment.class.isAssignableFrom(comment.getClass())) {
       final StoreComment storeComment = (StoreComment) comment;
-      replyLayout.setVisibility(View.VISIBLE);
+
+      @ColorRes int bgColor =
+          storeComment.getLevel() % 2 == 0 ? R.color.medium_custom_gray : R.color.white;
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        outerLayout.setBackgroundColor(getContext().getColor(bgColor));
+      } else {
+        outerLayout.setBackgroundColor(getContext().getResources().getColor(bgColor));
+      }
 
       // set left/start margin width in default comment
       setLayoutLeftMargin(storeComment);
 
-      compositeSubscription.add(RxView.clicks(replyLayout)
-          .flatMap(aVoid -> storeComment.observeReplySubmission().doOnError(err -> {
-            ShowMessage.asSnack(userAvatar, R.string.error_occured);
-          }).flatMap(v -> ShowMessage.asObservableSnack(userAvatar, R.string.comment_submitted)))
-          .retry()
-          .subscribe(aVoid -> { /* nothing else to do */ }, err -> {
-            Logger.e(TAG, err);
-            CrashReports.logException(err);
-          }));
+      if (storeComment.getLevel() == 1) {
+        replyLayout.setVisibility(View.VISIBLE);
+        compositeSubscription.add(RxView.clicks(replyLayout)
+            .flatMap(aVoid -> storeComment.observeReplySubmission().doOnError(err -> {
+              ShowMessage.asSnack(userAvatar, R.string.error_occured);
+            }).flatMap(v -> ShowMessage.asObservableSnack(userAvatar, R.string.comment_submitted)))
+            .retry()
+            .subscribe(aVoid -> { /* nothing else to do */ }, err -> {
+              Logger.e(TAG, err);
+              CrashReports.logException(err);
+            }));
+      } else {
+        replyLayout.setVisibility(View.GONE);
+      }
     }
   }
 
   private void setLayoutLeftMargin(StoreComment storeComment) {
     final int level = storeComment.getLevel();
-    RecyclerView.LayoutParams params =
-        (RecyclerView.LayoutParams) outterLayout.getLayoutParams();
-    int baseMargin;
+
+    outerLayout.setPadding(outerLayout.getPaddingRight(), outerLayout.getPaddingTop(),
+        outerLayout.getPaddingRight(), outerLayout.getPaddingBottom());
+
+    RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) rootView.getLayoutParams();
+    int baseMargin = AptoideUtils.ScreenU.getPixels(MARGIN_IN_DIP);
+
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
-      baseMargin = params.getMarginEnd();
-      int startMargin = baseMargin * level;
-      params.setMarginStart(startMargin);
-    } else {
-      baseMargin = params.rightMargin;
-      int leftMargin = baseMargin * level;
-      params.leftMargin = leftMargin;
+      params.setMarginStart(baseMargin * level);
+      params.setMarginEnd(baseMargin);
     }
+
+    params.leftMargin = baseMargin * level;
+    params.rightMargin = baseMargin;
+
+    rootView.setLayoutParams(params);
   }
 }

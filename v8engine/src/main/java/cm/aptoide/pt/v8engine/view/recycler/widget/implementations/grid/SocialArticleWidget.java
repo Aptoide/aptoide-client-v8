@@ -75,8 +75,13 @@ public class SocialArticleWidget extends CardWidget<SocialArticleDisplayable> {
 
   @Override public void bindView(SocialArticleDisplayable displayable) {
     this.displayable = displayable;
-    title.setText(displayable.getStore().getName());
-    subtitle.setText(displayable.getUser().getName());
+    if (displayable.getStore() != null) {
+      title.setText(displayable.getStore().getName());
+    }
+
+    if (displayable.getUser() != null) {
+      subtitle.setText(displayable.getUser().getName());
+    }
 
     //subtitle.setText(displayable.getTimeSinceLastUpdate(getContext()));
     Typeface typeFace =
@@ -84,8 +89,13 @@ public class SocialArticleWidget extends CardWidget<SocialArticleDisplayable> {
     articleTitle.setTypeface(typeFace);
     articleTitle.setText(displayable.getArticleTitle());
     setCardviewMargin(displayable, cardView);
-    ImageLoader.loadWithShadowCircleTransform(displayable.getStore().getAvatar(), storeAvatar);
-    ImageLoader.loadWithShadowCircleTransform(displayable.getUser().getAvatar(), userAvatar);
+    if (displayable.getStore() != null) {
+      ImageLoader.loadWithShadowCircleTransform(displayable.getStore().getAvatar(), storeAvatar);
+    }
+    if (displayable.getUser() != null) {
+      ImageLoader.loadWithShadowCircleTransform(displayable.getUser().getAvatar(), userAvatar);
+    }
+
     ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
     likeButton.setLiked(false);
     like.setVisibility(View.VISIBLE);
