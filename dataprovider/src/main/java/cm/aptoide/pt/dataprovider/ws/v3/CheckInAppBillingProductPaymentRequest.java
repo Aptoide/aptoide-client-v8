@@ -7,7 +7,6 @@ package cm.aptoide.pt.dataprovider.ws.v3;
 
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
-import java.util.Locale;
 import rx.Observable;
 
 /**
@@ -20,35 +19,22 @@ public class CheckInAppBillingProductPaymentRequest extends V3<InAppBillingPurch
     super(baseHost, baseBody);
   }
 
-  public static CheckInAppBillingProductPaymentRequest of(String paymentConfirmationId, int paymentId, int productId, double price, double taxRate, String currency,
-      NetworkOperatorManager operatorManager, int apiVersion, String developerPayload,
-      String accessToken) {
+  public static CheckInAppBillingProductPaymentRequest of(int productId, NetworkOperatorManager operatorManager,
+      int apiVersion, String accessToken) {
     final BaseBody args = new BaseBody();
-    addDefaultValues(paymentConfirmationId, paymentId, productId, price, taxRate, currency,
-        operatorManager, args, accessToken);
-    args.put("reqtype", "iabpurchasestatus");
-    args.put("apiversion", String.valueOf(apiVersion));
-    args.put("developerPayload", developerPayload);
-    return new CheckInAppBillingProductPaymentRequest(BASE_HOST, args);
-  }
-
-  private static void addDefaultValues(String paymentConfirmationId, int paymentId, int productId,
-      double price, double taxRate, String currency, NetworkOperatorManager operatorManager,
-      BaseBody args, String accessToken) {
 
     args.put("mode", "json");
     args.put("payreqtype", "rest");
-    args.put("paytype", String.valueOf(paymentId));
-    args.put("paykey", paymentConfirmationId);
-    args.put("taxrate", String.format(Locale.ROOT, "%.2f", taxRate));
     args.put("productid", String.valueOf(productId));
-    args.put("price", String.format(Locale.ROOT, "%.2f", price));
-    args.put("currency", currency);
     args.put("access_token", accessToken);
 
     if (operatorManager.isSimStateReady()) {
       args.put("simcc", operatorManager.getSimCountryISO());
     }
+
+    args.put("reqtype", "iabpurchasestatus");
+    args.put("apiversion", String.valueOf(apiVersion));
+    return new CheckInAppBillingProductPaymentRequest(BASE_HOST, args);
   }
 
   @Override

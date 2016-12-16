@@ -23,13 +23,10 @@ import static rx.Observable.error;
 public class AptoidePay {
 
   private final PaymentConfirmationRepository confirmationRepository;
-  private BackgroundSync backgroundSync;
   private ProductRepository productRepository;
 
-  public AptoidePay(PaymentConfirmationRepository confirmationRepository,
-      BackgroundSync backgroundSync, ProductRepository productRepository) {
+  public AptoidePay(PaymentConfirmationRepository confirmationRepository, ProductRepository productRepository) {
     this.confirmationRepository = confirmationRepository;
-    this.backgroundSync = backgroundSync;
     this.productRepository = productRepository;
   }
 
@@ -38,7 +35,7 @@ public class AptoidePay {
   }
 
   public Observable<Purchase> getPurchase(AptoideProduct product) {
-    return confirmationRepository.getPaymentConfirmation(product.getId())
+    return confirmationRepository.getPaymentConfirmation(product)
         .first(paymentConfirmation -> paymentConfirmation.isCompleted())
         .flatMap(paymentConfirmation -> productRepository.getPurchase(product))
         .onErrorResumeNext(throwable -> {
@@ -57,23 +54,16 @@ public class AptoidePay {
             "Product " + payment.getProduct().getId() + " already purchased."));
       }
 
-      return confirmationRepository.getPaymentConfirmation(payment.getProduct().getId())
+      return confirmationRepository.getPaymentConfirmation(payment.getProduct())
           .onErrorResumeNext(confirmationThrowable -> {
             if (confirmationThrowable instanceof RepositoryItemNotFoundException) {
-              return processPaymentAndGetConfirmation(payment);
+              return payment.process();
             }
             return Observable.<PaymentConfirmation>error(confirmationThrowable);
           })
           .first(paymentConfirmation -> paymentConfirmation.isCompleted())
           .flatMap(saved -> productRepository.getPurchase((AptoideProduct) payment.getProduct()));
     }).subscribeOn(Schedulers.computation());
-  }
-
-  private Observable<PaymentConfirmation> processPaymentAndGetConfirmation(Payment payment) {
-    return payment.process()
-        .flatMap(paymentConfirmation -> confirmationRepository.savePaymentConfirmation(paymentConfirmation))
-        .doOnNext(saved -> backgroundSync.schedule())
-        .flatMap(saved -> confirmationRepository.getPaymentConfirmation(payment.getProduct().getId()));
   }
 
   private Observable<Boolean> isProductAlreadyPurchased(AptoideProduct product) {

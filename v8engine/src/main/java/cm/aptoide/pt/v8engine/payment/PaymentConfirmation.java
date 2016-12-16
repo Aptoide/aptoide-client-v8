@@ -21,35 +21,22 @@ public class PaymentConfirmation {
   }
 
   private final String paymentConfirmationId;
-  private final int paymentId;
-  private final Product product;
-  private final Price price;
+  private final int productId;
 
   private Status status;
 
-  public PaymentConfirmation(String paymentConfirmationId, int paymentId, Product product,
-      Price price, Status status) {
+  public PaymentConfirmation(String paymentConfirmationId, int productId, Status status) {
     this.paymentConfirmationId = paymentConfirmationId;
-    this.paymentId = paymentId;
-    this.product = product;
-    this.price = price;
+    this.productId = productId;
     this.status = status;
   }
 
-  public Product getProduct() {
-    return product;
+  public int getProductId() {
+    return productId;
   }
 
   public String getPaymentConfirmationId() {
     return paymentConfirmationId;
-  }
-
-  public int getPaymentId() {
-    return paymentId;
-  }
-
-  public Price getPrice() {
-    return price;
   }
 
   public Status getStatus() {

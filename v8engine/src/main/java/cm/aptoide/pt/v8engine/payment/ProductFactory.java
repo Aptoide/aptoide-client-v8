@@ -30,25 +30,4 @@ public class ProductFactory {
         purchaseDataObject.getPrice(), apiVersion, purchaseDataObject.getProductId(), packageName,
         developerPayload, purchaseDataObject.getType());
   }
-
-  public AptoideProduct create(
-      cm.aptoide.pt.database.realm.PaymentConfirmation paymentConfirmation) {
-    final AptoideProduct product;
-
-    if (paymentConfirmation.getAppId() != 0 && paymentConfirmation.getStoreName() != null) {
-      product =
-          new PaidAppProduct(paymentConfirmation.getProductId(), paymentConfirmation.getIcon(),
-              paymentConfirmation.getTitle(), paymentConfirmation.getDescription(),
-              paymentConfirmation.getPriceDescription(), paymentConfirmation.getAppId(),
-              paymentConfirmation.getStoreName());
-    } else {
-      product =
-          new InAppBillingProduct(paymentConfirmation.getProductId(), paymentConfirmation.getIcon(),
-              paymentConfirmation.getTitle(), paymentConfirmation.getDescription(),
-              paymentConfirmation.getPriceDescription(), paymentConfirmation.getApiVersion(),
-              paymentConfirmation.getSku(), paymentConfirmation.getPackageName(),
-              paymentConfirmation.getDeveloperPayload(), paymentConfirmation.getType());
-    }
-    return product;
-  }
 }
