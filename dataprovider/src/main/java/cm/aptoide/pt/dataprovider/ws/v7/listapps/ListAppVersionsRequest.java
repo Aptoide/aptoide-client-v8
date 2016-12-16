@@ -58,14 +58,15 @@ import rx.Observable;
       return new ListAppVersionsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
     }
     else{
-      return of(packageName,accessToken,email,aptoideClientUUID);
+      return of(packageName, accessToken, email, aptoideClientUUID, storeCredentials);
     }
   }
 
   public static ListAppVersionsRequest of(String packageName, String accessToken, String email,
-      String aptoideClientUUID) {
+      String aptoideClientUUID, HashMapNotNull<String, List<String>> storeCredentials) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
     Body body = new Body(packageName);
+    body.setStoresAuthMap(storeCredentials);
     body.setLimit(MAX_LIMIT);
     return new ListAppVersionsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
