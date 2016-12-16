@@ -167,7 +167,6 @@ public class CreateUserActivity extends PermissionsBaseActivity implements Aptoi
           avatarPath = "";
         }
     } else if (requestCode == CREATE_STORE_REQUEST_CODE) {
-      //TODO: Coming from store
       finish();
     }
   }
