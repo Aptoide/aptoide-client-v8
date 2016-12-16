@@ -42,10 +42,13 @@ public class SimpleSetStoreRequest extends V7<BaseV7Response, SimpleSetStoreRequ
     public Body(String accessToken, String storeName, String storeTheme) {
       this.accessToken = accessToken;
       this.storeName = storeName;
-      try {
-        storeProperties = (new JSONObject().put("theme", storeTheme)).toString();
-      } catch (JSONException e) {
-        Logger.e(SimpleSetStoreRequest.Body.class.getSimpleName(), "Couldn't build store_properties json", e);
+      if (storeTheme.length() > 0 ) {
+        try {
+          storeProperties = (new JSONObject().put("theme", storeTheme)).toString();
+        } catch (JSONException e) {
+          Logger.e(SimpleSetStoreRequest.Body.class.getSimpleName(),
+              "Couldn't build store_properties json", e);
+        }
       }
   }
 
