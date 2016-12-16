@@ -30,4 +30,6 @@ public class ManagedKeys {
   public static final String FORCE_COUNTRY = "forcecountry";
   public static final String DEBUG = "debugmode";
   public static final String NOTIFICATION_TYPE = "notificationtype";
+  public static final String ACCESS = "access";
+  public static final String ACCESS_CONFIRMED = "access_confirmed";
 }

@@ -45,6 +45,7 @@ import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.preferences.AptoidePreferencesConfiguration;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -448,6 +449,18 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 
       if (!TextUtils.isEmpty(checkUserCredentialsJson.getUsername())) {
         AccountManagerPreferences.setUserNickName(checkUserCredentialsJson.getUsername());
+      }
+
+      if(checkUserCredentialsJson.getRepoDescription() != null && !TextUtils.isEmpty(checkUserCredentialsJson.getRepoDescription().getTheme())) {
+        AccountManagerPreferences.setRepoTheme(checkUserCredentialsJson.getRepoDescription().getTheme());
+      }
+
+      if(!TextUtils.isEmpty(checkUserCredentialsJson.getAccess())) {
+        ManagerPreferences.setUserAccess(checkUserCredentialsJson.getAccess());
+      }
+
+      if(!checkUserCredentialsJson.getAccessConfirmed().toString().isEmpty()) {
+        ManagerPreferences.setUserAccessConfirmed(checkUserCredentialsJson.getAccessConfirmed());
       }
 
       if (checkUserCredentialsJson.getSettings() != null) {

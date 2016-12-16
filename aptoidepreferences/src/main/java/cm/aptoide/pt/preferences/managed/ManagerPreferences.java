@@ -157,4 +157,28 @@ public class ManagerPreferences {
         .putBoolean(ManagedKeys.ALLOW_ROOT_INSTALATION, allowRootInstallation)
         .apply();
   }
+
+  public static String getUserAccess() {
+    return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
+        .getString(ManagedKeys.ACCESS, "UNLISTED");
+  }
+
+  public static void setUserAccess(String access) {
+    Preferences.get()
+        .edit()
+        .putString(ManagedKeys.ACCESS, access)
+        .apply();
+  }
+
+  public static String getUserAccessConfirmed() {
+    return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
+        .getString(ManagedKeys.ACCESS_CONFIRMED, "UNLISTED");
+  }
+
+  public static void setUserAccessConfirmed(Boolean accessConfirmed) {
+    Preferences.get()
+        .edit()
+        .putBoolean(ManagedKeys.ACCESS_CONFIRMED, accessConfirmed)
+        .apply();
+  }
 }
