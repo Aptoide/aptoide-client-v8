@@ -55,7 +55,7 @@
   <string name="ws_error_IARG_111">Invalid passhash format</string>
     <string name="ws_error_REPO_4">That store name is invalid, you can only use letters, numbers or
         dashes.</string>
-  <string name="ws_error_REPO_7">This user already has a valid repo.</string>
+  <string name="ws_error_REPO_7">This user already has a valid store.</string>
   <string name="ws_error_REPO_5">That store name must be at least 3 characters long.</string>
     <string name="ws_error_REPO_6">That store name is already taken, you need to choose another
         one.</string>

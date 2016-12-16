@@ -78,7 +78,7 @@
   <string name="error_REPO_2">The store was cancelled.</string>
   <string name="error_REPO_3">The store does not belong to this user.</string>
   <string name="error_REPO_4_no_store">Your account has no store created. You need to create one to make a review.</string>
-  <string name="error_REPO_7">This user already has a valid repo.</string>
+  <string name="error_REPO_7">This user already has a valid store.</string>
 
   <string name="error_APK_1">Can\'t open this app with the given info and version</string>
   <string name="error_APK_4">Can\'t open this app</string>
