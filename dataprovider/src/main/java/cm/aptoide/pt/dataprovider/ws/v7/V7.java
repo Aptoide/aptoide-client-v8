@@ -290,6 +290,8 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
         @Body BaseBody body, @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("store/set") Observable<BaseV7Response> editStore(@Body SimpleSetStoreRequest.Body body);
+
+    @POST("user/set") Observable<BaseV7Response> setUser(@Body SetUserRequest.Body body);
   }
 }
 

@@ -3,6 +3,11 @@ package cm.aptoide.accountmanager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.repository.IdsRepository;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.SetUserRequest;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.subscriptions.CompositeSubscription;
 
@@ -40,6 +45,12 @@ public class LoggedInActivity  extends BaseActivity{
 
   private void setupListeners() {
     mSubscriptions.add(RxView.clicks(mContinueButton).subscribe(clicks -> {
+      SetUserRequest.of(
+          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+              DataProvider.getContext()).getAptoideClientUUID(),
+          "PUBLIC").execute(answer -> {
+        finish();
+      });
       finish();
     }));
     mSubscriptions.add(RxView.clicks(mMoreInfoButton).subscribe(clicks -> {
