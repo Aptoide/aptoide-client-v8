@@ -20,6 +20,7 @@ import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import com.jakewharton.rxbinding.view.RxView;
+import java.util.ArrayList;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -151,19 +152,34 @@ public class CreateUserActivity extends PermissionsBaseActivity implements Aptoi
 
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+      FileUtils fileUtils = new FileUtils();
     if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
       Uri avatarUrl = getPhotoFileUri(PermissionsBaseActivity.createAvatarPhotoName(photoAvatar));
       ImageLoader.loadWithCircleTransform(avatarUrl, mAvatar);
       avatarPath = avatarUrl.toString();
-    } else if (requestCode == REQUEST_CAMERA_CODE && resultCode == RESULT_OK) {
+    } else if (requestCode == GALLERY_CODE && resultCode == RESULT_OK) {
         Uri avatarUrl = data.getData();
-        ImageLoader.loadWithCircleTransform(avatarUrl, mAvatar);
-        FileUtils fileUtils = new FileUtils();
         avatarPath = fileUtils.getPath(avatarUrl, getApplicationContext());
+        if (checkImageResolution(avatarPath)) {
+          ImageLoader.loadWithCircleTransform(avatarUrl, mAvatar);
+        } else {
+          ShowMessage.asSnack(this, R.string.create_user_bad_photo);
+          avatarPath = "";
+        }
     } else if (requestCode == CREATE_STORE_REQUEST_CODE) {
       //TODO: Coming from store
       finish();
     }
+  }
+
+  private boolean checkImageResolution(String avatarPath) {
+    ArrayList<Integer> resolution;
+    FileUtils fileUtils = new FileUtils();
+    resolution = fileUtils.getImageResolution(avatarPath);
+    if (resolution.get(0) > 300 && resolution.get(1) > 300) {
+      return true;
+    }
+    return false;
   }
 
   @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,

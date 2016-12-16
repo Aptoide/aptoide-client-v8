@@ -18,9 +18,6 @@ import com.jakewharton.rxbinding.view.RxView;
 import java.io.File;
 import rx.subscriptions.CompositeSubscription;
 
-import static cm.aptoide.accountmanager.CreateUserActivity.REQUEST_CAMERA_CODE;
-import static cm.aptoide.accountmanager.CreateUserActivity.REQUEST_IMAGE_CAPTURE;
-
 /**
  * Created by pedroribeiro on 02/12/16.
  */
@@ -31,7 +28,7 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
   protected static final int STORAGE_REQUEST_CODE = 123;
   protected static final int CAMERA_REQUEST_CODE = 124;
   protected static final int USER_PROFILE_CODE = 125;
-  static final int REQUEST_CAMERA_CODE = 1046;
+  static final int GALLERY_CODE = 1046;
   static final int REQUEST_IMAGE_CAPTURE = 1;
 
   private static final String TYPE_STORAGE = "storage";
@@ -69,7 +66,7 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
 
   public static String checkAndAskPermission(final AppCompatActivity activity, String type) {
 
-    if(Build.VERSION.SDK_INT>=android.os.Build.VERSION_CODES.M) {
+    if (Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
       /*if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && type.equals(TYPE_STORAGE)) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
           mSubscriptions.add(GenericDialogs.createGenericContinueCancelMessage(context, "",
@@ -103,7 +100,8 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
             != PackageManager.PERMISSION_GRANTED) {
 
           // Should we show an explanation?
-          if (ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+          if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
+              Manifest.permission.READ_EXTERNAL_STORAGE)) {
 
             ActivityCompat.requestPermissions(activity,
                 new String[] { Manifest.permission.READ_EXTERNAL_STORAGE }, STORAGE_REQUEST_CODE);
@@ -130,11 +128,12 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
             != PackageManager.PERMISSION_GRANTED) {
 
           // Should we show an explanation?
-          if (ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.CAMERA)) {
+          if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
+              Manifest.permission.CAMERA)) {
 
-            ActivityCompat.requestPermissions(activity,
-                new String[] { Manifest.permission.CAMERA,
-                    Manifest.permission.READ_EXTERNAL_STORAGE }, CAMERA_REQUEST_CODE);
+            ActivityCompat.requestPermissions(activity, new String[] {
+                Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE
+            }, CAMERA_REQUEST_CODE);
             // Show an explanation to the user *asynchronously* -- don't block
             // this thread waiting for the user's response! After the user
             // sees the explanation, try again to request the permission.
@@ -143,9 +142,9 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
 
             // No explanation needed, we can request the permission.
 
-            ActivityCompat.requestPermissions(activity,
-                new String[] { Manifest.permission.CAMERA,
-                    Manifest.permission.READ_EXTERNAL_STORAGE  }, CAMERA_REQUEST_CODE);
+            ActivityCompat.requestPermissions(activity, new String[] {
+                Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE
+            }, CAMERA_REQUEST_CODE);
 
             // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
             // app-defined int constant. The callback method gets the
@@ -156,24 +155,20 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
         }
       }
     } else {
-     if (type.equals(TYPE_CAMERA)) {
-       return CAMERA_PERMISSION_GIVEN;
-     } else if (type.equals(TYPE_STORAGE)) {
-       return STORAGE_PERMISSION_GIVEN;
-     }
+      if (type.equals(TYPE_CAMERA)) {
+        return CAMERA_PERMISSION_GIVEN;
+      } else if (type.equals(TYPE_STORAGE)) {
+        return STORAGE_PERMISSION_GIVEN;
+      }
     }
     return "";
   }
-
 
   protected static String createAvatarPhotoName(String avatar) {
     //SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-mm-yyyy");
     String output = avatar /*+ simpleDateFormat.toString()*/;
     return output;
   }
-
-
-
 
   public void chooseAvatarSource() {
     final Dialog dialog = new Dialog(this);
@@ -186,14 +181,14 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
       callPermissionAndAction(TYPE_STORAGE);
       dialog.dismiss();
     }));
-    mSubscriptions.add(RxView.clicks(dialog.findViewById(R.id.cancel))
-        .subscribe(click -> dialog.dismiss())
-    );
+    mSubscriptions.add(
+        RxView.clicks(dialog.findViewById(R.id.cancel)).subscribe(click -> dialog.dismiss()));
     dialog.show();
   }
 
   public void callPermissionAndAction(String type) {
-    String result = PermissionsBaseActivity.checkAndAskPermission(PermissionsBaseActivity.this, type);
+    String result =
+        PermissionsBaseActivity.checkAndAskPermission(PermissionsBaseActivity.this, type);
     switch (result) {
       case PermissionsBaseActivity.CAMERA_PERMISSION_GIVEN:
         changePermissionValue(true);
@@ -214,18 +209,18 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
     if (result) {
       Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
       if (intent.resolveActivity(getPackageManager()) != null) {
-        startActivityForResult(intent, REQUEST_CAMERA_CODE);
+        startActivityForResult(intent, GALLERY_CODE);
       }
     }
   }
-
 
   public void dispatchTakePictureIntent(Context context) {
     if (result) {
       setFileName();
       Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
       if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, getPhotoFileUri(PermissionsBaseActivity.createAvatarPhotoName(photoAvatar)));
+        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+            getPhotoFileUri(PermissionsBaseActivity.createAvatarPhotoName(photoAvatar)));
         startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
       }
     }
@@ -240,12 +235,12 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
   }
 
   public Uri getPhotoFileUri(String fileName) {
-    File storageDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), ".aptoide/user_avatar");
+    File storageDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath(),
+        ".aptoide/user_avatar");
     if (!storageDir.exists() && !storageDir.mkdirs()) {
       Logger.d(TAG, "Failed to create directory");
     }
     avatar = storageDir;
     return Uri.fromFile(new File(storageDir.getPath() + File.separator + fileName));
   }
-
 }
