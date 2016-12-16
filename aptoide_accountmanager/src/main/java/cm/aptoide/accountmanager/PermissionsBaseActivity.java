@@ -18,9 +18,6 @@ import com.jakewharton.rxbinding.view.RxView;
 import java.io.File;
 import rx.subscriptions.CompositeSubscription;
 
-import static cm.aptoide.accountmanager.CreateUserActivity.REQUEST_CAMERA_CODE;
-import static cm.aptoide.accountmanager.CreateUserActivity.REQUEST_IMAGE_CAPTURE;
-
 /**
  * Created by pedroribeiro on 02/12/16.
  */
@@ -30,7 +27,7 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
   protected static final int CREATE_STORE_REQUEST_CODE = 1;
   protected static final int STORAGE_REQUEST_CODE = 123;
   protected static final int CAMERA_REQUEST_CODE = 124;
-  static final int REQUEST_CAMERA_CODE = 1046;
+  static final int GALLERY_CODE = 1046;
   static final int REQUEST_IMAGE_CAPTURE = 1;
 
   private static final String TYPE_STORAGE = "storage";
@@ -213,7 +210,7 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
     if (result) {
       Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
       if (intent.resolveActivity(getPackageManager()) != null) {
-        startActivityForResult(intent, REQUEST_CAMERA_CODE);
+        startActivityForResult(intent, GALLERY_CODE);
       }
     }
   }

@@ -8,6 +8,7 @@ package cm.aptoide.pt.utils;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -19,6 +20,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -245,5 +248,13 @@ public class FileUtils {
     cursor.moveToFirst();
 
     return cursor.getString(column_index);
+  }
+
+  public ArrayList<Integer> getImageResolution(String imagePath) {
+    ArrayList<Integer> resolution = new ArrayList<>();
+    Bitmap image = BitmapFactory.decodeFile(imagePath);
+    resolution.add(image.getHeight());
+    resolution.add(image.getWidth());
+    return resolution;
   }
 }
