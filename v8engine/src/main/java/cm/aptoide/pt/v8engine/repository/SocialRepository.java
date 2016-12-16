@@ -1,5 +1,7 @@
 package cm.aptoide.pt.v8engine.repository;
 
+import android.app.Activity;
+import android.content.Context;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
@@ -9,6 +11,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.ShareInstallCardRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewInstallDisplayable;
 import rx.schedulers.Schedulers;
 
@@ -20,14 +23,14 @@ public class SocialRepository {
 
   }
 
-  public void share(TimelineCard timelineCard) {
+  public void share(TimelineCard timelineCard, Context context) {
     String accessToken = AptoideAccountManager.getAccessToken();
     String aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext()).getAptoideClientUUID();
     ShareCardRequest.of(timelineCard, accessToken, aptoideClientUUID)
         .observe()
         .subscribe(baseV7Response -> {
-          Logger.d(this.getClass().getSimpleName(), baseV7Response.toString());
+          ShowMessage.asSnack((Activity) context, "The share will be published soon");
         }, throwable -> throwable.printStackTrace());
   }
 

@@ -64,7 +64,7 @@ import lombok.Getter;
   }
 
   @Override public void share(Context context) {
-    socialRepository.share(storeLatestApps);
+    socialRepository.share(storeLatestApps, null);
   }
 
   @Override public void like(Context context, String cardType, int rating) {

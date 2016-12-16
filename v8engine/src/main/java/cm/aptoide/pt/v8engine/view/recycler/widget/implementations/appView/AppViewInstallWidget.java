@@ -35,6 +35,7 @@ import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Malware;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.SimpleSubscriber;
@@ -56,6 +57,8 @@ import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewInstallDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import rx.Observable;
+import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -336,17 +339,59 @@ import rx.android.schedulers.AndroidSchedulers;
           .first()
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(progress -> {
-            if (AptoideAccountManager.isLoggedIn()) {
-
+            if (AptoideAccountManager.isLoggedIn() && ManagerPreferences.getShowPreview()) {
+              //SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(displayable);
+              //AlertDialog.Builder alertDialog = sharePreviewDialog.showPreviewDialog(context)
+              //    .setPositiveButton(R.string.share, (dialogInterface, i) -> {
+              //      SocialRepository socialRepository = new SocialRepository();
+              //      socialRepository.share(displayable);
+              //    })
+              //    .setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
+              //    });
+              //alertDialog.show();
               SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(displayable);
-              AlertDialog.Builder alertDialog = sharePreviewDialog.showPreviewDialog(context)
-                  .setPositiveButton(R.string.share, (dialogInterface, i) -> {
-                    SocialRepository socialRepository = new SocialRepository();
+              AlertDialog.Builder alertDialog = sharePreviewDialog.showPreviewDialog(getContext());
+              SocialRepository socialRepository = new SocialRepository();
+
+              Observable.create((Subscriber<? super GenericDialogs.EResponse> subscriber) -> {
+                if (!ManagerPreferences.getUserPrivacyConfirmation()) {
+                  alertDialog.setPositiveButton(R.string.share, (dialogInterface, i) -> {
                     socialRepository.share(displayable);
-                  })
-                  .setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
+                    subscriber.onNext(GenericDialogs.EResponse.YES);
+                    subscriber.onCompleted();
+                  }).setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
+                    subscriber.onNext(GenericDialogs.EResponse.NO);
+                    subscriber.onCompleted();
                   });
-              alertDialog.show();
+                } else {
+                  alertDialog.setPositiveButton(R.string.continue_option, (dialogInterface, i) -> {
+                    socialRepository.share(displayable);
+                    subscriber.onNext(GenericDialogs.EResponse.YES);
+                    subscriber.onCompleted();
+                  }).setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
+                    subscriber.onNext(GenericDialogs.EResponse.NO);
+                    subscriber.onCompleted();
+                  }).setNeutralButton(R.string.dont_show_again, (dialogInterface, i) -> {
+                    subscriber.onNext(GenericDialogs.EResponse.CANCEL);
+                    subscriber.onCompleted();
+                    ManagerPreferences.setShowPreview(false);
+                  });
+                }
+
+                alertDialog.show();
+              }).subscribeOn(AndroidSchedulers.mainThread()).subscribe(eResponse -> {
+                switch (eResponse) {
+                  case YES:
+                    GenericDialogs.createGenericContinueMessage(getContext(), "",
+                        getContext().getResources()
+                            .getString(R.string.social_timeline_share_dialog_title)).subscribe();
+                    break;
+                  case NO:
+                    break;
+                  case CANCEL:
+                    break;
+                }
+              });
             }
             ShowMessage.asSnack(v, installOrUpgradeMsg);
           }, err -> {

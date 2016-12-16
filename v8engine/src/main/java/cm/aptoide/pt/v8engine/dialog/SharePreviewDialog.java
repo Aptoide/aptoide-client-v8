@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -73,20 +74,22 @@ public class SharePreviewDialog {
 
       alertadd.setView(view).setCancelable(false);
 
-      privacyText.setOnClickListener(click -> checkBox.toggle());
-
       alertadd.setTitle(R.string.social_timeline_you_will_share);
-      checkBox.setClickable(true);
-      checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-        if (isChecked) {
-          userAvatar.setVisibility(View.GONE);
-          subtitle.setVisibility(View.GONE);
-        } else {
-          userAvatar.setVisibility(View.VISIBLE);
-          subtitle.setVisibility(View.VISIBLE);
-        }
-      });
-      socialTerms.setVisibility(View.VISIBLE);
+
+      if (!ManagerPreferences.getUserPrivacyConfirmation()) {
+        privacyText.setOnClickListener(click -> checkBox.toggle());
+        checkBox.setClickable(true);
+        checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+          if (isChecked) {
+            userAvatar.setVisibility(View.GONE);
+            subtitle.setVisibility(View.GONE);
+          } else {
+            userAvatar.setVisibility(View.VISIBLE);
+            subtitle.setVisibility(View.VISIBLE);
+          }
+          socialTerms.setVisibility(View.VISIBLE);
+        });
+      }
     } else if (displayable instanceof VideoDisplayable) {
       LayoutInflater factory = LayoutInflater.from(context);
       final View view =
@@ -250,20 +253,23 @@ public class SharePreviewDialog {
           userAvatar);
       alertadd.setView(view).setCancelable(false);
 
-      privacyText.setOnClickListener(click -> checkBox.toggle());
-
       alertadd.setTitle(R.string.social_timeline_you_will_share);
-      checkBox.setClickable(true);
-      checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-        if (isChecked) {
-          userAvatar.setVisibility(View.GONE);
-          subtitle.setVisibility(View.GONE);
-        } else {
-          userAvatar.setVisibility(View.VISIBLE);
-          subtitle.setVisibility(View.VISIBLE);
-        }
-      });
+
       socialTerms.setVisibility(View.VISIBLE);
+      if (!ManagerPreferences.getUserPrivacyConfirmation()) {
+        privacyText.setOnClickListener(click -> checkBox.toggle());
+        checkBox.setClickable(true);
+        checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+          if (isChecked) {
+            userAvatar.setVisibility(View.GONE);
+            subtitle.setVisibility(View.GONE);
+          } else {
+            userAvatar.setVisibility(View.VISIBLE);
+            subtitle.setVisibility(View.VISIBLE);
+          }
+          socialTerms.setVisibility(View.VISIBLE);
+        });
+      }
     }
     return alertadd;
   }

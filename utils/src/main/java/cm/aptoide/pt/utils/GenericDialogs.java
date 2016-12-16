@@ -9,7 +9,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
 import cm.aptoide.pt.dialog.AndroidBasicDialog;
 import rx.Observable;
 import rx.Subscriber;
@@ -71,7 +70,7 @@ public class GenericDialogs {
         subscriber.onCompleted();
       });
       // cleaning up
-      subscriber.add(Subscriptions.create(()->dialog.dismiss()));
+      subscriber.add(Subscriptions.create(() -> dialog.dismiss()));
       dialog.show();
     }).subscribeOn(AndroidSchedulers.mainThread());
   }
@@ -117,38 +116,15 @@ public class GenericDialogs {
         subscriber.onCompleted();
       });
       // cleaning up
-      subscriber.add(Subscriptions.create(()->dialog.dismiss()));
+      subscriber.add(Subscriptions.create(() -> dialog.dismiss()));
       dialog.show();
     });
-  }
-
-  public static Observable<EResponse> createGenericShareCancelMessage(@NonNull Context context,
-      @Nullable String title, @Nullable String message) {
-    return Observable.create((Subscriber<? super EResponse> subscriber) -> {
-
-      final AndroidBasicDialog dialog = AndroidBasicDialog.build(context);
-      dialog.setTitle(title).setMessage(message).setPositiveButton("Share", v -> {
-        dialog.dismiss();
-        subscriber.onNext(EResponse.YES);
-        subscriber.onCompleted();
-      }).setNegativeButton("Cancel", v -> {
-        dialog.dismiss();
-        subscriber.onNext(EResponse.NO);
-        subscriber.onCompleted();
-      }).setOnCancelListener(() -> {
-        subscriber.onNext(EResponse.CANCEL);
-        subscriber.onCompleted();
-      });
-      // cleaning up
-      subscriber.add(Subscriptions.create(()->dialog.dismiss()));
-      dialog.show();
-    }).subscribeOn(AndroidSchedulers.mainThread());
   }
 
   public static Observable<EResponse> createGenericContinueCancelMessage(Context context,
       String title, String message) {
     return Observable.create((Subscriber<? super EResponse> subscriber) -> {
-			/*
+      /*
 			final AlertDialog ad = new AlertDialog.Builder(context).setTitle(title)
 					.setMessage(message)
 					.setPositiveButton(android.R.string.ok, (dialog, which) -> {
@@ -176,7 +152,21 @@ public class GenericDialogs {
         subscriber.onCompleted();
       });
       // cleaning up
-      subscriber.add(Subscriptions.create(()->dialog.dismiss()));
+      subscriber.add(Subscriptions.create(() -> dialog.dismiss()));
+      dialog.show();
+    });
+  }
+
+  public static Observable<EResponse> createGenericContinueMessage(Context context, String title,
+      String message) {
+    return Observable.create((Subscriber<? super EResponse> subscriber) -> {
+      final AndroidBasicDialog dialog = AndroidBasicDialog.build(context);
+      dialog.setTitle(title).setMessage(message).setPositiveButton(R.string.continue_option, v -> {
+        subscriber.onNext(EResponse.YES);
+        subscriber.onCompleted();
+        dialog.dismiss();
+      });
+      subscriber.add(Subscriptions.create(() -> dialog.dismiss()));
       dialog.show();
     });
   }

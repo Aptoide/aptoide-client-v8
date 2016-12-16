@@ -157,4 +157,18 @@ public class ManagerPreferences {
         .putBoolean(ManagedKeys.ALLOW_ROOT_INSTALATION, allowRootInstallation)
         .apply();
   }
+
+  public static boolean getUserPrivacyConfirmation() {
+    return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
+        .getBoolean(ManagedKeys.PRIVACY_CONFIRMATION, true);
+  }
+
+  public static boolean getShowPreview() {
+    return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
+        .getBoolean(ManagedKeys.SHOW_SHARE_PREVIEW, true);
+  }
+
+  public static void setShowPreview(boolean previewShower) {
+    Preferences.get().edit().putBoolean(ManagedKeys.SHOW_SHARE_PREVIEW, previewShower).apply();
+  }
 }
