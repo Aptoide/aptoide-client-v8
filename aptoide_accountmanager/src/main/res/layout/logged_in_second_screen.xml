@@ -22,102 +22,99 @@
 
 
   <LinearLayout
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_gravity="center_vertical|center_horizontal"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
       android:orientation="vertical"
       >
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="177dp"
-        android:layout_gravity="center_horizontal"
-        android:src="@drawable/icon_timeline"
-        />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="21dp"
-        android:textColor="@color/default_color"
-        android:textSize="19sp"
-        android:text="@string/create_profile_pub_pri"
-        />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="13dp"
-        android:textColor="@color/create_store_hint_color"
-        android:textSize="14sp"
-        android:textAlignment="center"
-        android:text="@string/create_profile_pub_pri_sub_text_1"
-        />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="13dp"
-        android:textColor="@color/create_store_hint_color"
-        android:textSize="14sp"
-        android:textAlignment="center"
-        android:text="@string/create_profile_pub_pri_sub_text_2"
-        />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="13dp"
-        android:textColor="@color/create_store_hint_color"
-        android:textSize="14sp"
-        android:textAlignment="center"
-        android:text="@string/create_profile_pub_pri_sub_text_3"
-        />
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="10dp"
         >
 
-      <LinearLayout
+      <ImageView
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_alignParentBottom="true"
-          android:layout_marginBottom="10dp"
-          android:orientation="horizontal"
-          >
+          android:layout_gravity="center_horizontal"
+          android:src="@drawable/icon_timeline"
+          />
 
-        <Button
-            android:id="@+id/logged_in_private_button"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:textSize="13sp"
-            android:textColor="@color/default_color"
-            android:text="@string/more_info"
-            />
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_horizontal"
+          android:layout_marginTop="21dp"
+          android:text="@string/create_profile_pub_pri"
+          android:textColor="@color/default_color"
+          android:textSize="19sp"
+          />
 
-        <Button
-            android:id="@+id/logged_in_continue"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="23dp"
-            android:background="@color/default_color"
-            android:textSize="13sp"
-            android:textColor="@color/white"
-            android:text="@string/continue_option"
-            />
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_horizontal"
+          android:layout_marginTop="13dp"
+          android:text="@string/create_profile_pub_pri_sub_text_1"
+          android:textAlignment="center"
+          android:textColor="@color/create_store_hint_color"
+          android:textSize="14sp"
+          />
 
-      </LinearLayout>
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_horizontal"
+          android:layout_marginTop="13dp"
+          android:text="@string/create_profile_pub_pri_sub_text_2"
+          android:textAlignment="center"
+          android:textColor="@color/create_store_hint_color"
+          android:textSize="14sp"
+          />
 
-    </RelativeLayout>
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_horizontal"
+          android:layout_marginTop="13dp"
+          android:text="@string/create_profile_pub_pri_sub_text_3"
+          android:textAlignment="center"
+          android:textColor="@color/create_store_hint_color"
+          android:textSize="14sp"
+          />
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="66dp"
+        android:gravity="top|center_horizontal"
+        android:orientation="horizontal"
+        >
+
+      <Button
+          android:id="@+id/logged_in_private_button"
+          android:layout_width="wrap_content"
+          android:layout_height="46dp"
+          android:background="@color/white"
+          android:text="@string/create_profile_pub_pri_make_priv"
+          android:textColor="@color/default_color"
+          style="?attr/customButton"
+          />
+
+      <Button
+          android:id="@+id/logged_in_continue"
+          android:layout_width="wrap_content"
+          android:layout_height="46dp"
+          android:layout_marginLeft="23dp"
+          android:background="@color/default_color"
+          android:text="@string/continue_option"
+          android:textColor="@color/white"
+          style="?attr/customButton"
+          />
+
+    </LinearLayout>
   </LinearLayout>
-
 </LinearLayout>
