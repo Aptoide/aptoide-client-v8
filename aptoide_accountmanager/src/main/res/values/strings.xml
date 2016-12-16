@@ -107,7 +107,6 @@
   <string name="create_store_create">Create Store</string>
   <string name="create_store_skip">Skip</string>
   <string name="create_store_choose_image">Choose an image for your store</string>
-  <string name="create_store_store_created">Store Created</string>
 
   <string name="upload_dialog_title">Upload Photo</string>
   <string name="upload_dialog_photo">Take new Photo</string>

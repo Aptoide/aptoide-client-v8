@@ -178,11 +178,14 @@ public class CreateStoreActivity extends PermissionsBaseActivity implements
         });
       }
     }));
-    mSubscriptions.add(RxView.clicks(mSkip).subscribe(click -> {
-      AptoideAccountManager.refreshAndSaveUserInfoData();
-      //TODO: Broadcast igual ao do signup
-      finish();
-    }));
+    mSubscriptions.add(RxView.clicks(mSkip)
+        .flatMap(click -> AptoideAccountManager.refreshAndSaveUserInfoData())
+        .subscribe(refreshed -> {
+          finish();
+    }, throwable -> {
+          //TODO: couldn't do getuserinfo
+          finish();
+        }));
   }
 
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -230,26 +233,34 @@ public class CreateStoreActivity extends PermissionsBaseActivity implements
       SetStoreRequest.of(new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
           DataProvider.getContext()).getAptoideClientUUID(), AptoideAccountManager.getAccessToken(),
           storeName, storeTheme, storeAvatarPath).execute(answer -> {
-            AptoideAccountManager.refreshAndSaveUserInfoData();
-            progressDialog.dismiss();
-            finish();
+            AptoideAccountManager.refreshAndSaveUserInfoData()
+                .subscribe(refreshed -> {
+                  progressDialog.dismiss();
+                  finish();
+                }, throwable -> throwable.printStackTrace());
       },throwable -> {
         onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
-        AptoideAccountManager.refreshAndSaveUserInfoData();
-        progressDialog.dismiss();
+        AptoideAccountManager.refreshAndSaveUserInfoData()
+            .subscribe(refreshed -> {
+              progressDialog.dismiss();
+            }, throwable1 -> throwable1.printStackTrace());
       });
     } else if (CREATE_STORE_REQUEST_CODE == 2 || CREATE_STORE_REQUEST_CODE == 3) {
       SimpleSetStoreRequest.of(AptoideAccountManager.getAccessToken(),
           new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
               DataProvider.getContext()).getAptoideClientUUID(),
           storeName, storeTheme).execute(answer -> {
-          AptoideAccountManager.refreshAndSaveUserInfoData();
-          progressDialog.dismiss();
-          finish();
+          AptoideAccountManager.refreshAndSaveUserInfoData()
+            .subscribe(refreshed -> {
+              progressDialog.dismiss();
+              finish();
+            }, Throwable::printStackTrace);
       }, throwable -> {
           onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
-          AptoideAccountManager.refreshAndSaveUserInfoData();
-          progressDialog.dismiss();
+          AptoideAccountManager.refreshAndSaveUserInfoData()
+            .subscribe(refreshed -> {
+              progressDialog.dismiss();
+            }, Throwable::printStackTrace);
       });
     }
   }
@@ -364,9 +375,9 @@ public class CreateStoreActivity extends PermissionsBaseActivity implements
     mSubscriptions.add(RxView.clicks(mLightblueShape).subscribe(click -> {
       if (!THEME_CLICKED_FLAG) {
         mLightblueTick.setVisibility(View.VISIBLE);
-        storeTheme = "lightblue";
+        storeTheme = "light-blue";
         THEME_CLICKED_FLAG = true;
-      } else if (THEME_CLICKED_FLAG && checkThemeClicked("lightblue")) {
+      } else if (THEME_CLICKED_FLAG && checkThemeClicked("light-blue")) {
         mLightblueTick.setVisibility(View.INVISIBLE);
         THEME_CLICKED_FLAG = false;
       }
