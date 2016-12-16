@@ -5,6 +5,7 @@ import cm.aptoide.pt.model.v7.TimelineStats;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.fragment.implementations.TimeLineFollowFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 
@@ -42,7 +43,16 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
   }
 
   public Void followersClick(FragmentShower fragmentShower) {
-    fragmentShower.pushFragmentV4(V8Engine.getFragmentProvider().newTimeLineFollowStatsFragment());
+    fragmentShower.pushFragmentV4(V8Engine.getFragmentProvider()
+        .newTimeLineFollowStatsFragment(TimeLineFollowFragment.FollowFragmentOpenMode.FOLLOWERS,
+            getPojo().getData().getFollowers()));
+    return null;
+  }
+
+  public Void followingClick(FragmentShower fragmentShower) {
+    fragmentShower.pushFragmentV4(V8Engine.getFragmentProvider()
+        .newTimeLineFollowStatsFragment(TimeLineFollowFragment.FollowFragmentOpenMode.FOLLOWING,
+            getPojo().getData().getFollowing()));
     return null;
   }
 }

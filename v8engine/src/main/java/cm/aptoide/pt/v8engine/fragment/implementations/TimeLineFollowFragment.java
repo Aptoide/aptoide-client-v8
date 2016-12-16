@@ -11,8 +11,11 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.GetFollowersRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.GetFollowingRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.GetFollowers;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeWithToolbarFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -27,7 +30,9 @@ import rx.functions.Action1;
 
 public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment {
 
+  public static final String OPEN_MODE = "OPEN_MODE";
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
+  private TimeLineFollowFragment.FollowFragmentOpenMode openMode;
 
   @Override public void setupToolbar() {
     super.setupToolbar();
@@ -40,9 +45,21 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
     if (create || refresh) {
-      GetFollowersRequest request = GetFollowersRequest.of(AptoideAccountManager.getAccessToken(),
-          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-              DataProvider.getContext()).getAptoideClientUUID());
+
+      V7 request;
+      switch (openMode) {
+        case FOLLOWERS:
+          request = GetFollowersRequest.of(AptoideAccountManager.getAccessToken(),
+              new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+                  DataProvider.getContext()).getAptoideClientUUID());
+          break;
+        default:
+        case FOLLOWING:
+          request = GetFollowingRequest.of(AptoideAccountManager.getAccessToken(),
+              new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+                  DataProvider.getContext()).getAptoideClientUUID());
+          break;
+      }
 
       Action1<GetFollowers> action = (followersList) -> {
         LinkedList<Displayable> dispList = new LinkedList<>();
@@ -82,11 +99,31 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
     setHasOptionsMenu(true);
   }
 
-  public static TimeLineFollowFragment newInstance() {
+  @Override public void loadExtras(Bundle args) {
+    super.loadExtras(args);
+    openMode = (FollowFragmentOpenMode) args.get(OPEN_MODE);
+  }
+
+  public static TimeLineFollowFragment newInstance(FollowFragmentOpenMode openMode,
+      long followNumber) {
     Bundle args = new Bundle();
-    args.putString(TITLE_KEY, "teste");
+    switch (openMode) {
+      case FOLLOWERS:
+        args.putString(TITLE_KEY, AptoideUtils.StringU.getFormattedString(
+            R.string.social_timeline_followers_fragment_title, followNumber));
+        break;
+      case FOLLOWING:
+        args.putString(TITLE_KEY, AptoideUtils.StringU.getFormattedString(
+            R.string.social_timeline_following_fragment_title, followNumber));
+        break;
+    }
+    args.putSerializable(OPEN_MODE, openMode);
     TimeLineFollowFragment fragment = new TimeLineFollowFragment();
     fragment.setArguments(args);
     return fragment;
+  }
+
+  public enum FollowFragmentOpenMode {
+    FOLLOWERS, FOLLOWING,
   }
 }

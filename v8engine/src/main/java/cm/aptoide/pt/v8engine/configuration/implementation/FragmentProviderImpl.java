@@ -210,7 +210,8 @@ public class FragmentProviderImpl implements FragmentProvider {
     return CreateUserFragment.newInstance();
   }
 
-  @Override public Fragment newTimeLineFollowStatsFragment() {
-    return TimeLineFollowFragment.newInstance();
+  @Override public Fragment newTimeLineFollowStatsFragment(
+      TimeLineFollowFragment.FollowFragmentOpenMode openMode, long followNumber) {
+    return TimeLineFollowFragment.newInstance(openMode, followNumber);
   }
 }

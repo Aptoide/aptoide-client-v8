@@ -30,5 +30,7 @@ public class TimeLineStatsWidget extends Widget<TimeLineStatsDisplayable> {
     following.setText(displayable.getFollowingText(getContext()));
     compositeSubscription.add(RxView.clicks(followers)
         .subscribe(click -> displayable.followersClick(((FragmentShower) getContext()))));
+    compositeSubscription.add(RxView.clicks(following)
+        .subscribe(click -> displayable.followingClick(((FragmentShower) getContext()))));
   }
 }

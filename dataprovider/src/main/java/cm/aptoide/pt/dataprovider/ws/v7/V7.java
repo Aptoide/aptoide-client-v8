@@ -277,20 +277,24 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
         @Path(value = "rating") String rating,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("/api/7/my/store/getMeta") Observable<GetStoreMeta> getMyStoreMeta(@Body BaseBody body,
+    @POST("my/store/getMeta") Observable<GetStoreMeta> getMyStoreMeta(@Body BaseBody body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("/api/7/{url}") Observable<ListStores> getMyStoreList(
+    @POST("{url}") Observable<ListStores> getMyStoreList(
         @Path(value = "url", encoded = true) String path, @Body BaseBody body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @Multipart @POST("store/set") Observable<BaseV7Response> editStore(
         @Part MultipartBody.Part store_avatar, @PartMap HashMapNotNull<String, RequestBody> body);
 
-    @POST("/api/7/user/getTimelineStats") Observable<TimelineStats> getTimelineStats(
+    @POST("user/getTimelineStats") Observable<TimelineStats> getTimelineStats(
         @Body BaseBody body, @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("/api/7/user/getFollowers") Observable<GetFollowers> getTimelineFollowers(
+    @POST("user/getFollowers") Observable<GetFollowers> getTimelineFollowers(
+        @Body GetFollowersRequest.Body body,
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("user/getFollowing") Observable<GetFollowers> getTimelineGetFollowing(
         @Body GetFollowersRequest.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
