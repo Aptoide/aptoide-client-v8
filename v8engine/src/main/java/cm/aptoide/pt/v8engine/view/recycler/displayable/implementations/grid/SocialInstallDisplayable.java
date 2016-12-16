@@ -10,6 +10,7 @@ import cm.aptoide.pt.model.v7.timeline.SocialInstall;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.repository.SocialRepository;
 import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -21,6 +22,7 @@ import lombok.Getter;
  */
 @AllArgsConstructor public class SocialInstallDisplayable extends CardDisplayable {
 
+  private SocialInstall socialInstall;
   @Getter private int avatarResource;
   @Getter private Store store;
   @Getter private int titleResource;
@@ -33,15 +35,16 @@ import lombok.Getter;
   @Getter private long numberOfLikes;
   @Getter private long numberOfComments;
 
-
   private TimelineMetricsManager timelineMetricsManager;
   private SpannableFactory spannableFactory;
+  private SocialRepository socialRepository;
 
   public SocialInstallDisplayable() {
   }
 
   public static Displayable from(SocialInstall socialInstall,
-      TimelineMetricsManager timelineMetricsManager, SpannableFactory spannableFactory) {
+      TimelineMetricsManager timelineMetricsManager, SpannableFactory spannableFactory,
+      SocialRepository socialRepository) {
 
     //for (App similarApp : socialInstall.getSimilarApps()) {
     //  similarAppsNames.add(similarApp.getName());
@@ -56,13 +59,13 @@ import lombok.Getter;
       abTestingURL = socialInstall.getAb().getConversion().getUrl();
     }
 
-    return new SocialInstallDisplayable(Application.getConfiguration().getIcon(),
+    return new SocialInstallDisplayable(socialInstall, Application.getConfiguration().getIcon(),
         socialInstall.getStore(),
         R.string.displayable_social_timeline_recommendation_atptoide_team_recommends,
         socialInstall.getUser(), socialInstall.getApp().getId(),
         socialInstall.getApp().getPackageName(), socialInstall.getApp().getName(),
-        socialInstall.getApp().getIcon(), abTestingURL,socialInstall.getLikes(),
-        socialInstall.getComments(), timelineMetricsManager, spannableFactory);
+        socialInstall.getApp().getIcon(), abTestingURL, socialInstall.getLikes(),
+        socialInstall.getComments(), timelineMetricsManager, spannableFactory, socialRepository);
   }
 
   public String getTitle() {
@@ -123,6 +126,6 @@ import lombok.Getter;
   }
 
   @Override public void like(Context context, String cardType, int rating) {
-
+    socialRepository.like(socialInstall, cardType, "", rating);
   }
 }
