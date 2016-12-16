@@ -8,20 +8,24 @@ package cm.aptoide.pt.v8engine.repository;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.PaymentAuthorizationAccessor;
 import cm.aptoide.pt.dataprovider.ws.v3.CreatePurchaseAuthorizationRequest;
-import cm.aptoide.pt.dataprovider.ws.v3.GetProductPurchaseAuthorizationRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
-import cm.aptoide.pt.model.v3.PurchaseAuthorizationResponse;
 import cm.aptoide.pt.v8engine.payment.PaymentAuthorization;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
-import java.util.List;
+import cm.aptoide.pt.v8engine.repository.sync.SyncAdapterBackgroundSync;
 import rx.Observable;
 
 public class PaymentAuthorizationRepository implements Repository {
   private final PaymentAuthorizationAccessor authotizationAccessor;
+  private final SyncAdapterBackgroundSync backgroundSync;
+  private final PaymentAuthorizationConverter paymentAuthorizationConverter;
 
-  public PaymentAuthorizationRepository(PaymentAuthorizationAccessor authotizationAccessor) {
+  public PaymentAuthorizationRepository(PaymentAuthorizationAccessor authotizationAccessor,
+      SyncAdapterBackgroundSync backgroundSync,
+      PaymentAuthorizationConverter paymentAuthorizationConverter) {
     this.authotizationAccessor = authotizationAccessor;
+    this.backgroundSync = backgroundSync;
+    this.paymentAuthorizationConverter = paymentAuthorizationConverter;
   }
 
   public Observable<PaymentAuthorization> createPaymentAuthorization(int paymentId) {
@@ -34,26 +38,15 @@ public class PaymentAuthorizationRepository implements Repository {
           return Observable.error(
               new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
         })
-        .flatMap(response -> savePaymentAuthorizationInDatabase(paymentId, response))
+        .map(response -> paymentAuthorizationConverter.convertToPaymentAuthorization(paymentId,
+            response))
+        .doOnNext(
+            paymentAuthorization -> syncPaymentAuthorizationInBackground(paymentAuthorization))
         .flatMap(saved -> getDatabasePaymentAuthorization(paymentId));
   }
 
   public Observable<PaymentAuthorization> getPaymentAuthorization(int paymentId) {
-    return syncServerDatabaseAuthorization(paymentId).flatMap(
-        synced -> getDatabasePaymentAuthorization(paymentId));
-  }
-
-  public Observable<List<PaymentAuthorization>> getPaymentAuthorizations() {
-    return authotizationAccessor.getPaymentAuthorizations()
-        .first()
-        .flatMapIterable(paymentAuthorizations -> paymentAuthorizations)
-        .flatMap(paymentAuthorization -> syncServerDatabaseAuthorization(
-            paymentAuthorization.getPaymentId()))
-        .toList()
-        .flatMap(synced -> authotizationAccessor.getPaymentAuthorizations()
-            .flatMap(paymentAuthorizations -> Observable.from(paymentAuthorizations)
-                .map(paymentAuthorization -> convertToPaymentAuthorization(paymentAuthorization))
-                .toList()));
+    return getDatabasePaymentAuthorization(paymentId);
   }
 
   public Observable<Void> removePaymentAuthorization(int paymentId) {
@@ -67,37 +60,17 @@ public class PaymentAuthorizationRepository implements Repository {
     return authotizationAccessor.getPaymentAuthorization(paymentId)
         .flatMap(databaseAuthorization -> {
           if (databaseAuthorization != null) {
-            return Observable.just(convertToPaymentAuthorization(databaseAuthorization));
+            return Observable.just(
+                paymentAuthorizationConverter.convertToPaymentAuthorization(databaseAuthorization));
           }
           return Observable.error(new RepositoryItemNotFoundException(
               "No payment authorization found for payment id: " + paymentId));
         });
   }
 
-  private Observable<Void> syncServerDatabaseAuthorization(int paymentId) {
-    return GetProductPurchaseAuthorizationRequest.of(AptoideAccountManager.getAccessToken(),
-        paymentId).observe().flatMap(response -> {
-      if (response != null && response.isOk()) {
-        return savePaymentAuthorizationInDatabase(paymentId, response);
-      }
-      return removePaymentAuthorization(paymentId);
-    });
-  }
-
-  private Observable<Void> savePaymentAuthorizationInDatabase(int paymentId,
-      PurchaseAuthorizationResponse response) {
-    return Observable.fromCallable(() -> {
-      authotizationAccessor.save(
-          new cm.aptoide.pt.database.realm.PaymentAuthorization(paymentId, response.getUrl(),
-              response.getSuccessUrl(), response.getAuthorizationStatus()));
-      return null;
-    });
-  }
-
-  private PaymentAuthorization convertToPaymentAuthorization(
-      cm.aptoide.pt.database.realm.PaymentAuthorization paymentAuthorization) {
-    return new PaymentAuthorization(paymentAuthorization.getPaymentId(),
-        paymentAuthorization.getUrl(), paymentAuthorization.getRedirectUrl(),
-        PaymentAuthorization.Status.valueOf(paymentAuthorization.getStatus()));
+  private void syncPaymentAuthorizationInBackground(PaymentAuthorization paymentAuthorization) {
+    authotizationAccessor.save(
+        paymentAuthorizationConverter.convertToPaymentAuthorization(paymentAuthorization));
+    backgroundSync.syncAuthorization(paymentAuthorization.getPaymentId());
   }
 }

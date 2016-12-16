@@ -550,7 +550,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       storeTheme = getApp.getNodes().getMeta().getData().getStore().getAppearance().getTheme();
     }
 
-    // useful data for the schedule updates menu option
+    // useful data for the syncAuthorization updates menu option
     installAction().observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(appAction -> {

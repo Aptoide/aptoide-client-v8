@@ -21,6 +21,19 @@ public class CreatePaidAppProductPaymentRequest extends V3<ProductPaymentRespons
 
   public static CreatePaidAppProductPaymentRequest of(int productId, int paymentId,
       NetworkOperatorManager operatorManager, String store, String accessToken) {
+    return new CreatePaidAppProductPaymentRequest(BASE_HOST,
+        getBaseBody(productId, paymentId, operatorManager, store, accessToken));
+  }
+
+  public static CreatePaidAppProductPaymentRequest of(int productId, int paymentId,
+      NetworkOperatorManager operatorManager, String store, String accessToken, String paymentConfirmationId) {
+    final BaseBody args = getBaseBody(productId, paymentId, operatorManager, store, accessToken);
+    args.put("paykey", paymentConfirmationId);
+    return new CreatePaidAppProductPaymentRequest(BASE_HOST, args);
+  }
+
+  private static BaseBody getBaseBody(int productId, int paymentId,
+      NetworkOperatorManager operatorManager, String store, String accessToken) {
     BaseBody body = new BaseBody();
     body.put("productid", String.valueOf(productId));
     body.put("access_token", accessToken);
@@ -31,8 +44,7 @@ public class CreatePaidAppProductPaymentRequest extends V3<ProductPaymentRespons
     if (operatorManager.isSimStateReady()) {
       body.put("simcc", operatorManager.getSimCountryISO());
     }
-
-    return new CreatePaidAppProductPaymentRequest(BASE_HOST, body);
+    return body;
   }
 
   @Override protected Observable<ProductPaymentResponse> loadDataFromNetwork(Interfaces interfaces,

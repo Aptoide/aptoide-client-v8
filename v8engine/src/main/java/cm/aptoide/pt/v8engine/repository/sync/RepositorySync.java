@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 22/11/2016.
  */
 
-package cm.aptoide.pt.v8engine.sync;
+package cm.aptoide.pt.v8engine.repository.sync;
 
 import android.content.SyncResult;
 import java.io.IOException;
@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * Created by marcelobenites on 22/11/16.
  */
-public abstract class AbstractSync {
+public abstract class RepositorySync {
 
   public abstract void sync(SyncResult syncResult);
 

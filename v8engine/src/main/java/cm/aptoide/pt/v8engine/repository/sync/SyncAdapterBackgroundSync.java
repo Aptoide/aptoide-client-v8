@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 22/11/2016.
  */
 
-package cm.aptoide.pt.v8engine.sync;
+package cm.aptoide.pt.v8engine.repository.sync;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -11,26 +11,45 @@ import android.content.ContentResolver;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.preferences.AptoidePreferencesConfiguration;
-import cm.aptoide.pt.v8engine.payment.BackgroundSync;
-import java.io.SyncFailedException;
+import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
+import cm.aptoide.pt.v8engine.payment.product.AptoideProduct;
 
 /**
  * Created by marcelobenites on 22/11/16.
  */
 
-public class SyncAdapterBackgroundSync implements BackgroundSync {
+public class SyncAdapterBackgroundSync {
 
   private final AptoidePreferencesConfiguration configuration;
   private final AccountManager accountManager;
+  private final ProductBundleConverter productConverter;
 
   public SyncAdapterBackgroundSync(AptoidePreferencesConfiguration configuration,
-      AccountManager accountManager) {
+      AccountManager accountManager, ProductBundleConverter productConverter) {
     this.configuration = configuration;
     this.accountManager = accountManager;
+    this.productConverter = productConverter;
   }
 
-  @Override public void schedule() {
+  public void syncAuthorization(int paymentId) {
     final Bundle bundle = new Bundle();
+    bundle.putInt(AptoideSyncAdapter.EXTRA_PAYMENT_ID, paymentId);
+    schedule(bundle);
+  }
+
+  public void syncConfirmation(AptoideProduct product) {
+    schedule(productConverter.toBundle(product));
+  }
+
+  public void syncConfirmation(AptoideProduct product, PaymentConfirmation paymentConfirmation,
+      int paymentId) {
+    final Bundle bundle = productConverter.toBundle(product);
+    bundle.putString(AptoideSyncAdapter.EXTRA_PAYMENT_CONFIRMATION_ID, paymentConfirmation.getPaymentConfirmationId());
+    bundle.putInt(AptoideSyncAdapter.EXTRA_PAYMENT_ID, paymentId);
+    schedule(bundle);
+  }
+
+  private void schedule(Bundle bundle) {
     bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
     bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
     ContentResolver.requestSync(getAccount(), configuration.getSyncAdapterAuthority(), bundle);

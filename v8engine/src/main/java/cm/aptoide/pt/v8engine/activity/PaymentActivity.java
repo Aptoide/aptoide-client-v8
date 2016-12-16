@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.activity;
 
-import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,19 +18,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import cm.aptoide.pt.iab.ErrorCodeFactory;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.AptoidePay;
+import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.Purchase;
 import cm.aptoide.pt.v8engine.payment.PurchaseIntentFactory;
 import cm.aptoide.pt.v8engine.payment.product.AptoideProduct;
-import cm.aptoide.pt.v8engine.payment.product.InAppBillingProduct;
 import cm.aptoide.pt.v8engine.presenter.PaymentPresenter;
-import cm.aptoide.pt.v8engine.repository.InAppBillingProductRepository;
-import cm.aptoide.pt.v8engine.repository.ProductRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
-import cm.aptoide.pt.v8engine.sync.SyncAdapterBackgroundSync;
 import cm.aptoide.pt.v8engine.view.PaymentView;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.ArrayList;
@@ -84,9 +78,7 @@ public class PaymentActivity extends ActivityView implements PaymentView {
 
     final AptoideProduct product = getIntent().getParcelableExtra(PRODUCT_EXTRA);
     attachPresenter(new PaymentPresenter(this,
-        new AptoidePay(RepositoryFactory.getPaymentConfirmationRepository(this),
-            new SyncAdapterBackgroundSync(Application.getConfiguration(),
-                (AccountManager) getSystemService(Context.ACCOUNT_SERVICE)),
+        new AptoidePay(RepositoryFactory.getPaymentConfirmationRepository(this, product),
             RepositoryFactory.getProductRepository(this, product)), product), savedInstanceState);
   }
 

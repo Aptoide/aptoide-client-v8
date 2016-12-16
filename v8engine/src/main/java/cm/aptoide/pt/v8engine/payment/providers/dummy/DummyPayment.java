@@ -9,6 +9,7 @@ import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.payment.Price;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.providers.AbstractPayment;
+import cm.aptoide.pt.v8engine.repository.InAppPaymentConfirmationRepository;
 import cm.aptoide.pt.v8engine.repository.PaymentConfirmationRepository;
 import rx.Observable;
 
@@ -27,6 +28,6 @@ public class DummyPayment extends AbstractPayment {
   }
 
   @Override public Observable<PaymentConfirmation> process() {
-    return confirmationRepository.createPaymentConfirmation(this);
+    return confirmationRepository.createPaymentConfirmation(getId());
   }
 }

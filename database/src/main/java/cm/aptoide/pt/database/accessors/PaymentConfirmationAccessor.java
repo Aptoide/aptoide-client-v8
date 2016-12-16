@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.database.accessors;
 
-import cm.aptoide.pt.database.realm.PaymentAuthorization;
 import cm.aptoide.pt.database.realm.PaymentConfirmation;
 import java.util.List;
 import rx.Observable;
@@ -27,9 +26,9 @@ public class PaymentConfirmationAccessor extends SimpleAccessor<PaymentConfirmat
     return database.getAll(PaymentConfirmation.class);
   }
 
-  public void delete(String paymentConfirmationId) {
-    database.delete(PaymentConfirmation.class, PaymentConfirmation.PAYMENT_CONFIRMATION_ID,
-        paymentConfirmationId);
+  public void delete(int productId) {
+    database.delete(PaymentConfirmation.class, PaymentConfirmation.PRODUCT_ID,
+        productId);
   }
 
   public void save(PaymentConfirmation paymentConfirmation) {
