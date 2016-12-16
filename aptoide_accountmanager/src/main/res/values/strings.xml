@@ -121,6 +121,6 @@
   <string name="create_profile_pub_pri_sub_text_2">With Apps Timeline you can share app recommendations and articles with your followers, seeing what you share.</string>
   <string name="create_profile_pub_pri_sub_text_3">But you an shoose to make your profile private, and lose sharing features.</string>
   <string name="create_profile_pub_pri_make_priv">Make my profile private</string>
-
+  <string name="create_profile_logged_in_activity_title">Logged in</string>
 
 </resources>

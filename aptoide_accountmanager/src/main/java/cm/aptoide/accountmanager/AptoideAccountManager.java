@@ -451,6 +451,18 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
         AccountManagerPreferences.setUserNickName(checkUserCredentialsJson.getUsername());
       }
 
+      if(checkUserCredentialsJson.getRepoDescription() != null && !TextUtils.isEmpty(checkUserCredentialsJson.getRepoDescription().getTheme())) {
+        AccountManagerPreferences.setRepoTheme(checkUserCredentialsJson.getRepoDescription().getTheme());
+      }
+
+      if(!TextUtils.isEmpty(checkUserCredentialsJson.getAccess())) {
+        ManagerPreferences.setUserAccess(checkUserCredentialsJson.getAccess());
+      }
+
+      if(!checkUserCredentialsJson.getAccessConfirmed().toString().isEmpty()) {
+        ManagerPreferences.setUserAccessConfirmed(checkUserCredentialsJson.getAccessConfirmed());
+      }
+
       if (checkUserCredentialsJson.getSettings() != null) {
         AccountManagerPreferences.setMatureSwitch(
             checkUserCredentialsJson.getSettings().getMatureswitch().equals("active"));
@@ -927,7 +939,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 
   public interface ICreateProfile {
 
-    void onRegisterSuccess();
+    void onRegisterSuccess(ProgressDialog progressDialog);
 
     void onRegisterFail(@StringRes int reason);
 

@@ -49,6 +49,18 @@
         android:windowSoftInputMode="stateHidden"
         />
 
+    <activity
+        android:name=".LoggedInActivity"
+        android:screenOrientation="nosensor"
+        android:windowSoftInputMode="stateHidden"
+        />
+
+    <activity
+        android:name=".LoggedInActivity2ndStep"
+        android:screenOrientation="nosensor"
+        android:windowSoftInputMode="stateHidden"
+        />
+
   </application>
 
 </manifest>
