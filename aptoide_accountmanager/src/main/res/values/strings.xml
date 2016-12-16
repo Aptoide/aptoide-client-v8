@@ -111,6 +111,8 @@
   <string name="upload_dialog_title">Upload Photo</string>
   <string name="upload_dialog_photo">Take new Photo</string>
   <string name="upload_dialog_gallery">Select from gallery</string>
+  <string name="create_store_store_created">Store created</string>
+
 
   <!--Public/Private-->
   <string name="create_profile_pub_pri_suc_login">You\'re successfully logged in</string>
