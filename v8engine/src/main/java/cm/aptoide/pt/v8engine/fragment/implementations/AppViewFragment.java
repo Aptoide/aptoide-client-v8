@@ -163,6 +163,7 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
   private GetAppMeta.App app;
   private AppAction appAction = AppAction.OPEN;
   private InstalledRepository installedRepository;
+  private GetApp getApp;
 
   public AppViewFragment() {
     super(BaseAdapter.class);
@@ -453,49 +454,57 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    super.load(create, refresh, savedInstanceState);
 
-    if (subscription != null) {
-      subscription.unsubscribe();
-    }
+    if (create) {
+      if (subscription != null) {
+        subscription.unsubscribe();
+      }
 
-    if (appId >= 0) {
-      Logger.d(TAG, "loading app info using app ID");
-      subscription = appRepository.getApp(appId, refresh, sponsored, storeName, packageName)
-          .flatMap(getApp -> manageOrganicAds(getApp))
-          .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
-          .observeOn(AndroidSchedulers.mainThread())
-          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-          .subscribe(getApp -> {
-            setupAppView(getApp);
-          }, throwable -> finishLoading(throwable));
-    } else if (!TextUtils.isEmpty(md5)) {
-      subscription = appRepository.getAppFromMd5(md5, refresh, sponsored)
-          .flatMap(getApp -> manageOrganicAds(getApp))
-          .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
-          .observeOn(AndroidSchedulers.mainThread())
-          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-          .subscribe(getApp -> {
-            setupAppView(getApp);
-          }, throwable -> {
-            finishLoading(throwable);
-            CrashReports.logString(key_appId, String.valueOf(appId));
-            CrashReports.logString(key_packageName, String.valueOf(packageName));
-            CrashReports.logString(key_md5sum, md5);
-          });
+      if (appId >= 0) {
+        Logger.d(TAG, "loading app info using app ID");
+        subscription = appRepository.getApp(appId, refresh, sponsored, storeName, packageName)
+            .map(getApp -> this.getApp = getApp)
+            .flatMap(getApp -> manageOrganicAds(getApp))
+            .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
+            .observeOn(AndroidSchedulers.mainThread())
+            .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+            .subscribe(getApp -> {
+              setupAppView(getApp);
+            }, throwable -> finishLoading(throwable));
+      } else if (!TextUtils.isEmpty(md5)) {
+        subscription = appRepository.getAppFromMd5(md5, refresh, sponsored)
+            .map(getApp -> this.getApp = getApp)
+            .flatMap(getApp -> manageOrganicAds(getApp))
+            .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
+            .observeOn(AndroidSchedulers.mainThread())
+            .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+            .subscribe(getApp -> {
+              setupAppView(getApp);
+            }, throwable -> {
+              finishLoading(throwable);
+              CrashReports.logString(key_appId, String.valueOf(appId));
+              CrashReports.logString(key_packageName, String.valueOf(packageName));
+              CrashReports.logString(key_md5sum, md5);
+            });
+      } else {
+        Logger.d(TAG, "loading app info using app package name");
+        subscription = appRepository.getApp(packageName, refresh, sponsored, storeName)
+            .map(getApp -> this.getApp = getApp)
+            .flatMap(getApp -> manageOrganicAds(getApp))
+            .observeOn(AndroidSchedulers.mainThread())
+            .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+            .subscribe(getApp -> {
+              setupAppView(getApp);
+            }, throwable -> {
+              finishLoading(throwable);
+              CrashReports.logString(key_appId, String.valueOf(appId));
+              CrashReports.logString(key_packageName, String.valueOf(packageName));
+              CrashReports.logString(key_md5sum, md5);
+            });
+      }
     } else {
-      Logger.d(TAG, "loading app info using app package name");
-      subscription = appRepository.getApp(packageName, refresh, sponsored, storeName)
-          .flatMap(getApp -> manageOrganicAds(getApp))
-          .observeOn(AndroidSchedulers.mainThread())
-          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-          .subscribe(getApp -> {
-            setupAppView(getApp);
-          }, throwable -> {
-            finishLoading(throwable);
-            CrashReports.logString(key_appId, String.valueOf(appId));
-            CrashReports.logString(key_packageName, String.valueOf(packageName));
-            CrashReports.logString(key_md5sum, md5);
-          });
+      header.setup(getApp);
     }
   }
 
