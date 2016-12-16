@@ -326,6 +326,10 @@
   <string name="social_timeline_share_dialog_opt_out_text_1">By making your profile hidden, your friends won\'t be able to find and follow you on Apps Timeline.</string>
   <string name="social_timeline_share_dialog_opt_out_text_2">Access <b>www.aptoide.com</b>, login to your account and go to <b>Settings</b> to change privacy definitions.</string>
   <string name="social_timeline_share_dialog_installed_and_recommended">Installed and Recommended</string>
+  <string name="social_timeline_share_bar_login">What are your friends installing?</string>
+  <string name="social_timeline_share_bar_following">Follow more Stores and connect with your friends.</string>
+  <string name="social_timeline_share_bar_followers">Improve your store to have more followers.</string>
+
 
   <!--  -->
   <string name="comment_store">Comment Store</string>

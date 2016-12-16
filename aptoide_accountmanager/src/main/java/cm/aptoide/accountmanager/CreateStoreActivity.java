@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v7.widget.Toolbar;
@@ -22,19 +21,12 @@ import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.SetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SimpleSetStoreRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.BaseV7Response;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import com.jakewharton.rxbinding.view.RxView;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.nio.channels.FileChannel;
 import rx.subscriptions.CompositeSubscription;
 
 
@@ -198,7 +190,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity implements
       Uri avatarUrl = getPhotoFileUri(PermissionsBaseActivity.createAvatarPhotoName(photoAvatar));
       ImageLoader.loadWithCircleTransform(avatarUrl, mStoreAvatar);
       storeAvatarPath = avatarUrl.toString();
-    } else if (requestCode == REQUEST_CAMERA_CODE && resultCode == RESULT_OK) {
+    } else if (requestCode == GALLERY_CODE && resultCode == RESULT_OK) {
       Uri avatarUrl = data.getData();
       ImageLoader.loadWithCircleTransform(avatarUrl, mStoreAvatar);
       FileUtils fileUtils = new FileUtils();
@@ -233,36 +225,31 @@ public class CreateStoreActivity extends PermissionsBaseActivity implements
   }
 
   @Override public void onCreateSuccess(ProgressDialog progressDialog) {
-    ShowMessage.asSnack(this, "Repo Created");
+    ShowMessage.asSnack(this, R.string.create_store_store_created);
     if (CREATE_STORE_REQUEST_CODE == 1) {
       SetStoreRequest.of(new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-              DataProvider.getContext()).getAptoideClientUUID(), AptoideAccountManager.getAccessToken(),
+          DataProvider.getContext()).getAptoideClientUUID(), AptoideAccountManager.getAccessToken(),
           storeName, storeTheme, storeAvatarPath).execute(answer -> {
-        if (answer.getInfo().getStatus().equals(BaseV7Response.Info.Status.OK)) {
-          ShowMessage.asSnack(this, "success");
-          AptoideAccountManager.refreshAndSaveUserInfoData();
-          progressDialog.dismiss();
-        } else {
-          onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors().get(0).getCode()));
-          AptoideAccountManager.refreshAndSaveUserInfoData();
-          progressDialog.dismiss();
-        }
+            AptoideAccountManager.refreshAndSaveUserInfoData();
+            progressDialog.dismiss();
+            finish();
+      },throwable -> {
+        onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
+        AptoideAccountManager.refreshAndSaveUserInfoData();
+        progressDialog.dismiss();
       });
     } else if (CREATE_STORE_REQUEST_CODE == 2 || CREATE_STORE_REQUEST_CODE == 3) {
       SimpleSetStoreRequest.of(AptoideAccountManager.getAccessToken(),
           new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
               DataProvider.getContext()).getAptoideClientUUID(),
           storeName, storeTheme).execute(answer -> {
-        if(answer.getInfo().getStatus().equals(BaseV7Response.Info.Status.OK)) {
-          ShowMessage.asSnack(this, "success");
           AptoideAccountManager.refreshAndSaveUserInfoData();
           progressDialog.dismiss();
           finish();
-        } else {
-          onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors().get(0).getCode()));
+      }, throwable -> {
+          onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
           AptoideAccountManager.refreshAndSaveUserInfoData();
           progressDialog.dismiss();
-        }
       });
     }
   }
