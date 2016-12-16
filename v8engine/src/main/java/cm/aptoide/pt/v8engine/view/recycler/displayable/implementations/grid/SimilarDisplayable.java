@@ -67,7 +67,7 @@ import lombok.Getter;
     }
 
     return new SimilarDisplayable(Application.getConfiguration().getIcon(),
-        R.string.displayable_social_timeline_recommendation_atptoide_team_recommends,
+        R.string.displayable_social_timeline_recommendation_atptoide_team_recommends_corrected,
         similar.getRecommendedApp().getId(), similar.getRecommendedApp().getPackageName(),
         similar.getRecommendedApp().getName(), similar.getRecommendedApp().getIcon(), abTestingURL,
         similarAppsNames, similarAppsPackageNames, similar.getRecommendedApp().getUpdated(),

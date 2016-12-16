@@ -69,7 +69,7 @@ import lombok.Getter;
     }
 
     return new RecommendationDisplayable(Application.getConfiguration().getIcon(),
-        R.string.displayable_social_timeline_recommendation_atptoide_team_recommends,
+        R.string.displayable_social_timeline_recommendation_atptoide_team_recommends_corrected,
         recommendation.getRecommendedApp().getId(),
         recommendation.getRecommendedApp().getPackageName(),
         recommendation.getRecommendedApp().getName(), recommendation.getRecommendedApp().getIcon(),
