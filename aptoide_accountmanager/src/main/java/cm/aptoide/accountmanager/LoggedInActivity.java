@@ -4,9 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.SetUserRequest;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.subscriptions.CompositeSubscription;
@@ -15,12 +15,13 @@ import rx.subscriptions.CompositeSubscription;
  * Created by pedroribeiro on 15/12/16.
  */
 
-public class LoggedInActivity  extends BaseActivity{
+public class LoggedInActivity extends BaseActivity {
+
+  private static final String TAG = LoggedInActivity.class.getSimpleName();
 
   private Button mContinueButton;
   private Button mMoreInfoButton;
   private CompositeSubscription mSubscriptions;
-
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -45,17 +46,21 @@ public class LoggedInActivity  extends BaseActivity{
 
   private void setupListeners() {
     mSubscriptions.add(RxView.clicks(mContinueButton).subscribe(clicks -> {
-      SetUserRequest.of(
-          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-              DataProvider.getContext()).getAptoideClientUUID(),
-          "PUBLIC").execute(answer -> {
+      SetUserRequest.of(new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+          DataProvider.getContext()).getAptoideClientUUID(), "PUBLIC").execute(answer -> {
+        if (answer.isOk()) {
+          Logger.v(TAG, "user is public");
+        } else {
+          Logger.v(TAG, "user is public: error: " + answer.getError().getDescription());
+        }
+        startActivity(new Intent(this, CreateStoreActivity.class));
         finish();
       });
-      finish();
     }));
     mSubscriptions.add(RxView.clicks(mMoreInfoButton).subscribe(clicks -> {
-      Intent intent = new Intent(this, LoggedInActivity2ndStep.class);
-      startActivityForResult(intent, LOGGED_IN_SECOND_STEP_CODE);
+      startActivity(new Intent(this, LoggedInActivity2ndStep.class));
+      //Intent intent = new Intent(this, LoggedInActivity2ndStep.class);
+      //startActivityForResult(intent, LOGGED_IN_SECOND_STEP_CODE);
     }));
   }
 
