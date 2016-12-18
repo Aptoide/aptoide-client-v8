@@ -406,7 +406,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity implements
       CREATE_STORE_REQUEST_CODE = 1;
     } else {
       CREATE_STORE_REQUEST_CODE = 0;
-      onCreateFail(R.string.nothing_inserted);
+      onCreateFail(R.string.nothing_inserted_store);
     }
     return CREATE_STORE_REQUEST_CODE;
   }

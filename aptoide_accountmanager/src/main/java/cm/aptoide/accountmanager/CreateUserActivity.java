@@ -247,11 +247,8 @@ public class CreateUserActivity extends PermissionsBaseActivity implements Aptoi
       }
     } else {
       CREATE_USER_REQUEST_CODE = 0;
-      onRegisterFail(R.string.nothing_inserted);
+      onRegisterFail(R.string.nothing_inserted_user);
     }
     return CREATE_USER_REQUEST_CODE;
   }
-
-
-
 }
