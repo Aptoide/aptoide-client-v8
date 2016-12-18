@@ -124,7 +124,7 @@ import rx.schedulers.Schedulers;
   }
 
   @Override public void share(Context context) {
-    socialRepository.share(article);
+    socialRepository.share(article, context);
   }
 
   @Override public void like(Context context, String cardType, int rating) {

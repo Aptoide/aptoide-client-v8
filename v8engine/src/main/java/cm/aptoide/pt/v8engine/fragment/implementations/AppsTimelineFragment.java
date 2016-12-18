@@ -279,6 +279,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
       adapter.addDisplayable(new ProgressBarDisplayable().setFullRow());
     }
   }
+
   private void removeLoading() {
     if (loading) {
       loading = false;
@@ -352,7 +353,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
           timelineMetricsManager);
     } else if (card instanceof SocialInstall) {
       return SocialInstallDisplayable.from((SocialInstall) card, timelineMetricsManager,
-          spannableFactory);
+          spannableFactory, socialRepository);
     }
     throw new IllegalArgumentException(
         "Only articles, features, store latest apps, app updates, videos, recommendations and similar cards supported.");

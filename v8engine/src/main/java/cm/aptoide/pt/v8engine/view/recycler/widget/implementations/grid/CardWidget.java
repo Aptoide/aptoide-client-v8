@@ -3,9 +3,10 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.view.View;
-import android.widget.Toast;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.R;
@@ -20,6 +21,9 @@ import okhttp3.Credentials;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by jdandrade on 29/11/2016.
@@ -75,13 +79,69 @@ public abstract class CardWidget<T extends Displayable> extends Widget<T> {
     }
 
     SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(displayable);
-    AlertDialog.Builder alertDialog = sharePreviewDialog.showPreviewDialog(getContext())
-        .setPositiveButton(R.string.share, (dialogInterface, i) -> {
+    AlertDialog.Builder alertDialog = sharePreviewDialog.showPreviewDialog(getContext());
+
+    Observable.create((Subscriber<? super GenericDialogs.EResponse> subscriber) -> {
+      if (!ManagerPreferences.getUserPrivacyConfirmation()) {
+        alertDialog.setPositiveButton(R.string.share, (dialogInterface, i) -> {
           displayable.share(getContext());
-        })
-        .setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
+          subscriber.onNext(GenericDialogs.EResponse.YES);
+          subscriber.onCompleted();
+        }).setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
+          subscriber.onNext(GenericDialogs.EResponse.NO);
+          subscriber.onCompleted();
         });
-    alertDialog.show();
+      } else {
+        alertDialog.setPositiveButton(R.string.continue_option, (dialogInterface, i) -> {
+          displayable.share(getContext());
+          subscriber.onNext(GenericDialogs.EResponse.YES);
+          subscriber.onCompleted();
+        }).setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
+          subscriber.onNext(GenericDialogs.EResponse.NO);
+          subscriber.onCompleted();
+        });
+      }
+      //.setNeutralButton(R.string.dont_show_again, (dialogInterface, i) -> {
+      //  subscriber.onNext(GenericDialogs.EResponse.CANCEL);
+      //  subscriber.onCompleted();
+      //  ManagerPreferences.setShowPreview(false);
+      //})
+      alertDialog.show();
+    }).subscribeOn(AndroidSchedulers.mainThread()).subscribe(eResponse -> {
+      switch (eResponse) {
+        case YES:
+          GenericDialogs.createGenericContinueMessage(getContext(), "",
+              getContext().getResources().getString(R.string.social_timeline_share_dialog_title))
+              .subscribe();
+          break;
+        case NO:
+          break;
+        case CANCEL:
+          break;
+      }
+    });
+
+    //if (!ManagerPreferences.getUserPrivacyConfirmation()) {
+    //  alertDialog.setPositiveButton(R.string.share, (dialogInterface, i) -> {
+    //    displayable.share(getContext());
+    //    positive[0] = true;
+    //  }).setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
+    //  });
+    //} else {
+    //  alertDialog.setPositiveButton(R.string.continue_option, (dialogInterface, i) -> {
+    //    displayable.share(getContext());
+    //    positive[0] = true;
+    //  }).setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
+    //  }).setNeutralButton("Don't show again", (dialogInterface, i) -> {
+    //    //todo change preferences to never show dialog again.
+    //  });
+    //}
+    //
+    //if (positive[0]) {
+    //  GenericDialogs.createGenericContinueMessage(getContext(), "", "Thank you for sharing.")
+    //      .subscribe();
+    //}
+
   }
 
   public void likeCard(CardDisplayable displayable, String cardType, int rating) {

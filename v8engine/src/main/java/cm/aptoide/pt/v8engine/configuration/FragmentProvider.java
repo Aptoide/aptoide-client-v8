@@ -7,6 +7,7 @@ import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.ScheduledDownloadsFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.TimeLineFollowFragment;
 import java.util.ArrayList;
 
 /**
@@ -96,4 +97,7 @@ public interface FragmentProvider {
   Fragment newSettingsFragment();
 
   Fragment newCreateUserFragment();
+
+  Fragment newTimeLineFollowStatsFragment(TimeLineFollowFragment.FollowFragmentOpenMode openMode,
+      long followNumber);
 }

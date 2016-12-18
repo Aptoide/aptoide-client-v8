@@ -158,6 +158,20 @@ public class ManagerPreferences {
         .apply();
   }
 
+  public static boolean getUserPrivacyConfirmation() {
+    return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
+        .getBoolean(ManagedKeys.PRIVACY_CONFIRMATION, true);
+  }
+
+  public static boolean getShowPreview() {
+    return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
+        .getBoolean(ManagedKeys.SHOW_SHARE_PREVIEW, true);
+  }
+
+  public static void setShowPreview(boolean previewShower) {
+    Preferences.get().edit().putBoolean(ManagedKeys.SHOW_SHARE_PREVIEW, previewShower).apply();
+  }
+
   public static String getUserAccess() {
     return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
         .getString(ManagedKeys.ACCESS, "UNLISTED");
