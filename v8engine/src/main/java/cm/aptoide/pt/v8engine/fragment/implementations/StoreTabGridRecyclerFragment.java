@@ -26,6 +26,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetMyStoreListRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.FullReview;
@@ -146,6 +147,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
         case getAds:
         case listStores:
         case listComments:
+        case listCommentsTimeline:
         case listReviews:
           return true;
       }
@@ -457,6 +459,9 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
           break;
         case listComments:
           caseListStoreComments(url, StoreUtils.getStoreCredentialsFromUrl(url), refresh);
+          break;
+        case listCommentsTimeline:
+          caseListTimelineComments(url, refresh);
           break;
         case listReviews:
           caseListReviews(url, refresh);

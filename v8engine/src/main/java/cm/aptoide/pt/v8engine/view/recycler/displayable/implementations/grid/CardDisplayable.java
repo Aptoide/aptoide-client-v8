@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -11,6 +12,19 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
  */
 
 public abstract class CardDisplayable extends Displayable {
+
+  private TimelineCard timelineCard;
+
+  public CardDisplayable() {
+  }
+
+  public CardDisplayable(TimelineCard timelineCard) {
+    this.timelineCard = timelineCard;
+  }
+
+  public TimelineCard getTimelineCard() {
+    return timelineCard;
+  }
 
   @Override protected Configs getConfig() {
     return new Configs(1, true);

@@ -12,6 +12,7 @@ import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.model.v7.timeline.SocialArticle;
+import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.link.Link;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
@@ -22,7 +23,6 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SocialCa
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import rx.Observable;
 import rx.schedulers.Schedulers;
@@ -31,9 +31,8 @@ import rx.schedulers.Schedulers;
  * Created by jdandrade on 23/11/2016.
  */
 
-@AllArgsConstructor public class SocialArticleDisplayable extends SocialCardDisplayable {
+public class SocialArticleDisplayable extends SocialCardDisplayable {
 
-  @Getter private SocialArticle socialArticle;
   @Getter private String articleTitle;
   @Getter private Link link;
   @Getter private Link developerLink;
@@ -55,6 +54,33 @@ import rx.schedulers.Schedulers;
   private SocialRepository socialRepository;
 
   public SocialArticleDisplayable() {
+  }
+
+  public SocialArticleDisplayable(TimelineCard timelineCard, String articleTitle, Link link,
+      Link developerLink, String title, String thumbnailUrl, String avatarUrl, long appId,
+      String abUrl, Store store, Comment.User user, long numberOfLikes, long numberOfComments,
+      List<App> relatedToAppsList, Date date, DateCalculator dateCalculator,
+      SpannableFactory spannableFactory, TimelineMetricsManager timelineMetricsManager,
+      SocialRepository socialRepository) {
+    super(timelineCard);
+    this.articleTitle = articleTitle;
+    this.link = link;
+    this.developerLink = developerLink;
+    this.title = title;
+    this.thumbnailUrl = thumbnailUrl;
+    this.avatarUrl = avatarUrl;
+    this.appId = appId;
+    this.abUrl = abUrl;
+    this.store = store;
+    this.user = user;
+    this.numberOfLikes = numberOfLikes;
+    this.numberOfComments = numberOfComments;
+    this.relatedToAppsList = relatedToAppsList;
+    this.date = date;
+    this.dateCalculator = dateCalculator;
+    this.spannableFactory = spannableFactory;
+    this.timelineMetricsManager = timelineMetricsManager;
+    this.socialRepository = socialRepository;
   }
 
   public static SocialArticleDisplayable from(SocialArticle socialArticle,
@@ -88,7 +114,7 @@ import rx.schedulers.Schedulers;
   public Observable<List<Installed>> getRelatedToApplication() {
     if (relatedToAppsList != null && relatedToAppsList.size() > 0) {
       InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
-      List<String> packageNamesList = new ArrayList<String>();
+      List<String> packageNamesList = new ArrayList<>();
 
       for (int i = 0; i < relatedToAppsList.size(); i++) {
         packageNamesList.add(relatedToAppsList.get(i).getPackageName());
@@ -133,7 +159,7 @@ import rx.schedulers.Schedulers;
   }
 
   @Override public void like(Context context, String cardType, int rating) {
-    socialRepository.like(socialArticle, cardType, "", rating);
+    socialRepository.like(getTimelineCard(), cardType, "", rating);
   }
 
   @Override public void share(Context context, boolean privacyResult) {

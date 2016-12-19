@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.configuration;
 
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.database.realm.MinimalAd;
+import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Event;
@@ -61,8 +62,6 @@ public interface FragmentProvider {
 
   Fragment newStoreGridRecyclerFragment(Event event, String title, String storeTheme, String tag);
 
-  Fragment newStoreGridRecyclerFragment(Event event, String title);
-
   Fragment newAppsTimelineFragment(String action);
 
   Fragment newSubscribedStoresFragment(Event event, String title, String storeTheme, String tag);
@@ -100,4 +99,6 @@ public interface FragmentProvider {
 
   Fragment newTimeLineFollowStatsFragment(TimeLineFollowFragment.FollowFragmentOpenMode openMode,
       long followNumber);
+
+  Fragment newCommentGridRecyclerFragment(CommentType commentType, String elementId);
 }

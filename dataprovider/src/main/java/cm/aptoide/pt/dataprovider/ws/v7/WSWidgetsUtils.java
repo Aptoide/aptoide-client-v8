@@ -100,6 +100,7 @@ public class WSWidgetsUtils {
               .compose(AptoideUtils.ObservableU.applySchedulers())
               .subscribe(reviews -> setObjectView(wsWidget, countDownLatch, reviews), action1);
           break;
+
         case MY_STORES_SUBSCRIBED:
         case STORES_RECOMMENDED:
           GetMyStoreListRequest.of(url, accessToken, aptoideClientUuid)
@@ -117,6 +118,7 @@ public class WSWidgetsUtils {
                     action1.call(throwable);
                   });
           break;
+
         case MY_STORE_META:
           GetMyStoreMetaRequest.of(accessToken, aptoideClientUuid)
               .observe(refresh)
@@ -134,15 +136,18 @@ public class WSWidgetsUtils {
                     action1.call(throwable);
                   });
           break;
+
         case APP_META:
           GetAppRequest.ofAction(url, accessToken, aptoideClientUuid)
               .observe(refresh)
               .compose(AptoideUtils.ObservableU.applySchedulers())
               .subscribe(getApp -> setObjectView(wsWidget, countDownLatch, getApp), action1);
           break;
+
         default:
           // In case a known enum is not implemented
           countDownLatch.countDown();
+          break;
       }
     } else {
       // Case we don't have the enum defined we still need to countDown the latch

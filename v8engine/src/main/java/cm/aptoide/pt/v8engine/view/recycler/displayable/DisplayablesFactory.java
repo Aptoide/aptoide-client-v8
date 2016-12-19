@@ -140,7 +140,7 @@ public class DisplayablesFactory {
             GetStoreWidgets.WSWidget.Data dataObj = wsWidget.getData();
             String message = dataObj.getMessage();
             displayables.add(new OfficialAppDisplayable(
-                new Pair<String, GetApp>(message, (GetApp) wsWidget.getViewObject())));
+                new Pair<>(message, (GetApp) wsWidget.getViewObject())));
             break;
         }
       }
@@ -313,8 +313,7 @@ public class DisplayablesFactory {
     }).toBlocking().first());
   }
 
-  public static Observable<List<Store>> loadLocalSubscribedStores(
-      StoreRepository storeRepository) {
+  public static Observable<List<Store>> loadLocalSubscribedStores(StoreRepository storeRepository) {
     return storeRepository.getAll().flatMap(stores -> Observable.from(stores).map(store -> {
       Store nwStore = new Store();
       nwStore.setName(store.getStoreName());
