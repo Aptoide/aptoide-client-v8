@@ -191,7 +191,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
         item -> getAdapter().clearDisplayables()).flatMap(displayableDatalist -> {
       if (!displayableDatalist.getList().isEmpty()) {
         return timelineRepository.getTimelineStats(refresh).map(timelineStats -> {
-          displayableDatalist.getList().add(0, new TimeLineStatsDisplayable(timelineStats));
+          displayableDatalist.getList()
+              .add(0, new TimeLineStatsDisplayable(timelineStats, spannableFactory));
           return displayableDatalist;
         }).onErrorReturn(throwable -> {
           Logger.e(this, throwable);
