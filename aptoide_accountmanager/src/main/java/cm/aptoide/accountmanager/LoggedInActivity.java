@@ -23,10 +23,10 @@ public class LoggedInActivity extends BaseActivity {
 
   private static final String TAG = LoggedInActivity.class.getSimpleName();
 
+  private Toolbar mToolbar;
   private Button mContinueButton;
   private Button mMoreInfoButton;
   private CompositeSubscription mSubscriptions;
-  private Toolbar mToolbar;
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -37,20 +37,15 @@ public class LoggedInActivity extends BaseActivity {
     setupListeners();
   }
 
-
-  private void setupToolbar() {
-    if (mToolbar != null) {
-      setSupportActionBar(mToolbar);
-      getSupportActionBar().setHomeButtonEnabled(false);
-      getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-      getSupportActionBar().setTitle(getActivityTitle());
-    }
-  }
-
   private void bindViews() {
-    mToolbar = (Toolbar) findViewById(R.id.toolbar);
     mContinueButton = (Button) findViewById(R.id.logged_in_continue);
     mMoreInfoButton = (Button) findViewById(R.id.logged_in_more_info_button);
+    mToolbar = (Toolbar) findViewById(R.id.toolbar);
+  }
+
+  private void setupToolbar() {
+    setSupportActionBar(mToolbar);
+    getSupportActionBar().setTitle(getActivityTitle());
   }
 
   @Override protected String getActivityTitle() {
@@ -79,7 +74,6 @@ public class LoggedInActivity extends BaseActivity {
           Toast.makeText(LoggedInActivity.this, R.string.unknown_error, Toast.LENGTH_SHORT).show();
         }
         pleaseWaitDialog.dismiss();
-
         startActivity(getIntent().setClass(this, CreateStoreActivity.class));
         finish();
       }, throwable -> {

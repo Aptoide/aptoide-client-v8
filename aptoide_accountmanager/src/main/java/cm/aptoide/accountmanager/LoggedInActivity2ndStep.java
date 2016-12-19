@@ -22,6 +22,7 @@ public class LoggedInActivity2ndStep extends BaseActivity {
 
   private static final String TAG = LoggedInActivity2ndStep.class.getSimpleName();
 
+  private Toolbar mToolbar;
   private Button mContinueButton;
   private Button mPrivateProfile;
 
@@ -35,6 +36,11 @@ public class LoggedInActivity2ndStep extends BaseActivity {
     bindViews();
     setupToolbar();
     setupListeners();
+  }
+
+  private void setupToolbar() {
+    setSupportActionBar(mToolbar);
+    getSupportActionBar().setTitle(getActivityTitle());
   }
 
   @Override protected String getActivityTitle() {
@@ -58,6 +64,7 @@ public class LoggedInActivity2ndStep extends BaseActivity {
     mToolbar = (Toolbar) findViewById(R.id.toolbar);
     mContinueButton = (Button) findViewById(R.id.logged_in_continue);
     mPrivateProfile = (Button) findViewById(R.id.logged_in_private_button);
+    mToolbar = (Toolbar) findViewById(R.id.toolbar);
   }
 
   private void setupListeners() {
