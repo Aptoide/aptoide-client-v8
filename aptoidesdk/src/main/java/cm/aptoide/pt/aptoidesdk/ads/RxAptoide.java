@@ -7,6 +7,7 @@ import cm.aptoide.pt.aptoidesdk.BuildConfig;
 import cm.aptoide.pt.aptoidesdk.entities.App;
 import cm.aptoide.pt.aptoidesdk.entities.EntitiesFactory;
 import cm.aptoide.pt.aptoidesdk.entities.SearchResult;
+import cm.aptoide.pt.aptoidesdk.misc.RemoteLogger;
 import cm.aptoide.pt.aptoidesdk.parser.Parsers;
 import cm.aptoide.pt.aptoidesdk.proxys.GetAdsProxy;
 import cm.aptoide.pt.aptoidesdk.proxys.GetAppProxy;
@@ -93,8 +94,10 @@ public class RxAptoide {
     handleOrganicAds(packageName);
 
     return getAppProxy.getApp(packageName, storeName, aptoideClientUUID)
-        .map(EntitiesFactory::createApp)
-        .onErrorReturn(throwable -> null);
+        .map(EntitiesFactory::createApp).onErrorReturn(throwable -> {
+          RemoteLogger.getInstance().log(throwable);
+          return null;
+        });
   }
 
   public static Observable<App> getApp(Ad ad) {
@@ -102,57 +105,77 @@ public class RxAptoide {
     }, throwable -> Logger.w(TAG, "Error extracting referrer.", throwable));
 
     return getAppProxy.getApp(ad.getAppId(), aptoideClientUUID)
-        .map(EntitiesFactory::createApp)
-        .onErrorReturn(throwable -> null);
+        .map(EntitiesFactory::createApp).onErrorReturn(throwable -> {
+          RemoteLogger.getInstance().log(throwable);
+          return null;
+        });
   }
 
   public static Observable<App> getApp(long appId) {
     return getAppProxy.getApp(appId, aptoideClientUUID)
         .map(EntitiesFactory::createApp).doOnNext(app -> handleOrganicAds(app.getPackageName()))
-        .onErrorReturn(throwable -> null);
+        .onErrorReturn(throwable -> {
+          RemoteLogger.getInstance().log(throwable);
+          return null;
+        });
   }
 
   public static Observable<List<Ad>> getAds(int limit) {
     return getAdsProxy.getAds(limit, aptoideClientUUID)
-        .map(ReferrerUtils::parse)
-        .onErrorReturn(throwable -> new LinkedList<>());
+        .map(ReferrerUtils::parse).onErrorReturn(throwable -> {
+          RemoteLogger.getInstance().log(throwable);
+          return new LinkedList<>();
+        });
   }
 
   public static Observable<List<Ad>> getAds(int limit, boolean mature) {
     return getAdsProxy.getAds(limit, mature, aptoideClientUUID)
-        .map(ReferrerUtils::parse)
-        .onErrorReturn(throwable -> new LinkedList<>());
+        .map(ReferrerUtils::parse).onErrorReturn(throwable -> {
+          RemoteLogger.getInstance().log(throwable);
+          return new LinkedList<>();
+        });
   }
 
   public static Observable<List<Ad>> getAds(int limit, List<String> keyword) {
     return getAdsProxy.getAds(limit, aptoideClientUUID, keyword)
-        .map(ReferrerUtils::parse)
-        .onErrorReturn(throwable -> new LinkedList<>());
+        .map(ReferrerUtils::parse).onErrorReturn(throwable -> {
+          RemoteLogger.getInstance().log(throwable);
+          return new LinkedList<>();
+        });
   }
 
   public static Observable<List<Ad>> getAds(int limit, List<String> keyword, boolean mature) {
     return getAdsProxy.getAds(limit, mature, aptoideClientUUID, keyword)
-        .map(ReferrerUtils::parse)
-        .onErrorReturn(throwable -> new LinkedList<>());
+        .map(ReferrerUtils::parse).onErrorReturn(throwable -> {
+          RemoteLogger.getInstance().log(throwable);
+          return new LinkedList<>();
+        });
   }
 
   public static Observable<List<SearchResult>> searchApps(String query) {
     return listSearchAppsProxy.search(query, aptoideClientUUID)
-        .map(Parsers::parse)
-        .onErrorReturn(throwable -> new LinkedList<>());
+        .map(Parsers::parse).onErrorReturn(throwable -> {
+          RemoteLogger.getInstance().log(throwable);
+          return new LinkedList<>();
+        });
   }
 
   public static Observable<List<SearchResult>> searchApps(String query, String storeName) {
     return listSearchAppsProxy.search(query, storeName, aptoideClientUUID)
-        .map(Parsers::parse)
-        .onErrorReturn(throwable -> new LinkedList<>());
+        .map(Parsers::parse).onErrorReturn(throwable -> {
+          RemoteLogger.getInstance().log(throwable);
+          return new LinkedList<>();
+        });
   }
 
   private static Subscription handleOrganicAds(String packageName) {
     return getAdsProxy.getAds(packageName, aptoideClientUUID)
         .filter(ReferrerUtils::hasAds)
         .map(ReferrerUtils::parse).flatMap(ads -> handleAds(ads.get(0)))
-        .onErrorReturn(throwable -> new LinkedList<>())
+        .onErrorReturn(throwable -> {
+          RemoteLogger.getInstance().log(throwable);
+          return new LinkedList<>();
+        })
         .subscribe();
   }
 
