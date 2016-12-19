@@ -41,7 +41,7 @@ import rx.schedulers.Schedulers;
  */
 public abstract class v3accountManager<U> extends WebService<v3accountManager.Interfaces, U> {
 
-  private static final int REFRESH_TOKEN_DELAY = 500;
+  private static final int REFRESH_TOKEN_DELAY = 1000;
   @Getter protected final BaseBody map;
   private final String INVALID_ACCESS_TOKEN_CODE = "invalid_token";
   private boolean accessTokenRetry = false;

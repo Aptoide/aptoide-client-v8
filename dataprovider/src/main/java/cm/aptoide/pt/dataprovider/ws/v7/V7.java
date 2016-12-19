@@ -66,7 +66,7 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
 
   public static final String BASE_HOST = "http://ws75.aptoide.com/api/7/";
   public static final String BASE_PRIMARY_HOST = "http://ws75-primary.aptoide.com/api/7/";
-  private static final int REFRESH_TOKEN_DELAY = 500;
+  private static final int REFRESH_TOKEN_DELAY = 1000;
   @Getter protected final B body;
   private final String INVALID_ACCESS_TOKEN_CODE = "AUTH-2";
   private boolean accessTokenRetry = false;
