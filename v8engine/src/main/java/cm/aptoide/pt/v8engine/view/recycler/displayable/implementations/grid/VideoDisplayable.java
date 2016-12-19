@@ -46,8 +46,7 @@ import rx.schedulers.Schedulers;
   private TimelineMetricsManager timelineMetricsManager;
   private SocialRepository socialRepository;
 
-  public VideoDisplayable() {
-  }
+  public VideoDisplayable() { }
 
   public static VideoDisplayable from(Video video, DateCalculator dateCalculator,
       SpannableFactory spannableFactory, LinksHandlerFactory linksHandlerFactory,
@@ -116,9 +115,5 @@ import rx.schedulers.Schedulers;
 
   @Override public void share(Context context, boolean privacyResult) {
     socialRepository.share(video, context, privacyResult);
-  }
-
-  @Override public void like(Context context, String cardType, int rating) {
-
   }
 }

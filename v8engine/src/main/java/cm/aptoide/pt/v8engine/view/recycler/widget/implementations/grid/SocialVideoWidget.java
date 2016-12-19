@@ -23,7 +23,7 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created by jdandrade on 28/11/2016.
  */
-public class SocialVideoWidget extends CardWidget<SocialVideoDisplayable> {
+public class SocialVideoWidget extends SocialCardWidget<SocialVideoDisplayable> {
   private String cardType = "Social Video";
   private TextView title;
   private TextView subtitle;

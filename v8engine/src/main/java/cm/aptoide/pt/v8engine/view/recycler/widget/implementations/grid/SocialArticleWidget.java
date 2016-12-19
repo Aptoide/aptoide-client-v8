@@ -25,7 +25,7 @@ import rx.android.schedulers.AndroidSchedulers;
  * Created by jdandrade on 23/11/2016.
  */
 
-public class SocialArticleWidget extends CardWidget<SocialArticleDisplayable> {
+public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayable> {
 
   private final String cardType = "Social Article";
   private TextView title;

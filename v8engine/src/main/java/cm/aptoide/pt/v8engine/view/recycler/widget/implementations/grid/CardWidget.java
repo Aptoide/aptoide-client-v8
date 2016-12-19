@@ -11,7 +11,6 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.dialog.SharePreviewDialog;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CardDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import java.io.IOException;
@@ -29,7 +28,7 @@ import rx.android.schedulers.AndroidSchedulers;
  * Created by jdandrade on 29/11/2016.
  */
 
-public abstract class CardWidget<T extends Displayable> extends Widget<T> {
+public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
 
   public CardWidget(View itemView) {
     super(itemView);
@@ -69,7 +68,11 @@ public abstract class CardWidget<T extends Displayable> extends Widget<T> {
     cardView.setLayoutParams(layoutParams);
   }
 
-  public void shareCard(CardDisplayable displayable) {
+  //
+  // all cards are "shareable"
+  //
+
+  public void shareCard(T displayable) {
     if (!AptoideAccountManager.isLoggedIn()) {
       ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> {
@@ -120,38 +123,5 @@ public abstract class CardWidget<T extends Displayable> extends Widget<T> {
           break;
       }
     });
-
-    //if (!ManagerPreferences.getUserPrivacyConfirmation()) {
-    //  alertDialog.setPositiveButton(R.string.share, (dialogInterface, i) -> {
-    //    displayable.share(getContext());
-    //    positive[0] = true;
-    //  }).setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
-    //  });
-    //} else {
-    //  alertDialog.setPositiveButton(R.string.continue_option, (dialogInterface, i) -> {
-    //    displayable.share(getContext());
-    //    positive[0] = true;
-    //  }).setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
-    //  }).setNeutralButton("Don't show again", (dialogInterface, i) -> {
-    //    //todo change preferences to never show dialog again.
-    //  });
-    //}
-    //
-    //if (positive[0]) {
-    //  GenericDialogs.createGenericContinueMessage(getContext(), "", "Thank you for sharing.")
-    //      .subscribe();
-    //}
-
-  }
-
-  public void likeCard(CardDisplayable displayable, String cardType, int rating) {
-    if (!AptoideAccountManager.isLoggedIn()) {
-      ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
-          snackView -> {
-            AptoideAccountManager.openAccountManager(snackView.getContext());
-          });
-      return;
-    }
-    displayable.like(getContext(), cardType.toUpperCase(), rating);
   }
 }
