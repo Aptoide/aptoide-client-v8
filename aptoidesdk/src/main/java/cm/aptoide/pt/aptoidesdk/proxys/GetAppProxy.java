@@ -1,5 +1,6 @@
 package cm.aptoide.pt.aptoidesdk.proxys;
 
+import cm.aptoide.pt.aptoidesdk.misc.RemoteLogger;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.model.v7.GetApp;
 import rx.Observable;
@@ -11,10 +12,14 @@ import rx.Observable;
 public class GetAppProxy {
 
   public Observable<GetApp> getApp(String packageName, String storeName, String aptoideClientUUID) {
-    return GetAppRequest.of(packageName, storeName, null, aptoideClientUUID).observe();
+    return GetAppRequest.of(packageName, storeName, null, aptoideClientUUID)
+        .observe()
+        .doOnError(RemoteLogger.getInstance()::log);
   }
 
   public Observable<GetApp> getApp(long appId, String aptoideClientUUID) {
-    return GetAppRequest.of(appId, null, aptoideClientUUID).observe();
+    return GetAppRequest.of(appId, null, aptoideClientUUID)
+        .observe()
+        .doOnError(RemoteLogger.getInstance()::log);
   }
 }
