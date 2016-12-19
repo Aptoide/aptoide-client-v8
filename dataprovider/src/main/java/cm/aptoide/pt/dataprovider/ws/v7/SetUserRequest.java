@@ -18,10 +18,10 @@ public class SetUserRequest extends V7<BaseV7Response, SetUserRequest.Body> {
     super(body, baseHost);
   }
 
-  public static SetUserRequest of(String aptoideClientUUID,String access) {
+  public static SetUserRequest of(String aptoideClientUUID, String access, String accessToken) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
     Body body = new Body(access);
-    return new SetUserRequest((Body) decorator.decorate(body, access), BASE_HOST);
+    return new SetUserRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,

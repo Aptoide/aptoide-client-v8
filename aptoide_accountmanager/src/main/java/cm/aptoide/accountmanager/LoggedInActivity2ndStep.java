@@ -49,7 +49,7 @@ public class LoggedInActivity2ndStep extends BaseActivity {
   private void setupListeners() {
     mSubscriptions.add(RxView.clicks(mContinueButton).subscribe(clicks -> {
       SetUserRequest.of(new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-          DataProvider.getContext()).getAptoideClientUUID(), "PUBLIC").execute(answer -> {
+          DataProvider.getContext()).getAptoideClientUUID(), "PUBLIC", AptoideAccountManager.getAccessToken()).execute(answer -> {
         if (answer.isOk()) {
           Logger.v(TAG, "user is public");
           Toast.makeText(LoggedInActivity2ndStep.this, R.string.successful, Toast.LENGTH_SHORT)
@@ -65,7 +65,7 @@ public class LoggedInActivity2ndStep extends BaseActivity {
     }));
     mSubscriptions.add(RxView.clicks(mPrivateProfile).subscribe(clicks -> {
       SetUserRequest.of(new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-          DataProvider.getContext()).getAptoideClientUUID(), "UNLISTED").execute(answer -> {
+          DataProvider.getContext()).getAptoideClientUUID(), "UNLISTED", AptoideAccountManager.getAccessToken()).execute(answer -> {
         if (answer.isOk()) {
           Logger.v(TAG, "user is private");
           Toast.makeText(LoggedInActivity2ndStep.this, R.string.successful, Toast.LENGTH_SHORT)

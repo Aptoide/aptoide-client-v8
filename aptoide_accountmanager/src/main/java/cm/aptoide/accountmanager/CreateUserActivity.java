@@ -219,7 +219,7 @@ public class CreateUserActivity extends PermissionsBaseActivity
     //data.putString(AptoideLoginUtils.APTOIDE_LOGIN_FROM, SIGNUP);
     progressDialog.dismiss();
     startActivity(new Intent(this, LoggedInActivity.class).putExtra(
-        AptoideLoginUtils.APTOIDE_LOGIN_USER_NAME_KEY, username)
+        AptoideLoginUtils.APTOIDE_LOGIN_USER_NAME_KEY, userEmail)
         .putExtra(AptoideLoginUtils.APTOIDE_LOGIN_PASSWORD_KEY, userPassword));
     finish();
   }
