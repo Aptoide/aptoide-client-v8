@@ -430,9 +430,16 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
       unInstallAction.call();
       return true;
     } else if (i == R.id.menu_remote_install){
-      DialogFragment newFragment = RemoteInstallDialog.newInstance(appId);
-      newFragment.show(getActivity().getSupportFragmentManager(),
-          RemoteInstallDialog.class.getSimpleName());
+      if (AptoideUtils.SystemU.getConnectionType().equals("mobile")) {
+        GenericDialogs.createGenericOkMessage(getContext(),
+            getContext().getString(R.string.remote_install_menu_title),
+            getContext().getString(R.string.install_on_tv_mobile_error)).subscribe();
+      } else {
+        DialogFragment newFragment = RemoteInstallDialog.newInstance(appId);
+        newFragment.show(getActivity().getSupportFragmentManager(),
+            RemoteInstallDialog.class.getSimpleName());
+      }
+
     }
 
     return super.onOptionsItemSelected(item);
