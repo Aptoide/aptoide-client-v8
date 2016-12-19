@@ -131,7 +131,7 @@ import rx.schedulers.Schedulers;
     return R.layout.displayable_social_timeline_social_article;
   }
 
-  @Override public void share(Context context) {
+  @Override public void share(Context context, boolean privacyResult) {
 
   }
 

@@ -27,6 +27,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Vid
 
 public class SharePreviewDialog {
   private Displayable displayable;
+  private boolean privacyResult;
 
   public SharePreviewDialog(Displayable cardDisplayable) {
     this.displayable = cardDisplayable;
@@ -76,19 +77,10 @@ public class SharePreviewDialog {
 
       alertadd.setTitle(R.string.social_timeline_you_will_share);
 
-      if (!ManagerPreferences.getUserPrivacyConfirmation()) {
+      if (!ManagerPreferences.getUserAccessConfirmed()) {
         privacyText.setOnClickListener(click -> checkBox.toggle());
         checkBox.setClickable(true);
-        checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-          if (isChecked) {
-            userAvatar.setVisibility(View.GONE);
-            subtitle.setVisibility(View.GONE);
-          } else {
-            userAvatar.setVisibility(View.VISIBLE);
-            subtitle.setVisibility(View.VISIBLE);
-          }
-          socialTerms.setVisibility(View.VISIBLE);
-        });
+        handlePrivacyCheckBoxChanges(subtitle, userAvatar, checkBox, socialTerms);
       }
     } else if (displayable instanceof VideoDisplayable) {
       LayoutInflater factory = LayoutInflater.from(context);
@@ -129,20 +121,12 @@ public class SharePreviewDialog {
       ImageLoader.load(((VideoDisplayable) displayable).getThumbnailUrl(), thumbnail);
       alertadd.setView(view).setCancelable(false);
 
-      privacyText.setOnClickListener(click -> checkBox.toggle());
-
       alertadd.setTitle(R.string.social_timeline_you_will_share);
-      checkBox.setClickable(true);
-      checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-        if (isChecked) {
-          userAvatar.setVisibility(View.GONE);
-          subtitle.setVisibility(View.GONE);
-        } else {
-          userAvatar.setVisibility(View.VISIBLE);
-          subtitle.setVisibility(View.VISIBLE);
-        }
-      });
-      socialTerms.setVisibility(View.VISIBLE);
+      if (!ManagerPreferences.getUserAccessConfirmed()) {
+        privacyText.setOnClickListener(click -> checkBox.toggle());
+        checkBox.setClickable(true);
+        handlePrivacyCheckBoxChanges(subtitle, userAvatar, checkBox, socialTerms);
+      }
     } else if (displayable instanceof StoreLatestAppsDisplayable) {
       LayoutInflater factory = LayoutInflater.from(context);
       final View view =
@@ -181,20 +165,12 @@ public class SharePreviewDialog {
       ImageLoader.load(((ArticleDisplayable) displayable).getThumbnailUrl(), thumbnail);
       alertadd.setView(view).setCancelable(false);
 
-      privacyText.setOnClickListener(click -> checkBox.toggle());
-
       alertadd.setTitle(R.string.social_timeline_you_will_share);
-      checkBox.setClickable(true);
-      checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-        if (isChecked) {
-          userAvatar.setVisibility(View.GONE);
-          subtitle.setVisibility(View.GONE);
-        } else {
-          userAvatar.setVisibility(View.VISIBLE);
-          subtitle.setVisibility(View.VISIBLE);
-        }
-      });
-      socialTerms.setVisibility(View.VISIBLE);
+      if (!ManagerPreferences.getUserAccessConfirmed()) {
+        privacyText.setOnClickListener(click -> checkBox.toggle());
+        checkBox.setClickable(true);
+        handlePrivacyCheckBoxChanges(subtitle, userAvatar, checkBox, socialTerms);
+      }
     } else if (displayable instanceof AppViewInstallDisplayable) {
       LayoutInflater factory = LayoutInflater.from(context);
       final View view =
@@ -255,22 +231,32 @@ public class SharePreviewDialog {
 
       alertadd.setTitle(R.string.social_timeline_you_will_share);
 
-      socialTerms.setVisibility(View.VISIBLE);
-      if (!ManagerPreferences.getUserPrivacyConfirmation()) {
+      if (!ManagerPreferences.getUserAccessConfirmed()) {
         privacyText.setOnClickListener(click -> checkBox.toggle());
         checkBox.setClickable(true);
-        checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-          if (isChecked) {
-            userAvatar.setVisibility(View.GONE);
-            subtitle.setVisibility(View.GONE);
-          } else {
-            userAvatar.setVisibility(View.VISIBLE);
-            subtitle.setVisibility(View.VISIBLE);
-          }
-          socialTerms.setVisibility(View.VISIBLE);
-        });
+        handlePrivacyCheckBoxChanges(subtitle, userAvatar, checkBox, socialTerms);
       }
     }
     return alertadd;
+  }
+
+  private void handlePrivacyCheckBoxChanges(TextView subtitle, ImageView userAvatar,
+      CheckBox checkBox, LinearLayout socialTerms) {
+    checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+      if (isChecked) {
+        userAvatar.setVisibility(View.GONE);
+        subtitle.setVisibility(View.GONE);
+        this.privacyResult = true;
+      } else {
+        userAvatar.setVisibility(View.VISIBLE);
+        subtitle.setVisibility(View.VISIBLE);
+        this.privacyResult = false;
+      }
+    });
+    socialTerms.setVisibility(View.VISIBLE);
+  }
+
+  public boolean getPrivacyResult() {
+    return this.privacyResult;
   }
 }
