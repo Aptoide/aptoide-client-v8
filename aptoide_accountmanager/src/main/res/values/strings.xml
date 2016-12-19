@@ -6,6 +6,7 @@
   <string name="link_device_webinstall">Link account with Webinstall</string>
   <string name="register">Sign Up</string>
   <string name="login">Login</string>
+  <string name="successful">Successful</string>
   <string name="login_successful">Successful login</string>
   <string name="forgot_passwd">Forgot password?</string>
   <string name="fields_cannot_empty">Please check your email and password.</string>
@@ -86,7 +87,8 @@
   <string name="create_user_dialog_camera">Take Photo</string>
   <string name="create_user_dialog_gallery">Choose From Gallery</string>
   <string name="create_user_dialog_cancel">Cancel</string>
-  <string name="nothing_inserted">Please insert a username and a photo (optional) to create your profile</string>
+  <string name="nothing_inserted_store">Please insert a store\'s name to create your store</string>
+  <string name="nothing_inserted_user">Please insert a username and a photo (optional) to create your profile</string>
   <string name="create_user_bad_photo">Please choose a image with at least 300x300 resolution</string>
   <string name="no_username_inserted">Please insert a username to create your profile</string>
   <string name="no_photo_inserted">Please choose a photo to create your profile</string>

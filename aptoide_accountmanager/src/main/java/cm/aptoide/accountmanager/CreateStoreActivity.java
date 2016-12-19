@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,6 +22,7 @@ import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.SetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SimpleSetStoreRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
@@ -29,13 +31,14 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.subscriptions.CompositeSubscription;
 
-
 /**
  * Created by pedroribeiro on 29/11/16.
  */
 
-public class CreateStoreActivity extends PermissionsBaseActivity implements
-    AptoideAccountManager.ICreateStore{
+public class CreateStoreActivity extends PermissionsBaseActivity
+    implements AptoideAccountManager.ICreateStore {
+
+  private static final String TAG = CreateStoreActivity.class.getSimpleName();
 
   private Toolbar mToolbar;
   private Button mCreateStore;
@@ -91,7 +94,11 @@ public class CreateStoreActivity extends PermissionsBaseActivity implements
     setupToolbar();
     setupListeners();
     setupThemeListeners();
-    getUserData();
+
+    if (!getUserData()) {
+      Logger.e(TAG, "username, password and access token is needed for this activity");
+      finish();
+    }
   }
 
   @Override protected void onDestroy() {
@@ -151,25 +158,40 @@ public class CreateStoreActivity extends PermissionsBaseActivity implements
     mLightblueTick = (ImageView) findViewById(R.id.create_store_theme_check_lightblue);
   }
 
+  private boolean getUserData() {
+
+    username = getIntent().getStringExtra(AptoideLoginUtils.APTOIDE_LOGIN_USER_NAME_KEY);
+    password = getIntent().getStringExtra(AptoideLoginUtils.APTOIDE_LOGIN_PASSWORD_KEY);
+
+    return !TextUtils.isEmpty(username) && !TextUtils.isEmpty(password);
+  }
+
   private void editViews() {
-    mHeader.setText(AptoideUtils.StringU.getFormattedString(R.string.create_store_header, "Aptoide"));
-    mChooseNameTitle.setText(AptoideUtils.StringU.getFormattedString(R.string.create_store_name, "Aptoide"));
+    mHeader.setText(
+        AptoideUtils.StringU.getFormattedString(R.string.create_store_header, "Aptoide"));
+    mChooseNameTitle.setText(
+        AptoideUtils.StringU.getFormattedString(R.string.create_store_name, "Aptoide"));
   }
 
   private void setupListeners() {
+
     mSubscriptions.add(RxView.clicks(mStoreAvatarLayout).subscribe(click -> chooseAvatarSource()));
     mSubscriptions.add(RxView.clicks(mCreateStore).subscribe(click -> {
       storeName = mStoreName.getText().toString();
       //TODO: Make request to create repo and to update it (checkusercredentials and setStore) and add dialog
       validateData();
-      if (CREATE_STORE_REQUEST_CODE == 2 || CREATE_STORE_REQUEST_CODE == 3 || CREATE_STORE_REQUEST_CODE == 1) {
-        ProgressDialog progressDialog = GenericDialogs.createGenericPleaseWaitDialog(this, getApplicationContext().getString(R.string.please_wait_upload));
+      if (CREATE_STORE_REQUEST_CODE == 2
+          || CREATE_STORE_REQUEST_CODE == 3
+          || CREATE_STORE_REQUEST_CODE == 1) {
+        ProgressDialog progressDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
+            getApplicationContext().getString(R.string.please_wait_upload));
         progressDialog.show();
-        CheckUserCredentialsRequest.of(getIntent().getStringExtra(AptoideLoginUtils.APTOIDE_LOGIN_ACCESS_TOKEN_KEY),
-            storeName, CREATE_STORE_CODE, username, password).execute(answer -> {
+        CheckUserCredentialsRequest.of(AptoideAccountManager.getAccessToken(), storeName,
+            CREATE_STORE_CODE, username, password).execute(answer -> {
           if (answer.hasErrors()) {
             if (answer.getErrors() != null && answer.getErrors().size() > 0) {
-              onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors().get(0).code));
+              onCreateFail(
+                  ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors().get(0).code));
               progressDialog.dismiss();
             }
           } else {
@@ -182,7 +204,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity implements
         .flatMap(click -> AptoideAccountManager.refreshAndSaveUserInfoData())
         .subscribe(refreshed -> {
           finish();
-    }, throwable -> {
+        }, throwable -> {
           //TODO: couldn't do getuserinfo
           finish();
         }));
@@ -222,46 +244,37 @@ public class CreateStoreActivity extends PermissionsBaseActivity implements
     }
   }
 
-  private void getUserData() {
-    username = getIntent().getStringExtra(AptoideLoginUtils.APTOIDE_LOGIN_USER_NAME_KEY);
-    password = getIntent().getStringExtra(AptoideLoginUtils.APTOIDE_LOGIN_PASSWORD_KEY);
-  }
-
   @Override public void onCreateSuccess(ProgressDialog progressDialog) {
     ShowMessage.asSnack(this, R.string.create_store_store_created);
     if (CREATE_STORE_REQUEST_CODE == 1) {
       SetStoreRequest.of(new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-          DataProvider.getContext()).getAptoideClientUUID(), AptoideAccountManager.getAccessToken(),
+              DataProvider.getContext()).getAptoideClientUUID(), AptoideAccountManager.getAccessToken(),
           storeName, storeTheme, storeAvatarPath).execute(answer -> {
-            AptoideAccountManager.refreshAndSaveUserInfoData()
-                .subscribe(refreshed -> {
-                  progressDialog.dismiss();
-                  finish();
-                }, throwable -> throwable.printStackTrace());
-      },throwable -> {
+        AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
+          progressDialog.dismiss();
+          finish();
+        }, throwable -> throwable.printStackTrace());
+      }, throwable -> {
         onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
-        AptoideAccountManager.refreshAndSaveUserInfoData()
-            .subscribe(refreshed -> {
-              progressDialog.dismiss();
-            }, throwable1 -> throwable1.printStackTrace());
+        AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
+          progressDialog.dismiss();
+        }, throwable1 -> throwable1.printStackTrace());
       });
     } else if (CREATE_STORE_REQUEST_CODE == 2 || CREATE_STORE_REQUEST_CODE == 3) {
       SimpleSetStoreRequest.of(AptoideAccountManager.getAccessToken(),
           new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-              DataProvider.getContext()).getAptoideClientUUID(),
-          storeName, storeTheme).execute(answer -> {
-          AptoideAccountManager.refreshAndSaveUserInfoData()
-            .subscribe(refreshed -> {
+              DataProvider.getContext()).getAptoideClientUUID(), storeName, storeTheme)
+          .execute(answer -> {
+            AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
               progressDialog.dismiss();
               finish();
             }, Throwable::printStackTrace);
-      }, throwable -> {
-          onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
-          AptoideAccountManager.refreshAndSaveUserInfoData()
-            .subscribe(refreshed -> {
+          }, throwable -> {
+            onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
+            AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
               progressDialog.dismiss();
             }, Throwable::printStackTrace);
-      });
+          });
     }
   }
 
@@ -406,7 +419,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity implements
       CREATE_STORE_REQUEST_CODE = 1;
     } else {
       CREATE_STORE_REQUEST_CODE = 0;
-      onCreateFail(R.string.nothing_inserted);
+      onCreateFail(R.string.nothing_inserted_store);
     }
     return CREATE_STORE_REQUEST_CODE;
   }

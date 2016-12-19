@@ -26,7 +26,6 @@ import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
-import cm.aptoide.accountmanager.CreateUserActivity;
 import cm.aptoide.accountmanager.util.UserCompleteData;
 import cm.aptoide.accountmanager.ws.AptoideWsV3Exception;
 import cm.aptoide.accountmanager.ws.ChangeUserRepoSubscriptionRequest;
@@ -81,10 +80,10 @@ import static cm.aptoide.pt.preferences.Application.getContext;
  */
 public class AptoideAccountManager implements Application.ActivityLifecycleCallbacks {
 
-  public static final String LOGIN = getConfiguration().getAppId()
-          + ".accountmanager.broadcast.login";
-  public static final String LOGIN_CANCELLED = getConfiguration().getAppId()
-          + ".accountmanager.broadcast.LOGIN_CANCELLED";
+  public static final String LOGIN =
+      getConfiguration().getAppId() + ".accountmanager.broadcast.login";
+  public static final String LOGIN_CANCELLED =
+      getConfiguration().getAppId() + ".accountmanager.broadcast.LOGIN_CANCELLED";
   public static final String LOGOUT =
       getConfiguration().getAppId() + ".accountmanager.broadcast.logout";
 
@@ -236,8 +235,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
         activity.finish();
       }
     }
-    getContext()
-        .sendBroadcast(new Intent().setAction(LOGOUT));
+    getContext().sendBroadcast(new Intent().setAction(LOGOUT));
   }
 
   private static @Nullable String getRefreshToken() {
@@ -400,11 +398,10 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
         try {
           if (e instanceof AptoideWsV3Exception) {
             GenericResponseV3 oAuth = ((AptoideWsV3Exception) e).getBaseResponse();
-            getInstance().onLoginFail(getContext()
-                .getString(ErrorsMapper.getWebServiceErrorMessageFromCode(oAuth.getError())));
+            getInstance().onLoginFail(getContext().getString(
+                ErrorsMapper.getWebServiceErrorMessageFromCode(oAuth.getError())));
           } else {
-            getInstance().onLoginFail(getContext()
-                .getString(R.string.unknown_error));
+            getInstance().onLoginFail(getContext().getString(R.string.unknown_error));
           }
         } finally {
           if (finalGenericPleaseWaitDialog != null) {
@@ -451,15 +448,17 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
         AccountManagerPreferences.setUserNickName(checkUserCredentialsJson.getUsername());
       }
 
-      if(checkUserCredentialsJson.getRepoDescription() != null && !TextUtils.isEmpty(checkUserCredentialsJson.getRepoDescription().getTheme())) {
-        AccountManagerPreferences.setRepoTheme(checkUserCredentialsJson.getRepoDescription().getTheme());
+      if (checkUserCredentialsJson.getRepoDescription() != null && !TextUtils.isEmpty(
+          checkUserCredentialsJson.getRepoDescription().getTheme())) {
+        AccountManagerPreferences.setRepoTheme(
+            checkUserCredentialsJson.getRepoDescription().getTheme());
       }
 
-      if(!TextUtils.isEmpty(checkUserCredentialsJson.getAccess())) {
+      if (!TextUtils.isEmpty(checkUserCredentialsJson.getAccess())) {
         ManagerPreferences.setUserAccess(checkUserCredentialsJson.getAccess());
       }
 
-      if(!checkUserCredentialsJson.getAccessConfirmed().toString().isEmpty()) {
+      if (!checkUserCredentialsJson.getAccessConfirmed().toString().isEmpty()) {
         ManagerPreferences.setUserAccessConfirmed(checkUserCredentialsJson.getAccessConfirmed());
       }
 
@@ -722,8 +721,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
   }
 
   public static void sendLoginCancelledBroadcast() {
-    getContext()
-        .sendBroadcast(new Intent().setAction(LOGIN_CANCELLED));
+    getContext().sendBroadcast(new Intent().setAction(LOGIN_CANCELLED));
   }
 
   public static Observable<List<Subscription>> getUserRepos() {
