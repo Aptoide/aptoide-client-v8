@@ -17,6 +17,7 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.util.ErrorUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Datalist;
 import cm.aptoide.pt.model.v7.timeline.AppUpdate;
 import cm.aptoide.pt.model.v7.timeline.Article;
@@ -191,6 +192,9 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
       if (!displayableDatalist.getList().isEmpty()) {
         return timelineRepository.getTimelineStats(refresh).map(timelineStats -> {
           displayableDatalist.getList().add(0, new TimeLineStatsDisplayable(timelineStats));
+          return displayableDatalist;
+        }).onErrorReturn(throwable -> {
+          Logger.e(this, throwable);
           return displayableDatalist;
         });
       } else {
