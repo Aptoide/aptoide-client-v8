@@ -79,12 +79,17 @@ public class LoggedInActivity2ndStep extends BaseActivity {
           Toast.makeText(LoggedInActivity2ndStep.this, R.string.unknown_error, Toast.LENGTH_SHORT)
               .show();
         }
+        pleaseWaitDialog.dismiss();
+
         startActivity(getIntent().setClass(this, CreateStoreActivity.class));
         finish();
+
       }, throwable -> {
-        pleaseWaitDialog.show();
+
+        pleaseWaitDialog.dismiss();
         startActivity(getIntent().setClass(this, CreateStoreActivity.class));
         finish();
+
       });
     }));
     mSubscriptions.add(RxView.clicks(mPrivateProfile).subscribe(clicks -> {
@@ -105,12 +110,17 @@ public class LoggedInActivity2ndStep extends BaseActivity {
           Toast.makeText(LoggedInActivity2ndStep.this, R.string.unknown_error, Toast.LENGTH_SHORT)
               .show();
         }
+
+        pleaseWaitDialog.dismiss();
         startActivity(getIntent().setClass(this, CreateStoreActivity.class));
         finish();
+
       }, throwable -> {
-        pleaseWaitDialog.show();
+
+        pleaseWaitDialog.dismiss();
         startActivity(getIntent().setClass(this, CreateStoreActivity.class));
         finish();
+
       });
     }));
   }

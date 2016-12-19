@@ -78,12 +78,12 @@ public class LoggedInActivity extends BaseActivity {
           Logger.v(TAG, "user is public: error: " + answer.getError().getDescription());
           Toast.makeText(LoggedInActivity.this, R.string.unknown_error, Toast.LENGTH_SHORT).show();
         }
-        pleaseWaitDialog.show();
+        pleaseWaitDialog.dismiss();
 
         startActivity(getIntent().setClass(this, CreateStoreActivity.class));
         finish();
       }, throwable -> {
-        pleaseWaitDialog.show();
+        pleaseWaitDialog.dismiss();
         startActivity(getIntent().setClass(this, CreateStoreActivity.class));
         finish();
       });
