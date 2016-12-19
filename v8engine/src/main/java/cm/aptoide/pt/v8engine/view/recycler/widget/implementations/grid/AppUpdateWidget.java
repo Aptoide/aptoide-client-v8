@@ -13,7 +13,6 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -22,13 +21,6 @@ import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppUpdateDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
-import java.io.IOException;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Credentials;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -79,7 +71,7 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
     appName.setText(displayable.getAppTitle(getContext()));
     appUpdate.setText(displayable.getHasUpdateText(getContext()));
     appVersion.setText(displayable.getVersionText(getContext()));
-    setCardviewMargin(displayable, cardView);
+    setCardViewMargin(displayable, cardView);
     updateButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.timeline_update_app_dark, 0, 0,
         0);
     updateButton.setText(displayable.getUpdateAppText(getContext()));

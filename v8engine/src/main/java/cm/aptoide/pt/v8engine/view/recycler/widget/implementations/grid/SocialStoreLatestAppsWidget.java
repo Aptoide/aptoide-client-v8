@@ -22,7 +22,8 @@ import java.util.Map;
  * Created by jdandrade on 29/11/2016.
  */
 
-public class SocialStoreLatestAppsWidget extends SocialCardWidget<SocialStoreLatestAppsDisplayable> {
+public class SocialStoreLatestAppsWidget
+    extends SocialCardWidget<SocialStoreLatestAppsDisplayable> {
 
   private final String cardType = "Social Latest Apps";
   private final LayoutInflater inflater;
@@ -31,7 +32,6 @@ public class SocialStoreLatestAppsWidget extends SocialCardWidget<SocialStoreLat
   private LinearLayout appsContaner;
   private ImageView image;
   private View store;
-  private SocialStoreLatestAppsDisplayable displayable;
   private Map<View, Long> apps;
   private Map<Long, String> appsPackages;
   private CardView cardView;
@@ -44,6 +44,7 @@ public class SocialStoreLatestAppsWidget extends SocialCardWidget<SocialStoreLat
   }
 
   @Override protected void assignViews(View itemView) {
+    super.assignViews(itemView);
     store = itemView.findViewById(R.id.displayable_social_timeline_store_latest_apps_header);
     title = (TextView) itemView.findViewById(
         R.id.displayable_social_timeline_store_latest_apps_card_title);
@@ -58,10 +59,10 @@ public class SocialStoreLatestAppsWidget extends SocialCardWidget<SocialStoreLat
   }
 
   @Override public void bindView(SocialStoreLatestAppsDisplayable displayable) {
-    this.displayable = displayable;
+    super.bindView(displayable);
     title.setText(displayable.getStoreName());
     subtitle.setText(displayable.getTimeSinceLastUpdate(getContext()));
-    setCardviewMargin(displayable, cardView);
+    setCardViewMargin(displayable, cardView);
     ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
 
     appsContaner.removeAllViews();

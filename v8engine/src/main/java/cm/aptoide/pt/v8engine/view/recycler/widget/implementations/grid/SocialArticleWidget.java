@@ -37,11 +37,8 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
   private Button getAppButton;
   private CardView cardView;
   private View articleHeader;
-  private SocialArticleDisplayable displayable;
   private TextView relatedTo;
-  private LinearLayout like;
   private LinearLayout share;
-  private LinearLayout comments;
   private LikeButton likeButton;
   private TextView numberLikes;
   private TextView numberComments;
@@ -53,6 +50,7 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
   }
 
   @Override protected void assignViews(View itemView) {
+    super.assignViews(itemView);
     title = (TextView) itemView.findViewById(R.id.card_title);
     subtitle = (TextView) itemView.findViewById(R.id.card_subtitle);
     storeAvatar = (ImageView) itemView.findViewById(R.id.card_image);
@@ -65,16 +63,14 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
     cardView = (CardView) itemView.findViewById(R.id.card);
     articleHeader = itemView.findViewById(R.id.displayable_social_timeline_article_header);
     relatedTo = (TextView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_related_to);
-    like = (LinearLayout) itemView.findViewById(R.id.social_like);
     share = (LinearLayout) itemView.findViewById(R.id.social_share);
     likeButton = (LikeButton) itemView.findViewById(R.id.social_like_test);
-    comments = (LinearLayout) itemView.findViewById(R.id.social_comment);
     numberLikes = (TextView) itemView.findViewById(R.id.social_number_of_likes);
     numberComments = (TextView) itemView.findViewById(R.id.social_number_of_comments);
   }
 
   @Override public void bindView(SocialArticleDisplayable displayable) {
-    this.displayable = displayable;
+    super.bindView(displayable);
     if (displayable.getStore() != null) {
       title.setText(displayable.getStore().getName());
     }
@@ -88,7 +84,7 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
         Typeface.createFromAsset(getContext().getAssets(), "fonts/DroidSerif-Regular.ttf");
     articleTitle.setTypeface(typeFace);
     articleTitle.setText(displayable.getArticleTitle());
-    setCardviewMargin(displayable, cardView);
+    setCardViewMargin(displayable, cardView);
     if (displayable.getStore() != null) {
       ImageLoader.loadWithShadowCircleTransform(displayable.getStore().getAvatar(), storeAvatar);
     }
@@ -98,10 +94,8 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
 
     ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
     likeButton.setLiked(false);
-    like.setVisibility(View.VISIBLE);
     numberLikes.setVisibility(View.VISIBLE);
     numberLikes.setText(String.valueOf(displayable.getNumberOfLikes()));
-    comments.setVisibility(View.VISIBLE);
     numberComments.setVisibility(View.VISIBLE);
     numberComments.setText(String.valueOf(displayable.getNumberOfComments()));
     //relatedTo.setText(displayable.getAppRelatedToText(getContext(), appName));
@@ -140,13 +134,13 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
             appName = installeds.get(0).getName();
             packageName = installeds.get(0).getPackageName();
           } else {
-            setAppNameToFirstLinkedApp();
+            setAppNameToFirstLinkedApp(displayable);
           }
           if (appName != null) {
             relatedTo.setText(displayable.getAppRelatedToText(getContext(), appName));
           }
         }, throwable -> {
-          setAppNameToFirstLinkedApp();
+          setAppNameToFirstLinkedApp(displayable);
           if (appName != null) {
             relatedTo.setText(displayable.getAppRelatedToText(getContext(), appName));
           }
@@ -173,9 +167,9 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
       displayable.share(getContext());
     }, throwable -> throwable.printStackTrace()));
 
-    compositeSubscription.add(RxView.clicks(like).subscribe(click -> {
-    }, (throwable) -> throwable.printStackTrace()));
-
+    //
+    // should this be inside the like button logic ??
+    //
     likeButton.setOnLikeListener(new OnLikeListener() {
       @Override public void liked(LikeButton likeButton) {
         likeCard(displayable, cardType, 1);
@@ -190,7 +184,7 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
     });
   }
 
-  private void setAppNameToFirstLinkedApp() {
+  private void setAppNameToFirstLinkedApp(SocialArticleDisplayable displayable) {
     if (!displayable.getRelatedToAppsList().isEmpty()) {
       appName = displayable.getRelatedToAppsList().get(0).getName();
     }

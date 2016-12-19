@@ -65,7 +65,7 @@ public class RecommendationWidget extends CardWidget<RecommendationDisplayable> 
     title.setText(displayable.getStyledTitle(getContext()));
     subtitle.setText(displayable.getTimeSinceRecommendation(getContext()));
 
-    setCardviewMargin(displayable, cardView);
+    setCardViewMargin(displayable, cardView);
 
     ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarResource(), image);
 

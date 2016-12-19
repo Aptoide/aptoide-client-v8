@@ -75,7 +75,7 @@ public class VideoWidget extends CardWidget<VideoDisplayable> {
     subtitle.setText(displayable.getTimeSinceLastUpdate(getContext()));
     videoTitle.setTypeface(typeFace);
     videoTitle.setText(displayable.getVideoTitle());
-    setCardviewMargin(displayable, cardView);
+    setCardViewMargin(displayable, cardView);
     ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
     ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
     play_button.setVisibility(View.VISIBLE);

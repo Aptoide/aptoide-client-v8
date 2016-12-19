@@ -1,34 +1,64 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
-import android.support.v7.app.AlertDialog;
+import android.support.annotation.CallSuper;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.LinearLayout;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.utils.GenericDialogs;
+import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.dialog.SharePreviewDialog;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 
-public abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWidget<T> {
+abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWidget<T> {
+
+  private static final String TAG = SocialCardWidget.class.getName();
 
   private LinearLayout comments;
+  //private LinearLayout like;
 
-  public SocialCardWidget(View itemView) {
+  SocialCardWidget(View itemView) {
     super(itemView);
   }
 
-  @Override protected void assignViews(View itemView) {
+  @Override @CallSuper protected void assignViews(View itemView) {
     comments = (LinearLayout) itemView.findViewById(R.id.social_comment);
+    //like = (LinearLayout) itemView.findViewById(R.id.social_like);
   }
 
+  @Override @CallSuper public void bindView(T displayable) {
+    if (comments != null) {
+      compositeSubscription.add(
+          RxView.clicks(comments).flatMap(aVoid -> showComments()).subscribe(aVoid -> {
+          }, showError()));
 
+      comments.setVisibility(View.VISIBLE);
+    } else {
+      Logger.w(TAG, "comment button is null in this view");
+    }
 
-  public void likeCard(T displayable, String cardType, int rating) {
+    //if (like != null) {
+    //  compositeSubscription.add(
+    //      RxView.clicks(like).flatMap(aVoid -> showComments()).subscribe(aVoid -> {
+    //      }, showError()));
+    //
+    //  like.setVisibility(View.VISIBLE);
+    //} else {
+    //  Logger.w(TAG, "like button is null in this view");
+    //}
+  }
+
+  @NonNull private Action1<Throwable> showError() {
+    return err -> {
+      Logger.e(TAG, err);
+      CrashReports.logException(err);
+    };
+  }
+
+  void likeCard(T displayable, String cardType, int rating) {
     if (!AptoideAccountManager.isLoggedIn()) {
       ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> {
@@ -39,11 +69,11 @@ public abstract class SocialCardWidget<T extends SocialCardDisplayable> extends 
     displayable.like(getContext(), cardType.toUpperCase(), rating);
   }
 
-  private void showComments(T displayable) {
-    compositeSubscription.add(RxView.clicks(comments).subscribe(aVoid -> {
-      // TODO
+  Observable<Void> showComments() {
+    return Observable.fromCallable(() -> {
+      // TODO: 19/12/2016 sithengineer
       ShowMessage.asSnack(comments, "TO DO");
-    }));
+      return null;
+    });
   }
-
 }

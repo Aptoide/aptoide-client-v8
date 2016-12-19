@@ -12,22 +12,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SimilarDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
-import java.io.IOException;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Credentials;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 /**
  * Created by marcelobenites on 7/8/16.
@@ -75,7 +65,7 @@ public class SimilarWidget extends CardWidget<SimilarDisplayable> {
     title.setText(displayable.getStyledTitle(getContext()));
     subtitle.setText(displayable.getTimeSinceRecommendation(getContext()));
 
-    setCardviewMargin(displayable, cardView);
+    setCardViewMargin(displayable, cardView);
 
     ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarResource(), image);
 

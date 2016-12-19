@@ -62,7 +62,7 @@ public class StoreLatestAppsWidget extends CardWidget<StoreLatestAppsDisplayable
     this.displayable = displayable;
     title.setText(displayable.getStoreName());
     subtitle.setText(displayable.getTimeSinceLastUpdate(getContext()));
-    setCardviewMargin(displayable, cardView);
+    setCardViewMargin(displayable, cardView);
     ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
 
     appsContaner.removeAllViews();

@@ -36,14 +36,11 @@ public class SocialVideoWidget extends SocialCardWidget<SocialVideoDisplayable> 
   private ImageView play_button;
   private FrameLayout media_layout;
   private CardView cardView;
-  private SocialVideoDisplayable displayable;
   private View videoHeader;
   private TextView relatedTo;
   private String appName;
   private String packageName;
-  private LinearLayout like;
   private LinearLayout share;
-  private LinearLayout comments;
   private LikeButton likeButton;
   private TextView numberLikes;
   private TextView numberComments;
@@ -53,6 +50,7 @@ public class SocialVideoWidget extends SocialCardWidget<SocialVideoDisplayable> 
   }
 
   @Override protected void assignViews(View itemView) {
+    super.assignViews(itemView);
     title = (TextView) itemView.findViewById(R.id.card_title);
     subtitle = (TextView) itemView.findViewById(R.id.card_subtitle);
     storeAvatar = (ImageView) itemView.findViewById(R.id.card_image);
@@ -67,31 +65,27 @@ public class SocialVideoWidget extends SocialCardWidget<SocialVideoDisplayable> 
     cardView = (CardView) itemView.findViewById(R.id.card);
     videoHeader = itemView.findViewById(R.id.displayable_social_timeline_video_header);
     relatedTo = (TextView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_related_to);
-    like = (LinearLayout) itemView.findViewById(R.id.social_like);
     share = (LinearLayout) itemView.findViewById(R.id.social_share);
     likeButton = (LikeButton) itemView.findViewById(R.id.social_like_test);
-    comments = (LinearLayout) itemView.findViewById(R.id.social_comment);
     numberLikes = (TextView) itemView.findViewById(R.id.social_number_of_likes);
     numberComments = (TextView) itemView.findViewById(R.id.social_number_of_comments);
   }
 
   @Override public void bindView(SocialVideoDisplayable displayable) {
-    this.displayable = displayable;
+    super.bindView(displayable);
     Typeface typeFace =
         Typeface.createFromAsset(getContext().getAssets(), "fonts/DroidSerif-Regular.ttf");
     title.setText(displayable.getTitle());
     subtitle.setText(displayable.getTimeSinceLastUpdate(getContext()));
     videoTitle.setTypeface(typeFace);
     videoTitle.setText(displayable.getVideoTitle());
-    setCardviewMargin(displayable, cardView);
+    setCardViewMargin(displayable, cardView);
     ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarUrl(), storeAvatar);
     ImageLoader.loadWithShadowCircleTransform(displayable.getUser().getAvatar(), userAvatar);
     ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
     play_button.setVisibility(View.VISIBLE);
-    like.setVisibility(View.VISIBLE);
     numberLikes.setVisibility(View.VISIBLE);
     numberLikes.setText(String.valueOf(displayable.getNumberOfLikes()));
-    comments.setVisibility(View.VISIBLE);
     numberComments.setVisibility(View.VISIBLE);
     numberComments.setText(String.valueOf(displayable.getNumberOfComments()));
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -123,13 +117,13 @@ public class SocialVideoWidget extends SocialCardWidget<SocialVideoDisplayable> 
             appName = installeds.get(0).getName();
             packageName = installeds.get(0).getPackageName();
           } else {
-            setAppNameToFirstLinkedApp();
+            setAppNameToFirstLinkedApp(displayable);
           }
           if (appName != null) {
             relatedTo.setText(displayable.getAppRelatedText(getContext(), appName));
           }
         }, throwable -> {
-          setAppNameToFirstLinkedApp();
+          setAppNameToFirstLinkedApp(displayable);
           if (appName != null) {
             relatedTo.setText(displayable.getAppRelatedText(getContext(), appName));
           }
@@ -165,7 +159,7 @@ public class SocialVideoWidget extends SocialCardWidget<SocialVideoDisplayable> 
     });
   }
 
-  private void setAppNameToFirstLinkedApp() {
+  private void setAppNameToFirstLinkedApp(SocialVideoDisplayable displayable) {
     if (!displayable.getRelatedToAppsList().isEmpty()) {
       appName = displayable.getRelatedToAppsList().get(0).getName();
     }

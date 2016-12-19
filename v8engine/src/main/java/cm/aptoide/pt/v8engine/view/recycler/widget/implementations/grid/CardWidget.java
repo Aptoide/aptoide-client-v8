@@ -57,7 +57,7 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
     });
   }
 
-  protected void setCardviewMargin(CardDisplayable displayable, CardView cardView) {
+  protected void setCardViewMargin(CardDisplayable displayable, CardView cardView) {
     CardView.LayoutParams layoutParams =
         new CardView.LayoutParams(CardView.LayoutParams.WRAP_CONTENT,
             CardView.LayoutParams.WRAP_CONTENT);

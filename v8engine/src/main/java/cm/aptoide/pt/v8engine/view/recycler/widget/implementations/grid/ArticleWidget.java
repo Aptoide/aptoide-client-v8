@@ -77,7 +77,7 @@ public class ArticleWidget extends CardWidget<ArticleDisplayable> {
         Typeface.createFromAsset(getContext().getAssets(), "fonts/DroidSerif-Regular.ttf");
     articleTitle.setTypeface(typeFace);
     articleTitle.setText(displayable.getArticleTitle());
-    setCardviewMargin(displayable, cardView);
+    setCardViewMargin(displayable, cardView);
     ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
     ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
 
