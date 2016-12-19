@@ -13,7 +13,7 @@ import lombok.Getter;
 /**
  * Created by jdandrade on 15/12/2016.
  */
-@EqualsAndHashCode(exclude = { "app", "similarApps" }) public class SocialInstall
+@EqualsAndHashCode(exclude = { "app" }) public class SocialInstall
     implements TimelineCard {
 
   @Getter private final String cardId;
