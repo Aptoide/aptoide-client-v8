@@ -2,6 +2,7 @@ package cm.aptoide.accountmanager;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.widget.Button;
 import android.widget.Toast;
 import cm.aptoide.pt.dataprovider.DataProvider;
@@ -25,12 +26,14 @@ public class LoggedInActivity2ndStep extends BaseActivity {
   private Button mPrivateProfile;
 
   private CompositeSubscription mSubscriptions;
+  private Toolbar mToolbar;
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(getLayoutId());
     mSubscriptions = new CompositeSubscription();
     bindViews();
+    setupToolbar();
     setupListeners();
   }
 
@@ -42,7 +45,17 @@ public class LoggedInActivity2ndStep extends BaseActivity {
     return R.layout.logged_in_second_screen;
   }
 
+  private void setupToolbar() {
+    if (mToolbar != null) {
+      setSupportActionBar(mToolbar);
+      getSupportActionBar().setHomeButtonEnabled(false);
+      getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+      getSupportActionBar().setTitle(getActivityTitle());
+    }
+  }
+
   private void bindViews() {
+    mToolbar = (Toolbar) findViewById(R.id.toolbar);
     mContinueButton = (Button) findViewById(R.id.logged_in_continue);
     mPrivateProfile = (Button) findViewById(R.id.logged_in_private_button);
   }
@@ -66,12 +79,17 @@ public class LoggedInActivity2ndStep extends BaseActivity {
           Toast.makeText(LoggedInActivity2ndStep.this, R.string.unknown_error, Toast.LENGTH_SHORT)
               .show();
         }
+        pleaseWaitDialog.dismiss();
+
         startActivity(getIntent().setClass(this, CreateStoreActivity.class));
         finish();
+
       }, throwable -> {
-        pleaseWaitDialog.show();
+
+        pleaseWaitDialog.dismiss();
         startActivity(getIntent().setClass(this, CreateStoreActivity.class));
         finish();
+
       });
     }));
     mSubscriptions.add(RxView.clicks(mPrivateProfile).subscribe(clicks -> {
@@ -92,12 +110,17 @@ public class LoggedInActivity2ndStep extends BaseActivity {
           Toast.makeText(LoggedInActivity2ndStep.this, R.string.unknown_error, Toast.LENGTH_SHORT)
               .show();
         }
+
+        pleaseWaitDialog.dismiss();
         startActivity(getIntent().setClass(this, CreateStoreActivity.class));
         finish();
+
       }, throwable -> {
-        pleaseWaitDialog.show();
+
+        pleaseWaitDialog.dismiss();
         startActivity(getIntent().setClass(this, CreateStoreActivity.class));
         finish();
+
       });
     }));
   }

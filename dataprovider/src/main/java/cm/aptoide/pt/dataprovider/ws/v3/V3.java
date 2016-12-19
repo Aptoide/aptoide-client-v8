@@ -22,6 +22,7 @@ import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.okhttp.cache.PostCacheInterceptor;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 import retrofit2.adapter.rxjava.HttpException;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
@@ -36,6 +37,7 @@ import rx.android.schedulers.AndroidSchedulers;
 public abstract class V3<U> extends WebService<V3.Interfaces, U> {
 
   protected static final String BASE_HOST = "http://webservices.aptoide.com/webservices/3/";
+  private static final int REFRESH_TOKEN_DELAY = 500;
   protected final BaseBody map;
   private final String INVALID_ACCESS_TOKEN_CODE = "invalid_token";
   private boolean accessTokenRetry = false;
@@ -86,7 +88,9 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
               return DataProvider.invalidateAccessToken()
                   .flatMap(s -> {
                     this.map.setAccess_token(s);
-                    return V3.this.observe(bypassCache).observeOn(AndroidSchedulers.mainThread());
+                    return V3.this.observe(bypassCache)
+                        .delaySubscription(REFRESH_TOKEN_DELAY, TimeUnit.MILLISECONDS)
+                        .observeOn(AndroidSchedulers.mainThread());
                   });
             }
           } else {
