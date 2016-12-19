@@ -3,6 +3,7 @@ package cm.aptoide.accountmanager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.Toast;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.SetUserRequest;
@@ -51,8 +52,12 @@ public class LoggedInActivity2ndStep extends BaseActivity {
           DataProvider.getContext()).getAptoideClientUUID(), "PUBLIC").execute(answer -> {
         if (answer.isOk()) {
           Logger.v(TAG, "user is public");
+          Toast.makeText(LoggedInActivity2ndStep.this, R.string.successful, Toast.LENGTH_SHORT)
+              .show();
         } else {
           Logger.v(TAG, "user is public: error: " + answer.getError().getDescription());
+          Toast.makeText(LoggedInActivity2ndStep.this, R.string.unknown_error, Toast.LENGTH_SHORT)
+              .show();
         }
         startActivity(new Intent(this, CreateStoreActivity.class));
         finish();
@@ -63,8 +68,12 @@ public class LoggedInActivity2ndStep extends BaseActivity {
           DataProvider.getContext()).getAptoideClientUUID(), "UNLISTED").execute(answer -> {
         if (answer.isOk()) {
           Logger.v(TAG, "user is private");
+          Toast.makeText(LoggedInActivity2ndStep.this, R.string.successful, Toast.LENGTH_SHORT)
+              .show();
         } else {
           Logger.v(TAG, "user is private: error: " + answer.getError().getDescription());
+          Toast.makeText(LoggedInActivity2ndStep.this, R.string.unknown_error, Toast.LENGTH_SHORT)
+              .show();
         }
         startActivity(new Intent(this, CreateStoreActivity.class));
         finish();

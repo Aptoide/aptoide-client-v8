@@ -27,7 +27,8 @@ import rx.subscriptions.CompositeSubscription;
  * Created by pedroribeiro on 24/11/16.
  */
 
-public class CreateUserActivity extends PermissionsBaseActivity implements AptoideAccountManager.ICreateProfile {
+public class CreateUserActivity extends PermissionsBaseActivity
+    implements AptoideAccountManager.ICreateProfile {
 
   private String userEmail;
   private String userPassword;
@@ -102,44 +103,50 @@ public class CreateUserActivity extends PermissionsBaseActivity implements Aptoi
       username = mUsername.getText().toString();
       validateProfileData();
       if (CREATE_USER_REQUEST_CODE == 1) {
-        ProgressDialog pleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(this, getApplicationContext().getString(R.string.please_wait_upload));
+        ProgressDialog pleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
+            getApplicationContext().getString(R.string.please_wait_upload));
         pleaseWaitDialog.show();
-        CreateUserRequest.of("true", userEmail, username, userPassword, avatarPath).execute(answer -> {
-          if (answer.hasErrors()) {
-            if (answer.getErrors() != null && answer.getErrors().size() > 0) {
-              onRegisterFail(ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors().get(0).code));
-              pleaseWaitDialog.dismiss();
-            } else {
-              onRegisterFail(R.string.unknown_error);
-              pleaseWaitDialog.dismiss();
-            }
-          } else {
-            //Successfull update
-            saveUserDataOnPreferences();
-            onRegisterSuccess(pleaseWaitDialog);
-            pleaseWaitDialog.dismiss();
-          }
-        });
+        CreateUserRequest.of("true", userEmail, username, userPassword, avatarPath)
+            .execute(answer -> {
+              if (answer.hasErrors()) {
+                if (answer.getErrors() != null && answer.getErrors().size() > 0) {
+                  onRegisterFail(ErrorsMapper.getWebServiceErrorMessageFromCode(
+                      answer.getErrors().get(0).code));
+                  pleaseWaitDialog.dismiss();
+                } else {
+                  onRegisterFail(R.string.unknown_error);
+                  pleaseWaitDialog.dismiss();
+                }
+              } else {
+                //Successfull update
+                saveUserDataOnPreferences();
+                onRegisterSuccess(pleaseWaitDialog);
+                pleaseWaitDialog.dismiss();
+              }
+            });
       } else if (CREATE_USER_REQUEST_CODE == 2) {
         avatarPath = "";
-        ProgressDialog pleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(this, getApplicationContext().getString(R.string.please_wait));
+        ProgressDialog pleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
+            getApplicationContext().getString(R.string.please_wait));
         pleaseWaitDialog.show();
-        CreateUserRequest.of("true", userEmail, username, userPassword, avatarPath).execute(answer -> {
-          if (answer.hasErrors()) {
-            if (answer.getErrors() != null && answer.getErrors().size() > 0) {
-              onRegisterFail(ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors().get(0).code));
-              pleaseWaitDialog.dismiss();
-            } else {
-              onRegisterFail(R.string.unknown_error);
-              pleaseWaitDialog.dismiss();
-            }
-          } else {
-            //Successfull update
-            saveUserDataOnPreferences();
-            onRegisterSuccess(pleaseWaitDialog);
-            pleaseWaitDialog.dismiss();
-          }
-        });
+        CreateUserRequest.of("true", userEmail, username, userPassword, avatarPath)
+            .execute(answer -> {
+              if (answer.hasErrors()) {
+                if (answer.getErrors() != null && answer.getErrors().size() > 0) {
+                  onRegisterFail(ErrorsMapper.getWebServiceErrorMessageFromCode(
+                      answer.getErrors().get(0).code));
+                  pleaseWaitDialog.dismiss();
+                } else {
+                  onRegisterFail(R.string.unknown_error);
+                  pleaseWaitDialog.dismiss();
+                }
+              } else {
+                //Successfull update
+                saveUserDataOnPreferences();
+                onRegisterSuccess(pleaseWaitDialog);
+                pleaseWaitDialog.dismiss();
+              }
+            });
       }
     }));
   }
@@ -150,22 +157,21 @@ public class CreateUserActivity extends PermissionsBaseActivity implements Aptoi
     accessToken = getIntent().getStringExtra(AptoideLoginUtils.APTOIDE_LOGIN_ACCESS_TOKEN_KEY);
   }
 
-  @Override
-  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-      FileUtils fileUtils = new FileUtils();
+  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    FileUtils fileUtils = new FileUtils();
     if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
       Uri avatarUrl = getPhotoFileUri(PermissionsBaseActivity.createAvatarPhotoName(photoAvatar));
       ImageLoader.loadWithCircleTransform(avatarUrl, mAvatar);
       avatarPath = avatarUrl.toString();
     } else if (requestCode == GALLERY_CODE && resultCode == RESULT_OK) {
-        Uri avatarUrl = data.getData();
-        avatarPath = fileUtils.getPath(avatarUrl, getApplicationContext());
-        if (checkImageResolution(avatarPath)) {
-          ImageLoader.loadWithCircleTransform(avatarUrl, mAvatar);
-        } else {
-          ShowMessage.asSnack(this, R.string.create_user_bad_photo);
-          avatarPath = "";
-        }
+      Uri avatarUrl = data.getData();
+      avatarPath = fileUtils.getPath(avatarUrl, getApplicationContext());
+      if (checkImageResolution(avatarPath)) {
+        ImageLoader.loadWithCircleTransform(avatarUrl, mAvatar);
+      } else {
+        ShowMessage.asSnack(this, R.string.create_user_bad_photo);
+        avatarPath = "";
+      }
     } else if (requestCode == CREATE_STORE_REQUEST_CODE) {
       finish();
     }
@@ -208,10 +214,8 @@ public class CreateUserActivity extends PermissionsBaseActivity implements Aptoi
         intent.putExtra(AptoideLoginUtils.APTOIDE_LOGIN_USER_NAME_KEY, userEmail);
         intent.putExtra(AptoideLoginUtils.APTOIDE_LOGIN_PASSWORD_KEY, userPassword);
         startActivityForResult(intent, CREATE_STORE_REQUEST_CODE);
-
     }
   }
-
 
   private void saveUserDataOnPreferences() {
     AccountManagerPreferences.setUserAvatar(avatarPath);
@@ -222,8 +226,7 @@ public class CreateUserActivity extends PermissionsBaseActivity implements Aptoi
     ShowMessage.asSnack(content, R.string.user_created);
     //data.putString(AptoideLoginUtils.APTOIDE_LOGIN_FROM, SIGNUP);
     progressDialog.dismiss();
-    Intent intent = new Intent(this, LoggedInActivity.class);
-    startActivityForResult(intent, USER_PROFILE_CODE);
+    startActivity(new Intent(this, LoggedInActivity.class));
   }
 
   @Override public void onRegisterFail(@StringRes int reason) {
