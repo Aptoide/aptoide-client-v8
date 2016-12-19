@@ -44,6 +44,14 @@ public class RxAptoide {
   }
 
   public static void integrate(Context context, String oemid) {
+    if (context == null) {
+      throw new IllegalArgumentException("Context cannot be null!");
+    }
+
+    if (oemid == null) {
+      throw new IllegalArgumentException("Oemid cannot be null!");
+    }
+
     AptoideUtils.setContext(context);
     RxAptoide.oemid = oemid;
 
