@@ -84,7 +84,7 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
 
       // get multi part message
       final String[] parts = Translator.translateToMultiple(messageAndApp.first);
-      if(parts!=null && parts.length>0) {
+      if (parts != null && parts.length == 4) {
         SpannableString middle =
             new SpannableString(String.format(isAppInstalled ? parts[2] : parts[3], appName));
         middle.setSpan(new ForegroundColorSpan(color), 0, middle.length(), Spanned.SPAN_MARK_MARK);
@@ -128,7 +128,8 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
       installButton.setBackgroundDrawable(d);
     }
 
-    installButton.setText(getContext().getString( isAppInstalled ? R.string.open : R.string.install));
+    installButton.setText(
+        getContext().getString(isAppInstalled ? R.string.open : R.string.install));
 
     compositeSubscription.add(RxView.clicks(installButton).subscribe(a -> {
       if (isAppInstalled) {
