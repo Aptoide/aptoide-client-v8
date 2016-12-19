@@ -59,7 +59,7 @@ public class LoggedInActivity2ndStep extends BaseActivity {
           Toast.makeText(LoggedInActivity2ndStep.this, R.string.unknown_error, Toast.LENGTH_SHORT)
               .show();
         }
-        startActivity(new Intent(this, CreateStoreActivity.class));
+        startActivity(getIntent().setClass(this, CreateStoreActivity.class));
         finish();
       });
     }));
@@ -75,7 +75,7 @@ public class LoggedInActivity2ndStep extends BaseActivity {
           Toast.makeText(LoggedInActivity2ndStep.this, R.string.unknown_error, Toast.LENGTH_SHORT)
               .show();
         }
-        startActivity(new Intent(this, CreateStoreActivity.class));
+        startActivity(getIntent().setClass(this, CreateStoreActivity.class));
         finish();
       });
     }));

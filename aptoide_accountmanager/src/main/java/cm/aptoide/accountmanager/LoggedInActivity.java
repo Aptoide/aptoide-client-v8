@@ -1,5 +1,6 @@
 package cm.aptoide.accountmanager;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
@@ -9,6 +10,7 @@ import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.SetUserRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.utils.GenericDialogs;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.subscriptions.CompositeSubscription;
 
@@ -47,6 +49,11 @@ public class LoggedInActivity extends BaseActivity {
 
   private void setupListeners() {
     mSubscriptions.add(RxView.clicks(mContinueButton).subscribe(clicks -> {
+
+      ProgressDialog pleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
+          getApplicationContext().getString(R.string.please_wait));
+      pleaseWaitDialog.show();
+
       SetUserRequest.of(new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
           DataProvider.getContext()).getAptoideClientUUID(), "PUBLIC").execute(answer -> {
         if (answer.isOk()) {
@@ -56,12 +63,14 @@ public class LoggedInActivity extends BaseActivity {
           Logger.v(TAG, "user is public: error: " + answer.getError().getDescription());
           Toast.makeText(LoggedInActivity.this, R.string.unknown_error, Toast.LENGTH_SHORT).show();
         }
-        startActivity(new Intent(this, CreateStoreActivity.class));
+        pleaseWaitDialog.show();
+
+        startActivity(getIntent().setClass(this, CreateStoreActivity.class));
         finish();
       });
     }));
     mSubscriptions.add(RxView.clicks(mMoreInfoButton).subscribe(clicks -> {
-      startActivity(new Intent(this, LoggedInActivity2ndStep.class));
+      startActivity(getIntent().setClass(this, LoggedInActivity2ndStep.class));
     }));
   }
 
