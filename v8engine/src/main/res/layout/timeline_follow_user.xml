@@ -1,16 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="87dp"
     android:orientation="vertical"
+    android:padding="5dp"
+    style="?attr/backgroundCard"
     >
 
-  <TextView
-      android:id="@+id/user_name"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      tools:text="teste"
+  <ImageView
+      android:id="@+id/main_icon"
+      android:layout_width="60dp"
+      android:layout_height="60dp"
+      android:layout_centerVertical="true"
+      tools:src="@drawable/ic_avatar_apps"
+      />
+  <ImageView
+      android:id="@+id/secondary_icon"
+      android:layout_width="26dp"
+      android:layout_height="26dp"
+      android:layout_alignBottom="@+id/main_icon"
+      android:layout_toLeftOf="@+id/names_layout"
+      tools:src="@drawable/icon_store"
       />
 
-</LinearLayout>
+
+  <LinearLayout
+      android:id="@+id/names_layout"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerVertical="true"
+      android:layout_marginLeft="10dp"
+      android:layout_marginStart="10dp"
+      android:layout_toLeftOf="@+id/separator_vertical"
+      android:layout_toRightOf="@+id/main_icon"
+      android:orientation="vertical"
+      >
+
+    <TextView
+        android:id="@+id/store_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/icon_store"
+        android:textStyle="bold"
+        tools:text="teste"
+        />
+
+    <TextView
+        android:id="@+id/user_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="teste"
+        />
+  </LinearLayout>
+  <include
+      layout="@layout/separator_vertical"
+      android:id="@+id/separator_vertical"
+      android:layout_width="1dp"
+      android:layout_height="87dp"
+      android:layout_alignParentEnd="true"
+      android:layout_alignParentRight="true"
+      android:layout_marginEnd="107dp"
+      />
+
+  <LinearLayout
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:layout_alignParentRight="true"
+      android:layout_alignParentTop="true"
+      android:gravity="center"
+      android:orientation="vertical"
+      >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/timeline_stats_followers"
+        />
+
+    <TextView
+        android:id="@+id/followers_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        tools:text="1605"
+        />
+
+    <View
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/horizontal_separator"
+        android:layout_width="100dp"
+        android:layout_height="1dp"
+        android:layout_gravity="center"
+        android:layout_marginEnd="4dp"
+        android:layout_marginLeft="9dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginStart="9dp"
+        android:background="?attr/separatorColor"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/followed"
+        />
+
+    <TextView
+        android:id="@+id/following_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        tools:text="1605"
+        />
+
+  </LinearLayout>
+</RelativeLayout>
