@@ -3,6 +3,7 @@ package cm.aptoide.accountmanager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.widget.Button;
 import android.widget.Toast;
 import cm.aptoide.pt.dataprovider.DataProvider;
@@ -25,16 +26,29 @@ public class LoggedInActivity extends BaseActivity {
   private Button mContinueButton;
   private Button mMoreInfoButton;
   private CompositeSubscription mSubscriptions;
+  private Toolbar mToolbar;
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(getLayoutId());
     mSubscriptions = new CompositeSubscription();
     bindViews();
+    setupToolbar();
     setupListeners();
   }
 
+
+  private void setupToolbar() {
+    if (mToolbar != null) {
+      setSupportActionBar(mToolbar);
+      getSupportActionBar().setHomeButtonEnabled(false);
+      getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+      getSupportActionBar().setTitle(getActivityTitle());
+    }
+  }
+
   private void bindViews() {
+    mToolbar = (Toolbar) findViewById(R.id.toolbar);
     mContinueButton = (Button) findViewById(R.id.logged_in_continue);
     mMoreInfoButton = (Button) findViewById(R.id.logged_in_more_info_button);
   }
