@@ -28,6 +28,7 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
+import cm.aptoide.pt.dataprovider.ws.v7.SetUserRequest;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
@@ -340,23 +341,14 @@ import rx.android.schedulers.AndroidSchedulers;
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(progress -> {
             if (AptoideAccountManager.isLoggedIn() && ManagerPreferences.getShowPreview()) {
-              //SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(displayable);
-              //AlertDialog.Builder alertDialog = sharePreviewDialog.showPreviewDialog(context)
-              //    .setPositiveButton(R.string.share, (dialogInterface, i) -> {
-              //      SocialRepository socialRepository = new SocialRepository();
-              //      socialRepository.share(displayable);
-              //    })
-              //    .setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
-              //    });
-              //alertDialog.show();
               SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(displayable);
               AlertDialog.Builder alertDialog = sharePreviewDialog.showPreviewDialog(getContext());
               SocialRepository socialRepository = new SocialRepository();
 
               Observable.create((Subscriber<? super GenericDialogs.EResponse> subscriber) -> {
-                if (!ManagerPreferences.getUserPrivacyConfirmation()) {
+                if (!ManagerPreferences.getUserAccessConfirmed()) {
                   alertDialog.setPositiveButton(R.string.share, (dialogInterface, i) -> {
-                    socialRepository.share(displayable);
+                    socialRepository.share(displayable, context,sharePreviewDialog.getPrivacyResult());
                     subscriber.onNext(GenericDialogs.EResponse.YES);
                     subscriber.onCompleted();
                   }).setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
@@ -365,7 +357,7 @@ import rx.android.schedulers.AndroidSchedulers;
                   });
                 } else {
                   alertDialog.setPositiveButton(R.string.continue_option, (dialogInterface, i) -> {
-                    socialRepository.share(displayable);
+                    socialRepository.share(displayable, context,sharePreviewDialog.getPrivacyResult());
                     subscriber.onNext(GenericDialogs.EResponse.YES);
                     subscriber.onCompleted();
                   }).setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {

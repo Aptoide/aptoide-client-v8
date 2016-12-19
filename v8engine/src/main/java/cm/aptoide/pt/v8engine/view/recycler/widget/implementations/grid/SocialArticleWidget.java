@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -89,12 +90,18 @@ public class SocialArticleWidget extends CardWidget<SocialArticleDisplayable> {
     articleTitle.setTypeface(typeFace);
     articleTitle.setText(displayable.getArticleTitle());
     setCardviewMargin(displayable, cardView);
+
     if (displayable.getStore() != null) {
       ImageLoader.loadWithShadowCircleTransform(displayable.getStore().getAvatar(), storeAvatar);
+      if (displayable.getUser() != null && ("PUBLIC").equals(ManagerPreferences.getUserAccess())) {
+        ImageLoader.loadWithShadowCircleTransform(displayable.getUser().getAvatar(), userAvatar);
+      }
+    } else {
+      if (displayable.getUser() != null && ("PUBLIC").equals(ManagerPreferences.getUserAccess())) {
+        ImageLoader.loadWithShadowCircleTransform(displayable.getUser().getAvatar(), storeAvatar);
+      }
     }
-    if (displayable.getUser() != null) {
-      ImageLoader.loadWithShadowCircleTransform(displayable.getUser().getAvatar(), userAvatar);
-    }
+
 
     ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
     likeButton.setLiked(false);
@@ -170,7 +177,7 @@ public class SocialArticleWidget extends CardWidget<SocialArticleDisplayable> {
     }));
 
     compositeSubscription.add(RxView.clicks(share).subscribe(click -> {
-      displayable.share(getContext());
+      //shareCard(displayable);
     }, throwable -> throwable.printStackTrace()));
 
     compositeSubscription.add(RxView.clicks(like).subscribe(click -> {

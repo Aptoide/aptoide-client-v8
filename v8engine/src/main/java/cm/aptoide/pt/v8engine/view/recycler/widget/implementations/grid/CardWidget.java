@@ -82,9 +82,9 @@ public abstract class CardWidget<T extends Displayable> extends Widget<T> {
     AlertDialog.Builder alertDialog = sharePreviewDialog.showPreviewDialog(getContext());
 
     Observable.create((Subscriber<? super GenericDialogs.EResponse> subscriber) -> {
-      if (!ManagerPreferences.getUserPrivacyConfirmation()) {
+      if (!ManagerPreferences.getUserAccessConfirmed()) {
         alertDialog.setPositiveButton(R.string.share, (dialogInterface, i) -> {
-          displayable.share(getContext());
+          displayable.share(getContext(), sharePreviewDialog.getPrivacyResult());
           subscriber.onNext(GenericDialogs.EResponse.YES);
           subscriber.onCompleted();
         }).setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
@@ -93,7 +93,7 @@ public abstract class CardWidget<T extends Displayable> extends Widget<T> {
         });
       } else {
         alertDialog.setPositiveButton(R.string.continue_option, (dialogInterface, i) -> {
-          displayable.share(getContext());
+          displayable.share(getContext(), sharePreviewDialog.getPrivacyResult());
           subscriber.onNext(GenericDialogs.EResponse.YES);
           subscriber.onCompleted();
         }).setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {

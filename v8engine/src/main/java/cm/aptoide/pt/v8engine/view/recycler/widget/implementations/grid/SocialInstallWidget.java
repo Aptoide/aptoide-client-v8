@@ -109,7 +109,7 @@ public class SocialInstallWidget extends CardWidget<SocialInstallDisplayable> {
           V8Engine.getFragmentProvider().newAppViewFragment(displayable.getAppId()));
     });
     compositeSubscription.add(RxView.clicks(share).subscribe(click -> {
-      displayable.share(getContext());
+      //shareCard(displayable);
     }, throwable -> throwable.printStackTrace()));
 
     compositeSubscription.add(RxView.clicks(like).subscribe(click -> {
