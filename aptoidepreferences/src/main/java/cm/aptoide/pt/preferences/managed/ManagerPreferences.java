@@ -184,9 +184,9 @@ public class ManagerPreferences {
         .apply();
   }
 
-  public static String getUserAccessConfirmed() {
+  public static Boolean getUserAccessConfirmed() {
     return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
-        .getString(ManagedKeys.ACCESS_CONFIRMED, "UNLISTED");
+        .getBoolean(ManagedKeys.ACCESS_CONFIRMED, false);
   }
 
   public static void setUserAccessConfirmed(Boolean accessConfirmed) {
