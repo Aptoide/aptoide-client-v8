@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.Toast;
-import cm.aptoide.accountmanager.ws.ErrorsMapper;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.SetUserRequest;
@@ -56,7 +55,8 @@ public class LoggedInActivity extends BaseActivity {
       pleaseWaitDialog.show();
 
       SetUserRequest.of(new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-          DataProvider.getContext()).getAptoideClientUUID(), "PUBLIC", AptoideAccountManager.getAccessToken()).execute(answer -> {
+              DataProvider.getContext()).getAptoideClientUUID(), "PUBLIC",
+          AptoideAccountManager.getAccessToken()).execute(answer -> {
         if (answer.isOk()) {
           Logger.v(TAG, "user is public");
           Toast.makeText(LoggedInActivity.this, R.string.successful, Toast.LENGTH_SHORT).show();
@@ -76,6 +76,7 @@ public class LoggedInActivity extends BaseActivity {
     }));
     mSubscriptions.add(RxView.clicks(mMoreInfoButton).subscribe(clicks -> {
       startActivity(getIntent().setClass(this, LoggedInActivity2ndStep.class));
+      finish();
     }));
   }
 

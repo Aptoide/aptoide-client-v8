@@ -1,6 +1,6 @@
 package cm.aptoide.accountmanager;
 
-import android.content.Intent;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.Toast;
@@ -9,6 +9,7 @@ import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.SetUserRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.utils.GenericDialogs;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.subscriptions.CompositeSubscription;
 
@@ -48,8 +49,14 @@ public class LoggedInActivity2ndStep extends BaseActivity {
 
   private void setupListeners() {
     mSubscriptions.add(RxView.clicks(mContinueButton).subscribe(clicks -> {
+
+      ProgressDialog pleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
+          getApplicationContext().getString(R.string.please_wait));
+      pleaseWaitDialog.show();
+
       SetUserRequest.of(new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-          DataProvider.getContext()).getAptoideClientUUID(), "PUBLIC", AptoideAccountManager.getAccessToken()).execute(answer -> {
+              DataProvider.getContext()).getAptoideClientUUID(), "PUBLIC",
+          AptoideAccountManager.getAccessToken()).execute(answer -> {
         if (answer.isOk()) {
           Logger.v(TAG, "user is public");
           Toast.makeText(LoggedInActivity2ndStep.this, R.string.successful, Toast.LENGTH_SHORT)
@@ -61,11 +68,21 @@ public class LoggedInActivity2ndStep extends BaseActivity {
         }
         startActivity(getIntent().setClass(this, CreateStoreActivity.class));
         finish();
+      }, throwable -> {
+        pleaseWaitDialog.show();
+        startActivity(getIntent().setClass(this, CreateStoreActivity.class));
+        finish();
       });
     }));
     mSubscriptions.add(RxView.clicks(mPrivateProfile).subscribe(clicks -> {
+
+      ProgressDialog pleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
+          getApplicationContext().getString(R.string.please_wait));
+      pleaseWaitDialog.show();
+
       SetUserRequest.of(new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-          DataProvider.getContext()).getAptoideClientUUID(), "UNLISTED", AptoideAccountManager.getAccessToken()).execute(answer -> {
+              DataProvider.getContext()).getAptoideClientUUID(), "UNLISTED",
+          AptoideAccountManager.getAccessToken()).execute(answer -> {
         if (answer.isOk()) {
           Logger.v(TAG, "user is private");
           Toast.makeText(LoggedInActivity2ndStep.this, R.string.successful, Toast.LENGTH_SHORT)
@@ -75,6 +92,10 @@ public class LoggedInActivity2ndStep extends BaseActivity {
           Toast.makeText(LoggedInActivity2ndStep.this, R.string.unknown_error, Toast.LENGTH_SHORT)
               .show();
         }
+        startActivity(getIntent().setClass(this, CreateStoreActivity.class));
+        finish();
+      }, throwable -> {
+        pleaseWaitDialog.show();
         startActivity(getIntent().setClass(this, CreateStoreActivity.class));
         finish();
       });

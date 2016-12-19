@@ -18,9 +18,9 @@ public class SetUserRequest extends V7<BaseV7Response, SetUserRequest.Body> {
     super(body, baseHost);
   }
 
-  public static SetUserRequest of(String aptoideClientUUID, String access, String accessToken) {
+  public static SetUserRequest of(String aptoideClientUUID, String user_access, String accessToken) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-    Body body = new Body(access);
+    Body body = new Body(user_access);
     return new SetUserRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
@@ -31,10 +31,10 @@ public class SetUserRequest extends V7<BaseV7Response, SetUserRequest.Body> {
 
   @Data @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody {
 
-    public String access;
+    public String user_access;
 
-    public Body(String access) {
-      this.access = access;
+    public Body(String user_access) {
+      this.user_access = user_access;
     }
 
   }
