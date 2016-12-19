@@ -96,7 +96,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
     setupThemeListeners();
 
     if (!getUserData()) {
-      Logger.e(TAG, "username, password and access token is needed for this activity");
+      Logger.e(TAG, "username and password are needed for this activity");
       finish();
     }
   }
