@@ -22,10 +22,8 @@ public class LoggedInActivity2ndStep extends BaseActivity {
 
   private static final String TAG = LoggedInActivity2ndStep.class.getSimpleName();
 
-  private Toolbar mToolbar;
   private Button mContinueButton;
   private Button mPrivateProfile;
-
   private CompositeSubscription mSubscriptions;
   private Toolbar mToolbar;
 
@@ -51,14 +49,6 @@ public class LoggedInActivity2ndStep extends BaseActivity {
     return R.layout.logged_in_second_screen;
   }
 
-  private void setupToolbar() {
-    if (mToolbar != null) {
-      setSupportActionBar(mToolbar);
-      getSupportActionBar().setHomeButtonEnabled(false);
-      getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-      getSupportActionBar().setTitle(getActivityTitle());
-    }
-  }
 
   private void bindViews() {
     mToolbar = (Toolbar) findViewById(R.id.toolbar);
