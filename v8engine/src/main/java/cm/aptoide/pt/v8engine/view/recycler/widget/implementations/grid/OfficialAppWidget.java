@@ -95,7 +95,7 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
         text.append(parts[1]);
         installMessage.setText(text);
       } else {
-        hideOfficialAppMessage();
+        installMessage.setText(messageAndApp.first);
       }
     } else {
       hideOfficialAppMessage();
