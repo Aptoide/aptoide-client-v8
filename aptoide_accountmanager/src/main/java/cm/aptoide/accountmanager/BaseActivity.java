@@ -32,4 +32,10 @@ public abstract class BaseActivity extends AppCompatActivity{
     }
     return super.onOptionsItemSelected(item);
   }
+
+  protected enum UserAccessState {
+    PUBLIC,
+    PRIVATE,
+    UNLISTED;
+  }
 }
