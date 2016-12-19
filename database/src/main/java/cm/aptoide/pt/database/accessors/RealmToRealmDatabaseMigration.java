@@ -168,10 +168,27 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
         downloadSchema.addField("versionName", String.class);
       }
 
-      RealmObjectSchema paymentConfirmationSchema = schema.create("PaymentConfirmation");
-      paymentConfirmationSchema.addField("status", String.class, FieldAttribute.REQUIRED)
-          .transform(obj -> obj.set("status", "UNKNOWN"));
-      paymentConfirmationSchema.setNullable("status", false);
+      RealmObjectSchema paymentConfirmationSchema = schema.get("PaymentConfirmation")
+          .addField("status", String.class, FieldAttribute.REQUIRED)
+          .transform(obj -> obj.set("status", "UNKNOWN"))
+          .setNullable("status", false)
+          .removeField("paymentId")
+          .removeField("price")
+          .removeField("currency")
+          .removeField("taxRate")
+          .removeField("icon")
+          .removeField("title")
+          .removeField("description")
+          .removeField("priceDescription")
+          .removeField("apiVersion")
+          .removeField("sku")
+          .removeField("packageName")
+          .removeField("developerPayload")
+          .removeField("type")
+          .removeField("appId")
+          .removeField("storeName");
+
+      oldVersion++;
     }
   }
 }
