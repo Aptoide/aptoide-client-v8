@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.Toast;
+import cm.aptoide.accountmanager.ws.ErrorsMapper;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.SetUserRequest;
@@ -65,6 +66,10 @@ public class LoggedInActivity extends BaseActivity {
         }
         pleaseWaitDialog.show();
 
+        startActivity(getIntent().setClass(this, CreateStoreActivity.class));
+        finish();
+      }, throwable -> {
+        pleaseWaitDialog.show();
         startActivity(getIntent().setClass(this, CreateStoreActivity.class));
         finish();
       });
