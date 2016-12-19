@@ -19,7 +19,7 @@ import com.like.OnLikeListener;
 /**
  * Created by jdandrade on 15/12/2016.
  */
-public class SocialInstallWidget extends CardWidget<SocialInstallDisplayable> {
+public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayable> {
 
   private final String cardType = "Social Install";
   private TextView storeName;

@@ -14,13 +14,14 @@ import cm.aptoide.pt.v8engine.repository.SocialRepository;
 import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SocialCardDisplayable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
  * Created by jdandrade on 15/12/2016.
  */
-@AllArgsConstructor public class SocialInstallDisplayable extends CardDisplayable {
+@AllArgsConstructor public class SocialInstallDisplayable extends SocialCardDisplayable {
 
   private SocialInstall socialInstall;
   @Getter private int avatarResource;

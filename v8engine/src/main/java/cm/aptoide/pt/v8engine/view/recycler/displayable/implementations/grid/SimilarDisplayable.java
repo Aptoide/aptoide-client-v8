@@ -136,7 +136,4 @@ import lombok.Getter;
 
   }
 
-  @Override public void like(Context context, String cardType, int rating) {
-
-  }
 }

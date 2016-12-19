@@ -18,6 +18,7 @@ import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.repository.SocialRepository;
 import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SocialCardDisplayable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,7 +31,7 @@ import rx.schedulers.Schedulers;
  * Created by jdandrade on 23/11/2016.
  */
 
-@AllArgsConstructor public class SocialArticleDisplayable extends CardDisplayable {
+@AllArgsConstructor public class SocialArticleDisplayable extends SocialCardDisplayable {
 
   @Getter private SocialArticle socialArticle;
   @Getter private String articleTitle;

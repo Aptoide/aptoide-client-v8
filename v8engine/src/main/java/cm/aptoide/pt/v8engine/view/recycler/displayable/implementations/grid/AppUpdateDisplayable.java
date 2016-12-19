@@ -163,7 +163,4 @@ import rx.Observable;
 
   }
 
-  @Override public void like(Context context, String cardType, int rating) {
-
-  }
 }

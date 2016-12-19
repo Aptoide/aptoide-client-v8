@@ -67,10 +67,6 @@ import lombok.Getter;
     socialRepository.share(storeLatestApps, null);
   }
 
-  @Override public void like(Context context, String cardType, int rating) {
-
-  }
-
   @EqualsAndHashCode @AllArgsConstructor public static class LatestApp {
 
     @Getter private final long appId;
