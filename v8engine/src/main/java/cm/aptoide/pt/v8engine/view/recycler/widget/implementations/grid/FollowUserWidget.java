@@ -23,6 +23,8 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
   private TextView followersNumber;
   private ImageView mainIcon;
   private ImageView secondaryIcon;
+  private TextView followingTv;
+  private TextView followedTv;
 
   public FollowUserWidget(View itemView) {
     super(itemView);
@@ -33,6 +35,8 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
     storeNameTv = (TextView) itemView.findViewById(R.id.store_name);
     followingNumber = (TextView) itemView.findViewById(R.id.following_number);
     followersNumber = (TextView) itemView.findViewById(R.id.followers_number);
+    followingTv = (TextView) itemView.findViewById(R.id.following_tv);
+    followedTv = (TextView) itemView.findViewById(R.id.followers_tv);
     mainIcon = (ImageView) itemView.findViewById(R.id.main_icon);
     secondaryIcon = (ImageView) itemView.findViewById(R.id.secondary_icon);
   }
@@ -63,6 +67,8 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
     } else {
       storeNameTv.setVisibility(View.GONE);
     }
+    followedTv.setTextColor(displayable.getStoreColor());
+    followingTv.setTextColor(displayable.getStoreColor());
   }
 
   private void setupStoreNameTv(int storeColor, String storeName) {

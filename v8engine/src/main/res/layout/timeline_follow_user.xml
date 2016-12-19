@@ -73,6 +73,7 @@
       >
 
     <TextView
+        android:id="@+id/followers_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -101,6 +102,7 @@
         />
 
     <TextView
+        android:id="@+id/following_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
