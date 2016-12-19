@@ -27,7 +27,7 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
   }
 
   public String getUserName() {
-    if (TextUtils.isEmpty(getPojo().getName())) {
+    if (getPojo().getStore() != null && TextUtils.isEmpty(getPojo().getName())) {
       if (TextUtils.isEmpty(getPojo().getStore().getName())) {
         return String.valueOf(getPojo().getId());
       } else {

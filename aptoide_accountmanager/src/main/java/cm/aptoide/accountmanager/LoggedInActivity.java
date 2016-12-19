@@ -1,13 +1,17 @@
 package cm.aptoide.accountmanager;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.widget.Button;
+import android.widget.Toast;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.SetUserRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.utils.GenericDialogs;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.subscriptions.CompositeSubscription;
 
@@ -19,6 +23,7 @@ public class LoggedInActivity extends BaseActivity {
 
   private static final String TAG = LoggedInActivity.class.getSimpleName();
 
+  private Toolbar mToolbar;
   private Button mContinueButton;
   private Button mMoreInfoButton;
   private CompositeSubscription mSubscriptions;
@@ -28,12 +33,19 @@ public class LoggedInActivity extends BaseActivity {
     setContentView(getLayoutId());
     mSubscriptions = new CompositeSubscription();
     bindViews();
+    setupToolbar();
     setupListeners();
   }
 
   private void bindViews() {
     mContinueButton = (Button) findViewById(R.id.logged_in_continue);
     mMoreInfoButton = (Button) findViewById(R.id.logged_in_more_info_button);
+    mToolbar = (Toolbar) findViewById(R.id.toolbar);
+  }
+
+  private void setupToolbar() {
+    setSupportActionBar(mToolbar);
+    getSupportActionBar().setTitle(getActivityTitle());
   }
 
   @Override protected String getActivityTitle() {
@@ -46,21 +58,33 @@ public class LoggedInActivity extends BaseActivity {
 
   private void setupListeners() {
     mSubscriptions.add(RxView.clicks(mContinueButton).subscribe(clicks -> {
+
+      ProgressDialog pleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
+          getApplicationContext().getString(R.string.please_wait));
+      pleaseWaitDialog.show();
+
       SetUserRequest.of(new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-          DataProvider.getContext()).getAptoideClientUUID(), "PUBLIC").execute(answer -> {
+              DataProvider.getContext()).getAptoideClientUUID(), "PUBLIC",
+          AptoideAccountManager.getAccessToken()).execute(answer -> {
         if (answer.isOk()) {
           Logger.v(TAG, "user is public");
+          Toast.makeText(LoggedInActivity.this, R.string.successful, Toast.LENGTH_SHORT).show();
         } else {
           Logger.v(TAG, "user is public: error: " + answer.getError().getDescription());
+          Toast.makeText(LoggedInActivity.this, R.string.unknown_error, Toast.LENGTH_SHORT).show();
         }
-        startActivity(new Intent(this, CreateStoreActivity.class));
+        pleaseWaitDialog.dismiss();
+        startActivity(getIntent().setClass(this, CreateStoreActivity.class));
+        finish();
+      }, throwable -> {
+        pleaseWaitDialog.dismiss();
+        startActivity(getIntent().setClass(this, CreateStoreActivity.class));
         finish();
       });
     }));
     mSubscriptions.add(RxView.clicks(mMoreInfoButton).subscribe(clicks -> {
-      startActivity(new Intent(this, LoggedInActivity2ndStep.class));
-      //Intent intent = new Intent(this, LoggedInActivity2ndStep.class);
-      //startActivityForResult(intent, LOGGED_IN_SECOND_STEP_CODE);
+      startActivity(getIntent().setClass(this, LoggedInActivity2ndStep.class));
+      finish();
     }));
   }
 

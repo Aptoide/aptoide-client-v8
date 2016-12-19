@@ -57,7 +57,6 @@ import retrofit2.http.PartMap;
 import retrofit2.http.Path;
 import retrofit2.http.Url;
 import rx.Observable;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -67,6 +66,7 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
 
   public static final String BASE_HOST = "http://ws75.aptoide.com/api/7/";
   public static final String BASE_PRIMARY_HOST = "http://ws75-primary.aptoide.com/api/7/";
+  private static final int REFRESH_TOKEN_DELAY = 1000;
   @Getter protected final B body;
   private final String INVALID_ACCESS_TOKEN_CODE = "AUTH-2";
   private boolean accessTokenRetry = false;
@@ -154,12 +154,10 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
 
           if (!accessTokenRetry) {
             accessTokenRetry = true;
-            return DataProvider.invalidateAccessToken()
-                .flatMap(new Func1<String, Observable<? extends U>>() {
-                  @Override public Observable<? extends U> call(String s) {
-                    V7.this.body.setAccessToken(s);
-                    return V7.this.observe(bypassCache);
-                  }
+            return DataProvider.invalidateAccessToken().flatMap(s -> {
+              V7.this.body.setAccessToken(s);
+              return V7.this.observe(bypassCache)
+                  .delaySubscription(REFRESH_TOKEN_DELAY, TimeUnit.MILLISECONDS);
                 });
           }
         } else {

@@ -119,7 +119,7 @@ import rx.schedulers.Schedulers;
     timelineMetricsManager.sendEvent(data, eventName);
   }
 
-  @Override public void share(Context context) {
+  @Override public void share(Context context, boolean privacyResult) {
 
   }
 

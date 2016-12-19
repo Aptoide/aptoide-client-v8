@@ -132,11 +132,11 @@ import rx.schedulers.Schedulers;
     return R.layout.displayable_social_timeline_social_article;
   }
 
-  @Override public void share(Context context) {
-
-  }
-
   @Override public void like(Context context, String cardType, int rating) {
     socialRepository.like(socialArticle, cardType, "", rating);
+  }
+
+  @Override public void share(Context context, boolean privacyResult) {
+
   }
 }

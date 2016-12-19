@@ -36,6 +36,10 @@ public abstract class GridRecyclerFragmentWithDecorator<T extends BaseAdapter>
             offset /= 2;
           }
 
+          if (view.getId() == R.id.timeline_stats_layout) {
+            offset = 0;
+          }
+
           outRect.set(offset, offset, offset, offset);
         }
       };

@@ -72,7 +72,7 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
   // all cards are "shareable"
   //
 
-  public void shareCard(T displayable) {
+  void shareCard(T displayable) {
     if (!AptoideAccountManager.isLoggedIn()) {
       ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> {
@@ -85,9 +85,9 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
     AlertDialog.Builder alertDialog = sharePreviewDialog.showPreviewDialog(getContext());
 
     Observable.create((Subscriber<? super GenericDialogs.EResponse> subscriber) -> {
-      if (!ManagerPreferences.getUserPrivacyConfirmation()) {
+      if (!ManagerPreferences.getUserAccessConfirmed()) {
         alertDialog.setPositiveButton(R.string.share, (dialogInterface, i) -> {
-          displayable.share(getContext());
+          displayable.share(getContext(), sharePreviewDialog.getPrivacyResult());
           subscriber.onNext(GenericDialogs.EResponse.YES);
           subscriber.onCompleted();
         }).setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
@@ -96,7 +96,7 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
         });
       } else {
         alertDialog.setPositiveButton(R.string.continue_option, (dialogInterface, i) -> {
-          displayable.share(getContext());
+          displayable.share(getContext(), sharePreviewDialog.getPrivacyResult());
           subscriber.onNext(GenericDialogs.EResponse.YES);
           subscriber.onCompleted();
         }).setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {

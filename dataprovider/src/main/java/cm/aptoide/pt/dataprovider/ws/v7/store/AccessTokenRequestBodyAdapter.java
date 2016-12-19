@@ -61,7 +61,7 @@ public class AccessTokenRequestBodyAdapter implements AccessTokenBody {
             "Couldn't build store_properties json", e);
       }
     }
-    body.put("store_theme", createBodyPartFromString(storeTheme));
+    //body.put("store_theme", createBodyPartFromString(storeTheme));
     body.put("access_token", createBodyPartFromString(accessToken));
     /*body.put("aptoide_uid", createBodyPartFromString(baseBody.getAptoideId()));
     body.put("aptoide_vercode", createBodyPartFromString(String.valueOf(baseBody.getAptoideVercode())));

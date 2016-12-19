@@ -30,5 +30,5 @@ public abstract class CardDisplayable extends Displayable {
     }
   }
 
-  public abstract void share(Context context);
+  public abstract void share(Context context, boolean privacyResult);
 }
