@@ -103,8 +103,9 @@ import rx.Observable;
     if(createRepo.equals("1")) {
       parameters.put("createRepo", createRepo);
       parameters.put("repo", repoName);
-      parameters.put("user", email);
-      parameters.put("passhash", AptoideUtils.AlgorithmU.computeSha1(password));
+      parameters.put("authMode", "aptoide");
+      parameters.put("oauthToken", token);
+      parameters.put("oauthCreateRepo", "true");
       return interfaces.checkUserCredentials(parameters);
     }
 
