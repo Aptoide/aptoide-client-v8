@@ -120,7 +120,7 @@ import rx.schedulers.Schedulers;
   }
 
   @Override public void share(Context context, boolean privacyResult) {
-
+    socialRepository.share(socialVideo, context, privacyResult);
   }
 
   @Override public void like(Context context, String cardType, int rating) {

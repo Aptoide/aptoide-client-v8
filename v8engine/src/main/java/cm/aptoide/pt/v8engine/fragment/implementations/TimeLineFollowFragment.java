@@ -20,6 +20,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeWithToolbarFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FollowUserDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.MessageWhiteBgDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
 import java.util.LinkedList;
 import rx.functions.Action1;
@@ -63,6 +64,16 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
 
       Action1<GetFollowers> action = (followersList) -> {
         LinkedList<Displayable> dispList = new LinkedList<>();
+        switch (openMode) {
+          case FOLLOWERS:
+            dispList.add(new MessageWhiteBgDisplayable(
+                getString(R.string.social_timeline_share_bar_followers)));
+            break;
+          case FOLLOWING:
+            dispList.add(new MessageWhiteBgDisplayable(
+                getString(R.string.social_timeline_share_bar_following)));
+            break;
+        }
         for (GetFollowers.TimelineUser user : followersList.getDatalist().getList()) {
           dispList.add(new FollowUserDisplayable(user));
         }

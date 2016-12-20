@@ -20,6 +20,7 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.repository.SocialRepository;
 import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -33,6 +34,7 @@ import rx.Observable;
  */
 @AllArgsConstructor public class AppUpdateDisplayable extends CardDisplayable {
 
+  private AppUpdate appUpdate;
   @Getter private String appIconUrl;
   @Getter private String storeIconUrl;
   @Getter private String storeName;
@@ -49,13 +51,15 @@ import rx.Observable;
   private InstallManager installManager;
   private PermissionManager permissionManager;
   private TimelineMetricsManager timelineMetricsManager;
+  private SocialRepository socialRepository;
 
   public AppUpdateDisplayable() {
   }
 
   public static AppUpdateDisplayable from(AppUpdate appUpdate, SpannableFactory spannableFactory,
       DownloadFactory downloadFactory, DateCalculator dateCalculator, InstallManager installManager,
-      PermissionManager permissionManager, TimelineMetricsManager timelineMetricsManager) {
+      PermissionManager permissionManager, TimelineMetricsManager timelineMetricsManager,
+      SocialRepository socialRepository) {
     String abTestingURL = null;
 
     if (appUpdate.getAb() != null
@@ -63,11 +67,12 @@ import rx.Observable;
         && appUpdate.getAb().getConversion().getUrl() != null) {
       abTestingURL = appUpdate.getAb().getConversion().getUrl();
     }
-    return new AppUpdateDisplayable(appUpdate.getIcon(), appUpdate.getStore().getAvatar(),
-        appUpdate.getStore().getName(), appUpdate.getAdded(), appUpdate.getFile().getVername(),
-        spannableFactory, appUpdate.getName(), appUpdate.getPackageName(),
-        downloadFactory.create(appUpdate, Download.ACTION_UPDATE), dateCalculator,
-        appUpdate.getId(), abTestingURL, installManager, permissionManager, timelineMetricsManager);
+    return new AppUpdateDisplayable(appUpdate, appUpdate.getIcon(),
+        appUpdate.getStore().getAvatar(), appUpdate.getStore().getName(), appUpdate.getAdded(),
+        appUpdate.getFile().getVername(), spannableFactory, appUpdate.getName(),
+        appUpdate.getPackageName(), downloadFactory.create(appUpdate, Download.ACTION_UPDATE),
+        dateCalculator, appUpdate.getId(), abTestingURL, installManager, permissionManager,
+        timelineMetricsManager, socialRepository);
   }
 
   public Observable<Progress<Download>> update(Context context) {
@@ -92,6 +97,10 @@ import rx.Observable;
     return installManager.getInstallations()
         .filter(downloadProgress -> (!TextUtils.isEmpty(downloadProgress.getRequest().getMd5())
             && downloadProgress.getRequest().getMd5().equals(download.getMd5())));
+  }
+
+  public String getAppName() {
+    return this.appName;
   }
 
   public Spannable getAppTitle(Context context) {
@@ -160,7 +169,6 @@ import rx.Observable;
   }
 
   @Override public void share(Context context, boolean privacyResult) {
-
+    socialRepository.share(appUpdate, context, privacyResult);
   }
-
 }

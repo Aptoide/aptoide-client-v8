@@ -8,8 +8,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FollowUserDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import com.jakewharton.rxbinding.view.RxView;
 
 /**
  * Created by trinkes on 16/12/2016.
@@ -69,6 +71,11 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
     }
     followedTv.setTextColor(displayable.getStoreColor());
     followingTv.setTextColor(displayable.getStoreColor());
+
+    if (displayable.hasStore()) {
+      compositeSubscription.add(RxView.clicks(itemView)
+          .subscribe(click -> displayable.viewClicked(((FragmentShower) getContext()))));
+    }
   }
 
   private void setupStoreNameTv(int storeColor, String storeName) {

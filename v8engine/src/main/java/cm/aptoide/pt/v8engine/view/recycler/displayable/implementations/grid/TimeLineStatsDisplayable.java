@@ -42,7 +42,7 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
 
   CharSequence getFollowingText(Context context) {
     return spannableFactory.createColorSpan(
-        context.getString(R.string.timeline_followers, getPojo().getData().getFollowing()),
+        context.getString(R.string.timeline_followed, getPojo().getData().getFollowing()),
         Color.BLACK, String.valueOf(getPojo().getData().getFollowing()));
   }
 

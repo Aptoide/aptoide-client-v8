@@ -4,16 +4,15 @@ import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.preferences.Application;
 
 /**
  * Created by trinkes on 4/18/16.
  */
-public abstract class BaseActivity extends AppCompatActivity{
+public abstract class BaseActivity extends AppCompatActivity {
 
-  private static final String TAG = BaseActivity.class.getSimpleName();
   protected static final int LOGGED_IN_SECOND_STEP_CODE = 126;
+  private static final String TAG = BaseActivity.class.getSimpleName();
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -31,5 +30,11 @@ public abstract class BaseActivity extends AppCompatActivity{
       finish();
     }
     return super.onOptionsItemSelected(item);
+  }
+
+  public enum UserAccessState {
+    PUBLIC,
+    PRIVATE,
+    UNLISTED
   }
 }

@@ -103,7 +103,7 @@ import rx.functions.Action0;
     });
 
     nameTextView.setText(pojo.getName());
-    String downloadNumber = AptoideUtils.StringU.withSuffix(pojo.getStats().getDownloads())
+    String downloadNumber = AptoideUtils.StringU.withSuffix(pojo.getStats().getPdownloads())
         + " "
         + bottomView.getContext().getString(R.string.downloads);
     downloadsTextView.setText(downloadNumber);

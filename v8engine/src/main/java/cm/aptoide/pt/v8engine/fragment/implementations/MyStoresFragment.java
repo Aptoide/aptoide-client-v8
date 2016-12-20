@@ -26,19 +26,15 @@ public class MyStoresFragment extends StoreTabGridRecyclerFragment {
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    final boolean[] isFirstLoad = { true };
     StoreRepository storeRepository = RepositoryFactory.getRepositoryFor(Store.class);
     if (subscription == null || subscription.isUnsubscribed()) {
       subscription = storeRepository.getAll().distinct()
           .observeOn(AndroidSchedulers.mainThread())
+          .skip(1)
           .compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW))
           .subscribe(stores -> {
-            if (!isFirstLoad[0]) {
-              Logger.d(TAG, "Store database changed, reloading...");
-              super.load(false, true, null);
-            } else {
-              isFirstLoad[0] = false;
-            }
+            Logger.d(TAG, "Store database changed, reloading...");
+            super.load(false, true, null);
           });
     }
     super.load(create, true, savedInstanceState);

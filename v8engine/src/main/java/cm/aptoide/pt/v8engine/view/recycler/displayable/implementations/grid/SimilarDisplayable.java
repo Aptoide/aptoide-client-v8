@@ -15,6 +15,7 @@ import cm.aptoide.pt.model.v7.timeline.Similar;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.repository.SocialRepository;
 import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -29,14 +30,15 @@ import lombok.Getter;
  */
 @AllArgsConstructor public class SimilarDisplayable extends CardDisplayable {
 
+  private Similar similar;
   @Getter private int avatarResource;
   @Getter private int titleResource;
   @Getter private long appId;
   @Getter private String packageName;
   @Getter private String appName;
   @Getter private String appIcon;
-  @Getter private String abUrl;
 
+  @Getter private String abUrl;
   private List<String> similarAppsNames;
   private List<String> similarAppsPackageNames;
   private Date date;
@@ -44,12 +46,14 @@ import lombok.Getter;
   private DateCalculator dateCalculator;
   private SpannableFactory spannableFactory;
   private TimelineMetricsManager timelineMetricsManager;
+  private SocialRepository socialRepository;
 
   public SimilarDisplayable() {
   }
 
   public static Displayable from(Similar similar, DateCalculator dateCalculator,
-      SpannableFactory spannableFactory, TimelineMetricsManager timelineMetricsManager) {
+      SpannableFactory spannableFactory, TimelineMetricsManager timelineMetricsManager,
+      SocialRepository socialRepository) {
     final List<String> similarAppsNames = new ArrayList<>();
     final List<String> similarAppsPackageNames = new ArrayList<>();
     for (App similarApp : similar.getSimilarApps()) {
@@ -65,12 +69,13 @@ import lombok.Getter;
       abTestingURL = similar.getAb().getConversion().getUrl();
     }
 
-    return new SimilarDisplayable(Application.getConfiguration().getIcon(),
+    return new SimilarDisplayable(similar, Application.getConfiguration().getIcon(),
         R.string.displayable_social_timeline_recommendation_atptoide_team_recommends,
         similar.getRecommendedApp().getId(), similar.getRecommendedApp().getPackageName(),
         similar.getRecommendedApp().getName(), similar.getRecommendedApp().getIcon(), abTestingURL,
         similarAppsNames, similarAppsPackageNames, similar.getRecommendedApp().getUpdated(),
-        similar.getTimestamp(), dateCalculator, spannableFactory, timelineMetricsManager);
+        similar.getTimestamp(), dateCalculator, spannableFactory, timelineMetricsManager,
+        socialRepository);
   }
 
   public String getTitle() {
@@ -133,7 +138,6 @@ import lombok.Getter;
   }
 
   @Override public void share(Context context, boolean privacyResult) {
-
+    socialRepository.share(similar, context, privacyResult);
   }
-
 }

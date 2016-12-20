@@ -8,12 +8,12 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -22,13 +22,6 @@ import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppUpdateDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
-import java.io.IOException;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Credentials;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -50,6 +43,7 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
   private TextView updateDate;
   private View store;
   private CardView cardView;
+  private LinearLayout share;
 
   public AppUpdateWidget(View itemView) {
     super(itemView);
@@ -72,6 +66,7 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
         R.id.displayable_social_timeline_app_update_card_card_subtitle);
     store = itemView.findViewById(R.id.displayable_social_timeline_app_update_header);
     cardView = (CardView) itemView.findViewById(R.id.displayable_social_timeline_app_update_card);
+    share = (LinearLayout) itemView.findViewById(R.id.social_share);
   }
 
   @Override public void bindView(AppUpdateDisplayable displayable) {
@@ -89,6 +84,10 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
     storeName.setText(displayable.getStoreName());
     updateDate.setText(displayable.getTimeSinceLastUpdate(getContext()));
     errorText.setVisibility(View.GONE);
+
+    compositeSubscription.add(RxView.clicks(share).subscribe(click -> {
+      shareCard(displayable);
+    }, throwable -> throwable.printStackTrace()));
 
     compositeSubscription.add(RxView.clicks(store).subscribe(click -> {
       knockWithSixpackCredentials(displayable.getAbUrl());

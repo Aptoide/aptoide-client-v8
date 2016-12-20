@@ -26,6 +26,7 @@ import cm.aptoide.pt.model.v7.timeline.Recommendation;
 import cm.aptoide.pt.model.v7.timeline.Similar;
 import cm.aptoide.pt.model.v7.timeline.SocialArticle;
 import cm.aptoide.pt.model.v7.timeline.SocialInstall;
+import cm.aptoide.pt.model.v7.timeline.SocialRecommendation;
 import cm.aptoide.pt.model.v7.timeline.SocialStoreLatestApps;
 import cm.aptoide.pt.model.v7.timeline.SocialVideo;
 import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
@@ -56,6 +57,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Rec
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SimilarDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SocialArticleDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SocialInstallDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SocialRecommendationDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SocialStoreLatestAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SocialVideoDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreLatestAppsDisplayable;
@@ -341,7 +343,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
           linksHandlerFactory, timelineMetricsManager, socialRepository);
     } else if (card instanceof SocialStoreLatestApps) {
       return SocialStoreLatestAppsDisplayable.from((SocialStoreLatestApps) card, dateCalculator,
-          timelineMetricsManager);
+          timelineMetricsManager, socialRepository);
     } else if (card instanceof Feature) {
       return FeatureDisplayable.from((Feature) card, dateCalculator, spannableFactory);
     } else if (card instanceof StoreLatestApps) {
@@ -349,16 +351,19 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
           timelineMetricsManager, socialRepository);
     } else if (card instanceof AppUpdate) {
       return AppUpdateDisplayable.from((AppUpdate) card, spannableFactory, downloadFactory,
-          dateCalculator, installManager, permissionManager, timelineMetricsManager);
+          dateCalculator, installManager, permissionManager, timelineMetricsManager, socialRepository);
     } else if (card instanceof Recommendation) {
       return RecommendationDisplayable.from((Recommendation) card, dateCalculator, spannableFactory,
-          timelineMetricsManager);
+          timelineMetricsManager, socialRepository);
     } else if (card instanceof Similar) {
       return SimilarDisplayable.from((Similar) card, dateCalculator, spannableFactory,
-          timelineMetricsManager);
+          timelineMetricsManager, socialRepository);
     } else if (card instanceof SocialInstall) {
       return SocialInstallDisplayable.from((SocialInstall) card, timelineMetricsManager,
           spannableFactory, socialRepository);
+    } else if (card instanceof SocialRecommendation) {
+      return SocialRecommendationDisplayable.from((SocialRecommendation) card,
+          timelineMetricsManager, spannableFactory, socialRepository);
     }
     throw new IllegalArgumentException(
         "Only articles, features, store latest apps, app updates, videos, recommendations and similar cards supported.");

@@ -102,7 +102,6 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
       }
     }
 
-
     ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
     likeButton.setLiked(false);
     like.setVisibility(View.VISIBLE);
@@ -177,7 +176,7 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
     }));
 
     compositeSubscription.add(RxView.clicks(share).subscribe(click -> {
-      //shareCard(displayable);
+      shareCard(displayable);
     }, throwable -> throwable.printStackTrace()));
 
     compositeSubscription.add(RxView.clicks(like).subscribe(click -> {

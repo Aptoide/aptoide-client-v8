@@ -111,9 +111,8 @@ public class StoreLatestAppsWidget extends CardWidget<StoreLatestAppsDisplayable
       ((FragmentShower) getContext()).pushFragmentV4(
           V8Engine.getFragmentProvider().newStoreFragment(displayable.getStoreName()));
     }));
-
-    //compositeSubscription.add(RxView.clicks(share)
-    //    .subscribe(click -> shareCard(displayable, cardType.replace(" ", "_")),
-    //        throwable -> throwable.printStackTrace()));
+    compositeSubscription.add(RxView.clicks(share).subscribe(click -> {
+      shareCard(displayable);
+    }, throwable -> throwable.printStackTrace()));
   }
 }

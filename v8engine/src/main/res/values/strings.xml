@@ -337,6 +337,6 @@
   <string name="comment_store">Comment Store</string>
   <string name="be_the_first_to_send_feedback_about_this_store">Be the first to send feedback about this store</string>
   <string name="timeline_followers">Followers&#160;&#160;%d</string>
-  <string name="timeline_followed"><Data><![CDATA[<font color="#e17117"><b><u>Following</u></b></font>]]></Data>&#160;&#160;%d</string>
+  <string name="timeline_followed">Following&#160;&#160;%d</string>
   <string name="timeline_stats_followers">Followers</string>
 </resources>
