@@ -20,13 +20,15 @@ import lombok.Getter;
 public class GridAppDisplayable extends DisplayablePojo<App> {
 
   @Getter private String tag;
+  @Getter private boolean totalDownloads;
 
   public GridAppDisplayable() {
   }
 
-  public GridAppDisplayable(App pojo, String tag) {
+  public GridAppDisplayable(App pojo, String tag, boolean totalDownloads) {
     super(pojo);
     this.tag = tag;
+    this.totalDownloads = totalDownloads;
   }
 
   @LayoutRes @Override public int getViewLayout() {

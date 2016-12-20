@@ -15,6 +15,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
@@ -162,6 +163,10 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
   private AppAction appAction = AppAction.OPEN;
   private InstalledRepository installedRepository;
 
+  public AppViewFragment() {
+    super(BaseAdapter.class);
+  }
+
   public static AppViewFragment newInstance(String packageName, String storeName,
       OpenType openType) {
     Bundle bundle = new Bundle();
@@ -220,10 +225,6 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
 
   public static Fragment newInstance(String packageName, OpenType openType) {
     return newInstance(packageName, null, openType);
-  }
-
-  public AppViewFragment() {
-    super(BaseAdapter.class);
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -422,8 +423,8 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
       unInstallAction.call();
       return true;
     } else if (i == R.id.menu_remote_install){
-	    android.support.v4.app.DialogFragment newFragment = RemoteInstallDialog.newInstance(appId);
-	    newFragment.show(getActivity().getSupportFragmentManager(), RemoteInstallDialog.class.getSimpleName());
+      DialogFragment newFragment = RemoteInstallDialog.newInstance(appId);
+      newFragment.show(getActivity().getSupportFragmentManager(), RemoteInstallDialog.class.getSimpleName());
     }
 
     return super.onOptionsItemSelected(item);
@@ -765,6 +766,8 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
 
     @Getter private final TextView fileSize;
 
+    @Getter private final TextView downloadsCountInStore;
+
     @Getter private final TextView downloadsCount;
 
     // ctor
@@ -778,6 +781,7 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
       badge = (ImageView) view.findViewById(R.id.badge_img);
       badgeText = (TextView) view.findViewById(R.id.badge_text);
       fileSize = (TextView) view.findViewById(R.id.file_size);
+      downloadsCountInStore = (TextView) view.findViewById(R.id.downloads_count_in_store);
       downloadsCount = (TextView) view.findViewById(R.id.downloads_count);
     }
 
@@ -847,7 +851,8 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
 
       fileSize.setText(AptoideUtils.StringU.formatBytes(app.getSize()));
 
-      downloadsCount.setText(AptoideUtils.StringU.withSuffix(app.getStats().getDownloads()));
+      downloadsCountInStore.setText(AptoideUtils.StringU.withSuffix(app.getStats().getDownloads()));
+      downloadsCount.setText(AptoideUtils.StringU.withSuffix(app.getStats().getPdownloads()));
 
       @DrawableRes int badgeResId = 0;
       @StringRes int badgeMessageId = 0;

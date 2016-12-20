@@ -56,9 +56,11 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
     ImageLoader.load(pojo.getIcon(), icon);
 
+    int downloads = displayable.isTotalDownloads() ? pojo.getStats().getPdownloads()
+        : pojo.getStats().getDownloads();
+
     name.setText(pojo.getName());
-    downloads.setText(
-        AptoideUtils.StringU.withSuffix(pojo.getStats().getDownloads()) + V8Engine.getContext()
+    this.downloads.setText(AptoideUtils.StringU.withSuffix(downloads) + V8Engine.getContext()
             .getString(R.string._downloads));
     ratingBar.setRating(pojo.getStats().getRating().getAvg());
     tvStoreName.setText(pojo.getStore().getName());
