@@ -114,8 +114,8 @@ public class AppUpdateWidget extends Widget<AppUpdateDisplayable> {
           .specific(
               SendEventRequest.Body.Specific.builder().app(displayable.getPackageName()).build())
           .build(), AptoideAnalytics.OPEN_APP);
-      ((FragmentShower) getContext()).pushFragmentV4(
-          V8Engine.getFragmentProvider().newAppViewFragment(displayable.getAppId()));
+      ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
+          .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
     }));
 
     compositeSubscription.add(RxView.clicks(updateButton).flatMap(click -> {

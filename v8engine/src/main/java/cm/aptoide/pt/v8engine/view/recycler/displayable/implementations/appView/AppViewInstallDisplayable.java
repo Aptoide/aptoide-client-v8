@@ -64,7 +64,7 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
    * This should only be used internally
    */
   private static final int ACTION_NO_STATE = -1;
-  @Getter private boolean shouldInstall;
+  @Getter @Setter private boolean shouldInstall;
   @Getter private MinimalAd minimalAd;
 
   private RollbackRepository rollbackRepository;

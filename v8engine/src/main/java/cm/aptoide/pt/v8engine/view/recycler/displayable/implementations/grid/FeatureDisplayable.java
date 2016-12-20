@@ -23,7 +23,6 @@ import lombok.Getter;
   @Getter private int titleResource;
   @Getter private String thumbnailUrl;
   @Getter private String url;
-  @Getter private long appId;
 
   private String appName;
   private String title;
@@ -44,7 +43,7 @@ import lombok.Getter;
     }
     return new FeatureDisplayable(Application.getConfiguration().getIcon(),
         R.string.fragment_social_timeline_aptoide_team, feature.getThumbnailUrl(), feature.getUrl(),
-        appId, appName, feature.getTitle(), feature.getDate(), dateCalculator, spannableFactory);
+        appName, feature.getTitle(), feature.getDate(), dateCalculator, spannableFactory);
   }
 
   public int getMarginWidth(Context context, int orientation) {
@@ -67,10 +66,6 @@ import lombok.Getter;
 
   public String getTimeSinceLastUpdate(Context context) {
     return dateCalculator.getTimeSinceDate(context, date);
-  }
-
-  public boolean isGetApp() {
-    return appName != null && appId != 0;
   }
 
   public Spannable getAppText(Context context) {

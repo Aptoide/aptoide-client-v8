@@ -40,19 +40,23 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
   private static final String TAG = DescriptionFragment.class.getSimpleName();
 
   @Getter private static final String APP_ID = "app_id";
+  @Getter private static final String PACKAGE_NAME = "packageName";
   @Getter private static final String STORE_NAME = "store_name";
   @Getter private static final String STORE_THEME = "store_theme";
   private boolean hasAppId = false;
   private long appId;
+  private String packageName;
   private TextView emptyData;
   private TextView descriptionContainer;
   private String storeName;
   private String storeTheme;
 
-  public static DescriptionFragment newInstance(long appId, String storeName, String storeTheme) {
+  public static DescriptionFragment newInstance(long appId, String packageName, String storeName,
+      String storeTheme) {
     DescriptionFragment fragment = new DescriptionFragment();
     Bundle args = new Bundle();
     args.putLong(APP_ID, appId);
+    args.putString(PACKAGE_NAME, packageName);
     args.putString(STORE_NAME, storeName);
     args.putString(STORE_THEME, storeTheme);
     fragment.setArguments(args);
@@ -65,6 +69,10 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
     if (args.containsKey(APP_ID)) {
       appId = args.getLong(APP_ID, -1);
       hasAppId = true;
+    }
+
+    if (args.containsKey(PACKAGE_NAME)) {
+      packageName = args.getString(PACKAGE_NAME);
     }
 
     if (args.containsKey(STORE_NAME)) {
@@ -85,7 +93,7 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
       GetAppRequest.of(appId, storeName, StoreUtils.getStoreCredentials(storeName),
           AptoideAccountManager.getAccessToken(),
           new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-              DataProvider.getContext()).getAptoideClientUUID()).execute(getApp -> {
+              DataProvider.getContext()).getAptoideClientUUID(), packageName).execute(getApp -> {
         setupAppDescription(getApp);
         setupTitle(getApp);
         finishLoading();

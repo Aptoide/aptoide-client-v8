@@ -91,7 +91,8 @@ import rx.android.schedulers.AndroidSchedulers;
     ImageLoader.load(updateDisplayable.getIcon(), iconImageView);
 
     updateRowRelativeLayout.setOnClickListener(v -> FragmentUtils.replaceFragmentV4(getContext(),
-        V8Engine.getFragmentProvider().newAppViewFragment(updateDisplayable.getAppId())));
+        V8Engine.getFragmentProvider()
+            .newAppViewFragment(updateDisplayable.getAppId(), updateDisplayable.getPackageName())));
 
     final View.OnLongClickListener longClickListener = v -> {
       AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());

@@ -35,6 +35,7 @@ import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.util.AppBarStateChangeListener;
+import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.OtherVersionDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
@@ -166,7 +167,8 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
         ListAppVersionsRequest.of(appPackge, storeNames, AptoideAccountManager.getAccessToken(),
             AptoideAccountManager.getUserEmail(),
             new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                DataProvider.getContext()).getAptoideClientUUID()),
+                DataProvider.getContext()).getAptoideClientUUID(),
+            StoreUtils.getSubscribedStoresAuthMap()),
         otherVersionsSuccessRequestListener, errorRequestListener);
 
     recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);

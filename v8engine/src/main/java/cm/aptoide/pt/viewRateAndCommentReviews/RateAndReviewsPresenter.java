@@ -39,7 +39,7 @@ public class RateAndReviewsPresenter implements Presenter {
 
     ratingRequest = GetAppRequest.of(appId, AptoideAccountManager.getAccessToken(),
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID());
+            DataProvider.getContext()).getAptoideClientUUID(), packageName);
 
     subscriptions = new CompositeSubscription();
   }

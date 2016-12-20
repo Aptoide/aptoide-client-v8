@@ -120,7 +120,7 @@
               />
 
           <TextView
-              android:id="@+id/downloads_count"
+              android:id="@+id/downloads_count_in_store"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_gravity="center"
@@ -129,7 +129,31 @@
               android:maxLines="1"
               android:textColor="@color/white"
               android:textSize="@dimen/text_size_small"
-              tools:text="12345"
+              tools:text="blablabla"
+              />
+
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center"
+              android:layout_marginLeft="2dp"
+              android:layout_marginStart="2dp"
+              android:maxLines="1"
+              android:text=" / "
+              android:textColor="@color/app_view_gray"
+              android:textSize="@dimen/text_size_small"
+              />
+
+          <TextView
+              android:id="@+id/downloads_count"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center"
+              android:layout_marginLeft="2dp"
+              android:layout_marginStart="2dp"
+              android:maxLines="1"
+              android:textColor="@color/app_view_gray"
+              android:textSize="@dimen/text_size_small"
               />
 
         </LinearLayout>

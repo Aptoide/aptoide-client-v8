@@ -92,7 +92,6 @@ import rx.android.schedulers.AndroidSchedulers;
   private PermissionRequest permissionRequest;
   private InstallManager installManager;
   private boolean isUpdate;
-  private boolean triedInstall;
 
   //private Subscription subscribe;
   //private long appID;
@@ -199,7 +198,6 @@ import rx.android.schedulers.AndroidSchedulers;
 
   @Override public void unbindView() {
     super.unbindView();
-    triedInstall = false;
   }
 
   private void setupActionButton(@StringRes int text, View.OnClickListener onClickListener) {
@@ -234,9 +232,9 @@ import rx.android.schedulers.AndroidSchedulers;
           installOrUpgradeListener(app, getApp.getNodes().getVersions(), displayable));
       if (displayable.isShouldInstall()) {
         actionButton.postDelayed(() -> {
-          if (displayable.isVisible() && !triedInstall) {
+          if (displayable.isVisible() && displayable.isShouldInstall()) {
             actionButton.performClick();
-            triedInstall = true;
+            displayable.setShouldInstall(false);
           }
         }, 1000);
       }
@@ -349,7 +347,8 @@ import rx.android.schedulers.AndroidSchedulers;
       Fragment fragment;
       if (hasTrustedVersion) {
         // go to app view of the trusted version
-        fragment = V8Engine.getFragmentProvider().newAppViewFragment(trustedVersion.getId());
+        fragment = V8Engine.getFragmentProvider()
+            .newAppViewFragment(trustedVersion.getId(), trustedVersion.getPackageName());
       } else {
         // search for a trusted version
         fragment = V8Engine.getFragmentProvider().newSearchFragment(app.getName(), true);
