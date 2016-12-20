@@ -283,6 +283,7 @@ public class Translator {
     }
 
     switch (string) {
+      case "Your store doesn't have any applications yet. Install Aptoide Uploader and upload apps to share them with the world!":
       case "Your store does not have any applications yet. Install Aptoide Uploader and upload apps to share them with the world!":
         result = new String[4];
         result[0] = Application.getContext().getString(R.string.install_app_outter_pt1);
