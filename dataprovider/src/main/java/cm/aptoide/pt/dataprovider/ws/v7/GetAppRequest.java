@@ -52,6 +52,14 @@ import rx.Observable;
         (Body) decorator.decorate(new Body(appId, forceServerRefresh, packageName), accessToken));
   }
 
+  public static GetAppRequest of(long appId, String accessToken, String aptoideClientUUID) {
+    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+    boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
+
+    return new GetAppRequest(BASE_HOST,
+        (Body) decorator.decorate(new Body(appId, forceServerRefresh, null), accessToken));
+  }
+
   public static GetAppRequest ofMd5(String md5, String accessToken, String aptoideClientUUID) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
