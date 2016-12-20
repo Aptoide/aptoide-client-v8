@@ -82,19 +82,23 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
 
     if (!TextUtils.isEmpty(messageAndApp.first)) {
 
+      // get multi part message
       final String[] parts = Translator.translateToMultiple(messageAndApp.first);
-      SpannableString middle =
-          new SpannableString(String.format(isAppInstalled ? parts[2] : parts[3], appName));
-      middle.setSpan(new ForegroundColorSpan(color), 0, middle.length(), Spanned.SPAN_MARK_MARK);
+      if (parts != null && parts.length == 4) {
+        SpannableString middle =
+            new SpannableString(String.format(isAppInstalled ? parts[2] : parts[3], appName));
+        middle.setSpan(new ForegroundColorSpan(color), 0, middle.length(), Spanned.SPAN_MARK_MARK);
 
-      SpannableStringBuilder text = new SpannableStringBuilder();
-      text.append(parts[0]);
-      text.append(middle);
-      text.append(parts[1]);
-      installMessage.setText(text);
+        SpannableStringBuilder text = new SpannableStringBuilder();
+        text.append(parts[0]);
+        text.append(middle);
+        text.append(parts[1]);
+        installMessage.setText(text);
+      } else {
+        installMessage.setText(messageAndApp.first);
+      }
     } else {
-      installMessage.setVisibility(View.GONE);
-      verticalSeparator.setVisibility(View.GONE);
+      hideOfficialAppMessage();
     }
 
     appRating.setRating(appData.getStats().getRating().getAvg());
@@ -124,7 +128,8 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
       installButton.setBackgroundDrawable(d);
     }
 
-    installButton.setText(getContext().getString( isAppInstalled ? R.string.open : R.string.install));
+    installButton.setText(
+        getContext().getString(isAppInstalled ? R.string.open : R.string.install));
 
     compositeSubscription.add(RxView.clicks(installButton).subscribe(a -> {
       if (isAppInstalled) {
@@ -140,6 +145,11 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
       Log.e(TAG, "", err);
       CrashReports.logException(err);
     }));
+  }
+
+  private void hideOfficialAppMessage() {
+    installMessage.setVisibility(View.GONE);
+    verticalSeparator.setVisibility(View.GONE);
   }
 
   private boolean isAppInstalled(GetApp app) {

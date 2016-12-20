@@ -31,6 +31,4 @@ public abstract class CardDisplayable extends Displayable {
   }
 
   public abstract void share(Context context, boolean privacyResult);
-
-  public abstract void like(Context context, String cardType, int rating);
 }

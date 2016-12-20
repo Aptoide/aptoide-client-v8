@@ -22,7 +22,7 @@ import java.util.Map;
  * Created by jdandrade on 29/11/2016.
  */
 
-public class SocialStoreLatestAppsWidget extends CardWidget<SocialStoreLatestAppsDisplayable> {
+public class SocialStoreLatestAppsWidget extends SocialCardWidget<SocialStoreLatestAppsDisplayable> {
 
   private final String cardType = "Social Latest Apps";
   private final LayoutInflater inflater;
