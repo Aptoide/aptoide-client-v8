@@ -5,6 +5,7 @@ import cm.aptoide.pt.model.v7.GetFollowers;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 
@@ -86,5 +87,13 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
 
   public boolean hasStore() {
     return getPojo().getStore() != null && !TextUtils.isEmpty(getPojo().getStore().getName());
+  }
+
+  public void viewClicked(FragmentShower shower) {
+    Store store = getPojo().getStore();
+    String theme =
+        store.getAppearance().getTheme() == null ? V8Engine.getConfiguration().getDefaultTheme()
+            : store.getAppearance().getTheme();
+    shower.pushFragmentV4(V8Engine.getFragmentProvider().newStoreFragment(store.getName(), theme));
   }
 }
