@@ -44,6 +44,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Gri
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreMetaDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.InstalledAppDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.MessageWhiteBgDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.MyStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.OfficialAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.OtherVersionDisplayable;
@@ -106,6 +107,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridDisp
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridStoreMetaWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridStoreWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.InstalledAppWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.MessageWhiteBgWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.MyStoreWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.OfficialAppWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.OtherVersionWidget;
@@ -349,6 +351,9 @@ public class DisplayableWidgetMapping {
 
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping((FollowUserWidget.class), FollowUserDisplayable.class));
+
+    displayableWidgetMappings.add(new DisplayableWidgetMapping((MessageWhiteBgWidget.class),
+        MessageWhiteBgDisplayable.class));
 
     return displayableWidgetMappings;
   }
