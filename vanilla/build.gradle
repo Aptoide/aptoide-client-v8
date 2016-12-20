@@ -63,7 +63,7 @@ android {
       // applicationIdSuffix does not work properly, as the application ID gets changed after the buildFlavor
       applicationIdSuffix ".internal"
 
-      versionName "8.0.2." + getDate()
+      versionName "8.1.0." + getDate()
       versionCode project.INTERNAL_VERSION_CODE.toInteger()
 
       resValue "string", "authenticatorAccountType", APPLICATION_ID + ".internal"
@@ -77,7 +77,7 @@ android {
       // applicationIdSuffix does not work properly, as the application ID gets changed after the buildFlavor
       applicationIdSuffix ".dev"
 
-      versionName "8.0.2." + getDate()
+      versionName "8.1.0." + getDate()
       versionCode project.DEV_VERSION_CODE.toInteger()
 
       resValue "string", "authenticatorAccountType", APPLICATION_ID + ".dev"
@@ -89,7 +89,7 @@ android {
 
     prod {
       versionCode project.PROD_VERSION_CODE.toInteger()
-      versionName "8.0.2.1"
+      versionName "8.1.0.0"
       resValue "string", "authenticatorAccountType", APPLICATION_ID
     }
   }
