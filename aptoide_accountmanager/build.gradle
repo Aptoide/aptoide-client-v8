@@ -74,6 +74,9 @@ dependencies {
 
   testCompile "junit:junit:${JUNIT_VERSION}"
 
+  //Also present in v8engine
+  compile "com.jakewharton.rxbinding:rxbinding:${JW_RX_BINDING_VERSION}"
+
   //noinspection GradleDependency
   compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
   //noinspection GradleDependency

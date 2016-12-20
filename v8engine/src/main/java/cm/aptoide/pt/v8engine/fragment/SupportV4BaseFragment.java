@@ -13,7 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.actions.PermissionRequest;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.util.ScreenTrackingUtils;
 import cm.aptoide.pt.v8engine.interfaces.UiComponentBasics;
 import rx.functions.Action0;
 
@@ -29,7 +29,7 @@ public abstract class SupportV4BaseFragment extends FragmentView
     if (getArguments() != null) {
       loadExtras(getArguments());
     }
-    CrashReports.ScreenUtils.getInstance().incrementNumberOfScreens();
+    ScreenTrackingUtils.getInstance().incrementNumberOfScreens();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -40,7 +40,7 @@ public abstract class SupportV4BaseFragment extends FragmentView
 
   @Override public void onDestroy() {
     super.onDestroy();
-    CrashReports.ScreenUtils.getInstance().decrementNumberOfScreens();
+    ScreenTrackingUtils.getInstance().decrementNumberOfScreens();
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -127,7 +127,7 @@ public abstract class SupportV4BaseFragment extends FragmentView
   @Override public void setUserVisibleHint(boolean isVisibleToUser) {
     super.setUserVisibleHint(isVisibleToUser);
     if (isVisibleToUser) {
-      CrashReports.ScreenUtils.getInstance().addScreenToHistory(getClass().getSimpleName());
+      ScreenTrackingUtils.getInstance().addScreenToHistory(getClass().getSimpleName());
     }
   }
 }

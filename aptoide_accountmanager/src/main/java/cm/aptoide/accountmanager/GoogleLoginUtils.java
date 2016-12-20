@@ -70,7 +70,7 @@ class GoogleLoginUtils implements GoogleApiClient.OnConnectionFailedListener {
   public static boolean isGoogleEnabledOnCurrentDevice(FragmentActivity activity) {
     final int connectionResult =
         GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(activity);
-    return BuildConfig.GMS_CONFIGURED && connectionResult == ConnectionResult.SUCCESS;
+    return connectionResult == ConnectionResult.SUCCESS;
   }
 
   public static GoogleApiClient setupGoogleApiClient(FragmentActivity activity) {
