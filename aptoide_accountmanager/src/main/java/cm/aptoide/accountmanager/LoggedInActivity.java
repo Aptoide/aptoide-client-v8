@@ -12,6 +12,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.SetUserRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.GenericDialogs;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.subscriptions.CompositeSubscription;
 
@@ -68,10 +69,10 @@ public class LoggedInActivity extends BaseActivity {
           AptoideAccountManager.getAccessToken()).execute(answer -> {
         if (answer.isOk()) {
           Logger.v(TAG, "user is public");
-          Toast.makeText(LoggedInActivity.this, R.string.successful, Toast.LENGTH_SHORT).show();
+          ShowMessage.asSnack(this, R.string.successful);
         } else {
           Logger.v(TAG, "user is public: error: " + answer.getError().getDescription());
-          Toast.makeText(LoggedInActivity.this, R.string.unknown_error, Toast.LENGTH_SHORT).show();
+          ShowMessage.asSnack(this, R.string.unknown_error);
         }
         pleaseWaitDialog.dismiss();
         startActivity(getIntent().setClass(this, CreateStoreActivity.class));

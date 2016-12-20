@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -20,6 +21,7 @@ import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import com.jakewharton.rxbinding.view.RxView;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import rx.subscriptions.CompositeSubscription;
 
@@ -128,6 +130,7 @@ public class CreateUserActivity extends PermissionsBaseActivity
         avatarPath = "";
         ProgressDialog pleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
             getApplicationContext().getString(R.string.please_wait));
+        pleaseWaitDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         pleaseWaitDialog.show();
         CreateUserRequest.of("true", userEmail, username, userPassword, avatarPath)
             .execute(answer -> {
@@ -162,7 +165,7 @@ public class CreateUserActivity extends PermissionsBaseActivity
     if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
       Uri avatarUrl = getPhotoFileUri(PermissionsBaseActivity.createAvatarPhotoName(photoAvatar));
       ImageLoader.loadWithCircleTransform(avatarUrl, mAvatar);
-      avatarPath = avatarUrl.toString();
+      avatarPath = fileUtils.getPathAlt(avatarUrl, getApplicationContext());
     } else if (requestCode == GALLERY_CODE && resultCode == RESULT_OK) {
       Uri avatarUrl = data.getData();
       avatarPath = fileUtils.getPath(avatarUrl, getApplicationContext());

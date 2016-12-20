@@ -10,6 +10,7 @@ import android.support.annotation.StringRes;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -199,14 +200,14 @@ public class CreateStoreActivity extends PermissionsBaseActivity
   }
 
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    FileUtils fileUtils = new FileUtils();
     if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
       Uri avatarUrl = getPhotoFileUri(PermissionsBaseActivity.createAvatarPhotoName(photoAvatar));
       ImageLoader.loadWithCircleTransform(avatarUrl, mStoreAvatar);
-      storeAvatarPath = avatarUrl.toString();
+      storeAvatarPath = fileUtils.getPathAlt(avatarUrl, getApplicationContext());
     } else if (requestCode == GALLERY_CODE && resultCode == RESULT_OK) {
       Uri avatarUrl = data.getData();
       ImageLoader.loadWithCircleTransform(avatarUrl, mStoreAvatar);
-      FileUtils fileUtils = new FileUtils();
       storeAvatarPath = fileUtils.getPath(avatarUrl, getApplicationContext());
     }
   }
