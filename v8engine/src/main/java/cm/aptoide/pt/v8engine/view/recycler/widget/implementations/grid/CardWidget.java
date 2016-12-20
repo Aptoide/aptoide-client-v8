@@ -104,11 +104,6 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
           subscriber.onCompleted();
         });
       }
-      //.setNeutralButton(R.string.dont_show_again, (dialogInterface, i) -> {
-      //  subscriber.onNext(GenericDialogs.EResponse.CANCEL);
-      //  subscriber.onCompleted();
-      //  ManagerPreferences.setShowPreview(false);
-      //})
       alertDialog.show();
     }).subscribeOn(AndroidSchedulers.mainThread()).subscribe(eResponse -> {
       switch (eResponse) {

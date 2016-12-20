@@ -59,6 +59,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Sea
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SimilarDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SocialArticleDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SocialInstallDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SocialRecommendationDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SocialStoreLatestAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SocialVideoDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreAddCommentDisplayable;
@@ -121,6 +122,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SearchWi
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SimilarWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SocialArticleWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SocialInstallWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SocialRecommendationWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SocialStoreLatestAppsWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SocialVideoWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.StoreAddCommentWidget;
@@ -248,6 +250,8 @@ public class DisplayableWidgetMapping {
         SocialStoreLatestAppsDisplayable.class));
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(SocialInstallWidget.class, SocialInstallDisplayable.class));
+    displayableWidgetMappings.add(new DisplayableWidgetMapping(SocialRecommendationWidget.class,
+        SocialRecommendationDisplayable.class));
 
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(RollbackWidget.class, RollbackDisplayable.class));

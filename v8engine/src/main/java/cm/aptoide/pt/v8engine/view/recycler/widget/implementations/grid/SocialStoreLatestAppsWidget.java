@@ -15,6 +15,7 @@ import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SocialStoreLatestAppsDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
+import com.like.LikeButton;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,6 +36,12 @@ public class SocialStoreLatestAppsWidget extends SocialCardWidget<SocialStoreLat
   private Map<View, Long> apps;
   private Map<Long, String> appsPackages;
   private CardView cardView;
+  private LinearLayout share;
+  private LinearLayout like;
+  private LinearLayout comments;
+  private LikeButton likeButton;
+  private TextView numberLikes;
+  private TextView numberComments;
 
   public SocialStoreLatestAppsWidget(View itemView) {
     super(itemView);
@@ -55,6 +62,12 @@ public class SocialStoreLatestAppsWidget extends SocialCardWidget<SocialStoreLat
         R.id.displayable_social_timeline_store_latest_apps_container);
     cardView =
         (CardView) itemView.findViewById(R.id.displayable_social_timeline_store_latest_apps_card);
+    like = (LinearLayout) itemView.findViewById(R.id.social_like);
+    share = (LinearLayout) itemView.findViewById(R.id.social_share);
+    likeButton = (LikeButton) itemView.findViewById(R.id.social_like_test);
+    comments = (LinearLayout) itemView.findViewById(R.id.social_comment);
+    numberLikes = (TextView) itemView.findViewById(R.id.social_number_of_likes);
+    numberComments = (TextView) itemView.findViewById(R.id.social_number_of_comments);
   }
 
   @Override public void bindView(SocialStoreLatestAppsDisplayable displayable) {
@@ -110,5 +123,17 @@ public class SocialStoreLatestAppsWidget extends SocialCardWidget<SocialStoreLat
       ((FragmentShower) getContext()).pushFragmentV4(
           V8Engine.getFragmentProvider().newStoreFragment(displayable.getStoreName()));
     }));
+
+    likeButton.setLiked(false);
+    like.setVisibility(View.VISIBLE);
+    numberLikes.setVisibility(View.VISIBLE);
+    numberLikes.setText(String.valueOf(displayable.getNumberOfLikes()));
+    comments.setVisibility(View.VISIBLE);
+    numberComments.setVisibility(View.VISIBLE);
+    numberComments.setText(String.valueOf(displayable.getNumberOfComments()));
+
+    compositeSubscription.add(RxView.clicks(share).subscribe(click -> {
+      shareCard(displayable);
+    }, throwable -> throwable.printStackTrace()));
   }
 }

@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
@@ -18,6 +19,7 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RecommendationDisplayable;
+import com.jakewharton.rxbinding.view.RxView;
 
 /**
  * Created by marcelobenites on 7/8/16.
@@ -34,6 +36,7 @@ public class RecommendationWidget extends CardWidget<RecommendationDisplayable> 
   private TextView getApp;
   private CardView cardView;
   private RelativeLayout cardContent;
+  private LinearLayout share;
 
   public RecommendationWidget(View itemView) {
     super(itemView);
@@ -58,6 +61,7 @@ public class RecommendationWidget extends CardWidget<RecommendationDisplayable> 
         (CardView) itemView.findViewById(R.id.displayable_social_timeline_recommendation_card);
     cardContent = (RelativeLayout) itemView.findViewById(
         R.id.displayable_social_timeline_recommendation_card_content);
+    share = (LinearLayout) itemView.findViewById(R.id.social_share);
   }
 
   @Override public void bindView(RecommendationDisplayable displayable) {
@@ -94,6 +98,9 @@ public class RecommendationWidget extends CardWidget<RecommendationDisplayable> 
       ((FragmentShower) getContext()).pushFragmentV4(
           V8Engine.getFragmentProvider().newAppViewFragment(displayable.getAppId()));
     });
+    compositeSubscription.add(RxView.clicks(share).subscribe(click -> {
+      shareCard(displayable);
+    }, throwable -> throwable.printStackTrace()));
   }
 
   @Override public void unbindView() {
