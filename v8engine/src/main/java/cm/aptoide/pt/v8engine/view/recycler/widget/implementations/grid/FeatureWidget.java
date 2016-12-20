@@ -9,8 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FeatureDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
@@ -51,15 +49,6 @@ public class FeatureWidget extends Widget<FeatureDisplayable> {
     setCardviewMargin(displayable);
     ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarResource(), image);
     ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
-
-    if (displayable.isGetApp()) {
-      getAppButton.setVisibility(View.VISIBLE);
-      getAppButton.setText(displayable.getAppText(getContext()));
-      getAppButton.setOnClickListener(view -> ((FragmentShower) getContext()).pushFragmentV4(
-          V8Engine.getFragmentProvider().newAppViewFragment(displayable.getAppId())));
-    } else {
-      getAppButton.setVisibility(View.GONE);
-    }
 
     url.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {

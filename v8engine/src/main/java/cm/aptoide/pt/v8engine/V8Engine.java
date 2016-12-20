@@ -148,7 +148,6 @@ public abstract class V8Engine extends DataProvider {
   }
 
   @Override public void onCreate() {
-    CrashReports.setup(AptoideCrashLogger.getInstance().setup(this));
     try {
       PRNGFixes.apply();
     } catch (Exception e) {
@@ -198,6 +197,7 @@ public abstract class V8Engine extends DataProvider {
     }
 
     if (SecurePreferences.isFirstRun()) {
+      createShortCut();
       PreferenceManager.setDefaultValues(this, R.xml.settings, false);
       loadInstalledApps().doOnNext(o -> {
         if (AptoideAccountManager.isLoggedIn()) {
@@ -276,6 +276,10 @@ public abstract class V8Engine extends DataProvider {
 
     AptoideAccountManager.setAnalytics(new AccountAnalytcsImp());
     Logger.d(TAG, "onCreate took " + (System.currentTimeMillis() - l) + " millis.");
+  }
+
+  protected void setupCrashReports(boolean isDisabled) {
+    CrashReports.setup(AptoideCrashLogger.getInstance().setup(this, isDisabled));
   }
 
   protected FragmentProvider createFragmentProvider() {
@@ -385,5 +389,17 @@ public abstract class V8Engine extends DataProvider {
 
   @Override protected TokenInvalidator getTokenInvalidator() {
     return AptoideAccountManager::invalidateAccessToken;
+  }
+
+  public void createShortCut() {
+    Intent shortcutIntent = new Intent(this, MainActivityFragment.class);
+    shortcutIntent.setAction(Intent.ACTION_MAIN);
+    Intent intent = new Intent();
+    intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
+    intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, "Aptoide");
+    intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE,
+        Intent.ShortcutIconResource.fromContext(getApplicationContext(), R.mipmap.ic_launcher));
+    intent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
+    getApplicationContext().sendBroadcast(intent);
   }
 }

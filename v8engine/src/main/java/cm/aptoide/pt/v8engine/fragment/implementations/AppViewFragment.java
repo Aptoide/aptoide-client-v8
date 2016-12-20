@@ -163,6 +163,7 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
   private GetAppMeta.App app;
   private AppAction appAction = AppAction.OPEN;
   private InstalledRepository installedRepository;
+  private GetApp getApp;
 
   public AppViewFragment() {
     super(BaseAdapter.class);
@@ -190,9 +191,10 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
     return fragment;
   }
 
-  public static AppViewFragment newInstance(long appId, OpenType openType) {
+  public static AppViewFragment newInstance(long appId, String packageName, OpenType openType) {
     Bundle bundle = new Bundle();
     bundle.putLong(BundleKeys.APP_ID.name(), appId);
+    bundle.putString(BundleKeys.PACKAGE_NAME.name(), packageName);
     bundle.putSerializable(BundleKeys.SHOULD_INSTALL.name(), openType);
 
     AppViewFragment fragment = new AppViewFragment();
@@ -200,9 +202,11 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
     return fragment;
   }
 
-  public static AppViewFragment newInstance(long appId, String storeTheme, String storeName) {
+  public static AppViewFragment newInstance(long appId, String packageName, String storeTheme,
+      String storeName) {
     Bundle bundle = new Bundle();
     bundle.putLong(BundleKeys.APP_ID.name(), appId);
+    bundle.putString(BundleKeys.PACKAGE_NAME.name(), packageName);
     bundle.putString(BundleKeys.STORE_NAME.name(), storeName);
     bundle.putString(StoreFragment.BundleCons.STORE_THEME, storeTheme);
     AppViewFragment fragment = new AppViewFragment();
@@ -213,6 +217,7 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
   public static AppViewFragment newInstance(MinimalAd minimalAd) {
     Bundle bundle = new Bundle();
     bundle.putLong(BundleKeys.APP_ID.name(), minimalAd.getAppId());
+    bundle.putString(BundleKeys.PACKAGE_NAME.name(), minimalAd.getPackageName());
     bundle.putParcelable(BundleKeys.MINIMAL_AD.name(), minimalAd);
 
     AppViewFragment fragment = new AppViewFragment();
@@ -425,9 +430,16 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
       unInstallAction.call();
       return true;
     } else if (i == R.id.menu_remote_install){
-      DialogFragment newFragment = RemoteInstallDialog.newInstance(appId);
-      newFragment.show(getActivity().getSupportFragmentManager(),
-          RemoteInstallDialog.class.getSimpleName());
+      if (AptoideUtils.SystemU.getConnectionType().equals("mobile")) {
+        GenericDialogs.createGenericOkMessage(getContext(),
+            getContext().getString(R.string.remote_install_menu_title),
+            getContext().getString(R.string.install_on_tv_mobile_error)).subscribe();
+      } else {
+        DialogFragment newFragment = RemoteInstallDialog.newInstance(appId);
+        newFragment.show(getActivity().getSupportFragmentManager(),
+            RemoteInstallDialog.class.getSimpleName());
+      }
+
     }
 
     return super.onOptionsItemSelected(item);
@@ -449,49 +461,57 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    super.load(create, refresh, savedInstanceState);
 
-    if (subscription != null) {
-      subscription.unsubscribe();
-    }
+    if (create) {
+      if (subscription != null) {
+        subscription.unsubscribe();
+      }
 
-    if (appId >= 0) {
-      Logger.d(TAG, "loading app info using app ID");
-      subscription = appRepository.getApp(appId, refresh, sponsored, storeName)
-          .flatMap(getApp -> manageOrganicAds(getApp))
-          .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
-          .observeOn(AndroidSchedulers.mainThread())
-          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-          .subscribe(getApp -> {
-            setupAppView(getApp);
-          }, throwable -> finishLoading(throwable));
-    } else if (!TextUtils.isEmpty(md5)) {
-      subscription = appRepository.getAppFromMd5(md5, refresh, sponsored)
-          .flatMap(getApp -> manageOrganicAds(getApp))
-          .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
-          .observeOn(AndroidSchedulers.mainThread())
-          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-          .subscribe(getApp -> {
-            setupAppView(getApp);
-          }, throwable -> {
-            finishLoading(throwable);
-            CrashReports.logString(key_appId, String.valueOf(appId));
-            CrashReports.logString(key_packageName, String.valueOf(packageName));
-            CrashReports.logString(key_md5sum, md5);
-          });
+      if (appId >= 0) {
+        Logger.d(TAG, "loading app info using app ID");
+        subscription = appRepository.getApp(appId, refresh, sponsored, storeName, packageName)
+            .map(getApp -> this.getApp = getApp)
+            .flatMap(getApp -> manageOrganicAds(getApp))
+            .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
+            .observeOn(AndroidSchedulers.mainThread())
+            .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+            .subscribe(getApp -> {
+              setupAppView(getApp);
+            }, throwable -> finishLoading(throwable));
+      } else if (!TextUtils.isEmpty(md5)) {
+        subscription = appRepository.getAppFromMd5(md5, refresh, sponsored)
+            .map(getApp -> this.getApp = getApp)
+            .flatMap(getApp -> manageOrganicAds(getApp))
+            .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
+            .observeOn(AndroidSchedulers.mainThread())
+            .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+            .subscribe(getApp -> {
+              setupAppView(getApp);
+            }, throwable -> {
+              finishLoading(throwable);
+              CrashReports.logString(key_appId, String.valueOf(appId));
+              CrashReports.logString(key_packageName, String.valueOf(packageName));
+              CrashReports.logString(key_md5sum, md5);
+            });
+      } else {
+        Logger.d(TAG, "loading app info using app package name");
+        subscription = appRepository.getApp(packageName, refresh, sponsored, storeName)
+            .map(getApp -> this.getApp = getApp)
+            .flatMap(getApp -> manageOrganicAds(getApp))
+            .observeOn(AndroidSchedulers.mainThread())
+            .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+            .subscribe(getApp -> {
+              setupAppView(getApp);
+            }, throwable -> {
+              finishLoading(throwable);
+              CrashReports.logString(key_appId, String.valueOf(appId));
+              CrashReports.logString(key_packageName, String.valueOf(packageName));
+              CrashReports.logString(key_md5sum, md5);
+            });
+      }
     } else {
-      Logger.d(TAG, "loading app info using app package name");
-      subscription = appRepository.getApp(packageName, refresh, sponsored, storeName)
-          .flatMap(getApp -> manageOrganicAds(getApp))
-          .observeOn(AndroidSchedulers.mainThread())
-          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-          .subscribe(getApp -> {
-            setupAppView(getApp);
-          }, throwable -> {
-            finishLoading(throwable);
-            CrashReports.logString(key_appId, String.valueOf(appId));
-            CrashReports.logString(key_packageName, String.valueOf(packageName));
-            CrashReports.logString(key_md5sum, md5);
-          });
+      header.setup(getApp);
     }
   }
 
@@ -771,6 +791,8 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
 
     @Getter private final TextView fileSize;
 
+    @Getter private final TextView downloadsCountInStore;
+
     @Getter private final TextView downloadsCount;
 
     // ctor
@@ -784,6 +806,7 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
       badge = (ImageView) view.findViewById(R.id.badge_img);
       badgeText = (TextView) view.findViewById(R.id.badge_text);
       fileSize = (TextView) view.findViewById(R.id.file_size);
+      downloadsCountInStore = (TextView) view.findViewById(R.id.downloads_count_in_store);
       downloadsCount = (TextView) view.findViewById(R.id.downloads_count);
     }
 
@@ -853,7 +876,8 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
 
       fileSize.setText(AptoideUtils.StringU.formatBytes(app.getSize()));
 
-      downloadsCount.setText(AptoideUtils.StringU.withSuffix(app.getStats().getDownloads()));
+      downloadsCountInStore.setText(AptoideUtils.StringU.withSuffix(app.getStats().getDownloads()));
+      downloadsCount.setText(AptoideUtils.StringU.withSuffix(app.getStats().getPdownloads()));
 
       @DrawableRes int badgeResId = 0;
       @StringRes int badgeMessageId = 0;

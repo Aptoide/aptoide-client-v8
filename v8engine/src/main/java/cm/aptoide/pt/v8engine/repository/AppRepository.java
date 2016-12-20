@@ -30,12 +30,12 @@ import rx.Observable;
   private final NetworkOperatorManager operatorManager;
   private final ProductFactory productFactory;
 
-  public Observable<GetApp> getApp(long appId, boolean refresh, boolean sponsored,
-      String storeName) {
+  public Observable<GetApp> getApp(long appId, boolean refresh, boolean sponsored, String storeName,
+      String packageName) {
     return GetAppRequest.of(appId, storeName, StoreUtils.getStoreCredentials(storeName),
         AptoideAccountManager.getAccessToken(),
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID())
+            DataProvider.getContext()).getAptoideClientUUID(), packageName)
         .observe(refresh)
         .flatMap(response -> {
           if (response != null && response.isOk()) {

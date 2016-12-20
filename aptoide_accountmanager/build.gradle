@@ -19,7 +19,6 @@ android {
 
     buildConfigField "String", "GMS_SERVER_ID", "\"" + project.GMS_SERVER_ID + "\""
     resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID + "\""
-    consumerProguardFiles "proguard-rules.txt"
   }
 
   lintOptions {
@@ -38,10 +37,6 @@ android {
       minifyEnabled false
       shrinkResources false
     }
-    debug {
-      minifyEnabled false
-      shrinkResources false
-    }
   }
 
   compileOptions {
@@ -56,20 +51,12 @@ dependencies {
   //
   // inter-projects dependencies
   //
+  compile project(path: ':aptoidepreferences', configuration: 'release')
+  compile project(path: ':networkclient', configuration: 'release')
+  compile project(path: ':utils', configuration: 'release')
+  compile project(path: ':utilsdesign', configuration: 'release')
 
-  debugCompile project(path: ':aptoidepreferences', configuration: 'debug')
-  releaseCompile project(path: ':aptoidepreferences', configuration: 'release')
-
-  debugCompile project(path: ':networkclient', configuration: 'debug')
-  releaseCompile project(path: ':networkclient', configuration: 'release')
-
-  debugCompile project(path: ':utils', configuration: 'debug')
-  releaseCompile project(path: ':utils', configuration: 'release')
-
-  debugCompile project(path: ':utilsdesign', configuration: 'debug')
-  releaseCompile project(path: ':utilsdesign', configuration: 'release')
-
-  internalCompile project(path: ':dataprovider', configuration: 'internalDebug')
+  internalCompile project(path: ':dataprovider', configuration: 'internalRelease')
   prodCompile project(path: ':dataprovider', configuration: 'prodRelease')
 
   //

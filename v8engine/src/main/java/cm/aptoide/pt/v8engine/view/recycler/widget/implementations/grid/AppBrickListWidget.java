@@ -46,7 +46,7 @@ public class AppBrickListWidget extends Widget<AppBrickListDisplayable> {
     itemView.setOnClickListener(v -> {
       Analytics.AppViewViewedFrom.addStepToList(displayable.getTag());
       ((FragmentShower) v.getContext()).pushFragmentV4(
-          V8Engine.getFragmentProvider().newAppViewFragment(app.getId()));
+          V8Engine.getFragmentProvider().newAppViewFragment(app.getId(), app.getPackageName()));
       Analytics.HomePageEditorsChoice.clickOnEditorsChoiceItem(getAdapterPosition(),
           app.getPackageName(), false);
     });

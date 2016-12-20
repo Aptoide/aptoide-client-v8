@@ -103,7 +103,7 @@ import rx.functions.Action0;
     });
 
     nameTextView.setText(pojo.getName());
-    String downloadNumber = AptoideUtils.StringU.withSuffix(pojo.getStats().getDownloads())
+    String downloadNumber = AptoideUtils.StringU.withSuffix(pojo.getStats().getPdownloads())
         + " "
         + bottomView.getContext().getString(R.string.downloads);
     downloadsTextView.setText(downloadNumber);
@@ -159,7 +159,8 @@ import rx.functions.Action0;
         clickCallback.call();
       }
       FragmentUtils.replaceFragmentV4(getContext(), V8Engine.getFragmentProvider()
-          .newAppViewFragment(pojo.getId(), pojo.getStore().getAppearance().getTheme(),
+          .newAppViewFragment(pojo.getId(), pojo.getPackageName(),
+              pojo.getStore().getAppearance().getTheme(),
               pojo.getStore().getName()));
     });
   }

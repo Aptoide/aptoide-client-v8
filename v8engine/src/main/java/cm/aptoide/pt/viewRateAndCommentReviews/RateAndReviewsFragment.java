@@ -179,7 +179,7 @@ public class RateAndReviewsFragment extends GridRecyclerFragment<ReviewsAndComme
   private void fetchRating(boolean refresh) {
     GetAppRequest.of(appId, AptoideAccountManager.getAccessToken(),
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID())
+            DataProvider.getContext()).getAptoideClientUUID(), packageName)
         .observe(refresh)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())

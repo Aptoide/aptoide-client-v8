@@ -30,7 +30,7 @@ import rx.Observable;
 @Data @Accessors(chain = true) @EqualsAndHashCode(callSuper = true) public class GetAdsRequest
     extends Aptwords<GetAdsResponse> {
 
-  private static OkHttpClient client = new OkHttpClient.Builder()
+  private static final OkHttpClient client = new OkHttpClient.Builder()
       .addInterceptor(new UserAgentInterceptor(new UserAgentGenerator() {
         @Override public String generateUserAgent() {
           return SecurePreferences.getUserAgent();

@@ -89,7 +89,7 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
         appViewDeepLink(intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_MD5_KEY));
       } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_ID_KEY)) {
         appViewDeepLink(intent.getLongExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_ID_KEY, -1),
-            true);
+            intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.PACKAGE_NAME_KEY), true);
       } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksKeys.PACKAGE_NAME_KEY)) {
         appViewDeepLink(
             intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.PACKAGE_NAME_KEY),
@@ -133,10 +133,10 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
     pushFragmentV4(V8Engine.getFragmentProvider().newSearchFragment(query));
   }
 
-  private void appViewDeepLink(long appId, boolean showPopup) {
+  private void appViewDeepLink(long appId, String packageName, boolean showPopup) {
     AppViewFragment.OpenType openType = showPopup ? AppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP
         : AppViewFragment.OpenType.OPEN_ONLY;
-    pushFragmentV4(V8Engine.getFragmentProvider().newAppViewFragment(appId, openType));
+    pushFragmentV4(V8Engine.getFragmentProvider().newAppViewFragment(appId, packageName, openType));
   }
 
   private void appViewDeepLink(String md5) {
