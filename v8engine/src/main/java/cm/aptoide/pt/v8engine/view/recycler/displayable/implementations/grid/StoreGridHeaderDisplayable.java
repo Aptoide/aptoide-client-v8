@@ -4,12 +4,14 @@ import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import lombok.Getter;
+import lombok.Setter;
 
 public class StoreGridHeaderDisplayable extends Displayable {
 
   @Getter private final GetStoreWidgets.WSWidget wsWidget;
   @Getter private final String storeTheme;
   @Getter private final String tag;
+  @Getter @Setter private boolean moreVisible;
 
   public StoreGridHeaderDisplayable() {
     this(null, null, null);
@@ -23,6 +25,7 @@ public class StoreGridHeaderDisplayable extends Displayable {
     this.wsWidget = wsWidget;
     this.storeTheme = storeTheme;
     this.tag = tag;
+    this.moreVisible = true;
   }
 
   @Override public int getViewLayout() {
