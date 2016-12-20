@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.accountmanager.BaseActivity;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -48,6 +49,7 @@ public class SharePreviewDialog {
 
       TextView title = (TextView) view.findViewById(R.id.card_title);
       TextView subtitle = (TextView) view.findViewById(R.id.card_subtitle);
+
       ImageView image = (ImageView) view.findViewById(R.id.card_image);
       ImageView userAvatar = (ImageView) view.findViewById(R.id.card_user_avatar);
       TextView articleTitle =

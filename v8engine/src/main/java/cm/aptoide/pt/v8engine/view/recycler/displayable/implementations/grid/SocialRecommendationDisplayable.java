@@ -89,7 +89,7 @@ import lombok.Getter;
   }
 
   @Override public void share(Context context, boolean privacyResult) {
-
+    socialRepository.share(socialRecommendation, context, privacyResult);
   }
 
   @Override public void like(Context context, String cardType, int rating) {
