@@ -64,7 +64,7 @@ public class LoggedInActivity extends BaseActivity {
       pleaseWaitDialog.show();
 
       SetUserRequest.of(new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-              DataProvider.getContext()).getAptoideClientUUID(), "PUBLIC",
+              DataProvider.getContext()).getAptoideClientUUID(), UserAccessState.PUBLIC.toString(),
           AptoideAccountManager.getAccessToken()).execute(answer -> {
         if (answer.isOk()) {
           Logger.v(TAG, "user is public");

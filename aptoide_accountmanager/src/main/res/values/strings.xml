@@ -61,6 +61,7 @@
     <string name="ws_error_REPO_6">That store name is already taken, you need to choose another
         one.</string>
   <string name="ws_eror_WOP_">Invalid name given for your store. The name of a store can only have alphanumeric characters (A to Z and 0 to 9) or hyphens (-), and it cannot start nor end with a hyphen.</string>
+  <string name="ws_error_WOP_2">Invalid name given for your store. The name of a store can only have alphanumeric characters and it cannot start nor end with a hyphen.</string>
   <string name="ws_error_WOP_3">A store already exists with the same name. Please give another name for your store.</string>
   <string name="ws_error_WOP_9">The email provided already exists in Aptoide</string>
   <string name="ws_error_WOP_10">The email provided does not exist in Aptoide yet</string>

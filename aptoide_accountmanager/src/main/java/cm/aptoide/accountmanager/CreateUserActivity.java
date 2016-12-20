@@ -100,7 +100,7 @@ public class CreateUserActivity extends PermissionsBaseActivity
   private void setupListeners() {
     mSubscriptions.add(RxView.clicks(mUserAvatar).subscribe(click -> chooseAvatarSource()));
     mSubscriptions.add(RxView.clicks(mCreateButton).subscribe(click -> {
-      username = mUsername.getText().toString();
+      username = mUsername.getText().toString().trim();
       validateProfileData();
       if (CREATE_USER_REQUEST_CODE == 1) {
         ProgressDialog pleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
