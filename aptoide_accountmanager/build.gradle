@@ -10,36 +10,15 @@ retrolambda {
   //defaultMethods true
 }
 
-Properties localProperties = new Properties()
-localProperties.load(new FileInputStream(project.file("../../aptoideProperties/local.properties")))
-
-def gmsServerId = localProperties.GMS_SERVER_ID
-
 android {
   compileSdkVersion COMPILE_SDK_VERSION
   buildToolsVersion BUILD_TOOLS_VERSION
 
-  def GMS_CONFIGURED = "GMS_CONFIGURED"
-  def GMS_SERVER_ID = "GMS_SERVER_ID"
-  def TRUE = "true"
-  def FALSE = "false"
-  def BOOLEAN = "boolean"
-  def STRING = "String"
-  def FACEBOOK_CONFIGURED = "FACEBOOK_CONFIGURED"
-
   defaultConfig {
     minSdkVersion 15
 
-    buildConfigField BOOLEAN, GMS_CONFIGURED, (gmsServerId != null).toString()
-    buildConfigField STRING, GMS_SERVER_ID, "\"" + gmsServerId.toString() + "\""
-
-    def facebookAppId = localProperties.FACEBOOK_APP_ID
-    def facebookAppIdExists = facebookAppId != null
-    buildConfigField BOOLEAN, FACEBOOK_CONFIGURED, facebookAppIdExists.toString()
-    facebookAppId = facebookAppIdExists ? facebookAppId.toString() : "0"
-    resValue "string", "facebook_app_id", "\"" + facebookAppId + "\""
-
-    consumerProguardFiles "proguard-rules.txt"
+    buildConfigField "String", "GMS_SERVER_ID", "\"" + project.GMS_SERVER_ID + "\""
+    resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID + "\""
   }
 
   lintOptions {
@@ -48,12 +27,13 @@ android {
 
   publishNonDefault true
 
+  productFlavors {
+    internal
+    prod
+  }
+
   buildTypes {
     release {
-      minifyEnabled false
-      shrinkResources false
-    }
-    debug {
       minifyEnabled false
       shrinkResources false
     }
@@ -71,27 +51,16 @@ dependencies {
   //
   // inter-projects dependencies
   //
+  compile project(path: ':aptoidepreferences', configuration: 'release')
+  compile project(path: ':networkclient', configuration: 'release')
+  compile project(path: ':utils', configuration: 'release')
+  compile project(path: ':utilsdesign', configuration: 'release')
 
-  debugCompile project(path: ':aptoidepreferences', configuration: 'debug')
-  releaseCompile project(path: ':aptoidepreferences', configuration: 'release')
+  internalCompile project(path: ':dataprovider', configuration: 'internalRelease')
+  prodCompile project(path: ':dataprovider', configuration: 'prodRelease')
 
-  debugCompile project(path: ':networkclient', configuration: 'debug')
-  releaseCompile project(path: ':networkclient', configuration: 'release')
-
-  debugCompile project(path: ':utils', configuration: 'debug')
-  releaseCompile project(path: ':utils', configuration: 'release')
-
-  debugCompile project(path: ':utilsdesign', configuration: 'debug')
-  releaseCompile project(path: ':utilsdesign', configuration: 'release')
-
-  debugCompile project(path: ':dataprovider', configuration: 'debug')
-  releaseCompile project(path: ':dataprovider', configuration: 'release')
-
-  debugCompile project(path: ':imageloader', configuration: 'debug')
-  releaseCompile project(path: ':imageloader', configuration: 'release')
-
-  debugCompile project(path: ':database', configuration: 'debug')
-  releaseCompile project(path: ':database', configuration: 'release')
+  compile project(path: ':imageloader', configuration: 'release')
+  compile project(path: ':database', configuration: 'release')
 
   //
   // custom libs in folders
@@ -104,9 +73,6 @@ dependencies {
   //
 
   testCompile "junit:junit:${JUNIT_VERSION}"
-
-  //Also present in v8engine
-  compile "com.jakewharton.rxbinding:rxbinding:${JW_RX_BINDING_VERSION}"
 
   //noinspection GradleDependency
   compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
