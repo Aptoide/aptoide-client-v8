@@ -95,10 +95,6 @@ public class CreateStoreActivity extends PermissionsBaseActivity
     setupListeners();
     setupThemeListeners();
 
-    if (!getUserData()) {
-      Logger.e(TAG, "username, password and access token is needed for this activity");
-      finish();
-    }
   }
 
   @Override protected void onDestroy() {
@@ -158,14 +154,6 @@ public class CreateStoreActivity extends PermissionsBaseActivity
     mLightblueTick = (ImageView) findViewById(R.id.create_store_theme_check_lightblue);
   }
 
-  private boolean getUserData() {
-
-    username = getIntent().getStringExtra(AptoideLoginUtils.APTOIDE_LOGIN_USER_NAME_KEY);
-    password = getIntent().getStringExtra(AptoideLoginUtils.APTOIDE_LOGIN_PASSWORD_KEY);
-
-    return !TextUtils.isEmpty(username) && !TextUtils.isEmpty(password);
-  }
-
   private void editViews() {
     mHeader.setText(
         AptoideUtils.StringU.getFormattedString(R.string.create_store_header, "Aptoide"));
@@ -187,7 +175,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
             getApplicationContext().getString(R.string.please_wait_upload));
         progressDialog.show();
         CheckUserCredentialsRequest.of(AptoideAccountManager.getAccessToken(), storeName,
-            CREATE_STORE_CODE, username, password).execute(answer -> {
+            CREATE_STORE_CODE).execute(answer -> {
           if (answer.hasErrors()) {
             if (answer.getErrors() != null && answer.getErrors().size() > 0) {
               onCreateFail(
