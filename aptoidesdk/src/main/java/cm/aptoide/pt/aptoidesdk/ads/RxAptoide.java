@@ -13,6 +13,7 @@ import cm.aptoide.pt.aptoidesdk.proxys.GetAdsProxy;
 import cm.aptoide.pt.aptoidesdk.proxys.GetAppProxy;
 import cm.aptoide.pt.aptoidesdk.proxys.ListSearchAppsProxy;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -23,6 +24,8 @@ import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+
+import static cm.aptoide.pt.aptoidesdk.ads.OemIds.INDUS;
 
 /**
  * Created by neuro on 10-11-2016.
@@ -53,6 +56,8 @@ public class RxAptoide {
       throw new IllegalArgumentException("Oemid cannot be null!");
     }
 
+    changeEndpointsBasedOnOemID(oemid);
+
     AptoideUtils.setContext(context);
     RxAptoide.oemid = oemid;
 
@@ -66,6 +71,14 @@ public class RxAptoide {
     }, Throwable::printStackTrace);
 
     Logger.setDBG(BuildConfig.DEBUG);
+  }
+
+  private static void changeEndpointsBasedOnOemID(String oemid) {
+    switch (oemid) {
+      case INDUS:
+        GetAdsRequest.setBaseUrl("http://indusos.aptoide.com/api/2/");
+        break;
+    }
   }
 
   private static void setUserAgent(String oemid) {
