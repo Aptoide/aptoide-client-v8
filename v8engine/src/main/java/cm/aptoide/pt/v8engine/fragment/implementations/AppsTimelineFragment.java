@@ -351,7 +351,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
           timelineMetricsManager, socialRepository);
     } else if (card instanceof AppUpdate) {
       return AppUpdateDisplayable.from((AppUpdate) card, spannableFactory, downloadFactory,
-          dateCalculator, installManager, permissionManager, timelineMetricsManager, socialRepository);
+          dateCalculator, installManager, permissionManager, timelineMetricsManager,
+          socialRepository);
     } else if (card instanceof Recommendation) {
       return RecommendationDisplayable.from((Recommendation) card, dateCalculator, spannableFactory,
           timelineMetricsManager, socialRepository);

@@ -175,6 +175,9 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
           .build(), AptoideAnalytics.OPEN_BLOG);
     }));
 
+    // TODO: 21/12/2016 jdandradex
+    share.setVisibility(View.INVISIBLE);
+
     compositeSubscription.add(RxView.clicks(share).subscribe(click -> {
       shareCard(displayable);
     }, throwable -> throwable.printStackTrace()));

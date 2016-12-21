@@ -24,6 +24,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.App
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ArticleDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RecommendationDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SimilarDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SocialArticleDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreLatestAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.VideoDisplayable;
 import java.util.HashMap;
@@ -510,6 +511,89 @@ public class SharePreviewDialog {
         privacyText.setOnClickListener(click -> checkBox.toggle());
         checkBox.setClickable(true);
         handlePrivacyCheckBoxChanges(userName, userAvatar, checkBox, socialTerms);
+      }
+    } else if (displayable instanceof SocialArticleDisplayable) {
+      LayoutInflater factory = LayoutInflater.from(context);
+      final View view =
+          factory.inflate(R.layout.displayable_social_timeline_social_article_preview, null);
+
+      TextView storeName = (TextView) view.findViewById(R.id.card_title);
+      TextView userName = (TextView) view.findViewById(R.id.card_subtitle);
+      ImageView image = (ImageView) view.findViewById(R.id.card_image);
+      ImageView userAvatar = (ImageView) view.findViewById(R.id.card_user_avatar);
+      TextView articleTitle =
+          (TextView) view.findViewById(R.id.partial_social_timeline_thumbnail_title);
+      ImageView thumbnail =
+          (ImageView) view.findViewById(R.id.partial_social_timeline_thumbnail_image);
+      CardView cardView = (CardView) view.findViewById(R.id.card);
+      LinearLayout like = (LinearLayout) view.findViewById(R.id.social_like);
+      LinearLayout comments = (LinearLayout) view.findViewById(R.id.social_comment);
+      TextView relatedTo =
+          (TextView) view.findViewById(R.id.partial_social_timeline_thumbnail_related_to);
+      CheckBox checkBox = (CheckBox) view.findViewById(R.id.social_preview_checkbox);
+      LinearLayout socialTerms = (LinearLayout) view.findViewById(R.id.social_privacy_terms);
+      TextView privacyText = (TextView) view.findViewById(R.id.social_text_privacy);
+
+      if (((SocialArticleDisplayable) displayable).getStore() != null) {
+        storeName.setText(((SocialArticleDisplayable) displayable).getStore().getName());
+      }
+      articleTitle.setText(((SocialArticleDisplayable) displayable).getArticleTitle());
+      cardView.setRadius(8);
+      cardView.setCardElevation(10);
+      like.setClickable(false);
+      like.setOnClickListener(null);
+      like.setVisibility(View.VISIBLE);
+      comments.setVisibility(View.VISIBLE);
+      if (((SocialArticleDisplayable) displayable).getStore() != null) {
+        ImageLoader.loadWithShadowCircleTransform(
+            ((SocialArticleDisplayable) displayable).getStore().getAvatar(), image);
+      }
+      if (BaseActivity.UserAccessState.PUBLIC.toString()
+          .equals(ManagerPreferences.getUserAccess())) {
+        if (TextUtils.isEmpty(AptoideAccountManager.getUserData().getUserRepo())) {
+          storeName.setText(((SocialArticleDisplayable) displayable).getUser().getName());
+          ImageLoader.loadWithShadowCircleTransform(
+              ((SocialArticleDisplayable) displayable).getUser().getAvatar(), image);
+        } else {
+          userName.setText(((SocialArticleDisplayable) displayable).getUser().getName());
+          ImageLoader.loadWithShadowCircleTransform(
+              ((SocialArticleDisplayable) displayable).getUser().getAvatar(), userAvatar);
+        }
+      } else {
+        userName.setVisibility(View.GONE);
+      }
+
+      if (BaseActivity.UserAccessState.PUBLIC.toString()
+          .equals(ManagerPreferences.getUserAccess())) {
+        relatedTo.setText(AptoideAccountManager.getUserData().getUserName() + " shared");
+      } else {
+        relatedTo.setText(AptoideAccountManager.getUserData().getUserRepo() + " shared");
+      }
+      ImageLoader.load(((SocialArticleDisplayable) displayable).getThumbnailUrl(), thumbnail);
+
+      alertadd.setView(view).setCancelable(false);
+
+      alertadd.setTitle(R.string.social_timeline_you_will_share);
+
+      if (!ManagerPreferences.getUserAccessConfirmed()) {
+        privacyText.setOnClickListener(click -> checkBox.toggle());
+        checkBox.setClickable(true);
+        checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+          if (isChecked) {
+            if (BaseActivity.UserAccessState.PUBLIC.toString()
+                .equals(ManagerPreferences.getUserAccess())) {
+              relatedTo.setText(AptoideAccountManager.getUserData().getUserRepo());
+            }
+            this.privacyResult = true;
+          } else {
+            if (BaseActivity.UserAccessState.PUBLIC.toString()
+                .equals(ManagerPreferences.getUserAccess())) {
+              relatedTo.setText(AptoideAccountManager.getUserData().getUserName());
+            }
+            this.privacyResult = false;
+          }
+        });
+        socialTerms.setVisibility(View.VISIBLE);
       }
     }
     return alertadd;

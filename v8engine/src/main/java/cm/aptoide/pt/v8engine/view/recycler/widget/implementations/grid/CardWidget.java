@@ -1,9 +1,13 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
+import android.text.TextUtils;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.accountmanager.BaseActivity;
+import cm.aptoide.accountmanager.CreateStoreActivity;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -77,6 +81,17 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
       ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> {
             AptoideAccountManager.openAccountManager(snackView.getContext());
+          });
+      return;
+    }
+
+    if (TextUtils.isEmpty(AptoideAccountManager.getUserData().getUserRepo())
+        && !BaseActivity.UserAccessState.PUBLIC.toString()
+        .equals(ManagerPreferences.getUserAccess())) {
+      ShowMessage.asSnack(getContext(), R.string.private_profile_create_store,
+          R.string.create_store_create, snackView -> {
+            Intent intent = new Intent(getContext(), CreateStoreActivity.class);
+            getContext().startActivity(intent);
           });
       return;
     }

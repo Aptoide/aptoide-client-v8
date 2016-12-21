@@ -132,6 +132,9 @@ public class SocialStoreLatestAppsWidget extends SocialCardWidget<SocialStoreLat
     numberComments.setVisibility(View.VISIBLE);
     numberComments.setText(String.valueOf(displayable.getNumberOfComments()));
 
+    // TODO: 21/12/2016 jdandradex
+    share.setVisibility(View.INVISIBLE);
+
     compositeSubscription.add(RxView.clicks(share).subscribe(click -> {
       shareCard(displayable);
     }, throwable -> throwable.printStackTrace()));
