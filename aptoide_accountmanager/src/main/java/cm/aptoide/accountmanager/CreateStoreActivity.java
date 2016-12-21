@@ -8,9 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -23,7 +21,6 @@ import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.SetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SimpleSetStoreRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
@@ -84,7 +81,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
   private boolean THEME_CLICKED_FLAG = false;
   private String storeTheme = "";
 
-  private int CREATE_STORE_REQUEST_CODE = 0; //1: all 2: user and theme 3:user
+  private int CREATE_STORE_REQUEST_CODE = 0; //1: all (Multipart)  2: user and theme 3:user
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -180,7 +177,8 @@ public class CreateStoreActivity extends PermissionsBaseActivity
               progressDialog.dismiss();
               if (answer.getErrors().get(0).code.equals("WOP-2")) {
                 mSubscriptions.add(GenericDialogs.createGenericContinueMessage(this, "",
-                    getApplicationContext().getResources().getString(R.string.ws_error_WOP_2)).subscribe());
+                    getApplicationContext().getResources().getString(R.string.ws_error_WOP_2))
+                    .subscribe());
               } else {
                 onCreateFail(
                     ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors().get(0).code));
@@ -238,6 +236,9 @@ public class CreateStoreActivity extends PermissionsBaseActivity
   @Override public void onCreateSuccess(ProgressDialog progressDialog) {
     ShowMessage.asSnack(this, R.string.create_store_store_created);
     if (CREATE_STORE_REQUEST_CODE == 1) {
+      /*
+       * Multipart
+       */
       SetStoreRequest.of(new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
               DataProvider.getContext()).getAptoideClientUUID(), AptoideAccountManager.getAccessToken(),
           storeName, storeTheme, storeAvatarPath).execute(answer -> {
@@ -252,6 +253,9 @@ public class CreateStoreActivity extends PermissionsBaseActivity
         }, throwable1 -> throwable1.printStackTrace());
       });
     } else if (CREATE_STORE_REQUEST_CODE == 2 || CREATE_STORE_REQUEST_CODE == 3) {
+      /*
+       * not multipart
+       */
       SimpleSetStoreRequest.of(AptoideAccountManager.getAccessToken(),
           new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
               DataProvider.getContext()).getAptoideClientUUID(), storeName, storeTheme)
@@ -396,18 +400,16 @@ public class CreateStoreActivity extends PermissionsBaseActivity
   }
 
   private int validateData() {
+
     if (getRepoName().length() != 0) {
-      if (getRepoTheme().length() != 0) {
-        if (getRepoAvatar().length() != 0) {
-          CREATE_STORE_REQUEST_CODE = 1;
-        } else {
-          CREATE_STORE_REQUEST_CODE = 2;
-        }
+
+      if (getRepoAvatar().length() != 0) {
+        CREATE_STORE_REQUEST_CODE = 1;
+      } else if (getRepoTheme().length() != 0) {
+        CREATE_STORE_REQUEST_CODE = 2;
       } else {
         CREATE_STORE_REQUEST_CODE = 3;
       }
-    } else if (getRepoAvatar().length() != 0) {
-      CREATE_STORE_REQUEST_CODE = 1;
     } else {
       CREATE_STORE_REQUEST_CODE = 0;
       onCreateFail(R.string.nothing_inserted_store);
