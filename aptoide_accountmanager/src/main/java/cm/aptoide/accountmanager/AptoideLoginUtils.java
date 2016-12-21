@@ -24,6 +24,7 @@ class AptoideLoginUtils {
   static final String APTOIDE_LOGIN_REFRESH_TOKEN_KEY = "aptoide_login_refresh_token";
   static final String APTOIDE_LOGIN_ACCESS_TOKEN_KEY = "aptoide_login_access_token";
   static final String APTOIDE_LOGIN_FROM = "aptoide_login_from";
+  public static final String IS_FACEBOOK_OR_GOOGLE = "facebook_google";
 
   private static int REQ_SIGNUP = 8;
 

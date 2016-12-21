@@ -221,9 +221,7 @@ public class CreateUserActivity extends PermissionsBaseActivity
     ShowMessage.asSnack(content, R.string.user_created);
     //data.putString(AptoideLoginUtils.APTOIDE_LOGIN_FROM, SIGNUP);
     progressDialog.dismiss();
-    startActivity(new Intent(this, LoggedInActivity.class).putExtra(
-        AptoideLoginUtils.APTOIDE_LOGIN_USER_NAME_KEY, userEmail)
-        .putExtra(AptoideLoginUtils.APTOIDE_LOGIN_PASSWORD_KEY, userPassword));
+    startActivity(new Intent(this, LoggedInActivity.class));
     finish();
   }
 

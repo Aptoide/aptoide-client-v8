@@ -26,6 +26,7 @@ public class LoggedInActivity2ndStep extends BaseActivity {
   private Button mPrivateProfile;
   private CompositeSubscription mSubscriptions;
   private Toolbar mToolbar;
+  private ProgressDialog pleaseWaitDialog;
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -49,7 +50,6 @@ public class LoggedInActivity2ndStep extends BaseActivity {
     return R.layout.logged_in_second_screen;
   }
 
-
   private void bindViews() {
     mToolbar = (Toolbar) findViewById(R.id.toolbar);
     mContinueButton = (Button) findViewById(R.id.logged_in_continue);
@@ -60,7 +60,7 @@ public class LoggedInActivity2ndStep extends BaseActivity {
   private void setupListeners() {
     mSubscriptions.add(RxView.clicks(mContinueButton).subscribe(clicks -> {
 
-      ProgressDialog pleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
+      pleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
           getApplicationContext().getString(R.string.please_wait));
       pleaseWaitDialog.show();
 
@@ -76,22 +76,14 @@ public class LoggedInActivity2ndStep extends BaseActivity {
           Toast.makeText(LoggedInActivity2ndStep.this, R.string.unknown_error, Toast.LENGTH_SHORT)
               .show();
         }
-        pleaseWaitDialog.dismiss();
-
-        startActivity(getIntent().setClass(this, CreateStoreActivity.class));
-        finish();
-
+        goTo();
       }, throwable -> {
-
-        pleaseWaitDialog.dismiss();
-        startActivity(getIntent().setClass(this, CreateStoreActivity.class));
-        finish();
-
+        goTo();
       });
     }));
     mSubscriptions.add(RxView.clicks(mPrivateProfile).subscribe(clicks -> {
 
-      ProgressDialog pleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
+      pleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
           getApplicationContext().getString(R.string.please_wait));
       pleaseWaitDialog.show();
 
@@ -108,17 +100,34 @@ public class LoggedInActivity2ndStep extends BaseActivity {
               .show();
         }
 
-        pleaseWaitDialog.dismiss();
-        startActivity(getIntent().setClass(this, CreateStoreActivity.class));
-        finish();
-
+        goTo();
       }, throwable -> {
 
-        pleaseWaitDialog.dismiss();
-        startActivity(getIntent().setClass(this, CreateStoreActivity.class));
-        finish();
-
+        goTo();
       });
     }));
+  }
+
+  private void updateUserInfo() {
+    AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
+      if (pleaseWaitDialog != null && pleaseWaitDialog.isShowing()) {
+        pleaseWaitDialog.dismiss();
+      }
+      finish();
+    }, throwable -> throwable.printStackTrace());
+  }
+
+  private void goTo() {
+
+    if (getIntent() != null && getIntent().getBooleanExtra(AptoideLoginUtils.IS_FACEBOOK_OR_GOOGLE,
+        false)) {
+      updateUserInfo();
+    } else {
+      if (pleaseWaitDialog != null && pleaseWaitDialog.isShowing()) {
+        pleaseWaitDialog.dismiss();
+      }
+      startActivity(getIntent().setClass(this, CreateStoreActivity.class));
+      finish();
+    }
   }
 }

@@ -65,11 +65,14 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
       Logger.w(TAG, "like button is null in this view");
     }
 
+
     likeButton.setLiked(false);
     numberLikes.setVisibility(View.VISIBLE);
     numberLikes.setText(String.valueOf(displayable.getNumberOfLikes()));
     numberComments.setVisibility(View.VISIBLE);
     numberComments.setText(String.valueOf(displayable.getNumberOfComments()));
+
+    shareButton.setVisibility(View.INVISIBLE);
 
     //
     // should this be inside the like button logic ??

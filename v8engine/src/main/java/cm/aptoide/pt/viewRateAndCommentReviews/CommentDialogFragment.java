@@ -235,6 +235,7 @@ public class CommentDialogFragment extends RxDialogFragment {
 
     switch (commentType) {
       case REVIEW:
+        // new comment on a review
         return PostCommentForReview.of(idAsLong, inputText, AptoideAccountManager.getAccessToken(),
             new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                 DataProvider.getContext()).getAptoideClientUUID()).observe();
@@ -253,8 +254,15 @@ public class CommentDialogFragment extends RxDialogFragment {
                 DataProvider.getContext()).getAptoideClientUUID()).observe();
 
       case TIMELINE:
-        // TODO: 20/12/2016 sithengineer
-        return PostCommentForTimelineArticle.of(idAsString, inputText,
+        // check if this is a new comment on a article or a reply to a previous one
+        if (previousCommentId == null) {
+          return PostCommentForTimelineArticle.of(idAsString, inputText,
+              AptoideAccountManager.getAccessToken(),
+              new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+                  DataProvider.getContext()).getAptoideClientUUID()).observe();
+        }
+
+        return PostCommentForTimelineArticle.of(idAsString, previousCommentId, inputText,
             AptoideAccountManager.getAccessToken(),
             new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                 DataProvider.getContext()).getAptoideClientUUID()).observe();
