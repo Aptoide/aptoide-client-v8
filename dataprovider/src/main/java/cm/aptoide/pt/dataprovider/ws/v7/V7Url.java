@@ -45,4 +45,8 @@ public class V7Url {
     this.url = url.replace(toRemove, "");
     return this;
   }
+
+  public boolean containsLimit() {
+    return url.contains("limit=");
+  }
 }
