@@ -6,7 +6,6 @@ import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.timeline.SocialStoreLatestApps;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
-import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SocialCardDisplayable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,18 +16,30 @@ import lombok.Getter;
 /**
  * Created by jdandrade on 29/11/2016.
  */
-@AllArgsConstructor public class SocialStoreLatestAppsDisplayable extends SocialCardDisplayable {
+public class SocialStoreLatestAppsDisplayable extends SocialCardDisplayable {
   @Getter private String storeName;
   @Getter private String avatarUrl;
   @Getter private List<SocialStoreLatestAppsDisplayable.LatestApp> latestApps;
-  @Getter private String abUrl;
+  @Getter private String abTestingUrl;
 
   private DateCalculator dateCalculator;
 
-  private Date date;
+  private Date latestUpdate;
   private TimelineMetricsManager timelineMetricsManager;
 
   public SocialStoreLatestAppsDisplayable() {
+  }
+
+  public SocialStoreLatestAppsDisplayable(String storeName, String avatarUrl,
+      List<LatestApp> latestApps, String abTestingUrl, DateCalculator dateCalculator,
+      Date latestUpdate, TimelineMetricsManager timelineMetricsManager) {
+    this.storeName = storeName;
+    this.avatarUrl = avatarUrl;
+    this.latestApps = latestApps;
+    this.abTestingUrl = abTestingUrl;
+    this.dateCalculator = dateCalculator;
+    this.latestUpdate = latestUpdate;
+    this.timelineMetricsManager = timelineMetricsManager;
   }
 
   public static SocialStoreLatestAppsDisplayable from(SocialStoreLatestApps storeLatestApps,
@@ -51,7 +62,7 @@ import lombok.Getter;
   }
 
   public String getTimeSinceLastUpdate(Context context) {
-    return dateCalculator.getTimeSinceDate(context, date);
+    return dateCalculator.getTimeSinceDate(context, latestUpdate);
   }
 
   @Override public int getViewLayout() {

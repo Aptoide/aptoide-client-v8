@@ -15,7 +15,7 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
-import cm.aptoide.pt.viewRateAndCommentReviews.StoreComment;
+import cm.aptoide.pt.viewRateAndCommentReviews.ComplexComment;
 import com.jakewharton.rxbinding.view.RxView;
 
 /**
@@ -58,11 +58,11 @@ public class CommentWidget extends Widget<CommentDisplayable> {
         .getTimeDiffString(getContext(), comment.getAdded().getTime()));
     this.comment.setText(comment.getBody());
 
-    if (StoreComment.class.isAssignableFrom(comment.getClass())) {
-      final StoreComment storeComment = (StoreComment) comment;
+    if (ComplexComment.class.isAssignableFrom(comment.getClass())) {
+      final ComplexComment complexComment = (ComplexComment) comment;
 
       @ColorRes int bgColor =
-          storeComment.getLevel() % 2 == 0 ? R.color.medium_custom_gray : R.color.white;
+          complexComment.getLevel() % 2 == 0 ? R.color.medium_custom_gray : R.color.white;
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         outerLayout.setBackgroundColor(getContext().getColor(bgColor));
       } else {
@@ -70,12 +70,12 @@ public class CommentWidget extends Widget<CommentDisplayable> {
       }
 
       // set left/start margin width in default comment
-      setLayoutLeftMargin(storeComment);
+      setLayoutLeftMargin(complexComment);
 
-      if (storeComment.getLevel() == 1) {
+      if (complexComment.getLevel() == 1) {
         replyLayout.setVisibility(View.VISIBLE);
         compositeSubscription.add(RxView.clicks(replyLayout)
-            .flatMap(aVoid -> storeComment.observeReplySubmission().doOnError(err -> {
+            .flatMap(aVoid -> complexComment.observeReplySubmission().doOnError(err -> {
               ShowMessage.asSnack(userAvatar, R.string.error_occured);
             }).flatMap(v -> ShowMessage.asObservableSnack(userAvatar, R.string.comment_submitted)))
             .retry()
@@ -89,8 +89,8 @@ public class CommentWidget extends Widget<CommentDisplayable> {
     }
   }
 
-  private void setLayoutLeftMargin(StoreComment storeComment) {
-    final int level = storeComment.getLevel();
+  private void setLayoutLeftMargin(ComplexComment complexComment) {
+    final int level = complexComment.getLevel();
 
     outerLayout.setPadding(outerLayout.getPaddingRight(), outerLayout.getPaddingTop(),
         outerLayout.getPaddingRight(), outerLayout.getPaddingBottom());

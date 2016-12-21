@@ -1,18 +1,23 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
+import android.support.annotation.CallSuper;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.view.View;
+import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.dialog.SharePreviewDialog;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CardDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import com.jakewharton.rxbinding.view.RxView;
 import java.io.IOException;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -30,8 +35,28 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
 
-  public CardWidget(View itemView) {
+  private TextView shareButton;
+
+  CardWidget(View itemView) {
     super(itemView);
+  }
+
+  @CallSuper @Override protected void assignViews(View itemView) {
+    shareButton = (TextView) itemView.findViewById(R.id.social_share);
+  }
+
+  @CallSuper @Override public void bindView(T displayable) {
+    compositeSubscription.add(RxView.clicks(shareButton).flatMap(a -> {
+      // FIXME: 20/12/2016 sithengineer remove this flatMap
+      return Observable.fromCallable(() -> {
+        final String elementId = displayable.getTimelineCard().getCardId();
+        V8Engine.getFragmentProvider()
+            .newCommentGridRecyclerFragment(CommentType.TIMELINE, elementId);
+        return null;
+      });
+    }).subscribe(click -> {
+      shareCard(displayable);
+    }, throwable -> throwable.printStackTrace()));
   }
 
   protected void knockWithSixpackCredentials(String url) {

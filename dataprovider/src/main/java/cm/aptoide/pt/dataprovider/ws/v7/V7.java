@@ -158,7 +158,7 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
               V7.this.body.setAccessToken(s);
               return V7.this.observe(bypassCache)
                   .delaySubscription(REFRESH_TOKEN_DELAY, TimeUnit.MILLISECONDS);
-                });
+            });
           }
         } else {
           return Observable.error(throwable);
@@ -244,11 +244,15 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("setComment") Observable<BaseV7Response> postReviewComment(
-        @Body PostCommentForReviewRequest.Body body,
+        @Body PostCommentForReview.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("setComment") Observable<BaseV7Response> postStoreComment(
         @Body PostCommentForStore.Body body,
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("setComment") Observable<BaseV7Response> postTimelineComment(
+        @Body PostCommentForTimelineArticle.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("setReviewVote") Observable<BaseV7Response> setReviewVote(
@@ -285,8 +289,8 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
     @Multipart @POST("store/set") Observable<BaseV7Response> editStore(
         @Part MultipartBody.Part store_avatar, @PartMap HashMapNotNull<String, RequestBody> body);
 
-    @POST("user/getTimelineStats") Observable<TimelineStats> getTimelineStats(
-        @Body BaseBody body, @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
+    @POST("user/getTimelineStats") Observable<TimelineStats> getTimelineStats(@Body BaseBody body,
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("user/getFollowers") Observable<GetFollowers> getTimelineFollowers(
         @Body GetFollowersRequest.Body body,

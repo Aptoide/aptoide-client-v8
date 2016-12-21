@@ -10,7 +10,6 @@ import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
@@ -21,7 +20,6 @@ import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ArticleDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
-import com.like.LikeButton;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -41,9 +39,6 @@ public class ArticleWidget extends CardWidget<ArticleDisplayable> {
   private View articleHeader;
   private ArticleDisplayable displayable;
   private TextView relatedTo;
-  private LinearLayout like;
-  private LinearLayout share;
-  private LikeButton likeButton;
 
   private String appName;
   private String packageName;
@@ -53,6 +48,8 @@ public class ArticleWidget extends CardWidget<ArticleDisplayable> {
   }
 
   @Override protected void assignViews(View itemView) {
+    super.assignViews(itemView);
+
     title = (TextView) itemView.findViewById(R.id.card_title);
     subtitle = (TextView) itemView.findViewById(R.id.card_subtitle);
     image = (ImageView) itemView.findViewById(R.id.card_image);
@@ -64,12 +61,11 @@ public class ArticleWidget extends CardWidget<ArticleDisplayable> {
     cardView = (CardView) itemView.findViewById(R.id.card);
     articleHeader = itemView.findViewById(R.id.displayable_social_timeline_article_header);
     relatedTo = (TextView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_related_to);
-    like = (LinearLayout) itemView.findViewById(R.id.social_like);
-    share = (LinearLayout) itemView.findViewById(R.id.social_share);
-    likeButton = (LikeButton) itemView.findViewById(R.id.social_like_test);
   }
 
   @Override public void bindView(ArticleDisplayable displayable) {
+    super.bindView(displayable);
+
     this.displayable = displayable;
     title.setText(displayable.getTitle());
     subtitle.setText(displayable.getTimeSinceLastUpdate(getContext()));
@@ -111,10 +107,10 @@ public class ArticleWidget extends CardWidget<ArticleDisplayable> {
 
     compositeSubscription.add(displayable.getRelatedToApplication()
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(installeds -> {
-          if (installeds != null && !installeds.isEmpty()) {
-            appName = installeds.get(0).getName();
-            packageName = installeds.get(0).getPackageName();
+        .subscribe(installedList -> {
+          if (installedList != null && !installedList.isEmpty()) {
+            appName = installedList.get(0).getName();
+            packageName = installedList.get(0).getPackageName();
           } else {
             setAppNameToFirstLinkedApp();
           }
@@ -144,13 +140,6 @@ public class ArticleWidget extends CardWidget<ArticleDisplayable> {
               .build())
           .build(), AptoideAnalytics.OPEN_BLOG);
     }));
-
-    compositeSubscription.add(RxView.clicks(share).subscribe(click -> {
-      shareCard(displayable);
-    }, throwable -> throwable.printStackTrace()));
-
-    compositeSubscription.add(RxView.clicks(like).subscribe(click -> {
-    }, (throwable) -> throwable.printStackTrace()));
   }
 
   private void setAppNameToFirstLinkedApp() {

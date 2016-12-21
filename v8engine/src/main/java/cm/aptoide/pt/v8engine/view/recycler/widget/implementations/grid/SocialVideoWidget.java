@@ -24,7 +24,9 @@ import rx.android.schedulers.AndroidSchedulers;
  * Created by jdandrade on 28/11/2016.
  */
 public class SocialVideoWidget extends SocialCardWidget<SocialVideoDisplayable> {
-  private String cardType = "Social Video";
+
+  private static final String CARD_TYPE_NAME = "Social Video";
+
   private TextView title;
   private TextView subtitle;
   private ImageView storeAvatar;
@@ -97,11 +99,11 @@ public class SocialVideoWidget extends SocialCardWidget<SocialVideoDisplayable> 
 
     media_layout.setOnClickListener(v -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
-      Analytics.AppsTimeline.clickOnCard(cardType, Analytics.AppsTimeline.BLANK,
+      Analytics.AppsTimeline.clickOnCard(getCardTypeName(), Analytics.AppsTimeline.BLANK,
           displayable.getVideoTitle(), displayable.getTitle(), Analytics.AppsTimeline.OPEN_VIDEO);
       displayable.getLink().launch(getContext());
       displayable.sendOpenVideoEvent(SendEventRequest.Body.Data.builder()
-          .cardType(cardType)
+          .cardType(getCardTypeName())
           .source(displayable.getTitle())
           .specific(SendEventRequest.Body.Specific.builder()
               .url(displayable.getLink().getUrl())
@@ -112,10 +114,10 @@ public class SocialVideoWidget extends SocialCardWidget<SocialVideoDisplayable> 
 
     compositeSubscription.add(displayable.getRelatedToApplication()
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(installeds -> {
-          if (installeds != null && !installeds.isEmpty()) {
-            appName = installeds.get(0).getName();
-            packageName = installeds.get(0).getPackageName();
+        .subscribe(installedList -> {
+          if (installedList != null && !installedList.isEmpty()) {
+            appName = installedList.get(0).getName();
+            packageName = installedList.get(0).getPackageName();
           } else {
             setAppNameToFirstLinkedApp(displayable);
           }
@@ -133,11 +135,11 @@ public class SocialVideoWidget extends SocialCardWidget<SocialVideoDisplayable> 
     compositeSubscription.add(RxView.clicks(videoHeader).subscribe(click -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
       displayable.getBaseLink().launch(getContext());
-      Analytics.AppsTimeline.clickOnCard(cardType, Analytics.AppsTimeline.BLANK,
+      Analytics.AppsTimeline.clickOnCard(getCardTypeName(), Analytics.AppsTimeline.BLANK,
           displayable.getVideoTitle(), displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_VIDEO_HEADER);
       displayable.sendOpenVideoEvent(SendEventRequest.Body.Data.builder()
-          .cardType(cardType)
+          .cardType(getCardTypeName())
           .source(displayable.getTitle())
           .specific(SendEventRequest.Body.Specific.builder()
               .url(displayable.getBaseLink().getUrl())
@@ -147,16 +149,20 @@ public class SocialVideoWidget extends SocialCardWidget<SocialVideoDisplayable> 
     }));
     likeButton.setOnLikeListener(new OnLikeListener() {
       @Override public void liked(LikeButton likeButton) {
-        likeCard(displayable, cardType, 1);
+        likeCard(displayable, 1);
         numberLikes.setText(String.valueOf(displayable.getNumberOfLikes() + 1));
       }
 
       @Override public void unLiked(LikeButton likeButton) {
         likeButton.setLiked(true);
-        //likeCard(displayable, cardType, -1);
+        //likeCard(displayable, getCardTypeName(), -1);
         //numberLikes.setText("0");
       }
     });
+  }
+
+  @Override String getCardTypeName() {
+    return CARD_TYPE_NAME;
   }
 
   private void setAppNameToFirstLinkedApp(SocialVideoDisplayable displayable) {

@@ -25,7 +25,7 @@ import java.util.Map;
 public class SocialStoreLatestAppsWidget
     extends SocialCardWidget<SocialStoreLatestAppsDisplayable> {
 
-  private final String cardType = "Social Latest Apps";
+  private final String CARD_TYPE_NAME = "Social Latest Apps";
   private final LayoutInflater inflater;
   private TextView title;
   private TextView subtitle;
@@ -80,12 +80,12 @@ public class SocialStoreLatestAppsWidget
 
     for (View app : apps.keySet()) {
       compositeSubscription.add(RxView.clicks(app).subscribe(click -> {
-        knockWithSixpackCredentials(displayable.getAbUrl());
+        knockWithSixpackCredentials(displayable.getAbTestingUrl());
         String packageName = appsPackages.get(apps.get(app));
-        Analytics.AppsTimeline.clickOnCard(cardType, packageName, Analytics.AppsTimeline.BLANK,
+        Analytics.AppsTimeline.clickOnCard(getCardTypeName(), packageName, Analytics.AppsTimeline.BLANK,
             displayable.getStoreName(), Analytics.AppsTimeline.OPEN_APP_VIEW);
         displayable.sendClickEvent(SendEventRequest.Body.Data.builder()
-            .cardType(cardType)
+            .cardType(getCardTypeName())
             .source(AptoideAnalytics.SOURCE_APTOIDE)
             .specific(SendEventRequest.Body.Specific.builder()
                 .app(packageName)
@@ -98,12 +98,12 @@ public class SocialStoreLatestAppsWidget
     }
 
     compositeSubscription.add(RxView.clicks(store).subscribe(click -> {
-      knockWithSixpackCredentials(displayable.getAbUrl());
-      Analytics.AppsTimeline.clickOnCard(cardType, Analytics.AppsTimeline.BLANK,
+      knockWithSixpackCredentials(displayable.getAbTestingUrl());
+      Analytics.AppsTimeline.clickOnCard(getCardTypeName(), Analytics.AppsTimeline.BLANK,
           Analytics.AppsTimeline.BLANK, displayable.getStoreName(),
           Analytics.AppsTimeline.OPEN_STORE);
       displayable.sendClickEvent(SendEventRequest.Body.Data.builder()
-          .cardType(cardType)
+          .cardType(getCardTypeName())
           .source(AptoideAnalytics.SOURCE_APTOIDE)
           .specific(
               SendEventRequest.Body.Specific.builder().store(displayable.getStoreName()).build())
@@ -111,5 +111,9 @@ public class SocialStoreLatestAppsWidget
       ((FragmentShower) getContext()).pushFragmentV4(
           V8Engine.getFragmentProvider().newStoreFragment(displayable.getStoreName()));
     }));
+  }
+
+  @Override String getCardTypeName() {
+    return CARD_TYPE_NAME;
   }
 }

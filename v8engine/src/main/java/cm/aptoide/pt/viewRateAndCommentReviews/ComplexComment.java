@@ -1,14 +1,13 @@
 package cm.aptoide.pt.viewRateAndCommentReviews;
 
 import cm.aptoide.pt.model.v7.Comment;
-import java.util.List;
 import rx.Observable;
 
-public class StoreComment extends Comment {
+public class ComplexComment extends Comment {
   private final Observable<Void> onClickReplyAction;
   private final int level;
 
-  public StoreComment(CommentNode commentNode, Observable<Void> onClickReplyAction) {
+  public ComplexComment(CommentNode commentNode, Observable<Void> onClickReplyAction) {
     this.level = commentNode.getLevel();
     Comment comment = commentNode.getComment();
     this.setAdded(comment.getAdded());

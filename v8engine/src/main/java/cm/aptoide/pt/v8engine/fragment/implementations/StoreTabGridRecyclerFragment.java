@@ -26,7 +26,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetMyStoreListRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.FullReview;
@@ -60,7 +59,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Rec
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RowReviewDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
 import cm.aptoide.pt.viewRateAndCommentReviews.CommentNode;
-import cm.aptoide.pt.viewRateAndCommentReviews.StoreComment;
+import cm.aptoide.pt.viewRateAndCommentReviews.ComplexComment;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -147,7 +146,6 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
         case getAds:
         case listStores:
         case listComments:
-        case listCommentsTimeline:
         case listReviews:
           return true;
       }
@@ -334,51 +332,6 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
         }, throwable -> finishLoading(throwable));
   }
 
-  // FIXME: 9/12/2016 sithengineer remove this method. xxx
-  /*
-  private void injectStuff(List<GetStoreWidgets.WSWidget> list, String storeName) {
-    // comments group widget
-    GetStoreWidgets.WSWidget widget1 = new GetStoreWidgets.WSWidget();
-    widget1.setType(Type.COMMENTS_GROUP);
-    widget1.setTitle("Comments on this store");
-    widget1.setTag("apps-group-latest-comments-in-this-store");
-
-    widget1.setView(String.format(
-        "http://ws2.aptoide.com/api/7/listComments/store_name/%s/comment_type=STORE/limit=3/sort=latest/order=desc",
-        TextUtils.isEmpty(storeName) ? "rmota" : storeName));
-    widget1.setData(new GetStoreWidgets.WSWidget.Data().setLayout(Layout.GRID));
-
-    GetStoreWidgets.WSWidget.Action action1 = new GetStoreWidgets.WSWidget.Action();
-    action1.setType("button");
-    action1.setLabel("More");
-    action1.setTag("apps-group-latest-comments-in-this-store");
-
-    Event event1 = new Event();
-    event1.setType(Event.Type.API);
-    event1.setName(Event.Name.listComments);
-    event1.setAction(String.format(
-        "http://ws2.aptoide.com/api/7/listComments/store_name/%s/comment_type=STORE/limit=10/sort=latest/order=desc",
-        TextUtils.isEmpty(storeName) ? "rmota" : storeName));
-    event1.setData(new GetStoreWidgets.WSWidget.Data().setLayout(Layout.GRID));
-    action1.setEvent(event1);
-
-    ArrayList<GetStoreWidgets.WSWidget.Action> actions1 = new ArrayList<>();
-    actions1.add(action1);
-    widget1.setActions(actions1);
-
-    list.add(widget1);
-
-    GetStoreWidgets.WSWidget widget2 = new GetStoreWidgets.WSWidget();
-    widget2.setType(Type.APP_META);
-    widget2.setTitle("Official app");
-    widget2.setTag("apps-group-official-app");
-    widget2.setView("http://ws75.aptoide.com/api/7/getApp/app_id=12765245");
-    widget2.setData(new GetStoreWidgets.WSWidget.Data().setLayout(Layout.GRID));
-
-    list.add(widget2);
-  }
-  */
-
   private Subscription caseGetStoreWidgets(String url,
       BaseRequestWithStore.StoreCredentials storeCredentials, boolean refresh) {
     return GetStoreWidgetsRequest.ofAction(url, storeCredentials,
@@ -419,9 +372,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
         }, throwable -> finishLoading(throwable));
   }
 
-  @Override public void setupToolbar() {
-
-  }
+  @Override public void setupToolbar() { }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -459,9 +410,6 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
           break;
         case listComments:
           caseListStoreComments(url, StoreUtils.getStoreCredentialsFromUrl(url), refresh);
-          break;
-        case listCommentsTimeline:
-          caseListTimelineComments(url, refresh);
           break;
         case listReviews:
           caseListReviews(url, refresh);
@@ -561,7 +509,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 
         ArrayList<Displayable> displayables = new ArrayList<>(comments.size());
         for (CommentNode commentNode : comments) {
-          displayables.add(new CommentDisplayable(new StoreComment(commentNode,
+          displayables.add(new CommentDisplayable(new ComplexComment(commentNode,
               showStoreCommentFragment(storeId, commentNode.getComment().getId(), storeName))));
         }
 

@@ -18,7 +18,7 @@ public abstract class CardDisplayable extends Displayable {
   public CardDisplayable() {
   }
 
-  public CardDisplayable(TimelineCard timelineCard) {
+  CardDisplayable(TimelineCard timelineCard) {
     this.timelineCard = timelineCard;
   }
 

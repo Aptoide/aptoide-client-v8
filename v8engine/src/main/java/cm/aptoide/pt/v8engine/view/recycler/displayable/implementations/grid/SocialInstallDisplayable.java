@@ -14,16 +14,13 @@ import cm.aptoide.pt.v8engine.repository.SocialRepository;
 import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
-import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SocialCardDisplayable;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
  * Created by jdandrade on 15/12/2016.
  */
-@AllArgsConstructor public class SocialInstallDisplayable extends SocialCardDisplayable {
+public class SocialInstallDisplayable extends SocialCardDisplayable {
 
-  private SocialInstall socialInstall;
   @Getter private int avatarResource;
   @Getter private Store store;
   @Getter private int titleResource;
@@ -33,14 +30,32 @@ import lombok.Getter;
   @Getter private String appName;
   @Getter private String appIcon;
   @Getter private String abUrl;
-  @Getter private long numberOfLikes;
-  @Getter private long numberOfComments;
 
   private TimelineMetricsManager timelineMetricsManager;
   private SpannableFactory spannableFactory;
   private SocialRepository socialRepository;
 
   public SocialInstallDisplayable() {
+  }
+
+  public SocialInstallDisplayable(SocialInstall socialInstall, int icon, Store store,
+      int titleResource, Comment.User user, long appId, String packageName, String appName,
+      String appIcon, String abTestingURL, long likes, long comments,
+      TimelineMetricsManager timelineMetricsManager, SpannableFactory spannableFactory,
+      SocialRepository socialRepository) {
+    super(socialInstall, likes, comments);
+    this.avatarResource = icon;
+    this.store = store;
+    this.titleResource = titleResource;
+    this.user = user;
+    this.appId = appId;
+    this.packageName = packageName;
+    this.appName = appName;
+    this.appIcon = appIcon;
+    this.abUrl = abTestingURL;
+    this.timelineMetricsManager = timelineMetricsManager;
+    this.spannableFactory = spannableFactory;
+    this.socialRepository = socialRepository;
   }
 
   public static Displayable from(SocialInstall socialInstall,
@@ -127,6 +142,6 @@ import lombok.Getter;
   }
 
   @Override public void like(Context context, String cardType, int rating) {
-    socialRepository.like(socialInstall, cardType, "", rating);
+    socialRepository.like(getTimelineCard(), cardType, "", rating);
   }
 }

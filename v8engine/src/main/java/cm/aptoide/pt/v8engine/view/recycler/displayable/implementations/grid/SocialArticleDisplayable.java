@@ -19,7 +19,6 @@ import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.repository.SocialRepository;
 import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
-import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SocialCardDisplayable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -43,8 +42,6 @@ public class SocialArticleDisplayable extends SocialCardDisplayable {
   @Getter private String abUrl;
   @Getter private Store store;
   @Getter private Comment.User user;
-  @Getter private long numberOfLikes;
-  @Getter private long numberOfComments;
 
   @Getter private List<App> relatedToAppsList;
   private Date date;
@@ -62,7 +59,7 @@ public class SocialArticleDisplayable extends SocialCardDisplayable {
       List<App> relatedToAppsList, Date date, DateCalculator dateCalculator,
       SpannableFactory spannableFactory, TimelineMetricsManager timelineMetricsManager,
       SocialRepository socialRepository) {
-    super(timelineCard);
+    super(timelineCard, numberOfLikes, numberOfComments);
     this.articleTitle = articleTitle;
     this.link = link;
     this.developerLink = developerLink;
@@ -73,8 +70,6 @@ public class SocialArticleDisplayable extends SocialCardDisplayable {
     this.abUrl = abUrl;
     this.store = store;
     this.user = user;
-    this.numberOfLikes = numberOfLikes;
-    this.numberOfComments = numberOfComments;
     this.relatedToAppsList = relatedToAppsList;
     this.date = date;
     this.dateCalculator = dateCalculator;

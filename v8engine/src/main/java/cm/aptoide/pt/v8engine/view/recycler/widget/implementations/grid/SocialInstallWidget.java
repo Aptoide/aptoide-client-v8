@@ -21,7 +21,8 @@ import com.like.OnLikeListener;
  */
 public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayable> {
 
-  private final String cardType = "Social Install";
+  private static final String CARD_TYPE_NAME = "Social Install";
+
   private TextView storeName;
   private TextView userName;
   private ImageView storeAvatar;
@@ -92,7 +93,7 @@ public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayab
     cardContent.setOnClickListener(view -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
 
-      Analytics.AppsTimeline.clickOnCard(cardType, displayable.getPackageName(),
+      Analytics.AppsTimeline.clickOnCard(CARD_TYPE_NAME, displayable.getPackageName(),
           Analytics.AppsTimeline.BLANK, displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_APP_VIEW);
       //displayable.sendClickEvent(SendEventRequest.Body.Data.builder()
@@ -112,7 +113,7 @@ public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayab
 
     likeButton.setOnLikeListener(new OnLikeListener() {
       @Override public void liked(LikeButton likeButton) {
-        likeCard(displayable, cardType, 1);
+        likeCard(displayable, 1);
         numberLikes.setText(String.valueOf(displayable.getNumberOfLikes() + 1));
       }
 
@@ -122,6 +123,10 @@ public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayab
         //numberLikes.setText("0");
       }
     });
+  }
+
+  @Override String getCardTypeName() {
+    return CARD_TYPE_NAME;
   }
 
   private void showFullSocialBar(SocialInstallDisplayable displayable) {

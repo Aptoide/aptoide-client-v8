@@ -17,8 +17,6 @@ import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SocialArticleDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
-import com.like.LikeButton;
-import com.like.OnLikeListener;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -27,7 +25,8 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayable> {
 
-  private final String cardType = "Social Article";
+  private static final String CARD_TYPE_NAME = "Social Article";
+
   private TextView title;
   private TextView subtitle;
   private ImageView storeAvatar;
@@ -40,14 +39,15 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
   private View articleHeader;
   private TextView relatedTo;
   private LinearLayout share;
-  private LikeButton likeButton;
-  private TextView numberLikes;
-  private TextView numberComments;
   private String appName;
   private String packageName;
 
   public SocialArticleWidget(View itemView) {
     super(itemView);
+  }
+
+  @Override String getCardTypeName() {
+    return CARD_TYPE_NAME;
   }
 
   @Override protected void assignViews(View itemView) {
@@ -65,9 +65,6 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
     articleHeader = itemView.findViewById(R.id.displayable_social_timeline_article_header);
     relatedTo = (TextView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_related_to);
     share = (LinearLayout) itemView.findViewById(R.id.social_share);
-    likeButton = (LikeButton) itemView.findViewById(R.id.social_like_test);
-    numberLikes = (TextView) itemView.findViewById(R.id.social_number_of_likes);
-    numberComments = (TextView) itemView.findViewById(R.id.social_number_of_comments);
   }
 
   @Override public void bindView(SocialArticleDisplayable displayable) {
@@ -98,13 +95,7 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
       }
     }
 
-
     ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
-    likeButton.setLiked(false);
-    numberLikes.setVisibility(View.VISIBLE);
-    numberLikes.setText(String.valueOf(displayable.getNumberOfLikes()));
-    numberComments.setVisibility(View.VISIBLE);
-    numberComments.setText(String.valueOf(displayable.getNumberOfComments()));
     //relatedTo.setText(displayable.getAppRelatedToText(getContext(), appName));
 
     //numberLikes.setText(String.valueOf(numberOfLikes));
@@ -121,11 +112,11 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
     url.setOnClickListener(v -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
       displayable.getLink().launch(getContext());
-      Analytics.AppsTimeline.clickOnCard(cardType, Analytics.AppsTimeline.BLANK,
+      Analytics.AppsTimeline.clickOnCard(CARD_TYPE_NAME, Analytics.AppsTimeline.BLANK,
           displayable.getArticleTitle(), displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_ARTICLE);
       displayable.sendOpenArticleEvent(SendEventRequest.Body.Data.builder()
-          .cardType(cardType)
+          .cardType(CARD_TYPE_NAME)
           .source(displayable.getTitle())
           .specific(SendEventRequest.Body.Specific.builder()
               .url(displayable.getLink().getUrl())
@@ -157,11 +148,11 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
     compositeSubscription.add(RxView.clicks(articleHeader).subscribe(click -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
       displayable.getDeveloperLink().launch(getContext());
-      Analytics.AppsTimeline.clickOnCard(cardType, Analytics.AppsTimeline.BLANK,
+      Analytics.AppsTimeline.clickOnCard(CARD_TYPE_NAME, Analytics.AppsTimeline.BLANK,
           displayable.getArticleTitle(), displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_ARTICLE_HEADER);
       displayable.sendOpenArticleEvent(SendEventRequest.Body.Data.builder()
-          .cardType(cardType)
+          .cardType(CARD_TYPE_NAME)
           .source(displayable.getTitle())
           .specific(SendEventRequest.Body.Specific.builder()
               .url(displayable.getDeveloperLink().getUrl())
@@ -173,22 +164,6 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
     compositeSubscription.add(RxView.clicks(share).subscribe(click -> {
       //shareCard(displayable);
     }, throwable -> throwable.printStackTrace()));
-
-    //
-    // should this be inside the like button logic ??
-    //
-    likeButton.setOnLikeListener(new OnLikeListener() {
-      @Override public void liked(LikeButton likeButton) {
-        likeCard(displayable, cardType, 1);
-        numberLikes.setText(String.valueOf(displayable.getNumberOfLikes() + 1));
-      }
-
-      @Override public void unLiked(LikeButton likeButton) {
-        likeButton.setLiked(true);
-        //likeCard(displayable, cardType, -1);
-        //numberLikes.setText("0");
-      }
-    });
   }
 
   private void setAppNameToFirstLinkedApp(SocialArticleDisplayable displayable) {

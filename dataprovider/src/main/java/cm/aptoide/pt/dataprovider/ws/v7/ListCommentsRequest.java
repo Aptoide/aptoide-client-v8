@@ -24,7 +24,7 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
 
   public static ListCommentsRequest ofStoreAction(String url, boolean refresh,
       BaseRequestWithStore.StoreCredentials storeCredentials, String accessToken,
-      String aptoideClientUUID) {
+      String aptoideClientUuid) {
 
     ListCommentsRequest.url = url;
 
@@ -33,27 +33,27 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
     body.setStore_pass_sha1(storeCredentials.getPasswordSha1());
     body.setStoreId(storeCredentials.getId());
 
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUuid);
     return new ListCommentsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
   public static ListCommentsRequest of(String url, long resourceId, int limit,
       BaseRequestWithStore.StoreCredentials storeCredentials, String accessToken,
-      String aptoideClientUUID, boolean isReview) {
+      String aptoideClientUuid, boolean isReview) {
     ListCommentsRequest.url = url;
-    return of(resourceId, limit, storeCredentials, accessToken, aptoideClientUUID, isReview);
+    return of(resourceId, limit, storeCredentials, accessToken, aptoideClientUuid, isReview);
   }
 
   public static ListCommentsRequest of(long resourceId, int offset, int limit, String accessToken,
-      String aptoideClientUUID, boolean isReview) {
-    ListCommentsRequest listCommentsRequest = of(resourceId, limit, accessToken, aptoideClientUUID, isReview);
+      String aptoideClientUuid, boolean isReview) {
+    ListCommentsRequest listCommentsRequest = of(resourceId, limit, accessToken, aptoideClientUuid, isReview);
     listCommentsRequest.getBody().setOffset(offset);
     return listCommentsRequest;
   }
 
   public static ListCommentsRequest of(long resourceId, int limit, String accessToken,
-      String aptoideClientUUID, boolean isReview) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+      String aptoideClientUuid, boolean isReview) {
+    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUuid);
     Body body = new Body(limit, ManagerPreferences.getAndResetForceServerRefresh(), Order.desc);
 
     if(isReview) {
@@ -67,10 +67,10 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
 
   public static ListCommentsRequest of(long resourceId, int limit,
       BaseRequestWithStore.StoreCredentials storeCredentials, String accessToken,
-      String aptoideClientUUID, boolean isReview) {
+      String aptoideClientUuid, boolean isReview) {
     String username = storeCredentials.getUsername();
     String password = storeCredentials.getPasswordSha1();
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUuid);
 
     Body body =
         new Body(limit, ManagerPreferences.getAndResetForceServerRefresh(), Order.desc, username,
@@ -82,6 +82,18 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
       body.setStoreId(resourceId);
     }
 
+    return new ListCommentsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
+  }
+
+  public static ListCommentsRequest ofTimeline(String url, boolean refresh, String timelineArticleId,
+      String accessToken, String aptoideClientUuid) {
+
+    ListCommentsRequest.url = url;
+
+    Body body = new Body(refresh, Order.desc);
+    body.setTimelineArticleId(timelineArticleId);
+
+    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUuid);
     return new ListCommentsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
@@ -108,6 +120,7 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
     private long subLimit = 5;
     private String store_user;
     private String store_pass_sha1;
+    private String timelineArticleId;
 
     public Body(boolean refresh, Order order) {
       this.refresh = refresh;
@@ -208,6 +221,14 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
 
     public void setSubLimit(long subLimit) {
       this.subLimit = subLimit;
+    }
+
+    public void setTimelineArticleId(String timelineArticleId) {
+      this.timelineArticleId = timelineArticleId;
+    }
+
+    public String getTimelineArticleId() {
+      return timelineArticleId;
     }
   }
 }

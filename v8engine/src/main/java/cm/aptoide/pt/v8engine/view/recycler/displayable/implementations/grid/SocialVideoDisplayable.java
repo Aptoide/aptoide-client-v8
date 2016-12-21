@@ -17,11 +17,9 @@ import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.repository.SocialRepository;
 import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
-import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SocialCardDisplayable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import rx.Observable;
 import rx.schedulers.Schedulers;
@@ -29,8 +27,8 @@ import rx.schedulers.Schedulers;
 /**
  * Created by jdandrade on 28/11/2016.
  */
-@AllArgsConstructor public class SocialVideoDisplayable extends SocialCardDisplayable {
-  @Getter private SocialVideo socialVideo;
+public class SocialVideoDisplayable extends SocialCardDisplayable {
+
   @Getter private String videoTitle;
   @Getter private Link link;
   @Getter private Link baseLink;
@@ -40,8 +38,6 @@ import rx.schedulers.Schedulers;
   @Getter private long appId;
   @Getter private String abUrl;
   @Getter private Comment.User user;
-  @Getter private long numberOfLikes;
-  @Getter private long numberOfComments;
 
   @Getter private List<App> relatedToAppsList;
   private Date date;
@@ -51,6 +47,30 @@ import rx.schedulers.Schedulers;
   private SocialRepository socialRepository;
 
   public SocialVideoDisplayable() {
+  }
+
+  private SocialVideoDisplayable(SocialVideo socialVideo, String videoTitle, Link link,
+      Link baseLink, String publisherName, String thumbnailUrl, String publisherAvatarUrl,
+      long appId, String abUrl, Comment.User user, long numberOfLikes, long numberOfComments,
+      List<App> relatedToAppsList, Date date, DateCalculator dateCalculator,
+      SpannableFactory spannableFactory, TimelineMetricsManager timelineMetricsManager,
+      SocialRepository socialRepository) {
+    super(socialVideo, numberOfLikes, numberOfComments);
+    this.videoTitle = videoTitle;
+    this.link = link;
+    this.baseLink = baseLink;
+    this.title = publisherName;
+    this.thumbnailUrl = thumbnailUrl;
+    this.avatarUrl = publisherAvatarUrl;
+    this.appId = appId;
+    this.abUrl = abUrl;
+    this.user = user;
+    this.relatedToAppsList = relatedToAppsList;
+    this.date = date;
+    this.dateCalculator = dateCalculator;
+    this.spannableFactory = spannableFactory;
+    this.timelineMetricsManager = timelineMetricsManager;
+    this.socialRepository = socialRepository;
   }
 
   public static SocialVideoDisplayable from(SocialVideo socialVideo, DateCalculator dateCalculator,
@@ -124,6 +144,6 @@ import rx.schedulers.Schedulers;
   }
 
   @Override public void like(Context context, String cardType, int rating) {
-    socialRepository.like(socialVideo, cardType, "", rating);
+    socialRepository.like(getTimelineCard(), cardType, "", rating);
   }
 }

@@ -16,22 +16,22 @@ import rx.Observable;
 /**
  * Created by sithengineer on 20/07/16.
  */
-public class PostCommentForReviewRequest extends V7<BaseV7Response, PostCommentForReviewRequest.Body> {
+public class PostCommentForReview extends V7<BaseV7Response, PostCommentForReview.Body> {
 
   private static final String BASE_HOST = "http://ws75-primary.aptoide.com/api/7/";
 
-  protected PostCommentForReviewRequest(Body body, String baseHost) {
+  protected PostCommentForReview(Body body, String baseHost) {
     super(body, baseHost);
   }
 
-  public static PostCommentForReviewRequest of(long reviewId, String text, String accessToken,
+  public static PostCommentForReview of(long reviewId, String text, String accessToken,
       String aptoideClientUUID) {
     //
     //  http://ws75-primary.aptoide.com/api/7/setComment/review_id/1/body/amazing%20review/access_token/ca01ee1e05ab4d82d99ef143e2816e667333c6ef
     //
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
     Body body = new Body(reviewId, text);
-    return new PostCommentForReviewRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
+    return new PostCommentForReview((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
