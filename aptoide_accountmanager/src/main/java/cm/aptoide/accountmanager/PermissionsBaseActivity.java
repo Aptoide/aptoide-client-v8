@@ -12,8 +12,10 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.Application;
 import com.jakewharton.rxbinding.view.RxView;
 import java.io.File;
 import rx.subscriptions.CompositeSubscription;
@@ -30,39 +32,17 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
   protected static final int USER_PROFILE_CODE = 125;
   static final int GALLERY_CODE = 1046;
   static final int REQUEST_IMAGE_CAPTURE = 1;
-
-  private static final String TYPE_STORAGE = "storage";
-  private static final String TYPE_CAMERA = "camera";
-  private String TAG = "STORAGE";
-  private File avatar;
-  protected static String photoAvatar = "aptoide_user_avatar.png";
-
   static final String STORAGE_PERMISSION_GIVEN = "storage_permission_given";
   static final String CAMERA_PERMISSION_GIVEN = "camera_permission_given";
   static final String STORAGE_PERMISSION_REQUESTED = "storage_permission_requested";
   static final String CAMERA_PERMISSION_REQUESTED = "camera_permission_requested";
-
+  private static final String TYPE_STORAGE = "storage";
+  private static final String TYPE_CAMERA = "camera";
+  protected static String photoAvatar = "aptoide_user_avatar.png";
   public boolean result;
-
+  private String TAG = "STORAGE";
+  private File avatar;
   private CompositeSubscription mSubscriptions;
-
-  @Override public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    mSubscriptions = new CompositeSubscription();
-  }
-
-  @Override protected void onDestroy() {
-    super.onDestroy();
-    mSubscriptions.clear();
-  }
-
-  @Override protected String getActivityTitle() {
-    return null;
-  }
-
-  @Override int getLayoutId() {
-    return 0;
-  }
 
   public static String checkAndAskPermission(final AppCompatActivity activity, String type) {
 
@@ -119,6 +99,24 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
     return output;
   }
 
+  @Override public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    mSubscriptions = new CompositeSubscription();
+  }
+
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    mSubscriptions.clear();
+  }
+
+  @Override protected String getActivityTitle() {
+    return null;
+  }
+
+  @Override int getLayoutId() {
+    return 0;
+  }
+
   public void chooseAvatarSource() {
     final Dialog dialog = new Dialog(this);
     dialog.setContentView(R.layout.dialog_choose_avatar_layout);
@@ -168,8 +166,11 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
       setFileName();
       Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
       if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-            getPhotoFileUri(PermissionsBaseActivity.createAvatarPhotoName(photoAvatar)));
+        Uri uriForFile = FileProvider.getUriForFile(context,
+            Application.getConfiguration().getAppId() + ".provider", new File(getPhotoFileUri(
+                PermissionsBaseActivity.createAvatarPhotoName(photoAvatar)).getPath()));
+        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uriForFile);
+
         startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
       }
     }
