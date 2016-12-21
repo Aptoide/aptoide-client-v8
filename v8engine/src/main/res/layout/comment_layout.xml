@@ -6,14 +6,14 @@
     android:layout_height="wrap_content"
     >
   <RelativeLayout
+      android:id="@+id/outer_layout"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:id="@+id/outer_layout"
-      android:paddingEnd="20dp"
-      android:paddingLeft="50dp"
-      android:paddingRight="20dp"
-      android:paddingStart="50dp"
-      android:paddingTop="10dp"
+      android:paddingEnd="15dp"
+      android:paddingLeft="15dp"
+      android:paddingRight="15dp"
+      android:paddingStart="15dp"
+      android:paddingTop="14dp"
       >
 
     <ImageView
