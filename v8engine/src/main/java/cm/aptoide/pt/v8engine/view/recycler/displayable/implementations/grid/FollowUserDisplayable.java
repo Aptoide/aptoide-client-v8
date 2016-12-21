@@ -40,8 +40,8 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
 
   public String getFollowing() {
     long number;
-    if (getPojo().getStats() != null && getPojo().getStats().getData() != null) {
-      number = getPojo().getStats().getData().getFollowing();
+    if (getPojo().getStats() != null) {
+      number = getPojo().getStats().getFollowing();
     } else {
       number = 0;
     }
@@ -50,8 +50,8 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
 
   public String getFollowers() {
     long number;
-    if (getPojo().getStats() != null && getPojo().getStats().getData() != null) {
-      number = getPojo().getStats().getData().getFollowers();
+    if (getPojo().getStats() != null) {
+      number = getPojo().getStats().getFollowers();
     } else {
       number = 0;
     }

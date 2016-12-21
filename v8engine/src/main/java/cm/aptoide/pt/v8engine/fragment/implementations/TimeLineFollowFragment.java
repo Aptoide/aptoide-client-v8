@@ -77,7 +77,7 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
         for (GetFollowers.TimelineUser user : followersList.getDatalist().getList()) {
           dispList.add(new FollowUserDisplayable(user));
         }
-        setDisplayables(dispList);
+        addDisplayables(dispList);
         finishLoading();
       };
       recyclerView.clearOnScrollListeners();

@@ -7,6 +7,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.store.ListStores;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 import rx.Observable;
 
 /**
@@ -36,25 +37,14 @@ public class GetMyStoreListRequest extends V7<ListStores, GetMyStoreListRequest.
   @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody
       implements Endless {
 
+    @Getter private Integer limit = 25;
+    @Getter @Setter private int offset;
     @Getter private WidgetsArgs widgetsArgs;
-    private int limit = 25;
-    private int offset;
 
     public Body(WidgetsArgs widgetsArgs) {
       super();
       this.widgetsArgs = widgetsArgs;
     }
 
-    @Override public int getOffset() {
-      return offset;
-    }
-
-    @Override public void setOffset(int offset) {
-      this.offset = offset;
-    }
-
-    @Override public Integer getLimit() {
-      return limit;
-    }
   }
 }
