@@ -43,7 +43,7 @@ public class Analytics {
   // Constantes globais a todos os eventos.
   public static final String ACTION = "Action";
   private static final String TAG = Analytics.class.getSimpleName();
-  private static final boolean ACTIVATE_FLURRY = BuildConfig.FLURRY_CONFIGURED;
+  private static final boolean ACTIVATE_FLURRY = true;
   private static final int ALL = Integer.MAX_VALUE;
   private static final int LOCALYTICS = 1 << 0;
   private static final int FLURRY = 1 << 1;
@@ -56,7 +56,7 @@ public class Analytics {
       "apps-group-top-games", "apps-group-top-stores", "apps-group-featured-stores",
       "apps-group-editors-choice"
   };
-  private static boolean ACTIVATE_LOCALYTICS = BuildConfig.LOCALYTICS_CONFIGURED;
+  private static boolean ACTIVATE_LOCALYTICS = true;
   private static boolean isFirstSession;
 
   public static boolean checkBuildVariant() {

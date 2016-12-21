@@ -40,8 +40,6 @@ import rx.Observable;
   private String token;
   private String repoName;
   private String createRepo = ""; // 1 if repo is to be created
-  private String email;
-  private String password;
 
   public CheckUserCredentialsRequest(Context context, OkHttpClient httpClient,
       Converter.Factory converterFactory) {
@@ -73,12 +71,10 @@ import rx.Observable;
   }
 
 
-  public static CheckUserCredentialsRequest of(String accessToken, String repoName, String createRepo, String email, String password) {
+  public static CheckUserCredentialsRequest of(String accessToken, String repoName, String createRepo) {
     CheckUserCredentialsRequest request = of(accessToken);
     request.setRepoName(repoName);
     request.setCreateRepo(createRepo);
-    request.setEmail(email);
-    request.setPassword(password);
     return request;
   }
 
@@ -103,8 +99,9 @@ import rx.Observable;
     if(createRepo.equals("1")) {
       parameters.put("createRepo", createRepo);
       parameters.put("repo", repoName);
-      parameters.put("user", email);
-      parameters.put("passhash", AptoideUtils.AlgorithmU.computeSha1(password));
+      parameters.put("authMode", "aptoide");
+      parameters.put("oauthToken", token);
+      parameters.put("oauthCreateRepo", "true");
       return interfaces.checkUserCredentials(parameters);
     }
 

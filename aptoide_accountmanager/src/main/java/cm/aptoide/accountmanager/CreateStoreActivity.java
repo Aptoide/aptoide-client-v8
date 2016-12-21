@@ -10,6 +10,7 @@ import android.support.annotation.StringRes;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -95,10 +96,6 @@ public class CreateStoreActivity extends PermissionsBaseActivity
     setupListeners();
     setupThemeListeners();
 
-    if (!getUserData()) {
-      Logger.e(TAG, "username and password are needed for this activity");
-      finish();
-    }
   }
 
   @Override protected void onDestroy() {
@@ -158,14 +155,6 @@ public class CreateStoreActivity extends PermissionsBaseActivity
     mLightblueTick = (ImageView) findViewById(R.id.create_store_theme_check_lightblue);
   }
 
-  private boolean getUserData() {
-
-    username = getIntent().getStringExtra(AptoideLoginUtils.APTOIDE_LOGIN_USER_NAME_KEY);
-    password = getIntent().getStringExtra(AptoideLoginUtils.APTOIDE_LOGIN_PASSWORD_KEY);
-
-    return !TextUtils.isEmpty(username) && !TextUtils.isEmpty(password);
-  }
-
   private void editViews() {
     mHeader.setText(
         AptoideUtils.StringU.getFormattedString(R.string.create_store_header, "Aptoide"));
@@ -177,7 +166,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
 
     mSubscriptions.add(RxView.clicks(mStoreAvatarLayout).subscribe(click -> chooseAvatarSource()));
     mSubscriptions.add(RxView.clicks(mCreateStore).subscribe(click -> {
-      storeName = mStoreName.getText().toString();
+      storeName = mStoreName.getText().toString().trim();
       //TODO: Make request to create repo and to update it (checkusercredentials and setStore) and add dialog
       validateData();
       if (CREATE_STORE_REQUEST_CODE == 2
@@ -187,7 +176,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
             getApplicationContext().getString(R.string.please_wait_upload));
         progressDialog.show();
         CheckUserCredentialsRequest.of(AptoideAccountManager.getAccessToken(), storeName,
-            CREATE_STORE_CODE, username, password).execute(answer -> {
+            CREATE_STORE_CODE).execute(answer -> {
           if (answer.hasErrors()) {
             if (answer.getErrors() != null && answer.getErrors().size() > 0) {
               onCreateFail(
@@ -211,14 +200,14 @@ public class CreateStoreActivity extends PermissionsBaseActivity
   }
 
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    FileUtils fileUtils = new FileUtils();
     if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
       Uri avatarUrl = getPhotoFileUri(PermissionsBaseActivity.createAvatarPhotoName(photoAvatar));
       ImageLoader.loadWithCircleTransform(avatarUrl, mStoreAvatar);
-      storeAvatarPath = avatarUrl.toString();
+      storeAvatarPath = fileUtils.getPathAlt(avatarUrl, getApplicationContext());
     } else if (requestCode == GALLERY_CODE && resultCode == RESULT_OK) {
       Uri avatarUrl = data.getData();
       ImageLoader.loadWithCircleTransform(avatarUrl, mStoreAvatar);
-      FileUtils fileUtils = new FileUtils();
       storeAvatarPath = fileUtils.getPath(avatarUrl, getApplicationContext());
     }
   }

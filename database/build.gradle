@@ -17,22 +17,16 @@ android {
 
   defaultConfig {
     minSdkVersion 15
-    versionCode 3
-    consumerProguardFiles "proguard-rules.txt"
+    // This should be a property set in Java code by the user of this lib
+    buildConfigField 'boolean', 'DELETE_DB', 'false'
   }
 
   publishNonDefault true
 
   buildTypes {
     release {
-      buildConfigField 'boolean', 'DELETE_DB', 'false'
       minifyEnabled false
       shrinkResources false
-    }
-    debug {
-      buildConfigField 'boolean', 'DELETE_DB', 'false'
-      shrinkResources false
-      minifyEnabled false
     }
   }
 
@@ -49,11 +43,8 @@ dependencies {
   // inter-projects dependencies
   //
 
-  debugCompile project(path: ':model', configuration: 'debug')
-  releaseCompile project(path: ':model', configuration: 'release')
-
-  debugCompile project(path: ':crashreports', configuration: 'debug')
-  releaseCompile project(path: ':crashreports', configuration: 'release')
+  compile project(path: ':model', configuration: 'release')
+  compile project(path: ':crashreports', configuration: 'release')
 
   //
   // custom libs in folders

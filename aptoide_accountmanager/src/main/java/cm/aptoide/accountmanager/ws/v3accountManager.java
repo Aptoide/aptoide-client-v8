@@ -112,7 +112,7 @@ public abstract class v3accountManager<U> extends WebService<v3accountManager.In
     @Headers({ PostCacheInterceptor.BYPASS_HEADER_KEY + ":" + PostCacheInterceptor.BYPASS_HEADER_VALUE })
     Observable<CheckUserCredentialsJson> getUserInfo(@FieldMap HashMapNotNull<String, String> args);
 
-    @FormUrlEncoded @POST("2/checkUserCredentials")
+    @FormUrlEncoded @POST("3/checkUserCredentials")
     @Headers({ PostCacheInterceptor.BYPASS_HEADER_KEY + ":" + PostCacheInterceptor.BYPASS_HEADER_VALUE })
     Observable<CheckUserCredentialsJson> checkUserCredentials(@FieldMap HashMapNotNull<String, String> args);
 

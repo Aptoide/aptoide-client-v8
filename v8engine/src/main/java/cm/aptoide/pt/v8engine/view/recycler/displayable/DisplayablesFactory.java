@@ -48,6 +48,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import rx.Observable;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by neuro on 01-05-2016.
@@ -262,7 +263,7 @@ public class DisplayablesFactory {
       }
 
       for (App app : apps) {
-        DisplayablePojo<App> diplayable = new GridAppDisplayable(app, wsWidget.getTag());
+        DisplayablePojo<App> diplayable = new GridAppDisplayable(app, wsWidget.getTag(), true);
         displayables.add(diplayable);
       }
     }
@@ -296,15 +297,19 @@ public class DisplayablesFactory {
             : listStores.getDatalist().getLimit();
       }
       Collections.sort(stores, (store, t1) -> store.getName().compareTo(t1.getName()));
-      if (stores.size() > 0) {
-        tmp.add(new StoreGridHeaderDisplayable(wsWidget, storeTheme, wsWidget.getTag()));
-      }
-      List<Store> storeSubList = stores.subList(0, maxStoresToShow);
-      for (int i = 0; i < storeSubList.size(); i++) {
-        if (i == 0 || storeSubList.get(i - 1).getId() != storeSubList.get(i).getId()) {
-          GridStoreDisplayable diplayable = new GridStoreDisplayable(storeSubList.get(i));
+      for (int i = 0; i < stores.size() && tmp.size() < maxStoresToShow; i++) {
+        if (i == 0 || stores.get(i - 1).getId() != stores.get(i).getId()) {
+          GridStoreDisplayable diplayable = new GridStoreDisplayable(stores.get(i));
           tmp.add(diplayable);
         }
+      }
+      if (tmp.size() > 0) {
+        StoreGridHeaderDisplayable header =
+            new StoreGridHeaderDisplayable(wsWidget, storeTheme, wsWidget.getTag());
+        if (stores.size() <= maxStoresToShow) {
+          header.setMoreVisible(false);
+        }
+        tmp.add(0, header);
       }
       return tmp;
     }).onErrorReturn(throwable -> {
@@ -314,14 +319,16 @@ public class DisplayablesFactory {
   }
 
   public static Observable<List<Store>> loadLocalSubscribedStores(StoreRepository storeRepository) {
-    return storeRepository.getAll().flatMap(stores -> Observable.from(stores).map(store -> {
-      Store nwStore = new Store();
-      nwStore.setName(store.getStoreName());
-      nwStore.setId(store.getStoreId());
-      nwStore.setAvatar(store.getIconPath());
-      nwStore.setAppearance(new Store.Appearance().setTheme(store.getTheme()));
-      return nwStore;
-    }).toList());
+    return storeRepository.getAll()
+        .observeOn(Schedulers.computation())
+        .flatMap(stores -> Observable.from(stores).map(store -> {
+          Store nwStore = new Store();
+          nwStore.setName(store.getStoreName());
+          nwStore.setId(store.getStoreId());
+          nwStore.setAvatar(store.getIconPath());
+          nwStore.setAppearance(new Store.Appearance().setTheme(store.getTheme()));
+          return nwStore;
+        }).toList());
   }
 
   private static Displayable getDisplays(GetStoreWidgets.WSWidget wsWidget, String storeTheme) {

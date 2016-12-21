@@ -15,8 +15,8 @@
       android:layout_marginTop="8dp"
       android:layout_toLeftOf="@+id/social_like"
       android:layout_toStartOf="@id/social_like"
-      android:text="0"
-      android:textSize="10sp"
+      android:text="@string/zero"
+      android:textSize="@dimen/text_size_small"
       android:visibility="invisible"
       tools:text="10"
 
@@ -53,9 +53,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="LIKE"
-        android:textSize="8sp"
-        tools:text="LIKE"
+        android:text="@string/like"
+        android:textSize="@dimen/text_size_extra_small"
+        android:textAllCaps="true"
         />
 
   </LinearLayout>
@@ -67,15 +67,13 @@
       android:layout_marginTop="8dp"
       android:layout_toLeftOf="@+id/social_comment"
       android:layout_toStartOf="@id/social_comment"
-      android:text="0"
-      android:textSize="10sp"
+      android:text="@string/zero"
+      android:textSize="@dimen/text_size_small"
       android:visibility="invisible"
       tools:text="10"
-
       />
 
-
-  <LinearLayout
+  <TextView
       android:id="@+id/social_comment"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
@@ -85,30 +83,16 @@
       android:layout_toLeftOf="@+id/social_share"
       android:layout_toStartOf="@id/social_share"
       android:clickable="true"
-      android:gravity="center"
       android:orientation="vertical"
       android:padding="5dp"
       android:visibility="invisible"
       tools:visibility="visible"
-      >
-
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/timeline_comment"
-        />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="COMMENT"
-        android:textSize="8sp"
-        tools:text="COMMENT"
-        />
-
-  </LinearLayout>
+      android:drawableTop="@drawable/timeline_comment"
+      android:gravity="center"
+      android:text="@string/comment"
+      android:textAllCaps="true"
+      android:textSize="@dimen/text_size_extra_small"
+      />
 
   <TextView
       android:id="@id/social_share"

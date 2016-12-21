@@ -36,7 +36,7 @@ import com.jakewharton.rxbinding.view.RxView;
 
     title.setText(Translator.translate(wsWidget.getTitle()));
 
-    more.setVisibility(moreIsVisible ? View.VISIBLE : View.GONE);
+    more.setVisibility(moreIsVisible && displayable.isMoreVisible() ? View.VISIBLE : View.GONE);
 
     if (moreIsVisible) {
       compositeSubscription.add(RxView.clicks(more).subscribe(a -> {

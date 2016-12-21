@@ -38,6 +38,7 @@
 
     <activity
         android:name=".CreateUserActivity"
+        android:configChanges="orientation|screenSize"
         android:screenOrientation="nosensor"
         android:windowSoftInputMode="stateHidden"
         />
@@ -46,6 +47,7 @@
         android:name=".CreateStoreActivity"
         android:exported="true"
         android:screenOrientation="nosensor"
+        android:configChanges="orientation|screenSize"
         android:windowSoftInputMode="stateHidden"
         />
 

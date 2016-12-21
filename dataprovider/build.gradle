@@ -16,7 +16,6 @@ android {
 
   defaultConfig {
     minSdkVersion 15
-    consumerProguardFiles "proguard-rules.txt"
   }
 
   lintOptions {
@@ -25,12 +24,27 @@ android {
 
   publishNonDefault true
 
+  productFlavors {
+    internal {
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_SCHEME", "\"" + project.APTOIDE_WEB_SERVICES_DEVELOPMENT_SCHEME + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_HOST", "\"" + project.APTOIDE_WEB_SERVICES_DEVELOPMENT_HOST + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_V7_HOST", "\"" + project.APTOIDE_WEB_SERVICES_DEVELOPMENT_V7_HOST + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_APTWORDS_HOST", "\"" + project.APTOIDE_WEB_SERVICES_DEVELOPMENT_APTWORDS_HOST + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_APTWORDS_SCHEME", "\"" + project.APTOIDE_WEB_SERVICES_DEVELOPMENT_APTWORDS_SCHEME + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_WRITE_V7_HOST", "\"" + project.APTOIDE_WEB_SERVICES_DEVELOPMENT_WRITE_V7_HOST + "\""
+    }
+    prod {
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_SCHEME", "\"" + project.APTOIDE_WEB_SERVICES_PRODUCTION_SCHEME + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_HOST", "\"" + project.APTOIDE_WEB_SERVICES_PRODUCTION_HOST + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_V7_HOST", "\"" + project.APTOIDE_WEB_SERVICES_PRODUCTION_V7_HOST + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_APTWORDS_HOST", "\"" + project.APTOIDE_WEB_SERVICES_PRODUCTION_APTWORDS_HOST + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_APTWORDS_SCHEME", "\"" + project.APTOIDE_WEB_SERVICES_PRODUCTION_APTWORDS_SCHEME + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_WRITE_V7_HOST", "\"" + project.APTOIDE_WEB_SERVICES_PRODUCTION_WRITE_V7_HOST + "\""
+    }
+  }
+
   buildTypes {
     release {
-      minifyEnabled false
-      shrinkResources false
-    }
-    debug {
       minifyEnabled false
       shrinkResources false
     }
@@ -52,17 +66,10 @@ dependencies {
   // inter-projects dependencies
   //
 
-  debugCompile project(path: ':model', configuration: 'debug')
-  releaseCompile project(path: ':model', configuration: 'release')
-
-  debugCompile project(path: ':aptoidepreferences', configuration: 'debug')
-  releaseCompile project(path: ':aptoidepreferences', configuration: 'release')
-
-  debugCompile project(path: ':networkclient', configuration: 'debug')
-  releaseCompile project(path: ':networkclient', configuration: 'release')
-
-  debugCompile project(path: ':utils', configuration: 'debug')
-  releaseCompile project(path: ':utils', configuration: 'release')
+  compile project(path: ':model', configuration: 'release')
+  compile project(path: ':aptoidepreferences', configuration: 'release')
+  compile project(path: ':networkclient', configuration: 'release')
+  compile project(path: ':utils', configuration: 'release')
 
   //
   // custom libs in folders
