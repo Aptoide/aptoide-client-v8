@@ -65,6 +65,7 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
       adapter.onDestroyView();
     }
 
+    recyclerView.clearOnScrollListeners();
     recyclerView.setAdapter(null);
     recyclerView = null;
     adapter = null;
