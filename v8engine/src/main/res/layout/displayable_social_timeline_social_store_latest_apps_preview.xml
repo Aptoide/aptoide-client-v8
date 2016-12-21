@@ -9,7 +9,7 @@
   android:clipToPadding="false"
   android:orientation="vertical">
 
-  <include layout="@layout/displayable_social_timeline_social_recommendation" />
+  <include layout="@layout/displayable_social_timeline_social_store_latest_apps" />
 
   <LinearLayout
     android:id="@+id/social_privacy_terms"

@@ -151,6 +151,14 @@ public class SocialVideoWidget extends SocialCardWidget<SocialVideoDisplayable> 
               .build())
           .build(), AptoideAnalytics.OPEN_CHANNEL);
     }));
+
+    // TODO: 21/12/2016 jdandradex
+    share.setVisibility(View.INVISIBLE);
+
+    compositeSubscription.add(RxView.clicks(share).subscribe(click -> {
+      shareCard(displayable);
+    }, throwable -> throwable.printStackTrace()));
+
     likeButton.setOnLikeListener(new OnLikeListener() {
       @Override public void liked(LikeButton likeButton) {
         likeCard(displayable, cardType, 1);

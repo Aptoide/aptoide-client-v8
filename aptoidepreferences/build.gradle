@@ -16,7 +16,6 @@ android {
 
   defaultConfig {
     minSdkVersion 9
-    consumerProguardFiles "proguard-rules.txt"
   }
 
   compileOptions {
@@ -28,10 +27,6 @@ android {
 
   buildTypes {
     release {
-      minifyEnabled false
-      shrinkResources false
-    }
-    debug {
       minifyEnabled false
       shrinkResources false
     }

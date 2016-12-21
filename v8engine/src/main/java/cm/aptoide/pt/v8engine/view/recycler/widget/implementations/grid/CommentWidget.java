@@ -59,10 +59,10 @@ public class CommentWidget extends Widget<CommentDisplayable> {
     this.comment.setText(comment.getBody());
 
     if (StoreComment.class.isAssignableFrom(comment.getClass())) {
+
       final StoreComment storeComment = (StoreComment) comment;
 
-      @ColorRes int bgColor =
-          storeComment.getLevel() % 2 == 0 ? R.color.medium_custom_gray : R.color.white;
+      @ColorRes int bgColor = R.color.white;
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         outerLayout.setBackgroundColor(getContext().getColor(bgColor));
       } else {
@@ -90,6 +90,7 @@ public class CommentWidget extends Widget<CommentDisplayable> {
   }
 
   private void setLayoutLeftMargin(StoreComment storeComment) {
+
     final int level = storeComment.getLevel();
 
     outerLayout.setPadding(outerLayout.getPaddingRight(), outerLayout.getPaddingTop(),
@@ -99,13 +100,14 @@ public class CommentWidget extends Widget<CommentDisplayable> {
     int baseMargin = AptoideUtils.ScreenU.getPixels(MARGIN_IN_DIP);
 
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
-      params.setMarginStart(baseMargin * level);
-      params.setMarginEnd(baseMargin);
+
+      if (level == 2) {
+        params.setMarginStart(baseMargin);
+      }
     }
-
-    params.leftMargin = baseMargin * level;
-    params.rightMargin = baseMargin;
-
+    if (level == 2) {
+      params.leftMargin = baseMargin;
+    }
     rootView.setLayoutParams(params);
   }
 }

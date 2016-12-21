@@ -1,9 +1,13 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
+import android.text.TextUtils;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.accountmanager.BaseActivity;
+import cm.aptoide.accountmanager.CreateStoreActivity;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -81,6 +85,17 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
       return;
     }
 
+    if (TextUtils.isEmpty(AptoideAccountManager.getUserData().getUserRepo())
+        && !BaseActivity.UserAccessState.PUBLIC.toString()
+        .equals(ManagerPreferences.getUserAccess())) {
+      ShowMessage.asSnack(getContext(), R.string.private_profile_create_store,
+          R.string.create_store_create, snackView -> {
+            Intent intent = new Intent(getContext(), CreateStoreActivity.class);
+            getContext().startActivity(intent);
+          });
+      return;
+    }
+
     SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(displayable);
     AlertDialog.Builder alertDialog = sharePreviewDialog.showPreviewDialog(getContext());
 
@@ -104,11 +119,6 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
           subscriber.onCompleted();
         });
       }
-      //.setNeutralButton(R.string.dont_show_again, (dialogInterface, i) -> {
-      //  subscriber.onNext(GenericDialogs.EResponse.CANCEL);
-      //  subscriber.onCompleted();
-      //  ManagerPreferences.setShowPreview(false);
-      //})
       alertDialog.show();
     }).subscribeOn(AndroidSchedulers.mainThread()).subscribe(eResponse -> {
       switch (eResponse) {

@@ -1,18 +1,11 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
-import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.LinearLayout;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.dialog.SharePreviewDialog;
 import com.jakewharton.rxbinding.view.RxView;
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
 
 public abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWidget<T> {
 
@@ -25,8 +18,6 @@ public abstract class SocialCardWidget<T extends SocialCardDisplayable> extends 
   @Override protected void assignViews(View itemView) {
     comments = (LinearLayout) itemView.findViewById(R.id.social_comment);
   }
-
-
 
   public void likeCard(T displayable, String cardType, int rating) {
     if (!AptoideAccountManager.isLoggedIn()) {
@@ -45,5 +36,4 @@ public abstract class SocialCardWidget<T extends SocialCardDisplayable> extends 
       ShowMessage.asSnack(comments, "TO DO");
     }));
   }
-
 }

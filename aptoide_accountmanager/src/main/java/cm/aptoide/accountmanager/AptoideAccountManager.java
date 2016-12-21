@@ -861,9 +861,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     if ((loginType.equals(LoginMode.FACEBOOK) || loginType.equals(LoginMode.GOOGLE)) && !ManagerPreferences.getUserAccessConfirmed()) {
       Intent socialIntent = new Intent(getContext(), LoggedInActivity.class);
       socialIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-      socialIntent.putExtra(AptoideLoginUtils.APTOIDE_LOGIN_USER_NAME_KEY, username);
-      socialIntent.putExtra(AptoideLoginUtils.APTOIDE_LOGIN_PASSWORD_KEY, password);
-      socialIntent.putExtra(AptoideLoginUtils.APTOIDE_LOGIN_ACCESS_TOKEN_KEY, getAccessToken());
+      socialIntent.putExtra(AptoideLoginUtils.IS_FACEBOOK_OR_GOOGLE, true);
       getContext().startActivity(socialIntent);
     }
   }

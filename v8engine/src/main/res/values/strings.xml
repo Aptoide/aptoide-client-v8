@@ -331,6 +331,9 @@
   <string name="social_timeline_share_bar_followers">Improve your store to have more followers.</string>
   <string name="social_timeline_followers_fragment_title">%d follower(s)</string>
   <string name="social_timeline_following_fragment_title">Following %d person(s)</string>
+  <string name="social_timeline_share_soon">The share will be published soon</string>
+  <string name="social_timeline_recommends">Recommends</string>
+  <string name="private_profile_create_store">To have a private profile, you need to create a store</string>
 
 
   <!--  -->

@@ -15,6 +15,7 @@ import cm.aptoide.pt.model.v7.timeline.Recommendation;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.repository.SocialRepository;
 import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -29,6 +30,7 @@ import lombok.Getter;
  */
 @AllArgsConstructor public class RecommendationDisplayable extends CardDisplayable {
 
+  private Recommendation recommendation;
   @Getter private int avatarResource;
   @Getter private int titleResource;
   @Getter private long appId;
@@ -44,12 +46,13 @@ import lombok.Getter;
   private DateCalculator dateCalculator;
   private SpannableFactory spannableFactory;
   private TimelineMetricsManager timelineMetricsManager;
+  private SocialRepository socialRepository;
 
   public RecommendationDisplayable() {
   }
 
   public static Displayable from(Recommendation recommendation, DateCalculator dateCalculator,
-      SpannableFactory spannableFactory, TimelineMetricsManager timelineMetricsManager) {
+      SpannableFactory spannableFactory, TimelineMetricsManager timelineMetricsManager, SocialRepository socialRepository) {
     final List<String> similarAppsNames = new ArrayList<>();
     final List<String> similarPackageNames = new ArrayList<>();
 
@@ -66,14 +69,14 @@ import lombok.Getter;
       abTestingURL = recommendation.getAb().getConversion().getUrl();
     }
 
-    return new RecommendationDisplayable(Application.getConfiguration().getIcon(),
+    return new RecommendationDisplayable(recommendation, Application.getConfiguration().getIcon(),
         R.string.displayable_social_timeline_recommendation_atptoide_team_recommends,
         recommendation.getRecommendedApp().getId(),
         recommendation.getRecommendedApp().getPackageName(),
         recommendation.getRecommendedApp().getName(), recommendation.getRecommendedApp().getIcon(),
         abTestingURL, similarAppsNames, similarPackageNames,
         recommendation.getRecommendedApp().getUpdated(), recommendation.getTimestamp(),
-        dateCalculator, spannableFactory, timelineMetricsManager);
+        dateCalculator, spannableFactory, timelineMetricsManager, socialRepository);
   }
 
   public String getTitle() {
@@ -136,7 +139,7 @@ import lombok.Getter;
   }
 
   @Override public void share(Context context, boolean privacyResult) {
-
+    socialRepository.share(recommendation, context, privacyResult);
   }
 
 }

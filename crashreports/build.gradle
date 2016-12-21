@@ -6,17 +6,12 @@ retrolambda {
   //defaultMethods true
 }
 
-Properties localProperties = new Properties()
-localProperties.load(new FileInputStream(project.file("../../aptoideProperties/local.properties")))
-
 android {
   compileSdkVersion COMPILE_SDK_VERSION
   buildToolsVersion BUILD_TOOLS_VERSION
 
   defaultConfig {
     minSdkVersion 9
-
-    configureFabric delegate, localProperties.FABRIC_API_KEY
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
 
@@ -27,15 +22,7 @@ android {
       minifyEnabled false
       shrinkResources false
     }
-    release {
-      minifyEnabled false
-      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-    }
   }
-}
-
-void configureFabric(androidDelegate, key) {
-  androidDelegate.buildConfigField("boolean", "FABRIC_CONFIGURED", (key != null).toString())
 }
 
 dependencies {
@@ -49,7 +36,4 @@ dependencies {
   releaseCompile project(path: ':utils', configuration: 'release')
 
   provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
-  compile("com.crashlytics.sdk.android:crashlytics:${CRASHLYTICS_VERSION}@aar") {
-    transitive = true;
-  }
 }

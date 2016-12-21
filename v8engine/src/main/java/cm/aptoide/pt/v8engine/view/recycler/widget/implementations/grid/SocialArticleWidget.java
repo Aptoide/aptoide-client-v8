@@ -102,7 +102,6 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
       }
     }
 
-
     ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
     likeButton.setLiked(false);
     like.setVisibility(View.VISIBLE);
@@ -176,8 +175,11 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
           .build(), AptoideAnalytics.OPEN_BLOG);
     }));
 
+    // TODO: 21/12/2016 jdandradex
+    share.setVisibility(View.INVISIBLE);
+
     compositeSubscription.add(RxView.clicks(share).subscribe(click -> {
-      //shareCard(displayable);
+      shareCard(displayable);
     }, throwable -> throwable.printStackTrace()));
 
     compositeSubscription.add(RxView.clicks(like).subscribe(click -> {

@@ -41,9 +41,7 @@ public class ArticleWidget extends CardWidget<ArticleDisplayable> {
   private View articleHeader;
   private ArticleDisplayable displayable;
   private TextView relatedTo;
-  private LinearLayout like;
   private LinearLayout share;
-  private LikeButton likeButton;
 
   private String appName;
   private String packageName;
@@ -64,9 +62,7 @@ public class ArticleWidget extends CardWidget<ArticleDisplayable> {
     cardView = (CardView) itemView.findViewById(R.id.card);
     articleHeader = itemView.findViewById(R.id.displayable_social_timeline_article_header);
     relatedTo = (TextView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_related_to);
-    like = (LinearLayout) itemView.findViewById(R.id.social_like);
     share = (LinearLayout) itemView.findViewById(R.id.social_share);
-    likeButton = (LikeButton) itemView.findViewById(R.id.social_like_test);
   }
 
   @Override public void bindView(ArticleDisplayable displayable) {
@@ -148,9 +144,6 @@ public class ArticleWidget extends CardWidget<ArticleDisplayable> {
     compositeSubscription.add(RxView.clicks(share).subscribe(click -> {
       shareCard(displayable);
     }, throwable -> throwable.printStackTrace()));
-
-    compositeSubscription.add(RxView.clicks(like).subscribe(click -> {
-    }, (throwable) -> throwable.printStackTrace()));
   }
 
   private void setAppNameToFirstLinkedApp() {

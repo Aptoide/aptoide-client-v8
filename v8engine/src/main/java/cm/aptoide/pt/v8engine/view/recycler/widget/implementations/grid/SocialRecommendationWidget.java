@@ -12,6 +12,7 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SocialInstallDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SocialRecommendationDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
@@ -19,9 +20,9 @@ import com.like.OnLikeListener;
 /**
  * Created by jdandrade on 15/12/2016.
  */
-public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayable> {
+public class SocialRecommendationWidget extends SocialCardWidget<SocialRecommendationDisplayable> {
 
-  private final String cardType = "Social Install";
+  private final String cardType = "Social Recommendation";
   private TextView storeName;
   private TextView userName;
   private ImageView storeAvatar;
@@ -38,7 +39,7 @@ public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayab
   private TextView numberLikes;
   private TextView numberComments;
 
-  public SocialInstallWidget(View itemView) {
+  public SocialRecommendationWidget(View itemView) {
     super(itemView);
   }
 
@@ -67,7 +68,7 @@ public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayab
     numberComments = (TextView) itemView.findViewById(R.id.social_number_of_comments);
   }
 
-  @Override public void bindView(SocialInstallDisplayable displayable) {
+  @Override public void bindView(SocialRecommendationDisplayable displayable) {
     if (displayable.getStore() != null) {
       storeName.setText(displayable.getStore().getName());
     }
@@ -113,7 +114,7 @@ public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayab
     share.setVisibility(View.INVISIBLE);
 
     compositeSubscription.add(RxView.clicks(share).subscribe(click -> {
-      shareCard(displayable);
+      //shareCard(displayable);
     }, throwable -> throwable.printStackTrace()));
 
     compositeSubscription.add(RxView.clicks(like).subscribe(click -> {
@@ -133,7 +134,7 @@ public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayab
     });
   }
 
-  private void showFullSocialBar(SocialInstallDisplayable displayable) {
+  private void showFullSocialBar(SocialRecommendationDisplayable displayable) {
     likeButton.setLiked(false);
     like.setVisibility(View.VISIBLE);
     numberLikes.setVisibility(View.VISIBLE);

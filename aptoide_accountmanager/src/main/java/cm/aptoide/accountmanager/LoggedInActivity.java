@@ -1,7 +1,6 @@
 package cm.aptoide.accountmanager;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.widget.Button;
@@ -12,6 +11,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.SetUserRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.GenericDialogs;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.subscriptions.CompositeSubscription;
 
@@ -27,6 +27,7 @@ public class LoggedInActivity extends BaseActivity {
   private Button mContinueButton;
   private Button mMoreInfoButton;
   private CompositeSubscription mSubscriptions;
+  private ProgressDialog pleaseWaitDialog;
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -59,7 +60,7 @@ public class LoggedInActivity extends BaseActivity {
   private void setupListeners() {
     mSubscriptions.add(RxView.clicks(mContinueButton).subscribe(clicks -> {
 
-      ProgressDialog pleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
+      pleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
           getApplicationContext().getString(R.string.please_wait));
       pleaseWaitDialog.show();
 
@@ -68,18 +69,14 @@ public class LoggedInActivity extends BaseActivity {
           AptoideAccountManager.getAccessToken()).execute(answer -> {
         if (answer.isOk()) {
           Logger.v(TAG, "user is public");
-          Toast.makeText(LoggedInActivity.this, R.string.successful, Toast.LENGTH_SHORT).show();
+          ShowMessage.asSnack(this, R.string.successful);
         } else {
           Logger.v(TAG, "user is public: error: " + answer.getError().getDescription());
-          Toast.makeText(LoggedInActivity.this, R.string.unknown_error, Toast.LENGTH_SHORT).show();
+          ShowMessage.asSnack(this, R.string.unknown_error);
         }
-        pleaseWaitDialog.dismiss();
-        startActivity(getIntent().setClass(this, CreateStoreActivity.class));
-        finish();
+        goTo();
       }, throwable -> {
-        pleaseWaitDialog.dismiss();
-        startActivity(getIntent().setClass(this, CreateStoreActivity.class));
-        finish();
+        goTo();
       });
     }));
     mSubscriptions.add(RxView.clicks(mMoreInfoButton).subscribe(clicks -> {
@@ -88,15 +85,29 @@ public class LoggedInActivity extends BaseActivity {
     }));
   }
 
-  @Override protected void onDestroy() {
-    super.onDestroy();
-    mSubscriptions.clear();
+  private void updateUserInfo() {
+    AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
+      if (pleaseWaitDialog != null && pleaseWaitDialog.isShowing()) {
+        pleaseWaitDialog.dismiss();
+      }
+      finish();
+    }, throwable -> throwable.printStackTrace());
   }
 
-  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    switch (requestCode) {
-      case LOGGED_IN_SECOND_STEP_CODE:
-        finishActivity(125);
+  private void goTo() {
+
+    if (getIntent() != null && getIntent().getBooleanExtra(AptoideLoginUtils.IS_FACEBOOK_OR_GOOGLE,
+        false)) {
+      updateUserInfo();
+    } else {
+      if (pleaseWaitDialog != null && pleaseWaitDialog.isShowing()) {
+        pleaseWaitDialog.dismiss();
+      }
+      startActivity(getIntent().setClass(this, CreateStoreActivity.class));
+      finish();
     }
   }
 }
+
+
+

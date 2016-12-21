@@ -10,9 +10,6 @@ retrolambda {
   //defaultMethods true
 }
 
-Properties localProperties = new Properties()
-localProperties.load(new FileInputStream(project.file("../../aptoideProperties/local.properties")))
-
 android {
 
   // Websockets
@@ -23,11 +20,13 @@ android {
 
   defaultConfig {
     minSdkVersion 15
-    consumerProguardFiles "proguard-rules.txt"
-    //testInstrumentationRunner "cm.aptoide.pt.v8engine.MultidexAndroidJunitRunner"
+    consumerProguardFiles "proguard-rules-consumer.pro"
 
-    // Enabling multidex support.
-    multiDexEnabled true
+    buildConfigField "String", "SIXPACK_USER", "\"" + project.SIXPACK_USER + "\""
+    buildConfigField "String", "SIXPACK_PASSWORD", "\"" + project.SIXPACK_PASSWORD + "\""
+    buildConfigField "String", "SIXPACK_URL", "\"" + project.SIXPACK_URL + "\""
+    buildConfigField "String", "GOOGLE_SENDER_ID", "\"" + project.GOOGLE_SENDER_ID + "\""
+    buildConfigField "String", "PAYPAL_KEY", "\"" + project.PAYPAL_KEY + "\""
   }
 
   lintOptions {
@@ -36,29 +35,24 @@ android {
 
   publishNonDefault true
 
+  productFlavors {
+    internal
+    prod
+  }
+
   buildTypes {
     release {
       minifyEnabled false
       shrinkResources false
-      configureFlurry delegate, localProperties.FLURRY_KEY
-      configureLocalytics delegate, localProperties.LOCALYTICS_RELEASE_KEY
-      configurePayPal delegate, localProperties.PAYPAL_KEY, localProperties.PAYPAL_ENVIRONMENT_LIVE
-      configureSixpackCredentials delegate, localProperties.SIXPACK_USER,
-          localProperties.SIXPACK_PASSWORD, localProperties.SIXPACK_URL
-      def googleSenderId = localProperties.GOOGLE_SENDER_ID
-      buildConfigField "String", "GOOGLE_SENDER_ID", "\"" + googleSenderId.toString() + "\""
+      buildConfigField "String", "FLURRY_KEY", "\"" + project.FLURRY_KEY + "\""
+      buildConfigField "String", "PAYPAL_ENVIRONMENT", "\"" + project.PAYPAL_ENVIRONMENT_LIVE + "\""
     }
 
     debug {
       minifyEnabled false
       shrinkResources false
-      configureFlurry delegate, localProperties.FLURRY_DEBUG_KEY
-      configureLocalytics delegate, localProperties.LOCALYTICS_DEBUG_KEY
-      configurePayPal delegate, localProperties.PAYPAL_KEY, localProperties.PAYPAL_ENVIRONMENT_MOCK
-      configureSixpackCredentials delegate, localProperties.SIXPACK_USER,
-          localProperties.SIXPACK_PASSWORD, localProperties.SIXPACK_URL
-      def googleSenderId = localProperties.GOOGLE_SENDER_ID
-      buildConfigField "String", "GOOGLE_SENDER_ID", "\"" + googleSenderId.toString() + "\""
+      buildConfigField "String", "FLURRY_KEY", "\"" + project.FLURRY_DEBUG_KEY + "\""
+      buildConfigField "String", "PAYPAL_ENVIRONMENT", "\"" + project.PAYPAL_ENVIRONMENT_MOCK + "\""
     }
   }
 
@@ -75,67 +69,25 @@ android {
 
 }
 
-void configureSixpackCredentials(androidDelegate, user, password, url) {
-  boolean userExists = user != null
-  boolean passwordExists = password != null
-  boolean urlExists = url != null
-
-  androidDelegate.buildConfigField "String", "SIXPACK_USER",
-      "\"" + (userExists ? user.toString() : "") + "\""
-  androidDelegate.buildConfigField "String", "SIXPACK_PASSWORD",
-      "\"" + (passwordExists ? password.toString() : "") + "\""
-  androidDelegate.buildConfigField "String", "SIXPACK_URL",
-      "\"" + (urlExists ? url.toString() : "") + "\""
-}
-
-void configureFlurry(androidDelegate, key) {
-  boolean keyExists = key != null
-  androidDelegate.buildConfigField "boolean", "FLURRY_CONFIGURED", keyExists.toString()
-  androidDelegate.buildConfigField "String", "FLURRY_KEY", "\"" + key.toString() + "\""
-}
-
-void configureLocalytics(androidDelegate, key) {
-  boolean keyExists = key != null
-  androidDelegate.buildConfigField "boolean", "LOCALYTICS_CONFIGURED", keyExists.toString()
-}
-
-void configurePayPal(androidDelegate, key, environment) {
-  boolean configurationExists = (key != null && environment != null)
-  androidDelegate.buildConfigField "String", "PAYPAL_KEY",
-      "\"" + (configurationExists ? key.toString() : "") + "\""
-  androidDelegate.buildConfigField "String", "PAYPAL_ENVIRONMENT",
-      "\"" + (configurationExists ? environment.toString() : "") + "\""
-}
-
 dependencies {
 
   //
   // inter-projects dependencies
   //
 
-  debugCompile project(path: ':database', configuration: 'debug')
-  releaseCompile project(path: ':database', configuration: 'release')
+  compile project(path: ':database', configuration: 'release')
 
-  debugCompile project(path: ':dataprovider', configuration: 'debug')
-  releaseCompile project(path: ':dataprovider', configuration: 'release')
+  internalCompile project(path: ':dataprovider', configuration: 'internalRelease')
+  internalCompile project(path: ':aptoide_accountmanager', configuration: 'internalRelease')
 
-  debugCompile project(path: ':utils', configuration: 'debug')
-  releaseCompile project(path: ':utils', configuration: 'release')
+  prodCompile project(path: ':dataprovider', configuration: 'prodRelease')
+  prodCompile project(path: ':aptoide_accountmanager', configuration: 'prodRelease')
 
-  debugCompile project(path: ':utilsdesign', configuration: 'debug')
-  releaseCompile project(path: ':utilsdesign', configuration: 'release')
-
-  debugCompile project(path: ':crashreports', configuration: 'debug')
-  releaseCompile project(path: ':crashreports', configuration: 'release')
-
-  debugCompile project(path: ':aptoide_accountmanager', configuration: 'debug')
-  releaseCompile project(path: ':aptoide_accountmanager', configuration: 'release')
-
-  debugCompile project(path: ':imageloader', configuration: 'debug')
-  releaseCompile project(path: ':imageloader', configuration: 'release')
-
-  debugCompile project(path: ':downloadmanager', configuration: 'debug')
-  releaseCompile project(path: ':downloadmanager', configuration: 'release')
+  compile project(path: ':utils', configuration: 'release')
+  compile project(path: ':utilsdesign', configuration: 'release')
+  compile project(path: ':crashreports', configuration: 'release')
+  compile project(path: ':imageloader', configuration: 'release')
+  compile project(path: ':downloadmanager', configuration: 'release')
 
   //
   // custom libs in folders
@@ -227,4 +179,9 @@ dependencies {
 
   //  Sixpack
   compile 'com.seatgeek:sixpack-java:0.4-SNAPSHOT'
+
+  // Fabric
+  compile("com.crashlytics.sdk.android:crashlytics:${CRASHLYTICS_VERSION}@aar") {
+    transitive = true;
+  }
 }

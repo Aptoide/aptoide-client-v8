@@ -8,26 +8,18 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SimilarDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
-import java.io.IOException;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Credentials;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import com.jakewharton.rxbinding.view.RxView;
 
 /**
  * Created by marcelobenites on 7/8/16.
@@ -44,6 +36,7 @@ public class SimilarWidget extends CardWidget<SimilarDisplayable> {
   private TextView getApp;
   private CardView cardView;
   private RelativeLayout cardContent;
+  private LinearLayout share;
 
   public SimilarWidget(View itemView) {
     super(itemView);
@@ -68,6 +61,7 @@ public class SimilarWidget extends CardWidget<SimilarDisplayable> {
         (CardView) itemView.findViewById(R.id.displayable_social_timeline_recommendation_card);
     cardContent = (RelativeLayout) itemView.findViewById(
         R.id.displayable_social_timeline_recommendation_card_content);
+    share = (LinearLayout) itemView.findViewById(R.id.social_share);
   }
 
   @Override public void bindView(SimilarDisplayable displayable) {
@@ -104,6 +98,10 @@ public class SimilarWidget extends CardWidget<SimilarDisplayable> {
       ((FragmentShower) getContext()).pushFragmentV4(
           V8Engine.getFragmentProvider().newAppViewFragment(displayable.getAppId()));
     });
+
+    compositeSubscription.add(RxView.clicks(share).subscribe(click -> {
+      shareCard(displayable);
+    }, throwable -> throwable.printStackTrace()));
   }
 
   @Override public void unbindView() {

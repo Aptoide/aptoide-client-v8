@@ -5,24 +5,12 @@ buildscript {
   }
 
   dependencies {
-    classpath 'io.fabric.tools:gradle:1.21.7'
+    classpath 'io.fabric.tools:gradle:1.22.0'
   }
 }
 
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 29/07/2016.
- */
 apply plugin: 'com.android.application'
-
-Properties localProperties = new Properties()
-localProperties.load(new FileInputStream(project.file("../../aptoideProperties/local.properties")))
-def fabricApiKey = localProperties.FABRIC_API_KEY
-def fabricConfigured = fabricApiKey != null
-
-if (fabricConfigured) {
-  apply plugin: 'io.fabric'
-}
+apply plugin: 'io.fabric'
 apply plugin: 'android-command'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'realm-android'
@@ -40,52 +28,18 @@ android {
   compileSdkVersion COMPILE_SDK_VERSION
   buildToolsVersion BUILD_TOOLS_VERSION
 
-  dexOptions {
-    maxProcessCount 2
-    javaMaxHeapSize "4g"
-  }
-
   // keep the "applicationId" var in third place for the jenkins build script hack
   defaultConfig {
-    versionName "8.0.0"
-    versionCode 1
     applicationId "${APPLICATION_ID}"
     minSdkVersion 15
     targetSdkVersion TARGET_SDK_VERSION
-    // common proguard files to append and configure proguard for the whole project
-    //        proguardFile 'proguard_files/proguard-android-gif-drawable.pro'
-    //        proguardFile 'proguard_files/proguard-androidannotations.pro'
-    //        proguardFile 'proguard_files/proguard-support-v7-appcompat.pro'
-    //        proguardFile 'proguard_files/proguard-support-v7-cardview.pro'
-    //        //proguardFile 'proguard_files/proguard-google-analytics.pro'
-    //        //proguardFile 'proguard_files/proguard-google-admob.pro'
-    //        proguardFile 'proguard_files/proguard-sqlite.pro'
-    //        proguardFile 'proguard_files/proguard-glide.pro'
-    //        proguardFile 'proguard_files/proguard-retrolambda.pro'
-    //        proguardFile 'proguard_files/proguard-rx-java.pro'
-    //        proguardFile 'proguard_files/proguard-rxjava-promises.pro'
-    //        proguardFile 'proguard_files/proguard-jackson-2.pro'
-    //        proguardFile 'proguard_files/proguard-realm.pro'
-    //        proguardFile 'proguard_files/proguard-square-okhttp3.pro'
-    //        proguardFile 'proguard_files/proguard-square-retrofit2.pro'
-    //        proguardFile 'proguard_files/proguard-crashlytics-2.pro'
-    //        proguardFile 'proguard_files/proguard-fabric-twitter-kit.pro'
-    //        proguardFile 'proguard_files/proguard-facebook.pro'
-    //        proguardFile 'proguard_files/proguard-facebook-stetho.pro'
-    //        proguardFile 'proguard_files/proguard-square-okio.pro'
-    proguardFile 'proguard-rules.pro'
-    proguardFile getDefaultProguardFile('proguard-android.txt')
-    testProguardFile 'proguard-test-rules.pro'
+    testProguardFile 'proguard-rules-test.pro'
     manifestPlaceholders = [toolboxProviderAuthority   : "cm.aptoide.pt.StubProvider",
                             suggestionProviderAuthority: "cm.aptoide.pt.v8engine.provider.SuggestionProvider",
                             currentApplicationId       : "cm.aptoide.pt",
-                            fabricApiKey               : fabricConfigured ?
-                                localProperties.FABRIC_API_KEY : ""]
+                            fabricApiKey               : project.FABRIC_API_KEY]
 
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-    //testInstrumentationRunner "cm.aptoide.pt.MultidexAndroidJunitRunner"
-
-    // Enabling multidex support.
     multiDexEnabled true
   }
 
@@ -93,20 +47,24 @@ android {
     abortOnError false
   }
 
-  signingConfigs { release }
+  signingConfigs {
+    release {
+      storeFile = file(project.STORE_FILE)
+      storePassword = project.STORE_PASSWORD
+      keyAlias = project.KEY_ALIAS
+      keyPassword = project.KEY_PASSWORD
+      v2SigningEnabled = false
+    }
+  }
 
   productFlavors {
 
     internal {
-      minSdkVersion 21
-
       // applicationIdSuffix does not work properly, as the application ID gets changed after the buildFlavor
       applicationIdSuffix ".internal"
 
-      Integer value = getVersionCode("../../aptoideProperties/version.properties",
-          "INTERNAL_VERSION_CODE")
       versionName "8.1.0." + getDate()
-      versionCode value
+      versionCode project.INTERNAL_VERSION_CODE.toInteger()
 
       resValue "string", "authenticatorAccountType", APPLICATION_ID + ".internal"
 
@@ -119,10 +77,8 @@ android {
       // applicationIdSuffix does not work properly, as the application ID gets changed after the buildFlavor
       applicationIdSuffix ".dev"
 
-      Integer value = getVersionCode("../../aptoideProperties/version.properties",
-          "DEV_VERSION_CODE")
       versionName "8.1.0." + getDate()
-      versionCode value
+      versionCode project.DEV_VERSION_CODE.toInteger()
 
       resValue "string", "authenticatorAccountType", APPLICATION_ID + ".dev"
 
@@ -132,9 +88,7 @@ android {
     }
 
     prod {
-      Integer value = getVersionCode("../../aptoideProperties/version.properties",
-          "PROD_VERSION_CODE")
-      versionCode value
+      versionCode project.PROD_VERSION_CODE.toInteger()
       versionName "8.1.0.0"
       resValue "string", "authenticatorAccountType", APPLICATION_ID
     }
@@ -142,20 +96,23 @@ android {
 
   buildTypes {
     release {
-      configureLocalytics delegate, localProperties.LOCALYTICS_RELEASE_KEY
+      buildConfigField "boolean", "CRASH_REPORTS_DISABLED", "false"
+      manifestPlaceholders = [LOCALYTICS_APP_KEY: project.LOCALYTICS_RELEASE_KEY]
       zipAlignEnabled true
       minifyEnabled true
       shrinkResources true
+      proguardFiles getDefaultProguardFile('proguard-android.txt')
       signingConfig signingConfigs.release
     }
 
     debug {
-      configureLocalytics delegate, localProperties.LOCALYTICS_DEBUG_KEY
+      buildConfigField "boolean", "CRASH_REPORTS_DISABLED", "true"
       ext.enableCrashlytics = false
-      multiDexEnabled true
-      zipAlignEnabled false
-      minifyEnabled false
-      shrinkResources false
+      manifestPlaceholders = [LOCALYTICS_APP_KEY: project.LOCALYTICS_DEBUG_KEY]
+      zipAlignEnabled true
+      minifyEnabled true
+      shrinkResources true
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules-debug.pro'
     }
   }
 
@@ -189,45 +146,21 @@ android {
         //noinspection GroovyAssignabilityCheck
         output.outputFile = new File(output.outputFile.parent, newName)
       }
-
-      //      variant.productFlavors.each { flavor ->
-      //        VersionCodeFileUpdateTask versionUpdate = project.tasks.create "update${variant.name.capitalize()}FileVersionCode",
-      //            VersionCodeFileUpdateTask
-      //        versionUpdate.versionPropertiesFile =
-      //            project.file("../../aptoideProperties/version.properties")
-      //        versionUpdate.versionPropertyKey = "${flavor.name.toUpperCase()}_VERSION_CODE"
-      //        versionUpdate.versionCode = variant.mergedFlavor.versionCode
-      //        variant.assemble.dependsOn versionUpdate
-      //      }
     }
+  }
+
+  dexOptions {
+    dexInProcess = project.APTOIDE_DEX_IN_PROCESS
+    preDexLibraries =  project.APTOIDE_PRE_DEX_LIBRARIES
+    javaMaxHeapSize = project.APTOIDE_DEX_JAVA_MAX_HEAP_SIZE
   }
 }
 
 dependencies {
 
-  //
-  // inter-projects dependencies
-  //
-
-  debugCompile project(path: ':v8engine', configuration: 'debug')
-  //  {
-  //    exclude(group:"com.android.support", name:"multidex")
-  //  }
-
-  releaseCompile project(path: ':v8engine', configuration: 'release')
-  //  {
-  //    exclude(group:"com.android.support", name:"multidex")
-  //  }
-
-  //
-  // custom libs in folders
-  //
-
-  //compile fileTree(dir: 'libs', include: ['*.jar'])
-
-  //
-  // from remote repos
-  //
+  devCompile project(path: ':v8engine', configuration: 'prodRelease')
+  prodCompile project(path: ':v8engine', configuration: 'prodRelease')
+  internalCompile project(path: ':v8engine', configuration: 'internalRelease')
 
   // Testing-only dependencies
   testCompile "junit:junit:${JUNIT_VERSION}"
@@ -248,77 +181,8 @@ dependencies {
   }
 }
 
-//class VersionCodeFileUpdateTask extends DefaultTask {
-//
-//  @InputFile
-//  File versionPropertiesFile
-//
-//  @Input
-//  String versionPropertyKey
-//
-//  @Input
-//  Integer versionCode
-//
-//  @TaskAction
-//  def updateVersionCodeFile() {
-//    if (versionPropertiesFile.canRead()) {
-//      Properties versionProperties = new Properties()
-//      versionProperties.load(new FileInputStream(versionPropertiesFile))
-//      versionProperties[versionPropertyKey] = versionCode.toString()
-//      versionProperties.store(versionPropertiesFile.newWriter(), null)
-//    } else {
-//      throw new GradleException("Could not read version.properties!")
-//    }
-//  }
-//}
-
-Integer getVersionCode(String versionPropertiesFilePath, String versionPropertyKey) {
-  File versionPropertiesFile = project.file(versionPropertiesFilePath);
-  if (versionPropertiesFile.canRead()) {
-    Properties versionProperties = new Properties()
-    versionProperties.load(new FileInputStream(versionPropertiesFile))
-
-    return versionProperties[versionPropertyKey].toInteger()
-  } else {
-    throw new GradleException("Could not read version.properties!")
-  }
-}
-
 String getDate() {
   def date = new Date()
   def formattedDate = date.format('yyyyMMdd')
   return formattedDate
-}
-
-def File propFile = project.file('../../aptoideProperties/signing.properties')
-if (propFile.canRead()) {
-  def Properties props = new Properties()
-  props.load(new FileInputStream(propFile))
-
-  if (props != null &&
-      props.containsKey('STORE_FILE') &&
-      props.containsKey('STORE_PASSWORD') &&
-      props.containsKey('KEY_ALIAS') &&
-      props.containsKey('KEY_PASSWORD')) {
-
-    android.signingConfigs.release.storeFile = project.file(props['STORE_FILE'])
-    android.signingConfigs.release.storePassword = props['STORE_PASSWORD']
-    android.signingConfigs.release.keyAlias = props['KEY_ALIAS']
-    android.signingConfigs.release.keyPassword = props['KEY_PASSWORD']
-    android.signingConfigs.release.v2SigningEnabled = false
-
-    println 'all good to go'
-  } else {
-    android.buildTypes.release.signingConfig = null
-    println 'signing.properties found but some entries are missing'
-  }
-} else {
-  println 'signing.properties not found'
-  android.buildTypes.release.signingConfig = null
-}
-
-void configureLocalytics(androidDelegate, key) {
-  boolean keyExists = key != null
-  androidDelegate.buildConfigField "boolean", "LOCALYTICS_CONFIGURED", keyExists.toString()
-  androidDelegate.manifestPlaceholders = [LOCALYTICS_APP_KEY: keyExists ? key : ""]
 }

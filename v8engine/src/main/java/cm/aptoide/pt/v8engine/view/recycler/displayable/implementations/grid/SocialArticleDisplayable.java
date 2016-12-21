@@ -137,6 +137,6 @@ import rx.schedulers.Schedulers;
   }
 
   @Override public void share(Context context, boolean privacyResult) {
-
+    socialRepository.share(socialArticle, context, privacyResult);
   }
 }
