@@ -89,7 +89,6 @@ public class CommentDialogFragment extends RxDialogFragment {
 
   public static CommentDialogFragment newInstanceTimelineArticleComment(String timelineArticleId) {
     Bundle args = new Bundle();
-    args.putString(APP_OR_STORE_NAME, timelineArticleId);
     args.putString(COMMENT_TYPE, CommentType.TIMELINE.name());
     args.putString(RESOURCE_ID, timelineArticleId);
 
@@ -101,7 +100,6 @@ public class CommentDialogFragment extends RxDialogFragment {
   public static CommentDialogFragment newInstanceTimelineArticleComment(String timelineArticleId,
       long previousCommentId) {
     Bundle args = new Bundle();
-    args.putString(APP_OR_STORE_NAME, timelineArticleId);
     args.putString(COMMENT_TYPE, CommentType.TIMELINE.name());
     args.putString(RESOURCE_ID, timelineArticleId);
     args.putLong(PREVIOUS_COMMENT_ID, previousCommentId);
@@ -117,7 +115,7 @@ public class CommentDialogFragment extends RxDialogFragment {
 
   private void loadArguments() {
     Bundle args = getArguments();
-    this.appOrStoreName = args.getString(APP_OR_STORE_NAME);
+    this.appOrStoreName = args.getString(APP_OR_STORE_NAME, "");
     this.commentType = CommentType.valueOf(args.getString(COMMENT_TYPE));
 
     if (commentType == CommentType.TIMELINE) {
@@ -141,8 +139,17 @@ public class CommentDialogFragment extends RxDialogFragment {
     TextView titleTextView = (TextView) view.findViewById(R.id.title);
     titleTextView.setVisibility(View.VISIBLE);
 
-    titleTextView.setText(String.format(getString(R.string.comment_on_store),
-        TextUtils.isEmpty(appOrStoreName) ? getString(R.string.word_this) : appOrStoreName));
+    switch (commentType) {
+      case REVIEW:
+        titleTextView.setText(getString(R.string.comment));
+        break;
+      case TIMELINE:
+        titleTextView.setText(getString(R.string.comment));
+      case STORE:
+        titleTextView.setText(String.format(getString(R.string.comment_on_store),
+            TextUtils.isEmpty(appOrStoreName) ? getString(R.string.word_this) : appOrStoreName));
+        break;
+    }
 
     Button cancelButton = (Button) view.findViewById(R.id.cancel_button);
     cancelButton.setOnClickListener(a -> CommentDialogFragment.this.dismiss());

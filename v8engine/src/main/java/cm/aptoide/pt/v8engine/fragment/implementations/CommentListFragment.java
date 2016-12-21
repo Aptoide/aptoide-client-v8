@@ -4,16 +4,15 @@ import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.CommentType;
-import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
 import cm.aptoide.pt.model.v7.ListComments;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -82,17 +81,16 @@ public class CommentListFragment extends GridRecyclerFragment {
     return fragment;
   }
 
-  //@Override public void setupToolbar() {
-  //  // It's not calling super cause it does nothing in the middle class}
-  //  // StoreTabGridRecyclerFragment.
-  //  if (toolbar != null) {
-  //    ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-  //    ((AppCompatActivity) getActivity()).getSupportActionBar()
-  //        .setTitle(Translator.translate(title));
-  //    ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-  //    toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
-  //  }
-  //}
+  @Override public void setupToolbar() {
+    // It's not calling super cause it does nothing in the middle class}
+    // StoreTabGridRecyclerFragment.
+    if (toolbar != null) {
+      ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+      ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.comments);
+      ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+      toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
+    }
+  }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
@@ -131,6 +129,9 @@ public class CommentListFragment extends GridRecyclerFragment {
   @Override public void bindViews(View view) {
     super.bindViews(view);
     floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fabAdd);
+    if (floatingActionButton != null) {
+      floatingActionButton.setVisibility(View.VISIBLE);
+    }
     commentOperations = new CommentOperations();
   }
 
@@ -202,6 +203,7 @@ public class CommentListFragment extends GridRecyclerFragment {
     });
   }
 
+  /*
   public Observable<Void> createNewCommentFragment(final long storeId, final long commentId,
       String storeName) {
 
@@ -222,6 +224,7 @@ public class CommentListFragment extends GridRecyclerFragment {
       return showSignInMessage();
     });
   }
+  */
 
   void caseListSocialTimelineComments(boolean refresh) {
 
@@ -260,6 +263,7 @@ public class CommentListFragment extends GridRecyclerFragment {
     endlessRecyclerOnScrollListener.onLoadMore(refresh);
   }
 
+  /*
   void caseListStoreComments(String url, BaseRequestWithStore.StoreCredentials storeCredentials,
       boolean refresh) {
 
@@ -305,4 +309,5 @@ public class CommentListFragment extends GridRecyclerFragment {
     recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(refresh);
   }
+  */
 }

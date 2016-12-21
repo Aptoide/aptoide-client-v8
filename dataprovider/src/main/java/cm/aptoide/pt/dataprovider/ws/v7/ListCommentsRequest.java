@@ -6,6 +6,7 @@ import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.ListComments;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import rx.Observable;
 
 /**
@@ -29,8 +30,8 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
     ListCommentsRequest.url = url;
 
     Body body = new Body(refresh, Order.desc);
-    body.setStore_user(storeCredentials.getUsername());
-    body.setStore_pass_sha1(storeCredentials.getPasswordSha1());
+    body.setStoreUser(storeCredentials.getUsername());
+    body.setStorePassSha1(storeCredentials.getPasswordSha1());
     body.setStoreId(storeCredentials.getId());
 
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUuid);
@@ -91,7 +92,11 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
     ListCommentsRequest.url = url;
 
     Body body = new Body(refresh, Order.desc);
-    body.setTimelineArticleId(timelineArticleId);
+    //body.setCommentType(CommentType.TIMELINE);
+    // since the server side has some limitations with more params than expected, we
+    // remove this one. it is not necessary for now.
+    body.setCommentType(null);
+    body.setTimelineCardId(timelineArticleId);
 
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUuid);
     return new ListCommentsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
@@ -118,9 +123,9 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
     private Long reviewId;
     private Long storeId;
     private long subLimit = 5;
-    private String store_user;
-    private String store_pass_sha1;
-    private String timelineArticleId;
+    @JsonProperty("store_user") private String storeUser;
+    @JsonProperty("store_pass_sha1") private String storePassSha1;
+    @JsonProperty("card_uid") private String timelineCardId;
 
     public Body(boolean refresh, Order order) {
       this.refresh = refresh;
@@ -137,8 +142,8 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
       this.limit = limit;
       this.refresh = refresh;
       this.order = order;
-      this.store_user = username;
-      this.store_pass_sha1 = password;
+      this.storeUser = username;
+      this.storePassSha1 = password;
     }
 
     @Override public int getOffset() {
@@ -181,6 +186,14 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
       return commentType;
     }
 
+    public void setCommentType(CommentType commentType) {
+      if (commentType == null) {
+        this.commentType = null;
+        return;
+      }
+      this.commentType = commentType.name();
+    }
+
     public Long getReviewId() {
       return reviewId;
     }
@@ -199,20 +212,20 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
       commentType = CommentType.STORE.name();
     }
 
-    public String getStore_user() {
-      return store_user;
+    public String getStoreUser() {
+      return storeUser;
     }
 
-    public void setStore_user(String store_user) {
-      this.store_user = store_user;
+    public void setStoreUser(String storeUser) {
+      this.storeUser = storeUser;
     }
 
-    public String getStore_pass_sha1() {
-      return store_pass_sha1;
+    public String getStorePassSha1() {
+      return storePassSha1;
     }
 
-    public void setStore_pass_sha1(String store_pass_sha1) {
-      this.store_pass_sha1 = store_pass_sha1;
+    public void setStorePassSha1(String storePassSha1) {
+      this.storePassSha1 = storePassSha1;
     }
 
     public long getSubLimit() {
@@ -223,12 +236,12 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
       this.subLimit = subLimit;
     }
 
-    public void setTimelineArticleId(String timelineArticleId) {
-      this.timelineArticleId = timelineArticleId;
+    public void setTimelineCardId(String timelineCardId) {
+      this.timelineCardId = timelineCardId;
     }
 
-    public String getTimelineArticleId() {
-      return timelineArticleId;
+    public String getTimelineCardId() {
+      return timelineCardId;
     }
   }
 }

@@ -1,6 +1,5 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -42,10 +41,10 @@ public class PostCommentForTimelineArticle
   @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) public static class Body
       extends BaseBody {
 
-    @JsonProperty("id") private String timelineArticleId;
+    @JsonProperty("card_uid") private String timelineArticleId;
     @JsonProperty("comment_id") private Long previousCommentId;
     private String body;
-    private String commentType = CommentType.TIMELINE.name();
+    //private String commentType = CommentType.TIMELINE.name();
 
     public Body(String timelineArticleId, String text) {
       this.timelineArticleId = timelineArticleId;
