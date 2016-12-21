@@ -132,7 +132,7 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
       switch (eventType) {
         // uncomment for further development
         case FACEBOOK:
-          //youtubeOrFacebookButton.setBackgroundResource(R.drawable.facebook_logo);
+          youtubeOrFacebookButton.setBackgroundResource(R.drawable.facebook_logo);
           youtubeOrFacebookButton.setClickable(true);
           youtubeOrFacebookButton.setVisibility(View.VISIBLE);
           return RxView.clicks(youtubeOrFacebookButton).map(aVoid -> socialChannel);
