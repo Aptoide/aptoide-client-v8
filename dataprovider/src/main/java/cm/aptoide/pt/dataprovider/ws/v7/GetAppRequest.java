@@ -43,6 +43,15 @@ import rx.Observable;
             accessToken));
   }
 
+  public static GetAppRequest of(long appId, String accessToken, String aptoideClientUUID,
+      String packageName) {
+    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+    boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
+
+    return new GetAppRequest(BASE_HOST,
+        (Body) decorator.decorate(new Body(appId, forceServerRefresh, packageName), accessToken));
+  }
+
   public static GetAppRequest of(long appId, String storeName, String accessToken, String aptoideClientUUID,
       String packageName) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
