@@ -37,7 +37,7 @@ public class RateAndReviewsPresenter implements Presenter {
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()).getAptoideClientUUID());
 
-    ratingRequest = GetAppRequest.of(appId, storeName, AptoideAccountManager.getAccessToken(),
+    ratingRequest = GetAppRequest.of(appId, AptoideAccountManager.getAccessToken(),
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()).getAptoideClientUUID(), packageName);
 
