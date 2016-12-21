@@ -61,8 +61,7 @@ public class CommentWidget extends Widget<CommentDisplayable> {
     if (ComplexComment.class.isAssignableFrom(comment.getClass())) {
       final ComplexComment complexComment = (ComplexComment) comment;
 
-      @ColorRes int bgColor =
-          complexComment.getLevel() % 2 == 0 ? R.color.medium_custom_gray : R.color.white;
+      @ColorRes int bgColor = R.color.white;
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         outerLayout.setBackgroundColor(getContext().getColor(bgColor));
       } else {

@@ -9,7 +9,7 @@ import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.v8engine.configuration.FragmentProvider;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppsTimelineFragment;
-import cm.aptoide.pt.v8engine.fragment.implementations.CommentListFragment;
+import cm.aptoide.pt.v8engine.fragment.CommentListFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.CreateUserFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.DescriptionFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.DownloadsFragment;
@@ -216,5 +216,10 @@ public class FragmentProviderImpl implements FragmentProvider {
   @Override
   public Fragment newCommentGridRecyclerFragment(CommentType commentType, String elementId) {
     return CommentListFragment.newInstance(commentType, elementId);
+  }
+
+  @Override
+  public Fragment newCommentGridRecyclerFragmentUrl(CommentType commentType, String url) {
+    return CommentListFragment.newInstanceUrl(commentType, url);
   }
 }

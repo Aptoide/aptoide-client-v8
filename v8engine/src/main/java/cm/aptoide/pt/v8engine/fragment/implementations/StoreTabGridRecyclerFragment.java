@@ -8,17 +8,17 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListFullReviewsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
@@ -32,7 +32,6 @@ import cm.aptoide.pt.model.v7.FullReview;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.Layout;
 import cm.aptoide.pt.model.v7.ListApps;
-import cm.aptoide.pt.model.v7.ListComments;
 import cm.aptoide.pt.model.v7.ListFullReviews;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.ListStores;
@@ -41,9 +40,9 @@ import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
+import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
-import cm.aptoide.pt.v8engine.util.CommentOperations;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.util.Translator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -51,15 +50,12 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayableGroup;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablesFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AdultRowDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickListDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAdDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RecommendedStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RowReviewDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
-import cm.aptoide.pt.viewRateAndCommentReviews.CommentNode;
-import cm.aptoide.pt.viewRateAndCommentReviews.ComplexComment;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -300,20 +296,6 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
                 DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(
                     V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId());
           });
-          /*
-
-
-          Observable.from(list)
-              .forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget,
-                  wsWidget.getView() != null ? StoreUtils.getStoreCredentialsFromUrl(
-                      wsWidget.getView()) : new BaseRequestWithStore.StoreCredentials(),
-                  countDownLatch, refresh, throwable -> countDownLatch.countDown(),
-                  AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
-                  new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                      DataProvider.getContext()).getAptoideClientUUID(),
-                  DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(
-                      V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId()));
-           */
 
           try {
             countDownLatch.await(5, TimeUnit.SECONDS);
@@ -409,7 +391,9 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
           caseGetStoreWidgets(url, StoreUtils.getStoreCredentialsFromUrl(url), refresh);
           break;
         case listComments:
-          caseListStoreComments(url, StoreUtils.getStoreCredentialsFromUrl(url), refresh);
+          // FIXME: 21/12/2016 sithengineer this is the second fragment behing called
+          // modify the more action to have a MoreActionResolver and fix this issue
+          caseListStoreComments(url);
           break;
         case listReviews:
           caseListReviews(url, refresh);
@@ -430,6 +414,12 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
       }
       //setDisplayables(displayables);
     }
+  }
+
+  private void caseListStoreComments(String url) {
+    Fragment fragment = V8Engine.getFragmentProvider()
+        .newCommentGridRecyclerFragmentUrl(CommentType.STORE, url);
+    ((FragmentShower) getContext()).pushFragmentV4(fragment);
   }
 
   private void caseMyStores(String url, boolean refresh) {
@@ -478,60 +468,6 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
       }
     }
     return storesDisplayables;
-  }
-
-  void caseListStoreComments(String url, BaseRequestWithStore.StoreCredentials storeCredentials,
-      boolean refresh) {
-
-    String aptoideClientUuid = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext()).getAptoideClientUUID();
-
-    ListCommentsRequest listCommentsRequest =
-        ListCommentsRequest.ofStoreAction(url, refresh, storeCredentials,
-            AptoideAccountManager.getAccessToken(), aptoideClientUuid);
-
-    if (storeCredentials.getId() == null) {
-      CrashReports.logException(
-          new IllegalStateException("Current store credentials does not have a store id"));
-    }
-
-    final long storeId = storeCredentials.getId() != null ? storeCredentials.getId() : -1;
-    final String storeName = storeCredentials.getName();
-
-    final CommentOperations commentOperations = new CommentOperations();
-
-    Action1<ListComments> listCommentsAction = (listComments -> {
-      if (listComments != null
-          && listComments.getDatalist() != null
-          && listComments.getDatalist().getList() != null) {
-        List<CommentNode> comments = commentOperations.flattenByDepth(
-            commentOperations.transform(listComments.getDatalist().getList()));
-
-        ArrayList<Displayable> displayables = new ArrayList<>(comments.size());
-        for (CommentNode commentNode : comments) {
-          displayables.add(new CommentDisplayable(new ComplexComment(commentNode,
-              showStoreCommentFragment(storeId, commentNode.getComment().getId(), storeName))));
-        }
-
-        this.displayables = new ArrayList<>(displayables.size());
-        this.displayables.add(new DisplayableGroup(displayables));
-
-        addDisplayables(this.displayables);
-      }
-    });
-    recyclerView.clearOnScrollListeners();
-    endlessRecyclerOnScrollListener =
-        new EndlessRecyclerOnScrollListener(this.getAdapter(), listCommentsRequest,
-            listCommentsAction, errorRequestListener, true);
-
-    recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
-    endlessRecyclerOnScrollListener.onLoadMore(refresh);
-  }
-
-  public Observable<Void> showStoreCommentFragment(final long storeId, final long commentId,
-      String storeName) {
-    // optional method implemented in child classes
-    return Observable.empty();
   }
 
   private void caseListReviews(String url, boolean refresh) {

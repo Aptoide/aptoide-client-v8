@@ -1,6 +1,8 @@
-package cm.aptoide.pt.v8engine.fragment.implementations;
+package cm.aptoide.pt.v8engine.fragment;
 
 import android.app.FragmentManager;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -10,17 +12,19 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.CommentType;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
 import cm.aptoide.pt.model.v7.ListComments;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.util.CommentOperations;
+import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayableGroup;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentDisplayable;
@@ -35,9 +39,11 @@ import java.util.List;
 import rx.Observable;
 import rx.functions.Action1;
 
+// TODO: 21/12/2016 sithengineer refactor and split in multiple classes to list comments
+// for each type: store and timeline card
 public class CommentListFragment extends GridRecyclerFragment {
 
-  private static final String TAG = StoreGridRecyclerFragment.class.getName();
+  //private static final String TAG = StoreGridRecyclerFragment.class.getName();
 
   //
   // consts
@@ -50,7 +56,6 @@ public class CommentListFragment extends GridRecyclerFragment {
   // vars
   //
   private CommentOperations commentOperations;
-  private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
   private List<Displayable> displayables;
   private CommentType commentType;
   private String elementId;
@@ -123,15 +128,27 @@ public class CommentListFragment extends GridRecyclerFragment {
           // no-op
         });
 
-    caseListSocialTimelineComments(true);
+    if(commentType == CommentType.TIMELINE) {
+      caseListSocialTimelineComments(true);
+    } else {
+      caseListStoreComments(url, StoreUtils.getStoreCredentialsFromUrl(url), true);
+    }
   }
 
   @Override public void bindViews(View view) {
     super.bindViews(view);
     floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fabAdd);
     if (floatingActionButton != null) {
+      Drawable drawable;
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        drawable = getContext().getDrawable(R.drawable.forma_1);
+      } else {
+        drawable = getActivity().getResources().getDrawable(R.drawable.forma_1);
+      }
+      floatingActionButton.setImageDrawable(drawable);
       floatingActionButton.setVisibility(View.VISIBLE);
     }
+
     commentOperations = new CommentOperations();
   }
 
@@ -162,7 +179,7 @@ public class CommentListFragment extends GridRecyclerFragment {
   //
 
   // Used method for each single reply in the list view and the new comment button
-  public Observable<Void> createNewCommentFragment(final String timelineArticleId) {
+  public Observable<Void> createNewCommentFragment(String timelineArticleId) {
 
     return Observable.just(AptoideAccountManager.isLoggedIn()).flatMap(isLoggedIn -> {
 
@@ -180,6 +197,11 @@ public class CommentListFragment extends GridRecyclerFragment {
 
       return showSignInMessage();
     });
+  }
+
+  private Observable<Void> createNewCommentFragment(long storeId, long previousCommentId,
+      String storeName) {
+    return null;
   }
 
   public Observable<Void> createNewCommentFragment(final String timelineArticleId,
@@ -202,29 +224,6 @@ public class CommentListFragment extends GridRecyclerFragment {
       return showSignInMessage();
     });
   }
-
-  /*
-  public Observable<Void> createNewCommentFragment(final long storeId, final long commentId,
-      String storeName) {
-
-    return Observable.just(AptoideAccountManager.isLoggedIn()).flatMap(isLoggedIn -> {
-
-      if (isLoggedIn) {
-        // show fragment CommentDialog
-        FragmentManager fm = CommentListFragment.this.getActivity().getFragmentManager();
-        CommentDialogFragment commentDialogFragment =
-            CommentDialogFragment.newInstanceStoreCommentReply(storeId, commentId, storeName);
-
-        return commentDialogFragment.lifecycle()
-            .doOnSubscribe(() -> commentDialogFragment.show(fm, "fragment_comment_dialog"))
-            .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
-            .flatMap(event -> reloadComments());
-      }
-
-      return showSignInMessage();
-    });
-  }
-  */
 
   void caseListSocialTimelineComments(boolean refresh) {
 
@@ -255,7 +254,7 @@ public class CommentListFragment extends GridRecyclerFragment {
       }
     });
     recyclerView.clearOnScrollListeners();
-    endlessRecyclerOnScrollListener =
+    EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(getAdapter(), listCommentsRequest, listCommentsAction,
             errorRequestListener, true);
 
@@ -263,7 +262,6 @@ public class CommentListFragment extends GridRecyclerFragment {
     endlessRecyclerOnScrollListener.onLoadMore(refresh);
   }
 
-  /*
   void caseListStoreComments(String url, BaseRequestWithStore.StoreCredentials storeCredentials,
       boolean refresh) {
 
@@ -302,12 +300,11 @@ public class CommentListFragment extends GridRecyclerFragment {
       }
     });
     recyclerView.clearOnScrollListeners();
-    endlessRecyclerOnScrollListener =
+    EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(getAdapter(), listCommentsRequest, listCommentsAction,
             errorRequestListener, true);
 
     recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(refresh);
   }
-  */
 }

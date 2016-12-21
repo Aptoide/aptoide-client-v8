@@ -1,7 +1,7 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.timeline;
 
-import android.support.annotation.CallSuper;
 import android.content.Intent;
+import android.support.annotation.CallSuper;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
@@ -62,7 +62,6 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
         //});
         //})
         .subscribe(click -> {
-          // FIXME: 21/12/2016 sithengineer remove this comment
           shareCard(displayable);
         }, err -> {
           Logger.e(TAG, err);

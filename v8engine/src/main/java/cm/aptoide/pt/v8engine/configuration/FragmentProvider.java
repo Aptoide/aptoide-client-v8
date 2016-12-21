@@ -101,4 +101,6 @@ public interface FragmentProvider {
       long followNumber);
 
   Fragment newCommentGridRecyclerFragment(CommentType commentType, String elementId);
+
+  Fragment newCommentGridRecyclerFragmentUrl(CommentType commentType, String url);
 }

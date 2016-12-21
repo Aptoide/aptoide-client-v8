@@ -146,7 +146,7 @@
         >
 
       <ImageButton
-          android:id="@+id/youtube_button"
+          android:id="@+id/youtube_or_facebook_button"
           android:layout_width="0dp"
           android:layout_height="22dp"
           android:layout_weight="1"
