@@ -109,7 +109,8 @@ public class WSWidgetsUtils {
                   throwable -> {
                     LinkedList<String> errorsList = new LinkedList<>();
                     errorsList.add(USER_NOT_LOGGED_ERROR);
-                    if (shouldAddObjectView(errorsList, (AptoideWsV7Exception) throwable)) {
+                    if (throwable instanceof AptoideWsV7Exception && shouldAddObjectView(errorsList,
+                        (AptoideWsV7Exception) throwable)) {
                       setObjectView(wsWidget, countDownLatch,
                           ((AptoideWsV7Exception) throwable).getBaseResponse());
                       return;

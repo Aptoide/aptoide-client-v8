@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.GridLayoutManager;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Download;
@@ -60,6 +61,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Soc
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SocialVideoDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreLatestAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.TimeLineStatsDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.TimelineLoginDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.VideoDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.listeners.RxEndlessRecyclerView;
 import com.trello.rxlifecycle.FragmentEvent;
@@ -190,14 +192,19 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     return getDisplayableList(packages, 0, refresh).doOnNext(
         item -> getAdapter().clearDisplayables()).flatMap(displayableDatalist -> {
       if (!displayableDatalist.getList().isEmpty()) {
-        return timelineRepository.getTimelineStats(refresh).map(timelineStats -> {
-          displayableDatalist.getList()
-              .add(0, new TimeLineStatsDisplayable(timelineStats, spannableFactory));
-          return displayableDatalist;
-        }).onErrorReturn(throwable -> {
-          Logger.e(this, throwable);
-          return displayableDatalist;
-        });
+        if (AptoideAccountManager.isLoggedIn()) {
+          return timelineRepository.getTimelineStats(refresh).map(timelineStats -> {
+            displayableDatalist.getList()
+                .add(0, new TimeLineStatsDisplayable(timelineStats, spannableFactory));
+            return displayableDatalist;
+          }).onErrorReturn(throwable -> {
+            Logger.e(this, throwable);
+            return displayableDatalist;
+          });
+        } else {
+          displayableDatalist.getList().add(0, new TimelineLoginDisplayable());
+          return Observable.just(displayableDatalist);
+        }
       } else {
         return Observable.just(displayableDatalist);
       }

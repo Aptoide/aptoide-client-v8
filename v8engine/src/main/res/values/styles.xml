@@ -780,4 +780,8 @@
     <item name="android:textColor">?attr/titleTextColor</item>
     <item name="android:buttonStyle">@style/AlertTextAppearanceAptoide</item>
   </style>
+
+  <style name="Widget.Aptoide.defaultColorText" parent="Base.TextAppearance.AppCompat.Small">
+    <item name="android:textColor">?attr/colorPrimary</item>
+  </style>
 </resources>

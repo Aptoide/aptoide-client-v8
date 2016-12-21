@@ -68,6 +68,8 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Sto
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SubscribedStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.TimeLineStatsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.TimeLineStatsWidget;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.TimelineLoginDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.TimelineLoginWidget;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdatesHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.VideoDisplayable;
@@ -354,6 +356,9 @@ public class DisplayableWidgetMapping {
 
     displayableWidgetMappings.add(new DisplayableWidgetMapping((MessageWhiteBgWidget.class),
         MessageWhiteBgDisplayable.class));
+
+    displayableWidgetMappings.add(
+        new DisplayableWidgetMapping((TimelineLoginWidget.class), TimelineLoginDisplayable.class));
 
     return displayableWidgetMappings;
   }
