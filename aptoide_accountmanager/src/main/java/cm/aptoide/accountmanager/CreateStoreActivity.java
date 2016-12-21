@@ -165,7 +165,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
 
     mSubscriptions.add(RxView.clicks(mStoreAvatarLayout).subscribe(click -> chooseAvatarSource()));
     mSubscriptions.add(RxView.clicks(mCreateStore).subscribe(click -> {
-      storeName = mStoreName.getText().toString().trim();
+      storeName = mStoreName.getText().toString().trim().toLowerCase();
       validateData();
       if (CREATE_STORE_REQUEST_CODE == 2
           || CREATE_STORE_REQUEST_CODE == 3
