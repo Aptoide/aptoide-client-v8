@@ -50,16 +50,22 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
     if (displayable.hasStoreAndUser()) {
       ImageLoader.loadWithCircleTransform(displayable.getStoreAvatar(), mainIcon);
       ImageLoader.loadWithCircleTransform(displayable.getUserAvatar(), secondaryIcon);
+      mainIcon.setVisibility(View.VISIBLE);
+      secondaryIcon.setVisibility(View.VISIBLE);
     } else if (displayable.hasUser()) {
       ImageLoader.loadWithCircleTransform(displayable.getUserAvatar(), mainIcon);
       secondaryIcon.setVisibility(View.GONE);
     } else if (displayable.hasStore()) {
       ImageLoader.loadWithCircleTransform(displayable.getStoreAvatar(), mainIcon);
       secondaryIcon.setVisibility(View.GONE);
+    } else {
+      mainIcon.setVisibility(View.GONE);
+      secondaryIcon.setVisibility(View.GONE);
     }
 
     if (displayable.hasUser()) {
       this.userNameTv.setText(displayable.getUserName());
+      userNameTv.setVisibility(View.VISIBLE);
     } else {
       userNameTv.setVisibility(View.GONE);
     }
@@ -81,6 +87,7 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
   private void setupStoreNameTv(int storeColor, String storeName) {
     storeNameTv.setText(storeName);
     storeNameTv.setTextColor(storeColor);
+    storeNameTv.setVisibility(View.VISIBLE);
     Drawable drawable;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       drawable = getContext().getResources().getDrawable(R.drawable.ic_store, null);
