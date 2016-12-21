@@ -30,6 +30,10 @@ import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import com.jakewharton.rxbinding.view.RxView;
+import java.net.Socket;
+import java.net.SocketTimeoutException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -165,6 +169,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
 
     mSubscriptions.add(RxView.clicks(mStoreAvatarLayout).subscribe(click -> chooseAvatarSource()));
     mSubscriptions.add(RxView.clicks(mCreateStore).subscribe(click -> {
+      AptoideUtils.SystemU.hideKeyboard(this);
       storeName = mStoreName.getText().toString().trim().toLowerCase();
       validateData();
       if (CREATE_STORE_REQUEST_CODE == 2
@@ -180,7 +185,8 @@ public class CreateStoreActivity extends PermissionsBaseActivity
               progressDialog.dismiss();
               if (answer.getErrors().get(0).code.equals("WOP-2")) {
                 mSubscriptions.add(GenericDialogs.createGenericContinueMessage(this, "",
-                    getApplicationContext().getResources().getString(R.string.ws_error_WOP_2)).subscribe());
+                    getApplicationContext().getResources().getString(R.string.ws_error_WOP_2))
+                    .subscribe());
               } else {
                 onCreateFail(
                     ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors().get(0).code));
@@ -238,19 +244,43 @@ public class CreateStoreActivity extends PermissionsBaseActivity
   @Override public void onCreateSuccess(ProgressDialog progressDialog) {
     ShowMessage.asSnack(this, R.string.create_store_store_created);
     if (CREATE_STORE_REQUEST_CODE == 1) {
-      SetStoreRequest.of(new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-              DataProvider.getContext()).getAptoideClientUUID(), AptoideAccountManager.getAccessToken(),
-          storeName, storeTheme, storeAvatarPath).execute(answer -> {
-        AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
-          progressDialog.dismiss();
-          finish();
-        }, throwable -> throwable.printStackTrace());
-      }, throwable -> {
-        onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
-        AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
-          progressDialog.dismiss();
-        }, throwable1 -> throwable1.printStackTrace());
-      });
+      mSubscriptions.add(SetStoreRequest.of(
+          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+              DataProvider.getContext()).getAptoideClientUUID(),
+          AptoideAccountManager.getAccessToken(), storeName, storeTheme, storeAvatarPath)
+          .observe()
+          .timeout(90, TimeUnit.SECONDS)
+          .subscribe(answer -> {
+            AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
+              progressDialog.dismiss();
+              finish();
+            }, throwable -> throwable.printStackTrace());
+          }, throwable -> {
+            if (throwable.getClass().equals(SocketTimeoutException.class)) {
+              progressDialog.dismiss();
+              ShowMessage.asObservableSnack(this, R.string.store_upload_photo_failed)
+                  .subscribe(visibility -> {
+                    if(visibility == ShowMessage.DISMISSED) {
+                      finish();
+                    }
+                  });
+            } else if (throwable.getClass().equals(TimeoutException.class)) {
+              progressDialog.dismiss();
+              ShowMessage.asObservableSnack(this, R.string.store_upload_photo_failed)
+                  .subscribe(visibility -> {
+                    if(visibility == ShowMessage.DISMISSED) {
+                      finish();
+                    }
+                  });
+            } else {
+              progressDialog.dismiss();
+              onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
+
+            }
+            AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
+              progressDialog.dismiss();
+            }, throwable1 -> throwable1.printStackTrace());
+          }));
     } else if (CREATE_STORE_REQUEST_CODE == 2 || CREATE_STORE_REQUEST_CODE == 3) {
       SimpleSetStoreRequest.of(AptoideAccountManager.getAccessToken(),
           new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),

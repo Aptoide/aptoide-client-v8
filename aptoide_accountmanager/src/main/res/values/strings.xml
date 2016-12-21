@@ -72,7 +72,7 @@
     <string name="ws_error_AUTH_1">Either email or password are not valid to login (upon name
         update)</string>
   <string name="user_upload_photo_failed">At the moment it was not possible to create a profile.</string>
-  <string name="stoer_upload_photo_failed">At the moment it was not possible to upload the photo, but your store was created.</string>
+  <string name="store_upload_photo_failed">At the moment it was not possible to upload the photo, but your store was created.</string>
   <string name="user_created">User Created</string>
   <!-- WIZARD -->
   <string name="wizard_skip"><b>SKIP</b></string>

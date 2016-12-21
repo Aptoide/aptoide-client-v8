@@ -17,12 +17,16 @@ import android.widget.RelativeLayout;
 import cm.aptoide.accountmanager.ws.CreateUserRequest;
 import cm.aptoide.accountmanager.ws.ErrorsMapper;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import com.jakewharton.rxbinding.view.RxView;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import rx.Observable;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -102,30 +106,55 @@ public class CreateUserActivity extends PermissionsBaseActivity
   private void setupListeners() {
     mSubscriptions.add(RxView.clicks(mUserAvatar).subscribe(click -> chooseAvatarSource()));
     mSubscriptions.add(RxView.clicks(mCreateButton).subscribe(click -> {
+      AptoideUtils.SystemU.hideKeyboard(this);
       username = mUsername.getText().toString().trim();
       validateProfileData();
       if (CREATE_USER_REQUEST_CODE == 1) {
         ProgressDialog pleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
             getApplicationContext().getString(R.string.please_wait_upload));
         pleaseWaitDialog.show();
-        CreateUserRequest.of("true", userEmail, username, userPassword, avatarPath)
-            .execute(answer -> {
-              if (answer.hasErrors()) {
-                if (answer.getErrors() != null && answer.getErrors().size() > 0) {
-                  onRegisterFail(ErrorsMapper.getWebServiceErrorMessageFromCode(
-                      answer.getErrors().get(0).code));
+        mSubscriptions.add(
+            CreateUserRequest.of("true", userEmail, username, userPassword, avatarPath)
+                .observe()
+                .filter(answer -> {
+                  if(answer.hasErrors()){
+                    if (answer.getErrors() != null && answer.getErrors().size() > 0) {
+                      onRegisterFail(ErrorsMapper.getWebServiceErrorMessageFromCode(
+                          answer.getErrors().get(0).code));
+                      pleaseWaitDialog.dismiss();
+                    } else {
+                      onRegisterFail(R.string.unknown_error);
+                      pleaseWaitDialog.dismiss();
+                    }
+                    return false;
+                  }
+                  return true;
+                })
+                .timeout(90, TimeUnit.SECONDS)
+                .subscribe(answer -> {
+                  //Successfull update
+                  saveUserDataOnPreferences();
+                  onRegisterSuccess(pleaseWaitDialog);
                   pleaseWaitDialog.dismiss();
-                } else {
-                  onRegisterFail(R.string.unknown_error);
-                  pleaseWaitDialog.dismiss();
-                }
-              } else {
-                //Successfull update
-                saveUserDataOnPreferences();
-                onRegisterSuccess(pleaseWaitDialog);
-                pleaseWaitDialog.dismiss();
-              }
-            });
+                }, err -> {
+                  if (err.getClass().equals(SocketTimeoutException.class)) {
+                    pleaseWaitDialog.dismiss();
+                    ShowMessage.asObservableSnack(this, R.string.user_upload_photo_failed)
+                        .subscribe(visibility -> {
+                          if(visibility == ShowMessage.DISMISSED) {
+                            finish();
+                          }
+                        });
+                  } else if (err.getClass().equals(TimeoutException.class)) {
+                    pleaseWaitDialog.dismiss();
+                    ShowMessage.asObservableSnack(this, R.string.user_upload_photo_failed)
+                        .subscribe(visibility -> {
+                          if(visibility == ShowMessage.DISMISSED) {
+                            finish();
+                          }
+                        });
+                  }
+                }));
       } else if (CREATE_USER_REQUEST_CODE == 2) {
         avatarPath = "";
         ProgressDialog pleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
