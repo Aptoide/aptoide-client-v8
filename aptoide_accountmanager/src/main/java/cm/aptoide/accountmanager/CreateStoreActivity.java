@@ -95,7 +95,6 @@ public class CreateStoreActivity extends PermissionsBaseActivity
     setupToolbar();
     setupListeners();
     setupThemeListeners();
-
   }
 
   @Override protected void onDestroy() {
@@ -167,7 +166,6 @@ public class CreateStoreActivity extends PermissionsBaseActivity
     mSubscriptions.add(RxView.clicks(mStoreAvatarLayout).subscribe(click -> chooseAvatarSource()));
     mSubscriptions.add(RxView.clicks(mCreateStore).subscribe(click -> {
       storeName = mStoreName.getText().toString().trim();
-      //TODO: Make request to create repo and to update it (checkusercredentials and setStore) and add dialog
       validateData();
       if (CREATE_STORE_REQUEST_CODE == 2
           || CREATE_STORE_REQUEST_CODE == 3
@@ -179,9 +177,14 @@ public class CreateStoreActivity extends PermissionsBaseActivity
             CREATE_STORE_CODE).execute(answer -> {
           if (answer.hasErrors()) {
             if (answer.getErrors() != null && answer.getErrors().size() > 0) {
-              onCreateFail(
-                  ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors().get(0).code));
               progressDialog.dismiss();
+              if (answer.getErrors().get(0).code.equals("WOP-2")) {
+                mSubscriptions.add(GenericDialogs.createGenericContinueMessage(this, "",
+                    getApplicationContext().getResources().getString(R.string.ws_error_WOP_2)).subscribe());
+              } else {
+                onCreateFail(
+                    ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors().get(0).code));
+              }
             }
           } else {
             onCreateSuccess(progressDialog);
@@ -194,7 +197,6 @@ public class CreateStoreActivity extends PermissionsBaseActivity
         .subscribe(refreshed -> {
           finish();
         }, throwable -> {
-          //TODO: couldn't do getuserinfo
           finish();
         }));
   }
