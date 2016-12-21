@@ -100,6 +100,7 @@ public class WSWidgetsUtils {
               .compose(AptoideUtils.ObservableU.applySchedulers())
               .subscribe(reviews -> setObjectView(wsWidget, countDownLatch, reviews), action1);
           break;
+
         case MY_STORES_SUBSCRIBED:
         case STORES_RECOMMENDED:
           GetMyStoreListRequest.of(url, accessToken, aptoideClientUuid)
@@ -109,7 +110,8 @@ public class WSWidgetsUtils {
                   throwable -> {
                     LinkedList<String> errorsList = new LinkedList<>();
                     errorsList.add(USER_NOT_LOGGED_ERROR);
-                    if (shouldAddObjectView(errorsList, (AptoideWsV7Exception) throwable)) {
+                    if (throwable instanceof AptoideWsV7Exception && shouldAddObjectView(errorsList,
+                        (AptoideWsV7Exception) throwable)) {
                       setObjectView(wsWidget, countDownLatch,
                           ((AptoideWsV7Exception) throwable).getBaseResponse());
                       return;
@@ -117,6 +119,7 @@ public class WSWidgetsUtils {
                     action1.call(throwable);
                   });
           break;
+
         case MY_STORE_META:
           GetMyStoreMetaRequest.of(accessToken, aptoideClientUuid)
               .observe(refresh)
@@ -134,15 +137,18 @@ public class WSWidgetsUtils {
                     action1.call(throwable);
                   });
           break;
+
         case APP_META:
           GetAppRequest.ofAction(url, accessToken, aptoideClientUuid)
               .observe(refresh)
               .compose(AptoideUtils.ObservableU.applySchedulers())
               .subscribe(getApp -> setObjectView(wsWidget, countDownLatch, getApp), action1);
           break;
+
         default:
           // In case a known enum is not implemented
           countDownLatch.countDown();
+          break;
       }
     } else {
       // Case we don't have the enum defined we still need to countDown the latch

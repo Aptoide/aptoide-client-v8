@@ -51,7 +51,7 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
   private TextView subscribersCount;
   private TextView appsCount;
   private TextView downloadsCount;
-  private ImageButton youtubeButton;
+  private ImageButton youtubeOrFacebookButton;
   private ImageButton twitchButton;
   private ImageButton twitterButton;
 
@@ -69,7 +69,7 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
     subscribersCount = (TextView) itemView.findViewById(R.id.subscribers);
     appsCount = (TextView) itemView.findViewById(R.id.apps);
     downloadsCount = (TextView) itemView.findViewById(R.id.downloads);
-    youtubeButton = (ImageButton) itemView.findViewById(R.id.youtube_button);
+    youtubeOrFacebookButton = (ImageButton) itemView.findViewById(R.id.youtube_or_facebook_button);
     twitchButton = (ImageButton) itemView.findViewById(R.id.twitch_button);
     twitterButton = (ImageButton) itemView.findViewById(R.id.twitter_button);
   }
@@ -131,16 +131,16 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
 
       switch (eventType) {
         // uncomment for further development
-        //case FACEBOOK:
-        //  youtubeButton.setBackgroundResource( ?? );
-        //  youtubeButton.setClickable(true);
-        //  youtubeButton.setVisibility(View.VISIBLE);
-        //  return RxView.clicks(youtubeButton).map(aVoid -> socialChannel);
+        case FACEBOOK:
+          youtubeOrFacebookButton.setBackgroundResource(R.drawable.facebook_logo);
+          youtubeOrFacebookButton.setClickable(true);
+          youtubeOrFacebookButton.setVisibility(View.VISIBLE);
+          return RxView.clicks(youtubeOrFacebookButton).map(aVoid -> socialChannel);
 
         case YOUTUBE:
-          youtubeButton.setClickable(true);
-          youtubeButton.setVisibility(View.VISIBLE);
-          return RxView.clicks(youtubeButton).map(aVoid -> socialChannel);
+          youtubeOrFacebookButton.setClickable(true);
+          youtubeOrFacebookButton.setVisibility(View.VISIBLE);
+          return RxView.clicks(youtubeOrFacebookButton).map(aVoid -> socialChannel);
 
         case TWITCH:
           twitchButton.setClickable(true);

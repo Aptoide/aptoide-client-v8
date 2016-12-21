@@ -54,6 +54,13 @@ public abstract class GridRecyclerFragmentWithDecorator<T extends BaseAdapter>
             bottom = offset;
           }
 
+          if (view.getId() == R.id.timeline_login_layout) {
+            top = 0;
+            left = 0;
+            right = 0;
+            bottom = offset;
+          }
+
           if (view.getId() == R.id.message_white_bg) {
             top = 0;
             left = offset;

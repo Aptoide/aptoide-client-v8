@@ -81,7 +81,7 @@ public class Logger {
   }
 
   public static void e(Object object, String msg) {
-    e(object.getClass().getSimpleName(), msg);
+    e(object.getClass().getName(), msg);
   }
 
   public static void e(String TAG, Throwable tr) {
@@ -89,7 +89,7 @@ public class Logger {
   }
 
   public static void e(Object object, Throwable tr) {
-    e(object.getClass().getSimpleName(), tr);
+    e(object.getClass().getName(), tr);
   }
 
   public static void e(String TAG, String msg, Throwable tr) {

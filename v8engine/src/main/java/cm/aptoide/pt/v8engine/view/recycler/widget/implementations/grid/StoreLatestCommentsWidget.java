@@ -24,7 +24,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Sto
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import cm.aptoide.pt.viewRateAndCommentReviews.CommentDialogFragment;
 import cm.aptoide.pt.viewRateAndCommentReviews.CommentNode;
-import cm.aptoide.pt.viewRateAndCommentReviews.StoreComment;
+import cm.aptoide.pt.viewRateAndCommentReviews.ComplexComment;
 import com.trello.rxlifecycle.FragmentEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -93,7 +93,7 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
 
       ArrayList<Displayable> displayables = new ArrayList<>(sortedComments.size());
       for (CommentNode commentNode : sortedComments) {
-        displayables.add(new CommentDisplayable(new StoreComment(commentNode,
+        displayables.add(new CommentDisplayable(new ComplexComment(commentNode,
             showStoreCommentFragment(storeId, commentNode.getComment(), storeName, fragmentManager,
                 view, reloadComments))));
       }

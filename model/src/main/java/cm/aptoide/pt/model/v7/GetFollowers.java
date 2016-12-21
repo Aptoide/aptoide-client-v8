@@ -14,7 +14,7 @@ import lombok.Data;
     String name;
     String avatar;
     Store store;
-    TimelineStats stats;
+    TimelineStats.StatusData stats;
   }
 }
 

@@ -141,7 +141,7 @@ public class DisplayablesFactory {
             GetStoreWidgets.WSWidget.Data dataObj = wsWidget.getData();
             String message = dataObj.getMessage();
             displayables.add(new OfficialAppDisplayable(
-                new Pair<String, GetApp>(message, (GetApp) wsWidget.getViewObject())));
+                new Pair<>(message, (GetApp) wsWidget.getViewObject())));
             break;
         }
       }

@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.repository;
 import android.app.Activity;
 import android.content.Context;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.accountmanager.BaseActivity;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.LikeCardRequest;
@@ -14,6 +15,7 @@ import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewInstallDisplayable;
 import rx.schedulers.Schedulers;
 
@@ -32,8 +34,9 @@ public class SocialRepository {
     ShareCardRequest.of(timelineCard, accessToken, aptoideClientUUID)
         .observe()
         .subscribe(baseV7Response -> {
-          ShowMessage.asSnack((Activity) context, "The share will be published soon");
-          final String userAccess = privacy ? "UNLISTED" : "PUBLIC";
+          ShowMessage.asSnack((Activity) context, R.string.social_timeline_share_soon);
+          final String userAccess = privacy ? BaseActivity.UserAccessState.UNLISTED.toString()
+              : BaseActivity.UserAccessState.PUBLIC.toString();
           SetUserRequest.of(aptoideClientUUID, userAccess, accessToken)
               .observe()
               .subscribe(baseV7Response1 -> Logger.d(this.getClass().getSimpleName(),
@@ -64,8 +67,9 @@ public class SocialRepository {
     ShareInstallCardRequest.of(
         displayable.getPojo().getNodes().getMeta().getData().getPackageName(), accessToken,
         aptoideClientUUID).observe().subscribe(baseV7Response -> {
-      ShowMessage.asSnack((Activity) context, "The share will be published soon");
-      final String userAccess = privacy ? "UNLISTED" : "PUBLIC";
+      ShowMessage.asSnack((Activity) context, R.string.social_timeline_share_soon);
+      final String userAccess = privacy ? BaseActivity.UserAccessState.UNLISTED.toString()
+          : BaseActivity.UserAccessState.PUBLIC.toString();
       SetUserRequest.of(aptoideClientUUID, userAccess, accessToken)
           .observe()
           .subscribe(baseV7Response1 -> Logger.d(this.getClass().getSimpleName(),

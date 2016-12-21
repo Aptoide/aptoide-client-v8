@@ -120,7 +120,7 @@
         android:layout_toRightOf="@+id/displayable_social_timeline_recommendation_icon"
         android:ellipsize="end"
         android:lines="1"
-        tools:text="Clash Royale" />
+        android:text="@string/social_timeline_recommends" />
 
       <TextView
         android:id="@+id/displayable_social_timeline_recommendation_similar_apps"

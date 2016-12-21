@@ -16,7 +16,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     @JsonSubTypes.Type(value = SocialVideoTimelineItem.class, name = "SOCIAL_VIDEO"),
     @JsonSubTypes.Type(value = SocialStoreLatestAppsTimelineItem.class, name = "SOCIAL_APPS_LATEST"),
     @JsonSubTypes.Type(value = SocialInstallTimelineItem.class, name = "SOCIAL_INSTALL"),
-    @JsonSubTypes.Type(value = SocialRecommendationTimelineItem.class, name = "SOCIAL_RECOMMENDATION")
+    @JsonSubTypes.Type(value = SocialRecommendationTimelineItem.class, name = "SOCIAL_APP")
 }) public interface TimelineItem<T> {
 
   T getData();
