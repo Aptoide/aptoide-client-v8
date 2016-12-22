@@ -318,7 +318,7 @@
   <!-- social apps timeline -->
   <string name="social_timeline_you_will_share">What your followers will see:</string>
   <string name="social_timeline_share_title">Share card preview</string>
-  <string name="social_timeline_share_title_checkbox">Make user\'s profile private on Apps Timeline and just share my Store\'s info</string>
+  <string name="social_timeline_share_title_checkbox">Make my user profile private in Apps Timeline. Only show/share my store info.</string>
   <string name="social_timeline_share_title_checkbox_fb">Allow my user\'s profile to be public on Apps Timeline</string>
   <string name="social_timeline_share_dialog_title">Thank you for sharing</string>
   <string name="social_timeline_share_dialog_opt_in_text_1">Your friends will be able to find you and follow you.</string>
@@ -336,9 +336,12 @@
   <string name="private_profile_create_store">To have a private profile, you need to create a store</string>
 
 
-  <!--  -->
+  <!-- Comments on store -->
   <string name="comment_store">Comment Store</string>
   <string name="be_the_first_to_send_feedback_about_this_store">Be the first to send feedback about this store</string>
+
+
+  <!-- Followers and following -->
   <string name="timeline_followers">Followers&#160;&#160;%d</string>
   <string name="timeline_followed">Following&#160;&#160;%d</string>
   <string name="timeline_stats_followers">Followers</string>
