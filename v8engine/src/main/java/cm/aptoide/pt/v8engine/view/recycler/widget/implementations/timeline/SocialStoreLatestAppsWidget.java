@@ -1,22 +1,30 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.timeline;
 
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
+import cm.aptoide.pt.v8engine.repository.StoreRepository;
+import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.SocialStoreLatestAppsDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewStoreWidget;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.HashMap;
 import java.util.Map;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by jdandrade on 29/11/2016.
@@ -27,43 +35,66 @@ public class SocialStoreLatestAppsWidget
 
   private static final String CARD_TYPE_NAME = "Social Latest Apps";
   private final LayoutInflater inflater;
-  private TextView title;
-  private TextView subtitle;
+  private TextView storeName;
+  private TextView userName;
+  private TextView sharedStoreName;
   private LinearLayout appsContaner;
-  private ImageView image;
+  private ImageView storeAvatar;
+  private ImageView userAvatar;
+  private ImageView sharedStoreAvatar;
   private View store;
   private Map<View, Long> apps;
   private Map<Long, String> appsPackages;
   private CardView cardView;
+  private Button followStore;
+  private StoreRepository storeRepository;
 
   public SocialStoreLatestAppsWidget(View itemView) {
     super(itemView);
     inflater = LayoutInflater.from(itemView.getContext());
     apps = new HashMap<>();
     appsPackages = new HashMap<>();
+    storeRepository = new StoreRepository(
+        AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Store.class));
   }
 
   @Override protected void assignViews(View itemView) {
     super.assignViews(itemView);
     store = itemView.findViewById(R.id.displayable_social_timeline_store_latest_apps_header);
-    title = (TextView) itemView.findViewById(
+    storeName = (TextView) itemView.findViewById(
         R.id.displayable_social_timeline_store_latest_apps_card_title);
-    image = (ImageView) itemView.findViewById(
-        R.id.displayable_social_timeline_store_latest_apps_card_image);
-    subtitle = (TextView) itemView.findViewById(
+    userName = (TextView) itemView.findViewById(
         R.id.displayable_social_timeline_store_latest_apps_card_subtitle);
+    sharedStoreName = (TextView) itemView.findViewById(R.id.store_name);
+    storeAvatar = (ImageView) itemView.findViewById(R.id.card_image);
+    userAvatar = (ImageView) itemView.findViewById(R.id.card_user_avatar);
+    sharedStoreAvatar = (ImageView) itemView.findViewById(R.id.social_shared_store_avatar);
     appsContaner = (LinearLayout) itemView.findViewById(
         R.id.displayable_social_timeline_store_latest_apps_container);
     cardView =
         (CardView) itemView.findViewById(R.id.displayable_social_timeline_store_latest_apps_card);
+    followStore = (Button) itemView.findViewById(R.id.follow_btn);
   }
 
   @Override public void bindView(SocialStoreLatestAppsDisplayable displayable) {
     super.bindView(displayable);
-    title.setText(displayable.getStoreName());
-    subtitle.setText(displayable.getTimeSinceLastUpdate(getContext()));
+    storeName.setText(displayable.getStoreName());
+    userName.setText(displayable.getUser().getName());
     setCardViewMargin(displayable, cardView);
-    ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
+    if (displayable.getStore() != null) {
+      ImageLoader.loadWithShadowCircleTransform(displayable.getStore().getAvatar(), storeAvatar);
+      if (displayable.getUser() != null && ("PUBLIC").equals(ManagerPreferences.getUserAccess())) {
+        ImageLoader.loadWithShadowCircleTransform(displayable.getUser().getAvatar(), userAvatar);
+      }
+    } else {
+      if (displayable.getUser() != null && ("PUBLIC").equals(ManagerPreferences.getUserAccess())) {
+        ImageLoader.loadWithShadowCircleTransform(displayable.getUser().getAvatar(), storeAvatar);
+      }
+    }
+
+    ImageLoader.loadWithShadowCircleTransform(displayable.getSharedStore().getAvatar(),
+        sharedStoreAvatar);
+    sharedStoreName.setText(displayable.getSharedStore().getName());
 
     appsContaner.removeAllViews();
     apps.clear();
@@ -112,6 +143,31 @@ public class SocialStoreLatestAppsWidget
       ((FragmentShower) getContext()).pushFragmentV4(
           V8Engine.getFragmentProvider().newStoreFragment(displayable.getStoreName()));
     }));
+
+    compositeSubscription.add(storeRepository.isSubscribed(displayable.getSharedStore().getId())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(isSubscribed -> {
+          if (isSubscribed) {
+            //int checkmarkDrawable = storeThemeEnum.getCheckmarkDrawable();
+            //followButton.setCompoundDrawablesWithIntrinsicBounds(checkmarkDrawable, 0, 0, 0);
+            followStore.setText(R.string.followed);
+            followStore.setOnClickListener(
+                new AppViewStoreWidget.Listeners().newOpenStoreListener(itemView,
+                    displayable.getSharedStore().getName(),
+                    displayable.getSharedStore().getAppearance().getTheme()));
+          } else {
+            //int plusMarkDrawable = storeThemeEnum.getPlusmarkDrawable();
+            //followButton.setCompoundDrawablesWithIntrinsicBounds(plusMarkDrawable, 0, 0, 0);
+            followStore.setText(R.string.appview_follow_store_button_text);
+            followStore.setOnClickListener(
+                new AppViewStoreWidget.Listeners().newSubscribeStoreListener(itemView,
+                    displayable.getSharedStore().getName()));
+          }
+        }));
+
+    followStore.setOnClickListener(
+        v -> FragmentUtils.replaceFragmentV4((FragmentActivity) v.getContext(),
+            V8Engine.getFragmentProvider().newStoreFragment(displayable.getStoreName())));
   }
 
   @Override String getCardTypeName() {

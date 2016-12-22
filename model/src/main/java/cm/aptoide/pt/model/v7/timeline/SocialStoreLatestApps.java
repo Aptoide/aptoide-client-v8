@@ -6,7 +6,6 @@ import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.Store;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Date;
 import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -27,31 +26,42 @@ public class SocialStoreLatestApps implements TimelineCard {
   @Getter private final long comments;
   @Getter private final Comment.User user;
 
-  private Date latestUpdate;
+  //private Date latestUpdate;
 
   @JsonCreator public SocialStoreLatestApps(@JsonProperty("uid") String cardId,
-      @JsonProperty("stores") List<Store> stores, @JsonProperty("apps") List<App> apps,
-      @JsonProperty("user") Comment.User user, @JsonProperty("stats") Review.Stats stats,
+      @JsonProperty("stores") Stores stores, @JsonProperty("user") Comment.User user,
+      @JsonProperty("stats") Review.Stats stats, @JsonProperty("apps") List<App> apps,
       @JsonProperty("ab") Ab ab) {
     this.user = user;
+    this.ownerStore = stores.getUser();
+    this.sharedStore = stores.getCard();
     this.cardId = cardId;
-    this.ownerStore = stores.get(0);
-    this.sharedStore = stores.get(1);
+    //this.latestUpdate = latestUpdate;
     this.apps = apps;
     this.ab = ab;
     this.likes = stats.getLikes();
     this.comments = stats.getComments();
   }
 
-  public Date getLatestUpdate() {
-    if (latestUpdate == null) {
-      for (App app : apps) {
-        if (latestUpdate == null || (app.getUpdated() != null
-            && app.getUpdated().getTime() > latestUpdate.getTime())) {
-          latestUpdate = app.getUpdated();
-        }
-      }
+  //public Date getLatestUpdate() {
+  //  if (latestUpdate == null) {
+  //  for (App app : apps) {
+  //    if (latestUpdate == null || (app.getUpdated() != null
+  //        && app.getUpdated().getTime() > latestUpdate.getTime())) {
+  //      latestUpdate = app.getUpdated();
+  //    }
+  //  }
+  //  }
+  //  return latestUpdate;
+  //}
+
+  private static class Stores {
+    @Getter private final Store user;
+    @Getter private final Store card;
+
+    @JsonCreator public Stores(@JsonProperty("user") Store user, @JsonProperty("card") Store card) {
+      this.user = user;
+      this.card = card;
     }
-    return latestUpdate;
   }
 }
