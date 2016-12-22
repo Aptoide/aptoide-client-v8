@@ -306,7 +306,8 @@ public class CreateStoreActivity extends PermissionsBaseActivity
               DataProvider.getContext()).getAptoideClientUUID(), storeName, storeTheme)
           .execute(answer -> {
             AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
-              storeSetSecondTime(progressDialog);
+              progressDialog.dismiss();
+              finish();
             }, Throwable::printStackTrace);
           }, throwable -> {
             onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
@@ -331,24 +332,6 @@ public class CreateStoreActivity extends PermissionsBaseActivity
 
   @Override public String getRepoAvatar() {
     return storeAvatarPath == null ? "" : storeAvatarPath;
-  }
-
-  private void storeSetSecondTime(ProgressDialog progressDialog) {
-
-    SimpleSetStoreRequest.of(AptoideAccountManager.getAccessToken(),
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID(), storeName, storeTheme)
-        .execute(answer -> {
-          AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
-            progressDialog.dismiss();
-            finish();
-          }, Throwable::printStackTrace);
-        }, throwable -> {
-          onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
-          AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
-            progressDialog.dismiss();
-          }, Throwable::printStackTrace);
-        });
   }
 
   private void setupThemeListeners() {
