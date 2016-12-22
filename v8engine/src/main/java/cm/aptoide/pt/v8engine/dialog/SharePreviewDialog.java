@@ -75,14 +75,6 @@ public class SharePreviewDialog {
       like.setVisibility(View.VISIBLE);
       comments.setVisibility(View.VISIBLE);
 
-
-
-
-
-
-
-
-
       //if (displayable.getStore() != null) {
       //  if (displayable.getUser() != null && (BaseActivity.UserAccessState.PUBLIC.toString()).equals(
       //      ManagerPreferences.getUserAccess())) {
@@ -110,17 +102,6 @@ public class SharePreviewDialog {
       //    subtitle.setVisibility(View.GONE);
       //  }
       //}
-
-
-
-
-
-
-
-
-
-
-
 
       ImageLoader.loadWithShadowCircleTransform(
           AptoideAccountManager.getUserData().getUserAvatarRepo(), storeAvatar);
@@ -215,8 +196,10 @@ public class SharePreviewDialog {
           R.id.displayable_social_timeline_store_latest_apps_card_title);
       TextView userName = (TextView) view.findViewById(
           R.id.displayable_social_timeline_store_latest_apps_card_subtitle);
+      TextView sharedStoreName = (TextView) view.findViewById(R.id.store_name);
       ImageView image = (ImageView) view.findViewById(R.id.card_image);
       ImageView userAvatar = (ImageView) view.findViewById(R.id.card_user_avatar);
+      ImageView sharedStoreAvatar = (ImageView) view.findViewById(R.id.social_shared_store_avatar);
       CardView cardView =
           (CardView) view.findViewById(R.id.displayable_social_timeline_store_latest_apps_card);
       LinearLayout latestAppsContainer = (LinearLayout) view.findViewById(
@@ -225,6 +208,9 @@ public class SharePreviewDialog {
       Map<View, Long> apps = new HashMap<>();
       Map<Long, String> appsPackages = new HashMap<>();
 
+      sharedStoreName.setText(((StoreLatestAppsDisplayable) displayable).getStoreName());
+      ImageLoader.loadWithShadowCircleTransform(
+          ((StoreLatestAppsDisplayable) displayable).getAvatarUrl(), sharedStoreAvatar);
       View latestAppView;
       ImageView latestAppIcon;
       for (StoreLatestAppsDisplayable.LatestApp latestApp : ((StoreLatestAppsDisplayable) displayable)
