@@ -204,8 +204,6 @@ public class CreateUserActivity extends PermissionsBaseActivity
         ShowMessage.asSnack(this, R.string.create_user_bad_photo);
         avatarPath = "";
       }
-    } else if (requestCode == CREATE_STORE_REQUEST_CODE) {
-      finish();
     }
   }
 
