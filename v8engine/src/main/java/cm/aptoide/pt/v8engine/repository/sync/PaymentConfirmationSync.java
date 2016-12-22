@@ -15,6 +15,7 @@ import cm.aptoide.pt.dataprovider.ws.v3.CreateInAppBillingProductPaymentRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.CreatePaidAppProductPaymentRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.model.v3.ProductPaymentResponse;
+import cm.aptoide.pt.v8engine.payment.PaymentAuthorization;
 import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.product.InAppBillingProduct;
@@ -22,7 +23,8 @@ import cm.aptoide.pt.v8engine.payment.product.PaidAppProduct;
 import cm.aptoide.pt.v8engine.repository.PaymentConfirmationConverter;
 import cm.aptoide.pt.v8engine.repository.PaymentConfirmationRepository;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
-import rx.Observable;
+import java.io.IOException;
+import rx.Single;
 
 /**
  * Created by marcelobenites on 22/11/16.
@@ -54,75 +56,83 @@ public class PaymentConfirmationSync extends RepositorySync {
 
   @Override public void sync(SyncResult syncResult) {
     try {
-      final Observable<PaymentConfirmation> serverPaymentConfirmation;
+      final Single<PaymentConfirmation> serverPaymentConfirmation;
       if (paymentConfirmationId != null) {
         serverPaymentConfirmation =
             createServerPaymentConfirmation(product, paymentConfirmationId, paymentId);
       } else {
         serverPaymentConfirmation = getServerPaymentConfirmation(product);
       }
-      serverPaymentConfirmation.doOnNext(paymentConfirmation -> confirmationAccessor.save(
-          paymentConfirmationConverter.convertToStoredPaymentConfirmation(paymentConfirmation)))
-          .onErrorReturn(throwable -> {
-            if (throwable instanceof RepositoryItemNotFoundException) {
-              confirmationAccessor.delete(product.getId());
-            } else {
-              rescheduleOrCancelSync(syncResult, throwable);
-            }
-            return null;
-          })
-          .toBlocking()
-          .subscribe();
+      serverPaymentConfirmation.doOnSuccess(
+          paymentConfirmation -> saveAndReschedulePendingConfirmation(paymentConfirmation,
+              syncResult)).onErrorReturn(throwable -> {
+        saveAndRescheduleOnNetworkError(syncResult, throwable);
+        return null;
+      }).toBlocking().value();
     } catch (RuntimeException e) {
       rescheduleSync(syncResult);
     }
   }
 
-  private Observable<PaymentConfirmation> createServerPaymentConfirmation(Product product,
+  private void saveAndRescheduleOnNetworkError(SyncResult syncResult, Throwable throwable) {
+    if (throwable instanceof IOException) {
+      rescheduleSync(syncResult);
+    } else {
+      confirmationAccessor.save(
+          new cm.aptoide.pt.database.realm.PaymentConfirmation("", product.getId(),
+              PaymentConfirmation.Status.ERROR.name()));
+    }
+  }
+
+  private void saveAndReschedulePendingConfirmation(PaymentConfirmation paymentConfirmation,
+      SyncResult syncResult) {
+    confirmationAccessor.save(
+        paymentConfirmationConverter.convertToDatabasePaymentConfirmation(paymentConfirmation));
+    if (paymentConfirmation.isPending()) {
+      rescheduleSync(syncResult);
+    }
+  }
+
+  private Single<PaymentConfirmation> createServerPaymentConfirmation(Product product,
       String paymentConfirmationId, int paymentId) {
-    return Observable.just(product instanceof InAppBillingProduct).flatMap(isInAppBilling -> {
+    return Single.just(product instanceof InAppBillingProduct).flatMap(isInAppBilling -> {
       if (isInAppBilling) {
         return CreateInAppBillingProductPaymentRequest.of(product.getId(), paymentId,
             operatorManager, ((InAppBillingProduct) product).getDeveloperPayload(),
             AptoideAccountManager.getAccessToken(), paymentConfirmationId)
             .observe()
-            .cast(ProductPaymentResponse.class);
+            .cast(ProductPaymentResponse.class)
+            .toSingle();
       }
       return CreatePaidAppProductPaymentRequest.of(product.getId(), paymentId, operatorManager,
           ((PaidAppProduct) product).getStoreName(), AptoideAccountManager.getAccessToken(),
-          paymentConfirmationId).observe();
+          paymentConfirmationId).observe().toSingle();
     }).flatMap(response -> {
       if (response != null && response.isOk()) {
-        return Observable.just(
+        return Single.just(
             paymentConfirmationConverter.convertToPaymentConfirmation(product.getId(), response));
       }
-      return Observable.error(new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
+      return Single.error(new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
     });
   }
 
-  private Observable<PaymentConfirmation> getServerPaymentConfirmation(Product product) {
-    return Observable.just(product instanceof InAppBillingProduct).flatMap(isInAppBilling -> {
+  private Single<PaymentConfirmation> getServerPaymentConfirmation(Product product) {
+    return Single.just(product instanceof InAppBillingProduct).flatMap(isInAppBilling -> {
       if (isInAppBilling) {
         return CheckInAppBillingProductPaymentRequest.of(product.getId(), operatorManager,
             ((InAppBillingProduct) product).getApiVersion(), AptoideAccountManager.getAccessToken())
             .observe()
-            .cast(ProductPaymentResponse.class);
+            .cast(ProductPaymentResponse.class)
+            .toSingle();
       }
       return CheckPaidAppProductPaymentRequest.of(product.getId(), operatorManager,
-          AptoideAccountManager.getAccessToken()).observe();
+          AptoideAccountManager.getAccessToken()).observe().toSingle();
     }).flatMap(response -> {
       if (response != null && response.isOk()) {
-        return Observable.just(
+        return Single.just(
             paymentConfirmationConverter.convertToPaymentConfirmation(product.getId(), response));
       }
-      return Observable.error(new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
+      return Single.error(new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
     });
-  }
-
-  private void rescheduleIncompletedPaymentSync(PaymentConfirmation paymentConfirmation,
-      SyncResult syncResult) {
-    if (!paymentConfirmation.isCompleted()) {
-      rescheduleSync(syncResult);
-    }
   }
 }

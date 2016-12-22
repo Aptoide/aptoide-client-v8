@@ -10,13 +10,14 @@ import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.Purchase;
 import cm.aptoide.pt.v8engine.payment.product.AptoideProduct;
 import java.util.List;
-import rx.Observable;
+import rx.Single;
 
 /**
  * Created by marcelobenites on 29/11/16.
  */
 public interface ProductRepository {
-  Observable<Purchase> getPurchase(AptoideProduct product);
 
-  Observable<List<Payment>> getPayments(Context context, AptoideProduct product);
+  Single<Purchase> getPurchase(AptoideProduct product);
+
+  Single<List<Payment>> getPayments(Context context, AptoideProduct product);
 }

@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.payment;
 
 import cm.aptoide.pt.v8engine.payment.exception.PaymentException;
+import rx.Completable;
 import rx.Observable;
 
 /**
@@ -23,6 +24,8 @@ public interface Payment {
 
   String getDescription();
 
-  Observable<PaymentConfirmation> process();
+  Completable process();
+
+  Observable<PaymentConfirmation> getConfirmation();
 
 }

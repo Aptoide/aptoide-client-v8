@@ -23,6 +23,7 @@ public class PaymentFactory {
 
   public static final String PAYPAL = "paypal";
   public static final String BOACOMPRA = "boacompra";
+  public static final String BOACOMPRAGOLD = "boacompragold";
   public static final String DUMMY = "dummy";
   private Account account;
 
@@ -35,6 +36,7 @@ public class PaymentFactory {
                 paymentService.getTaxRate()), getPayPalConfiguration(), product,
             paymentService.getTypes().get(0).getLabel(), RepositoryFactory.getPaymentConfirmationRepository(context, product));
       case BOACOMPRA:
+      case BOACOMPRAGOLD:
         return new WebPayment(context, paymentService.getId(), paymentService.getShortName(),
             product, getPrice(paymentService.getPrice(), paymentService.getCurrency(),
             paymentService.getTaxRate()), paymentService.getName(),

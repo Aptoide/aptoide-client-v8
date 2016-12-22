@@ -16,6 +16,7 @@ import cm.aptoide.pt.v8engine.payment.product.PaidAppProduct;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.util.List;
 import rx.Observable;
+import rx.Single;
 import rx.schedulers.Schedulers;
 
 /**
@@ -35,28 +36,29 @@ public class PaidAppProductRepository implements ProductRepository {
     this.paymentFactory = paymentFactory;
   }
 
-  @Override public Observable<Purchase> getPurchase(AptoideProduct product) {
+  @Override public Single<Purchase> getPurchase(AptoideProduct product) {
     final PaidAppProduct paidAppProduct = (PaidAppProduct) product;
     return appRepository.getPaidApp(paidAppProduct.getAppId(), false,
-        paidAppProduct.getStoreName(), true).flatMap(app -> {
+        paidAppProduct.getStoreName(), true).toSingle().flatMap(app -> {
       if (app.getPayment().isPaid()) {
-        return Observable.just(purchaseFactory.create(app));
+        return Single.just(purchaseFactory.create(app));
       }
-      return Observable.error(new RepositoryItemNotFoundException(
+      return Single.error(new RepositoryItemNotFoundException(
           "Purchase not found for product " + paidAppProduct.getId()));
     });
   }
 
-  @Override public Observable<List<Payment>> getPayments(Context context, AptoideProduct product) {
+  @Override public Single<List<Payment>> getPayments(Context context, AptoideProduct product) {
     return getServerPaidAppPaymentServices(((PaidAppProduct) product).getAppId(), false,
-        ((PaidAppProduct) product).getStoreName(), true).flatMapIterable(paymentServices -> paymentServices)
+        ((PaidAppProduct) product).getStoreName(), true).toObservable()
+        .flatMapIterable(paymentServices -> paymentServices)
         .map(paymentService -> paymentFactory.create(context, paymentService, product))
-        .toList();
+        .toList().toSingle();
   }
 
-  private Observable<List<PaymentService>> getServerPaidAppPaymentServices(long appId,
+  private Single<List<PaymentService>> getServerPaidAppPaymentServices(long appId,
       boolean sponsored, String storeName, boolean refresh) {
     return appRepository.getPaidApp(appId, sponsored, storeName, refresh)
-        .map(paidApp -> paidApp.getPayment().getPaymentServices());
+        .map(paidApp -> paidApp.getPayment().getPaymentServices()).toSingle();
   }
 }

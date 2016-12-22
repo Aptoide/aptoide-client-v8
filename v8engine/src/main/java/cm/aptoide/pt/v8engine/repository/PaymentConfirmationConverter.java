@@ -17,13 +17,18 @@ public class PaymentConfirmationConverter {
         PaymentConfirmation.Status.valueOf(response.getPaymentStatus()));
   }
 
-  public cm.aptoide.pt.database.realm.PaymentConfirmation convertToStoredPaymentConfirmation(
+  public cm.aptoide.pt.database.realm.PaymentConfirmation convertToDatabasePaymentConfirmation(
       PaymentConfirmation paymentConfirmation) {
-    cm.aptoide.pt.database.realm.PaymentConfirmation realmObject =
-        new cm.aptoide.pt.database.realm.PaymentConfirmation(
-            paymentConfirmation.getPaymentConfirmationId(), paymentConfirmation.getProductId(),
-            paymentConfirmation.getStatus().name());
-    return realmObject;
+    return new cm.aptoide.pt.database.realm.PaymentConfirmation(
+        paymentConfirmation.getPaymentConfirmationId(), paymentConfirmation.getProductId(),
+        paymentConfirmation.getStatus().name());
+  }
+
+  public cm.aptoide.pt.database.realm.PaymentConfirmation convertToDatabasePaymentConfirmation(
+      int productId, ProductPaymentResponse response) {
+    return new cm.aptoide.pt.database.realm.PaymentConfirmation(
+        response.getPaymentConfirmationId(), productId,
+        response.getPaymentStatus());
   }
 
   public PaymentConfirmation convertToPaymentConfirmation(

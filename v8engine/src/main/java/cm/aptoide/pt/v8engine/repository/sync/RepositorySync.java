@@ -15,16 +15,10 @@ public abstract class RepositorySync {
 
   public abstract void sync(SyncResult syncResult);
 
-  protected void rescheduleOrCancelSync(SyncResult syncResult, Throwable throwable) {
+  protected void rescheduleOnNetworkError(SyncResult syncResult, Throwable throwable) {
     if (throwable instanceof IOException) {
       rescheduleSync(syncResult);
-    } else {
-      cancelSync(syncResult);
     }
-  }
-
-  protected void cancelSync(SyncResult syncResult) {
-    syncResult.tooManyRetries = true;
   }
 
   protected void rescheduleSync(SyncResult syncResult) {

@@ -17,6 +17,7 @@ import cm.aptoide.pt.v8engine.payment.product.InAppBillingProduct;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.util.List;
 import rx.Observable;
+import rx.Single;
 import rx.schedulers.Schedulers;
 
 public class InAppBillingProductRepository implements ProductRepository {
@@ -32,22 +33,22 @@ public class InAppBillingProductRepository implements ProductRepository {
     this.paymentFactory = paymentFactory;
   }
 
-  @Override public Observable<Purchase> getPurchase(AptoideProduct product) {
+  @Override public Single<Purchase> getPurchase(AptoideProduct product) {
     return inAppBillingRepository.getInAppPurchaseInformation(
         ((InAppBillingProduct) product).getApiVersion(),
         ((InAppBillingProduct) product).getPackageName(), ((InAppBillingProduct) product).getType())
         .flatMap(purchaseInformation -> convertToPurchase(purchaseInformation,
-            ((InAppBillingProduct) product).getSku()))
+            ((InAppBillingProduct) product).getSku())).toSingle()
         .subscribeOn(Schedulers.io());
   }
 
-  @Override public Observable<List<Payment>> getPayments(Context context, AptoideProduct product) {
+  @Override public Single<List<Payment>> getPayments(Context context, AptoideProduct product) {
     return getServerInAppBillingPaymentServices(((InAppBillingProduct) product).getApiVersion(),
         ((InAppBillingProduct) product).getPackageName(), ((InAppBillingProduct) product).getSku(),
         ((InAppBillingProduct) product).getType()).flatMapIterable(
         paymentServices -> paymentServices)
         .map(paymentService -> paymentFactory.create(context, paymentService, product))
-        .toList()
+        .toList().toSingle()
         .subscribeOn(Schedulers.io());
   }
 

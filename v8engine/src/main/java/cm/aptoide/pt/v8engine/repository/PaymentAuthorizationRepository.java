@@ -9,68 +9,60 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.PaymentAuthorizationAccessor;
 import cm.aptoide.pt.dataprovider.ws.v3.CreatePurchaseAuthorizationRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
+import cm.aptoide.pt.model.v3.PurchaseAuthorizationResponse;
 import cm.aptoide.pt.v8engine.payment.PaymentAuthorization;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
-import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import cm.aptoide.pt.v8engine.repository.sync.SyncAdapterBackgroundSync;
+import rx.Completable;
 import rx.Observable;
 
 public class PaymentAuthorizationRepository implements Repository {
   private final PaymentAuthorizationAccessor authotizationAccessor;
   private final SyncAdapterBackgroundSync backgroundSync;
-  private final PaymentAuthorizationConverter paymentAuthorizationConverter;
+  private final PaymentAuthorizationConverter auhorizationConverter;
 
-  public PaymentAuthorizationRepository(PaymentAuthorizationAccessor authotizationAccessor,
+  public PaymentAuthorizationRepository(PaymentAuthorizationAccessor authorizationAccessor,
       SyncAdapterBackgroundSync backgroundSync,
-      PaymentAuthorizationConverter paymentAuthorizationConverter) {
-    this.authotizationAccessor = authotizationAccessor;
+      PaymentAuthorizationConverter authorizationConverter) {
+    this.authotizationAccessor = authorizationAccessor;
     this.backgroundSync = backgroundSync;
-    this.paymentAuthorizationConverter = paymentAuthorizationConverter;
+    this.auhorizationConverter = authorizationConverter;
   }
 
-  public Observable<PaymentAuthorization> createPaymentAuthorization(int paymentId) {
+  public Completable createPaymentAuthorization(int paymentId) {
     return CreatePurchaseAuthorizationRequest.of(AptoideAccountManager.getAccessToken(), paymentId)
         .observe()
         .flatMap(response -> {
           if (response != null && response.isOk()) {
-            return Observable.just(response);
+            syncPaymentAuthorization(paymentId, response);
+            return Observable.just(null);
           }
-          return Observable.error(
+          return Observable.<Void>error(
               new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
         })
-        .map(response -> paymentAuthorizationConverter.convertToPaymentAuthorization(paymentId,
-            response))
-        .doOnNext(
-            paymentAuthorization -> syncPaymentAuthorizationInBackground(paymentAuthorization))
-        .flatMap(saved -> getDatabasePaymentAuthorization(paymentId));
+        .toCompletable();
   }
 
   public Observable<PaymentAuthorization> getPaymentAuthorization(int paymentId) {
-    return getDatabasePaymentAuthorization(paymentId);
+    return authotizationAccessor.getPaymentAuthorizations(paymentId)
+        .flatMap(paymentAuthorizations -> Observable.from(paymentAuthorizations)
+            .map(paymentAuthorization -> auhorizationConverter.convertToPaymentAuthorization(
+                paymentAuthorization))
+            .defaultIfEmpty(
+                new PaymentAuthorization(paymentId, "", "", PaymentAuthorization.Status.ERROR)))
+        .doOnSubscribe(() -> syncPaymentAuthorization(paymentId));
   }
 
-  public Observable<Void> removePaymentAuthorization(int paymentId) {
-    return Observable.fromCallable(() -> {
-      authotizationAccessor.deleteAuthorization(paymentId);
-      return null;
-    });
-  }
-
-  private Observable<PaymentAuthorization> getDatabasePaymentAuthorization(int paymentId) {
-    return authotizationAccessor.getPaymentAuthorization(paymentId)
-        .flatMap(databaseAuthorization -> {
-          if (databaseAuthorization != null) {
-            return Observable.just(
-                paymentAuthorizationConverter.convertToPaymentAuthorization(databaseAuthorization));
-          }
-          return Observable.error(new RepositoryItemNotFoundException(
-              "No payment authorization found for payment id: " + paymentId));
-        });
-  }
-
-  private void syncPaymentAuthorizationInBackground(PaymentAuthorization paymentAuthorization) {
+  private void syncPaymentAuthorization(int paymentId) {
     authotizationAccessor.save(
-        paymentAuthorizationConverter.convertToPaymentAuthorization(paymentAuthorization));
-    backgroundSync.syncAuthorization(paymentAuthorization.getPaymentId());
+        new cm.aptoide.pt.database.realm.PaymentAuthorization(paymentId, null, null,
+            PaymentAuthorization.Status.SYNCING.name()));
+    backgroundSync.syncAuthorization(paymentId);
+  }
+
+  private void syncPaymentAuthorization(int paymentId, PurchaseAuthorizationResponse response) {
+    authotizationAccessor.save(
+        auhorizationConverter.convertToDatabasePaymentAuthorization(paymentId, response));
+    backgroundSync.syncAuthorization(paymentId);
   }
 }
