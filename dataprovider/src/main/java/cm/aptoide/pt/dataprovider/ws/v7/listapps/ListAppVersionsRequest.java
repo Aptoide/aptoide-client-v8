@@ -112,12 +112,15 @@ import rx.Observable;
     public Body(String packageName, List<String> storeNames,
         HashMapNotNull<String, List<String>> storesAuthMap) {
       this.packageName = packageName;
+      this.storeNames = storeNames;
       setStoresAuthMap(storesAuthMap);
     }
 
     public void setStoresAuthMap(HashMapNotNull<String, List<String>> storesAuthMap) {
-      this.storesAuthMap = storesAuthMap;
-      this.storeNames = new LinkedList<>(storesAuthMap.keySet());
+      if(storesAuthMap!=null) {
+        this.storesAuthMap = storesAuthMap;
+        this.storeNames = new LinkedList<>(storesAuthMap.keySet());
+      }
     }
   }
 }

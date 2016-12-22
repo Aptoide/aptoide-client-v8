@@ -52,6 +52,15 @@ import rx.Observable;
         (Body) decorator.decorate(new Body(appId, forceServerRefresh, packageName), accessToken));
   }
 
+  public static GetAppRequest of(long appId, String storeName, String accessToken, String aptoideClientUUID,
+      String packageName) {
+    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+    boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
+
+    return new GetAppRequest(BASE_HOST,
+        (Body) decorator.decorate(new Body(appId, storeName, forceServerRefresh, packageName), accessToken));
+  }
+
   public static GetAppRequest of(long appId, String accessToken, String aptoideClientUUID) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
@@ -75,7 +84,7 @@ import rx.Observable;
 
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
-    Body body = new Body(appId, forceServerRefresh, packageName);
+    Body body = new Body(appId, storeName, forceServerRefresh, packageName);
     body.setStoreUser(storeCredentials.getUsername());
     body.setStorePassSha1(storeCredentials.getPasswordSha1());
 
@@ -99,6 +108,13 @@ import rx.Observable;
     public Body(Long appId, Boolean refresh, String packageName) {
       this.appId = appId;
       this.refresh = refresh;
+      nodes = new Node(appId, packageName);
+    }
+
+    public Body(Long appId, String storeName, Boolean refresh, String packageName) {
+      this.appId = appId;
+      this.refresh = refresh;
+      this.storeName = storeName;
       nodes = new Node(appId, packageName);
     }
 

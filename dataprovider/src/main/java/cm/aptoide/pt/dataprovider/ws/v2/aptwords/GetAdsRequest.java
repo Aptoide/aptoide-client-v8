@@ -20,6 +20,8 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 import okhttp3.OkHttpClient;
 import rx.Observable;
@@ -37,6 +39,7 @@ import rx.Observable;
         }
       }))
       .build();
+  @Getter @Setter private static String forcedCountry = null;
   private final String aptoideClientUUID;
   private final boolean googlePlayServicesAvailable;
   private final String oemid;
@@ -159,6 +162,8 @@ import rx.Observable;
     parameters.put("partners", "1-3,5-10");
     parameters.put("keywords", keyword);
     parameters.put("oem_id", oemid);
+    parameters.put("country", forcedCountry);
+
     if (ManagerPreferences.isDebug()) {
       String forceCountry = ManagerPreferences.getForceCountry();
       if (!TextUtils.isEmpty(forceCountry)) {
