@@ -51,7 +51,7 @@ public class SharePreviewDialog {
 
       TextView storeName = (TextView) view.findViewById(R.id.card_title);
       TextView userName = (TextView) view.findViewById(R.id.card_subtitle);
-      ImageView image = (ImageView) view.findViewById(R.id.card_image);
+      ImageView storeAvatar = (ImageView) view.findViewById(R.id.card_image);
       ImageView userAvatar = (ImageView) view.findViewById(R.id.card_user_avatar);
       TextView articleTitle =
           (TextView) view.findViewById(R.id.partial_social_timeline_thumbnail_title);
@@ -74,14 +74,62 @@ public class SharePreviewDialog {
       like.setOnClickListener(null);
       like.setVisibility(View.VISIBLE);
       comments.setVisibility(View.VISIBLE);
+
+
+
+
+
+
+
+
+
+      //if (displayable.getStore() != null) {
+      //  if (displayable.getUser() != null && (BaseActivity.UserAccessState.PUBLIC.toString()).equals(
+      //      ManagerPreferences.getUserAccess())) {
+      //    ImageLoader.loadWithShadowCircleTransform(displayable.getStore().getAvatar(), storeAvatar);
+      //    ImageLoader.loadWithShadowCircleTransform(displayable.getUser().getAvatar(), userAvatar);
+      //    title.setVisibility(View.VISIBLE);
+      //    subtitle.setVisibility(View.VISIBLE);
+      //  } else {
+      //    ImageLoader.loadWithShadowCircleTransform(displayable.getStore().getAvatar(), storeAvatar);
+      //    userAvatar.setVisibility(View.INVISIBLE);
+      //    title.setVisibility(View.VISIBLE);
+      //    subtitle.setVisibility(View.GONE);
+      //  }
+      //} else {
+      //  if (displayable.getUser() != null && (BaseActivity.UserAccessState.PUBLIC.toString()).equals(
+      //      ManagerPreferences.getUserAccess())) {
+      //    ImageLoader.loadWithShadowCircleTransform(AptoideAccountManager.getUserData().getUserAvatar(), storeAvatar);
+      //    userAvatar.setVisibility(View.INVISIBLE);
+      //    title.setVisibility(View.GONE);
+      //    subtitle.setVisibility(View.VISIBLE);
+      //  } else {
+      //    storeAvatar.setVisibility(View.INVISIBLE);
+      //    userAvatar.setVisibility(View.INVISIBLE);
+      //    title.setVisibility(View.GONE);
+      //    subtitle.setVisibility(View.GONE);
+      //  }
+      //}
+
+
+
+
+
+
+
+
+
+
+
+
       ImageLoader.loadWithShadowCircleTransform(
-          AptoideAccountManager.getUserData().getUserAvatarRepo(), image);
+          AptoideAccountManager.getUserData().getUserAvatarRepo(), storeAvatar);
       if (BaseActivity.UserAccessState.PUBLIC.toString()
           .equals(ManagerPreferences.getUserAccess())) {
         if (TextUtils.isEmpty(AptoideAccountManager.getUserData().getUserRepo())) {
           storeName.setText(AptoideAccountManager.getUserData().getUserName());
           ImageLoader.loadWithShadowCircleTransform(
-              AptoideAccountManager.getUserData().getUserAvatar(), image);
+              AptoideAccountManager.getUserData().getUserAvatar(), storeAvatar);
         } else {
           userName.setText(AptoideAccountManager.getUserData().getUserName());
           ImageLoader.loadWithShadowCircleTransform(

@@ -32,6 +32,7 @@
         android:layout_marginLeft="10.7dp"
         android:layout_marginStart="10.7dp"
         android:layout_marginTop="14dp"
+        android:background="@drawable/grey_circular_placeholder_store"
         tools:ignore="contentDescription" />
 
       <ImageView
@@ -41,6 +42,7 @@
         android:layout_marginLeft="27.7dp"
         android:layout_marginStart="27.7dp"
         android:layout_marginTop="14dp"
+        android:background="@drawable/grey_circular_placeholder"
         tools:ignore="contentDescription" />
 
       <RelativeLayout

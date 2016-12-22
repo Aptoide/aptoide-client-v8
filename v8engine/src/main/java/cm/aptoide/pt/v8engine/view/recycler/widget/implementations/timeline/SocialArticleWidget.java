@@ -67,12 +67,30 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
 
   @Override public void bindView(SocialArticleDisplayable displayable) {
     super.bindView(displayable);
-    if (displayable.getStore() != null) {
-      title.setText(displayable.getStore().getName());
-    }
 
-    if (displayable.getUser() != null) {
-      subtitle.setText(displayable.getUser().getName());
+    if (displayable.getStore() != null) {
+      title.setVisibility(View.VISIBLE);
+      title.setText(displayable.getStore().getName());
+      storeAvatar.setVisibility(View.VISIBLE);
+      ImageLoader.loadWithShadowCircleTransform(displayable.getStore().getAvatar(), storeAvatar);
+      if (displayable.getUser() != null) {
+        subtitle.setVisibility(View.VISIBLE);
+        subtitle.setText(displayable.getUser().getName());
+        userAvatar.setVisibility(View.VISIBLE);
+        ImageLoader.loadWithShadowCircleTransform(displayable.getUser().getAvatar(), userAvatar);
+      } else {
+        subtitle.setVisibility(View.GONE);
+        userAvatar.setVisibility(View.GONE);
+      }
+    } else {
+      subtitle.setVisibility(View.GONE);
+      userAvatar.setVisibility(View.GONE);
+      if (displayable.getUser() != null) {
+        title.setVisibility(View.VISIBLE);
+        title.setText(displayable.getUser().getName());
+        storeAvatar.setVisibility(View.VISIBLE);
+        ImageLoader.loadWithShadowCircleTransform(displayable.getUser().getAvatar(), storeAvatar);
+      }
     }
 
     //subtitle.setText(displayable.getTimeSinceLastUpdate(getContext()));
@@ -82,16 +100,16 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
     articleTitle.setText(displayable.getArticleTitle());
     setCardViewMargin(displayable, cardView);
 
-    if (displayable.getStore() != null) {
-      ImageLoader.loadWithShadowCircleTransform(displayable.getStore().getAvatar(), storeAvatar);
-      if (displayable.getUser() != null && ("PUBLIC").equals(ManagerPreferences.getUserAccess())) {
-        ImageLoader.loadWithShadowCircleTransform(displayable.getUser().getAvatar(), userAvatar);
-      }
-    } else {
-      if (displayable.getUser() != null && ("PUBLIC").equals(ManagerPreferences.getUserAccess())) {
-        ImageLoader.loadWithShadowCircleTransform(displayable.getUser().getAvatar(), storeAvatar);
-      }
-    }
+    //if (displayable.getStore() != null) {
+    //  ImageLoader.loadWithShadowCircleTransform(displayable.getStore().getAvatar(), storeAvatar);
+    //  if (displayable.getUser() != null && ("PUBLIC").equals(ManagerPreferences.getUserAccess())) {
+    //    ImageLoader.loadWithShadowCircleTransform(displayable.getUser().getAvatar(), userAvatar);
+    //  }
+    //} else {
+    //  if (displayable.getUser() != null && ("PUBLIC").equals(ManagerPreferences.getUserAccess())) {
+    //    ImageLoader.loadWithShadowCircleTransform(displayable.getUser().getAvatar(), storeAvatar);
+    //  }
+    //}
 
     ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
     //relatedTo.setText(displayable.getAppRelatedToText(getContext(), appName));

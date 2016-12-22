@@ -66,8 +66,32 @@ public class SocialVideoWidget extends SocialCardWidget<SocialVideoDisplayable> 
     super.bindView(displayable);
     Typeface typeFace =
         Typeface.createFromAsset(getContext().getAssets(), "fonts/DroidSerif-Regular.ttf");
-    title.setText(displayable.getTitle());
-    subtitle.setText(displayable.getTimeSinceLastUpdate(getContext()));
+    //title.setText(displayable.getTitle());
+    //subtitle.setText(displayable.getTimeSinceLastUpdate(getContext()));
+    if (displayable.getStore() != null) {
+      title.setVisibility(View.VISIBLE);
+      title.setText(displayable.getStore().getName());
+      storeAvatar.setVisibility(View.VISIBLE);
+      ImageLoader.loadWithShadowCircleTransform(displayable.getStore().getAvatar(), storeAvatar);
+      if (displayable.getUser() != null) {
+        subtitle.setVisibility(View.VISIBLE);
+        subtitle.setText(displayable.getUser().getName());
+        userAvatar.setVisibility(View.VISIBLE);
+        ImageLoader.loadWithShadowCircleTransform(displayable.getUser().getAvatar(), userAvatar);
+      } else {
+        subtitle.setVisibility(View.GONE);
+        userAvatar.setVisibility(View.GONE);
+      }
+    } else {
+      subtitle.setVisibility(View.GONE);
+      userAvatar.setVisibility(View.GONE);
+      if (displayable.getUser() != null) {
+        title.setVisibility(View.VISIBLE);
+        title.setText(displayable.getUser().getName());
+        storeAvatar.setVisibility(View.VISIBLE);
+        ImageLoader.loadWithShadowCircleTransform(displayable.getUser().getAvatar(), storeAvatar);
+      }
+    }
     videoTitle.setTypeface(typeFace);
     videoTitle.setText(displayable.getVideoTitle());
     setCardViewMargin(displayable, cardView);

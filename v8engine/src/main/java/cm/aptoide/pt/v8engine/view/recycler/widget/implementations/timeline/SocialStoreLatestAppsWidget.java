@@ -1,6 +1,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.timeline;
 
-import android.support.v4.app.FragmentActivity;
+import android.os.Build;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,14 +11,13 @@ import android.widget.TextView;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
-import cm.aptoide.pt.v8engine.util.FragmentUtils;
+import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.SocialStoreLatestAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewStoreWidget;
 import com.jakewharton.rxbinding.view.RxView;
@@ -38,6 +37,8 @@ public class SocialStoreLatestAppsWidget
   private TextView storeName;
   private TextView userName;
   private TextView sharedStoreName;
+  private TextView sharedStoreSubscribersNumber;
+  private TextView sharedStoreAppsNumber;
   private LinearLayout appsContaner;
   private ImageView storeAvatar;
   private ImageView userAvatar;
@@ -74,6 +75,8 @@ public class SocialStoreLatestAppsWidget
     cardView =
         (CardView) itemView.findViewById(R.id.displayable_social_timeline_store_latest_apps_card);
     followStore = (Button) itemView.findViewById(R.id.follow_btn);
+    sharedStoreSubscribersNumber = (TextView) itemView.findViewById(R.id.number_of_followers);
+    sharedStoreAppsNumber = (TextView) itemView.findViewById(R.id.number_of_apps);
   }
 
   @Override public void bindView(SocialStoreLatestAppsDisplayable displayable) {
@@ -82,12 +85,26 @@ public class SocialStoreLatestAppsWidget
     userName.setText(displayable.getUser().getName());
     setCardViewMargin(displayable, cardView);
     if (displayable.getStore() != null) {
+      storeName.setVisibility(View.VISIBLE);
+      storeName.setText(displayable.getStore().getName());
+      storeAvatar.setVisibility(View.VISIBLE);
       ImageLoader.loadWithShadowCircleTransform(displayable.getStore().getAvatar(), storeAvatar);
-      if (displayable.getUser() != null && ("PUBLIC").equals(ManagerPreferences.getUserAccess())) {
+      if (displayable.getUser() != null) {
+        userName.setVisibility(View.VISIBLE);
+        userName.setText(displayable.getUser().getName());
+        userAvatar.setVisibility(View.VISIBLE);
         ImageLoader.loadWithShadowCircleTransform(displayable.getUser().getAvatar(), userAvatar);
+      } else {
+        userName.setVisibility(View.GONE);
+        userAvatar.setVisibility(View.GONE);
       }
     } else {
-      if (displayable.getUser() != null && ("PUBLIC").equals(ManagerPreferences.getUserAccess())) {
+      userName.setVisibility(View.GONE);
+      userAvatar.setVisibility(View.GONE);
+      if (displayable.getUser() != null) {
+        storeName.setVisibility(View.VISIBLE);
+        storeName.setText(displayable.getUser().getName());
+        storeAvatar.setVisibility(View.VISIBLE);
         ImageLoader.loadWithShadowCircleTransform(displayable.getUser().getAvatar(), storeAvatar);
       }
     }
@@ -95,6 +112,8 @@ public class SocialStoreLatestAppsWidget
     ImageLoader.loadWithShadowCircleTransform(displayable.getSharedStore().getAvatar(),
         sharedStoreAvatar);
     sharedStoreName.setText(displayable.getSharedStore().getName());
+    //sharedStoreSubscribersNumber.setText("" + displayable.getSharedStore().getStats().getSubscribers());
+    //sharedStoreAppsNumber.setText("" + displayable.getSharedStore().getStats().getApps());
 
     appsContaner.removeAllViews();
     apps.clear();
@@ -144,6 +163,14 @@ public class SocialStoreLatestAppsWidget
           V8Engine.getFragmentProvider().newStoreFragment(displayable.getStoreName()));
     }));
 
+    StoreThemeEnum storeThemeEnum = StoreThemeEnum.get(displayable.getSharedStore());
+
+    followStore.setBackgroundDrawable(storeThemeEnum.getButtonLayoutDrawable());
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      followStore.setElevation(0);
+    }
+    followStore.setTextColor(storeThemeEnum.getStoreHeaderInt());
+
     compositeSubscription.add(storeRepository.isSubscribed(displayable.getSharedStore().getId())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(isSubscribed -> {
@@ -164,10 +191,6 @@ public class SocialStoreLatestAppsWidget
                     displayable.getSharedStore().getName()));
           }
         }));
-
-    followStore.setOnClickListener(
-        v -> FragmentUtils.replaceFragmentV4((FragmentActivity) v.getContext(),
-            V8Engine.getFragmentProvider().newStoreFragment(displayable.getStoreName())));
   }
 
   @Override String getCardTypeName() {
