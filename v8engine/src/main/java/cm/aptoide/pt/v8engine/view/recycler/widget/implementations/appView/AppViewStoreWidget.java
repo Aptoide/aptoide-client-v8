@@ -111,9 +111,9 @@ import rx.android.schedulers.AndroidSchedulers;
         }));
   }
 
-  private static class Listeners {
+  public static class Listeners {
 
-    private View.OnClickListener newOpenStoreListener(View itemView, String storeName,
+    public View.OnClickListener newOpenStoreListener(View itemView, String storeName,
         String storeTheme) {
       return v -> {
         FragmentUtils.replaceFragmentV4((FragmentActivity) itemView.getContext(),
@@ -121,7 +121,7 @@ import rx.android.schedulers.AndroidSchedulers;
       };
     }
 
-    private View.OnClickListener newSubscribeStoreListener(View itemView, String storeName) {
+    public View.OnClickListener newSubscribeStoreListener(View itemView, String storeName) {
       return v -> {
         StoreUtilsProxy.subscribeStore(storeName, getStoreMeta -> {
           ShowMessage.asSnack(itemView,

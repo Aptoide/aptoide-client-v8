@@ -158,7 +158,6 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
               .build())
           .build(), AptoideAnalytics.OPEN_BLOG);
     }));
-
   }
 
   private void setAppNameToFirstLinkedApp(SocialArticleDisplayable displayable) {

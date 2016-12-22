@@ -27,7 +27,6 @@ import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import com.jakewharton.rxbinding.view.RxView;
-import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -166,42 +165,46 @@ public class CreateStoreActivity extends PermissionsBaseActivity
 
     mSubscriptions.add(RxView.clicks(mStoreAvatarLayout).subscribe(click -> chooseAvatarSource()));
     mSubscriptions.add(RxView.clicks(mCreateStore).subscribe(click -> {
-      AptoideUtils.SystemU.hideKeyboard(this);
-      storeName = mStoreName.getText().toString().trim().toLowerCase();
-      validateData();
-      if (CREATE_STORE_REQUEST_CODE == 2
-          || CREATE_STORE_REQUEST_CODE == 3
-          || CREATE_STORE_REQUEST_CODE == 1) {
-        ProgressDialog progressDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
-            getApplicationContext().getString(R.string.please_wait_upload));
-        progressDialog.show();
-        CheckUserCredentialsRequest.of(AptoideAccountManager.getAccessToken(), storeName,
-            CREATE_STORE_CODE).execute(answer -> {
-          if (answer.hasErrors()) {
-            if (answer.getErrors() != null && answer.getErrors().size() > 0) {
-              progressDialog.dismiss();
-              if (answer.getErrors().get(0).code.equals("WOP-2")) {
-                mSubscriptions.add(GenericDialogs.createGenericContinueMessage(this, "",
-                    getApplicationContext().getResources().getString(R.string.ws_error_WOP_2))
-                    .subscribe());
+          AptoideUtils.SystemU.hideKeyboard(this);
+          storeName = mStoreName.getText().toString().trim().toLowerCase();
+          validateData();
+          if (CREATE_STORE_REQUEST_CODE == 2
+              || CREATE_STORE_REQUEST_CODE == 3
+              || CREATE_STORE_REQUEST_CODE == 1) {
+            ProgressDialog progressDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
+                getApplicationContext().getString(R.string.please_wait_upload));
+            progressDialog.show();
+            CheckUserCredentialsRequest.of(AptoideAccountManager.getAccessToken(), storeName,
+                CREATE_STORE_CODE).execute(answer -> {
+              if (answer.hasErrors()) {
+                if (answer.getErrors() != null && answer.getErrors().size() > 0) {
+                  progressDialog.dismiss();
+                  //TODO check more errors
+                  if (answer.getErrors().get(0).code.equals("WOP-2")) {
+                    mSubscriptions.add(GenericDialogs.createGenericContinueMessage(this, "",
+                        getApplicationContext().getResources().getString(R.string.ws_error_WOP_2))
+                        .subscribe());
+                  } else if (answer.getErrors().get(0).code.equals("WOP-3")) {
+                    ShowMessage.asSnack(this,
+                        ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors().get(0).code));
+                  } else {
+                    ShowMessage.asObservableSnack(this,
+                        ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors().get(0).code))
+                        .subscribe(visibility -> {
+                          if (visibility == ShowMessage.DISMISSED) {
+                            finish();
+                          }
+                        });
+                  }
+                }
               } else {
-                onCreateFail(
-                    ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors().get(0).code));
-                ShowMessage.asObservableSnack(this, ErrorsMapper
-                    .getWebServiceErrorMessageFromCode(answer.getErrors().get(0).code))
-                    .subscribe(visibility -> {
-                      if (visibility == ShowMessage.DISMISSED) {
-                        finish();
-                      }
-                    });
+                onCreateSuccess(progressDialog);
               }
-            }
-          } else {
-            onCreateSuccess(progressDialog);
+            });
           }
-        });
-      }
-    }));
+        }
+
+    ));
     mSubscriptions.add(RxView.clicks(mSkip)
         .flatMap(click -> AptoideAccountManager.refreshAndSaveUserInfoData())
         .subscribe(refreshed -> {
@@ -267,7 +270,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
               progressDialog.dismiss();
               ShowMessage.asObservableSnack(this, R.string.store_upload_photo_failed)
                   .subscribe(visibility -> {
-                    if(visibility == ShowMessage.DISMISSED) {
+                    if (visibility == ShowMessage.DISMISSED) {
                       finish();
                     }
                   });
@@ -275,19 +278,19 @@ public class CreateStoreActivity extends PermissionsBaseActivity
               progressDialog.dismiss();
               ShowMessage.asObservableSnack(this, R.string.store_upload_photo_failed)
                   .subscribe(visibility -> {
-                    if(visibility == ShowMessage.DISMISSED) {
+                    if (visibility == ShowMessage.DISMISSED) {
                       finish();
                     }
                   });
             } else {
               progressDialog.dismiss();
-              ShowMessage.asObservableSnack(this, ErrorsMapper
-                  .getWebServiceErrorMessageFromCode(throwable.getMessage()))
-              .subscribe(visibility -> {
-                if (visibility == ShowMessage.DISMISSED) {
-                  finish();
-                }
-              });
+              ShowMessage.asObservableSnack(this,
+                  ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()))
+                  .subscribe(visibility -> {
+                    if (visibility == ShowMessage.DISMISSED) {
+                      finish();
+                    }
+                  });
             }
             AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
               progressDialog.dismiss();
@@ -303,8 +306,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
               DataProvider.getContext()).getAptoideClientUUID(), storeName, storeTheme)
           .execute(answer -> {
             AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
-              progressDialog.dismiss();
-              finish();
+              storeSetSecondTime(progressDialog);
             }, Throwable::printStackTrace);
           }, throwable -> {
             onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
@@ -329,6 +331,24 @@ public class CreateStoreActivity extends PermissionsBaseActivity
 
   @Override public String getRepoAvatar() {
     return storeAvatarPath == null ? "" : storeAvatarPath;
+  }
+
+  private void storeSetSecondTime(ProgressDialog progressDialog) {
+
+    SimpleSetStoreRequest.of(AptoideAccountManager.getAccessToken(),
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext()).getAptoideClientUUID(), storeName, storeTheme)
+        .execute(answer -> {
+          AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
+            progressDialog.dismiss();
+            finish();
+          }, Throwable::printStackTrace);
+        }, throwable -> {
+          onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
+          AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
+            progressDialog.dismiss();
+          }, Throwable::printStackTrace);
+        });
   }
 
   private void setupThemeListeners() {
