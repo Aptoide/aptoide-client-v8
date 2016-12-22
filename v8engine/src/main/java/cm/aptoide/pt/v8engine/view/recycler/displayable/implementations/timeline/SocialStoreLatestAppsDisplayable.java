@@ -2,14 +2,15 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timelin
 
 import android.content.Context;
 import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
+import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.listapp.App;
+import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.model.v7.timeline.SocialStoreLatestApps;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.repository.SocialRepository;
 import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.DateCalculator;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -23,29 +24,37 @@ public class SocialStoreLatestAppsDisplayable extends SocialCardDisplayable {
   @Getter private String avatarUrl;
   @Getter private List<SocialStoreLatestAppsDisplayable.LatestApp> latestApps;
   @Getter private String abTestingUrl;
+  @Getter private Store store;
+  @Getter private Store sharedStore;
+  @Getter private Comment.User user;
 
   private DateCalculator dateCalculator;
 
-  private Date latestUpdate;
+  //private Date latestUpdate;
   private TimelineMetricsManager timelineMetricsManager;
   private SocialRepository socialRepository;
 
   public SocialStoreLatestAppsDisplayable() {
   }
 
+  // TODO: 22/12/2016 Date latestUpdate,
   private SocialStoreLatestAppsDisplayable(SocialStoreLatestApps socialStoreLatestApps,
       String storeName, String avatarUrl, List<LatestApp> latestApps, String abTestingUrl,
-      long likes, long comments, DateCalculator dateCalculator, Date latestUpdate,
+      long likes, long comments, DateCalculator dateCalculator,
       TimelineMetricsManager timelineMetricsManager, SocialRepository socialRepository) {
     super(socialStoreLatestApps, likes, comments);
     this.storeName = storeName;
+    socialStoreLatestApps.getSharedStore().getId();
     this.avatarUrl = avatarUrl;
     this.latestApps = latestApps;
     this.abTestingUrl = abTestingUrl;
     this.dateCalculator = dateCalculator;
-    this.latestUpdate = latestUpdate;
+    //this.latestUpdate = latestUpdate;
     this.timelineMetricsManager = timelineMetricsManager;
     this.socialRepository = socialRepository;
+    this.store = socialStoreLatestApps.getOwnerStore();
+    this.sharedStore = socialStoreLatestApps.getSharedStore();
+    this.user = socialStoreLatestApps.getUser();
   }
 
   public static SocialStoreLatestAppsDisplayable from(SocialStoreLatestApps socialStoreLatestApps,
@@ -63,16 +72,24 @@ public class SocialStoreLatestAppsDisplayable extends SocialCardDisplayable {
         && socialStoreLatestApps.getAb().getConversion().getUrl() != null) {
       abTestingURL = socialStoreLatestApps.getAb().getConversion().getUrl();
     }
-    return new SocialStoreLatestAppsDisplayable(socialStoreLatestApps,
-        socialStoreLatestApps.getStore().getName(), socialStoreLatestApps.getStore().getAvatar(),
-        latestApps, abTestingURL, socialStoreLatestApps.getLikes(),
-        socialStoreLatestApps.getComments(), dateCalculator,
-        socialStoreLatestApps.getLatestUpdate(), timelineMetricsManager, socialRepository);
+
+    String ownerStoreName = "";
+    String ownerStoreAvatar = "";
+    if (socialStoreLatestApps.getOwnerStore() != null) {
+      ownerStoreName = socialStoreLatestApps.getOwnerStore().getName();
+      ownerStoreAvatar = socialStoreLatestApps.getOwnerStore().getAvatar();
+    }
+
+    // TODO: 22/12/2016 socialStoreLatestApps.getLatestUpdate() 
+    return new SocialStoreLatestAppsDisplayable(socialStoreLatestApps, ownerStoreName,
+        ownerStoreAvatar, latestApps, abTestingURL, socialStoreLatestApps.getLikes(),
+        socialStoreLatestApps.getComments(), dateCalculator, timelineMetricsManager,
+        socialRepository);
   }
 
-  public String getTimeSinceLastUpdate(Context context) {
-    return dateCalculator.getTimeSinceDate(context, latestUpdate);
-  }
+  //public String getTimeSinceLastUpdate(Context context) {
+  //  return dateCalculator.getTimeSinceDate(context, latestUpdate);
+  //}
 
   @Override public int getViewLayout() {
     return R.layout.displayable_social_timeline_social_store_latest_apps;

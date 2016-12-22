@@ -89,6 +89,7 @@ public class SignUpActivity extends BaseActivity implements AptoideAccountManage
     if (analytics != null) {
       analytics.signUp();
     }
+    AptoideAccountManager.sendLoginBroadcast();
     finish();
   }
 

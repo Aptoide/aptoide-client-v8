@@ -111,7 +111,7 @@ public class WSWidgetsUtils {
                     LinkedList<String> errorsList = new LinkedList<>();
                     errorsList.add(USER_NOT_LOGGED_ERROR);
                     if (throwable instanceof AptoideWsV7Exception && shouldAddObjectView(errorsList,
-                        (AptoideWsV7Exception) throwable)) {
+                        throwable)) {
                       setObjectView(wsWidget, countDownLatch,
                           ((AptoideWsV7Exception) throwable).getBaseResponse());
                       return;
@@ -129,7 +129,7 @@ public class WSWidgetsUtils {
                     LinkedList<String> errorsList = new LinkedList<>();
                     errorsList.add(USER_NOT_LOGGED_ERROR);
                     errorsList.add(USER_DONT_HAVE_STORE_ERROR);
-                    if (shouldAddObjectView(errorsList, (AptoideWsV7Exception) throwable)) {
+                    if (shouldAddObjectView(errorsList, throwable)) {
                       setObjectView(wsWidget, countDownLatch,
                           ((AptoideWsV7Exception) throwable).getBaseResponse());
                       return;
@@ -156,10 +156,13 @@ public class WSWidgetsUtils {
     }
   }
 
-  public static boolean shouldAddObjectView(List<String> list, AptoideWsV7Exception throwable) {
-    for (BaseV7Response.Error error : throwable.getBaseResponse().getErrors()) {
-      if (list.contains(error.getCode())) {
-        return true;
+  public static boolean shouldAddObjectView(List<String> list, Throwable throwable) {
+    if (throwable instanceof AptoideWsV7Exception) {
+      for (BaseV7Response.Error error : ((AptoideWsV7Exception) throwable).getBaseResponse()
+          .getErrors()) {
+        if (list.contains(error.getCode())) {
+          return true;
+        }
       }
     }
     return false;

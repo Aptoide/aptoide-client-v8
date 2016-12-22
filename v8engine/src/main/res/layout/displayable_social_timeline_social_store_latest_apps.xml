@@ -85,19 +85,7 @@
         android:background="@color/timeline_separator" />
     </RelativeLayout>
 
-    <TextView
-      style="@style/Widget.Aptoide.Card.Headline"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginEnd="16dp"
-      android:layout_marginLeft="16dp"
-      android:layout_marginRight="16dp"
-      android:layout_marginStart="16dp"
-      android:layout_marginTop="12dp"
-      android:ellipsize="end"
-      android:lines="1"
-      android:text="@string/displayable_social_timeline_store_latest_apps_headline"
-      android:textColor="@color/grey" />
+    <include layout="@layout/social_timeline_social_store_follow"/>
 
     <HorizontalScrollView
       android:layout_width="match_parent"

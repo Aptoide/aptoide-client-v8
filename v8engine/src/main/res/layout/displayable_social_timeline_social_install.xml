@@ -200,7 +200,7 @@
         android:layout_marginEnd="15dp"
         android:layout_marginRight="15dp"
         android:clickable="true"
-        android:text="Make my user profile private in Apps Timeline. Only Show/Share store info."
+        android:text="@string/social_timeline_share_title_checkbox"
         android:textColor="@color/almost_black" />
     </LinearLayout>
   </LinearLayout>

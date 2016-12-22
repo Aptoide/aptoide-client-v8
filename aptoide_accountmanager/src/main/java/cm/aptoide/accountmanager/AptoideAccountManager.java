@@ -95,7 +95,11 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 
   private final static AptoideAccountManager instance = new AptoideAccountManager();
   private static String TAG = AptoideAccountManager.class.getSimpleName();
-
+  /**
+   * This variable indicates if the user is logged or not. It's used because in some cases the
+   * account manager is not fast enough
+   */
+  private static boolean userIsLoggedIn = isLoggedIn();
   @Setter @Getter(AccessLevel.PACKAGE) private static Analytics analytics;
   /**
    * private variables
@@ -138,7 +142,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
    * @param extras Extras to add on created intent (to login or register activity)
    */
   public static void openAccountManager(Context context, @Nullable Bundle extras) {
-    if (isLoggedIn()) {
+    if (userIsLoggedIn) {
       context.startActivity(new Intent(context, MyAccountActivity.class));
     } else {
       final Intent intent = new Intent(context, LoginActivity.class);
@@ -222,6 +226,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
       FacebookLoginUtils.logout();
     }
     getInstance().removeLocalAccount();
+    userIsLoggedIn = false;
     if (activityRef != null) {
       Activity activity = activityRef.get();
       if (activity != null) {
@@ -497,7 +502,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
    */
   public static void updateMatureSwitch(boolean matureSwitch) {
     AccountManagerPreferences.setMatureSwitch(matureSwitch);
-    if (isLoggedIn()) {
+    if (userIsLoggedIn) {
       ChangeUserSettingsRequest.of(matureSwitch)
           .observe(true) // bypass cache since we are "writing" a value
           .subscribeOn(Schedulers.io())
@@ -709,7 +714,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
         .execute(genericResponseV3 -> Logger.d(TAG, "Successfully subscribed " + storeName), true);
   }
 
-  private static void sendLoginBroadcast() {
+  static void sendLoginBroadcast() {
     getContext().sendBroadcast(new Intent().setAction(LOGIN));
   }
 
@@ -837,6 +842,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
   }
 
   void onLoginSuccess(LoginMode loginType, String loginOrigin, String username, String password) {
+    userIsLoggedIn = true;
     mCallback.onLoginSuccess();
     if (analytics != null) {
       analytics.login(loginType.name());
@@ -850,7 +856,8 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
       getContext().startActivity(intent);
     }
 
-    if ((loginType.equals(LoginMode.FACEBOOK) || loginType.equals(LoginMode.GOOGLE)) && !ManagerPreferences.getUserAccessConfirmed()) {
+    if ((loginType.equals(LoginMode.FACEBOOK) || loginType.equals(LoginMode.GOOGLE))
+        && !ManagerPreferences.getUserAccessConfirmed()) {
       Intent socialIntent = new Intent(getContext(), LoggedInActivity.class);
       socialIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
       socialIntent.putExtra(AptoideLoginUtils.IS_FACEBOOK_OR_GOOGLE, true);
@@ -859,6 +866,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
   }
 
   void onLoginSuccess() {
+    userIsLoggedIn = true;
     mCallback.onLoginSuccess();
   }
 
