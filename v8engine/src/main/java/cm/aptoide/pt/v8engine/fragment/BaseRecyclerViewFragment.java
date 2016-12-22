@@ -40,7 +40,8 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
     }
   }
 
-  @CallSuper @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+  @CallSuper @Override
+  public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     if (create) {
       clearDisplayables();
     } else {
@@ -91,11 +92,11 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
     adapter.addDisplayable(position, displayable);
   }
 
-  //public void addDisplayable(Displayable displayable) {
-  //  this.displayables.add(displayable);
-  //  adapter.addDisplayable(displayable);
-  //  finishLoading();
-  //}
+  public void addDisplayable(Displayable displayable) {
+    this.displayables.add(displayable);
+    adapter.addDisplayable(displayable);
+    finishLoading();
+  }
 
   @CallSuper public void addDisplayables(List<? extends Displayable> displayables) {
     this.displayables.addAll(displayables);
@@ -108,7 +109,8 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
     addDisplayables(displayables);
   }
 
-  @CallSuper @Deprecated public void addDisplayables(int position, List<? extends Displayable> displayables) {
+  @CallSuper @Deprecated
+  public void addDisplayables(int position, List<? extends Displayable> displayables) {
     adapter.addDisplayables(position, displayables);
     finishLoading();
   }
