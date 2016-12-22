@@ -74,7 +74,8 @@ import rx.Observable;
         body.put("oem_id", oem_id);
       }
 
-      RequestBody hmac = createBodyPartFromString(AptoideUtils.AlgorithmU.computeHmacSha1(getEmail() + calculatedPasshash + getName() + getUpdate(), "bazaar_hmac"));
+      RequestBody hmac = createBodyPartFromString(AptoideUtils.AlgorithmU
+          .computeHmacSha1(getEmail() + calculatedPasshash + getName() + getUpdate(), "bazaar_hmac"));
 
       RequestBody name = createBodyPartFromString(getName());
       RequestBody update = createBodyPartFromString(getUpdate());
@@ -87,7 +88,8 @@ import rx.Observable;
       body.put("update", update);
       File file = new File(userAvatarPath);
       RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-      MultipartBody.Part multipartBody = MultipartBody.Part.createFormData("user_avatar", file.getName(), requestFile);
+      MultipartBody.Part multipartBody = MultipartBody.Part.createFormData("user_avatar",
+          file.getName(), requestFile);
       return interfaces.createUserWithFile(multipartBody, body);
     } else if(update.equals("true") && userAvatarPath.isEmpty()) {
       parameters.put("update", update);

@@ -166,11 +166,14 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
       setFileName();
       Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
       if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-        Uri uriForFile = FileProvider.getUriForFile(context,
-            Application.getConfiguration().getAppId() + ".provider", new File(getPhotoFileUri(
-                PermissionsBaseActivity.createAvatarPhotoName(photoAvatar)).getPath()));
-        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uriForFile);
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+          Uri uriForFile = FileProvider.getUriForFile(context,
+              Application.getConfiguration().getAppId() + ".provider", new File(getPhotoFileUri(
+                  PermissionsBaseActivity.createAvatarPhotoName(photoAvatar)).getPath()));
+          takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uriForFile);
+        }
+        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+            getPhotoFileUri(PermissionsBaseActivity.createAvatarPhotoName(photoAvatar)));
         startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
       }
     }
