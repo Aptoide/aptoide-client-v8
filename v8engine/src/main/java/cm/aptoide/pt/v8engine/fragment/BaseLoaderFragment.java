@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -27,26 +28,26 @@ public abstract class BaseLoaderFragment extends SupportV4BaseFragment implement
   protected ErrorRequestListener errorRequestListener = e -> finishLoading(e);
   @Getter private boolean create = true;
 
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+  @CallSuper @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     load(create, false, savedInstanceState);
   }
 
-  @Override public void onDestroyView() {
+  @CallSuper @Override public void onDestroyView() {
     super.onDestroyView();
     if (loaderLayoutHandler != null) {
       loaderLayoutHandler = null;
     }
   }
 
-  @Nullable @Override
+  @CallSuper @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     loaderLayoutHandler = createLoaderLayoutHandler();
     return super.onCreateView(inflater, container, savedInstanceState);
   }
 
-  @Override public void bindViews(View view) {
+  @CallSuper @Override public void bindViews(View view) {
     if (loaderLayoutHandler != null) {
       loaderLayoutHandler.bindViews(view);
     }
@@ -55,7 +56,7 @@ public abstract class BaseLoaderFragment extends SupportV4BaseFragment implement
     }
   }
 
-  @Override public void onStop() {
+  @CallSuper @Override public void onStop() {
     super.onStop();
     create = false;
   }
@@ -66,13 +67,13 @@ public abstract class BaseLoaderFragment extends SupportV4BaseFragment implement
 
   @IdRes protected abstract int getViewToShowAfterLoadingId();
 
-  protected void finishLoading() {
+  @CallSuper protected void finishLoading() {
     if (loaderLayoutHandler != null) {
       loaderLayoutHandler.finishLoading();
     }
   }
 
-  protected void finishLoading(Throwable throwable) {
+  @CallSuper protected void finishLoading(Throwable throwable) {
     if (loaderLayoutHandler != null) {
       loaderLayoutHandler.finishLoading(throwable);
     }

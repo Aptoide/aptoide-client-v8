@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -13,6 +14,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.interfaces.LifecycleSchim;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import lombok.Getter;
@@ -26,9 +28,9 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
   @Getter protected T adapter;
   @Getter protected RecyclerView.LayoutManager layoutManager;
   @Getter protected RecyclerView recyclerView;
-  private List<Displayable> displayables = new LinkedList<>();
+  private ArrayList<Displayable> displayables = new ArrayList<>();
 
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+  @CallSuper @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     adapter = createAdapter();
 
     super.onViewCreated(view, savedInstanceState);
@@ -38,7 +40,7 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
     }
   }
 
-  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+  @CallSuper @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     if (create) {
       clearDisplayables();
     } else {
@@ -50,14 +52,14 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
     return R.layout.recycler_fragment;
   }
 
-  @Override public void setupViews() {
+  @CallSuper @Override public void setupViews() {
     super.setupViews();
     recyclerView.setAdapter(adapter);
     layoutManager = createLayoutManager();
     recyclerView.setLayoutManager(layoutManager);
   }
 
-  @Override public void onDestroyView() {
+  @CallSuper @Override public void onDestroyView() {
     super.onDestroyView();
 
     // Lifecycle interface
@@ -71,7 +73,7 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
     adapter = null;
   }
 
-  @Override public void bindViews(View view) {
+  @CallSuper @Override public void bindViews(View view) {
     super.bindViews(view);
     recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
   }
@@ -80,34 +82,38 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
 
   protected abstract RecyclerView.LayoutManager createLayoutManager();
 
-  public void addDisplayable(int position, Displayable displayable) {
+  //
+  // Displayables methods
+  //
+
+  @CallSuper public void addDisplayable(int position, Displayable displayable) {
     this.displayables.add(position, displayable);
     adapter.addDisplayable(position, displayable);
   }
 
-  public void addDisplayable(Displayable displayable) {
-    this.displayables.add(displayable);
-    adapter.addDisplayable(displayable);
-    finishLoading();
-  }
+  //public void addDisplayable(Displayable displayable) {
+  //  this.displayables.add(displayable);
+  //  adapter.addDisplayable(displayable);
+  //  finishLoading();
+  //}
 
-  public void addDisplayables(List<? extends Displayable> displayables) {
+  @CallSuper public void addDisplayables(List<? extends Displayable> displayables) {
     this.displayables.addAll(displayables);
     adapter.addDisplayables(displayables);
     finishLoading();
   }
 
-  public void setDisplayables(List<? extends Displayable> displayables) {
+  @CallSuper public void setDisplayables(List<? extends Displayable> displayables) {
     clearDisplayables();
     addDisplayables(displayables);
   }
 
-  @Deprecated public void addDisplayables(int position, List<? extends Displayable> displayables) {
+  @CallSuper @Deprecated public void addDisplayables(int position, List<? extends Displayable> displayables) {
     adapter.addDisplayables(position, displayables);
     finishLoading();
   }
 
-  public void clearDisplayables() {
+  @CallSuper public void clearDisplayables() {
     this.displayables.clear();
     adapter.clearDisplayables();
   }
@@ -121,34 +127,34 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
    * de adapter is not null it is empty. Further calls to this
    * method will invoke the proper "onRsume" event in the adapters elements.
    */
-  @Override public void onResume() {
+  @CallSuper @Override public void onResume() {
     super.onResume();
     if (adapter != null) {
       adapter.onResume();
     }
   }
 
-  @Override public void onPause() {
+  @CallSuper @Override public void onPause() {
     super.onPause();
     if (adapter != null) {
       adapter.onPause();
     }
   }
 
-  @Override public void onViewCreated() {
+  @CallSuper @Override public void onViewCreated() {
     if (adapter != null) {
       adapter.onViewCreated();
     }
   }
 
-  @Override public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+  @CallSuper @Override public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
     super.onViewStateRestored(savedInstanceState);
     if (adapter != null) {
       adapter.onViewStateRestored(savedInstanceState);
     }
   }
 
-  @Override public void onSaveInstanceState(Bundle outState) {
+  @CallSuper @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
     if (adapter != null) {
       adapter.onSaveInstanceState(outState);

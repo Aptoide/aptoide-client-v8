@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -41,7 +43,7 @@ import rx.functions.Action1;
 
 // TODO: 21/12/2016 sithengineer refactor and split in multiple classes to list comments
 // for each type: store and timeline card
-public class CommentListFragment extends GridRecyclerFragment {
+public class CommentListFragment extends GridRecyclerSwipeFragment {
 
   //private static final String TAG = StoreGridRecyclerFragment.class.getName();
 
@@ -49,7 +51,8 @@ public class CommentListFragment extends GridRecyclerFragment {
   // consts
   //
   private static final String COMMENT_TYPE = "comment_type";
-  private static final String ELEMENT_ID = "element_id";
+  private static final String ELEMENT_ID_AS_STRING = "element_id_as_string";
+  private static final String ELEMENT_ID_AS_LONG = "element_id_as_long";
   private static final String URL_VAL = "url_val";
 
   //
@@ -58,17 +61,21 @@ public class CommentListFragment extends GridRecyclerFragment {
   private CommentOperations commentOperations;
   private List<Displayable> displayables;
   private CommentType commentType;
-  private String elementId;
   private String url;
+  // timeline card comments vars
+  private String elementIdAsString;
+  // store comments vars
+  private long elementIdAsLong;
+  private String storeName;
 
   //
   // views
   //
   private FloatingActionButton floatingActionButton;
 
-  public static Fragment newInstance(CommentType commentType, String elementId) {
+  public static Fragment newInstance(CommentType commentType, String timelineArticleId) {
     Bundle args = new Bundle();
-    args.putString(ELEMENT_ID, elementId);
+    args.putString(ELEMENT_ID_AS_STRING, timelineArticleId);
     args.putString(COMMENT_TYPE, commentType.name());
 
     CommentListFragment fragment = new CommentListFragment();
@@ -86,12 +93,34 @@ public class CommentListFragment extends GridRecyclerFragment {
     return fragment;
   }
 
+  @Override public void loadExtras(Bundle args) {
+    super.loadExtras(args);
+    elementIdAsString = args.getString(ELEMENT_ID_AS_STRING);
+    elementIdAsLong = args.getLong(ELEMENT_ID_AS_LONG);
+    url = args.getString(URL_VAL);
+    commentType = Enum.valueOf(CommentType.class, args.getString(COMMENT_TYPE));
+
+    // extracting store data from the URL...
+    if (commentType == CommentType.STORE) {
+      BaseRequestWithStore.StoreCredentials storeCredentials =
+          StoreUtils.getStoreCredentialsFromUrlOrNull(url);
+      if (storeCredentials != null && !TextUtils.isEmpty(storeCredentials.getName())) {
+        storeName = storeCredentials.getName();
+      }
+    }
+  }
+
   @Override public void setupToolbar() {
     // It's not calling super cause it does nothing in the middle class}
     // StoreTabGridRecyclerFragment.
     if (toolbar != null) {
       ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-      ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.comments);
+      if(commentType==CommentType.STORE) {
+        String title = String.format(getString(R.string.comment_on_store), storeName);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(title);
+      } else {
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.comments);
+      }
       ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
       toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
     }
@@ -119,24 +148,19 @@ public class CommentListFragment extends GridRecyclerFragment {
     setupToolbar();
     setHasOptionsMenu(true);
 
-    // FIXME: 20/12/2016 sithengineer refactor this
-
-    RxView.clicks(floatingActionButton)
-        .flatMap(a -> createNewCommentFragment(elementId))
-        .compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW))
-        .subscribe(a -> {
-          // no-op
-        });
-
-    if(commentType == CommentType.TIMELINE) {
-      caseListSocialTimelineComments(true);
-    } else {
-      caseListStoreComments(url, StoreUtils.getStoreCredentialsFromUrl(url), true);
-    }
+    RxView.clicks(floatingActionButton).flatMap(a -> {
+      if (commentType == CommentType.TIMELINE) {
+        return createNewCommentFragment(elementIdAsString);
+      }
+      return createNewCommentFragment(elementIdAsLong, storeName);
+    }).compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW)).subscribe(a -> {
+      // no-op
+    });
   }
 
   @Override public void bindViews(View view) {
     super.bindViews(view);
+    commentOperations = new CommentOperations();
     floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fabAdd);
     if (floatingActionButton != null) {
       Drawable drawable;
@@ -148,15 +172,25 @@ public class CommentListFragment extends GridRecyclerFragment {
       floatingActionButton.setImageDrawable(drawable);
       floatingActionButton.setVisibility(View.VISIBLE);
     }
-
-    commentOperations = new CommentOperations();
   }
 
-  @Override public void loadExtras(Bundle args) {
-    super.loadExtras(args);
-    elementId = args.getString(ELEMENT_ID);
-    url = args.getString(URL_VAL);
-    commentType = Enum.valueOf(CommentType.class, args.getString(COMMENT_TYPE));
+  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    super.load(create, refresh, savedInstanceState);
+    if (create || refresh) {
+      refreshData();
+    }
+  }
+
+  @Override protected RecyclerView.ItemDecoration getItemDecoration() {
+    return null;
+  }
+
+  void refreshData() {
+    if (commentType == CommentType.TIMELINE) {
+      caseListSocialTimelineComments(true);
+    } else {
+      caseListStoreComments(url, StoreUtils.getStoreCredentialsFromUrl(url), true);
+    }
   }
 
   private Observable<Void> reloadComments() {
@@ -170,7 +204,7 @@ public class CommentListFragment extends GridRecyclerFragment {
   private Observable<Void> showSignInMessage() {
     return ShowMessage.asObservableSnack(this.getActivity(), R.string.you_need_to_be_logged_in,
         R.string.login, snackView -> {
-          //AptoideAccountManager.openAccountManager(StoreGridRecyclerFragment.this.getContext());
+          AptoideAccountManager.openAccountManager(CommentListFragment.this.getContext());
         }).flatMap(a -> Observable.empty());
   }
 
@@ -178,7 +212,10 @@ public class CommentListFragment extends GridRecyclerFragment {
   // create new comment different fragment constructions
   //
 
-  // Used method for each single reply in the list view and the new comment button
+  //
+  // Timeline Articles comments methods
+  //
+
   public Observable<Void> createNewCommentFragment(String timelineArticleId) {
 
     return Observable.just(AptoideAccountManager.isLoggedIn()).flatMap(isLoggedIn -> {
@@ -199,13 +236,8 @@ public class CommentListFragment extends GridRecyclerFragment {
     });
   }
 
-  private Observable<Void> createNewCommentFragment(long storeId, long previousCommentId,
-      String storeName) {
-    return null;
-  }
-
   public Observable<Void> createNewCommentFragment(final String timelineArticleId,
-      final long commentId) {
+      final long previousCommentId) {
 
     return Observable.just(AptoideAccountManager.isLoggedIn()).flatMap(isLoggedIn -> {
 
@@ -213,7 +245,8 @@ public class CommentListFragment extends GridRecyclerFragment {
         // show fragment CommentDialog
         FragmentManager fm = CommentListFragment.this.getActivity().getFragmentManager();
         CommentDialogFragment commentDialogFragment =
-            CommentDialogFragment.newInstanceTimelineArticleComment(timelineArticleId, commentId);
+            CommentDialogFragment.newInstanceTimelineArticleComment(timelineArticleId,
+                previousCommentId);
 
         return commentDialogFragment.lifecycle()
             .doOnSubscribe(() -> commentDialogFragment.show(fm, "fragment_comment_dialog"))
@@ -231,7 +264,7 @@ public class CommentListFragment extends GridRecyclerFragment {
         DataProvider.getContext()).getAptoideClientUUID();
 
     ListCommentsRequest listCommentsRequest =
-        ListCommentsRequest.ofTimeline(url, refresh, elementId,
+        ListCommentsRequest.ofTimeline(url, refresh, elementIdAsString,
             AptoideAccountManager.getAccessToken(), aptoideClientUuid);
 
     Action1<ListComments> listCommentsAction = (listComments -> {
@@ -244,7 +277,7 @@ public class CommentListFragment extends GridRecyclerFragment {
         ArrayList<Displayable> displayables = new ArrayList<>(comments.size());
         for (CommentNode commentNode : comments) {
           displayables.add(new CommentDisplayable(new ComplexComment(commentNode,
-              createNewCommentFragment(elementId, commentNode.getComment().getId()))));
+              createNewCommentFragment(elementIdAsString, commentNode.getComment().getId()))));
         }
 
         this.displayables = new ArrayList<>(displayables.size());
@@ -260,6 +293,52 @@ public class CommentListFragment extends GridRecyclerFragment {
 
     recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(refresh);
+  }
+
+  //
+  // Store comments methods
+  //
+
+  public Observable<Void> createNewCommentFragment(long storeCommentId, String storeName) {
+
+    return Observable.just(AptoideAccountManager.isLoggedIn()).flatMap(isLoggedIn -> {
+
+      if (isLoggedIn) {
+        // show fragment CommentDialog
+        FragmentManager fm = CommentListFragment.this.getActivity().getFragmentManager();
+        CommentDialogFragment commentDialogFragment =
+            CommentDialogFragment.newInstanceStoreComment(storeCommentId, storeName);
+
+        return commentDialogFragment.lifecycle()
+            .doOnSubscribe(() -> commentDialogFragment.show(fm, "fragment_comment_dialog"))
+            .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
+            .flatMap(event -> reloadComments());
+      }
+
+      return showSignInMessage();
+    });
+  }
+
+  private Observable<Void> createNewCommentFragment(long storeId, long previousCommentId,
+      String storeName) {
+
+    return Observable.just(AptoideAccountManager.isLoggedIn()).flatMap(isLoggedIn -> {
+
+      if (isLoggedIn) {
+        // show fragment CommentDialog
+        FragmentManager fm = CommentListFragment.this.getActivity().getFragmentManager();
+        CommentDialogFragment commentDialogFragment =
+            CommentDialogFragment.newInstanceStoreCommentReply(storeId, previousCommentId,
+                storeName);
+
+        return commentDialogFragment.lifecycle()
+            .doOnSubscribe(() -> commentDialogFragment.show(fm, "fragment_comment_dialog"))
+            .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
+            .flatMap(event -> reloadComments());
+      }
+
+      return showSignInMessage();
+    });
   }
 
   void caseListStoreComments(String url, BaseRequestWithStore.StoreCredentials storeCredentials,
@@ -299,6 +378,7 @@ public class CommentListFragment extends GridRecyclerFragment {
         addDisplayables(this.displayables);
       }
     });
+
     recyclerView.clearOnScrollListeners();
     EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(getAdapter(), listCommentsRequest, listCommentsAction,

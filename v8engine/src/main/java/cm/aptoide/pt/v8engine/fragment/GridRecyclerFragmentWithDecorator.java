@@ -6,13 +6,13 @@
 package cm.aptoide.pt.v8engine.fragment;
 
 import android.graphics.Rect;
+import android.support.annotation.CallSuper;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.View;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
-import lombok.Getter;
 
 /**
  * Created by neuro on 25-05-2016.
@@ -20,8 +20,8 @@ import lombok.Getter;
 public abstract class GridRecyclerFragmentWithDecorator<T extends BaseAdapter>
     extends GridRecyclerFragment<T> {
 
-  @Getter private final RecyclerView.ItemDecoration defaultItemDecoration =
-      new RecyclerView.ItemDecoration() {
+  protected RecyclerView.ItemDecoration getItemDecoration() {
+      return new RecyclerView.ItemDecoration() {
         @Override public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
             RecyclerView.State state) {
 
@@ -71,16 +71,20 @@ public abstract class GridRecyclerFragmentWithDecorator<T extends BaseAdapter>
           outRect.set(left, top, right, bottom);
         }
       };
+    }
 
   public GridRecyclerFragmentWithDecorator() {
   }
 
-  public GridRecyclerFragmentWithDecorator(Class<T> adapterClass) {
-    super(adapterClass);
-  }
+  //public GridRecyclerFragmentWithDecorator(Class<T> adapterClass) {
+  //  super(adapterClass);
+  //}
 
-  @Override public void setupViews() {
+  @CallSuper @Override public void setupViews() {
     super.setupViews();
-    recyclerView.addItemDecoration(defaultItemDecoration);
+    RecyclerView.ItemDecoration itemDecoration = getItemDecoration();
+    if(itemDecoration!=null) {
+      recyclerView.addItemDecoration(itemDecoration);
+    }
   }
 }

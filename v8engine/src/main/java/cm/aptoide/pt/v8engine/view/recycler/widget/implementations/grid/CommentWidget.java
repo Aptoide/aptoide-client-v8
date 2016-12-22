@@ -76,7 +76,7 @@ public class CommentWidget extends Widget<CommentDisplayable> {
         compositeSubscription.add(RxView.clicks(replyLayout)
             .flatMap(aVoid -> complexComment.observeReplySubmission().doOnError(err -> {
               ShowMessage.asSnack(userAvatar, R.string.error_occured);
-            }).flatMap(v -> ShowMessage.asObservableSnack(userAvatar, R.string.comment_submitted)))
+            }))
             .retry()
             .subscribe(aVoid -> { /* nothing else to do */ }, err -> {
               Logger.e(TAG, err);
@@ -101,10 +101,14 @@ public class CommentWidget extends Widget<CommentDisplayable> {
 
       if (level == 2) {
         params.setMarginStart(baseMargin);
+      } else {
+        params.setMarginStart(0);
       }
     }
     if (level == 2) {
       params.leftMargin = baseMargin;
+    } else {
+      params.leftMargin = 0;
     }
     rootView.setLayoutParams(params);
   }
