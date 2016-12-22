@@ -571,15 +571,13 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 
   static void setupRegisterUser(IRegisterUser callback, Button signupButton) {
     final WeakReference callBackWeakReference = new WeakReference(callback);
-    signupButton.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        IRegisterUser callback = (IRegisterUser) callBackWeakReference.get();
-        if (callback != null) {
-          ProgressDialog genericPleaseWaitDialog =
-              GenericDialogs.createGenericPleaseWaitDialog(v.getContext());
-          genericPleaseWaitDialog.show();
-          registerUserUsingWebServices(callback, genericPleaseWaitDialog);
-        }
+    signupButton.setOnClickListener(v -> {
+      IRegisterUser callback1 = (IRegisterUser) callBackWeakReference.get();
+      if (callback1 != null) {
+        ProgressDialog genericPleaseWaitDialog =
+            GenericDialogs.createGenericPleaseWaitDialog(v.getContext());
+        genericPleaseWaitDialog.show();
+        registerUserUsingWebServices(callback1, genericPleaseWaitDialog);
       }
     });
   }

@@ -1,14 +1,11 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.Translator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
@@ -40,10 +37,8 @@ import com.jakewharton.rxbinding.view.RxView;
 
     if (moreIsVisible) {
       compositeSubscription.add(RxView.clicks(more).subscribe(a -> {
-        FragmentUtils.replaceFragmentV4((FragmentActivity) itemView.getContext(),
-            V8Engine.getFragmentProvider()
-                .newStoreGridRecyclerFragment(wsWidget.getActions().get(0).getEvent(),
-                    wsWidget.getTitle(), displayable.getStoreTheme(), displayable.getTag()));
+        getNavigationManager().navigateUsing(wsWidget.getActions().get(0).getEvent(),
+            displayable.getStoreTheme(), wsWidget.getTitle(), displayable.getTag());
         Analytics.AppViewViewedFrom.addStepToList(wsWidget.getTag());
       }));
     }

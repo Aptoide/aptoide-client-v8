@@ -8,13 +8,10 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
@@ -40,7 +37,6 @@ import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
@@ -80,6 +76,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
   protected String tag;
   protected String storeTheme;
   private List<Displayable> displayables;
+      // // FIXME: 22/12/2016 sithengineer duplicated var from parent
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
   private StoreRepository storeRepository;
 
@@ -336,7 +333,8 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
         }, throwable -> finishLoading(throwable));
   }
 
-  @Override public void setupToolbar() { }
+  @Override public void setupToolbar() {
+  }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -361,9 +359,9 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
     storeTheme = args.getString(BundleCons.STORE_THEME);
   }
 
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-  }
+  //@Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+  //  super.onViewCreated(view, savedInstanceState);
+  //}
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
@@ -390,11 +388,6 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
         case getStoreWidgets:
           caseGetStoreWidgets(url, StoreUtils.getStoreCredentialsFromUrl(url), refresh);
           break;
-        case listComments:
-          // FIXME: 21/12/2016 sithengineer this is the second fragment behing called
-          // modify the more action to have a MoreActionResolver and fix this issue
-          caseListStoreComments(url);
-          break;
         case listReviews:
           caseListReviews(url, refresh);
           break;
@@ -414,12 +407,6 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
       }
       //setDisplayables(displayables);
     }
-  }
-
-  private void caseListStoreComments(String url) {
-    Fragment fragment = V8Engine.getFragmentProvider()
-        .newCommentGridRecyclerFragmentUrl(CommentType.STORE, url);
-    ((FragmentShower) getContext()).pushFragmentV4(fragment);
   }
 
   private void caseMyStores(String url, boolean refresh) {

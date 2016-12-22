@@ -15,7 +15,6 @@ import cm.aptoide.pt.v8engine.view.recycler.base.BaseGridLayoutManager;
  * Created by neuro on 15-04-2016.
  *
  * @author neuro
- * @author sithengineer
  */
 public abstract class GridRecyclerFragment<T extends BaseAdapter>
     extends BaseRecyclerViewFragment<T> {
