@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.R;
@@ -63,7 +62,7 @@ public class MyStoreWidget extends Widget<MyStoreDisplayable> {
 
     ImageLoader.loadWithShadowCircleTransform(store.getAvatar(), storeIcon);
 
-    storeName.setText(AptoideAccountManager.getUserData().getUserRepo());
+    storeName.setText(store.getName());
     compositeSubscription.add(RxView.clicks(exploreButton)
         .subscribe(click -> ((FragmentShower) context).pushFragmentV4(
             V8Engine.getFragmentProvider().newStoreFragment(store.getName(), storeTheme))));

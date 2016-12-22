@@ -5,7 +5,10 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
+import android.text.TextUtils;
 import android.util.Pair;
+import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
@@ -140,8 +143,8 @@ public class DisplayablesFactory {
           case APP_META:
             GetStoreWidgets.WSWidget.Data dataObj = wsWidget.getData();
             String message = dataObj.getMessage();
-            displayables.add(new OfficialAppDisplayable(
-                new Pair<>(message, (GetApp) wsWidget.getViewObject())));
+            displayables.add(
+                new OfficialAppDisplayable(new Pair<>(message, (GetApp) wsWidget.getViewObject())));
             break;
         }
       }
@@ -155,9 +158,35 @@ public class DisplayablesFactory {
     if (viewObject instanceof GetStoreMeta) {
       displayables.add(new MyStoreDisplayable(((GetStoreMeta) viewObject)));
     } else {
-      displayables.add(new CreateStoreDisplayable());
+      // TODO: 22/12/2016 trinkes remove this hammered!!!!
+      GetStoreMeta meta = AptoideAccountManager.refreshUserInfoData()
+          .map(userInfo -> convertUserInfoStore(userInfo))
+          .onErrorReturn(throwable -> null)
+          .toBlocking()
+          .first();
+      if (meta == null) {
+        displayables.add(new CreateStoreDisplayable());
+      } else {
+        displayables.add(new MyStoreDisplayable(meta));
+      }
     }
     return displayables;
+  }
+
+  private static GetStoreMeta convertUserInfoStore(CheckUserCredentialsJson userInfo) {
+    if (!TextUtils.isEmpty(userInfo.getRepo())) {
+      GetStoreMeta getStoreMeta = new GetStoreMeta();
+      Store store = new Store();
+      Store.Appearance appearance = new Store.Appearance();
+      appearance.setTheme(userInfo.getRepoDescription().getTheme());
+      store.setAppearance(appearance);
+      store.setName(userInfo.getRepo());
+      store.setAvatar(userInfo.getRavatarHd());
+      getStoreMeta.setData(store);
+      return getStoreMeta;
+    } else {
+      return null;
+    }
   }
 
   private static Displayable createRecommendedStores(GetStoreWidgets.WSWidget wsWidget,
