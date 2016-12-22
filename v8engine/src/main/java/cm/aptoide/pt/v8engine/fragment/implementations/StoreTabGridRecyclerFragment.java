@@ -150,24 +150,6 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
     return false;
   }
 
-  @Override public void loadExtras(Bundle args) {
-    if (args.containsKey(BundleCons.TYPE)) {
-      type = Event.Type.valueOf(args.getString(BundleCons.TYPE));
-    }
-    if (args.containsKey(BundleCons.NAME)) {
-      name = Event.Name.valueOf(args.getString(BundleCons.NAME));
-    }
-    if (args.containsKey(BundleCons.LAYOUT)) {
-      layout = Layout.valueOf(args.getString(BundleCons.LAYOUT));
-    }
-    if (args.containsKey(BundleCons.TAG)) {
-      tag = args.getString(BundleCons.TAG);
-    }
-    title = args.getString(Translator.translate(BundleCons.TITLE));
-    action = args.getString(BundleCons.ACTION);
-    storeTheme = args.getString(BundleCons.STORE_THEME);
-  }
-
   private void caseListStores(String url, boolean refresh) {
     ListStoresRequest listStoresRequest =
         ListStoresRequest.ofAction(url, AptoideAccountManager.getAccessToken(),
@@ -238,14 +220,14 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
           default:
             for (App app : list) {
               app.getStore().setAppearance(new Store.Appearance(storeTheme, null));
-              displayables.add(new GridAppDisplayable(app, tag, false));
+              displayables.add(new GridAppDisplayable(app, tag, true));
             }
             break;
         }
       } else {
         for (App app : list) {
           app.getStore().setAppearance(new Store.Appearance(storeTheme, null));
-          displayables.add(new GridAppDisplayable(app, tag, false));
+          displayables.add(new GridAppDisplayable(app, tag, true));
         }
       }
 
@@ -359,6 +341,24 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     storeRepository = RepositoryFactory.getRepositoryFor(cm.aptoide.pt.database.realm.Store.class);
+  }
+
+  @Override public void loadExtras(Bundle args) {
+    if (args.containsKey(BundleCons.TYPE)) {
+      type = Event.Type.valueOf(args.getString(BundleCons.TYPE));
+    }
+    if (args.containsKey(BundleCons.NAME)) {
+      name = Event.Name.valueOf(args.getString(BundleCons.NAME));
+    }
+    if (args.containsKey(BundleCons.LAYOUT)) {
+      layout = Layout.valueOf(args.getString(BundleCons.LAYOUT));
+    }
+    if (args.containsKey(BundleCons.TAG)) {
+      tag = args.getString(BundleCons.TAG);
+    }
+    title = args.getString(Translator.translate(BundleCons.TITLE));
+    action = args.getString(BundleCons.ACTION);
+    storeTheme = args.getString(BundleCons.STORE_THEME);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
