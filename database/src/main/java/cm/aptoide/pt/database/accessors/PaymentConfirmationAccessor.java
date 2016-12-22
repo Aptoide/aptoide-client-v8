@@ -18,17 +18,8 @@ public class PaymentConfirmationAccessor extends SimpleAccessor<PaymentConfirmat
     super(database, PaymentConfirmation.class);
   }
 
-  public Observable<PaymentConfirmation> getPaymentConfirmation(int productId) {
-    return database.get(PaymentConfirmation.class, PaymentConfirmation.PRODUCT_ID, productId);
-  }
-
-  public Observable<List<PaymentConfirmation>> getPaymentConfirmations() {
-    return database.getAll(PaymentConfirmation.class);
-  }
-
-  public void delete(int productId) {
-    database.delete(PaymentConfirmation.class, PaymentConfirmation.PRODUCT_ID,
-        productId);
+  public Observable<List<PaymentConfirmation>> getPaymentConfirmations(int productId) {
+    return database.getAsList(PaymentConfirmation.class, PaymentConfirmation.PRODUCT_ID, productId);
   }
 
   public void save(PaymentConfirmation paymentConfirmation) {

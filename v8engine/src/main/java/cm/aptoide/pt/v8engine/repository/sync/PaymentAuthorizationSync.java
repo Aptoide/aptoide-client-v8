@@ -10,11 +10,13 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.PaymentAuthorizationAccessor;
 import cm.aptoide.pt.dataprovider.ws.v3.GetProductPurchaseAuthorizationRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
+import cm.aptoide.pt.model.v3.PurchaseAuthorizationResponse;
 import cm.aptoide.pt.v8engine.payment.PaymentAuthorization;
 import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationConverter;
 import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationRepository;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
-import rx.Observable;
+import java.io.IOException;
+import rx.Single;
 
 /**
  * Created by marcelobenites on 22/11/16.
@@ -37,30 +39,54 @@ public class PaymentAuthorizationSync extends RepositorySync {
 
   @Override public void sync(SyncResult syncResult) {
     try {
-      getServerAuthorization(paymentId).doOnNext(paymentAuthorization -> authorizationAccessor.save(
-          authorizationConverter.convertToPaymentAuthorization(paymentAuthorization)))
+      getServerAuthorization(paymentId).doOnSuccess(
+          response -> saveAndReschedulePendingAuthorization(response, syncResult))
           .onErrorReturn(throwable -> {
-            if (throwable instanceof RepositoryItemNotFoundException) {
-              authorizationAccessor.deleteAuthorization(paymentId);
-            } else {
-              rescheduleOrCancelSync(syncResult, throwable);
-            }
+            saveAndRescheduleOnNetworkError(syncResult, throwable);
             return null;
           })
           .toBlocking()
-          .subscribe();
+          .value();
     } catch (RuntimeException e) {
       rescheduleSync(syncResult);
     }
   }
 
-  private Observable<PaymentAuthorization> getServerAuthorization(int paymentId) {
+  private void saveAndRescheduleOnNetworkError(SyncResult syncResult, Throwable throwable) {
+    if (throwable instanceof IOException) {
+      rescheduleSync(syncResult);
+    } else {
+      authorizationAccessor.save(
+          new cm.aptoide.pt.database.realm.PaymentAuthorization(paymentId, "", "",
+              PaymentAuthorization.Status.ERROR.name()));
+    }
+  }
+
+  private void saveAndReschedulePendingAuthorization(PurchaseAuthorizationResponse response,
+      SyncResult syncResult) {
+    final PaymentAuthorization paymentAuthorization =
+        authorizationConverter.convertToPaymentAuthorization(paymentId, response);
+    authorizationAccessor.save(
+        authorizationConverter.convertToDatabasePaymentAuthorization(paymentId, response));
+    if (paymentAuthorization.isPending()) {
+      rescheduleSync(syncResult);
+    }
+  }
+
+  private Single<PurchaseAuthorizationResponse> getServerAuthorization(int paymentId) {
     return GetProductPurchaseAuthorizationRequest.of(AptoideAccountManager.getAccessToken(),
-        paymentId).observe().flatMap(response -> {
+        paymentId).observe().toSingle().flatMap(response -> {
       if (response != null && response.isOk()) {
-        return Observable.just(response);
+        return Single.just(response);
       }
-      return Observable.error(new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
-    }).map(response -> authorizationConverter.convertToPaymentAuthorization(paymentId, response));
+      return Single.error(new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
+    });
+  }
+
+  private void reschedulePendingAuthorization(PaymentAuthorization paymentAuthorization,
+      SyncResult syncResult) {
+    if (paymentAuthorization.isPending()) {
+      rescheduleSync(syncResult);
+    }
   }
 }

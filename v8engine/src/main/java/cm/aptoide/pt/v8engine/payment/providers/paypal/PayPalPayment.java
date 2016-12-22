@@ -8,9 +8,7 @@ package cm.aptoide.pt.v8engine.payment.providers.paypal;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.support.annotation.NonNull;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
-import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.payment.Price;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentCancellationException;
@@ -20,6 +18,7 @@ import cm.aptoide.pt.v8engine.repository.PaymentConfirmationRepository;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 import java.math.BigDecimal;
 import java.util.Locale;
+import rx.Completable;
 import rx.Observable;
 
 /**
@@ -40,31 +39,29 @@ public class PayPalPayment extends AbstractPayment {
 
   private final Context context;
   private final PayPalConfiguration configuration;
-  private final PaymentConfirmationRepository confirmationRepository;
 
   public PayPalPayment(Context context, int id, String type, String name, String sign, Price price,
       PayPalConfiguration configuration, Product product, String methodLabel,
       PaymentConfirmationRepository confirmationRepository) {
     super(id, type, product, price,
-        String.format(Locale.getDefault(), "%s - %.2f %s", methodLabel, price.getAmount(), sign));
+        String.format(Locale.getDefault(), "%s - %.2f %s", methodLabel, price.getAmount(), sign),
+        confirmationRepository);
     this.context = context;
     this.configuration = configuration;
-    this.confirmationRepository = confirmationRepository;
   }
 
-  @Override public Observable<PaymentConfirmation> process() {
+  @Override public Completable process() {
     final IntentFilter paymentResultFilter = new IntentFilter();
     paymentResultFilter.addAction(PAYMENT_RESULT_ACTION);
     return Observable.create(
         new BroadcastRegisterOnSubscribe(context, paymentResultFilter, null, null))
         .doOnSubscribe(() -> startPayPalActivity(getPrice(), getProduct()))
-        .filter(intent -> isPaymentConfirmationIntent(intent))
+        .first(intent -> isPaymentConfirmationIntent(intent))
         .flatMap(intent -> getIntentPaymentConfirmationId(intent, getId(), getProduct().getId()))
-        .flatMap(paymentConfirmationId -> confirmationRepository.createPaymentConfirmation(getId(),
-            paymentConfirmationId));
+        .flatMap(paymentConfirmationId -> process(paymentConfirmationId).toObservable())
+        .toCompletable();
   }
 
-  @NonNull
   private Observable<String> getIntentPaymentConfirmationId(Intent intent, int id, int productId) {
     final com.paypal.android.sdk.payments.PaymentConfirmation payPalConfirmation;
     switch (intent.getIntExtra(PAYMENT_STATUS_EXTRA, PAYMENT_STATUS_FAILED)) {

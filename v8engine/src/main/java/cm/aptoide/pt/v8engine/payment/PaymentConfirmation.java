@@ -11,13 +11,14 @@ package cm.aptoide.pt.v8engine.payment;
 public class PaymentConfirmation {
 
   public static enum Status {
-    UNKNOWN,
-    COMPLETED,
+    SYNCING,
     CREATED,
-    FAILED,
-    CANCELED,
     PROCESSING,
-    PENDING
+    PENDING,
+    COMPLETED,
+    FAILED,
+    ERROR,
+    CANCELED
   }
 
   private final String paymentConfirmationId;
@@ -51,9 +52,16 @@ public class PaymentConfirmation {
     return Status.COMPLETED.equals(status);
   }
 
+  public boolean isPending() {
+    return Status.CREATED.equals(status)
+        || Status.PROCESSING.equals(status)
+        || Status.PENDING.equals(status)
+        || Status.SYNCING.equals(status);
+  }
   public boolean isFailed() {
     return Status.FAILED.equals(status)
-        || Status.CANCELED.equals(status);
+        || Status.CANCELED.equals(status)
+        || Status.ERROR.equals(status);
   }
 
   @Override public boolean equals(Object o) {

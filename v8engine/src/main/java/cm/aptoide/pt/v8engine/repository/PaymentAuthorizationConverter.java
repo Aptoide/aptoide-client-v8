@@ -9,13 +9,11 @@ import cm.aptoide.pt.model.v3.PurchaseAuthorizationResponse;
 import cm.aptoide.pt.v8engine.payment.PaymentAuthorization;
 
 public class PaymentAuthorizationConverter {
-  public PaymentAuthorizationConverter() {
-  }
 
-  public PaymentAuthorization convertToPaymentAuthorization(int paymentId,
+  public cm.aptoide.pt.database.realm.PaymentAuthorization convertToDatabasePaymentAuthorization(int paymentId,
       PurchaseAuthorizationResponse response) {
-    return new PaymentAuthorization(paymentId, response.getUrl(), response.getSuccessUrl(),
-        PaymentAuthorization.Status.valueOf(response.getAuthorizationStatus()));
+    return new cm.aptoide.pt.database.realm.PaymentAuthorization(paymentId, response.getUrl(),
+        response.getSuccessUrl(), response.getAuthorizationStatus());
   }
 
   public PaymentAuthorization convertToPaymentAuthorization(
@@ -25,10 +23,10 @@ public class PaymentAuthorizationConverter {
         PaymentAuthorization.Status.valueOf(paymentAuthorization.getStatus()));
   }
 
-  public cm.aptoide.pt.database.realm.PaymentAuthorization convertToPaymentAuthorization(
-      PaymentAuthorization paymentAuthorization) {
-    return new cm.aptoide.pt.database.realm.PaymentAuthorization(paymentAuthorization.getPaymentId(),
-        paymentAuthorization.getUrl(), paymentAuthorization.getRedirectUrl(),
-        paymentAuthorization.getStatus().name());
+  public PaymentAuthorization convertToPaymentAuthorization(int paymentId,
+      PurchaseAuthorizationResponse response) {
+    return new PaymentAuthorization(paymentId,
+        response.getUrl(), response.getSuccessUrl(),
+        PaymentAuthorization.Status.valueOf(response.getStatus()));
   }
 }

@@ -9,10 +9,13 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.PaymentConfirmationAccessor;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.ws.v3.CreateInAppBillingProductPaymentRequest;
+import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.model.v3.ProductPaymentResponse;
 import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.payment.product.InAppBillingProduct;
+import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import cm.aptoide.pt.v8engine.repository.sync.SyncAdapterBackgroundSync;
+import rx.Completable;
 import rx.Observable;
 
 /**
@@ -29,20 +32,22 @@ public class InAppPaymentConfirmationRepository extends PaymentConfirmationRepos
     this.product = product;
   }
 
-  @Override public Observable<PaymentConfirmation> createPaymentConfirmation(int paymentId) {
+  @Override public Completable createPaymentConfirmation(int paymentId) {
     return CreateInAppBillingProductPaymentRequest.of(product.getId(), paymentId, operatorManager,
         product.getDeveloperPayload(), AptoideAccountManager.getAccessToken())
         .observe()
         .cast(ProductPaymentResponse.class)
-        .map(response -> paymentConfirmationConverter.convertToPaymentConfirmation(product.getId(),
-            response))
-        .doOnNext(paymentConfirmation ->
-            syncPaymentConfirmationInBackground(product, paymentConfirmation))
-        .flatMap(paymentConfirmation -> getPaymentConfirmation(product));
+        .flatMap(response -> {
+          if (response != null && response.isOk()) {
+            syncPaymentConfirmation(paymentId, response, product);
+            return Observable.just(null);
+          }
+          return Observable.error(
+              new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
+        }).toCompletable();
   }
 
-  @Override
-  public Observable<PaymentConfirmation> createPaymentConfirmation(int paymentId,
+  @Override public Completable createPaymentConfirmation(int paymentId,
       String paymentConfirmationId) {
     return createPaymentConfirmation(paymentId, paymentConfirmationId, product);
   }
