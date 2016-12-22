@@ -27,7 +27,7 @@ import lombok.Data;
   String repo;
   public String access;
   @JsonProperty("access_confirmed") public Boolean accessConfirmed;
-  public RepoDescription repoDescription;
+  @JsonProperty("repoDescription") public RepoDescription repoDescription;
 
   @Data public static class RepoDescription {
     public long id_store;
