@@ -75,6 +75,14 @@ public class SharePreviewDialog {
       like.setVisibility(View.VISIBLE);
       comments.setVisibility(View.VISIBLE);
 
+
+
+
+
+
+
+
+
       //if (displayable.getStore() != null) {
       //  if (displayable.getUser() != null && (BaseActivity.UserAccessState.PUBLIC.toString()).equals(
       //      ManagerPreferences.getUserAccess())) {
@@ -102,6 +110,17 @@ public class SharePreviewDialog {
       //    subtitle.setVisibility(View.GONE);
       //  }
       //}
+
+
+
+
+
+
+
+
+
+
+
 
       ImageLoader.loadWithShadowCircleTransform(
           AptoideAccountManager.getUserData().getUserAvatarRepo(), storeAvatar);
