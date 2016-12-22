@@ -61,29 +61,42 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
                   DataProvider.getContext()).getAptoideClientUUID());
           break;
       }
+      LinkedList<Displayable> dispList = new LinkedList<>();
 
       Action1<GetFollowers> action = (followersList) -> {
-        LinkedList<Displayable> dispList = new LinkedList<>();
-        switch (openMode) {
-          case FOLLOWERS:
-            dispList.add(new MessageWhiteBgDisplayable(
-                getString(R.string.social_timeline_share_bar_followers)));
-            break;
-          case FOLLOWING:
-            dispList.add(new MessageWhiteBgDisplayable(
-                getString(R.string.social_timeline_share_bar_following)));
-            break;
-        }
         for (GetFollowers.TimelineUser user : followersList.getDatalist().getList()) {
           dispList.add(new FollowUserDisplayable(user));
         }
         addDisplayables(dispList);
-        finishLoading();
+        dispList.clear();
+      };
+
+      EndlessRecyclerOnScrollListener.BooleanAction<GetFollowers> firstRequest = response -> {
+        String headerMessage, footerMessage;
+        switch (openMode) {
+          case FOLLOWERS:
+            headerMessage = getString(R.string.social_timeline_share_bar_followers);
+            footerMessage =
+                getString(R.string.private_followers_message, response.getDatalist().getHidden());
+            break;
+          case FOLLOWING:
+            headerMessage = getString(R.string.social_timeline_share_bar_following);
+            footerMessage =
+                getString(R.string.private_following_message, response.getDatalist().getHidden());
+            break;
+          default:
+            headerMessage = "";
+            footerMessage = "";
+        }
+        dispList.add(0, new MessageWhiteBgDisplayable(headerMessage));
+        endlessRecyclerOnScrollListener.setOnEndOfListReachedListener(
+            () -> addDisplayable(new MessageWhiteBgDisplayable(footerMessage)));
+        return false;
       };
       recyclerView.clearOnScrollListeners();
       endlessRecyclerOnScrollListener =
           new EndlessRecyclerOnScrollListener(this.getAdapter(), request, action,
-              errorRequestListener, true);
+              errorRequestListener, 6, true, firstRequest, null);
       recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
       endlessRecyclerOnScrollListener.onLoadMore(refresh);
     } else {
@@ -113,6 +126,11 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
     openMode = (FollowFragmentOpenMode) args.get(OPEN_MODE);
+  }
+
+  @Override public void onDestroyView() {
+    endlessRecyclerOnScrollListener.removeListeners();
+    super.onDestroyView();
   }
 
   public static TimeLineFollowFragment newInstance(FollowFragmentOpenMode openMode,
