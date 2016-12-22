@@ -716,7 +716,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
         .execute(genericResponseV3 -> Logger.d(TAG, "Successfully subscribed " + storeName), true);
   }
 
-  private static void sendLoginBroadcast() {
+  static void sendLoginBroadcast() {
     getContext().sendBroadcast(new Intent().setAction(LOGIN));
   }
 
@@ -858,7 +858,8 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
       getContext().startActivity(intent);
     }
 
-    if ((loginType.equals(LoginMode.FACEBOOK) || loginType.equals(LoginMode.GOOGLE)) && !ManagerPreferences.getUserAccessConfirmed()) {
+    if ((loginType.equals(LoginMode.FACEBOOK) || loginType.equals(LoginMode.GOOGLE))
+        && !ManagerPreferences.getUserAccessConfirmed()) {
       Intent socialIntent = new Intent(getContext(), LoggedInActivity.class);
       socialIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
       socialIntent.putExtra(AptoideLoginUtils.IS_FACEBOOK_OR_GOOGLE, true);
