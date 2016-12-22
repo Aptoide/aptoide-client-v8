@@ -64,7 +64,7 @@ public class SocialStoreLatestAppsDisplayable extends SocialCardDisplayable {
       abTestingURL = socialStoreLatestApps.getAb().getConversion().getUrl();
     }
     return new SocialStoreLatestAppsDisplayable(socialStoreLatestApps,
-        socialStoreLatestApps.getStore().getName(), socialStoreLatestApps.getStore().getAvatar(),
+        socialStoreLatestApps.getOwnerStore().getName(), socialStoreLatestApps.getOwnerStore().getAvatar(),
         latestApps, abTestingURL, socialStoreLatestApps.getLikes(),
         socialStoreLatestApps.getComments(), dateCalculator,
         socialStoreLatestApps.getLatestUpdate(), timelineMetricsManager, socialRepository);

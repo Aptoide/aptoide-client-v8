@@ -32,7 +32,7 @@ public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayab
   private TextView getApp;
   private CardView cardView;
   private RelativeLayout cardContent;
-  private LinearLayout share;
+  //private LinearLayout share;
   private LikeButton likeButton;
   private TextView numberLikes;
   private TextView numberComments;
@@ -59,7 +59,7 @@ public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayab
         (CardView) itemView.findViewById(R.id.displayable_social_timeline_recommendation_card);
     cardContent = (RelativeLayout) itemView.findViewById(
         R.id.displayable_social_timeline_recommendation_card_content);
-    share = (LinearLayout) itemView.findViewById(R.id.social_share);
+    //share = (LinearLayout) itemView.findViewById(R.id.social_share);
     likeButton = (LikeButton) itemView.findViewById(R.id.social_like_test);
     numberLikes = (TextView) itemView.findViewById(R.id.social_number_of_likes);
     numberComments = (TextView) itemView.findViewById(R.id.social_number_of_comments);
@@ -106,26 +106,6 @@ public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayab
       //    .build(), AptoideAnalytics.OPEN_APP);
       ((FragmentShower) getContext()).pushFragmentV4(
           V8Engine.getFragmentProvider().newAppViewFragment(displayable.getAppId()));
-    });
-
-    // TODO: 21/12/2016 jdandradex
-    share.setVisibility(View.INVISIBLE);
-
-    compositeSubscription.add(RxView.clicks(share).subscribe(click -> {
-      shareCard(displayable);
-    }, throwable -> throwable.printStackTrace()));
-
-    likeButton.setOnLikeListener(new OnLikeListener() {
-      @Override public void liked(LikeButton likeButton) {
-        likeCard(displayable, 1);
-        numberLikes.setText(String.valueOf(displayable.getNumberOfLikes() + 1));
-      }
-
-      @Override public void unLiked(LikeButton likeButton) {
-        likeButton.setLiked(true);
-        //likeCard(displayable, cardType, -1);
-        //numberLikes.setText("0");
-      }
     });
   }
 

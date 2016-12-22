@@ -43,33 +43,38 @@
         android:layout_marginTop="14dp"
         tools:ignore="contentDescription" />
 
-      <TextView
-        android:id="@+id/card_title"
-        style="@style/Widget.Aptoide.Card.Title"
+      <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="48dp"
-        android:layout_marginLeft="72dp"
-        android:layout_marginRight="48dp"
-        android:layout_marginStart="72dp"
-        android:layout_marginTop="14.7dp"
-        android:ellipsize="end"
-        android:lines="1"
-        tools:text="Hamata6 Store" />
+        android:layout_height="match_parent"
+        android:gravity="center_vertical">
 
-      <TextView
-        android:id="@+id/card_subtitle"
-        style="@style/Widget.Aptoide.Card.Subtitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/card_title"
-        android:layout_marginEnd="48dp"
-        android:layout_marginLeft="72dp"
-        android:layout_marginRight="48dp"
-        android:layout_marginStart="72dp"
-        android:ellipsize="end"
-        android:lines="1"
-        tools:text="Há duas horas" />
+        <TextView
+          android:id="@+id/card_title"
+          style="@style/Widget.Aptoide.Card.Title"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginEnd="48dp"
+          android:layout_marginLeft="72dp"
+          android:layout_marginRight="48dp"
+          android:layout_marginStart="72dp"
+          android:ellipsize="end"
+          android:lines="1"
+          tools:text="Hamata6 Store" />
+
+        <TextView
+          android:id="@+id/card_subtitle"
+          style="@style/Widget.Aptoide.Card.Subtitle"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_below="@+id/card_title"
+          android:layout_marginEnd="48dp"
+          android:layout_marginLeft="72dp"
+          android:layout_marginRight="48dp"
+          android:layout_marginStart="72dp"
+          android:ellipsize="end"
+          android:lines="1"
+          tools:text="Há duas horas" />
+      </RelativeLayout>
 
       <ImageView
         android:layout_width="70dp"
