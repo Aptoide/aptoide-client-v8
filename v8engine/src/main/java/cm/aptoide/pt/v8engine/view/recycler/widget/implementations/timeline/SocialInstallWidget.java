@@ -68,17 +68,28 @@ public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayab
   @Override public void bindView(SocialInstallDisplayable displayable) {
     super.bindView(displayable);
     if (displayable.getStore() != null) {
+      storeName.setVisibility(View.VISIBLE);
       storeName.setText(displayable.getStore().getName());
-    }
-
-    if (displayable.getUser() != null) {
-      userName.setText(displayable.getUser().getName());
-    }
-    if (displayable.getStore() != null) {
+      storeAvatar.setVisibility(View.VISIBLE);
       ImageLoader.loadWithShadowCircleTransform(displayable.getStore().getAvatar(), storeAvatar);
-    }
-    if (displayable.getUser() != null) {
-      ImageLoader.loadWithShadowCircleTransform(displayable.getUser().getAvatar(), userAvatar);
+      if (displayable.getUser() != null) {
+        userName.setVisibility(View.VISIBLE);
+        userName.setText(displayable.getUser().getName());
+        userAvatar.setVisibility(View.VISIBLE);
+        ImageLoader.loadWithShadowCircleTransform(displayable.getUser().getAvatar(), userAvatar);
+      } else {
+        userName.setVisibility(View.GONE);
+        userAvatar.setVisibility(View.GONE);
+      }
+    } else {
+      userName.setVisibility(View.GONE);
+      userAvatar.setVisibility(View.GONE);
+      if (displayable.getUser() != null) {
+        storeName.setVisibility(View.VISIBLE);
+        storeName.setText(displayable.getUser().getName());
+        storeAvatar.setVisibility(View.VISIBLE);
+        ImageLoader.loadWithShadowCircleTransform(displayable.getUser().getAvatar(), storeAvatar);
+      }
     }
     setCardViewMargin(displayable, cardView);
 
