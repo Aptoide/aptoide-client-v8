@@ -187,6 +187,13 @@ public class CreateStoreActivity extends PermissionsBaseActivity
               } else {
                 onCreateFail(
                     ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors().get(0).code));
+                ShowMessage.asObservableSnack(this, ErrorsMapper
+                    .getWebServiceErrorMessageFromCode(answer.getErrors().get(0).code))
+                    .subscribe(visibility -> {
+                      if (visibility == ShowMessage.DISMISSED) {
+                        finish();
+                      }
+                    });
               }
             }
           } else {
@@ -274,11 +281,17 @@ public class CreateStoreActivity extends PermissionsBaseActivity
                   });
             } else {
               progressDialog.dismiss();
-              onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
-
+              ShowMessage.asObservableSnack(this, ErrorsMapper
+                  .getWebServiceErrorMessageFromCode(throwable.getMessage()))
+              .subscribe(visibility -> {
+                if (visibility == ShowMessage.DISMISSED) {
+                  finish();
+                }
+              });
             }
             AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
               progressDialog.dismiss();
+              finish();
             }, throwable1 -> throwable1.printStackTrace());
           }));
     } else if (CREATE_STORE_REQUEST_CODE == 2 || CREATE_STORE_REQUEST_CODE == 3) {
