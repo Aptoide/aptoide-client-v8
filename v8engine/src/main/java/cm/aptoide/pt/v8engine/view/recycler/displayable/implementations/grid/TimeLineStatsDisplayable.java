@@ -2,6 +2,8 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.text.Spannable;
+import android.text.style.UnderlineSpan;
 import cm.aptoide.pt.model.v7.TimelineStats;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -35,15 +37,23 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
   }
 
   CharSequence getFollowersText(Context context) {
-    return spannableFactory.createColorSpan(
-        context.getString(R.string.timeline_followers, getPojo().getData().getFollowers()),
-        Color.BLACK, String.valueOf(getPojo().getData().getFollowers()));
+
+    String t = context.getString(R.string.timeline_followers, getPojo().getData().getFollowing());
+    Spannable s = spannableFactory.createColorSpan(t, Color.BLACK,
+        String.valueOf(getPojo().getData().getFollowing()));
+    s.setSpan(new UnderlineSpan(), context.getString(R.string.timeline_stats_followers).length(),
+        t.length(), 0);
+    return s;
   }
 
   CharSequence getFollowingText(Context context) {
-    return spannableFactory.createColorSpan(
-        context.getString(R.string.timeline_followed, getPojo().getData().getFollowing()),
-        Color.BLACK, String.valueOf(getPojo().getData().getFollowing()));
+
+    String t = context.getString(R.string.timeline_followed, getPojo().getData().getFollowing());
+    Spannable s = spannableFactory.createColorSpan(t, Color.BLACK,
+        String.valueOf(getPojo().getData().getFollowing()));
+    s.setSpan(new UnderlineSpan(), context.getString(R.string.timeline_stats_followers).length(),
+        t.length(), 0);
+    return s;
   }
 
   public Void followersClick(FragmentShower fragmentShower) {
