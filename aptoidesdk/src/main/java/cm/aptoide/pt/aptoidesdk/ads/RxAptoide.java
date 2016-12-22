@@ -56,7 +56,8 @@ public class RxAptoide {
       throw new IllegalArgumentException("Oemid cannot be null!");
     }
 
-    changeEndpointsBasedOnOemID(oemid);
+    setupEndpointsBasedOnOemId(oemid);
+    setupForcedCountryBasedOnOemId(oemid);
 
     AptoideUtils.setContext(context);
     RxAptoide.oemid = oemid;
@@ -73,10 +74,18 @@ public class RxAptoide {
     Logger.setDBG(BuildConfig.DEBUG);
   }
 
-  private static void changeEndpointsBasedOnOemID(String oemid) {
+  private static void setupEndpointsBasedOnOemId(String oemid) {
     switch (oemid) {
       case INDUS:
         GetAdsRequest.setBaseUrl("http://indusos.aptoide.com/api/2/");
+        break;
+    }
+  }
+
+  private static void setupForcedCountryBasedOnOemId(String oemid) {
+    switch (oemid) {
+      case INDUS:
+        GetAdsRequest.setForcedCountry("IN");
         break;
     }
   }
