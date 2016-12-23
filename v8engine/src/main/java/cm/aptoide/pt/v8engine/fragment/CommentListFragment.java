@@ -98,7 +98,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
     elementIdAsString = args.getString(ELEMENT_ID_AS_STRING);
     elementIdAsLong = args.getLong(ELEMENT_ID_AS_LONG);
     url = args.getString(URL_VAL);
-    commentType = Enum.valueOf(CommentType.class, args.getString(COMMENT_TYPE));
+    commentType = CommentType.valueOf(args.getString(COMMENT_TYPE));
 
     // extracting store data from the URL...
     if (commentType == CommentType.STORE) {
