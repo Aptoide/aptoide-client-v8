@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 30/08/2016.
  */
 
-package cm.aptoide.pt.v8engine.payment.product;
+package cm.aptoide.pt.v8engine.payment.products;
 
 import android.os.Parcel;
 import android.os.Parcelable;

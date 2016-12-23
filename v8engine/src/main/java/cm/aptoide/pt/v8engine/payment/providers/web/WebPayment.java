@@ -8,7 +8,8 @@ package cm.aptoide.pt.v8engine.payment.providers.web;
 import android.content.Context;
 import cm.aptoide.pt.v8engine.payment.Price;
 import cm.aptoide.pt.v8engine.payment.Product;
-import cm.aptoide.pt.v8engine.payment.exception.PaymentFailureException;
+import cm.aptoide.pt.v8engine.payment.authorizations.WebAuthorization;
+import cm.aptoide.pt.v8engine.payment.authorizations.WebAuthorizationActivity;
 import cm.aptoide.pt.v8engine.payment.providers.AbstractPayment;
 import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationRepository;
 import cm.aptoide.pt.v8engine.repository.PaymentConfirmationRepository;
@@ -39,6 +40,7 @@ public class WebPayment extends AbstractPayment {
     return authorizationRepository.getPaymentAuthorization(paymentId)
         .distinctUntilChanged(paymentAuthorization -> paymentAuthorization.getStatus())
         .takeUntil(paymentAuthorization -> paymentAuthorization.isAuthorized())
+        .cast(WebAuthorization.class)
         .flatMap(authorization -> {
           if (authorization.isInvalid()) {
             return authorizationRepository.createPaymentAuthorization(getId()).toObservable();
@@ -56,6 +58,6 @@ public class WebPayment extends AbstractPayment {
 
   private Completable startWebAuthorizationActivity(String url, String resultUrl) {
     return Completable.fromAction(
-        () -> context.startActivity(WebPaymentActivity.getIntent(context, url, resultUrl)));
+        () -> context.startActivity(WebAuthorizationActivity.getIntent(context, url, resultUrl)));
   }
 }
