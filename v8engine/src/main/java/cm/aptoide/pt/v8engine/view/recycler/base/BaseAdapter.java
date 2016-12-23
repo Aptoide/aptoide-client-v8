@@ -15,7 +15,6 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.WidgetFactory;
 import java.util.List;
-import rx.Single;
 
 /**
  * Created by neuro on 16-04-2016.
@@ -44,6 +43,11 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> implements Lifecyc
     return displayables.get(position).getViewLayout();
   }
 
+  @Override public void onViewRecycled(Widget holder) {
+    super.onViewRecycled(holder);
+    holder.unbindView();
+  }
+
   @Override public long getItemId(int position) {
     return position;
   }
@@ -52,17 +56,10 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> implements Lifecyc
     return displayables.size();
   }
 
-  @Override public void onViewRecycled(Widget holder) {
-    super.onViewRecycled(holder);
-    holder.unbindView();
-  }
-
   public Displayable popDisplayable() {
-    return Single.fromCallable(() -> {
-      Displayable pop = displayables.pop();
-      notifyItemRemoved(displayables.size());
-      return pop;
-    }).toBlocking().value();
+    Displayable pop = displayables.pop();
+    AptoideUtils.ThreadU.runOnUiThread(() -> notifyItemRemoved(displayables.size()));
+    return pop;
   }
 
   public Displayable getDisplayable(int position) {
@@ -70,52 +67,46 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> implements Lifecyc
   }
 
   public void addDisplayable(int position, Displayable displayable) {
-    AptoideUtils.ThreadU.runOnUiThread(() -> {
-      this.displayables.add(position, displayable);
-      notifyDataSetChanged();
-    });
+    this.displayables.add(position, displayable);
+    AptoideUtils.ThreadU.runOnUiThread(this::notifyDataSetChanged);
   }
 
   public void addDisplayable(Displayable displayable) {
-    AptoideUtils.ThreadU.runOnUiThread(() -> {
-      this.displayables.add(displayable);
-      notifyDataSetChanged();
-    });
+    this.displayables.add(displayable);
+    AptoideUtils.ThreadU.runOnUiThread(this::notifyDataSetChanged);
   }
 
   public void addDisplayables(List<? extends Displayable> displayables) {
-    AptoideUtils.ThreadU.runOnUiThread(() -> {
-      this.displayables.add(displayables);
-      notifyDataSetChanged();
-    });
+    this.displayables.add(displayables);
+    AptoideUtils.ThreadU.runOnUiThread(this::notifyDataSetChanged);
   }
 
   public void addDisplayables(int position, List<? extends Displayable> displayables) {
-    AptoideUtils.ThreadU.runOnUiThread(() -> {
-      this.displayables.add(position, displayables);
-      notifyItemRangeInserted(position, displayables.size());
-    });
+    this.displayables.add(position, displayables);
+    AptoideUtils.ThreadU.runOnUiThread(
+        () -> notifyItemRangeInserted(position, displayables.size()));
   }
 
   public void removeDisplayables(int startPosition, int endPosition) {
-    AptoideUtils.ThreadU.runOnUiThread(() -> {
-      int numberRemovedItems = this.displayables.remove(startPosition, endPosition);
-      notifyItemRangeRemoved(startPosition, numberRemovedItems);
-    });
+    int numberRemovedItems = this.displayables.remove(startPosition, endPosition);
+    AptoideUtils.ThreadU.runOnUiThread(
+        () -> notifyItemRangeRemoved(startPosition, numberRemovedItems));
   }
 
   public void removeDisplayable(int position) {
-    AptoideUtils.ThreadU.runOnUiThread(() -> {
-      this.displayables.remove(position);
-      notifyItemRemoved(position);
-    });
+    this.displayables.remove(position);
+    AptoideUtils.ThreadU.runOnUiThread(() -> notifyItemRemoved(position));
   }
 
   public void clearDisplayables() {
-    AptoideUtils.ThreadU.runOnUiThread(() -> {
-      displayables.clear();
+    clearDisplayables(true);
+  }
+
+  public void clearDisplayables(boolean notifyDataSetChanged) {
+    displayables.clear();
+    if (notifyDataSetChanged) {
       AptoideUtils.ThreadU.runOnUiThread(this::notifyDataSetChanged);
-    });
+    }
   }
 
   //
