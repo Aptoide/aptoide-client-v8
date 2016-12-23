@@ -46,4 +46,9 @@ public class SwipeLoaderLayoutHandler extends LoaderLayoutHandler {
     super.restoreState();
     swipeContainer.setEnabled(true);
   }
+
+  @Override public void unbindViews() {
+    swipeContainer.setOnRefreshListener(null);
+    super.unbindViews();
+  }
 }
