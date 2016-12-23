@@ -11,8 +11,8 @@ package cm.aptoide.pt.v8engine.payment;
 public class PaymentAuthorization {
 
   public enum Status {
-    ERROR,
     SYNCING,
+    SYNCING_ERROR,
     ACTIVE,
     INITIATED,
     PAYMENT_METHOD_CHANGE,
@@ -29,6 +29,14 @@ public class PaymentAuthorization {
   private final String url;
   private final String redirectUrl;
   private Status status;
+
+  public static PaymentAuthorization syncingError(int paymentId) {
+    return new PaymentAuthorization(paymentId, "", "", PaymentAuthorization.Status.SYNCING_ERROR);
+  }
+
+  public static PaymentAuthorization syncing(int paymentId) {
+    return new PaymentAuthorization(paymentId, "", "", Status.SYNCING);
+  }
 
   public PaymentAuthorization(int paymentId, String url, String redirectUrl, Status status) {
     this.paymentId = paymentId;
@@ -65,7 +73,7 @@ public class PaymentAuthorization {
         || Status.EXPIRED.equals(status)
         || Status.SESSION_EXPIRED.equals(status)
         || Status.CANCELLED_BY_CHARGEBACK.equals(status)
-        || Status.ERROR.equals(status);
+        || Status.SYNCING_ERROR.equals(status);
   }
 
   public Status getStatus() {

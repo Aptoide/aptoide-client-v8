@@ -56,9 +56,8 @@ public class PaymentAuthorizationSync extends RepositorySync {
     if (throwable instanceof IOException) {
       rescheduleSync(syncResult);
     } else {
-      authorizationAccessor.save(
-          new cm.aptoide.pt.database.realm.PaymentAuthorization(paymentId, "", "",
-              PaymentAuthorization.Status.ERROR.name()));
+      authorizationAccessor.save(authorizationConverter.convertToDatabasePaymentAuthorization(
+          PaymentAuthorization.syncingError(paymentId)));
     }
   }
 

@@ -45,8 +45,7 @@ public abstract class PaymentConfirmationRepository {
         .flatMap(paymentConfirmations -> Observable.from(paymentConfirmations)
             .map(paymentConfirmation -> confirmationConverter.convertToPaymentConfirmation(
                 paymentConfirmation))
-            .defaultIfEmpty(
-                new PaymentConfirmation("", product.getId(), PaymentConfirmation.Status.ERROR)))
+            .defaultIfEmpty(PaymentConfirmation.syncingError(product.getId())))
         .doOnSubscribe(() -> syncPaymentConfirmation((AptoideProduct) product));
   }
 
@@ -65,21 +64,17 @@ public abstract class PaymentConfirmationRepository {
   }
 
   private void syncPaymentConfirmation(AptoideProduct product) {
-    final PaymentConfirmation paymentConfirmation =
-        new PaymentConfirmation("", product.getId(), PaymentConfirmation.Status.SYNCING);
+    final PaymentConfirmation paymentConfirmation = PaymentConfirmation.syncing(product.getId());
     confirmationAccessor.save(
         confirmationConverter.convertToDatabasePaymentConfirmation(paymentConfirmation));
     backgroundSync.syncConfirmation(product);
   }
 
   private void syncPaymentConfirmation(int paymentId, AptoideProduct product,
-      String confirmationId) {
-    final PaymentConfirmation paymentConfirmation =
-        new PaymentConfirmation(confirmationId, product.getId(),
-            PaymentConfirmation.Status.SYNCING);
-    confirmationAccessor.save(
-        confirmationConverter.convertToDatabasePaymentConfirmation(paymentConfirmation));
-    backgroundSync.syncConfirmation(product, paymentConfirmation, paymentId);
+      String paymentConfirmationId) {
+    confirmationAccessor.save(confirmationConverter.convertToDatabasePaymentConfirmation(
+        PaymentConfirmation.syncing(paymentConfirmationId, product.getId())));
+    backgroundSync.syncConfirmation(product, paymentId, paymentConfirmationId);
   }
 
   private void storePaymentConfirmationInDatabase(PaymentConfirmation paymentConfirmation) {

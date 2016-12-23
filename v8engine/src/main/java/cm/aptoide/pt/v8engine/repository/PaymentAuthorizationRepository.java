@@ -48,15 +48,13 @@ public class PaymentAuthorizationRepository implements Repository {
         .flatMap(paymentAuthorizations -> Observable.from(paymentAuthorizations)
             .map(paymentAuthorization -> auhorizationConverter.convertToPaymentAuthorization(
                 paymentAuthorization))
-            .defaultIfEmpty(
-                new PaymentAuthorization(paymentId, "", "", PaymentAuthorization.Status.ERROR)))
+            .defaultIfEmpty(PaymentAuthorization.syncingError(paymentId)))
         .doOnSubscribe(() -> syncPaymentAuthorization(paymentId));
   }
 
   private void syncPaymentAuthorization(int paymentId) {
-    authotizationAccessor.save(
-        new cm.aptoide.pt.database.realm.PaymentAuthorization(paymentId, null, null,
-            PaymentAuthorization.Status.SYNCING.name()));
+    authotizationAccessor.save(auhorizationConverter.convertToDatabasePaymentAuthorization(
+        PaymentAuthorization.syncing(paymentId)));
     backgroundSync.syncAuthorization(paymentId);
   }
 
