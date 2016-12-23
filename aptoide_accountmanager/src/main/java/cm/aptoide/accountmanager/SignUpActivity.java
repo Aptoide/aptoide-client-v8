@@ -102,6 +102,6 @@ public class SignUpActivity extends BaseActivity implements AptoideAccountManage
   }
 
   @Override public String getUserEmail() {
-    return emailBox == null ? "" : emailBox.getText().toString();
+    return emailBox == null ? "" : emailBox.getText().toString().toLowerCase();
   }
 }
