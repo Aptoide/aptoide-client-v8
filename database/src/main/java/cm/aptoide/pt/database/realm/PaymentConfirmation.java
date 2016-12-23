@@ -14,12 +14,10 @@ import io.realm.annotations.PrimaryKey;
  */
 public class PaymentConfirmation extends RealmObject {
 
-  public static final String PAYMENT_CONFIRMATION_ID = "paymentConfirmationId";
   public static final String PRODUCT_ID = "productId";
 
-  @PrimaryKey private String paymentConfirmationId;
-  @Index private int productId;
-
+  @PrimaryKey private int productId;
+  private String paymentConfirmationId;
   private String status;
 
   public PaymentConfirmation() {
@@ -30,7 +28,6 @@ public class PaymentConfirmation extends RealmObject {
     this.status = status;
     this.productId = productId;
   }
-
   public String getPaymentConfirmationId() {
     return paymentConfirmationId;
   }

@@ -12,23 +12,35 @@ public class PaymentConfirmation {
 
   public static enum Status {
     SYNCING,
+    SYNCING_ERROR,
     CREATED,
     PROCESSING,
     PENDING,
     COMPLETED,
     FAILED,
-    ERROR,
     CANCELED
   }
 
-  private final String paymentConfirmationId;
   private final int productId;
+  private final String paymentConfirmationId;
 
   private Status status;
 
-  public PaymentConfirmation(String paymentConfirmationId, int productId, Status status) {
-    this.paymentConfirmationId = paymentConfirmationId;
+  public static PaymentConfirmation syncingError(int productId) {
+    return new PaymentConfirmation(productId, "", Status.SYNCING_ERROR);
+  }
+
+  public static PaymentConfirmation syncing(int productId) {
+    return PaymentConfirmation.syncing("", productId);
+  }
+
+  public static PaymentConfirmation syncing(String paymentConfirmationId, int productId) {
+    return new PaymentConfirmation(productId, paymentConfirmationId, Status.SYNCING);
+  }
+
+  public PaymentConfirmation(int productId, String paymentConfirmationId, Status status) {
     this.productId = productId;
+    this.paymentConfirmationId = paymentConfirmationId;
     this.status = status;
   }
 
@@ -61,27 +73,6 @@ public class PaymentConfirmation {
   public boolean isFailed() {
     return Status.FAILED.equals(status)
         || Status.CANCELED.equals(status)
-        || Status.ERROR.equals(status);
-  }
-
-  @Override public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    final PaymentConfirmation that = (PaymentConfirmation) o;
-
-    if (!paymentConfirmationId.equals(that.paymentConfirmationId)) {
-      return false;
-    }
-
-    return true;
-  }
-
-  @Override public int hashCode() {
-    return paymentConfirmationId.hashCode();
+        || Status.SYNCING_ERROR.equals(status);
   }
 }

@@ -170,9 +170,10 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
 
       RealmObjectSchema paymentConfirmationSchema = schema.get("PaymentConfirmation")
           .addField("status", String.class, FieldAttribute.REQUIRED)
-          .transform(obj -> obj.set("status", "UNKNOWN"))
+          .transform(paymentConfirmation -> paymentConfirmation.set("status", "UNKNOWN"))
           .setNullable("status", false)
-          .removeField("paymentId")
+          .removePrimaryKey()
+          .addPrimaryKey("productId")
           .removeField("price")
           .removeField("currency")
           .removeField("taxRate")

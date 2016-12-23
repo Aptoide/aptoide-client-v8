@@ -11,7 +11,6 @@ import android.content.ContentResolver;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.preferences.AptoidePreferencesConfiguration;
-import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.payment.product.AptoideProduct;
 
 /**
@@ -41,10 +40,9 @@ public class SyncAdapterBackgroundSync {
     schedule(productConverter.toBundle(product));
   }
 
-  public void syncConfirmation(AptoideProduct product, PaymentConfirmation paymentConfirmation,
-      int paymentId) {
+  public void syncConfirmation(AptoideProduct product, int paymentId, String paymentConfirmationId) {
     final Bundle bundle = productConverter.toBundle(product);
-    bundle.putString(AptoideSyncAdapter.EXTRA_PAYMENT_CONFIRMATION_ID, paymentConfirmation.getPaymentConfirmationId());
+    bundle.putString(AptoideSyncAdapter.EXTRA_PAYMENT_CONFIRMATION_ID, paymentConfirmationId);
     bundle.putInt(AptoideSyncAdapter.EXTRA_PAYMENT_ID, paymentId);
     schedule(bundle);
   }

@@ -15,7 +15,6 @@ import cm.aptoide.pt.dataprovider.ws.v3.CreateInAppBillingProductPaymentRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.CreatePaidAppProductPaymentRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.model.v3.ProductPaymentResponse;
-import cm.aptoide.pt.v8engine.payment.PaymentAuthorization;
 import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.product.InAppBillingProduct;
@@ -36,20 +35,20 @@ public class PaymentConfirmationSync extends RepositorySync {
   private final Product product;
   private final NetworkOperatorManager operatorManager;
   private final PaymentConfirmationAccessor confirmationAccessor;
-  private final PaymentConfirmationConverter paymentConfirmationConverter;
+  private final PaymentConfirmationConverter confirmationConverter;
   private final String paymentConfirmationId;
   private int paymentId;
 
   public PaymentConfirmationSync(PaymentConfirmationRepository paymentConfirmationRepository,
       Product product, NetworkOperatorManager operatorManager,
       PaymentConfirmationAccessor confirmationAccessor,
-      PaymentConfirmationConverter paymentConfirmationConverter, String paymentConfirmationId,
+      PaymentConfirmationConverter confirmationConverter, String paymentConfirmationId,
       int paymentId) {
     this.paymentConfirmationRepository = paymentConfirmationRepository;
     this.product = product;
     this.operatorManager = operatorManager;
     this.confirmationAccessor = confirmationAccessor;
-    this.paymentConfirmationConverter = paymentConfirmationConverter;
+    this.confirmationConverter = confirmationConverter;
     this.paymentConfirmationId = paymentConfirmationId;
     this.paymentId = paymentId;
   }
@@ -78,16 +77,15 @@ public class PaymentConfirmationSync extends RepositorySync {
     if (throwable instanceof IOException) {
       rescheduleSync(syncResult);
     } else {
-      confirmationAccessor.save(
-          new cm.aptoide.pt.database.realm.PaymentConfirmation("", product.getId(),
-              PaymentConfirmation.Status.ERROR.name()));
+      confirmationAccessor.save(confirmationConverter.convertToDatabasePaymentConfirmation(
+          PaymentConfirmation.syncingError(product.getId())));
     }
   }
 
   private void saveAndReschedulePendingConfirmation(PaymentConfirmation paymentConfirmation,
       SyncResult syncResult) {
     confirmationAccessor.save(
-        paymentConfirmationConverter.convertToDatabasePaymentConfirmation(paymentConfirmation));
+        confirmationConverter.convertToDatabasePaymentConfirmation(paymentConfirmation));
     if (paymentConfirmation.isPending()) {
       rescheduleSync(syncResult);
     }
@@ -110,7 +108,7 @@ public class PaymentConfirmationSync extends RepositorySync {
     }).flatMap(response -> {
       if (response != null && response.isOk()) {
         return Single.just(
-            paymentConfirmationConverter.convertToPaymentConfirmation(product.getId(), response));
+            confirmationConverter.convertToPaymentConfirmation(product.getId(), response));
       }
       return Single.error(new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
     });
@@ -130,7 +128,7 @@ public class PaymentConfirmationSync extends RepositorySync {
     }).flatMap(response -> {
       if (response != null && response.isOk()) {
         return Single.just(
-            paymentConfirmationConverter.convertToPaymentConfirmation(product.getId(), response));
+            confirmationConverter.convertToPaymentConfirmation(product.getId(), response));
       }
       return Single.error(new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
     });
