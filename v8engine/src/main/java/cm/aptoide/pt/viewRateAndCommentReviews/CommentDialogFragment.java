@@ -36,7 +36,8 @@ public class CommentDialogFragment extends RxDialogFragment {
   private static final String TAG = CommentDialogFragment.class.getName();
 
   private static final String APP_OR_STORE_NAME = "app_or_store_name";
-  private static final String RESOURCE_ID = "resource_id";
+  private static final String RESOURCE_ID_AS_LONG = "resource_id_as_long";
+  private static final String RESOURCE_ID_AS_STRING = "resource_id_as_string";
   private static final String COMMENT_TYPE = "comment_type";
   private static final String PREVIOUS_COMMENT_ID = "previous_comment_id";
 
@@ -51,14 +52,18 @@ public class CommentDialogFragment extends RxDialogFragment {
   private TextInputLayout textInputLayout;
   private Button commentButton;
   private final String onEmptyTextError;
+  private boolean reply;
 
   public static CommentDialogFragment newInstanceStoreCommentReply(long storeId,
       long previousCommentId, String storeName) {
     Bundle args = new Bundle();
-    args.putString(APP_OR_STORE_NAME, TextUtils.isEmpty(storeName) ? null : storeName);
     args.putString(COMMENT_TYPE, CommentType.STORE.name());
-    args.putLong(RESOURCE_ID, storeId);
+    args.putLong(RESOURCE_ID_AS_LONG, storeId);
     args.putLong(PREVIOUS_COMMENT_ID, previousCommentId);
+
+    if(!TextUtils.isEmpty(storeName)) {
+      args.putString(APP_OR_STORE_NAME, storeName);
+    }
 
     CommentDialogFragment fragment = new CommentDialogFragment();
     fragment.setArguments(args);
@@ -67,9 +72,12 @@ public class CommentDialogFragment extends RxDialogFragment {
 
   public static CommentDialogFragment newInstanceReview(long id, String appName) {
     Bundle args = new Bundle();
-    args.putString(APP_OR_STORE_NAME, TextUtils.isEmpty(appName) ? null : appName);
     args.putString(COMMENT_TYPE, CommentType.REVIEW.name());
-    args.putLong(RESOURCE_ID, id);
+    args.putLong(RESOURCE_ID_AS_LONG, id);
+
+    if(!TextUtils.isEmpty(appName)) {
+      args.putString(APP_OR_STORE_NAME, appName);
+    }
 
     CommentDialogFragment fragment = new CommentDialogFragment();
     fragment.setArguments(args);
@@ -78,9 +86,12 @@ public class CommentDialogFragment extends RxDialogFragment {
 
   public static CommentDialogFragment newInstanceStoreComment(long id, String storeName) {
     Bundle args = new Bundle();
-    args.putString(APP_OR_STORE_NAME, TextUtils.isEmpty(storeName) ? null : storeName);
     args.putString(COMMENT_TYPE, CommentType.STORE.name());
-    args.putLong(RESOURCE_ID, id);
+    args.putLong(RESOURCE_ID_AS_LONG, id);
+
+    if(!TextUtils.isEmpty(storeName)) {
+      args.putString(APP_OR_STORE_NAME, storeName);
+    }
 
     CommentDialogFragment fragment = new CommentDialogFragment();
     fragment.setArguments(args);
@@ -90,7 +101,7 @@ public class CommentDialogFragment extends RxDialogFragment {
   public static CommentDialogFragment newInstanceTimelineArticleComment(String timelineArticleId) {
     Bundle args = new Bundle();
     args.putString(COMMENT_TYPE, CommentType.TIMELINE.name());
-    args.putString(RESOURCE_ID, timelineArticleId);
+    args.putString(RESOURCE_ID_AS_STRING, timelineArticleId);
 
     CommentDialogFragment fragment = new CommentDialogFragment();
     fragment.setArguments(args);
@@ -101,7 +112,7 @@ public class CommentDialogFragment extends RxDialogFragment {
       long previousCommentId) {
     Bundle args = new Bundle();
     args.putString(COMMENT_TYPE, CommentType.TIMELINE.name());
-    args.putString(RESOURCE_ID, timelineArticleId);
+    args.putString(RESOURCE_ID_AS_STRING, timelineArticleId);
     args.putLong(PREVIOUS_COMMENT_ID, previousCommentId);
 
     CommentDialogFragment fragment = new CommentDialogFragment();
@@ -117,14 +128,11 @@ public class CommentDialogFragment extends RxDialogFragment {
     Bundle args = getArguments();
     this.appOrStoreName = args.getString(APP_OR_STORE_NAME, "");
     this.commentType = CommentType.valueOf(args.getString(COMMENT_TYPE));
-
-    if (commentType == CommentType.TIMELINE) {
-      this.idAsString = args.getString(RESOURCE_ID);
-    } else {
-      this.idAsLong = args.getLong(RESOURCE_ID);
-    }
+    this.idAsString = args.getString(RESOURCE_ID_AS_STRING);
+    this.idAsLong = args.getLong(RESOURCE_ID_AS_STRING);
 
     if (args.containsKey(PREVIOUS_COMMENT_ID)) {
+      this.reply = true;
       this.previousCommentId = args.getLong(PREVIOUS_COMMENT_ID);
     }
   }
@@ -145,6 +153,7 @@ public class CommentDialogFragment extends RxDialogFragment {
         break;
       case TIMELINE:
         titleTextView.setText(getString(R.string.comment));
+        break;
       case STORE:
         titleTextView.setText(String.format(getString(R.string.comment_on_store),
             TextUtils.isEmpty(appOrStoreName) ? getString(R.string.word_this) : appOrStoreName));
