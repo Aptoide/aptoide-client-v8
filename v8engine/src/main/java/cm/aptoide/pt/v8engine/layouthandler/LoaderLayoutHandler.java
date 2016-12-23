@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.layouthandler;
 
+import android.support.annotation.CallSuper;
 import android.support.annotation.IdRes;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -98,5 +99,9 @@ public class LoaderLayoutHandler {
     genericErrorView.setVisibility(View.GONE);
     noNetworkConnectionView.setVisibility(View.GONE);
     progressBar.setVisibility(View.VISIBLE);
+  }
+
+  @CallSuper public void unbindViews() {
+
   }
 }
