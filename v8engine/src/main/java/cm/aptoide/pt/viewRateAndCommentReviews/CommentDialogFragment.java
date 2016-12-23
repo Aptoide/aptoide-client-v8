@@ -67,7 +67,7 @@ public class CommentDialogFragment extends RxDialogFragment {
 
   public static CommentDialogFragment newInstanceReview(long id, String appName) {
     Bundle args = new Bundle();
-    args.putString(APP_OR_STORE_NAME, appName);
+    args.putString(APP_OR_STORE_NAME, TextUtils.isEmpty(appName) ? null : appName);
     args.putString(COMMENT_TYPE, CommentType.REVIEW.name());
     args.putLong(RESOURCE_ID, id);
 
@@ -78,7 +78,7 @@ public class CommentDialogFragment extends RxDialogFragment {
 
   public static CommentDialogFragment newInstanceStoreComment(long id, String storeName) {
     Bundle args = new Bundle();
-    args.putString(APP_OR_STORE_NAME, storeName);
+    args.putString(APP_OR_STORE_NAME, TextUtils.isEmpty(storeName) ? null : storeName);
     args.putString(COMMENT_TYPE, CommentType.STORE.name());
     args.putLong(RESOURCE_ID, id);
 
@@ -210,7 +210,7 @@ public class CommentDialogFragment extends RxDialogFragment {
           return true;
         })
         .flatMap(inputText -> submitComment(inputText).observeOn(AndroidSchedulers.mainThread()))
-        .map(wsRespose -> wsRespose.isOk())
+        .map(wsResponse -> wsResponse.isOk())
         .doOnError(e -> {
           Logger.e(TAG, e);
           ShowMessage.asSnack(CommentDialogFragment.this, R.string.error_occured);

@@ -106,6 +106,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
           StoreUtils.getStoreCredentialsFromUrlOrNull(url);
       if (storeCredentials != null && !TextUtils.isEmpty(storeCredentials.getName())) {
         storeName = storeCredentials.getName();
+        elementIdAsLong = storeCredentials.getId();
       }
     }
   }
@@ -115,7 +116,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
     // StoreTabGridRecyclerFragment.
     if (toolbar != null) {
       ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-      if(commentType==CommentType.STORE) {
+      if (commentType == CommentType.STORE) {
         String title = String.format(getString(R.string.comment_on_store), storeName);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(title);
       } else {
