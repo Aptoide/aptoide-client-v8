@@ -8,7 +8,7 @@ package cm.aptoide.pt.v8engine.payment;
 import android.content.Context;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentAlreadyProcessedException;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentFailureException;
-import cm.aptoide.pt.v8engine.payment.product.AptoideProduct;
+import cm.aptoide.pt.v8engine.payment.products.AptoideProduct;
 import cm.aptoide.pt.v8engine.repository.PaymentConfirmationRepository;
 import cm.aptoide.pt.v8engine.repository.ProductRepository;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;

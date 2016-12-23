@@ -11,7 +11,8 @@ import cm.aptoide.pt.database.accessors.PaymentAuthorizationAccessor;
 import cm.aptoide.pt.dataprovider.ws.v3.GetProductPurchaseAuthorizationRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.model.v3.PurchaseAuthorizationResponse;
-import cm.aptoide.pt.v8engine.payment.PaymentAuthorization;
+import cm.aptoide.pt.v8engine.payment.authorizations.Authorization;
+import cm.aptoide.pt.v8engine.payment.authorizations.WebAuthorization;
 import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationConverter;
 import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationRepository;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
@@ -57,13 +58,13 @@ public class PaymentAuthorizationSync extends RepositorySync {
       rescheduleSync(syncResult);
     } else {
       authorizationAccessor.save(authorizationConverter.convertToDatabasePaymentAuthorization(
-          PaymentAuthorization.syncingError(paymentId)));
+          WebAuthorization.syncingError(paymentId)));
     }
   }
 
   private void saveAndReschedulePendingAuthorization(PurchaseAuthorizationResponse response,
       SyncResult syncResult) {
-    final PaymentAuthorization paymentAuthorization =
+    final Authorization paymentAuthorization =
         authorizationConverter.convertToPaymentAuthorization(paymentId, response);
     authorizationAccessor.save(
         authorizationConverter.convertToDatabasePaymentAuthorization(paymentId, response));
@@ -82,7 +83,7 @@ public class PaymentAuthorizationSync extends RepositorySync {
     });
   }
 
-  private void reschedulePendingAuthorization(PaymentAuthorization paymentAuthorization,
+  private void reschedulePendingAuthorization(Authorization paymentAuthorization,
       SyncResult syncResult) {
     if (paymentAuthorization.isPending()) {
       rescheduleSync(syncResult);

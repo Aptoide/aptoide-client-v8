@@ -11,7 +11,7 @@ import android.content.ContentResolver;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.preferences.AptoidePreferencesConfiguration;
-import cm.aptoide.pt.v8engine.payment.product.AptoideProduct;
+import cm.aptoide.pt.v8engine.payment.products.AptoideProduct;
 
 /**
  * Created by marcelobenites on 22/11/16.

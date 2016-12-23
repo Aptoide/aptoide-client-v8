@@ -22,9 +22,9 @@ import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.payment.PaymentFactory;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.PurchaseFactory;
-import cm.aptoide.pt.v8engine.payment.product.AptoideProduct;
-import cm.aptoide.pt.v8engine.payment.product.InAppBillingProduct;
-import cm.aptoide.pt.v8engine.payment.product.PaidAppProduct;
+import cm.aptoide.pt.v8engine.payment.products.AptoideProduct;
+import cm.aptoide.pt.v8engine.payment.products.InAppBillingProduct;
+import cm.aptoide.pt.v8engine.payment.products.PaidAppProduct;
 import cm.aptoide.pt.v8engine.repository.sync.ProductBundleConverter;
 import cm.aptoide.pt.v8engine.repository.sync.SyncAdapterBackgroundSync;
 

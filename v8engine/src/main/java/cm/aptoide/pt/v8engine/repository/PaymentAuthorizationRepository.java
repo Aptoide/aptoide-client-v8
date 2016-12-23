@@ -10,7 +10,8 @@ import cm.aptoide.pt.database.accessors.PaymentAuthorizationAccessor;
 import cm.aptoide.pt.dataprovider.ws.v3.CreatePurchaseAuthorizationRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.model.v3.PurchaseAuthorizationResponse;
-import cm.aptoide.pt.v8engine.payment.PaymentAuthorization;
+import cm.aptoide.pt.v8engine.payment.authorizations.Authorization;
+import cm.aptoide.pt.v8engine.payment.authorizations.WebAuthorization;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import cm.aptoide.pt.v8engine.repository.sync.SyncAdapterBackgroundSync;
 import rx.Completable;
@@ -43,18 +44,18 @@ public class PaymentAuthorizationRepository implements Repository {
         .toCompletable();
   }
 
-  public Observable<PaymentAuthorization> getPaymentAuthorization(int paymentId) {
+  public Observable<Authorization> getPaymentAuthorization(int paymentId) {
     return authotizationAccessor.getPaymentAuthorizations(paymentId)
         .flatMap(paymentAuthorizations -> Observable.from(paymentAuthorizations)
             .map(paymentAuthorization -> auhorizationConverter.convertToPaymentAuthorization(
                 paymentAuthorization))
-            .defaultIfEmpty(PaymentAuthorization.syncingError(paymentId)))
+            .defaultIfEmpty(WebAuthorization.syncingError(paymentId)))
         .doOnSubscribe(() -> syncPaymentAuthorization(paymentId));
   }
 
   private void syncPaymentAuthorization(int paymentId) {
     authotizationAccessor.save(auhorizationConverter.convertToDatabasePaymentAuthorization(
-        PaymentAuthorization.syncing(paymentId)));
+        WebAuthorization.syncing(paymentId)));
     backgroundSync.syncAuthorization(paymentId);
   }
 

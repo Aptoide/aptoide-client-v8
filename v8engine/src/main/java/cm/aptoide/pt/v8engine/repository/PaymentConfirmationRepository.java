@@ -10,7 +10,7 @@ import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.model.v3.ProductPaymentResponse;
 import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.payment.Product;
-import cm.aptoide.pt.v8engine.payment.product.AptoideProduct;
+import cm.aptoide.pt.v8engine.payment.products.AptoideProduct;
 import cm.aptoide.pt.v8engine.repository.sync.SyncAdapterBackgroundSync;
 import rx.Completable;
 import rx.Observable;

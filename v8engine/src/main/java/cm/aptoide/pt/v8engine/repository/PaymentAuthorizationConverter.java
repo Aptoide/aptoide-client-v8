@@ -6,7 +6,8 @@
 package cm.aptoide.pt.v8engine.repository;
 
 import cm.aptoide.pt.model.v3.PurchaseAuthorizationResponse;
-import cm.aptoide.pt.v8engine.payment.PaymentAuthorization;
+import cm.aptoide.pt.v8engine.payment.authorizations.Authorization;
+import cm.aptoide.pt.v8engine.payment.authorizations.WebAuthorization;
 
 public class PaymentAuthorizationConverter {
 
@@ -17,22 +18,23 @@ public class PaymentAuthorizationConverter {
   }
 
   public cm.aptoide.pt.database.realm.PaymentAuthorization convertToDatabasePaymentAuthorization(
-      PaymentAuthorization paymentAuthorization) {
+      Authorization paymentAuthorization) {
     return new cm.aptoide.pt.database.realm.PaymentAuthorization(
-        paymentAuthorization.getPaymentId(), paymentAuthorization.getUrl(),
-        paymentAuthorization.getRedirectUrl(), paymentAuthorization.getStatus().name());
+        paymentAuthorization.getPaymentId(), ((WebAuthorization) paymentAuthorization).getUrl(),
+        ((WebAuthorization) paymentAuthorization).getRedirectUrl(),
+        paymentAuthorization.getStatus().name());
   }
 
-  public PaymentAuthorization convertToPaymentAuthorization(
+  public Authorization convertToPaymentAuthorization(
       cm.aptoide.pt.database.realm.PaymentAuthorization paymentAuthorization) {
-    return new PaymentAuthorization(paymentAuthorization.getPaymentId(),
-        paymentAuthorization.getUrl(), paymentAuthorization.getRedirectUrl(),
-        PaymentAuthorization.Status.valueOf(paymentAuthorization.getStatus()));
+    return new WebAuthorization(paymentAuthorization.getPaymentId(), paymentAuthorization.getUrl(),
+        paymentAuthorization.getRedirectUrl(),
+        WebAuthorization.Status.valueOf(paymentAuthorization.getStatus()));
   }
 
-  public PaymentAuthorization convertToPaymentAuthorization(int paymentId,
+  public Authorization convertToPaymentAuthorization(int paymentId,
       PurchaseAuthorizationResponse response) {
-    return new PaymentAuthorization(paymentId, response.getUrl(), response.getSuccessUrl(),
-        PaymentAuthorization.Status.valueOf(response.getStatus()));
+    return new WebAuthorization(paymentId, response.getUrl(), response.getSuccessUrl(),
+        WebAuthorization.Status.valueOf(response.getStatus()));
   }
 }

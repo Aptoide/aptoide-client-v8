@@ -3,7 +3,7 @@
  * Modified by Marcelo Benites on 11/11/2016.
  */
 
-package cm.aptoide.pt.v8engine.payment.providers.web;
+package cm.aptoide.pt.v8engine.payment.authorizations;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -13,7 +13,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import cm.aptoide.pt.v8engine.R;
@@ -21,7 +20,7 @@ import cm.aptoide.pt.v8engine.R;
 /**
  * Created by marcelobenites on 11/11/16.
  */
-public class WebPaymentActivity extends AppCompatActivity {
+public class WebAuthorizationActivity extends AppCompatActivity {
 
   private static final String EXTRA_AUTHORIZATION_URL =
       "cm.aptoide.pt.v8engine.payment.providers.boacompra.intent.extra.AUTHORIZATION_URL";
@@ -30,7 +29,7 @@ public class WebPaymentActivity extends AppCompatActivity {
   private WebView webView;
 
   public static Intent getIntent(Context context, String url, String resultUrl) {
-    final Intent intent = new Intent(context, WebPaymentActivity.class);
+    final Intent intent = new Intent(context, WebAuthorizationActivity.class);
     intent.putExtra(EXTRA_AUTHORIZATION_URL, url);
     intent.putExtra(EXTRA_AUTHORIZATION_RESULT_URL, resultUrl);
     return intent;

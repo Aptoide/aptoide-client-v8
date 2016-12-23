@@ -7,7 +7,7 @@ package cm.aptoide.pt.v8engine.view;
 
 import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.Purchase;
-import cm.aptoide.pt.v8engine.payment.product.AptoideProduct;
+import cm.aptoide.pt.v8engine.payment.products.AptoideProduct;
 import java.util.List;
 import rx.Observable;
 

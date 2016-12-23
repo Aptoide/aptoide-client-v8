@@ -8,7 +8,7 @@ package cm.aptoide.pt.v8engine.repository;
 import android.content.Context;
 import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.Purchase;
-import cm.aptoide.pt.v8engine.payment.product.AptoideProduct;
+import cm.aptoide.pt.v8engine.payment.products.AptoideProduct;
 import java.util.List;
 import rx.Single;
 

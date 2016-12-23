@@ -7,9 +7,9 @@ package cm.aptoide.pt.v8engine.repository.sync;
 
 import android.os.Bundle;
 import cm.aptoide.pt.model.v3.PaidApp;
-import cm.aptoide.pt.v8engine.payment.product.AptoideProduct;
-import cm.aptoide.pt.v8engine.payment.product.InAppBillingProduct;
-import cm.aptoide.pt.v8engine.payment.product.PaidAppProduct;
+import cm.aptoide.pt.v8engine.payment.products.AptoideProduct;
+import cm.aptoide.pt.v8engine.payment.products.InAppBillingProduct;
+import cm.aptoide.pt.v8engine.payment.products.PaidAppProduct;
 
 /**
  * Created by marcelobenites on 19/12/16.

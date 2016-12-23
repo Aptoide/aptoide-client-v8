@@ -12,7 +12,7 @@ import cm.aptoide.pt.dataprovider.ws.v3.CreateInAppBillingProductPaymentRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.model.v3.ProductPaymentResponse;
 import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
-import cm.aptoide.pt.v8engine.payment.product.InAppBillingProduct;
+import cm.aptoide.pt.v8engine.payment.products.InAppBillingProduct;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import cm.aptoide.pt.v8engine.repository.sync.SyncAdapterBackgroundSync;
 import rx.Completable;
