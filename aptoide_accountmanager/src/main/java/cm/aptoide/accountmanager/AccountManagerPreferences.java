@@ -134,6 +134,6 @@ class AccountManagerPreferences {
   }
 
   static void setRepoTheme(String repoTheme) {
-    SecurePreferences.putString(SecureKeys.REPO_AVATAR, repoTheme);
+    SecurePreferences.putString(SecureKeys.REPO_THEME, repoTheme);
   }
 }
