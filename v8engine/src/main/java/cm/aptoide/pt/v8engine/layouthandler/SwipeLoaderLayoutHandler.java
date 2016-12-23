@@ -17,7 +17,7 @@ import cm.aptoide.pt.v8engine.interfaces.ReloadInterface;
  */
 public class SwipeLoaderLayoutHandler extends LoaderLayoutHandler {
 
-  protected SwipeRefreshLayout swipeContainer;
+  private SwipeRefreshLayout swipeContainer;
 
   public SwipeLoaderLayoutHandler(int baseViewId, ReloadInterface reloadInterface) {
     super(baseViewId, reloadInterface);
@@ -28,7 +28,7 @@ public class SwipeLoaderLayoutHandler extends LoaderLayoutHandler {
     swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
     swipeContainer.setColorSchemeResources(R.color.default_progress_bar_color,
         R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
-    swipeContainer.setOnRefreshListener(((ReloadInterface) loadInterface)::reload);
+    swipeContainer.setOnRefreshListener(()->((ReloadInterface) loadInterface).reload());
   }
 
   @Override public void onFinishLoading(Throwable throwable) {

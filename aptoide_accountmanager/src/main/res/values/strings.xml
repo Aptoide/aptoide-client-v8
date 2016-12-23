@@ -6,6 +6,7 @@
   <string name="link_device_webinstall">Link account with Webinstall</string>
   <string name="register">Sign Up</string>
   <string name="login">Login</string>
+  <string name="successful">Successful</string>
   <string name="login_successful">Successful login</string>
   <string name="forgot_passwd">Forgot password?</string>
   <string name="fields_cannot_empty">Please check your email and password.</string>
@@ -55,19 +56,77 @@
   <string name="ws_error_IARG_111">Invalid passhash format</string>
     <string name="ws_error_REPO_4">That store name is invalid, you can only use letters, numbers or
         dashes.</string>
-  <string name="ws_error_REPO_7">This user already has a valid repo.</string>
+  <string name="ws_error_REPO_7">This user already has a valid store.</string>
   <string name="ws_error_REPO_5">That store name must be at least 3 characters long.</string>
     <string name="ws_error_REPO_6">That store name is already taken, you need to choose another
         one.</string>
+  <string name="ws_eror_WOP_">Invalid name given for your store. The name of a store can only have alphanumeric characters (A to Z and 0 to 9) or hyphens (-), and it cannot start nor end with a hyphen.</string>
+  <string name="ws_eror_WOP_1">Your account has a store already. You cannot create another one under the same account</string>
+  <string name="ws_error_WOP_2">Invalid name given for your store. The name of a store can only have alphanumeric characters and it cannot start nor end with a hyphen.</string>
+  <string name="ws_error_WOP_3">A store already exists with the same name. Please give another name for your store.</string>
   <string name="ws_error_WOP_9">The email provided already exists in Aptoide</string>
   <string name="ws_error_WOP_10">The email provided does not exist in Aptoide yet</string>
   <string name="ws_error_WOP_11">The store could not be created. Please try again.</string>
     <string name="ws_error_QUOTA_2">Daily limit of created users reached for today. If you need
-        this limit increased please contact support at suport@aptoide.com or create more users tomorrow</string>
+        this limit increased please contact support at support@aptoide.com or create more users tomorrow</string>
     <string name="ws_error_AUTH_1">Either email or password are not valid to login (upon name
         update)</string>
+  <string name="user_upload_photo_failed">At the moment it was not possible to create a profile.</string>
+  <string name="store_upload_photo_failed">At the moment it was not possible to upload the photo, but your store was created.</string>
   <string name="user_created">User Created</string>
   <!-- WIZARD -->
   <string name="wizard_skip"><b>SKIP</b></string>
+  <string name="please_wait_upload">Please wait, if you are uploading, it may take a while…</string>
+
+
+  <!--Create user fragment-->
+  <string name="create_user_title">Create a User Profile</string>
+  <string name="create_user_header"><b>Create your User Profile</b> so that you\'re able to rate, comment and share apps with your friends</string>
+  <string name="create_user_take_picture">Take a picture for your profile</string>
+  <string name="create_user_random_photo">Or use random photo</string>
+  <string name="create_user_choose_username">Choose your username</string>
+  <string name="create_user_username">User name</string>
+  <string name="create_user_hint">Appears when you rate, comment and share apps.</string>
+  <string name="create_user_create_button">Create Profile</string>
+  <string name="create_user_dialog_camera">Take Photo</string>
+  <string name="create_user_dialog_gallery">Choose From Gallery</string>
+  <string name="create_user_dialog_cancel">Cancel</string>
+  <string name="nothing_inserted_store">Please insert a store\'s name to create your store</string>
+  <string name="nothing_inserted_user">Please insert a username and a photo (optional) to create your profile</string>
+  <string name="create_user_bad_photo">Please choose a image with at least 300x300 resolution</string>
+  <string name="no_username_inserted">Please insert a username to create your profile</string>
+  <string name="no_photo_inserted">Please choose a photo to create your profile</string>
+
+  <!--User interests fragment -->
+  <string name="user_interests_title">Your Interests</string>
+  <string name="user_interests_header"><b>Show us your interests</b> and help us to find the best apps for you</string>
+  <string name="user_interests_adult_gambling">Adult &amp; Gambling</string>
+  <string name="user_interests_photography_video">Photography &amp; Video</string>
+  <string name="next">Next</string>
+
+  <!--Create Store fragment-->
+  <string name="create_store_title">Create Your Store</string>
+  <string name="create_store_header"><b>Create your store</b> and share your apps selection with %s community. <b>Give it a try</b></string>
+  <string name="create_store_name">Choose a name for your %s Store</string>
+  <string name="create_store_name_inserted">Your Store\'s name</string>
+  <string name="create_store_theme">Store Theme</string>
+  <string name="create_store_create">Create Store</string>
+  <string name="create_store_skip">Skip</string>
+  <string name="create_store_choose_image">Choose an image for your store</string>
+
+  <string name="upload_dialog_title">Upload Photo</string>
+  <string name="upload_dialog_photo">Take new Photo</string>
+  <string name="upload_dialog_gallery">Select from gallery</string>
+  <string name="create_store_store_created">Store created</string>
+
+  <!--Public/Private-->
+  <string name="create_profile_pub_pri_suc_login">You\'re successfully logged in</string>
+  <string name="create_profile_pub_pri_suc_login_sub_text">Your friends are now able to follow you and see your shares on Apps Timeline!</string>
+  <string name="create_profile_pub_pri">Aptoide\'s Apps Timeline</string>
+  <string name="create_profile_pub_pri_sub_text_1">Allows you to follow your friends and family</string>
+  <string name="create_profile_pub_pri_sub_text_2">With Apps Timeline you can share app recommendations and articles with your followers, seeing what you share.</string>
+  <string name="create_profile_pub_pri_sub_text_3">You can choose to make your profile private, losing sharing features.</string>
+  <string name="create_profile_pub_pri_make_priv">Make my profile private</string>
+  <string name="create_profile_logged_in_activity_title">Logged in</string>
 
 </resources>

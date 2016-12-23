@@ -17,6 +17,7 @@ import android.preference.PreferenceManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
 import cm.aptoide.pt.actions.UserData;
+import cm.aptoide.pt.crashreports.AptoideCrashLogger;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
@@ -84,7 +85,6 @@ public abstract class V8Engine extends DataProvider {
       if (subscriptions.size() > 0) {
         for (Subscription subscription : subscriptions) {
           Store store = new Store();
-
           store.setDownloads(Long.parseLong(subscription.getDownloads()));
           store.setIconPath(subscription.getAvatarHd() != null ? subscription.getAvatarHd()
               : subscription.getAvatar());
@@ -147,7 +147,6 @@ public abstract class V8Engine extends DataProvider {
   }
 
   @Override public void onCreate() {
-    CrashReports.setup(this);
     try {
       PRNGFixes.apply();
     } catch (Exception e) {
@@ -275,6 +274,10 @@ public abstract class V8Engine extends DataProvider {
 
     AptoideAccountManager.setAnalytics(new AccountAnalytcsImp());
     Logger.d(TAG, "onCreate took " + (System.currentTimeMillis() - l) + " millis.");
+  }
+
+  protected void setupCrashReports(boolean isDisabled) {
+    CrashReports.setup(AptoideCrashLogger.getInstance().setup(this, isDisabled));
   }
 
   protected FragmentProvider createFragmentProvider() {

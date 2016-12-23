@@ -1,17 +1,17 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
- */
-
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReports;
@@ -28,139 +28,220 @@ import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreMetaDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.bumptech.glide.Glide;
+import com.jakewharton.rxbinding.view.RxView;
 import java.text.NumberFormat;
+import java.util.List;
 import java.util.Locale;
+import lombok.Getter;
+import lombok.Setter;
+import rx.Observable;
+import rx.functions.Action1;
 
 /**
  * Created by neuro on 04-08-2016.
  */
 public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
 
-  private ImageView avatar;
-  private ImageView ivSubscribe;
+  private View containerLayout;
+  private View descriptionContentLayout;
+  private ImageView image;
   private TextView name;
   private TextView description;
-  private TextView subscribed;
-  private LinearLayout subscribeButtonLayout;
+  private Button subscribeButton;
   private TextView subscribersCount;
   private TextView appsCount;
   private TextView downloadsCount;
-
-  private StoreThemeEnum theme;
-  private boolean subscribedBool;
+  private ImageButton youtubeOrFacebookButton;
+  private ImageButton twitchButton;
+  private ImageButton twitterButton;
 
   public GridStoreMetaWidget(View itemView) {
     super(itemView);
   }
 
   @Override protected void assignViews(View itemView) {
-    avatar = (ImageView) itemView.findViewById(R.id.store_avatar_storehome);
-    ivSubscribe = (ImageView) itemView.findViewById(R.id.iv_subscribed_icon);
-    name = (TextView) itemView.findViewById(R.id.store_name_home_row);
-    description = (TextView) itemView.findViewById(R.id.store_description_storehome);
-    subscribed = (TextView) itemView.findViewById(R.id.store_subscribed_storehome);
-    subscribeButtonLayout = (LinearLayout) itemView.findViewById(R.id.subscribe_button_layout);
-    subscribersCount = (TextView) itemView.findViewById(R.id.store_subscribers_count);
-    appsCount = (TextView) itemView.findViewById(R.id.store_apps_count);
-    downloadsCount = (TextView) itemView.findViewById(R.id.store_downloads_count);
+    containerLayout = itemView.findViewById(R.id.outter_layout);
+    descriptionContentLayout = itemView.findViewById(R.id.descriptionContent);
+    image = (ImageView) itemView.findViewById(R.id.image);
+    name = (TextView) itemView.findViewById(R.id.name);
+    description = (TextView) itemView.findViewById(R.id.description);
+    subscribeButton = (Button) itemView.findViewById(R.id.follow_btn);
+    subscribersCount = (TextView) itemView.findViewById(R.id.subscribers);
+    appsCount = (TextView) itemView.findViewById(R.id.apps);
+    downloadsCount = (TextView) itemView.findViewById(R.id.downloads);
+    youtubeOrFacebookButton = (ImageButton) itemView.findViewById(R.id.youtube_or_facebook_button);
+    twitchButton = (ImageButton) itemView.findViewById(R.id.twitch_button);
+    twitterButton = (ImageButton) itemView.findViewById(R.id.twitter_button);
   }
 
-  @Override public void bindView(GridStoreMetaDisplayable displayable) {
+  private void showStoreData(cm.aptoide.pt.model.v7.store.Store store, StoreThemeEnum theme,
+      Context context) {
 
-    GetStoreMeta getStoreMeta = displayable.getPojo();
+    @ColorInt int color = getColorOrDefault(theme, context);
+    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+      Drawable d = context.getDrawable(R.drawable.dialog_bg_2);
+      d.setColorFilter(color, PorterDuff.Mode.SRC_IN);
+      containerLayout.setBackground(d);
+    } else {
+      Drawable d = context.getResources().getDrawable(R.drawable.dialog_bg_2);
+      d.setColorFilter(color, PorterDuff.Mode.SRC_IN);
+      containerLayout.setBackgroundDrawable(d);
+    }
+    subscribeButton.setTextColor(color);
 
-    //@Cleanup Realm realm = DeprecatedDatabase.get();
-    //subscribedBool = DeprecatedDatabase.StoreQ.get(getStoreMeta.getData().getId(), realm) != null;
+    name.setText(store.getName());
+    description.setText(store.getAppearance().getDescription());
+    appsCount.setText(
+        NumberFormat.getNumberInstance(Locale.getDefault()).format(store.getStats().getApps()));
+    downloadsCount.setText(AptoideUtils.StringU.withSuffix(store.getStats().getDownloads()));
+    subscribersCount.setText(AptoideUtils.StringU.withSuffix(store.getStats().getSubscribers()));
+  }
 
-    StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
-    subscribedBool =
-        storeAccessor.get(getStoreMeta.getData().getId()).toBlocking().firstOrDefault(null) != null;
+  private int getColorOrDefault(StoreThemeEnum theme, Context context) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      return context.getResources().getColor(theme.getStoreHeader(), context.getTheme());
+    } else {
+      return context.getResources().getColor(theme.getStoreHeader());
+    }
+  }
 
-    this.theme = StoreThemeEnum.get(getStoreMeta.getData().getAppearance().getTheme());
-
-    final Context context = itemView.getContext();
-    if (TextUtils.isEmpty(getStoreMeta.getData().getAvatar())) {
+  private void showStoreImage(cm.aptoide.pt.model.v7.store.Store store, Context context) {
+    if (TextUtils.isEmpty(store.getAvatar())) {
       Glide.with(context)
           .fromResource()
           .load(R.drawable.ic_avatar_apps)
           .transform(new CircleTransform(context))
-          .into(avatar);
+          .into(image);
     } else {
       Glide.with(context)
-          .load(getStoreMeta.getData().getAvatar())
+          .load(store.getAvatar())
           .transform(new CircleTransform(context))
-          .into(avatar);
+          .into(image);
+    }
+  }
+
+  private void setupSocialChannelButtons(
+      List<cm.aptoide.pt.model.v7.store.Store.SocialChannel> socialChannels) {
+    if (socialChannels == null || socialChannels.isEmpty()) {
+      return;
     }
 
-    @ColorInt int color = context.getResources().getColor(theme.getStoreHeader());
-    name.setText(getStoreMeta.getData().getName());
-    name.setTextColor(color);
-    description.setText(getStoreMeta.getData().getAppearance().getDescription());
-    appsCount.setText(NumberFormat.getNumberInstance(Locale.getDefault())
-        .format(getStoreMeta.getData().getStats().getApps()));
-    downloadsCount.setText(
-        AptoideUtils.StringU.withSuffix(getStoreMeta.getData().getStats().getDownloads()));
-    subscribersCount.setText(
-        AptoideUtils.StringU.withSuffix(getStoreMeta.getData().getStats().getSubscribers()));
-    subscribeButtonLayout.getBackground().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+    compositeSubscription.add(Observable.from(socialChannels).flatMap(socialChannel -> {
+      cm.aptoide.pt.model.v7.store.Store.SocialChannelType eventType = socialChannel.getType();
 
-    handleSubscriptionLogic(getStoreMeta);
+      switch (eventType) {
+        // uncomment for further development
+        case FACEBOOK:
+          youtubeOrFacebookButton.setImageResource(R.drawable.facebook_logo);
+          youtubeOrFacebookButton.setClickable(true);
+          youtubeOrFacebookButton.setVisibility(View.VISIBLE);
+          return RxView.clicks(youtubeOrFacebookButton).map(aVoid -> socialChannel);
+
+        case YOUTUBE:
+          youtubeOrFacebookButton.setClickable(true);
+          youtubeOrFacebookButton.setVisibility(View.VISIBLE);
+          return RxView.clicks(youtubeOrFacebookButton).map(aVoid -> socialChannel);
+
+        case TWITCH:
+          twitchButton.setClickable(true);
+          twitchButton.setVisibility(View.VISIBLE);
+          return RxView.clicks(twitchButton).map(aVoid -> socialChannel);
+
+        case TWITTER:
+          twitterButton.setClickable(true);
+          twitterButton.setVisibility(View.VISIBLE);
+          return RxView.clicks(twitterButton).map(aVoid -> socialChannel);
+
+        default:
+          return Observable.empty();
+      }
+    }).subscribe(socialChannel -> {
+      handleEvent(socialChannel);
+    }));
+  }
+
+  private Action1<Void> handleEvent(
+      cm.aptoide.pt.model.v7.store.Store.SocialChannel socialChannel) {
+    final String action = socialChannel.getUrl();
+    if (!TextUtils.isEmpty(action)) {
+      Intent i = new Intent(Intent.ACTION_VIEW);
+      i.setData(Uri.parse(action));
+      itemView.getContext().startActivity(i);
+    }
+    return null;
+  }
+
+  @Override public void bindView(GridStoreMetaDisplayable displayable) {
+
+    final GetStoreMeta getStoreMeta = displayable.getPojo();
+    final cm.aptoide.pt.model.v7.store.Store store = getStoreMeta.getData();
+    final StoreThemeEnum theme = StoreThemeEnum.get(store.getAppearance().getTheme());
+    final Context context = itemView.getContext();
+
+    StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
+    boolean isStoreSubscribed =
+        storeAccessor.get(store.getId()).toBlocking().firstOrDefault(null) != null;
+
+    showStoreImage(store, context);
+    showStoreData(store, theme, context);
+
+    updateSubscribeButtonText(isStoreSubscribed);
+    compositeSubscription.add(RxView.clicks(subscribeButton)
+        .subscribe(handleSubscriptionLogic(new StoreWrapper(store, isStoreSubscribed))));
+
+    List<cm.aptoide.pt.model.v7.store.Store.SocialChannel> socialChannels =
+        store.getSocialChannels();
+    setupSocialChannelButtons(socialChannels);
+
+    // if there is no channels nor description, hide that area
+    if ((socialChannels == null || socialChannels.isEmpty()) && TextUtils.isEmpty(
+        store.getAppearance().getDescription())) {
+      descriptionContentLayout.setVisibility(View.GONE);
+    }
   }
 
   @Override public void unbindView() {
 
   }
 
-  private void handleSubscriptionLogic(final GetStoreMeta getStoreMeta) {
-    if (subscribedBool) {
+  private void updateSubscribeButtonText(boolean isStoreSubscribed) {
+    subscribeButton.setText(isStoreSubscribed ? itemView.getContext().getString(R.string.followed)
+        : itemView.getContext().getString(R.string.appview_follow_store_button_text));
+  }
 
-      ivSubscribe.setImageResource(R.drawable.ic_check_white);
-      subscribed.setText(itemView.getContext().getString(R.string.followed));
-
-      subscribeButtonLayout.setOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(View v) {
-          subscribedBool = false;
-          if (AptoideAccountManager.isLoggedIn()) {
-            AptoideAccountManager.unsubscribeStore(getStoreMeta.getData().getName());
-          }
-
-          //@Cleanup Realm realm = DeprecatedDatabase.get();
-          //DeprecatedDatabase.StoreQ.delete(getStoreMeta.getData().getId(), realm);
-          StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
-          storeAccessor.remove(getStoreMeta.getData().getId());
-
+  private Action1<Void> handleSubscriptionLogic(final StoreWrapper storeWrapper) {
+    return aVoid -> {
+      if (storeWrapper.isStoreSubscribed()) {
+        storeWrapper.setStoreSubscribed(false);
+        if (AptoideAccountManager.isLoggedIn()) {
+          AptoideAccountManager.unsubscribeStore(storeWrapper.getStore().getName());
+        }
+        StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
+        storeAccessor.remove(storeWrapper.getStore().getId());
+        ShowMessage.asSnack(itemView,
+            AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message,
+                storeWrapper.getStore().getName()));
+      } else {
+        storeWrapper.setStoreSubscribed(true);
+        StoreUtilsProxy.subscribeStore(storeWrapper.getStore().getName(), subscribedStoreMeta -> {
           ShowMessage.asSnack(itemView,
-              AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message,
-                  getStoreMeta.getData().getName()));
-          handleSubscriptionLogic(getStoreMeta);
-        }
-      });
-    } else {
-      ivSubscribe.setImageResource(R.drawable.ic_plus_white);
-      subscribed.setText(
-          itemView.getContext().getString(R.string.appview_follow_store_button_text));
-      subscribed.setCompoundDrawables(null, null, null, null);
-          /*Drawable drawableLeft = itemView.getContext().getResources().getDrawable(R.drawable.ic_action_cancel_small_dark);
-            if (drawableLeft != null) {
-                drawableLeft.setBounds(0, 0, drawableLeft.getIntrinsicWidth(), drawableLeft.getIntrinsicHeight());
-                subscribed.setCompoundDrawables(drawableLeft, null, null, null);
-            }*/
+              AptoideUtils.StringU.getFormattedString(R.string.store_followed,
+                  subscribedStoreMeta.getData().getName()));
+        }, err -> {
+          CrashReports.logException(err);
+        });
+      }
+      updateSubscribeButtonText(storeWrapper.isStoreSubscribed());
+    };
+  }
 
-      subscribeButtonLayout.setOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(View v) {
-          if (!subscribedBool) {
-            subscribedBool = true;
-            StoreUtilsProxy.subscribeStore(getStoreMeta.getData().getName(), getStoreMeta -> {
-              ShowMessage.asSnack(itemView,
-                  AptoideUtils.StringU.getFormattedString(R.string.store_followed,
-                      getStoreMeta.getData().getName()));
-            }, err -> {
-              CrashReports.logException(err);
-            });
-            handleSubscriptionLogic(getStoreMeta);
-          }
-        }
-      });
+  private static class StoreWrapper {
+    @Getter private final cm.aptoide.pt.model.v7.store.Store store;
+    @Getter @Setter private boolean storeSubscribed;
+
+    StoreWrapper(cm.aptoide.pt.model.v7.store.Store store, boolean isStoreSubscribed) {
+      this.store = store;
+      this.storeSubscribed = isStoreSubscribed;
     }
   }
 }

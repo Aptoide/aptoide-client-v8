@@ -5,8 +5,10 @@
 
 package cm.aptoide.pt.utils.design;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -221,6 +223,26 @@ public class ShowMessage {
       return asSnackObservableInternal(snackbar);
     }
     return Observable.error(new IllegalStateException("Extracted view from activity is null"));
+  }
+
+  //
+  // override 10
+  //
+
+  @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+  @NonNull private static Snackbar asSnackInternal(android.app.Fragment fragment, @StringRes int msg) {
+    return Snackbar.make(fragment.getView(), msg, Snackbar.LENGTH_SHORT);
+  }
+
+  public static void asSnack(android.app.Fragment fragment, @StringRes int msg) {
+    asSnackInternal(fragment, msg).show();
+  }
+
+  /**
+   * @return {@link Observable} that returns a {@link ShowMessage.SnackbarVisibility} integer
+   */
+  @NonNull public static Observable<Integer> asObservableSnack(android.app.Fragment fragment, @StringRes int msg) {
+    return asSnackObservableInternal(asSnackInternal(fragment, msg));
   }
 
   //

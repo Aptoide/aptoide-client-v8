@@ -69,6 +69,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    super.load(create, refresh, savedInstanceState);
     fetchUpdates()
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))

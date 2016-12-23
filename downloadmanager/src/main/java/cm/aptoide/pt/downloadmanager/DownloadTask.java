@@ -256,7 +256,10 @@ class DownloadTask extends FileDownloadLargeFileListener {
       }
     } else {
       Logger.d(TAG, "Error on download: " + download.getMd5());
-      e.printStackTrace();
+      // Apparently throwable e can be null.
+      if (e != null) {
+        e.printStackTrace();
+      }
     }
     setDownloadStatus(Download.ERROR, download, task);
     AptoideDownloadManager.getInstance().currentDownloadFinished();

@@ -5,10 +5,10 @@ import java.util.List;
 
 abstract class CommentAdder {
 
-  final int reviewIndex;
+  final int itemIndex;
 
-  CommentAdder(int reviewIndex) {
-    this.reviewIndex = reviewIndex;
+  CommentAdder(int itemIndex) {
+    this.itemIndex = itemIndex;
   }
 
   public abstract void addComment(List<Comment> comments);

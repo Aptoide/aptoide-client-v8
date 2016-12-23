@@ -13,7 +13,8 @@
   <color name="aptoide_orange_700">@color/default_color_700</color>
   <color name="navdrawer_body_text_1_inverse">#deffffff</color>
   <color name="navdrawer_body_text_2_inverse">#d2ffffff</color>
-  <color name="cinza_medio">#b8b8b8</color>
+  <color name="medium_gray">#b8b8b8</color>
+  <color name="darker_gray">#858585</color>
 
   <color name="aptoide_color_focused">#e55c1b</color>
   <color name="aptoide_color_pressed">#000000</color>
@@ -158,5 +159,12 @@
   <color name="appstimeline_grey">#4d4d4d</color>
   <color name="appstimeline_recommends_title">#ff7200</color>
 
+  <!-- Create stores colors -->
+  <color name="create_store_edit_text_background">#f5f5f5</color>
+  <color name="create_store_edit_text_color">#9c999999</color>
+  <color name="create_store_title_color">#545454</color>
+  <color name="create_store_hint_color">#7e7e7e</color>
+  <color name="followed_stores_store_name_color">#5c5c5c</color>
+  <color name="recommended_stores_numbers_color">#aaaaaa</color>
 
 </resources>

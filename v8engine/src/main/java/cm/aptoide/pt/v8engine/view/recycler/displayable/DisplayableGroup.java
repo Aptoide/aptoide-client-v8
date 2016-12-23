@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 18/05/2016.
- */
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
@@ -18,7 +14,7 @@ import lombok.Getter;
 
   @Getter private final List<Displayable> children;
 
-  public DisplayableGroup(List<Displayable> children, boolean computeLeftSpaces) {
+  DisplayableGroup(List<Displayable> children, boolean computeLeftSpaces) {
     this.children = children;
     if (computeLeftSpaces) computeLeftSpaces();
   }

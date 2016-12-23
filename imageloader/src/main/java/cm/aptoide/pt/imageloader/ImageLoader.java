@@ -8,7 +8,9 @@ package cm.aptoide.pt.imageloader;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
+import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
@@ -18,6 +20,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.GlideBuilder;
 import com.bumptech.glide.load.DecodeFormat;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.NotificationTarget;
 import java.util.concurrent.ExecutionException;
 
@@ -109,6 +112,15 @@ public class ImageLoader {
         .into(imageView);
   }
 
+  public static void loadWithCircleTransform(Uri url, ImageView imageView) {
+    Glide.with(Application.getContext())
+        .load(url.toString())
+        .diskCacheStrategy(DiskCacheStrategy.NONE)
+        .skipMemoryCache(true)
+        .transform(new CircleTransform(Application.getContext()))
+        .into(imageView);
+  }
+
   public static void loadWithShadowCircleTransform(String url, ImageView imageView) {
     Glide.with(Application.getContext())
         .load(url)
@@ -122,6 +134,23 @@ public class ImageLoader {
         .fromResource()
         .load(drawableId)
         .transform(new ShadowCircleTransformation(Application.getContext(), imageView))
+        .into(imageView);
+  }
+
+  public static void loadWithShadowCircleTransform(String url, ImageView imageView,
+      @ColorInt int shadowColor) {
+    Glide.with(Application.getContext())
+        .load(AptoideUtils.IconSizeU.generateSizeStoreString(url))
+        .transform(new ShadowCircleTransformation(Application.getContext(), imageView, shadowColor))
+        .into(imageView);
+  }
+
+  public static void loadWithShadowCircleTransform(@DrawableRes int drawableId, ImageView imageView,
+      @ColorInt int shadowColor) {
+    Glide.with(Application.getContext())
+        .fromResource()
+        .load(drawableId)
+        .transform(new ShadowCircleTransformation(Application.getContext(), imageView, shadowColor))
         .into(imageView);
   }
 

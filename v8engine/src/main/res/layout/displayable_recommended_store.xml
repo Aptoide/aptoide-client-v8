@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/recommended_store_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_centerVertical="true"
+    android:gravity="center_vertical|center"
+    android:padding="10dp"
+    style="?attr/backgroundCard"
+    >
+
+  <!-- can be follow or open?! -->
+
+  <android.support.v7.widget.AppCompatButton
+      android:id="@+id/recommended_store_action"
+      android:layout_alignParentRight="true"
+      android:layout_centerVertical="true"
+      android:text="@string/follow"
+      style="?attr/customButton"
+      />
+
+
+    <ImageView
+        android:id="@+id/store_avatar_row"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginTop="2dp"
+        android:contentDescription="@null"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_avatar_apps"
+        />
+
+  <LinearLayout
+      android:id="@+id/recommended_store_info"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_centerVertical="true"
+      android:layout_marginLeft="9dp"
+      android:layout_toLeftOf="@id/recommended_store_action"
+      android:layout_toRightOf="@+id/store_avatar_row"
+      android:orientation="vertical"
+      >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+
+      <ImageView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_vertical|center_horizontal"
+          android:src="@drawable/icon_store"
+          />
+
+      <TextView
+          android:id="@+id/recommended_store_name"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="10dp"
+          android:text="@string/apps"
+          android:textColor="@color/followed_stores_store_name_color"
+          />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+
+      <ImageView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_vertical|center_horizontal"
+          android:src="@drawable/user_shape"
+          />
+
+      <TextView
+          android:id="@+id/recommended_store_users"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="10dp"
+          android:text="xxx"
+          android:textColor="@color/recommended_stores_numbers_color"
+          />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+
+      <ImageView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_vertical|center_horizontal"
+          android:src="@drawable/number_of_apps"
+          />
+
+      <TextView
+          android:id="@+id/recommended_store_apps"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="10dp"
+          android:text="xxxx"
+          android:textColor="@color/recommended_stores_numbers_color"
+          />
+
+    </LinearLayout>
+
+  </LinearLayout>
+
+
+</RelativeLayout>

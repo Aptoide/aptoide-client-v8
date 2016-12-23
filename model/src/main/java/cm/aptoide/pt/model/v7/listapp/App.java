@@ -37,6 +37,7 @@ import lombok.Data;
     private int apps;         // used on Store items
     private int subscribers;  // used both on App items and Store items
     private int downloads;    // used on listApps, Store items and listAppsVersions
+    private int pdownloads;    // used on listApps, Store items and listAppsVersions
     private Rating rating;       // used on App items and listAppsVersions
 
     @Data public static class Rating {
