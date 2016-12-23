@@ -63,7 +63,9 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
       }
       LinkedList<Displayable> dispList = new LinkedList<>();
 
+      final int[] hidden = { 0 };
       Action1<GetFollowers> action = (followersList) -> {
+        hidden[0] += followersList.getDatalist().getHidden();
         for (GetFollowers.TimelineUser user : followersList.getDatalist().getList()) {
           dispList.add(new FollowUserDisplayable(user));
         }
@@ -72,31 +74,16 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
       };
 
       EndlessRecyclerOnScrollListener.BooleanAction<GetFollowers> firstRequest = response -> {
-        String headerMessage, footerMessage;
-        switch (openMode) {
-          case FOLLOWERS:
-            headerMessage = getString(R.string.social_timeline_share_bar_followers);
-            footerMessage =
-                getString(R.string.private_followers_message, response.getDatalist().getHidden());
-            break;
-          case FOLLOWING:
-            headerMessage = getString(R.string.social_timeline_share_bar_following);
-            footerMessage =
-                getString(R.string.private_following_message, response.getDatalist().getHidden());
-            break;
-          default:
-            headerMessage = "";
-            footerMessage = "";
-        }
-        dispList.add(0, new MessageWhiteBgDisplayable(headerMessage));
-        endlessRecyclerOnScrollListener.setOnEndOfListReachedListener(
-            () -> addDisplayable(new MessageWhiteBgDisplayable(footerMessage)));
+        dispList.add(0, new MessageWhiteBgDisplayable(getHeaderMessage()));
         return false;
       };
+
       recyclerView.clearOnScrollListeners();
       endlessRecyclerOnScrollListener =
           new EndlessRecyclerOnScrollListener(this.getAdapter(), request, action,
               errorRequestListener, 6, true, firstRequest, null);
+      endlessRecyclerOnScrollListener.setOnEndOfListReachedListener(
+          () -> addDisplayable(new MessageWhiteBgDisplayable(getFooterMessage(hidden[0]))));
       recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
       endlessRecyclerOnScrollListener.onLoadMore(refresh);
     } else {
@@ -150,6 +137,36 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
     TimeLineFollowFragment fragment = new TimeLineFollowFragment();
     fragment.setArguments(args);
     return fragment;
+  }
+
+  public String getFooterMessage(int hidden) {
+    String footerMessage;
+    switch (openMode) {
+      case FOLLOWERS:
+        footerMessage = getString(R.string.private_followers_message, hidden);
+        break;
+      case FOLLOWING:
+        footerMessage = getString(R.string.private_following_message, hidden);
+        break;
+      default:
+        footerMessage = "";
+    }
+    return footerMessage;
+  }
+
+  public String getHeaderMessage() {
+    String headerMessage;
+    switch (openMode) {
+      case FOLLOWERS:
+        headerMessage = getString(R.string.social_timeline_share_bar_followers);
+        break;
+      case FOLLOWING:
+        headerMessage = getString(R.string.social_timeline_share_bar_following);
+        break;
+      default:
+        headerMessage = "";
+    }
+    return headerMessage;
   }
 
   public enum FollowFragmentOpenMode {

@@ -40,6 +40,8 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
   @Setter private BooleanAction onFirstLoadListener;
   @Setter private Action0 onEndOfListReachedListener;
   private boolean endCallbackCalled;
+  private boolean firstCallbackCalled;
+  private boolean isLoading;
 
   public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(BaseAdapter baseAdapter,
       V7<T, ? extends Endless> v7request, Action1<T> successRequestListener,
@@ -63,7 +65,7 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
   public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(BaseAdapter baseAdapter,
       V7<T, ? extends Endless> v7request, Action1<T> successRequestListener,
       ErrorRequestListener errorRequestListener, int visibleThreshold, boolean bypassCache,
-      BooleanAction onFirstLoadListener, Action0 onEndOfListReachedListener) {
+      BooleanAction<T> onFirstLoadListener, Action0 onEndOfListReachedListener) {
     this.adapter = baseAdapter;
     this.v7request = v7request;
     this.successRequestListener = successRequestListener;
@@ -72,6 +74,7 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
     this.bypassCache = bypassCache;
     this.onEndOfListReachedListener = onEndOfListReachedListener;
     this.endCallbackCalled = false;
+    this.firstCallbackCalled = false;
     this.onFirstLoadListener = onFirstLoadListener;
   }
 
@@ -95,7 +98,7 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
     boolean isOverVisibleThreshold =
         ((lastVisibleItemPosition + visibleThreshold) == (totalItemCount - 1));
 
-    boolean isLoading = subscription != null && !subscription.isUnsubscribed();
+    //boolean isLoading = subscription != null && !subscription.isUnsubscribed();
     return !isLoading && (hasMoreElements || offset == 0) && (isOverLastPosition
         || isOverVisibleThreshold);
   }
@@ -105,6 +108,7 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
   }
 
   public void onLoadMore(boolean bypassCache) {
+    isLoading = true;
     adapter.addDisplayable(new ProgressBarDisplayable());
     subscription = v7request.observe(bypassCache)
         .observeOn(Schedulers.io())
@@ -113,7 +117,6 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
           if (adapter.getItemCount() > 0) {
             adapter.popDisplayable();
           }
-          int offsetBeforeRequest = offset;
           if (response.hasData()) {
 
             stableData = response.hasStableTotal();
@@ -127,20 +130,23 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
             v7request.getBody().setOffset(offset);
           }
 
-          if (onFirstLoadListener != null && offsetBeforeRequest == 0) {
+          if (onFirstLoadListener != null && !firstCallbackCalled) {
             if (!onFirstLoadListener.call(response)) {
               successRequestListener.call(response);
             }
+            firstCallbackCalled = true;
           } else {
             // FIXME: 17/08/16 sithengineer use response.getList() instead
             successRequestListener.call(response);
           }
+          isLoading = false;
         }, error -> {
           //remove spinner if webservice respond with error
           if (adapter.getItemCount() > 0) {
             adapter.popDisplayable();
           }
           errorRequestListener.onError(error);
+          isLoading = false;
         });
   }
 
