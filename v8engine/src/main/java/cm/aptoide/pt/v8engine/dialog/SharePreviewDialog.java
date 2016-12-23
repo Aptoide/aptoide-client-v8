@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
@@ -75,69 +74,24 @@ public class SharePreviewDialog {
       like.setVisibility(View.VISIBLE);
       comments.setVisibility(View.VISIBLE);
 
+      showCardHeaderWithPrivacyOptions(storeName, userName, storeAvatar, userAvatar);
 
-
-
-
-
-
-
-
-      //if (displayable.getStore() != null) {
-      //  if (displayable.getUser() != null && (BaseActivity.UserAccessState.PUBLIC.toString()).equals(
-      //      ManagerPreferences.getUserAccess())) {
-      //    ImageLoader.loadWithShadowCircleTransform(displayable.getStore().getAvatar(), storeAvatar);
-      //    ImageLoader.loadWithShadowCircleTransform(displayable.getUser().getAvatar(), userAvatar);
-      //    title.setVisibility(View.VISIBLE);
-      //    subtitle.setVisibility(View.VISIBLE);
+      //ImageLoader.loadWithShadowCircleTransform(
+      //    AptoideAccountManager.getUserData().getUserAvatarRepo(), storeAvatar);
+      //if (BaseActivity.UserAccessState.PUBLIC.toString()
+      //    .equals(ManagerPreferences.getUserAccess())) {
+      //  if (TextUtils.isEmpty(AptoideAccountManager.getUserData().getUserRepo())) {
+      //    storeName.setText(AptoideAccountManager.getUserData().getUserName());
+      //    ImageLoader.loadWithShadowCircleTransform(
+      //        AptoideAccountManager.getUserData().getUserAvatar(), storeAvatar);
       //  } else {
-      //    ImageLoader.loadWithShadowCircleTransform(displayable.getStore().getAvatar(), storeAvatar);
-      //    userAvatar.setVisibility(View.INVISIBLE);
-      //    title.setVisibility(View.VISIBLE);
-      //    subtitle.setVisibility(View.GONE);
+      //    userName.setText(AptoideAccountManager.getUserData().getUserName());
+      //    ImageLoader.loadWithShadowCircleTransform(
+      //        AptoideAccountManager.getUserData().getUserAvatar(), userAvatar);
       //  }
       //} else {
-      //  if (displayable.getUser() != null && (BaseActivity.UserAccessState.PUBLIC.toString()).equals(
-      //      ManagerPreferences.getUserAccess())) {
-      //    ImageLoader.loadWithShadowCircleTransform(AptoideAccountManager.getUserData().getUserAvatar(), storeAvatar);
-      //    userAvatar.setVisibility(View.INVISIBLE);
-      //    title.setVisibility(View.GONE);
-      //    subtitle.setVisibility(View.VISIBLE);
-      //  } else {
-      //    storeAvatar.setVisibility(View.INVISIBLE);
-      //    userAvatar.setVisibility(View.INVISIBLE);
-      //    title.setVisibility(View.GONE);
-      //    subtitle.setVisibility(View.GONE);
-      //  }
+      //  userName.setVisibility(View.GONE);
       //}
-
-
-
-
-
-
-
-
-
-
-
-
-      ImageLoader.loadWithShadowCircleTransform(
-          AptoideAccountManager.getUserData().getUserAvatarRepo(), storeAvatar);
-      if (BaseActivity.UserAccessState.PUBLIC.toString()
-          .equals(ManagerPreferences.getUserAccess())) {
-        if (TextUtils.isEmpty(AptoideAccountManager.getUserData().getUserRepo())) {
-          storeName.setText(AptoideAccountManager.getUserData().getUserName());
-          ImageLoader.loadWithShadowCircleTransform(
-              AptoideAccountManager.getUserData().getUserAvatar(), storeAvatar);
-        } else {
-          userName.setText(AptoideAccountManager.getUserData().getUserName());
-          ImageLoader.loadWithShadowCircleTransform(
-              AptoideAccountManager.getUserData().getUserAvatar(), userAvatar);
-        }
-      } else {
-        userName.setVisibility(View.GONE);
-      }
       relatedTo.setVisibility(View.GONE);
       ImageLoader.load(((ArticleDisplayable) displayable).getThumbnailUrl(), thumbnail);
 
@@ -148,6 +102,8 @@ public class SharePreviewDialog {
       if (!ManagerPreferences.getUserAccessConfirmed()) {
         privacyText.setOnClickListener(click -> checkBox.toggle());
         checkBox.setClickable(true);
+        storeAvatar.setVisibility(View.VISIBLE);
+        storeName.setVisibility(View.VISIBLE);
         handlePrivacyCheckBoxChanges(userName, userAvatar, checkBox, socialTerms);
       }
     } else if (displayable instanceof VideoDisplayable) {
@@ -157,7 +113,7 @@ public class SharePreviewDialog {
 
       TextView storeName = (TextView) view.findViewById(R.id.card_title);
       TextView userName = (TextView) view.findViewById(R.id.card_subtitle);
-      ImageView image = (ImageView) view.findViewById(R.id.card_image);
+      ImageView storeAvatar = (ImageView) view.findViewById(R.id.card_image);
       ImageView userAvatar = (ImageView) view.findViewById(R.id.card_user_avatar);
       TextView articleTitle =
           (TextView) view.findViewById(R.id.partial_social_timeline_thumbnail_title);
@@ -180,22 +136,25 @@ public class SharePreviewDialog {
       like.setOnClickListener(null);
       like.setVisibility(View.VISIBLE);
       comments.setVisibility(View.VISIBLE);
-      ImageLoader.loadWithShadowCircleTransform(
-          AptoideAccountManager.getUserData().getUserAvatarRepo(), image);
-      if (BaseActivity.UserAccessState.PUBLIC.toString()
-          .equals(ManagerPreferences.getUserAccess())) {
-        if (TextUtils.isEmpty(AptoideAccountManager.getUserData().getUserRepo())) {
-          storeName.setText(AptoideAccountManager.getUserData().getUserName());
-          ImageLoader.loadWithShadowCircleTransform(
-              AptoideAccountManager.getUserData().getUserAvatar(), image);
-        } else {
-          userName.setText(AptoideAccountManager.getUserData().getUserName());
-          ImageLoader.loadWithShadowCircleTransform(
-              AptoideAccountManager.getUserData().getUserAvatar(), userAvatar);
-        }
-      } else {
-        userName.setVisibility(View.GONE);
-      }
+
+      showCardHeaderWithPrivacyOptions(storeName, userName, storeAvatar, userAvatar);
+
+      //ImageLoader.loadWithShadowCircleTransform(
+      //    AptoideAccountManager.getUserData().getUserAvatarRepo(), image);
+      //if (BaseActivity.UserAccessState.PUBLIC.toString()
+      //    .equals(ManagerPreferences.getUserAccess())) {
+      //  if (TextUtils.isEmpty(AptoideAccountManager.getUserData().getUserRepo())) {
+      //    storeName.setText(AptoideAccountManager.getUserData().getUserName());
+      //    ImageLoader.loadWithShadowCircleTransform(
+      //        AptoideAccountManager.getUserData().getUserAvatar(), image);
+      //  } else {
+      //    userName.setText(AptoideAccountManager.getUserData().getUserName());
+      //    ImageLoader.loadWithShadowCircleTransform(
+      //        AptoideAccountManager.getUserData().getUserAvatar(), userAvatar);
+      //  }
+      //} else {
+      //  userName.setVisibility(View.GONE);
+      //}
       relatedTo.setVisibility(View.GONE);
       ImageLoader.load(((VideoDisplayable) displayable).getThumbnailUrl(), thumbnail);
       alertadd.setView(view).setCancelable(false);
@@ -209,14 +168,15 @@ public class SharePreviewDialog {
     } else if (displayable instanceof StoreLatestAppsDisplayable) {
       LayoutInflater factory = LayoutInflater.from(context);
       final View view =
-          factory.inflate(R.layout.displayable_social_timeline_social_store_latest_apps, null);
+          factory.inflate(R.layout.displayable_social_timeline_social_store_latest_apps_preview,
+              null);
 
       TextView storeName = (TextView) view.findViewById(
           R.id.displayable_social_timeline_store_latest_apps_card_title);
       TextView userName = (TextView) view.findViewById(
           R.id.displayable_social_timeline_store_latest_apps_card_subtitle);
       TextView sharedStoreName = (TextView) view.findViewById(R.id.store_name);
-      ImageView image = (ImageView) view.findViewById(R.id.card_image);
+      ImageView storeAvatar = (ImageView) view.findViewById(R.id.card_image);
       ImageView userAvatar = (ImageView) view.findViewById(R.id.card_user_avatar);
       ImageView sharedStoreAvatar = (ImageView) view.findViewById(R.id.social_shared_store_avatar);
       CardView cardView =
@@ -255,22 +215,25 @@ public class SharePreviewDialog {
       like.setOnClickListener(null);
       like.setVisibility(View.VISIBLE);
       comments.setVisibility(View.VISIBLE);
-      ImageLoader.loadWithShadowCircleTransform(
-          AptoideAccountManager.getUserData().getUserAvatarRepo(), image);
-      if (BaseActivity.UserAccessState.PUBLIC.toString()
-          .equals(ManagerPreferences.getUserAccess())) {
-        if (TextUtils.isEmpty(AptoideAccountManager.getUserData().getUserRepo())) {
-          storeName.setText(AptoideAccountManager.getUserData().getUserName());
-          ImageLoader.loadWithShadowCircleTransform(
-              AptoideAccountManager.getUserData().getUserAvatar(), image);
-        } else {
-          userName.setText(AptoideAccountManager.getUserData().getUserName());
-          ImageLoader.loadWithShadowCircleTransform(
-              AptoideAccountManager.getUserData().getUserAvatar(), userAvatar);
-        }
-      } else {
-        userName.setVisibility(View.GONE);
-      }
+
+      showCardHeaderWithPrivacyOptions(storeName, userName, storeAvatar, userAvatar);
+
+      //ImageLoader.loadWithShadowCircleTransform(
+      //    AptoideAccountManager.getUserData().getUserAvatarRepo(), image);
+      //if (BaseActivity.UserAccessState.PUBLIC.toString()
+      //    .equals(ManagerPreferences.getUserAccess())) {
+      //  if (TextUtils.isEmpty(AptoideAccountManager.getUserData().getUserRepo())) {
+      //    storeName.setText(AptoideAccountManager.getUserData().getUserName());
+      //    ImageLoader.loadWithShadowCircleTransform(
+      //        AptoideAccountManager.getUserData().getUserAvatar(), image);
+      //  } else {
+      //    userName.setText(AptoideAccountManager.getUserData().getUserName());
+      //    ImageLoader.loadWithShadowCircleTransform(
+      //        AptoideAccountManager.getUserData().getUserAvatar(), userAvatar);
+      //  }
+      //} else {
+      //  userName.setVisibility(View.GONE);
+      //}
       alertadd.setView(view).setCancelable(false);
 
       alertadd.setTitle(R.string.social_timeline_you_will_share);
@@ -288,7 +251,7 @@ public class SharePreviewDialog {
           (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_card_title);
       TextView userName = (TextView) view.findViewById(
           R.id.displayable_social_timeline_recommendation_card_subtitle);
-      ImageView image = (ImageView) view.findViewById(R.id.card_image);
+      ImageView storeAvatar = (ImageView) view.findViewById(R.id.card_image);
       ImageView userAvatar = (ImageView) view.findViewById(R.id.card_user_avatar);
       ImageView appIcon =
           (ImageView) view.findViewById(R.id.displayable_social_timeline_recommendation_icon);
@@ -324,22 +287,7 @@ public class SharePreviewDialog {
       like.setOnClickListener(null);
       like.setVisibility(View.VISIBLE);
       comments.setVisibility(View.VISIBLE);
-      ImageLoader.loadWithShadowCircleTransform(
-          AptoideAccountManager.getUserData().getUserAvatarRepo(), image);
-      if (BaseActivity.UserAccessState.PUBLIC.toString()
-          .equals(ManagerPreferences.getUserAccess())) {
-        if (TextUtils.isEmpty(AptoideAccountManager.getUserData().getUserRepo())) {
-          storeName.setText(AptoideAccountManager.getUserData().getUserName());
-          ImageLoader.loadWithShadowCircleTransform(
-              AptoideAccountManager.getUserData().getUserAvatar(), image);
-        } else {
-          userName.setText(AptoideAccountManager.getUserData().getUserName());
-          ImageLoader.loadWithShadowCircleTransform(
-              AptoideAccountManager.getUserData().getUserAvatar(), userAvatar);
-        }
-      } else {
-        userName.setVisibility(View.GONE);
-      }
+      showCardHeaderWithPrivacyOptions(storeName, userName, storeAvatar, userAvatar);
       alertadd.setView(view).setCancelable(false);
 
       alertadd.setTitle(R.string.social_timeline_you_will_share);
@@ -358,7 +306,7 @@ public class SharePreviewDialog {
           (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_card_title);
       TextView userName = (TextView) view.findViewById(
           R.id.displayable_social_timeline_recommendation_card_subtitle);
-      ImageView image = (ImageView) view.findViewById(R.id.card_image);
+      ImageView storeAvatar = (ImageView) view.findViewById(R.id.card_image);
       ImageView userAvatar = (ImageView) view.findViewById(R.id.card_user_avatar);
       ImageView appIcon =
           (ImageView) view.findViewById(R.id.displayable_social_timeline_recommendation_icon);
@@ -394,22 +342,7 @@ public class SharePreviewDialog {
       like.setOnClickListener(null);
       like.setVisibility(View.VISIBLE);
       comments.setVisibility(View.VISIBLE);
-      ImageLoader.loadWithShadowCircleTransform(
-          AptoideAccountManager.getUserData().getUserAvatarRepo(), image);
-      if (BaseActivity.UserAccessState.PUBLIC.toString()
-          .equals(ManagerPreferences.getUserAccess())) {
-        if (TextUtils.isEmpty(AptoideAccountManager.getUserData().getUserRepo())) {
-          storeName.setText(AptoideAccountManager.getUserData().getUserName());
-          ImageLoader.loadWithShadowCircleTransform(
-              AptoideAccountManager.getUserData().getUserAvatar(), image);
-        } else {
-          userName.setText(AptoideAccountManager.getUserData().getUserName());
-          ImageLoader.loadWithShadowCircleTransform(
-              AptoideAccountManager.getUserData().getUserAvatar(), userAvatar);
-        }
-      } else {
-        userName.setVisibility(View.GONE);
-      }
+      showCardHeaderWithPrivacyOptions(storeName, userName, storeAvatar, userAvatar);
       alertadd.setView(view).setCancelable(false);
 
       alertadd.setTitle(R.string.social_timeline_you_will_share);
@@ -428,7 +361,7 @@ public class SharePreviewDialog {
           (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_card_title);
       TextView userName = (TextView) view.findViewById(
           R.id.displayable_social_timeline_recommendation_card_subtitle);
-      ImageView image = (ImageView) view.findViewById(R.id.card_image);
+      ImageView storeAvatar = (ImageView) view.findViewById(R.id.card_image);
       ImageView userAvatar = (ImageView) view.findViewById(R.id.card_user_avatar);
       ImageView appIcon =
           (ImageView) view.findViewById(R.id.displayable_social_timeline_recommendation_icon);
@@ -464,22 +397,7 @@ public class SharePreviewDialog {
       like.setOnClickListener(null);
       like.setVisibility(View.VISIBLE);
       comments.setVisibility(View.VISIBLE);
-      ImageLoader.loadWithShadowCircleTransform(
-          AptoideAccountManager.getUserData().getUserAvatarRepo(), image);
-      if (BaseActivity.UserAccessState.PUBLIC.toString()
-          .equals(ManagerPreferences.getUserAccess())) {
-        if (TextUtils.isEmpty(AptoideAccountManager.getUserData().getUserRepo())) {
-          storeName.setText(AptoideAccountManager.getUserData().getUserName());
-          ImageLoader.loadWithShadowCircleTransform(
-              AptoideAccountManager.getUserData().getUserAvatar(), image);
-        } else {
-          userName.setText(AptoideAccountManager.getUserData().getUserName());
-          ImageLoader.loadWithShadowCircleTransform(
-              AptoideAccountManager.getUserData().getUserAvatar(), userAvatar);
-        }
-      } else {
-        userName.setVisibility(View.GONE);
-      }
+      showCardHeaderWithPrivacyOptions(storeName, userName, storeAvatar, userAvatar);
       alertadd.setView(view).setCancelable(false);
 
       alertadd.setTitle(R.string.social_timeline_you_will_share);
@@ -498,7 +416,7 @@ public class SharePreviewDialog {
           (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_card_title);
       TextView userName = (TextView) view.findViewById(
           R.id.displayable_social_timeline_recommendation_card_subtitle);
-      ImageView image = (ImageView) view.findViewById(R.id.card_image);
+      ImageView storeAvatar = (ImageView) view.findViewById(R.id.card_image);
       ImageView userAvatar = (ImageView) view.findViewById(R.id.card_user_avatar);
       ImageView appIcon =
           (ImageView) view.findViewById(R.id.displayable_social_timeline_recommendation_icon);
@@ -540,22 +458,7 @@ public class SharePreviewDialog {
       like.setOnClickListener(null);
       like.setVisibility(View.VISIBLE);
       comments.setVisibility(View.VISIBLE);
-      ImageLoader.loadWithShadowCircleTransform(
-          AptoideAccountManager.getUserData().getUserAvatarRepo(), image);
-      if (BaseActivity.UserAccessState.PUBLIC.toString()
-          .equals(ManagerPreferences.getUserAccess())) {
-        if (TextUtils.isEmpty(AptoideAccountManager.getUserData().getUserRepo())) {
-          storeName.setText(AptoideAccountManager.getUserData().getUserName());
-          ImageLoader.loadWithShadowCircleTransform(
-              AptoideAccountManager.getUserData().getUserAvatar(), image);
-        } else {
-          userName.setText(AptoideAccountManager.getUserData().getUserName());
-          ImageLoader.loadWithShadowCircleTransform(
-              AptoideAccountManager.getUserData().getUserAvatar(), userAvatar);
-        }
-      } else {
-        userName.setVisibility(View.GONE);
-      }
+      showCardHeaderWithPrivacyOptions(storeName, userName, storeAvatar, userAvatar);
       alertadd.setView(view).setCancelable(false);
 
       alertadd.setTitle(R.string.social_timeline_you_will_share);
@@ -572,7 +475,7 @@ public class SharePreviewDialog {
 
       TextView storeName = (TextView) view.findViewById(R.id.card_title);
       TextView userName = (TextView) view.findViewById(R.id.card_subtitle);
-      ImageView image = (ImageView) view.findViewById(R.id.card_image);
+      ImageView storeAvatar = (ImageView) view.findViewById(R.id.card_image);
       ImageView userAvatar = (ImageView) view.findViewById(R.id.card_user_avatar);
       TextView articleTitle =
           (TextView) view.findViewById(R.id.partial_social_timeline_thumbnail_title);
@@ -597,24 +500,7 @@ public class SharePreviewDialog {
       like.setOnClickListener(null);
       like.setVisibility(View.VISIBLE);
       comments.setVisibility(View.VISIBLE);
-      if (((SocialArticleDisplayable) displayable).getStore() != null) {
-        ImageLoader.loadWithShadowCircleTransform(
-            ((SocialArticleDisplayable) displayable).getStore().getAvatar(), image);
-      }
-      if (BaseActivity.UserAccessState.PUBLIC.toString()
-          .equals(ManagerPreferences.getUserAccess())) {
-        if (TextUtils.isEmpty(AptoideAccountManager.getUserData().getUserRepo())) {
-          storeName.setText(((SocialArticleDisplayable) displayable).getUser().getName());
-          ImageLoader.loadWithShadowCircleTransform(
-              ((SocialArticleDisplayable) displayable).getUser().getAvatar(), image);
-        } else {
-          userName.setText(((SocialArticleDisplayable) displayable).getUser().getName());
-          ImageLoader.loadWithShadowCircleTransform(
-              ((SocialArticleDisplayable) displayable).getUser().getAvatar(), userAvatar);
-        }
-      } else {
-        userName.setVisibility(View.GONE);
-      }
+      showCardHeaderWithPrivacyOptions(storeName, userName, storeAvatar, userAvatar);
 
       if (BaseActivity.UserAccessState.PUBLIC.toString()
           .equals(ManagerPreferences.getUserAccess())) {
@@ -652,21 +538,60 @@ public class SharePreviewDialog {
     return alertadd;
   }
 
+  private void showCardHeaderWithPrivacyOptions(TextView storeName, TextView userName,
+      ImageView storeAvatar, ImageView userAvatar) {
+    if (AptoideAccountManager.getUserData().getUserRepo() != null) {
+      if (BaseActivity.UserAccessState.PUBLIC.toString()
+          .equals(ManagerPreferences.getUserAccess())) {
+        storeAvatar.setVisibility(View.VISIBLE);
+        userAvatar.setVisibility(View.VISIBLE);
+        ImageLoader.loadWithShadowCircleTransform(
+            AptoideAccountManager.getUserData().getUserAvatarRepo(), storeAvatar);
+        ImageLoader.loadWithShadowCircleTransform(
+            AptoideAccountManager.getUserData().getUserAvatar(), userAvatar);
+        storeName.setText(AptoideAccountManager.getUserData().getUserRepo());
+        userName.setText(AptoideAccountManager.getUserData().getUserName());
+      } else {
+        storeAvatar.setVisibility(View.VISIBLE);
+        userAvatar.setVisibility(View.INVISIBLE);
+        ImageLoader.loadWithShadowCircleTransform(
+            AptoideAccountManager.getUserData().getUserAvatarRepo(), storeAvatar);
+        ImageLoader.loadWithShadowCircleTransform(
+            AptoideAccountManager.getUserData().getUserAvatar(), userAvatar);
+        storeName.setText(AptoideAccountManager.getUserData().getUserRepo());
+        userName.setText(AptoideAccountManager.getUserData().getUserName());
+        userName.setVisibility(View.GONE);
+      }
+    } else {
+      if ((BaseActivity.UserAccessState.PUBLIC.toString()).equals(
+          ManagerPreferences.getUserAccess())) {
+        storeAvatar.setVisibility(View.VISIBLE);
+        ImageLoader.loadWithShadowCircleTransform(
+            AptoideAccountManager.getUserData().getUserAvatar(), storeAvatar);
+        userAvatar.setVisibility(View.INVISIBLE);
+        storeName.setText(AptoideAccountManager.getUserData().getUserName());
+        userName.setVisibility(View.GONE);
+      }
+    }
+  }
+
   private void handlePrivacyCheckBoxChanges(TextView subtitle, ImageView userAvatar,
       CheckBox checkBox, LinearLayout socialTerms) {
+    subtitle.setVisibility(View.VISIBLE);
+    userAvatar.setVisibility(View.VISIBLE);
     checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
       if (isChecked) {
-        if (BaseActivity.UserAccessState.PUBLIC.toString()
-            .equals(ManagerPreferences.getUserAccess())) {
+        //if (BaseActivity.UserAccessState.PUBLIC.toString()
+        //    .equals(ManagerPreferences.getUserAccess())) {
           userAvatar.setVisibility(View.GONE);
-        }
+        //}
         subtitle.setVisibility(View.GONE);
         this.privacyResult = true;
       } else {
-        if (BaseActivity.UserAccessState.PUBLIC.toString()
-            .equals(ManagerPreferences.getUserAccess())) {
+        //if (BaseActivity.UserAccessState.PUBLIC.toString()
+        //    .equals(ManagerPreferences.getUserAccess())) {
           userAvatar.setVisibility(View.VISIBLE);
-        }
+        //}
         subtitle.setVisibility(View.VISIBLE);
         this.privacyResult = false;
       }
