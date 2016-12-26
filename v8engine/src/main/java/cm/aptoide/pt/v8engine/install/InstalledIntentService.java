@@ -18,6 +18,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.repository.AdsRepository;
 import cm.aptoide.pt.v8engine.repository.InstalledRepository;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.RollbackRepository;
 import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import cm.aptoide.pt.v8engine.util.referrer.ReferrerUtils;
@@ -48,7 +49,7 @@ public class InstalledIntentService extends IntentService {
     super(name);
 
     adsRepository = new AdsRepository();
-    repository = new RollbackRepository(AccessorFactory.getAccessorFor(Rollback.class));
+    repository = RepositoryFactory.getRollbackRepository();
     installedRepository = new InstalledRepository(AccessorFactory.getAccessorFor(Installed.class));
     updatesRepository = new UpdateRepository(AccessorFactory.getAccessorFor(Update.class),
         AccessorFactory.getAccessorFor(Store.class));

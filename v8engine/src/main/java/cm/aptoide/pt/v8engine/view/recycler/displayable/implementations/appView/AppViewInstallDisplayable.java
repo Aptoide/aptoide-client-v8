@@ -12,11 +12,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.widget.Button;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.MinimalAd;
-import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
@@ -26,6 +24,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.interfaces.Payments;
 import cm.aptoide.pt.v8engine.repository.InstalledRepository;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.RollbackRepository;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -91,8 +90,7 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
     currentApp = getApp.getNodes().getMeta().getData();
     this.minimalAd = minimalAd;
     this.shouldInstall = shouldInstall;
-    this.rollbackRepository =
-        new RollbackRepository(AccessorFactory.getAccessorFor(Rollback.class));
+    this.rollbackRepository = RepositoryFactory.getRollbackRepository();
     this.installedRepository = installedRepository;
     widgetState = new WidgetState(ACTION_NO_STATE);
   }
@@ -124,16 +122,6 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
     return R.layout.displayable_app_view_install;
   }
 
-  @Override public void onResume() {
-    super.onResume();
-    Logger.i(TAG, "onResume");
-  }
-
-  @Override public void onPause() {
-    super.onPause();
-    Logger.i(TAG, "onPause");
-  }
-
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
     Logger.i(TAG, "onSaveInstanceState");
@@ -146,6 +134,16 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
 
   @Override protected Configs getConfig() {
     return new Configs(1, true);
+  }
+
+  @Override public void onResume() {
+    super.onResume();
+    Logger.i(TAG, "onResume");
+  }
+
+  @Override public void onPause() {
+    super.onPause();
+    Logger.i(TAG, "onPause");
   }
 
   public Observable<WidgetState> getState() {

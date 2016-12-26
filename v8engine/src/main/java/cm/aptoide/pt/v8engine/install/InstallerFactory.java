@@ -9,14 +9,13 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.v8engine.install.installer.DefaultInstaller;
 import cm.aptoide.pt.v8engine.install.installer.RollbackInstaller;
 import cm.aptoide.pt.v8engine.install.provider.DownloadInstallationProvider;
 import cm.aptoide.pt.v8engine.install.provider.RollbackFactory;
-import cm.aptoide.pt.v8engine.repository.RollbackRepository;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 
 /**
  * Created by marcelobenites on 9/29/16.
@@ -40,7 +39,7 @@ public class InstallerFactory {
 
   @NonNull private RollbackInstaller getRollbackInstaller(Context context) {
     return new RollbackInstaller(getDefaultInstaller(context),
-        new RollbackRepository(AccessorFactory.getAccessorFor(Rollback.class)),
+        RepositoryFactory.getRollbackRepository(),
         new RollbackFactory(), getInstallationProvider());
   }
 
