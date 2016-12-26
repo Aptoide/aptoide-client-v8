@@ -34,9 +34,9 @@ public class MyStoresFragment extends StoreTabGridRecyclerFragment {
           .compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW))
           .subscribe(stores -> {
             Logger.d(TAG, "Store database changed, reloading...");
-            super.load(false, true, null);
+            super.load(false, refresh, null);
           });
     }
-    super.load(create, true, savedInstanceState);
+    super.load(create, refresh, savedInstanceState);
   }
 }

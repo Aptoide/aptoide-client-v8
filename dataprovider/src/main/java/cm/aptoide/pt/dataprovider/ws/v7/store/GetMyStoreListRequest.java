@@ -31,6 +31,9 @@ public class GetMyStoreListRequest extends V7<ListStores, GetMyStoreListRequest.
 
   @Override
   protected Observable<ListStores> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
+    if (url.contains("getSubscribed")) {
+      body.setRefresh(bypassCache);
+    }
     return interfaces.getMyStoreList(url, body, bypassCache);
   }
 
@@ -40,11 +43,11 @@ public class GetMyStoreListRequest extends V7<ListStores, GetMyStoreListRequest.
     @Getter private Integer limit = 25;
     @Getter @Setter private int offset;
     @Getter private WidgetsArgs widgetsArgs;
+    @Getter @Setter private boolean refresh;
 
     public Body(WidgetsArgs widgetsArgs) {
       super();
       this.widgetsArgs = widgetsArgs;
     }
-
   }
 }
