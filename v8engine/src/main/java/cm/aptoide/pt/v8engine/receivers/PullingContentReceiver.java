@@ -22,7 +22,6 @@ public class PullingContentReceiver extends BroadcastReceiver {
   private static final String TAG = PullingContentReceiver.class.getSimpleName();
 
   @Override public void onReceive(Context context, Intent intent) {
-    Toast.makeText(context, intent.getAction(), Toast.LENGTH_LONG).show();
     Log.d(TAG,
         "onReceive() called with: " + "context = [" + context + "], intent = [" + intent + "]");
     String action = intent.getAction();
