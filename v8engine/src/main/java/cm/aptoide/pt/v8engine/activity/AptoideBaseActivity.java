@@ -55,9 +55,14 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
     super.onCreate(savedInstanceState);
     // https://fabric.io/downloads/gradle/ndk
     // Fabric.with(this, new Crashlytics(), new CrashlyticsNdk());
-    AptoideCrashLogger.getInstance()
-        .setLanguage(getResources().getConfiguration().locale.getLanguage());
 
+    if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+      AptoideCrashLogger.getInstance()
+          .setLanguage(getResources().getConfiguration().locale.getLanguage());
+    } else {
+      AptoideCrashLogger.getInstance()
+          .setLanguage(getResources().getConfiguration().getLocales().get(0).getLanguage());
+    }
     setUpAnalytics();
 
     if (getIntent().getExtras() != null) {

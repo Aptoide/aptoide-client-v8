@@ -10,7 +10,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
@@ -415,7 +414,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
     GetMyStoreListRequest request =
         GetMyStoreListRequest.of(url, AptoideAccountManager.getAccessToken(),
             new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                DataProvider.getContext()).getAptoideClientUUID());
+                DataProvider.getContext()).getAptoideClientUUID(), true);
 
     Action1<ListStores> listStoresAction =
         listStores -> addDisplayables(getStoresDisplayable(listStores.getDatalist().getList()));
@@ -424,7 +423,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
       recyclerView.clearOnScrollListeners();
       LinkedList<String> errorsList = new LinkedList<>();
       errorsList.add(WSWidgetsUtils.USER_NOT_LOGGED_ERROR);
-      if (WSWidgetsUtils.shouldAddObjectView(errorsList, (AptoideWsV7Exception) throwable)) {
+      if (WSWidgetsUtils.shouldAddObjectView(errorsList, throwable)) {
         DisplayablesFactory.loadLocalSubscribedStores(storeRepository)
             .compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW))
             .subscribe(stores -> addDisplayables(getStoresDisplayable(stores)));

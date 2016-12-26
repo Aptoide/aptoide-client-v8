@@ -116,7 +116,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
     // StoreTabGridRecyclerFragment.
     if (toolbar != null) {
       ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-      if (commentType == CommentType.STORE) {
+      if (commentType == CommentType.STORE && !TextUtils.isEmpty(storeName)) {
         String title = String.format(getString(R.string.comment_on_store), storeName);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(title);
       } else {

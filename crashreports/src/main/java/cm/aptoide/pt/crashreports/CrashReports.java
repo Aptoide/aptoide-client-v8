@@ -8,6 +8,7 @@ import cm.aptoide.pt.logger.Logger;
 public class CrashReports {
 
   private final static String TAG = CrashReports.class.getSimpleName();   //TAG for the logger
+
   private static boolean initialized = false;
   private static CrashLogger crashLogger;
 
