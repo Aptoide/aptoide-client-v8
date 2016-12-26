@@ -56,7 +56,8 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
       if (StoreTabGridRecyclerFragment.validateAcceptedName(name)) {
         FragmentUtils.replaceFragmentV4((FragmentActivity) itemView.getContext(),
             V8Engine.getFragmentProvider()
-                .newStoreGridRecyclerFragment(event, pojo.getLabel(), displayable.getStoreTheme(),
+                .newStoreTabGridRecyclerFragment(event, pojo.getLabel(),
+                    displayable.getStoreTheme(),
                     displayable.getTag()));
       } else {
         switch (name) {

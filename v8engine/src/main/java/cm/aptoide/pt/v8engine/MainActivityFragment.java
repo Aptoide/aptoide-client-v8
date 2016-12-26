@@ -195,8 +195,7 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
         GetStoreWidgets.WSWidget.Data data = new GetStoreWidgets.WSWidget.Data();
         data.setLayout(Layout.valueOf(queryLayout));
         event.setData(data);
-        pushFragmentV4(V8Engine.getFragmentProvider()
-            .newStoreGridRecyclerFragment(event,
+        pushFragmentV4(V8Engine.getFragmentProvider().newStoreTabGridRecyclerFragment(event,
                 uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.TITLE),
                 uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.STORE_THEME),
                 V8Engine.getConfiguration().getDefaultTheme()));

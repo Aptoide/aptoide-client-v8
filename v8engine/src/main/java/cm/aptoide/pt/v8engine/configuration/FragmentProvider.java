@@ -61,8 +61,6 @@ public interface FragmentProvider {
   Fragment newStoreTabGridRecyclerFragment(Event event, String title, String storeTheme,
       String tag);
 
-  Fragment newStoreGridRecyclerFragment(Event event, String title, String storeTheme, String tag);
-
   Fragment newAppsTimelineFragment(String action);
 
   Fragment newSubscribedStoresFragment(Event event, String title, String storeTheme, String tag);

@@ -29,7 +29,6 @@ import cm.aptoide.pt.v8engine.fragment.implementations.SocialFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.TimeLineFollowFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.UpdatesFragment;
-import cm.aptoide.pt.v8engine.fragment.implementations.storetab.StoreGridRecyclerFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.storetab.StoreTabGridRecyclerFragment;
 import cm.aptoide.pt.viewRateAndCommentReviews.RateAndReviewsFragment;
 import java.util.ArrayList;
@@ -134,12 +133,6 @@ public class FragmentProviderImpl implements FragmentProvider {
   public Fragment newStoreTabGridRecyclerFragment(Event event, String title, String storeTheme,
       String tag) {
     return StoreTabGridRecyclerFragment.newInstance(event, title, storeTheme, tag);
-  }
-
-  @Override
-  public Fragment newStoreGridRecyclerFragment(Event event, String title, String storeTheme,
-      String tag) {
-    return StoreGridRecyclerFragment.newInstance(event, title, storeTheme, tag);
   }
 
   @Override public Fragment newAppsTimelineFragment(String action) {
