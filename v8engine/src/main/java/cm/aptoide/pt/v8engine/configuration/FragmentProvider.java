@@ -56,6 +56,8 @@ public interface FragmentProvider {
 
   Fragment newLatestReviewsFragment(long storeId);
 
+  Fragment newStoreTabGridRecyclerFragment(Event event, String storeTheme, String tag);
+
   Fragment newStoreTabGridRecyclerFragment(Event event, String title, String storeTheme,
       String tag);
 

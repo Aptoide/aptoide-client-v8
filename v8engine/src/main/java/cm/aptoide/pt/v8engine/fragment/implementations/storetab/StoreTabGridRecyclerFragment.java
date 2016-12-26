@@ -8,6 +8,13 @@ package cm.aptoide.pt.v8engine.fragment.implementations.storetab;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.DataProvider;
@@ -32,13 +39,16 @@ import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.HomeFragment;
 import cm.aptoide.pt.v8engine.repository.AdsRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
+import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
+import cm.aptoide.pt.v8engine.util.ThemeUtils;
 import cm.aptoide.pt.v8engine.util.Translator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayableGroup;
@@ -86,6 +96,11 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
     StoreTabGridRecyclerFragment fragment = new StoreTabGridRecyclerFragment();
     fragment.setArguments(args);
     return fragment;
+  }
+
+  public static StoreTabGridRecyclerFragment newInstance(Event event, String storeTheme,
+      String tag) {
+    return newInstance(event, null, storeTheme, tag);
   }
 
   @NonNull
@@ -179,7 +194,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
       }
 
       addDisplayables(displayables);
-        }, e -> finishLoading());
+    }, e -> finishLoading());
 
     //Highlighted should have pull to refresh
     //getView().findViewById(R.id.swipe_container).setEnabled(false);
@@ -276,6 +291,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
           setDisplayables(displayables);
         }, throwable -> finishLoading(throwable));
   }
+
   private Subscription caseGetStoreWidgets(String url, boolean refresh) {
     return RepositoryFactory.getRequestRepositoty().getStoreWidgets(url)
         .observe(refresh)
@@ -338,7 +354,20 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
     setDisplayables(displayables);
   }
 
+  @Override public void setupViews() {
+    super.setupViews();
+    setupToolbar();
+    setHasOptionsMenu(true);
+  }
+
   @Override public void setupToolbar() {
+    if (hasToolbar()) {
+      ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+      ((AppCompatActivity) getActivity()).getSupportActionBar()
+          .setTitle(Translator.translate(title));
+      ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+      toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
+    }
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -364,6 +393,40 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
     title = args.getString(Translator.translate(BundleCons.TITLE));
     action = args.getString(BundleCons.ACTION);
     storeTheme = args.getString(BundleCons.STORE_THEME);
+  }
+
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+
+    if (hasToolbar()) {
+      if (storeTheme != null) {
+        ThemeUtils.setStoreTheme(getActivity(), storeTheme);
+        ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
+      }
+    }
+    return super.onCreateView(inflater, container, savedInstanceState);
+  }
+
+  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+    if (hasToolbar()) {
+      inflater.inflate(R.menu.menu_empty, menu);
+    }
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    if (hasToolbar()) {
+      if (item.getItemId() == android.R.id.home) {
+        getActivity().onBackPressed();
+        return true;
+      }
+    }
+    return super.onOptionsItemSelected(item);
+  }
+
+  private boolean hasToolbar() {
+    return toolbar != null && title != null;
   }
 
   //@Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -490,6 +553,15 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 
     recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(refresh);
+  }
+
+  @Override public int getContentViewId() {
+    // title flag whether toolbar should be shown or not
+    if (title != null) {
+      return R.layout.recycler_swipe_fragment_with_toolbar;
+    } else {
+      return super.getContentViewId();
+    }
   }
 
   private static class BundleCons {
