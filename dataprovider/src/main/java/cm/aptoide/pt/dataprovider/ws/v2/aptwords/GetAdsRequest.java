@@ -219,7 +219,8 @@ import rx.Observable;
     search("native-aptoide:search"),
     secondinstall("native-aptoide:secondinstall"),
     secondtry("native-aptoide:secondtry"),
-    aptoidesdk("sdk-aptoide:generic");
+    aptoidesdk("sdk-aptoide:generic"),
+    firstinstall("native-aptoide:firstinstall");
 
     private final String value;
 
