@@ -312,6 +312,32 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
         }, throwable -> finishLoading(throwable));
   }
 
+  protected void loadGetStoreWidgets(GetStoreWidgets getStoreWidgets, boolean refresh) {
+    // Load sub nodes
+    List<GetStoreWidgets.WSWidget> list = getStoreWidgets.getDatalist().getList();
+    CountDownLatch countDownLatch = new CountDownLatch(list.size());
+
+    Observable.from(list)
+        .forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget,
+            wsWidget.getView() != null ? StoreUtils.getStoreCredentialsFromUrl(wsWidget.getView())
+                : new BaseRequestWithStore.StoreCredentials(), countDownLatch, refresh,
+            throwable -> countDownLatch.countDown(), AptoideAccountManager.getAccessToken(),
+            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+                DataProvider.getContext()).getAptoideClientUUID(),
+            DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(V8Engine.getContext()),
+            DataProvider.getConfiguration().getPartnerId(),
+            AptoideAccountManager.isMatureSwitchOn()));
+
+    try {
+      countDownLatch.await();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+
+    displayables = DisplayablesFactory.parse(getStoreWidgets, storeTheme, storeRepository);
+    setDisplayables(displayables);
+  }
+
   @Override public void setupToolbar() {
   }
 
