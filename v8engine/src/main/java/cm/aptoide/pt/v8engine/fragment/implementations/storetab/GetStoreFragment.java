@@ -10,7 +10,7 @@ import rx.schedulers.Schedulers;
  * Created by neuro on 26-12-2016.
  */
 
-public class GetStoreFragment extends StoreGridRecyclerFragment {
+public class GetStoreFragment extends StoreTabGridRecyclerFragment {
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);

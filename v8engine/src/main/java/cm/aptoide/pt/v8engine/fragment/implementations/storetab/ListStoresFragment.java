@@ -16,7 +16,7 @@ import rx.functions.Action1;
  * Created by neuro on 26-12-2016.
  */
 
-public class ListStoresFragment extends StoreGridRecyclerFragment {
+public class ListStoresFragment extends StoreTabGridRecyclerFragment {
 
   private static final AdsRepository adsRepository = new AdsRepository();
 

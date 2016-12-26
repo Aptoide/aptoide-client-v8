@@ -18,7 +18,7 @@ import rx.functions.Action1;
  * Created by neuro on 26-12-2016.
  */
 
-public class ListReviewsFragment extends StoreGridRecyclerFragment {
+public class ListReviewsFragment extends StoreTabGridRecyclerFragment {
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);

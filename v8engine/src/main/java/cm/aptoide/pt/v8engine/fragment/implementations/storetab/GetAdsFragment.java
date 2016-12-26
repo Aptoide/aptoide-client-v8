@@ -10,7 +10,7 @@ import java.util.LinkedList;
  * Created by neuro on 26-12-2016.
  */
 
-public class GetAdsFragment extends StoreGridRecyclerFragment {
+public class GetAdsFragment extends StoreTabGridRecyclerFragment {
 
   private static final AdsRepository adsRepository = new AdsRepository();
 
