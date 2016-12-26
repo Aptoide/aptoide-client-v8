@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.util.Log;
+import android.widget.Toast;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.services.PullingContentService;
@@ -20,13 +22,14 @@ public class PullingContentReceiver extends BroadcastReceiver {
   private static final String TAG = PullingContentReceiver.class.getSimpleName();
 
   @Override public void onReceive(Context context, Intent intent) {
-    Logger.d(TAG,
+    Toast.makeText(context, intent.getAction(), Toast.LENGTH_LONG).show();
+    Log.d(TAG,
         "onReceive() called with: " + "context = [" + context + "], intent = [" + intent + "]");
     String action = intent.getAction();
     if (action != null) {
       switch (action) {
         case Intent.ACTION_BOOT_COMPLETED:
-          context.startService(new Intent(context, PullingContentService.class));
+          context.startService(new Intent(context, PullingContentService.class));//.setAction("PUSH_NOTIFICATIONS_ACTION"));
           break;
         case NOTIFICATION_PRESSED_ACTION:
           pushNotificationPressed(context, intent);
