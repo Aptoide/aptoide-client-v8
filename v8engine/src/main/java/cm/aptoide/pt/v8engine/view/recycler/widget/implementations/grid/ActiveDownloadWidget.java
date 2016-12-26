@@ -71,7 +71,7 @@ import rx.schedulers.Schedulers;
     }
     downloadProgressTv.setText(download.getOverallProgress() + "%");
     downloadSpeedTv.setText(
-        String.valueOf(AptoideUtils.StringU.formatBytes((long) download.getDownloadSpeed())));
+        String.valueOf(AptoideUtils.StringU.formatBytesToBits((long) download.getDownloadSpeed())));
     return null;
   }
 }
