@@ -9,7 +9,6 @@ import cm.aptoide.pt.database.accessors.StoreMinimalAdAccessor;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.database.realm.Rollback;
-import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
@@ -51,8 +50,7 @@ public class InstalledIntentService extends IntentService {
     adsRepository = new AdsRepository();
     repository = RepositoryFactory.getRollbackRepository();
     installedRepository = new InstalledRepository(AccessorFactory.getAccessorFor(Installed.class));
-    updatesRepository = new UpdateRepository(AccessorFactory.getAccessorFor(Update.class),
-        AccessorFactory.getAccessorFor(Store.class));
+    updatesRepository = RepositoryFactory.getUpdateRepository();
 
     subscriptions = new CompositeSubscription();
   }
