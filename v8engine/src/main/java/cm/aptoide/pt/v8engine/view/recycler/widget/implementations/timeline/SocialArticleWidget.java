@@ -93,37 +93,20 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
       }
     }
 
-    //subtitle.setText(displayable.getTimeSinceLastUpdate(getContext()));
     Typeface typeFace =
         Typeface.createFromAsset(getContext().getAssets(), "fonts/DroidSerif-Regular.ttf");
     articleTitle.setTypeface(typeFace);
     articleTitle.setText(displayable.getArticleTitle());
     setCardViewMargin(displayable, cardView);
 
-    //if (displayable.getStore() != null) {
-    //  ImageLoader.loadWithShadowCircleTransform(displayable.getStore().getAvatar(), storeAvatar);
-    //  if (displayable.getUser() != null && ("PUBLIC").equals(ManagerPreferences.getUserAccess())) {
-    //    ImageLoader.loadWithShadowCircleTransform(displayable.getUser().getAvatar(), userAvatar);
-    //  }
-    //} else {
-    //  if (displayable.getUser() != null && ("PUBLIC").equals(ManagerPreferences.getUserAccess())) {
-    //    ImageLoader.loadWithShadowCircleTransform(displayable.getUser().getAvatar(), storeAvatar);
-    //  }
-    //}
 
     ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
-    //relatedTo.setText(displayable.getAppRelatedToText(getContext(), appName));
-
-    //numberLikes.setText(String.valueOf(numberOfLikes));
     if (getAppButton.getVisibility() != View.GONE && displayable.isGetApp(appName)) {
       getAppButton.setVisibility(View.VISIBLE);
       getAppButton.setText(displayable.getAppText(getContext(), appName));
       getAppButton.setOnClickListener(view -> ((FragmentShower) getContext()).pushFragmentV4(
           V8Engine.getFragmentProvider().newAppViewFragment(displayable.getAppId())));
     }
-
-    //		CustomTabsHelper.getInstance()
-    //				.setUpCustomTabsService(displayable.getLink().getUrl(), getContext());
 
     url.setOnClickListener(v -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
