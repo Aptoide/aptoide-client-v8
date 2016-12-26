@@ -226,10 +226,6 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
     return fragment;
   }
 
-  public static AppViewFragment newInstance(GetAdsResponse.Ad ad) {
-    return newInstance(MinimalAd.from(ad));
-  }
-
   public static Fragment newInstance(String packageName, OpenType openType) {
     return newInstance(packageName, null, openType);
   }

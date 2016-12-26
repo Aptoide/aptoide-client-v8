@@ -4,7 +4,6 @@ import android.support.v4.app.Fragment;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.ScheduledDownloadsFragment;
@@ -48,8 +47,6 @@ public interface FragmentProvider {
   Fragment newAppViewFragment(long appId, String packageName, String storeTheme, String storeName);
 
   Fragment newAppViewFragment(MinimalAd minimalAd);
-
-  Fragment newAppViewFragment(GetAdsResponse.Ad ad);
 
   Fragment newAppViewFragment(String packageName, AppViewFragment.OpenType openType);
 
