@@ -76,22 +76,6 @@ public class SharePreviewDialog {
 
       showCardHeaderWithPrivacyOptions(storeName, userName, storeAvatar, userAvatar);
 
-      //ImageLoader.loadWithShadowCircleTransform(
-      //    AptoideAccountManager.getUserData().getUserAvatarRepo(), storeAvatar);
-      //if (BaseActivity.UserAccessState.PUBLIC.toString()
-      //    .equals(ManagerPreferences.getUserAccess())) {
-      //  if (TextUtils.isEmpty(AptoideAccountManager.getUserData().getUserRepo())) {
-      //    storeName.setText(AptoideAccountManager.getUserData().getUserName());
-      //    ImageLoader.loadWithShadowCircleTransform(
-      //        AptoideAccountManager.getUserData().getUserAvatar(), storeAvatar);
-      //  } else {
-      //    userName.setText(AptoideAccountManager.getUserData().getUserName());
-      //    ImageLoader.loadWithShadowCircleTransform(
-      //        AptoideAccountManager.getUserData().getUserAvatar(), userAvatar);
-      //  }
-      //} else {
-      //  userName.setVisibility(View.GONE);
-      //}
       relatedTo.setVisibility(View.GONE);
       ImageLoader.load(((ArticleDisplayable) displayable).getThumbnailUrl(), thumbnail);
 
@@ -139,22 +123,6 @@ public class SharePreviewDialog {
 
       showCardHeaderWithPrivacyOptions(storeName, userName, storeAvatar, userAvatar);
 
-      //ImageLoader.loadWithShadowCircleTransform(
-      //    AptoideAccountManager.getUserData().getUserAvatarRepo(), image);
-      //if (BaseActivity.UserAccessState.PUBLIC.toString()
-      //    .equals(ManagerPreferences.getUserAccess())) {
-      //  if (TextUtils.isEmpty(AptoideAccountManager.getUserData().getUserRepo())) {
-      //    storeName.setText(AptoideAccountManager.getUserData().getUserName());
-      //    ImageLoader.loadWithShadowCircleTransform(
-      //        AptoideAccountManager.getUserData().getUserAvatar(), image);
-      //  } else {
-      //    userName.setText(AptoideAccountManager.getUserData().getUserName());
-      //    ImageLoader.loadWithShadowCircleTransform(
-      //        AptoideAccountManager.getUserData().getUserAvatar(), userAvatar);
-      //  }
-      //} else {
-      //  userName.setVisibility(View.GONE);
-      //}
       relatedTo.setVisibility(View.GONE);
       ImageLoader.load(((VideoDisplayable) displayable).getThumbnailUrl(), thumbnail);
       alertadd.setView(view).setCancelable(false);
@@ -218,22 +186,6 @@ public class SharePreviewDialog {
 
       showCardHeaderWithPrivacyOptions(storeName, userName, storeAvatar, userAvatar);
 
-      //ImageLoader.loadWithShadowCircleTransform(
-      //    AptoideAccountManager.getUserData().getUserAvatarRepo(), image);
-      //if (BaseActivity.UserAccessState.PUBLIC.toString()
-      //    .equals(ManagerPreferences.getUserAccess())) {
-      //  if (TextUtils.isEmpty(AptoideAccountManager.getUserData().getUserRepo())) {
-      //    storeName.setText(AptoideAccountManager.getUserData().getUserName());
-      //    ImageLoader.loadWithShadowCircleTransform(
-      //        AptoideAccountManager.getUserData().getUserAvatar(), image);
-      //  } else {
-      //    userName.setText(AptoideAccountManager.getUserData().getUserName());
-      //    ImageLoader.loadWithShadowCircleTransform(
-      //        AptoideAccountManager.getUserData().getUserAvatar(), userAvatar);
-      //  }
-      //} else {
-      //  userName.setVisibility(View.GONE);
-      //}
       alertadd.setView(view).setCancelable(false);
 
       alertadd.setTitle(R.string.social_timeline_you_will_share);
@@ -581,17 +533,11 @@ public class SharePreviewDialog {
     userAvatar.setVisibility(View.VISIBLE);
     checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
       if (isChecked) {
-        //if (BaseActivity.UserAccessState.PUBLIC.toString()
-        //    .equals(ManagerPreferences.getUserAccess())) {
-          userAvatar.setVisibility(View.GONE);
-        //}
+        userAvatar.setVisibility(View.GONE);
         subtitle.setVisibility(View.GONE);
         this.privacyResult = true;
       } else {
-        //if (BaseActivity.UserAccessState.PUBLIC.toString()
-        //    .equals(ManagerPreferences.getUserAccess())) {
-          userAvatar.setVisibility(View.VISIBLE);
-        //}
+        userAvatar.setVisibility(View.VISIBLE);
         subtitle.setVisibility(View.VISIBLE);
         this.privacyResult = false;
       }
