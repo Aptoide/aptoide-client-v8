@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
@@ -180,7 +181,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 
           displayables = new LinkedList<>();
           for (GetAdsResponse.Ad ad : list) {
-            displayables.add(new GridAdDisplayable(ad, tag));
+            displayables.add(new GridAdDisplayable(MinimalAd.from(ad), tag));
           }
 
           addDisplayables(displayables);
