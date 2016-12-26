@@ -43,17 +43,17 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> implements Lifecyc
     return displayables.get(position).getViewLayout();
   }
 
-  @Override public void onViewRecycled(Widget holder) {
-    super.onViewRecycled(holder);
-    holder.unbindView();
-  }
-
   @Override public long getItemId(int position) {
     return position;
   }
 
   @Override public int getItemCount() {
     return displayables.size();
+  }
+
+  @Override public void onViewRecycled(Widget holder) {
+    super.onViewRecycled(holder);
+    holder.unbindView();
   }
 
   public Displayable popDisplayable() {
@@ -99,14 +99,10 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> implements Lifecyc
   }
 
   public void clearDisplayables() {
-    clearDisplayables(true);
-  }
-
-  public void clearDisplayables(boolean notifyDataSetChanged) {
-    displayables.clear();
-    if (notifyDataSetChanged) {
-      AptoideUtils.ThreadU.runOnUiThread(this::notifyDataSetChanged);
-    }
+    AptoideUtils.ThreadU.runOnUiThread(() -> {
+      displayables.clear();
+      notifyDataSetChanged();
+    });
   }
 
   //
