@@ -194,10 +194,10 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
     //getView().findViewById(R.id.swipe_container).setEnabled(false);
   }
 
-  private void caseListApps(String url, BaseRequestWithStore.StoreCredentials storeCredentials,
-      boolean refresh) {
+  private void caseListApps(String url, boolean refresh) {
     ListAppsRequest listAppsRequest =
-        ListAppsRequest.ofAction(url, storeCredentials, AptoideAccountManager.getAccessToken(),
+        ListAppsRequest.ofAction(url, StoreUtils.getStoreCredentialsFromUrl(url),
+            AptoideAccountManager.getAccessToken(),
             AptoideAccountManager.getUserEmail(),
             new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                 DataProvider.getContext()).getAptoideClientUUID());
@@ -241,9 +241,9 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
     endlessRecyclerOnScrollListener.onLoadMore(refresh);
   }
 
-  private Subscription caseGetStore(String url,
-      BaseRequestWithStore.StoreCredentials storeCredentials, boolean refresh) {
-    return GetStoreRequest.ofAction(url, storeCredentials, AptoideAccountManager.getAccessToken(),
+  private Subscription caseGetStore(String url, boolean refresh) {
+    return GetStoreRequest.ofAction(url, StoreUtils.getStoreCredentialsFromUrl(url),
+        AptoideAccountManager.getAccessToken(),
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()).getAptoideClientUUID())
         .observe(refresh)
@@ -262,10 +262,10 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 
             BaseRequestWithStore.StoreCredentials widgetStoreCredentials =
                 wsWidget.getView() != null ? StoreUtils.getStoreCredentialsFromUrlOrNull(
-                    wsWidget.getView()) : storeCredentials;
+                    wsWidget.getView()) : StoreUtils.getStoreCredentialsFromUrl(url);
 
             if (widgetStoreCredentials == null) {
-              widgetStoreCredentials = storeCredentials;
+              widgetStoreCredentials = StoreUtils.getStoreCredentialsFromUrl(url);
             }
 
             WSWidgetsUtils.loadInnerNodes(wsWidget, widgetStoreCredentials, countDownLatch, refresh,
@@ -294,10 +294,8 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
           setDisplayables(displayables);
         }, throwable -> finishLoading(throwable));
   }
-
-  private Subscription caseGetStoreWidgets(String url,
-      BaseRequestWithStore.StoreCredentials storeCredentials, boolean refresh) {
-    return GetStoreWidgetsRequest.ofAction(url, storeCredentials,
+  private Subscription caseGetStoreWidgets(String url, boolean refresh) {
+    return GetStoreWidgetsRequest.ofAction(url, StoreUtils.getStoreCredentialsFromUrl(url),
         AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()).getAptoideClientUUID())
@@ -378,10 +376,10 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 
       switch (name) {
         case listApps:
-          caseListApps(url, StoreUtils.getStoreCredentialsFromUrl(url), refresh);
+          caseListApps(url, refresh);
           break;
         case getStore:
-          caseGetStore(url, StoreUtils.getStoreCredentialsFromUrl(url), refresh);
+          caseGetStore(url, refresh);
           break;
         case getStoresRecommended:
         case getMyStoresSubscribed:
@@ -389,7 +387,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
           break;
         case myStores:
         case getStoreWidgets:
-          caseGetStoreWidgets(url, StoreUtils.getStoreCredentialsFromUrl(url), refresh);
+          caseGetStoreWidgets(url, refresh);
           break;
         case listReviews:
           caseListReviews(url, refresh);
