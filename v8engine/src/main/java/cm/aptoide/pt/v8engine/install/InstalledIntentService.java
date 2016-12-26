@@ -49,7 +49,7 @@ public class InstalledIntentService extends IntentService {
 
     adsRepository = new AdsRepository();
     repository = RepositoryFactory.getRollbackRepository();
-    installedRepository = new InstalledRepository(AccessorFactory.getAccessorFor(Installed.class));
+    installedRepository = RepositoryFactory.getInstalledRepository();
     updatesRepository = RepositoryFactory.getUpdateRepository();
 
     subscriptions = new CompositeSubscription();
