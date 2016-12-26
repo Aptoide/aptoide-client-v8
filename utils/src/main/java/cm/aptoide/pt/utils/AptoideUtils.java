@@ -1024,11 +1024,15 @@ public class AptoideUtils {
     }
 
     public static void runOnUiThread(Runnable runnable) {
-      Observable.just(null)
-          .observeOn(AndroidSchedulers.mainThread())
-          .subscribe(o -> runnable.run(), e -> {
-            e.printStackTrace();
-          });
+      if (ThreadU.isUiThread()) {
+        runnable.run();
+      } else {
+        Observable.just(null)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(o -> runnable.run(), e -> {
+              e.printStackTrace();
+            });
+      }
     }
 
     public static void sleep(long l) {
