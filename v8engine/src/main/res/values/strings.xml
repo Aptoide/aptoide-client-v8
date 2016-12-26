@@ -323,7 +323,7 @@
   <string name="social_timeline_share_title_checkbox_fb">Allow my user\'s profile to be public on Apps Timeline</string>
   <string name="social_timeline_share_dialog_title">Thank you for sharing</string>
   <string name="social_timeline_share_dialog_opt_in_text_1">Your friends will be able to find you and follow you.</string>
-  <string name="social_timeline_share_dialog_opt_in_text_2">If you want your profile to be private on Apps Timeline, edit your privacy settinds on <b>www.aptoide.com</b>.</string>
+  <string name="social_timeline_share_dialog_opt_in_text_2">If you want your profile to be private on Apps Timeline, edit your privacy settings on <b>www.aptoide.com</b>.</string>
   <string name="social_timeline_share_dialog_opt_out_text_1">By making your profile hidden, your friends won\'t be able to find and follow you on Apps Timeline.</string>
   <string name="social_timeline_share_dialog_opt_out_text_2">Access <b>www.aptoide.com</b>, login to your account and go to <b>Settings</b> to change privacy definitions.</string>
   <string name="social_timeline_share_dialog_installed_and_recommended">Installed and Recommended</string>
