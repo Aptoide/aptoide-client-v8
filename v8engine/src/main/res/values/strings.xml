@@ -139,7 +139,7 @@
     <string name="remote_install_tip">Please make sure you have an AndroidTV connected to the network</string>
     <string name="remote_install_retry">Retry</string>
     <string name="remote_install_help">Help</string>
-    <string name="remote_install_help_url">http://blog.aptoide.com/remote-tv-install</string>
+    <string name="remote_install_help_url" translatable="false">http://blog.aptoide.com/remote-tv-install</string>
 
     <!-- WIZARD -->
   <string name="wizard_skip"><b>SKIP</b></string>
