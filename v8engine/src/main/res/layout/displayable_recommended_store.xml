@@ -16,7 +16,6 @@
       android:id="@+id/recommended_store_action"
       android:layout_alignParentRight="true"
       android:layout_centerVertical="true"
-      android:text="@string/follow"
       style="?attr/customButton"
       />
 

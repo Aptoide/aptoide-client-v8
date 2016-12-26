@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
-import android.content.res.ColorStateList;
 import android.support.v7.widget.AppCompatButton;
 import android.view.View;
 import android.widget.ImageView;
@@ -53,14 +52,13 @@ public class RecommendedStoreWidget extends Widget<RecommendedStoreDisplayable> 
     ImageLoader.loadWithShadowCircleTransform(store.getAvatar(), storeIcon,
         StoreThemeEnum.get(store).getStoreHeaderInt());
     setFollowButtonListener(displayable);
-    followButton.setSupportBackgroundTintList(
-        ColorStateList.valueOf(StoreThemeEnum.get(store).getStoreHeaderInt()));
     setButtonText(displayable);
     RxView.clicks(itemView)
         .subscribe(click -> displayable.openStoreFragment((FragmentShower) getContext()));
   }
 
   private void setButtonText(RecommendedStoreDisplayable displayable) {
+    followButton.setVisibility(View.GONE);
     displayable.isFollowing()
         .first()
         .observeOn(AndroidSchedulers.mainThread())
@@ -73,6 +71,7 @@ public class RecommendedStoreWidget extends Widget<RecommendedStoreDisplayable> 
           }
           followButton.setText(
               AptoideUtils.StringU.getFormattedString(message, displayable.getPojo().getName()));
+          followButton.setVisibility(View.VISIBLE);
         });
   }
 
