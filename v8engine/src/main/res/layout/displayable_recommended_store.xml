@@ -14,6 +14,7 @@
 
   <android.support.v7.widget.AppCompatButton
       android:id="@+id/recommended_store_action"
+      android:layout_alignParentEnd="true"
       android:layout_alignParentRight="true"
       android:layout_centerVertical="true"
       style="?attr/customButton"
@@ -38,7 +39,9 @@
       android:layout_centerVertical="true"
       android:layout_marginLeft="9dp"
       android:layout_toLeftOf="@id/recommended_store_action"
+      android:layout_toStartOf="@id/recommended_store_action"
       android:layout_toRightOf="@+id/store_avatar_row"
+      android:layout_toEndOf="@id/store_avatar_row"
       android:orientation="vertical"
       >
 
@@ -60,6 +63,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginLeft="10dp"
+          android:layout_marginStart="10dp"
           android:text="@string/apps"
           android:textColor="@color/followed_stores_store_name_color"
           />
@@ -84,6 +88,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginLeft="10dp"
+          android:layout_marginStart="10dp"
           android:text="xxx"
           android:textColor="@color/recommended_stores_numbers_color"
           />
@@ -108,6 +113,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginLeft="10dp"
+          android:layout_marginStart="10dp"
           android:text="xxxx"
           android:textColor="@color/recommended_stores_numbers_color"
           />
