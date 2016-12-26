@@ -29,7 +29,7 @@ import cm.aptoide.pt.v8engine.fragment.BaseWizardViewerFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.HomeFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.ScheduledDownloadsFragment;
-import cm.aptoide.pt.v8engine.fragment.implementations.StoreTabGridRecyclerFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.storetab.StoreTabGridRecyclerFragment;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.interfaces.DrawerFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
@@ -267,6 +267,11 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
     } else {
       super.onBackPressed();
     }
+  }
+
+  @Override protected void onNewIntent(Intent intent) {
+    super.onNewIntent(intent);
+    Analytics.Lifecycle.Activity.onNewIntent(this, intent);
   }
 
   @Override protected void onNewIntent(Intent intent) {

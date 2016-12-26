@@ -3,7 +3,7 @@
  * Modified by SithEngineer on 04/08/2016.
  */
 
-package cm.aptoide.pt.v8engine.fragment.implementations;
+package cm.aptoide.pt.v8engine.fragment.implementations.storetab;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

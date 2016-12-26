@@ -3,7 +3,7 @@
  * Modified by SithEngineer on 02/08/2016.
  */
 
-package cm.aptoide.pt.v8engine.fragment.implementations;
+package cm.aptoide.pt.v8engine.fragment.implementations.storetab;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -34,6 +34,7 @@ import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.HomeFragment;
 import cm.aptoide.pt.v8engine.repository.AdsRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
@@ -73,10 +74,10 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
   protected String title;
   protected String tag;
   protected String storeTheme;
+  protected List<Displayable> displayables;
+  protected EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
+  protected String url;
   private AdsRepository adsRepository;
-  private List<Displayable> displayables;
-  // // FIXME: 22/12/2016 sithengineer duplicated var from parent
-  private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
   private StoreRepository storeRepository;
 
   public static StoreTabGridRecyclerFragment newInstance(Event event, String title,
