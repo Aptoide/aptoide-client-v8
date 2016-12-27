@@ -26,7 +26,6 @@ import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Store;
-import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
@@ -106,7 +105,7 @@ public abstract class V8Engine extends DataProvider {
   }
 
   private static void checkUpdates() {
-    UpdateRepository repository = RepositoryFactory.getRepositoryFor(Update.class);
+    UpdateRepository repository = RepositoryFactory.getUpdateRepository();
     repository.getUpdates(true)
         .first()
         .subscribe(updates -> Logger.d(TAG, "updates are up to date now"), throwable -> {
@@ -277,6 +276,10 @@ public abstract class V8Engine extends DataProvider {
     Logger.d(TAG, "onCreate took " + (System.currentTimeMillis() - l) + " millis.");
   }
 
+  @Override protected TokenInvalidator getTokenInvalidator() {
+    return AptoideAccountManager::invalidateAccessToken;
+  }
+
   protected void setupCrashReports(boolean isDisabled) {
     CrashReports.setup(AptoideCrashLogger.getInstance().setup(this, isDisabled));
   }
@@ -298,6 +301,10 @@ public abstract class V8Engine extends DataProvider {
         () -> new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             this).getAptoideClientUUID()).subscribeOn(Schedulers.computation());
   }
+
+  //
+  // Strict Mode
+  //
 
   private Observable<?> loadInstalledApps() {
     return Observable.fromCallable(() -> {
@@ -322,24 +329,6 @@ public abstract class V8Engine extends DataProvider {
           AccessorFactory.getAccessorFor(Installed.class).insertAll(list);
         })
         .subscribeOn(Schedulers.io());
-  }
-
-  //
-  // Strict Mode
-  //
-
-  private void setupStrictMode() {
-    StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectDiskReads()
-        .detectDiskWrites()
-        .detectNetwork()   // or .detectAll() for all detectable problems
-        .penaltyLog()
-        .build());
-
-    StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectLeakedSqlLiteObjects()
-        .detectLeakedClosableObjects()
-        .penaltyLog()
-        .penaltyDeath()
-        .build());
   }
 
   //	private static class LeakCAnaryActivityWatcher implements ActivityLifecycleCallbacks {
@@ -386,8 +375,18 @@ public abstract class V8Engine extends DataProvider {
   //		}
   //	}
 
-  @Override protected TokenInvalidator getTokenInvalidator() {
-    return AptoideAccountManager::invalidateAccessToken;
+  private void setupStrictMode() {
+    StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectDiskReads()
+        .detectDiskWrites()
+        .detectNetwork()   // or .detectAll() for all detectable problems
+        .penaltyLog()
+        .build());
+
+    StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectLeakedSqlLiteObjects()
+        .detectLeakedClosableObjects()
+        .penaltyLog()
+        .penaltyDeath()
+        .build());
   }
 
   public void createShortCut() {

@@ -88,7 +88,22 @@ public class SettingsFragment extends PreferenceFragmentCompat
     if (key.equals(ManagedKeys.UPDATES_FILTER_ALPHA_BETA_KEY)) {
       UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
       updateAccessor.removeAll();
-      UpdateRepository repository = RepositoryFactory.getRepositoryFor(Update.class);
+      UpdateRepository repository = RepositoryFactory.getUpdateRepository();
+      repository.getUpdates(true)
+          .first()
+          .subscribe(updates -> Logger.d(TAG, "updates refreshed"), throwable -> {
+            throwable.printStackTrace();
+            CrashReports.logException(throwable);
+          });
+    }
+  }
+
+  @Override public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+    // TODO
+    if (key.equals(ManagedKeys.UPDATES_FILTER_ALPHA_BETA_KEY)) {
+      UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
+      updateAccessor.removeAll();
+      UpdateRepository repository = RepositoryFactory.getUpdateRepository();
       repository.getUpdates(true)
           .first()
           .subscribe(updates -> Logger.d(TAG, "updates refreshed"), throwable -> {

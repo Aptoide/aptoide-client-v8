@@ -247,7 +247,7 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
         (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE)),
         productFactory);
     adRepository = new AdRepository();
-    installedRepository = RepositoryFactory.getRepositoryFor(Installed.class);
+    installedRepository = RepositoryFactory.getInstalledRepository();
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -514,6 +514,53 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
     }
   }
 
+  @Override public int getContentViewId() {
+    return VIEW_ID;
+  }
+
+  @Override public void setupViews() {
+    super.setupViews();
+    //		this.showAppInfo();
+
+    final AppCompatActivity parentActivity = (AppCompatActivity) getActivity();
+    ActionBar supportActionBar = parentActivity.getSupportActionBar();
+    if (supportActionBar != null) {
+      supportActionBar.setDisplayHomeAsUpEnabled(true);
+      supportActionBar.setTitle("");
+    }
+  }
+
+  @Override public void onDestroyView() {
+    super.onDestroyView();
+
+    V8Engine.getRefWatcher(getContext()).watch(this);
+
+    if (storeTheme != null) {
+      ThemeUtils.setStatusBarThemeColor(getActivity(),
+          StoreThemeEnum.get(V8Engine.getConfiguration().getDefaultTheme()));
+    }
+  }
+
+  @Override public void bindViews(View view) {
+    super.bindViews(view);
+    header = new AppViewHeader(view);
+    setHasOptionsMenu(true);
+  }
+
+  @Override public void onResume() {
+    super.onResume();
+
+    // restore download bar status
+    // TODO: 04/08/16 sithengineer restore download bar status
+  }
+
+  @Override public void onPause() {
+    super.onPause();
+
+    // save download bar status
+    // TODO: 04/08/16 sithengineer save download bar status
+  }
+
   private void setupAppView(GetApp getApp) {
     app = getApp.getNodes().getMeta().getData();
     updateLocalVars(app);
@@ -589,53 +636,6 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
       MenuItem item = menu.getItem(i);
       showHideOptionsMenu(item, visible);
     }
-  }
-
-  @Override public int getContentViewId() {
-    return VIEW_ID;
-  }
-
-  @Override public void setupViews() {
-    super.setupViews();
-    //		this.showAppInfo();
-
-    final AppCompatActivity parentActivity = (AppCompatActivity) getActivity();
-    ActionBar supportActionBar = parentActivity.getSupportActionBar();
-    if (supportActionBar != null) {
-      supportActionBar.setDisplayHomeAsUpEnabled(true);
-      supportActionBar.setTitle("");
-    }
-  }
-
-  @Override public void onDestroyView() {
-    super.onDestroyView();
-
-    V8Engine.getRefWatcher(getContext()).watch(this);
-
-    if (storeTheme != null) {
-      ThemeUtils.setStatusBarThemeColor(getActivity(),
-          StoreThemeEnum.get(V8Engine.getConfiguration().getDefaultTheme()));
-    }
-  }
-
-  @Override public void bindViews(View view) {
-    super.bindViews(view);
-    header = new AppViewHeader(view);
-    setHasOptionsMenu(true);
-  }
-
-  @Override public void onResume() {
-    super.onResume();
-
-    // restore download bar status
-    // TODO: 04/08/16 sithengineer restore download bar status
-  }
-
-  @Override public void onPause() {
-    super.onPause();
-
-    // save download bar status
-    // TODO: 04/08/16 sithengineer save download bar status
   }
 
   private Observable<GetApp> manageOrganicAds(GetApp getApp) {

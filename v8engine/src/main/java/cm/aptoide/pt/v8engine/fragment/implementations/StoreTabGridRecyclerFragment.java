@@ -36,7 +36,6 @@ import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
-import cm.aptoide.pt.v8engine.repository.RequestRepositoty;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.util.Translator;
@@ -147,7 +146,8 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
   }
 
   private void caseListStores(String url, boolean refresh) {
-    ListStoresRequest listStoresRequest = new RequestRepositoty().getListStores(url);
+    ListStoresRequest listStoresRequest =
+        RepositoryFactory.getRequestRepositoty().getListStores(url);
     Action1<ListStores> listStoresAction = listStores -> {
 
       // Load sub nodes
@@ -191,7 +191,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
   }
 
   private void caseListApps(String url, boolean refresh) {
-    ListAppsRequest listAppsRequest = new RequestRepositoty().getListApps(url);
+    ListAppsRequest listAppsRequest = RepositoryFactory.getRequestRepositoty().getListApps(url);
     Action1<ListApps> listAppsAction = listApps -> {
 
       // Load sub nodes
@@ -233,7 +233,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
   }
 
   private Subscription caseGetStore(String url, boolean refresh) {
-    return new RequestRepositoty().getStore(url)
+    return RepositoryFactory.getRequestRepositoty().getStore(url)
         .observe(refresh)
         .observeOn(Schedulers.io())
         .subscribe(getStore -> {
@@ -273,7 +273,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
           }
 
           displayables = DisplayablesFactory.parse(getStore.getNodes().getWidgets(), storeTheme,
-              RepositoryFactory.getRepositoryFor(cm.aptoide.pt.database.realm.Store.class));
+              RepositoryFactory.getStoreRepository());
 
           // We only want Adult Switch in Home Fragment.
           if (getParentFragment() != null && getParentFragment() instanceof HomeFragment) {
@@ -283,7 +283,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
         }, throwable -> finishLoading(throwable));
   }
   private Subscription caseGetStoreWidgets(String url, boolean refresh) {
-    return new RequestRepositoty().getStoreWidgets(url)
+    return RepositoryFactory.getRequestRepositoty().getStoreWidgets(url)
         .observe(refresh)
         .observeOn(Schedulers.io())
         .subscribe(getStoreWidgets -> {
@@ -314,7 +314,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
           }
 
           displayables = DisplayablesFactory.parse(getStoreWidgets, storeTheme,
-              RepositoryFactory.getRepositoryFor(cm.aptoide.pt.database.realm.Store.class));
+              RepositoryFactory.getStoreRepository());
           setDisplayables(displayables);
         }, throwable -> finishLoading(throwable));
   }
@@ -324,7 +324,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    storeRepository = RepositoryFactory.getRepositoryFor(cm.aptoide.pt.database.realm.Store.class);
+    storeRepository = RepositoryFactory.getStoreRepository();
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -396,8 +396,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
   }
 
   private void caseMyStores(String url, boolean refresh) {
-    StoreRepository storeRepository =
-        RepositoryFactory.getRepositoryFor(cm.aptoide.pt.database.realm.Store.class);
+    StoreRepository storeRepository = RepositoryFactory.getStoreRepository();
     GetMyStoreListRequest request =
         GetMyStoreListRequest.of(url, AptoideAccountManager.getAccessToken(),
             new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
@@ -445,7 +444,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 
   private void caseListReviews(String url, boolean refresh) {
     ListFullReviewsRequest listFullReviewsRequest =
-        new RequestRepositoty().getListFullReviews(url, refresh);
+        RepositoryFactory.getRequestRepositoty().getListFullReviews(url, refresh);
 
     Action1<ListFullReviews> listFullReviewsAction = (listFullReviews -> {
       if (listFullReviews != null

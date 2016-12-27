@@ -74,18 +74,13 @@ public class PullingContentService extends Service {
     }
   }
 
-  @Override public void onDestroy() {
-    subscriptions.clear();
-    super.onDestroy();
-  }
-
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
 
     String action = intent == null ? null : intent.getAction();
     if (action != null) {
       switch (action) {
         case UPDATES_ACTION:
-          UpdateRepository repository = RepositoryFactory.getRepositoryFor(Update.class);
+          UpdateRepository repository = RepositoryFactory.getUpdateRepository();
           subscriptions.add(repository.getUpdates(true).first().subscribe(updates -> {
             Logger.d(TAG, "updates refreshed");
             setUpdatesNotification(updates, startId);
@@ -101,6 +96,11 @@ public class PullingContentService extends Service {
       }
     }
     return START_NOT_STICKY;
+  }
+
+  @Override public void onDestroy() {
+    subscriptions.clear();
+    super.onDestroy();
   }
 
   @Nullable @Override public IBinder onBind(Intent intent) {

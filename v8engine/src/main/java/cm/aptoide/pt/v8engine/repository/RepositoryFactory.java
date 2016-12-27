@@ -11,29 +11,34 @@ import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.Update;
-import io.realm.RealmObject;
 
 /**
  * Created by sithengineer on 02/09/16.
  */
 public final class RepositoryFactory {
 
-  public static <T extends RealmObject, A extends Repository> A getRepositoryFor(Class<T> clazz) {
-    if (clazz.equals(Scheduled.class)) {
-      return (A) new ScheduledDownloadRepository(AccessorFactory.getAccessorFor(Scheduled.class));
-    } else if (clazz.equals(Rollback.class)) {
-      return (A) new RollbackRepository(AccessorFactory.getAccessorFor(Rollback.class));
-    } else if (clazz.equals(Update.class)) {
-      return (A) new UpdateRepository(AccessorFactory.getAccessorFor(Update.class),
-          AccessorFactory.getAccessorFor(Store.class));
-    } else if (clazz.equals(Installed.class)) {
-      return (A) new InstalledRepository(AccessorFactory.getAccessorFor(Installed.class));
-    } else if (clazz.equals(Store.class)) {
-      return (A) new StoreRepository(AccessorFactory.getAccessorFor(Store.class));
-    }
+  public static ScheduledDownloadRepository getScheduledDownloadRepository() {
+    return new ScheduledDownloadRepository(AccessorFactory.getAccessorFor(Scheduled.class));
+  }
 
-    // TODO: 02/09/16 add missing cases
+  public static RollbackRepository getRollbackRepository() {
+    return new RollbackRepository(AccessorFactory.getAccessorFor(Rollback.class));
+  }
 
-    return null;
+  public static UpdateRepository getUpdateRepository() {
+    return new UpdateRepository(AccessorFactory.getAccessorFor(Update.class),
+        AccessorFactory.getAccessorFor(Store.class));
+  }
+
+  public static InstalledRepository getInstalledRepository() {
+    return new InstalledRepository(AccessorFactory.getAccessorFor(Installed.class));
+  }
+
+  public static StoreRepository getStoreRepository() {
+    return new StoreRepository(AccessorFactory.getAccessorFor(Store.class));
+  }
+
+  public static RequestRepositoty getRequestRepositoty() {
+    return new RequestRepositoty();
   }
 }

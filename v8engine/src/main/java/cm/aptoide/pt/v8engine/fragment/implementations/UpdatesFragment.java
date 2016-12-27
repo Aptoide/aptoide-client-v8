@@ -8,19 +8,12 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
-import com.trello.rxlifecycle.FragmentEvent;
-
-import java.util.LinkedList;
-import java.util.List;
-
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
@@ -41,6 +34,9 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Ins
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdatesHeaderDisplayable;
+import com.trello.rxlifecycle.FragmentEvent;
+import java.util.LinkedList;
+import java.util.List;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -150,8 +146,8 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
   }
 
   private Observable<List<Update>> reloadData() {
-    StoreRepository storeRepository = RepositoryFactory.getRepositoryFor(Store.class);
-    UpdateRepository updateRepository = RepositoryFactory.getRepositoryFor(Update.class);
+    StoreRepository storeRepository = RepositoryFactory.getStoreRepository();
+    UpdateRepository updateRepository = RepositoryFactory.getUpdateRepository();
     return  storeRepository.count()
         .first()
         .flatMap(numberStores -> {

@@ -18,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import cm.aptoide.pt.crashreports.CrashReports;
-import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
@@ -118,7 +117,7 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
     // check if app is installed. if it is, show open button
 
     // apply button background
-    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       Drawable d = context.getDrawable(R.drawable.dialog_bg_2);
       d.setColorFilter(color, PorterDuff.Mode.SRC_IN);
       installButton.setBackground(d);
@@ -153,7 +152,7 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
   }
 
   private boolean isAppInstalled(GetApp app) {
-    InstalledRepository installedRepo = RepositoryFactory.getRepositoryFor(Installed.class);
+    InstalledRepository installedRepo = RepositoryFactory.getInstalledRepository();
     return installedRepo.contains(app.getNodes().getMeta().getData().getPackageName());
   }
 }

@@ -1,7 +1,6 @@
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
-import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
@@ -26,7 +25,7 @@ public class MyStoresFragment extends StoreTabGridRecyclerFragment {
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    StoreRepository storeRepository = RepositoryFactory.getRepositoryFor(Store.class);
+    StoreRepository storeRepository = RepositoryFactory.getStoreRepository();
     if (subscription == null || subscription.isUnsubscribed()) {
       subscription = storeRepository.getAll().distinct()
           .observeOn(AndroidSchedulers.mainThread())
