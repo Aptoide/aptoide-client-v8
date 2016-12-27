@@ -18,7 +18,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.v8engine.interfaces.LoadInterface;
 import cm.aptoide.pt.v8engine.layouthandler.LoaderLayoutHandler;
 import lombok.Getter;
@@ -29,8 +28,6 @@ import lombok.Getter;
 public abstract class BaseLoaderFragment extends SupportV4BaseFragment implements LoadInterface {
 
   private LoaderLayoutHandler loaderLayoutHandler;
-  // Just a convenient reuse option.
-  protected ErrorRequestListener errorRequestListener = e -> finishLoading(e);
   @Getter private boolean create = true;
   private BroadcastReceiver receiver;
 

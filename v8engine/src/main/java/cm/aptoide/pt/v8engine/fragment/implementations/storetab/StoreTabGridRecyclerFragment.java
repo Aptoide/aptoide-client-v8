@@ -8,58 +8,33 @@ package cm.aptoide.pt.v8engine.fragment.implementations.storetab;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
-import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.ListFullReviewsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetMyStoreListRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
 import cm.aptoide.pt.model.v7.Event;
-import cm.aptoide.pt.model.v7.FullReview;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.Layout;
-import cm.aptoide.pt.model.v7.ListApps;
-import cm.aptoide.pt.model.v7.ListFullReviews;
-import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
-import cm.aptoide.pt.v8engine.fragment.implementations.HomeFragment;
-import cm.aptoide.pt.v8engine.repository.AdsRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
-import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
-import cm.aptoide.pt.v8engine.util.ThemeUtils;
 import cm.aptoide.pt.v8engine.util.Translator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayableGroup;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablesFactory;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AdultRowDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickListDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAdDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RecommendedStoreDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RowReviewDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -75,7 +50,9 @@ import rx.schedulers.Schedulers;
 /**
  * Created by neuro on 29-04-2016.
  */
-public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
+public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
+
+  protected StoreRepository storeRepository;
 
   protected Event.Type type;
   protected Event.Name name;
@@ -84,16 +61,11 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
   protected String title;
   protected String tag;
   protected String storeTheme;
-  protected List<Displayable> displayables;
-  protected EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
-  protected String url;
-  private AdsRepository adsRepository;
-  private StoreRepository storeRepository;
 
   public static StoreTabGridRecyclerFragment newInstance(Event event, String title,
       String storeTheme, String tag) {
     Bundle args = buildBundle(event, title, storeTheme, tag);
-    StoreTabGridRecyclerFragment fragment = new StoreTabGridRecyclerFragment();
+    StoreTabGridRecyclerFragment fragment = createFragment(event.getName());
     fragment.setArguments(args);
     return fragment;
   }
@@ -123,21 +95,27 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
     return args;
   }
 
-  @NonNull protected static Bundle buildBundle(Event event, String title) {
-    Bundle args = new Bundle();
-
-    if (event.getType() != null) {
-      args.putString(BundleCons.TYPE, event.getType().toString());
+  private static StoreTabGridRecyclerFragment createFragment(Event.Name name) {
+    switch (name) {
+      case listApps:
+        return new ListAppsFragment();
+      case getStore:
+        return new GetStoreFragment();
+      case getStoresRecommended:
+      case getMyStoresSubscribed:
+        return new MyStoresSubscribedFragment();
+      case myStores:
+      case getStoreWidgets:
+        return new GetStoreWidgetsFragment();
+      case listReviews:
+        return new ListReviewsFragment();
+      case getAds:
+        return new GetAdsFragment();
+      case listStores:
+        return new ListStoresFragment();
+      default:
+        throw new RuntimeException("Fragment " + name + " not implemented!");
     }
-    if (event.getName() != null) {
-      args.putString(BundleCons.NAME, event.getName().toString());
-    }
-    if (event.getData() != null && event.getData().getLayout() != null) {
-      args.putString(BundleCons.LAYOUT, event.getData().getLayout().toString());
-    }
-    args.putString(BundleCons.TITLE, title);
-    args.putString(BundleCons.ACTION, event.getAction());
-    return args;
   }
 
   public static boolean validateAcceptedName(Event.Name name) {
@@ -162,219 +140,10 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
     return false;
   }
 
-  private void caseListStores(String url, boolean refresh) {
-    ListStoresRequest listStoresRequest =
-        RepositoryFactory.getRequestRepositoty().getListStores(url);
-    Action1<ListStores> listStoresAction = listStores -> {
-
-      // Load sub nodes
-      List<Store> list = listStores.getDatalist().getList();
-
-      displayables = new LinkedList<>();
-      for (Store store : list) {
-        displayables.add(new GridStoreDisplayable(store));
-      }
-
-      addDisplayables(displayables);
-    };
-
-    recyclerView.clearOnScrollListeners();
-    endlessRecyclerOnScrollListener =
-        new EndlessRecyclerOnScrollListener(this.getAdapter(), listStoresRequest, listStoresAction,
-            errorRequestListener);
-    recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
-    endlessRecyclerOnScrollListener.onLoadMore(refresh);
-  }
-
-  private void caseGetAds(boolean refresh) {
-    adsRepository.getAdsFromHomepageMore().subscribe(minimalAds -> {
-      displayables = new LinkedList<>();
-      for (MinimalAd minimalAd : minimalAds) {
-        displayables.add(new GridAdDisplayable(minimalAd, tag));
-      }
-
-      addDisplayables(displayables);
-    }, e -> finishLoading());
-
-    //Highlighted should have pull to refresh
-    //getView().findViewById(R.id.swipe_container).setEnabled(false);
-  }
-
-  private void caseListApps(String url, boolean refresh) {
-    ListAppsRequest listAppsRequest = RepositoryFactory.getRequestRepositoty().getListApps(url);
-    Action1<ListApps> listAppsAction = listApps -> {
-
-      // Load sub nodes
-      List<App> list = listApps.getDatalist().getList();
-
-      displayables = new LinkedList<>();
-      if (layout != null) {
-        switch (layout) {
-          case GRAPHIC:
-            for (App app : list) {
-              app.getStore().setAppearance(new Store.Appearance(storeTheme, null));
-              displayables.add(new AppBrickListDisplayable(app, tag));
-            }
-            break;
-          default:
-            for (App app : list) {
-              app.getStore().setAppearance(new Store.Appearance(storeTheme, null));
-              displayables.add(new GridAppDisplayable(app, tag, true));
-            }
-            break;
-        }
-      } else {
-        for (App app : list) {
-          app.getStore().setAppearance(new Store.Appearance(storeTheme, null));
-          displayables.add(new GridAppDisplayable(app, tag, true));
-        }
-      }
-
-      addDisplayables(displayables);
-    };
-
-    recyclerView.clearOnScrollListeners();
-    endlessRecyclerOnScrollListener =
-        new EndlessRecyclerOnScrollListener(this.getAdapter(), listAppsRequest, listAppsAction,
-            errorRequestListener);
-
-    recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
-    endlessRecyclerOnScrollListener.onLoadMore(refresh);
-  }
-
-  private Subscription caseGetStore(String url, boolean refresh) {
-    return RepositoryFactory.getRequestRepositoty().getStore(url)
-        .observe(refresh)
-        .observeOn(Schedulers.io())
-        .subscribe(getStore -> {
-
-          // Load sub nodes
-          List<GetStoreWidgets.WSWidget> list =
-              getStore.getNodes().getWidgets().getDatalist().getList();
-
-          // xxx
-          //injectStuff(list, storeCredentials != null ? storeCredentials.getName() : null);
-
-          CountDownLatch countDownLatch = new CountDownLatch(list.size());
-          Observable.from(list).forEach(wsWidget -> {
-
-            BaseRequestWithStore.StoreCredentials widgetStoreCredentials =
-                wsWidget.getView() != null ? StoreUtils.getStoreCredentialsFromUrlOrNull(
-                    wsWidget.getView()) : StoreUtils.getStoreCredentialsFromUrl(url);
-
-            if (widgetStoreCredentials == null) {
-              widgetStoreCredentials = StoreUtils.getStoreCredentialsFromUrl(url);
-            }
-
-            WSWidgetsUtils.loadInnerNodes(wsWidget, widgetStoreCredentials, countDownLatch, refresh,
-                throwable -> countDownLatch.countDown(), AptoideAccountManager.getAccessToken(),
-                new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                    DataProvider.getContext()).getAptoideClientUUID(),
-                DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(
-                    V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId(),
-                AptoideAccountManager.isMatureSwitchOn());
-          });
-
-          try {
-            countDownLatch.await(5, TimeUnit.SECONDS);
-          } catch (InterruptedException e) {
-            e.printStackTrace();
-          }
-
-          displayables = DisplayablesFactory.parse(getStore.getNodes().getWidgets(), storeTheme,
-              RepositoryFactory.getStoreRepository());
-
-          // We only want Adult Switch in Home Fragment.
-          if (getParentFragment() != null && getParentFragment() instanceof HomeFragment) {
-            displayables.add(new AdultRowDisplayable());
-          }
-          setDisplayables(displayables);
-        }, throwable -> finishLoading(throwable));
-  }
-
-  private Subscription caseGetStoreWidgets(String url, boolean refresh) {
-    return RepositoryFactory.getRequestRepositoty().getStoreWidgets(url)
-        .observe(refresh)
-        .observeOn(Schedulers.io())
-        .subscribe(getStoreWidgets -> {
-
-          // Load sub nodes
-          List<GetStoreWidgets.WSWidget> list = getStoreWidgets.getDatalist().getList();
-          CountDownLatch countDownLatch = new CountDownLatch(list.size());
-
-          String aptoideClientUuid =
-              new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                  DataProvider.getContext()).getAptoideClientUUID();
-
-          Observable.from(list)
-              .forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget,
-                  wsWidget.getView() != null ? StoreUtils.getStoreCredentialsFromUrl(
-                      wsWidget.getView()) : new BaseRequestWithStore.StoreCredentials(),
-                  countDownLatch, refresh, throwable -> finishLoading(throwable),
-                  AptoideAccountManager.getAccessToken(), aptoideClientUuid,
-                  DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(
-                      V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId(),
-                  SecurePreferences.isAdultSwitchActive()));
-
-          try {
-            countDownLatch.await(5, TimeUnit.SECONDS);
-          } catch (InterruptedException e) {
-            e.printStackTrace();
-          }
-
-          displayables = DisplayablesFactory.parse(getStoreWidgets, storeTheme,
-              RepositoryFactory.getStoreRepository());
-          setDisplayables(displayables);
-        }, throwable -> finishLoading(throwable));
-  }
-
-  protected void loadGetStoreWidgets(GetStoreWidgets getStoreWidgets, boolean refresh) {
-    // Load sub nodes
-    List<GetStoreWidgets.WSWidget> list = getStoreWidgets.getDatalist().getList();
-    CountDownLatch countDownLatch = new CountDownLatch(list.size());
-
-    Observable.from(list)
-        .forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget,
-            wsWidget.getView() != null ? StoreUtils.getStoreCredentialsFromUrl(wsWidget.getView())
-                : new BaseRequestWithStore.StoreCredentials(), countDownLatch, refresh,
-            throwable -> countDownLatch.countDown(), AptoideAccountManager.getAccessToken(),
-            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                DataProvider.getContext()).getAptoideClientUUID(),
-            DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(V8Engine.getContext()),
-            DataProvider.getConfiguration().getPartnerId(),
-            AptoideAccountManager.isMatureSwitchOn()));
-
-    try {
-      countDownLatch.await();
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
-
-    displayables = DisplayablesFactory.parse(getStoreWidgets, storeTheme, storeRepository);
-    setDisplayables(displayables);
-  }
-
-  @Override public void setupViews() {
-    super.setupViews();
-    setupToolbar();
-    setHasOptionsMenu(true);
-  }
-
-  @Override public void setupToolbar() {
-    if (hasToolbar()) {
-      ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-      ((AppCompatActivity) getActivity()).getSupportActionBar()
-          .setTitle(Translator.translate(title));
-      ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-      toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
-    }
-  }
-
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-
-    adsRepository = new AdsRepository();
     storeRepository = RepositoryFactory.getStoreRepository();
+
+    super.onCreate(savedInstanceState);
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -395,44 +164,6 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
     storeTheme = args.getString(BundleCons.STORE_THEME);
   }
 
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-
-    if (hasToolbar()) {
-      if (storeTheme != null) {
-        ThemeUtils.setStoreTheme(getActivity(), storeTheme);
-        ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
-      }
-    }
-    return super.onCreateView(inflater, container, savedInstanceState);
-  }
-
-  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    super.onCreateOptionsMenu(menu, inflater);
-    if (hasToolbar()) {
-      inflater.inflate(R.menu.menu_empty, menu);
-    }
-  }
-
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    if (hasToolbar()) {
-      if (item.getItemId() == android.R.id.home) {
-        getActivity().onBackPressed();
-        return true;
-      }
-    }
-    return super.onOptionsItemSelected(item);
-  }
-
-  private boolean hasToolbar() {
-    return toolbar != null && title != null;
-  }
-
-  //@Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-  //  super.onViewCreated(view, savedInstanceState);
-  //}
-
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
     if (create || refresh) {
@@ -443,43 +174,74 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
             "Invalid name(" + name + ") for event on " + getClass().getSimpleName() + "!");
       }
 
+      // TODO: 28-12-2016 neuro martelo martelo martelo
       switch (name) {
-        case listApps:
-          caseListApps(url, refresh);
-          break;
-        case getStore:
-          caseGetStore(url, refresh);
-          break;
         case getStoresRecommended:
         case getMyStoresSubscribed:
           caseMyStores(url, refresh);
           break;
         case myStores:
         case getStoreWidgets:
-          caseGetStoreWidgets(url, refresh);
+          caseGetStoreWidgets(url, StoreUtils.getStoreCredentialsFromUrl(url), refresh);
           break;
-        case listReviews:
-          caseListReviews(url, refresh);
-          break;
-        //	case getApkComments:
-        //		break;
-        case getAds:
-          caseGetAds(refresh);
-          break;
-        case listStores:
-          caseListStores(url, refresh);
-          break;
+        default:
+          Observable<List<? extends Displayable>> displayablesObservable =
+              buildDisplayables(refresh, url);
+          if (displayablesObservable != null) {
+            displayablesObservable.compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW))
+                .subscribe(this::setDisplayables);
+          }
       }
-    } else {
-      // Not all requests are endless so..
-      if (endlessRecyclerOnScrollListener != null) {
-        recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
-      }
-      //setDisplayables(displayables);
     }
   }
 
-  private void caseMyStores(String url, boolean refresh) {
+  /**
+   * @deprecated á espera da ajuda do trinkies :/
+   */
+  @Deprecated private Subscription caseGetStoreWidgets(String url,
+      BaseRequestWithStore.StoreCredentials storeCredentials, boolean refresh) {
+    return GetStoreWidgetsRequest.ofAction(url, storeCredentials,
+        AptoideAccountManager.getAccessToken(),
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext()).getAptoideClientUUID())
+        .observe(refresh)
+        .observeOn(Schedulers.io())
+        .subscribe(getStoreWidgets -> {
+
+          // Load sub nodes
+          List<GetStoreWidgets.WSWidget> list = getStoreWidgets.getDatalist().getList();
+          CountDownLatch countDownLatch = new CountDownLatch(list.size());
+
+          String aptoideClientUuid =
+              new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+                  DataProvider.getContext()).getAptoideClientUUID();
+
+          Observable.from(list)
+              .forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget,
+                  wsWidget.getView() != null ? StoreUtils.getStoreCredentialsFromUrl(
+                      wsWidget.getView()) : new BaseRequestWithStore.StoreCredentials(),
+                  countDownLatch, refresh, throwable -> finishLoading(throwable),
+                  AptoideAccountManager.getAccessToken(), aptoideClientUuid,
+                  DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(
+                      V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId(),
+                  AptoideAccountManager.isMatureSwitchOn()));
+
+          try {
+            countDownLatch.await(5, TimeUnit.SECONDS);
+          } catch (InterruptedException e) {
+            e.printStackTrace();
+          }
+
+          List<Displayable> displayables = DisplayablesFactory.parse(getStoreWidgets, storeTheme,
+              RepositoryFactory.getStoreRepository());
+          setDisplayables(displayables);
+        }, throwable -> finishLoading(throwable));
+  }
+
+  /**
+   * @deprecated á espera da ajuda do trinkies :/
+   */
+  @Deprecated private void caseMyStores(String url, boolean refresh) {
     StoreRepository storeRepository = RepositoryFactory.getStoreRepository();
     GetMyStoreListRequest request =
         GetMyStoreListRequest.of(url, AptoideAccountManager.getAccessToken(),
@@ -503,7 +265,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
     };
 
     recyclerView.clearOnScrollListeners();
-    endlessRecyclerOnScrollListener =
+    EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(this.getAdapter(), request, listStoresAction,
             errorListener, refresh);
 
@@ -526,35 +288,6 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
     return storesDisplayables;
   }
 
-  private void caseListReviews(String url, boolean refresh) {
-    ListFullReviewsRequest listFullReviewsRequest =
-        RepositoryFactory.getRequestRepositoty().getListFullReviews(url, refresh);
-
-    Action1<ListFullReviews> listFullReviewsAction = (listFullReviews -> {
-      if (listFullReviews != null
-          && listFullReviews.getDatalist() != null
-          && listFullReviews.getDatalist().getList() != null) {
-        List<FullReview> reviews = listFullReviews.getDatalist().getList();
-        LinkedList<Displayable> displayables = new LinkedList<>();
-        for (int i = 0; i < reviews.size(); i++) {
-          FullReview review = reviews.get(i);
-          displayables.add(new RowReviewDisplayable(review));
-        }
-        this.displayables = new ArrayList<>(reviews.size());
-        this.displayables.add(new DisplayableGroup(displayables));
-        addDisplayables(this.displayables);
-      }
-    });
-
-    recyclerView.clearOnScrollListeners();
-    endlessRecyclerOnScrollListener =
-        new EndlessRecyclerOnScrollListener(this.getAdapter(), listFullReviewsRequest,
-            listFullReviewsAction, errorRequestListener, true);
-
-    recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
-    endlessRecyclerOnScrollListener.onLoadMore(refresh);
-  }
-
   @Override public int getContentViewId() {
     // title flag whether toolbar should be shown or not
     if (title != null) {
@@ -563,6 +296,10 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
       return super.getContentViewId();
     }
   }
+
+  @Nullable
+  protected abstract Observable<List<? extends Displayable>> buildDisplayables(boolean refresh,
+      String url);
 
   private static class BundleCons {
 

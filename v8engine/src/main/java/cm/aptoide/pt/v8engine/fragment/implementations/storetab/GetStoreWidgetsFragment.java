@@ -1,24 +1,23 @@
 package cm.aptoide.pt.v8engine.fragment.implementations.storetab;
 
-import android.os.Bundle;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
+import java.util.List;
+import rx.Observable;
 import rx.schedulers.Schedulers;
 
 /**
  * Created by neuro on 26-12-2016.
  */
 
-public class GetStoreWidgetsFragment extends StoreTabGridRecyclerFragment {
+public class GetStoreWidgetsFragment extends StoreTabWidgetsGridRecyclerFragment {
 
-  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    super.load(create, refresh, savedInstanceState);
-
-    RepositoryFactory.getRequestRepositoty()
+  @Override
+  protected Observable<List<? extends Displayable>> buildDisplayables(boolean refresh, String url) {
+    return RepositoryFactory.getRequestRepositoty()
         .getStoreWidgets(url)
         .observe(refresh)
         .observeOn(Schedulers.io())
-        .subscribe(getStoreWidgets -> {
-          loadGetStoreWidgets(getStoreWidgets, refresh);
-        }, this::finishLoading);
+        .map(getStoreWidgets -> loadGetStoreWidgets(getStoreWidgets, refresh, url));
   }
 }

@@ -1,14 +1,14 @@
 package cm.aptoide.pt.v8engine.fragment.implementations.storetab;
 
-import android.os.Bundle;
-import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.Endless;
+import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.ListApps;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickListDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAppDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
 import java.util.LinkedList;
 import java.util.List;
 import rx.functions.Action1;
@@ -17,18 +17,19 @@ import rx.functions.Action1;
  * Created by neuro on 26-12-2016.
  */
 
-public class ListAppsFragment extends StoreTabGridRecyclerFragment {
+public class ListAppsFragment extends GetStoreEndlessFragment<ListApps> {
 
-  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    super.load(create, refresh, savedInstanceState);
+  @Override protected V7<ListApps, ? extends Endless> buildRequest(boolean refresh, String url) {
+    return RepositoryFactory.getRequestRepositoty().getListApps(url);
+  }
 
-    ListAppsRequest listAppsRequest = RepositoryFactory.getRequestRepositoty().getListApps(url);
-    Action1<ListApps> listAppsAction = listApps -> {
+  @Override protected Action1<ListApps> buildAction() {
+    return listApps -> {
 
       // Load sub nodes
       List<App> list = listApps.getDatalist().getList();
 
-      displayables = new LinkedList<>();
+      List<Displayable> displayables = new LinkedList<>();
       if (layout != null) {
         switch (layout) {
           case GRAPHIC:
@@ -53,13 +54,5 @@ public class ListAppsFragment extends StoreTabGridRecyclerFragment {
 
       addDisplayables(displayables);
     };
-
-    recyclerView.clearOnScrollListeners();
-    endlessRecyclerOnScrollListener =
-        new EndlessRecyclerOnScrollListener(this.getAdapter(), listAppsRequest, listAppsAction,
-            errorRequestListener);
-
-    recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
-    endlessRecyclerOnScrollListener.onLoadMore(refresh);
   }
 }

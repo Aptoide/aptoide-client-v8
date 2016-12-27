@@ -35,12 +35,50 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
   private TimeLineFollowFragment.FollowFragmentOpenMode openMode;
 
+  public static TimeLineFollowFragment newInstance(FollowFragmentOpenMode openMode,
+      long followNumber) {
+    Bundle args = new Bundle();
+    switch (openMode) {
+      case FOLLOWERS:
+        args.putString(TITLE_KEY, AptoideUtils.StringU.getFormattedString(
+            R.string.social_timeline_followers_fragment_title, followNumber));
+        break;
+      case FOLLOWING:
+        args.putString(TITLE_KEY, AptoideUtils.StringU.getFormattedString(
+            R.string.social_timeline_following_fragment_title, followNumber));
+        break;
+    }
+    args.putSerializable(OPEN_MODE, openMode);
+    TimeLineFollowFragment fragment = new TimeLineFollowFragment();
+    fragment.setArguments(args);
+    return fragment;
+  }
+
   @Override public void setupToolbar() {
     super.setupToolbar();
     if (toolbar != null) {
       ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
       bar.setDisplayHomeAsUpEnabled(true);
     }
+  }
+
+  @Override public void loadExtras(Bundle args) {
+    super.loadExtras(args);
+    openMode = (FollowFragmentOpenMode) args.get(OPEN_MODE);
+  }
+
+  @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+    inflater.inflate(R.menu.menu_empty, menu);
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    int itemId = item.getItemId();
+    if (itemId == android.R.id.home) {
+      getActivity().onBackPressed();
+      return true;
+    }
+    return super.onOptionsItemSelected(item);
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
@@ -81,7 +119,7 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
       recyclerView.clearOnScrollListeners();
       endlessRecyclerOnScrollListener =
           new EndlessRecyclerOnScrollListener(this.getAdapter(), request, action,
-              errorRequestListener, 6, true, firstRequest, null);
+              Throwable::printStackTrace, 6, true, firstRequest, null);
       endlessRecyclerOnScrollListener.setOnEndOfListReachedListener(
           () -> addDisplayable(new MessageWhiteBgDisplayable(getFooterMessage(hidden[0]))));
       recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
@@ -91,52 +129,14 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
     }
   }
 
-  @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
-    super.onCreateOptionsMenu(menu, inflater);
-    inflater.inflate(R.menu.menu_empty, menu);
-  }
-
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    int itemId = item.getItemId();
-    if (itemId == android.R.id.home) {
-      getActivity().onBackPressed();
-      return true;
-    }
-    return super.onOptionsItemSelected(item);
-  }
-
-  @Override public void bindViews(View view) {
-    super.bindViews(view);
-    setHasOptionsMenu(true);
-  }
-
-  @Override public void loadExtras(Bundle args) {
-    super.loadExtras(args);
-    openMode = (FollowFragmentOpenMode) args.get(OPEN_MODE);
-  }
-
   @Override public void onDestroyView() {
     endlessRecyclerOnScrollListener.removeListeners();
     super.onDestroyView();
   }
 
-  public static TimeLineFollowFragment newInstance(FollowFragmentOpenMode openMode,
-      long followNumber) {
-    Bundle args = new Bundle();
-    switch (openMode) {
-      case FOLLOWERS:
-        args.putString(TITLE_KEY, AptoideUtils.StringU.getFormattedString(
-            R.string.social_timeline_followers_fragment_title, followNumber));
-        break;
-      case FOLLOWING:
-        args.putString(TITLE_KEY, AptoideUtils.StringU.getFormattedString(
-            R.string.social_timeline_following_fragment_title, followNumber));
-        break;
-    }
-    args.putSerializable(OPEN_MODE, openMode);
-    TimeLineFollowFragment fragment = new TimeLineFollowFragment();
-    fragment.setArguments(args);
-    return fragment;
+  @Override public void bindViews(View view) {
+    super.bindViews(view);
+    setHasOptionsMenu(true);
   }
 
   public String getFooterMessage(int hidden) {

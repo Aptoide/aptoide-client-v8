@@ -179,7 +179,7 @@ public class RateAndReviewsFragment extends GridRecyclerFragment<CommentsAdapter
 
     endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(this.getAdapter(), reviewsRequest,
-            new ListFullReviewsSuccessRequestListener(this), errorRequestListener);
+            new ListFullReviewsSuccessRequestListener(this), Throwable::printStackTrace);
     recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(false);
   }

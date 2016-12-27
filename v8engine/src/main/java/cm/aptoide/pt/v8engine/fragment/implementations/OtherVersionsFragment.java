@@ -167,8 +167,8 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
         ListAppVersionsRequest.of(appPackge, storeNames, AptoideAccountManager.getAccessToken(),
             new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                 DataProvider.getContext()).getAptoideClientUUID(),
-            StoreUtils.getSubscribedStoresAuthMap()),
-        otherVersionsSuccessRequestListener, errorRequestListener);
+            StoreUtils.getSubscribedStoresAuthMap()), otherVersionsSuccessRequestListener,
+        Throwable::printStackTrace);
 
     recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(false);

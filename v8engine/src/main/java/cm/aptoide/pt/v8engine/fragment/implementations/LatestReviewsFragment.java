@@ -88,7 +88,7 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
       recyclerView.clearOnScrollListeners();
       endlessRecyclerOnScrollListener =
           new EndlessRecyclerOnScrollListener(this.getAdapter(), listFullReviewsRequest,
-              listFullReviewsAction, errorRequestListener, true);
+              listFullReviewsAction, Throwable::printStackTrace, true);
       recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
       endlessRecyclerOnScrollListener.onLoadMore(refresh);
     } else {

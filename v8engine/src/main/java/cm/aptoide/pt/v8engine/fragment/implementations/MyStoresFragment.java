@@ -1,11 +1,13 @@
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.v8engine.fragment.implementations.storetab.StoreTabGridRecyclerFragment;
-import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
-import cm.aptoide.pt.v8engine.repository.StoreRepository;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
+import java.util.List;
+import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -19,14 +21,14 @@ public class MyStoresFragment extends StoreTabGridRecyclerFragment {
 
   public static MyStoresFragment newInstance(Event event, String title, String storeTheme,
       String tag) {
-    Bundle args = buildBundle(event, title, storeTheme, tag);
+    // TODO: 28-12-2016 neuro ia saltando um preguito com este null lolz
+    Bundle args = buildBundle(event, null, storeTheme, tag);
     MyStoresFragment fragment = new MyStoresFragment();
     fragment.setArguments(args);
     return fragment;
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    StoreRepository storeRepository = RepositoryFactory.getStoreRepository();
     if (subscription == null || subscription.isUnsubscribed()) {
       subscription = storeRepository.getAll().distinct()
           .observeOn(AndroidSchedulers.mainThread())
@@ -38,5 +40,21 @@ public class MyStoresFragment extends StoreTabGridRecyclerFragment {
           });
     }
     super.load(create, refresh, savedInstanceState);
+  }
+
+  @Nullable @Override
+  protected Observable<List<? extends Displayable>> buildDisplayables(boolean refresh, String url) {
+    // TODO: 28-12-2016 neuro e mais uma martelada...
+    subscription = storeRepository.getAll()
+        .distinct()
+        .observeOn(AndroidSchedulers.mainThread())
+        .skip(1)
+        .compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW))
+        .subscribe(stores -> {
+          Logger.d(TAG, "Store database changed, reloading...");
+          super.load(false, true, null);
+        });
+
+    return null;
   }
 }
