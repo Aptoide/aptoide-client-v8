@@ -259,7 +259,6 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 
             WSWidgetsUtils.loadInnerNodes(wsWidget, widgetStoreCredentials, countDownLatch, refresh,
                 throwable -> countDownLatch.countDown(), AptoideAccountManager.getAccessToken(),
-                AptoideAccountManager.getUserEmail(),
                 new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                     DataProvider.getContext()).getAptoideClientUUID(),
                 DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(
@@ -302,8 +301,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
                   wsWidget.getView() != null ? StoreUtils.getStoreCredentialsFromUrl(
                       wsWidget.getView()) : new BaseRequestWithStore.StoreCredentials(),
                   countDownLatch, refresh, throwable -> finishLoading(throwable),
-                  AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
-                  aptoideClientUuid,
+                  AptoideAccountManager.getAccessToken(), aptoideClientUuid,
                   DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(
                       V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId(),
                   SecurePreferences.isAdultSwitchActive()));

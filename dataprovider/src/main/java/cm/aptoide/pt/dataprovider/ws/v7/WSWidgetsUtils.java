@@ -32,8 +32,8 @@ public class WSWidgetsUtils {
 
   public static void loadInnerNodes(GetStoreWidgets.WSWidget wsWidget,
       BaseRequestWithStore.StoreCredentials storeCredentials, CountDownLatch countDownLatch,
-      boolean refresh, Action1<Throwable> action1, String accessToken, String email,
-      String aptoideClientUuid, boolean googlePlayServicesAvailable, String oemid, boolean mature) {
+      boolean refresh, Action1<Throwable> action1, String accessToken, String aptoideClientUuid,
+      boolean googlePlayServicesAvailable, String oemid, boolean mature) {
 
     if (isKnownType(wsWidget.getType())) {
 
