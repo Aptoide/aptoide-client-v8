@@ -131,13 +131,13 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
       ListSearchAppsRequest of;
       if (storeName != null) {
         of = ListSearchAppsRequest.of(query, storeName, StoreUtils.getSubscribedStoresAuthMap(),
-            AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
+            AptoideAccountManager.getAccessToken(),
             new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                 DataProvider.getContext()).getAptoideClientUUID());
       } else {
         of = ListSearchAppsRequest.of(query, addSubscribedStores,
             StoreUtils.getSubscribedStoresIds(), StoreUtils.getSubscribedStoresAuthMap(),
-            AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
+            AptoideAccountManager.getAccessToken(),
             new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                 DataProvider.getContext()).getAptoideClientUUID());
       }
@@ -155,6 +155,14 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
     return R.layout.recycler_fragment;
   }
 
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+
+    outState.putString(BundleCons.QUERY, query);
+    outState.putString(BundleCons.STORE_NAME, storeName);
+    outState.putBoolean(BundleCons.ADD_SUBSCRIBED_STORES, addSubscribedStores);
+  }
+
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
 
@@ -162,14 +170,6 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
     storeName = args.getString(BundleCons.STORE_NAME);
     addSubscribedStores = args.getBoolean(BundleCons.ADD_SUBSCRIBED_STORES);
     hasMultipleFragments = args.getBoolean(BundleCons.HAS_MULTIPLE_FRAGMENTS, false);
-  }
-
-  @Override public void onSaveInstanceState(Bundle outState) {
-    super.onSaveInstanceState(outState);
-
-    outState.putString(BundleCons.QUERY, query);
-    outState.putString(BundleCons.STORE_NAME, storeName);
-    outState.putBoolean(BundleCons.ADD_SUBSCRIBED_STORES, addSubscribedStores);
   }
 
   protected static class BundleCons {
