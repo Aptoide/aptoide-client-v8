@@ -263,6 +263,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
           .subscribe(answer -> {
             AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
               progressDialog.dismiss();
+              AptoideAccountManager.sendLoginBroadcast();
               finish();
             }, throwable -> throwable.printStackTrace());
           }, throwable -> {
@@ -294,6 +295,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
             }
             AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
               progressDialog.dismiss();
+              AptoideAccountManager.sendLoginBroadcast();
               finish();
             }, throwable1 -> throwable1.printStackTrace());
           }));
@@ -307,6 +309,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
           .execute(answer -> {
             AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
               progressDialog.dismiss();
+              AptoideAccountManager.sendLoginBroadcast();
               finish();
             }, Throwable::printStackTrace);
           }, throwable -> {

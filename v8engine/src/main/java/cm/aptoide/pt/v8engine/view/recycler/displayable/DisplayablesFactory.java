@@ -155,7 +155,7 @@ public class DisplayablesFactory {
 
   private static List<Displayable> createMyStoreDisplayables(Object viewObject) {
     LinkedList<Displayable> displayables = new LinkedList<>();
-    if (viewObject instanceof GetStoreMeta) {
+    if (viewObject instanceof GetStoreMeta && ((GetStoreMeta) viewObject).getData() != null) {
       displayables.add(new MyStoreDisplayable(((GetStoreMeta) viewObject)));
     } else {
       // TODO: 22/12/2016 trinkes remove this hammered!!!!

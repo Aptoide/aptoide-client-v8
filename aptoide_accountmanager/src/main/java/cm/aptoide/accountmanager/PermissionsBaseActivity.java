@@ -171,9 +171,9 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
               Application.getConfiguration().getAppId() + ".provider", new File(getPhotoFileUri(
                   PermissionsBaseActivity.createAvatarPhotoName(photoAvatar)).getPath()));
           takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uriForFile);
+        } else {
+          takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, getPhotoFileUri(PermissionsBaseActivity.createAvatarPhotoName(photoAvatar)));
         }
-        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-            getPhotoFileUri(PermissionsBaseActivity.createAvatarPhotoName(photoAvatar)));
         startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
       }
     }
@@ -181,9 +181,9 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
 
   private void setFileName() {
     if (getActivityTitle().equals("Create User Profile")) {
-      photoAvatar = "aptoide_user_avatar.png";
+      photoAvatar = "aptoide_user_avatar.jpg";
     } else if (getActivityTitle().equals("Create Your Store")) {
-      photoAvatar = "aptoide_store_avatar.png";
+      photoAvatar = "aptoide_store_avatar.jpg";
     }
   }
 

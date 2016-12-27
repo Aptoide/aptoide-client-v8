@@ -2,7 +2,8 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.text.Spannable;
+import android.text.ParcelableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.UnderlineSpan;
 import cm.aptoide.pt.model.v7.TimelineStats;
 import cm.aptoide.pt.v8engine.R;
@@ -38,22 +39,24 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
 
   CharSequence getFollowersText(Context context) {
 
-    String t = context.getString(R.string.timeline_followers, getPojo().getData().getFollowers());
-    Spannable s = spannableFactory.createColorSpan(t, Color.BLACK,
-        String.valueOf(getPojo().getData().getFollowers()));
-    s.setSpan(new UnderlineSpan(), context.getString(R.string.timeline_stats_followers).length(),
-        t.length(), 0);
-    return s;
+    return spannableFactory.createSpan(
+        context.getString(R.string.timeline_followers, getPojo().getData().getFollowers()),
+        new ParcelableSpan[] { new ForegroundColorSpan(Color.BLACK), new UnderlineSpan() },
+        new String[] {
+            String.valueOf(getPojo().getData().getFollowers()),
+            String.valueOf(getPojo().getData().getFollowers())
+        });
   }
 
   CharSequence getFollowingText(Context context) {
 
-    String t = context.getString(R.string.timeline_followed, getPojo().getData().getFollowing());
-    Spannable s = spannableFactory.createColorSpan(t, Color.BLACK,
-        String.valueOf(getPojo().getData().getFollowing()));
-    s.setSpan(new UnderlineSpan(), context.getString(R.string.timeline_stats_followers).length(),
-        t.length(), 0);
-    return s;
+    return spannableFactory.createSpan(
+        context.getString(R.string.timeline_followed, getPojo().getData().getFollowing()),
+        new ParcelableSpan[] { new ForegroundColorSpan(Color.BLACK), new UnderlineSpan() },
+        new String[] {
+            String.valueOf(getPojo().getData().getFollowing()),
+            String.valueOf(getPojo().getData().getFollowing())
+        });
   }
 
   public Void followersClick(FragmentShower fragmentShower) {

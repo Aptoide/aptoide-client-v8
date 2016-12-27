@@ -80,6 +80,7 @@ public abstract class BaseLoaderFragment extends SupportV4BaseFragment implement
   @CallSuper @Override public void onDestroyView() {
     super.onDestroyView();
     if (loaderLayoutHandler != null) {
+      loaderLayoutHandler.unbindViews();
       loaderLayoutHandler = null;
     }
     unregisterReceiverForAccountManager();
