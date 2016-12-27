@@ -38,6 +38,7 @@ import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
+import cm.aptoide.pt.v8engine.repository.RequestRepositoty;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.util.Translator;
@@ -195,12 +196,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
   }
 
   private void caseListApps(String url, boolean refresh) {
-    ListAppsRequest listAppsRequest =
-        ListAppsRequest.ofAction(url, StoreUtils.getStoreCredentialsFromUrl(url),
-            AptoideAccountManager.getAccessToken(),
-            AptoideAccountManager.getUserEmail(),
-            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                DataProvider.getContext()).getAptoideClientUUID());
+    ListAppsRequest listAppsRequest = new RequestRepositoty().getListAppsFromUrl(url);
     Action1<ListApps> listAppsAction = listApps -> {
 
       // Load sub nodes
