@@ -24,14 +24,14 @@ import rx.Observable;
 /**
  * Created by marcelobenites on 7/27/16.
  */
-public class AdRepository {
+public class AdsRepository {
 
   private AptoideClientUUID aptoideClientUUID;
   private GooglePlayServicesAvailabilityChecker googlePlayServicesAvailabilityChecker;
   private PartnerIdProvider partnerIdProvider;
   private AdultSwitchStatus adultSwitchStatus;
 
-  public AdRepository() {
+  public AdsRepository() {
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
 
@@ -55,7 +55,7 @@ public class AdRepository {
     return getAdsResponse != null && validAds(getAdsResponse.getAds());
   }
 
-  public Observable<MinimalAd> getAdFromAppView(String packageName, String storeName) {
+  public Observable<MinimalAd> getAdsFromAppView(String packageName, String storeName) {
     return GetAdsRequest.ofAppviewOrganic(packageName, storeName,
         aptoideClientUUID.getAptoideClientUUID(),
         googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()),

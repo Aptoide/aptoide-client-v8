@@ -81,7 +81,7 @@ import cm.aptoide.pt.v8engine.interfaces.Payments;
 import cm.aptoide.pt.v8engine.interfaces.Scrollable;
 import cm.aptoide.pt.v8engine.payment.ProductFactory;
 import cm.aptoide.pt.v8engine.receivers.AppBoughtReceiver;
-import cm.aptoide.pt.v8engine.repository.AdRepository;
+import cm.aptoide.pt.v8engine.repository.AdsRepository;
 import cm.aptoide.pt.v8engine.repository.AppRepository;
 import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
@@ -146,7 +146,7 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
   private AppRepository appRepository;
   private ProductFactory productFactory;
   private Subscription subscription;
-  private AdRepository adRepository;
+  private AdsRepository adsRepository;
   private boolean sponsored;
   private List<GetAdsResponse.Ad> suggestedAds;
   // buy app vars
@@ -242,7 +242,7 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
     appRepository = new AppRepository(new NetworkOperatorManager(
         (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE)),
         productFactory);
-    adRepository = new AdRepository();
+    adsRepository = new AdsRepository();
     installedRepository = RepositoryFactory.getInstalledRepository();
   }
 
@@ -639,7 +639,7 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
     String storeName = getApp.getNodes().getMeta().getData().getStore().getName();
 
     if (minimalAd == null) {
-      return adRepository.getAdFromAppView(packageName, storeName).doOnNext(ad -> {
+      return adsRepository.getAdsFromAppView(packageName, storeName).doOnNext(ad -> {
         minimalAd = ad;
         handleAdsLogic(minimalAd);
       }).map(ad -> getApp).onErrorReturn(throwable -> getApp);
@@ -671,7 +671,7 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
         DataProvider.getConfiguration().getPartnerId(), SecurePreferences.isAdultSwitchActive())
         .observe()
         .map(getAdsResponse -> {
-          if (AdRepository.validAds(getAdsResponse)) {
+          if (AdsRepository.validAds(getAdsResponse)) {
             suggestedAds = getAdsResponse.getAds();
           }
 
