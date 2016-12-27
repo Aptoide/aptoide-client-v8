@@ -453,9 +453,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 
   private void caseListReviews(String url, boolean refresh) {
     ListFullReviewsRequest listFullReviewsRequest =
-        ListFullReviewsRequest.ofAction(url, refresh, AptoideAccountManager.getAccessToken(),
-            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                DataProvider.getContext()).getAptoideClientUUID());
+        new RequestRepositoty().getListFullReviews(url, refresh);
 
     Action1<ListFullReviews> listFullReviewsAction = (listFullReviews -> {
       if (listFullReviews != null

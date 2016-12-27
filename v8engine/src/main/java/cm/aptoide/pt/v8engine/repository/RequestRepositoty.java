@@ -4,6 +4,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.ListFullReviewsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreDisplaysRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
@@ -39,6 +40,12 @@ public class RequestRepositoty {
   public GetStoreMetaRequest getStoreMeta(String url) {
     return GetStoreMetaRequest.ofAction(url, StoreUtils.getStoreCredentialsFromUrl(url),
         AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext()).getAptoideClientUUID());
+  }
+
+  public ListFullReviewsRequest getListFullReviews(String url, boolean refresh) {
+    return ListFullReviewsRequest.ofAction(url, refresh, AptoideAccountManager.getAccessToken(),
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()).getAptoideClientUUID());
   }
