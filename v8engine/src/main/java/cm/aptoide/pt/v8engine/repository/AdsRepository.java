@@ -18,6 +18,7 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.interfaces.AdultSwitchStatus;
 import cm.aptoide.pt.v8engine.interfaces.GooglePlayServicesAvailabilityChecker;
 import cm.aptoide.pt.v8engine.interfaces.PartnerIdProvider;
+import java.util.LinkedList;
 import java.util.List;
 import rx.Observable;
 
@@ -55,6 +56,19 @@ public class AdsRepository {
     return getAdsResponse != null && validAds(getAdsResponse.getAds());
   }
 
+  private Observable<List<MinimalAd>> mapToMinimalAds(
+      Observable<GetAdsResponse> getAdsResponseObservable) {
+    return getAdsResponseObservable.filter(AdsRepository::validAds)
+        .map(GetAdsResponse::getAds)
+        .map(ads -> {
+          List<MinimalAd> minimalAds = new LinkedList<>();
+          for (GetAdsResponse.Ad ad : ads) {
+            minimalAds.add(MinimalAd.from(ad));
+          }
+          return minimalAds;
+        });
+  }
+
   public Observable<MinimalAd> getAdsFromAppView(String packageName, String storeName) {
     return GetAdsRequest.ofAppviewOrganic(packageName, storeName,
         aptoideClientUUID.getAptoideClientUUID(),
@@ -69,5 +83,11 @@ public class AdsRepository {
           return Observable.just(ads.get(0));
         })
         .map(ad -> MinimalAd.from(ad));
+  }
+
+  public Observable<List<MinimalAd>> getAdsFromHomepageMore() {
+    return mapToMinimalAds(GetAdsRequest.ofHomepageMore(aptoideClientUUID.getAptoideClientUUID(),
+        googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()),
+        partnerIdProvider.getPartnerId(), adultSwitchStatus.isAdultSwitchActive()).observe());
   }
 }

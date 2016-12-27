@@ -13,7 +13,6 @@ import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
-import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListFullReviewsRequest;
@@ -21,7 +20,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetMyStoreListRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
-import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.FullReview;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
@@ -36,6 +34,7 @@ import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
+import cm.aptoide.pt.v8engine.repository.AdsRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
@@ -74,6 +73,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
   protected String title;
   protected String tag;
   protected String storeTheme;
+  private AdsRepository adsRepository;
   private List<Displayable> displayables;
   // // FIXME: 22/12/2016 sithengineer duplicated var from parent
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
@@ -171,20 +171,13 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
   }
 
   private void caseGetAds(boolean refresh) {
-    GetAdsRequest.ofHomepageMore(
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID(),
-        DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(V8Engine.getContext()),
-        DataProvider.getConfiguration().getPartnerId(), SecurePreferences.isAdultSwitchActive())
-        .execute(getAdsResponse -> {
-          List<GetAdsResponse.Ad> list = getAdsResponse.getAds();
+    adsRepository.getAdsFromHomepageMore().subscribe(minimalAds -> {
+      displayables = new LinkedList<>();
+      for (MinimalAd minimalAd : minimalAds) {
+        displayables.add(new GridAdDisplayable(minimalAd, tag));
+      }
 
-          displayables = new LinkedList<>();
-          for (GetAdsResponse.Ad ad : list) {
-            displayables.add(new GridAdDisplayable(MinimalAd.from(ad), tag));
-          }
-
-          addDisplayables(displayables);
+      addDisplayables(displayables);
         }, e -> finishLoading());
 
     //Highlighted should have pull to refresh
@@ -323,6 +316,8 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
+    adsRepository = new AdsRepository();
     storeRepository = RepositoryFactory.getStoreRepository();
   }
 
