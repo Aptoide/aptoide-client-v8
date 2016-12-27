@@ -33,7 +33,6 @@ public class RateAndReviewsPresenter implements Presenter {
     this.schedulerProvider = schedulerProvider;
 
     request = ListReviewsRequest.of(storeName, packageName, AptoideAccountManager.getAccessToken(),
-        AptoideAccountManager.getUserEmail(),
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()).getAptoideClientUUID());
 
@@ -77,6 +76,14 @@ public class RateAndReviewsPresenter implements Presenter {
     });
   }
 
+  @Override public void saveState(Bundle state) {
+
+  }
+
+  @Override public void restoreState(Bundle state) {
+
+  }
+
   @NonNull private Observable<Object> showRating() {
     return ratingRequest.observe().observeOn(schedulerProvider.ui()).doOnNext(response -> {
       if (response.isOk()) {
@@ -101,13 +108,5 @@ public class RateAndReviewsPresenter implements Presenter {
             CrashReports.logException(exception);
           }
         }).map(response -> null);
-  }
-
-  @Override public void saveState(Bundle state) {
-
-  }
-
-  @Override public void restoreState(Bundle state) {
-
   }
 }

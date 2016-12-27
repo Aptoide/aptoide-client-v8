@@ -107,31 +107,6 @@ public class RateAndReviewsFragment extends GridRecyclerFragment<CommentsAdapter
     storeTheme = args.getString(STORE_THEME);
   }
 
-  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    Logger.d(TAG, "Other versions should refresh? " + create);
-    fetchRating(refresh);
-    fetchReviews();
-  }
-
-  @Override public int getContentViewId() {
-    return R.layout.fragment_rate_and_reviews;
-  }
-
-  @Override public void bindViews(View view) {
-    super.bindViews(view);
-    final FloatingActionButton floatingActionButton =
-        (FloatingActionButton) view.findViewById(R.id.fab);
-    setHasOptionsMenu(true);
-
-    ratingTotalsLayout = new RatingTotalsLayout(view);
-    ratingBarsLayout = new RatingBarsLayout(view);
-
-    floatingActionButton.setOnClickListener(v -> {
-      DialogUtils.showRateDialog(getActivity(), appName, packageName, storeName,
-          () -> fetchReviews());
-    });
-  }
-
   @Override public void setupToolbar() {
     super.setupToolbar();
     if (toolbar != null) {
@@ -199,7 +174,6 @@ public class RateAndReviewsFragment extends GridRecyclerFragment<CommentsAdapter
   private void fetchReviews() {
     ListReviewsRequest reviewsRequest =
         ListReviewsRequest.of(storeName, packageName, AptoideAccountManager.getAccessToken(),
-            AptoideAccountManager.getUserEmail(),
             new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                 DataProvider.getContext()).getAptoideClientUUID());
 
@@ -216,6 +190,31 @@ public class RateAndReviewsFragment extends GridRecyclerFragment<CommentsAdapter
       ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
       ThemeUtils.setStoreTheme(getActivity(), storeTheme);
     }
+  }
+
+  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    Logger.d(TAG, "Other versions should refresh? " + create);
+    fetchRating(refresh);
+    fetchReviews();
+  }
+
+  @Override public int getContentViewId() {
+    return R.layout.fragment_rate_and_reviews;
+  }
+
+  @Override public void bindViews(View view) {
+    super.bindViews(view);
+    final FloatingActionButton floatingActionButton =
+        (FloatingActionButton) view.findViewById(R.id.fab);
+    setHasOptionsMenu(true);
+
+    ratingTotalsLayout = new RatingTotalsLayout(view);
+    ratingBarsLayout = new RatingBarsLayout(view);
+
+    floatingActionButton.setOnClickListener(v -> {
+      DialogUtils.showRateDialog(getActivity(), appName, packageName, storeName,
+          () -> fetchReviews());
+    });
   }
 
   @NonNull @Override
