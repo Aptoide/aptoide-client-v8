@@ -7,6 +7,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListFullReviewsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreDisplaysRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
@@ -46,6 +47,13 @@ public class RequestRepositoty {
 
   public ListFullReviewsRequest getListFullReviews(String url, boolean refresh) {
     return ListFullReviewsRequest.ofAction(url, refresh, AptoideAccountManager.getAccessToken(),
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext()).getAptoideClientUUID());
+  }
+
+  public GetStoreRequest getStore(String url) {
+    return GetStoreRequest.ofAction(url, StoreUtils.getStoreCredentialsFromUrl(url),
+        AptoideAccountManager.getAccessToken(),
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()).getAptoideClientUUID());
   }
