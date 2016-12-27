@@ -76,7 +76,7 @@ public class WSWidgetsUtils {
           break;
 
         case STORE_META:
-          GetStoreMetaRequest.ofAction(url, storeCredentials, accessToken, email, aptoideClientUuid)
+          GetStoreMetaRequest.ofAction(url, storeCredentials, accessToken, aptoideClientUuid)
               .observe(refresh)
               .compose(AptoideUtils.ObservableU.applySchedulers())
               .subscribe(getStoreMeta -> setObjectView(wsWidget, countDownLatch, getStoreMeta),

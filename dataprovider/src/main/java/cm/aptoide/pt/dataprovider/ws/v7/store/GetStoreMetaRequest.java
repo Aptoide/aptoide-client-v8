@@ -45,7 +45,7 @@ import rx.Observable;
   }
 
   public static GetStoreMetaRequest ofAction(String url, StoreCredentials storeCredentials,
-      String accessToken, String email, String aptoideClientUUID) {
+      String accessToken, String aptoideClientUUID) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
     return new GetStoreMetaRequest(new V7Url(url).remove("getStoreMeta").get(),
@@ -53,7 +53,7 @@ import rx.Observable;
   }
 
   public static GetStoreMetaRequest of(StoreCredentials storeCredentials, String accessToken,
-      String email, String aptoideClientUUID) {
+      String aptoideClientUUID) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
     return new GetStoreMetaRequest(BASE_HOST,

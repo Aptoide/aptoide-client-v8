@@ -41,7 +41,7 @@ public class RequestRepositoty {
 
   public GetStoreMetaRequest getStoreMeta(String url) {
     return GetStoreMetaRequest.ofAction(url, StoreUtils.getStoreCredentialsFromUrl(url),
-        AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
+        AptoideAccountManager.getAccessToken(),
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()).getAptoideClientUUID());
   }

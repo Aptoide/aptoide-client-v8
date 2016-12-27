@@ -120,7 +120,7 @@ public class AddStoreDialog extends DialogFragment {
 
   private GetStoreMetaRequest buildRequest(String storeName) {
     return GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName),
-        AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
+        AptoideAccountManager.getAccessToken(),
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()).getAptoideClientUUID());
   }
