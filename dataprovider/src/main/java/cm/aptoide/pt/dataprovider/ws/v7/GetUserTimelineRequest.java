@@ -36,7 +36,7 @@ public class GetUserTimelineRequest extends V7<GetUserTimeline, GetUserTimelineR
   }
 
   public static GetUserTimelineRequest of(String url, Integer limit, int offset,
-      List<String> packages, String accessToken, String email, String aptoideClientUUID) {
+      List<String> packages, String accessToken, String aptoideClientUUID) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
     GetUserTimelineRequest getAppRequest = new GetUserTimelineRequest(url,
