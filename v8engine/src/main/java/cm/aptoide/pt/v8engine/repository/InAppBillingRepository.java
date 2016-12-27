@@ -35,8 +35,9 @@ import rx.Observable;
   private final ProductFactory productFactory;
 
   public Observable<Void> getInAppBilling(int apiVersion, String packageName, String type) {
-    return InAppBillingAvailableRequest.of(apiVersion, packageName, type,
-        AptoideAccountManager.getUserEmail()).observe().flatMap(response -> {
+    return InAppBillingAvailableRequest.of(apiVersion, packageName, type)
+        .observe()
+        .flatMap(response -> {
       if (response != null && response.isOk()) {
         if (response.getInAppBillingAvailable().isAvailable()) {
           return Observable.just(null);
