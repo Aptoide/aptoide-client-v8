@@ -34,7 +34,7 @@ public class RequestRepositoty {
 
   public GetStoreDisplaysRequest getStoreDisplays(String url) {
     return GetStoreDisplaysRequest.ofAction(url, StoreUtils.getStoreCredentialsFromUrl(url),
-        AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
+        AptoideAccountManager.getAccessToken(),
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()).getAptoideClientUUID());
   }

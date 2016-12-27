@@ -59,8 +59,7 @@ public class WSWidgetsUtils {
           break;
 
         case DISPLAYS:
-          GetStoreDisplaysRequest.ofAction(url, storeCredentials, accessToken, email,
-              aptoideClientUuid)
+          GetStoreDisplaysRequest.ofAction(url, storeCredentials, accessToken, aptoideClientUuid)
               .observe(refresh)
               .compose(AptoideUtils.ObservableU.applySchedulers())
               .subscribe(
