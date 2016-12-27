@@ -18,7 +18,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreMinimalAdAccessor;
@@ -170,7 +169,7 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
             Logger.d("ExtractReferrer", "Sending RegisterAdRefererRequest with value " + success);
 
             RegisterAdRefererRequest.of(minimalAd.getAdId(), minimalAd.getAppId(),
-                minimalAd.getClickUrl(), success, AptoideAccountManager.getUserEmail()).execute();
+                minimalAd.getClickUrl(), success).execute();
 
             Logger.d("ExtractReferrer", "Retries left: " + retries);
 
