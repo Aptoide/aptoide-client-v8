@@ -20,8 +20,8 @@ public class InAppBillingSkuDetailsRequest extends V3<InAppBillingSkuDetailsResp
   }
 
   public static InAppBillingSkuDetailsRequest of(int apiVersion, String packageName,
-      List<String> skuList, NetworkOperatorManager operatorManager, String type, String accessToken,
-      String email) {
+      List<String> skuList, NetworkOperatorManager operatorManager, String type,
+      String accessToken) {
     BaseBody args = new BaseBody();
     args.put("mode", "json");
     args.put("package", packageName);

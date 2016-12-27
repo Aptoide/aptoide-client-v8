@@ -108,7 +108,7 @@ import rx.Observable;
   private Observable<InAppBillingSkuDetailsResponse> getSKUListDetails(int apiVersion,
       String packageName, List<String> skuList, String type) {
     return InAppBillingSkuDetailsRequest.of(apiVersion, packageName, skuList, operatorManager, type,
-        AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail())
+        AptoideAccountManager.getAccessToken())
         .observe()
         .flatMap(response -> {
           if (response != null && response.isOk()) {
