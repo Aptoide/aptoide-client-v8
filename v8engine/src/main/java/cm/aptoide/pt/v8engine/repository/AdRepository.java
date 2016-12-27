@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.repository;
 
+import cm.aptoide.pt.actions.AptoideClientUUID;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
@@ -14,6 +15,9 @@ import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.interfaces.AdultSwitchStatus;
+import cm.aptoide.pt.v8engine.interfaces.GooglePlayServicesAvailabilityChecker;
+import cm.aptoide.pt.v8engine.interfaces.PartnerIdProvider;
 import java.util.List;
 import rx.Observable;
 
@@ -21,6 +25,23 @@ import rx.Observable;
  * Created by marcelobenites on 7/27/16.
  */
 public class AdRepository {
+
+  private AptoideClientUUID aptoideClientUUID;
+  private GooglePlayServicesAvailabilityChecker googlePlayServicesAvailabilityChecker;
+  private PartnerIdProvider partnerIdProvider;
+  private AdultSwitchStatus adultSwitchStatus;
+
+  public AdRepository() {
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+
+    googlePlayServicesAvailabilityChecker =
+        DataproviderUtils.AdNetworksUtils::isGooglePlayServicesAvailable;
+
+    partnerIdProvider = () -> DataProvider.getConfiguration().getPartnerId();
+
+    adultSwitchStatus = SecurePreferences::isAdultSwitchActive;
+  }
 
   public static boolean validAds(List<GetAdsResponse.Ad> ads) {
     return ads != null
@@ -36,10 +57,9 @@ public class AdRepository {
 
   public Observable<MinimalAd> getAdFromAppView(String packageName, String storeName) {
     return GetAdsRequest.ofAppviewOrganic(packageName, storeName,
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID(),
-        DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(V8Engine.getContext()),
-        DataProvider.getConfiguration().getPartnerId(), SecurePreferences.isAdultSwitchActive())
+        aptoideClientUUID.getAptoideClientUUID(),
+        googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()),
+        partnerIdProvider.getPartnerId(), adultSwitchStatus.isAdultSwitchActive())
         .observe()
         .map(response -> response.getAds())
         .flatMap(ads -> {
