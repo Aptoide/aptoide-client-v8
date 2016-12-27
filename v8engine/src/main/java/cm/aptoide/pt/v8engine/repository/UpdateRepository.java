@@ -55,7 +55,6 @@ import rx.schedulers.Schedulers;
 
   private Observable<List<App>> getNetworkUpdates(List<Long> storeIds, boolean bypassCache) {
     return ListAppsUpdatesRequest.of(storeIds, AptoideAccountManager.getAccessToken(),
-        AptoideAccountManager.getUserEmail(),
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()).getAptoideClientUUID()).observe(bypassCache).map(result -> {
       if (result.isOk()) {

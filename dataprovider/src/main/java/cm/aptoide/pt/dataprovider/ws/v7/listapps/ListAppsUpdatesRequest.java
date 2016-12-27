@@ -46,7 +46,7 @@ import rx.schedulers.Schedulers;
   }
 
   public static ListAppsUpdatesRequest of(List<Long> subscribedStoresIds, String accessToken,
-      String email, String aptoideClientUUID) {
+      String aptoideClientUUID) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
     return new ListAppsUpdatesRequest((Body) decorator.decorate(
