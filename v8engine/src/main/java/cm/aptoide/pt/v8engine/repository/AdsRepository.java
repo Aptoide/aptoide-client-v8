@@ -74,15 +74,13 @@ public class AdsRepository {
         aptoideClientUUID.getAptoideClientUUID(),
         googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()),
         partnerIdProvider.getPartnerId(), adultSwitchStatus.isAdultSwitchActive())
-        .observe()
-        .map(response -> response.getAds())
+        .observe().map(GetAdsResponse::getAds)
         .flatMap(ads -> {
           if (!validAds(ads)) {
             return Observable.error(new IllegalStateException("Invalid ads returned from server"));
           }
           return Observable.just(ads.get(0));
-        })
-        .map(ad -> MinimalAd.from(ad));
+        }).map(MinimalAd::from);
   }
 
   public Observable<List<MinimalAd>> getAdsFromHomepageMore() {
