@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 import android.os.Bundle;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
@@ -123,7 +124,8 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
           .execute(getAdsResponse -> {
         if (getAdsResponse.getAds().size() > 0) {
           refreshed = true;
-          addDisplayable(0, new SearchAdDisplayable(getAdsResponse.getAds().get(0)));
+          addDisplayable(0,
+              new SearchAdDisplayable(MinimalAd.from(getAdsResponse.getAds().get(0))));
         }
       });
 

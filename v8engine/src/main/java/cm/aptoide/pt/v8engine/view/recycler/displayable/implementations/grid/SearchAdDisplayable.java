@@ -5,19 +5,19 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
-import cm.aptoide.pt.model.v2.GetAdsResponse;
+import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 
 /**
  * Created by neuro on 20-06-2016.
  */
-public class SearchAdDisplayable extends DisplayablePojo<GetAdsResponse.Ad> {
+public class SearchAdDisplayable extends DisplayablePojo<MinimalAd> {
 
   public SearchAdDisplayable() {
   }
 
-  public SearchAdDisplayable(GetAdsResponse.Ad pojo) {
+  public SearchAdDisplayable(MinimalAd pojo) {
     super(pojo);
   }
 
