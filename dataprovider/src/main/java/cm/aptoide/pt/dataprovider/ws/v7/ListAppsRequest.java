@@ -37,7 +37,7 @@ import rx.Observable;
   }
 
   public static ListAppsRequest ofAction(String url, StoreCredentials storeCredentials,
-      String accessToken, String email, String aptoideClientUUID) {
+      String accessToken, String aptoideClientUUID) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
     V7Url listAppsV7Url = new V7Url(url).remove("listApps");

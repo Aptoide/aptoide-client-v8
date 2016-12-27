@@ -21,7 +21,7 @@ public class RequestRepositoty {
 
   public ListAppsRequest getListApps(String url) {
     return ListAppsRequest.ofAction(url, StoreUtils.getStoreCredentialsFromUrl(url),
-        AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
+        AptoideAccountManager.getAccessToken(),
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()).getAptoideClientUUID());
   }

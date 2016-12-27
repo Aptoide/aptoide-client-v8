@@ -44,7 +44,7 @@ public class WSWidgetsUtils {
       }
       switch (wsWidget.getType()) {
         case APPS_GROUP:
-          ListAppsRequest.ofAction(url, storeCredentials, accessToken, email, aptoideClientUuid)
+          ListAppsRequest.ofAction(url, storeCredentials, accessToken, aptoideClientUuid)
               .observe(refresh)
               .compose(AptoideUtils.ObservableU.applySchedulers())
               .subscribe(listApps -> setObjectView(wsWidget, countDownLatch, listApps), action1);
