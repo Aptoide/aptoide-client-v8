@@ -27,14 +27,12 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.util.referrer.SimpleTimedFuture;
-import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.RegisterAdRefererRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.repository.AdsRepository;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -48,6 +46,8 @@ import rx.android.schedulers.AndroidSchedulers;
 public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.ReferrerUtils {
 
   private static final String TAG = ReferrerUtils.class.getSimpleName();
+
+  private static final AdsRepository adsRepository = new AdsRepository();
 
   public static void extractReferrer(MinimalAd minimalAd, final int retries,
       boolean broadcastReferrer) {
@@ -179,24 +179,11 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
               try {
 
                 if (retries > 0) {
-                  GetAdsRequest.ofSecondTry(packageName,
-                      new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                          DataProvider.getContext()).getAptoideClientUUID(),
-                      DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(
-                          V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId(),
-                      SecurePreferences.isAdultSwitchActive())
-                      .observe()
-                      .filter((getAdsResponse1) -> {
-                        Boolean hasAds = hasAds(getAdsResponse1);
-                        if (!hasAds) {
-                          clearExcludedNetworks(packageName);
-                        }
-                        return hasAds;
-                      })
+                  adsRepository.getAdsFromSecondTry(packageName)
                       .observeOn(AndroidSchedulers.mainThread())
-                      .subscribe(getAdsResponse -> extractReferrer(
-                          MinimalAd.from(getAdsResponse.getAds().get(0)), retries - 1,
-                          broadcastReferrer), CrashReports::logException);
+                      .subscribe(
+                          minimalAd1 -> extractReferrer(minimalAd1, retries - 1, broadcastReferrer),
+                          throwable -> clearExcludedNetworks(packageName));
                 } else {
                   // A lista de excluded networks deve ser limpa a cada "ronda"
                   clearExcludedNetworks(packageName);
