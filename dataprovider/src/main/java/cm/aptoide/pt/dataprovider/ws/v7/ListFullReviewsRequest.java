@@ -6,7 +6,6 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.text.TextUtils;
-import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.ListFullReviews;
@@ -63,7 +62,7 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
   }
 
   public static ListFullReviewsRequest of(String storeName, String packageName, String accessToken,
-      String email, String aptoideClientUUID) {
+      String aptoideClientUUID) {
     return of(storeName, packageName, MAX_REVIEWS, MAX_COMMENTS, accessToken,
         aptoideClientUUID);
   }
