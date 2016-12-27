@@ -149,10 +149,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
   }
 
   private void caseListStores(String url, boolean refresh) {
-    ListStoresRequest listStoresRequest =
-        ListStoresRequest.ofAction(url, AptoideAccountManager.getAccessToken(),
-            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                DataProvider.getContext()).getAptoideClientUUID());
+    ListStoresRequest listStoresRequest = new RequestRepositoty().getListStores(url);
     Action1<ListStores> listStoresAction = listStores -> {
 
       // Load sub nodes
