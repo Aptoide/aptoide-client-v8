@@ -65,7 +65,7 @@ import rx.Observable;
   public Observable<InAppBillingPurchasesResponse.PurchaseInformation> getInAppPurchaseInformation(
       int apiVersion, String packageName, String type) {
     return InAppBillingPurchasesRequest.of(apiVersion, packageName, type,
-        AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail())
+        AptoideAccountManager.getAccessToken())
         .observe()
         .flatMap(response -> {
           if (response != null && response.isOk()) {
