@@ -14,7 +14,7 @@ import cm.aptoide.pt.v8engine.util.StoreUtils;
 
 public class RequestRepositoty {
 
-  public ListAppsRequest getListAppsFromUrl(String url) {
+  public ListAppsRequest getListApps(String url) {
     return ListAppsRequest.ofAction(url, StoreUtils.getStoreCredentialsFromUrl(url),
         AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),

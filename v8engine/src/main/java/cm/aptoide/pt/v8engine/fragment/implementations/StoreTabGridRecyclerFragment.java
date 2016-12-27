@@ -193,7 +193,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
   }
 
   private void caseListApps(String url, boolean refresh) {
-    ListAppsRequest listAppsRequest = new RequestRepositoty().getListAppsFromUrl(url);
+    ListAppsRequest listAppsRequest = new RequestRepositoty().getListApps(url);
     Action1<ListApps> listAppsAction = listApps -> {
 
       // Load sub nodes
