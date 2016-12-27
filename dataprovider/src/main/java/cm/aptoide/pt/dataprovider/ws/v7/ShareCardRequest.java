@@ -17,7 +17,6 @@ public class ShareCardRequest extends V7<BaseV7Response, ShareCardRequest.Body> 
 
   //private static final String BASE_HOST = "http://54.171.127.167/shares/v1.0/";
 
-  private static String email;
   private static String cardId;
   private static String access_token;
 
