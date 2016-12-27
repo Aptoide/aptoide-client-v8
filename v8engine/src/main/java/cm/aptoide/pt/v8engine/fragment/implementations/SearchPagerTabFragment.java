@@ -6,25 +6,22 @@
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReports;
-import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
-import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.abtesting.ABTest;
 import cm.aptoide.pt.v8engine.analytics.abtesting.ABTestManager;
 import cm.aptoide.pt.v8engine.analytics.abtesting.SearchTabOptions;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragmentWithDecorator;
+import cm.aptoide.pt.v8engine.repository.AdsRepository;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SearchAdDisplayable;
@@ -42,6 +39,8 @@ import rx.functions.Action0;
  */
 public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
   private static final String TAG = SearchPagerTabFragment.class.getSimpleName();
+
+  private AdsRepository adsRepository;
 
   private String query;
   private String storeName;
@@ -107,6 +106,21 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
     return fragment;
   }
 
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    adsRepository = new AdsRepository();
+
+    super.onCreate(savedInstanceState);
+  }
+
+  @Override public void loadExtras(Bundle args) {
+    super.loadExtras(args);
+
+    query = args.getString(BundleCons.QUERY);
+    storeName = args.getString(BundleCons.STORE_NAME);
+    addSubscribedStores = args.getBoolean(BundleCons.ADD_SUBSCRIBED_STORES);
+    hasMultipleFragments = args.getBoolean(BundleCons.HAS_MULTIPLE_FRAGMENTS, false);
+  }
+
   private boolean isConvert(ABTest<SearchTabOptions> searchAbTest, boolean addSubscribedStores) {
     return hasMultipleFragments && (addSubscribedStores == (searchAbTest.alternative()
         == SearchTabOptions.FOLLOWED_STORES));
@@ -116,17 +130,9 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
     super.load(create, refresh, savedInstanceState);
     if (create) {
       searchAbTest = ABTestManager.getInstance().get(ABTestManager.SEARCH_TAB_TEST);
-      GetAdsRequest.ofSearch(query,
-          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-              DataProvider.getContext()).getAptoideClientUUID(),
-          DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(V8Engine.getContext()),
-          DataProvider.getConfiguration().getPartnerId(), SecurePreferences.isAdultSwitchActive())
-          .execute(getAdsResponse -> {
-        if (getAdsResponse.getAds().size() > 0) {
-          refreshed = true;
-          addDisplayable(0,
-              new SearchAdDisplayable(MinimalAd.from(getAdsResponse.getAds().get(0))));
-        }
+      adsRepository.getAdsFromSearch(query).subscribe(minimalAd -> {
+        refreshed = true;
+        addDisplayable(0, new SearchAdDisplayable(minimalAd));
       });
 
       recyclerView.clearOnScrollListeners();
@@ -163,15 +169,6 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
     outState.putString(BundleCons.QUERY, query);
     outState.putString(BundleCons.STORE_NAME, storeName);
     outState.putBoolean(BundleCons.ADD_SUBSCRIBED_STORES, addSubscribedStores);
-  }
-
-  @Override public void loadExtras(Bundle args) {
-    super.loadExtras(args);
-
-    query = args.getString(BundleCons.QUERY);
-    storeName = args.getString(BundleCons.STORE_NAME);
-    addSubscribedStores = args.getBoolean(BundleCons.ADD_SUBSCRIBED_STORES);
-    hasMultipleFragments = args.getBoolean(BundleCons.HAS_MULTIPLE_FRAGMENTS, false);
   }
 
   protected static class BundleCons {

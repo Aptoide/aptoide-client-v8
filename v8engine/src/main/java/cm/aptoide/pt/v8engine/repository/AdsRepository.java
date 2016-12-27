@@ -56,31 +56,37 @@ public class AdsRepository {
     return getAdsResponse != null && validAds(getAdsResponse.getAds());
   }
 
+  private Observable<MinimalAd> mapToMinimalAd(
+      Observable<GetAdsResponse> getAdsResponseObservable) {
+    return getAdsResponseObservable.map(GetAdsResponse::getAds).flatMap(ads -> {
+      if (!validAds(ads)) {
+        return Observable.error(new IllegalStateException("Invalid ads returned from server"));
+      }
+      return Observable.just(ads.get(0));
+    }).map(MinimalAd::from);
+  }
+
   private Observable<List<MinimalAd>> mapToMinimalAds(
       Observable<GetAdsResponse> getAdsResponseObservable) {
-    return getAdsResponseObservable.filter(AdsRepository::validAds)
-        .map(GetAdsResponse::getAds)
-        .map(ads -> {
-          List<MinimalAd> minimalAds = new LinkedList<>();
-          for (GetAdsResponse.Ad ad : ads) {
-            minimalAds.add(MinimalAd.from(ad));
-          }
-          return minimalAds;
-        });
+    return getAdsResponseObservable.flatMap(ads -> {
+      if (!validAds(ads)) {
+        return Observable.error(new IllegalStateException("Invalid ads returned from server"));
+      }
+      return Observable.just(ads);
+    }).map(GetAdsResponse::getAds).map(ads -> {
+      List<MinimalAd> minimalAds = new LinkedList<>();
+      for (GetAdsResponse.Ad ad : ads) {
+        minimalAds.add(MinimalAd.from(ad));
+      }
+      return minimalAds;
+    });
   }
 
   public Observable<MinimalAd> getAdsFromAppView(String packageName, String storeName) {
-    return GetAdsRequest.ofAppviewOrganic(packageName, storeName,
+    return mapToMinimalAd(GetAdsRequest.ofAppviewOrganic(packageName, storeName,
         aptoideClientUUID.getAptoideClientUUID(),
         googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()),
-        partnerIdProvider.getPartnerId(), adultSwitchStatus.isAdultSwitchActive())
-        .observe().map(GetAdsResponse::getAds)
-        .flatMap(ads -> {
-          if (!validAds(ads)) {
-            return Observable.error(new IllegalStateException("Invalid ads returned from server"));
-          }
-          return Observable.just(ads.get(0));
-        }).map(MinimalAd::from);
+        partnerIdProvider.getPartnerId(), adultSwitchStatus.isAdultSwitchActive()).observe());
   }
 
   public Observable<List<MinimalAd>> getAdsFromHomepageMore() {
@@ -95,5 +101,11 @@ public class AdsRepository {
         GetAdsRequest.ofAppviewSuggested(keywords, aptoideClientUUID.getAptoideClientUUID(),
             googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()), packageName,
             partnerIdProvider.getPartnerId(), adultSwitchStatus.isAdultSwitchActive()).observe());
+  }
+
+  public Observable<MinimalAd> getAdsFromSearch(String query) {
+    return mapToMinimalAd(GetAdsRequest.ofSearch(query, aptoideClientUUID.getAptoideClientUUID(),
+        googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()),
+        partnerIdProvider.getPartnerId(), adultSwitchStatus.isAdultSwitchActive()).observe());
   }
 }
