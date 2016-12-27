@@ -14,7 +14,6 @@ import rx.Observable;
  */
 public class LikeCardRequest extends V7<BaseV7Response, LikeCardRequest.Body> {
   private static final String BASE_HOST = "http://ws75-primary.aptoide.com/api/7/";
-  private static String email;
   private static String access_token;
   private static String cardId;
   private static int rating;
@@ -24,8 +23,7 @@ public class LikeCardRequest extends V7<BaseV7Response, LikeCardRequest.Body> {
   }
 
   public static LikeCardRequest of(TimelineCard timelineCard, String cardType, String ownerHash,
-      String accessToken, String aptoideClientUUID, String userEmail, int ratng) {
-    email = userEmail;
+      String accessToken, String aptoideClientUUID, int ratng) {
     access_token = accessToken;
     cardId = timelineCard.getCardId();
     rating = ratng;

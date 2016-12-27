@@ -51,8 +51,7 @@ public class SocialRepository {
     String aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext()).getAptoideClientUUID();
     String email = AptoideAccountManager.getUserEmail();
-    LikeCardRequest.of(timelineCard, cardType, ownerHash, accessToken, aptoideClientUUID, email,
-        rating)
+    LikeCardRequest.of(timelineCard, cardType, ownerHash, accessToken, aptoideClientUUID, rating)
         .observe()
         .observeOn(Schedulers.io())
         .subscribe(
