@@ -93,13 +93,6 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
     setHeader();
   }
 
-  protected void setHeader(){
-    if (header != null) {
-      header.setImage(appImgUrl);
-      setTitle(appName);
-    }
-  }
-
   @Override public int getContentViewId() {
     return R.layout.fragment_other_versions;
   }
@@ -113,6 +106,13 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
 
   @Override public void onResume() {
     super.onResume();
+  }
+
+  protected void setHeader() {
+    if (header != null) {
+      header.setImage(appImgUrl);
+      setTitle(appName);
+    }
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -165,7 +165,6 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
 
     endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(this.getAdapter(),
         ListAppVersionsRequest.of(appPackge, storeNames, AptoideAccountManager.getAccessToken(),
-            AptoideAccountManager.getUserEmail(),
             new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                 DataProvider.getContext()).getAptoideClientUUID(),
             StoreUtils.getSubscribedStoresAuthMap()),
