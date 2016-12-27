@@ -46,4 +46,8 @@ import rx.Observable;
   public void remove(String packageName) {
     accessor.remove(packageName);
   }
+
+  public boolean contains(String packageName) {
+    return accessor.isInstalled(packageName).toBlocking().first();
+  }
 }

@@ -101,7 +101,7 @@ import lombok.AllArgsConstructor;
     return advertisingId;
   }
 
-  public String getAndroidId() {
+  public synchronized String getAndroidId() {
     String androidId = sharedPreferences.getString(ANDROID_ID_CLIENT, null);
 
     if (androidId == null) {

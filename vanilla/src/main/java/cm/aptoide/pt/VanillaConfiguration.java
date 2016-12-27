@@ -20,6 +20,7 @@ public class VanillaConfiguration implements AptoidePreferencesConfiguration {
   private static final String PATH_CACHE = PATH_SDCARD + "/.aptoide/";
   private static final String PATH_CACHE_APKS = PATH_CACHE + "apks/";
   private static final String PATH_CACHE_IMAGES = PATH_CACHE + "icons/";
+  private static final String PATH_CACHE_USER_AVATAR = PATH_CACHE + "user_avatar/";
   private static final String APP_ID = BuildConfig.APPLICATION_ID;
   private static final String AUTO_UPDATE_URL = "http://imgs.aptoide.com/latest_version_v8.xml";
   private static final String MARKETNAME = "Aptoide";
@@ -32,6 +33,10 @@ public class VanillaConfiguration implements AptoidePreferencesConfiguration {
 
   @Override public String getCachePath() {
     return PATH_CACHE;
+  }
+
+  @Override public String getUserAvatarCachePath() {
+    return PATH_CACHE_USER_AVATAR;
   }
 
   @Override public String getApkCachePath() {

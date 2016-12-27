@@ -20,8 +20,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Scope;
 import java.lang.ref.WeakReference;
+
+import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
 /**
  * Created by trinkes on 4/19/16.
@@ -42,7 +46,6 @@ class GoogleLoginUtils implements GoogleApiClient.OnConnectionFailedListener {
    * This method set's up google social login
    *
    * @param activity Where the login button is
-   * @param googleSignInButton
    */
   protected static void setUpGoogle(FragmentActivity activity, View googleSignInButton) {
     activityReference = new WeakReference(activity);
@@ -76,11 +79,13 @@ class GoogleLoginUtils implements GoogleApiClient.OnConnectionFailedListener {
   public static GoogleApiClient setupGoogleApiClient(FragmentActivity activity) {
     GoogleSignInOptions gso =
         new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail()
+            .requestScopes(new Scope("https://www.googleapis.com/auth/contacts.readonly"))
+            .requestScopes(new Scope(Scopes.PROFILE))
             .requestServerAuthCode(BuildConfig.GMS_SERVER_ID)
             .build();
     GoogleApiClient mGoogleApiClient =
         new GoogleApiClient.Builder(activity).enableAutoManage(activity, new GoogleLoginUtils())
-            .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+            .addApi(GOOGLE_SIGN_IN_API, gso)
             .build();
     mGoogleApiClient.connect();
 

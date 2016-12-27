@@ -16,13 +16,20 @@ public enum Type {
 
   // Server
   APPS_GROUP(3, false),
-  STORES_GROUP(2, false),
+  STORES_GROUP(3, false),
   DISPLAYS(2, true),
   ADS(3, false),
   STORE_META(1, true),
+  COMMENTS_GROUP(1, true),
 
   //Reviews Screen
-  REVIEWS_GROUP(1, false);
+  REVIEWS_GROUP(1, false),
+  //widget to create the user's store
+  MY_STORE_META(1, true),
+  MY_STORES_SUBSCRIBED(3, false),
+  STORES_RECOMMENDED(3, false),
+  MY_STORE(1, true),
+  APP_META(1, true);
 
   @Getter private int defaultPerLineCount;
   @Getter private boolean fixedPerLineCount;

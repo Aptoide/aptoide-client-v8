@@ -11,6 +11,7 @@ import cm.aptoide.pt.preferences.Application;
  */
 public abstract class BaseActivity extends AppCompatActivity {
 
+  protected static final int LOGGED_IN_SECOND_STEP_CODE = 126;
   private static final String TAG = BaseActivity.class.getSimpleName();
 
   @Override public void onCreate(Bundle savedInstanceState) {
@@ -29,5 +30,11 @@ public abstract class BaseActivity extends AppCompatActivity {
       finish();
     }
     return super.onOptionsItemSelected(item);
+  }
+
+  public enum UserAccessState {
+    PUBLIC,
+    PRIVATE,
+    UNLISTED
   }
 }

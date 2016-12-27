@@ -273,4 +273,29 @@ public class Translator {
     }
     return translated;
   }
+
+  public static String[] translateToMultiple(String string) {
+
+    String[] result = null;
+
+    if (string == null) {
+      return result;
+    }
+
+    switch (string) {
+      case "Your store doesn't have any applications yet. Install Aptoide Uploader and upload apps to share them with the world!":
+      case "Your store does not have any applications yet. Install Aptoide Uploader and upload apps to share them with the world!":
+        result = new String[4];
+        result[0] = Application.getContext().getString(R.string.install_app_outter_pt1);
+        result[1] = Application.getContext().getString(R.string.install_app_outter_pt2);
+        result[2] = Application.getContext().getString(R.string.install_app_inner);
+        result[3] = Application.getContext().getString(R.string.open_app_inner);
+        break;
+
+      default:
+        break;
+    }
+
+    return result;
+  }
 }

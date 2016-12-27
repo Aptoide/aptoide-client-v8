@@ -47,7 +47,7 @@ public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
   }
 
   public static ListStoresRequest ofTopStores(int offset, int limit, String accessToken,
-      String email, String aptoideClientUUID) {
+      String aptoideClientUUID) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
     final Body baseBody = new Body();
@@ -56,11 +56,15 @@ public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
     return new ListStoresRequest((Body) decorator.decorate(baseBody, accessToken), BASE_HOST);
   }
 
-  public static ListStoresRequest ofAction(String url, String accessToken, String email,
+  public static ListStoresRequest ofAction(String url, String accessToken,
       String aptoideClientUUID) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
-    return new ListStoresRequest(url.replace("listStores", ""),
+    url = url.replace("listStores", "");
+    if (!url.startsWith("/")) {
+      url = "/" + url;
+    }
+    return new ListStoresRequest(url,
         (Body) decorator.decorate(new Body(), accessToken), BASE_HOST);
   }
 

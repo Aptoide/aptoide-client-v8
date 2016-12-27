@@ -157,4 +157,42 @@ public class ManagerPreferences {
         .putBoolean(ManagedKeys.ALLOW_ROOT_INSTALATION, allowRootInstallation)
         .apply();
   }
+
+  public static boolean getUserPrivacyConfirmation() {
+    return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
+        .getBoolean(ManagedKeys.PRIVACY_CONFIRMATION, true);
+  }
+
+  public static boolean getShowPreview() {
+    return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
+        .getBoolean(ManagedKeys.SHOW_SHARE_PREVIEW, true);
+  }
+
+  public static void setShowPreview(boolean previewShower) {
+    Preferences.get().edit().putBoolean(ManagedKeys.SHOW_SHARE_PREVIEW, previewShower).apply();
+  }
+
+  public static String getUserAccess() {
+    return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
+        .getString(ManagedKeys.ACCESS, "UNLISTED");
+  }
+
+  public static void setUserAccess(String access) {
+    Preferences.get()
+        .edit()
+        .putString(ManagedKeys.ACCESS, access)
+        .apply();
+  }
+
+  public static Boolean getUserAccessConfirmed() {
+    return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
+        .getBoolean(ManagedKeys.ACCESS_CONFIRMED, false);
+  }
+
+  public static void setUserAccessConfirmed(Boolean accessConfirmed) {
+    Preferences.get()
+        .edit()
+        .putBoolean(ManagedKeys.ACCESS_CONFIRMED, accessConfirmed)
+        .apply();
+  }
 }

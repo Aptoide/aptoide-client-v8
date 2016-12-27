@@ -54,11 +54,6 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
             V8Engine.getConfiguration().getDefaultTheme());
   }
 
-  @Override protected void onNewIntent(Intent intent) {
-    super.onNewIntent(intent);
-    Analytics.Lifecycle.Activity.onNewIntent(this, intent);
-  }
-
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     Analytics.Lifecycle.Activity.onCreate(this);
@@ -269,8 +264,13 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
       } else {
         super.onBackPressed();
       }
+    } else {
+      super.onBackPressed();
     }
+  }
 
-    super.onBackPressed();
+  @Override protected void onNewIntent(Intent intent) {
+    super.onNewIntent(intent);
+    Analytics.Lifecycle.Activity.onNewIntent(this, intent);
   }
 }

@@ -429,7 +429,7 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
     } else if (i == R.id.menu_uninstall && unInstallAction != null) {
       unInstallAction.call();
       return true;
-    } else if (i == R.id.menu_remote_install){
+    } else if (i == R.id.menu_remote_install) {
       if (AptoideUtils.SystemU.getConnectionType().equals("mobile")) {
         GenericDialogs.createGenericOkMessage(getContext(),
             getContext().getString(R.string.remote_install_menu_title),
@@ -439,7 +439,6 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
         newFragment.show(getActivity().getSupportFragmentManager(),
             RemoteInstallDialog.class.getSimpleName());
       }
-
     }
 
     return super.onOptionsItemSelected(item);
@@ -529,7 +528,7 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
           AppViewFragment.this.appAction = appAction;
           MenuItem item = menu.findItem(R.id.menu_schedule);
           if (item != null) {
-            showHideOptionsMenu(item,appAction != AppAction.OPEN);
+            showHideOptionsMenu(item, appAction != AppAction.OPEN);
           }
           if (appAction != AppAction.INSTALL) {
             setUnInstallMenuOptionVisible(() -> new PermissionManager().requestDownloadAccess(
@@ -579,8 +578,8 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
     appName = app.getName();
   }
 
-  protected void showHideOptionsMenu(MenuItem item, boolean visible){
-    if(item!=null) {
+  protected void showHideOptionsMenu(MenuItem item, boolean visible) {
+    if (item != null) {
       item.setVisible(visible);
     }
   }
@@ -588,7 +587,7 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
   private void showHideOptionsMenu(boolean visible) {
     for (int i = 0; i < menu.size(); i++) {
       MenuItem item = menu.getItem(i);
-      showHideOptionsMenu(item,visible);
+      showHideOptionsMenu(item, visible);
     }
   }
 
@@ -676,12 +675,12 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
         DataProvider.getConfiguration().getPartnerId(), SecurePreferences.isAdultSwitchActive())
         .observe()
         .map(getAdsResponse -> {
-      if (AdRepository.validAds(getAdsResponse)) {
-        suggestedAds = getAdsResponse.getAds();
-      }
+          if (AdRepository.validAds(getAdsResponse)) {
+            suggestedAds = getAdsResponse.getAds();
+          }
 
-      return getApp1;
-    });
+          return getApp1;
+        });
   }
 
   @Override public void scroll(Position position) {
@@ -716,7 +715,7 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
 
   @Override public void setUnInstallMenuOptionVisible(@Nullable Action0 unInstallAction) {
     this.unInstallAction = unInstallAction;
-    showHideOptionsMenu(uninstallMenuItem,unInstallAction != null);
+    showHideOptionsMenu(uninstallMenuItem, unInstallAction != null);
   }
 
   public void setupShare(GetApp app) {

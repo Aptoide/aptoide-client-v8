@@ -9,8 +9,10 @@ import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.GetTimelineStatsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetUserTimelineRequest;
 import cm.aptoide.pt.model.v7.Datalist;
+import cm.aptoide.pt.model.v7.TimelineStats;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.model.v7.timeline.TimelineItem;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -69,5 +71,11 @@ public class TimelineRepository {
       items = datalist.getList();
     }
     return items;
+  }
+
+  public Observable<TimelineStats> getTimelineStats(boolean byPassCache) {
+    return GetTimelineStatsRequest.of(AptoideAccountManager.getAccessToken(),
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext()).getAptoideClientUUID()).observe(byPassCache);
   }
 }

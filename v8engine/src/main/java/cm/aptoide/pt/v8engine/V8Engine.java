@@ -85,7 +85,6 @@ public abstract class V8Engine extends DataProvider {
       if (subscriptions.size() > 0) {
         for (Subscription subscription : subscriptions) {
           Store store = new Store();
-
           store.setDownloads(Long.parseLong(subscription.getDownloads()));
           store.setIconPath(subscription.getAvatarHd() != null ? subscription.getAvatarHd()
               : subscription.getAvatar());

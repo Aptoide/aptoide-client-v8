@@ -43,7 +43,7 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
   }
 
   public static ListFullReviewsRequest of(long storeId, int limit, int offset,
-      BaseRequestWithStore.StoreCredentials storeCredentials, String accessToken, String email,
+      BaseRequestWithStore.StoreCredentials storeCredentials, String accessToken,
       String aptoideClientUUID) {
     String username = storeCredentials.getUsername();
     String password = storeCredentials.getPasswordSha1();
@@ -56,7 +56,7 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
   }
 
   public static ListFullReviewsRequest ofAction(String url, boolean refresh, String accessToken,
-      String email, String aptoideClientUUID) {
+      String aptoideClientUUID) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
     return new ListFullReviewsRequest(url.replace("listFullReviews", ""),
         (Body) decorator.decorate(new Body(refresh), accessToken), BASE_HOST);
@@ -64,7 +64,7 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
 
   public static ListFullReviewsRequest of(String storeName, String packageName, String accessToken,
       String email, String aptoideClientUUID) {
-    return of(storeName, packageName, MAX_REVIEWS, MAX_COMMENTS, accessToken, email,
+    return of(storeName, packageName, MAX_REVIEWS, MAX_COMMENTS, accessToken,
         aptoideClientUUID);
   }
 
@@ -72,7 +72,7 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
    * example call: http://ws75.aptoide.com/api/7/listFullReviews/store_name/apps/package_name/com.supercell.clashofclans/limit/10
    */
   public static ListFullReviewsRequest of(String storeName, String packageName, int maxReviews,
-      int maxComments, String accessToken, String email, String aptoideClientUUID) {
+      int maxComments, String accessToken, String aptoideClientUUID) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
     Body body = new Body(storeName, packageName, maxReviews, maxComments,
@@ -84,7 +84,7 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
    * example call: http://ws75.aptoide.com/api/7/listReviews/store_name/apps/package_name/com.supercell.clashofclans/sub_limit/0/limit/3
    */
   public static ListFullReviewsRequest ofTopReviews(String storeName, String packageName,
-      int maxReviews, String accessToken, String email, String aptoideClientUUID) {
+      int maxReviews, String accessToken, String aptoideClientUUID) {
 
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 

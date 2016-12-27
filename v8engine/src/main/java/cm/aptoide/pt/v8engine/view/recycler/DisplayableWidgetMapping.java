@@ -8,7 +8,6 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.ProgressBarDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.RecommendationDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewCommentsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDescriptionDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDeveloperDisplayable;
@@ -27,13 +26,15 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Add
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AdultRowDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickListDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppUpdateDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ArticleDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.AppUpdateDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.ArticleDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentDisplayable;
-import cm.aptoide.pt.viewRateAndCommentReviews.CommentsReadMoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CompletedDownloadDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CreateStoreDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CreateStoreWidget;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ExcludedUpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FeatureDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FollowUserDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FooterDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FooterRowDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAdDisplayable;
@@ -43,20 +44,36 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Gri
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreMetaDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.InstalledAppDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.MessageWhiteBgDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.MyStoreDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.OfficialAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.OtherVersionDisplayable;
-import cm.aptoide.pt.viewRateAndCommentReviews.RateAndReviewCommentDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.RecommendationDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RecommendedStoreDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RecommendedStoreWidget;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RollbackDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RowReviewDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ScheduledDownloadDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SearchAdDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SearchDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SimilarDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.SimilarDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.SocialArticleDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.SocialInstallDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.SocialRecommendationDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.SocialStoreLatestAppsDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.SocialVideoDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreAddCommentDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreLatestAppsDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.StoreLatestAppsDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreLatestCommentsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SubscribedStoreDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.TimeLineStatsDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.TimeLineStatsWidget;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.TimelineLoginDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.TimelineLoginWidget;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdatesHeaderDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.VideoDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.VideoDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.EmptyWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewCommentsWidget;
@@ -77,13 +94,13 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AddMoreS
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AdultRowWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AppBrickListWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AppBrickWidget;
-import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AppUpdateWidget;
-import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.ArticleWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.timeline.AppUpdateWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.timeline.ArticleWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.CommentWidget;
-import cm.aptoide.pt.viewRateAndCommentReviews.CommentsReadMoreWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.CompletedDownloadWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.ExcludedUpdateWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.FeatureWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.FollowUserWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.FooterRowWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.FooterWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridAdWidget;
@@ -93,22 +110,35 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridDisp
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridStoreMetaWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.GridStoreWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.InstalledAppWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.MessageWhiteBgWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.MyStoreWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.OfficialAppWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.OtherVersionWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.ProgressBarWidget;
-import cm.aptoide.pt.viewRateAndCommentReviews.RateAndReviewCommentWidget;
-import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.RecommendationWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.timeline.RecommendationWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.RollbackWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.RowReviewWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.ScheduledDownloadWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SearchAdWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SearchWidget;
-import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SimilarWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.timeline.SimilarWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.timeline.SocialArticleWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.timeline.SocialInstallWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.timeline.SocialRecommendationWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.timeline.SocialStoreLatestAppsWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.timeline.SocialVideoWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.StoreAddCommentWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.StoreGridHeaderWidget;
-import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.StoreLatestAppsWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.timeline.StoreLatestAppsWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.StoreLatestCommentsWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.SubscribedStoreWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.UpdateWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.UpdatesHeaderWidget;
-import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.VideoWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.timeline.VideoWidget;
+import cm.aptoide.pt.viewRateAndCommentReviews.CommentsReadMoreDisplayable;
+import cm.aptoide.pt.viewRateAndCommentReviews.CommentsReadMoreWidget;
+import cm.aptoide.pt.viewRateAndCommentReviews.RateAndReviewCommentDisplayable;
+import cm.aptoide.pt.viewRateAndCommentReviews.RateAndReviewCommentWidget;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -214,6 +244,16 @@ public class DisplayableWidgetMapping {
         new DisplayableWidgetMapping(SimilarWidget.class, SimilarDisplayable.class));
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(RecommendationWidget.class, RecommendationDisplayable.class));
+    displayableWidgetMappings.add(
+        new DisplayableWidgetMapping(SocialArticleWidget.class, SocialArticleDisplayable.class));
+    displayableWidgetMappings.add(
+        new DisplayableWidgetMapping(SocialVideoWidget.class, SocialVideoDisplayable.class));
+    displayableWidgetMappings.add(new DisplayableWidgetMapping(SocialStoreLatestAppsWidget.class,
+        SocialStoreLatestAppsDisplayable.class));
+    displayableWidgetMappings.add(
+        new DisplayableWidgetMapping(SocialInstallWidget.class, SocialInstallDisplayable.class));
+    displayableWidgetMappings.add(new DisplayableWidgetMapping(SocialRecommendationWidget.class,
+        SocialRecommendationDisplayable.class));
 
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(RollbackWidget.class, RollbackDisplayable.class));
@@ -263,27 +303,66 @@ public class DisplayableWidgetMapping {
 
     displayableWidgetMappings.add(new DisplayableWidgetMapping(AppViewSuggestedAppsWidget.class,
         AppViewSuggestedAppsDisplayable.class));
+
     displayableWidgetMappings.add(new DisplayableWidgetMapping(AppViewSuggestedAppWidget.class,
         AppViewSuggestedAppDisplayable.class));
 
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(OtherVersionWidget.class, OtherVersionDisplayable.class));
+
     displayableWidgetMappings.add(new DisplayableWidgetMapping(RateAndReviewCommentWidget.class,
         RateAndReviewCommentDisplayable.class));
+
     displayableWidgetMappings.add(new DisplayableWidgetMapping(ScheduledDownloadWidget.class,
         ScheduledDownloadDisplayable.class));
+
     displayableWidgetMappings.add(new DisplayableWidgetMapping(CompletedDownloadWidget.class,
         CompletedDownloadDisplayable.class));
+
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(ActiveDownloadWidget.class, ActiveDownloadDisplayable.class));
+
     displayableWidgetMappings.add(new DisplayableWidgetMapping(ActiveDownloadsHeaderWidget.class,
         ActiveDownloadsHeaderDisplayable.class));
+
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(RowReviewWidget.class, RowReviewDisplayable.class));
+
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(CommentWidget.class, CommentDisplayable.class));
+
     displayableWidgetMappings.add(new DisplayableWidgetMapping((CommentsReadMoreWidget.class),
         CommentsReadMoreDisplayable.class));
+
+    displayableWidgetMappings.add(new DisplayableWidgetMapping((StoreLatestCommentsWidget.class),
+        StoreLatestCommentsDisplayable.class));
+
+    displayableWidgetMappings.add(new DisplayableWidgetMapping((StoreAddCommentWidget.class),
+        StoreAddCommentDisplayable.class));
+
+    displayableWidgetMappings.add(
+        new DisplayableWidgetMapping((CreateStoreWidget.class), CreateStoreDisplayable.class));
+
+    displayableWidgetMappings.add(
+        new DisplayableWidgetMapping((MyStoreWidget.class), MyStoreDisplayable.class));
+
+    displayableWidgetMappings.add(new DisplayableWidgetMapping((RecommendedStoreWidget.class),
+        RecommendedStoreDisplayable.class));
+
+    displayableWidgetMappings.add(
+        new DisplayableWidgetMapping((OfficialAppWidget.class), OfficialAppDisplayable.class));
+
+    displayableWidgetMappings.add(
+        new DisplayableWidgetMapping((TimeLineStatsWidget.class), TimeLineStatsDisplayable.class));
+
+    displayableWidgetMappings.add(
+        new DisplayableWidgetMapping((FollowUserWidget.class), FollowUserDisplayable.class));
+
+    displayableWidgetMappings.add(new DisplayableWidgetMapping((MessageWhiteBgWidget.class),
+        MessageWhiteBgDisplayable.class));
+
+    displayableWidgetMappings.add(
+        new DisplayableWidgetMapping((TimelineLoginWidget.class), TimelineLoginDisplayable.class));
 
     return displayableWidgetMappings;
   }
@@ -337,6 +416,7 @@ public class DisplayableWidgetMapping {
 
   /**
    * needed in the partners to get the displayableClass
+   *
    * @return displayableClass
    */
   public Class<? extends Displayable> getDisplayableClass() {
@@ -345,6 +425,7 @@ public class DisplayableWidgetMapping {
 
   /**
    * needed in the partners to get the widgetClass
+   *
    * @return widgetClass
    */
   public Class<? extends Widget> getWidgetClass() {
@@ -353,6 +434,7 @@ public class DisplayableWidgetMapping {
 
   /**
    * needed in partners to add it's own displayables/widgets
+   *
    * @return Map of widgets and displayables
    */
   public Map<Integer, DisplayableWidgetMapping> getViewTypeMapping() {

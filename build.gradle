@@ -33,6 +33,7 @@ allprojects {
     maven { url 'https://maven.fabric.io/public' }
     maven { url 'http://maven.localytics.com/public' }
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+    maven { url "https://jitpack.io" }
   }
 }
 

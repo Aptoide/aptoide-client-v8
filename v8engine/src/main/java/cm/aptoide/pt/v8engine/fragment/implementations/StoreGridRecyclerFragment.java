@@ -78,6 +78,7 @@ public class StoreGridRecyclerFragment extends StoreTabGridRecyclerFragment {
 
   @Override public void bindViews(View view) {
     super.bindViews(view);
+    // does nothing
   }
 
   @Nullable @Override

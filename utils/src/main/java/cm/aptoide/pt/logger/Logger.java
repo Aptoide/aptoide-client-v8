@@ -44,6 +44,10 @@ public class Logger {
     }
   }
 
+  public static void d(Object object, String msg) {
+    d(object.getClass().getSimpleName(), msg);
+  }
+
   public static void d(String tag, String msg, Throwable tr) {
     if (DBG) {
       Log.d(tag, msg, tr);
@@ -76,8 +80,16 @@ public class Logger {
     Log.e(TAG, msg);
   }
 
+  public static void e(Object object, String msg) {
+    e(object.getClass().getName(), msg);
+  }
+
   public static void e(String TAG, Throwable tr) {
     Log.e(TAG, "", tr);
+  }
+
+  public static void e(Object object, Throwable tr) {
+    e(object.getClass().getName(), tr);
   }
 
   public static void e(String TAG, String msg, Throwable tr) {

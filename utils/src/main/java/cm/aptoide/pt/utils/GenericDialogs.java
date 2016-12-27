@@ -70,7 +70,7 @@ public class GenericDialogs {
         subscriber.onCompleted();
       });
       // cleaning up
-      subscriber.add(Subscriptions.create(()->dialog.dismiss()));
+      subscriber.add(Subscriptions.create(() -> dialog.dismiss()));
       dialog.show();
     }).subscribeOn(AndroidSchedulers.mainThread());
   }
@@ -116,7 +116,7 @@ public class GenericDialogs {
         subscriber.onCompleted();
       });
       // cleaning up
-      subscriber.add(Subscriptions.create(()->dialog.dismiss()));
+      subscriber.add(Subscriptions.create(() -> dialog.dismiss()));
       dialog.show();
     });
   }
@@ -150,7 +150,7 @@ public class GenericDialogs {
   public static Observable<EResponse> createGenericContinueCancelMessage(Context context,
       String title, String message) {
     return Observable.create((Subscriber<? super EResponse> subscriber) -> {
-			/*
+      /*
 			final AlertDialog ad = new AlertDialog.Builder(context).setTitle(title)
 					.setMessage(message)
 					.setPositiveButton(android.R.string.ok, (dialog, which) -> {
@@ -178,7 +178,21 @@ public class GenericDialogs {
         subscriber.onCompleted();
       });
       // cleaning up
-      subscriber.add(Subscriptions.create(()->dialog.dismiss()));
+      subscriber.add(Subscriptions.create(() -> dialog.dismiss()));
+      dialog.show();
+    });
+  }
+
+  public static Observable<EResponse> createGenericContinueMessage(Context context, String title,
+      String message) {
+    return Observable.create((Subscriber<? super EResponse> subscriber) -> {
+      final AndroidBasicDialog dialog = AndroidBasicDialog.build(context);
+      dialog.setTitle(title).setMessage(message).setPositiveButton(R.string.continue_option, v -> {
+        subscriber.onNext(EResponse.YES);
+        subscriber.onCompleted();
+        dialog.dismiss();
+      });
+      subscriber.add(Subscriptions.create(() -> dialog.dismiss()));
       dialog.show();
     });
   }
@@ -191,6 +205,18 @@ public class GenericDialogs {
   public static ProgressDialog createGenericPleaseWaitDialog(Context context) {
     ProgressDialog progressDialog = new ProgressDialog(context);
     progressDialog.setMessage(context.getString(R.string.please_wait));
+    progressDialog.setCancelable(false);
+    return progressDialog;
+  }
+
+  /**
+   * Creates an endless progressDialog to be shown when user is waiting for something
+   *
+   * @return A ProgressDialog with a please wait message
+   */
+  public static ProgressDialog createGenericPleaseWaitDialog(Context context, String string) {
+    ProgressDialog progressDialog = new ProgressDialog(context);
+    progressDialog.setMessage(string);
     progressDialog.setCancelable(false);
     return progressDialog;
   }
