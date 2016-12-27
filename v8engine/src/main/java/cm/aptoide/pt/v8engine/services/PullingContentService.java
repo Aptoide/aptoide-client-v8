@@ -14,7 +14,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.widget.RemoteViews;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.ws.v3.PushNotificationsRequest;
@@ -90,7 +89,7 @@ public class PullingContentService extends Service {
           }));
           break;
         case PUSH_NOTIFICATIONS_ACTION:
-          PushNotificationsRequest.of(AptoideAccountManager.getUserEmail())
+          PushNotificationsRequest.of()
               .execute(response -> setPushNotification(response, startId));
           break;
       }
