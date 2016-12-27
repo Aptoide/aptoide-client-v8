@@ -14,7 +14,6 @@ import rx.Observable;
 
 public class ShareInstallCardRequest extends V7<BaseV7Response, ShareInstallCardRequest.Body> {
 
-  private static String email;
   private static String packageName;
   private static String access_token;
 
