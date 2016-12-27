@@ -19,7 +19,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.ListFullReviewsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetMyStoreListRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Event;
@@ -284,10 +283,7 @@ public class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
         }, throwable -> finishLoading(throwable));
   }
   private Subscription caseGetStoreWidgets(String url, boolean refresh) {
-    return GetStoreWidgetsRequest.ofAction(url, StoreUtils.getStoreCredentialsFromUrl(url),
-        AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID())
+    return new RequestRepositoty().getStoreWidgets(url)
         .observe(refresh)
         .observeOn(Schedulers.io())
         .subscribe(getStoreWidgets -> {
