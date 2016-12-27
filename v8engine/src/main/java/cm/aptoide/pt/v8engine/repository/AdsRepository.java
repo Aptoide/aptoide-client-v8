@@ -88,4 +88,12 @@ public class AdsRepository {
         googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()),
         partnerIdProvider.getPartnerId(), adultSwitchStatus.isAdultSwitchActive()).observe());
   }
+
+  public Observable<List<MinimalAd>> getAdsFromAppviewSuggested(String packageName,
+      List<String> keywords) {
+    return mapToMinimalAds(
+        GetAdsRequest.ofAppviewSuggested(keywords, aptoideClientUUID.getAptoideClientUUID(),
+            googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()), packageName,
+            partnerIdProvider.getPartnerId(), adultSwitchStatus.isAdultSwitchActive()).observe());
+  }
 }

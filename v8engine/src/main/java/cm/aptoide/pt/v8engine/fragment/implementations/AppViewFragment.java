@@ -45,23 +45,17 @@ import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
-import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
-import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.iab.BillingBinder;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Malware;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.SimpleSubscriber;
@@ -148,7 +142,7 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
   private Subscription subscription;
   private AdsRepository adsRepository;
   private boolean sponsored;
-  private List<GetAdsResponse.Ad> suggestedAds;
+  private List<MinimalAd> suggestedAds;
   // buy app vars
   private String storeName;
   private float priceValue;
@@ -662,21 +656,12 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
 
   @NonNull private Observable<GetApp> manageSuggestedAds(GetApp getApp1) {
     List<String> keywords = getApp1.getNodes().getMeta().getData().getMedia().getKeywords();
+    String packageName = getApp1.getNodes().getMeta().getData().getPackageName();
 
-    return GetAdsRequest.ofAppviewSuggested(keywords,
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID(),
-        DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(V8Engine.getContext()),
-        getApp1.getNodes().getMeta().getData().getPackageName(),
-        DataProvider.getConfiguration().getPartnerId(), SecurePreferences.isAdultSwitchActive())
-        .observe()
-        .map(getAdsResponse -> {
-          if (AdsRepository.validAds(getAdsResponse)) {
-            suggestedAds = getAdsResponse.getAds();
-          }
-
-          return getApp1;
-        });
+    return adsRepository.getAdsFromAppviewSuggested(packageName, keywords).map(minimalAds -> {
+      suggestedAds = minimalAds;
+      return getApp1;
+    });
   }
 
   @Override public void scroll(Position position) {
