@@ -79,7 +79,7 @@ import rx.Observable;
   public Observable<Void> deleteInAppPurchase(int apiVersion, String packageName,
       String purchaseToken) {
     return InAppBillingConsumeRequest.of(apiVersion, packageName, purchaseToken,
-        AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail())
+        AptoideAccountManager.getAccessToken())
         .observe()
         .flatMap(response -> {
           if (response != null && response.isOk()) {
