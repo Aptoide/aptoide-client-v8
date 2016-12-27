@@ -61,7 +61,7 @@ public class RequestRepositoty {
 
   public GetStoreWidgetsRequest getStoreWidgets(String url) {
     return GetStoreWidgetsRequest.ofAction(url, StoreUtils.getStoreCredentialsFromUrl(url),
-        AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
+        AptoideAccountManager.getAccessToken(),
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()).getAptoideClientUUID());
   }
