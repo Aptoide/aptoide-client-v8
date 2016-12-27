@@ -108,4 +108,11 @@ public class AdsRepository {
         googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()),
         partnerIdProvider.getPartnerId(), adultSwitchStatus.isAdultSwitchActive()).observe());
   }
+
+  public Observable<MinimalAd> getAdsFromSecondInstall(String packageName) {
+    return mapToMinimalAd(
+        GetAdsRequest.ofSecondInstall(packageName, aptoideClientUUID.getAptoideClientUUID(),
+            googlePlayServicesAvailabilityChecker.isAvailable(V8Engine.getContext()),
+            partnerIdProvider.getPartnerId(), adultSwitchStatus.isAdultSwitchActive()).observe());
+  }
 }

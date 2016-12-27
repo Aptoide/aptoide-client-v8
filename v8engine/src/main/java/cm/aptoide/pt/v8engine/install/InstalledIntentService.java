@@ -12,16 +12,11 @@ import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
-import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.repository.AdsRepository;
 import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RollbackRepository;
 import cm.aptoide.pt.v8engine.repository.UpdateRepository;
@@ -34,6 +29,7 @@ public class InstalledIntentService extends IntentService {
 
   private static final String TAG = InstalledIntentService.class.getName();
 
+  private final AdsRepository adsRepository;
   private final RollbackRepository repository;
   private final InstalledRepository installedRepository;
   private final UpdateRepository updatesRepository;
@@ -51,6 +47,7 @@ public class InstalledIntentService extends IntentService {
   public InstalledIntentService(String name) {
     super(name);
 
+    adsRepository = new AdsRepository();
     repository = new RollbackRepository(AccessorFactory.getAccessorFor(Rollback.class));
     installedRepository = new InstalledRepository(AccessorFactory.getAccessorFor(Installed.class));
     updatesRepository = new UpdateRepository(AccessorFactory.getAccessorFor(Update.class),
@@ -113,14 +110,7 @@ public class InstalledIntentService extends IntentService {
             DataproviderUtils.AdNetworksUtils.knockCpi(storeMinimalAd);
             storeMinimalAdAccessor.remove(storeMinimalAd);
           } else {
-            GetAdsRequest.ofSecondInstall(packageName,
-                new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                    DataProvider.getContext()).getAptoideClientUUID(),
-                DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(
-                    V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId(),
-                SecurePreferences.isAdultSwitchActive())
-                .observe()
-                .map(getAdsResponse -> MinimalAd.from(getAdsResponse.getAds().get(0)))
+            adsRepository.getAdsFromSecondInstall(packageName)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(
                     minimalAd -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES,
