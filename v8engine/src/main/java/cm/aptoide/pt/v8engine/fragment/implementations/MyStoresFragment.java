@@ -1,13 +1,9 @@
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Event;
-import cm.aptoide.pt.v8engine.fragment.implementations.storetab.StoreTabGridRecyclerFragment;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
-import java.util.List;
-import rx.Observable;
+import cm.aptoide.pt.v8engine.fragment.implementations.storetab.GetStoreWidgetsFragment;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -15,7 +11,7 @@ import rx.android.schedulers.AndroidSchedulers;
  * Created by trinkes on 13/12/2016.
  */
 
-public class MyStoresFragment extends StoreTabGridRecyclerFragment {
+public class MyStoresFragment extends GetStoreWidgetsFragment {
   private static final String TAG = MyStoresFragment.class.getSimpleName();
   private Subscription subscription;
 
@@ -40,21 +36,5 @@ public class MyStoresFragment extends StoreTabGridRecyclerFragment {
           });
     }
     super.load(create, refresh, savedInstanceState);
-  }
-
-  @Nullable @Override
-  protected Observable<List<? extends Displayable>> buildDisplayables(boolean refresh, String url) {
-    // TODO: 28-12-2016 neuro e mais uma martelada...
-    subscription = storeRepository.getAll()
-        .distinct()
-        .observeOn(AndroidSchedulers.mainThread())
-        .skip(1)
-        .compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW))
-        .subscribe(stores -> {
-          Logger.d(TAG, "Store database changed, reloading...");
-          super.load(false, true, null);
-        });
-
-    return null;
   }
 }

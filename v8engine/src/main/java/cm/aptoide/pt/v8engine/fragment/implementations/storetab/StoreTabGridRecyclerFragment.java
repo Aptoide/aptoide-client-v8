@@ -27,6 +27,7 @@ import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.MyStoresFragment;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
@@ -106,6 +107,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
       case getMyStoresSubscribed:
         return new MyStoresSubscribedFragment();
       case myStores:
+        return new MyStoresFragment();
       case getStoreWidgets:
         return new GetStoreWidgetsFragment();
       case listReviews:
@@ -180,10 +182,6 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
         case getStoresRecommended:
         case getMyStoresSubscribed:
           caseMyStores(url, refresh);
-          break;
-        case myStores:
-        case getStoreWidgets:
-          caseGetStoreWidgets(url, StoreUtils.getStoreCredentialsFromUrl(url), refresh);
           break;
         default:
           Observable<List<? extends Displayable>> displayablesObservable =
