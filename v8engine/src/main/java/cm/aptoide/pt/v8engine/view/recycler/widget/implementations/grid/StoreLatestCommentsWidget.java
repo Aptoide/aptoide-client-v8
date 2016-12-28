@@ -29,6 +29,8 @@ import com.trello.rxlifecycle.FragmentEvent;
 import java.util.ArrayList;
 import java.util.List;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplayable> {
 
@@ -68,16 +70,19 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
 
   private Void reloadComments() {
     ManagerPreferences.setForceServerRefreshFlag(true);
-    ListCommentsRequest.of(storeId, 0, 3, AptoideAccountManager.getAccessToken(),
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID(), false)
-        .observe()
-        .subscribe(listComments -> {
-          setAdapter(listComments.getDatalist().getList());
-        }, err -> {
-          Logger.e(TAG, err);
-          CrashReports.logException(err);
-        });
+    compositeSubscription.add(
+        ListCommentsRequest.of(storeId, 0, 3, AptoideAccountManager.getAccessToken(),
+            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+                DataProvider.getContext()).getAptoideClientUUID(), false)
+            .observe()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(listComments -> {
+              setAdapter(listComments.getDatalist().getList());
+            }, err -> {
+              Logger.e(TAG, err);
+              CrashReports.logException(err);
+            }));
     return null;
   }
 

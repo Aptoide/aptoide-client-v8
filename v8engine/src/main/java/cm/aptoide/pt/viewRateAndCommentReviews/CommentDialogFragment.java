@@ -131,8 +131,8 @@ public class CommentDialogFragment extends RxDialogFragment {
     this.idAsString = args.getString(RESOURCE_ID_AS_STRING);
     this.idAsLong = args.getLong(RESOURCE_ID_AS_LONG);
 
-    if (args.containsKey(PREVIOUS_COMMENT_ID)) {
-      this.reply = true;
+    this.reply = args.containsKey(PREVIOUS_COMMENT_ID);
+    if (this.reply) {
       this.previousCommentId = args.getLong(PREVIOUS_COMMENT_ID);
     }
   }
