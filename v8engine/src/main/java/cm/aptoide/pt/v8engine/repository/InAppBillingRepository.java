@@ -23,16 +23,21 @@ import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentExce
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.util.Collections;
 import java.util.List;
-import lombok.AllArgsConstructor;
 import rx.Observable;
 
 /**
  * Created by marcelobenites on 8/11/16.
  */
-@AllArgsConstructor public class InAppBillingRepository {
+public class InAppBillingRepository {
 
   private final NetworkOperatorManager operatorManager;
   private final ProductFactory productFactory;
+
+  public InAppBillingRepository(NetworkOperatorManager operatorManager,
+      ProductFactory productFactory) {
+    this.operatorManager = operatorManager;
+    this.productFactory = productFactory;
+  }
 
   public Observable<Void> getInAppBilling(int apiVersion, String packageName, String type) {
     return InAppBillingAvailableRequest.of(apiVersion, packageName, type)

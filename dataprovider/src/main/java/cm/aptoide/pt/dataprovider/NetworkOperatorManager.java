@@ -6,14 +6,17 @@
 package cm.aptoide.pt.dataprovider;
 
 import android.telephony.TelephonyManager;
-import lombok.AllArgsConstructor;
 
 /**
  * Created by marcelobenites on 7/27/16.
  */
-@AllArgsConstructor public class NetworkOperatorManager {
+public class NetworkOperatorManager {
 
   private final TelephonyManager telephonyManager;
+
+  public NetworkOperatorManager(TelephonyManager telephonyManager) {
+    this.telephonyManager = telephonyManager;
+  }
 
   public String getMobileCountryCode() {
     final String networkOperator = telephonyManager.getNetworkOperator();

@@ -12,7 +12,6 @@ import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.DateCalculator;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
@@ -107,10 +106,16 @@ public class SocialStoreLatestAppsDisplayable extends SocialCardDisplayable {
     socialRepository.like(getTimelineCard(), cardType, "", rating);
   }
 
-  @EqualsAndHashCode @AllArgsConstructor public static class LatestApp {
+  @EqualsAndHashCode public static class LatestApp {
 
     @Getter private final long appId;
     @Getter private final String iconUrl;
     @Getter private final String packageName;
+
+    public LatestApp(long appId, String iconUrl, String packageName) {
+      this.appId = appId;
+      this.iconUrl = iconUrl;
+      this.packageName = packageName;
+    }
   }
 }

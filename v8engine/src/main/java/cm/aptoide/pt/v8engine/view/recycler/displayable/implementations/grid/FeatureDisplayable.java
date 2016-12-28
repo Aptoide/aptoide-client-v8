@@ -11,13 +11,12 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import java.util.Date;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
  * Created by marcelobenites on 6/17/16.
  */
-@AllArgsConstructor public class FeatureDisplayable extends Displayable {
+public class FeatureDisplayable extends Displayable {
 
   @Getter private int avatarResource;
   @Getter private int titleResource;
@@ -31,6 +30,20 @@ import lombok.Getter;
   private SpannableFactory spannableFactory;
 
   public FeatureDisplayable() {
+  }
+
+  public FeatureDisplayable(int avatarResource, int titleResource, String thumbnailUrl, String url,
+      String appName, String title, Date date, DateCalculator dateCalculator,
+      SpannableFactory spannableFactory) {
+    this.avatarResource = avatarResource;
+    this.titleResource = titleResource;
+    this.thumbnailUrl = thumbnailUrl;
+    this.url = url;
+    this.appName = appName;
+    this.title = title;
+    this.date = date;
+    this.dateCalculator = dateCalculator;
+    this.spannableFactory = spannableFactory;
   }
 
   public static FeatureDisplayable from(Feature feature, DateCalculator dateCalculator,

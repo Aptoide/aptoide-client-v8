@@ -1,17 +1,20 @@
 package cm.aptoide.pt.actions;
 
 import cm.aptoide.pt.logger.Logger;
-import lombok.AllArgsConstructor;
 import rx.Observable;
 import rx.Subscriber;
 
 /**
  * Created by diogoloureiro on 09/09/16.
  */
-@AllArgsConstructor public class RequestDownloadAccessOnSubscribe
+public class RequestDownloadAccessOnSubscribe
     implements Observable.OnSubscribe<Void> {
 
   private final PermissionRequest permissionRequest;
+
+  public RequestDownloadAccessOnSubscribe(PermissionRequest permissionRequest) {
+    this.permissionRequest = permissionRequest;
+  }
 
   @Override public void call(Subscriber<? super Void> subscriber) {
     permissionRequest.requestDownloadAccess(() -> {

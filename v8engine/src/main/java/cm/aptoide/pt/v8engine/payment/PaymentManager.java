@@ -13,16 +13,19 @@ import cm.aptoide.pt.v8engine.payment.rx.RxPayment;
 import cm.aptoide.pt.v8engine.repository.PaymentRepository;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.util.List;
-import lombok.AllArgsConstructor;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
 /**
  * Created by marcelobenites on 8/12/16.
  */
-@AllArgsConstructor public class PaymentManager {
+public class PaymentManager {
 
   private final PaymentRepository paymentRepository;
+
+  public PaymentManager(PaymentRepository paymentRepository) {
+    this.paymentRepository = paymentRepository;
+  }
 
   public Observable<List<Payment>> getProductPayments(Context context, AptoideProduct product) {
     return paymentRepository.getPayments(context, product);

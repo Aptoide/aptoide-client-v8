@@ -11,6 +11,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
@@ -30,7 +31,6 @@ import java.io.File;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import rx.Observable;
 import rx.schedulers.Schedulers;
@@ -38,7 +38,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by marcelobenites on 7/18/16.
  */
-@AllArgsConstructor public class DefaultInstaller implements Installer {
+public class DefaultInstaller implements Installer {
 
   public static final String OBB_FOLDER =
       Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/obb/";
@@ -46,6 +46,13 @@ import rx.schedulers.Schedulers;
   @Getter(AccessLevel.PACKAGE) private final PackageManager packageManager;
   private final InstallationProvider installationProvider;
   private FileUtils fileUtils;
+
+  public DefaultInstaller(PackageManager packageManager, InstallationProvider installationProvider,
+      FileUtils fileUtils) {
+    this.packageManager = packageManager;
+    this.installationProvider = installationProvider;
+    this.fileUtils = fileUtils;
+  }
 
   @Override public Observable<Boolean> isInstalled(String md5) {
     return installationProvider.getInstallation(md5)
@@ -78,20 +85,6 @@ import rx.schedulers.Schedulers;
         });
   }
 
-  private void moveInstallationFiles(RollbackInstallation installation) {
-    List<FileToDownload> files = installation.getFiles();
-    for (int i = 0; i < files.size(); i++) {
-      FileToDownload file = files.get(i);
-      if (file != null && file.getFileType() == FileToDownload.OBB) {
-        String newPath = OBB_FOLDER + installation.getPackageName() + "/";
-        fileUtils.copyFile(file.getPath(), newPath, file.getFileName());
-        FileUtils.removeFile(file.getPath());
-        file.setPath(newPath);
-      }
-    }
-    installation.save();
-  }
-
   @Override public Observable<Void> update(Context context, String md5) {
     return install(context, md5);
   }
@@ -116,6 +109,20 @@ import rx.schedulers.Schedulers;
     }).flatMap(uninstallStarted -> waitPackageIntent(context, intentFilter, packageName));
   }
 
+  private void moveInstallationFiles(RollbackInstallation installation) {
+    List<FileToDownload> files = installation.getFiles();
+    for (int i = 0; i < files.size(); i++) {
+      FileToDownload file = files.get(i);
+      if (file != null && file.getFileType() == FileToDownload.OBB) {
+        String newPath = OBB_FOLDER + installation.getPackageName() + "/";
+        fileUtils.copyFile(file.getPath(), newPath, file.getFileName());
+        FileUtils.removeFile(file.getPath());
+        file.setPath(newPath);
+      }
+    }
+    installation.save();
+  }
+
   private Observable<Void> defaultInstall(Context context, File file, String packageName) {
     final IntentFilter intentFilter = new IntentFilter();
     intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
@@ -132,7 +139,7 @@ import rx.schedulers.Schedulers;
 
     Uri photoURI = null;
     //read: https://inthecheesefactory.com/blog/how-to-share-access-to-file-with-fileprovider-on-android-nougat/en
-    if (android.os.Build.VERSION.SDK_INT > 23) {
+    if (Build.VERSION.SDK_INT > 23) {
       //content://....apk for nougat
       photoURI =
           FileProvider.getUriForFile(context, V8Engine.getConfiguration().getAppId() + ".provider",

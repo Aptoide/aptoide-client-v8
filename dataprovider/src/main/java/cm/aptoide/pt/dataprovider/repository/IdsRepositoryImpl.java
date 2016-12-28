@@ -14,12 +14,11 @@ import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 import java.security.SecureRandom;
 import java.util.UUID;
-import lombok.AllArgsConstructor;
 
 /**
  * Created by neuro on 11-07-2016.
  */
-@AllArgsConstructor public class IdsRepositoryImpl implements IdsRepository, AptoideClientUUID {
+public class IdsRepositoryImpl implements IdsRepository, AptoideClientUUID {
 
   private static final String APTOIDE_CLIENT_UUID = "aptoide_client_uuid";
   private static final String ADVERTISING_ID_CLIENT = "advertisingIdClient";
@@ -30,24 +29,16 @@ import lombok.AllArgsConstructor;
   private final SharedPreferences sharedPreferences;
   private final Context context;
 
+  public IdsRepositoryImpl(SharedPreferences sharedPreferences, Context context) {
+    this.sharedPreferences = sharedPreferences;
+    this.context = context;
+  }
+
   @Override public String getAptoideClientUUID() {
     if (!sharedPreferences.contains(APTOIDE_CLIENT_UUID)) {
       generateAptoideId(sharedPreferences);
     }
     return sharedPreferences.getString(APTOIDE_CLIENT_UUID, null);
-  }
-
-  private void generateAptoideId(SharedPreferences sharedPreferences) {
-    String aptoideId;
-    if (getGoogleAdvertisingId() != null) {
-      aptoideId = getGoogleAdvertisingId();
-    } else if (getAndroidId() != null) {
-      aptoideId = getAndroidId();
-    } else {
-      aptoideId = UUID.randomUUID().toString();
-    }
-
-    sharedPreferences.edit().putString(APTOIDE_CLIENT_UUID, aptoideId).apply();
   }
 
   public String getGoogleAdvertisingId() {
@@ -56,23 +47,6 @@ import lombok.AllArgsConstructor;
     }
 
     return sharedPreferences.getString(GOOGLE_ADVERTISING_ID_CLIENT, null);
-  }
-
-  private void generateGAID() {
-
-    String gaid = null;
-
-    if (DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(context)) {
-      try {
-        gaid = AdvertisingIdClient.getAdvertisingIdInfo(context).getId();
-      } catch (Exception e) {
-        CrashReports.logException(e);
-        e.printStackTrace();
-      }
-    }
-
-    sharedPreferences.edit().putString(GOOGLE_ADVERTISING_ID_CLIENT, gaid).apply();
-    sharedPreferences.edit().putBoolean(GOOGLE_ADVERTISING_ID_CLIENT_SET, true).apply();
   }
 
   public String getAdvertisingId() {
@@ -87,18 +61,6 @@ import lombok.AllArgsConstructor;
 
   private void setAdvertisingId(String aaid) {
     sharedPreferences.edit().putString(ADVERTISING_ID_CLIENT, aaid).apply();
-  }
-
-  private String generateAdvertisingId() {
-    final String advertisingId;
-
-    if (getGoogleAdvertisingId() != null) {
-      setAdvertisingId(advertisingId = getGoogleAdvertisingId());
-    } else {
-      setAdvertisingId(advertisingId = generateRandomAdvertisingID());
-    }
-
-    return advertisingId;
   }
 
   public synchronized String getAndroidId() {
@@ -119,6 +81,48 @@ import lombok.AllArgsConstructor;
     }
 
     sharedPreferences.edit().putString(ANDROID_ID_CLIENT, android).apply();
+  }
+
+  private void generateAptoideId(SharedPreferences sharedPreferences) {
+    String aptoideId;
+    if (getGoogleAdvertisingId() != null) {
+      aptoideId = getGoogleAdvertisingId();
+    } else if (getAndroidId() != null) {
+      aptoideId = getAndroidId();
+    } else {
+      aptoideId = UUID.randomUUID().toString();
+    }
+
+    sharedPreferences.edit().putString(APTOIDE_CLIENT_UUID, aptoideId).apply();
+  }
+
+  private void generateGAID() {
+
+    String gaid = null;
+
+    if (DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(context)) {
+      try {
+        gaid = AdvertisingIdClient.getAdvertisingIdInfo(context).getId();
+      } catch (Exception e) {
+        CrashReports.logException(e);
+        e.printStackTrace();
+      }
+    }
+
+    sharedPreferences.edit().putString(GOOGLE_ADVERTISING_ID_CLIENT, gaid).apply();
+    sharedPreferences.edit().putBoolean(GOOGLE_ADVERTISING_ID_CLIENT_SET, true).apply();
+  }
+
+  private String generateAdvertisingId() {
+    final String advertisingId;
+
+    if (getGoogleAdvertisingId() != null) {
+      setAdvertisingId(advertisingId = getGoogleAdvertisingId());
+    } else {
+      setAdvertisingId(advertisingId = generateRandomAdvertisingID());
+    }
+
+    return advertisingId;
   }
 
   private String generateRandomAdvertisingID() {

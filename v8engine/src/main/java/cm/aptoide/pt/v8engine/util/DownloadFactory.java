@@ -21,7 +21,6 @@ import cm.aptoide.pt.utils.IdUtils;
 import cm.aptoide.pt.v8engine.AutoUpdate;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdateDisplayable;
 import io.realm.RealmList;
-import lombok.AllArgsConstructor;
 
 /**
  * Created by marcelobenites on 6/29/16.
@@ -310,8 +309,13 @@ public class DownloadFactory {
     return new ApkPaths(path, altPath);
   }
 
-  @AllArgsConstructor private class ApkPaths {
+  private class ApkPaths {
     String path;
     String altPath;
+
+    public ApkPaths(String path, String altPath) {
+      this.path = path;
+      this.altPath = altPath;
+    }
   }
 }
