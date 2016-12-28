@@ -29,7 +29,6 @@ import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.util.referrer.SimpleTimedFuture;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.RegisterAdRefererRequest;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.repository.AdsRepository;
@@ -218,13 +217,6 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
 
   private static List<Long> clearExcludedNetworks(String packageName) {
     return excludedNetworks.remove(packageName);
-  }
-
-  private static Boolean hasAds(GetAdsResponse getAdsResponse) {
-    return getAdsResponse != null
-        && getAdsResponse.getAds() != null
-        && getAdsResponse.getAds().size() > 0
-        && getAdsResponse.getAds().get(0) != null;
   }
 
   private static String getReferrer(String uriAsString) {
