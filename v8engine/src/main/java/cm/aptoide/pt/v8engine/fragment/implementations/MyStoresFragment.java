@@ -37,6 +37,6 @@ public class MyStoresFragment extends StoreTabGridRecyclerFragment {
             super.load(false, true, null);
           });
     }
-    super.load(create, true, savedInstanceState);
+    super.load(create, refresh, savedInstanceState);
   }
 }

@@ -287,6 +287,11 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
         @Path(value = "url", encoded = true) String path, @Body GetMyStoreListRequest.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
+    @POST("{url}") Observable<ListStores> getMyStoreListEndless(
+        @Path(value = "url", encoded = true) String path,
+        @Body GetMyStoreListRequest.EndlessBody body,
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
+
     @Multipart @POST("store/set") Observable<BaseV7Response> editStore(
         @Part MultipartBody.Part store_avatar, @PartMap HashMapNotNull<String, RequestBody> body);
 

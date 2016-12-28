@@ -108,7 +108,6 @@
 
       <TextView
         android:id="@+id/displayable_social_timeline_recommendation_name"
-        style="@style/Widget.Aptoide.Card.Body"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/displayable_social_timeline_recommendation_icon"
@@ -120,6 +119,8 @@
         android:layout_toRightOf="@+id/displayable_social_timeline_recommendation_icon"
         android:ellipsize="end"
         android:lines="1"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
         android:text="@string/social_timeline_recommends" />
 
       <TextView

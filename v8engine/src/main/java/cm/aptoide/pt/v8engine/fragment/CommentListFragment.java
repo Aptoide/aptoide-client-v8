@@ -98,7 +98,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
     elementIdAsString = args.getString(ELEMENT_ID_AS_STRING);
     elementIdAsLong = args.getLong(ELEMENT_ID_AS_LONG);
     url = args.getString(URL_VAL);
-    commentType = Enum.valueOf(CommentType.class, args.getString(COMMENT_TYPE));
+    commentType = CommentType.valueOf(args.getString(COMMENT_TYPE));
 
     // extracting store data from the URL...
     if (commentType == CommentType.STORE) {
@@ -106,6 +106,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
           StoreUtils.getStoreCredentialsFromUrlOrNull(url);
       if (storeCredentials != null && !TextUtils.isEmpty(storeCredentials.getName())) {
         storeName = storeCredentials.getName();
+        elementIdAsLong = storeCredentials.getId();
       }
     }
   }
@@ -115,7 +116,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
     // StoreTabGridRecyclerFragment.
     if (toolbar != null) {
       ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-      if(commentType==CommentType.STORE) {
+      if (commentType == CommentType.STORE && !TextUtils.isEmpty(storeName)) {
         String title = String.format(getString(R.string.comment_on_store), storeName);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(title);
       } else {

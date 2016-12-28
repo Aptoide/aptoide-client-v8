@@ -34,7 +34,9 @@
         android:background="#c16114"
         android:gravity="center"
         android:paddingLeft="24dp"
+        android:paddingStart="24dp"
         android:paddingRight="23dp"
+        android:paddingEnd="23dp"
         android:text="@string/create_store_header"
         android:textColor="@color/white"
         />
@@ -69,6 +71,7 @@
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:layout_marginLeft="12dp"
+                android:layout_marginStart="12dp"
                 android:layout_marginTop="20dp"
                 android:src="@drawable/create_store_avatar"
                 />
@@ -78,10 +81,13 @@
                 android:layout_height="33.3dp"
                 android:layout_alignBottom="@+id/create_store_image"
                 android:layout_alignRight="@+id/create_store_image"
+                android:layout_alignEnd="@+id/create_store_image"
                 android:background="@drawable/create_user_camera_background_shape"
                 android:paddingBottom="8dp"
                 android:paddingLeft="8dp"
+                android:paddingStart="8dp"
                 android:paddingRight="8dp"
+                android:paddingEnd="8dp"
                 android:paddingTop="8dp"
                 android:src="@drawable/create_user_camera"
                 />
@@ -99,7 +105,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="57dp"
+                android:layout_marginStart="57dp"
                 android:layout_marginRight="55dp"
+                android:layout_marginEnd="55dp"
                 android:layout_marginTop="49dp"
                 android:gravity="center_vertical"
                 android:maxLines="2"
@@ -113,8 +121,10 @@
                 android:id="@+id/create_store_random_photo"
                 android:layout_width="98dp"
                 android:layout_height="12dp"
-                android:layout_marginLeft="56.3dp"
-                android:layout_marginRight="62.3dp"
+                android:layout_marginLeft="56dp"
+                android:layout_marginStart="56dp"
+                android:layout_marginRight="62dp"
+                android:layout_marginEnd="62dp"
                 android:layout_marginTop="21dp"
                 android:text="@string/create_user_random_photo"
                 android:textColor="#a9a9a9"
@@ -135,7 +145,8 @@
           <LinearLayout
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:layout_marginLeft="16.3dp"
+              android:layout_marginLeft="16dp"
+              android:layout_marginStart="16dp"
               android:layout_marginTop="29.3dp"
               android:orientation="vertical"
               >
@@ -154,12 +165,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="43dp"
                 android:layout_marginRight="15dp"
+                android:layout_marginEnd="15dp"
                 android:layout_marginTop="15dp"
                 android:background="@color/create_store_edit_text_background"
                 android:hint="@string/create_store_name_inserted"
                 android:maxLength="63"
                 android:padding="8dp"
                 android:paddingLeft="12dp"
+                android:paddingStart="12dp"
                 android:textSize="12sp"
                 />
 
@@ -199,6 +212,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="26dp"
+                    android:layout_marginEnd="26dp"
                     >
 
                   <ImageView
@@ -214,6 +228,7 @@
                       android:layout_height="23dp"
                       android:layout_alignBottom="@+id/create_store_theme_orange"
                       android:layout_alignRight="@+id/create_store_theme_orange"
+                      android:layout_alignEnd="@+id/create_store_theme_orange"
                       android:scaleType="centerInside"
                       android:src="@drawable/create_store_theme_check"
                       android:visibility="invisible"
@@ -225,6 +240,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="26dp"
+                    android:layout_marginEnd="26dp"
                     >
 
                   <ImageView
@@ -240,6 +256,7 @@
                       android:layout_height="23dp"
                       android:layout_alignBottom="@+id/create_store_theme_green"
                       android:layout_alignRight="@+id/create_store_theme_green"
+                      android:layout_alignEnd="@+id/create_store_theme_green"
                       android:scaleType="centerInside"
                       android:src="@drawable/create_store_theme_check"
                       android:visibility="invisible"
@@ -251,6 +268,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="26dp"
+                    android:layout_marginEnd="26dp"
                     >
 
                   <ImageView
@@ -266,6 +284,7 @@
                       android:layout_height="23dp"
                       android:layout_alignBottom="@+id/create_store_theme_red"
                       android:layout_alignRight="@+id/create_store_theme_red"
+                      android:layout_alignEnd="@+id/create_store_theme_red"
                       android:scaleType="centerInside"
                       android:src="@drawable/create_store_theme_check"
                       android:visibility="invisible"
@@ -277,6 +296,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="26dp"
+                    android:layout_marginEnd="26dp"
                     >
 
                   <ImageView
@@ -292,6 +312,7 @@
                       android:layout_height="23dp"
                       android:layout_alignBottom="@+id/create_store_theme_indigo"
                       android:layout_alignRight="@+id/create_store_theme_indigo"
+                      android:layout_alignEnd="@+id/create_store_theme_indigo"
                       android:scaleType="centerInside"
                       android:src="@drawable/create_store_theme_check"
                       android:visibility="invisible"
@@ -303,6 +324,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="26dp"
+                    android:layout_marginEnd="26dp"
                     >
 
                   <ImageView
@@ -318,6 +340,7 @@
                       android:layout_height="23dp"
                       android:layout_alignBottom="@+id/create_store_theme_teal"
                       android:layout_alignRight="@+id/create_store_theme_teal"
+                      android:layout_alignEnd="@+id/create_store_theme_teal"
                       android:scaleType="centerInside"
                       android:src="@drawable/create_store_theme_check"
                       android:visibility="invisible"
@@ -329,6 +352,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="26dp"
+                    android:layout_marginEnd="26dp"
                     >
 
                   <ImageView
@@ -344,6 +368,7 @@
                       android:layout_height="23dp"
                       android:layout_alignBottom="@+id/create_store_theme_pink"
                       android:layout_alignRight="@+id/create_store_theme_pink"
+                      android:layout_alignEnd="@+id/create_store_theme_pink"
                       android:scaleType="centerInside"
                       android:src="@drawable/create_store_theme_check"
                       android:visibility="invisible"
@@ -355,6 +380,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="26dp"
+                    android:layout_marginEnd="26dp"
                     >
 
                   <ImageView
@@ -370,6 +396,7 @@
                       android:layout_height="23dp"
                       android:layout_alignBottom="@+id/create_store_theme_lime"
                       android:layout_alignRight="@+id/create_store_theme_lime"
+                      android:layout_alignEnd="@+id/create_store_theme_lime"
                       android:scaleType="centerInside"
                       android:src="@drawable/create_store_theme_check"
                       android:visibility="invisible"
@@ -381,6 +408,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="26dp"
+                    android:layout_marginEnd="26dp"
                     >
 
                   <ImageView
@@ -396,6 +424,7 @@
                       android:layout_height="23dp"
                       android:layout_alignBottom="@+id/create_store_theme_amber"
                       android:layout_alignRight="@+id/create_store_theme_amber"
+                      android:layout_alignEnd="@+id/create_store_theme_amber"
                       android:scaleType="centerInside"
                       android:src="@drawable/create_store_theme_check"
                       android:visibility="invisible"
@@ -407,6 +436,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="26dp"
+                    android:layout_marginEnd="26dp"
                     >
 
                   <ImageView
@@ -422,6 +452,7 @@
                       android:layout_height="23dp"
                       android:layout_alignBottom="@+id/create_store_theme_brown"
                       android:layout_alignRight="@+id/create_store_theme_brown"
+                      android:layout_alignEnd="@+id/create_store_theme_brown"
                       android:scaleType="centerInside"
                       android:src="@drawable/create_store_theme_check"
                       android:visibility="invisible"
@@ -432,6 +463,7 @@
                 <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="26dp"
                     >
 
                   <ImageView
@@ -447,6 +479,7 @@
                       android:layout_height="23dp"
                       android:layout_alignBottom="@+id/create_store_theme_lightblue"
                       android:layout_alignRight="@+id/create_store_theme_lightblue"
+                      android:layout_alignEnd="@+id/create_store_theme_lightblue"
                       android:scaleType="centerInside"
                       android:src="@drawable/create_store_theme_check"
                       android:visibility="invisible"

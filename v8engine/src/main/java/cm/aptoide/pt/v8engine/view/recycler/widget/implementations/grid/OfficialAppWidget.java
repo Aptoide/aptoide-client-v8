@@ -86,7 +86,7 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
       final String[] parts = Translator.translateToMultiple(messageAndApp.first);
       if (parts != null && parts.length == 4) {
         SpannableString middle =
-            new SpannableString(String.format(isAppInstalled ? parts[2] : parts[3], appName));
+            new SpannableString(String.format(isAppInstalled ? parts[3] : parts[2], appName));
         middle.setSpan(new ForegroundColorSpan(color), 0, middle.length(), Spanned.SPAN_MARK_MARK);
 
         SpannableStringBuilder text = new SpannableStringBuilder();

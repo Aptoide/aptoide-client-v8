@@ -15,7 +15,6 @@ import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.ProgressBarDisplayable;
 import lombok.Setter;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
@@ -36,7 +35,6 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
   private int total;
   private int offset;
   private boolean stableData = false;
-  private Subscription subscription;
   @Setter private BooleanAction onFirstLoadListener;
   @Setter private Action0 onEndOfListReachedListener;
   private boolean endCallbackCalled;
@@ -99,8 +97,7 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
         ((lastVisibleItemPosition + visibleThreshold) == (totalItemCount - 1));
 
     //boolean isLoading = subscription != null && !subscription.isUnsubscribed();
-    return !isLoading && (hasMoreElements || offset == 0) && (isOverLastPosition
-        || isOverVisibleThreshold);
+    return !isLoading && hasMoreElements && (isOverLastPosition || isOverVisibleThreshold);
   }
 
   private boolean hasMoreElements() {
@@ -110,7 +107,7 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
   public void onLoadMore(boolean bypassCache) {
     isLoading = true;
     adapter.addDisplayable(new ProgressBarDisplayable());
-    subscription = v7request.observe(bypassCache)
+    v7request.observe(bypassCache)
         .observeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(response -> {

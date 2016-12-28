@@ -44,6 +44,7 @@
         tools:textColor="@color/black"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         />
     <LinearLayout
         android:layout_width="wrap_content"
@@ -56,6 +57,7 @@
         android:paddingEnd="16dp"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/image"
+        android:layout_toEndOf="@+id/image"
         >
 
       <TextView
@@ -75,6 +77,7 @@
           android:textColor="@color/white"
           android:textSize="10sp"
           android:drawableLeft="@drawable/user_shape_mini_icon"
+          android:drawableStart="@drawable/user_shape_mini_icon"
           android:drawablePadding="4dp"
           tools:text="214"
           />
@@ -86,6 +89,7 @@
           android:textColor="@color/white"
           android:textSize="10sp"
           android:drawableLeft="@drawable/app_count_mini_icon"
+          android:drawableStart="@drawable/app_count_mini_icon"
           android:drawablePadding="4dp"
           tools:text="4678"
           />
@@ -98,6 +102,7 @@
           android:textColor="@color/white"
           android:textSize="10sp"
           android:drawableLeft="@null"
+          android:drawableStart="@null"
           android:visibility="gone"
           tools:text="719.218.997"
           />

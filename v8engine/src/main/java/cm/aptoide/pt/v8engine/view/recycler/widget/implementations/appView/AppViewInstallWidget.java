@@ -326,7 +326,6 @@ import rx.android.schedulers.AndroidSchedulers;
 
       if (installOrUpgradeMsg == R.string.installing_msg) {
         Analytics.ClickedOnInstallButton.clicked(app);
-        Analytics.SourceDownloadComplete.installClicked(app.getId());
         Analytics.DownloadComplete.installClicked(app.getId());
       }
 
@@ -445,7 +444,6 @@ import rx.android.schedulers.AndroidSchedulers;
 
       case Download.COMPLETED: {
         Analytics.DownloadComplete.downloadComplete(app);
-        Analytics.SourceDownloadComplete.downloadComplete(app.getId(), app.getPackageName());
         if (!isUpdate) {
           if (minimalAd != null && minimalAd.getCpdUrl() != null) {
             DataproviderUtils.AdNetworksUtils.knockCpd(minimalAd);
