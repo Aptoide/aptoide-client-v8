@@ -56,12 +56,15 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
     if (event.getType() != null) {
       args.putString(BundleCons.TYPE, event.getType().toString());
     }
+
     if (event.getName() != null) {
       args.putString(BundleCons.NAME, event.getName().toString());
     }
+
     if (event.getData() != null && event.getData().getLayout() != null) {
       args.putString(BundleCons.LAYOUT, event.getData().getLayout().toString());
     }
+
     args.putString(BundleCons.TITLE, title);
     args.putString(BundleCons.ACTION, event.getAction());
     args.putString(BundleCons.STORE_THEME, storeTheme);

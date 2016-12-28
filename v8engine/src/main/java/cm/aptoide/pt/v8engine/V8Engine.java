@@ -30,7 +30,6 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.downloadmanager.DownloadService;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.PRNGFixes;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -55,8 +54,6 @@ import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.view.recycler.DisplayableWidgetMapping;
 import com.flurry.android.FlurryAgent;
-import com.squareup.leakcanary.LeakCanary;
-import com.squareup.leakcanary.RefWatcher;
 import java.util.Collections;
 import java.util.List;
 import lombok.Getter;
@@ -70,12 +67,12 @@ import rx.schedulers.Schedulers;
 public abstract class V8Engine extends DataProvider {
 
   private static final String TAG = V8Engine.class.getName();
-  @Getter static DownloadService downloadService;
+
+  //@Getter static DownloadService downloadService;
   @Getter private static FragmentProvider fragmentProvider;
   @Getter private static ActivityProvider activityProvider;
   @Getter private static DisplayableWidgetMapping displayableWidgetMapping;
   @Setter @Getter private static boolean autoUpdateWasCalled = false;
-  private RefWatcher refWatcher;
 
   public static void loadStores() {
 
@@ -135,11 +132,6 @@ public abstract class V8Engine extends DataProvider {
     regenerateUserAgent();
   }
 
-  public static RefWatcher getRefWatcher(Context context) {
-    V8Engine app = (V8Engine) context.getApplicationContext();
-    return app.refWatcher;
-  }
-
   private static void addDefaultStore() {
     StoreUtils.subscribeStore(getConfiguration().getDefaultStore(), getStoreMeta -> checkUpdates(),
         null);
@@ -185,14 +177,6 @@ public abstract class V8Engine extends DataProvider {
     Analytics.Lifecycle.Application.onCreate(this);
     Logger.setDBG(ManagerPreferences.isDebug() || cm.aptoide.pt.utils.BuildConfig.DEBUG);
     new FlurryAgent.Builder().withLogEnabled(false).build(this, BuildConfig.FLURRY_KEY);
-
-    if (BuildConfig.DEBUG) {
-      refWatcher = LeakCanary.install(this);
-      //registerActivityLifecycleCallbacks(new LeakCAnaryActivityWatcher(refWatcher));
-      Logger.w(TAG, "LeakCanary installed");
-    } else {
-      refWatcher = RefWatcher.DISABLED;
-    }
 
     if (SecurePreferences.isFirstRun()) {
       createShortCut();

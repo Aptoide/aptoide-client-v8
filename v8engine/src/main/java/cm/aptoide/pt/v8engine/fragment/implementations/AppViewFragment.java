@@ -523,8 +523,6 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
   @Override public void onDestroyView() {
     super.onDestroyView();
 
-    V8Engine.getRefWatcher(getContext()).watch(this);
-
     if (storeTheme != null) {
       ThemeUtils.setStatusBarThemeColor(getActivity(),
           StoreThemeEnum.get(V8Engine.getConfiguration().getDefaultTheme()));
