@@ -96,6 +96,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
   }
 
   private static StoreTabGridRecyclerFragment createFragment(Event.Name name) {
+    // TODO: 28-12-2016 neuro newInstance needed, reflection even more..
     switch (name) {
       case listApps:
         return new ListAppsFragment();
