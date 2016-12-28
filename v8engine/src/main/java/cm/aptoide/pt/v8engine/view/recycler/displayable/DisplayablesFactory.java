@@ -7,6 +7,12 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
 import android.text.TextUtils;
 import android.util.Pair;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
 import cm.aptoide.pt.database.realm.MinimalAd;
@@ -47,10 +53,6 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Row
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreAddCommentDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreLatestCommentsDisplayable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -92,15 +94,6 @@ public class DisplayablesFactory {
           case ADS:
             Displayable ads = getAds(wsWidget);
             if (ads != null) {
-              // Header hammered
-              LinkedList<GetStoreWidgets.WSWidget.Action> actions = new LinkedList<>();
-              actions.add(new GetStoreWidgets.WSWidget.Action().setEvent(
-                  new Event().setName(Event.Name.getAds)));
-              wsWidget.setActions(actions);
-              StoreGridHeaderDisplayable storeGridHeaderDisplayable =
-                  new StoreGridHeaderDisplayable(wsWidget, null, wsWidget.getTag());
-              displayables.add(storeGridHeaderDisplayable);
-
               displayables.add(ads);
             }
             break;
@@ -225,6 +218,14 @@ public class DisplayablesFactory {
     if (wsWidget.getViewObject() != null) {
       List<GetAdsResponse.Ad> ads = getAdsResponse.getAds();
       List<Displayable> tmp = new ArrayList<>(ads.size());
+
+      // Header hammered
+      LinkedList<GetStoreWidgets.WSWidget.Action> actions = new LinkedList<>();
+      actions.add(new GetStoreWidgets.WSWidget.Action().setEvent(new Event().setName(Event.Name.getAds)));
+      wsWidget.setActions(actions);
+      StoreGridHeaderDisplayable storeGridHeaderDisplayable = new StoreGridHeaderDisplayable(wsWidget, null, wsWidget.getTag());
+      tmp.add(storeGridHeaderDisplayable);
+
       for (GetAdsResponse.Ad ad : ads) {
 
         GridAdDisplayable diplayable = new GridAdDisplayable(MinimalAd.from(ad), wsWidget.getTag());

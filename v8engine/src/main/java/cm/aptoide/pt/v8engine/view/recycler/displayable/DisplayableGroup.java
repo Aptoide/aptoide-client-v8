@@ -1,10 +1,12 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
+import java.util.List;
+
 import cm.aptoide.pt.annotation.Ignore;
+import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.WidgetFactory;
-import java.util.List;
 import lombok.Getter;
 
 /**
@@ -12,7 +14,10 @@ import lombok.Getter;
  */
 @Ignore public class DisplayableGroup extends Displayable {
 
-  @Getter private final List<Displayable> children;
+  @Getter private List<Displayable> children;
+
+  public DisplayableGroup() {
+  }
 
   DisplayableGroup(List<Displayable> children, boolean computeLeftSpaces) {
     this.children = children;
@@ -40,19 +45,12 @@ import lombok.Getter;
     }
   }
 
-  @Override public int getViewLayout() {
-    throw new IllegalStateException(
-        "getViewLayout() on DisplayableGroup should not be " + "called!");
-  }
-
-  @Override public int getDefaultPerLineCount() {
-    throw new IllegalStateException(
-        "getDefaultPerLineCount() on DisplayableGroup should not " + "be called!");
+  @Override
+  public int getViewLayout() {
+    return R.layout.recycler_view;
   }
 
   @Override protected Configs getConfig() {
-    // Stub
-    // Should not be used
     return new Configs(1, true);
   }
 }
