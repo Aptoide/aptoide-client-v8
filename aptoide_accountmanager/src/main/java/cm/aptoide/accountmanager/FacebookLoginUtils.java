@@ -187,7 +187,7 @@ class FacebookLoginUtils {
 
         final AndroidBasicDialog dialog = AndroidBasicDialog.build(activity);
         dialog.setMessage(R.string.facebook_email_permission_regected_message)
-            .setPositiveButton(R.string.facebook_garant_permission_button, v -> {
+            .setPositiveButton(R.string.facebook_grant_permission_button, v -> {
               LoginManager.getInstance()
                   .logInWithReadPermissions(activity, Collections.singletonList(EMAIL));
               dialog.dismiss();
@@ -201,7 +201,7 @@ class FacebookLoginUtils {
 				/*
         AlertDialog dialog = new AlertDialog.Builder(activity).setMessage(R.string
 						.facebook_email_permission_regected_message)
-						.setPositiveButton(R.string.facebook_garant_permission_button, new
+						.setPositiveButton(R.string.facebook_grant_permission_button, new
 								DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
