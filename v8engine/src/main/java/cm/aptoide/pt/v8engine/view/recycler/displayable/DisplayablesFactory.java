@@ -7,12 +7,6 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
 import android.text.TextUtils;
 import android.util.Pair;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
 import cm.aptoide.pt.database.realm.MinimalAd;
@@ -53,6 +47,10 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Row
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreAddCommentDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreLatestCommentsDisplayable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -110,7 +108,7 @@ public class DisplayablesFactory {
             }
             break;
           case MY_STORE_META:
-            displayables.addAll(createMyStoreDisplayables(wsWidget.getViewObject()));
+            displayables.add(createMyStoreDisplayables(wsWidget.getViewObject()));
             break;
           case STORES_RECOMMENDED:
             displayables.add(createRecommendedStores(wsWidget, storeTheme, storeRepository));
@@ -147,7 +145,7 @@ public class DisplayablesFactory {
     return displayables;
   }
 
-  private static List<Displayable> createMyStoreDisplayables(Object viewObject) {
+  private static Displayable createMyStoreDisplayables(Object viewObject) {
     LinkedList<Displayable> displayables = new LinkedList<>();
     if (viewObject instanceof GetStoreMeta && ((GetStoreMeta) viewObject).getData() != null) {
       displayables.add(new MyStoreDisplayable(((GetStoreMeta) viewObject)));
@@ -164,7 +162,7 @@ public class DisplayablesFactory {
         displayables.add(new MyStoreDisplayable(meta));
       }
     }
-    return displayables;
+    return new DisplayableGroup(displayables);
   }
 
   private static GetStoreMeta convertUserInfoStore(CheckUserCredentialsJson userInfo) {
