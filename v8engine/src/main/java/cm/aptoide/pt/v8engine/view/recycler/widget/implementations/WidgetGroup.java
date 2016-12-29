@@ -35,6 +35,7 @@ public class WidgetGroup extends Widget<DisplayableGroup> {
 	@Override
 	public void bindView(DisplayableGroup displayable) {
 		BaseAdapter adapter = new BaseAdapter(displayable.getChildren());
+		recyclerView.setNestedScrollingEnabled(false);
 		recyclerView.setAdapter(adapter);
 		recyclerView.setLayoutManager(new BaseGridLayoutManager(getContext(), adapter));
 	}
