@@ -99,18 +99,7 @@ public class GenericDialogs {
    */
   public static Observable<EResponse> createGenericOkMessage(Context context, String title,
       String message) {
-    return Observable.create((Subscriber<? super EResponse> subscriber) -> {
-
-      final AndroidBasicDialog dialog = AndroidBasicDialog.build(context);
-      dialog.setTitle(title).setMessage(message).setPositiveButton(android.R.string.ok, v -> {
-        subscriber.onNext(EResponse.YES);
-        subscriber.onCompleted();
-        dialog.dismiss();
-      });
-      // cleaning up
-      subscriber.add(Subscriptions.create(() -> dialog.dismiss()));
-      dialog.show();
-    });
+    return createGenericContinueMessage(context, null, title, message, android.R.string.ok);
   }
 
   public static Observable<EResponse> createGenericContinueCancelMessage(Context context,
