@@ -39,6 +39,7 @@ public class SocialVideoWidget extends SocialCardWidget<SocialVideoDisplayable> 
   private TextView relatedTo;
   private String appName;
   private String packageName;
+  //private TextView sharedBy;
 
   public SocialVideoWidget(View itemView) {
     super(itemView);
@@ -60,6 +61,7 @@ public class SocialVideoWidget extends SocialCardWidget<SocialVideoDisplayable> 
     cardView = (CardView) itemView.findViewById(R.id.card);
     videoHeader = itemView.findViewById(R.id.displayable_social_timeline_video_header);
     relatedTo = (TextView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_related_to);
+    //sharedBy = (TextView) itemView.findViewById(R.id.social_shared_by);
   }
 
   @Override public void bindView(SocialVideoDisplayable displayable) {

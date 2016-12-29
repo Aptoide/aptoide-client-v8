@@ -16,6 +16,7 @@ import lombok.Getter;
 
   @Getter private final Publisher publisher;
   @Getter private final Comment.User user;
+  @Getter private final Comment.User userSharer;
   @Getter private final long likes;
   @Getter private final long comments;
   @Getter private final Store store;
@@ -27,9 +28,11 @@ import lombok.Getter;
   @Getter private final List<App> apps;
   @Getter private final Ab ab;
 
-  @JsonCreator public SocialArticle(@JsonProperty("uid") String cardId,
-      @JsonProperty("title") String title, @JsonProperty("thumbnail") String thumbnailUrl,
-      @JsonProperty("publisher") Publisher publisher, @JsonProperty("user") Comment.User user,
+  @JsonCreator
+  public SocialArticle(@JsonProperty("uid") String cardId, @JsonProperty("title") String title,
+      @JsonProperty("thumbnail") String thumbnailUrl,
+      @JsonProperty("publisher") Publisher publisher,
+      @JsonProperty("user_sharer") Comment.User userSharer, @JsonProperty("user") Comment.User user,
       @JsonProperty("stats") Review.Stats stats, @JsonProperty("store") Store store,
       @JsonProperty("url") String url,
       @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC") @JsonProperty("date") Date date,
@@ -45,6 +48,7 @@ import lombok.Getter;
     this.apps = apps;
     this.ab = ab;
     this.user = user;
+    this.userSharer = userSharer;
     this.store = store;
   }
 }

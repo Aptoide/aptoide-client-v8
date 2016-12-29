@@ -25,18 +25,20 @@ public class SocialStoreLatestApps implements TimelineCard {
   @Getter private final long likes;
   @Getter private final long comments;
   @Getter private final Comment.User user;
+  @Getter private final Comment.User userSharer;
 
   //private Date latestUpdate;
 
   @JsonCreator public SocialStoreLatestApps(@JsonProperty("uid") String cardId,
       @JsonProperty("stores") Stores stores, @JsonProperty("user") Comment.User user,
-      @JsonProperty("stats") Review.Stats stats, @JsonProperty("apps") List<App> apps,
+      @JsonProperty("stats") Review.Stats stats,
+      @JsonProperty("user_sharer") Comment.User userSharer, @JsonProperty("apps") List<App> apps,
       @JsonProperty("ab") Ab ab) {
     this.user = user;
     this.ownerStore = stores.getUser();
     this.sharedStore = stores.getCard();
     this.cardId = cardId;
-    //this.latestUpdate = latestUpdate;
+    this.userSharer = userSharer;
     this.apps = apps;
     this.ab = ab;
     this.likes = stats.getLikes();

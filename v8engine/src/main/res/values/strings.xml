@@ -335,6 +335,7 @@
   <string name="social_timeline_share_soon">The share will be published soon</string>
   <string name="social_timeline_recommends">Recommends</string>
   <string name="private_profile_create_store">To have a private profile, you need to create a store</string>
+  <string name="social_timeline_shared_by">shared by %1$s</string>
 
 
   <!-- Comments on store -->

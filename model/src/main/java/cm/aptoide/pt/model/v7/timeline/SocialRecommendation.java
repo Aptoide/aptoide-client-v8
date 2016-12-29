@@ -22,15 +22,17 @@ import lombok.Getter;
   @Getter private final long comments;
   @Getter private final Review.Stats stats;
   @Getter private final Store store;
+  @Getter private final Comment.User userSharer;
   @Getter private Comment.User user;
 
   @JsonCreator public SocialRecommendation(@JsonProperty("uid") String cardId,
       @JsonProperty("apps") List<App> apps, @JsonProperty("ab") Ab ab,
-      @JsonProperty("user") Comment.User user, @JsonProperty("stats") Review.Stats stats,
-      @JsonProperty("store") Store store) {
+      @JsonProperty("user_sharer") Comment.User userSharer, @JsonProperty("user") Comment.User user,
+      @JsonProperty("stats") Review.Stats stats, @JsonProperty("store") Store store) {
     this.ab = ab;
     this.cardId = cardId;
     this.user = user;
+    this.userSharer = userSharer;
     this.stats = stats;
     this.store = store;
     this.likes = stats.getLikes();

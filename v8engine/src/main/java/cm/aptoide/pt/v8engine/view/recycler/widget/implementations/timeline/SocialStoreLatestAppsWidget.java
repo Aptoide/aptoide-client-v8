@@ -49,6 +49,7 @@ public class SocialStoreLatestAppsWidget
   private CardView cardView;
   private Button followStore;
   private StoreRepository storeRepository;
+  //private TextView sharedBy;
 
   public SocialStoreLatestAppsWidget(View itemView) {
     super(itemView);
@@ -76,6 +77,7 @@ public class SocialStoreLatestAppsWidget
     followStore = (Button) itemView.findViewById(R.id.follow_btn);
     sharedStoreSubscribersNumber = (TextView) itemView.findViewById(R.id.number_of_followers);
     sharedStoreAppsNumber = (TextView) itemView.findViewById(R.id.number_of_apps);
+    //sharedBy = (TextView) itemView.findViewById(R.id.social_shared_by);
   }
 
   @Override public void bindView(SocialStoreLatestAppsDisplayable displayable) {
@@ -107,6 +109,13 @@ public class SocialStoreLatestAppsWidget
         ImageLoader.loadWithShadowCircleTransform(displayable.getUser().getAvatar(), storeAvatar);
       }
     }
+
+    //if ((displayable.getUserSharer() != null || displayable.getUserSharer().getName() != null)) {
+    //  if (!displayable.getUser().getName().equals(displayable.getUserSharer().getName())) {
+    //    sharedBy.setVisibility(View.VISIBLE);
+    //    sharedBy.setText(displayable.getSharedBy(getContext()));
+    //  }
+    //}
 
     ImageLoader.loadWithShadowCircleTransform(displayable.getSharedStore().getAvatar(),
         sharedStoreAvatar);

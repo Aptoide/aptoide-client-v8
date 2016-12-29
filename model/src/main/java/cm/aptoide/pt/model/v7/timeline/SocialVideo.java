@@ -23,6 +23,7 @@ import lombok.Getter;
   @Getter private final String thumbnailUrl;
   @Getter private final String url;
   @Getter private final Comment.User user;
+  @Getter private final Comment.User userSharer;
   @Getter private final Store store;
   @Getter private final long likes;
   @Getter private final long comments;
@@ -34,6 +35,7 @@ import lombok.Getter;
   public SocialVideo(@JsonProperty("uid") String cardId, @JsonProperty("title") String title,
       @JsonProperty("thumbnail") String thumbnailUrl,
       @JsonProperty("publisher") Publisher publisher, @JsonProperty("user") Comment.User user,
+      @JsonProperty("user_sharer") Comment.User userSharer,
       @JsonProperty("stats") Review.Stats stats, @JsonProperty("url") String url,
       @JsonProperty("store") Store store,
       @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC") @JsonProperty("date") Date date,
@@ -43,6 +45,7 @@ import lombok.Getter;
     this.comments = stats.getComments();
     this.store = store;
     this.user = user;
+    this.userSharer = userSharer;
     this.cardId = cardId;
     this.title = title;
     this.thumbnailUrl = thumbnailUrl;

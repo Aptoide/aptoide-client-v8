@@ -43,7 +43,8 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
       String appIcon, String abTestingURL, long likes, long comments,
       TimelineMetricsManager timelineMetricsManager, SpannableFactory spannableFactory,
       SocialRepository socialRepository) {
-    super(socialInstall, likes, comments);
+    super(socialInstall, likes, comments, socialInstall.getUser(), socialInstall.getUserSharer(),
+        spannableFactory);
     this.avatarResource = icon;
     this.store = store;
     this.titleResource = titleResource;

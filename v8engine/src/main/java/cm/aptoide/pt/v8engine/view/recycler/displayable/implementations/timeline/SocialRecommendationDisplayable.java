@@ -38,12 +38,13 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
   public SocialRecommendationDisplayable() {
   }
 
-  public SocialRecommendationDisplayable(SocialRecommendation socialRecommendation, int avatarResource,
-      Store store, int titleResource, Comment.User user, long appId, String packageName,
-      String appName, String appIcon, String abUrl, long numberOfLikes, long numberOfComments,
-      TimelineMetricsManager timelineMetricsManager, SpannableFactory spannableFactory,
-      SocialRepository socialRepository) {
-    super(socialRecommendation, numberOfLikes, numberOfComments);
+  public SocialRecommendationDisplayable(SocialRecommendation socialRecommendation,
+      int avatarResource, Store store, int titleResource, Comment.User user, long appId,
+      String packageName, String appName, String appIcon, String abUrl, long numberOfLikes,
+      long numberOfComments, TimelineMetricsManager timelineMetricsManager,
+      SpannableFactory spannableFactory, SocialRepository socialRepository) {
+    super(socialRecommendation, numberOfLikes, numberOfComments, socialRecommendation.getUser(),
+        socialRecommendation.getUserSharer(), spannableFactory);
     this.avatarResource = avatarResource;
     this.store = store;
     this.titleResource = titleResource;

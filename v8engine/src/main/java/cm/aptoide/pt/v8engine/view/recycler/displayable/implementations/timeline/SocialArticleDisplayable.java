@@ -55,13 +55,13 @@ public class SocialArticleDisplayable extends SocialCardDisplayable {
   public SocialArticleDisplayable() {
   }
 
-  public SocialArticleDisplayable(TimelineCard timelineCard, String articleTitle, Link link,
+  public SocialArticleDisplayable(SocialArticle socialArticle, String articleTitle, Link link,
       Link developerLink, String title, String thumbnailUrl, String avatarUrl, long appId,
       String abUrl, Store store, Comment.User user, long numberOfLikes, long numberOfComments,
       List<App> relatedToAppsList, Date date, DateCalculator dateCalculator,
       SpannableFactory spannableFactory, TimelineMetricsManager timelineMetricsManager,
       SocialRepository socialRepository) {
-    super(timelineCard, numberOfLikes, numberOfComments);
+    super(socialArticle, numberOfLikes, numberOfComments, socialArticle.getUser(), socialArticle.getUserSharer(), spannableFactory);
     this.articleTitle = articleTitle;
     this.link = link;
     this.developerLink = developerLink;

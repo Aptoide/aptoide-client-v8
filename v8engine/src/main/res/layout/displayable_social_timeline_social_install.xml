@@ -88,6 +88,20 @@
         android:background="@color/timeline_separator" />
     </RelativeLayout>
 
+    <TextView
+      android:id="@+id/social_shared_by"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_marginLeft="72dp"
+      android:layout_marginStart="72dp"
+      android:layout_marginTop="7dp"
+      android:text="@string/social_timeline_shared_by"
+      android:textStyle="italic"
+      android:visibility="gone"
+      tools:text="shared by Jonenz"
+      tools:visibility="visible" />
+
+
     <RelativeLayout
       android:id="@+id/displayable_social_timeline_recommendation_card_content"
       android:layout_width="match_parent"
