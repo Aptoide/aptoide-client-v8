@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.fragment;
 
 import android.support.annotation.NonNull;
+
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.interfaces.ReloadInterface;
 import cm.aptoide.pt.v8engine.layouthandler.LoaderLayoutHandler;
@@ -29,7 +30,7 @@ public abstract class GridRecyclerSwipeFragment<T extends BaseAdapter>
   }
 
   @Override public void reload() {
-    load(true, true, null);
+    load(false, true, null);
   }
 
   @Override public int getContentViewId() {
