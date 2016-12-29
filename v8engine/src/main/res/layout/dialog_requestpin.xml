@@ -29,13 +29,10 @@
       android:id="@+id/pininput"
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
+      android:gravity="center"
       android:inputType="number"
       android:maxLength="8"
       android:textSize="@dimen/text_size_medium"
-      android:gravity="center"
       tools:text="1234"
       />
-
-  <include layout="@layout/basic_dialog_buttons" />
-
 </LinearLayout>
