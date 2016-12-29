@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import android.support.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
@@ -76,30 +77,18 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
   private final String INVALID_ACCESS_TOKEN_CODE = "AUTH-2";
   private boolean accessTokenRetry = false;
 
-  protected V7(B body, String baseHost) {
-    super(Interfaces.class, new UserAgentGenerator() {
-      @Override public String generateUserAgent() {
-        return SecurePreferences.getUserAgent();
-      }
-    }, WebService.getDefaultConverter(), baseHost);
-    this.body = body;
+  @NonNull private static UserAgentGenerator getDefaultUserAgentGenerator() {
+    return () -> SecurePreferences.getUserAgent();
   }
 
-  protected V7(B body, String baseHost, MultipartBody.Part file) {
-    super(Interfaces.class, new UserAgentGenerator() {
-      @Override public String generateUserAgent() {
-        return SecurePreferences.getUserAgent();
-      }
-    }, WebService.getDefaultConverter(), baseHost, file);
+  protected V7(B body, String baseHost) {
+    super(Interfaces.class, getDefaultUserAgentGenerator(), WebService.getDefaultConverter(),
+        baseHost);
     this.body = body;
   }
 
   protected V7(B body, Converter.Factory converterFactory, String baseHost) {
-    super(Interfaces.class, new UserAgentGenerator() {
-      @Override public String generateUserAgent() {
-        return SecurePreferences.getUserAgent();
-      }
-    }, converterFactory, baseHost);
+    super(Interfaces.class, getDefaultUserAgentGenerator(), converterFactory, baseHost);
     this.body = body;
   }
 

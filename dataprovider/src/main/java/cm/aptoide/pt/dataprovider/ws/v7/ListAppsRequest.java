@@ -12,8 +12,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import okhttp3.OkHttpClient;
-import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -27,12 +25,6 @@ import rx.Observable;
 
   private ListAppsRequest(String url, Body body, String baseHost) {
     super(body, baseHost);
-    this.url = url;
-  }
-
-  private ListAppsRequest(String url, Body body, Converter.Factory converterFactory,
-      OkHttpClient httpClient, String baseHost) {
-    super(body, httpClient, converterFactory, baseHost);
     this.url = url;
   }
 

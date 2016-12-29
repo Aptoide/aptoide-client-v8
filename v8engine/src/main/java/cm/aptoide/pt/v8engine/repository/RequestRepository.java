@@ -17,7 +17,7 @@ import cm.aptoide.pt.v8engine.util.StoreUtils;
  * Created by neuro on 26-12-2016.
  */
 
-public class RequestRepositoty {
+public class RequestRepository {
 
   public ListAppsRequest getListApps(String url) {
     return ListAppsRequest.ofAction(url, StoreUtils.getStoreCredentialsFromUrl(url),

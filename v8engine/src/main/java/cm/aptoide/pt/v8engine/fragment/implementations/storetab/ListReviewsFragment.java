@@ -21,7 +21,7 @@ public class ListReviewsFragment extends GetStoreEndlessFragment<ListFullReviews
 
   @Override
   protected V7<ListFullReviews, ? extends Endless> buildRequest(boolean refresh, String url) {
-    return RepositoryFactory.getRequestRepositoty().getListFullReviews(url, refresh);
+    return RepositoryFactory.getRequestRepository().getListFullReviews(url, refresh);
   }
 
   @Override protected Action1<ListFullReviews> buildAction() {

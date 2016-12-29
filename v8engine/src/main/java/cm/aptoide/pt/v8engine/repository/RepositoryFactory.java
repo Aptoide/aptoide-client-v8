@@ -38,7 +38,7 @@ public final class RepositoryFactory {
     return new StoreRepository(AccessorFactory.getAccessorFor(Store.class));
   }
 
-  public static RequestRepositoty getRequestRepositoty() {
-    return new RequestRepositoty();
+  public static RequestRepository getRequestRepository() {
+    return new RequestRepository();
   }
 }
