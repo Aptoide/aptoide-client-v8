@@ -80,9 +80,7 @@ public class DisplayablesFactory {
             displayables.add(getMyStores(wsWidget, storeRepository, storeTheme));
             break;
           case STORES_GROUP:
-            displayables.add(
-                new StoreGridHeaderDisplayable(wsWidget, storeTheme, wsWidget.getTag()));
-            displayables.add(getStores(wsWidget.getViewObject()));
+            displayables.add(getStores(wsWidget, storeTheme));
             break;
 
           case DISPLAYS:
@@ -99,13 +97,7 @@ public class DisplayablesFactory {
             displayables.add(new GridStoreMetaDisplayable((GetStoreMeta) wsWidget.getViewObject()));
             break;
           case REVIEWS_GROUP:
-            ListFullReviews reviewsList = (ListFullReviews) wsWidget.getViewObject();
-            if (reviewsList != null
-                && reviewsList.getDatalist() != null
-                && reviewsList.getDatalist().getList().size() > 0) {
-              displayables.add(new StoreGridHeaderDisplayable(wsWidget));
-              displayables.add(createReviewsDisplayables(reviewsList));
-            }
+            displayables.add(createReviewsGroupDisplayables(wsWidget));
             break;
           case MY_STORE_META:
             displayables.add(createMyStoreDisplayables(wsWidget.getViewObject()));
@@ -143,6 +135,21 @@ public class DisplayablesFactory {
     }
 
     return displayables;
+  }
+
+  private static DisplayableGroup createReviewsGroupDisplayables(
+      GetStoreWidgets.WSWidget wsWidget) {
+    List<Displayable> displayables = new LinkedList<>();
+
+    ListFullReviews reviewsList = (ListFullReviews) wsWidget.getViewObject();
+    if (reviewsList != null
+        && reviewsList.getDatalist() != null
+        && reviewsList.getDatalist().getList().size() > 0) {
+      displayables.add(new StoreGridHeaderDisplayable(wsWidget));
+      displayables.add(createReviewsDisplayables(reviewsList));
+    }
+
+    return new DisplayableGroup(displayables);
   }
 
   private static Displayable createMyStoreDisplayables(Object viewObject) {
@@ -299,13 +306,15 @@ public class DisplayablesFactory {
     return new DisplayableGroup(displayables);
   }
 
-  private static Displayable getStores(Object viewObject) {
+  private static Displayable getStores(GetStoreWidgets.WSWidget wsWidget, String storeTheme) {
+    Object viewObject = wsWidget.getViewObject();
     ListStores listStores = (ListStores) viewObject;
     if (listStores == null) {
       return new EmptyDisplayable();
     }
     List<Store> stores = listStores.getDatalist().getList();
     List<Displayable> tmp = new ArrayList<>(stores.size());
+    tmp.add(new StoreGridHeaderDisplayable(wsWidget, storeTheme, wsWidget.getTag()));
     for (Store store : stores) {
 
       GridStoreDisplayable diplayable = new GridStoreDisplayable(store);
