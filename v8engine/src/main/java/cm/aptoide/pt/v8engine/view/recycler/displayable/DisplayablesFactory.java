@@ -94,7 +94,8 @@ public class DisplayablesFactory {
             }
             break;
           case STORE_META:
-            displayables.add(new GridStoreMetaDisplayable((GetStoreMeta) wsWidget.getViewObject()));
+            displayables.add(new DisplayableGroup(
+                new GridStoreMetaDisplayable((GetStoreMeta) wsWidget.getViewObject())));
             break;
           case REVIEWS_GROUP:
             displayables.add(createReviewsGroupDisplayables(wsWidget));

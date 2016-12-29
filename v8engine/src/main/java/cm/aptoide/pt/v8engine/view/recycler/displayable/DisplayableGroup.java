@@ -1,12 +1,13 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
-import java.util.List;
-
 import cm.aptoide.pt.annotation.Ignore;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.WidgetFactory;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 import lombok.Getter;
 
 /**
@@ -26,6 +27,10 @@ import lombok.Getter;
 
   public DisplayableGroup(List<Displayable> children) {
     this(children, true);
+  }
+
+  public DisplayableGroup(Displayable child) {
+    this(new LinkedList<>(Collections.singletonList(child)), true);
   }
 
   private void computeLeftSpaces() {
