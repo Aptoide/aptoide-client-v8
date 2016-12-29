@@ -37,7 +37,7 @@ public class ListReviewsFragment extends GetStoreEndlessFragment<ListFullReviews
         }
         displayables = new ArrayList<>(reviews.size());
         displayables.add(new DisplayableGroup(displayables));
-        addDisplayables(displayables);
+        addDisplayable(new DisplayableGroup(displayables));
       }
     };
   }
