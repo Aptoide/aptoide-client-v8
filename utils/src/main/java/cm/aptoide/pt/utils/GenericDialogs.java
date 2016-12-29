@@ -9,7 +9,9 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
+import android.view.View;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -106,19 +108,51 @@ public class GenericDialogs {
     });
   }
 
-  public static Observable<EResponse> createGenericContinueMessage(Context context, String title,
-      String message) {
+  public static Observable<EResponse> createGenericOkCancelMessage(Context context, String title,
+      @StringRes int message, @StringRes int okMessage, @StringRes int cancelMessage) {
     return Observable.create((Subscriber<? super EResponse> subscriber) -> {
-      AlertDialog alertDialog = new AlertDialog.Builder(context).setTitle(title)
+      final AlertDialog ad = new AlertDialog.Builder(context).setTitle(title)
           .setMessage(message)
-          .setPositiveButton(R.string.continue_option, (dialogInterface, i) -> {
+          .setPositiveButton(okMessage, (dialog, which) -> {
             subscriber.onNext(EResponse.YES);
             subscriber.onCompleted();
           })
+          .setNegativeButton(cancelMessage, (dialogInterface, i) -> {
+            subscriber.onNext(EResponse.NO);
+            subscriber.onCompleted();
+          })
+          .setOnCancelListener(dialog -> {
+            subscriber.onNext(EResponse.CANCEL);
+            subscriber.onCompleted();
+          })
           .create();
+      // cleaning up
+      subscriber.add(Subscriptions.create(ad::dismiss));
+      ad.show();
+    });
+  }
+
+  public static Observable<EResponse> createGenericContinueMessage(Context context,
+      @Nullable View view, String title, String message, @StringRes int buttonText) {
+    return Observable.create((Subscriber<? super EResponse> subscriber) -> {
+      AlertDialog.Builder builder = new AlertDialog.Builder(context).setTitle(title)
+          .setMessage(message)
+          .setPositiveButton(buttonText, (dialogInterface, i) -> {
+            subscriber.onNext(EResponse.YES);
+            subscriber.onCompleted();
+          });
+      if (view != null) {
+        builder.setView(view);
+      }
+      AlertDialog alertDialog = builder.create();
       subscriber.add(Subscriptions.create(() -> alertDialog.dismiss()));
       alertDialog.show();
     });
+  }
+
+  public static Observable<EResponse> createGenericContinueMessage(Context context, String title,
+      String message) {
+    return createGenericContinueMessage(context, null, title, message, R.string.continue_option);
   }
 
   /**

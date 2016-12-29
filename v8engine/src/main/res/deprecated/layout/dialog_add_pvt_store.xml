@@ -27,8 +27,8 @@
         android:layout_marginBottom="20dp"
         android:drawablePadding="4dp"
         android:gravity="center_vertical"
-        android:visibility="gone"
         android:textAppearance="?android:attr/textAppearanceMedium"
+        android:visibility="gone"
         tools:text="this is a sample title"
         tools:visibility="visible"
         />
@@ -70,8 +70,6 @@
         android:inputType="textPassword"
         android:singleLine="true"
         />
-
-    <include layout="@layout/basic_dialog_buttons" />
 
   </LinearLayout>
 
