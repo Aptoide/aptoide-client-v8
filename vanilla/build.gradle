@@ -62,7 +62,7 @@ android {
     internal {
       // applicationIdSuffix does not work properly, as the application ID gets changed after the buildFlavor
       applicationIdSuffix ".internal"
-
+      minSdkVersion 21
       versionName "8.1.0." + getDate()
       versionCode project.INTERNAL_VERSION_CODE.toInteger()
 
