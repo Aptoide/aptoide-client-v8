@@ -128,8 +128,8 @@ public class DisplayablesFactory {
           case APP_META:
             GetStoreWidgets.WSWidget.Data dataObj = wsWidget.getData();
             String message = dataObj.getMessage();
-            displayables.add(
-                new OfficialAppDisplayable(new Pair<>(message, (GetApp) wsWidget.getViewObject())));
+            displayables.add(new DisplayableGroup(new OfficialAppDisplayable(
+                new Pair<>(message, (GetApp) wsWidget.getViewObject()))));
             break;
         }
       }
