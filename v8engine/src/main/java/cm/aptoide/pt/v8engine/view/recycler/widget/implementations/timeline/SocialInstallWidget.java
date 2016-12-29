@@ -3,7 +3,6 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.timeline;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.imageloader.ImageLoader;
@@ -12,9 +11,7 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.SocialInstallDisplayable;
-import com.jakewharton.rxbinding.view.RxView;
 import com.like.LikeButton;
-import com.like.OnLikeListener;
 
 /**
  * Created by jdandrade on 15/12/2016.
@@ -115,8 +112,8 @@ public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayab
       //        .based_on(displayable.getSimilarAppPackageName())
       //        .build())
       //    .build(), AptoideAnalytics.OPEN_APP);
-      ((FragmentShower) getContext()).pushFragmentV4(
-          V8Engine.getFragmentProvider().newAppViewFragment(displayable.getAppId()));
+      ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
+          .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
     });
   }
 

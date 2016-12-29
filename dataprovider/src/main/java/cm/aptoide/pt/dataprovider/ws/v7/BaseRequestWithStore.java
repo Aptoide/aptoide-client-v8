@@ -14,8 +14,6 @@ import retrofit2.Converter;
  */
 public abstract class BaseRequestWithStore<U, B extends BaseBodyWithStore> extends V7<U, B> {
 
-  private static final String TAG = BaseRequestWithStore.class.getName();
-
   public BaseRequestWithStore(B body, String baseHost) {
     super(body, baseHost);
   }

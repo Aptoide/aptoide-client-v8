@@ -18,7 +18,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreMinimalAdAccessor;
@@ -28,13 +27,11 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.util.referrer.SimpleTimedFuture;
-import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.RegisterAdRefererRequest;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.repository.AdsRepository;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -48,6 +45,8 @@ import rx.android.schedulers.AndroidSchedulers;
 public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.ReferrerUtils {
 
   private static final String TAG = ReferrerUtils.class.getSimpleName();
+
+  private static final AdsRepository adsRepository = new AdsRepository();
 
   public static void extractReferrer(MinimalAd minimalAd, final int retries,
       boolean broadcastReferrer) {
@@ -169,7 +168,7 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
             Logger.d("ExtractReferrer", "Sending RegisterAdRefererRequest with value " + success);
 
             RegisterAdRefererRequest.of(minimalAd.getAdId(), minimalAd.getAppId(),
-                minimalAd.getClickUrl(), success, AptoideAccountManager.getUserEmail()).execute();
+                minimalAd.getClickUrl(), success).execute();
 
             Logger.d("ExtractReferrer", "Retries left: " + retries);
 
@@ -179,23 +178,11 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
               try {
 
                 if (retries > 0) {
-                  GetAdsRequest.ofSecondTry(packageName,
-                      new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                          DataProvider.getContext()).getAptoideClientUUID(),
-                      DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(
-                          V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId())
-                      .observe()
-                      .filter((getAdsResponse1) -> {
-                        Boolean hasAds = hasAds(getAdsResponse1);
-                        if (!hasAds) {
-                          clearExcludedNetworks(packageName);
-                        }
-                        return hasAds;
-                      })
+                  adsRepository.getAdsFromSecondTry(packageName)
                       .observeOn(AndroidSchedulers.mainThread())
-                      .subscribe(getAdsResponse -> extractReferrer(
-                          MinimalAd.from(getAdsResponse.getAds().get(0)), retries - 1,
-                          broadcastReferrer), CrashReports::logException);
+                      .subscribe(
+                          minimalAd1 -> extractReferrer(minimalAd1, retries - 1, broadcastReferrer),
+                          throwable -> clearExcludedNetworks(packageName));
                 } else {
                   // A lista de excluded networks deve ser limpa a cada "ronda"
                   clearExcludedNetworks(packageName);
@@ -230,13 +217,6 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
 
   private static List<Long> clearExcludedNetworks(String packageName) {
     return excludedNetworks.remove(packageName);
-  }
-
-  private static Boolean hasAds(GetAdsResponse getAdsResponse) {
-    return getAdsResponse != null
-        && getAdsResponse.getAds() != null
-        && getAdsResponse.getAds().size() > 0
-        && getAdsResponse.getAds().get(0) != null;
   }
 
   private static String getReferrer(String uriAsString) {

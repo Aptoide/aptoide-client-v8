@@ -28,8 +28,6 @@ import rx.Observable;
  */
 public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsRequest.Body> {
 
-  private static final String BASE_HOST = "http://ws2.aptoide.com/api/7/";
-
   private static final int MAX_REVIEWS = 10;
   private static final int MAX_COMMENTS = 10;
   private String url;
@@ -64,7 +62,7 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
   }
 
   public static ListFullReviewsRequest of(String storeName, String packageName, String accessToken,
-      String email, String aptoideClientUUID) {
+      String aptoideClientUUID) {
     return of(storeName, packageName, MAX_REVIEWS, MAX_COMMENTS, accessToken,
         aptoideClientUUID);
   }

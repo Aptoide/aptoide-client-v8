@@ -87,6 +87,32 @@ public class GenericDialogs {
     });
   }
 
+  /**
+   * Show an AlertDialog with the {@code title} and the {@code message}. The Alert dialog has an
+   * "ok" button.
+   *
+   * @param title Title to apply on AlertDialog
+   * @param message Message to asSnack on AlertDialog
+   * @return A Observable that shows the dialog when subscribed and return the action made by
+   * user. This action is represented by EResponse
+   * @see EResponse
+   */
+  public static Observable<EResponse> createGenericOkMessage(Context context, String title,
+      String message) {
+    return Observable.create((Subscriber<? super EResponse> subscriber) -> {
+
+      final AndroidBasicDialog dialog = AndroidBasicDialog.build(context);
+      dialog.setTitle(title).setMessage(message).setPositiveButton(android.R.string.ok, v -> {
+        subscriber.onNext(EResponse.YES);
+        subscriber.onCompleted();
+        dialog.dismiss();
+      });
+      // cleaning up
+      subscriber.add(Subscriptions.create(() -> dialog.dismiss()));
+      dialog.show();
+    });
+  }
+
   public static Observable<EResponse> createGenericContinueCancelMessage(Context context,
       String title, String message) {
     return Observable.create((Subscriber<? super EResponse> subscriber) -> {

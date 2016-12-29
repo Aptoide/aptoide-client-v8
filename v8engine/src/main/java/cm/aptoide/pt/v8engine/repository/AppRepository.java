@@ -19,23 +19,27 @@ import cm.aptoide.pt.v8engine.payment.ProductFactory;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import java.util.List;
-import lombok.AllArgsConstructor;
 import rx.Observable;
 
 /**
  * Created by marcelobenites on 7/27/16.
  */
-@AllArgsConstructor public class AppRepository {
+public class AppRepository {
 
   private final NetworkOperatorManager operatorManager;
   private final ProductFactory productFactory;
 
-  public Observable<GetApp> getApp(long appId, boolean refresh, boolean sponsored,
-      String storeName) {
+  public AppRepository(NetworkOperatorManager operatorManager, ProductFactory productFactory) {
+    this.operatorManager = operatorManager;
+    this.productFactory = productFactory;
+  }
+
+  public Observable<GetApp> getApp(long appId, boolean refresh, boolean sponsored, String storeName,
+      String packageName) {
     return GetAppRequest.of(appId, storeName, StoreUtils.getStoreCredentials(storeName),
         AptoideAccountManager.getAccessToken(),
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID())
+            DataProvider.getContext()).getAptoideClientUUID(), packageName)
         .observe(refresh)
         .flatMap(response -> {
           if (response != null && response.isOk()) {

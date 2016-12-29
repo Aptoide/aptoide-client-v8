@@ -14,7 +14,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.widget.RemoteViews;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.ws.v3.PushNotificationsRequest;
@@ -74,18 +73,13 @@ public class PullingContentService extends Service {
     }
   }
 
-  @Override public void onDestroy() {
-    subscriptions.clear();
-    super.onDestroy();
-  }
-
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
 
     String action = intent == null ? null : intent.getAction();
     if (action != null) {
       switch (action) {
         case UPDATES_ACTION:
-          UpdateRepository repository = RepositoryFactory.getRepositoryFor(Update.class);
+          UpdateRepository repository = RepositoryFactory.getUpdateRepository();
           subscriptions.add(repository.getUpdates(true).first().subscribe(updates -> {
             Logger.d(TAG, "updates refreshed");
             setUpdatesNotification(updates, startId);
@@ -95,12 +89,17 @@ public class PullingContentService extends Service {
           }));
           break;
         case PUSH_NOTIFICATIONS_ACTION:
-          PushNotificationsRequest.of(AptoideAccountManager.getUserEmail())
+          PushNotificationsRequest.of()
               .execute(response -> setPushNotification(response, startId));
           break;
       }
     }
     return START_NOT_STICKY;
+  }
+
+  @Override public void onDestroy() {
+    subscriptions.clear();
+    super.onDestroy();
   }
 
   @Nullable @Override public IBinder onBind(Intent intent) {

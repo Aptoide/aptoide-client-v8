@@ -19,10 +19,9 @@ import cm.aptoide.pt.v8engine.repository.InAppBillingRepository;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.AllArgsConstructor;
 import rx.Observable;
 
-@AllArgsConstructor public class BillingBinder extends AptoideInAppBillingService.Stub {
+public class BillingBinder extends AptoideInAppBillingService.Stub {
 
   // Response result codes
   public static final int RESULT_OK = 0;
@@ -62,6 +61,17 @@ import rx.Observable;
   private final ErrorCodeFactory errorCodeFactory;
   private final PurchaseErrorCodeFactory purchaseErrorCodeFactory;
   private final ProductFactory productFactory;
+
+  public BillingBinder(Context context, InAppBillingRepository repository,
+      InAppBillingSerializer serializer, ErrorCodeFactory errorCodeFactory,
+      PurchaseErrorCodeFactory purchaseErrorCodeFactory, ProductFactory productFactory) {
+    this.context = context;
+    this.repository = repository;
+    this.serializer = serializer;
+    this.errorCodeFactory = errorCodeFactory;
+    this.purchaseErrorCodeFactory = purchaseErrorCodeFactory;
+    this.productFactory = productFactory;
+  }
 
   @Override public int isBillingSupported(int apiVersion, String packageName, String type)
       throws RemoteException {

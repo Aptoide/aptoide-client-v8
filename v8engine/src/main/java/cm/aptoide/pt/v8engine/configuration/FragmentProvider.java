@@ -4,7 +4,6 @@ import android.support.v4.app.Fragment;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.ScheduledDownloadsFragment;
@@ -41,13 +40,13 @@ public interface FragmentProvider {
 
   Fragment newAppViewFragment(String md5);
 
-  Fragment newAppViewFragment(long appId);
+  Fragment newAppViewFragment(long appId, String packageName, AppViewFragment.OpenType openType);
 
-  Fragment newAppViewFragment(long appId, String storeTheme, String storeName);
+  Fragment newAppViewFragment(long appId, String packageName);
+
+  Fragment newAppViewFragment(long appId, String packageName, String storeTheme, String storeName);
 
   Fragment newAppViewFragment(MinimalAd minimalAd);
-
-  Fragment newAppViewFragment(GetAdsResponse.Ad ad);
 
   Fragment newAppViewFragment(String packageName, AppViewFragment.OpenType openType);
 
@@ -57,10 +56,10 @@ public interface FragmentProvider {
 
   Fragment newLatestReviewsFragment(long storeId);
 
+  Fragment newStoreTabGridRecyclerFragment(Event event, String storeTheme, String tag);
+
   Fragment newStoreTabGridRecyclerFragment(Event event, String title, String storeTheme,
       String tag);
-
-  Fragment newStoreGridRecyclerFragment(Event event, String title, String storeTheme, String tag);
 
   Fragment newAppsTimelineFragment(String action);
 
@@ -89,7 +88,8 @@ public interface FragmentProvider {
   Fragment newRateAndReviewsFragment(long appId, String appName, String storeName,
       String packageName, long reviewId);
 
-  Fragment newDescriptionFragment(long appId, String storeName, String storeTheme);
+  Fragment newDescriptionFragment(long appId, String packageName, String storeName,
+      String storeTheme);
 
   Fragment newSocialFragment(String socialUrl, String pageTitle);
 

@@ -43,8 +43,7 @@ import java.util.List;
     button.setOnClickListener((view) -> {
       Event event = displayable.getPojo().getActions().get(0).getEvent();
       FragmentUtils.replaceFragmentV4((FragmentActivity) itemView.getContext(),
-          V8Engine.getFragmentProvider()
-              .newStoreGridRecyclerFragment(event,
+          V8Engine.getFragmentProvider().newStoreTabGridRecyclerFragment(event,
                   Translator.translate(displayable.getPojo().getTitle()), null,
                   displayable.getTag()));
     });

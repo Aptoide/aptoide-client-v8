@@ -8,7 +8,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
@@ -16,6 +15,7 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.SocialStoreLatestAppsDisplayable;
@@ -55,8 +55,7 @@ public class SocialStoreLatestAppsWidget
     inflater = LayoutInflater.from(itemView.getContext());
     apps = new HashMap<>();
     appsPackages = new HashMap<>();
-    storeRepository = new StoreRepository(
-        AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Store.class));
+    storeRepository = RepositoryFactory.getStoreRepository();
   }
 
   @Override protected void assignViews(View itemView) {
@@ -144,7 +143,7 @@ public class SocialStoreLatestAppsWidget
                 .build())
             .build(), AptoideAnalytics.OPEN_APP);
         ((FragmentShower) getContext()).pushFragmentV4(
-            V8Engine.getFragmentProvider().newAppViewFragment(apps.get(app)));
+            V8Engine.getFragmentProvider().newAppViewFragment(apps.get(app), packageName));
       }));
     }
 

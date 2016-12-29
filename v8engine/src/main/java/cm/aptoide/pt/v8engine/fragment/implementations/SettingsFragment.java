@@ -71,30 +71,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
     return new SettingsFragment();
   }
 
-  @Override public void onDestroyView() {
-    subscriptions.clear();
-    super.onDestroyView();
-  }
-
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     fileManager = FileManager.build();
     subscriptions = new CompositeSubscription();
-  }
-
-  @Override public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-    // TODO
-    if (key.equals(ManagedKeys.UPDATES_FILTER_ALPHA_BETA_KEY)) {
-      UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
-      updateAccessor.removeAll();
-      UpdateRepository repository = RepositoryFactory.getRepositoryFor(Update.class);
-      repository.getUpdates(true)
-          .first()
-          .subscribe(updates -> Logger.d(TAG, "updates refreshed"), throwable -> {
-            throwable.printStackTrace();
-            CrashReports.logException(throwable);
-          });
-    }
   }
 
   @Override public void onCreatePreferences(Bundle bundle, String s) {
@@ -102,6 +82,26 @@ public class SettingsFragment extends PreferenceFragmentCompat
     SharedPreferences sharedPreferences =
         PreferenceManager.getDefaultSharedPreferences(getActivity());
     sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+  }
+
+  @Override public void onDestroyView() {
+    subscriptions.clear();
+    super.onDestroyView();
+  }
+
+  @Override public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+    // TODO
+    if (key.equals(ManagedKeys.UPDATES_FILTER_ALPHA_BETA_KEY)) {
+      UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
+      updateAccessor.removeAll();
+      UpdateRepository repository = RepositoryFactory.getUpdateRepository();
+      repository.getUpdates(true)
+          .first()
+          .subscribe(updates -> Logger.d(TAG, "updates refreshed"), throwable -> {
+            throwable.printStackTrace();
+            CrashReports.logException(throwable);
+          });
+    }
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

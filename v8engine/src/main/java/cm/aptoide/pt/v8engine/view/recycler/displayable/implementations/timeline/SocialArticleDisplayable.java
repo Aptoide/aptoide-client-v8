@@ -43,6 +43,7 @@ public class SocialArticleDisplayable extends SocialCardDisplayable {
   @Getter private String abUrl;
   @Getter private Store store;
   @Getter private Comment.User user;
+  @Getter private String packageName;
 
   @Getter private List<App> relatedToAppsList;
   private Date date;

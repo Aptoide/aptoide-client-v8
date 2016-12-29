@@ -6,13 +6,12 @@
 package cm.aptoide.pt.iab;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
  * Created by marcelobenites on 8/11/16.
  */
-@AllArgsConstructor public class SKU {
+public class SKU {
 
   @Getter private String productId;
 
@@ -27,4 +26,15 @@ import lombok.Getter;
   @Getter private String title;
 
   @Getter private String description;
+
+  public SKU(String productId, String type, String price, String currency, long amount,
+      String title, String description) {
+    this.productId = productId;
+    this.type = type;
+    this.price = price;
+    this.currency = currency;
+    this.amount = amount;
+    this.title = title;
+    this.description = description;
+  }
 }

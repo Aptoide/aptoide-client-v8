@@ -180,7 +180,6 @@ import rx.Observable;
 
     if (AptoideAccountManager.isLoggedIn()) {
       SetReviewRatingRequest.of(reviewId, positive, AptoideAccountManager.getAccessToken(),
-          AptoideAccountManager.getUserEmail(),
           new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
               DataProvider.getContext()).getAptoideClientUUID()).execute(response -> {
         if (response == null) {

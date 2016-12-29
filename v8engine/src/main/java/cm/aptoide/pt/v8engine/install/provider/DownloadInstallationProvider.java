@@ -11,16 +11,21 @@ import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.v8engine.install.exception.InstallationException;
 import cm.aptoide.pt.v8engine.install.installer.InstallationProvider;
 import cm.aptoide.pt.v8engine.install.installer.RollbackInstallation;
-import lombok.AllArgsConstructor;
 import rx.Observable;
 
 /**
  * Created by marcelobenites on 7/25/16.
  */
-@AllArgsConstructor public class DownloadInstallationProvider implements InstallationProvider {
+public class DownloadInstallationProvider implements InstallationProvider {
 
   private final AptoideDownloadManager downloadManager;
   private final DownloadAccessor downloadAccessor;
+
+  public DownloadInstallationProvider(AptoideDownloadManager downloadManager,
+      DownloadAccessor downloadAccessor) {
+    this.downloadManager = downloadManager;
+    this.downloadAccessor = downloadAccessor;
+  }
 
   @Override public Observable<RollbackInstallation> getInstallation(String md5) {
     return downloadManager.getDownload(md5).first().flatMap(download -> {

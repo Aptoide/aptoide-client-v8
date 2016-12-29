@@ -24,14 +24,13 @@ import cm.aptoide.pt.v8engine.payment.product.InAppBillingProduct;
 import cm.aptoide.pt.v8engine.payment.product.PaidAppProduct;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.util.List;
-import lombok.AllArgsConstructor;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
 /**
  * Created by marcelobenites on 8/18/16.
  */
-@AllArgsConstructor public class PaymentRepository {
+public class PaymentRepository {
 
   private final AppRepository appRepository;
   private final InAppBillingRepository inAppBillingRepository;
@@ -40,6 +39,19 @@ import rx.schedulers.Schedulers;
   private final PurchaseFactory purchaseFactory;
   private final PaymentFactory paymentFactory;
   private final PaymentAccessor paymentDatabase;
+
+  public PaymentRepository(AppRepository appRepository,
+      InAppBillingRepository inAppBillingRepository, NetworkOperatorManager operatorManager,
+      ProductFactory productFactory, PurchaseFactory purchaseFactory, PaymentFactory paymentFactory,
+      PaymentAccessor paymentDatabase) {
+    this.appRepository = appRepository;
+    this.inAppBillingRepository = inAppBillingRepository;
+    this.operatorManager = operatorManager;
+    this.productFactory = productFactory;
+    this.purchaseFactory = purchaseFactory;
+    this.paymentFactory = paymentFactory;
+    this.paymentDatabase = paymentDatabase;
+  }
 
   public Observable<Purchase> getPurchase(AptoideProduct product) {
     return Observable.just(product instanceof InAppBillingProduct).flatMap(iab -> {

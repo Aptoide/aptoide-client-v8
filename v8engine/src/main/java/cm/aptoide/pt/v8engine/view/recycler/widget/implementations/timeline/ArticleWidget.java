@@ -14,10 +14,8 @@ import android.widget.TextView;
 import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.ArticleDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.android.schedulers.AndroidSchedulers;
@@ -77,18 +75,6 @@ public class ArticleWidget extends CardWidget<ArticleDisplayable> {
     setCardViewMargin(displayable, cardView);
     ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
     ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
-
-    //relatedTo.setText(displayable.getAppRelatedToText(getContext(), appName));
-
-    if (getAppButton.getVisibility() != View.GONE && displayable.isGetApp(appName)) {
-      getAppButton.setVisibility(View.VISIBLE);
-      getAppButton.setText(displayable.getAppText(getContext(), appName));
-      getAppButton.setOnClickListener(view -> ((FragmentShower) getContext()).pushFragmentV4(
-          V8Engine.getFragmentProvider().newAppViewFragment(displayable.getAppId())));
-    }
-
-    //		CustomTabsHelper.getInstance()
-    //				.setUpCustomTabsService(displayable.getLink().getUrl(), getContext());
 
     url.setOnClickListener(v -> {
       knockWithSixpackCredentials(displayable.getAbUrl());

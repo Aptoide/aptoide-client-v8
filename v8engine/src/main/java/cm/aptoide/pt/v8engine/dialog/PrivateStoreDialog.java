@@ -114,6 +114,12 @@ public class PrivateStoreDialog extends DialogFragment {
     super.onDismiss(dialog);
   }
 
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+
+    outState.putString(BundleArgs.STORE_NAME.name(), storeName);
+  }
+
   @Override public void onDestroyView() {
     Dialog dialog = getDialog();
 
@@ -121,12 +127,6 @@ public class PrivateStoreDialog extends DialogFragment {
     if ((dialog != null) && getRetainInstance()) dialog.setDismissMessage(null);
 
     super.onDestroyView();
-  }
-
-  @Override public void onSaveInstanceState(Bundle outState) {
-    super.onSaveInstanceState(outState);
-
-    outState.putString(BundleArgs.STORE_NAME.name(), storeName);
   }
 
   private void dismissLoadingDialog() {
@@ -143,7 +143,7 @@ public class PrivateStoreDialog extends DialogFragment {
   private GetStoreMetaRequest buildRequest() {
     return GetStoreMetaRequest.of(
         new BaseRequestWithStore.StoreCredentials(storeName, storeUser, storePassSha1),
-        AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
+        AptoideAccountManager.getAccessToken(),
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()).getAptoideClientUUID());
   }

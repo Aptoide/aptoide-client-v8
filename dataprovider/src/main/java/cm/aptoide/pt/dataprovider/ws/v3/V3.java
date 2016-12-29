@@ -6,6 +6,7 @@
 package cm.aptoide.pt.dataprovider.ws.v3;
 
 import android.support.annotation.NonNull;
+import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception;
 import cm.aptoide.pt.dataprovider.ws.v2.GenericResponseV2;
@@ -36,8 +37,13 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public abstract class V3<U> extends WebService<V3.Interfaces, U> {
 
-  protected static final String BASE_HOST = "http://webservices.aptoide.com/webservices/3/";
+  protected static final String BASE_HOST = BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
+      + "://"
+      + BuildConfig.APTOIDE_WEB_SERVICES_HOST
+      + "/webservices/3/";
+
   private static final int REFRESH_TOKEN_DELAY = 1000;
+
   protected final BaseBody map;
   private final String INVALID_ACCESS_TOKEN_CODE = "invalid_token";
   private boolean accessTokenRetry = false;
@@ -47,12 +53,9 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
   }
 
   protected V3(String baseHost, BaseBody baseBody) {
-    super(
-        Interfaces.class,
+    super(Interfaces.class,
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent()),
-        WebService.getDefaultConverter(),
-        baseHost
-    );
+        WebService.getDefaultConverter(), baseHost);
     this.map = baseBody;
   }
 
@@ -85,13 +88,12 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
 
             if (!accessTokenRetry) {
               accessTokenRetry = true;
-              return DataProvider.invalidateAccessToken()
-                  .flatMap(s -> {
-                    this.map.setAccess_token(s);
-                    return V3.this.observe(bypassCache)
-                        .delaySubscription(REFRESH_TOKEN_DELAY, TimeUnit.MILLISECONDS)
-                        .observeOn(AndroidSchedulers.mainThread());
-                  });
+              return DataProvider.invalidateAccessToken().flatMap(s -> {
+                this.map.setAccess_token(s);
+                return V3.this.observe(bypassCache)
+                    .delaySubscription(REFRESH_TOKEN_DELAY, TimeUnit.MILLISECONDS)
+                    .observeOn(AndroidSchedulers.mainThread());
+              });
             }
           } else {
             return Observable.error(
@@ -102,7 +104,7 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
         }
       }
       return Observable.error(throwable);
-    }).observeOn(AndroidSchedulers.mainThread());
+    });
   }
 
   interface Interfaces {
@@ -112,7 +114,8 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("addApkFlag") @FormUrlEncoded Observable<GenericResponseV2> addApkFlag(
-        @FieldMap BaseBody arg, @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
+        @FieldMap BaseBody arg,
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("getApkInfo") @FormUrlEncoded Observable<PaidApp> getApkInfo(@FieldMap BaseBody args,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);

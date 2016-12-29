@@ -11,19 +11,17 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import java.util.Date;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
  * Created by marcelobenites on 6/17/16.
  */
-@AllArgsConstructor public class FeatureDisplayable extends Displayable {
+public class FeatureDisplayable extends Displayable {
 
   @Getter private int avatarResource;
   @Getter private int titleResource;
   @Getter private String thumbnailUrl;
   @Getter private String url;
-  @Getter private long appId;
 
   private String appName;
   private String title;
@@ -32,6 +30,20 @@ import lombok.Getter;
   private SpannableFactory spannableFactory;
 
   public FeatureDisplayable() {
+  }
+
+  public FeatureDisplayable(int avatarResource, int titleResource, String thumbnailUrl, String url,
+      String appName, String title, Date date, DateCalculator dateCalculator,
+      SpannableFactory spannableFactory) {
+    this.avatarResource = avatarResource;
+    this.titleResource = titleResource;
+    this.thumbnailUrl = thumbnailUrl;
+    this.url = url;
+    this.appName = appName;
+    this.title = title;
+    this.date = date;
+    this.dateCalculator = dateCalculator;
+    this.spannableFactory = spannableFactory;
   }
 
   public static FeatureDisplayable from(Feature feature, DateCalculator dateCalculator,
@@ -44,7 +56,7 @@ import lombok.Getter;
     }
     return new FeatureDisplayable(Application.getConfiguration().getIcon(),
         R.string.fragment_social_timeline_aptoide_team, feature.getThumbnailUrl(), feature.getUrl(),
-        appId, appName, feature.getTitle(), feature.getDate(), dateCalculator, spannableFactory);
+        appName, feature.getTitle(), feature.getDate(), dateCalculator, spannableFactory);
   }
 
   public int getMarginWidth(Context context, int orientation) {
@@ -67,10 +79,6 @@ import lombok.Getter;
 
   public String getTimeSinceLastUpdate(Context context) {
     return dateCalculator.getTimeSinceDate(context, date);
-  }
-
-  public boolean isGetApp() {
-    return appName != null && appId != 0;
   }
 
   public Spannable getAppText(Context context) {

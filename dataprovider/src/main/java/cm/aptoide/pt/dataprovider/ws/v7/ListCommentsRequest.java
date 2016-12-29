@@ -16,7 +16,6 @@ import rx.Observable;
  */
 public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Body> {
 
-  private static final String BASE_HOST = "http://ws2.aptoide.com/api/7/";
   private static String url;
 
   private ListCommentsRequest(Body body, String baseHost) {

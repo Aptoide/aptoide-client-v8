@@ -137,7 +137,7 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
   @Override public void bindViews(View view) {
     super.bindViews(view);
     emptyData = (TextView) view.findViewById(R.id.empty_data);
-    scheduledDownloadRepository = RepositoryFactory.getRepositoryFor(Scheduled.class);
+    scheduledDownloadRepository = RepositoryFactory.getScheduledDownloadRepository();
     //		compositeSubscription = new CompositeSubscription();
     setHasOptionsMenu(true);
   }

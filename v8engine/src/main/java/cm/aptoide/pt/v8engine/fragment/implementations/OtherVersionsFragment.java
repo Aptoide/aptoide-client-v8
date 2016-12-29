@@ -35,6 +35,7 @@ import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.util.AppBarStateChangeListener;
+import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.OtherVersionDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
@@ -92,13 +93,6 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
     setHeader();
   }
 
-  protected void setHeader(){
-    if (header != null) {
-      header.setImage(appImgUrl);
-      setTitle(appName);
-    }
-  }
-
   @Override public int getContentViewId() {
     return R.layout.fragment_other_versions;
   }
@@ -112,6 +106,13 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
 
   @Override public void onResume() {
     super.onResume();
+  }
+
+  protected void setHeader() {
+    if (header != null) {
+      header.setImage(appImgUrl);
+      setTitle(appName);
+    }
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -164,10 +165,10 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
 
     endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(this.getAdapter(),
         ListAppVersionsRequest.of(appPackge, storeNames, AptoideAccountManager.getAccessToken(),
-            AptoideAccountManager.getUserEmail(),
             new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                DataProvider.getContext()).getAptoideClientUUID()),
-        otherVersionsSuccessRequestListener, errorRequestListener);
+                DataProvider.getContext()).getAptoideClientUUID(),
+            StoreUtils.getSubscribedStoresAuthMap()), otherVersionsSuccessRequestListener,
+        Throwable::printStackTrace);
 
     recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(false);

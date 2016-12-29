@@ -98,7 +98,7 @@ public class StoreLatestAppsWidget extends CardWidget<StoreLatestAppsDisplayable
                 .build())
             .build(), AptoideAnalytics.OPEN_APP);
         ((FragmentShower) getContext()).pushFragmentV4(
-            V8Engine.getFragmentProvider().newAppViewFragment(apps.get(app)));
+            V8Engine.getFragmentProvider().newAppViewFragment(apps.get(app), packageName));
       }));
     }
 

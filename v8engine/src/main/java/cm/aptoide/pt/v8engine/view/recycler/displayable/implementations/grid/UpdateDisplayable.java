@@ -18,7 +18,6 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import rx.Observable;
 import rx.Scheduler;
@@ -28,7 +27,7 @@ import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 /**
  * Created by neuro on 17-05-2016.
  */
-@AllArgsConstructor public class UpdateDisplayable extends Displayable {
+public class UpdateDisplayable extends Displayable {
 
   @Getter private String packageName;
   @Getter private long appId;
@@ -51,6 +50,30 @@ import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
   @Getter private InstallManager installManager;
 
   public UpdateDisplayable() {
+  }
+
+  public UpdateDisplayable(String packageName, long appId, String label, String icon,
+      int versionCode, String md5, String apkPath, String alternativeApkPath,
+      String updateVersionName, String mainObbName, String mainObbPath, String mainObbMd5,
+      String patchObbName, String patchObbPath, String patchObbMd5, Download download,
+      InstallManager installManager) {
+    this.packageName = packageName;
+    this.appId = appId;
+    this.label = label;
+    this.icon = icon;
+    this.versionCode = versionCode;
+    this.md5 = md5;
+    this.apkPath = apkPath;
+    this.alternativeApkPath = alternativeApkPath;
+    this.updateVersionName = updateVersionName;
+    this.mainObbName = mainObbName;
+    this.mainObbPath = mainObbPath;
+    this.mainObbMd5 = mainObbMd5;
+    this.patchObbName = patchObbName;
+    this.patchObbPath = patchObbPath;
+    this.patchObbMd5 = patchObbMd5;
+    this.download = download;
+    this.installManager = installManager;
   }
 
   public static UpdateDisplayable create(Update update, InstallManager installManager,

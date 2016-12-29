@@ -36,7 +36,7 @@ import rx.Observable;
   }
 
   public static GetStoreDisplaysRequest ofAction(String url, StoreCredentials storeCredentials,
-      String accessToken, String email, String aptoideClientUUID) {
+      String accessToken, String aptoideClientUUID) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
     return new GetStoreDisplaysRequest(new V7Url(url).remove("getStoreDisplays").get(),

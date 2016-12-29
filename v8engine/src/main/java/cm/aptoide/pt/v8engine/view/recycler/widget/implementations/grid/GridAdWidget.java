@@ -8,8 +8,8 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -36,10 +36,10 @@ public class GridAdWidget extends Widget<GridAdDisplayable> {
 
   @Override public void bindView(GridAdDisplayable displayable) {
 
-    GetAdsResponse.Ad pojo = displayable.getPojo();
+    MinimalAd pojo = displayable.getPojo();
 
-    name.setText(pojo.getData().getName());
-    ImageLoader.load(pojo.getData().getIcon(), icon);
+    name.setText(pojo.getName());
+    ImageLoader.load(pojo.getIconPath(), icon);
 
     itemView.setOnClickListener(v -> {
       Analytics.AppViewViewedFrom.addStepToList(displayable.getTag());

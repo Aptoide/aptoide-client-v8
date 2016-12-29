@@ -7,11 +7,13 @@ package cm.aptoide.pt.dataprovider.ws.v7.listapps;
 
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
-import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithApp;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.networkclient.WebService;
+import cm.aptoide.pt.networkclient.util.HashMapNotNull;
+import java.util.LinkedList;
 import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -39,7 +41,7 @@ import rx.Observable;
     return new ListAppVersionsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
-  public static ListAppVersionsRequest of(int limit, int offset, String accessToken, String email,
+  public static ListAppVersionsRequest of(int limit, int offset, String accessToken,
       String aptoideClientUUID) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
     Body body = new Body();
@@ -48,29 +50,31 @@ import rx.Observable;
     return new ListAppVersionsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
-  public static ListAppVersionsRequest of(String packageName, List<String> storeNames, String accessToken, String email,
-      String aptoideClientUUID) {
+  public static ListAppVersionsRequest of(String packageName, List<String> storeNames,
+      String accessToken,
+      String aptoideClientUUID, HashMapNotNull<String, List<String>> storeCredentials) {
     if(storeNames!= null && !storeNames.isEmpty()) {
       BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-      Body body = new Body(packageName, storeNames);
+      Body body = new Body(packageName, storeNames, storeCredentials);
       body.setLimit(MAX_LIMIT);
       return new ListAppVersionsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
     }
     else{
-      return of(packageName,accessToken,email,aptoideClientUUID);
+      return of(packageName, accessToken, aptoideClientUUID, storeCredentials);
     }
   }
 
-  public static ListAppVersionsRequest of(String packageName, String accessToken, String email,
-      String aptoideClientUUID) {
+  public static ListAppVersionsRequest of(String packageName, String accessToken,
+      String aptoideClientUUID, HashMapNotNull<String, List<String>> storeCredentials) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
     Body body = new Body(packageName);
+    body.setStoresAuthMap(storeCredentials);
     body.setLimit(MAX_LIMIT);
     return new ListAppVersionsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
   public static ListAppVersionsRequest of(String packageName, int limit, int offset,
-      String accessToken, String email, String aptoideClientUUID) {
+      String accessToken, String aptoideClientUUID) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
     Body body = new Body(packageName);
     body.setLimit(limit);
@@ -84,7 +88,7 @@ import rx.Observable;
   }
 
   @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) public static class Body
-      extends BaseBody implements Endless {
+      extends BaseBodyWithApp implements Endless {
 
     private Integer apkId;
     private String apkMd5sum;
@@ -97,6 +101,7 @@ import rx.Observable;
     private String q = Api.Q;
     private List<Long> storeIds;
     private List<String> storeNames;
+    @Getter private HashMapNotNull<String, List<String>> storesAuthMap;
 
     public Body() {
     }
@@ -105,9 +110,18 @@ import rx.Observable;
       this.packageName = packageName;
     }
 
-    public Body(String packageName, List<String> storeNames) {
+    public Body(String packageName, List<String> storeNames,
+        HashMapNotNull<String, List<String>> storesAuthMap) {
       this.packageName = packageName;
       this.storeNames = storeNames;
+      setStoresAuthMap(storesAuthMap);
+    }
+
+    public void setStoresAuthMap(HashMapNotNull<String, List<String>> storesAuthMap) {
+      if(storesAuthMap!=null) {
+        this.storesAuthMap = storesAuthMap;
+        this.storeNames = new LinkedList<>(storesAuthMap.keySet());
+      }
     }
   }
 }

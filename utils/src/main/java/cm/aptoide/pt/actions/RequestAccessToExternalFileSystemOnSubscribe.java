@@ -5,17 +5,20 @@
 
 package cm.aptoide.pt.actions;
 
-import lombok.AllArgsConstructor;
 import rx.Observable;
 import rx.Subscriber;
 
 /**
  * Created by marcelobenites on 7/25/16.
  */
-@AllArgsConstructor public class RequestAccessToExternalFileSystemOnSubscribe
+public class RequestAccessToExternalFileSystemOnSubscribe
     implements Observable.OnSubscribe<Void> {
 
   private final PermissionRequest permissionRequest;
+
+  public RequestAccessToExternalFileSystemOnSubscribe(PermissionRequest permissionRequest) {
+    this.permissionRequest = permissionRequest;
+  }
 
   @Override public void call(Subscriber<? super Void> subscriber) {
     permissionRequest.requestAccessToExternalFileSystem(() -> {

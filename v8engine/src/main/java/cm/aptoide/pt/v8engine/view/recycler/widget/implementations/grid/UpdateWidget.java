@@ -19,13 +19,12 @@ import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.database.realm.Store;
-import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdateDisplayable;
@@ -72,8 +71,7 @@ import rx.android.schedulers.AndroidSchedulers;
     textUpdateLayout = (TextView) itemView.findViewById(R.id.text_update_layout);
     progressBar = (ProgressBar) itemView.findViewById(R.id.progress_bar);
 
-    updateRepository = new UpdateRepository(AccessorFactory.getAccessorFor(Update.class),
-        AccessorFactory.getAccessorFor(Store.class));
+    updateRepository = RepositoryFactory.getUpdateRepository();
   }
 
   @Override public void bindView(UpdateDisplayable updateDisplayable) {
@@ -91,7 +89,8 @@ import rx.android.schedulers.AndroidSchedulers;
     ImageLoader.load(updateDisplayable.getIcon(), iconImageView);
 
     updateRowRelativeLayout.setOnClickListener(v -> FragmentUtils.replaceFragmentV4(getContext(),
-        V8Engine.getFragmentProvider().newAppViewFragment(updateDisplayable.getAppId())));
+        V8Engine.getFragmentProvider()
+            .newAppViewFragment(updateDisplayable.getAppId(), updateDisplayable.getPackageName())));
 
     final View.OnLongClickListener longClickListener = v -> {
       AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());

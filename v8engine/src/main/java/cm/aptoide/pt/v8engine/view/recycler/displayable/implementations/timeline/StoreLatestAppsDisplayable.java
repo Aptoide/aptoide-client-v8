@@ -11,7 +11,6 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Dat
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
@@ -82,10 +81,16 @@ public class StoreLatestAppsDisplayable extends CardDisplayable {
     socialRepository.share(getTimelineCard(), context, privacyResult);
   }
 
-  @EqualsAndHashCode @AllArgsConstructor public static class LatestApp {
+  @EqualsAndHashCode public static class LatestApp {
 
     @Getter private final long appId;
     @Getter private final String iconUrl;
     @Getter private final String packageName;
+
+    public LatestApp(long appId, String iconUrl, String packageName) {
+      this.appId = appId;
+      this.iconUrl = iconUrl;
+      this.packageName = packageName;
+    }
   }
 }

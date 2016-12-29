@@ -73,7 +73,7 @@ public class FragmentTopStores extends GridRecyclerFragment implements Endless {
                 DataProvider.getContext()).getAptoideClientUUID());
     EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(this.getAdapter(), listStoresRequest, listener,
-            errorRequestListener);
+            Throwable::printStackTrace);
     recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(false);
   }

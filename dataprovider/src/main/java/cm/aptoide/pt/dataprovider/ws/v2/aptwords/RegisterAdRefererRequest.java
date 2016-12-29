@@ -30,8 +30,8 @@ public class RegisterAdRefererRequest extends Aptwords<RegisterAdRefererRequest.
     extractAndSetTracker(clickUrl);
   }
 
-  public static RegisterAdRefererRequest of(long adId, long appId, String clickUrl, boolean success,
-      String email) {
+  public static RegisterAdRefererRequest of(long adId, long appId, String clickUrl,
+      boolean success) {
     return new RegisterAdRefererRequest(adId, appId, clickUrl, success);
   }
 

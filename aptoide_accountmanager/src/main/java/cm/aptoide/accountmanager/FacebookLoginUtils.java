@@ -186,7 +186,7 @@ class FacebookLoginUtils {
       if (activity != null) {
         GenericDialogs.createGenericOkCancelMessage(activity, null,
             R.string.facebook_email_permission_regected_message,
-            R.string.facebook_garant_permission_button, android.R.string.cancel)
+            R.string.facebook_grant_permission_button, android.R.string.cancel)
             .subscribe(eResponse -> {
               if (eResponse == GenericDialogs.EResponse.YES) {
                 LoginManager.getInstance()

@@ -32,8 +32,8 @@ public class WSWidgetsUtils {
 
   public static void loadInnerNodes(GetStoreWidgets.WSWidget wsWidget,
       BaseRequestWithStore.StoreCredentials storeCredentials, CountDownLatch countDownLatch,
-      boolean refresh, Action1<Throwable> action1, String accessToken, String email,
-      String aptoideClientUuid, boolean googlePlayServicesAvailable, String oemid) {
+      boolean refresh, Action1<Throwable> action1, String accessToken, String aptoideClientUuid,
+      boolean googlePlayServicesAvailable, String oemid, boolean mature) {
 
     if (isKnownType(wsWidget.getType())) {
 
@@ -44,7 +44,7 @@ public class WSWidgetsUtils {
       }
       switch (wsWidget.getType()) {
         case APPS_GROUP:
-          ListAppsRequest.ofAction(url, storeCredentials, accessToken, email, aptoideClientUuid)
+          ListAppsRequest.ofAction(url, storeCredentials, accessToken, aptoideClientUuid)
               .observe(refresh)
               .compose(AptoideUtils.ObservableU.applySchedulers())
               .subscribe(listApps -> setObjectView(wsWidget, countDownLatch, listApps), action1);
@@ -59,8 +59,7 @@ public class WSWidgetsUtils {
           break;
 
         case DISPLAYS:
-          GetStoreDisplaysRequest.ofAction(url, storeCredentials, accessToken, email,
-              aptoideClientUuid)
+          GetStoreDisplaysRequest.ofAction(url, storeCredentials, accessToken, aptoideClientUuid)
               .observe(refresh)
               .compose(AptoideUtils.ObservableU.applySchedulers())
               .subscribe(
@@ -69,7 +68,7 @@ public class WSWidgetsUtils {
           break;
 
         case ADS:
-          GetAdsRequest.ofHomepage(aptoideClientUuid, googlePlayServicesAvailable, oemid)
+          GetAdsRequest.ofHomepage(aptoideClientUuid, googlePlayServicesAvailable, oemid, mature)
               .observe()
               .compose(AptoideUtils.ObservableU.applySchedulers())
               .subscribe(getAdsResponse -> setObjectView(wsWidget, countDownLatch, getAdsResponse),
@@ -77,7 +76,7 @@ public class WSWidgetsUtils {
           break;
 
         case STORE_META:
-          GetStoreMetaRequest.ofAction(url, storeCredentials, accessToken, email, aptoideClientUuid)
+          GetStoreMetaRequest.ofAction(url, storeCredentials, accessToken, aptoideClientUuid)
               .observe(refresh)
               .compose(AptoideUtils.ObservableU.applySchedulers())
               .subscribe(getStoreMeta -> setObjectView(wsWidget, countDownLatch, getStoreMeta),

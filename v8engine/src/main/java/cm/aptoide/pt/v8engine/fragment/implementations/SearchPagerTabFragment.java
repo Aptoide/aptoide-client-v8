@@ -6,23 +6,22 @@
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
-import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.abtesting.ABTest;
 import cm.aptoide.pt.v8engine.analytics.abtesting.ABTestManager;
 import cm.aptoide.pt.v8engine.analytics.abtesting.SearchTabOptions;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragmentWithDecorator;
+import cm.aptoide.pt.v8engine.repository.AdsRepository;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SearchAdDisplayable;
@@ -40,6 +39,8 @@ import rx.functions.Action0;
  */
 public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
   private static final String TAG = SearchPagerTabFragment.class.getSimpleName();
+
+  private AdsRepository adsRepository;
 
   private String query;
   private String storeName;
@@ -105,53 +106,10 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
     return fragment;
   }
 
-  private boolean isConvert(ABTest<SearchTabOptions> searchAbTest, boolean addSubscribedStores) {
-    return hasMultipleFragments && (addSubscribedStores == (searchAbTest.alternative()
-        == SearchTabOptions.FOLLOWED_STORES));
-  }
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    adsRepository = new AdsRepository();
 
-  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    super.load(create, refresh, savedInstanceState);
-    if (create) {
-      searchAbTest = ABTestManager.getInstance().get(ABTestManager.SEARCH_TAB_TEST);
-      GetAdsRequest.ofSearch(query,
-          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-              DataProvider.getContext()).getAptoideClientUUID(),
-          DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(V8Engine.getContext()),
-          DataProvider.getConfiguration().getPartnerId())
-          .execute(getAdsResponse -> {
-        if (getAdsResponse.getAds().size() > 0) {
-          refreshed = true;
-          addDisplayable(0, new SearchAdDisplayable(getAdsResponse.getAds().get(0)));
-        }
-      });
-
-      recyclerView.clearOnScrollListeners();
-      ListSearchAppsRequest of;
-      if (storeName != null) {
-        of = ListSearchAppsRequest.of(query, storeName, StoreUtils.getSubscribedStoresAuthMap(),
-            AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
-            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                DataProvider.getContext()).getAptoideClientUUID());
-      } else {
-        of = ListSearchAppsRequest.of(query, addSubscribedStores,
-            StoreUtils.getSubscribedStoresIds(), StoreUtils.getSubscribedStoresAuthMap(),
-            AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
-            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                DataProvider.getContext()).getAptoideClientUUID());
-      }
-      endlessRecyclerOnScrollListener =
-          new EndlessRecyclerOnScrollListener(this.getAdapter(), listSearchAppsRequest = of,
-              listSearchAppsSuccessRequestListener, errorRequestListener, refresh);
-      recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
-      endlessRecyclerOnScrollListener.onLoadMore(refresh);
-    } else {
-      recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
-    }
-  }
-
-  @Override public int getContentViewId() {
-    return R.layout.recycler_fragment;
+    super.onCreate(savedInstanceState);
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -161,6 +119,48 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
     storeName = args.getString(BundleCons.STORE_NAME);
     addSubscribedStores = args.getBoolean(BundleCons.ADD_SUBSCRIBED_STORES);
     hasMultipleFragments = args.getBoolean(BundleCons.HAS_MULTIPLE_FRAGMENTS, false);
+  }
+
+  private boolean isConvert(ABTest<SearchTabOptions> searchAbTest, boolean addSubscribedStores) {
+    return hasMultipleFragments && (addSubscribedStores == (searchAbTest.alternative()
+        == SearchTabOptions.FOLLOWED_STORES));
+  }
+
+  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    super.load(create, refresh, savedInstanceState);
+    if (create) {
+      searchAbTest = ABTestManager.getInstance().get(ABTestManager.SEARCH_TAB_TEST);
+      adsRepository.getAdsFromSearch(query).subscribe(minimalAd -> {
+        refreshed = true;
+        addDisplayable(0, new SearchAdDisplayable(minimalAd));
+      });
+
+      recyclerView.clearOnScrollListeners();
+      ListSearchAppsRequest of;
+      if (storeName != null) {
+        of = ListSearchAppsRequest.of(query, storeName, StoreUtils.getSubscribedStoresAuthMap(),
+            AptoideAccountManager.getAccessToken(),
+            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+                DataProvider.getContext()).getAptoideClientUUID());
+      } else {
+        of = ListSearchAppsRequest.of(query, addSubscribedStores,
+            StoreUtils.getSubscribedStoresIds(), StoreUtils.getSubscribedStoresAuthMap(),
+            AptoideAccountManager.getAccessToken(),
+            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+                DataProvider.getContext()).getAptoideClientUUID());
+      }
+      endlessRecyclerOnScrollListener =
+          new EndlessRecyclerOnScrollListener(this.getAdapter(), listSearchAppsRequest = of,
+              listSearchAppsSuccessRequestListener, Throwable::printStackTrace, refresh);
+      recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+      endlessRecyclerOnScrollListener.onLoadMore(refresh);
+    } else {
+      recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+    }
+  }
+
+  @Override public int getContentViewId() {
+    return R.layout.recycler_fragment;
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {

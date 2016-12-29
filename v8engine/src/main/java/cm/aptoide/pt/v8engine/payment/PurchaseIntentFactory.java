@@ -9,14 +9,17 @@ import android.content.Intent;
 import cm.aptoide.pt.iab.BillingBinder;
 import cm.aptoide.pt.iab.ErrorCodeFactory;
 import java.io.IOException;
-import lombok.AllArgsConstructor;
 
 /**
  * Created by marcelobenites on 8/26/16.
  */
-@AllArgsConstructor public class PurchaseIntentFactory {
+public class PurchaseIntentFactory {
 
   private final ErrorCodeFactory codeFactory;
+
+  public PurchaseIntentFactory(ErrorCodeFactory codeFactory) {
+    this.codeFactory = codeFactory;
+  }
 
   public Intent create(Purchase purchase) {
     Intent intent;
