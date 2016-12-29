@@ -384,7 +384,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
         this.displayables = new ArrayList<>(displayables.size());
         this.displayables.add(new DisplayableGroup(displayables));
 
-        addDisplayables(this.displayables);
+        addDisplayable(new DisplayableGroup(this.displayables));
       }
     });
 
