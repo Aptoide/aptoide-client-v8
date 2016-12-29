@@ -30,6 +30,7 @@ import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayableGroup;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.InstalledAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdateDisplayable;
@@ -189,8 +190,8 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 
   private void setDisplayables() {
     LinkedList<Displayable> displayables = new LinkedList<>();
-    displayables.addAll(updatesDisplayablesList);
-    displayables.addAll(installedDisplayablesList);
+    displayables.add(new DisplayableGroup(updatesDisplayablesList));
+    displayables.add(new DisplayableGroup(installedDisplayablesList));
     setDisplayables(displayables);
   }
 }
