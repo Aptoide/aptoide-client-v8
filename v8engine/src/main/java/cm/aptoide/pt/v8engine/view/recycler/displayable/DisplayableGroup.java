@@ -21,7 +21,7 @@ import lombok.Getter;
   }
 
   DisplayableGroup(List<Displayable> children, boolean computeLeftSpaces) {
-    this.children = children;
+    this.children = new LinkedList<>(children);
     if (computeLeftSpaces) computeLeftSpaces();
   }
 
