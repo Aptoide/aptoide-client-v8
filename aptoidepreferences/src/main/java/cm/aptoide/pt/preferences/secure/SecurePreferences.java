@@ -44,6 +44,18 @@ public class SecurePreferences {
     return SecurePreferencesImplementation.getInstance().getBoolean(key, false);
   }
 
+  public static boolean shouldRunApkFy() {
+    return SecurePreferencesImplementation.getInstance()
+        .getBoolean(SecureKeys.SHOULD_RUN_APK_FY, true);
+  }
+
+  public static void setApkFyRun() {
+    SecurePreferencesImplementation.getInstance()
+        .edit()
+        .putBoolean(SecureKeys.SHOULD_RUN_APK_FY, false)
+        .apply();
+  }
+
   public static boolean isUserDataLoaded() {
     return SecurePreferencesImplementation.getInstance()
         .getBoolean(SecureKeys.USER_DATA_LOADED, false);

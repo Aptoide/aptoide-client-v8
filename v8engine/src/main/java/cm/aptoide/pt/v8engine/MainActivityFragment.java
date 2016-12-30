@@ -35,6 +35,7 @@ import cm.aptoide.pt.v8engine.interfaces.DrawerFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver;
 import cm.aptoide.pt.v8engine.services.PullingContentService;
+import cm.aptoide.pt.v8engine.util.ApkFy;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
@@ -57,6 +58,7 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     Analytics.Lifecycle.Activity.onCreate(this);
+    new ApkFy().run(this);
 
     if (savedInstanceState == null) {
       startService(new Intent(this, PullingContentService.class));
