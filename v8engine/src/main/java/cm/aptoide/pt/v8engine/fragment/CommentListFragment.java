@@ -27,6 +27,7 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.util.CommentOperations;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
+import cm.aptoide.pt.v8engine.view.custom.HorizontalGraySeparator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayableGroup;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentDisplayable;
@@ -104,9 +105,16 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
     if (commentType == CommentType.STORE) {
       BaseRequestWithStore.StoreCredentials storeCredentials =
           StoreUtils.getStoreCredentialsFromUrlOrNull(url);
-      if (storeCredentials != null && !TextUtils.isEmpty(storeCredentials.getName())) {
-        storeName = storeCredentials.getName();
-        elementIdAsLong = storeCredentials.getId();
+      if (storeCredentials != null) {
+
+        Long id = storeCredentials.getId();
+        if (id != null) {
+          elementIdAsLong = id;
+        }
+
+        if (!TextUtils.isEmpty(storeCredentials.getName())) {
+          storeName = storeCredentials.getName();
+        }
       }
     }
   }
@@ -168,7 +176,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
   }
 
   @Override protected RecyclerView.ItemDecoration getItemDecoration() {
-    return null;
+    return new HorizontalGraySeparator(getContext());
   }
 
   @Override public void setupViews() {
@@ -197,7 +205,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
   private Observable<Void> reloadComments() {
     return Observable.fromCallable(() -> {
       ManagerPreferences.setForceServerRefreshFlag(true);
-      //super.reload();
+      super.reload();
       return null;
     });
   }
@@ -379,6 +387,9 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
         addDisplayables(this.displayables);
       }
     });
+
+    // remove recycler view left and right padding
+    recyclerView.setPadding(0, recyclerView.getPaddingTop(), 0, recyclerView.getPaddingBottom());
 
     recyclerView.clearOnScrollListeners();
     EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener =

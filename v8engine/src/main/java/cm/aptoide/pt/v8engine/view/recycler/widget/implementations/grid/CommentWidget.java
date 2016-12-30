@@ -2,7 +2,6 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.os.Build;
 import android.support.annotation.ColorRes;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,7 +23,7 @@ import com.jakewharton.rxbinding.view.RxView;
 public class CommentWidget extends Widget<CommentDisplayable> {
 
   private static final String TAG = CommentWidget.class.getName();
-  private static final int MARGIN_IN_DIP = 24;
+  private static final int MARGIN_IN_DIP = 15;
 
   private final View rootView;
 
@@ -34,6 +33,7 @@ public class CommentWidget extends Widget<CommentDisplayable> {
   private TextView userName;
   private TextView date;
   private TextView comment;
+  private View commentDivider;
 
   public CommentWidget(View itemView) {
     super(itemView);
@@ -47,6 +47,7 @@ public class CommentWidget extends Widget<CommentDisplayable> {
     date = (TextView) itemView.findViewById(R.id.added_date);
     comment = (TextView) itemView.findViewById(R.id.comment);
     replyLayout = itemView.findViewById(R.id.reply_layout);
+    commentDivider = itemView.findViewById(R.id.comment_divider);
   }
 
   @Override public void bindView(CommentDisplayable displayable) {
@@ -69,7 +70,7 @@ public class CommentWidget extends Widget<CommentDisplayable> {
       }
 
       // set left/start margin width in default comment
-      setLayoutLeftMargin(complexComment);
+      setLayoutLeftPadding(complexComment);
 
       if (complexComment.getLevel() == 1) {
         replyLayout.setVisibility(View.VISIBLE);
@@ -88,17 +89,16 @@ public class CommentWidget extends Widget<CommentDisplayable> {
     }
   }
 
-  private void setLayoutLeftMargin(ComplexComment complexComment) {
+  private void setLayoutLeftPadding(ComplexComment complexComment) {
     final int level = complexComment.getLevel();
 
+    /*
     outerLayout.setPadding(outerLayout.getPaddingRight(), outerLayout.getPaddingTop(),
         outerLayout.getPaddingRight(), outerLayout.getPaddingBottom());
 
-    RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) rootView.getLayoutParams();
     int baseMargin = AptoideUtils.ScreenU.getPixels(MARGIN_IN_DIP);
-
+    RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) rootView.getLayoutParams();
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
-
       if (level == 2) {
         params.setMarginStart(baseMargin);
       } else {
@@ -111,5 +111,17 @@ public class CommentWidget extends Widget<CommentDisplayable> {
       params.leftMargin = 0;
     }
     rootView.setLayoutParams(params);
+    */
+
+    //int baseMargin = level < 2 ? 0 : AptoideUtils.ScreenU.getPixels(MARGIN_IN_DIP);
+    //rootView.setPadding(baseMargin, rootView.getPaddingTop(), rootView.getPaddingRight(),
+    //    rootView.getPaddingBottom());
+
+    commentDivider.setVisibility(View.GONE);
+
+    int baseMargin = AptoideUtils.ScreenU.getPixels(MARGIN_IN_DIP);
+    int leftMargin = level < 2 ? baseMargin : baseMargin * level;
+    outerLayout.setPadding(leftMargin, outerLayout.getPaddingTop(), baseMargin,
+        outerLayout.getPaddingBottom());
   }
 }

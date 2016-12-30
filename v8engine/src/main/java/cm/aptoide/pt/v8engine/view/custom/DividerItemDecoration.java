@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 04/07/2016.
- */
-
 package cm.aptoide.pt.v8engine.view.custom;
 
 import android.graphics.Rect;
@@ -16,10 +11,10 @@ import android.view.View;
  */
 public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
-  public static final int LEFT = 1;
-  public static final int RIGHT = 2;
-  public static final int BOTTOM = 4;
-  public static final int ALL = 7;
+  private static final int LEFT = 1;
+  private static final int RIGHT = 2;
+  private static final int BOTTOM = 4;
+  private static final int ALL = 7;
 
   private final int spacingFlag;
   private final int space;

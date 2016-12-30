@@ -17,6 +17,7 @@ import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.util.CommentOperations;
+import cm.aptoide.pt.v8engine.view.custom.HorizontalGraySeparator;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentDisplayable;
@@ -53,6 +54,8 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
     LinearLayoutManager layoutManager = new LinearLayoutManager(recyclerView.getContext());
     layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
     recyclerView.setLayoutManager(layoutManager);
+
+    recyclerView.addItemDecoration(new HorizontalGraySeparator(getContext()));
 
     storeId = displayable.getStoreId();
     storeName = displayable.getStoreName();

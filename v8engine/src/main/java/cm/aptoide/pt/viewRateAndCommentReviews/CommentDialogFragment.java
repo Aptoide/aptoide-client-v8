@@ -84,10 +84,10 @@ public class CommentDialogFragment extends RxDialogFragment {
     return fragment;
   }
 
-  public static CommentDialogFragment newInstanceStoreComment(long id, String storeName) {
+  public static CommentDialogFragment newInstanceStoreComment(long storeId, String storeName) {
     Bundle args = new Bundle();
     args.putString(COMMENT_TYPE, CommentType.STORE.name());
-    args.putLong(RESOURCE_ID_AS_LONG, id);
+    args.putLong(RESOURCE_ID_AS_LONG, storeId);
 
     if(!TextUtils.isEmpty(storeName)) {
       args.putString(APP_OR_STORE_NAME, storeName);
