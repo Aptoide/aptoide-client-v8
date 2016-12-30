@@ -368,10 +368,10 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
           timelineMetricsManager, socialRepository);
     } else if (card instanceof SocialInstall) {
       return SocialInstallDisplayable.from((SocialInstall) card, timelineMetricsManager,
-          spannableFactory, socialRepository);
+          spannableFactory, socialRepository, dateCalculator);
     } else if (card instanceof SocialRecommendation) {
       return SocialRecommendationDisplayable.from((SocialRecommendation) card,
-          timelineMetricsManager, spannableFactory, socialRepository);
+          timelineMetricsManager, spannableFactory, socialRepository, dateCalculator);
     }
     throw new IllegalArgumentException(
         "Only articles, features, store latest apps, app updates, videos, recommendations and similar cards supported.");

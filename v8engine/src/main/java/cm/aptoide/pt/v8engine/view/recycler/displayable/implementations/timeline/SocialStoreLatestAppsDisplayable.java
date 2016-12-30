@@ -1,8 +1,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
-import android.text.Spannable;
 import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.listapp.App;
@@ -48,7 +46,8 @@ public class SocialStoreLatestAppsDisplayable extends SocialCardDisplayable {
       TimelineMetricsManager timelineMetricsManager, SocialRepository socialRepository,
       SpannableFactory spannableFactory) {
     super(socialStoreLatestApps, likes, comments, socialStoreLatestApps.getUser(),
-        socialStoreLatestApps.getUserSharer(), spannableFactory);
+        socialStoreLatestApps.getUserSharer(), socialStoreLatestApps.getDate(), spannableFactory,
+        dateCalculator);
     this.storeName = storeName;
     socialStoreLatestApps.getSharedStore().getId();
     this.avatarUrl = avatarUrl;

@@ -25,6 +25,7 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
 
   private TextView title;
   private TextView subtitle;
+  //private TextView time;
   private ImageView storeAvatar;
   private ImageView userAvatar;
   private TextView articleTitle;
@@ -58,7 +59,7 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
     getAppButton =
         (Button) itemView.findViewById(R.id.partial_social_timeline_thumbnail_get_app_button);
     cardView = (CardView) itemView.findViewById(R.id.card);
-    articleHeader = itemView.findViewById(R.id.displayable_social_timeline_article_header);
+    articleHeader = itemView.findViewById(R.id.social_header);
     relatedTo = (TextView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_related_to);
   }
 
@@ -95,6 +96,8 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
     articleTitle.setTypeface(typeFace);
     articleTitle.setText(displayable.getArticleTitle());
     setCardViewMargin(displayable, cardView);
+
+    //time.setText(displayable.getTimeSinceLastUpdate(getContext()));
 
     ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
 

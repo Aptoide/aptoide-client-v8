@@ -31,6 +31,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
   private TextView numberLikes;
   private TextView numberComments;
   private TextView sharedBy;
+  private TextView time;
 
   SocialCardWidget(View itemView) {
     super(itemView);
@@ -38,6 +39,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
 
   @Override @CallSuper protected void assignViews(View itemView) {
     super.assignViews(itemView);
+    time = (TextView) itemView.findViewById(R.id.card_date);
     comments = (TextView) itemView.findViewById(R.id.social_comment);
     like = (LinearLayout) itemView.findViewById(R.id.social_like);
     likeButton = (LikeButton) itemView.findViewById(R.id.social_like_test);
@@ -54,7 +56,8 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
           .getName()
           .equals(displayable.getUserSharer().getName())) {
         sharedBy.setVisibility(View.VISIBLE);
-        sharedBy.setText(displayable.getSharedBy(getContext(), displayable.getUserSharer().getName()));
+        sharedBy.setText(
+            displayable.getSharedBy(getContext(), displayable.getUserSharer().getName()));
       } else {
         sharedBy.setVisibility(View.GONE);
       }
@@ -71,6 +74,8 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
     } else {
       Logger.w(TAG, "comment button is null in this view");
     }
+
+    time.setText(displayable.getTimeSinceLastUpdate(getContext()));
 
     if (like != null) {
       //compositeSubscription.add(

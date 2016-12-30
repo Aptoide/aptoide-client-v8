@@ -59,7 +59,7 @@ public class SocialVideoWidget extends SocialCardWidget<SocialVideoDisplayable> 
     getAppButton =
         (Button) itemView.findViewById(R.id.partial_social_timeline_thumbnail_get_app_button);
     cardView = (CardView) itemView.findViewById(R.id.card);
-    videoHeader = itemView.findViewById(R.id.displayable_social_timeline_video_header);
+    videoHeader = itemView.findViewById(R.id.social_header);
     relatedTo = (TextView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_related_to);
     //sharedBy = (TextView) itemView.findViewById(R.id.social_shared_by);
   }

@@ -40,10 +40,8 @@ public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayab
 
   @Override protected void assignViews(View itemView) {
     super.assignViews(itemView);
-    storeName = (TextView) itemView.findViewById(
-        R.id.displayable_social_timeline_recommendation_card_title);
-    userName = (TextView) itemView.findViewById(
-        R.id.displayable_social_timeline_recommendation_card_subtitle);
+    storeName = (TextView) itemView.findViewById(R.id.card_title);
+    userName = (TextView) itemView.findViewById(R.id.card_subtitle);
     storeAvatar = (ImageView) itemView.findViewById(R.id.card_image);
     userAvatar = (ImageView) itemView.findViewById(R.id.card_user_avatar);
     appName = (TextView) itemView.findViewById(

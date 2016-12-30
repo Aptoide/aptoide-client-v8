@@ -12,7 +12,6 @@ import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.model.v7.timeline.SocialArticle;
-import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.link.Link;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
@@ -61,7 +60,8 @@ public class SocialArticleDisplayable extends SocialCardDisplayable {
       List<App> relatedToAppsList, Date date, DateCalculator dateCalculator,
       SpannableFactory spannableFactory, TimelineMetricsManager timelineMetricsManager,
       SocialRepository socialRepository) {
-    super(socialArticle, numberOfLikes, numberOfComments, socialArticle.getUser(), socialArticle.getUserSharer(), spannableFactory);
+    super(socialArticle, numberOfLikes, numberOfComments, socialArticle.getUser(),
+        socialArticle.getUserSharer(), date, spannableFactory, dateCalculator);
     this.articleTitle = articleTitle;
     this.link = link;
     this.developerLink = developerLink;
@@ -127,9 +127,9 @@ public class SocialArticleDisplayable extends SocialCardDisplayable {
     return Observable.just(null);
   }
 
-  public String getTimeSinceLastUpdate(Context context) {
-    return dateCalculator.getTimeSinceDate(context, date);
-  }
+  //public String getTimeSinceLastUpdate(Context context) {
+  //  return dateCalculator.getTimeSinceDate(context, date);
+  //}
 
   public boolean isGetApp(String appName) {
     return appName != null && appId != 0;

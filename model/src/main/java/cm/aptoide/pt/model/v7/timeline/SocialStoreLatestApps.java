@@ -5,7 +5,9 @@ import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.Store;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Date;
 import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -26,15 +28,18 @@ public class SocialStoreLatestApps implements TimelineCard {
   @Getter private final long comments;
   @Getter private final Comment.User user;
   @Getter private final Comment.User userSharer;
+  @Getter private final Date date;
 
   //private Date latestUpdate;
 
   @JsonCreator public SocialStoreLatestApps(@JsonProperty("uid") String cardId,
       @JsonProperty("stores") Stores stores, @JsonProperty("user") Comment.User user,
       @JsonProperty("stats") Review.Stats stats,
+      @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC") @JsonProperty("date") Date date,
       @JsonProperty("user_sharer") Comment.User userSharer, @JsonProperty("apps") List<App> apps,
       @JsonProperty("ab") Ab ab) {
     this.user = user;
+    this.date = date;
     this.ownerStore = stores.getUser();
     this.sharedStore = stores.getCard();
     this.cardId = cardId;

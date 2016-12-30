@@ -61,14 +61,12 @@ public class SocialStoreLatestAppsWidget
 
   @Override protected void assignViews(View itemView) {
     super.assignViews(itemView);
-    store = itemView.findViewById(R.id.displayable_social_timeline_store_latest_apps_header);
-    storeName = (TextView) itemView.findViewById(
-        R.id.displayable_social_timeline_store_latest_apps_card_title);
-    userName = (TextView) itemView.findViewById(
-        R.id.displayable_social_timeline_store_latest_apps_card_subtitle);
-    sharedStoreName = (TextView) itemView.findViewById(R.id.store_name);
+    store = itemView.findViewById(R.id.social_header);
+    storeName = (TextView) itemView.findViewById(R.id.card_title);
+    userName = (TextView) itemView.findViewById(R.id.card_subtitle);
     storeAvatar = (ImageView) itemView.findViewById(R.id.card_image);
     userAvatar = (ImageView) itemView.findViewById(R.id.card_user_avatar);
+    sharedStoreName = (TextView) itemView.findViewById(R.id.store_name);
     sharedStoreAvatar = (ImageView) itemView.findViewById(R.id.social_shared_store_avatar);
     appsContaner = (LinearLayout) itemView.findViewById(
         R.id.displayable_social_timeline_store_latest_apps_container);
