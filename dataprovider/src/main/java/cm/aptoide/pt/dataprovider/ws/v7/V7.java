@@ -11,6 +11,7 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.util.ToRetryThrowable;
+import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppVersionsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetMyStoreListRequest;
@@ -77,10 +78,6 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
   private final String INVALID_ACCESS_TOKEN_CODE = "AUTH-2";
   private boolean accessTokenRetry = false;
 
-  @NonNull private static UserAgentGenerator getDefaultUserAgentGenerator() {
-    return () -> SecurePreferences.getUserAgent();
-  }
-
   protected V7(B body, String baseHost) {
     super(Interfaces.class, getDefaultUserAgentGenerator(), WebService.getDefaultConverter(),
         baseHost);
@@ -101,6 +98,10 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
       String baseHost) {
     super(Interfaces.class, httpClient, converterFactory, baseHost);
     this.body = body;
+  }
+
+  @NonNull private static UserAgentGenerator getDefaultUserAgentGenerator() {
+    return () -> SecurePreferences.getUserAgent();
   }
 
   @Override public Observable<U> observe(boolean bypassCache) {
@@ -302,6 +303,9 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
     @POST("store/set") Observable<BaseV7Response> editStore(@Body SimpleSetStoreRequest.Body body);
 
     @POST("user/set") Observable<BaseV7Response> setUser(@Body SetUserRequest.Body body);
+
+    @POST("user/addEvent") Observable<BaseV7Response> setDownloadAnalyticsEvent(
+        @Body DownloadInstallAnalyticsBaseBody<DownloadAnalyticsRequest.DownloadEventBody> body);
   }
 }
 
