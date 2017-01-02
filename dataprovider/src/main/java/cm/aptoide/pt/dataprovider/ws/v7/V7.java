@@ -304,7 +304,9 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
 
     @POST("user/set") Observable<BaseV7Response> setUser(@Body SetUserRequest.Body body);
 
-    @POST("user/addEvent") Observable<BaseV7Response> setDownloadAnalyticsEvent(
+    @POST("user/addEvent/name={name}/action={action}/context={context}")
+    Observable<BaseV7Response> setDownloadAnalyticsEvent(@Path(value = "name") String name,
+        @Path(value = "action") String action, @Path(value = "context") String context,
         @Body DownloadInstallAnalyticsBaseBody<DownloadAnalyticsRequest.DownloadEventBody> body);
   }
 }

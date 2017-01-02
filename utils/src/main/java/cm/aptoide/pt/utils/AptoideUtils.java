@@ -31,6 +31,7 @@ import android.support.annotation.IntegerRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
@@ -852,6 +853,12 @@ public class AptoideUtils {
         }
       }
       return "unknown";
+    }
+
+    public static String getCarrierName() {
+      TelephonyManager manager =
+          (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+      return manager.getNetworkOperatorName();
     }
 
     public static File readLogs(String mPath, String fileName) {

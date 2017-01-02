@@ -14,7 +14,6 @@ import lombok.Setter;
 public @Data @EqualsAndHashCode(callSuper = true) class AnalyticsBaseBody<T> extends BaseBody {
   @Getter @Setter Event<T> event;
   User user;
-  @Getter @Setter long version;
 
   @lombok.Data public static class User {
     Aptoide aptoide;

@@ -9,11 +9,11 @@ import java.util.List;
 
 public class DownloadInstallAnalyticsBaseBody<T extends DownloadInstallAnalyticsBaseBody.Data>
     extends AnalyticsBaseBody<T> {
-  enum ObbType {
+  public enum ObbType {
     main, patch
   }
 
-  enum ResultStatus {
+  public enum ResultStatus {
     SUCC, FAIL
   }
 
