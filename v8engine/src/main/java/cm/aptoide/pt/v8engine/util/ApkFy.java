@@ -7,7 +7,6 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver;
-import com.crashlytics.android.Crashlytics;
 import java.io.InputStream;
 import java.util.Properties;
 import java.util.zip.ZipFile;
