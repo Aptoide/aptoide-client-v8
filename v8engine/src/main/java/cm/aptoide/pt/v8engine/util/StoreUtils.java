@@ -44,6 +44,7 @@ public class StoreUtils {
     if (store != null) {
       username = store.getUsername();
       passwordSha1 = store.getPasswordSha1();
+      return new BaseRequestWithStore.StoreCredentials(storeId, store.getStoreName(), username, passwordSha1);
     }
 
     return new BaseRequestWithStore.StoreCredentials(storeId, username, passwordSha1);
@@ -61,6 +62,8 @@ public class StoreUtils {
     if (store != null) {
       username = store.getUsername();
       passwordSha1 = store.getPasswordSha1();
+
+      return new BaseRequestWithStore.StoreCredentials(store.getStoreId(), storeName, username, passwordSha1);
     }
 
     return new BaseRequestWithStore.StoreCredentials(storeName, username, passwordSha1);
@@ -81,6 +84,20 @@ public class StoreUtils {
     }
   }
 
+  public static BaseRequestWithStore.StoreCredentials getStoreCredentialsFromUrlOrNull(String url) {
+
+    V7Url v7Url = new V7Url(url);
+    Long storeId = v7Url.getStoreId();
+    String storeName = v7Url.getStoreName();
+
+    if (storeId != null) {
+      return getStoreCredentials(storeId);
+    } else if (storeName != null) {
+      return getStoreCredentials(storeName);
+    }
+    return null;
+  }
+
   /**
    * If you want to do event tracking (Analytics) use (v8engine)StoreUtilsProxy.subscribeStore
    * instead, else, use this
@@ -89,7 +106,7 @@ public class StoreUtils {
       @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
       @Nullable ErrorRequestListener errorRequestListener) {
     subscribeStore(GetStoreMetaRequest.of(getStoreCredentials(storeName),
-        AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
+        AptoideAccountManager.getAccessToken(),
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()).getAptoideClientUUID()), successRequestListener,
         errorRequestListener);
@@ -201,5 +218,13 @@ public class StoreUtils {
       }
     }
     return storesAuthMap.size() > 0 ? storesAuthMap : null;
+  }
+
+  public static void unsubscribeStore(String name) {
+    if (AptoideAccountManager.isLoggedIn()) {
+      AptoideAccountManager.unsubscribeStore(name);
+    }
+    StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
+    storeAccessor.remove(name);
   }
 }

@@ -18,7 +18,7 @@ public class InAppBillingConsumeRequest extends V3<BaseV3Response> {
   }
 
   public static InAppBillingConsumeRequest of(int apiVersion, String packageName,
-      String purchaseToken, String accessToken, String email) {
+      String purchaseToken, String accessToken) {
     BaseBody args = new BaseBody();
     args.put("mode", "json");
     args.put("package", packageName);

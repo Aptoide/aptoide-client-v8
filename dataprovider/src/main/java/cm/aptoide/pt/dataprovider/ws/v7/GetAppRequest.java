@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import android.util.Log;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -52,13 +53,14 @@ import rx.Observable;
         (Body) decorator.decorate(new Body(appId, forceServerRefresh, packageName), accessToken));
   }
 
-  public static GetAppRequest of(long appId, String storeName, String accessToken, String aptoideClientUUID,
-      String packageName) {
+  public static GetAppRequest of(long appId, String storeName, String accessToken,
+      String aptoideClientUUID, String packageName) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
     return new GetAppRequest(BASE_HOST,
-        (Body) decorator.decorate(new Body(appId, storeName, forceServerRefresh, packageName), accessToken));
+        (Body) decorator.decorate(new Body(appId, storeName, forceServerRefresh, packageName),
+            accessToken));
   }
 
   public static GetAppRequest of(long appId, String accessToken, String aptoideClientUUID) {
@@ -89,6 +91,27 @@ import rx.Observable;
     body.setStorePassSha1(storeCredentials.getPasswordSha1());
 
     return new GetAppRequest(BASE_HOST, (Body) decorator.decorate(body, accessToken));
+  }
+
+  public static GetAppRequest ofAction(String url, String accessToken, String aptoideClientUUID) {
+    final long appId = getAppIdFromUrl(url);
+    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+    return new GetAppRequest(BASE_HOST, (Body) decorator.decorate(new Body(appId), accessToken));
+  }
+
+  private static long getAppIdFromUrl(String url) {
+    try {
+      // find first index of "appId", split on "=" and the app id is the next index (1) of
+      // the resulting array, excluding the remaining "trash"
+      // example: http://ws75.aptoide.com/api/7/getApp/appId=15168558
+      // example: http://ws75.aptoide.com/api/7/getApp/appId=15168558/other=stuff/in=here
+      String tmp = url.substring(url.indexOf("app_id")).split("=")[1];
+      int lastIdx = tmp.lastIndexOf('/');
+      return Long.parseLong(tmp.substring(0, lastIdx > 0 ? lastIdx : tmp.length()));
+    } catch (Exception e) {
+      Log.e(GetAppRequest.class.getName(), e.getMessage());
+    }
+    return 12765245; // -> Aptoide Uploader app id
   }
 
   @Override
@@ -132,6 +155,11 @@ import rx.Observable;
     public Body(Boolean refresh, String md5) {
       this.md5 = md5;
       this.refresh = refresh;
+    }
+
+    public Body(long appId) {
+      // TODO: 27/12/2016 analara
+      this.appId = appId;
     }
 
     @Data private static class Node {

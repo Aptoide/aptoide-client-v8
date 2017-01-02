@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -14,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.store.Store;
-import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
@@ -33,10 +33,10 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
   private ImageView storeAvatar;
   private TextView storeName;
-  private TextView storeUnsubscribe;
+  //private TextView storeUnsubscribe;
   private LinearLayout storeLayout;
-  private TextView storeSubscribers;
-  private TextView storeDownloads;
+  //private TextView storeSubscribers;
+  //private TextView storeDownloads;
   //private LinearLayout infoLayout;
 
   public GridStoreWidget(View itemView) {
@@ -46,10 +46,10 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
   @Override protected void assignViews(View itemView) {
     storeAvatar = (ImageView) itemView.findViewById(R.id.store_avatar_row);
     storeName = (TextView) itemView.findViewById(R.id.store_name_row);
-    storeUnsubscribe = (TextView) itemView.findViewById(R.id.store_unsubscribe_row);
+    //storeUnsubscribe = (TextView) itemView.findViewById(R.id.store_unsubscribe_row);
     storeLayout = (LinearLayout) itemView.findViewById(R.id.store_main_layout_row);
-    storeSubscribers = (TextView) itemView.findViewById(R.id.store_subscribers);
-    storeDownloads = (TextView) itemView.findViewById(R.id.store_downloads);
+    //storeSubscribers = (TextView) itemView.findViewById(R.id.store_subscribers);
+    //storeDownloads = (TextView) itemView.findViewById(R.id.store_downloads);
     //infoLayout = (LinearLayout) itemView.findViewById(R.id.store_layout_subscribers);
   }
 
@@ -59,14 +59,14 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
     final Store store = gridStoreDisplayable.getPojo();
 
     storeName.setText(store.getName());
-    storeDownloads.setText(AptoideUtils.StringU.withSuffix(store.getStats().getDownloads()));
-    storeSubscribers.setText(AptoideUtils.StringU.withSuffix(store.getStats().getSubscribers()));
+    //storeDownloads.setText(AptoideUtils.StringU.withSuffix(store.getStats().getDownloads()));
+    //storeSubscribers.setText(AptoideUtils.StringU.withSuffix(store.getStats().getSubscribers()));
 
     // in order to re-use the row_store_item layout, we hide the unsubscribe button and
     // increase the padding
-    storeUnsubscribe.setVisibility(View.GONE);
+    //storeUnsubscribe.setVisibility(View.GONE);
 
-    storeLayout.setBackgroundColor(StoreThemeEnum.get(store).getStoreHeaderInt());
+    storeLayout.setBackgroundColor(Color.WHITE);
     storeLayout.setOnClickListener(
         v -> FragmentUtils.replaceFragmentV4((FragmentActivity) v.getContext(),
             V8Engine.getFragmentProvider()
@@ -74,9 +74,11 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
                     store.getAppearance().getTheme())));
 
     if (store.getId() == -1 || TextUtils.isEmpty(store.getAvatar())) {
-      ImageLoader.loadWithCircleTransform(R.drawable.ic_avatar_apps, storeAvatar);
+      ImageLoader.loadWithShadowCircleTransform(R.drawable.ic_avatar_apps, storeAvatar,
+          StoreThemeEnum.get(store).getStoreHeaderInt());
     } else {
-      ImageLoader.loadWithCircleTransform(store.getAvatar(), storeAvatar);
+      ImageLoader.loadWithShadowCircleTransform(store.getAvatar(), storeAvatar,
+          StoreThemeEnum.get(store).getStoreHeaderInt());
     }
   }
 

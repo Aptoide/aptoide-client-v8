@@ -29,12 +29,13 @@ import cm.aptoide.pt.v8engine.fragment.BaseWizardViewerFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.HomeFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.ScheduledDownloadsFragment;
-import cm.aptoide.pt.v8engine.fragment.implementations.StoreTabGridRecyclerFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.storetab.StoreTabGridRecyclerFragment;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.interfaces.DrawerFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver;
 import cm.aptoide.pt.v8engine.services.PullingContentService;
+import cm.aptoide.pt.v8engine.util.ApkFy;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
@@ -54,14 +55,10 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
             V8Engine.getConfiguration().getDefaultTheme());
   }
 
-  @Override protected void onNewIntent(Intent intent) {
-    super.onNewIntent(intent);
-    Analytics.Lifecycle.Activity.onNewIntent(this, intent);
-  }
-
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     Analytics.Lifecycle.Activity.onCreate(this);
+    new ApkFy().run(this);
 
     if (savedInstanceState == null) {
       startService(new Intent(this, PullingContentService.class));
@@ -200,8 +197,7 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
         GetStoreWidgets.WSWidget.Data data = new GetStoreWidgets.WSWidget.Data();
         data.setLayout(Layout.valueOf(queryLayout));
         event.setData(data);
-        pushFragmentV4(V8Engine.getFragmentProvider()
-            .newStoreGridRecyclerFragment(event,
+        pushFragmentV4(V8Engine.getFragmentProvider().newStoreTabGridRecyclerFragment(event,
                 uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.TITLE),
                 uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.STORE_THEME),
                 V8Engine.getConfiguration().getDefaultTheme()));
@@ -269,8 +265,13 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
       } else {
         super.onBackPressed();
       }
+    } else {
+      super.onBackPressed();
     }
+  }
 
-    super.onBackPressed();
+  @Override protected void onNewIntent(Intent intent) {
+    super.onNewIntent(intent);
+    Analytics.Lifecycle.Activity.onNewIntent(this, intent);
   }
 }

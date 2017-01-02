@@ -5,7 +5,6 @@ import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -50,18 +49,32 @@ public class SendEventRequest extends V7<BaseV7Response, SendEventRequest.Body> 
       this.data = data;
     }
 
-    @lombok.Data @Builder @AllArgsConstructor public static class Data {
+    @lombok.Data @Builder public static class Data {
       private String cardType;
       private String source;
       private Specific specific;
+
+      public Data(String cardType, String source, Specific specific) {
+        this.cardType = cardType;
+        this.source = source;
+        this.specific = specific;
+      }
     }
 
-    @lombok.Data @Builder @AllArgsConstructor public static class Specific {
+    @lombok.Data @Builder public static class Specific {
       private String store;
       private String app;
       private String url;
       private String similar_to;
       private String based_on;
+
+      public Specific(String store, String app, String url, String similar_to, String based_on) {
+        this.store = store;
+        this.app = app;
+        this.url = url;
+        this.similar_to = similar_to;
+        this.based_on = based_on;
+      }
     }
   }
 }

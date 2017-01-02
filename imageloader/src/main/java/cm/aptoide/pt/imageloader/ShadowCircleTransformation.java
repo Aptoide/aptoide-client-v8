@@ -11,6 +11,7 @@ import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.view.View;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
@@ -20,12 +21,28 @@ import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
  * Created by marcelobenites on 7/26/16.
  */
 public class ShadowCircleTransformation extends BitmapTransformation {
+  @ColorInt private final int shadowColor;
+  private final float strokeSize;
+  private final float spaceBetween;
 
   public ShadowCircleTransformation(Context context, View view) {
     super(context);
     // When hardware acceleration is setShadowLayer will only work for text views. We need to disable for the view
     // to make sure it will work. There is a performance penalty by doing that.
     view.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+    shadowColor = Color.WHITE;
+    strokeSize = 0.08f;
+    spaceBetween = 0f;
+  }
+
+  public ShadowCircleTransformation(Context context, View view, @ColorInt int shadowColor) {
+    super(context);
+    // When hardware acceleration is setShadowLayer will only work for text views. We need to disable for the view
+    // to make sure it will work. There is a performance penalty by doing that.
+    view.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+    this.shadowColor = shadowColor;
+    strokeSize = 0.08f;
+    spaceBetween = .95f;
   }
 
   @Override
@@ -51,18 +68,20 @@ public class ShadowCircleTransformation extends BitmapTransformation {
 
     float r = size / 2f;
     Paint strokePaint = new Paint();
-    strokePaint.setColor(Color.WHITE);
+    strokePaint.setColor(shadowColor);
     strokePaint.setStyle(Paint.Style.FILL);
     float shadowRadius = size * 0.02f;
     strokePaint.setShadowLayer(shadowRadius, 0.0f, 0.0f, Color.GRAY);
     strokePaint.setAntiAlias(true);
     canvas.drawCircle(r, r, r - shadowRadius, strokePaint);
 
+    strokePaint.setColor(Color.WHITE);
+    canvas.drawCircle(r, r, (r - shadowRadius) * spaceBetween, strokePaint);
     Paint paint = new Paint();
     paint.setShader(
         new BitmapShader(squared, BitmapShader.TileMode.CLAMP, BitmapShader.TileMode.CLAMP));
     paint.setAntiAlias(true);
-    canvas.drawCircle(r, r, r - (size * 0.08f), paint);
+    canvas.drawCircle(r, r, r - (size * strokeSize), paint);
 
     return result;
   }

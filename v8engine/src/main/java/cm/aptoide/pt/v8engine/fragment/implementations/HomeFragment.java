@@ -30,7 +30,6 @@ import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
@@ -85,7 +84,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    updateRepository = RepositoryFactory.getRepositoryFor(Update.class);
+    updateRepository = RepositoryFactory.getUpdateRepository();
   }
 
   private void setupNavigationView() {
@@ -138,9 +137,12 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
     //  startActivity(i);
     //}
 
+
+
     InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
-    Subscription unManagedSubscription = installedAccessor.get(BACKUP_APPS_PACKAGE_NAME)
+    installedAccessor.get(BACKUP_APPS_PACKAGE_NAME)
         .observeOn(AndroidSchedulers.mainThread())
+        .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .subscribe(installed -> {
           if (installed == null) {
             FragmentUtils.replaceFragmentV4(this.getActivity(), V8Engine.getFragmentProvider()
@@ -285,6 +287,41 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
     setUserDataOnHeader();
   }
 
+  public void refreshUpdatesBadge(int num) {
+    // No updates present
+    if (updatesBadge == null) {
+      return;
+    }
+
+    updatesBadge.setTextSize(11);
+
+    if (num > 0) {
+      updatesBadge.setText(String.valueOf(num));
+      if (!updatesBadge.isShown()) {
+        updatesBadge.show(true);
+      }
+    } else {
+      if (updatesBadge.isShown()) {
+        updatesBadge.hide(true);
+      }
+    }
+  }
+
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    View view = super.onCreateView(inflater, container, savedInstanceState);
+    receiver = new ChangeTabReceiver();
+    getContext().registerReceiver(receiver, new IntentFilter(ChangeTabReceiver.SET_TAB_EVENT));
+    return view;
+  }
+
+  @Override public void onDestroyView() {
+    getContext().unregisterReceiver(receiver);
+    receiver = null;
+    super.onDestroyView();
+  }
+
   @Override public int getContentViewId() {
     return R.layout.activity_main;
   }
@@ -341,41 +378,6 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
       toolbar.setNavigationIcon(R.drawable.ic_drawer);
       toolbar.setNavigationOnClickListener(v -> mDrawerLayout.openDrawer(GravityCompat.START));
     }
-  }
-
-  public void refreshUpdatesBadge(int num) {
-    // No updates present
-    if (updatesBadge == null) {
-      return;
-    }
-
-    updatesBadge.setTextSize(11);
-
-    if (num > 0) {
-      updatesBadge.setText(String.valueOf(num));
-      if (!updatesBadge.isShown()) {
-        updatesBadge.show(true);
-      }
-    } else {
-      if (updatesBadge.isShown()) {
-        updatesBadge.hide(true);
-      }
-    }
-  }
-
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    View view = super.onCreateView(inflater, container, savedInstanceState);
-    receiver = new ChangeTabReceiver();
-    getContext().registerReceiver(receiver, new IntentFilter(ChangeTabReceiver.SET_TAB_EVENT));
-    return view;
-  }
-
-  @Override public void onDestroyView() {
-    getContext().unregisterReceiver(receiver);
-    receiver = null;
-    super.onDestroyView();
   }
 
   @Override public boolean isDrawerOpened() {

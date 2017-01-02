@@ -29,6 +29,10 @@ public class StoreAccessor extends SimpleAccessor<Store> {
     database.delete(Store.class, Store.STORE_ID, storeId);
   }
 
+  public void remove(String storeName) {
+    database.delete(Store.class, Store.STORE_NAME, storeName);
+  }
+
   public void save(Store store) {
     database.insert(store);
   }

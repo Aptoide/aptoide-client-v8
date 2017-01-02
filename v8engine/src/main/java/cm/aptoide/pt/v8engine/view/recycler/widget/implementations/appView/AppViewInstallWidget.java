@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
@@ -27,6 +28,7 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
+import cm.aptoide.pt.dataprovider.ws.v7.SetUserRequest;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
@@ -34,6 +36,7 @@ import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Malware;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.SimpleSubscriber;
@@ -44,15 +47,19 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.dialog.InstallWarningDialog;
+import cm.aptoide.pt.v8engine.dialog.SharePreviewDialog;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.receivers.AppBoughtReceiver;
+import cm.aptoide.pt.v8engine.repository.SocialRepository;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewInstallDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import rx.Observable;
+import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -69,7 +76,7 @@ import rx.android.schedulers.AndroidSchedulers;
   //
   // downloading views
   //
-  private CheckBox shareInTimeline; // FIXME: 27/07/16 sithengineer what does this flag do ??
+  private CheckBox shareInTimeline;
   private ProgressBar downloadProgress;
   private TextView textProgress;
   private ImageView actionResume;
@@ -317,7 +324,6 @@ import rx.android.schedulers.AndroidSchedulers;
 
       if (installOrUpgradeMsg == R.string.installing_msg) {
         Analytics.ClickedOnInstallButton.clicked(app);
-        Analytics.SourceDownloadComplete.installClicked(app.getId());
         Analytics.DownloadComplete.installClicked(app.getId());
       }
 
@@ -331,6 +337,51 @@ import rx.android.schedulers.AndroidSchedulers;
           .first()
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(progress -> {
+            if (AptoideAccountManager.isLoggedIn() && ManagerPreferences.getShowPreview()) {
+              SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(displayable);
+              AlertDialog.Builder alertDialog = sharePreviewDialog.showPreviewDialog(getContext());
+              SocialRepository socialRepository = new SocialRepository();
+
+              Observable.create((Subscriber<? super GenericDialogs.EResponse> subscriber) -> {
+                if (!ManagerPreferences.getUserAccessConfirmed()) {
+                  alertDialog.setPositiveButton(R.string.share, (dialogInterface, i) -> {
+                    socialRepository.share(displayable, context,sharePreviewDialog.getPrivacyResult());
+                    subscriber.onNext(GenericDialogs.EResponse.YES);
+                    subscriber.onCompleted();
+                  }).setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
+                    subscriber.onNext(GenericDialogs.EResponse.NO);
+                    subscriber.onCompleted();
+                  });
+                } else {
+                  alertDialog.setPositiveButton(R.string.continue_option, (dialogInterface, i) -> {
+                    socialRepository.share(displayable, context,sharePreviewDialog.getPrivacyResult());
+                    subscriber.onNext(GenericDialogs.EResponse.YES);
+                    subscriber.onCompleted();
+                  }).setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
+                    subscriber.onNext(GenericDialogs.EResponse.NO);
+                    subscriber.onCompleted();
+                  }).setNeutralButton(R.string.dont_show_again, (dialogInterface, i) -> {
+                    subscriber.onNext(GenericDialogs.EResponse.CANCEL);
+                    subscriber.onCompleted();
+                    ManagerPreferences.setShowPreview(false);
+                  });
+                }
+
+                alertDialog.show();
+              }).subscribeOn(AndroidSchedulers.mainThread()).subscribe(eResponse -> {
+                switch (eResponse) {
+                  case YES:
+                    GenericDialogs.createGenericContinueMessage(getContext(), "",
+                        getContext().getResources()
+                            .getString(R.string.social_timeline_share_dialog_title)).subscribe();
+                    break;
+                  case NO:
+                    break;
+                  case CANCEL:
+                    break;
+                }
+              });
+            }
             ShowMessage.asSnack(v, installOrUpgradeMsg);
           }, err -> {
             if (err instanceof SecurityException) {
@@ -392,7 +443,6 @@ import rx.android.schedulers.AndroidSchedulers;
 
       case Download.COMPLETED: {
         Analytics.DownloadComplete.downloadComplete(app);
-        Analytics.SourceDownloadComplete.downloadComplete(app.getId(), app.getPackageName());
         if (!isUpdate) {
           if (minimalAd != null && minimalAd.getCpdUrl() != null) {
             DataproviderUtils.AdNetworksUtils.knockCpd(minimalAd);

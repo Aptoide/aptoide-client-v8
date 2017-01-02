@@ -23,6 +23,8 @@ class AptoideLoginUtils {
   static final String APTOIDE_LOGIN_PASSWORD_KEY = "aptoide_login_password";
   static final String APTOIDE_LOGIN_REFRESH_TOKEN_KEY = "aptoide_login_refresh_token";
   static final String APTOIDE_LOGIN_ACCESS_TOKEN_KEY = "aptoide_login_access_token";
+  static final String APTOIDE_LOGIN_FROM = "aptoide_login_from";
+  public static final String IS_FACEBOOK_OR_GOOGLE = "facebook_google";
 
   private static int REQ_SIGNUP = 8;
 
@@ -63,12 +65,13 @@ class AptoideLoginUtils {
       String password = (String) bundle.get(APTOIDE_LOGIN_PASSWORD_KEY);
       String refreshToken = (String) bundle.get(APTOIDE_LOGIN_REFRESH_TOKEN_KEY);
       String accessToken = (String) bundle.get(APTOIDE_LOGIN_ACCESS_TOKEN_KEY);
+      String loginOrigin = (String) bundle.get(APTOIDE_LOGIN_FROM);
       AccountManagerPreferences.setAccessToken(accessToken);
       AptoideAccountManager.getInstance()
           .addLocalUserAccount(userName, password, null, refreshToken, accessToken);
       AptoideAccountManager.setAccessTokenOnLocalAccount(accessToken, null,
           SecureKeys.ACCESS_TOKEN);
-      AptoideAccountManager.getInstance().onLoginSuccess(LoginMode.APTOIDE);
+      AptoideAccountManager.getInstance().onLoginSuccess(LoginMode.APTOIDE, loginOrigin, userName, password);
       activity.finish();
     }
   }

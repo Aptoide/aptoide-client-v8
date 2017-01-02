@@ -82,11 +82,7 @@ import java.util.Map;
       bindFlagViews(app);
     }
   }
-
-  @Override public void unbindView() {
-
-  }
-
+  
   private void bindFlagViews(GetAppMeta.App app) {
     try {
       GetAppMeta.GetAppMetaFile.Flags flags = app.getFile().getFlags();
@@ -123,8 +119,8 @@ import java.util.Map;
 
       final GetAppMeta.GetAppMetaFile.Flags.Vote.Type type = viewIdTypeMap.get(v.getId());
 
-      AddApkFlagRequest.of(storeName, md5, type.name().toLowerCase(),
-          AptoideAccountManager.getAccessToken()).execute(response -> {
+      compositeSubscription.add(AddApkFlagRequest.of(storeName, md5, type.name().toLowerCase(),
+          AptoideAccountManager.getAccessToken()).observe(true).subscribe(response -> {
         if (response.isOk() && !response.hasErrors()) {
           boolean voteSubmitted = false;
           switch (type) {
@@ -178,7 +174,7 @@ import java.util.Map;
         Logger.e(TAG, error);
         setAllButtonsUnPressed(v);
         ShowMessage.asSnack(v, R.string.unknown_error);
-      }, true);
+      }));
     };
   }
 

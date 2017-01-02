@@ -22,7 +22,7 @@ public class PushNotificationsRequest extends V3<GetPushNotificationsResponse> {
     super(BASE_HOST, baseBody);
   }
 
-  public static PushNotificationsRequest of(String email) {
+  public static PushNotificationsRequest of() {
     BaseBody args = new BaseBody();
 
     String oemid = DataProvider.getConfiguration().getExtraId();

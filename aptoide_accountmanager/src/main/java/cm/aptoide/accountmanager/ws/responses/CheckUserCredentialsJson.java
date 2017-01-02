@@ -25,10 +25,24 @@ import lombok.Data;
   public List<ErrorResponse> errors;
   public Settings settings;
   String repo;
+  public String access;
+  @JsonProperty("access_confirmed") public Boolean accessConfirmed;
+  public RepoDescription repoDescription;
+
+  @Data public static class RepoDescription {
+    public long id_store;
+    public String description;
+    public String theme;
+    public String items;
+  }
 
   @Data public static class Settings {
 
     public String timeline;
     @JsonProperty("matureswitch") public String matureswitch;
+  }
+
+  public boolean hasErrors() {
+    return errors != null && errors.size() > 0;
   }
 }

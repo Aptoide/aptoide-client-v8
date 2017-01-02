@@ -643,6 +643,11 @@ public class AptoideUtils {
       return String.format(Locale.ENGLISH, "%.1f %sbps", bytes / Math.pow(unit, exp) * 8, pre);
     }
 
+    /**
+     *
+     * @param bytes file size
+     * @return formatted string for file file showing a Human perceptible file size
+     */
     public static String formatBytes(long bytes) {
       int unit = 1024;
       if (bytes < unit) {
@@ -1019,11 +1024,15 @@ public class AptoideUtils {
     }
 
     public static void runOnUiThread(Runnable runnable) {
-      Observable.just(null)
-          .observeOn(AndroidSchedulers.mainThread())
-          .subscribe(o -> runnable.run(), e -> {
-            e.printStackTrace();
-          });
+      if (ThreadU.isUiThread()) {
+        runnable.run();
+      } else {
+        Observable.just(null)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(o -> runnable.run(), e -> {
+              e.printStackTrace();
+            });
+      }
     }
 
     public static void sleep(long l) {

@@ -31,7 +31,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.zip.ZipFile;
 
-import static cm.aptoide.pt.v8engine.analytics.Analytics.AppViewViewedFrom.containsUnwantedValues;
 import static cm.aptoide.pt.v8engine.analytics.Analytics.Lifecycle.Application.facebookLogger;
 
 /**
@@ -118,10 +117,22 @@ public class Analytics {
     }
   }
 
+  private static void logFacebookEvents(String eventName, Map<String, String> map) {
+    if (BuildConfig.BUILD_TYPE.equals("debug") && map == null) {
+      return;
+    }
+    Bundle parameters = new Bundle();
+    for (String s : map.keySet()) {
+      parameters.putString(s, map.get(s));
+    }
+    logFacebookEvents(eventName, parameters);
+  }
+
   private static void logFacebookEvents(String eventName, Bundle parameters) {
     if (BuildConfig.BUILD_TYPE.equals("debug")) {
       return;
     }
+
     facebookLogger.logEvent(eventName, parameters);
   }
 
@@ -748,41 +759,40 @@ public class Analytics {
   }
 
   public static class DownloadComplete {
+
     public static final String EVENT_NAME = "Download Complete";
+    private static final String PARTIAL_EVENT_NAME = "Editors Choice_Download_Complete";
+
     private static final String PACKAGE_NAME = "Package Name";
     private static final String TRUSTED_BADGE = "Trusted Badge";
+    private static final String SOURCE = "Source";
+
     private static HashMap<Long, String> applicationsInstallClicked = new HashMap<>();
 
     public static void installClicked(long id) {
-      int homeIndex = AppViewViewedFrom.STEPS.indexOf("home");
-      if (homeIndex > 0) {
-        applicationsInstallClicked.put(id, AppViewViewedFrom.STEPS.get(homeIndex - 1));
-      }
+      String lastStep = Analytics.AppViewViewedFrom.getLastStep();
+      applicationsInstallClicked.put(id, lastStep);
     }
 
     public static void downloadComplete(GetAppMeta.App app) {
+
       try {
-        HashMap<String, String> map = new HashMap<>();
-        String step = applicationsInstallClicked.get(app.getId());
-        if (!TextUtils.isEmpty(step)) {
-          if (step.equals("apps-group-editors-choice")) {
-            map.put("editors package name", app.getPackageName());
-          } else {
-            map.put("bundle package name", step + "_" + app.getPackageName());
-            map.put("bundle category", step);
-          }
+
+        String lastStep = applicationsInstallClicked.get(app.getId());
+        if (TextUtils.isEmpty(lastStep)) {
+          return;
+        } else if (lastStep.contains("editor") && lastStep.contains("choice")) {
+          track(PARTIAL_EVENT_NAME, PACKAGE_NAME, app.getPackageName(), FLURRY);
         }
+
+        HashMap<String, String> map = new HashMap<>();
+        map.put(SOURCE, lastStep);
         map.put(PACKAGE_NAME, app.getPackageName());
         map.put(TRUSTED_BADGE, app.getFile().getMalware().getRank().name());
 
-        if (map.containsKey("Source") && !containsUnwantedValues(map.get("Source"))) {
-          track(EVENT_NAME, map, ALL);
-        }
-
-        Bundle parameters = new Bundle();
-        parameters.putString(PACKAGE_NAME, app.getPackageName());
-        parameters.putString(TRUSTED_BADGE, app.getFile().getMalware().getRank().name());
-        logFacebookEvents(EVENT_NAME, parameters);
+        track(EVENT_NAME, map, ALL);
+        logFacebookEvents(EVENT_NAME, map);
+        applicationsInstallClicked.remove(app.getId());
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -1084,24 +1094,6 @@ public class Analytics {
 
     public static void moveFile(String moveType) {
       track(EVENT_NAME, ATTRIBUTE, moveType, FLURRY);
-    }
-  }
-
-  public static class SourceDownloadComplete {
-    private static final String PARTIAL_EVENT_NAME = "_Download_Complete";
-    private static final String PACKAGE_NAME = "Package Name";
-    private static HashMap<Long, String> applicationsInstallClicked = new HashMap<>();
-
-    public static void installClicked(long id) {
-      String lastStep = Analytics.AppViewViewedFrom.getLastStep();
-      applicationsInstallClicked.put(id, lastStep);
-    }
-
-    public static void downloadComplete(long id, String packageName) {
-      String lastStep = applicationsInstallClicked.get(id);
-      if (!TextUtils.isEmpty(lastStep) && lastStep.contains("editors-choice")) {
-        track(lastStep.concat(PARTIAL_EVENT_NAME), PACKAGE_NAME, packageName, FLURRY);
-      }
     }
   }
 

@@ -127,22 +127,22 @@
   <string name="followed_stores">Followed Stores</string>
   <string name="storage_access_permission_request_message">Please allow access to your phone’s storage so we can download and install this app.</string>
 
-    <string name="remote_install_menu_title">Install on TV</string>
+  <string name="remote_install_menu_title">Install on TV</string>
   <string name="install_on_tv_mobile_error">Make sure your device is connected to Wi-Fi to use this feature.</string>
-    <string name="remote_install_title">Choose target device</string>
-    <string name="remote_install_success">The app is now being installed</string>
-    <string name="remote_install_fail">The remote installation has failed</string>
-    <string name="remote_install_nodevices">No devices found</string>
-    <string name="remote_install_notinstallated">Do you have Aptoide TV installed on your Android TV? \n http://aptoi.de/tv</string>
-    <string name="remote_install_nowifi">No Wi-Fi connection</string>
-    <string name="remote_install_nowifi_tip">Please enable and connect to a Wi-Fi network</string>
-    <string name="remote_install_empty_list">Searching…</string>
-    <string name="remote_install_tip">Please make sure you have an AndroidTV connected to the network</string>
-    <string name="remote_install_retry">Retry</string>
-    <string name="remote_install_help">Help</string>
-    <string name="remote_install_help_url" translatable="false">http://blog.aptoide.com/remote-tv-install</string>
+  <string name="remote_install_title">Choose target device</string>
+  <string name="remote_install_success">The app is now being installed</string>
+  <string name="remote_install_fail">The remote installation has failed</string>
+  <string name="remote_install_nodevices">No devices found</string>
+  <string name="remote_install_notinstallated">Do you have Aptoide TV installed on your Android TV? \n http://aptoi.de/tv</string>
+  <string name="remote_install_nowifi">No Wi-Fi connection</string>
+  <string name="remote_install_nowifi_tip">Please enable and connect to a Wi-Fi network</string>
+  <string name="remote_install_empty_list">Searching…</string>
+  <string name="remote_install_tip">Please make sure you have an AndroidTV connected to the network</string>
+  <string name="remote_install_retry">Retry</string>
+  <string name="remote_install_help">Help</string>
+  <string name="remote_install_help_url" translatable="false">http://blog.aptoide.com/remote-tv-install</string>
 
-    <!-- WIZARD -->
+  <!-- WIZARD -->
   <string name="wizard_skip"><b>SKIP</b></string>
   <!-- WIZARD PAGE 1 -->
   <string name="wizard_welcome_message"><b>Welcome!</b></string>
@@ -301,15 +301,15 @@
   <string name="create_store_displayable_message">Create your Store now and start sharing your apps!</string>
   <string name="create_store_displayable_button">CREATE STORE</string>
   <string name="my_store_created_displayable_message">Your Android App store</string>
-  <string name="create_store_displayable_created_store_message">You’ve just created your Store!</string>
+  <string name="create_store_displayable_created_store_message">You\'ve just created your Store!</string>
   <string name="create_store_displayable_explore_message">Enter and explore all the possibilities</string>
   <string name="create_store_displayable_explore_button">Explore</string>
 
   <!-- stores tab > my store with no apps -->
   <string name="install_app_outter_pt1">Your store doesn\'t have applications yet.</string>
   <string name="install_app_outter_pt2">and upload apps to share them with the world!</string>
-  <string name="install_app_inner">Install %1$s</string>
-  <string name="open_app_inner">Open %1$s</string>
+  <string name="install_app_inner">\u0020Install %1$s\u0020</string>
+  <string name="open_app_inner">\u0020Open %1$s\u0020</string>
   <string name="downloads_count">Downloads: %1$s</string>
   <string name="version_number">Version: %1$s</string>
   <string name="app_size">Size: %1$s</string>
@@ -335,6 +335,7 @@
   <string name="social_timeline_share_soon">The share will be published soon</string>
   <string name="social_timeline_recommends">Recommends</string>
   <string name="private_profile_create_store">To have a private profile, you need to create a store</string>
+  <string name="social_timeline_shared_by">shared by %1$s</string>
 
 
   <!-- Comments on store -->
@@ -347,4 +348,7 @@
   <string name="timeline_followed">Following %d</string>
   <string name="timeline_stats_followers">Followers</string>
   <string name="timeline_login_message">What are your friends installing?</string>
+  <string name="private_followers_message">%d followers are private</string>
+  <string name="private_following_message">you are following %d private users/stores</string>
+
 </resources>

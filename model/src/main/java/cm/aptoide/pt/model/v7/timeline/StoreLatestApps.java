@@ -17,7 +17,6 @@ import lombok.Getter;
   @Getter private final List<App> apps;
   @Getter private final Ab ab;
 
-
   private Date latestUpdate;
 
   @JsonCreator

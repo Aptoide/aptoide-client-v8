@@ -41,7 +41,7 @@ import rx.Observable;
     return new ListAppVersionsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
-  public static ListAppVersionsRequest of(int limit, int offset, String accessToken, String email,
+  public static ListAppVersionsRequest of(int limit, int offset, String accessToken,
       String aptoideClientUUID) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
     Body body = new Body();
@@ -50,7 +50,8 @@ import rx.Observable;
     return new ListAppVersionsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
-  public static ListAppVersionsRequest of(String packageName, List<String> storeNames, String accessToken, String email,
+  public static ListAppVersionsRequest of(String packageName, List<String> storeNames,
+      String accessToken,
       String aptoideClientUUID, HashMapNotNull<String, List<String>> storeCredentials) {
     if(storeNames!= null && !storeNames.isEmpty()) {
       BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
@@ -59,11 +60,11 @@ import rx.Observable;
       return new ListAppVersionsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
     }
     else{
-      return of(packageName, accessToken, email, aptoideClientUUID, storeCredentials);
+      return of(packageName, accessToken, aptoideClientUUID, storeCredentials);
     }
   }
 
-  public static ListAppVersionsRequest of(String packageName, String accessToken, String email,
+  public static ListAppVersionsRequest of(String packageName, String accessToken,
       String aptoideClientUUID, HashMapNotNull<String, List<String>> storeCredentials) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
     Body body = new Body(packageName);
@@ -73,7 +74,7 @@ import rx.Observable;
   }
 
   public static ListAppVersionsRequest of(String packageName, int limit, int offset,
-      String accessToken, String email, String aptoideClientUUID) {
+      String accessToken, String aptoideClientUUID) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
     Body body = new Body(packageName);
     body.setLimit(limit);

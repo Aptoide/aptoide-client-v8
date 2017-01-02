@@ -128,4 +128,12 @@ class AccountManagerPreferences {
   public static void setLoginMode(LoginMode loginMode) {
     SecurePreferences.putString(SecureKeys.LOGIN_MODE, loginMode.name());
   }
+
+  static String getRepoTheme() {
+    return SecurePreferences.getString(SecureKeys.REPO_THEME);
+  }
+
+  static void setRepoTheme(String repoTheme) {
+    SecurePreferences.putString(SecureKeys.REPO_THEME, repoTheme);
+  }
 }

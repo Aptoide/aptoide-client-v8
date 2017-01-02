@@ -12,55 +12,93 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDis
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 /**
  * Created by neuro on 18-04-2016.
  */
 public class Displayables implements LifecycleSchim {
 
+  private final Queue<Displayable> temporaryDisplayables = new LinkedList<>();
   private final List<Displayable> displayables = new LinkedList<>();
 
-  public Displayables() {
+  public Displayables() { }
+
+  public void add(int position, List<? extends Displayable> displayables) {
+    Collections.reverse(displayables);
+
+    for (Displayable displayable : displayables) {
+      add(position, displayable);
+    }
+  }
+
+  public void add(List<? extends Displayable> displayables) {
+    for (Displayable displayable : displayables) {
+      add(displayable);
+    }
   }
 
   public void add(int position, Displayable displayable) {
-    // Ignore empty displayables
-    if (displayable instanceof EmptyDisplayable) {
-      return;
-    }
+    if (shouldIgnore(displayable)) return;
 
     if (displayable instanceof DisplayableGroup) {
-      add(position, ((DisplayableGroup) displayable).getChildren());
+      addDisplayableGroup(position, (DisplayableGroup) displayable);
     } else {
       displayables.add(position, displayable);
     }
   }
 
-  public void add(int position, List<? extends Displayable> collection) {
-    Collections.reverse(collection);
-
-    for (Displayable displayable : collection) {
-      add(position, displayable);
-    }
-  }
-
   public void add(Displayable displayable) {
-    // Ignore empty displayables
-    if (displayable instanceof EmptyDisplayable) {
-      return;
-    }
+    if (shouldIgnore(displayable)) return;
 
     if (displayable instanceof DisplayableGroup) {
-      add(((DisplayableGroup) displayable).getChildren());
+      addDisplayableGroup((DisplayableGroup) displayable);
     } else {
       displayables.add(displayable);
     }
   }
 
-  public void add(List<? extends Displayable> collection) {
-    for (Displayable displayable : collection) {
-      add(displayable);
+  private boolean shouldIgnore(Displayable displayable) {
+    return displayable instanceof EmptyDisplayable;
+  }
+
+  /**
+   * Uses a breadth-first-search to reach all leaf nodes transversing the list in width.
+   *
+   * @param displayable
+   */
+  private void addDisplayableGroup(DisplayableGroup displayable) {
+    temporaryDisplayables.clear();
+    temporaryDisplayables.addAll(displayable.getChildren());
+    while (!temporaryDisplayables.isEmpty()) {
+      Displayable innerDisplayable = temporaryDisplayables.poll();
+      if (innerDisplayable instanceof DisplayableGroup) {
+        temporaryDisplayables.addAll(((DisplayableGroup) innerDisplayable).getChildren());
+      } else {
+        displayables.add(innerDisplayable);
+      }
     }
+  }
+
+  /**
+   * Uses a breadth-first-search to reach all leaf nodes transversing the list in width.
+   *
+   * @param position
+   */
+  private void addDisplayableGroup(int position, DisplayableGroup displayable) {
+    temporaryDisplayables.clear();
+    temporaryDisplayables.addAll(displayable.getChildren());
+    LinkedList<Displayable> temp = new LinkedList<>();
+    while (!temporaryDisplayables.isEmpty()) {
+      Displayable innerDisplayable = temporaryDisplayables.poll();
+      if (innerDisplayable instanceof DisplayableGroup) {
+        temporaryDisplayables.addAll(((DisplayableGroup) innerDisplayable).getChildren());
+      } else {
+        temp.add(innerDisplayable);
+      }
+    }
+    Collections.reverse(temp);
+    displayables.addAll(position, temp);
   }
 
   public Displayable pop() {

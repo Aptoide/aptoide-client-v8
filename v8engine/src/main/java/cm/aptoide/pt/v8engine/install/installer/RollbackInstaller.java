@@ -10,19 +10,26 @@ import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.provider.RollbackFactory;
 import cm.aptoide.pt.v8engine.repository.RollbackRepository;
-import lombok.AllArgsConstructor;
 import rx.Observable;
 
 /**
  * Created by trinkes on 9/8/16.
  */
 
-@AllArgsConstructor public class RollbackInstaller implements Installer {
+public class RollbackInstaller implements Installer {
 
   private final DefaultInstaller defaultInstaller;
   private final RollbackRepository repository;
   private final RollbackFactory rollbackFactory;
   private final InstallationProvider installationProvider;
+
+  public RollbackInstaller(DefaultInstaller defaultInstaller, RollbackRepository repository,
+      RollbackFactory rollbackFactory, InstallationProvider installationProvider) {
+    this.defaultInstaller = defaultInstaller;
+    this.repository = repository;
+    this.rollbackFactory = rollbackFactory;
+    this.installationProvider = installationProvider;
+  }
 
   @Override public Observable<Boolean> isInstalled(String md5) {
     return defaultInstaller.isInstalled(md5);

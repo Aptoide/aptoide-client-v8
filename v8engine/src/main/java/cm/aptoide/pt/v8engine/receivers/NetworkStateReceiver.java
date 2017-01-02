@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.fragment.implementations.ScheduledDownloadsFragment;
@@ -39,7 +38,7 @@ public class NetworkStateReceiver extends BroadcastReceiver {
     }
 
     ScheduledDownloadRepository scheduledRepository =
-        RepositoryFactory.getRepositoryFor(Scheduled.class);
+        RepositoryFactory.getScheduledDownloadRepository();
     if (scheduledRepository != null && scheduledRepository.hasScheduleDownloads()) {
       Intent i = new Intent(Intent.ACTION_VIEW,
           Uri.parse(ScheduledDownloadsFragment.OPEN_SCHEDULE_DOWNLOADS_WITH_POPUP_URI));

@@ -8,10 +8,8 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.BaseV7Response;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
 import rx.Observable;
 
 /**
@@ -26,7 +24,7 @@ public class PostReviewRequest extends V7<BaseV7Response, PostReviewRequest.Body
   }
 
   public static PostReviewRequest of(String storeName, String packageName, String title,
-      String textBody, Integer rating, String accessToken, String email, String aptoideClientUUID) {
+      String textBody, Integer rating, String accessToken, String aptoideClientUUID) {
     //
     //  http://ws75-primary.aptoide.com/api/7/setReview/package_name/cm.aptoide
     // .pt/store_name/apps/title/Best%20app%20store/rating/5/access_token/ca01ee1e05ab4d82d99ef143e2816e667333c6ef
@@ -37,7 +35,7 @@ public class PostReviewRequest extends V7<BaseV7Response, PostReviewRequest.Body
   }
 
   public static PostReviewRequest of(String packageName, String title, String textBody,
-      Integer rating, String accessToken, String email, String aptoideClientUUID) {
+      Integer rating, String accessToken, String aptoideClientUUID) {
     //
     //  http://ws75-primary.aptoide.com/api/7/setReview/package_name/cm.aptoide
     // .pt/store_name/apps/title/Best%20app%20store/rating/5/access_token/ca01ee1e05ab4d82d99ef143e2816e667333c6ef
@@ -52,8 +50,7 @@ public class PostReviewRequest extends V7<BaseV7Response, PostReviewRequest.Body
     return interfaces.postReview(body, true);
   }
 
-  @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) @AllArgsConstructor
-  public static class Body extends BaseBody {
+  @Data @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody {
 
     private String storeName;
     private String packageName;
@@ -62,6 +59,14 @@ public class PostReviewRequest extends V7<BaseV7Response, PostReviewRequest.Body
     private Integer rating;
 
     public Body(String packageName, String title, String body, Integer rating) {
+      this.packageName = packageName;
+      this.title = title;
+      this.body = body;
+      this.rating = rating;
+    }
+
+    public Body(String storeName, String packageName, String title, String body, Integer rating) {
+      this.storeName = storeName;
       this.packageName = packageName;
       this.title = title;
       this.body = body;

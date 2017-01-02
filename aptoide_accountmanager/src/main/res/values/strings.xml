@@ -26,7 +26,7 @@
   <string name="sign_out">Sign Out</string>
   <string name="default_account_type">cm.aptoide.pt</string>
 
-  <string name="facebook_garant_permission_button">Garant permission</string>
+  <string name="facebook_grant_permission_button">Grant permission</string>
   <string name="facebook_email_permission_regected_message">Aptoide needs your email to make an
         account
     </string>

@@ -17,7 +17,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -46,7 +45,7 @@ import rx.schedulers.Schedulers;
   }
 
   public static ListAppsUpdatesRequest of(List<Long> subscribedStoresIds, String accessToken,
-      String email, String aptoideClientUUID) {
+      String aptoideClientUUID) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
     return new ListAppsUpdatesRequest((Body) decorator.decorate(
@@ -150,10 +149,16 @@ import rx.schedulers.Schedulers;
     }
   }
 
-  @AllArgsConstructor public static class ApksData {
+  public static class ApksData {
 
     @Getter @JsonProperty("package") private String packageName;
     @Getter private int vercode;
     @Getter private String signature;
+
+    public ApksData(String packageName, int vercode, String signature) {
+      this.packageName = packageName;
+      this.vercode = vercode;
+      this.signature = signature;
+    }
   }
 }

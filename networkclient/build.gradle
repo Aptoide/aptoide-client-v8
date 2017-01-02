@@ -67,7 +67,6 @@ dependencies {
   testCompile "com.android.support.test:testing-support-lib:0.1"
 
   testCompile "junit:junit:${JUNIT_VERSION}"
-  //testCompile "org.robolectric:robolectric:${ROBOELECTRIC_VERSION}"
   testCompile "com.squareup.okhttp3:mockwebserver:${MOCK_WEB_SERVER_VERSION}"
   testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
 

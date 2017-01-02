@@ -2,18 +2,21 @@ package cm.aptoide.pt.v8engine.configuration.implementation;
 
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.database.realm.MinimalAd;
+import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.v8engine.configuration.FragmentProvider;
+import cm.aptoide.pt.v8engine.fragment.CommentListFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppsTimelineFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.CreateUserFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.DescriptionFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.DownloadsFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.ExcludedUpdatesFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.FragmentTopStores;
 import cm.aptoide.pt.v8engine.fragment.implementations.HomeFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.LatestReviewsFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.MyStoresFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.OtherVersionsFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.RollbackFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.ScheduledDownloadsFragment;
@@ -24,10 +27,9 @@ import cm.aptoide.pt.v8engine.fragment.implementations.SendFeedbackFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.SettingsFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.SocialFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
-import cm.aptoide.pt.v8engine.fragment.implementations.StoreGridRecyclerFragment;
-import cm.aptoide.pt.v8engine.fragment.implementations.StoreTabGridRecyclerFragment;
-import cm.aptoide.pt.v8engine.fragment.implementations.SubscribedStoresFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.TimeLineFollowFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.UpdatesFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.storetab.StoreTabGridRecyclerFragment;
 import cm.aptoide.pt.viewRateAndCommentReviews.RateAndReviewsFragment;
 import java.util.ArrayList;
 
@@ -87,13 +89,13 @@ public class FragmentProviderImpl implements FragmentProvider {
     return AppViewFragment.newInstance(md5);
   }
 
-  @Override public Fragment newAppViewFragment(long appId, String packageName) {
-    return AppViewFragment.newInstance(appId, packageName, AppViewFragment.OpenType.OPEN_ONLY);
-  }
-
   @Override public Fragment newAppViewFragment(long appId, String packageName,
       AppViewFragment.OpenType openType) {
     return AppViewFragment.newInstance(appId, packageName, openType);
+  }
+
+  @Override public Fragment newAppViewFragment(long appId, String packageName) {
+    return AppViewFragment.newInstance(appId, packageName, AppViewFragment.OpenType.OPEN_ONLY);
   }
 
   @Override public Fragment newAppViewFragment(long appId, String packageName, String storeTheme,
@@ -103,10 +105,6 @@ public class FragmentProviderImpl implements FragmentProvider {
 
   @Override public Fragment newAppViewFragment(MinimalAd minimalAd) {
     return AppViewFragment.newInstance(minimalAd);
-  }
-
-  @Override public Fragment newAppViewFragment(GetAdsResponse.Ad ad) {
-    return AppViewFragment.newInstance(ad);
   }
 
   @Override
@@ -127,27 +125,24 @@ public class FragmentProviderImpl implements FragmentProvider {
   }
 
   @Override
-  public Fragment newStoreTabGridRecyclerFragment(Event event, String title, String storeTheme,
-      String tag) {
-    return StoreTabGridRecyclerFragment.newInstance(event, title, storeTheme, tag);
+  public Fragment newStoreTabGridRecyclerFragment(Event event, String storeTheme, String tag) {
+    return StoreTabGridRecyclerFragment.newInstance(event, storeTheme, tag);
   }
 
   @Override
-  public Fragment newStoreGridRecyclerFragment(Event event, String title, String storeTheme,
+  public Fragment newStoreTabGridRecyclerFragment(Event event, String title, String storeTheme,
       String tag) {
-    return StoreGridRecyclerFragment.newInstance(event, title, storeTheme, tag);
-  }
-
-  @Override public Fragment newStoreGridRecyclerFragment(Event event, String title) {
-    return StoreGridRecyclerFragment.newInstance(event, title);
+    return StoreTabGridRecyclerFragment.newInstance(event, title, storeTheme, tag);
   }
 
   @Override public Fragment newAppsTimelineFragment(String action) {
     return AppsTimelineFragment.newInstance(action);
   }
 
-  @Override public Fragment newSubscribedStoresFragment() {
-    return SubscribedStoresFragment.newInstance();
+  @Override
+  public Fragment newSubscribedStoresFragment(Event event, String label, String storeTheme,
+      String tag) {
+    return MyStoresFragment.newInstance(event, label, storeTheme, tag);
   }
 
   @Override public Fragment newSearchPagerTabFragment(String query, boolean subscribedStores,
@@ -206,5 +201,24 @@ public class FragmentProviderImpl implements FragmentProvider {
 
   @Override public Fragment newSettingsFragment() {
     return SettingsFragment.newInstance();
+  }
+
+  @Override public Fragment newCreateUserFragment() {
+    return CreateUserFragment.newInstance();
+  }
+
+  @Override public Fragment newTimeLineFollowStatsFragment(
+      TimeLineFollowFragment.FollowFragmentOpenMode openMode, long followNumber) {
+    return TimeLineFollowFragment.newInstance(openMode, followNumber);
+  }
+
+  @Override
+  public Fragment newCommentGridRecyclerFragment(CommentType commentType, String elementId) {
+    return CommentListFragment.newInstance(commentType, elementId);
+  }
+
+  @Override
+  public Fragment newCommentGridRecyclerFragmentUrl(CommentType commentType, String url) {
+    return CommentListFragment.newInstanceUrl(commentType, url);
   }
 }

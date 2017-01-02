@@ -11,18 +11,25 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.GridLayoutManager;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.util.ErrorUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Datalist;
 import cm.aptoide.pt.model.v7.timeline.AppUpdate;
 import cm.aptoide.pt.model.v7.timeline.Article;
 import cm.aptoide.pt.model.v7.timeline.Feature;
 import cm.aptoide.pt.model.v7.timeline.Recommendation;
 import cm.aptoide.pt.model.v7.timeline.Similar;
+import cm.aptoide.pt.model.v7.timeline.SocialArticle;
+import cm.aptoide.pt.model.v7.timeline.SocialInstall;
+import cm.aptoide.pt.model.v7.timeline.SocialRecommendation;
+import cm.aptoide.pt.model.v7.timeline.SocialStoreLatestApps;
+import cm.aptoide.pt.model.v7.timeline.SocialVideo;
 import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.model.v7.timeline.Video;
@@ -34,6 +41,7 @@ import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.repository.PackageRepository;
+import cm.aptoide.pt.v8engine.repository.SocialRepository;
 import cm.aptoide.pt.v8engine.repository.TimelineCardFilter;
 import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
 import cm.aptoide.pt.v8engine.repository.TimelineRepository;
@@ -42,14 +50,21 @@ import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.ProgressBarDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.RecommendationDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppUpdateDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ArticleDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FeatureDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SimilarDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreLatestAppsDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.VideoDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.TimeLineStatsDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.TimelineLoginDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.AppUpdateDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.ArticleDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.RecommendationDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.SimilarDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.SocialArticleDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.SocialInstallDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.SocialRecommendationDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.SocialStoreLatestAppsDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.SocialVideoDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.StoreLatestAppsDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.VideoDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.listeners.RxEndlessRecyclerView;
 import com.trello.rxlifecycle.FragmentEvent;
 import java.util.Arrays;
@@ -83,6 +98,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
   private InstallManager installManager;
   private PermissionManager permissionManager;
   private TimelineMetricsManager timelineMetricsManager;
+  private SocialRepository socialRepository;
 
   public static AppsTimelineFragment newInstance(String action) {
     AppsTimelineFragment fragment = new AppsTimelineFragment();
@@ -109,6 +125,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
         AccessorFactory.getAccessorFor(Download.class),
         AccessorFactory.getAccessorFor(Installed.class));
     timelineMetricsManager = new TimelineMetricsManager();
+    socialRepository = new SocialRepository();
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
@@ -175,7 +192,25 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
   @NonNull private Observable<Datalist<Displayable>> getFreshDisplayables(boolean refresh,
       List<String> packages) {
     return getDisplayableList(packages, 0, refresh).doOnNext(
-        item -> getAdapter().clearDisplayables()).doOnUnsubscribe(() -> finishLoading());
+        item -> getAdapter().clearDisplayables()).flatMap(displayableDatalist -> {
+      if (!displayableDatalist.getList().isEmpty()) {
+        if (AptoideAccountManager.isLoggedIn()) {
+          return timelineRepository.getTimelineStats(refresh).map(timelineStats -> {
+            displayableDatalist.getList()
+                .add(0, new TimeLineStatsDisplayable(timelineStats, spannableFactory));
+            return displayableDatalist;
+          }).onErrorReturn(throwable -> {
+            Logger.e(this, throwable);
+            return displayableDatalist;
+          });
+        } else {
+          displayableDatalist.getList().add(0, new TimelineLoginDisplayable());
+          return Observable.just(displayableDatalist);
+        }
+      } else {
+        return Observable.just(displayableDatalist);
+      }
+    }).doOnUnsubscribe(() -> finishLoading());
   }
 
   @Override public void reload() {
@@ -303,24 +338,40 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
       LinksHandlerFactory linksHandlerFactory) {
     if (card instanceof Article) {
       return ArticleDisplayable.from((Article) card, dateCalculator, spannableFactory,
-          linksHandlerFactory, timelineMetricsManager);
+          linksHandlerFactory, timelineMetricsManager, socialRepository);
     } else if (card instanceof Video) {
       return VideoDisplayable.from((Video) card, dateCalculator, spannableFactory,
-          linksHandlerFactory, timelineMetricsManager);
+          linksHandlerFactory, timelineMetricsManager, socialRepository);
+    } else if (card instanceof SocialArticle) {
+      return SocialArticleDisplayable.from(((SocialArticle) card), dateCalculator, spannableFactory,
+          linksHandlerFactory, timelineMetricsManager, socialRepository);
+    } else if (card instanceof SocialVideo) {
+      return SocialVideoDisplayable.from(((SocialVideo) card), dateCalculator, spannableFactory,
+          linksHandlerFactory, timelineMetricsManager, socialRepository);
+    } else if (card instanceof SocialStoreLatestApps) {
+      return SocialStoreLatestAppsDisplayable.from((SocialStoreLatestApps) card, dateCalculator,
+          timelineMetricsManager, socialRepository, spannableFactory);
     } else if (card instanceof Feature) {
       return FeatureDisplayable.from((Feature) card, dateCalculator, spannableFactory);
     } else if (card instanceof StoreLatestApps) {
       return StoreLatestAppsDisplayable.from((StoreLatestApps) card, dateCalculator,
-          timelineMetricsManager);
+          timelineMetricsManager, socialRepository);
     } else if (card instanceof AppUpdate) {
       return AppUpdateDisplayable.from((AppUpdate) card, spannableFactory, downloadFactory,
-          dateCalculator, installManager, permissionManager, timelineMetricsManager);
+          dateCalculator, installManager, permissionManager, timelineMetricsManager,
+          socialRepository);
     } else if (card instanceof Recommendation) {
       return RecommendationDisplayable.from((Recommendation) card, dateCalculator, spannableFactory,
-          timelineMetricsManager);
+          timelineMetricsManager, socialRepository);
     } else if (card instanceof Similar) {
       return SimilarDisplayable.from((Similar) card, dateCalculator, spannableFactory,
-          timelineMetricsManager);
+          timelineMetricsManager, socialRepository);
+    } else if (card instanceof SocialInstall) {
+      return SocialInstallDisplayable.from((SocialInstall) card, timelineMetricsManager,
+          spannableFactory, socialRepository, dateCalculator);
+    } else if (card instanceof SocialRecommendation) {
+      return SocialRecommendationDisplayable.from((SocialRecommendation) card,
+          timelineMetricsManager, spannableFactory, socialRepository, dateCalculator);
     }
     throw new IllegalArgumentException(
         "Only articles, features, store latest apps, app updates, videos, recommendations and similar cards supported.");

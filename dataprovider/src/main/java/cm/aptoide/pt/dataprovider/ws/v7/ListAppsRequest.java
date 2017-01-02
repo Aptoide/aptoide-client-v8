@@ -12,8 +12,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import okhttp3.OkHttpClient;
-import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -30,14 +28,8 @@ import rx.Observable;
     this.url = url;
   }
 
-  private ListAppsRequest(String url, Body body, Converter.Factory converterFactory,
-      OkHttpClient httpClient, String baseHost) {
-    super(body, httpClient, converterFactory, baseHost);
-    this.url = url;
-  }
-
   public static ListAppsRequest ofAction(String url, StoreCredentials storeCredentials,
-      String accessToken, String email, String aptoideClientUUID) {
+      String accessToken, String aptoideClientUUID) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
     V7Url listAppsV7Url = new V7Url(url).remove("listApps");

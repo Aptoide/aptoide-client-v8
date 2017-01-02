@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 09/08/2016.
- */
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
@@ -18,15 +14,11 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RowReviewDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import com.jakewharton.rxbinding.view.RxView;
 import java.util.Locale;
 
-/**
- * created by SithEngineer
- */
 public class RowReviewWidget extends Widget<RowReviewDisplayable> {
 
-  //private final EnumStoreTheme theme;
-  //private boolean isCommunity;
   public ImageView appIcon;
   public TextView rating;
   public TextView appName;
@@ -66,25 +58,14 @@ public class RowReviewWidget extends Widget<RowReviewDisplayable> {
     reviewer.setText(
         AptoideUtils.StringU.getFormattedString(R.string.reviewed_by, review.getUser().getName()));
 
-    //rating.setText(AptoideUtils.StringUtils.getRoundedValueFromDouble(appItem.rating));
     rating.setText(String.format(Locale.getDefault(), "%d", (long) review.getStats().getRating()));
     ImageLoader.loadWithCircleTransformAndPlaceHolderAvatarSize(review.getUser().getAvatar(),
         avatar, R.drawable.layer_1);
 
-    //        ReviewViewHolder holder = (ReviewViewHolder) viewHolder;
-    //		final ReviewRowItem appItem = (ReviewRowItem) displayable;
-    //		final Context context = itemView.getContext();
-    //
-    //		if(theme != null) {
-    //			@ColorInt
-    //			int color = context.getResources().getColor(theme.getStoreHeader());
-    //			score.getBackground().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-    //		}
-
-    itemView.setOnClickListener(v -> {
+    compositeSubscription.add(RxView.clicks(itemView).subscribe(aVoid-> {
       ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
           .newRateAndReviewsFragment(app.getId(), app.getName(), app.getStore().getName(),
               app.getPackageName(), review.getId()));
-    });
+    }));
   }
 }

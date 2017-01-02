@@ -10,8 +10,8 @@ import android.text.Html;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
@@ -40,18 +40,18 @@ public class SearchAdWidget extends Widget<SearchAdDisplayable> {
   }
 
   @Override public void bindView(SearchAdDisplayable displayable) {
-    GetAdsResponse.Ad ad = displayable.getPojo();
+    MinimalAd minimalAd = displayable.getPojo();
 
-    name.setText(ad.getData().getName());
-    description.setText(Html.fromHtml(ad.getData().getDescription()));
+    name.setText(minimalAd.getName());
+    description.setText(Html.fromHtml(minimalAd.getDescription()));
     sponsored.setTypeface(null, Typeface.BOLD);
     sponsored.setText((getContext().getResources().getText(R.string.sponsored) + "").toUpperCase());
-    ImageLoader.load(ad.getData().getIcon(), icon);
+    ImageLoader.load(minimalAd.getIconPath(), icon);
 
     itemView.setOnClickListener(view -> {
       //	        AptoideUtils.FlurryAppviewOrigin.addAppviewOrigin("Suggested_Search Result");
       ((FragmentShower) view.getContext()).pushFragmentV4(
-          V8Engine.getFragmentProvider().newAppViewFragment(ad));
+          V8Engine.getFragmentProvider().newAppViewFragment(minimalAd));
     });
   }
 

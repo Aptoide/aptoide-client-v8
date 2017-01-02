@@ -1,41 +1,38 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 28/07/2016.
- */
-
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import lombok.Getter;
+import lombok.Setter;
 
-/**
- * Created by sithengineer on 29/04/16.
- */
-public class StoreGridHeaderDisplayable extends DisplayablePojo<GetStoreWidgets.WSWidget> {
+public class StoreGridHeaderDisplayable extends Displayable {
 
-  @Getter private String storeTheme;
-  @Getter private String tag;
+  @Getter private final GetStoreWidgets.WSWidget wsWidget;
+  @Getter private final String storeTheme;
+  @Getter private final String tag;
+  @Getter @Setter private boolean moreVisible;
 
   public StoreGridHeaderDisplayable() {
+    this(null, null, null);
   }
 
-  public StoreGridHeaderDisplayable(GetStoreWidgets.WSWidget pojo) {
-    super(pojo);
+  public StoreGridHeaderDisplayable(GetStoreWidgets.WSWidget wsWidget) {
+    this(wsWidget, null, null);
   }
 
-  public StoreGridHeaderDisplayable(GetStoreWidgets.WSWidget pojo, String storeTheme, String tag) {
-    super(pojo);
+  public StoreGridHeaderDisplayable(GetStoreWidgets.WSWidget wsWidget, String storeTheme, String tag) {
+    this.wsWidget = wsWidget;
     this.storeTheme = storeTheme;
     this.tag = tag;
+    this.moreVisible = true;
   }
 
   @Override public int getViewLayout() {
     return R.layout.displayable_grid_header;
   }
 
-  @Override protected Configs getConfig() {
+  @Override protected Displayable.Configs getConfig() {
     return new Configs(1, true);
   }
 }
