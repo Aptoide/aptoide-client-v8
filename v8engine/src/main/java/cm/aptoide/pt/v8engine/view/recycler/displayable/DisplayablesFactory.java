@@ -31,6 +31,7 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.DefaultDisplayableGroup;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.DisplayableGroupWithMargin;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CreateStoreDisplayable;
@@ -108,24 +109,8 @@ public class DisplayablesFactory {
             displayables.add(createRecommendedStores(wsWidget, storeTheme, storeRepository));
             break;
           case COMMENTS_GROUP:
-            Pair<ListComments, BaseRequestWithStore.StoreCredentials> data =
-                (Pair<ListComments, BaseRequestWithStore.StoreCredentials>) wsWidget.getViewObject();
-            ListComments comments = data.first;
-            if (comments != null
-                && comments.getDatalist() != null
-                && comments.getDatalist().getList().size() > 0) {
-              displayables.add(new StoreGridHeaderDisplayable(wsWidget));
-              displayables.add(
-                  new StoreLatestCommentsDisplayable(data.second.getId(), data.second.getName(),
-                      comments.getDatalist().getList()));
-            } else {
-              displayables.add(new StoreGridHeaderDisplayable(wsWidget));
-              displayables.add(
-                  new StoreAddCommentDisplayable(data.second.getId(), data.second.getName(),
-                      StoreThemeEnum.APTOIDE_STORE_THEME_DEFAULT));
-            }
+            displayables.add(createCommentsGroup(wsWidget));
             break;
-
           case APP_META:
             GetStoreWidgets.WSWidget.Data dataObj = wsWidget.getData();
             String message = dataObj.getMessage();
@@ -137,6 +122,27 @@ public class DisplayablesFactory {
     }
 
     return displayables;
+  }
+
+  private static Displayable createCommentsGroup(GetStoreWidgets.WSWidget wsWidget) {
+    List<Displayable> displayables = new LinkedList<>();
+
+    Pair<ListComments, BaseRequestWithStore.StoreCredentials> data =
+        (Pair<ListComments, BaseRequestWithStore.StoreCredentials>) wsWidget.getViewObject();
+    ListComments comments = data.first;
+    displayables.add(new DefaultDisplayableGroup(new StoreGridHeaderDisplayable(wsWidget)));
+    if (comments != null
+        && comments.getDatalist() != null
+        && comments.getDatalist().getList().size() > 0) {
+      displayables.add(
+          new StoreLatestCommentsDisplayable(data.second.getId(), data.second.getName(),
+              comments.getDatalist().getList()));
+    } else {
+      displayables.add(new StoreAddCommentDisplayable(data.second.getId(), data.second.getName(),
+          StoreThemeEnum.APTOIDE_STORE_THEME_DEFAULT));
+    }
+
+    return new DisplayableGroupWithMargin(displayables);
   }
 
   private static DefaultDisplayableGroup createReviewsGroupDisplayables(

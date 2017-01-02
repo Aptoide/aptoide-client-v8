@@ -7,6 +7,7 @@ import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.DefaultDisplayableGroup;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.DisplayableGroupWithMargin;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.ProgressBarDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewCommentsDisplayable;
@@ -78,6 +79,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.DefaultWidgetGroup;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.EmptyWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.WidgetGroupWithMargin;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewCommentsWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewDescriptionWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewDeveloperWidget;
@@ -189,8 +191,11 @@ public class DisplayableWidgetMapping {
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(EmptyWidget.class, EmptyDisplayable.class));
 
+    // Group
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(DefaultWidgetGroup.class, DefaultDisplayableGroup.class));
+    displayableWidgetMappings.add(new DisplayableWidgetMapping(WidgetGroupWithMargin.class,
+        DisplayableGroupWithMargin.class));
 
     // common widgets / displayables
     displayableWidgetMappings.add(
