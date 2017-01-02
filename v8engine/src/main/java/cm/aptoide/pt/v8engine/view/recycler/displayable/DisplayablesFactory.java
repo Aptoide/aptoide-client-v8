@@ -30,6 +30,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.DefaultDisplayableGroup;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CreateStoreDisplayable;
@@ -94,7 +95,7 @@ public class DisplayablesFactory {
             }
             break;
           case STORE_META:
-            displayables.add(new DisplayableGroup(
+            displayables.add(new DefaultDisplayableGroup(
                 new GridStoreMetaDisplayable((GetStoreMeta) wsWidget.getViewObject())));
             break;
           case REVIEWS_GROUP:
@@ -128,7 +129,7 @@ public class DisplayablesFactory {
           case APP_META:
             GetStoreWidgets.WSWidget.Data dataObj = wsWidget.getData();
             String message = dataObj.getMessage();
-            displayables.add(new DisplayableGroup(new OfficialAppDisplayable(
+            displayables.add(new DefaultDisplayableGroup(new OfficialAppDisplayable(
                 new Pair<>(message, (GetApp) wsWidget.getViewObject()))));
             break;
         }
@@ -138,7 +139,7 @@ public class DisplayablesFactory {
     return displayables;
   }
 
-  private static DisplayableGroup createReviewsGroupDisplayables(
+  private static DefaultDisplayableGroup createReviewsGroupDisplayables(
       GetStoreWidgets.WSWidget wsWidget) {
     List<Displayable> displayables = new LinkedList<>();
 
@@ -150,7 +151,7 @@ public class DisplayablesFactory {
       displayables.add(createReviewsDisplayables(reviewsList));
     }
 
-    return new DisplayableGroup(displayables);
+    return new DefaultDisplayableGroup(displayables);
   }
 
   private static Displayable createMyStoreDisplayables(Object viewObject) {
@@ -170,7 +171,7 @@ public class DisplayablesFactory {
         displayables.add(new MyStoreDisplayable(meta));
       }
     }
-    return new DisplayableGroup(displayables);
+    return new DefaultDisplayableGroup(displayables);
   }
 
   private static GetStoreMeta convertUserInfoStore(CheckUserCredentialsJson userInfo) {
@@ -206,17 +207,18 @@ public class DisplayablesFactory {
       }
     }
 
-    return new DisplayableGroup(displayables);
+    return new DefaultDisplayableGroup(displayables);
   }
 
-  private static DisplayableGroup createReviewsDisplayables(ListFullReviews listFullReviews) {
+  private static DefaultDisplayableGroup createReviewsDisplayables(
+      ListFullReviews listFullReviews) {
     List<FullReview> reviews = listFullReviews.getDatalist().getList();
     final List<Displayable> displayables = new ArrayList<>(reviews.size());
     for (int i = 0; i < reviews.size(); i++) {
       displayables.add(new RowReviewDisplayable(reviews.get(i)));
     }
 
-    return new DisplayableGroup(displayables);
+    return new DefaultDisplayableGroup(displayables);
   }
 
   private static Displayable getAds(GetStoreWidgets.WSWidget wsWidget) {
@@ -237,7 +239,7 @@ public class DisplayablesFactory {
         GridAdDisplayable diplayable = new GridAdDisplayable(MinimalAd.from(ad), wsWidget.getTag());
         tmp.add(diplayable);
       }
-      return new DisplayableGroup(tmp);
+      return new DefaultDisplayableGroup(tmp);
     }
 
     return null;
@@ -304,7 +306,7 @@ public class DisplayablesFactory {
         displayables.add(diplayable);
       }
     }
-    return new DisplayableGroup(displayables);
+    return new DefaultDisplayableGroup(displayables);
   }
 
   private static Displayable getStores(GetStoreWidgets.WSWidget wsWidget, String storeTheme) {
@@ -321,12 +323,12 @@ public class DisplayablesFactory {
       GridStoreDisplayable diplayable = new GridStoreDisplayable(store);
       tmp.add(diplayable);
     }
-    return new DisplayableGroup(tmp);
+    return new DefaultDisplayableGroup(tmp);
   }
 
   private static Displayable getMyStores(GetStoreWidgets.WSWidget wsWidget,
       StoreRepository storeRepository, String storeTheme) {
-    return new DisplayableGroup(loadLocalSubscribedStores(storeRepository).map(stores -> {
+    return new DefaultDisplayableGroup(loadLocalSubscribedStores(storeRepository).map(stores -> {
       List<Displayable> tmp = new ArrayList<>(stores.size());
       int maxStoresToShow = stores.size();
       if (wsWidget.getViewObject() instanceof ListStores) {
@@ -390,6 +392,6 @@ public class DisplayablesFactory {
       }
       tmp.add(displayablePojo);
     }
-    return new DisplayableGroup(tmp);
+    return new DefaultDisplayableGroup(tmp);
   }
 }

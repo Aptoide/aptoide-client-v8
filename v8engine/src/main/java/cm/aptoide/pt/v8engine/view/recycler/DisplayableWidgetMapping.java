@@ -3,17 +3,10 @@ package cm.aptoide.pt.v8engine.view.recycler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayableGroup;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.DefaultDisplayableGroup;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.ProgressBarDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewCommentsDisplayable;
@@ -83,8 +76,8 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.StoreLatestAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.VideoDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.DefaultWidgetGroup;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.EmptyWidget;
-import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.WidgetGroup;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewCommentsWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewDescriptionWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewDeveloperWidget;
@@ -148,6 +141,11 @@ import cm.aptoide.pt.viewRateAndCommentReviews.CommentsReadMoreDisplayable;
 import cm.aptoide.pt.viewRateAndCommentReviews.CommentsReadMoreWidget;
 import cm.aptoide.pt.viewRateAndCommentReviews.RateAndReviewCommentDisplayable;
 import cm.aptoide.pt.viewRateAndCommentReviews.RateAndReviewCommentWidget;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by neuro on 10-10-2016.
@@ -191,7 +189,8 @@ public class DisplayableWidgetMapping {
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(EmptyWidget.class, EmptyDisplayable.class));
 
-    displayableWidgetMappings.add(new DisplayableWidgetMapping(WidgetGroup.class, DisplayableGroup.class));
+    displayableWidgetMappings.add(
+        new DisplayableWidgetMapping(DefaultWidgetGroup.class, DefaultDisplayableGroup.class));
 
     // common widgets / displayables
     displayableWidgetMappings.add(

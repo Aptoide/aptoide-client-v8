@@ -1,8 +1,6 @@
-
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
 import cm.aptoide.pt.annotation.Ignore;
-import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.WidgetFactory;
 import java.util.Collections;
@@ -13,23 +11,23 @@ import lombok.Getter;
 /**
  * Created by neuro on 16-04-2016.
  */
-@Ignore public class DisplayableGroup extends Displayable {
+@Ignore public abstract class AbstractDisplayableGroup extends Displayable {
 
   @Getter private List<Displayable> children;
 
-  public DisplayableGroup() {
+  public AbstractDisplayableGroup() {
   }
 
-  DisplayableGroup(List<Displayable> children, boolean computeLeftSpaces) {
+  AbstractDisplayableGroup(List<Displayable> children, boolean computeLeftSpaces) {
     this.children = new LinkedList<>(children);
     if (computeLeftSpaces) computeLeftSpaces();
   }
 
-  public DisplayableGroup(List<Displayable> children) {
+  public AbstractDisplayableGroup(List<Displayable> children) {
     this(children, true);
   }
 
-  public DisplayableGroup(Displayable child) {
+  public AbstractDisplayableGroup(Displayable child) {
     this(new LinkedList<>(Collections.singletonList(child)), true);
   }
 
@@ -48,11 +46,6 @@ import lombok.Getter;
     if (index < columnSize) {
       children.add(new EmptyDisplayable(columnSize - index));
     }
-  }
-
-  @Override
-  public int getViewLayout() {
-    return R.layout.recycler_view;
   }
 
   @Override protected Configs getConfig() {
