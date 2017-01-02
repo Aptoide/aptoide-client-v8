@@ -11,7 +11,7 @@ import cm.aptoide.pt.database.accessors.PaymentAuthorizationAccessor;
 import cm.aptoide.pt.dataprovider.ws.v3.GetProductPurchaseAuthorizationRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.model.v3.PurchaseAuthorizationResponse;
-import cm.aptoide.pt.v8engine.payment.authorizations.Authorization;
+import cm.aptoide.pt.v8engine.payment.Authorization;
 import cm.aptoide.pt.v8engine.payment.authorizations.WebAuthorization;
 import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationConverter;
 import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationRepository;

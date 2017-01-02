@@ -31,37 +31,24 @@ public class AptoidePay {
     this.productRepository = productRepository;
   }
 
-  public Single<List<Payment>> getProductPayments(Context context, AptoideProduct product) {
+  public Single<List<Payment>> availablePayments(Context context, AptoideProduct product) {
     return productRepository.getPayments(context, product);
   }
 
-  public Single<Purchase> getPurchase(AptoideProduct product) {
-    return productRepository.getPurchase(product)
-        .flatMap(purchase -> Single.<Purchase>error(new PaymentAlreadyProcessedException(
-            "Product " + product.getId() + " already purchased.")))
-        .onErrorResumeNext(throwable -> {
-          if (throwable instanceof RepositoryItemNotFoundException) {
-            return getOngoingPurchase(product);
+  public Observable<Purchase> getPurchase(AptoideProduct product) {
+    return confirmationRepository.getPaymentConfirmation(product)
+        .distinctUntilChanged(paymentConfirmation -> paymentConfirmation.getStatus())
+        .takeUntil(paymentConfirmation -> paymentConfirmation.isCompleted() || paymentConfirmation.isFailed())
+        .flatMap(paymentConfirmation -> {
+          if (paymentConfirmation.isFailed()) {
+            return Observable.empty();
           }
-          return Single.<Purchase>error(throwable);
+          return productRepository.getPurchase(product).toObservable();
         });
   }
 
-  public Single<Purchase> pay(Payment payment) {
+  public Single<Purchase> process(Payment payment) {
     return payment.process().andThen(productRepository.getPurchase(
         (AptoideProduct) payment.getProduct()));
-  }
-
-  private Single<Purchase> getOngoingPurchase(AptoideProduct product) {
-    return confirmationRepository.getPaymentConfirmation(product)
-        .distinctUntilChanged(paymentConfirmation -> paymentConfirmation.getStatus())
-        .first(paymentConfirmation -> paymentConfirmation.isCompleted() || paymentConfirmation.isFailed())
-        .flatMap(paymentConfirmation -> {
-          if (paymentConfirmation.isFailed()) {
-            return Observable.just(null);
-          }
-          return productRepository.getPurchase(product).toObservable();
-        })
-        .toSingle();
   }
 }

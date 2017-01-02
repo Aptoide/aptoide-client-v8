@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2016.
- * Modified by Marcelo Benites on 23/12/2016.
+ * Copyright (c) 2017.
+ * Modified by Marcelo Benites on 02/01/2017.
  */
 
-package cm.aptoide.pt.v8engine.payment.authorizations;
+package cm.aptoide.pt.v8engine.payment;
 
 /**
  * Created by marcelobenites on 23/12/16.
@@ -28,8 +28,7 @@ public abstract class Authorization {
 
   public boolean isPending() {
     return Status.PENDING.equals(status)
-        || Status.PENDING_PAYMENT_METHOD.equals(status)
-        || Status.SYNCING.equals(status);
+        || Status.PENDING_PAYMENT_METHOD.equals(status);
   }
 
   public boolean isInvalid() {
@@ -46,7 +45,6 @@ public abstract class Authorization {
   }
 
   public enum Status {
-    SYNCING,
     SYNCING_ERROR,
     ACTIVE,
     INITIATED,

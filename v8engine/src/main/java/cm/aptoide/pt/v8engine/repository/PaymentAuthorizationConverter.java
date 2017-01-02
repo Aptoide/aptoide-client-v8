@@ -6,7 +6,7 @@
 package cm.aptoide.pt.v8engine.repository;
 
 import cm.aptoide.pt.model.v3.PurchaseAuthorizationResponse;
-import cm.aptoide.pt.v8engine.payment.authorizations.Authorization;
+import cm.aptoide.pt.v8engine.payment.Authorization;
 import cm.aptoide.pt.v8engine.payment.authorizations.WebAuthorization;
 
 public class PaymentAuthorizationConverter {

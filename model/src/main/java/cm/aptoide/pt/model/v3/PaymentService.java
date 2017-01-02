@@ -14,25 +14,19 @@ import lombok.Data;
  */
 @Data public class PaymentService {
 
-  private int id;
+  @JsonProperty("id") private int id;
 
   @JsonProperty("short_name") private String shortName;
 
-  private String name;
+  @JsonProperty("name") private String name;
 
-  private ArrayList<PaymentType> types;
+  @JsonProperty("description") private String description;
 
-  private double price;
+  @JsonProperty("price") private double price;
 
-  private String currency;
+  @JsonProperty("currency") private String currency;
 
-  private double taxRate;
+  @JsonProperty("tax_rate") private double taxRate;
 
-  private String sign;
-
-  @Data public static class PaymentType {
-
-    private String reqType;
-    private String label;
-  }
+  @JsonProperty("sign") private String sign;
 }

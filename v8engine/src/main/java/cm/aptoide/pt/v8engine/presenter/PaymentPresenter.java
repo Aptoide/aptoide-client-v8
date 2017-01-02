@@ -11,13 +11,15 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.AptoidePay;
 import cm.aptoide.pt.v8engine.payment.Purchase;
-import cm.aptoide.pt.v8engine.payment.exception.PaymentCancellationException;
 import cm.aptoide.pt.v8engine.payment.products.AptoideProduct;
 import cm.aptoide.pt.v8engine.view.PaymentView;
 import cm.aptoide.pt.v8engine.view.View;
+import java.util.ArrayList;
 import java.util.List;
 import javax.security.auth.login.LoginException;
+import rx.Completable;
 import rx.Observable;
+import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -34,11 +36,14 @@ public class PaymentPresenter implements Presenter {
   private final AptoideProduct product;
 
   private boolean isProcessingLogin;
+  private final List<Payment> currentPayments;
+  private Payment selectedPayment;
 
   public PaymentPresenter(PaymentView view, AptoidePay aptoidePay, AptoideProduct product) {
     this.view = view;
     this.aptoidePay = aptoidePay;
     this.product = product;
+    this.currentPayments = new ArrayList<>();
   }
 
   @Override public void present() {
@@ -54,11 +59,9 @@ public class PaymentPresenter implements Presenter {
         .flatMap(created -> login())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(loggedIn -> showProductAndShowLoading(product))
-        .flatMap(loggedIn -> pay())
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnError(throwable -> removeLoadingAndDismiss(throwable))
-        .doOnNext(purchase -> removeLoadingAndDismiss(purchase))
-        .onErrorReturn(throwable -> null)
+        .flatMap(loggedIn -> treatOngoingPurchase().switchIfEmpty(
+            loadPayments().andThen(Completable.merge(buySelection(), paymentSelection()))
+                .toObservable()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
   }
@@ -73,46 +76,63 @@ public class PaymentPresenter implements Presenter {
 
   private Observable<Void> login() {
     return Observable.defer(() -> {
-          if (isProcessingLogin) {
-            return Observable.just(AptoideAccountManager.isLoggedIn())
-                .flatMap(loggedIn -> (loggedIn) ? Observable.just(null) : Observable.error(
-                    new LoginException("Not logged In. Payment can not be processed!")));
-          }
-          return AptoideAccountManager.login(view.getContext())
-              .doOnSubscribe(() -> saveLoginState());
-        })
+      if (isProcessingLogin) {
+        return Observable.just(AptoideAccountManager.isLoggedIn())
+            .flatMap(loggedIn -> (loggedIn) ? Observable.just(null) : Observable.error(
+                new LoginException("Not logged In. Payment can not be processed!")));
+      }
+      return AptoideAccountManager.login(view.getContext()).doOnSubscribe(() -> saveLoginState());
+    })
         .doOnNext(loggedIn -> clearLoginState())
         .doOnError(throwable -> clearLoginState())
         .subscribeOn(Schedulers.computation());
   }
 
-  private Observable<Purchase> pay() {
-    return aptoidePay.getPurchase(product).toObservable()
-        .flatMap(purchase -> {
-          if (purchase == null) {
-            return aptoidePay.getProductPayments(view.getContext(), product).toObservable()
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(payments -> removeLoadingAndShowPayments(payments))
-                .filter(payments -> !payments.isEmpty())
-                .flatMap(payments -> paymentSelection());
-          }
-          return Observable.just(purchase);
-        });
+  private Completable loadPayments() {
+    return aptoidePay.availablePayments(view.getContext(), product)
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnSuccess(payments -> showPaymentsAndRemoveLoading(payments))
+        .doOnError(error -> removeLoadingAndDismiss(error))
+        .flatMap(payments -> selectDefaultPayment(payments))
+        .toCompletable();
+}
+
+  private Single<List<Payment>> selectDefaultPayment(List<Payment> payments) {
+    return Observable.from(payments).doOnNext(payment -> {
+      if (selectedPayment != null && selectedPayment.getId() == payment.getId()) {
+        selectPayment(selectedPayment);
+      }
+      if (selectedPayment == null && payment.getId() == 1) { // PayPal
+        selectPayment(payment);
+      }
+    }).toList().toSingle();
   }
 
-  @NonNull private Observable<Purchase> paymentSelection() {
-    return view.paymentSelection()
-        .doOnNext(payment -> view.showLoading())
-        .flatMap(payment -> aptoidePay.pay(payment).toObservable())
+  private Observable<Purchase> treatOngoingPurchase() {
+    return aptoidePay.getPurchase(product)
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(purchase -> view.removeLoading())
-        .retryWhen(errors -> errors.observeOn(AndroidSchedulers.mainThread())
-            .doOnNext(throwable -> view.removeLoading()).<Throwable>flatMap(throwable -> {
-              if (throwable instanceof PaymentCancellationException) {
-                return Observable.just(throwable);
-              }
-              return Observable.error(throwable);
-            }));
+        .doOnNext(purchase -> removeLoadingAndDismiss(purchase))
+        .doOnError(error -> removeLoadingAndDismiss(error))
+        .onErrorResumeNext(throwable -> Observable.empty());
+  }
+
+  private Completable buySelection() {
+    return view.buySelection()
+        .doOnNext(payment -> view.showLoading())
+        .flatMap(payment -> aptoidePay.process(selectedPayment).toObservable())
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(purchase -> removeLoadingAndDismiss(purchase))
+        .doOnError(error -> removeLoadingAndDismiss(error))
+        .retry()
+        .toCompletable();
+  }
+
+  private Completable paymentSelection() {
+    return view.paymentSelection()
+        .flatMap(paymentId -> Observable.from(currentPayments)
+            .filter(payment -> payment.getId() == paymentId))
+        .doOnNext(payment -> selectPayment(payment))
+        .toCompletable();
   }
 
   private void showProductAndShowLoading(AptoideProduct product) {
@@ -120,13 +140,25 @@ public class PaymentPresenter implements Presenter {
     view.showProduct(product);
   }
 
-  private void removeLoadingAndShowPayments(List<Payment> payments) {
-    view.removeLoading();
+  private void showPaymentsAndRemoveLoading(List<Payment> payments) {
+    currentPayments.clear();
+    currentPayments.addAll(payments);
     if (payments.isEmpty()) {
       view.showPaymentsNotFoundMessage();
     } else {
-      view.showPayments(payments);
+      view.showPayments(convertToPaymentViewModel(payments));
     }
+    view.removeLoading();
+  }
+
+  private List<PaymentView.PaymentViewModel> convertToPaymentViewModel(List<Payment> payments) {
+    final List<PaymentView.PaymentViewModel> viewModels = new ArrayList<>();
+    for (Payment payment : payments) {
+      viewModels.add(new PaymentView.PaymentViewModel(payment.getId(), payment.getName(),
+          payment.getDescription(), payment.getPrice().getAmount(),
+          payment.getPrice().getCurrency()));
+    }
+    return viewModels;
   }
 
   private void removeLoadingAndDismiss(Throwable throwable) {
@@ -137,6 +169,11 @@ public class PaymentPresenter implements Presenter {
   private void removeLoadingAndDismiss(Purchase purchase) {
     view.removeLoading();
     view.dismiss(purchase);
+  }
+
+  private void selectPayment(Payment payment) {
+    selectedPayment = payment;
+    view.markPaymentAsSelected(selectedPayment.getId());
   }
 
   private boolean clearLoginState() {

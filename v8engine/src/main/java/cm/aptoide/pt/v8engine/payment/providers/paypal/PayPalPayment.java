@@ -13,18 +13,17 @@ import cm.aptoide.pt.v8engine.payment.Price;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentCancellationException;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentFailureException;
-import cm.aptoide.pt.v8engine.payment.providers.AbstractPayment;
+import cm.aptoide.pt.v8engine.payment.AptoidePayment;
 import cm.aptoide.pt.v8engine.repository.PaymentConfirmationRepository;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 import java.math.BigDecimal;
-import java.util.Locale;
 import rx.Completable;
 import rx.Observable;
 
 /**
  * Created by marcelobenites on 8/10/16.
  */
-public class PayPalPayment extends AbstractPayment {
+public class PayPalPayment extends AptoidePayment {
 
   public static final String PAYMENT_RESULT_ACTION =
       "cm.aptoide.pt.v8engine.payment.service.action.PAYMENT_RESULT";
@@ -41,11 +40,9 @@ public class PayPalPayment extends AbstractPayment {
   private final PayPalConfiguration configuration;
 
   public PayPalPayment(Context context, int id, String type, String name, String sign, Price price,
-      PayPalConfiguration configuration, Product product, String methodLabel,
+      PayPalConfiguration configuration, Product product, String description,
       PaymentConfirmationRepository confirmationRepository) {
-    super(id, type, product, price,
-        String.format(Locale.getDefault(), "%s - %.2f %s", methodLabel, price.getAmount(), sign),
-        confirmationRepository);
+    super(id, type, name, description, product, price, confirmationRepository);
     this.context = context;
     this.configuration = configuration;
   }
