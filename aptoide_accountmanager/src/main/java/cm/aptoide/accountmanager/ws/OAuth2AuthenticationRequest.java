@@ -75,6 +75,11 @@ public class OAuth2AuthenticationRequest extends v3accountManager<OAuth> {
           parameters.put("authMode", "facebook");
           parameters.put("oauthToken", password);
           break;
+        case ABAN:
+          parameters.put("oauthUserName",username);
+          parameters.put("oauthToken",password);
+          parameters.put("authMode","aban");
+          parameters.put("oauthUser",nameForGoogle);
       }
     }
     if (refreshToken != null) {

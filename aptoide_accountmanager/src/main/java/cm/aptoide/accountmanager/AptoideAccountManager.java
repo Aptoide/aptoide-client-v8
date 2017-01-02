@@ -103,7 +103,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
   /**
    * private variables
    */
-  private ILoginInterface mCallback;
+  @Setter private static ILoginInterface mCallback;
   private WeakReference<Context> mContextWeakReference;
 
   public static Observable<Void> login(Context context) {
@@ -188,6 +188,17 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     Bundle extras = new Bundle();
     extras.putBoolean(LoginActivity.OPEN_MY_ACCOUNT_ON_LOGIN_SUCCESS, openMyAccount);
     openAccountManager(context, extras);
+  }
+
+  /**
+   * This method should be used to login users for ABAN
+   * @param phoneNumber users inserted phonenumber
+   * @param token users token sended by Aban
+   * @param username users inserted username
+   */
+  public static void openAccountManager(ILoginInterface loginInterface, Context context, String phoneNumber, String token, String username){
+    setMCallback(loginInterface);
+    AptoideAccountManager.loginUserCredentials(LoginMode.ABAN, phoneNumber, token, username, context);
   }
 
   /**
@@ -355,7 +366,20 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
    */
   static void loginUserCredentials(LoginMode mode, final String userName,
       final String passwordOrToken, final String nameForGoogle) {
-    Context context = getInstance().mContextWeakReference.get();
+    loginUserCredentials(mode,userName,passwordOrToken,nameForGoogle,getInstance().mContextWeakReference.get());
+  }
+
+  /**
+   * make the request to the server for login using the user credentials
+   *
+   * @param mode login mode, ca be facebook, aptoide or google
+   * @param userName user's username usually the email address
+   * @param passwordOrToken user password or token given by google or facebook
+   * @param nameForGoogle name given by google
+   * @param context given context
+   */
+  static void loginUserCredentials(LoginMode mode, final String userName,
+      final String passwordOrToken, final String nameForGoogle, Context context) {
     ProgressDialog genericPleaseWaitDialog = null;
     if (context != null) {
       genericPleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(context);
@@ -371,7 +395,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
         AccountManagerPreferences.setAccessToken(oAuth.getAccessToken());
 
         getInstance().addLocalUserAccount(userName, passwordOrToken, null, oAuth.getRefresh_token(),
-            oAuth.getAccessToken()).subscribe(isSuccess -> {
+            oAuth.getAccessToken(), context).subscribe(isSuccess -> {
           if (isSuccess) {
             setAccessTokenOnLocalAccount(oAuth.getAccessToken(), null, SecureKeys.ACCESS_TOKEN);
             AccountManagerPreferences.setLoginMode(mode);
@@ -781,7 +805,22 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
    */
   Observable<Boolean> addLocalUserAccount(String userName, String userPassword,
       @Nullable String accountType, String refreshToken, String accessToken) {
-    Context context = mContextWeakReference.get();
+    return addLocalUserAccount(userName,userPassword,accountType,refreshToken,accessToken,mContextWeakReference.get());
+  }
+
+  /**
+   * This method adds an new local account
+   *
+   * @param userName This will be used to identify the account
+   * @param userPassword password to access the account
+   * @param accountType account type
+   * @param refreshToken Refresh token to be saved
+   * @param accessToken AccessToken to be used on CheckUserCredentialsRequest
+   * @param context given context
+   * @return true if the account was added successfully, false otherwise
+   */
+  Observable<Boolean> addLocalUserAccount(String userName, String userPassword,
+      @Nullable String accountType, String refreshToken, String accessToken, Context context) {
     if (context != null) {
       AccountManager accountManager = AccountManager.get(context);
       accountType = accountType != null ? accountType
