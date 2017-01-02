@@ -10,9 +10,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.model.v3.PaymentService;
 import cm.aptoide.pt.v8engine.BuildConfig;
-import cm.aptoide.pt.v8engine.payment.providers.dummy.DummyPayment;
 import cm.aptoide.pt.v8engine.payment.providers.paypal.PayPalPayment;
-import cm.aptoide.pt.v8engine.payment.providers.web.WebPayment;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 
@@ -34,18 +32,15 @@ public class PaymentFactory {
             paymentService.getName(), paymentService.getSign(),
             getPrice(paymentService.getPrice(), paymentService.getCurrency(),
                 paymentService.getTaxRate()), getPayPalConfiguration(), product,
-            paymentService.getTypes().get(0).getLabel(), RepositoryFactory.getPaymentConfirmationRepository(context, product));
+            paymentService.getDescription(),
+            RepositoryFactory.getPaymentConfirmationRepository(context, product));
       case BOACOMPRA:
       case BOACOMPRAGOLD:
-        return new WebPayment(context, paymentService.getId(), paymentService.getShortName(),
-            product, getPrice(paymentService.getPrice(), paymentService.getCurrency(),
-            paymentService.getTaxRate()), paymentService.getName(),
-            RepositoryFactory.getPaymentAuthorizationRepository(context),
-            RepositoryFactory.getPaymentConfirmationRepository(context, product));
       case DUMMY:
-        return new DummyPayment(paymentService.getId(), paymentService.getShortName(), product,
+        return new AptoidePayment(paymentService.getId(), paymentService.getShortName(),
+            paymentService.getName(), paymentService.getDescription(), product,
             getPrice(paymentService.getPrice(), paymentService.getCurrency(),
-                paymentService.getTaxRate()), paymentService.getName(),
+                paymentService.getTaxRate()),
             RepositoryFactory.getPaymentConfirmationRepository(context, product));
       default:
         throw new IllegalArgumentException(

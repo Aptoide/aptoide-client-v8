@@ -20,7 +20,6 @@ import cm.aptoide.pt.iab.ErrorCodeFactory;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.payment.AptoidePay;
-import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.Purchase;
 import cm.aptoide.pt.v8engine.payment.PurchaseIntentFactory;
 import cm.aptoide.pt.v8engine.payment.products.AptoideProduct;
@@ -47,8 +46,9 @@ public class PaymentActivity extends ActivityView implements PaymentView {
   private TextView noPaymentsText;
   private TextView payWithText;
   private Button cancelButton;
+  private Button buyButton;
 
-  private List<Observable<Payment>> paymentSelections;
+  private List<Observable<Integer>> paymentSelections;
   private PurchaseIntentFactory intentFactory;
 
   public static Intent getIntent(Context context, AptoideProduct product) {
@@ -70,6 +70,7 @@ public class PaymentActivity extends ActivityView implements PaymentView {
     header = findViewById(R.id.activity_payment_header);
     body = findViewById(R.id.activity_payment_body);
     cancelButton = (Button) findViewById(R.id.activity_payment_cancel_button);
+    buyButton = (Button) findViewById(R.id.activity_payment_buy_button);
     overlay = findViewById(R.id.payment_activity_overlay);
     noPaymentsText = (TextView) findViewById(R.id.activity_payment_no_payments_text);
     payWithText = (TextView) findViewById(R.id.activity_payment_pay_with_text);
@@ -104,19 +105,27 @@ public class PaymentActivity extends ActivityView implements PaymentView {
     return Observable.merge(RxView.clicks(cancelButton), RxView.clicks(overlay));
   }
 
-  @Override public void showPayments(List<Payment> paymentList) {
+  @Override public void showPayments(List<PaymentViewModel> paymentList) {
     paymentContainer.removeAllViews();
     payWithText.setVisibility(View.VISIBLE);
     noPaymentsText.setVisibility(View.GONE);
     Button paymentButton;
-    for (Payment payment : paymentList) {
+    for (PaymentViewModel payment : paymentList) {
       paymentButton =
-          (Button) getLayoutInflater().inflate(getButtonLayoutResource(payment), paymentContainer,
+          (Button) getLayoutInflater().inflate(getButtonLayoutResource(), paymentContainer,
               false);
-      paymentButton.setText(payment.getDescription());
+      paymentButton.setText(payment.getName());
       paymentContainer.addView(paymentButton);
-      paymentSelections.add(RxView.clicks(paymentButton).map(click -> payment));
+      paymentSelections.add(RxView.clicks(paymentButton).map(click -> payment.getId()));
     }
+  }
+
+  @Override public Observable<Void> buySelection() {
+    return RxView.clicks(buyButton);
+  }
+
+  @Override public void markPaymentAsSelected(int paymentId) {
+
   }
 
   @Override public void showPaymentsNotFoundMessage() {
@@ -129,6 +138,7 @@ public class PaymentActivity extends ActivityView implements PaymentView {
     header.setVisibility(View.INVISIBLE);
     body.setVisibility(View.INVISIBLE);
     cancelButton.setVisibility(View.INVISIBLE);
+    buyButton.setVisibility(View.INVISIBLE);
     progressBar.setVisibility(View.VISIBLE);
   }
 
@@ -136,14 +146,15 @@ public class PaymentActivity extends ActivityView implements PaymentView {
     header.setVisibility(View.VISIBLE);
     body.setVisibility(View.VISIBLE);
     cancelButton.setVisibility(View.VISIBLE);
+    buyButton.setVisibility(View.VISIBLE);
     progressBar.setVisibility(View.GONE);
   }
 
-  @Override public Observable<Payment> paymentSelection() {
+  @Override public Observable<Integer> paymentSelection() {
     return Observable.merge(paymentSelections);
   }
 
-  @LayoutRes private int getButtonLayoutResource(Payment payment) {
+  @LayoutRes private int getButtonLayoutResource() {
     return R.layout.button_visa;
   }
 

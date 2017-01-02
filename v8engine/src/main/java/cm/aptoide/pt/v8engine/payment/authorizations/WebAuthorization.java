@@ -5,6 +5,8 @@
 
 package cm.aptoide.pt.v8engine.payment.authorizations;
 
+import cm.aptoide.pt.v8engine.payment.Authorization;
+
 /**
  * Created by marcelobenites on 15/11/16.
  */
@@ -15,10 +17,6 @@ public class WebAuthorization extends Authorization {
 
   public static Authorization syncingError(int paymentId) {
     return new WebAuthorization(paymentId, "", "", WebAuthorization.Status.SYNCING_ERROR);
-  }
-
-  public static Authorization syncing(int paymentId) {
-    return new WebAuthorization(paymentId, "", "", Status.SYNCING);
   }
 
   public WebAuthorization(int paymentId, String url, String redirectUrl, Status status) {

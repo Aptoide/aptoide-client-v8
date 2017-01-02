@@ -1,14 +1,10 @@
 /*
- * Copyright (c) 2016.
- * Modified by Marcelo Benites on 25/11/2016.
+ * Copyright (c) 2017.
+ * Modified by Marcelo Benites on 02/01/2017.
  */
 
-package cm.aptoide.pt.v8engine.payment.providers;
+package cm.aptoide.pt.v8engine.payment;
 
-import cm.aptoide.pt.v8engine.payment.Payment;
-import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
-import cm.aptoide.pt.v8engine.payment.Price;
-import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentFailureException;
 import cm.aptoide.pt.v8engine.repository.PaymentConfirmationRepository;
 import rx.Completable;
@@ -18,19 +14,21 @@ import rx.Observable;
  * Created by marcelobenites on 25/11/16.
  */
 
-public abstract class AbstractPayment implements Payment {
+public class AptoidePayment implements Payment {
 
   protected final PaymentConfirmationRepository confirmationRepository;
   private final int id;
   private final String type;
+  private final String name;
   private final Product product;
   private final Price price;
   private final String description;
 
-  public AbstractPayment(int id, String type, Product product, Price price, String description,
+  public AptoidePayment(int id, String type, String name, String description, Product product, Price price,
       PaymentConfirmationRepository confirmationRepository) {
     this.id = id;
     this.type = type;
+    this.name = name;
     this.product = product;
     this.price = price;
     this.description = description;
@@ -39,6 +37,10 @@ public abstract class AbstractPayment implements Payment {
 
   @Override public int getId() {
     return id;
+  }
+
+  @Override public String getName() {
+    return name;
   }
 
   @Override public String getType() {

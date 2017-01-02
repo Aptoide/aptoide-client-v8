@@ -16,6 +16,8 @@ public interface Payment {
 
   int getId();
 
+  String getName();
+
   String getType();
 
   Product getProduct();

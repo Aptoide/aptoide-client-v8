@@ -11,7 +11,6 @@ package cm.aptoide.pt.v8engine.payment;
 public class PaymentConfirmation {
 
   public static enum Status {
-    SYNCING,
     SYNCING_ERROR,
     CREATED,
     PROCESSING,
@@ -30,12 +29,8 @@ public class PaymentConfirmation {
     return new PaymentConfirmation(productId, "", Status.SYNCING_ERROR);
   }
 
-  public static PaymentConfirmation syncing(int productId) {
-    return PaymentConfirmation.syncing("", productId);
-  }
-
-  public static PaymentConfirmation syncing(String paymentConfirmationId, int productId) {
-    return new PaymentConfirmation(productId, paymentConfirmationId, Status.SYNCING);
+  public static PaymentConfirmation created(String paymentConfirmationId, int productId) {
+    return new PaymentConfirmation(productId, paymentConfirmationId, Status.CREATED);
   }
 
   public PaymentConfirmation(int productId, String paymentConfirmationId, Status status) {
@@ -67,8 +62,7 @@ public class PaymentConfirmation {
   public boolean isPending() {
     return Status.CREATED.equals(status)
         || Status.PROCESSING.equals(status)
-        || Status.PENDING.equals(status)
-        || Status.SYNCING.equals(status);
+        || Status.PENDING.equals(status);
   }
   public boolean isFailed() {
     return Status.FAILED.equals(status)
