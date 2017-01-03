@@ -46,12 +46,12 @@ public class RequestRepository {
     return listStoresRequestFactory.newListStoresRequest(url);
   }
 
-  public ListAppsRequest newListApps(String url) {
+  public ListAppsRequest newListAppsRequest(String url) {
     return ListAppsRequest.ofAction(url, storeCredentialsFromUrl.get(url), accessToken.get(),
         aptoideClientUUID.getAptoideClientUUID());
   }
 
-  public GetStoreDisplaysRequest newStoreDisplays(String url) {
+  public GetStoreDisplaysRequest newStoreDisplaysRequest(String url) {
     return GetStoreDisplaysRequest.ofAction(url, storeCredentialsFromUrl.get(url),
         accessToken.get(), aptoideClientUUID.getAptoideClientUUID());
   }
