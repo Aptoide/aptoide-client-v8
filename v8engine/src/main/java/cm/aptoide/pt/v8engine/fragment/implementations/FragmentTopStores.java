@@ -4,15 +4,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
@@ -68,10 +64,7 @@ public class FragmentTopStores extends AptoideBaseFragment<BaseAdapter> implemen
 
   private void fetchStores() {
     final ListStoresRequest listStoresRequest =
-        ListStoresRequest.ofTopStores(offset, STORES_LIMIT_PER_REQUEST,
-            AptoideAccountManager.getAccessToken(),
-            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                DataProvider.getContext()).getAptoideClientUUID());
+        requestRepository.newListStoresRequest(offset, STORES_LIMIT_PER_REQUEST);
     EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(this.getAdapter(), listStoresRequest, listener,
             Throwable::printStackTrace);

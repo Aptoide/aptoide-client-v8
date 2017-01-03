@@ -22,6 +22,7 @@ import cm.aptoide.pt.v8engine.util.StoreUtils;
 
 public class RequestRepository {
 
+  private final ListStoresRequestFactory listStoresRequestFactory;
   private AptoideClientUUID aptoideClientUUID;
   private AccessToken accessToken;
   private StoreCredentialsFromUrl storeCredentialsFromUrl;
@@ -33,15 +34,20 @@ public class RequestRepository {
 
     accessToken = AptoideAccountManager::getAccessToken;
     storeCredentialsFromUrl = StoreUtils::getStoreCredentialsFromUrl;
+
+    listStoresRequestFactory = new ListStoresRequestFactory();
+  }
+
+  public ListStoresRequest newListStoresRequest(int offset, int limit) {
+    return listStoresRequestFactory.newListStoresRequest(offset, limit);
+  }
+
+  public ListStoresRequest newListStoresRequest(String url) {
+    return listStoresRequestFactory.newListStoresRequest(url);
   }
 
   public ListAppsRequest newListApps(String url) {
     return ListAppsRequest.ofAction(url, storeCredentialsFromUrl.get(url), accessToken.get(),
-        aptoideClientUUID.getAptoideClientUUID());
-  }
-
-  public ListStoresRequest newListStores(String url) {
-    return ListStoresRequest.ofAction(url, accessToken.get(),
         aptoideClientUUID.getAptoideClientUUID());
   }
 
