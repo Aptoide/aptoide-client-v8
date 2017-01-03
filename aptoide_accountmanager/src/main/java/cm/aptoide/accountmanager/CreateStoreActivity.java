@@ -14,9 +14,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import cm.aptoide.accountmanager.ws.AptoideWsV3Exception;
 import cm.aptoide.accountmanager.ws.CheckUserCredentialsRequest;
 import cm.aptoide.accountmanager.ws.ErrorsMapper;
 import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.SetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SimpleSetStoreRequest;
@@ -235,8 +237,21 @@ public class CreateStoreActivity extends PermissionsBaseActivity
                 finish();
               }, Throwable::printStackTrace);
             }, throwable -> {
-              onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
-              progressDialog.dismiss();
+              if (((AptoideWsV7Exception) throwable).getBaseResponse()
+                  .getErrors()
+                  .get(0)
+                  .getCode()
+                  .equals("API-1")) {
+                progressDialog.dismiss();
+                ShowMessage.asObservableSnack(this, R.string.ws_error_API_1).subscribe(visibility -> {
+                  if (visibility == ShowMessage.DISMISSED) {
+                    finish();
+                  }
+                });
+              } else {
+                onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
+                progressDialog.dismiss();
+              }
             }));
           } else if (CREATE_STORE_REQUEST_CODE == 5) {
             /*
@@ -324,7 +339,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
           }, throwable -> {
             if (throwable.getClass().equals(SocketTimeoutException.class)) {
               progressDialog.dismiss();
-              ShowMessage.asObservableSnack(this, R.string.store_upload_photo_failed)
+              ShowMessage.asLongObservableSnack(this, R.string.store_upload_photo_failed)
                   .subscribe(visibility -> {
                     if (visibility == ShowMessage.DISMISSED) {
                       finish();
@@ -332,15 +347,26 @@ public class CreateStoreActivity extends PermissionsBaseActivity
                   });
             } else if (throwable.getClass().equals(TimeoutException.class)) {
               progressDialog.dismiss();
-              ShowMessage.asObservableSnack(this, R.string.store_upload_photo_failed)
+              ShowMessage.asLongObservableSnack(this, R.string.store_upload_photo_failed)
                   .subscribe(visibility -> {
                     if (visibility == ShowMessage.DISMISSED) {
                       finish();
                     }
                   });
+            } else if (((AptoideWsV7Exception) throwable).getBaseResponse()
+                .getErrors()
+                .get(0)
+                .getCode()
+                .equals("API-1")) {
+              progressDialog.dismiss();
+              ShowMessage.asLongObservableSnack(this, R.string.ws_error_API_1).subscribe(visibility -> {
+                if (visibility == ShowMessage.DISMISSED) {
+                  finish();
+                }
+              });
             } else {
               progressDialog.dismiss();
-              ShowMessage.asObservableSnack(this,
+              ShowMessage.asLongObservableSnack(this,
                   ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()))
                   .subscribe(visibility -> {
                     if (visibility == ShowMessage.DISMISSED) {

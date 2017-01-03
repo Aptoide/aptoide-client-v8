@@ -32,7 +32,7 @@ public class AccessTokenRequestBodyAdapter implements AccessTokenBody {
   private String storeName;
   private String accessToken;
   private String storeTheme;
-  private Boolean storeEdit;
+  private Boolean storeEdit = false;
   private Long storeid;
   private SimpleSetStoreRequest.StoreProperties storeProperties;
 

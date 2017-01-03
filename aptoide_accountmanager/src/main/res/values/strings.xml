@@ -67,6 +67,7 @@
   <string name="ws_error_WOP_9">The email provided already exists in Aptoide</string>
   <string name="ws_error_WOP_10">The email provided does not exist in Aptoide yet</string>
   <string name="ws_error_WOP_11">The store could not be created. Please try again.</string>
+  <string name="ws_error_API_1">The image is not valid.</string>
     <string name="ws_error_QUOTA_2">Daily limit of created users reached for today. If you need
         this limit increased please contact support at support@aptoide.com or create more users tomorrow</string>
     <string name="ws_error_AUTH_1">Either email or password are not valid to login (upon name
