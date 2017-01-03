@@ -7,7 +7,6 @@ import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreMinimalAdAccessor;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.database.realm.Update;
@@ -113,8 +112,7 @@ public class InstalledIntentService extends IntentService {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(
                     minimalAd -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES,
-                        true))
-                .onErrorReturn(throwable1 -> new MinimalAd())
+                        true)).onErrorReturn(throwable1 -> null)
                 .subscribe();
           }
         }, err -> {
