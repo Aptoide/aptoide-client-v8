@@ -4,8 +4,6 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.ListFullReviewsRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreDisplaysRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
 import cm.aptoide.pt.interfaces.AccessToken;
@@ -38,17 +36,6 @@ public class RequestRepository {
 
     listStoresRequestFactory = new ListStoresRequestFactory();
     listAppsRequestFactory = new ListAppsRequestFactory();
-  }
-
-  public GetStoreDisplaysRequest newStoreDisplaysRequest(String url) {
-    return GetStoreDisplaysRequest.ofAction(url, storeCredentialsProvider.fromUrl(url),
-        accessToken.get(), aptoideClientUUID.getAptoideClientUUID());
-  }
-
-  public GetStoreMetaRequest newStoreMetaRequest(String url) {
-    return GetStoreMetaRequest.ofAction(url, storeCredentialsProvider.fromUrl(url),
-        accessToken.get(),
-        aptoideClientUUID.getAptoideClientUUID());
   }
 
   public ListFullReviewsRequest newListFullReviews(String url, boolean refresh) {
