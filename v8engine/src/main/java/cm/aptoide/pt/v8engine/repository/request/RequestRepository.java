@@ -35,37 +35,37 @@ public class RequestRepository {
     storeCredentialsFromUrl = StoreUtils::getStoreCredentialsFromUrl;
   }
 
-  public ListAppsRequest getListApps(String url) {
+  public ListAppsRequest newListApps(String url) {
     return ListAppsRequest.ofAction(url, storeCredentialsFromUrl.get(url), accessToken.get(),
         aptoideClientUUID.getAptoideClientUUID());
   }
 
-  public ListStoresRequest getListStores(String url) {
+  public ListStoresRequest newListStores(String url) {
     return ListStoresRequest.ofAction(url, accessToken.get(),
         aptoideClientUUID.getAptoideClientUUID());
   }
 
-  public GetStoreDisplaysRequest getStoreDisplays(String url) {
+  public GetStoreDisplaysRequest newStoreDisplays(String url) {
     return GetStoreDisplaysRequest.ofAction(url, storeCredentialsFromUrl.get(url),
         accessToken.get(), aptoideClientUUID.getAptoideClientUUID());
   }
 
-  public GetStoreMetaRequest getStoreMeta(String url) {
+  public GetStoreMetaRequest newStoreMeta(String url) {
     return GetStoreMetaRequest.ofAction(url, storeCredentialsFromUrl.get(url), accessToken.get(),
         aptoideClientUUID.getAptoideClientUUID());
   }
 
-  public ListFullReviewsRequest getListFullReviews(String url, boolean refresh) {
+  public ListFullReviewsRequest newListFullReviews(String url, boolean refresh) {
     return ListFullReviewsRequest.ofAction(url, refresh, accessToken.get(),
         aptoideClientUUID.getAptoideClientUUID());
   }
 
-  public GetStoreRequest getStore(String url) {
+  public GetStoreRequest newStore(String url) {
     return GetStoreRequest.ofAction(url, storeCredentialsFromUrl.get(url), accessToken.get(),
         aptoideClientUUID.getAptoideClientUUID());
   }
 
-  public GetStoreWidgetsRequest getStoreWidgets(String url) {
+  public GetStoreWidgetsRequest newStoreWidgets(String url) {
     return GetStoreWidgetsRequest.ofAction(url, storeCredentialsFromUrl.get(url), accessToken.get(),
         aptoideClientUUID.getAptoideClientUUID());
   }

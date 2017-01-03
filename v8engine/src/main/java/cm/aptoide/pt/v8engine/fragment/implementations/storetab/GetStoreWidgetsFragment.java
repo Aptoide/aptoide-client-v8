@@ -13,8 +13,7 @@ public class GetStoreWidgetsFragment extends StoreTabWidgetsGridRecyclerFragment
 
   @Override
   protected Observable<List<? extends Displayable>> buildDisplayables(boolean refresh, String url) {
-    return requestRepository
-        .getStoreWidgets(url)
+    return requestRepository.newStoreWidgets(url)
         .observe(refresh)
         .observeOn(Schedulers.io())
         .map(getStoreWidgets -> loadGetStoreWidgets(getStoreWidgets, refresh, url));
