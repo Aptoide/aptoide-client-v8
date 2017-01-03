@@ -6,10 +6,10 @@
 package cm.aptoide.pt.v8engine.download;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.actions.AptoideClientUUID;
 import cm.aptoide.pt.actions.UserData;
-import cm.aptoide.pt.networkclient.okhttp.UserAgentGenerator;
 import cm.aptoide.pt.dataprovider.BuildConfig;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
+import cm.aptoide.pt.networkclient.okhttp.UserAgentGenerator;
 import cm.aptoide.pt.networkclient.okhttp.UserAgentInterceptor;
 import cm.aptoide.pt.utils.AptoideUtils;
 import com.liulishuo.filedownloader.util.FileDownloadHelper;

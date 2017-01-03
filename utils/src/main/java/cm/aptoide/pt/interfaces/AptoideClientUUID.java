@@ -1,4 +1,4 @@
-package cm.aptoide.pt.actions;
+package cm.aptoide.pt.interfaces;
 
 /**
  * Created by sithengineer on 13/10/2016.
