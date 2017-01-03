@@ -13,11 +13,15 @@ public class AnalyticsDataSaver {
     map = new HashMap<>();
   }
 
-  public void save(String md5, Report report) {
-    map.put(md5, report);
+  public void save(String key, Report report) {
+    map.put(key, report);
   }
 
-  public Report get(String md5) {
-    return map.get(md5);
+  public Report get(String key) {
+    return map.get(key);
+  }
+
+  public void remove(String key) {
+    map.remove(key);
   }
 }
