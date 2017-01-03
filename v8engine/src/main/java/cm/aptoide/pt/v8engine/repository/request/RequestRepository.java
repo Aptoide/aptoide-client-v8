@@ -13,8 +13,8 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.interfaces.AccessToken;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
-import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsFromUrl;
-import cm.aptoide.pt.v8engine.util.StoreUtils;
+import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
+import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 
 /**
  * Created by neuro on 26-12-2016.
@@ -23,9 +23,10 @@ import cm.aptoide.pt.v8engine.util.StoreUtils;
 public class RequestRepository {
 
   private final ListStoresRequestFactory listStoresRequestFactory;
+
   private AptoideClientUUID aptoideClientUUID;
   private AccessToken accessToken;
-  private StoreCredentialsFromUrl storeCredentialsFromUrl;
+  private StoreCredentialsProvider storeCredentialsProvider;
 
   public RequestRepository() {
 
@@ -33,7 +34,7 @@ public class RequestRepository {
         DataProvider.getContext()).getAptoideClientUUID();
 
     accessToken = AptoideAccountManager::getAccessToken;
-    storeCredentialsFromUrl = StoreUtils::getStoreCredentialsFromUrl;
+    storeCredentialsProvider = new StoreCredentialsProviderImpl();
 
     listStoresRequestFactory = new ListStoresRequestFactory();
   }
@@ -47,17 +48,18 @@ public class RequestRepository {
   }
 
   public ListAppsRequest newListAppsRequest(String url) {
-    return ListAppsRequest.ofAction(url, storeCredentialsFromUrl.get(url), accessToken.get(),
+    return ListAppsRequest.ofAction(url, storeCredentialsProvider.fromUrl(url), accessToken.get(),
         aptoideClientUUID.getAptoideClientUUID());
   }
 
   public GetStoreDisplaysRequest newStoreDisplaysRequest(String url) {
-    return GetStoreDisplaysRequest.ofAction(url, storeCredentialsFromUrl.get(url),
+    return GetStoreDisplaysRequest.ofAction(url, storeCredentialsProvider.fromUrl(url),
         accessToken.get(), aptoideClientUUID.getAptoideClientUUID());
   }
 
-  public GetStoreMetaRequest newStoreMeta(String url) {
-    return GetStoreMetaRequest.ofAction(url, storeCredentialsFromUrl.get(url), accessToken.get(),
+  public GetStoreMetaRequest newStoreMetaRequest(String url) {
+    return GetStoreMetaRequest.ofAction(url, storeCredentialsProvider.fromUrl(url),
+        accessToken.get(),
         aptoideClientUUID.getAptoideClientUUID());
   }
 
@@ -67,12 +69,13 @@ public class RequestRepository {
   }
 
   public GetStoreRequest newStore(String url) {
-    return GetStoreRequest.ofAction(url, storeCredentialsFromUrl.get(url), accessToken.get(),
+    return GetStoreRequest.ofAction(url, storeCredentialsProvider.fromUrl(url), accessToken.get(),
         aptoideClientUUID.getAptoideClientUUID());
   }
 
   public GetStoreWidgetsRequest newStoreWidgets(String url) {
-    return GetStoreWidgetsRequest.ofAction(url, storeCredentialsFromUrl.get(url), accessToken.get(),
+    return GetStoreWidgetsRequest.ofAction(url, storeCredentialsProvider.fromUrl(url),
+        accessToken.get(),
         aptoideClientUUID.getAptoideClientUUID());
   }
 }
