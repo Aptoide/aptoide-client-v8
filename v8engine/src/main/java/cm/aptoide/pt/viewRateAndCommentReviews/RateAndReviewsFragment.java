@@ -49,12 +49,12 @@ public class RateAndReviewsFragment extends GridRecyclerFragment<CommentsAdapter
     implements ItemCommentAdderView<Review, CommentsAdapter> {
 
   private static final String TAG = RateAndReviewsFragment.class.getSimpleName();
-  private static final String APP_ID = "app_id";
-  private static final String PACKAGE_NAME = "package_name";
-  private static final String STORE_NAME = "store_name";
-  private static final String APP_NAME = "app_name";
-  private static final String REVIEW_ID = "review_id";
-  private static final String STORE_THEME = "store_theme";
+  @Getter private static final String APP_ID = "app_id";
+  @Getter private static final String PACKAGE_NAME = "package_name";
+  @Getter private static final String STORE_NAME = "store_name";
+  @Getter private static final String APP_NAME = "app_name";
+  @Getter private static final String REVIEW_ID = "review_id";
+  @Getter private static final String STORE_THEME = "store_theme";
 
   private long appId;
   @Getter private long reviewId;
