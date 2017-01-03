@@ -1,7 +1,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations;
 
 import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.DefaultDisplayableGroup;
 import cm.aptoide.pt.v8engine.view.recycler.widget.AbstractWidgetGroup;
@@ -14,9 +13,5 @@ public class WidgetGroupWithMargin extends AbstractWidgetGroup<DefaultDisplayabl
 
   public WidgetGroupWithMargin(@NonNull View itemView) {
     super(itemView);
-  }
-
-  @Override protected RecyclerView.ItemDecoration getRecyclerViewDecorator() {
-    return null;
   }
 }

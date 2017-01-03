@@ -7,6 +7,8 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseGridLayoutManager;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.AbstractDisplayableGroup;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by neuro on 28-12-2016.
@@ -22,8 +24,7 @@ public abstract class AbstractWidgetGroup<T extends AbstractDisplayableGroup> ex
 
   @Override protected void assignViews(View itemView) {
     recyclerView = (RecyclerView) itemView.findViewById(R.id.recycler_view);
-    RecyclerView.ItemDecoration recyclerViewDecorator = getRecyclerViewDecorator();
-    if (recyclerViewDecorator != null) {
+    for (RecyclerView.ItemDecoration recyclerViewDecorator : createRecyclerViewDecorators()) {
       recyclerView.addItemDecoration(recyclerViewDecorator);
     }
   }
@@ -35,7 +36,9 @@ public abstract class AbstractWidgetGroup<T extends AbstractDisplayableGroup> ex
     recyclerView.setLayoutManager(getLayoutManager(adapter));
   }
 
-  protected abstract RecyclerView.ItemDecoration getRecyclerViewDecorator();
+  protected List<RecyclerView.ItemDecoration> createRecyclerViewDecorators() {
+    return Collections.emptyList();
+  }
 
   @NonNull protected RecyclerView.LayoutManager getLayoutManager(BaseAdapter adapter) {
     return new BaseGridLayoutManager(getContext(), adapter);

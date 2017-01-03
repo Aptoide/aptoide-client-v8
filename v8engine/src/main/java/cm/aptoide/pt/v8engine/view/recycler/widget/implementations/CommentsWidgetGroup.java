@@ -6,6 +6,8 @@ import android.view.View;
 import cm.aptoide.pt.v8engine.view.custom.HorizontalGraySeparator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.CommentsDisplayableGroup;
 import cm.aptoide.pt.v8engine.view.recycler.widget.AbstractWidgetGroup;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by neuro on 28-12-2016.
@@ -17,7 +19,7 @@ public class CommentsWidgetGroup extends AbstractWidgetGroup<CommentsDisplayable
     super(itemView);
   }
 
-  @Override protected RecyclerView.ItemDecoration getRecyclerViewDecorator() {
-    return new HorizontalGraySeparator(getContext());
+  @Override protected List<RecyclerView.ItemDecoration> createRecyclerViewDecorators() {
+    return Collections.singletonList(new HorizontalGraySeparator(getContext()));
   }
 }
