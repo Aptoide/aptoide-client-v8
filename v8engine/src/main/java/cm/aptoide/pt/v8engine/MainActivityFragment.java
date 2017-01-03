@@ -29,7 +29,7 @@ import cm.aptoide.pt.v8engine.fragment.BaseWizardViewerFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.HomeFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.ScheduledDownloadsFragment;
-import cm.aptoide.pt.v8engine.fragment.implementations.storetab.StoreTabGridRecyclerFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.storetab.StoreTabFragmentChooser;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.interfaces.DrawerFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
@@ -212,8 +212,8 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
     return !TextUtils.isEmpty(queryType)
         && !TextUtils.isEmpty(queryLayout)
         && !TextUtils.isEmpty(queryName)
-        && !TextUtils.isEmpty(queryAction)
-        && StoreTabGridRecyclerFragment.validateAcceptedName(Event.Name.valueOf(queryName));
+        && !TextUtils.isEmpty(queryAction) && StoreTabFragmentChooser.validateAcceptedName(
+        Event.Name.valueOf(queryName));
   }
 
   private void setMainPagerPosition(Event.Name name) {
