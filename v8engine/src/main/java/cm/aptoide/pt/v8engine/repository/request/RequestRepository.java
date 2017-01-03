@@ -3,7 +3,6 @@ package cm.aptoide.pt.v8engine.repository.request;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListFullReviewsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreDisplaysRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
@@ -23,10 +22,11 @@ import lombok.experimental.Delegate;
 public class RequestRepository {
 
   @Delegate private final ListStoresRequestFactory listStoresRequestFactory;
+  @Delegate private final ListAppsRequestFactory listAppsRequestFactory;
 
-  private AptoideClientUUID aptoideClientUUID;
-  private AccessToken accessToken;
-  private StoreCredentialsProvider storeCredentialsProvider;
+  private final AptoideClientUUID aptoideClientUUID;
+  private final AccessToken accessToken;
+  private final StoreCredentialsProvider storeCredentialsProvider;
 
   public RequestRepository() {
 
@@ -37,11 +37,7 @@ public class RequestRepository {
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
 
     listStoresRequestFactory = new ListStoresRequestFactory();
-  }
-
-  public ListAppsRequest newListAppsRequest(String url) {
-    return ListAppsRequest.ofAction(url, storeCredentialsProvider.fromUrl(url), accessToken.get(),
-        aptoideClientUUID.getAptoideClientUUID());
+    listAppsRequestFactory = new ListAppsRequestFactory();
   }
 
   public GetStoreDisplaysRequest newStoreDisplaysRequest(String url) {
