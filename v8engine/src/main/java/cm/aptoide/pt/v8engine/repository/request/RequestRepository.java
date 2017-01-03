@@ -9,12 +9,12 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreDisplaysRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.interfaces.AccessToken;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
+import lombok.experimental.Delegate;
 
 /**
  * Created by neuro on 26-12-2016.
@@ -22,7 +22,7 @@ import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 
 public class RequestRepository {
 
-  private final ListStoresRequestFactory listStoresRequestFactory;
+  @Delegate private final ListStoresRequestFactory listStoresRequestFactory;
 
   private AptoideClientUUID aptoideClientUUID;
   private AccessToken accessToken;
@@ -37,14 +37,6 @@ public class RequestRepository {
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
 
     listStoresRequestFactory = new ListStoresRequestFactory();
-  }
-
-  public ListStoresRequest newListStoresRequest(int offset, int limit) {
-    return listStoresRequestFactory.newListStoresRequest(offset, limit);
-  }
-
-  public ListStoresRequest newListStoresRequest(String url) {
-    return listStoresRequestFactory.newListStoresRequest(url);
   }
 
   public ListAppsRequest newListAppsRequest(String url) {
