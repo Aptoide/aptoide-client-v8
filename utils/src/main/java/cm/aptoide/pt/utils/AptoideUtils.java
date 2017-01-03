@@ -633,14 +633,16 @@ public class AptoideUtils {
           "kMBTPE".charAt(exp - 1));
     }
 
-    public static String formatBytesToBits(long bytes) {
+    public static String formatBytesToBits(long bytes, boolean speed) {
+      bytes *= 8;
       int unit = 1024;
       if (bytes < unit) {
         return bytes + " B";
       }
       int exp = (int) (Math.log(bytes) / Math.log(unit));
       String pre = ("KMGTPE").charAt(exp - 1) + "";
-      return String.format(Locale.ENGLISH, "%.1f %sbps", bytes / Math.pow(unit, exp) * 8, pre);
+      String string = String.format(Locale.ENGLISH, "%.1f %sb", bytes / Math.pow(unit, exp), pre);
+      return speed ? string + "ps" : string;
     }
 
     /**
@@ -648,14 +650,15 @@ public class AptoideUtils {
      * @param bytes file size
      * @return formatted string for file file showing a Human perceptible file size
      */
-    public static String formatBytes(long bytes) {
+    public static String formatBytes(long bytes, boolean speed) {
       int unit = 1024;
       if (bytes < unit) {
         return bytes + " B";
       }
       int exp = (int) (Math.log(bytes) / Math.log(unit));
       String pre = ("KMGTPE").charAt(exp - 1) + "";
-      return String.format(Locale.ENGLISH, "%.1f %sB/s", bytes / Math.pow(unit, exp), pre);
+      String string = String.format(Locale.ENGLISH, "%.1f %sB", bytes / Math.pow(unit, exp), pre);
+      return speed ? string + "/s" : string;
     }
 
     public static String getResString(@StringRes int stringResId) {

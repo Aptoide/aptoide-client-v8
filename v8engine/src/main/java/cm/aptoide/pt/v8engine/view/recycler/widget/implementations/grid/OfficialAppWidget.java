@@ -110,7 +110,7 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
         String.format(context.getString(R.string.version_number), appData.getFile().getVername()));
 
     this.appSize.setText(String.format(context.getString(R.string.app_size),
-        AptoideUtils.StringU.formatBytes(appData.getFile().getFilesize())));
+        AptoideUtils.StringU.formatBytes(appData.getFile().getFilesize(), false)));
 
     ImageLoader.load(appData.getIcon(), this.appImage);
 
