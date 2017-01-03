@@ -3,7 +3,6 @@ package cm.aptoide.pt.v8engine.repository.request;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.dataprovider.ws.v7.ListFullReviewsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
 import cm.aptoide.pt.interfaces.AccessToken;
@@ -21,6 +20,7 @@ public class RequestRepository {
 
   @Delegate private final ListStoresRequestFactory listStoresRequestFactory;
   @Delegate private final ListAppsRequestFactory listAppsRequestFactory;
+  @Delegate private final ListFullReviewsRequestFactory listFullReviewsRequestFactory;
 
   private final AptoideClientUUID aptoideClientUUID;
   private final AccessToken accessToken;
@@ -36,11 +36,7 @@ public class RequestRepository {
 
     listStoresRequestFactory = new ListStoresRequestFactory();
     listAppsRequestFactory = new ListAppsRequestFactory();
-  }
-
-  public ListFullReviewsRequest newListFullReviews(String url, boolean refresh) {
-    return ListFullReviewsRequest.ofAction(url, refresh, accessToken.get(),
-        aptoideClientUUID.getAptoideClientUUID());
+    listFullReviewsRequestFactory = new ListFullReviewsRequestFactory();
   }
 
   public GetStoreRequest newStore(String url) {
