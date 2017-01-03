@@ -69,22 +69,8 @@ public class StoreUtils {
     return new BaseRequestWithStore.StoreCredentials(storeName, username, passwordSha1);
   }
 
-  public static BaseRequestWithStore.StoreCredentials getStoreCredentialsFromUrl(String url) {
-
-    V7Url v7Url = new V7Url(url);
-    Long storeId = v7Url.getStoreId();
-    String storeName = v7Url.getStoreName();
-
-    if (storeId != null) {
-      return getStoreCredentials(storeId);
-    } else if (storeName != null) {
-      return getStoreCredentials(storeName);
-    } else {
-      return new BaseRequestWithStore.StoreCredentials();
-    }
-  }
-
-  public static BaseRequestWithStore.StoreCredentials getStoreCredentialsFromUrlOrNull(String url) {
+  public static @Nullable BaseRequestWithStore.StoreCredentials getStoreCredentialsFromUrl(
+      String url) {
 
     V7Url v7Url = new V7Url(url);
     Long storeId = v7Url.getStoreId();
@@ -95,7 +81,8 @@ public class StoreUtils {
     } else if (storeName != null) {
       return getStoreCredentials(storeName);
     }
-    return null;
+
+    return new BaseRequestWithStore.StoreCredentials();
   }
 
   /**

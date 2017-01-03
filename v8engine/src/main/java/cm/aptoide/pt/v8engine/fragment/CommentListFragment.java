@@ -105,7 +105,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
     // extracting store data from the URL...
     if (commentType == CommentType.STORE) {
       BaseRequestWithStore.StoreCredentials storeCredentials =
-          StoreUtils.getStoreCredentialsFromUrlOrNull(url);
+          StoreUtils.getStoreCredentialsFromUrl(url);
       if (storeCredentials != null) {
 
         Long id = storeCredentials.getId();
@@ -361,9 +361,11 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
         ListCommentsRequest.ofStoreAction(url, refresh, storeCredentials,
             AptoideAccountManager.getAccessToken(), aptoideClientUuid);
 
-    if (storeCredentials.getId() == null) {
-      CrashReports.logException(
-          new IllegalStateException("Current store credentials does not have a store id"));
+    if (storeCredentials == null || storeCredentials.getId() == null) {
+      IllegalStateException illegalStateException =
+          new IllegalStateException("Current store credentials does not have a store id");
+      CrashReports.logException(illegalStateException);
+      throw illegalStateException;
     }
 
     final long storeId = storeCredentials.getId() != null ? storeCredentials.getId() : -1;
