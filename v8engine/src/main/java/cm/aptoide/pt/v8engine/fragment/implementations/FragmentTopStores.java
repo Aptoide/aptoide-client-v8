@@ -14,7 +14,8 @@ import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
+import cm.aptoide.pt.v8engine.fragment.AptoideBaseFragment;
+import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
@@ -27,7 +28,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by trinkes on 8/25/16.
  */
-public class FragmentTopStores extends GridRecyclerFragment implements Endless {
+public class FragmentTopStores extends AptoideBaseFragment<BaseAdapter> implements Endless {
 
   public static final int STORES_LIMIT_PER_REQUEST = 10;
   public static String TAG = FragmentTopStores.class.getSimpleName();

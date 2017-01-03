@@ -5,12 +5,12 @@
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
-import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
+import cm.aptoide.pt.v8engine.fragment.AptoideBaseFragment;
 
 /**
  * Created by sithengineer on 13/05/16.
  */
-public class RateAndReviewsFragment extends GridRecyclerFragment {
+public class RateAndReviewsFragment extends AptoideBaseFragment {
 
   /*
   private static final String TAG = RateAndReviewsFragment.class.getSimpleName();

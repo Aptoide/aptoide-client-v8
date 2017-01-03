@@ -22,9 +22,10 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
+import cm.aptoide.pt.v8engine.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
+import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FooterRowDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RollbackDisplayable;
@@ -40,7 +41,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by sithengineer on 14/06/16.
  */
-public class RollbackFragment extends GridRecyclerFragment {
+public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
 
   private static final String TAG = RollbackFragment.class.getSimpleName();
   private TextView emptyData;
