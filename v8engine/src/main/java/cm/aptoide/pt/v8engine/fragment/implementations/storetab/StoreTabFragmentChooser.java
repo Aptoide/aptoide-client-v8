@@ -1,7 +1,9 @@
 package cm.aptoide.pt.v8engine.fragment.implementations.storetab;
 
+import android.support.v4.app.Fragment;
 import cm.aptoide.pt.model.v7.Event;
-import cm.aptoide.pt.v8engine.fragment.implementations.MyStoresFragment;
+import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.configuration.FragmentProvider;
 
 /**
  * Created by neuro on 03-01-2017.
@@ -9,25 +11,27 @@ import cm.aptoide.pt.v8engine.fragment.implementations.MyStoresFragment;
 
 public class StoreTabFragmentChooser {
 
-  static StoreTabGridRecyclerFragment choose(Event.Name name) {
+  private static FragmentProvider fragmentProvider = V8Engine.getFragmentProvider();
+
+  static Fragment choose(Event.Name name) {
     switch (name) {
       case listApps:
-        return new ListAppsFragment();
+        return fragmentProvider.newListAppsFragment();
       case getStore:
-        return new GetStoreFragment();
+        return fragmentProvider.newGetStoreFragment();
       case getStoresRecommended:
       case getMyStoresSubscribed:
-        return new MyStoresSubscribedFragment();
+        return fragmentProvider.newMyStoresSubscribedFragment();
       case myStores:
-        return new MyStoresFragment();
+        return fragmentProvider.newMyStoresFragment();
       case getStoreWidgets:
-        return new GetStoreWidgetsFragment();
+        return fragmentProvider.newGetStoreWidgetsFragment();
       case listReviews:
-        return new ListReviewsFragment();
+        return fragmentProvider.newListReviewsFragment();
       case getAds:
-        return new GetAdsFragment();
+        return fragmentProvider.newGetAdsFragment();
       case listStores:
-        return new ListStoresFragment();
+        return fragmentProvider.newListStoresFragment();
       default:
         throw new RuntimeException("Fragment " + name + " not implemented!");
     }
