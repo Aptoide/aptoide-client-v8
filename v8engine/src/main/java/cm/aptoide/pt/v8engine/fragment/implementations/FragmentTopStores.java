@@ -64,7 +64,7 @@ public class FragmentTopStores extends AptoideBaseFragment<BaseAdapter> implemen
 
   private void fetchStores() {
     final ListStoresRequest listStoresRequest =
-        requestRepository.newListStoresRequest(offset, STORES_LIMIT_PER_REQUEST);
+        requestFactory.newListStoresRequest(offset, STORES_LIMIT_PER_REQUEST);
     EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(this.getAdapter(), listStoresRequest, listener,
             Throwable::printStackTrace);

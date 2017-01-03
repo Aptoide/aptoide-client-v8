@@ -2,7 +2,7 @@ package cm.aptoide.pt.v8engine.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import cm.aptoide.pt.v8engine.repository.request.RequestRepository;
+import cm.aptoide.pt.v8engine.repository.request.RequestFactory;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 
 /**
@@ -11,10 +11,10 @@ import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 
 public class AptoideBaseFragment<T extends BaseAdapter> extends GridRecyclerFragment<T> {
 
-  protected RequestRepository requestRepository;
+  protected RequestFactory requestFactory;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    requestRepository = new RequestRepository();
+    requestFactory = new RequestFactory();
 
     super.onCreate(savedInstanceState);
   }
