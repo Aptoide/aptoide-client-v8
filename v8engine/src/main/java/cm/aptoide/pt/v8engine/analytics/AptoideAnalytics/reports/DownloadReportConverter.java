@@ -14,7 +14,13 @@ import java.util.LinkedList;
  */
 
 public class DownloadReportConverter {
-  public static DownloadInstallAnalyticsBaseBody<DownloadAnalyticsRequest.DownloadEventBody> convert(
+
+  public DownloadInstallAnalyticsBaseBody<DownloadAnalyticsRequest.DownloadEventBody> convert(
+      DownloadReport report, DownloadInstallAnalyticsBaseBody.ResultStatus status) {
+    return convert(report, status, null);
+  }
+
+  public DownloadInstallAnalyticsBaseBody<DownloadAnalyticsRequest.DownloadEventBody> convert(
       DownloadReport report, DownloadInstallAnalyticsBaseBody.ResultStatus status,
       @Nullable DownloadInstallAnalyticsBaseBody.ResultError resultError) {
     DownloadInstallAnalyticsBaseBody<DownloadAnalyticsRequest.DownloadEventBody> body =
@@ -23,7 +29,6 @@ public class DownloadReportConverter {
     DownloadAnalyticsRequest.DownloadEventBody data =
         new DownloadAnalyticsRequest.DownloadEventBody();
     data.setOrigin(DownloadAnalyticsRequest.DataOrigin.valueOf(report.getOrigin().name()));
-    data.setStatus(DownloadAnalyticsRequest.DataStatus.valueOf(report.getStatus().name()));
 
     DownloadInstallAnalyticsBaseBody.App app = new DownloadInstallAnalyticsBaseBody.App();
     app.setPackageName(report.getPackageName());
