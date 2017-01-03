@@ -13,8 +13,8 @@ import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
  */
 class ListStoresRequestFactory {
 
-  private AptoideClientUUID aptoideClientUUID;
-  private AccessToken accessToken;
+  private final AptoideClientUUID aptoideClientUUID;
+  private final AccessToken accessToken;
 
   public ListStoresRequestFactory() {
     aptoideClientUUID = () -> new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
