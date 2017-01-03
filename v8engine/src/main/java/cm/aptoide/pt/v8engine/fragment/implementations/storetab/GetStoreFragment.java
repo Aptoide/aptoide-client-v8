@@ -1,7 +1,6 @@
 package cm.aptoide.pt.v8engine.fragment.implementations.storetab;
 
 import cm.aptoide.pt.v8engine.fragment.implementations.HomeFragment;
-import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AdultRowDisplayable;
 import java.util.List;
@@ -16,7 +15,7 @@ public class GetStoreFragment extends StoreTabWidgetsGridRecyclerFragment {
 
   @Override
   protected Observable<List<? extends Displayable>> buildDisplayables(boolean refresh, String url) {
-    return RepositoryFactory.getRequestRepository().getStore(url)
+    return requestRepository.getStore(url)
         .observe(refresh).observeOn(Schedulers.io()).map(getStore -> {
           List<Displayable> displayables =
               loadGetStoreWidgets(getStore.getNodes().getWidgets(), refresh, url);

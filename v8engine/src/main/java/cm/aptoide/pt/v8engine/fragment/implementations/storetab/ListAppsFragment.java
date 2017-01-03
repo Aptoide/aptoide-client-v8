@@ -5,7 +5,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.ListApps;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.Store;
-import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.DefaultDisplayableGroup;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickListDisplayable;
@@ -21,7 +20,7 @@ import rx.functions.Action1;
 public class ListAppsFragment extends GetStoreEndlessFragment<ListApps> {
 
   @Override protected V7<ListApps, ? extends Endless> buildRequest(boolean refresh, String url) {
-    return RepositoryFactory.getRequestRepository().getListApps(url);
+    return requestRepository.getListApps(url);
   }
 
   @Override protected Action1<ListApps> buildAction() {
