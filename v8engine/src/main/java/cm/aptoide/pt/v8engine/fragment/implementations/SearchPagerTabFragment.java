@@ -130,10 +130,13 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
     super.load(create, refresh, savedInstanceState);
     if (create) {
       searchAbTest = ABTestManager.getInstance().get(ABTestManager.SEARCH_TAB_TEST);
-      adsRepository.getAdsFromSearch(query).subscribe(minimalAd -> {
-        refreshed = true;
-        addDisplayable(0, new SearchAdDisplayable(minimalAd));
-      });
+      adsRepository.getAdsFromSearch(query)
+          .onErrorReturn(throwable -> null)
+          .filter(minimalAd -> minimalAd != null)
+          .subscribe(minimalAd -> {
+            refreshed = true;
+            addDisplayable(0, new SearchAdDisplayable(minimalAd));
+          });
 
       recyclerView.clearOnScrollListeners();
       ListSearchAppsRequest of;

@@ -5,7 +5,7 @@
 
 package cm.aptoide.pt.networkclient;
 
-import cm.aptoide.pt.actions.AptoideClientUUID;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.okhttp.UserAgentGenerator;
 import cm.aptoide.pt.networkclient.okhttp.UserAgentInterceptor;

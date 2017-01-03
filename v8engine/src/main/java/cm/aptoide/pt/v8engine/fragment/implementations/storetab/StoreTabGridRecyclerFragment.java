@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.fragment.implementations.storetab;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,7 +21,6 @@ import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.Layout;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
-import cm.aptoide.pt.v8engine.fragment.implementations.MyStoresFragment;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
@@ -45,15 +45,15 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
   protected String tag;
   protected String storeTheme;
 
-  public static StoreTabGridRecyclerFragment newInstance(Event event, String title,
+  public static Fragment newInstance(Event event, String title,
       String storeTheme, String tag) {
     Bundle args = buildBundle(event, title, storeTheme, tag);
-    StoreTabGridRecyclerFragment fragment = createFragment(event.getName());
+    Fragment fragment = StoreTabFragmentChooser.choose(event.getName());
     fragment.setArguments(args);
     return fragment;
   }
 
-  public static StoreTabGridRecyclerFragment newInstance(Event event, String storeTheme,
+  public static Fragment newInstance(Event event, String storeTheme,
       String tag) {
     return newInstance(event, null, storeTheme, tag);
   }
@@ -79,53 +79,6 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
     args.putString(BundleCons.STORE_THEME, storeTheme);
     args.putString(BundleCons.TAG, tag);
     return args;
-  }
-
-  protected static StoreTabGridRecyclerFragment createFragment(Event.Name name) {
-    // TODO: 28-12-2016 neuro newInstance needed, reflection even more..
-    switch (name) {
-      case listApps:
-        return new ListAppsFragment();
-      case getStore:
-        return new GetStoreFragment();
-      case getStoresRecommended:
-      case getMyStoresSubscribed:
-        return new MyStoresSubscribedFragment();
-      case myStores:
-        return new MyStoresFragment();
-      case getStoreWidgets:
-        return new GetStoreWidgetsFragment();
-      case listReviews:
-        return new ListReviewsFragment();
-      case getAds:
-        return new GetAdsFragment();
-      case listStores:
-        return new ListStoresFragment();
-      default:
-        throw new RuntimeException("Fragment " + name + " not implemented!");
-    }
-  }
-
-  public static boolean validateAcceptedName(Event.Name name) {
-    if (name != null) {
-      switch (name) {
-        case myStores:
-        case getMyStoresSubscribed:
-        case getStoresRecommended:
-        case listApps:
-        case getStore:
-        case getStoreWidgets:
-        case getReviews:
-          //case getApkComments:
-        case getAds:
-        case listStores:
-        case listComments:
-        case listReviews:
-          return true;
-      }
-    }
-
-    return false;
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -157,7 +110,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
     if (create || refresh) {
       String url = action != null ? action.replace(V7.BASE_HOST, "") : null;
 
-      if (!validateAcceptedName(name)) {
+      if (!StoreTabFragmentChooser.validateAcceptedName(name)) {
         throw new RuntimeException(
             "Invalid name(" + name + ") for event on " + getClass().getSimpleName() + "!");
       }

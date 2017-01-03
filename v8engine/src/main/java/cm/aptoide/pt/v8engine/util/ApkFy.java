@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver;
 import com.crashlytics.android.Crashlytics;
 import java.io.InputStream;
@@ -22,8 +23,8 @@ public class ApkFy {
 
     String appId = null;
     try {
-      final String sourceDir =
-          context.getPackageManager().getPackageInfo("cm.aptoide.pt", 0).applicationInfo.sourceDir;
+      final String sourceDir = context.getPackageManager()
+          .getPackageInfo(V8Engine.getConfiguration().getAppId(), 0).applicationInfo.sourceDir;
       final ZipFile myZipFile = new ZipFile(sourceDir);
       final InputStream is = myZipFile.getInputStream(myZipFile.getEntry("META-INF/aob"));
 

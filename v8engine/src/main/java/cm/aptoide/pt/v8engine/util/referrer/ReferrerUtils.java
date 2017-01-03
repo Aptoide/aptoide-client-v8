@@ -180,6 +180,8 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
                 if (retries > 0) {
                   adsRepository.getAdsFromSecondTry(packageName)
                       .observeOn(AndroidSchedulers.mainThread())
+                      .onErrorReturn(throwable -> null)
+                      .filter(minimalAd1 -> minimalAd != null)
                       .subscribe(
                           minimalAd1 -> extractReferrer(minimalAd1, retries - 1, broadcastReferrer),
                           throwable -> clearExcludedNetworks(packageName));

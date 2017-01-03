@@ -21,6 +21,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import java.util.Map;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by sithengineer on 30/06/16.
@@ -120,7 +121,10 @@ import java.util.Map;
       final GetAppMeta.GetAppMetaFile.Flags.Vote.Type type = viewIdTypeMap.get(v.getId());
 
       compositeSubscription.add(AddApkFlagRequest.of(storeName, md5, type.name().toLowerCase(),
-          AptoideAccountManager.getAccessToken()).observe(true).subscribe(response -> {
+          AptoideAccountManager.getAccessToken())
+          .observe(true)
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe(response -> {
         if (response.isOk() && !response.hasErrors()) {
           boolean voteSubmitted = false;
           switch (type) {

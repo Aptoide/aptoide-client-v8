@@ -29,6 +29,13 @@ import cm.aptoide.pt.v8engine.fragment.implementations.SocialFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.TimeLineFollowFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.UpdatesFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.storetab.GetAdsFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.storetab.GetStoreFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.storetab.GetStoreWidgetsFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.storetab.ListAppsFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.storetab.ListReviewsFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.storetab.ListStoresFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.storetab.MyStoresSubscribedFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.storetab.StoreTabGridRecyclerFragment;
 import cm.aptoide.pt.viewRateAndCommentReviews.RateAndReviewsFragment;
 import java.util.ArrayList;
@@ -133,6 +140,38 @@ public class FragmentProviderImpl implements FragmentProvider {
   public Fragment newStoreTabGridRecyclerFragment(Event event, String title, String storeTheme,
       String tag) {
     return StoreTabGridRecyclerFragment.newInstance(event, title, storeTheme, tag);
+  }
+
+  @Override public Fragment newListAppsFragment() {
+    return new ListAppsFragment();
+  }
+
+  @Override public Fragment newGetStoreFragment() {
+    return new GetStoreFragment();
+  }
+
+  @Override public Fragment newMyStoresSubscribedFragment() {
+    return new MyStoresSubscribedFragment();
+  }
+
+  @Override public Fragment newMyStoresFragment() {
+    return new MyStoresFragment();
+  }
+
+  @Override public Fragment newGetStoreWidgetsFragment() {
+    return new GetStoreWidgetsFragment();
+  }
+
+  @Override public Fragment newListReviewsFragment() {
+    return new ListReviewsFragment();
+  }
+
+  @Override public Fragment newGetAdsFragment() {
+    return new GetAdsFragment();
+  }
+
+  @Override public Fragment newListStoresFragment() {
+    return new ListStoresFragment();
   }
 
   @Override public Fragment newAppsTimelineFragment(String action) {

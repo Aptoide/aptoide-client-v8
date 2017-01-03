@@ -17,11 +17,11 @@ import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.ListComments;
 import cm.aptoide.pt.model.v7.Type;
-import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by neuro on 27-04-2016.
@@ -45,23 +45,20 @@ public class WSWidgetsUtils {
       switch (wsWidget.getType()) {
         case APPS_GROUP:
           ListAppsRequest.ofAction(url, storeCredentials, accessToken, aptoideClientUuid)
-              .observe(refresh)
-              .compose(AptoideUtils.ObservableU.applySchedulers())
+              .observe(refresh).observeOn(Schedulers.io())
               .subscribe(listApps -> setObjectView(wsWidget, countDownLatch, listApps), action1);
           break;
 
         case STORES_GROUP:
           ListStoresRequest.ofAction(url, accessToken, aptoideClientUuid)
-              .observe(refresh)
-              .compose(AptoideUtils.ObservableU.applySchedulers())
+              .observe(refresh).observeOn(Schedulers.io())
               .subscribe(listStores -> setObjectView(wsWidget, countDownLatch, listStores),
                   action1);
           break;
 
         case DISPLAYS:
           GetStoreDisplaysRequest.ofAction(url, storeCredentials, accessToken, aptoideClientUuid)
-              .observe(refresh)
-              .compose(AptoideUtils.ObservableU.applySchedulers())
+              .observe(refresh).observeOn(Schedulers.io())
               .subscribe(
                   getStoreDisplays -> setObjectView(wsWidget, countDownLatch, getStoreDisplays),
                   action1);
@@ -69,16 +66,14 @@ public class WSWidgetsUtils {
 
         case ADS:
           GetAdsRequest.ofHomepage(aptoideClientUuid, googlePlayServicesAvailable, oemid, mature)
-              .observe()
-              .compose(AptoideUtils.ObservableU.applySchedulers())
+              .observe().observeOn(Schedulers.io())
               .subscribe(getAdsResponse -> setObjectView(wsWidget, countDownLatch, getAdsResponse),
                   action1);
           break;
 
         case STORE_META:
           GetStoreMetaRequest.ofAction(url, storeCredentials, accessToken, aptoideClientUuid)
-              .observe(refresh)
-              .compose(AptoideUtils.ObservableU.applySchedulers())
+              .observe(refresh).observeOn(Schedulers.io())
               .subscribe(getStoreMeta -> setObjectView(wsWidget, countDownLatch, getStoreMeta),
                   action1);
           break;
@@ -86,8 +81,7 @@ public class WSWidgetsUtils {
         case COMMENTS_GROUP:
           ListCommentsRequest.ofStoreAction(url, refresh, storeCredentials, accessToken,
               aptoideClientUuid)
-              .observe(refresh)
-              .compose(AptoideUtils.ObservableU.applySchedulers())
+              .observe(refresh).observeOn(Schedulers.io())
               .subscribe(listComments -> setObjectView(wsWidget, countDownLatch,
                   new Pair<ListComments, BaseRequestWithStore.StoreCredentials>(listComments,
                       storeCredentials)), action1);
@@ -95,16 +89,14 @@ public class WSWidgetsUtils {
 
         case REVIEWS_GROUP:
           ListFullReviewsRequest.ofAction(url, refresh, accessToken, aptoideClientUuid)
-              .observe(refresh)
-              .compose(AptoideUtils.ObservableU.applySchedulers())
+              .observe(refresh).observeOn(Schedulers.io())
               .subscribe(reviews -> setObjectView(wsWidget, countDownLatch, reviews), action1);
           break;
 
         case MY_STORES_SUBSCRIBED:
         case STORES_RECOMMENDED:
           GetMyStoreListRequest.of(url, accessToken, aptoideClientUuid)
-              .observe(refresh)
-              .compose(AptoideUtils.ObservableU.applySchedulers())
+              .observe(refresh).observeOn(Schedulers.io())
               .subscribe(getStoreMeta -> setObjectView(wsWidget, countDownLatch, getStoreMeta),
                   throwable -> {
                     LinkedList<String> errorsList = new LinkedList<>();
@@ -121,8 +113,7 @@ public class WSWidgetsUtils {
 
         case MY_STORE_META:
           GetMyStoreMetaRequest.of(accessToken, aptoideClientUuid)
-              .observe(refresh)
-              .compose(AptoideUtils.ObservableU.applySchedulers())
+              .observe(refresh).observeOn(Schedulers.io())
               .subscribe(getStoreMeta -> setObjectView(wsWidget, countDownLatch, getStoreMeta),
                   throwable -> {
                     LinkedList<String> errorsList = new LinkedList<>();
@@ -139,8 +130,7 @@ public class WSWidgetsUtils {
 
         case APP_META:
           GetAppRequest.ofAction(url, accessToken, aptoideClientUuid)
-              .observe(refresh)
-              .compose(AptoideUtils.ObservableU.applySchedulers())
+              .observe(refresh).observeOn(Schedulers.io())
               .subscribe(getApp -> setObjectView(wsWidget, countDownLatch, getApp), action1);
           break;
 
