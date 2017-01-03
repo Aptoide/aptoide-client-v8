@@ -11,6 +11,7 @@ import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.v8engine.repository.request.RequestRepository;
 
 /**
  * Created by sithengineer on 02/09/16.

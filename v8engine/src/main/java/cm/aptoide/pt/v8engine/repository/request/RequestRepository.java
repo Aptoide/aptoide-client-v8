@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.repository;
+package cm.aptoide.pt.v8engine.repository.request;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
