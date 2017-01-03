@@ -264,7 +264,8 @@ public class AptoideDownloadManager {
           isDownloading = false;
           cacheHelper.cleanCache()
               .subscribe(cleanedSize -> Logger.d(TAG,
-                  "cleaned size: " + AptoideUtils.StringU.formatBytes(cleanedSize)), throwable -> {
+                  "cleaned size: " + AptoideUtils.StringU.formatBytes(cleanedSize, false)),
+                  throwable -> {
                 Logger.e(TAG, throwable);
                 CrashReports.logException(throwable);
               });

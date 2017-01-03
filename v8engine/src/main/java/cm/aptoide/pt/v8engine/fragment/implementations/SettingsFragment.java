@@ -221,7 +221,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 .subscribe(deletedSize -> {
                   ShowMessage.asSnack(SettingsFragment.this,
                       AptoideUtils.StringU.getFormattedString(R.string.freed_space,
-                          AptoideUtils.StringU.formatBytes(deletedSize)));
+                          AptoideUtils.StringU.formatBytes(deletedSize, false)));
                 }, throwable -> {
                   ShowMessage.asSnack(SettingsFragment.this, R.string.error_SYS_1);
                   throwable.printStackTrace();
