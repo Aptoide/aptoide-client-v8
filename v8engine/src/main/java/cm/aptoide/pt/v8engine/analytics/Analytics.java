@@ -5,18 +5,20 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.Constants;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.dataprovider.ws.v7.DownloadAnalyticsRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AnalyticsDataSaver;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.Report;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.facebook.FacebookSdk;
@@ -32,6 +34,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.zip.ZipFile;
+import lombok.Getter;
 
 import static cm.aptoide.pt.v8engine.analytics.Analytics.Lifecycle.Application.facebookLogger;
 
@@ -57,8 +60,14 @@ public class Analytics {
       "apps-group-top-games", "apps-group-top-stores", "apps-group-featured-stores",
       "apps-group-editors-choice"
   };
+  static @Getter Analytics instance = new Analytics(new AnalyticsDataSaver());
   private static boolean ACTIVATE_LOCALYTICS = true;
   private static boolean isFirstSession;
+  private AnalyticsDataSaver saver;
+
+  public Analytics(AnalyticsDataSaver saver) {
+    this.saver = saver;
+  }
 
   public static boolean checkBuildVariant() {
     return BuildConfig.BUILD_TYPE.contains("release") && BuildConfig.FLAVOR.contains("dev");
@@ -162,6 +171,32 @@ public class Analytics {
     } catch (Exception e) {
       e.printStackTrace();
     }
+  }
+
+  public void save(@NonNull String key, @NonNull Report report) {
+    saver.save(key, report);
+  }
+
+  public void remove(@NonNull String key) {
+    saver.remove(key);
+  }
+
+  public @Nullable Report get(String key) {
+    return saver.get(key);
+  }
+
+  public void sendEvent(Report report) {
+    report.send();
+  }
+
+  public void sendEvent(String key) {
+    Report report = get(key);
+    if (report == null) {
+      Logger.e(TAG, "Report is null");
+    } else {
+      report.send();
+    }
+    remove(key);
   }
 
   public static class Lifecycle {
@@ -1143,16 +1178,4 @@ public class Analytics {
     }
   }
 
-  public static class DownloadEvent {
-    public static void sendEvent(
-        DownloadInstallAnalyticsBaseBody<DownloadAnalyticsRequest.DownloadEventBody> report,
-        String action, String name, String context) {
-      DownloadAnalyticsRequest.of(AptoideAccountManager.getAccessToken(),
-          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-              DataProvider.getContext()).getAptoideClientUUID(), report, action, name, context)
-          .observe()
-          .subscribe(baseV7Response -> Logger.d(TAG, "onResume: " + baseV7Response),
-              throwable -> throwable.printStackTrace());
-    }
-  }
 }
