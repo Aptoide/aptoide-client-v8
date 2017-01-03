@@ -24,6 +24,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.RecommendationDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.SimilarDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.SocialArticleDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.SocialInstallDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.SocialRecommendationDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.SocialStoreLatestAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.SocialVideoDisplayable;
@@ -810,6 +811,97 @@ public class SharePreviewDialog {
         checkBox.setClickable(true);
         handlePrivacyCheckBoxChanges(userName, userAvatar, checkBox, socialTerms);
       }
+    } else if (displayable instanceof SocialInstallDisplayable) {
+
+      LayoutInflater factory = LayoutInflater.from(context);
+      final View view =
+          factory.inflate(R.layout.displayable_social_timeline_social_install_preview, null);
+
+      TextView storeName =
+          (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_card_title);
+      TextView userName = (TextView) view.findViewById(
+          R.id.displayable_social_timeline_recommendation_card_subtitle);
+      ImageView storeAvatar = (ImageView) view.findViewById(R.id.card_image);
+      ImageView userAvatar = (ImageView) view.findViewById(R.id.card_user_avatar);
+      ImageView appIcon =
+          (ImageView) view.findViewById(R.id.displayable_social_timeline_recommendation_icon);
+      TextView appName = (TextView) view.findViewById(
+          R.id.displayable_social_timeline_recommendation_similar_apps);
+      TextView appSubTitle =
+          (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_name);
+      CardView cardView =
+          (CardView) view.findViewById(R.id.displayable_social_timeline_recommendation_card);
+      LinearLayout like = (LinearLayout) view.findViewById(R.id.social_like);
+      TextView comments = (TextView) view.findViewById(R.id.social_comment);
+      CheckBox checkBox = (CheckBox) view.findViewById(R.id.social_preview_checkbox);
+      LinearLayout socialTerms = (LinearLayout) view.findViewById(R.id.social_privacy_terms);
+      TextView privacyText = (TextView) view.findViewById(R.id.social_text_privacy);
+      TextView getApp = (TextView) view.findViewById(
+          R.id.displayable_social_timeline_recommendation_get_app_button);
+      storeName.setText(AptoideAccountManager.getUserData().getUserRepo());
+      ImageLoader.loadWithShadowCircleTransform(
+          ((SocialInstallDisplayable) displayable).getAppIcon(), appIcon);
+      appName.setText(((SocialInstallDisplayable) displayable).getAppName());
+      appSubTitle.setText(AptoideUtils.StringU.getFormattedString(
+          R.string.displayable_social_timeline_recommendation_atptoide_team_recommends, ""));
+
+      //// TODO: 27/12/2016 shared by text
+
+      SpannableFactory spannableFactory = new SpannableFactory();
+
+      getApp.setText(spannableFactory.createColorSpan(
+          context.getString(R.string.displayable_social_timeline_article_get_app_button, ""),
+          ContextCompat.getColor(context, R.color.appstimeline_grey), ""));
+
+      cardView.setRadius(8);
+      cardView.setCardElevation(10);
+      like.setClickable(false);
+      like.setOnClickListener(null);
+      like.setVisibility(View.VISIBLE);
+      comments.setVisibility(View.VISIBLE);
+
+      if (((SocialInstallDisplayable) displayable).getStore() != null) {
+        storeName.setVisibility(View.VISIBLE);
+        storeAvatar.setVisibility(View.VISIBLE);
+        if (((SocialInstallDisplayable) displayable).getStore().getName() != null) {
+          storeName.setText(((SocialInstallDisplayable) displayable).getStore().getName());
+        }
+
+        if (((SocialInstallDisplayable) displayable).getStore().getAvatar() != null) {
+          ImageLoader.loadWithShadowCircleTransform(
+              ((SocialInstallDisplayable) displayable).getStore().getAvatar(), storeAvatar);
+        }
+      } else {
+        storeName.setVisibility(View.GONE);
+        storeAvatar.setVisibility(View.GONE);
+      }
+
+      if (((SocialInstallDisplayable) displayable).getUser() != null) {
+        userName.setVisibility(View.VISIBLE);
+        userAvatar.setVisibility(View.VISIBLE);
+        if (((SocialInstallDisplayable) displayable).getUser().getName() != null) {
+          userName.setText(((SocialInstallDisplayable) displayable).getUser().getName());
+        }
+
+        if (((SocialInstallDisplayable) displayable).getUser().getAvatar() != null) {
+          ImageLoader.loadWithShadowCircleTransform(
+              ((SocialInstallDisplayable) displayable).getUser().getAvatar(), userAvatar);
+        }
+      } else {
+        userName.setVisibility(View.GONE);
+        userAvatar.setVisibility(View.GONE);
+      }
+
+      alertadd.setView(view).setCancelable(false);
+
+      alertadd.setTitle(R.string.social_timeline_you_will_share);
+
+      if (!ManagerPreferences.getUserAccessConfirmed()) {
+        privacyText.setOnClickListener(click -> checkBox.toggle());
+        checkBox.setClickable(true);
+        handlePrivacyCheckBoxChanges(userName, userAvatar, checkBox, socialTerms);
+      }
+
     }
     return alertadd;
   }
