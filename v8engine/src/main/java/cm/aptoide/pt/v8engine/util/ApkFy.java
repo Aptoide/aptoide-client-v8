@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.util;
 
 import android.app.Activity;
 import android.content.Context;
+import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -37,10 +38,10 @@ public class ApkFy {
       return appId != null ? Long.parseLong(appId) : null;
     } catch (Exception e) {
       if (appId != null) {
-        Crashlytics.setString("APKFY_APP_ID", appId);
+        CrashReports.logString("APKFY_APP_ID", appId);
       }
       Logger.d(TAG, e.getMessage());
-      Crashlytics.logException(e);
+      CrashReports.logException(e);
     }
     return null;
   }

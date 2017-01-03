@@ -70,8 +70,8 @@ import rx.schedulers.Schedulers;
       progressBar.setProgress(download.getOverallProgress());
     }
     downloadProgressTv.setText(download.getOverallProgress() + "%");
-    downloadSpeedTv.setText(
-        String.valueOf(AptoideUtils.StringU.formatBytesToBits((long) download.getDownloadSpeed())));
+    downloadSpeedTv.setText(String.valueOf(
+        AptoideUtils.StringU.formatBytesToBits((long) download.getDownloadSpeed(), true)));
     return null;
   }
 }
