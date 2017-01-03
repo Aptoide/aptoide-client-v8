@@ -26,8 +26,8 @@ import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.util.CommentOperations;
+import cm.aptoide.pt.v8engine.util.RecyclerViewUtils;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
-import cm.aptoide.pt.v8engine.view.custom.HorizontalGraySeparator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.CommentsDisplayableGroup;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.DisplayableGroupWithMargin;
@@ -177,7 +177,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
   }
 
   @Override protected RecyclerView.ItemDecoration getItemDecoration() {
-    return new HorizontalGraySeparator(getContext());
+    return RecyclerViewUtils.newHorizontalGraySeparator(getContext());
   }
 
   @Override public void setupViews() {

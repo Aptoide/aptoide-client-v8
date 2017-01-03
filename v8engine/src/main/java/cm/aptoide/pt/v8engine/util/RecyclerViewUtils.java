@@ -2,11 +2,12 @@ package cm.aptoide.pt.v8engine.util;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.View;
-
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.view.custom.DrawableItemDecoration;
 
 /**
  * Created by neuro on 28-12-2016.
@@ -63,5 +64,10 @@ public class RecyclerViewUtils {
 				outRect.set(left, top, right, bottom);
 			}
 		};
+	}
+
+	public static DrawableItemDecoration newHorizontalGraySeparator(Context context) {
+		return new DrawableItemDecoration(
+				ContextCompat.getDrawable(context, R.drawable.gray_item_decorator), 35);
 	}
 }
