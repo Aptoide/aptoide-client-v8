@@ -6,6 +6,7 @@ import android.view.View;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.CommentsDisplayableGroup;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.DefaultDisplayableGroup;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.DisplayableGroupWithMargin;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
@@ -77,6 +78,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.StoreLatestAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.VideoDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.CommentsWidgetGroup;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.DefaultWidgetGroup;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.EmptyWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.WidgetGroupWithMargin;
@@ -196,6 +198,8 @@ public class DisplayableWidgetMapping {
         new DisplayableWidgetMapping(DefaultWidgetGroup.class, DefaultDisplayableGroup.class));
     displayableWidgetMappings.add(new DisplayableWidgetMapping(WidgetGroupWithMargin.class,
         DisplayableGroupWithMargin.class));
+    displayableWidgetMappings.add(
+        new DisplayableWidgetMapping(CommentsWidgetGroup.class, CommentsDisplayableGroup.class));
 
     // common widgets / displayables
     displayableWidgetMappings.add(
