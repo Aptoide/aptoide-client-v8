@@ -13,7 +13,7 @@ public class StoreTabFragmentChooser {
 
   private static FragmentProvider fragmentProvider = V8Engine.getFragmentProvider();
 
-  static Fragment choose(Event.Name name) {
+  public static Fragment choose(Event.Name name) {
     switch (name) {
       case listApps:
         return fragmentProvider.newListAppsFragment();
