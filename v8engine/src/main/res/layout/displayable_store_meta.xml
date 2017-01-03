@@ -46,6 +46,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         />
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -124,24 +125,52 @@
       android:weightSum="2"
       >
 
-    <TextView
-        android:id="@+id/description"
+    <LinearLayout
+        android:id="@+id/description_edit"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:paddingLeft="10dp"
         android:paddingStart="10dp"
-        android:paddingRight="10dp"
-        android:paddingEnd="10dp"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:padding="@dimen/row_store_vertical_delimiter"
-        android:textSize="12sp"
-        android:textColor="@color/white"
-        tools:text="In this store you can download free Android apps using the Aptoide client for download and etc ipsus lorem ipsus lorem ipsus lorem ipsus"
-        />
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        >
+
+      <TextView
+          android:id="@+id/description"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:ellipsize="end"
+          android:maxLines="2"
+          android:padding="@dimen/row_store_vertical_delimiter"
+          android:textSize="12sp"
+          android:textColor="@color/white"
+          tools:text="In this store you can download free Android apps using the Aptoide client for download and etc ipsus lorem ipsus lorem ipsus lorem ipsus"
+          />
+
+
+      <Button
+          android:id="@+id/edit_store_btn"
+          android:layout_width="80dp"
+          android:layout_height="33dp"
+          android:layout_marginEnd="13dp"
+          android:layout_marginRight="13dp"
+          android:layout_gravity="center"
+          android:background="@drawable/rounded_corners_white"
+          android:gravity="center"
+          android:padding="@dimen/row_store_vertical_half_delimiter"
+          android:text="@string/edit_store"
+          android:textAlignment="center"
+          android:textSize="12sp"
+          android:visibility="gone"
+          />
+
+
+    </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/social_channels"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"

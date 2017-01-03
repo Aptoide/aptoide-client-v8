@@ -337,6 +337,8 @@
   <string name="private_profile_create_store">To have a private profile, you need to create a store</string>
   <string name="social_timeline_shared_by">shared by %1$s</string>
 
+  <!-- Store Meta widget -->
+  <string name="edit_store">Edit</string>
 
   <!-- Comments on store -->
   <string name="comment_store">Comment Store</string>

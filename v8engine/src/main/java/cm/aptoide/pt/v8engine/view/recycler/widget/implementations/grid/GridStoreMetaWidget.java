@@ -13,7 +13,9 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cm.aptoide.accountmanager.AccountManagerPreferences;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.accountmanager.CreateStoreActivity;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
@@ -44,10 +46,12 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
 
   private View containerLayout;
   private View descriptionContentLayout;
+  private View socialChannelsLayout;
   private ImageView image;
   private TextView name;
   private TextView description;
   private Button subscribeButton;
+  private Button editStoreButton;
   private TextView subscribersCount;
   private TextView appsCount;
   private TextView downloadsCount;
@@ -62,10 +66,12 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
   @Override protected void assignViews(View itemView) {
     containerLayout = itemView.findViewById(R.id.outter_layout);
     descriptionContentLayout = itemView.findViewById(R.id.descriptionContent);
+    socialChannelsLayout = itemView.findViewById(R.id.social_channels);
     image = (ImageView) itemView.findViewById(R.id.image);
     name = (TextView) itemView.findViewById(R.id.name);
     description = (TextView) itemView.findViewById(R.id.description);
     subscribeButton = (Button) itemView.findViewById(R.id.follow_btn);
+    editStoreButton = (Button) itemView.findViewById(R.id.edit_store_btn);
     subscribersCount = (TextView) itemView.findViewById(R.id.subscribers);
     appsCount = (TextView) itemView.findViewById(R.id.apps);
     downloadsCount = (TextView) itemView.findViewById(R.id.downloads);
@@ -88,6 +94,7 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
       containerLayout.setBackgroundDrawable(d);
     }
     subscribeButton.setTextColor(color);
+    editStoreButton.setTextColor(color);
 
     name.setText(store.getName());
     description.setText(store.getAppearance().getDescription());
@@ -178,6 +185,7 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
     final StoreThemeEnum theme = StoreThemeEnum.get(store.getAppearance().getTheme());
     final Context context = itemView.getContext();
 
+
     StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
     boolean isStoreSubscribed =
         storeAccessor.get(store.getId()).toBlocking().firstOrDefault(null) != null;
@@ -194,9 +202,17 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
     setupSocialChannelButtons(socialChannels);
 
     // if there is no channels nor description, hide that area
-    if ((socialChannels == null || socialChannels.isEmpty()) && TextUtils.isEmpty(
-        store.getAppearance().getDescription())) {
-      descriptionContentLayout.setVisibility(View.GONE);
+    if (socialChannels == null || socialChannels.isEmpty()) {
+      this.socialChannelsLayout.setVisibility(View.GONE);
+    }
+
+    if (TextUtils.isEmpty(store.getAppearance().getDescription())) {
+      description.setText("Add a description to your store by editing it.");
+    }
+
+    if (AccountManagerPreferences.getUserRepo().equals(store.getName())) {
+      editStoreButton.setVisibility(View.VISIBLE);
+      compositeSubscription.add(RxView.clicks(editStoreButton).subscribe(click -> editStore(store.getId())));
     }
   }
 
@@ -243,5 +259,12 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
       this.store = store;
       this.storeSubscribed = isStoreSubscribed;
     }
+  }
+
+  private void editStore(long storeId) {
+    Intent intent = new Intent(getContext(), CreateStoreActivity.class);
+    intent.putExtra("storeId", storeId);
+    intent.putExtra("from", "store");
+    getContext().startActivity(intent);
   }
 }

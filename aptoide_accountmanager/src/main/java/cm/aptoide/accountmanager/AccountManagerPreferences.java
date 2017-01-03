@@ -6,7 +6,7 @@ import cm.aptoide.pt.preferences.secure.SecurePreferences;
 /**
  * Created by trinkes on 5/2/16.
  */
-class AccountManagerPreferences {
+public class AccountManagerPreferences {
 
   static String getAccessToken() {
     return SecurePreferences.getString(SecureKeys.ACCESS_TOKEN);
@@ -68,7 +68,7 @@ class AccountManagerPreferences {
     SecurePreferences.remove(SecureKeys.USER_AVATAR);
   }
 
-  static String getUserRepo() {
+  public static String getUserRepo() {
     return SecurePreferences.getString(SecureKeys.USER_REPO);
   }
 

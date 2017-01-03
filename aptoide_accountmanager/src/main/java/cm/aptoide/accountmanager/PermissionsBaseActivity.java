@@ -44,6 +44,18 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
   private File avatar;
   private CompositeSubscription mSubscriptions;
 
+
+  @Override public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    mSubscriptions = new CompositeSubscription();
+  }
+
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    mSubscriptions.clear();
+  }
+
+
   public static String checkAndAskPermission(final AppCompatActivity activity, String type) {
 
     if (Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
@@ -97,16 +109,6 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
     //SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-mm-yyyy");
     String output = avatar /*+ simpleDateFormat.toString()*/;
     return output;
-  }
-
-  @Override public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    mSubscriptions = new CompositeSubscription();
-  }
-
-  @Override protected void onDestroy() {
-    super.onDestroy();
-    mSubscriptions.clear();
   }
 
   @Override protected String getActivityTitle() {
