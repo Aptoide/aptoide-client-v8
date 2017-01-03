@@ -10,6 +10,8 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.Constants;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.DownloadAnalyticsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -1138,6 +1140,19 @@ public class Analytics {
 
     public static void signUp() {
       track(USER_REGISTERED, LOCALYTICS);
+    }
+  }
+
+  public static class DownloadEvent {
+    public static void sendEvent(
+        DownloadInstallAnalyticsBaseBody<DownloadAnalyticsRequest.DownloadEventBody> report,
+        String action, String name, String context) {
+      DownloadAnalyticsRequest.of(AptoideAccountManager.getAccessToken(),
+          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+              DataProvider.getContext()).getAptoideClientUUID(), report, action, name, context)
+          .observe()
+          .subscribe(baseV7Response -> Logger.d(TAG, "onResume: " + baseV7Response),
+              throwable -> throwable.printStackTrace());
     }
   }
 }

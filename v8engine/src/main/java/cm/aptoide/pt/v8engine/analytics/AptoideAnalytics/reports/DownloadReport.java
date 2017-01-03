@@ -1,7 +1,5 @@
 package cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports;
 
-import android.widget.Toast;
-import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.Report;
 import lombok.Data;
 import lombok.ToString;
@@ -45,12 +43,6 @@ public @Data @ToString class DownloadReport extends Report {
     this.patchObbUrl = patchObbUrl;
     this.name = "download";
     this.context = context;
-  }
-
-  @Override public String getMd5() {
-    Toast.makeText(V8Engine.getContext(), "this method should be abstract", Toast.LENGTH_SHORT)
-        .show();
-    return "teste";
   }
 
   public enum Action {

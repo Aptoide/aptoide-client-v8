@@ -5,5 +5,5 @@ package cm.aptoide.pt.v8engine.analytics.AptoideAnalytics;
  */
 
 public abstract class Report {
-  abstract public String getMd5();
+  abstract public String getName();
 }

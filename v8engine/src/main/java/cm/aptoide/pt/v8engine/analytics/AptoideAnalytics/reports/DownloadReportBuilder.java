@@ -17,11 +17,15 @@ public class DownloadReportBuilder {
   private DownloadReport.AppContext context;
 
   public DownloadReportBuilder(DownloadReport.Origin origin, DownloadReport.AppContext context,
-      DownloadReport.Action event, String packageName) {
+      DownloadReport.Action event, String packageName, DownloadReport.Status status, long size,
+      long timeStamp) {
     this.origin = origin;
     this.context = context;
     this.event = event;
     this.packageName = packageName;
+    this.status = status;
+    this.size = size;
+    this.timeStamp = timeStamp;
   }
 
   public DownloadReportBuilder setEvent(DownloadReport.Action event) {
