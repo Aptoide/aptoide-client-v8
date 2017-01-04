@@ -1,5 +1,6 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import android.support.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.store.AccessTokenRequestBodyAdapter;
 import cm.aptoide.pt.model.v7.BaseV7Response;
@@ -43,15 +44,38 @@ import rx.Observable;
     RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
 
     // use a client with bigger timeouts
+    OkHttpClient.Builder clientBuilder = getBuilder();
+
+    return new SetStoreRequest(body, BASE_HOST,
+        MultipartBody.Part.createFormData("store_avatar", file.getName(), requestFile),
+        clientBuilder.build());
+  }
+
+  public static SetStoreRequest of(String aptoideClientUUID, String accessToken, String storeName,
+      String storeTheme, String storeAvatarPath, String storeDescription, Boolean editStore,
+      long storeId) {
+    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+    AccessTokenRequestBodyAdapter body =
+        new AccessTokenRequestBodyAdapter(new BaseBody(), decorator, accessToken, storeName,
+            storeTheme, storeDescription, editStore, storeId);
+    File file = new File(storeAvatarPath);
+    RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+
+    // use a client with bigger timeouts
+    OkHttpClient.Builder clientBuilder = getBuilder();
+
+    return new SetStoreRequest(body, BASE_HOST,
+        MultipartBody.Part.createFormData("store_avatar", file.getName(), requestFile),
+        clientBuilder.build());
+  }
+
+  @NonNull private static OkHttpClient.Builder getBuilder() {
     OkHttpClient.Builder clientBuilder =
         OkHttpClientFactory.newClient(() -> SecurePreferences.getUserAgent()).newBuilder();
     clientBuilder.connectTimeout(2, TimeUnit.MINUTES);
     clientBuilder.readTimeout(2, TimeUnit.MINUTES);
     clientBuilder.writeTimeout(2, TimeUnit.MINUTES);
-
-    return new SetStoreRequest(body, BASE_HOST,
-        MultipartBody.Part.createFormData("store_avatar", file.getName(), requestFile),
-        clientBuilder.build());
+    return clientBuilder;
   }
 
   //private RequestBody createBodyPartFromString(String string) {

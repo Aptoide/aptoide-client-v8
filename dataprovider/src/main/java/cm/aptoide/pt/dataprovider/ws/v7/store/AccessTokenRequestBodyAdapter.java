@@ -3,10 +3,13 @@ package cm.aptoide.pt.dataprovider.ws.v7.store;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.AccessTokenBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.SimpleSetStoreRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.listapp.File;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.Application;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.Map;
 import lombok.AllArgsConstructor;
@@ -29,13 +32,31 @@ public class AccessTokenRequestBodyAdapter implements AccessTokenBody {
   private String storeName;
   private String accessToken;
   private String storeTheme;
+  private Boolean storeEdit = false;
+  private Long storeid;
+  private SimpleSetStoreRequest.StoreProperties storeProperties;
 
-  public AccessTokenRequestBodyAdapter(BaseBody baseBody, BaseBodyDecorator decorator, String accessToken, String storeName, String storeTheme) {
+  private static final String JSONOBJECT_ERROR = "Couldn't build store_properties json";
+
+  public AccessTokenRequestBodyAdapter(BaseBody baseBody, BaseBodyDecorator decorator,
+      String accessToken, String storeName, String storeTheme) {
     this.baseBody = baseBody;
     this.decorator = decorator;
     this.storeName = storeName;
     this.storeTheme = storeTheme;
     this.accessToken = accessToken;
+  }
+
+  public AccessTokenRequestBodyAdapter(BaseBody baseBody, BaseBodyDecorator decorator,
+      String accessToken, String storeName, String storeTheme, String storeDescription,
+      Boolean storeEdit, long storeid) {
+    this.baseBody = baseBody;
+    this.decorator = decorator;
+    this.storeName = storeName;
+    this.accessToken = accessToken;
+    storeProperties = new SimpleSetStoreRequest.StoreProperties(storeTheme, storeDescription);
+    this.storeEdit = storeEdit;
+    this.storeid = storeid;
   }
 
   @Override public String getAccessToken() {
@@ -50,28 +71,25 @@ public class AccessTokenRequestBodyAdapter implements AccessTokenBody {
     decorator.decorate(baseBody, accessToken);
     HashMapNotNull<String, RequestBody> body = new HashMapNotNull<>();
 
-
-    body.put("store_name", createBodyPartFromString(storeName));
-    if (storeTheme.length() > 0) {
+    if (storeEdit) {
+      body.put("store_id", createBodyPartFromLong(storeid));
       try {
-        body.put("store_properties",
-            createBodyPartFromString(new JSONObject().put("theme", storeTheme).toString()));
-      } catch (JSONException e) {
-        Logger.e(AccessTokenRequestBodyAdapter.class.getSimpleName(),
-            "Couldn't build store_properties json", e);
+        body.put("store_properties", createBodyPartFromString(new ObjectMapper().writeValueAsString(storeProperties)));
+      } catch (JsonProcessingException e) {
+        e.printStackTrace();
+      }
+    } else {
+      body.put("store_name", createBodyPartFromString(storeName));
+      if (storeTheme.length() > 0) {
+        try {
+          body.put("store_properties",
+              createBodyPartFromString(new JSONObject().put("theme", storeTheme).toString()));
+        } catch (JSONException e) {
+          Logger.e(AccessTokenRequestBodyAdapter.class.getSimpleName(), JSONOBJECT_ERROR, e);
+        }
       }
     }
-    //body.put("store_theme", createBodyPartFromString(storeTheme));
     body.put("access_token", createBodyPartFromString(accessToken));
-    /*body.put("aptoide_uid", createBodyPartFromString(baseBody.getAptoideId()));
-    body.put("aptoide_vercode", createBodyPartFromString(String.valueOf(baseBody.getAptoideVercode())));
-
-    body.put("cdn", createBodyPartFromString(baseBody.getCdn()));
-    body.put("lang", createBodyPartFromString(baseBody.getLang()));
-    body.put("q", createBodyPartFromString(baseBody.getQ()));
-    body.put("country", createBodyPartFromString(baseBody.getCountry()));
-
-    body.put("mature", createBodyPartFromString(String.valueOf(baseBody.isMature())));*/
 
     return body;
   }
@@ -83,5 +101,10 @@ public class AccessTokenRequestBodyAdapter implements AccessTokenBody {
     return RequestBody.create(MediaType.parse("multipart/form-data"), string);
   }
 
-
+  private RequestBody createBodyPartFromLong(Long longValue) {
+    if (longValue == null) {
+      longValue = Long.valueOf(0);
+    }
+    return RequestBody.create(MediaType.parse("multipart/form-data"), String.valueOf(longValue));
+  }
 }

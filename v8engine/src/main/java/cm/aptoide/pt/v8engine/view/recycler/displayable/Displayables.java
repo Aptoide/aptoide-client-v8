@@ -7,12 +7,14 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import cm.aptoide.pt.v8engine.interfaces.LifecycleSchim;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
+
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+
+import cm.aptoide.pt.v8engine.interfaces.LifecycleSchim;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
 
 /**
  * Created by neuro on 18-04-2016.
@@ -41,64 +43,17 @@ public class Displayables implements LifecycleSchim {
   public void add(int position, Displayable displayable) {
     if (shouldIgnore(displayable)) return;
 
-    if (displayable instanceof DisplayableGroup) {
-      addDisplayableGroup(position, (DisplayableGroup) displayable);
-    } else {
       displayables.add(position, displayable);
-    }
   }
 
   public void add(Displayable displayable) {
     if (shouldIgnore(displayable)) return;
 
-    if (displayable instanceof DisplayableGroup) {
-      addDisplayableGroup((DisplayableGroup) displayable);
-    } else {
       displayables.add(displayable);
-    }
   }
 
   private boolean shouldIgnore(Displayable displayable) {
     return displayable instanceof EmptyDisplayable;
-  }
-
-  /**
-   * Uses a breadth-first-search to reach all leaf nodes transversing the list in width.
-   *
-   * @param displayable
-   */
-  private void addDisplayableGroup(DisplayableGroup displayable) {
-    temporaryDisplayables.clear();
-    temporaryDisplayables.addAll(displayable.getChildren());
-    while (!temporaryDisplayables.isEmpty()) {
-      Displayable innerDisplayable = temporaryDisplayables.poll();
-      if (innerDisplayable instanceof DisplayableGroup) {
-        temporaryDisplayables.addAll(((DisplayableGroup) innerDisplayable).getChildren());
-      } else {
-        displayables.add(innerDisplayable);
-      }
-    }
-  }
-
-  /**
-   * Uses a breadth-first-search to reach all leaf nodes transversing the list in width.
-   *
-   * @param position
-   */
-  private void addDisplayableGroup(int position, DisplayableGroup displayable) {
-    temporaryDisplayables.clear();
-    temporaryDisplayables.addAll(displayable.getChildren());
-    LinkedList<Displayable> temp = new LinkedList<>();
-    while (!temporaryDisplayables.isEmpty()) {
-      Displayable innerDisplayable = temporaryDisplayables.poll();
-      if (innerDisplayable instanceof DisplayableGroup) {
-        temporaryDisplayables.addAll(((DisplayableGroup) innerDisplayable).getChildren());
-      } else {
-        temp.add(innerDisplayable);
-      }
-    }
-    Collections.reverse(temp);
-    displayables.addAll(position, temp);
   }
 
   public Displayable pop() {

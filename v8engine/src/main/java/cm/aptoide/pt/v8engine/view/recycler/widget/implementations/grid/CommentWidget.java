@@ -25,19 +25,15 @@ public class CommentWidget extends Widget<CommentDisplayable> {
   private static final String TAG = CommentWidget.class.getName();
   private static final int MARGIN_IN_DIP = 15;
 
-  private final View rootView;
-
   private View replyLayout;
   private View outerLayout;
   private ImageView userAvatar;
   private TextView userName;
   private TextView date;
   private TextView comment;
-  private View commentDivider;
 
   public CommentWidget(View itemView) {
     super(itemView);
-    rootView = itemView;
   }
 
   @Override protected void assignViews(View itemView) {
@@ -47,7 +43,6 @@ public class CommentWidget extends Widget<CommentDisplayable> {
     date = (TextView) itemView.findViewById(R.id.added_date);
     comment = (TextView) itemView.findViewById(R.id.comment);
     replyLayout = itemView.findViewById(R.id.reply_layout);
-    commentDivider = itemView.findViewById(R.id.comment_divider);
   }
 
   @Override public void bindView(CommentDisplayable displayable) {
@@ -116,8 +111,6 @@ public class CommentWidget extends Widget<CommentDisplayable> {
     //int baseMargin = level < 2 ? 0 : AptoideUtils.ScreenU.getPixels(MARGIN_IN_DIP);
     //rootView.setPadding(baseMargin, rootView.getPaddingTop(), rootView.getPaddingRight(),
     //    rootView.getPaddingBottom());
-
-    commentDivider.setVisibility(View.GONE);
 
     int baseMargin = AptoideUtils.ScreenU.getPixels(MARGIN_IN_DIP);
     int leftMargin = level < 2 ? baseMargin : baseMargin * level;

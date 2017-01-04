@@ -23,6 +23,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragmentWithDecorator;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.DefaultDisplayableGroup;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ActiveDownloadDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ActiveDownloadsHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CompletedDownloadDisplayable;
@@ -85,14 +86,14 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
         });
   }
 
+  @Override public int getContentViewId() {
+    return R.layout.recycler_fragment_downloads;
+  }
+
   private List<Progress<Download>> sortDownloads(List<Progress<Download>> progressList) {
     Collections.sort(progressList, (lhs, rhs) -> Long.valueOf(lhs.getRequest().getTimeStamp())
         .compareTo(rhs.getRequest().getTimeStamp()) * -1);
     return progressList;
-  }
-
-  @Override public int getContentViewId() {
-    return R.layout.recycler_fragment_downloads;
   }
 
   private void updateUi(List<Progress<Download>> progressList) {
@@ -179,8 +180,8 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
 
   public void setDisplayables() {
     LinkedList<Displayable> displayables = new LinkedList<>();
-    displayables.addAll(activeDisplayablesList);
-    displayables.addAll(completedDisplayablesList);
+    displayables.add(new DefaultDisplayableGroup(activeDisplayablesList));
+    displayables.add(new DefaultDisplayableGroup(completedDisplayablesList));
     setDisplayables(displayables);
   }
 }

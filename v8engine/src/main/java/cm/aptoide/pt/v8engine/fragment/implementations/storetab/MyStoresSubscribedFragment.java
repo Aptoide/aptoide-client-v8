@@ -15,6 +15,7 @@ import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablesFactory;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.DefaultDisplayableGroup;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RecommendedStoreDisplayable;
 import java.util.ArrayList;
@@ -40,7 +41,8 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
   }
 
   @Override protected Action1<ListStores> buildAction() {
-    return listStores -> addDisplayables(getStoresDisplayable(listStores.getDatalist().getList()));
+    return listStores -> addDisplayable(
+        new DefaultDisplayableGroup(getStoresDisplayable(listStores.getDatalist().getList())));
   }
 
   @Override protected ErrorRequestListener getErrorRequestListener() {

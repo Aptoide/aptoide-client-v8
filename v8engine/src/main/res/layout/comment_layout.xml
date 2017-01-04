@@ -94,18 +94,9 @@
         android:layout_below="@id/user_icon"
         android:layout_marginTop="9dp"
         android:ellipsize="end"
+        android:paddingBottom="6dp"
         android:textSize="@dimen/text_size_medium_small"
         tools:text="O Lorem Ipsum é um texto modelo da indústria tipográfica e de impressão. O Lorem Ipsum tem vindo a ser o texto padrão usado por estas indústrias desde o ano de 1500, quando uma misturou os caracteres de um texto para criar um espécime de livro."
-        android:paddingBottom="6dp"
-        />
-
-    <View
-        android:id="@+id/comment_divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@+id/comment"
-        android:layout_marginTop="10dp"
-        android:background="@color/comments_footer"
         />
 
   </RelativeLayout>

@@ -67,6 +67,7 @@
   <string name="ws_error_WOP_9">The email provided already exists in Aptoide</string>
   <string name="ws_error_WOP_10">The email provided does not exist in Aptoide yet</string>
   <string name="ws_error_WOP_11">The store could not be created. Please try again.</string>
+  <string name="ws_error_API_1">The image is not valid.</string>
     <string name="ws_error_QUOTA_2">Daily limit of created users reached for today. If you need
         this limit increased please contact support at support@aptoide.com or create more users tomorrow</string>
     <string name="ws_error_AUTH_1">Either email or password are not valid to login (upon name
@@ -107,12 +108,17 @@
   <!--Create Store fragment-->
   <string name="create_store_title">Create Your Store</string>
   <string name="create_store_header"><b>Create your store</b> and share your apps selection with %s community. <b>Give it a try</b></string>
+  <string name="edit_store_header">Edit your store with a beautiful image and a lovely description</string>
   <string name="create_store_name">Choose a name for your %s Store</string>
   <string name="create_store_name_inserted">Your Store\'s name</string>
   <string name="create_store_theme">Store Theme</string>
   <string name="create_store_create">Create Store</string>
   <string name="create_store_skip">Skip</string>
   <string name="create_store_choose_image">Choose an image for your store</string>
+  <string name="create_store_description_title">Your Store\'s description</string>
+  <string name="create_store_description_hint">Your store description</string>
+  <string name="edit_store_title">Edit Your Store</string>
+  <string name="save_edit_store">Save</string>
 
   <string name="upload_dialog_title">Upload Photo</string>
   <string name="upload_dialog_photo">Take new Photo</string>

@@ -6,7 +6,7 @@ import cm.aptoide.pt.model.v7.FullReview;
 import cm.aptoide.pt.model.v7.ListFullReviews;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayableGroup;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.DefaultDisplayableGroup;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RowReviewDisplayable;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -36,8 +36,8 @@ public class ListReviewsFragment extends GetStoreEndlessFragment<ListFullReviews
           displayables.add(new RowReviewDisplayable(review));
         }
         displayables = new ArrayList<>(reviews.size());
-        displayables.add(new DisplayableGroup(displayables));
-        addDisplayables(displayables);
+        displayables.add(new DefaultDisplayableGroup(displayables));
+        addDisplayable(new DefaultDisplayableGroup(displayables));
       }
     };
   }

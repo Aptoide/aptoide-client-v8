@@ -7,6 +7,7 @@ import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.DefaultDisplayableGroup;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickListDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAppDisplayable;
 import java.util.LinkedList;
@@ -52,7 +53,7 @@ public class ListAppsFragment extends GetStoreEndlessFragment<ListApps> {
         }
       }
 
-      addDisplayables(displayables);
+      addDisplayable(new DefaultDisplayableGroup(displayables));
     };
   }
 }

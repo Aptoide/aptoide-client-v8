@@ -18,6 +18,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.DefaultDisplayableGroup;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RowReviewDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
 import java.util.LinkedList;
@@ -82,7 +83,7 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
         for (final FullReview review : reviews) {
           displayables.add(new RowReviewDisplayable(review));
         }
-        addDisplayables(displayables);
+        addDisplayable(new DefaultDisplayableGroup(displayables));
       };
 
       recyclerView.clearOnScrollListeners();

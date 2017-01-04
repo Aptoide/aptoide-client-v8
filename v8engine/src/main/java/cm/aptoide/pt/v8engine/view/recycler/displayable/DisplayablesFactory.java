@@ -30,6 +30,8 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.DefaultDisplayableGroup;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.DisplayableGroupWithMargin;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CreateStoreDisplayable;
@@ -80,9 +82,7 @@ public class DisplayablesFactory {
             displayables.add(getMyStores(wsWidget, storeRepository, storeTheme));
             break;
           case STORES_GROUP:
-            displayables.add(
-                new StoreGridHeaderDisplayable(wsWidget, storeTheme, wsWidget.getTag()));
-            displayables.add(getStores(wsWidget.getViewObject()));
+            displayables.add(getStores(wsWidget, storeTheme));
             break;
 
           case DISPLAYS:
@@ -92,60 +92,30 @@ public class DisplayablesFactory {
           case ADS:
             Displayable ads = getAds(wsWidget);
             if (ads != null) {
-              // Header hammered
-              LinkedList<GetStoreWidgets.WSWidget.Action> actions = new LinkedList<>();
-              actions.add(new GetStoreWidgets.WSWidget.Action().setEvent(
-                  new Event().setName(Event.Name.getAds)));
-              wsWidget.setActions(actions);
-              StoreGridHeaderDisplayable storeGridHeaderDisplayable =
-                  new StoreGridHeaderDisplayable(wsWidget, null, wsWidget.getTag());
-              displayables.add(storeGridHeaderDisplayable);
-
               displayables.add(ads);
             }
             break;
           case STORE_META:
-            displayables.add(new GridStoreMetaDisplayable((GetStoreMeta) wsWidget.getViewObject()));
+            displayables.add(new DefaultDisplayableGroup(
+                new GridStoreMetaDisplayable((GetStoreMeta) wsWidget.getViewObject())));
             break;
           case REVIEWS_GROUP:
-            ListFullReviews reviewsList = (ListFullReviews) wsWidget.getViewObject();
-            if (reviewsList != null
-                && reviewsList.getDatalist() != null
-                && reviewsList.getDatalist().getList().size() > 0) {
-              displayables.add(new StoreGridHeaderDisplayable(wsWidget));
-              displayables.add(createReviewsDisplayables(reviewsList));
-            }
+            displayables.add(createReviewsGroupDisplayables(wsWidget));
             break;
           case MY_STORE_META:
-            displayables.addAll(createMyStoreDisplayables(wsWidget.getViewObject()));
+            displayables.add(createMyStoreDisplayables(wsWidget.getViewObject()));
             break;
           case STORES_RECOMMENDED:
             displayables.add(createRecommendedStores(wsWidget, storeTheme, storeRepository));
             break;
           case COMMENTS_GROUP:
-            Pair<ListComments, BaseRequestWithStore.StoreCredentials> data =
-                (Pair<ListComments, BaseRequestWithStore.StoreCredentials>) wsWidget.getViewObject();
-            ListComments comments = data.first;
-            if (comments != null
-                && comments.getDatalist() != null
-                && comments.getDatalist().getList().size() > 0) {
-              displayables.add(new StoreGridHeaderDisplayable(wsWidget));
-              displayables.add(
-                  new StoreLatestCommentsDisplayable(data.second.getId(), data.second.getName(),
-                      comments.getDatalist().getList()));
-            } else {
-              displayables.add(new StoreGridHeaderDisplayable(wsWidget));
-              displayables.add(
-                  new StoreAddCommentDisplayable(data.second.getId(), data.second.getName(),
-                      StoreThemeEnum.APTOIDE_STORE_THEME_DEFAULT));
-            }
+            displayables.add(createCommentsGroup(wsWidget));
             break;
-
           case APP_META:
             GetStoreWidgets.WSWidget.Data dataObj = wsWidget.getData();
             String message = dataObj.getMessage();
-            displayables.add(
-                new OfficialAppDisplayable(new Pair<>(message, (GetApp) wsWidget.getViewObject())));
+            displayables.add(new DefaultDisplayableGroup(new OfficialAppDisplayable(
+                new Pair<>(message, (GetApp) wsWidget.getViewObject()))));
             break;
         }
       }
@@ -154,7 +124,43 @@ public class DisplayablesFactory {
     return displayables;
   }
 
-  private static List<Displayable> createMyStoreDisplayables(Object viewObject) {
+  private static Displayable createCommentsGroup(GetStoreWidgets.WSWidget wsWidget) {
+    List<Displayable> displayables = new LinkedList<>();
+
+    Pair<ListComments, BaseRequestWithStore.StoreCredentials> data =
+        (Pair<ListComments, BaseRequestWithStore.StoreCredentials>) wsWidget.getViewObject();
+    ListComments comments = data.first;
+    displayables.add(new DefaultDisplayableGroup(new StoreGridHeaderDisplayable(wsWidget)));
+    if (comments != null
+        && comments.getDatalist() != null
+        && comments.getDatalist().getList().size() > 0) {
+      displayables.add(
+          new StoreLatestCommentsDisplayable(data.second.getId(), data.second.getName(),
+              comments.getDatalist().getList()));
+    } else {
+      displayables.add(new StoreAddCommentDisplayable(data.second.getId(), data.second.getName(),
+          StoreThemeEnum.APTOIDE_STORE_THEME_DEFAULT));
+    }
+
+    return new DisplayableGroupWithMargin(displayables);
+  }
+
+  private static DefaultDisplayableGroup createReviewsGroupDisplayables(
+      GetStoreWidgets.WSWidget wsWidget) {
+    List<Displayable> displayables = new LinkedList<>();
+
+    ListFullReviews reviewsList = (ListFullReviews) wsWidget.getViewObject();
+    if (reviewsList != null
+        && reviewsList.getDatalist() != null
+        && reviewsList.getDatalist().getList().size() > 0) {
+      displayables.add(new StoreGridHeaderDisplayable(wsWidget));
+      displayables.add(createReviewsDisplayables(reviewsList));
+    }
+
+    return new DefaultDisplayableGroup(displayables);
+  }
+
+  private static Displayable createMyStoreDisplayables(Object viewObject) {
     LinkedList<Displayable> displayables = new LinkedList<>();
     if (viewObject instanceof GetStoreMeta && ((GetStoreMeta) viewObject).getData() != null) {
       displayables.add(new MyStoreDisplayable(((GetStoreMeta) viewObject)));
@@ -171,7 +177,7 @@ public class DisplayablesFactory {
         displayables.add(new MyStoreDisplayable(meta));
       }
     }
-    return displayables;
+    return new DefaultDisplayableGroup(displayables);
   }
 
   private static GetStoreMeta convertUserInfoStore(CheckUserCredentialsJson userInfo) {
@@ -207,17 +213,18 @@ public class DisplayablesFactory {
       }
     }
 
-    return new DisplayableGroup(displayables);
+    return new DefaultDisplayableGroup(displayables);
   }
 
-  private static DisplayableGroup createReviewsDisplayables(ListFullReviews listFullReviews) {
+  private static DefaultDisplayableGroup createReviewsDisplayables(
+      ListFullReviews listFullReviews) {
     List<FullReview> reviews = listFullReviews.getDatalist().getList();
     final List<Displayable> displayables = new ArrayList<>(reviews.size());
     for (int i = 0; i < reviews.size(); i++) {
       displayables.add(new RowReviewDisplayable(reviews.get(i)));
     }
 
-    return new DisplayableGroup(displayables);
+    return new DefaultDisplayableGroup(displayables);
   }
 
   private static Displayable getAds(GetStoreWidgets.WSWidget wsWidget) {
@@ -225,12 +232,20 @@ public class DisplayablesFactory {
     if (wsWidget.getViewObject() != null) {
       List<GetAdsResponse.Ad> ads = getAdsResponse.getAds();
       List<Displayable> tmp = new ArrayList<>(ads.size());
+
+      // Header hammered
+      LinkedList<GetStoreWidgets.WSWidget.Action> actions = new LinkedList<>();
+      actions.add(new GetStoreWidgets.WSWidget.Action().setEvent(new Event().setName(Event.Name.getAds)));
+      wsWidget.setActions(actions);
+      StoreGridHeaderDisplayable storeGridHeaderDisplayable = new StoreGridHeaderDisplayable(wsWidget, null, wsWidget.getTag());
+      tmp.add(storeGridHeaderDisplayable);
+
       for (GetAdsResponse.Ad ad : ads) {
 
         GridAdDisplayable diplayable = new GridAdDisplayable(MinimalAd.from(ad), wsWidget.getTag());
         tmp.add(diplayable);
       }
-      return new DisplayableGroup(tmp);
+      return new DefaultDisplayableGroup(tmp);
     }
 
     return null;
@@ -297,27 +312,29 @@ public class DisplayablesFactory {
         displayables.add(diplayable);
       }
     }
-    return new DisplayableGroup(displayables);
+    return new DefaultDisplayableGroup(displayables);
   }
 
-  private static Displayable getStores(Object viewObject) {
+  private static Displayable getStores(GetStoreWidgets.WSWidget wsWidget, String storeTheme) {
+    Object viewObject = wsWidget.getViewObject();
     ListStores listStores = (ListStores) viewObject;
     if (listStores == null) {
       return new EmptyDisplayable();
     }
     List<Store> stores = listStores.getDatalist().getList();
     List<Displayable> tmp = new ArrayList<>(stores.size());
+    tmp.add(new StoreGridHeaderDisplayable(wsWidget, storeTheme, wsWidget.getTag()));
     for (Store store : stores) {
 
       GridStoreDisplayable diplayable = new GridStoreDisplayable(store);
       tmp.add(diplayable);
     }
-    return new DisplayableGroup(tmp);
+    return new DefaultDisplayableGroup(tmp);
   }
 
   private static Displayable getMyStores(GetStoreWidgets.WSWidget wsWidget,
       StoreRepository storeRepository, String storeTheme) {
-    return new DisplayableGroup(loadLocalSubscribedStores(storeRepository).map(stores -> {
+    return new DefaultDisplayableGroup(loadLocalSubscribedStores(storeRepository).map(stores -> {
       List<Displayable> tmp = new ArrayList<>(stores.size());
       int maxStoresToShow = stores.size();
       if (wsWidget.getViewObject() instanceof ListStores) {
@@ -381,6 +398,6 @@ public class DisplayablesFactory {
       }
       tmp.add(displayablePojo);
     }
-    return new DisplayableGroup(tmp);
+    return new DefaultDisplayableGroup(tmp);
   }
 }

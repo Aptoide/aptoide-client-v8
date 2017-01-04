@@ -1002,6 +1002,8 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     String getRepoTheme();
 
     String getRepoAvatar();
+
+    String getRepoDescription();
   }
 
   /**

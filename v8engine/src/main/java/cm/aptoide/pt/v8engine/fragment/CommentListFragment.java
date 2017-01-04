@@ -26,10 +26,11 @@ import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.util.CommentOperations;
+import cm.aptoide.pt.v8engine.util.RecyclerViewUtils;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
-import cm.aptoide.pt.v8engine.view.custom.HorizontalGraySeparator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayableGroup;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.CommentsDisplayableGroup;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.DisplayableGroupWithMargin;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
 import cm.aptoide.pt.viewRateAndCommentReviews.CommentDialogFragment;
@@ -176,7 +177,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
   }
 
   @Override protected RecyclerView.ItemDecoration getItemDecoration() {
-    return new HorizontalGraySeparator(getContext());
+    return RecyclerViewUtils.newHorizontalGraySeparator(getContext());
   }
 
   @Override public void setupViews() {
@@ -290,7 +291,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
         }
 
         this.displayables = new ArrayList<>(displayables.size());
-        this.displayables.add(new DisplayableGroup(displayables));
+        this.displayables.add(new DisplayableGroupWithMargin(displayables));
 
         addDisplayables(this.displayables);
       }
@@ -382,7 +383,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
         }
 
         this.displayables = new ArrayList<>(displayables.size());
-        this.displayables.add(new DisplayableGroup(displayables));
+        this.displayables.add(new CommentsDisplayableGroup(displayables));
 
         addDisplayables(this.displayables);
       }
