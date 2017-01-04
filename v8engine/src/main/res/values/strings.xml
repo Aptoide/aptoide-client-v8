@@ -353,4 +353,8 @@
   <string name="private_followers_message">%d followers are private</string>
   <string name="private_following_message">you are following %d private users/stores</string>
 
+  <!-- Payments -->
+  <string name="payment_item_select_button">select</string>
+  <string name="activity_payment_more_payments_button">Use another payment method</string>
+
 </resources>

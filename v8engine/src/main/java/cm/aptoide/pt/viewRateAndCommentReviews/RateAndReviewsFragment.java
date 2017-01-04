@@ -39,7 +39,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Com
 import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
 import cm.aptoide.pt.viewRateAndCommentReviews.layout.RatingBarsLayout;
 import cm.aptoide.pt.viewRateAndCommentReviews.layout.RatingTotalsLayout;
-import com.trello.rxlifecycle.FragmentEvent;
+import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.List;
 import lombok.Getter;
 import rx.android.schedulers.AndroidSchedulers;

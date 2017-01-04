@@ -23,7 +23,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ExcludedUpdateDisplayable;
-import com.trello.rxlifecycle.FragmentEvent;
+import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
