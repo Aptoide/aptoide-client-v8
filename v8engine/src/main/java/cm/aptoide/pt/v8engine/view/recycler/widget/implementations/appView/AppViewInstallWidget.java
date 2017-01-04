@@ -28,12 +28,12 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
-import cm.aptoide.pt.dataprovider.ws.v7.SetUserRequest;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Malware;
+import cm.aptoide.pt.model.v7.Obb;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -46,6 +46,8 @@ import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadReport;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadReportConverter;
 import cm.aptoide.pt.v8engine.dialog.InstallWarningDialog;
 import cm.aptoide.pt.v8engine.dialog.SharePreviewDialog;
 import cm.aptoide.pt.v8engine.install.Installer;
@@ -270,7 +272,9 @@ import rx.android.schedulers.AndroidSchedulers;
                   showRootInstallWarningPopup(context);
                   compositeSubscription.add(
                       new PermissionManager().requestDownloadAccess(permissionRequest)
-                          .flatMap(success -> installManager.install(getContext(), appDownload))
+                          .flatMap(success -> installManager.install(getContext(), appDownload)
+                              .doOnSubscribe(() -> setupDownloadEvent(app, appDownload,
+                                  DownloadReport.Origin.downgrade)))
                           .observeOn(AndroidSchedulers.mainThread())
                           .subscribe(progress -> {
                             Logger.d(TAG, "Installing");
@@ -285,6 +289,36 @@ import rx.android.schedulers.AndroidSchedulers;
         ShowMessage.asSnack(view, R.string.needs_permission_to_fs);
       });
     };
+  }
+
+  private void setupDownloadEvent(GetAppMeta.App app, Download download,
+      DownloadReport.Origin origin) {
+    Obb obb = app.getObb();
+    String mainObbPath = null;
+    long mainObbSize = 0;
+    long patchSize = 0;
+    String patchPath = null;
+
+    if (obb != null) {
+      Obb.ObbItem main = obb.getMain();
+      if (main != null) {
+        mainObbSize = main.getFilesize();
+        mainObbPath = main.getPath();
+      }
+
+      Obb.ObbItem obbPatch = obb.getPatch();
+      if (obbPatch != null) {
+        patchSize = obbPatch.getFilesize();
+        patchPath = obbPatch.getPath();
+      }
+    }
+
+    DownloadReport report =
+        new DownloadReport(DownloadReport.Action.CLICK, origin, app.getPackageName(), app.getSize(),
+            download.getFilesToDownload().get(0).getLink(), mainObbSize, mainObbPath, patchSize,
+            patchPath, DownloadReport.AppContext.appview, app.getFile().getVercode(),
+            new DownloadReportConverter());
+    Analytics.getInstance().save(report.getPackageName() + report.getVersionCode(), report);
   }
 
   private void showRootInstallWarningPopup(Context context) {
@@ -331,9 +365,14 @@ import rx.android.schedulers.AndroidSchedulers;
 
       compositeSubscription.add(permissionManager.requestDownloadAccess(permissionRequest)
           .flatMap(success -> permissionManager.requestExternalStoragePermission(permissionRequest))
-          .flatMap(success -> installManager.install(getContext(),
-              new DownloadFactory().create(displayable.getPojo().getNodes().getMeta().getData(),
-                  downloadAction)))
+          .flatMap(success -> {
+            Download download =
+                new DownloadFactory().create(displayable.getPojo().getNodes().getMeta().getData(),
+                    downloadAction);
+            return installManager.install(getContext(), download)
+                .doOnSubscribe(() -> setupDownloadEvent(app, download,
+                    isUpdate ? DownloadReport.Origin.update : DownloadReport.Origin.install));
+          })
           .first()
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(progress -> {
@@ -469,10 +508,15 @@ import rx.android.schedulers.AndroidSchedulers;
       PermissionManager permissionManager = new PermissionManager();
       compositeSubscription.add(permissionManager.requestDownloadAccess(permissionRequest)
           .flatMap(permissionGranted -> permissionManager.requestExternalStoragePermission(
-              (PermissionRequest) getContext()))
-          .flatMap(success -> installManager.install(getContext(),
-              new DownloadFactory().create(displayable.getPojo().getNodes().getMeta().getData(),
-                  progress.getRequest().getAction())))
+              (PermissionRequest) getContext())).flatMap(success -> {
+            DownloadReport.Origin origin = getOrigin(progress);
+            Download download =
+                new DownloadFactory().create(displayable.getPojo().getNodes().getMeta().getData(),
+                    progress.getRequest().getAction());
+            return installManager.install(getContext(), download).doOnSubscribe(() -> {
+              setupDownloadEvent(app, download, origin);
+            });
+          })
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(downloadProgress -> {
             Logger.d(TAG, "Installing");
@@ -480,6 +524,24 @@ import rx.android.schedulers.AndroidSchedulers;
             Logger.e(TAG, err);
           }));
     });
+  }
+
+  private DownloadReport.Origin getOrigin(Progress<Download> progress) {
+    DownloadReport.Origin origin;
+    switch (progress.getRequest().getAction()) {
+      case Download.ACTION_INSTALL:
+        origin = DownloadReport.Origin.install;
+        break;
+      case Download.ACTION_UPDATE:
+        origin = DownloadReport.Origin.update;
+        break;
+      case Download.ACTION_DOWNGRADE:
+        origin = DownloadReport.Origin.downgrade;
+        break;
+      default:
+        origin = DownloadReport.Origin.install;
+    }
+    return origin;
   }
 
   private void setDownloadBarVisible(boolean visible, AppViewInstallDisplayable displayable,

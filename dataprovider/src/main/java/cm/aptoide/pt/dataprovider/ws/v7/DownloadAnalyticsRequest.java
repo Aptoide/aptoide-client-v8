@@ -42,16 +42,11 @@ public class DownloadAnalyticsRequest extends
     return interfaces.setDownloadAnalyticsEvent(name, action, context, body);
   }
 
-  public enum DataStatus {
-    start, pause, resume, stop,
-  }
-
   public enum DataOrigin {
     install, update, downgrade, update_all
   }
 
   public @Data static class DownloadEventBody extends DownloadInstallAnalyticsBaseBody.Data {
     DataOrigin origin;
-    DataStatus status;
   }
 }
