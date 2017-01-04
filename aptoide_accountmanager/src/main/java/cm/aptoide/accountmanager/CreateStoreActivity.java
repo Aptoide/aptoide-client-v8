@@ -176,12 +176,13 @@ public class CreateStoreActivity extends PermissionsBaseActivity
       mChooseNameTitle.setText(
           AptoideUtils.StringU.getFormattedString(R.string.create_store_name, "Aptoide"));
     } else {
-      mHeader.setVisibility(View.GONE);
+      mHeader.setText(R.string.edit_store_header);
       mChooseNameTitle.setText(
           AptoideUtils.StringU.getFormattedString(R.string.create_store_description_title));
       mStoreName.setVisibility(View.GONE);
       mStoreDescription.setVisibility(View.VISIBLE);
-      mCreateStore.setText(R.string.edit_store);
+      mCreateStore.setText(R.string.save_edit_store);
+      mSkip.setText(R.string.cancel);
     }
   }
 
@@ -221,8 +222,16 @@ public class CreateStoreActivity extends PermissionsBaseActivity
                         });
                   }
                 }
-              } else {
+              } else if (!(CREATE_STORE_REQUEST_CODE == 3)) {
                 onCreateSuccess(progressDialog);
+              } else {
+                progressDialog.dismiss();
+                ShowMessage.asLongObservableSnack(this, R.string.create_store_store_created).subscribe(visibility -> {
+                  if (visibility == ShowMessage.DISMISSED) {
+
+                    finish();
+                  }
+                });
               }
             });
           } else if (CREATE_STORE_REQUEST_CODE == 4) {
@@ -424,112 +433,55 @@ public class CreateStoreActivity extends PermissionsBaseActivity
 
   private void setupThemeListeners() {
     mSubscriptions.add(RxView.clicks(mOrangeShape).subscribe(click -> {
-      if (!THEME_CLICKED_FLAG) {
+        resetPreviousTickedTheme(storeTheme);
         mOrangeTick.setVisibility(View.VISIBLE);
         storeTheme = "orange";
-        THEME_CLICKED_FLAG = true;
-      } else if (THEME_CLICKED_FLAG && checkThemeClicked("orange")) {
-        mOrangeTick.setVisibility(View.INVISIBLE);
-        THEME_CLICKED_FLAG = false;
-      }
     }));
     mSubscriptions.add(RxView.clicks(mGreenShape).subscribe(click -> {
-      if (!THEME_CLICKED_FLAG) {
+        resetPreviousTickedTheme(storeTheme);
         mGreenTick.setVisibility(View.VISIBLE);
         storeTheme = "green";
-        THEME_CLICKED_FLAG = true;
-      } else if (THEME_CLICKED_FLAG && checkThemeClicked("green")) {
-        mGreenTick.setVisibility(View.INVISIBLE);
-        THEME_CLICKED_FLAG = false;
-      }
     }));
     mSubscriptions.add(RxView.clicks(mRedShape).subscribe(click -> {
-      if (!THEME_CLICKED_FLAG) {
+        resetPreviousTickedTheme(storeTheme);
         mRedTick.setVisibility(View.VISIBLE);
         storeTheme = "red";
-        THEME_CLICKED_FLAG = true;
-      } else if (THEME_CLICKED_FLAG && checkThemeClicked("red")) {
-        mRedTick.setVisibility(View.INVISIBLE);
-        THEME_CLICKED_FLAG = false;
-      }
     }));
     mSubscriptions.add(RxView.clicks(mIndigoShape).subscribe(click -> {
-      if (!THEME_CLICKED_FLAG) {
+        resetPreviousTickedTheme(storeTheme);
         mIndigoTick.setVisibility(View.VISIBLE);
         storeTheme = "indigo";
-        THEME_CLICKED_FLAG = true;
-      } else if (THEME_CLICKED_FLAG && checkThemeClicked("indigo")) {
-        mIndigoTick.setVisibility(View.INVISIBLE);
-        THEME_CLICKED_FLAG = false;
-      }
     }));
     mSubscriptions.add(RxView.clicks(mTealShape).subscribe(click -> {
-      if (!THEME_CLICKED_FLAG) {
+        resetPreviousTickedTheme(storeTheme);
         mTealTick.setVisibility(View.VISIBLE);
         storeTheme = "teal";
-        THEME_CLICKED_FLAG = true;
-      } else if (THEME_CLICKED_FLAG && checkThemeClicked("teal")) {
-        mTealTick.setVisibility(View.INVISIBLE);
-        THEME_CLICKED_FLAG = false;
-      }
     }));
     mSubscriptions.add(RxView.clicks(mPinkShape).subscribe(click -> {
-      if (!THEME_CLICKED_FLAG) {
+        resetPreviousTickedTheme(storeTheme);
         mPinkTick.setVisibility(View.VISIBLE);
         storeTheme = "pink";
-        THEME_CLICKED_FLAG = true;
-      } else if (THEME_CLICKED_FLAG && checkThemeClicked("pink")) {
-        mPinkTick.setVisibility(View.INVISIBLE);
-        THEME_CLICKED_FLAG = false;
-      }
     }));
     mSubscriptions.add(RxView.clicks(mLimeShape).subscribe(click -> {
-      if (!THEME_CLICKED_FLAG) {
+      resetPreviousTickedTheme(storeTheme);
         mLimeTick.setVisibility(View.VISIBLE);
         storeTheme = "lime";
-        THEME_CLICKED_FLAG = true;
-      } else if (THEME_CLICKED_FLAG && checkThemeClicked("lime")) {
-        mLimeTick.setVisibility(View.INVISIBLE);
-        THEME_CLICKED_FLAG = false;
-      }
     }));
     mSubscriptions.add(RxView.clicks(mAmberShape).subscribe(click -> {
-      if (!THEME_CLICKED_FLAG) {
+        resetPreviousTickedTheme(storeTheme);
         mAmberTick.setVisibility(View.VISIBLE);
         storeTheme = "amber";
-        THEME_CLICKED_FLAG = true;
-      } else if (THEME_CLICKED_FLAG && checkThemeClicked("amber")) {
-        mAmberTick.setVisibility(View.INVISIBLE);
-        THEME_CLICKED_FLAG = false;
-      }
     }));
     mSubscriptions.add(RxView.clicks(mBrownShape).subscribe(click -> {
-      if (!THEME_CLICKED_FLAG) {
+        resetPreviousTickedTheme(storeTheme);
         mBrownTick.setVisibility(View.VISIBLE);
         storeTheme = "brown";
-        THEME_CLICKED_FLAG = true;
-      } else if (THEME_CLICKED_FLAG && checkThemeClicked("brown")) {
-        mBrownTick.setVisibility(View.INVISIBLE);
-        THEME_CLICKED_FLAG = false;
-      }
     }));
     mSubscriptions.add(RxView.clicks(mLightblueShape).subscribe(click -> {
-      if (!THEME_CLICKED_FLAG) {
+        resetPreviousTickedTheme(storeTheme);
         mLightblueTick.setVisibility(View.VISIBLE);
         storeTheme = "light-blue";
-        THEME_CLICKED_FLAG = true;
-      } else if (THEME_CLICKED_FLAG && checkThemeClicked("light-blue")) {
-        mLightblueTick.setVisibility(View.INVISIBLE);
-        THEME_CLICKED_FLAG = false;
-      }
     }));
-  }
-
-  private boolean checkThemeClicked(String color) {
-    if (color.equals(storeTheme)) {
-      return true;
-    }
-    return false;
   }
 
   /**
@@ -538,7 +490,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
    */
   private int validateData() {
     if (from.equals("store")) {
-      if (getRepoDescription().length() != 0) {
+      if (getRepoDescription().length() != 0 || getRepoTheme().length() > 0) {
         if (getRepoAvatar().length() != 0) {
           return CREATE_STORE_REQUEST_CODE = 4;
         } else {
@@ -563,9 +515,42 @@ public class CreateStoreActivity extends PermissionsBaseActivity
   }
 
   /**
-   * This method resets all ticked views
+   * This method resets previously ticked theme tick
    */
-  private void resetTickedTheme() {
-    //TODO: implementation
+  private void resetPreviousTickedTheme(String storeTheme) {
+    switch (storeTheme) {
+      case "orange":
+        mOrangeTick.setVisibility(View.GONE);
+        break;
+      case "green":
+        mGreenTick.setVisibility(View.GONE);
+        break;
+      case "red":
+        mRedTick.setVisibility(View.GONE);
+        break;
+      case "indigo":
+        mIndigoTick.setVisibility(View.GONE);
+        break;
+      case "teal":
+        mTealTick.setVisibility(View.GONE);
+        break;
+      case "pink":
+        mPinkTick.setVisibility(View.GONE);
+        break;
+      case "lime":
+        mLimeTick.setVisibility(View.GONE);
+        break;
+      case "amber":
+        mAmberTick.setVisibility(View.GONE);
+        break;
+      case "brown":
+        mBrownTick.setVisibility(View.GONE);
+        break;
+      case "light-blue":
+        mLightblueTick.setVisibility(View.GONE);
+        break;
+      default:
+        break;
+    }
   }
 }
