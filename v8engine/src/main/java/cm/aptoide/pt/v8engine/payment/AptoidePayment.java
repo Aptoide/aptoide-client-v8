@@ -73,15 +73,15 @@ public class AptoidePayment implements Payment {
   }
 
   private Completable completePaymentOrFail() {
-    return getConfirmation().takeUntil(
-        paymentConfirmation -> paymentConfirmation.isCompleted()
-            || paymentConfirmation.isFailed()).flatMap(paymentConfirmation -> {
-      if (paymentConfirmation.isFailed()) {
-        return Observable.error(new PaymentFailureException(
-            "Payment " + getId() + "failed for product " + getProduct().getId()));
-      }
-      return Observable.empty();
-    }).toCompletable();
+    return getConfirmation().first(paymentConfirmation -> paymentConfirmation.isCompleted()
+            || paymentConfirmation.isFailed())
+        .flatMap(paymentConfirmation -> {
+          if (paymentConfirmation.isFailed()) {
+            return Observable.error(new PaymentFailureException(
+                "Payment " + getId() + "failed for product " + getProduct().getId()));
+          }
+          return Observable.empty();
+        }).toCompletable();
   }
 
 }

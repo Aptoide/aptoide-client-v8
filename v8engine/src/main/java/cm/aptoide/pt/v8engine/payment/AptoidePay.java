@@ -38,7 +38,7 @@ public class AptoidePay {
   public Observable<Purchase> getPurchase(AptoideProduct product) {
     return confirmationRepository.getPaymentConfirmation(product)
         .distinctUntilChanged(paymentConfirmation -> paymentConfirmation.getStatus())
-        .takeUntil(paymentConfirmation -> paymentConfirmation.isCompleted() || paymentConfirmation.isFailed())
+        .first(paymentConfirmation -> paymentConfirmation.isCompleted() || paymentConfirmation.isFailed())
         .flatMap(paymentConfirmation -> {
           if (paymentConfirmation.isFailed()) {
             return Observable.empty();

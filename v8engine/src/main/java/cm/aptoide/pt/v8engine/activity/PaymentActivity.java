@@ -5,10 +5,10 @@
 
 package cm.aptoide.pt.v8engine.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,9 +27,12 @@ import cm.aptoide.pt.v8engine.presenter.PaymentPresenter;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.view.PaymentView;
 import com.jakewharton.rxbinding.view.RxView;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import rx.Observable;
+import rx.subjects.PublishSubject;
+import rx.subjects.Subject;
+import rx.subscriptions.CompositeSubscription;
 
 public class PaymentActivity extends ActivityView implements PaymentView {
 
@@ -38,17 +41,21 @@ public class PaymentActivity extends ActivityView implements PaymentView {
   private View overlay;
   private View header;
   private View body;
+  private View actionButtons;
   private ProgressBar progressBar;
-  private ViewGroup paymentContainer;
+  private ViewGroup morePaymentsContainer;
   private ImageView productIcon;
   private TextView productName;
   private TextView productPriceDescription;
   private TextView noPaymentsText;
-  private TextView payWithText;
+  private Button morePaymentsButton;
   private Button cancelButton;
   private Button buyButton;
+  private TextView selectedPaymentName;
+  private TextView selectedPaymentPrice;
 
-  private List<Observable<Integer>> paymentSelections;
+  private PublishSubject<PaymentViewModel> paymentSelections;
+  private CompositeSubscription paymentItemClicks;
   private PurchaseIntentFactory intentFactory;
 
   public static Intent getIntent(Context context, AptoideProduct product) {
@@ -57,30 +64,43 @@ public class PaymentActivity extends ActivityView implements PaymentView {
     return intent;
   }
 
-  @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
+  @SuppressLint("UseSparseArrays") @Override
+  protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_payment);
 
-    paymentContainer = (ViewGroup) findViewById(R.id.activity_payment_list);
+    overlay = findViewById(R.id.payment_activity_overlay);
     progressBar = (ProgressBar) findViewById(R.id.activity_payment_progress_bar);
+    noPaymentsText = (TextView) findViewById(R.id.activity_payment_no_payments_text);
+
+    header = findViewById(R.id.activity_payment_header);
     productIcon = (ImageView) findViewById(R.id.activity_payment_product_icon);
     productName = (TextView) findViewById(R.id.activity_payment_product_name);
     productPriceDescription =
         (TextView) findViewById(R.id.activity_payment_product_price_description);
-    header = findViewById(R.id.activity_payment_header);
+
     body = findViewById(R.id.activity_payment_body);
+    selectedPaymentName = (TextView) findViewById(R.id.activity_selected_payment_name);
+    selectedPaymentPrice = (TextView) findViewById(R.id.activity_selected_payment_price);
+    morePaymentsButton = (Button) findViewById(R.id.activity_payment_more_payments_button);
+    morePaymentsContainer = (ViewGroup) findViewById(R.id.activity_payment_list);
+
+    actionButtons = findViewById(R.id.activity_payment_buttons);
     cancelButton = (Button) findViewById(R.id.activity_payment_cancel_button);
     buyButton = (Button) findViewById(R.id.activity_payment_buy_button);
-    overlay = findViewById(R.id.payment_activity_overlay);
-    noPaymentsText = (TextView) findViewById(R.id.activity_payment_no_payments_text);
-    payWithText = (TextView) findViewById(R.id.activity_payment_pay_with_text);
-    paymentSelections = new ArrayList<>();
+
+    paymentSelections = PublishSubject.create();
     intentFactory = new PurchaseIntentFactory(new ErrorCodeFactory());
+    paymentItemClicks = new CompositeSubscription();
 
     final AptoideProduct product = getIntent().getParcelableExtra(PRODUCT_EXTRA);
     attachPresenter(new PaymentPresenter(this,
         new AptoidePay(RepositoryFactory.getPaymentConfirmationRepository(this, product),
             RepositoryFactory.getProductRepository(this, product)), product), savedInstanceState);
+  }
+
+  @Override protected void onResume() {
+    super.onResume();
   }
 
   @Override public void dismiss(Purchase purchase) {
@@ -99,63 +119,86 @@ public class PaymentActivity extends ActivityView implements PaymentView {
     ImageLoader.load(product.getIcon(), productIcon);
     productName.setText(product.getTitle());
     productPriceDescription.setText(product.getPriceDescription());
+    header.setVisibility(View.VISIBLE);
   }
 
   @Override public Observable<Void> cancellationSelection() {
     return Observable.merge(RxView.clicks(cancelButton), RxView.clicks(overlay));
   }
 
-  @Override public void showPayments(List<PaymentViewModel> paymentList) {
-    paymentContainer.removeAllViews();
-    payWithText.setVisibility(View.VISIBLE);
+  @Override public Observable<Void> otherPaymentsSelection() {
+    return RxView.clicks(morePaymentsButton);
+  }
+
+  @Override public void hideOtherPayments() {
+    morePaymentsContainer.setVisibility(View.GONE);
+  }
+
+  @Override public void showOtherPayments(List<PaymentViewModel> otherPayments) {
+    morePaymentsContainer.removeAllViews();
+    morePaymentsContainer.setVisibility(View.VISIBLE);
     noPaymentsText.setVisibility(View.GONE);
-    Button paymentButton;
-    for (PaymentViewModel payment : paymentList) {
-      paymentButton =
-          (Button) getLayoutInflater().inflate(getButtonLayoutResource(), paymentContainer,
-              false);
-      paymentButton.setText(payment.getName());
-      paymentContainer.addView(paymentButton);
-      paymentSelections.add(RxView.clicks(paymentButton).map(click -> payment.getId()));
+    paymentItemClicks.clear();
+
+    if (otherPayments.isEmpty()) {
+      morePaymentsButton.setVisibility(View.GONE);
+    } else {
+      morePaymentsButton.setVisibility(View.VISIBLE);
     }
+
+    View view;
+    TextView name;
+    TextView description;
+    Button button;
+    for (PaymentViewModel otherPayment : otherPayments) {
+      view = getLayoutInflater().inflate(R.layout.payment_item, morePaymentsContainer, false);
+      name = (TextView) view.findViewById(R.id.item_payment_name);
+      description = (TextView) view.findViewById(R.id.item_payment_description);
+      name.setText(otherPayment.getName());
+      description.setText(otherPayment.getDescription());
+      button = (Button) view.findViewById(R.id.item_payment_button);
+      morePaymentsContainer.addView(view);
+      paymentItemClicks.add(
+          RxView.clicks(button).doOnNext(click -> paymentSelections.onNext(otherPayment)).subscribe());
+    }
+  }
+
+  @Override public void showSelectedPayment(PaymentViewModel selectedPayment) {
+    selectedPaymentName.setText(selectedPayment.getName());
+    selectedPaymentPrice.setText(
+        String.format(Locale.getDefault(), "%.2f %s", selectedPayment.getPrice(),
+            selectedPayment.getCurrency()));
   }
 
   @Override public Observable<Void> buySelection() {
     return RxView.clicks(buyButton);
   }
 
-  @Override public void markPaymentAsSelected(int paymentId) {
-
-  }
-
   @Override public void showPaymentsNotFoundMessage() {
-    paymentContainer.removeAllViews();
-    payWithText.setVisibility(View.INVISIBLE);
+    header.setVisibility(View.VISIBLE);
+    body.setVisibility(View.GONE);
+    actionButtons.setVisibility(View.GONE);
     noPaymentsText.setVisibility(View.VISIBLE);
   }
 
   @Override public void showLoading() {
-    header.setVisibility(View.INVISIBLE);
-    body.setVisibility(View.INVISIBLE);
-    cancelButton.setVisibility(View.INVISIBLE);
-    buyButton.setVisibility(View.INVISIBLE);
+    header.setVisibility(View.GONE);
+    body.setVisibility(View.GONE);
+    actionButtons.setVisibility(View.GONE);
     progressBar.setVisibility(View.VISIBLE);
+    noPaymentsText.setVisibility(View.GONE);
   }
 
-  @Override public void removeLoading() {
+  @Override public void hideLoading() {
     header.setVisibility(View.VISIBLE);
     body.setVisibility(View.VISIBLE);
-    cancelButton.setVisibility(View.VISIBLE);
-    buyButton.setVisibility(View.VISIBLE);
+    actionButtons.setVisibility(View.VISIBLE);
     progressBar.setVisibility(View.GONE);
+    noPaymentsText.setVisibility(View.GONE);
   }
 
-  @Override public Observable<Integer> paymentSelection() {
-    return Observable.merge(paymentSelections);
-  }
-
-  @LayoutRes private int getButtonLayoutResource() {
-    return R.layout.button_visa;
+  @Override public Observable<PaymentViewModel> paymentSelection() {
+    return paymentSelections.asObservable();
   }
 
   private void finish(int code, Intent intent) {

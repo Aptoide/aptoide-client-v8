@@ -15,19 +15,25 @@ import rx.Observable;
  */
 public interface PaymentView extends View {
 
-  Observable<Integer> paymentSelection();
+  Observable<PaymentViewModel> paymentSelection();
 
   Observable<Void> cancellationSelection();
 
   Observable<Void> buySelection();
 
+  Observable<Void> otherPaymentsSelection();
+
   void showLoading();
 
-  void showPayments(List<PaymentViewModel> paymentList);
+  void showOtherPayments(List<PaymentViewModel> paymentList);
+
+  void hideOtherPayments();
 
   void showProduct(AptoideProduct product);
 
-  void removeLoading();
+  void showSelectedPayment(PaymentViewModel selectedPayment);
+
+  void hideLoading();
 
   void dismiss(Purchase purchase);
 
@@ -37,22 +43,20 @@ public interface PaymentView extends View {
 
   void showPaymentsNotFoundMessage();
 
-  void markPaymentAsSelected(int paymentId);
-
   public static class PaymentViewModel {
 
     private final int id;
     private final String name;
     private final String description;
     private final double price;
-    private final String curency;
+    private final String currency;
 
-    public PaymentViewModel(int id, String name, String description, double price, String curency) {
+    public PaymentViewModel(int id, String name, String description, double price, String currency) {
       this.id = id;
       this.name = name;
       this.description = description;
       this.price = price;
-      this.curency = curency;
+      this.currency = currency;
     }
 
     public int getId() {
@@ -71,8 +75,8 @@ public interface PaymentView extends View {
       return description;
     }
 
-    public String getCurency() {
-      return curency;
+    public String getCurrency() {
+      return currency;
     }
   }
 }

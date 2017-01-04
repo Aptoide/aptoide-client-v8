@@ -12,26 +12,29 @@
     >
 
   <FrameLayout
-      android:clickable="true"
       android:id="@+id/payment_activity_overlay"
-      android:background="@color/overlay_black"
-      android:orientation="horizontal"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
+      android:background="@color/overlay_black"
+      android:clickable="true"
+      android:orientation="horizontal"
       />
 
   <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:minHeight="200dp"
       android:layout_centerInParent="true"
       android:layout_margin="16dp"
       android:background="@drawable/dialog_bg"
-      android:orientation="vertical"
       android:clickable="true"
+      android:orientation="vertical"
       android:padding="16dp"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
       >
 
     <RelativeLayout
+        tools:visibility="visible"
+        android:visibility="gone"
         android:id="@+id/activity_payment_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -67,70 +70,128 @@
 
     </RelativeLayout>
 
-    <RelativeLayout
+    <LinearLayout
+        android:animateLayoutChanges="true"
+        tools:visibility="visible"
+        android:visibility="gone"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
         android:id="@+id/activity_payment_body"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="100dp"
+        android:orientation="vertical"
         >
 
-      <TextView
-          android:layout_alignParentTop="true"
-          android:id="@+id/activity_payment_pay_with_text"
+      <RelativeLayout
+          xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
+          android:layout_width="match_parent"
+          android:layout_height="56dp"
+          >
+
+        <TextView
+            android:id="@+id/activity_selected_payment_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="16dp"
+            android:layout_toStartOf="@+id/activity_selected_payment_price"
+            tools:text="Paypal"
+            style="@style/TextAppearance.AppCompat.Medium"
+            />
+
+        <ImageView
+            android:id="@+id/activity_selected_payment_checked_image"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/selected_payment_icon"
+            tools:ignore="contentDescription"
+            />
+
+        <TextView
+            android:id="@+id/activity_selected_payment_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_toStartOf="@id/activity_selected_payment_checked_image"
+            android:gravity="end"
+            tools:text="0,03 R$"
+            style="@style/TextAppearance.AppCompat.Medium"
+            />
+
+      </RelativeLayout>
+
+      <View
+          android:id="@+id/activity_payment_selected_divider"
+          android:layout_width="match_parent"
+          android:layout_height="0.5dp"
+          android:background="@color/dark_custom_gray"
+          />
+
+      <Button
+          android:id="@+id/activity_payment_more_payments_button"
+          android:gravity="start|center_vertical"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginBottom="16dp"
-          android:layout_marginTop="16dp"
-          android:text="@string/payment_methods"
+          android:drawableEnd="@drawable/arrow_down"
+          android:text="@string/activity_payment_more_payments_button"
+          style="@style/Widget.AppBaseTheme.Button.Borderless"
           />
 
       <LinearLayout
-          android:layout_below="@id/activity_payment_pay_with_text"
+          android:visibility="gone"
           android:id="@+id/activity_payment_list"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:orientation="vertical"
           >
       </LinearLayout>
+    </LinearLayout>
 
-      <TextView
-          android:id="@+id/activity_payment_no_payments_text"
-          tools:visibility="visible"
-          android:visibility="gone"
-          android:layout_centerInParent="true"
-          android:gravity="center"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginBottom="16dp"
-          android:layout_marginTop="16dp"
-          android:text="@string/no_payments_available"
-          />
-    </RelativeLayout>
+    <TextView
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
+        android:id="@+id/activity_payment_no_payments_text"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:gravity="center"
+        android:text="@string/no_payments_available"
+        android:visibility="gone"/>
 
-    <LinearLayout
+    <RelativeLayout
+        tools:visibility="visible"
+        android:visibility="gone"
+        android:id="@+id/activity_payment_buttons"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="end"
-        android:orientation="horizontal">
+        android:padding="8dp"
+        >
 
       <Button
-        android:id="@+id/activity_payment_cancel_button"
-        style="@style/Widget.AppBaseTheme.Button.Borderless.Colored"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:text="@string/cancel"
-        />
+          android:id="@+id/activity_payment_cancel_button"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentStart="true"
+          android:text="@string/cancel"
+          style="@style/Widget.AppBaseTheme.Button.Borderless.Colored"
+          />
 
       <Button
-        android:id="@+id/activity_payment_buy_button"
-        style="@style/Widget.AppBaseTheme.Button.Borderless.Colored"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:text="@string/buy"
-        />
-    </LinearLayout>
+          android:id="@+id/activity_payment_buy_button"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentEnd="true"
+          android:text="@string/buy"
+          style="@style/Widget.AppCompat.Button"
+          />
+    </RelativeLayout>
   </LinearLayout>
 
   <ProgressBar
