@@ -513,7 +513,6 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginTop="8dp"
                 android:background="@android:color/darker_gray"
                 >
             </View>
@@ -541,7 +540,7 @@
           android:layout_height="46dp"
           android:layout_marginRight="23dp"
           android:text="@string/create_store_skip"
-          style="?attr/customButton"
+          style="?attr/customButtonWhite"
           />
 
       <Button
