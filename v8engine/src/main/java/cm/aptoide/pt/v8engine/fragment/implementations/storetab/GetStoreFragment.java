@@ -14,19 +14,17 @@ import rx.schedulers.Schedulers;
 
 public class GetStoreFragment extends StoreTabWidgetsGridRecyclerFragment {
 
-  @Override
-  protected Observable<List<? extends Displayable>> buildDisplayables(boolean refresh, String url) {
-    return RepositoryFactory.getRequestRepository().getStore(url)
-        .observe(refresh).observeOn(Schedulers.io()).map(getStore -> {
-          List<Displayable> displayables =
-              loadGetStoreWidgets(getStore.getNodes().getWidgets(), refresh, url);
-
+  @Override protected Observable<List<Displayable>> buildDisplayables(boolean refresh, String url) {
+    return RepositoryFactory.getRequestRepository()
+        .getStore(url)
+        .observe(refresh)
+        .observeOn(Schedulers.io())
+        .flatMap(getStore -> loadGetStoreWidgets(getStore.getNodes().getWidgets(), refresh, url))
+        .doOnNext(displayables -> {
           // We only want Adult Switch in Home Fragment.
           if (getParentFragment() != null && getParentFragment() instanceof HomeFragment) {
             displayables.add(new AdultRowDisplayable());
           }
-
-          return displayables;
         });
   }
 }

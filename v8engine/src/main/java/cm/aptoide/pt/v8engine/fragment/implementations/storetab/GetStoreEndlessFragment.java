@@ -31,8 +31,7 @@ public abstract class GetStoreEndlessFragment<T extends BaseV7EndlessResponse>
     }
   }
 
-  @Override
-  protected Observable<List<? extends Displayable>> buildDisplayables(boolean refresh, String url) {
+  @Override protected Observable<List<Displayable>> buildDisplayables(boolean refresh, String url) {
     setupEndless(buildRequest(refresh, url), buildAction(), refresh);
 
     return null;

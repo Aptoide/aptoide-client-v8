@@ -116,7 +116,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
       }
 
       // TODO: 28-12-2016 neuro martelo martelo martelo
-      Observable<List<? extends Displayable>> displayablesObservable =
+      Observable<List<Displayable>> displayablesObservable =
           buildDisplayables(refresh, url);
       if (displayablesObservable != null) {
         displayablesObservable.compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW))
@@ -173,8 +173,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
     return super.onCreateView(inflater, container, savedInstanceState);
   }
 
-  @Nullable
-  protected abstract Observable<List<? extends Displayable>> buildDisplayables(boolean refresh,
+  @Nullable protected abstract Observable<List<Displayable>> buildDisplayables(boolean refresh,
       String url);
 
   private static class BundleCons {
