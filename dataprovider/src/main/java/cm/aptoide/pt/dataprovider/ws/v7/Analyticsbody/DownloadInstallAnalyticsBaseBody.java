@@ -17,10 +17,6 @@ public class DownloadInstallAnalyticsBaseBody<T extends DownloadInstallAnalytics
     SUCC, FAIL
   }
 
-  enum EventContext {
-    timeline, appview, updatetab, scheduled, rollback, RateComments,
-  }
-
   @lombok.Data public static class Data {
     App app;
     List<Obb> obb;

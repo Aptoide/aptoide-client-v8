@@ -6,7 +6,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.DownloadAnalyticsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.Event;
 import cm.aptoide.pt.utils.AptoideUtils;
-import java.sql.Timestamp;
 import java.util.LinkedList;
 
 /**
@@ -14,15 +13,9 @@ import java.util.LinkedList;
  */
 
 public class DownloadReportConverter {
-
-  public DownloadInstallAnalyticsBaseBody<DownloadAnalyticsRequest.DownloadEventBody> convert(
-      DownloadReport report, DownloadInstallAnalyticsBaseBody.ResultStatus status) {
-    return convert(report, status, null);
-  }
-
   public DownloadInstallAnalyticsBaseBody<DownloadAnalyticsRequest.DownloadEventBody> convert(
       DownloadReport report, DownloadInstallAnalyticsBaseBody.ResultStatus status,
-      @Nullable DownloadInstallAnalyticsBaseBody.ResultError resultError) {
+      @Nullable Throwable error) {
     DownloadInstallAnalyticsBaseBody<DownloadAnalyticsRequest.DownloadEventBody> body =
         new DownloadInstallAnalyticsBaseBody<>();
 
@@ -58,7 +51,12 @@ public class DownloadReportConverter {
 
     DownloadInstallAnalyticsBaseBody.Result result = new DownloadInstallAnalyticsBaseBody.Result();
     result.setStatus(status);
-    if (resultError != null) {
+    if (error != null) {
+
+      DownloadInstallAnalyticsBaseBody.ResultError resultError =
+          new DownloadInstallAnalyticsBaseBody.ResultError();
+      resultError.setMessage(error.getMessage());
+      resultError.setType(error.getClass().getSimpleName());
       result.setError(resultError);
     }
 
@@ -66,7 +64,6 @@ public class DownloadReportConverter {
     event.setContext(report.getContext().name());
     event.setData(data);
     event.setName(report.getName());
-    event.setTimestamp(new Timestamp(report.getTimeStamp()));
     event.setAction(report.getAction().name());
 
     data.setResult(result);

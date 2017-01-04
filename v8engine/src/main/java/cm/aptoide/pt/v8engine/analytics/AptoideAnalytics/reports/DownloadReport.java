@@ -19,7 +19,6 @@ import lombok.ToString;
 public @Data @ToString class DownloadReport extends Report {
   private Action action;
   private int versionCode;
-  private long timeStamp;
   private Origin origin;
   private String packageName;
   private long size;
@@ -39,13 +38,13 @@ public @Data @ToString class DownloadReport extends Report {
    * event to be sent if download was cached
    */
   @Setter private boolean downloadHadProgress;
+  private Throwable error;
 
   public DownloadReport(Action action, Origin origin, String packageName, long size, String url,
       long obbSize, String obbUrl, long patchObbSize, String patchObbUrl, AppContext context,
       int versionCode, DownloadReportConverter downloadReportConverter) {
     this.action = action;
     this.versionCode = versionCode;
-    this.timeStamp = System.currentTimeMillis();
     this.origin = origin;
     this.packageName = packageName;
     this.size = size;
@@ -65,19 +64,23 @@ public @Data @ToString class DownloadReport extends Report {
   @Override public void send() {
     if (downloadHadProgress) {
       if (resultStatus == null) {
-        throw new IllegalArgumentException(
-            "The Result status should be added before send the event");
+        Logger.e(this, new IllegalArgumentException(
+            "The Result status should be added before send the event"));
       } else {
         DownloadAnalyticsRequest.of(AptoideAccountManager.getAccessToken(),
             new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                 DataProvider.getContext()).getAptoideClientUUID(),
-            downloadReportConverter.convert(this, resultStatus), action.name(), name,
+            downloadReportConverter.convert(this, resultStatus, error), action.name(), name,
             context.name())
             .observe()
             .subscribe(baseV7Response -> Logger.d(this, "onResume: " + baseV7Response),
                 throwable -> throwable.printStackTrace());
       }
     }
+  }
+
+  public void setError(Throwable error) {
+    this.error = error;
   }
 
   public enum Action {

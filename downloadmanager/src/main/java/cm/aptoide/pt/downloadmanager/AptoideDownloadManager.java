@@ -12,6 +12,7 @@ import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
+import cm.aptoide.pt.downloadmanager.interfaces.Analytics;
 import cm.aptoide.pt.downloadmanager.interfaces.CacheManager;
 import cm.aptoide.pt.downloadmanager.interfaces.DownloadNotificationActionsInterface;
 import cm.aptoide.pt.downloadmanager.interfaces.DownloadSettingsInterface;
@@ -61,6 +62,7 @@ public class AptoideDownloadManager {
   private DownloadAccessor downloadAccessor;
   private CacheManager cacheHelper;
   private FileUtils fileUtils;
+  private Analytics analytics;
 
   public static Context getContext() {
     return context;
@@ -220,7 +222,8 @@ public class AptoideDownloadManager {
       DownloadNotificationActionsInterface downloadNotificationActionsInterface,
       DownloadSettingsInterface settingsInterface, DownloadAccessor downloadAccessor,
       CacheManager cacheHelper, FileUtils fileUtils,
-      FileDownloadHelper.OkHttpClientCustomMaker httpClientFactory) {
+      FileDownloadHelper.OkHttpClientCustomMaker httpClientFactory, Analytics analytics) {
+    this.analytics = analytics;
 
     FileDownloader.init(context, httpClientFactory);
     this.downloadNotificationActionsInterface = downloadNotificationActionsInterface;
@@ -258,7 +261,7 @@ public class AptoideDownloadManager {
       isDownloading = true;
       getNextDownload().first().subscribe(download -> {
         if (download != null) {
-          new DownloadTask(downloadAccessor, download, fileUtils).startDownload();
+          new DownloadTask(downloadAccessor, download, fileUtils, analytics).startDownload();
           Logger.d(TAG, "Download with md5 " + download.getMd5() + " started");
         } else {
           isDownloading = false;

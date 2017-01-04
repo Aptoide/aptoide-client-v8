@@ -228,7 +228,8 @@ public abstract class V8Engine extends DataProvider {
                   @Override public String getUserEmail() {
                     return AptoideAccountManager.getUserEmail();
                   }
-                }, getConfiguration().getPartnerId()));
+                }, getConfiguration().getPartnerId()),
+            new DownloadAnalytics(Analytics.getInstance()));
 
     fileManager.purgeCache()
         .subscribe(cleanedSize -> Logger.d(TAG,
