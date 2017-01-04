@@ -30,6 +30,9 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadReport;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadReportConverter;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
@@ -58,6 +61,8 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
   private TextView emptyData;
   private ScheduledDownloadRepository scheduledDownloadRepository;
   private OpenMode openMode = OpenMode.normal;
+  private DownloadReportConverter converter;
+  private Analytics analytics;
 
   //	private CompositeSubscription compositeSubscription;
 
@@ -82,6 +87,8 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
     installManager = new InstallManager(AptoideDownloadManager.getInstance(), installer,
         AccessorFactory.getAccessorFor(Download.class),
         AccessorFactory.getAccessorFor(Installed.class));
+    converter = new DownloadReportConverter();
+    analytics = Analytics.getInstance();
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -105,7 +112,7 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
                         .first()
                         .observeOn(AndroidSchedulers.mainThread())
                         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-                        .subscribe(scheduleds -> downloadAndInstallScheduledList(scheduleds));
+                        .subscribe(scheduleds -> downloadAndInstallScheduledList(scheduleds, true));
                     break;
                   case NO:
                     break;
@@ -218,7 +225,7 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
         }
       }
 
-      if (downloadAndInstallScheduledList(scheduledList)) {
+      if (downloadAndInstallScheduledList(scheduledList, false)) {
         ShowMessage.asSnack(this.emptyData, R.string.installing_msg);
       } else {
         ShowMessage.asSnack(this.emptyData, R.string.schDown_nodownloadselect);
@@ -260,7 +267,8 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
     return super.onOptionsItemSelected(item);
   }
 
-  private boolean downloadAndInstallScheduledList(List<Scheduled> installing) {
+  private boolean downloadAndInstallScheduledList(List<Scheduled> installing,
+      boolean isStartedAutomatic) {
 
     if (installing == null || installing.isEmpty()) return false;
 
@@ -280,6 +288,8 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
         .flatMapIterable(scheduleds -> scheduleds)
         .map(scheduled -> downloadFactory.create(scheduled))
         .flatMap(downloadItem -> installManager.install(context, downloadItem)
+            .doOnSubscribe(() -> setupDownloadEvent(downloadItem,
+                isStartedAutomatic ? DownloadReport.Action.AUTO : DownloadReport.Action.CLICK))
             .filter(downloadProgress -> downloadProgress.getState() == Progress.DONE)
             .doOnNext(success -> scheduledDownloadRepository.deleteScheduledDownload(
                 downloadItem.getMd5())))
@@ -291,6 +301,11 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
         });
 
     return true;
+  }
+
+  public void setupDownloadEvent(Download download, DownloadReport.Action action) {
+    DownloadReport report = converter.create(download, action, DownloadReport.AppContext.scheduled);
+    analytics.save(download.getPackageName() + download.getVersionCode(), report);
   }
 
   public enum OpenMode {

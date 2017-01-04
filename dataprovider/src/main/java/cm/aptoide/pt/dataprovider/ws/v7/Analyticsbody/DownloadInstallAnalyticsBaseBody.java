@@ -27,12 +27,10 @@ public class DownloadInstallAnalyticsBaseBody<T extends DownloadInstallAnalytics
 
   @lombok.Data public static class App {
     @JsonProperty("package") String packageName;
-    long size;
     String url;
   }
 
   @lombok.Data public static class Obb {
-    long size;
     ObbType type;
     String url;
   }

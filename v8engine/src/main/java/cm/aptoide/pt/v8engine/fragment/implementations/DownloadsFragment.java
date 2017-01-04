@@ -20,6 +20,8 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadReportConverter;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragmentWithDecorator;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -46,6 +48,7 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
   private List<Displayable> completedDisplayablesList = new LinkedList<>();
   private InstallManager installManager;
   private List<Progress<Download>> oldDownloadsList;
+  private Analytics analytics;
 
   public static DownloadsFragment newInstance() {
     return new DownloadsFragment();
@@ -59,6 +62,7 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
         AccessorFactory.getAccessorFor(Installed.class));
 
     oldDownloadsList = new ArrayList<>();
+    analytics = Analytics.getInstance();
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
@@ -115,7 +119,8 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
       if (isDownloading(progress)) {
         activeDisplayablesList.add(new ActiveDownloadDisplayable(progress, installManager));
       } else {
-        completedDisplayablesList.add(new CompletedDownloadDisplayable(progress, installManager));
+        completedDisplayablesList.add(new CompletedDownloadDisplayable(progress, installManager,
+            new DownloadReportConverter(), analytics));
       }
     }
     Collections.reverse(activeDisplayablesList);

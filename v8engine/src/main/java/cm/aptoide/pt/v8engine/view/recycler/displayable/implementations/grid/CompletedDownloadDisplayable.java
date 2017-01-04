@@ -13,6 +13,9 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadReport;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadReportConverter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 import lombok.Setter;
 import rx.Observable;
@@ -24,6 +27,8 @@ import rx.functions.Action0;
 public class CompletedDownloadDisplayable extends DisplayablePojo<Progress<Download>> {
 
   private InstallManager installManager;
+  private DownloadReportConverter converter;
+  private Analytics analytics;
   @Setter private Action0 onResumeAction;
   @Setter private Action0 onPauseAction;
 
@@ -31,9 +36,12 @@ public class CompletedDownloadDisplayable extends DisplayablePojo<Progress<Downl
     super();
   }
 
-  public CompletedDownloadDisplayable(Progress<Download> pojo, InstallManager installManager) {
+  public CompletedDownloadDisplayable(Progress<Download> pojo, InstallManager installManager,
+      DownloadReportConverter converter, Analytics analytics) {
     super(pojo);
     this.installManager = installManager;
+    this.converter = converter;
+    this.analytics = analytics;
   }
 
   @Override public void onResume() {
@@ -73,7 +81,8 @@ public class CompletedDownloadDisplayable extends DisplayablePojo<Progress<Downl
     PermissionManager permissionManager = new PermissionManager();
     return permissionManager.requestExternalStoragePermission(permissionRequest)
         .flatMap(success -> permissionManager.requestDownloadAccess(permissionRequest))
-        .flatMap(success -> installManager.install(context, getPojo().getRequest()));
+        .flatMap(success -> installManager.install(context, getPojo().getRequest())
+            .doOnSubscribe(() -> setupDownloadEvent(getPojo().getRequest())));
   }
 
   public Observable<Progress<Download>> installOrOpenDownload(Context context,
@@ -86,5 +95,11 @@ public class CompletedDownloadDisplayable extends DisplayablePojo<Progress<Downl
       }
       return resumeDownload(context, permissionRequest);
     });
+  }
+
+  public void setupDownloadEvent(Download download) {
+    DownloadReport report = converter.create(download, DownloadReport.Action.CLICK,
+        DownloadReport.AppContext.downloads);
+    analytics.save(download.getPackageName() + download.getVersionCode(), report);
   }
 }

@@ -21,12 +21,9 @@ public @Data @ToString class DownloadReport extends Report {
   private int versionCode;
   private Origin origin;
   private String packageName;
-  private long size;
   private String url;
-  private long obbSize;
   private ObbType obbType;
   private String obbUrl;
-  private long patchObbSize;
   private ObbType patchObbType;
   private String patchObbUrl;
   private String name;
@@ -40,19 +37,15 @@ public @Data @ToString class DownloadReport extends Report {
   @Setter private boolean downloadHadProgress;
   private Throwable error;
 
-  public DownloadReport(Action action, Origin origin, String packageName, long size, String url,
-      long obbSize, String obbUrl, long patchObbSize, String patchObbUrl, AppContext context,
-      int versionCode, DownloadReportConverter downloadReportConverter) {
+  public DownloadReport(Action action, Origin origin, String packageName, String url, String obbUrl,
+      String patchObbUrl, AppContext context, int versionCode, DownloadReportConverter downloadReportConverter) {
     this.action = action;
     this.versionCode = versionCode;
     this.origin = origin;
     this.packageName = packageName;
-    this.size = size;
     this.url = url;
-    this.obbSize = obbSize;
     this.obbType = ObbType.main;
     this.obbUrl = obbUrl;
-    this.patchObbSize = patchObbSize;
     this.patchObbType = ObbType.patch;
     this.patchObbUrl = patchObbUrl;
     this.name = "download";
@@ -96,6 +89,6 @@ public @Data @ToString class DownloadReport extends Report {
   }
 
   public enum AppContext {
-    timeline, appview, updatetab, scheduled, rollback, RateComments
+    timeline, appview, updatetab, scheduled, downloads
   }
 }

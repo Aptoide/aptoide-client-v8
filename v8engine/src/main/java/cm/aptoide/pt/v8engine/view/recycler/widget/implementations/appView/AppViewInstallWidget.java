@@ -33,7 +33,6 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Malware;
-import cm.aptoide.pt.model.v7.Obb;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -101,6 +100,8 @@ import rx.android.schedulers.AndroidSchedulers;
   private PermissionRequest permissionRequest;
   private InstallManager installManager;
   private boolean isUpdate;
+  private DownloadReportConverter downloadReportConverter;
+  private Analytics analytics;
 
   //private Subscription subscribe;
   //private long appID;
@@ -136,6 +137,8 @@ import rx.android.schedulers.AndroidSchedulers;
     installManager = new InstallManager(downloadManager, installer,
         AccessorFactory.getAccessorFor(Download.class),
         AccessorFactory.getAccessorFor(Installed.class));
+    downloadReportConverter = new DownloadReportConverter();
+    analytics = Analytics.getInstance();
 
     minimalAd = displayable.getMinimalAd();
     GetApp getApp = displayable.getPojo();
@@ -273,8 +276,7 @@ import rx.android.schedulers.AndroidSchedulers;
                   compositeSubscription.add(
                       new PermissionManager().requestDownloadAccess(permissionRequest)
                           .flatMap(success -> installManager.install(getContext(), appDownload)
-                              .doOnSubscribe(() -> setupDownloadEvent(app, appDownload,
-                                  DownloadReport.Origin.downgrade)))
+                              .doOnSubscribe(() -> setupDownloadEvent(appDownload)))
                           .observeOn(AndroidSchedulers.mainThread())
                           .subscribe(progress -> {
                             Logger.d(TAG, "Installing");
@@ -291,34 +293,11 @@ import rx.android.schedulers.AndroidSchedulers;
     };
   }
 
-  private void setupDownloadEvent(GetAppMeta.App app, Download download,
-      DownloadReport.Origin origin) {
-    Obb obb = app.getObb();
-    String mainObbPath = null;
-    long mainObbSize = 0;
-    long patchSize = 0;
-    String patchPath = null;
+  private void setupDownloadEvent(Download download) {
+    DownloadReport report = downloadReportConverter.create(download, DownloadReport.Action.CLICK,
+        DownloadReport.AppContext.appview);
 
-    if (obb != null) {
-      Obb.ObbItem main = obb.getMain();
-      if (main != null) {
-        mainObbSize = main.getFilesize();
-        mainObbPath = main.getPath();
-      }
-
-      Obb.ObbItem obbPatch = obb.getPatch();
-      if (obbPatch != null) {
-        patchSize = obbPatch.getFilesize();
-        patchPath = obbPatch.getPath();
-      }
-    }
-
-    DownloadReport report =
-        new DownloadReport(DownloadReport.Action.CLICK, origin, app.getPackageName(), app.getSize(),
-            download.getFilesToDownload().get(0).getLink(), mainObbSize, mainObbPath, patchSize,
-            patchPath, DownloadReport.AppContext.appview, app.getFile().getVercode(),
-            new DownloadReportConverter());
-    Analytics.getInstance().save(report.getPackageName() + report.getVersionCode(), report);
+    analytics.save(report.getPackageName() + report.getVersionCode(), report);
   }
 
   private void showRootInstallWarningPopup(Context context) {
@@ -370,8 +349,7 @@ import rx.android.schedulers.AndroidSchedulers;
                 new DownloadFactory().create(displayable.getPojo().getNodes().getMeta().getData(),
                     downloadAction);
             return installManager.install(getContext(), download)
-                .doOnSubscribe(() -> setupDownloadEvent(app, download,
-                    isUpdate ? DownloadReport.Origin.update : DownloadReport.Origin.install));
+                .doOnSubscribe(() -> setupDownloadEvent(download));
           })
           .first()
           .observeOn(AndroidSchedulers.mainThread())
@@ -514,7 +492,7 @@ import rx.android.schedulers.AndroidSchedulers;
                 new DownloadFactory().create(displayable.getPojo().getNodes().getMeta().getData(),
                     progress.getRequest().getAction());
             return installManager.install(getContext(), download).doOnSubscribe(() -> {
-              setupDownloadEvent(app, download, origin);
+              setupDownloadEvent(download);
             });
           })
           .observeOn(AndroidSchedulers.mainThread())
