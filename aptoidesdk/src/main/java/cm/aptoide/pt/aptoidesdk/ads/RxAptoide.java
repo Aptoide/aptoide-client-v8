@@ -53,6 +53,7 @@ public class RxAptoide {
     RxAptoide.debug = debug;
 
     Logger.setDBG(debug);
+    RemoteLogger.setDebug(debug);
     WebService.setDebug(debug);
   }
 
@@ -80,7 +81,7 @@ public class RxAptoide {
     }).subscribeOn(Schedulers.io()).subscribe(o -> {
     }, RemoteLogger.getInstance()::log);
 
-    Logger.setDBG(debug);
+    setDebug(debug);
   }
 
   private static void setupEndpointsBasedOnOemId(String oemid) {
