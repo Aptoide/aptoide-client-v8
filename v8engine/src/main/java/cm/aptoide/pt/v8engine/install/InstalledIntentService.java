@@ -11,9 +11,11 @@ import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
+import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEvent;
 import cm.aptoide.pt.v8engine.repository.AdsRepository;
 import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
@@ -33,6 +35,7 @@ public class InstalledIntentService extends IntentService {
   private final InstalledRepository installedRepository;
   private final UpdateRepository updatesRepository;
   private final CompositeSubscription subscriptions;
+  private Analytics analytics;
 
   public InstalledIntentService() {
     this("InstalledIntentService");
@@ -52,6 +55,7 @@ public class InstalledIntentService extends IntentService {
     updatesRepository = RepositoryFactory.getUpdateRepository();
 
     subscriptions = new CompositeSubscription();
+    analytics = Analytics.getInstance();
   }
 
   @Override protected void onHandleIntent(Intent intent) {
@@ -94,8 +98,23 @@ public class InstalledIntentService extends IntentService {
   protected void onPackageAdded(String packageName) {
     Logger.d(TAG, "Package added: " + packageName);
 
-    databaseOnPackageAdded(packageName);
+    PackageInfo packageInfo = databaseOnPackageAdded(packageName);
     checkAndBroadcastReferrer(packageName);
+    sendInstallEvent(packageName, packageInfo);
+  }
+
+  private void sendInstallEvent(String packageName, PackageInfo packageInfo) {
+    if (packageInfo != null) {
+      Logger.d(TAG, "sendInstallEvent: " + packageInfo.versionCode);
+      InstallEvent event =
+          (InstallEvent) analytics.get(packageName + packageInfo.versionCode, InstallEvent.class);
+      if (event != null) {
+        event.setResultStatus(DownloadInstallAnalyticsBaseBody.ResultStatus.SUCC);
+        analytics.sendEvent(event);
+      }
+    } else {
+      Logger.e(TAG, new NullPointerException("PackageInfo is null"));
+    }
   }
 
   private void checkAndBroadcastReferrer(String packageName) {
@@ -125,7 +144,8 @@ public class InstalledIntentService extends IntentService {
 
   protected void onPackageReplaced(String packageName) {
     Logger.d(TAG, "Packaged replaced: " + packageName);
-    databaseOnPackageReplaced(packageName);
+    PackageInfo packageInfo = databaseOnPackageReplaced(packageName);
+    sendInstallEvent(packageName, packageInfo);
   }
 
   protected void onPackageRemoved(String packageName) {
@@ -133,16 +153,17 @@ public class InstalledIntentService extends IntentService {
     databaseOnPackageRemoved(packageName);
   }
 
-  private void databaseOnPackageAdded(String packageName) {
+  private PackageInfo databaseOnPackageAdded(String packageName) {
     PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName);
 
     if (checkAndLogNullPackageInfo(packageInfo, packageName)) {
-      return;
+      return packageInfo;
     }
     installedRepository.insert(new Installed(packageInfo));
+    return packageInfo;
   }
 
-  private void databaseOnPackageReplaced(String packageName) {
+  private PackageInfo databaseOnPackageReplaced(String packageName) {
     final Update update = updatesRepository.get(packageName).doOnError(throwable -> {
       Logger.e(TAG, throwable);
       CrashReports.logException(throwable);
@@ -155,7 +176,7 @@ public class InstalledIntentService extends IntentService {
     PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName);
 
     if (checkAndLogNullPackageInfo(packageInfo, packageName)) {
-      return;
+      return packageInfo;
     }
 
     if (update != null) {
@@ -168,6 +189,7 @@ public class InstalledIntentService extends IntentService {
     }
 
     installedRepository.insert(new Installed(packageInfo));
+    return packageInfo;
   }
 
   /**

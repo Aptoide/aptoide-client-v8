@@ -44,7 +44,8 @@ public class StoreUtils {
     if (store != null) {
       username = store.getUsername();
       passwordSha1 = store.getPasswordSha1();
-      return new BaseRequestWithStore.StoreCredentials(storeId, store.getStoreName(), username, passwordSha1);
+      return new BaseRequestWithStore.StoreCredentials(storeId, store.getStoreName(), username,
+          passwordSha1);
     }
 
     return new BaseRequestWithStore.StoreCredentials(storeId, username, passwordSha1);
@@ -63,7 +64,8 @@ public class StoreUtils {
       username = store.getUsername();
       passwordSha1 = store.getPasswordSha1();
 
-      return new BaseRequestWithStore.StoreCredentials(store.getStoreId(), storeName, username, passwordSha1);
+      return new BaseRequestWithStore.StoreCredentials(store.getStoreId(), storeName, username,
+          passwordSha1);
     }
 
     return new BaseRequestWithStore.StoreCredentials(storeName, username, passwordSha1);

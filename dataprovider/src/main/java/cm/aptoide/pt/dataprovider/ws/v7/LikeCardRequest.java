@@ -1,5 +1,6 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
@@ -12,7 +13,13 @@ import rx.Observable;
  * Created by jdandrade on 06/12/2016.
  */
 public class LikeCardRequest extends V7<BaseV7Response, LikeCardRequest.Body> {
-  private static final String BASE_HOST = "http://ws75-primary.aptoide.com/api/7/";
+
+  //private static final String BASE_HOST = "http://ws75-primary.aptoide.com/api/7/";
+
+  private static final String BASE_HOST = BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
+      + "://"
+      + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
+      + "/api/7/";
   private static String access_token;
   private static String cardId;
   private static int rating;

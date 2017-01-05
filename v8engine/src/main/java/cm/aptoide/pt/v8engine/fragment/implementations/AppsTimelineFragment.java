@@ -33,6 +33,7 @@ import cm.aptoide.pt.model.v7.timeline.SocialVideo;
 import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.model.v7.timeline.Video;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -265,6 +266,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     } else {
       errorString = R.string.fragment_social_timeline_general_error;
     }
+    //Todo: switch to showmessage snack
     Snackbar.make(getView(), errorString, Snackbar.LENGTH_SHORT).show();
   }
 

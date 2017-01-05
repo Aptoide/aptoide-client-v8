@@ -17,7 +17,10 @@ import rx.Observable;
  */
 public class PostReviewRequest extends V7<BaseV7Response, PostReviewRequest.Body> {
 
-  private static final String BASE_HOST = BuildConfig.APTOIDE_WEB_SERVICES_SCHEME + "://" + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST + "/api/7/";
+  private static final String BASE_HOST = BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
+      + "://"
+      + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
+      + "/api/7/";
 
   protected PostReviewRequest(Body body, String baseHost) {
     super(body, baseHost);

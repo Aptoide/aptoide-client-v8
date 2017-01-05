@@ -17,7 +17,6 @@ import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablesFactory;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 import rx.Observable;
 
 /**
@@ -25,28 +24,20 @@ import rx.Observable;
  */
 public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRecyclerFragment {
 
-  protected List<Displayable> loadGetStoreWidgets(GetStoreWidgets getStoreWidgets, boolean refresh,
+  protected Observable<List<Displayable>> loadGetStoreWidgets(GetStoreWidgets getStoreWidgets,
+      boolean refresh,
       String url) {
-    // Load sub nodes
-    List<GetStoreWidgets.WSWidget> list = getStoreWidgets.getDatalist().getList();
-    CountDownLatch countDownLatch = new CountDownLatch(list.size());
-
-    Observable.from(list)
-        .forEach(wsWidget -> WSWidgetsUtils.loadInnerNodes(wsWidget,
-            StoreUtils.getStoreCredentialsFromUrl(url), countDownLatch, refresh,
-            throwable -> countDownLatch.countDown(), AptoideAccountManager.getAccessToken(),
+    return Observable.from(getStoreWidgets.getDatalist().getList())
+        .flatMap(wsWidget -> WSWidgetsUtils.loadWidgetNode(wsWidget,
+            StoreUtils.getStoreCredentialsFromUrl(url), refresh,
+            AptoideAccountManager.getAccessToken(),
             new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                 DataProvider.getContext()).getAptoideClientUUID(),
             DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(V8Engine.getContext()),
             DataProvider.getConfiguration().getPartnerId(),
-            AptoideAccountManager.isMatureSwitchOn()));
-
-    try {
-      countDownLatch.await();
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
-
-    return DisplayablesFactory.parse(getStoreWidgets, storeTheme, storeRepository);
+            AptoideAccountManager.isMatureSwitchOn()))
+        .toList()
+        .map(wsWidgets -> DisplayablesFactory.parse(getStoreWidgets, storeTheme, storeRepository))
+        .first();
   }
 }

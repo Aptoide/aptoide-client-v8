@@ -14,7 +14,9 @@ import android.content.pm.PackageInfo;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
+import cm.aptoide.accountmanager.AccountManagerPreferences;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.accountmanager.util.UserCompleteData;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
 import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.crashreports.AptoideCrashLogger;
@@ -137,6 +139,13 @@ public abstract class V8Engine extends DataProvider {
         null);
   }
 
+  /**
+   * call after this instance onCreate()
+   */
+  protected void activateLogger() {
+    Logger.setDBG(true);
+  }
+
   @Override public void onCreate() {
     try {
       PRNGFixes.apply();
@@ -181,6 +190,9 @@ public abstract class V8Engine extends DataProvider {
     if (SecurePreferences.isFirstRun()) {
       createShortCut();
       PreferenceManager.setDefaultValues(this, R.xml.settings, false);
+      if (AptoideAccountManager.isLoggedIn()) {
+        AptoideAccountManager.removeLocalAccount();
+      }
       loadInstalledApps().doOnNext(o -> {
         if (AptoideAccountManager.isLoggedIn()) {
 
@@ -228,7 +240,8 @@ public abstract class V8Engine extends DataProvider {
                   @Override public String getUserEmail() {
                     return AptoideAccountManager.getUserEmail();
                   }
-                }, getConfiguration().getPartnerId()));
+                }, getConfiguration().getPartnerId()),
+            new DownloadAnalytics(Analytics.getInstance()));
 
     fileManager.purgeCache()
         .subscribe(cleanedSize -> Logger.d(TAG,
