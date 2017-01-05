@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
     tv = (TextView) findViewById(R.id.tv);
 
     Aptoide.integrate(this, "dummyoem");
+    Aptoide.setDebug(true);
 
     IntentFilter filter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
     registerReceiver(downloadReceiver, filter);

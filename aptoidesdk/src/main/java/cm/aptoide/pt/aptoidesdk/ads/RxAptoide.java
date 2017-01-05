@@ -15,13 +15,13 @@ import cm.aptoide.pt.aptoidesdk.proxys.ListSearchAppsProxy;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.LinkedList;
 import java.util.List;
 import lombok.Getter;
-import lombok.Setter;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -39,7 +39,7 @@ public class RxAptoide {
   private static final GetAdsProxy getAdsProxy = new GetAdsProxy();
   private static final ListSearchAppsProxy listSearchAppsProxy = new ListSearchAppsProxy();
   private static final GetAppProxy getAppProxy = new GetAppProxy();
-  @Getter @Setter private static boolean debug = false;
+  @Getter private static boolean debug = false;
 
   private static String aptoideClientUUID;
   private static String oemid;
@@ -47,6 +47,13 @@ public class RxAptoide {
       "Aptoide not integrated, did you forget to call Aptoide.integrate()?";
 
   private RxAptoide() {
+  }
+
+  public static void setDebug(boolean debug) {
+    RxAptoide.debug = debug;
+
+    Logger.setDBG(debug);
+    WebService.setDebug(debug);
   }
 
   public static void integrate(Context context, String oemid) {
