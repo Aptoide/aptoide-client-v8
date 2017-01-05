@@ -71,7 +71,7 @@ public class RxAptoide {
               context).getAptoideClientUUID();
       return null;
     }).subscribeOn(Schedulers.io()).subscribe(o -> {
-    }, Throwable::printStackTrace);
+    }, RemoteLogger.getInstance()::log);
 
     Logger.setDBG(debug);
   }
@@ -126,7 +126,10 @@ public class RxAptoide {
 
   public static Observable<App> getApp(Ad ad) {
     handleAds(ad).subscribe(t -> {
-    }, throwable -> Logger.w(TAG, "Error extracting referrer.", throwable));
+    }, throwable -> {
+      Logger.w(TAG, "Error extracting referrer.", throwable);
+      RemoteLogger.getInstance().log(throwable);
+    });
 
     return getAppProxy.getApp(ad.getAppId(), aptoideClientUUID)
         .map(EntitiesFactory::createApp).onErrorReturn(throwable -> {
