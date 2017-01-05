@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events;
 
-import cm.aptoide.pt.logger.Logger;
 import lombok.Data;
 import lombok.Setter;
 import lombok.ToString;
@@ -10,7 +9,7 @@ import lombok.ToString;
  */
 
 public @Data @ToString class DownloadEvent extends DownloadInstallBaseEvent {
-  public static final String EVENT_NAME = "download";
+  private static final String EVENT_NAME = "download";
   /**
    * this variable should be activated when the download progress starts, this will prevent the
    * event to be sent if download was cached
@@ -26,12 +25,7 @@ public @Data @ToString class DownloadEvent extends DownloadInstallBaseEvent {
     downloadHadProgress = false;
   }
 
-  @Override public void send() {
-    if (downloadHadProgress) {
-      super.send();
-    } else {
-      Logger.e(this,
-          new IllegalArgumentException("The Result status should be added before send the event"));
-    }
+  @Override public boolean isReadyToSend() {
+    return super.isReadyToSend() && downloadHadProgress;
   }
 }

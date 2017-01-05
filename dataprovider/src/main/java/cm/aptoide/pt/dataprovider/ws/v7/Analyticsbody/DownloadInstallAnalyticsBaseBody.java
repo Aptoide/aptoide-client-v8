@@ -7,8 +7,8 @@ import java.util.List;
  * Created by trinkes on 30/12/2016.
  */
 
-public class DownloadInstallAnalyticsBaseBody<T extends DownloadInstallAnalyticsBaseBody.Data>
-    extends AnalyticsBaseBody<T> {
+public class DownloadInstallAnalyticsBaseBody
+    extends AnalyticsBaseBody<DownloadInstallAnalyticsBaseBody.Data> {
   public DownloadInstallAnalyticsBaseBody(String hostPackageName) {
     super(hostPackageName);
   }
@@ -21,7 +21,12 @@ public class DownloadInstallAnalyticsBaseBody<T extends DownloadInstallAnalytics
     SUCC, FAIL
   }
 
+  public enum DataOrigin {
+    INSTALL, UPDATE, DOWNGRADE, UPDATE_ALL
+  }
+
   @lombok.Data public static class Data {
+    DataOrigin origin;
     App app;
     List<Obb> obb;
     String network;

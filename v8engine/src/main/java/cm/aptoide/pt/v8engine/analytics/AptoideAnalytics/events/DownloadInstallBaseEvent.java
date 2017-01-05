@@ -1,6 +1,8 @@
 package cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events;
 
+import android.support.annotation.CallSuper;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.DownloadAnalyticsRequest;
@@ -49,18 +51,28 @@ public @Data @ToString class DownloadInstallBaseEvent extends Event {
   }
 
   @Override public void send() {
-    DownloadAnalyticsRequest.of(AptoideAccountManager.getAccessToken(),
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID(),
-        downloadInstallEventConverter.convert(this, resultStatus, error), action.name(), name,
-        context.name())
-        .observe()
-        .subscribe(baseV7Response -> Logger.d(this, "onResume: " + baseV7Response),
-            throwable -> throwable.printStackTrace());
+    if (isReadyToSend()) {
+      DownloadAnalyticsRequest.of(AptoideAccountManager.getAccessToken(),
+          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+              DataProvider.getContext()).getAptoideClientUUID(),
+          downloadInstallEventConverter.convert(this, resultStatus, error), action.name(), name,
+          context.name())
+          .observe()
+          .subscribe(baseV7Response -> Logger.d(this, "onResume: " + baseV7Response),
+              throwable -> throwable.printStackTrace());
+    } else {
+      CrashReports.logException(
+          new IllegalArgumentException("The Result status should be added before send the event"));
+      Logger.e(this, "The event was not ready to send!");
+    }
   }
 
   public void setError(Throwable error) {
     this.error = error;
+  }
+
+  @CallSuper public boolean isReadyToSend() {
+    return resultStatus != null;
   }
 
   public enum Action {

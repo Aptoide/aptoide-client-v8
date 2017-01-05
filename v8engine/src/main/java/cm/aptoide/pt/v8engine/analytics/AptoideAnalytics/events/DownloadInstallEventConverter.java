@@ -5,7 +5,6 @@ import android.text.TextUtils;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.ws.v7.DownloadAnalyticsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 import cm.aptoide.pt.utils.AptoideUtils;
 import io.realm.RealmList;
@@ -16,15 +15,13 @@ import java.util.LinkedList;
  */
 
 abstract class DownloadInstallEventConverter<T extends DownloadInstallBaseEvent> {
-  public DownloadInstallAnalyticsBaseBody<DownloadAnalyticsRequest.DownloadEventBody> convert(
-      DownloadInstallBaseEvent report, DownloadInstallAnalyticsBaseBody.ResultStatus status,
-      @Nullable Throwable error) {
-    DownloadInstallAnalyticsBaseBody<DownloadAnalyticsRequest.DownloadEventBody> body =
-        new DownloadInstallAnalyticsBaseBody<>(DataProvider.getConfiguration().getAppId());
+  public DownloadInstallAnalyticsBaseBody convert(DownloadInstallBaseEvent report,
+      DownloadInstallAnalyticsBaseBody.ResultStatus status, @Nullable Throwable error) {
+    DownloadInstallAnalyticsBaseBody body =
+        new DownloadInstallAnalyticsBaseBody(DataProvider.getConfiguration().getAppId());
 
-    DownloadAnalyticsRequest.DownloadEventBody data =
-        new DownloadAnalyticsRequest.DownloadEventBody();
-    data.setOrigin(DownloadAnalyticsRequest.DataOrigin.valueOf(report.getOrigin().name()));
+    DownloadInstallAnalyticsBaseBody.Data data = new DownloadInstallAnalyticsBaseBody.Data();
+    data.setOrigin(DownloadInstallAnalyticsBaseBody.DataOrigin.valueOf(report.getOrigin().name()));
 
     DownloadInstallAnalyticsBaseBody.App app = new DownloadInstallAnalyticsBaseBody.App();
     app.setPackageName(report.getPackageName());
