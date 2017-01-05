@@ -45,8 +45,8 @@ import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadAndInstallEventConverter;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadReport;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadReportConverter;
 import cm.aptoide.pt.v8engine.dialog.InstallWarningDialog;
 import cm.aptoide.pt.v8engine.dialog.SharePreviewDialog;
 import cm.aptoide.pt.v8engine.install.Installer;
@@ -100,7 +100,7 @@ import rx.android.schedulers.AndroidSchedulers;
   private PermissionRequest permissionRequest;
   private InstallManager installManager;
   private boolean isUpdate;
-  private DownloadReportConverter downloadReportConverter;
+  private DownloadAndInstallEventConverter downloadAndInstallEventConverter;
   private Analytics analytics;
 
   //private Subscription subscribe;
@@ -137,7 +137,7 @@ import rx.android.schedulers.AndroidSchedulers;
     installManager = new InstallManager(downloadManager, installer,
         AccessorFactory.getAccessorFor(Download.class),
         AccessorFactory.getAccessorFor(Installed.class));
-    downloadReportConverter = new DownloadReportConverter();
+    downloadAndInstallEventConverter = new DownloadAndInstallEventConverter();
     analytics = Analytics.getInstance();
 
     minimalAd = displayable.getMinimalAd();
@@ -294,7 +294,7 @@ import rx.android.schedulers.AndroidSchedulers;
   }
 
   private void setupDownloadEvent(Download download) {
-    DownloadReport report = downloadReportConverter.create(download, DownloadReport.Action.CLICK,
+    DownloadReport report = downloadAndInstallEventConverter.create(download, DownloadReport.Action.CLICK,
         DownloadReport.AppContext.appview);
 
     analytics.save(report.getPackageName() + report.getVersionCode(), report);

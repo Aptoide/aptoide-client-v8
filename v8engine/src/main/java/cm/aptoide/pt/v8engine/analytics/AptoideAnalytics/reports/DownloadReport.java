@@ -28,7 +28,7 @@ public @Data @ToString class DownloadReport extends Report {
   private String patchObbUrl;
   private String name;
   private AppContext context;
-  private DownloadReportConverter downloadReportConverter;
+  private DownloadAndInstallEventConverter downloadAndInstallEventConverter;
   private DownloadInstallAnalyticsBaseBody.ResultStatus resultStatus;
   /**
    * this variable should be activated when the download progress starts, this will prevent the
@@ -38,7 +38,7 @@ public @Data @ToString class DownloadReport extends Report {
   private Throwable error;
 
   public DownloadReport(Action action, Origin origin, String packageName, String url, String obbUrl,
-      String patchObbUrl, AppContext context, int versionCode, DownloadReportConverter downloadReportConverter) {
+      String patchObbUrl, AppContext context, int versionCode, DownloadAndInstallEventConverter downloadAndInstallEventConverter) {
     this.action = action;
     this.versionCode = versionCode;
     this.origin = origin;
@@ -50,7 +50,7 @@ public @Data @ToString class DownloadReport extends Report {
     this.patchObbUrl = patchObbUrl;
     this.name = "download";
     this.context = context;
-    this.downloadReportConverter = downloadReportConverter;
+    this.downloadAndInstallEventConverter = downloadAndInstallEventConverter;
     downloadHadProgress = false;
   }
 
@@ -63,7 +63,7 @@ public @Data @ToString class DownloadReport extends Report {
         DownloadAnalyticsRequest.of(AptoideAccountManager.getAccessToken(),
             new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                 DataProvider.getContext()).getAptoideClientUUID(),
-            downloadReportConverter.convert(this, resultStatus, error), action.name(), name,
+            downloadAndInstallEventConverter.convert(this, resultStatus, error), action.name(), name,
             context.name())
             .observe()
             .subscribe(baseV7Response -> Logger.d(this, "onResume: " + baseV7Response),

@@ -23,7 +23,7 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadReportConverter;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadAndInstallEventConverter;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
@@ -53,7 +53,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
   private List<Displayable> installedDisplayablesList = new LinkedList<>();
   private InstallManager installManager;
   private Analytics analytics;
-  private DownloadReportConverter downloadReportConverter;
+  private DownloadAndInstallEventConverter downloadAndInstallEventConverter;
 
   @NonNull
   public static UpdatesFragment newInstance() {
@@ -67,7 +67,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
         AccessorFactory.getAccessorFor(Download.class),
         AccessorFactory.getAccessorFor(Installed.class));
     analytics = Analytics.getInstance();
-    downloadReportConverter = new DownloadReportConverter();
+    downloadAndInstallEventConverter = new DownloadAndInstallEventConverter();
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
@@ -84,14 +84,15 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
             if (updates.size() > 0) {
               updatesDisplayablesList.add(
                   new UpdatesHeaderDisplayable(installManager,
-                      AptoideUtils.StringU.getResString(R.string.updates),analytics,downloadReportConverter
+                      AptoideUtils.StringU.getResString(R.string.updates),analytics,
+                      downloadAndInstallEventConverter
                   )
               );
 
               for (Update update : updates) {
                 updatesDisplayablesList.add(
                     UpdateDisplayable.create(update, installManager, new DownloadFactory(),
-                        analytics, downloadReportConverter));
+                        analytics, downloadAndInstallEventConverter));
               }
             }
 

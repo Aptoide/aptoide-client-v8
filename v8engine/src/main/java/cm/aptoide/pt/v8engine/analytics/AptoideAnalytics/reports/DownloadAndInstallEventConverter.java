@@ -15,7 +15,7 @@ import java.util.LinkedList;
  * Created by trinkes on 02/01/2017.
  */
 
-public class DownloadReportConverter {
+public class DownloadAndInstallEventConverter {
   public DownloadInstallAnalyticsBaseBody<DownloadAnalyticsRequest.DownloadEventBody> convert(
       DownloadReport report, DownloadInstallAnalyticsBaseBody.ResultStatus status,
       @Nullable Throwable error) {

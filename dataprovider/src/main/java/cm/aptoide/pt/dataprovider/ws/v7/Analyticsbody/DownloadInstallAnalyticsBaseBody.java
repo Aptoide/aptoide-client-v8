@@ -9,6 +9,10 @@ import java.util.List;
 
 public class DownloadInstallAnalyticsBaseBody<T extends DownloadInstallAnalyticsBaseBody.Data>
     extends AnalyticsBaseBody<T> {
+  public DownloadInstallAnalyticsBaseBody(String hostPackageName) {
+    super(hostPackageName);
+  }
+
   public enum ObbType {
     main, patch
   }
