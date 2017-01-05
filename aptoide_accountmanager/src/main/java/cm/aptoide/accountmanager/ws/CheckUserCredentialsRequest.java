@@ -15,7 +15,6 @@ import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
-import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.Locale;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -63,7 +62,7 @@ import rx.Observable;
   public static CheckUserCredentialsRequest of(String accessToken) {
     CheckUserCredentialsRequest request = new CheckUserCredentialsRequest(
         Application.getContext(),
-        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent()),
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), isDebug()),
         WebService.getDefaultConverter()
     );
     request.setToken(accessToken);

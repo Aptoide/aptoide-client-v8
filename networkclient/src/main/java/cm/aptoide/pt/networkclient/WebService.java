@@ -19,6 +19,8 @@ import java.net.UnknownHostException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+import lombok.Getter;
+import lombok.Setter;
 import okhttp3.OkHttpClient;
 import retrofit2.CallAdapter;
 import retrofit2.Converter;
@@ -37,6 +39,7 @@ import rx.schedulers.Schedulers;
  */
 public abstract class WebService<T, U> {
 
+  @Getter @Setter private static boolean debug;
   private static Converter.Factory defaultConverterFactory;
 
   protected final Converter.Factory converterFactory;
@@ -49,7 +52,7 @@ public abstract class WebService<T, U> {
 
   protected WebService(Class<T> clazz, UserAgentGenerator userAgentGenerator,
       Converter.Factory converterFactory, String baseHost) {
-    this(clazz, OkHttpClientFactory.getSingletonClient(userAgentGenerator), converterFactory,
+    this(clazz, OkHttpClientFactory.getSingletonClient(userAgentGenerator, debug), converterFactory,
         baseHost);
   }
 

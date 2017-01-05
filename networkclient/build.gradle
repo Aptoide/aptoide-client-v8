@@ -79,6 +79,8 @@ dependencies {
   compile "com.squareup.retrofit2:adapter-rxjava:${RETROFIT_VERSION}"
   compile "com.squareup.retrofit2:converter-jackson:${RETROFIT_VERSION}"
 
+  compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
+
   provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
   // Just for lombok not to complain
   provided "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"

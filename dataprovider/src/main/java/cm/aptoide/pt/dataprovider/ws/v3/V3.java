@@ -54,7 +54,7 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
 
   protected V3(String baseHost, BaseBody baseBody) {
     super(Interfaces.class,
-        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent()),
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), isDebug()),
         WebService.getDefaultConverter(), baseHost);
     this.map = baseBody;
   }
