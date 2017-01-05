@@ -17,6 +17,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.realm.FileToDownload;
+import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -24,6 +25,7 @@ import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEvent;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.exception.InstallationException;
 import eu.chainfire.libsuperuser.Shell;
@@ -46,12 +48,14 @@ public class DefaultInstaller implements Installer {
   @Getter(AccessLevel.PACKAGE) private final PackageManager packageManager;
   private final InstallationProvider installationProvider;
   private FileUtils fileUtils;
+  private Analytics analytics;
 
   public DefaultInstaller(PackageManager packageManager, InstallationProvider installationProvider,
-      FileUtils fileUtils) {
+      FileUtils fileUtils, Analytics analytics) {
     this.packageManager = packageManager;
     this.installationProvider = installationProvider;
     this.fileUtils = fileUtils;
+    this.analytics = analytics;
   }
 
   @Override public Observable<Boolean> isInstalled(String md5) {
@@ -180,10 +184,15 @@ public class DefaultInstaller implements Installer {
                 CrashReports.logException(new Exception("install -r exitCode: " + exitCode));
                 Observable.fromCallable(() -> exitCode)
                     .observeOn(Schedulers.computation())
-                    .delay(10, TimeUnit.SECONDS)
-                    .subscribe(
-                        exitCodeToSend -> Analytics.RootInstall.rootInstallCompleted(exitCodeToSend,
-                            isInstalled(packageName, versionCode)));
+                    .delay(20, TimeUnit.SECONDS)
+                    .subscribe(exitCodeToSend -> {
+                      boolean installed = isInstalled(packageName, versionCode);
+                      if (!installed) {
+                        sendErrorEvent(packageName, versionCode,
+                            new Exception("Root install not succeeded. Exit code = " + exitCode));
+                      }
+                      Analytics.RootInstall.rootInstallCompleted(exitCodeToSend, installed);
+                    });
                 if (exitCode == 0) {
                   Logger.v(TAG, "app successfully installed using root");
                 } else {
@@ -207,10 +216,21 @@ public class DefaultInstaller implements Installer {
       //}
     } catch (Exception e) {
       CrashReports.logException(e);
+      sendErrorEvent(packageName, versionCode, e);
       throw new InstallationException("Installation with root failed for "
           + packageName
           + ". Error message: "
           + e.getMessage());
+    }
+  }
+
+  private void sendErrorEvent(String packageName, int versionCode, Exception e) {
+    InstallEvent report =
+        (InstallEvent) analytics.get(packageName + versionCode, InstallEvent.class);
+    if (report != null) {
+      report.setResultStatus(DownloadInstallAnalyticsBaseBody.ResultStatus.FAIL);
+      report.setError(e);
+      analytics.sendEvent(report);
     }
   }
 

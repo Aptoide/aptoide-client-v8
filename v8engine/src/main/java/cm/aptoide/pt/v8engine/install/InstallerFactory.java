@@ -11,6 +11,7 @@ import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.utils.FileUtils;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.install.installer.DefaultInstaller;
 import cm.aptoide.pt.v8engine.install.installer.RollbackInstaller;
 import cm.aptoide.pt.v8engine.install.provider.DownloadInstallationProvider;
@@ -50,6 +51,6 @@ public class InstallerFactory {
 
   @NonNull private DefaultInstaller getDefaultInstaller(Context context) {
     return new DefaultInstaller(context.getPackageManager(), getInstallationProvider(),
-        new FileUtils());
+        new FileUtils(), Analytics.getInstance());
   }
 }
