@@ -54,10 +54,6 @@ public class AppUpdateDisplayable extends CardDisplayable {
   private PermissionManager permissionManager;
   private TimelineMetricsManager timelineMetricsManager;
   private SocialRepository socialRepository;
-  private String url;
-  private String obbUrl;
-  private String patchObbUrl;
-  private int versionCode;
   private DownloadReportConverter downloadConverter;
   private Analytics analytics;
 
@@ -67,10 +63,9 @@ public class AppUpdateDisplayable extends CardDisplayable {
   public AppUpdateDisplayable(AppUpdate appUpdate, String appIconUrl, String storeIconUrl,
       String storeName, Date dateUpdated, String appVersionName, SpannableFactory spannableFactory,
       String appName, String packageName, Download download, DateCalculator dateCalculator,
-      long appId, String abUrl, InstallManager installManager,
-      PermissionManager permissionManager, TimelineMetricsManager timelineMetricsManager,
-      SocialRepository socialRepository, String url, DownloadReportConverter downloadConverter,
-      String obbUrl, String patchObbUrl, int versionCode, Analytics analytics) {
+      long appId, String abUrl, InstallManager installManager, PermissionManager permissionManager,
+      TimelineMetricsManager timelineMetricsManager, SocialRepository socialRepository,
+      DownloadReportConverter downloadConverter, Analytics analytics) {
     super(appUpdate);
     this.appIconUrl = appIconUrl;
     this.storeIconUrl = storeIconUrl;
@@ -88,10 +83,6 @@ public class AppUpdateDisplayable extends CardDisplayable {
     this.permissionManager = permissionManager;
     this.timelineMetricsManager = timelineMetricsManager;
     this.socialRepository = socialRepository;
-    this.url = url;
-    this.obbUrl = obbUrl;
-    this.patchObbUrl = patchObbUrl;
-    this.versionCode = versionCode;
     this.downloadConverter = downloadConverter;
     this.analytics = analytics;
   }
@@ -112,9 +103,7 @@ public class AppUpdateDisplayable extends CardDisplayable {
         appUpdate.getFile().getVername(), spannableFactory, appUpdate.getName(),
         appUpdate.getPackageName(), downloadFactory.create(appUpdate, Download.ACTION_UPDATE),
         dateCalculator, appUpdate.getId(), abTestingURL, installManager, permissionManager,
-        timelineMetricsManager, socialRepository, appUpdate.getFile().getPath(),
-        new DownloadReportConverter(), appUpdate.getObb().getMain().getPath(),
-        appUpdate.getObb().getPatch().getPath(), appUpdate.getFile().getVercode(),
+        timelineMetricsManager, socialRepository, new DownloadReportConverter(),
         Analytics.getInstance());
   }
 
@@ -137,11 +126,9 @@ public class AppUpdateDisplayable extends CardDisplayable {
   }
 
   private void setupDownloadEvent() {
-    DownloadReport report =
-        new DownloadReport(DownloadReport.Action.CLICK, DownloadReport.Origin.update,
-            download.getPackageName(), url, obbUrl, patchObbUrl,
-            DownloadReport.AppContext.timeline, versionCode, downloadConverter);
-    analytics.save(packageName + versionCode, report);
+    DownloadReport report = downloadConverter.create(download, DownloadReport.Action.CLICK,
+        DownloadReport.AppContext.timeline);
+    analytics.save(packageName + download.getVersionCode(), report);
   }
 
   public Observable<Progress<Download>> updateProgress() {
