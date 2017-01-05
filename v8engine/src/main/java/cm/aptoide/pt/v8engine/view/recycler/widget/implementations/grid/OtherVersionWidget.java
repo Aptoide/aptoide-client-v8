@@ -38,7 +38,7 @@ import java.util.Locale;
   // left side
   //private ImageView versionBadge;
   private TextView version;
-  //private ImageView trustedBadge;
+  private ImageView trustedBadge;
   private TextView date;
   private TextView downloads;
   // right side
@@ -58,7 +58,7 @@ import java.util.Locale;
     // left side
     //versionBadge = (ImageView) itemView.findViewById(R.id.version_icon);
     version = (TextView) itemView.findViewById(R.id.version_name);
-    //trustedBadge = (ImageView) itemView.findViewById(R.id.badge_icon);
+    trustedBadge = (ImageView) itemView.findViewById(R.id.badge_icon);
     date = (TextView) itemView.findViewById(R.id.version_date);
     downloads = (TextView) itemView.findViewById(R.id.downloads);
     // right side
@@ -126,8 +126,7 @@ import java.util.Locale;
     //version.setCompoundDrawables(drawables[0], drawables[1], ImageLoader.load(badgeResId), drawables[3]);
     // does not work properly because "The Drawables must already have had setBounds(Rect) called". info from:
     // https://developer.android.com/reference/android/widget/TextView.html#setCompoundDrawables
-    version.setCompoundDrawablesWithIntrinsicBounds(drawables[0], drawables[1],
-        ImageLoader.load(badgeResId), drawables[3]);
+    trustedBadge.setImageResource(badgeResId);
   }
 
   private void setItemBackgroundColor(View itemView) {
