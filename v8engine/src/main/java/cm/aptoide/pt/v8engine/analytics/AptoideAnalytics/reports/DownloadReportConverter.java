@@ -4,9 +4,9 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
+import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.ws.v7.DownloadAnalyticsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.Event;
 import cm.aptoide.pt.utils.AptoideUtils;
 import io.realm.RealmList;
 import java.util.LinkedList;
@@ -20,7 +20,7 @@ public class DownloadReportConverter {
       DownloadReport report, DownloadInstallAnalyticsBaseBody.ResultStatus status,
       @Nullable Throwable error) {
     DownloadInstallAnalyticsBaseBody<DownloadAnalyticsRequest.DownloadEventBody> body =
-        new DownloadInstallAnalyticsBaseBody<>();
+        new DownloadInstallAnalyticsBaseBody<>(DataProvider.getConfiguration().getAppId());
 
     DownloadAnalyticsRequest.DownloadEventBody data =
         new DownloadAnalyticsRequest.DownloadEventBody();
@@ -60,16 +60,8 @@ public class DownloadReportConverter {
       result.setError(resultError);
     }
 
-    Event<DownloadAnalyticsRequest.DownloadEventBody> event = new Event<>();
-    event.setContext(report.getContext().name());
-    event.setData(data);
-    event.setName(report.getName());
-    event.setAction(report.getAction().name());
-
     data.setResult(result);
-    event.setData(data);
-    body.setEvent(event);
-
+    body.setData(data);
     return body;
   }
 

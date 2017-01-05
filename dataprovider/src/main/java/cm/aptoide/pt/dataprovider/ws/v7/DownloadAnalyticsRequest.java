@@ -36,9 +36,6 @@ public class DownloadAnalyticsRequest extends
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    action = body.getEvent().getAction();
-    name = body.getEvent().getName();
-    context = body.getEvent().getContext();
     return interfaces.setDownloadAnalyticsEvent(name, action, context, body);
   }
 
