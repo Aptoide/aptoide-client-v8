@@ -8,8 +8,8 @@ import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadAndInstallEventConverter;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadEvent;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadEventConverter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import lombok.Getter;
 import rx.Observable;
@@ -21,18 +21,18 @@ public class UpdatesHeaderDisplayable extends Displayable {
 
   @Getter private String label;
   private Analytics analytics;
-  private DownloadAndInstallEventConverter converter;
+  private DownloadEventConverter converter;
   @Getter private InstallManager installManager;
 
   public UpdatesHeaderDisplayable() {
   }
 
   public UpdatesHeaderDisplayable(InstallManager installManager, String label, Analytics analytics,
-      DownloadAndInstallEventConverter downloadAndInstallEventConverter) {
+      DownloadEventConverter downloadInstallEventConverter) {
     this.installManager = installManager;
     this.label = label;
     this.analytics = analytics;
-    this.converter = downloadAndInstallEventConverter;
+    this.converter = downloadInstallEventConverter;
   }
 
   @Override public int getViewLayout() {

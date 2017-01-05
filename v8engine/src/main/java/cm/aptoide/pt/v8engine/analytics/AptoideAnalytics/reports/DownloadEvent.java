@@ -1,13 +1,6 @@
 package cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports;
 
-import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.dataprovider.ws.v7.DownloadAnalyticsRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.Event;
 import lombok.Data;
 import lombok.Setter;
 import lombok.ToString;
@@ -16,20 +9,8 @@ import lombok.ToString;
  * Created by trinkes on 02/01/2017.
  */
 
-public @Data @ToString class DownloadEvent extends Event {
-  private Action action;
-  private int versionCode;
-  private Origin origin;
-  private String packageName;
-  private String url;
-  private ObbType obbType;
-  private String obbUrl;
-  private ObbType patchObbType;
-  private String patchObbUrl;
-  private String name;
-  private AppContext context;
-  private DownloadAndInstallEventConverter downloadAndInstallEventConverter;
-  private DownloadInstallAnalyticsBaseBody.ResultStatus resultStatus;
+public @Data @ToString class DownloadEvent extends DownloadInstallBaseEvent {
+  public static final String EVENT_NAME = "download";
   /**
    * this variable should be activated when the download progress starts, this will prevent the
    * event to be sent if download was cached
@@ -38,57 +19,19 @@ public @Data @ToString class DownloadEvent extends Event {
   private Throwable error;
 
   public DownloadEvent(Action action, Origin origin, String packageName, String url, String obbUrl,
-      String patchObbUrl, AppContext context, int versionCode, DownloadAndInstallEventConverter downloadAndInstallEventConverter) {
-    this.action = action;
-    this.versionCode = versionCode;
-    this.origin = origin;
-    this.packageName = packageName;
-    this.url = url;
-    this.obbType = ObbType.main;
-    this.obbUrl = obbUrl;
-    this.patchObbType = ObbType.patch;
-    this.patchObbUrl = patchObbUrl;
-    this.name = "download";
-    this.context = context;
-    this.downloadAndInstallEventConverter = downloadAndInstallEventConverter;
+      String patchObbUrl, AppContext context, int versionCode,
+      DownloadEventConverter downloadInstallEventConverter) {
+    super(action, origin, packageName, url, obbUrl, patchObbUrl, context, versionCode,
+        downloadInstallEventConverter, EVENT_NAME);
     downloadHadProgress = false;
   }
 
   @Override public void send() {
     if (downloadHadProgress) {
-      if (resultStatus == null) {
-        Logger.e(this, new IllegalArgumentException(
-            "The Result status should be added before send the event"));
-      } else {
-        DownloadAnalyticsRequest.of(AptoideAccountManager.getAccessToken(),
-            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                DataProvider.getContext()).getAptoideClientUUID(),
-            downloadAndInstallEventConverter.convert(this, resultStatus, error), action.name(), name,
-            context.name())
-            .observe()
-            .subscribe(baseV7Response -> Logger.d(this, "onResume: " + baseV7Response),
-                throwable -> throwable.printStackTrace());
-      }
+      super.send();
+    } else {
+      Logger.e(this,
+          new IllegalArgumentException("The Result status should be added before send the event"));
     }
-  }
-
-  public void setError(Throwable error) {
-    this.error = error;
-  }
-
-  public enum Action {
-    CLICK, AUTO
-  }
-
-  public enum Origin {
-    install, update, downgrade, update_all
-  }
-
-  private enum ObbType {
-    main, patch
-  }
-
-  public enum AppContext {
-    timeline, appview, updatetab, scheduled, downloads
   }
 }

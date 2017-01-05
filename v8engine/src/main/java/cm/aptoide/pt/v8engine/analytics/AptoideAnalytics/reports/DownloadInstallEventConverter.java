@@ -15,9 +15,9 @@ import java.util.LinkedList;
  * Created by trinkes on 02/01/2017.
  */
 
-public class DownloadAndInstallEventConverter {
+abstract class DownloadInstallEventConverter<T extends DownloadInstallBaseEvent> {
   public DownloadInstallAnalyticsBaseBody<DownloadAnalyticsRequest.DownloadEventBody> convert(
-      DownloadEvent report, DownloadInstallAnalyticsBaseBody.ResultStatus status,
+      DownloadInstallBaseEvent report, DownloadInstallAnalyticsBaseBody.ResultStatus status,
       @Nullable Throwable error) {
     DownloadInstallAnalyticsBaseBody<DownloadAnalyticsRequest.DownloadEventBody> body =
         new DownloadInstallAnalyticsBaseBody<>(DataProvider.getConfiguration().getAppId());
@@ -46,7 +46,7 @@ public class DownloadAndInstallEventConverter {
       data.setObb(obbs);
     }
 
-    data.setNetwork(AptoideUtils.SystemU.getConnectionType());
+    data.setNetwork(AptoideUtils.SystemU.getConnectionType().toUpperCase());
     data.setTeleco(AptoideUtils.SystemU.getCarrierName());
 
     DownloadInstallAnalyticsBaseBody.Result result = new DownloadInstallAnalyticsBaseBody.Result();
@@ -65,31 +65,31 @@ public class DownloadAndInstallEventConverter {
     return body;
   }
 
-  public DownloadEvent.Origin getOrigin(Download download) {
-    DownloadEvent.Origin origin;
+  public DownloadInstallBaseEvent.Origin getOrigin(Download download) {
+    DownloadInstallBaseEvent.Origin origin;
     switch (download.getAction()) {
       case Download.ACTION_INSTALL:
-        origin = DownloadEvent.Origin.install;
+        origin = DownloadInstallBaseEvent.Origin.install;
         break;
       case Download.ACTION_UPDATE:
-        origin = DownloadEvent.Origin.update;
+        origin = DownloadInstallBaseEvent.Origin.update;
         break;
       case Download.ACTION_DOWNGRADE:
-        origin = DownloadEvent.Origin.downgrade;
+        origin = DownloadInstallBaseEvent.Origin.downgrade;
         break;
       default:
-        origin = DownloadEvent.Origin.install;
+        origin = DownloadInstallBaseEvent.Origin.install;
     }
     return origin;
   }
 
-  public DownloadEvent create(Download download, DownloadEvent.Action action,
-      DownloadEvent.AppContext context) {
+  public T create(Download download, DownloadInstallBaseEvent.Action action,
+      DownloadInstallBaseEvent.AppContext context) {
     return create(download, action, context, getOrigin(download));
   }
 
-  public DownloadEvent create(Download download, DownloadEvent.Action action,
-      DownloadEvent.AppContext context, DownloadEvent.Origin origin) {
+  public T create(Download download, DownloadInstallBaseEvent.Action action,
+      DownloadInstallBaseEvent.AppContext context, DownloadInstallBaseEvent.Origin origin) {
     String appUrl = null;
     String obbPath = null;
     String patchObbPath = null;
@@ -105,7 +105,11 @@ public class DownloadAndInstallEventConverter {
       }
     }
 
-    return new DownloadEvent(action, origin, download.getPackageName(), appUrl, obbPath,
-        patchObbPath, context, download.getVersionCode(), this);
+    return createEventObject(action, origin, download.getPackageName(), appUrl, obbPath,
+        patchObbPath, context, download.getVersionCode());
   }
+
+  protected abstract T createEventObject(DownloadInstallBaseEvent.Action action,
+      DownloadInstallBaseEvent.Origin origin, String packageName, String url, String obbUrl,
+      String patchObbUrl, DownloadInstallBaseEvent.AppContext context, int versionCode);
 }

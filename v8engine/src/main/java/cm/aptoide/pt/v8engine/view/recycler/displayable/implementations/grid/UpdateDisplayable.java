@@ -16,8 +16,8 @@ import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadAndInstallEventConverter;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadEvent;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadEventConverter;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import lombok.Getter;
@@ -51,7 +51,7 @@ public class UpdateDisplayable extends Displayable {
   @Getter private Download download;
   @Getter private InstallManager installManager;
   private Analytics analytics;
-  private DownloadAndInstallEventConverter converter;
+  private DownloadEventConverter converter;
 
   public UpdateDisplayable() {
   }
@@ -61,7 +61,7 @@ public class UpdateDisplayable extends Displayable {
       String updateVersionName, String mainObbName, String mainObbPath, String mainObbMd5,
       String patchObbName, String patchObbPath, String patchObbMd5, Download download,
       InstallManager installManager, Analytics analytics,
-      DownloadAndInstallEventConverter downloadAndInstallEventConverter) {
+      DownloadEventConverter downloadInstallEventConverter) {
     this.packageName = packageName;
     this.appId = appId;
     this.label = label;
@@ -80,19 +80,19 @@ public class UpdateDisplayable extends Displayable {
     this.download = download;
     this.installManager = installManager;
     this.analytics = analytics;
-    this.converter = downloadAndInstallEventConverter;
+    this.converter = downloadInstallEventConverter;
   }
 
   public static UpdateDisplayable create(Update update, InstallManager installManager,
       DownloadFactory downloadFactory, Analytics analytics,
-      DownloadAndInstallEventConverter downloadAndInstallEventConverter) {
+      DownloadEventConverter downloadInstallEventConverter) {
 
     return new UpdateDisplayable(update.getPackageName(), update.getAppId(), update.getLabel(),
         update.getIcon(), update.getVersionCode(), update.getMd5(), update.getApkPath(),
         update.getAlternativeApkPath(), update.getUpdateVersionName(), update.getMainObbName(),
         update.getMainObbPath(), update.getMainObbMd5(), update.getPatchObbName(),
         update.getPatchObbPath(), update.getPatchObbMd5(), downloadFactory.create(update),
-        installManager, analytics, downloadAndInstallEventConverter);
+        installManager, analytics, downloadInstallEventConverter);
   }
 
   public Observable<Progress<Download>> downloadAndInstall(Context context,

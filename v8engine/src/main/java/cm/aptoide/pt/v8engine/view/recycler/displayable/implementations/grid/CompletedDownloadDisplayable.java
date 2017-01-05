@@ -14,8 +14,8 @@ import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadAndInstallEventConverter;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadEvent;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadEventConverter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 import lombok.Setter;
 import rx.Observable;
@@ -27,7 +27,7 @@ import rx.functions.Action0;
 public class CompletedDownloadDisplayable extends DisplayablePojo<Progress<Download>> {
 
   private InstallManager installManager;
-  private DownloadAndInstallEventConverter converter;
+  private DownloadEventConverter converter;
   private Analytics analytics;
   @Setter private Action0 onResumeAction;
   @Setter private Action0 onPauseAction;
@@ -37,7 +37,7 @@ public class CompletedDownloadDisplayable extends DisplayablePojo<Progress<Downl
   }
 
   public CompletedDownloadDisplayable(Progress<Download> pojo, InstallManager installManager,
-      DownloadAndInstallEventConverter converter, Analytics analytics) {
+      DownloadEventConverter converter, Analytics analytics) {
     super(pojo);
     this.installManager = installManager;
     this.converter = converter;

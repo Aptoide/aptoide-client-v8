@@ -21,8 +21,8 @@ import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadAndInstallEventConverter;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadEvent;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadEventConverter;
 import cm.aptoide.pt.v8engine.repository.SocialRepository;
 import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
@@ -54,7 +54,7 @@ public class AppUpdateDisplayable extends CardDisplayable {
   private PermissionManager permissionManager;
   private TimelineMetricsManager timelineMetricsManager;
   private SocialRepository socialRepository;
-  private DownloadAndInstallEventConverter downloadConverter;
+  private DownloadEventConverter downloadConverter;
   private Analytics analytics;
 
   public AppUpdateDisplayable() {
@@ -65,7 +65,7 @@ public class AppUpdateDisplayable extends CardDisplayable {
       String appName, String packageName, Download download, DateCalculator dateCalculator,
       long appId, String abUrl, InstallManager installManager, PermissionManager permissionManager,
       TimelineMetricsManager timelineMetricsManager, SocialRepository socialRepository,
-      DownloadAndInstallEventConverter downloadConverter, Analytics analytics) {
+      DownloadEventConverter downloadConverter, Analytics analytics) {
     super(appUpdate);
     this.appIconUrl = appIconUrl;
     this.storeIconUrl = storeIconUrl;
@@ -103,7 +103,7 @@ public class AppUpdateDisplayable extends CardDisplayable {
         appUpdate.getFile().getVername(), spannableFactory, appUpdate.getName(),
         appUpdate.getPackageName(), downloadFactory.create(appUpdate, Download.ACTION_UPDATE),
         dateCalculator, appUpdate.getId(), abTestingURL, installManager, permissionManager,
-        timelineMetricsManager, socialRepository, new DownloadAndInstallEventConverter(),
+        timelineMetricsManager, socialRepository, new DownloadEventConverter(),
         Analytics.getInstance());
   }
 

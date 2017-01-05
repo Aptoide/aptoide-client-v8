@@ -31,8 +31,8 @@ import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadAndInstallEventConverter;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadEvent;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadEventConverter;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
@@ -61,7 +61,7 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
   private TextView emptyData;
   private ScheduledDownloadRepository scheduledDownloadRepository;
   private OpenMode openMode = OpenMode.normal;
-  private DownloadAndInstallEventConverter converter;
+  private DownloadEventConverter converter;
   private Analytics analytics;
 
   //	private CompositeSubscription compositeSubscription;
@@ -87,7 +87,7 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
     installManager = new InstallManager(AptoideDownloadManager.getInstance(), installer,
         AccessorFactory.getAccessorFor(Download.class),
         AccessorFactory.getAccessorFor(Installed.class));
-    converter = new DownloadAndInstallEventConverter();
+    converter = new DownloadEventConverter();
     analytics = Analytics.getInstance();
   }
 
