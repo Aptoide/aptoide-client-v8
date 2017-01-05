@@ -23,6 +23,9 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEvent;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEventConverter;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadInstallBaseEvent;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEvent;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEventConverter;
 import cm.aptoide.pt.v8engine.repository.SocialRepository;
 import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
@@ -55,6 +58,7 @@ public class AppUpdateDisplayable extends CardDisplayable {
   private TimelineMetricsManager timelineMetricsManager;
   private SocialRepository socialRepository;
   private DownloadEventConverter downloadConverter;
+  private InstallEventConverter installConverter;
   private Analytics analytics;
 
   public AppUpdateDisplayable() {
@@ -65,7 +69,8 @@ public class AppUpdateDisplayable extends CardDisplayable {
       String appName, String packageName, Download download, DateCalculator dateCalculator,
       long appId, String abUrl, InstallManager installManager, PermissionManager permissionManager,
       TimelineMetricsManager timelineMetricsManager, SocialRepository socialRepository,
-      DownloadEventConverter downloadConverter, Analytics analytics) {
+      DownloadEventConverter downloadConverter, InstallEventConverter installConverter,
+      Analytics analytics) {
     super(appUpdate);
     this.appIconUrl = appIconUrl;
     this.storeIconUrl = storeIconUrl;
@@ -84,6 +89,7 @@ public class AppUpdateDisplayable extends CardDisplayable {
     this.timelineMetricsManager = timelineMetricsManager;
     this.socialRepository = socialRepository;
     this.downloadConverter = downloadConverter;
+    this.installConverter = installConverter;
     this.analytics = analytics;
   }
 
@@ -104,7 +110,7 @@ public class AppUpdateDisplayable extends CardDisplayable {
         appUpdate.getPackageName(), downloadFactory.create(appUpdate, Download.ACTION_UPDATE),
         dateCalculator, appUpdate.getId(), abTestingURL, installManager, permissionManager,
         timelineMetricsManager, socialRepository, new DownloadEventConverter(),
-        Analytics.getInstance());
+        new InstallEventConverter(), Analytics.getInstance());
   }
 
   public Observable<Progress<Download>> update(Context context) {
@@ -122,13 +128,18 @@ public class AppUpdateDisplayable extends CardDisplayable {
             }
           });
     }
-    return installManager.install(context, download).doOnSubscribe(() -> setupDownloadEvent());
+    return installManager.install(context, download).doOnSubscribe(() -> setupEvents());
   }
 
-  private void setupDownloadEvent() {
+  private void setupEvents() {
     DownloadEvent report = downloadConverter.create(download, DownloadEvent.Action.CLICK,
         DownloadEvent.AppContext.TIMELINE);
     analytics.save(packageName + download.getVersionCode(), report);
+
+    InstallEvent installEvent =
+        installConverter.create(download, DownloadInstallBaseEvent.Action.CLICK,
+            DownloadInstallBaseEvent.AppContext.TIMELINE);
+    analytics.save(packageName + download.getVersionCode(), installEvent);
   }
 
   public Observable<Progress<Download>> updateProgress() {

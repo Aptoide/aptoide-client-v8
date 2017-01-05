@@ -47,6 +47,9 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEvent;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEventConverter;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadInstallBaseEvent;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEvent;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEventConverter;
 import cm.aptoide.pt.v8engine.dialog.InstallWarningDialog;
 import cm.aptoide.pt.v8engine.dialog.SharePreviewDialog;
 import cm.aptoide.pt.v8engine.install.Installer;
@@ -102,6 +105,7 @@ import rx.android.schedulers.AndroidSchedulers;
   private boolean isUpdate;
   private DownloadEventConverter downloadInstallEventConverter;
   private Analytics analytics;
+  private InstallEventConverter installConverter;
 
   //private Subscription subscribe;
   //private long appID;
@@ -138,6 +142,7 @@ import rx.android.schedulers.AndroidSchedulers;
         AccessorFactory.getAccessorFor(Download.class),
         AccessorFactory.getAccessorFor(Installed.class));
     downloadInstallEventConverter = new DownloadEventConverter();
+    installConverter = new InstallEventConverter();
     analytics = Analytics.getInstance();
 
     minimalAd = displayable.getMinimalAd();
@@ -276,7 +281,7 @@ import rx.android.schedulers.AndroidSchedulers;
                   compositeSubscription.add(
                       new PermissionManager().requestDownloadAccess(permissionRequest)
                           .flatMap(success -> installManager.install(getContext(), appDownload)
-                              .doOnSubscribe(() -> setupDownloadEvent(appDownload)))
+                              .doOnSubscribe(() -> setupEvents(appDownload)))
                           .observeOn(AndroidSchedulers.mainThread())
                           .subscribe(progress -> {
                             Logger.d(TAG, "Installing");
@@ -293,11 +298,17 @@ import rx.android.schedulers.AndroidSchedulers;
     };
   }
 
-  private void setupDownloadEvent(Download download) {
-    DownloadEvent report = downloadInstallEventConverter.create(download, DownloadEvent.Action.CLICK,
-        DownloadEvent.AppContext.APPVIEW);
+  private void setupEvents(Download download) {
+    DownloadEvent report =
+        downloadInstallEventConverter.create(download, DownloadEvent.Action.CLICK,
+            DownloadEvent.AppContext.APPVIEW);
 
     analytics.save(report.getPackageName() + report.getVersionCode(), report);
+
+    InstallEvent installEvent =
+        installConverter.create(download, DownloadInstallBaseEvent.Action.CLICK,
+            DownloadInstallBaseEvent.AppContext.APPVIEW);
+    analytics.save(download.getPackageName() + download.getVersionCode(), installEvent);
   }
 
   private void showRootInstallWarningPopup(Context context) {
@@ -349,7 +360,7 @@ import rx.android.schedulers.AndroidSchedulers;
                 new DownloadFactory().create(displayable.getPojo().getNodes().getMeta().getData(),
                     downloadAction);
             return installManager.install(getContext(), download)
-                .doOnSubscribe(() -> setupDownloadEvent(download));
+                .doOnSubscribe(() -> setupEvents(download));
           })
           .first()
           .observeOn(AndroidSchedulers.mainThread())
@@ -362,7 +373,8 @@ import rx.android.schedulers.AndroidSchedulers;
               Observable.create((Subscriber<? super GenericDialogs.EResponse> subscriber) -> {
                 if (!ManagerPreferences.getUserAccessConfirmed()) {
                   alertDialog.setPositiveButton(R.string.share, (dialogInterface, i) -> {
-                    socialRepository.share(displayable, context,sharePreviewDialog.getPrivacyResult());
+                    socialRepository.share(displayable, context,
+                        sharePreviewDialog.getPrivacyResult());
                     subscriber.onNext(GenericDialogs.EResponse.YES);
                     subscriber.onCompleted();
                   }).setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
@@ -371,7 +383,8 @@ import rx.android.schedulers.AndroidSchedulers;
                   });
                 } else {
                   alertDialog.setPositiveButton(R.string.continue_option, (dialogInterface, i) -> {
-                    socialRepository.share(displayable, context,sharePreviewDialog.getPrivacyResult());
+                    socialRepository.share(displayable, context,
+                        sharePreviewDialog.getPrivacyResult());
                     subscriber.onNext(GenericDialogs.EResponse.YES);
                     subscriber.onCompleted();
                   }).setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
@@ -486,12 +499,13 @@ import rx.android.schedulers.AndroidSchedulers;
       PermissionManager permissionManager = new PermissionManager();
       compositeSubscription.add(permissionManager.requestDownloadAccess(permissionRequest)
           .flatMap(permissionGranted -> permissionManager.requestExternalStoragePermission(
-              (PermissionRequest) getContext())).flatMap(success -> {
+              (PermissionRequest) getContext()))
+          .flatMap(success -> {
             Download download =
                 new DownloadFactory().create(displayable.getPojo().getNodes().getMeta().getData(),
                     progress.getRequest().getAction());
             return installManager.install(getContext(), download).doOnSubscribe(() -> {
-              setupDownloadEvent(download);
+              setupEvents(download);
             });
           })
           .observeOn(AndroidSchedulers.mainThread())

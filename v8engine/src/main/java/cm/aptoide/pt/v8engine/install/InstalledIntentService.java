@@ -107,7 +107,8 @@ public class InstalledIntentService extends IntentService {
   private void sendInstallEvent(String packageName, PackageInfo packageInfo) {
     if (packageInfo != null) {
       Logger.d(TAG, "sendInstallEvent: " + packageInfo.versionCode);
-      InstallEvent event = (InstallEvent) analytics.get(packageName + packageInfo.versionCode);
+      InstallEvent event =
+          (InstallEvent) analytics.get(packageName + packageInfo.versionCode, InstallEvent.class);
       if (event != null) {
         event.setResultStatus(DownloadInstallAnalyticsBaseBody.ResultStatus.SUCC);
         analytics.sendEvent(event);
@@ -145,7 +146,8 @@ public class InstalledIntentService extends IntentService {
 
   protected void onPackageReplaced(String packageName) {
     Logger.d(TAG, "Packaged replaced: " + packageName);
-    databaseOnPackageReplaced(packageName);
+    PackageInfo packageInfo = databaseOnPackageReplaced(packageName);
+    sendInstallEvent(packageName, packageInfo);
   }
 
   protected void onPackageRemoved(String packageName) {
@@ -163,7 +165,7 @@ public class InstalledIntentService extends IntentService {
     return packageInfo;
   }
 
-  private void databaseOnPackageReplaced(String packageName) {
+  private PackageInfo databaseOnPackageReplaced(String packageName) {
     final Update update = updatesRepository.get(packageName).doOnError(throwable -> {
       Logger.e(TAG, throwable);
       CrashReports.logException(throwable);
@@ -176,7 +178,7 @@ public class InstalledIntentService extends IntentService {
     PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName);
 
     if (checkAndLogNullPackageInfo(packageInfo, packageName)) {
-      return;
+      return packageInfo;
     }
 
     if (update != null) {
@@ -189,6 +191,7 @@ public class InstalledIntentService extends IntentService {
     }
 
     installedRepository.insert(new Installed(packageInfo));
+    return packageInfo;
   }
 
   /**

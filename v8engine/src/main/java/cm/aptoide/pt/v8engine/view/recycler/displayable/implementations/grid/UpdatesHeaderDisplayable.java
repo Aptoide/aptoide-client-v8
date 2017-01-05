@@ -10,6 +10,9 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEvent;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEventConverter;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadInstallBaseEvent;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEvent;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEventConverter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import lombok.Getter;
 import rx.Observable;
@@ -23,16 +26,19 @@ public class UpdatesHeaderDisplayable extends Displayable {
   private Analytics analytics;
   private DownloadEventConverter converter;
   @Getter private InstallManager installManager;
+  private InstallEventConverter installConverter;
 
   public UpdatesHeaderDisplayable() {
   }
 
   public UpdatesHeaderDisplayable(InstallManager installManager, String label, Analytics analytics,
-      DownloadEventConverter downloadInstallEventConverter) {
+      DownloadEventConverter downloadInstallEventConverter,
+      InstallEventConverter installConverter) {
     this.installManager = installManager;
     this.label = label;
     this.analytics = analytics;
     this.converter = downloadInstallEventConverter;
+    this.installConverter = installConverter;
   }
 
   @Override public int getViewLayout() {
@@ -67,5 +73,10 @@ public class UpdatesHeaderDisplayable extends Displayable {
         converter.create(download, DownloadEvent.Action.CLICK, DownloadEvent.AppContext.UPDATE_TAB,
             DownloadEvent.Origin.UPDATE_ALL);
     analytics.save(download.getPackageName() + download.getVersionCode(), report);
+
+    InstallEvent installEvent =
+        installConverter.create(download, DownloadInstallBaseEvent.Action.CLICK,
+            DownloadInstallBaseEvent.AppContext.UPDATE_TAB, DownloadEvent.Origin.UPDATE_ALL);
+    analytics.save(download.getPackageName() + download.getVersionCode(), installEvent);
   }
 }

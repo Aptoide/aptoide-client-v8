@@ -16,6 +16,9 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEvent;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEventConverter;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadInstallBaseEvent;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEvent;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEventConverter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 import lombok.Setter;
 import rx.Observable;
@@ -31,17 +34,19 @@ public class CompletedDownloadDisplayable extends DisplayablePojo<Progress<Downl
   private Analytics analytics;
   @Setter private Action0 onResumeAction;
   @Setter private Action0 onPauseAction;
+  private InstallEventConverter installConverter;
 
   public CompletedDownloadDisplayable() {
     super();
   }
 
   public CompletedDownloadDisplayable(Progress<Download> pojo, InstallManager installManager,
-      DownloadEventConverter converter, Analytics analytics) {
+      DownloadEventConverter converter, Analytics analytics, InstallEventConverter installConverter) {
     super(pojo);
     this.installManager = installManager;
     this.converter = converter;
     this.analytics = analytics;
+    this.installConverter = installConverter;
   }
 
   @Override public void onResume() {
@@ -82,7 +87,7 @@ public class CompletedDownloadDisplayable extends DisplayablePojo<Progress<Downl
     return permissionManager.requestExternalStoragePermission(permissionRequest)
         .flatMap(success -> permissionManager.requestDownloadAccess(permissionRequest))
         .flatMap(success -> installManager.install(context, getPojo().getRequest())
-            .doOnSubscribe(() -> setupDownloadEvent(getPojo().getRequest())));
+            .doOnSubscribe(() -> setupEvents(getPojo().getRequest())));
   }
 
   public Observable<Progress<Download>> installOrOpenDownload(Context context,
@@ -97,9 +102,14 @@ public class CompletedDownloadDisplayable extends DisplayablePojo<Progress<Downl
     });
   }
 
-  public void setupDownloadEvent(Download download) {
+  public void setupEvents(Download download) {
     DownloadEvent report = converter.create(download, DownloadEvent.Action.CLICK,
         DownloadEvent.AppContext.DOWNLOADS);
     analytics.save(download.getPackageName() + download.getVersionCode(), report);
+
+    InstallEvent installEvent =
+        installConverter.create(download, DownloadInstallBaseEvent.Action.CLICK,
+            DownloadInstallBaseEvent.AppContext.DOWNLOADS);
+    analytics.save(download.getPackageName() + download.getVersionCode(), installEvent);
   }
 }

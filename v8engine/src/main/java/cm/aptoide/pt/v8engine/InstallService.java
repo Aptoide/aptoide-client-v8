@@ -145,8 +145,9 @@ public class InstallService extends Service {
         .doOnNext(download -> {
           stopOnDownloadError(download.getOverallDownloadStatus());
           if (download.getOverallDownloadStatus() == Download.PROGRESS) {
-            DownloadEvent report = (DownloadEvent) analytics.get(
-                download.getPackageName() + download.getVersionCode());
+            DownloadEvent report =
+                (DownloadEvent) analytics.get(download.getPackageName() + download.getVersionCode(),
+                    DownloadEvent.class);
             if (report != null) {
               report.setDownloadHadProgress(true);
             }
@@ -155,7 +156,8 @@ public class InstallService extends Service {
         .first(download -> download.getOverallDownloadStatus() == Download.COMPLETED)
         .doOnNext(download -> {
           DownloadEvent report =
-              (DownloadEvent) analytics.get(download.getPackageName() + download.getVersionCode());
+              (DownloadEvent) analytics.get(download.getPackageName() + download.getVersionCode(),
+                  DownloadEvent.class);
           if (report != null) {
             report.setResultStatus(DownloadInstallAnalyticsBaseBody.ResultStatus.SUCC);
             analytics.sendEvent(report);

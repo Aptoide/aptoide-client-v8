@@ -24,6 +24,7 @@ import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEventConverter;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEventConverter;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
@@ -54,6 +55,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
   private InstallManager installManager;
   private Analytics analytics;
   private DownloadEventConverter downloadInstallEventConverter;
+  private InstallEventConverter installConverter;
 
   @NonNull
   public static UpdatesFragment newInstance() {
@@ -68,6 +70,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
         AccessorFactory.getAccessorFor(Installed.class));
     analytics = Analytics.getInstance();
     downloadInstallEventConverter = new DownloadEventConverter();
+    installConverter = new InstallEventConverter();
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
@@ -85,14 +88,13 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
               updatesDisplayablesList.add(
                   new UpdatesHeaderDisplayable(installManager,
                       AptoideUtils.StringU.getResString(R.string.updates),analytics,
-                      downloadInstallEventConverter
-                  )
+                      downloadInstallEventConverter, installConverter)
               );
 
               for (Update update : updates) {
                 updatesDisplayablesList.add(
                     UpdateDisplayable.create(update, installManager, new DownloadFactory(),
-                        analytics, downloadInstallEventConverter));
+                        analytics, downloadInstallEventConverter, installConverter));
               }
             }
 

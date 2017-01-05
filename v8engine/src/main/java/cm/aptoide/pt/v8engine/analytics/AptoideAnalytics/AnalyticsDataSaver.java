@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.analytics.AptoideAnalytics;
 
+import android.support.annotation.NonNull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,5 +24,9 @@ public class AnalyticsDataSaver {
 
   public void remove(String key) {
     map.remove(key);
+  }
+
+  public void remove(@NonNull Event event) {
+    map.remove(event);
   }
 }

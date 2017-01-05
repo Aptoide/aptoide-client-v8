@@ -9,7 +9,7 @@ import lombok.ToString;
  */
 
 public @Data @ToString class DownloadEvent extends DownloadInstallBaseEvent {
-  private static final String EVENT_NAME = "download";
+  private static final String EVENT_NAME = "DOWNLOAD";
   /**
    * this variable should be activated when the download progress starts, this will prevent the
    * event to be sent if download was cached

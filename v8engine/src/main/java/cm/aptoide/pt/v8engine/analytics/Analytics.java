@@ -174,29 +174,20 @@ public class Analytics {
   }
 
   public void save(@NonNull String key, @NonNull Event event) {
-    saver.save(key, event);
+    saver.save(key + event.getClass().getName(), event);
   }
 
-  public void remove(@NonNull String key) {
-    saver.remove(key);
-  }
-
-  public @Nullable Event get(String key) {
-    return saver.get(key);
+  public @Nullable Event get(String key, Class<? extends Event> clazz) {
+    return saver.get(key + clazz.getName());
   }
 
   public void sendEvent(Event event) {
     event.send();
+    remove(event);
   }
 
-  public void sendEvent(String key) {
-    Event event = get(key);
-    if (event == null) {
-      Logger.e(TAG, "Event is null");
-    } else {
-      event.send();
-    }
-    remove(key);
+  private void remove(@NonNull Event event) {
+    saver.remove(event);
   }
 
   public static class Lifecycle {
@@ -1177,5 +1168,4 @@ public class Analytics {
       track(USER_REGISTERED, LOCALYTICS);
     }
   }
-
 }

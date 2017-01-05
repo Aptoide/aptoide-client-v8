@@ -18,7 +18,8 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.interfac
 
   @Override public void onError(Download download, Throwable throwable) {
     DownloadEvent report =
-        (DownloadEvent) analytics.get(download.getPackageName() + download.getVersionCode());
+        (DownloadEvent) analytics.get(download.getPackageName() + download.getVersionCode(),
+            DownloadEvent.class);
     if (report != null) {
       report.setResultStatus(DownloadInstallAnalyticsBaseBody.ResultStatus.FAIL);
       report.setError(throwable);
