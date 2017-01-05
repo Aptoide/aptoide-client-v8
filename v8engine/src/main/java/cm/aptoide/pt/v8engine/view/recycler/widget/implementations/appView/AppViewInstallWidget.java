@@ -165,12 +165,15 @@ import rx.android.schedulers.AndroidSchedulers;
               if (widgetState.getProgress() != null) {
                 downloadProgress.setIndeterminate(widgetState.getProgress().isIndeterminate());
                 downloadStatusUpdate(widgetState.getProgress(), currentApp);
-                setDownloadBarVisible(true, displayable, widgetState.getProgress(), currentApp);
+                if (!isDownloadBarVisible()) {
+                  setDownloadBarVisible();
+                  setupDownloadControls(currentApp, widgetState.getProgress(), displayable);
+                }
                 break;
               }
             case AppViewInstallDisplayable.ACTION_INSTALL:
               //App not installed
-              setDownloadBarVisible(false, displayable, widgetState.getProgress(), currentApp);
+              setDownloadBarInvisible();
               setupInstallOrBuyButton(displayable, getApp);
               if (widgetState.getProgress() != null) {
                 downloadStatusUpdate(widgetState.getProgress(), currentApp);
@@ -179,19 +182,19 @@ import rx.android.schedulers.AndroidSchedulers;
               break;
             case AppViewInstallDisplayable.ACTION_DOWNGRADE:
               //downgrade
-              setDownloadBarVisible(false, displayable, widgetState.getProgress(), currentApp);
+              setDownloadBarInvisible();
               setupActionButton(R.string.downgrade, downgradeListener(currentApp));
               break;
             case AppViewInstallDisplayable.ACTION_OPEN:
               //current installed version
-              setDownloadBarVisible(false, displayable, widgetState.getProgress(), currentApp);
+              setDownloadBarInvisible();
               setupActionButton(R.string.open,
                   v -> AptoideUtils.SystemU.openApp(currentApp.getPackageName()));
               break;
             case AppViewInstallDisplayable.ACTION_UPDATE:
               //update
               isUpdate = true;
-              setDownloadBarVisible(false, displayable, widgetState.getProgress(), currentApp);
+              setDownloadBarInvisible();
               setupActionButton(R.string.update,
                   installOrUpgradeListener(currentApp, getApp.getNodes().getVersions(),
                       displayable));
@@ -535,13 +538,19 @@ import rx.android.schedulers.AndroidSchedulers;
     return origin;
   }
 
-  private void setDownloadBarVisible(boolean visible, AppViewInstallDisplayable displayable,
-      Progress<Download> progress, GetAppMeta.App app) {
-    installAndLatestVersionLayout.setVisibility(visible ? View.GONE : View.VISIBLE);
-    downloadProgressLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
-    if (visible) {
-      setupDownloadControls(app, progress, displayable);
-    }
+  private void setDownloadBarInvisible() {
+    installAndLatestVersionLayout.setVisibility(View.VISIBLE);
+    downloadProgressLayout.setVisibility(View.GONE);
+  }
+
+  private void setDownloadBarVisible() {
+    installAndLatestVersionLayout.setVisibility(View.GONE);
+    downloadProgressLayout.setVisibility(View.VISIBLE);
+  }
+
+  private boolean isDownloadBarVisible() {
+    return installAndLatestVersionLayout.getVisibility() == View.GONE
+        && downloadProgressLayout.getVisibility() == View.VISIBLE;
   }
 
   /**

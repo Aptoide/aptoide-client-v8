@@ -139,6 +139,13 @@ public abstract class V8Engine extends DataProvider {
         null);
   }
 
+  /**
+   * call after this instance onCreate()
+   */
+  protected void activateLogger() {
+    Logger.setDBG(true);
+  }
+
   @Override public void onCreate() {
     try {
       PRNGFixes.apply();
