@@ -1,5 +1,6 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -11,7 +12,11 @@ import rx.Observable;
 public class PostCommentForTimelineArticle
     extends V7<BaseV7Response, PostCommentForTimelineArticle.Body> {
 
-  private static final String BASE_HOST = "http://ws75-primary.aptoide.com/api/7/";
+  //private static final String BASE_HOST = "http://ws75-primary.aptoide.com/api/7/";
+  private static final String BASE_HOST = BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
+      + "://"
+      + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
+      + "/api/7/";
 
   private PostCommentForTimelineArticle(Body body, String baseHost) {
     super(body, baseHost);
