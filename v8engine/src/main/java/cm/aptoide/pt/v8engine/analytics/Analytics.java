@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.Constants;
@@ -15,6 +17,8 @@ import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AnalyticsDataSaver;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.Event;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.facebook.FacebookSdk;
@@ -30,6 +34,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.zip.ZipFile;
+import lombok.Getter;
 
 import static cm.aptoide.pt.v8engine.analytics.Analytics.Lifecycle.Application.facebookLogger;
 
@@ -55,8 +60,14 @@ public class Analytics {
       "apps-group-top-games", "apps-group-top-stores", "apps-group-featured-stores",
       "apps-group-editors-choice"
   };
+  static @Getter Analytics instance = new Analytics(new AnalyticsDataSaver());
   private static boolean ACTIVATE_LOCALYTICS = true;
   private static boolean isFirstSession;
+  private AnalyticsDataSaver saver;
+
+  public Analytics(AnalyticsDataSaver saver) {
+    this.saver = saver;
+  }
 
   public static boolean checkBuildVariant() {
     return BuildConfig.BUILD_TYPE.contains("release") && BuildConfig.FLAVOR.contains("dev");
@@ -160,6 +171,23 @@ public class Analytics {
     } catch (Exception e) {
       e.printStackTrace();
     }
+  }
+
+  public void save(@NonNull String key, @NonNull Event event) {
+    saver.save(key + event.getClass().getName(), event);
+  }
+
+  public @Nullable Event get(String key, Class<? extends Event> clazz) {
+    return saver.get(key + clazz.getName());
+  }
+
+  public void sendEvent(Event event) {
+    event.send();
+    remove(event);
+  }
+
+  private void remove(@NonNull Event event) {
+    saver.remove(event);
   }
 
   public static class Lifecycle {

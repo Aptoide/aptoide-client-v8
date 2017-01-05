@@ -21,9 +21,12 @@ import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Scheduled;
+import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEvent;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver;
@@ -62,6 +65,7 @@ public class InstallService extends Service {
   private Installer defaultInstaller;
   private InstallManager installManager;
   private Map<String, Integer> installerTypeMap;
+  private Analytics analytics;
 
   @Override public void onCreate() {
     super.onCreate();
@@ -75,6 +79,7 @@ public class InstallService extends Service {
     subscriptions = new CompositeSubscription();
     setupNotification();
     installerTypeMap = new HashMap();
+    analytics = Analytics.getInstance();
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
@@ -137,8 +142,27 @@ public class InstallService extends Service {
     return downloadManager.getDownload(md5)
         .first()
         .flatMap(download -> downloadManager.startDownload(download))
-        .doOnNext(download -> stopOnDownloadError(download.getOverallDownloadStatus()))
+        .doOnNext(download -> {
+          stopOnDownloadError(download.getOverallDownloadStatus());
+          if (download.getOverallDownloadStatus() == Download.PROGRESS) {
+            DownloadEvent report =
+                (DownloadEvent) analytics.get(download.getPackageName() + download.getVersionCode(),
+                    DownloadEvent.class);
+            if (report != null) {
+              report.setDownloadHadProgress(true);
+            }
+          }
+        })
         .first(download -> download.getOverallDownloadStatus() == Download.COMPLETED)
+        .doOnNext(download -> {
+          DownloadEvent report =
+              (DownloadEvent) analytics.get(download.getPackageName() + download.getVersionCode(),
+                  DownloadEvent.class);
+          if (report != null) {
+            report.setResultStatus(DownloadInstallAnalyticsBaseBody.ResultStatus.SUCC);
+            analytics.sendEvent(report);
+          }
+        })
         .flatMap(download -> stopForegroundAndInstall(context, download, true).doOnNext(
             success -> sendBackgroundInstallFinishedBroadcast(download)))
         .flatMap(completed -> hasNextDownload());
