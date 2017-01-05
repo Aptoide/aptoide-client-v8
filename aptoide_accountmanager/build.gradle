@@ -60,7 +60,6 @@ dependencies {
   prodCompile project(path: ':dataprovider', configuration: 'prodRelease')
 
   compile project(path: ':imageloader', configuration: 'release')
-  compile project(path: ':database', configuration: 'release')
 
   //
   // custom libs in folders
