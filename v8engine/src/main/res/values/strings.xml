@@ -354,7 +354,9 @@
   <string name="private_following_message">you are following %d private users/stores</string>
 
   <!-- Payments -->
-  <string name="payment_item_select_button">select</string>
+  <string name="item_payment_button_use">use</string>
+  <string name="item_payment_button_register">register</string>
+  <string name="item_payment_approving_text">Approving</string>
   <string name="activity_payment_more_payments_button">Use another payment method</string>
 
 </resources>

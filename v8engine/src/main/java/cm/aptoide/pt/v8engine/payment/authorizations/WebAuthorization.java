@@ -19,6 +19,10 @@ public class WebAuthorization extends Authorization {
     return new WebAuthorization(paymentId, "", "", WebAuthorization.Status.SYNCING_ERROR);
   }
 
+  public static Authorization syncing(int paymentId) {
+    return new WebAuthorization(paymentId, "", "", WebAuthorization.Status.SYNCING);
+  }
+
   public WebAuthorization(int paymentId, String url, String redirectUrl, Status status) {
     super(paymentId, status);
     this.url = url;

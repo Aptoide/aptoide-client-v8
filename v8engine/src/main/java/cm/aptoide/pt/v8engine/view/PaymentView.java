@@ -15,7 +15,7 @@ import rx.Observable;
  */
 public interface PaymentView extends View {
 
-  Observable<PaymentViewModel> paymentSelection();
+  Observable<PaymentViewModel> usePaymentSelection();
 
   Observable<Void> cancellationSelection();
 
@@ -43,6 +43,8 @@ public interface PaymentView extends View {
 
   void showPaymentsNotFoundMessage();
 
+  Observable<PaymentViewModel> registerPaymentSelection();
+
   public static class PaymentViewModel {
 
     private final int id;
@@ -50,13 +52,16 @@ public interface PaymentView extends View {
     private final String description;
     private final double price;
     private final String currency;
+    private final Status status;
 
-    public PaymentViewModel(int id, String name, String description, double price, String currency) {
+    public PaymentViewModel(int id, String name, String description, double price, String currency,
+        Status status) {
       this.id = id;
       this.name = name;
       this.description = description;
       this.price = price;
       this.currency = currency;
+      this.status = status;
     }
 
     public int getId() {
@@ -77,6 +82,16 @@ public interface PaymentView extends View {
 
     public String getCurrency() {
       return currency;
+    }
+
+    public Status getStatus() {
+      return status;
+    }
+
+    public static enum Status {
+      REGISTER,
+      APPROVING,
+      USE
     }
   }
 }

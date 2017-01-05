@@ -8,7 +8,7 @@ package cm.aptoide.pt.v8engine.payment;
 import android.accounts.Account;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import cm.aptoide.pt.model.v3.PaymentService;
+import cm.aptoide.pt.model.v3.PaymentServiceResponse;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.payment.providers.paypal.PayPalPayment;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
@@ -25,7 +25,7 @@ public class PaymentFactory {
   public static final String DUMMY = "dummy";
   private Account account;
 
-  public Payment create(Context context, PaymentService paymentService, Product product) {
+  public Payment create(Context context, PaymentServiceResponse paymentService, Product product) {
     switch (paymentService.getShortName()) {
       case PAYPAL:
         return new PayPalPayment(context, paymentService.getId(), paymentService.getShortName(),
@@ -33,14 +33,15 @@ public class PaymentFactory {
             getPrice(paymentService.getPrice(), paymentService.getCurrency(),
                 paymentService.getTaxRate()), getPayPalConfiguration(), product,
             paymentService.getDescription(),
-            RepositoryFactory.getPaymentConfirmationRepository(context, product));
+            RepositoryFactory.getPaymentConfirmationRepository(context, product),
+            paymentService.isAuthorizationRequired());
       case BOACOMPRA:
       case BOACOMPRAGOLD:
       case DUMMY:
         return new AptoidePayment(paymentService.getId(), paymentService.getShortName(),
             paymentService.getName(), paymentService.getDescription(), product,
             getPrice(paymentService.getPrice(), paymentService.getCurrency(),
-                paymentService.getTaxRate()),
+                paymentService.getTaxRate()), paymentService.isAuthorizationRequired(),
             RepositoryFactory.getPaymentConfirmationRepository(context, product));
       default:
         throw new IllegalArgumentException(

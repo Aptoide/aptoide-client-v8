@@ -5,12 +5,12 @@
 
 package cm.aptoide.pt.v8engine.repository;
 
-import cm.aptoide.pt.model.v3.ProductPaymentResponse;
+import cm.aptoide.pt.model.v3.PaymentConfirmationResponse;
 import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 
 public class PaymentConfirmationConverter {
 
-  public PaymentConfirmation convertToPaymentConfirmation(int productId, ProductPaymentResponse response) {
+  public PaymentConfirmation convertToPaymentConfirmation(int productId, PaymentConfirmationResponse response) {
     return new PaymentConfirmation(productId, response.getPaymentConfirmationId(),
         PaymentConfirmation.Status.valueOf(response.getPaymentStatus()));
   }
@@ -19,12 +19,6 @@ public class PaymentConfirmationConverter {
       PaymentConfirmation paymentConfirmation) {
     return new cm.aptoide.pt.database.realm.PaymentConfirmation(paymentConfirmation.getPaymentConfirmationId(), paymentConfirmation.getProductId(),
         paymentConfirmation.getStatus().name());
-  }
-
-  public cm.aptoide.pt.database.realm.PaymentConfirmation convertToDatabasePaymentConfirmation(
-      int productId, ProductPaymentResponse response) {
-    return new cm.aptoide.pt.database.realm.PaymentConfirmation(response.getPaymentConfirmationId(), productId,
-        response.getPaymentStatus());
   }
 
   public PaymentConfirmation convertToPaymentConfirmation(

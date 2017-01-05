@@ -7,7 +7,6 @@ package cm.aptoide.pt.v8engine.repository;
 
 import cm.aptoide.pt.database.accessors.PaymentConfirmationAccessor;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
-import cm.aptoide.pt.model.v3.ProductPaymentResponse;
 import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.products.AptoideProduct;
@@ -51,21 +50,11 @@ public abstract class PaymentConfirmationRepository {
   protected Completable createPaymentConfirmation(int paymentId, String paymentConfirmationId,
       AptoideProduct product) {
     return Completable.fromAction(() -> {
-      syncPaymentConfirmation(paymentId, product, paymentConfirmationId);
+      backgroundSync.syncConfirmation(product, paymentId, paymentConfirmationId);
     }).subscribeOn(Schedulers.io());
   }
 
-  protected void syncPaymentConfirmation(int paymentId, ProductPaymentResponse response,
-      AptoideProduct product) {
-    confirmationAccessor.save(
-        confirmationConverter.convertToDatabasePaymentConfirmation(paymentId, response));
+  protected void syncPaymentConfirmation(AptoideProduct product) {
     backgroundSync.syncConfirmation(product);
-  }
-
-  private void syncPaymentConfirmation(int paymentId, AptoideProduct product,
-      String paymentConfirmationId) {
-    confirmationAccessor.save(confirmationConverter.convertToDatabasePaymentConfirmation(
-        PaymentConfirmation.created(paymentConfirmationId, product.getId())));
-    backgroundSync.syncConfirmation(product, paymentId, paymentConfirmationId);
   }
 }

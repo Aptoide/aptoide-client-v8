@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.database.realm;
 
-import cm.aptoide.pt.model.v3.ProductPaymentResponse;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 

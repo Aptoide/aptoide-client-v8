@@ -20,7 +20,7 @@ import lombok.EqualsAndHashCode;
 
   @JsonProperty("publisher_response") private PublisherResponse publisherResponse;
 
-  @JsonProperty("payment_services") private List<PaymentService> paymentServices;
+  @JsonProperty("payment_services") private List<PaymentServiceResponse> paymentServices;
 
   @Data public static class PublisherResponse {
 

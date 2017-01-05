@@ -26,6 +26,12 @@ public interface Payment {
 
   String getDescription();
 
+  Authorization getAuthorization();
+
+  void setAuthorization(Authorization authorization);
+
+  boolean isAuthorizationRequired();
+
   Completable process();
 
   Observable<PaymentConfirmation> getConfirmation();

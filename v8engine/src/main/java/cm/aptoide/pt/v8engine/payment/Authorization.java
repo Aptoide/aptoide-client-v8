@@ -28,7 +28,8 @@ public abstract class Authorization {
 
   public boolean isPending() {
     return Status.PENDING.equals(status)
-        || Status.PENDING_PAYMENT_METHOD.equals(status);
+        || Status.PENDING_PAYMENT_METHOD.equals(status)
+        || Status.SYNCING.equals(status);
   }
 
   public boolean isInvalid() {
@@ -45,6 +46,7 @@ public abstract class Authorization {
   }
 
   public enum Status {
+    SYNCING,
     SYNCING_ERROR,
     ACTIVE,
     INITIATED,

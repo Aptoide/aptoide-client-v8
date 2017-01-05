@@ -12,7 +12,7 @@ import lombok.Data;
 /**
  * Created by rmateus on 21-05-2014.
  */
-@Data public class PaymentService {
+@Data public class PaymentServiceResponse {
 
   @JsonProperty("id") private int id;
 
@@ -29,4 +29,6 @@ import lombok.Data;
   @JsonProperty("tax_rate") private double taxRate;
 
   @JsonProperty("sign") private String sign;
+
+  @JsonProperty("needsauth") private boolean authorizationRequired;
 }

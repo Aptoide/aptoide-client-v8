@@ -32,16 +32,21 @@ public class SyncAdapterBackgroundSync {
 
   public void syncAuthorization(int paymentId) {
     final Bundle bundle = new Bundle();
+    bundle.putBoolean(AptoideSyncAdapter.EXTRA_PAYMENT_AUTHORIZATIONS, true);
     bundle.putInt(AptoideSyncAdapter.EXTRA_PAYMENT_ID, paymentId);
     schedule(bundle);
   }
 
   public void syncConfirmation(AptoideProduct product) {
-    schedule(productConverter.toBundle(product));
+    final Bundle bundle = productConverter.toBundle(product);
+    bundle.putBoolean(AptoideSyncAdapter.EXTRA_PAYMENT_CONFIRMATIONS, true);
+    schedule(bundle);
   }
 
-  public void syncConfirmation(AptoideProduct product, int paymentId, String paymentConfirmationId) {
+  public void syncConfirmation(AptoideProduct product, int paymentId,
+      String paymentConfirmationId) {
     final Bundle bundle = productConverter.toBundle(product);
+    bundle.putBoolean(AptoideSyncAdapter.EXTRA_PAYMENT_CONFIRMATIONS, true);
     bundle.putString(AptoideSyncAdapter.EXTRA_PAYMENT_CONFIRMATION_ID, paymentConfirmationId);
     bundle.putInt(AptoideSyncAdapter.EXTRA_PAYMENT_ID, paymentId);
     schedule(bundle);

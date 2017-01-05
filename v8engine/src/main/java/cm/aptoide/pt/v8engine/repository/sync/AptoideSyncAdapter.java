@@ -29,6 +29,8 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
   public static final String EXTRA_PAYMENT_CONFIRMATION_ID =
       "cm.aptoide.pt.v8engine.repository.sync.PAYMENT_CONFIRMATION_ID";
   public static final String EXTRA_PAYMENT_ID = "cm.aptoide.pt.v8engine.repository.sync.PAYMENT_ID";
+  public static final String EXTRA_PAYMENT_AUTHORIZATIONS = "cm.aptoide.pt.v8engine.repository.sync.EXTRA_PAYMENT_AUTHORIZATIONS";
+  public static final String EXTRA_PAYMENT_CONFIRMATIONS = "cm.aptoide.pt.v8engine.repository.sync.EXTRA_PAYMENT_CONFIRMATIONS";
 
   private final PaymentAuthorizationRepository authorizationRepository;
   private final ProductBundleConverter productConverter;
@@ -56,17 +58,21 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
 
   @Override public void onPerformSync(Account account, Bundle extras, String authority,
       ContentProviderClient provider, SyncResult syncResult) {
-    final Product product = productConverter.toProduct(extras);
-    final String paymentConfirmationId = extras.getString(EXTRA_PAYMENT_CONFIRMATION_ID);
+    final boolean authorizations = extras.getBoolean(EXTRA_PAYMENT_AUTHORIZATIONS);
+    final boolean confirmations = extras.getBoolean(EXTRA_PAYMENT_CONFIRMATIONS);
+
     final int paymentId = extras.getInt(EXTRA_PAYMENT_ID, -1);
-    if (product != null) {
+    if (confirmations) {
+      final Product product = productConverter.toProduct(extras);
+      final String paymentConfirmationId = extras.getString(EXTRA_PAYMENT_CONFIRMATION_ID);
+
       new PaymentConfirmationSync(
           RepositoryFactory.getPaymentConfirmationRepository(getContext(), product), product,
           operatorManager, confirmationAccessor, confirmationConverter, paymentConfirmationId,
           paymentId).sync(syncResult);
-    } else if (paymentId != -1) {
-      new PaymentAuthorizationSync(authorizationRepository, paymentId, authorizationAcessor,
-          authorizationConverter).sync(syncResult);
+    } else if (authorizations){
+        new PaymentAuthorizationSync(paymentId, authorizationRepository, authorizationAcessor,
+            authorizationConverter).sync(syncResult);
     }
   }
 }

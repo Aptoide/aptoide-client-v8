@@ -78,6 +78,7 @@ dependencies {
   compile "com.squareup.retrofit2:retrofit:${RETROFIT_VERSION}"
   compile "com.squareup.retrofit2:adapter-rxjava:${RETROFIT_VERSION}"
   compile "com.squareup.retrofit2:converter-jackson:${RETROFIT_VERSION}"
+  compile "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VERSION}"
 
   compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
 
