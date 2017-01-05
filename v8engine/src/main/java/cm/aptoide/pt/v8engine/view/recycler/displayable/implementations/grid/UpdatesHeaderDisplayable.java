@@ -7,6 +7,9 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadReport;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadReportConverter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import lombok.Getter;
 import rx.Observable;
@@ -17,14 +20,19 @@ import rx.Observable;
 public class UpdatesHeaderDisplayable extends Displayable {
 
   @Getter private String label;
+  private Analytics analytics;
+  private DownloadReportConverter converter;
   @Getter private InstallManager installManager;
 
   public UpdatesHeaderDisplayable() {
   }
 
-  public UpdatesHeaderDisplayable(InstallManager installManager, String label) {
+  public UpdatesHeaderDisplayable(InstallManager installManager, String label, Analytics analytics,
+      DownloadReportConverter downloadReportConverter) {
     this.installManager = installManager;
     this.label = label;
+    this.analytics = analytics;
+    this.converter = downloadReportConverter;
   }
 
   @Override public int getViewLayout() {
@@ -50,6 +58,14 @@ public class UpdatesHeaderDisplayable extends Displayable {
             }
           });
     }
-    return installManager.install(context, download);
+    return installManager.install(context, download)
+        .doOnSubscribe(() -> setupDownloadEvent(download));
+  }
+
+  public void setupDownloadEvent(Download download) {
+    DownloadReport report =
+        converter.create(download, DownloadReport.Action.CLICK, DownloadReport.AppContext.updatetab,
+            DownloadReport.Origin.update_all);
+    analytics.save(download.getPackageName() + download.getVersionCode(), report);
   }
 }

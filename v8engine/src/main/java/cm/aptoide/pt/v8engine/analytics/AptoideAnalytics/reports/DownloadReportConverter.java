@@ -41,8 +41,8 @@ public class DownloadReportConverter {
         obb = new DownloadInstallAnalyticsBaseBody.Obb();
         obb.setUrl(report.getPatchObbUrl());
         obb.setType(DownloadInstallAnalyticsBaseBody.ObbType.patch);
+        obbs.add(obb);
       }
-      obbs.add(obb);
       data.setObb(obbs);
     }
 
@@ -91,7 +91,13 @@ public class DownloadReportConverter {
     return origin;
   }
 
-  public DownloadReport create(Download download, DownloadReport.Action action, DownloadReport.AppContext context) {
+  public DownloadReport create(Download download, DownloadReport.Action action,
+      DownloadReport.AppContext context) {
+    return create(download, action, context, getOrigin(download));
+  }
+
+  public DownloadReport create(Download download, DownloadReport.Action action,
+      DownloadReport.AppContext context, DownloadReport.Origin origin) {
     String appUrl = null;
     String obbPath = null;
     String patchObbPath = null;
@@ -107,7 +113,7 @@ public class DownloadReportConverter {
       }
     }
 
-    return new DownloadReport(action, getOrigin(download), download.getPackageName(), appUrl, obbPath,
+    return new DownloadReport(action, origin, download.getPackageName(), appUrl, obbPath,
         patchObbPath, context, download.getVersionCode(), this);
   }
 }

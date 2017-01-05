@@ -84,7 +84,7 @@ public @Data @ToString class DownloadReport extends Report {
     install, update, downgrade, update_all
   }
 
-  enum ObbType {
+  private enum ObbType {
     main, patch
   }
 
