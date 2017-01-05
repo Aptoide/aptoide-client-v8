@@ -7,7 +7,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.DownloadAnalyticsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.Report;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.Event;
 import lombok.Data;
 import lombok.Setter;
 import lombok.ToString;
@@ -16,7 +16,7 @@ import lombok.ToString;
  * Created by trinkes on 02/01/2017.
  */
 
-public @Data @ToString class DownloadReport extends Report {
+public @Data @ToString class DownloadEvent extends Event {
   private Action action;
   private int versionCode;
   private Origin origin;
@@ -37,7 +37,7 @@ public @Data @ToString class DownloadReport extends Report {
   @Setter private boolean downloadHadProgress;
   private Throwable error;
 
-  public DownloadReport(Action action, Origin origin, String packageName, String url, String obbUrl,
+  public DownloadEvent(Action action, Origin origin, String packageName, String url, String obbUrl,
       String patchObbUrl, AppContext context, int versionCode, DownloadAndInstallEventConverter downloadAndInstallEventConverter) {
     this.action = action;
     this.versionCode = versionCode;

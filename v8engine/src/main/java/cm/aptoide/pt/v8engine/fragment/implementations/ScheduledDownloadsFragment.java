@@ -32,7 +32,7 @@ import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadAndInstallEventConverter;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadReport;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadEvent;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
@@ -289,7 +289,7 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
         .map(scheduled -> downloadFactory.create(scheduled))
         .flatMap(downloadItem -> installManager.install(context, downloadItem)
             .doOnSubscribe(() -> setupDownloadEvent(downloadItem,
-                isStartedAutomatic ? DownloadReport.Action.AUTO : DownloadReport.Action.CLICK))
+                isStartedAutomatic ? DownloadEvent.Action.AUTO : DownloadEvent.Action.CLICK))
             .filter(downloadProgress -> downloadProgress.getState() == Progress.DONE)
             .doOnNext(success -> scheduledDownloadRepository.deleteScheduledDownload(
                 downloadItem.getMd5())))
@@ -303,8 +303,8 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
     return true;
   }
 
-  public void setupDownloadEvent(Download download, DownloadReport.Action action) {
-    DownloadReport report = converter.create(download, action, DownloadReport.AppContext.scheduled);
+  public void setupDownloadEvent(Download download, DownloadEvent.Action action) {
+    DownloadEvent report = converter.create(download, action, DownloadEvent.AppContext.scheduled);
     analytics.save(download.getPackageName() + download.getVersionCode(), report);
   }
 

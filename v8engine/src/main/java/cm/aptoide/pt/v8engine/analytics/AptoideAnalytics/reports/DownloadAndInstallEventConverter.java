@@ -17,7 +17,7 @@ import java.util.LinkedList;
 
 public class DownloadAndInstallEventConverter {
   public DownloadInstallAnalyticsBaseBody<DownloadAnalyticsRequest.DownloadEventBody> convert(
-      DownloadReport report, DownloadInstallAnalyticsBaseBody.ResultStatus status,
+      DownloadEvent report, DownloadInstallAnalyticsBaseBody.ResultStatus status,
       @Nullable Throwable error) {
     DownloadInstallAnalyticsBaseBody<DownloadAnalyticsRequest.DownloadEventBody> body =
         new DownloadInstallAnalyticsBaseBody<>(DataProvider.getConfiguration().getAppId());
@@ -65,31 +65,31 @@ public class DownloadAndInstallEventConverter {
     return body;
   }
 
-  public DownloadReport.Origin getOrigin(Download download) {
-    DownloadReport.Origin origin;
+  public DownloadEvent.Origin getOrigin(Download download) {
+    DownloadEvent.Origin origin;
     switch (download.getAction()) {
       case Download.ACTION_INSTALL:
-        origin = DownloadReport.Origin.install;
+        origin = DownloadEvent.Origin.install;
         break;
       case Download.ACTION_UPDATE:
-        origin = DownloadReport.Origin.update;
+        origin = DownloadEvent.Origin.update;
         break;
       case Download.ACTION_DOWNGRADE:
-        origin = DownloadReport.Origin.downgrade;
+        origin = DownloadEvent.Origin.downgrade;
         break;
       default:
-        origin = DownloadReport.Origin.install;
+        origin = DownloadEvent.Origin.install;
     }
     return origin;
   }
 
-  public DownloadReport create(Download download, DownloadReport.Action action,
-      DownloadReport.AppContext context) {
+  public DownloadEvent create(Download download, DownloadEvent.Action action,
+      DownloadEvent.AppContext context) {
     return create(download, action, context, getOrigin(download));
   }
 
-  public DownloadReport create(Download download, DownloadReport.Action action,
-      DownloadReport.AppContext context, DownloadReport.Origin origin) {
+  public DownloadEvent create(Download download, DownloadEvent.Action action,
+      DownloadEvent.AppContext context, DownloadEvent.Origin origin) {
     String appUrl = null;
     String obbPath = null;
     String patchObbPath = null;
@@ -105,7 +105,7 @@ public class DownloadAndInstallEventConverter {
       }
     }
 
-    return new DownloadReport(action, origin, download.getPackageName(), appUrl, obbPath,
+    return new DownloadEvent(action, origin, download.getPackageName(), appUrl, obbPath,
         patchObbPath, context, download.getVersionCode(), this);
   }
 }

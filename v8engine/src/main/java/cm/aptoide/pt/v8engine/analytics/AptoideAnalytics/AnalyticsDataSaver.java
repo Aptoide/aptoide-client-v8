@@ -7,17 +7,17 @@ import java.util.Map;
  * Created by trinkes on 30/12/2016.
  */
 public class AnalyticsDataSaver {
-  Map<String, Report> map;
+  Map<String, Event> map;
 
   public AnalyticsDataSaver() {
     map = new HashMap<>();
   }
 
-  public void save(String key, Report report) {
-    map.put(key, report);
+  public void save(String key, Event event) {
+    map.put(key, event);
   }
 
-  public Report get(String key) {
+  public Event get(String key) {
     return map.get(key);
   }
 

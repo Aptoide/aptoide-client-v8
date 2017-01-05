@@ -18,7 +18,7 @@ import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AnalyticsDataSaver;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.Report;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.Event;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.facebook.FacebookSdk;
@@ -173,28 +173,28 @@ public class Analytics {
     }
   }
 
-  public void save(@NonNull String key, @NonNull Report report) {
-    saver.save(key, report);
+  public void save(@NonNull String key, @NonNull Event event) {
+    saver.save(key, event);
   }
 
   public void remove(@NonNull String key) {
     saver.remove(key);
   }
 
-  public @Nullable Report get(String key) {
+  public @Nullable Event get(String key) {
     return saver.get(key);
   }
 
-  public void sendEvent(Report report) {
-    report.send();
+  public void sendEvent(Event event) {
+    event.send();
   }
 
   public void sendEvent(String key) {
-    Report report = get(key);
-    if (report == null) {
-      Logger.e(TAG, "Report is null");
+    Event event = get(key);
+    if (event == null) {
+      Logger.e(TAG, "Event is null");
     } else {
-      report.send();
+      event.send();
     }
     remove(key);
   }

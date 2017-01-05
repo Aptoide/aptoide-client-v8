@@ -3,7 +3,7 @@ package cm.aptoide.pt.v8engine;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadReport;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadEvent;
 
 /**
  * Created by trinkes on 04/01/2017.
@@ -17,8 +17,8 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.interfac
   }
 
   @Override public void onError(Download download, Throwable throwable) {
-    DownloadReport report =
-        (DownloadReport) analytics.get(download.getPackageName() + download.getVersionCode());
+    DownloadEvent report =
+        (DownloadEvent) analytics.get(download.getPackageName() + download.getVersionCode());
     if (report != null) {
       report.setResultStatus(DownloadInstallAnalyticsBaseBody.ResultStatus.FAIL);
       report.setError(throwable);

@@ -46,7 +46,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadAndInstallEventConverter;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadReport;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadEvent;
 import cm.aptoide.pt.v8engine.dialog.InstallWarningDialog;
 import cm.aptoide.pt.v8engine.dialog.SharePreviewDialog;
 import cm.aptoide.pt.v8engine.install.Installer;
@@ -294,8 +294,8 @@ import rx.android.schedulers.AndroidSchedulers;
   }
 
   private void setupDownloadEvent(Download download) {
-    DownloadReport report = downloadAndInstallEventConverter.create(download, DownloadReport.Action.CLICK,
-        DownloadReport.AppContext.appview);
+    DownloadEvent report = downloadAndInstallEventConverter.create(download, DownloadEvent.Action.CLICK,
+        DownloadEvent.AppContext.appview);
 
     analytics.save(report.getPackageName() + report.getVersionCode(), report);
   }
@@ -487,7 +487,6 @@ import rx.android.schedulers.AndroidSchedulers;
       compositeSubscription.add(permissionManager.requestDownloadAccess(permissionRequest)
           .flatMap(permissionGranted -> permissionManager.requestExternalStoragePermission(
               (PermissionRequest) getContext())).flatMap(success -> {
-            DownloadReport.Origin origin = getOrigin(progress);
             Download download =
                 new DownloadFactory().create(displayable.getPojo().getNodes().getMeta().getData(),
                     progress.getRequest().getAction());
@@ -504,20 +503,20 @@ import rx.android.schedulers.AndroidSchedulers;
     });
   }
 
-  private DownloadReport.Origin getOrigin(Progress<Download> progress) {
-    DownloadReport.Origin origin;
+  private DownloadEvent.Origin getOrigin(Progress<Download> progress) {
+    DownloadEvent.Origin origin;
     switch (progress.getRequest().getAction()) {
       case Download.ACTION_INSTALL:
-        origin = DownloadReport.Origin.install;
+        origin = DownloadEvent.Origin.install;
         break;
       case Download.ACTION_UPDATE:
-        origin = DownloadReport.Origin.update;
+        origin = DownloadEvent.Origin.update;
         break;
       case Download.ACTION_DOWNGRADE:
-        origin = DownloadReport.Origin.downgrade;
+        origin = DownloadEvent.Origin.downgrade;
         break;
       default:
-        origin = DownloadReport.Origin.install;
+        origin = DownloadEvent.Origin.install;
     }
     return origin;
   }

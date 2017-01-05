@@ -15,7 +15,7 @@ import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadAndInstallEventConverter;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadReport;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadEvent;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 import lombok.Setter;
 import rx.Observable;
@@ -98,8 +98,8 @@ public class CompletedDownloadDisplayable extends DisplayablePojo<Progress<Downl
   }
 
   public void setupDownloadEvent(Download download) {
-    DownloadReport report = converter.create(download, DownloadReport.Action.CLICK,
-        DownloadReport.AppContext.downloads);
+    DownloadEvent report = converter.create(download, DownloadEvent.Action.CLICK,
+        DownloadEvent.AppContext.downloads);
     analytics.save(download.getPackageName() + download.getVersionCode(), report);
   }
 }

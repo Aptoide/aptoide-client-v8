@@ -22,7 +22,7 @@ import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadAndInstallEventConverter;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadReport;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadEvent;
 import cm.aptoide.pt.v8engine.repository.SocialRepository;
 import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
@@ -126,8 +126,8 @@ public class AppUpdateDisplayable extends CardDisplayable {
   }
 
   private void setupDownloadEvent() {
-    DownloadReport report = downloadConverter.create(download, DownloadReport.Action.CLICK,
-        DownloadReport.AppContext.timeline);
+    DownloadEvent report = downloadConverter.create(download, DownloadEvent.Action.CLICK,
+        DownloadEvent.AppContext.timeline);
     analytics.save(packageName + download.getVersionCode(), report);
   }
 

@@ -17,7 +17,7 @@ import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadAndInstallEventConverter;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadReport;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadEvent;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import lombok.Getter;
@@ -115,8 +115,8 @@ public class UpdateDisplayable extends Displayable {
   }
 
   public void setupDownloadEvent(Download download) {
-    DownloadReport report = converter.create(download, DownloadReport.Action.CLICK,
-        DownloadReport.AppContext.updatetab);
+    DownloadEvent report = converter.create(download, DownloadEvent.Action.CLICK,
+        DownloadEvent.AppContext.updatetab);
     analytics.save(download.getPackageName() + download.getVersionCode(), report);
   }
   @Override public int getViewLayout() {

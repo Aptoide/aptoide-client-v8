@@ -9,7 +9,7 @@ import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadAndInstallEventConverter;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadReport;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadEvent;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import lombok.Getter;
 import rx.Observable;
@@ -63,9 +63,9 @@ public class UpdatesHeaderDisplayable extends Displayable {
   }
 
   public void setupDownloadEvent(Download download) {
-    DownloadReport report =
-        converter.create(download, DownloadReport.Action.CLICK, DownloadReport.AppContext.updatetab,
-            DownloadReport.Origin.update_all);
+    DownloadEvent report =
+        converter.create(download, DownloadEvent.Action.CLICK, DownloadEvent.AppContext.updatetab,
+            DownloadEvent.Origin.update_all);
     analytics.save(download.getPackageName() + download.getVersionCode(), report);
   }
 }
