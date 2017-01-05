@@ -41,8 +41,8 @@ public class PayPalPayment extends AptoidePayment {
 
   public PayPalPayment(Context context, int id, String type, String name, String sign, Price price,
       PayPalConfiguration configuration, Product product, String description,
-      PaymentConfirmationRepository confirmationRepository) {
-    super(id, type, name, description, product, price, confirmationRepository);
+      PaymentConfirmationRepository confirmationRepository, boolean requiresAuthorization) {
+    super(id, type, name, description, product, price, requiresAuthorization, confirmationRepository);
     this.context = context;
     this.configuration = configuration;
   }

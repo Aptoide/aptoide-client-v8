@@ -10,7 +10,6 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.AptoidePay;
 import cm.aptoide.pt.v8engine.payment.Purchase;
-import cm.aptoide.pt.v8engine.payment.exception.PaymentFailureException;
 import cm.aptoide.pt.v8engine.payment.products.AptoideProduct;
 import cm.aptoide.pt.v8engine.view.PaymentView;
 import cm.aptoide.pt.v8engine.view.View;
@@ -51,7 +50,12 @@ public class PaymentPresenter implements Presenter {
 
     view.getLifecycle()
         .filter(event -> View.LifecycleEvent.RESUME.equals(event))
-        .flatMap(resumed -> cancellationSelection())
+        .flatMap(resumed -> Observable.merge(
+            buySelection(),
+            paymentUseSelection(),
+            paymentRegisterSelection(),
+            otherPaymentsSelection(),
+            cancellationSelection()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
 
@@ -60,8 +64,7 @@ public class PaymentPresenter implements Presenter {
         .flatMap(created -> login())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(loggedIn -> showProductAndShowLoading(product))
-        .flatMap(loggedIn -> treatOngoingPurchase().switchIfEmpty(loadPayments().andThen(
-            Observable.merge(buySelection(), paymentSelection(), otherPaymentsSelection()))))
+        .flatMap(loggedIn -> treatOngoingPurchase().switchIfEmpty(loadPayments()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
   }
@@ -88,21 +91,22 @@ public class PaymentPresenter implements Presenter {
         .subscribeOn(Schedulers.computation());
   }
 
-  private Completable loadPayments() {
+  private Observable<Void> loadPayments() {
     return aptoidePay.availablePayments(view.getContext(), product)
         .observeOn(AndroidSchedulers.mainThread())
-        .flatMapCompletable(payments -> {
+        .flatMap(payments -> {
           if (payments.isEmpty()) {
+            view.hideLoading();
             view.showPaymentsNotFoundMessage();
-            return Completable.complete();
+            return Observable.just(null);
           } else {
+            view.hideLoading();
             return getDefaultPayment(payments).flatMapCompletable(
-                defaultPayment -> showPayments(payments, defaultPayment));
+                defaultPayment -> showPayments(payments, defaultPayment)).<Void>toObservable();
           }
         })
-        .doOnCompleted(() -> view.hideLoading())
         .doOnError(error -> hideLoadingAndDismiss(error))
-        .onErrorComplete();
+        .onErrorReturn(throwable -> null);
   }
 
   private Completable showPayments(List<Payment> allPayments, Payment selectedPayment) {
@@ -114,13 +118,21 @@ public class PaymentPresenter implements Presenter {
             .flatMapCompletable(otherPayments -> showOtherPayments(otherPayments)));
   }
 
-  private Observable<Void> paymentSelection() {
-    return view.paymentSelection()
+  private Observable<Void> paymentUseSelection() {
+    return view.usePaymentSelection()
         .flatMap(paymentViewModel -> getSelectedPayment(otherPayments, paymentViewModel))
-        .<Void>flatMap(selectedPayment -> showPayments(getAllPayments(), selectedPayment)
-            .doOnCompleted(() -> hideOtherPayments()).toObservable())
-        .doOnError(throwable -> hideLoadingAndDismiss(throwable))
-        .retry();
+        .<Void>flatMap(
+            selectedPayment -> showPayments(getAllPayments(), selectedPayment).doOnCompleted(
+                () -> hideOtherPayments()).toObservable()).doOnError(
+            throwable -> hideLoadingAndDismiss(throwable)).retry()
+        .compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE));
+  }
+
+  private Observable<Void> paymentRegisterSelection() {
+    return view.registerPaymentSelection()
+        .flatMap(paymentViewModel -> getSelectedPayment(getAllPayments(), paymentViewModel))
+        .<Void>flatMap(payment -> aptoidePay.authorize(view.getContext(), payment).toObservable())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE));
   }
 
   private List<Payment> getAllPayments() {
@@ -148,17 +160,18 @@ public class PaymentPresenter implements Presenter {
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(purchase -> hideLoadingAndDismiss(purchase))
         .doOnError(throwable -> hideLoadingAndDismiss(throwable)).<Void>map(
-            success -> null).retry();
+            success -> null).retry()
+        .compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE));
   }
 
   private Observable<Void> otherPaymentsSelection() {
-    return view.otherPaymentsSelection().flatMap(event -> {
+    return view.otherPaymentsSelection().<Void>flatMap(event -> {
       if (!otherPaymentsVisible) {
         return showPayments(getAllPayments(), selectedPayment).toObservable();
       }
       hideOtherPayments();
       return Observable.empty();
-    });
+    }).compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE));
   }
 
   private void hideOtherPayments() {
@@ -192,7 +205,18 @@ public class PaymentPresenter implements Presenter {
 
   private PaymentView.PaymentViewModel convertToPaymentViewModel(Payment payment) {
     return new PaymentView.PaymentViewModel(payment.getId(), payment.getName(),
-        payment.getDescription(), payment.getPrice().getAmount(), payment.getPrice().getCurrency());
+        payment.getDescription(), payment.getPrice().getAmount(), payment.getPrice().getCurrency(),
+        getPaymentViewStatus(payment));
+  }
+
+  private PaymentView.PaymentViewModel.Status getPaymentViewStatus(Payment payment) {
+    if (!payment.isAuthorizationRequired() || payment.getAuthorization().isAuthorized()) {
+      return PaymentView.PaymentViewModel.Status.USE;
+    } else if (payment.getAuthorization().isPending()) {
+      return PaymentView.PaymentViewModel.Status.APPROVING;
+    } else {
+      return PaymentView.PaymentViewModel.Status.REGISTER;
+    }
   }
 
   private void showSelectedPayment(Payment selectedPayment) {
@@ -207,9 +231,7 @@ public class PaymentPresenter implements Presenter {
   }
 
   private Single<Payment> getDefaultPayment(List<Payment> payments) {
-    return Observable.from(payments)
-        .first(payment -> isDefaultPayment(payment))
-        .toSingle();
+    return Observable.from(payments).first(payment -> isDefaultPayment(payment)).toSingle();
   }
 
   private boolean isDefaultPayment(Payment payment) {
@@ -223,7 +245,6 @@ public class PaymentPresenter implements Presenter {
   }
 
   private void hideLoadingAndDismiss(Throwable throwable) {
-    throwable.printStackTrace();
     view.hideLoading();
     view.dismiss(throwable);
   }

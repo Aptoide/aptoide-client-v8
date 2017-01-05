@@ -14,12 +14,11 @@ import cm.aptoide.pt.model.v3.BaseV3Response;
 import cm.aptoide.pt.model.v3.ErrorResponse;
 import cm.aptoide.pt.model.v3.GetPushNotificationsResponse;
 import cm.aptoide.pt.model.v3.InAppBillingAvailableResponse;
-import cm.aptoide.pt.model.v3.InAppBillingProductPaymentResponse;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
 import cm.aptoide.pt.model.v3.InAppBillingSkuDetailsResponse;
 import cm.aptoide.pt.model.v3.PaidApp;
-import cm.aptoide.pt.model.v3.PurchaseAuthorizationResponse;
-import cm.aptoide.pt.model.v3.ProductPaymentResponse;
+import cm.aptoide.pt.model.v3.PaymentAuthorizationResponse;
+import cm.aptoide.pt.model.v3.PaymentConfirmationResponse;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.okhttp.cache.PostCacheInterceptor;
@@ -134,22 +133,16 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
     @POST("processInAppBilling") @FormUrlEncoded
     Observable<BaseV3Response> deleteInAppBillingPurchase(@FieldMap BaseBody args);
 
-    @POST("checkProductPayment") @FormUrlEncoded Observable<ProductPaymentResponse> checkPaidAppProductPayment(
-        @FieldMap BaseBody args);
-
     @POST("checkProductPayment") @FormUrlEncoded
-    Observable<InAppBillingPurchasesResponse> checkInAppProductPayment(@FieldMap BaseBody args);
+    Observable<PaymentConfirmationResponse> getPaymentConfirmation(@FieldMap BaseBody args);
 
     @POST("productPurchaseAuthorization") @FormUrlEncoded
-    Observable<PurchaseAuthorizationResponse> getProductPurchaseAuthorization(@FieldMap BaseBody args);
+    Observable<PaymentAuthorizationResponse> getPaymentAuthorization(@FieldMap BaseBody args);
 
     @POST("payProduct") @FormUrlEncoded
-    Observable<InAppBillingProductPaymentResponse> createInAppBillingProductPayment(@FieldMap BaseBody args);
-
-    @POST("payProduct") @FormUrlEncoded
-    Observable<ProductPaymentResponse> createPaidAppProductPayment(@FieldMap BaseBody args);
+    Observable<BaseV3Response> createPaymentConfirmation(@FieldMap BaseBody args);
 
     @POST("createPurchaseAuthorization") @FormUrlEncoded
-    Observable<PurchaseAuthorizationResponse> createPurchaseAuthorization(@FieldMap BaseBody args);
+    Observable<BaseV3Response> createPaymentAuthorization(@FieldMap BaseBody args);
   }
 }

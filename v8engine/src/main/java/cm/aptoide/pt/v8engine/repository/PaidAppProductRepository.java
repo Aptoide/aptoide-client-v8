@@ -6,7 +6,7 @@
 package cm.aptoide.pt.v8engine.repository;
 
 import android.content.Context;
-import cm.aptoide.pt.model.v3.PaymentService;
+import cm.aptoide.pt.model.v3.PaymentServiceResponse;
 import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.PaymentFactory;
 import cm.aptoide.pt.v8engine.payment.Purchase;
@@ -15,9 +15,7 @@ import cm.aptoide.pt.v8engine.payment.products.AptoideProduct;
 import cm.aptoide.pt.v8engine.payment.products.PaidAppProduct;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.util.List;
-import rx.Observable;
 import rx.Single;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by marcelobenites on 29/11/16.
@@ -56,7 +54,7 @@ public class PaidAppProductRepository implements ProductRepository {
         .toList().toSingle();
   }
 
-  private Single<List<PaymentService>> getServerPaidAppPaymentServices(long appId,
+  private Single<List<PaymentServiceResponse>> getServerPaidAppPaymentServices(long appId,
       boolean sponsored, String storeName, boolean refresh) {
     return appRepository.getPaidApp(appId, sponsored, storeName, refresh)
         .map(paidApp -> paidApp.getPayment().getPaymentServices()).toSingle();

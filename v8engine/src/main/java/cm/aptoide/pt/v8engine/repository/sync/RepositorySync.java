@@ -15,12 +15,6 @@ public abstract class RepositorySync {
 
   public abstract void sync(SyncResult syncResult);
 
-  protected void rescheduleOnNetworkError(SyncResult syncResult, Throwable throwable) {
-    if (throwable instanceof IOException) {
-      rescheduleSync(syncResult);
-    }
-  }
-
   protected void rescheduleSync(SyncResult syncResult) {
     syncResult.stats.numIoExceptions++;
   }

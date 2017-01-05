@@ -14,9 +14,10 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class PurchaseAuthorizationResponse extends BaseV3Response {
+public class PaymentAuthorizationResponse extends BaseV3Response {
 
-  private String url;
+  @JsonProperty("paymentTypeId") private int paymentId;
+  @JsonProperty("url") private String url;
   @JsonProperty("successUrl") private String successUrl;
   @JsonProperty("authorizationStatus") private String authorizationStatus;
 }

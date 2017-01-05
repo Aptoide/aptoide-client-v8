@@ -29,10 +29,6 @@ public class PaymentConfirmation {
     return new PaymentConfirmation(productId, "", Status.SYNCING_ERROR);
   }
 
-  public static PaymentConfirmation created(String paymentConfirmationId, int productId) {
-    return new PaymentConfirmation(productId, paymentConfirmationId, Status.CREATED);
-  }
-
   public PaymentConfirmation(int productId, String paymentConfirmationId, Status status) {
     this.productId = productId;
     this.paymentConfirmationId = paymentConfirmationId;

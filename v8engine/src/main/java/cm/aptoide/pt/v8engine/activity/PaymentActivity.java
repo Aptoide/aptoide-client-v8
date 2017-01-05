@@ -27,11 +27,12 @@ import cm.aptoide.pt.v8engine.presenter.PaymentPresenter;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.view.PaymentView;
 import com.jakewharton.rxbinding.view.RxView;
+import com.jakewharton.rxrelay.PublishRelay;
 import java.util.List;
 import java.util.Locale;
 import rx.Observable;
+import rx.internal.operators.BlockingOperatorLatest;
 import rx.subjects.PublishSubject;
-import rx.subjects.Subject;
 import rx.subscriptions.CompositeSubscription;
 
 public class PaymentActivity extends ActivityView implements PaymentView {
@@ -54,8 +55,9 @@ public class PaymentActivity extends ActivityView implements PaymentView {
   private TextView selectedPaymentName;
   private TextView selectedPaymentPrice;
 
-  private PublishSubject<PaymentViewModel> paymentSelections;
-  private CompositeSubscription paymentItemClicks;
+  private PublishRelay<PaymentViewModel> usePaymentClick;
+  private PublishRelay<PaymentViewModel> registerPaymentClick;
+  private CompositeSubscription paymentClicks;
   private PurchaseIntentFactory intentFactory;
 
   public static Intent getIntent(Context context, AptoideProduct product) {
@@ -89,18 +91,21 @@ public class PaymentActivity extends ActivityView implements PaymentView {
     cancelButton = (Button) findViewById(R.id.activity_payment_cancel_button);
     buyButton = (Button) findViewById(R.id.activity_payment_buy_button);
 
-    paymentSelections = PublishSubject.create();
+    usePaymentClick = PublishRelay.create();
+    registerPaymentClick = PublishRelay.create();
     intentFactory = new PurchaseIntentFactory(new ErrorCodeFactory());
-    paymentItemClicks = new CompositeSubscription();
+    paymentClicks = new CompositeSubscription();
 
     final AptoideProduct product = getIntent().getParcelableExtra(PRODUCT_EXTRA);
     attachPresenter(new PaymentPresenter(this,
         new AptoidePay(RepositoryFactory.getPaymentConfirmationRepository(this, product),
+            RepositoryFactory.getPaymentAuthorizationRepository(this),
             RepositoryFactory.getProductRepository(this, product)), product), savedInstanceState);
   }
 
-  @Override protected void onResume() {
-    super.onResume();
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    paymentClicks.clear();
   }
 
   @Override public void dismiss(Purchase purchase) {
@@ -138,7 +143,7 @@ public class PaymentActivity extends ActivityView implements PaymentView {
     morePaymentsContainer.removeAllViews();
     morePaymentsContainer.setVisibility(View.VISIBLE);
     noPaymentsText.setVisibility(View.GONE);
-    paymentItemClicks.clear();
+    paymentClicks.clear();
 
     if (otherPayments.isEmpty()) {
       morePaymentsButton.setVisibility(View.GONE);
@@ -149,17 +154,43 @@ public class PaymentActivity extends ActivityView implements PaymentView {
     View view;
     TextView name;
     TextView description;
-    Button button;
+    TextView approving;
+    Button useButton;
+    Button registerButton;
     for (PaymentViewModel otherPayment : otherPayments) {
       view = getLayoutInflater().inflate(R.layout.payment_item, morePaymentsContainer, false);
       name = (TextView) view.findViewById(R.id.item_payment_name);
       description = (TextView) view.findViewById(R.id.item_payment_description);
+      useButton = (Button) view.findViewById(R.id.item_payment_button_use);
+      registerButton = (Button) view.findViewById(R.id.item_payment_button_register);
+      approving = (TextView) view.findViewById(R.id.item_payment_approving_text);
+
       name.setText(otherPayment.getName());
       description.setText(otherPayment.getDescription());
-      button = (Button) view.findViewById(R.id.item_payment_button);
+      switch (otherPayment.getStatus()) {
+        case USE:
+          paymentClicks.add(
+              RxView.clicks(useButton).doOnNext(click -> usePaymentClick.call(otherPayment)).subscribe());
+          useButton.setVisibility(View.VISIBLE);
+          approving.setVisibility(View.GONE);
+          registerButton.setVisibility(View.GONE);
+          break;
+        case REGISTER:
+          paymentClicks.add(
+              RxView.clicks(registerButton).doOnNext(click -> registerPaymentClick.call(otherPayment)).subscribe());
+          registerButton.setVisibility(View.VISIBLE);
+          approving.setVisibility(View.GONE);
+          useButton.setVisibility(View.GONE);
+          break;
+        case APPROVING:
+          approving.setVisibility(View.VISIBLE);
+          registerButton.setVisibility(View.GONE);
+          useButton.setVisibility(View.GONE);
+          break;
+        default:
+          throw new IllegalStateException("Invalid payment view model state");
+      }
       morePaymentsContainer.addView(view);
-      paymentItemClicks.add(
-          RxView.clicks(button).doOnNext(click -> paymentSelections.onNext(otherPayment)).subscribe());
     }
   }
 
@@ -197,8 +228,12 @@ public class PaymentActivity extends ActivityView implements PaymentView {
     noPaymentsText.setVisibility(View.GONE);
   }
 
-  @Override public Observable<PaymentViewModel> paymentSelection() {
-    return paymentSelections.asObservable();
+  @Override public Observable<PaymentViewModel> usePaymentSelection() {
+    return usePaymentClick;
+  }
+
+  @Override public Observable<PaymentViewModel> registerPaymentSelection() {
+    return registerPaymentClick;
   }
 
   private void finish(int code, Intent intent) {

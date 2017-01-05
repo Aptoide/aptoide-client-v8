@@ -14,8 +14,8 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class InAppBillingProductPaymentResponse extends ProductPaymentResponse {
+public class PaymentConfirmationResponse extends BaseV3Response {
 
-  @JsonProperty("publisher_response") private InAppBillingPurchasesResponse purchaseInformation;
-
+  @JsonProperty("payStatus") private String paymentStatus;
+  @JsonProperty("paykey") private String paymentConfirmationId;
 }

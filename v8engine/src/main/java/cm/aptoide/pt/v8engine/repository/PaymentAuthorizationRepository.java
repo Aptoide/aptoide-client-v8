@@ -7,12 +7,13 @@ package cm.aptoide.pt.v8engine.repository;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.PaymentAuthorizationAccessor;
-import cm.aptoide.pt.dataprovider.ws.v3.CreatePurchaseAuthorizationRequest;
+import cm.aptoide.pt.dataprovider.ws.v3.CreatePaymentAuthorizationRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
-import cm.aptoide.pt.model.v3.PurchaseAuthorizationResponse;
 import cm.aptoide.pt.v8engine.payment.Authorization;
+import cm.aptoide.pt.v8engine.payment.authorizations.WebAuthorization;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import cm.aptoide.pt.v8engine.repository.sync.SyncAdapterBackgroundSync;
+import java.util.List;
 import rx.Completable;
 import rx.Observable;
 
@@ -30,11 +31,11 @@ public class PaymentAuthorizationRepository implements Repository {
   }
 
   public Completable createPaymentAuthorization(int paymentId) {
-    return CreatePurchaseAuthorizationRequest.of(AptoideAccountManager.getAccessToken(), paymentId)
+    return CreatePaymentAuthorizationRequest.of(AptoideAccountManager.getAccessToken(), paymentId)
         .observe()
         .flatMap(response -> {
           if (response != null && response.isOk()) {
-            syncPaymentAuthorization(paymentId, response);
+            backgroundSync.syncAuthorization(paymentId);
             return Observable.just(null);
           }
           return Observable.<Void>error(
@@ -49,11 +50,5 @@ public class PaymentAuthorizationRepository implements Repository {
             .map(paymentAuthorization -> auhorizationConverter.convertToPaymentAuthorization(
                 paymentAuthorization)))
         .doOnSubscribe(() -> backgroundSync.syncAuthorization(paymentId));
-  }
-
-  private void syncPaymentAuthorization(int paymentId, PurchaseAuthorizationResponse response) {
-    authotizationAccessor.save(
-        auhorizationConverter.convertToDatabasePaymentAuthorization(paymentId, response));
-    backgroundSync.syncAuthorization(paymentId);
   }
 }

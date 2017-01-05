@@ -7,7 +7,7 @@ package cm.aptoide.pt.v8engine.repository;
 
 import android.content.Context;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
-import cm.aptoide.pt.model.v3.PaymentService;
+import cm.aptoide.pt.model.v3.PaymentServiceResponse;
 import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.PaymentFactory;
 import cm.aptoide.pt.v8engine.payment.Purchase;
@@ -67,7 +67,7 @@ public class InAppBillingProductRepository implements ProductRepository {
         .first();
   }
 
-  private Observable<List<PaymentService>> getServerInAppBillingPaymentServices(int apiVersion,
+  private Observable<List<PaymentServiceResponse>> getServerInAppBillingPaymentServices(int apiVersion,
       String packageName, String sku, String type) {
     return inAppBillingRepository.getSKUDetails(apiVersion, packageName, sku, type)
         .map(response -> response.getPaymentServices());

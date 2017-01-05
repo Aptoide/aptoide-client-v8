@@ -23,15 +23,19 @@ public class AptoidePayment implements Payment {
   private final Product product;
   private final Price price;
   private final String description;
+  private final boolean requiresAuthorization;
+
+  private Authorization authorization;
 
   public AptoidePayment(int id, String type, String name, String description, Product product, Price price,
-      PaymentConfirmationRepository confirmationRepository) {
+      boolean requiresAuthorization, PaymentConfirmationRepository confirmationRepository) {
     this.id = id;
     this.type = type;
     this.name = name;
     this.product = product;
     this.price = price;
     this.description = description;
+    this.requiresAuthorization = requiresAuthorization;
     this.confirmationRepository = confirmationRepository;
   }
 
@@ -57,6 +61,18 @@ public class AptoidePayment implements Payment {
 
   @Override public String getDescription() {
     return description;
+  }
+
+  @Override public Authorization getAuthorization() {
+    return authorization;
+  }
+
+  @Override public void setAuthorization(Authorization authorization) {
+    this.authorization = authorization;
+  }
+
+  @Override public boolean isAuthorizationRequired() {
+    return requiresAuthorization;
   }
 
   @Override public Observable<PaymentConfirmation> getConfirmation() {

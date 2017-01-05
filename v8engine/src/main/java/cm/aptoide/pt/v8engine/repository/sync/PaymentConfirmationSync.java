@@ -9,12 +9,10 @@ import android.content.SyncResult;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.PaymentConfirmationAccessor;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
-import cm.aptoide.pt.dataprovider.ws.v3.CheckInAppBillingProductPaymentRequest;
-import cm.aptoide.pt.dataprovider.ws.v3.CheckPaidAppProductPaymentRequest;
-import cm.aptoide.pt.dataprovider.ws.v3.CreateInAppBillingProductPaymentRequest;
-import cm.aptoide.pt.dataprovider.ws.v3.CreatePaidAppProductPaymentRequest;
+import cm.aptoide.pt.dataprovider.ws.v3.GetPaymentConfirmationRequest;
+import cm.aptoide.pt.dataprovider.ws.v3.CreatePaymentConfirmationRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
-import cm.aptoide.pt.model.v3.ProductPaymentResponse;
+import cm.aptoide.pt.model.v3.PaymentConfirmationResponse;
 import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.products.InAppBillingProduct;
@@ -23,6 +21,7 @@ import cm.aptoide.pt.v8engine.repository.PaymentConfirmationConverter;
 import cm.aptoide.pt.v8engine.repository.PaymentConfirmationRepository;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.io.IOException;
+import rx.Completable;
 import rx.Single;
 
 /**
@@ -58,7 +57,8 @@ public class PaymentConfirmationSync extends RepositorySync {
       final Single<PaymentConfirmation> serverPaymentConfirmation;
       if (paymentConfirmationId != null) {
         serverPaymentConfirmation =
-            createServerPaymentConfirmation(product, paymentConfirmationId, paymentId);
+            createServerPaymentConfirmation(product, paymentConfirmationId, paymentId).andThen(
+                getServerPaymentConfirmation(product));
       } else {
         serverPaymentConfirmation = getServerPaymentConfirmation(product);
       }
@@ -91,39 +91,37 @@ public class PaymentConfirmationSync extends RepositorySync {
     }
   }
 
-  private Single<PaymentConfirmation> createServerPaymentConfirmation(Product product,
-      String paymentConfirmationId, int paymentId) {
+  private Completable createServerPaymentConfirmation(Product product, String paymentConfirmationId,
+      int paymentId) {
     return Single.just(product instanceof InAppBillingProduct).flatMap(isInAppBilling -> {
       if (isInAppBilling) {
-        return CreateInAppBillingProductPaymentRequest.of(product.getId(), paymentId,
+        return CreatePaymentConfirmationRequest.ofInApp(product.getId(), paymentId,
             operatorManager, ((InAppBillingProduct) product).getDeveloperPayload(),
             AptoideAccountManager.getAccessToken(), paymentConfirmationId)
             .observe()
-            .cast(ProductPaymentResponse.class)
             .toSingle();
       }
-      return CreatePaidAppProductPaymentRequest.of(product.getId(), paymentId, operatorManager,
+      return CreatePaymentConfirmationRequest.ofPaidApp(product.getId(), paymentId, operatorManager,
           ((PaidAppProduct) product).getStoreName(), AptoideAccountManager.getAccessToken(),
           paymentConfirmationId).observe().toSingle();
-    }).flatMap(response -> {
+    }).flatMapCompletable(response -> {
       if (response != null && response.isOk()) {
-        return Single.just(
-            confirmationConverter.convertToPaymentConfirmation(product.getId(), response));
+        return Completable.complete();
       }
-      return Single.error(new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
+      return Completable.error(new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
     });
   }
 
   private Single<PaymentConfirmation> getServerPaymentConfirmation(Product product) {
     return Single.just(product instanceof InAppBillingProduct).flatMap(isInAppBilling -> {
       if (isInAppBilling) {
-        return CheckInAppBillingProductPaymentRequest.of(product.getId(), operatorManager,
+        return GetPaymentConfirmationRequest.of(product.getId(), operatorManager,
             ((InAppBillingProduct) product).getApiVersion(), AptoideAccountManager.getAccessToken())
             .observe()
-            .cast(ProductPaymentResponse.class)
+            .cast(PaymentConfirmationResponse.class)
             .toSingle();
       }
-      return CheckPaidAppProductPaymentRequest.of(product.getId(), operatorManager,
+      return GetPaymentConfirmationRequest.of(product.getId(), operatorManager,
           AptoideAccountManager.getAccessToken()).observe().toSingle();
     }).flatMap(response -> {
       if (response != null && response.isOk()) {
