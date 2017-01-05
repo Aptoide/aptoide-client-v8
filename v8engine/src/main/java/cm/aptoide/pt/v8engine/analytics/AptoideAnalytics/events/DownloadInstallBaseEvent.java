@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports;
+package cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;

@@ -26,7 +26,7 @@ import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadEvent;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEvent;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver;

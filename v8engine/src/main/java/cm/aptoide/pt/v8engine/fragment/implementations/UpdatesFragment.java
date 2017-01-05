@@ -23,7 +23,7 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.reports.DownloadEventConverter;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEventConverter;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
