@@ -4,9 +4,9 @@
   -->
 
 <android.support.design.widget.CoordinatorLayout
-    android:id="@+id/toolbal_swipe_recycler_coordinator_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbal_swipe_recycler_coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
@@ -24,12 +24,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:paddingLeft="@dimen/recycler_margin"
-        android:paddingRight="@dimen/recycler_margin"
         />
 
 
   </android.support.v4.widget.SwipeRefreshLayout>
+
+
+  <android.support.design.widget.FloatingActionButton
+      android:id="@+id/fabAdd"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="right|bottom"
+      android:layout_margin="@dimen/fab_margin"
+      android:src="@drawable/ic_add"
+      android:visibility="gone"
+      />
 
   <include layout="@layout/app_bar_layout"/>
 

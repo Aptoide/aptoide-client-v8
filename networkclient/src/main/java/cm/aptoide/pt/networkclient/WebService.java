@@ -19,6 +19,8 @@ import java.net.UnknownHostException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+import lombok.Getter;
+import lombok.Setter;
 import okhttp3.OkHttpClient;
 import retrofit2.CallAdapter;
 import retrofit2.Converter;
@@ -37,6 +39,7 @@ import rx.schedulers.Schedulers;
  */
 public abstract class WebService<T, U> {
 
+  @Getter @Setter private static boolean debug;
   private static Converter.Factory defaultConverterFactory;
 
   protected final Converter.Factory converterFactory;
@@ -47,12 +50,10 @@ public abstract class WebService<T, U> {
 
   private Retrofit retrofit;
 
-  protected WebService(Class<T> clazz, UserAgentGenerator userAgentGenerator, Converter.Factory converterFactory,
-      String baseHost) {
-    this.converterFactory = converterFactory;
-    this.clazz = clazz;
-    this.baseHost = baseHost;
-    this.httpClient = OkHttpClientFactory.getSingletonClient(userAgentGenerator);
+  protected WebService(Class<T> clazz, UserAgentGenerator userAgentGenerator,
+      Converter.Factory converterFactory, String baseHost) {
+    this(clazz, OkHttpClientFactory.getSingletonClient(userAgentGenerator, debug), converterFactory,
+        baseHost);
   }
 
   protected WebService(Class<T> clazz, OkHttpClient httpClient, Converter.Factory converterFactory,
@@ -79,8 +80,8 @@ public abstract class WebService<T, U> {
     return defaultConverterFactory;
   }
 
-  protected Observable<T> createServiceObservable() {
-    return Observable.fromCallable(this::createService);
+  private Observable<T> createServiceObservable() {
+    return Observable.fromCallable(() -> createService());
   }
 
   private T createService() {
@@ -135,7 +136,7 @@ public abstract class WebService<T, U> {
   public void execute(SuccessRequestListener<U> successRequestListener,
       ErrorRequestListener errorRequestListener, boolean bypassCache) {
     observe(bypassCache).observeOn(AndroidSchedulers.mainThread())
-        .subscribe(successRequestListener::call, errorRequestListener::onError);
+        .subscribe(successRequestListener, err -> errorRequestListener.onError(err));
   }
 
   private ErrorRequestListener defaultErrorRequestListener() {

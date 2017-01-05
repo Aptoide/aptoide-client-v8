@@ -10,14 +10,14 @@ import rx.Observable;
  */
 public class ListSearchAppsProxy {
   public Observable<ListSearchApps> search(String query, String aptoideClientUUID) {
-    return ListSearchAppsRequest.of(query, null, null, null, null, aptoideClientUUID)
+    return ListSearchAppsRequest.of(query, null, null, null, aptoideClientUUID)
         .observe()
         .doOnError(RemoteLogger.getInstance()::log);
   }
 
   public Observable<ListSearchApps> search(String query, String storeName,
       String aptoideClientUUID) {
-    return ListSearchAppsRequest.of(query, storeName, null, null, null, aptoideClientUUID)
+    return ListSearchAppsRequest.of(query, storeName, null, null, aptoideClientUUID)
         .observe()
         .doOnError(RemoteLogger.getInstance()::log);
   }

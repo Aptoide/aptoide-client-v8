@@ -9,7 +9,6 @@ import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentException;
-import lombok.AllArgsConstructor;
 import rx.Observable;
 import rx.Subscriber;
 import rx.subscriptions.Subscriptions;
@@ -17,10 +16,14 @@ import rx.subscriptions.Subscriptions;
 /**
  * Created by marcelobenites on 8/12/16.
  */
-@AllArgsConstructor public class ProcessPaymentOnSubscribe
+public class ProcessPaymentOnSubscribe
     implements Observable.OnSubscribe<PaymentConfirmation> {
 
   private final Payment payment;
+
+  public ProcessPaymentOnSubscribe(Payment payment) {
+    this.payment = payment;
+  }
 
   @Override public void call(Subscriber<? super PaymentConfirmation> subscriber) {
 

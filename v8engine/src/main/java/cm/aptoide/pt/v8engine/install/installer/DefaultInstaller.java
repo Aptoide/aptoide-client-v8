@@ -11,11 +11,13 @@ import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.realm.FileToDownload;
+import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -23,6 +25,7 @@ import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEvent;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.exception.InstallationException;
 import eu.chainfire.libsuperuser.Shell;
@@ -30,7 +33,6 @@ import java.io.File;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import rx.Observable;
 import rx.schedulers.Schedulers;
@@ -38,7 +40,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by marcelobenites on 7/18/16.
  */
-@AllArgsConstructor public class DefaultInstaller implements Installer {
+public class DefaultInstaller implements Installer {
 
   public static final String OBB_FOLDER =
       Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/obb/";
@@ -46,6 +48,15 @@ import rx.schedulers.Schedulers;
   @Getter(AccessLevel.PACKAGE) private final PackageManager packageManager;
   private final InstallationProvider installationProvider;
   private FileUtils fileUtils;
+  private Analytics analytics;
+
+  public DefaultInstaller(PackageManager packageManager, InstallationProvider installationProvider,
+      FileUtils fileUtils, Analytics analytics) {
+    this.packageManager = packageManager;
+    this.installationProvider = installationProvider;
+    this.fileUtils = fileUtils;
+    this.analytics = analytics;
+  }
 
   @Override public Observable<Boolean> isInstalled(String md5) {
     return installationProvider.getInstallation(md5)
@@ -78,20 +89,6 @@ import rx.schedulers.Schedulers;
         });
   }
 
-  private void moveInstallationFiles(RollbackInstallation installation) {
-    List<FileToDownload> files = installation.getFiles();
-    for (int i = 0; i < files.size(); i++) {
-      FileToDownload file = files.get(i);
-      if (file != null && file.getFileType() == FileToDownload.OBB) {
-        String newPath = OBB_FOLDER + installation.getPackageName() + "/";
-        fileUtils.copyFile(file.getPath(), newPath, file.getFileName());
-        FileUtils.removeFile(file.getPath());
-        file.setPath(newPath);
-      }
-    }
-    installation.save();
-  }
-
   @Override public Observable<Void> update(Context context, String md5) {
     return install(context, md5);
   }
@@ -116,6 +113,20 @@ import rx.schedulers.Schedulers;
     }).flatMap(uninstallStarted -> waitPackageIntent(context, intentFilter, packageName));
   }
 
+  private void moveInstallationFiles(RollbackInstallation installation) {
+    List<FileToDownload> files = installation.getFiles();
+    for (int i = 0; i < files.size(); i++) {
+      FileToDownload file = files.get(i);
+      if (file != null && file.getFileType() == FileToDownload.OBB) {
+        String newPath = OBB_FOLDER + installation.getPackageName() + "/";
+        fileUtils.copyFile(file.getPath(), newPath, file.getFileName());
+        FileUtils.removeFile(file.getPath());
+        file.setPath(newPath);
+      }
+    }
+    installation.save();
+  }
+
   private Observable<Void> defaultInstall(Context context, File file, String packageName) {
     final IntentFilter intentFilter = new IntentFilter();
     intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
@@ -132,7 +143,7 @@ import rx.schedulers.Schedulers;
 
     Uri photoURI = null;
     //read: https://inthecheesefactory.com/blog/how-to-share-access-to-file-with-fileprovider-on-android-nougat/en
-    if (android.os.Build.VERSION.SDK_INT > 23) {
+    if (Build.VERSION.SDK_INT > 23) {
       //content://....apk for nougat
       photoURI =
           FileProvider.getUriForFile(context, V8Engine.getConfiguration().getAppId() + ".provider",
@@ -173,10 +184,15 @@ import rx.schedulers.Schedulers;
                 CrashReports.logException(new Exception("install -r exitCode: " + exitCode));
                 Observable.fromCallable(() -> exitCode)
                     .observeOn(Schedulers.computation())
-                    .delay(10, TimeUnit.SECONDS)
-                    .subscribe(
-                        exitCodeToSend -> Analytics.RootInstall.rootInstallCompleted(exitCodeToSend,
-                            isInstalled(packageName, versionCode)));
+                    .delay(20, TimeUnit.SECONDS)
+                    .subscribe(exitCodeToSend -> {
+                      boolean installed = isInstalled(packageName, versionCode);
+                      if (!installed) {
+                        sendErrorEvent(packageName, versionCode,
+                            new Exception("Root install not succeeded. Exit code = " + exitCode));
+                      }
+                      Analytics.RootInstall.rootInstallCompleted(exitCodeToSend, installed);
+                    });
                 if (exitCode == 0) {
                   Logger.v(TAG, "app successfully installed using root");
                 } else {
@@ -200,10 +216,21 @@ import rx.schedulers.Schedulers;
       //}
     } catch (Exception e) {
       CrashReports.logException(e);
+      sendErrorEvent(packageName, versionCode, e);
       throw new InstallationException("Installation with root failed for "
           + packageName
           + ". Error message: "
           + e.getMessage());
+    }
+  }
+
+  private void sendErrorEvent(String packageName, int versionCode, Exception e) {
+    InstallEvent report =
+        (InstallEvent) analytics.get(packageName + versionCode, InstallEvent.class);
+    if (report != null) {
+      report.setResultStatus(DownloadInstallAnalyticsBaseBody.ResultStatus.FAIL);
+      report.setError(e);
+      analytics.sendEvent(report);
     }
   }
 

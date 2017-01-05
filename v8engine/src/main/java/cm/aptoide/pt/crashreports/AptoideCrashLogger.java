@@ -15,6 +15,9 @@ public class AptoideCrashLogger implements CrashLogger {
 
   private final static String TAG = AptoideCrashLogger.class.getSimpleName();   //TAG for the logger
   private static final AptoideCrashLogger instance = new AptoideCrashLogger();
+
+  static final String LANGUAGE = "Language";
+
   //var with the language the app is set to
   @Setter private String language;
 
@@ -29,11 +32,11 @@ public class AptoideCrashLogger implements CrashLogger {
    * setup crash reports
    *
    * @param context context from the class that's calling this method
-   * @param isDisabled
    */
   public AptoideCrashLogger setup(Context context, boolean isDisabled) {
-    Fabric.with(context, new Crashlytics.Builder().core(
-        new CrashlyticsCore.Builder().disabled(isDisabled).build()).build());
+    Fabric.with(context,
+        new Crashlytics.Builder().core(new CrashlyticsCore.Builder().disabled(isDisabled).build())
+            .build());
     Logger.d(TAG, "Setup of AptoideCrashLogger");
     return this;
   }
@@ -49,8 +52,7 @@ public class AptoideCrashLogger implements CrashLogger {
       return;
     }
 
-    Crashlytics.setString("Language", language);
-    Crashlytics.logException(throwable);
+    Crashlytics.setString(LANGUAGE, language);
     Logger.d(TAG, "logException: " + throwable.toString());
   }
 
@@ -66,7 +68,7 @@ public class AptoideCrashLogger implements CrashLogger {
       return;
     }
 
-    Crashlytics.setString(key, value);
+    Crashlytics.setString(LANGUAGE, language);
     Logger.d(TAG, "logString : key: " + key + " , value: " + value);
   }
 }

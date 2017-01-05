@@ -8,19 +8,12 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
-import com.trello.rxlifecycle.FragmentEvent;
-
-import java.util.LinkedList;
-import java.util.List;
-
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
@@ -29,6 +22,9 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEventConverter;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEventConverter;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
@@ -37,10 +33,14 @@ import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.DefaultDisplayableGroup;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.InstalledAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdatesHeaderDisplayable;
+import com.trello.rxlifecycle.FragmentEvent;
+import java.util.LinkedList;
+import java.util.List;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -54,6 +54,9 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
   private List<Displayable> updatesDisplayablesList = new LinkedList<>();
   private List<Displayable> installedDisplayablesList = new LinkedList<>();
   private InstallManager installManager;
+  private Analytics analytics;
+  private DownloadEventConverter downloadInstallEventConverter;
+  private InstallEventConverter installConverter;
 
   @NonNull
   public static UpdatesFragment newInstance() {
@@ -66,9 +69,13 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
         new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK),
         AccessorFactory.getAccessorFor(Download.class),
         AccessorFactory.getAccessorFor(Installed.class));
+    analytics = Analytics.getInstance();
+    downloadInstallEventConverter = new DownloadEventConverter();
+    installConverter = new InstallEventConverter();
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    super.load(create, refresh, savedInstanceState);
     fetchUpdates()
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
@@ -81,13 +88,14 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
             if (updates.size() > 0) {
               updatesDisplayablesList.add(
                   new UpdatesHeaderDisplayable(installManager,
-                      AptoideUtils.StringU.getResString(R.string.updates)
-                  )
+                      AptoideUtils.StringU.getResString(R.string.updates),analytics,
+                      downloadInstallEventConverter, installConverter)
               );
 
               for (Update update : updates) {
                 updatesDisplayablesList.add(
-                    UpdateDisplayable.create(update, installManager, new DownloadFactory()));
+                    UpdateDisplayable.create(update, installManager, new DownloadFactory(),
+                        analytics, downloadInstallEventConverter, installConverter));
               }
             }
 
@@ -149,8 +157,8 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
   }
 
   private Observable<List<Update>> reloadData() {
-    StoreRepository storeRepository = RepositoryFactory.getRepositoryFor(Store.class);
-    UpdateRepository updateRepository = RepositoryFactory.getRepositoryFor(Update.class);
+    StoreRepository storeRepository = RepositoryFactory.getStoreRepository();
+    UpdateRepository updateRepository = RepositoryFactory.getUpdateRepository();
     return  storeRepository.count()
         .first()
         .flatMap(numberStores -> {
@@ -192,8 +200,8 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 
   private void setDisplayables() {
     LinkedList<Displayable> displayables = new LinkedList<>();
-    displayables.addAll(updatesDisplayablesList);
-    displayables.addAll(installedDisplayablesList);
+    displayables.add(new DefaultDisplayableGroup(updatesDisplayablesList));
+    displayables.add(new DefaultDisplayableGroup(installedDisplayablesList));
     setDisplayables(displayables);
   }
 }

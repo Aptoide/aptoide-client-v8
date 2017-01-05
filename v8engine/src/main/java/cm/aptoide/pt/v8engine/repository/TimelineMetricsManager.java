@@ -9,6 +9,6 @@ import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
  */
 public class TimelineMetricsManager {
   public void sendEvent(SendEventRequest.Body.Data data, String eventName) {
-    AptoideAnalytics.logEvent(data, eventName);
+    AptoideAnalytics.logTimelineEvent(data, eventName);
   }
 }

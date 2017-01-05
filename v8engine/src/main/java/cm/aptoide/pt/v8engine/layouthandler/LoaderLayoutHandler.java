@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.layouthandler;
 
+import android.support.annotation.CallSuper;
 import android.support.annotation.IdRes;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -24,15 +25,15 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class LoaderLayoutHandler {
 
-  protected final LoadInterface loadInterface;
+  final LoadInterface loadInterface;
   @IdRes private final int viewToShowAfterLoadingId;
 
-  protected View viewToShowAfterLoading;
+  private View viewToShowAfterLoading;
   protected ProgressBar progressBar;
-  protected View genericErrorView;
-  protected View noNetworkConnectionView;
-  protected View retryErrorView;
-  protected View retryNoNetworkView;
+  private View genericErrorView;
+  private View noNetworkConnectionView;
+  private View retryErrorView;
+  private View retryNoNetworkView;
 
   public LoaderLayoutHandler(int viewToShowAfterLoadingId, LoadInterface loadInterface) {
     this.viewToShowAfterLoadingId = viewToShowAfterLoadingId;
@@ -98,5 +99,9 @@ public class LoaderLayoutHandler {
     genericErrorView.setVisibility(View.GONE);
     noNetworkConnectionView.setVisibility(View.GONE);
     progressBar.setVisibility(View.VISIBLE);
+  }
+
+  @CallSuper public void unbindViews() {
+
   }
 }

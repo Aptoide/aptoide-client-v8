@@ -31,7 +31,7 @@ abstract class Aptwords<U> extends WebService<Aptwords.Interfaces, U> {
 
   Aptwords() {
     super(Interfaces.class,
-        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent()),
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), isDebug()),
         WebService.getDefaultConverter(), baseUrl);
   }
 

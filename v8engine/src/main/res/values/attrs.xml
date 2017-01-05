@@ -92,6 +92,7 @@
   <attr name="gridItemRatingBar" format="reference"/>
   <attr name="titleLabelStyle" format="reference"/>
   <attr name="storesTextColor" format="reference|color"/>
+  <attr name="defaultTextStyle" format="reference"/>
   <attr name="appviewRatingCardTextColor" format="reference|color"/>
 
   <attr name="alertDialog" format="reference"/>

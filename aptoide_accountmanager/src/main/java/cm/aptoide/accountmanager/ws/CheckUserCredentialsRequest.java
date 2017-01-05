@@ -37,6 +37,8 @@ import rx.Observable;
   private String screenSize;
   private String openGl;
   private String token;
+  private String repoName;
+  private String createRepo = ""; // 1 if repo is to be created
 
   public CheckUserCredentialsRequest(Context context, OkHttpClient httpClient,
       Converter.Factory converterFactory) {
@@ -60,16 +62,18 @@ import rx.Observable;
   public static CheckUserCredentialsRequest of(String accessToken) {
     CheckUserCredentialsRequest request = new CheckUserCredentialsRequest(
         Application.getContext(),
-        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent()),
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), isDebug()),
         WebService.getDefaultConverter()
     );
     request.setToken(accessToken);
     return request;
   }
 
-  public static CheckUserCredentialsRequest of(String accessToken, boolean accountLinked) {
+
+  public static CheckUserCredentialsRequest of(String accessToken, String repoName, String createRepo) {
     CheckUserCredentialsRequest request = of(accessToken);
-    request.setRegisterDevice(accountLinked);
+    request.setRepoName(repoName);
+    request.setCreateRepo(createRepo);
     return request;
   }
 
@@ -89,6 +93,15 @@ import rx.Observable;
       parameters.put("myCpu", cpu);
       parameters.put("maxScreen", screenSize);
       parameters.put("maxGles", openGl);
+    }
+
+    if(createRepo.equals("1")) {
+      parameters.put("createRepo", createRepo);
+      parameters.put("repo", repoName);
+      parameters.put("authMode", "aptoide");
+      parameters.put("oauthToken", token);
+      parameters.put("oauthCreateRepo", "true");
+      return interfaces.checkUserCredentials(parameters);
     }
 
     return interfaces.getUserInfo(parameters);

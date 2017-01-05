@@ -10,7 +10,6 @@ import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import cm.aptoide.pt.database.realm.MinimalAd;
-import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -38,11 +37,11 @@ import java.util.List;
   }
 
   @Override public void bindView(AppViewSuggestedAppsDisplayable displayable) {
-    final List<GetAdsResponse.Ad> ads = displayable.getPojo();
+    final List<MinimalAd> ads = displayable.getPojo();
 
     List<Displayable> displayables = new LinkedList<>();
-    for (GetAdsResponse.Ad ad : ads) {
-      displayables.add(new AppViewSuggestedAppDisplayable(MinimalAd.from(ad)));
+    for (MinimalAd minimalAd : ads) {
+      displayables.add(new AppViewSuggestedAppDisplayable(minimalAd));
     }
 
     BaseAdapter adapter = new BaseAdapter(displayables) {

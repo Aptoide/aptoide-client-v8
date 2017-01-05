@@ -19,6 +19,8 @@ public interface AptoidePreferencesConfiguration {
 
   String getApkCachePath();
 
+  String getUserAvatarCachePath();
+
   String getImagesCachePath();
 
   // Account

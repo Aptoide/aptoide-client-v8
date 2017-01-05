@@ -7,7 +7,6 @@ package cm.aptoide.pt.dataprovider.ws.v7.store;
 
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
@@ -25,7 +24,9 @@ public class WidgetsArgs extends HashMapNotNull<WidgetsArgs.Key, WidgetsArgs.Gri
 
   public static WidgetsArgs createDefault() {
     return new WidgetsArgs().add(Key.APPS_GROUP, Type.APPS_GROUP.getPerLineCount())
-        .add(Key.STORES_GROUP, Type.STORES_GROUP.getPerLineCount());
+        .add(Key.STORES_GROUP, Type.STORES_GROUP.getPerLineCount())
+        .add(Key.MY_STORES_SUBSCRIBED, Type.MY_STORES_SUBSCRIBED.getPerLineCount())
+        .add(Key.STORES_RECOMMENDED, Type.STORES_RECOMMENDED.getPerLineCount());
   }
 
   public WidgetsArgs add(Key key, int gridRowSize) {
@@ -37,11 +38,15 @@ public class WidgetsArgs extends HashMapNotNull<WidgetsArgs.Key, WidgetsArgs.Gri
 
   // FIXME Parece me redundante com Type! Confirmar!
   public enum Key {
-    APPS_GROUP, STORES_GROUP
+    APPS_GROUP, MY_STORES_SUBSCRIBED, STORES_RECOMMENDED, STORES_GROUP
   }
 
-  @Data @AllArgsConstructor protected static class GridSizeObject {
+  @Data protected static class GridSizeObject {
 
     private int grid_row_size;
+
+    public GridSizeObject(int grid_row_size) {
+      this.grid_row_size = grid_row_size;
+    }
   }
 }

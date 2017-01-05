@@ -8,18 +8,17 @@ package cm.aptoide.pt.dataprovider.repository;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.provider.Settings;
-import cm.aptoide.pt.actions.AptoideClientUUID;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 import java.security.SecureRandom;
 import java.util.UUID;
-import lombok.AllArgsConstructor;
 
 /**
  * Created by neuro on 11-07-2016.
  */
-@AllArgsConstructor public class IdsRepositoryImpl implements IdsRepository, AptoideClientUUID {
+public class IdsRepositoryImpl implements IdsRepository, AptoideClientUUID {
 
   private static final String APTOIDE_CLIENT_UUID = "aptoide_client_uuid";
   private static final String ADVERTISING_ID_CLIENT = "advertisingIdClient";
@@ -30,11 +29,58 @@ import lombok.AllArgsConstructor;
   private final SharedPreferences sharedPreferences;
   private final Context context;
 
+  public IdsRepositoryImpl(SharedPreferences sharedPreferences, Context context) {
+    this.sharedPreferences = sharedPreferences;
+    this.context = context;
+  }
+
   @Override public String getAptoideClientUUID() {
     if (!sharedPreferences.contains(APTOIDE_CLIENT_UUID)) {
       generateAptoideId(sharedPreferences);
     }
     return sharedPreferences.getString(APTOIDE_CLIENT_UUID, null);
+  }
+
+  public String getGoogleAdvertisingId() {
+    if (!sharedPreferences.contains(GOOGLE_ADVERTISING_ID_CLIENT_SET)) {
+      generateGAID();
+    }
+
+    return sharedPreferences.getString(GOOGLE_ADVERTISING_ID_CLIENT, null);
+  }
+
+  public String getAdvertisingId() {
+    String advertisingId = sharedPreferences.getString(ADVERTISING_ID_CLIENT, null);
+
+    if (advertisingId == null) {
+      advertisingId = generateAdvertisingId();
+    }
+
+    return advertisingId;
+  }
+
+  private void setAdvertisingId(String aaid) {
+    sharedPreferences.edit().putString(ADVERTISING_ID_CLIENT, aaid).apply();
+  }
+
+  public synchronized String getAndroidId() {
+    String androidId = sharedPreferences.getString(ANDROID_ID_CLIENT, null);
+
+    if (androidId == null) {
+      androidId = Settings.Secure.getString(context.getContentResolver(),
+          Settings.Secure.ANDROID_ID);
+      setAndroidId(androidId);
+    }
+
+    return androidId;
+  }
+
+  private void setAndroidId(String android) {
+    if (sharedPreferences.getString(ANDROID_ID_CLIENT, null) != null) {
+      throw new RuntimeException("Android ID already set!");
+    }
+
+    sharedPreferences.edit().putString(ANDROID_ID_CLIENT, android).apply();
   }
 
   private void generateAptoideId(SharedPreferences sharedPreferences) {
@@ -48,14 +94,6 @@ import lombok.AllArgsConstructor;
     }
 
     sharedPreferences.edit().putString(APTOIDE_CLIENT_UUID, aptoideId).apply();
-  }
-
-  public String getGoogleAdvertisingId() {
-    if (!sharedPreferences.contains(GOOGLE_ADVERTISING_ID_CLIENT_SET)) {
-      generateGAID();
-    }
-
-    return sharedPreferences.getString(GOOGLE_ADVERTISING_ID_CLIENT, null);
   }
 
   private void generateGAID() {
@@ -75,20 +113,6 @@ import lombok.AllArgsConstructor;
     sharedPreferences.edit().putBoolean(GOOGLE_ADVERTISING_ID_CLIENT_SET, true).apply();
   }
 
-  public String getAdvertisingId() {
-    String advertisingId = sharedPreferences.getString(ADVERTISING_ID_CLIENT, null);
-
-    if (advertisingId == null) {
-      advertisingId = generateAdvertisingId();
-    }
-
-    return advertisingId;
-  }
-
-  private void setAdvertisingId(String aaid) {
-    sharedPreferences.edit().putString(ADVERTISING_ID_CLIENT, aaid).apply();
-  }
-
   private String generateAdvertisingId() {
     final String advertisingId;
 
@@ -99,26 +123,6 @@ import lombok.AllArgsConstructor;
     }
 
     return advertisingId;
-  }
-
-  public String getAndroidId() {
-    String androidId = sharedPreferences.getString(ANDROID_ID_CLIENT, null);
-
-    if (androidId == null) {
-      androidId = Settings.Secure.getString(context.getContentResolver(),
-          Settings.Secure.ANDROID_ID);
-      setAndroidId(androidId);
-    }
-
-    return androidId;
-  }
-
-  private void setAndroidId(String android) {
-    if (sharedPreferences.getString(ANDROID_ID_CLIENT, null) != null) {
-      throw new RuntimeException("Android ID already set!");
-    }
-
-    sharedPreferences.edit().putString(ANDROID_ID_CLIENT, android).apply();
   }
 
   private String generateRandomAdvertisingID() {

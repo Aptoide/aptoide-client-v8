@@ -11,8 +11,7 @@ import cm.aptoide.pt.dataprovider.util.referrer.ReferrerUtils;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Type;
-import cm.aptoide.pt.networkclient.okhttp.UserAgentGenerator;
-import cm.aptoide.pt.networkclient.okhttp.UserAgentInterceptor;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
@@ -32,13 +31,8 @@ import rx.Observable;
 @Data @Accessors(chain = true) @EqualsAndHashCode(callSuper = true) public class GetAdsRequest
     extends Aptwords<GetAdsResponse> {
 
-  private static final OkHttpClient client = new OkHttpClient.Builder()
-      .addInterceptor(new UserAgentInterceptor(new UserAgentGenerator() {
-        @Override public String generateUserAgent() {
-          return SecurePreferences.getUserAgent();
-        }
-      }))
-      .build();
+  private static final OkHttpClient client =
+      OkHttpClientFactory.newClient(SecurePreferences::getUserAgent, isDebug());
   @Getter @Setter private static String forcedCountry = null;
   private final String aptoideClientUUID;
   private final boolean googlePlayServicesAvailable;
@@ -219,7 +213,8 @@ import rx.Observable;
     search("native-aptoide:search"),
     secondinstall("native-aptoide:secondinstall"),
     secondtry("native-aptoide:secondtry"),
-    aptoidesdk("sdk-aptoide:generic");
+    aptoidesdk("sdk-aptoide:generic"),
+    firstinstall("native-aptoide:firstinstall");
 
     private final String value;
 

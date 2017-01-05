@@ -21,6 +21,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import java.util.Map;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by sithengineer on 30/06/16.
@@ -82,11 +83,7 @@ import java.util.Map;
       bindFlagViews(app);
     }
   }
-
-  @Override public void unbindView() {
-
-  }
-
+  
   private void bindFlagViews(GetAppMeta.App app) {
     try {
       GetAppMeta.GetAppMetaFile.Flags flags = app.getFile().getFlags();
@@ -123,8 +120,11 @@ import java.util.Map;
 
       final GetAppMeta.GetAppMetaFile.Flags.Vote.Type type = viewIdTypeMap.get(v.getId());
 
-      AddApkFlagRequest.of(storeName, md5, type.name().toLowerCase(),
-          AptoideAccountManager.getAccessToken()).execute(response -> {
+      compositeSubscription.add(AddApkFlagRequest.of(storeName, md5, type.name().toLowerCase(),
+          AptoideAccountManager.getAccessToken())
+          .observe(true)
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe(response -> {
         if (response.isOk() && !response.hasErrors()) {
           boolean voteSubmitted = false;
           switch (type) {
@@ -178,7 +178,7 @@ import java.util.Map;
         Logger.e(TAG, error);
         setAllButtonsUnPressed(v);
         ShowMessage.asSnack(v, R.string.unknown_error);
-      }, true);
+      }));
     };
   }
 

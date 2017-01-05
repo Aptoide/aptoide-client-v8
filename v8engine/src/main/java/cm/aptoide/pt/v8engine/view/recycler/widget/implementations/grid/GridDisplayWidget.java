@@ -22,7 +22,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.implementations.HomeFragment;
-import cm.aptoide.pt.v8engine.fragment.implementations.StoreTabGridRecyclerFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.storetab.StoreTabFragmentChooser;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridDisplayDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
@@ -53,10 +53,11 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
     imageView.setOnClickListener(v -> {
       Event event = pojo.getEvent();
       Event.Name name = event.getName();
-      if (StoreTabGridRecyclerFragment.validateAcceptedName(name)) {
+      if (StoreTabFragmentChooser.validateAcceptedName(name)) {
         FragmentUtils.replaceFragmentV4((FragmentActivity) itemView.getContext(),
             V8Engine.getFragmentProvider()
-                .newStoreGridRecyclerFragment(event, pojo.getLabel(), displayable.getStoreTheme(),
+                .newStoreTabGridRecyclerFragment(event, pojo.getLabel(),
+                    displayable.getStoreTheme(),
                     displayable.getTag()));
       } else {
         switch (name) {

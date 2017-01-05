@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
+import cm.aptoide.pt.downloadmanager.interfaces.Analytics;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
@@ -46,8 +47,11 @@ class DownloadTask extends FileDownloadLargeFileListener {
    */
   @Setter boolean isSerial = true;
   private ConnectableObservable<Download> observable;
+  private Analytics analytics;
 
-  DownloadTask(DownloadAccessor downloadAccessor, Download download, FileUtils fileUtils) {
+  DownloadTask(DownloadAccessor downloadAccessor, Download download, FileUtils fileUtils,
+      Analytics analytics) {
+    this.analytics = analytics;
     this.download = download;
     this.md5 = download.getMd5();
     this.downloadAccessor = downloadAccessor;
@@ -256,7 +260,13 @@ class DownloadTask extends FileDownloadLargeFileListener {
       }
     } else {
       Logger.d(TAG, "Error on download: " + download.getMd5());
-      e.printStackTrace();
+      // Apparently throwable e can be null.
+      if (e != null) {
+        e.printStackTrace();
+      }
+      if (analytics != null) {
+        analytics.onError(download, e);
+      }
     }
     setDownloadStatus(Download.ERROR, download, task);
     AptoideDownloadManager.getInstance().currentDownloadFinished();

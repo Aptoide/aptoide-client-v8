@@ -10,12 +10,11 @@ import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Obb;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
-import lombok.AllArgsConstructor;
 
 /**
  * Created by sithengineer on 12/05/16.
  */
-@AllArgsConstructor public class Scheduled extends RealmObject {
+public class Scheduled extends RealmObject {
 
   //public static final String APP_ID = "appId";
   public static final String NAME = "name";
@@ -53,6 +52,29 @@ import lombok.AllArgsConstructor;
   private String appAction;
 
   public Scheduled() {
+  }
+
+  public Scheduled(String name, String versionName, String icon, String path, String md5,
+      int verCode, String packageName, String storeName, String alternativeApkPath,
+      String mainObbName, String mainObbPath, String mainObbMd5, String patchObbName,
+      String patchObbPath, String patchObbMd5, boolean isDownloading, String appAction) {
+    this.name = name;
+    this.versionName = versionName;
+    this.icon = icon;
+    this.path = path;
+    this.md5 = md5;
+    this.verCode = verCode;
+    this.packageName = packageName;
+    this.storeName = storeName;
+    this.alternativeApkPath = alternativeApkPath;
+    this.mainObbName = mainObbName;
+    this.mainObbPath = mainObbPath;
+    this.mainObbMd5 = mainObbMd5;
+    this.patchObbName = patchObbName;
+    this.patchObbPath = patchObbPath;
+    this.patchObbMd5 = patchObbMd5;
+    this.isDownloading = isDownloading;
+    this.appAction = appAction;
   }
 
   public static Scheduled from(GetAppMeta.App app, AppAction appAction) {

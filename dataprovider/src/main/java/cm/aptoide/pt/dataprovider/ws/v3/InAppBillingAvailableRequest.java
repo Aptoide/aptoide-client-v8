@@ -17,8 +17,7 @@ public class InAppBillingAvailableRequest extends V3<InAppBillingAvailableRespon
     super(baseHost, baseBody);
   }
 
-  public static InAppBillingAvailableRequest of(int apiVersion, String packageName, String type,
-      String email) {
+  public static InAppBillingAvailableRequest of(int apiVersion, String packageName, String type) {
     final BaseBody args = new BaseBody();
     args.put("mode", "json");
     args.put("apiversion", String.valueOf(apiVersion));

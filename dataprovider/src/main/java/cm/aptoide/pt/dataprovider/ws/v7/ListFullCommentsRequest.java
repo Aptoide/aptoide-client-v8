@@ -32,7 +32,7 @@ public class ListFullCommentsRequest extends V7<ListFullComments, ListFullCommen
   }
 
   public static ListFullCommentsRequest of(long reviewId, int limit, String accessToken,
-      String email, String aptoideClientUUID) {
+      String aptoideClientUUID) {
     //
     //
     //

@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -17,6 +16,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.EditTextPreference;
@@ -33,7 +33,6 @@ import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.dialog.AndroidBasicDialog;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagedKeys;
@@ -72,30 +71,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
     return new SettingsFragment();
   }
 
-  @Override public void onDestroyView() {
-    subscriptions.clear();
-    super.onDestroyView();
-  }
-
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     fileManager = FileManager.build();
     subscriptions = new CompositeSubscription();
-  }
-
-  @Override public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-    // TODO
-    if (key.equals(ManagedKeys.UPDATES_FILTER_ALPHA_BETA_KEY)) {
-      UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
-      updateAccessor.removeAll();
-      UpdateRepository repository = RepositoryFactory.getRepositoryFor(Update.class);
-      repository.getUpdates(true)
-          .first()
-          .subscribe(updates -> Logger.d(TAG, "updates refreshed"), throwable -> {
-            throwable.printStackTrace();
-            CrashReports.logException(throwable);
-          });
-    }
   }
 
   @Override public void onCreatePreferences(Bundle bundle, String s) {
@@ -103,6 +82,26 @@ public class SettingsFragment extends PreferenceFragmentCompat
     SharedPreferences sharedPreferences =
         PreferenceManager.getDefaultSharedPreferences(getActivity());
     sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+  }
+
+  @Override public void onDestroyView() {
+    subscriptions.clear();
+    super.onDestroyView();
+  }
+
+  @Override public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+    // TODO
+    if (key.equals(ManagedKeys.UPDATES_FILTER_ALPHA_BETA_KEY)) {
+      UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
+      updateAccessor.removeAll();
+      UpdateRepository repository = RepositoryFactory.getUpdateRepository();
+      repository.getUpdates(true)
+          .first()
+          .subscribe(updates -> Logger.d(TAG, "updates refreshed"), throwable -> {
+            throwable.printStackTrace();
+            CrashReports.logException(throwable);
+          });
+    }
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -222,7 +221,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 .subscribe(deletedSize -> {
                   ShowMessage.asSnack(SettingsFragment.this,
                       AptoideUtils.StringU.getFormattedString(R.string.freed_space,
-                          AptoideUtils.StringU.formatBytes(deletedSize)));
+                          AptoideUtils.StringU.formatBytes(deletedSize, false)));
                 }, throwable -> {
                   ShowMessage.asSnack(SettingsFragment.this, R.string.error_SYS_1);
                   throwable.printStackTrace();
@@ -335,11 +334,12 @@ public class SettingsFragment extends PreferenceFragmentCompat
         ((TextView) view.findViewById(R.id.credits)).setMovementMethod(
             LinkMovementMethod.getInstance());
 
-        AndroidBasicDialog.build(getContext(), view)
-            .setPositiveButton(android.R.string.ok)
-            .setMessage(R.string.about_us)
+        new AlertDialog.Builder(context).setView(view)
             .setTitle(getString(R.string.about_us))
             .setIcon(android.R.drawable.ic_menu_info_details)
+            .setPositiveButton(android.R.string.ok,
+                (dialogInterface, i) -> dialogInterface.cancel())
+            .create()
             .show();
 
         return true;

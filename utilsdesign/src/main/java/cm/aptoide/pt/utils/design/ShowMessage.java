@@ -5,8 +5,10 @@
 
 package cm.aptoide.pt.utils.design;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -140,6 +142,11 @@ public class ShowMessage {
     return Snackbar.make(view, msg, Snackbar.LENGTH_SHORT);
   }
 
+  private static Snackbar asLongSnackInternal(Activity activity, @StringRes int msg) {
+    View view = getViewFromActivity(activity);
+    return Snackbar.make(view, msg, Snackbar.LENGTH_LONG);
+  }
+
   public static void asSnack(Activity activity, @StringRes int msg) {
     asSnackInternal(activity, msg).show();
   }
@@ -150,6 +157,13 @@ public class ShowMessage {
   @NonNull public static Observable<Integer> asObservableSnack(Activity activity,
       @StringRes int msg) {
     return asSnackObservableInternal(asSnackInternal(activity, msg));
+  }
+  /**
+   * @return {@link Observable} that returns a {@link ShowMessage.SnackbarVisibility} integer
+   */
+  @NonNull public static Observable<Integer> asLongObservableSnack(Activity activity,
+      @StringRes int msg) {
+    return asSnackObservableInternal(asLongSnackInternal(activity, msg));
   }
 
   //
@@ -221,6 +235,26 @@ public class ShowMessage {
       return asSnackObservableInternal(snackbar);
     }
     return Observable.error(new IllegalStateException("Extracted view from activity is null"));
+  }
+
+  //
+  // override 10
+  //
+
+  @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+  @NonNull private static Snackbar asSnackInternal(android.app.Fragment fragment, @StringRes int msg) {
+    return Snackbar.make(fragment.getView(), msg, Snackbar.LENGTH_SHORT);
+  }
+
+  public static void asSnack(android.app.Fragment fragment, @StringRes int msg) {
+    asSnackInternal(fragment, msg).show();
+  }
+
+  /**
+   * @return {@link Observable} that returns a {@link ShowMessage.SnackbarVisibility} integer
+   */
+  @NonNull public static Observable<Integer> asObservableSnack(android.app.Fragment fragment, @StringRes int msg) {
+    return asSnackObservableInternal(asSnackInternal(fragment, msg));
   }
 
   //

@@ -16,9 +16,13 @@ import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEvent;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEventConverter;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadInstallBaseEvent;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEvent;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEventConverter;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import rx.Observable;
 import rx.Scheduler;
@@ -28,7 +32,7 @@ import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 /**
  * Created by neuro on 17-05-2016.
  */
-@AllArgsConstructor public class UpdateDisplayable extends Displayable {
+public class UpdateDisplayable extends Displayable {
 
   @Getter private String packageName;
   @Getter private long appId;
@@ -49,19 +53,51 @@ import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 
   @Getter private Download download;
   @Getter private InstallManager installManager;
+  private Analytics analytics;
+  private DownloadEventConverter converter;
+  private InstallEventConverter installConverter;
 
   public UpdateDisplayable() {
   }
 
+  public UpdateDisplayable(String packageName, long appId, String label, String icon,
+      int versionCode, String md5, String apkPath, String alternativeApkPath,
+      String updateVersionName, String mainObbName, String mainObbPath, String mainObbMd5,
+      String patchObbName, String patchObbPath, String patchObbMd5, Download download,
+      InstallManager installManager, Analytics analytics,
+      DownloadEventConverter downloadInstallEventConverter, InstallEventConverter installConverter) {
+    this.packageName = packageName;
+    this.appId = appId;
+    this.label = label;
+    this.icon = icon;
+    this.versionCode = versionCode;
+    this.md5 = md5;
+    this.apkPath = apkPath;
+    this.alternativeApkPath = alternativeApkPath;
+    this.updateVersionName = updateVersionName;
+    this.mainObbName = mainObbName;
+    this.mainObbPath = mainObbPath;
+    this.mainObbMd5 = mainObbMd5;
+    this.patchObbName = patchObbName;
+    this.patchObbPath = patchObbPath;
+    this.patchObbMd5 = patchObbMd5;
+    this.download = download;
+    this.installManager = installManager;
+    this.analytics = analytics;
+    this.converter = downloadInstallEventConverter;
+    this.installConverter = installConverter;
+  }
+
   public static UpdateDisplayable create(Update update, InstallManager installManager,
-      DownloadFactory downloadFactory) {
+      DownloadFactory downloadFactory, Analytics analytics,
+      DownloadEventConverter downloadInstallEventConverter, InstallEventConverter installConverter) {
 
     return new UpdateDisplayable(update.getPackageName(), update.getAppId(), update.getLabel(),
         update.getIcon(), update.getVersionCode(), update.getMd5(), update.getApkPath(),
         update.getAlternativeApkPath(), update.getUpdateVersionName(), update.getMainObbName(),
         update.getMainObbPath(), update.getMainObbMd5(), update.getPatchObbName(),
         update.getPatchObbPath(), update.getPatchObbMd5(), downloadFactory.create(update),
-        installManager);
+        installManager, analytics, downloadInstallEventConverter, installConverter);
   }
 
   public Observable<Progress<Download>> downloadAndInstall(Context context,
@@ -79,7 +115,18 @@ import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
           return Observable.just(true);
         })
         .flatMap(success -> permissionManager.requestDownloadAccess(permissionRequest))
-        .flatMap(success -> installManager.install(context, download));
+        .flatMap(success -> installManager.install(context, download)
+            .doOnSubscribe(() -> setupEvents(download)));
+  }
+
+  public void setupEvents(Download download) {
+    DownloadEvent report =
+        converter.create(download, DownloadEvent.Action.CLICK, DownloadEvent.AppContext.UPDATE_TAB);
+    analytics.save(download.getPackageName() + download.getVersionCode(), report);
+    InstallEvent installEvent =
+        installConverter.create(download, DownloadInstallBaseEvent.Action.CLICK,
+            DownloadInstallBaseEvent.AppContext.UPDATE_TAB);
+    analytics.save(download.getPackageName() + download.getVersionCode(), installEvent);
   }
 
   @Override public int getViewLayout() {

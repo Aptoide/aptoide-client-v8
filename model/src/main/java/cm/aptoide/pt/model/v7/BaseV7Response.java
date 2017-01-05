@@ -6,9 +6,7 @@
 package cm.aptoide.pt.model.v7;
 
 import java.util.List;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * Created by neuro on 20-04-2016.
@@ -30,10 +28,18 @@ import lombok.NoArgsConstructor;
     return info != null && info.getStatus() == Info.Status.OK;
   }
 
-  @Data @NoArgsConstructor @AllArgsConstructor public static class Info {
+  @Data public static class Info {
 
     private Status status;
     private Time time;
+
+    public Info() {
+    }
+
+    public Info(Status status, Time time) {
+      this.status = status;
+      this.time = time;
+    }
 
     public enum Status {
       OK, QUEUED, FAIL

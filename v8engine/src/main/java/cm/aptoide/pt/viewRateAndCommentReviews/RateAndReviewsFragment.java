@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
- */
-
 package cm.aptoide.pt.viewRateAndCommentReviews;
 
 import android.os.Bundle;
@@ -31,7 +26,7 @@ import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.adapters.ReviewsAndCommentsAdapter;
+import cm.aptoide.pt.v8engine.adapters.CommentsAdapter;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
@@ -50,8 +45,8 @@ import lombok.Getter;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class RateAndReviewsFragment extends GridRecyclerFragment<ReviewsAndCommentsAdapter>
-    implements FullCommentAdderView<ReviewsAndCommentsAdapter> {
+public class RateAndReviewsFragment extends GridRecyclerFragment<CommentsAdapter>
+    implements ItemCommentAdderView<Review, CommentsAdapter> {
 
   private static final String TAG = RateAndReviewsFragment.class.getSimpleName();
   @Getter private static final String APP_ID = "app_id";
@@ -73,7 +68,7 @@ public class RateAndReviewsFragment extends GridRecyclerFragment<ReviewsAndComme
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
 
   public RateAndReviewsFragment() {
-    super(ReviewsAndCommentsAdapter.class);
+    super(CommentsAdapter.class);
   }
 
   public static RateAndReviewsFragment newInstance(long appId, String appName, String storeName,
@@ -110,31 +105,6 @@ public class RateAndReviewsFragment extends GridRecyclerFragment<ReviewsAndComme
     storeName = args.getString(STORE_NAME);
     appName = args.getString(APP_NAME);
     storeTheme = args.getString(STORE_THEME);
-  }
-
-  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    Logger.d(TAG, "Other versions should refresh? " + create);
-    fetchRating(refresh);
-    fetchReviews();
-  }
-
-  @Override public int getContentViewId() {
-    return R.layout.fragment_rate_and_reviews;
-  }
-
-  @Override public void bindViews(View view) {
-    super.bindViews(view);
-    final FloatingActionButton floatingActionButton =
-        (FloatingActionButton) view.findViewById(R.id.fab);
-    setHasOptionsMenu(true);
-
-    ratingTotalsLayout = new RatingTotalsLayout(view);
-    ratingBarsLayout = new RatingBarsLayout(view);
-
-    floatingActionButton.setOnClickListener(v -> {
-      DialogUtils.showRateDialog(getActivity(), appName, packageName, storeName,
-          this::fetchReviews);
-    });
   }
 
   @Override public void setupToolbar() {
@@ -204,13 +174,12 @@ public class RateAndReviewsFragment extends GridRecyclerFragment<ReviewsAndComme
   private void fetchReviews() {
     ListReviewsRequest reviewsRequest =
         ListReviewsRequest.of(storeName, packageName, AptoideAccountManager.getAccessToken(),
-            AptoideAccountManager.getUserEmail(),
             new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                 DataProvider.getContext()).getAptoideClientUUID());
 
     endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(this.getAdapter(), reviewsRequest,
-            new ListFullReviewsSuccessRequestListener(this), errorRequestListener);
+            new ListFullReviewsSuccessRequestListener(this), Throwable::printStackTrace);
     recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(false);
   }
@@ -223,10 +192,35 @@ public class RateAndReviewsFragment extends GridRecyclerFragment<ReviewsAndComme
     }
   }
 
+  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    Logger.d(TAG, "Other versions should refresh? " + create);
+    fetchRating(refresh);
+    fetchReviews();
+  }
+
+  @Override public int getContentViewId() {
+    return R.layout.fragment_rate_and_reviews;
+  }
+
+  @Override public void bindViews(View view) {
+    super.bindViews(view);
+    final FloatingActionButton floatingActionButton =
+        (FloatingActionButton) view.findViewById(R.id.fab);
+    setHasOptionsMenu(true);
+
+    ratingTotalsLayout = new RatingTotalsLayout(view);
+    ratingBarsLayout = new RatingBarsLayout(view);
+
+    floatingActionButton.setOnClickListener(v -> {
+      DialogUtils.showRateDialog(getActivity(), appName, packageName, storeName,
+          () -> fetchReviews());
+    });
+  }
+
   @NonNull @Override
-  public CommentsReadMoreDisplayable createReadMoreDisplayable(final int count, Review review) {
-    return new CommentsReadMoreDisplayable(review, review.getCommentList().getDatalist().getNext(),
-        new SimpleReviewCommentAdder(count, this));
+  public CommentsReadMoreDisplayable createReadMoreDisplayable(final int itemPosition, Review review) {
+    return new CommentsReadMoreDisplayable(review.getId(), true,
+        review.getCommentList().getDatalist().getNext(), new SimpleReviewCommentAdder(itemPosition, this));
   }
 
   /*
@@ -236,6 +230,10 @@ public class RateAndReviewsFragment extends GridRecyclerFragment<ReviewsAndComme
     }
   }
   */
+
+  @Override protected CommentsAdapter createAdapter() {
+    return new CommentsAdapter<>(RateAndReviewCommentDisplayable.class);
+  }
 
   @Override
   public void createDisplayableComments(List<Comment> comments, List<Displayable> displayables) {

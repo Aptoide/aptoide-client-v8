@@ -31,6 +31,7 @@ import android.support.annotation.IntegerRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
@@ -41,8 +42,8 @@ import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import cm.aptoide.pt.actions.AptoideClientUUID;
 import cm.aptoide.pt.actions.UserData;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.permissions.ApkPermission;
 import java.io.BufferedReader;
@@ -633,24 +634,32 @@ public class AptoideUtils {
           "kMBTPE".charAt(exp - 1));
     }
 
-    public static String withBinarySuffix(long bytes) {
+    public static String formatBytesToBits(long bytes, boolean speed) {
+      bytes *= 8;
       int unit = 1024;
       if (bytes < unit) {
         return bytes + " B";
       }
       int exp = (int) (Math.log(bytes) / Math.log(unit));
       String pre = ("KMGTPE").charAt(exp - 1) + "";
-      return String.format(Locale.ENGLISH, "%.1f %sb", bytes / Math.pow(unit, exp), pre);
+      String string = String.format(Locale.ENGLISH, "%.1f %sb", bytes / Math.pow(unit, exp), pre);
+      return speed ? string + "ps" : string;
     }
 
-    public static String formatBytes(long bytes) {
+    /**
+     *
+     * @param bytes file size
+     * @return formatted string for file file showing a Human perceptible file size
+     */
+    public static String formatBytes(long bytes, boolean speed) {
       int unit = 1024;
       if (bytes < unit) {
         return bytes + " B";
       }
       int exp = (int) (Math.log(bytes) / Math.log(unit));
       String pre = ("KMGTPE").charAt(exp - 1) + "";
-      return String.format(Locale.ENGLISH, "%.1f %sB", bytes / Math.pow(unit, exp), pre);
+      String string = String.format(Locale.ENGLISH, "%.1f %sB", bytes / Math.pow(unit, exp), pre);
+      return speed ? string + "/s" : string;
     }
 
     public static String getResString(@StringRes int stringResId) {
@@ -849,6 +858,12 @@ public class AptoideUtils {
       return "unknown";
     }
 
+    public static String getCarrierName() {
+      TelephonyManager manager =
+          (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+      return manager.getNetworkOperatorName();
+    }
+
     public static File readLogs(String mPath, String fileName) {
 
       Process process = null;
@@ -1019,11 +1034,15 @@ public class AptoideUtils {
     }
 
     public static void runOnUiThread(Runnable runnable) {
-      Observable.just(null)
-          .observeOn(AndroidSchedulers.mainThread())
-          .subscribe(o -> runnable.run(), e -> {
-            e.printStackTrace();
-          });
+      if (ThreadU.isUiThread()) {
+        runnable.run();
+      } else {
+        Observable.just(null)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(o -> runnable.run(), e -> {
+              e.printStackTrace();
+            });
+      }
     }
 
     public static void sleep(long l) {

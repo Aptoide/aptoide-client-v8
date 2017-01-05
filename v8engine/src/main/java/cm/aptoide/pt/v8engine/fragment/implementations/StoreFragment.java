@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -36,6 +37,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.StorePagerAdapter;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.behavior.ScrollAwareFABBehavior;
 import cm.aptoide.pt.v8engine.dialog.AddStoreDialog;
 import cm.aptoide.pt.v8engine.dialog.PrivateStoreDialog;
 import cm.aptoide.pt.v8engine.fragment.BasePagerToolbarFragment;
@@ -135,7 +137,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     if (create || getStore == null) {
       GetStoreRequest.of(StoreUtils.getStoreCredentials(storeName), storeContext,
-          AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
+          AptoideAccountManager.getAccessToken(),
           new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
               DataProvider.getContext()).getAptoideClientUUID())
           .observe(refresh)
@@ -218,10 +220,21 @@ public class StoreFragment extends BasePagerToolbarFragment {
         } else if (Integer.valueOf(position)
             .equals(adapter.getEventNamePosition(Event.Name.myStores))) {
           FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+
+          CoordinatorLayout.LayoutParams params =
+              (CoordinatorLayout.LayoutParams) floatingActionButton.getLayoutParams();
+          params.setBehavior(new ScrollAwareFABBehavior());
+          floatingActionButton.setLayoutParams(params);
+
           floatingActionButton.setOnClickListener(
               v -> new AddStoreDialog().show(fragmentManager, "addStoreDialog"));
           floatingActionButton.show();
         } else {
+          CoordinatorLayout.LayoutParams layoutParams =
+              (CoordinatorLayout.LayoutParams) floatingActionButton.getLayoutParams();
+          layoutParams.setBehavior(null);
+          floatingActionButton.setLayoutParams(layoutParams);
+
           floatingActionButton.hide();
           floatingActionButton.setOnClickListener(null);
         }

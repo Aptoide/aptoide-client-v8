@@ -52,6 +52,12 @@ public enum StoreThemeEnum {
       R.color.brown, R.drawable.custom_categ_maroon, R.drawable.gradient_maroon, R.color.brown_700,
       R.drawable.button_border_brown, R.drawable.ic_check_brown, R.drawable.ic_plus_brown),
 
+  //Alternative name to BLUEGREY
+  APTOIDE_STORE_THEME_BLUEGRAY(R.style.AptoideThemeDefaultBluegrey, R.color.transparent_bluegrey,
+      R.color.bluegrey, R.drawable.custom_categ_midnight, R.drawable.gradient_midnight,
+      R.color.bluegrey_700, R.drawable.button_border_bluegrey, R.drawable.ic_check_blue_grey,
+      R.drawable.ic_plus_blue_grey),
+
   APTOIDE_STORE_THEME_BLUEGREY(R.style.AptoideThemeDefaultBluegrey, R.color.transparent_bluegrey,
       R.color.bluegrey, R.drawable.custom_categ_midnight, R.drawable.gradient_midnight,
       R.color.bluegrey_700, R.drawable.button_border_bluegrey, R.drawable.ic_check_blue_grey,
@@ -162,7 +168,7 @@ public enum StoreThemeEnum {
   APTOIDE_STORE_THEME_HAPPYBLUE(R.style.AptoideThemeDefaultLightblue, R.color.transparent_lightblue,
       R.color.lightblue, R.drawable.custom_categ_lightsky, R.drawable.gradient_lightsky,
       R.color.lightblue_700, R.drawable.button_border_lightblue, R.drawable.ic_check_light_blue,
-      R.drawable.ic_plus_light_blue);
+      R.drawable.ic_plus_light_blue), ;
 
   private final int color700tint;
   private final int buttonLayout;

@@ -7,60 +7,53 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import cm.aptoide.pt.v8engine.interfaces.LifecycleSchim;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
+
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
+
+import cm.aptoide.pt.v8engine.interfaces.LifecycleSchim;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
 
 /**
  * Created by neuro on 18-04-2016.
  */
 public class Displayables implements LifecycleSchim {
 
+  private final Queue<Displayable> temporaryDisplayables = new LinkedList<>();
   private final List<Displayable> displayables = new LinkedList<>();
 
-  public Displayables() {
-  }
+  public Displayables() { }
 
-  public void add(int position, Displayable displayable) {
-    // Ignore empty displayables
-    if (displayable instanceof EmptyDisplayable) {
-      return;
-    }
+  public void add(int position, List<? extends Displayable> displayables) {
+    Collections.reverse(displayables);
 
-    if (displayable instanceof DisplayableGroup) {
-      add(position, ((DisplayableGroup) displayable).getChildren());
-    } else {
-      displayables.add(position, displayable);
-    }
-  }
-
-  public void add(int position, List<? extends Displayable> collection) {
-    Collections.reverse(collection);
-
-    for (Displayable displayable : collection) {
+    for (Displayable displayable : displayables) {
       add(position, displayable);
     }
   }
 
-  public void add(Displayable displayable) {
-    // Ignore empty displayables
-    if (displayable instanceof EmptyDisplayable) {
-      return;
-    }
-
-    if (displayable instanceof DisplayableGroup) {
-      add(((DisplayableGroup) displayable).getChildren());
-    } else {
-      displayables.add(displayable);
+  public void add(List<? extends Displayable> displayables) {
+    for (Displayable displayable : displayables) {
+      add(displayable);
     }
   }
 
-  public void add(List<? extends Displayable> collection) {
-    for (Displayable displayable : collection) {
-      add(displayable);
-    }
+  public void add(int position, Displayable displayable) {
+    if (shouldIgnore(displayable)) return;
+
+      displayables.add(position, displayable);
+  }
+
+  public void add(Displayable displayable) {
+    if (shouldIgnore(displayable)) return;
+
+      displayables.add(displayable);
+  }
+
+  private boolean shouldIgnore(Displayable displayable) {
+    return displayable instanceof EmptyDisplayable;
   }
 
   public Displayable pop() {

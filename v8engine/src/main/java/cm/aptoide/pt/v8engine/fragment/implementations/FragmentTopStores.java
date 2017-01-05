@@ -68,12 +68,12 @@ public class FragmentTopStores extends GridRecyclerFragment implements Endless {
   private void fetchStores() {
     final ListStoresRequest listStoresRequest =
         ListStoresRequest.ofTopStores(offset, STORES_LIMIT_PER_REQUEST,
-            AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
+            AptoideAccountManager.getAccessToken(),
             new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                 DataProvider.getContext()).getAptoideClientUUID());
     EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(this.getAdapter(), listStoresRequest, listener,
-            errorRequestListener);
+            Throwable::printStackTrace);
     recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(false);
   }

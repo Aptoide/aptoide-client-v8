@@ -2,11 +2,12 @@ package cm.aptoide.pt.v8engine.configuration;
 
 import android.support.v4.app.Fragment;
 import cm.aptoide.pt.database.realm.MinimalAd;
+import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.ScheduledDownloadsFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.TimeLineFollowFragment;
 import java.util.ArrayList;
 
 /**
@@ -47,8 +48,6 @@ public interface FragmentProvider {
 
   Fragment newAppViewFragment(MinimalAd minimalAd);
 
-  Fragment newAppViewFragment(GetAdsResponse.Ad ad);
-
   Fragment newAppViewFragment(String packageName, AppViewFragment.OpenType openType);
 
   Fragment newFragmentTopStores();
@@ -57,16 +56,30 @@ public interface FragmentProvider {
 
   Fragment newLatestReviewsFragment(long storeId);
 
+  Fragment newStoreTabGridRecyclerFragment(Event event, String storeTheme, String tag);
+
   Fragment newStoreTabGridRecyclerFragment(Event event, String title, String storeTheme,
       String tag);
 
-  Fragment newStoreGridRecyclerFragment(Event event, String title, String storeTheme, String tag);
+  Fragment newListAppsFragment();
 
-  Fragment newStoreGridRecyclerFragment(Event event, String title);
+  Fragment newGetStoreFragment();
+
+  Fragment newMyStoresSubscribedFragment();
+
+  Fragment newMyStoresFragment();
+
+  Fragment newGetStoreWidgetsFragment();
+
+  Fragment newListReviewsFragment();
+
+  Fragment newGetAdsFragment();
+
+  Fragment newListStoresFragment();
 
   Fragment newAppsTimelineFragment(String action);
 
-  Fragment newSubscribedStoresFragment();
+  Fragment newSubscribedStoresFragment(Event event, String title, String storeTheme, String tag);
 
   Fragment newSearchPagerTabFragment(String query, boolean subscribedStores,
       boolean hasMultipleFragments);
@@ -97,4 +110,13 @@ public interface FragmentProvider {
   Fragment newSocialFragment(String socialUrl, String pageTitle);
 
   Fragment newSettingsFragment();
+
+  Fragment newCreateUserFragment();
+
+  Fragment newTimeLineFollowStatsFragment(TimeLineFollowFragment.FollowFragmentOpenMode openMode,
+      long followNumber);
+
+  Fragment newCommentGridRecyclerFragment(CommentType commentType, String elementId);
+
+  Fragment newCommentGridRecyclerFragmentUrl(CommentType commentType, String url);
 }

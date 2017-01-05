@@ -30,8 +30,6 @@ android {
 
   // keep the "applicationId" var in third place for the jenkins build script hack
   defaultConfig {
-    versionName "8.0.0"
-    versionCode 1
     applicationId "${APPLICATION_ID}"
     minSdkVersion 15
     targetSdkVersion TARGET_SDK_VERSION
@@ -42,6 +40,7 @@ android {
                             fabricApiKey               : project.FABRIC_API_KEY]
 
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    multiDexEnabled true
   }
 
   lintOptions {
@@ -63,8 +62,8 @@ android {
     internal {
       // applicationIdSuffix does not work properly, as the application ID gets changed after the buildFlavor
       applicationIdSuffix ".internal"
-
-      versionName "8.0.2." + getDate()
+      minSdkVersion 21
+      versionName "8.1.1." + getDate()
       versionCode project.INTERNAL_VERSION_CODE.toInteger()
 
       resValue "string", "authenticatorAccountType", APPLICATION_ID + ".internal"
@@ -78,7 +77,8 @@ android {
       // applicationIdSuffix does not work properly, as the application ID gets changed after the buildFlavor
       applicationIdSuffix ".dev"
 
-      versionName "8.0.2." + getDate()
+
+      versionName "8.1.1." + getDate()
       versionCode project.DEV_VERSION_CODE.toInteger()
 
       resValue "string", "authenticatorAccountType", APPLICATION_ID + ".dev"
@@ -90,7 +90,7 @@ android {
 
     prod {
       versionCode project.PROD_VERSION_CODE.toInteger()
-      versionName "8.0.2.1"
+      versionName "8.1.1.0"
       resValue "string", "authenticatorAccountType", APPLICATION_ID
     }
   }

@@ -75,7 +75,7 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
       case API:
         return caseAPI(tab);
       case CLIENT:
-        return caseClient(event);
+        return caseClient(event, tab);
       case v3:
         return caseV3(event);
       default:
@@ -95,7 +95,7 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
         return V8Engine.getFragmentProvider().newAppsTimelineFragment(event.getAction());
       default:
         return V8Engine.getFragmentProvider()
-            .newStoreTabGridRecyclerFragment(event, tab.getLabel(), storeTheme, tab.getTag());
+            .newStoreTabGridRecyclerFragment(event, storeTheme, tab.getTag());
     }
   }
 
@@ -118,14 +118,15 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
     return integer;
   }
 
-  private Fragment caseClient(Event event) {
+  private Fragment caseClient(Event event, GetStoreTabs.Tab tab) {
     switch (event.getName()) {
-      case myStores:
-        return V8Engine.getFragmentProvider().newSubscribedStoresFragment();
       case myUpdates:
         return V8Engine.getFragmentProvider().newUpdatesFragment();
       case myDownloads:
         return V8Engine.getFragmentProvider().newDownloadsFragment();
+      case myStores:
+        return V8Engine.getFragmentProvider()
+            .newSubscribedStoresFragment(event, tab.getLabel(), storeTheme, tab.getTag());
       default:
         // Safe to throw exception as the tab should be filtered prior to getting here.
         throw new RuntimeException("Fragment type not implemented!");

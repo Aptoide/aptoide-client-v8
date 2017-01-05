@@ -19,7 +19,7 @@ public class InAppBillingPurchasesRequest extends V3<InAppBillingPurchasesRespon
   }
 
   public static InAppBillingPurchasesRequest of(int apiVersion, String packageName, String type,
-      String accessToken, String email) {
+      String accessToken) {
     BaseBody args = getBaseArgs(apiVersion, packageName, type, accessToken);
     return new InAppBillingPurchasesRequest(BASE_HOST, args);
   }

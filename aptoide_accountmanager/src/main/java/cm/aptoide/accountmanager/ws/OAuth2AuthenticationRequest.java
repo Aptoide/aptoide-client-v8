@@ -8,7 +8,10 @@ package cm.aptoide.accountmanager.ws;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
+import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.preferences.Application;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -59,6 +62,9 @@ public class OAuth2AuthenticationRequest extends v3accountManager<OAuth> {
     parameters.put("grant_type", grantType);
     parameters.put("client_id", "Aptoide");
     parameters.put("mode", "json");
+    parameters.put("aptoide_uid",
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext()).getAptoideClientUUID());
 
     if (mode != null) {
       switch (mode) {
@@ -74,6 +80,12 @@ public class OAuth2AuthenticationRequest extends v3accountManager<OAuth> {
         case FACEBOOK:
           parameters.put("authMode", "facebook");
           parameters.put("oauthToken", password);
+          break;
+        case ABAN:
+          parameters.put("oauthUserName",username);
+          parameters.put("oauthToken",password);
+          parameters.put("authMode","aban");
+          parameters.put("oauthUser",nameForGoogle);
           break;
       }
     }

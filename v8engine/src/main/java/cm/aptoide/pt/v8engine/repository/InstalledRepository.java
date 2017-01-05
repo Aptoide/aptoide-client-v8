@@ -9,14 +9,17 @@ import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.schedulers.RealmSchedulers;
 import java.util.List;
-import lombok.AllArgsConstructor;
 import rx.Observable;
 
 /**
  * Created by marcelobenites on 7/27/16.
  */
-@AllArgsConstructor public class InstalledRepository implements Repository {
+public class InstalledRepository implements Repository {
   private InstalledAccessor accessor;
+
+  public InstalledRepository(InstalledAccessor accessor) {
+    this.accessor = accessor;
+  }
 
   /**
    * Get all installed apps
@@ -45,5 +48,9 @@ import rx.Observable;
 
   public void remove(String packageName) {
     accessor.remove(packageName);
+  }
+
+  public boolean contains(String packageName) {
+    return accessor.isInstalled(packageName).toBlocking().first();
   }
 }

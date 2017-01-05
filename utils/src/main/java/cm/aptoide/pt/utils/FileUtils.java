@@ -5,7 +5,12 @@
 
 package cm.aptoide.pt.utils;
 
+import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import cm.aptoide.pt.logger.Logger;
@@ -15,6 +20,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -232,4 +239,42 @@ public class FileUtils {
       out = null;
     }
   }
+
+  public String getPath(Uri uri, Context context) {
+
+    String[] projection = { MediaStore.Images.Media.DATA };
+    Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
+    int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+    cursor.moveToFirst();
+
+    return cursor.getString(column_index);
+  }
+
+
+  public String getPathAlt(Uri contentUri, Context context) {
+    {
+      try
+      {
+        String[] proj = {MediaStore.Images.Media.DATA};
+        Cursor cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
+      }
+      catch (Exception e)
+      {
+        return contentUri.getPath();
+      }
+    }
+  }
+
+  public ArrayList<Integer> getImageResolution(String imagePath) {
+    ArrayList<Integer> resolution = new ArrayList<>();
+    Bitmap image = BitmapFactory.decodeFile(imagePath);
+    resolution.add(image.getHeight());
+    resolution.add(image.getWidth());
+    return resolution;
+  }
+
+
 }

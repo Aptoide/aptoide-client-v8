@@ -5,7 +5,7 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView;
 
-import cm.aptoide.pt.model.v2.GetAdsResponse;
+import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 import java.util.List;
@@ -13,12 +13,12 @@ import java.util.List;
 /**
  * Created by sithengineer on 04/05/16.
  */
-public class AppViewSuggestedAppsDisplayable extends DisplayablePojo<List<GetAdsResponse.Ad>> {
+public class AppViewSuggestedAppsDisplayable extends DisplayablePojo<List<MinimalAd>> {
 
   public AppViewSuggestedAppsDisplayable() {
   }
 
-  public AppViewSuggestedAppsDisplayable(List<GetAdsResponse.Ad> ads) {
+  public AppViewSuggestedAppsDisplayable(List<MinimalAd> ads) {
     super(ads);
   }
 
