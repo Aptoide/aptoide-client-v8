@@ -20,6 +20,8 @@ import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.LinkedList;
 import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -30,7 +32,6 @@ import static cm.aptoide.pt.aptoidesdk.ads.OemIds.INDUS;
 /**
  * Created by neuro on 10-11-2016.
  */
-
 public class RxAptoide {
 
   private static final String TAG = RxAptoide.class.getSimpleName();
@@ -38,6 +39,7 @@ public class RxAptoide {
   private static final GetAdsProxy getAdsProxy = new GetAdsProxy();
   private static final ListSearchAppsProxy listSearchAppsProxy = new ListSearchAppsProxy();
   private static final GetAppProxy getAppProxy = new GetAppProxy();
+  @Getter @Setter private static boolean debug = false;
 
   private static String aptoideClientUUID;
   private static String oemid;
@@ -71,7 +73,7 @@ public class RxAptoide {
     }).subscribeOn(Schedulers.io()).subscribe(o -> {
     }, Throwable::printStackTrace);
 
-    Logger.setDBG(BuildConfig.DEBUG);
+    Logger.setDBG(debug);
   }
 
   private static void setupEndpointsBasedOnOemId(String oemid) {

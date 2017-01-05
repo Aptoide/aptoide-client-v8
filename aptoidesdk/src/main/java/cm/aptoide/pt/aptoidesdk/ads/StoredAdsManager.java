@@ -2,7 +2,6 @@ package cm.aptoide.pt.aptoidesdk.ads;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import cm.aptoide.pt.aptoidesdk.BuildConfig;
 import cm.aptoide.pt.aptoidesdk.misc.ObjectMapperFactory;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -126,7 +125,7 @@ public class StoredAdsManager {
   }
 
   public void reload() {
-    if (!BuildConfig.DEBUG) {
+    if (!RxAptoide.isDebug()) {
       throw new RuntimeException("reload() not allowed in production!");
     }
     load();

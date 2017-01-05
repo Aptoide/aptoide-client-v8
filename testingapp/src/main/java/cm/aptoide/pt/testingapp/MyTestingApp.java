@@ -14,5 +14,6 @@ public class MyTestingApp extends Application {
         super.onCreate();
 
         Aptoide.integrate(this, "oemid");
+        Aptoide.setDebug(true);
     }
 }

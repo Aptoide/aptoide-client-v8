@@ -129,4 +129,8 @@ public class Aptoide {
   public static List<SearchResult> searchApps(String query, String storeName) {
     return RxAptoide.searchApps(query, storeName).toBlocking().first();
   }
+
+  public static void setDebug(boolean debug) {
+    RxAptoide.setDebug(debug);
+  }
 }
