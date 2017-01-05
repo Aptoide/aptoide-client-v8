@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="developer_website">Spletna stran: %s</string>
+    <string name="not_available">N/A</string>
+    <string name="developer_email">Email: %s</string>
+    <string name="developer_privacy_policy">Pravilnik o zasebnosti: %s</string>
+
+
+    <string name="open">Odpri</string>
+    <string name="button_header_more">več</string>
+    <string name="search">Iskanje</string>
+
+    <string name="update">Posodobi</string>
+    <string name="uninstall">Odstrani</string>
+    <string name="downgrade">Povrnitev prejšnje različice</string>
+    <string name="menu_select_all">Izberite vse</string>
+    <string name="menu_select_none">Ne izberite nič</string>
+    <string name="clear">Pobriši</string>
+
+    <string name="excluded_updates">Izključene nadgradnje</string>
+    <string name="no_excluded_updates_msg">Nova različica ne deluje na vaši napravi ali pogrešate nekatere funkcije? Blokirajte nadgradnje aplikacij. Pojdite na zavihek Nadgradnje in dolgo držite aplikacijo, za katero želite preklicati nadgradnje.</string>
+
+    <string name="restore_updates">Obnovite nadgradnje</string>
+    <string name="rollback">Povrnitev prejšnjega stanja podatkovne baze</string>
+    <string name="menu_card_timeline_clear">Pobriši</string>
+    <string name="fragment_social_timeline_no_connection">Ni internetne povezave</string>
+    <string name="fragment_social_timeline_general_error">Imamo nekaj težav. Bi lahko poskusili kasneje?</string>
+
+    <string name="displayable_social_timeline_app_update">Posodobi</string>
+    <string name="appview_rate_this_app">Ocenite to aplikacijo</string>
+    <string name="needs_license">Potrebuje licenco</string>
+    <string name="virus">Virus</string>
+    <string name="additional_information">Dodatne informacije</string>
+    <string name="displayable_social_timeline_app_update_updated">Nadgrajeno</string>
+    <string name="displayable_social_timeline_recommendation_similar_and">in</string>
+    <string name="social_facebook_screen_title">Facebook</string>
+    <string name="social_twitter_screen_title">Twitter</string>
+    <string name="title">NASLOV</string>
+    <string name="feedback_not_valid">Prosimo, vpišite veljavno zadevo</string>
+    <string name="ignore_update">Ignorirajte nadgradnjo</string>
+    <string name="added_to_scheduled">Dodano v meni &gt; Načrtovani prenosi</string>
+    </resources>

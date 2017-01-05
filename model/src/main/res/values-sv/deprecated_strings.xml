@@ -1,0 +1,475 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="error_MARG_1">Saknad butik</string>
+    <string name="error_MARG_2">Saknad app-information</string>
+    <string name="error_MARG_3">Saknad app-version</string>
+    <string name="error_MARG_4">Inloggning saknas</string>
+    <string name="error_MARG_5">App saknas</string>
+    <string name="error_MARG_6">Saknar MD5-data</string>
+    <string name="error_MARG_7">Paket-parameter saknas</string>
+    <string name="error_MARG_8">hmac-parameter saknas</string>
+    <string name="error_MARG_9">Gränsparameter saknas</string>
+    <string name="error_MARG_10">Offset-parameter saknas</string>
+    <string name="error_MARG_11">Språk-parameter saknas</string>
+    <string name="error_MARG_100">Appens namn saknas</string>
+    <string name="error_MARG_101">Beskrivning saknas</string>
+    <string name="error_MARG_102">Kategorin saknas</string>
+    <string name="error_MARG_103">Betyg saknas</string>
+    <string name="error_MARG_104">Flagga saknas</string>
+    <string name="error_MARG_105">Kommentar saknas</string>
+    <string name="error_MARG_106">Röst saknas</string>
+    <string name="error_MARG_107">Text saknas</string>
+    <string name="error_MARG_108">Gilla-parameter saknas</string>
+    <string name="error_MARG_109">E-postparameter saknas</string>
+    <string name="error_MARG_110">Passhash-parameter saknas</string>
+    <string name="error_MARG_111">Namn-parameter saknas</string>
+    <string name="error_MARG_112">Användaragent-parameter saknas</string>
+    <string name="error_MARG_113">Parameter för hash saknas</string>
+    <string name="error_MARG_200">Autentiseringsfel</string>
+    <string name="error_MARG_201">Ogiltig kombination av användarnamn/lösenord</string>
+    <string name="error_MARG_202">Ogiltig token eller användare/lösenord</string>
+
+    <string name="error_IARG_1">Ej giltig butik</string>
+    <string name="error_IARG_2">Inloggningen är felaktig</string>
+    <string name="error_IARG_3">Ogiltig identifierare</string>
+    <string name="error_IARG_4">Ogiltig MD5-data</string>
+    <string name="error_IARG_5">hmac-formatet är ogiltigt</string>
+    <string name="error_IARG_6">Ogiltigt språk</string>
+    <string name="error_IARG_100">Det minsta antalet tecken som tillåts i en kommentar är 10</string>
+    <string name="error_IARG_101">Det minsta antalet tecken i en svarskommentar är 10</string>
+    <string name="error_IARG_102">Ogiltigt argument</string>
+    <string name="error_IARG_103">Ogiltig kategori</string>
+    <string name="error_IARG_104">Ogiltig rating</string>
+    <string name="error_IARG_105">Hemsidan är inte en giltig URL</string>
+    <string name="error_IARG_106">E-postadressen är inte giltig</string>
+    <string name="error_IARG_107">Flaggan är ogiltig</string>
+    <string name="error_IARG_108">Kommentaren är ogiltig</string>
+    <string name="error_IARG_109">Rösten är ogiltig</string>
+    <string name="error_IARG_110">Ogiltig svarskommentar</string>
+    <string name="error_IARG_200">Ogiltigt inloggningstoken</string>
+    <string name="error_IARG_201">Ogiltig inloggningsmetod</string>
+    <string name="error_IARG_300">Ogiltig anpassad kategori</string>
+    <string name="error_IARG_301">Ogiltig kategori</string>
+    <string name="error_IARG_302">Angivet program finns redan i denna kategori</string>
+
+    <string name="error_AUTH_1">Ogiltiga inloggningsuppgifter!</string>
+    <string name="error_AUTH_2">Ogiltiga uppgifter!</string>
+    <string name="error_AUTH_3">Ditt konto har avslutats. Vid frågor, kontakta Aptoides supportteam.</string>
+    <string name="error_AUTH_4">Fel vid HMAC-autentisering</string>
+    <string name="error_AUTH_100">Kunde inte logga in med Google. Vänligen kontrollera ditt Google-konto (du kan behöva bekräfta din e-postadress).</string>
+    <string name="error_AUTH_101">Kunde inte logga in med Google. Vänligen försök igen.</string>
+    <string name="error_AUTH_102">Kunde inte logga in med Facebook. Vänligen kolla ditt Facebook-konto (du kan behöva bekräfta din e-postadress).</string>
+    <string name="error_AUTH_103">Kunde inte logga in med Facebook. Vänligen försök igen).</string>
+
+    <string name="error_WOP_6">För att lägga till en kommentar så måste du fylla i ditt namn (det kommer att synas)</string>
+    <string name="error_WOP_7">Kommentarfel</string>
+    <string name="error_WOP_8">Kommentarsröst felaktig</string>
+    <string name="error_WOP_9">E-postadressen som angavs existerar redan i systemet</string>
+    <string name="error_WOP_10">E-postadressen som angavs existerar ännu inte i systemet</string>
+    <string name="error_WOP_11">Butiken kunde inte skapas. Vänligen försök igen.</string>
+
+    <string name="error_REPO_1">Butiken finns inte.</string>
+    <string name="error_REPO_2">Butiken har avslutats.</string>
+    <string name="error_REPO_3">Butiken ägs inte av den här användaren.</string>
+    <string name="error_REPO_4_no_store">Ditt konto har ingen butik som är skapad. Du måste skapa en för att göra en gransknig.</string>
+    <string name="error_REPO_7">Den här användaren har redan en giltig repa.</string>
+
+    <string name="error_APK_1">Kan inte öppna den här appen med den angivna informationen &amp; versionen</string>
+    <string name="error_APK_4">Kan inte öppna den här appen</string>
+    <string name="error_APK_Description">Beskrivning är inte tillgänglig</string>
+
+    <string name="error_SYS_1">Ett okänt fel inträffade, vänligen försök igen</string>
+    <string name="error_SYS_2">Ingen data hittades, vänligen försök igen senare</string>
+    <string name="error_SYS_3">Systemet är nu i underhållsläge, var god försök igen senare</string>
+    <string name="error_SYS_4">Det här samtalet stöds inte av den nuvarande API-versionen</string>
+    <string name="error_SYS_Billing">Fakturering via app stöds inte av den här enheten.</string>
+
+    <string name="error_410">Ledsen, men den begärda appen hittades inte på den här servern.</string>
+
+    <string name="please_wait">Var god vänta…</string>
+    <string name="simple_error_occured">Ett fel inträffade. </string>
+    <string name="yes">Ja</string>
+    <string name="no">Nej</string>
+    <string name="feedback_subject">Ämne</string>
+    <string name="feedback_to_write2">Skriv här för att skicka oss dina synpunkter…\n\n Vänligen ge oss all information du kan:
+\n Åtgärder du har gjort
+\n Felaktigheter som du ser</string>
+    <string name="feedback_include_logs">Inkludera skärmdump och loggar</string>
+    <string name="feedback_no_email">Ingen e-postklient installerad!</string>
+    <string name="username_tip">Skriv in din e-postadress</string>
+    <string name="store_already_added">Butiken är redan tillagd!</string>
+    <string name="subscribe_store">Prenumerera på butik</string>
+    <string name="permissions">Se behörigheter</string>
+    <string name="permissions_na">Behörigheter: Inte tillgängliga</string>
+    <string name="additional_permissions">Extra behörigheter</string>
+    <string name="no_permissions_required">Inga behörigheter krävs för den här appen.</string>
+    <string name="restore">Installera</string>
+
+    <string name="timeout">Nätverksanslutningen dog ut</string>
+    <string name="ip_blacklisted">Svartlistade IP</string>
+    <string name="connection_error">Ingen nätverksanslutning</string>
+    <string name="apk_not_found">Apk hittades inte</string>
+    <string name="invalid_apk">Ogiltig apk</string>
+    <string name="remote_in_nospace">inte nog med utrymme på din enhet.</string>
+    <string name="server_error">Server-fel</string>
+    <string name="paidapp_not_found">Fel vid nedladdning av app. Vänligen försök igen eller kontakta supporten.</string>
+    <string name="sd_error">Kunde inte skriva till SD-kort.</string>
+    <string name="sd_error_jolla">Kunde inte ladda ner ordentligt</string>
+    <string name="starting_download">Startar nedladdning</string>
+    <string name="installing">%s installeras…</string>
+    <string name="finished_install">%s har installerats.</string>
+    <string name="aptoide_downloading">%s laddar ner</string>
+    <string name="remaining_time">återstående</string>
+    <string name="data_usage_constraint">Nedladdning tillåts inte i Inställningar &gt; Generella nedladdningsregler</string>
+    <string name="download_pending">Väntar</string>
+
+    <string name="download_retry">Försök igen</string>
+    <string name="error503">Hoppla... Är det bara jag eller håller alla på att installera appar samtidigt?</string>
+    <string name="having_some_trouble">Har lite problem. Kan du försöka igen senare?</string>
+
+    <string name="reply">Svara</string>
+    <string name="vote_down">Rösta ner</string>
+    <string name="vote_up">Rösta upp</string>
+    <string name="casting_vote">Avlägger röst…</string>
+    <string name="vote_submitted">Din röst har skickats iväg</string>
+    <string name="votes">%s röster</string>
+
+    <string name="reviewed_by">Granskad av - %s</string>
+    <string name="installed_this">% installerade den här.</string>
+
+    <string name="adult_pin_wrong">Felaktig pin-kod, försök igen.</string>
+    <string name="request_adult_pin">Lägg in pin-kod för att låsa upp</string>
+    <string name="are_you_adult">Är du minst 21 år gammal?</string>
+    <string name="facebook_logout_and_login">Logga ut och logga in med Facebook</string>
+
+    <string name="schDown_nodownloadselect">Inga nedladdningar är valda</string>
+    <string name="no_sch_downloads">Surfar du med mobil data och vill ladda ner senare när du har en wifi-uppkoppling? Använd \'Schedule downloads\' och ändra dina inställningar i \'Settings -&gt; General Download Rules\' - till WiFi.</string>
+    <string name="schDown_installselected">Installera valda</string>
+    <string name="schDown_removeselected">Ta bort valda</string>
+    <string name="schDown_invertselection">Invertera val</string>
+
+    <string name="schDwnBtn">Schemalägg nedladdning</string>
+    <string name="schDown_install">Vill du installera alla schemalagda nedladdningar?</string>
+    <string name="dont_show_again">Visa inte den här dialogen igen</string>
+
+    <string name="see_more">Se mer</string>
+    <string name="see_less">Se mindre</string>
+    <string name="get_latest">Hämta den senaste versionen</string>
+
+    <string name="installed_tab">Installerade</string>
+    <string name="updates_tab">Uppdateringar</string>
+
+    <string name="feedback_send_button">Skicka feedback</string>
+
+    <string name="my_account">Mitt konto</string>
+    <string name="setting_schdwntitle">Schemalagda nerladdningar</string>
+    <string name="settings">Inställningar</string>
+    <string name="facebook">Facebook</string>
+    <string name="twitter">Twitter</string>
+    <string name="backup_apps">Säkerhetskopiera appar</string>
+
+    <string name="menu_context_reparse">Ladda om</string>
+    <string name="menu_context_remove">Ta bort</string>
+
+    <string name="search_other_stores">Eller sök efter andra…</string>
+    <string name="see_top_stores">Se toppbutiker</string>
+    <string name="store_name">Butiksnamn</string>
+    <string name="insert_store_name">Lägg in butiksnamn:</string>
+    <string name="subscribe_pvt_store">Prenumerera på privat butik</string>
+
+    <string name="no_excluded_updates">Inga uteslutna uppdateringar</string>
+    <string name="no_excluded_updates_selected">Inga uteslutna uppdateringar valda</string>
+    <string name="exclude_update">Ignorera uppdatering</string>
+    <string name="install_update">Installera uppdatering</string>
+
+    <string name="payment_methods">Betala med:</string>
+    <string name="cancel">Avbryt</string>
+    <string name="no_payments_available">Inga betalningar tillgängliga.</string>
+    <string name="failed_auth_code">Misslyckades med att autentisera kontot. Vänligen försök igen.</string>
+    <string name="error_occured_paying">Ett fel inträffade. Betalningen slutfördes inte.</string>
+    <string name="account">Konto</string>
+    <string name="confirm_carrier_payment">"Vill du köpa \'{title}\' för {value}? Du kommer att debiteras från din operatör. "</string>
+    <string name="buy">Köp</string>
+    <string name="billing_result">"Transaktionsresultatet är: "</string>
+
+    <string name="change_payment">Bakåt</string>
+    <string name="rollback_installed">Installerade</string>
+    <string name="rollback_uninstalled">Avinstallerad</string>
+    <string name="rollback_updated">Uppdaterad</string>
+    <string name="rollback_downgraded">Nedgraderad</string>
+    <string name="install">Installera</string>
+    <string name="cannot_uninstall_self">Kan inte avinstallera installeraren.</string>
+    <string name="at_time">vid %s</string>
+    <string name="root_access_dialog">Det ser ut som att du har root-behörighet. Vill du tillåta automatisk installation av appen efter nedladdningen?</string>
+    <string name="downgrade_requires_uninstall">Nedgradering kräver en avinstallation av programmet</string>
+
+    <string name="order_popup_title3">Vuxet innehåll</string>
+    <string name="invite_friends">Bjud in vänner</string>
+    <string name="timeline_is_empty_send_email">Vi kommer att skicka e-post till de du väljer</string>
+    <string name="facebook_timeline_friends_invited">Vänner inbjudna!</string>
+    <string name="select_friends_to_invite">Vänligen markera dina vänner för att bjuda in dem!</string>
+    <string name="facebook_friends_list_using_timeline">använder redan Aptoides sociala tidslinje</string>
+    <string name="and">och</string>
+    <string name="more_friends">mer</string>
+    <string name="more_reviews">Recensioner</string>
+    <string name="more_editors_choice">Fler redaktörens val</string>
+    <string name="more_versions">Fler versioner</string>
+    <string name="facebook_friends_list_using_timeline_empty">Sociala tidslinjer tillåter dig att dela dina program med dina facebook-vänner. Vill du gå med i nätverket?</string>
+    <string name="X_download_number">%s ner.</string>
+    <string name="timeline_not_compatible">Ooojjj... Den här funktionen är inte kompatibel med din Android-version</string>
+    <string name="sponsored">Sponsrad</string>
+    <string name="friends_installs">Dina vänner installerar</string>
+    <string name="recommended_for_you">Rekommenderat till dig</string>
+    <string name="highlighted_apps">Markerad</string>
+    <string name="button_more">mer</string>
+    <string name="unhide_post">VISA</string>
+    <string name="hide_post">GÖM</string>
+    <string name="like">Gilla</string>
+    <string name="comment">Kommentar</string>
+    <string name="hide_post_info">Dina vänner kommer inte att se det här inlägget</string>
+    <string name="timeline_like">Gilla</string>
+    <string name="likes">Gilla-markeringar</string>
+    <string name="unlike">Ogilla</string>
+    <string name="timeline_empty_no_friends_send_email">Det verkar som dina vänner inte loggade in i Aptoide med deras facebook-konton. Skicka dom ett e-postmeddelande och be dom logga in med deras facebook-konto</string>
+    <string name="timeline_empty_send_email_to_friends">E-posta vänner</string>
+    <string name="aptoide_timeline">Tidslinje för Aptoide</string>
+    <string name="timeline_email_invitation">Bjöd in dig till Aptoides sociala tidslinje. Anslut dig!</string>
+    <string name="timeline_email_how_to_join">Hur kan du ansluta dig till den sociala tidslinjen?</string>
+    <string name="timeline_email_step1">1- Ladda ner den senaste versionen av Aptoide:</string>
+    <string name="timeline_email_step2">2- Gå till fliken “Social Timeline” och anslut till nätverket</string>
+    <string name="timeline_ad">Föreslagen app av facebook</string>
+    <string name="facebook_start_timeline">Anslut dig till sociala tidslinjen</string>
+    <string name="facebook_join_friends">Vill du gå med dom i sociala tidslinjen?</string>
+    <string name="timeline_is_empty_no_friends">Din tidslinje är tom. Det är förmodligen pga att du inte har några vänner på Aptoide än eller att dom inte har några inlägg.</string>
+    <string name="timeline_is_empty_start_invite">Låt oss börja med att bjuda in några vänner:</string>
+
+    <string name="review_get_app">Hämta appen</string>
+    <string name="review_final_verdict">Slutomdöme</string>
+    <string name="review_speed">Hastighet</string>
+    <string name="review_usability">Användbarhet</string>
+    <string name="review_addictive">Beroendeframkallande</string>
+    <string name="review_stability">Stabilitet</string>
+    <string name="review_by">Recenserad av:\n%s</string>
+    <string name="review_title">Recensioner</string>
+    <string name="review_good">Bra</string>
+    <string name="review_bad">Dålig</string>
+    <string name="review_finish">Avsluta</string>
+    <string name="review_final_score">Poäng</string>
+    <string name="make_review_title">Gör en recension</string>
+    <string name="size">Storlek</string>
+    <string name="set_sliders">Ställ in reglagen</string>
+    <string name="write_one_pro">Skriv åtminstone en för</string>
+    <string name="write_one_con">Skriv åtminstone en emot</string>
+    <string name="write_your_final_verdict">Skriv ditt slutomdöme</string>
+    <string name="review_success">Recensionen ivägskickad!</string>
+    <string name="store_privacy">Butikssekretess</string>
+    <string name="public_key">publik</string>
+    <string name="private_key">privat</string>
+    <string name="store_username">Användarnamn</string>
+    <string name="store_password">Lösenord</string>
+    <string name="upload_app">Ladda upp app</string>
+    <string name="create_review">Skapa en recension</string>
+
+    <string name="asksetadultpinmessage">Vill du ställa in en PIN-kod för att låsa upp barnförbjudet innehåll?</string>
+    <string name="setpin">Ställ in PIN-kod</string>
+    <string name="remove_mature_pin_title">Ta bort PIN för barnförbjudet innehåll</string>
+    <string name="remove_mature_pin_summary">Ta bort PIN-koden som krävs för att låsa upp barnförbjudet innehåll</string>
+    <string name="set_mature_pin_title">Ställ in PIN-kod för barnförbjudet innehåll</string>
+    <string name="set_mature_pin_summary">Ange en PIN-kod som kommer krävas för att låsa upp barnförbjudet innehåll</string>
+    <string name="settings_title_bar">Inställningar</string>
+    <string name="settings_dwn_network_rules">Mobila nätverksalternativ</string>
+    <string name="setting_sum_icon_download_rules">Tillåt ikoner att laddas ned via mobila dataanslutningar</string>
+    <string name="setting_icon_download_rules">Ikon nedladdningsregler</string>
+    <string name="setting_wifi">Trådlöst</string>
+    <string name="setting_mobile">Mobil 3G/4G</string>
+    <string name="setting_3g">3G</string>
+    <string name="setting_4g">4G</string>
+    <string name="setting_ethernet">Ethernet</string>
+    <string name="setting_sum_general_download_rules">Ladda ner appar, redaktörens val, topp-program och butiker över tillåtna mobila dataanslutningar</string>
+    <string name="setting_general_download_rules">Generella nedladdningsregler</string>
+    <string name="setting_hwspecstitle">Hårdvaruspecifikationer</string>
+    <string name="setting_hwspecssum">Hårdvaruinformation om din telefon</string>
+    <string name="setting_appfiltersum">Visa inte applikationer som inte är kompatibla med den här enheten</string>
+    <string name="setting_appfiltertitle">Filtrera program</string>
+    <string name="setting_dont_show_mature_content">Visa vuxet innehåll</string>
+    <string name="setting_mature_filtering">Vuxet innehåll</string>
+    <string name="setting_updates">Uppdateringar</string>
+    <string name="update_all">Uppdatera alla</string>
+    <string name="whats_new">Vad är nytt?</string>
+    <string name="setting_updates_notification_sum">Visa aviseringar om nya uppdateringar</string>
+    <string name="setting_updates_notification_title">Meddelande om uppdateringar</string>
+    <string name="setting_auto_update_sum">Aktivera automatiska uppdateringar för program</string>
+    <string name="setting_auto_update_title">Aktivera automatiska uppdateringar</string>
+    <string name="show_all_updates">Visa inte uppdateringar för program med olika signaturer</string>
+    <string name="setting_allUpdates_filtering">Filtrera uppdateringar</string>
+    <string name="setting_schdwninstallsum">Installera automatiskt schemalagda nerladdningar när en trådlös anslutning är tillgänglig</string>
+    <string name="setting_schdwninstalltitle">Automatisk installation</string>
+    <string name="setting_clear_memory">Rensa minnet</string>
+    <string name="clearcontent_title">Ta bort data och konfigurationer</string>
+    <string name="settings_maxFileCache_sum">Ställ in en maximal storlek för att hålla dina apk-filer</string>
+    <string name="settings_maxFileCache_title">Ladda ner fil-cache (MB)</string>
+    <string name="change_theme">Byt tema</string>
+    <string name="theme">Teman</string>
+    <string name="root">Root</string>
+    <string name="allow_root">Tillåt root-installation</string>
+    <string name="disable_social_timeline">Inaktivera social tidslinje</string>
+    <string name="social_timeline_notifications">Tidslinje-aviseringar</string>
+    <string name="about_us">Om oss</string>
+    <string name="restart_aptoide">Vänligen starta om programmet för att ändra tema</string>
+    <string name="setting_sdk_version">SDK-version</string>
+    <string name="setting_screen_size">Storlek på skärm</string>
+    <string name="setting_esgl_version">ESGL-version</string>
+    <string name="screenCode">Skärmkod</string>
+    <string name="cpuAbi">Processor</string>
+    <string name="about_site">Webbplats:</string>
+    <string name="about_mail">Kontakta:</string>
+    <string name="clear_cache_sucess">Innehåll har tagits bort</string>
+    <string name="clearcontent_sum">Tar bort datat på SD-kortet.</string>
+    <string name="cache_using_X_mb">Använder %s MB</string>
+    <string name="clearcache_sum">Tar bort cache (ikoner, skärmdumpar) från SD-kortet.</string>
+    <string name="clearcontent_sum_jolla">Tar bort data</string>
+    <string name="clearcache_sum_jolla">Tar bort cache (ikoner, skärmdumpar)</string>
+    <string name="drawer_social_media_title">Låt oss fortsätta vara anslutna</string>
+    <string name="read_more">Läs mer</string>
+    <string name="read_less">Se mindre</string>
+    <string name="flag_this_app_good">Bra</string>
+    <string name="flag_this_app_button_text">Flagga den här appen</string>
+    <string name="appview_rating_card_text">Rankning</string>
+    <string name="flag_this_app_need_licence">Behöver licens</string>
+    <string name="flag_this_app_fake">Falsk</string>
+    <string name="flag_this_app_freeze">Frys</string>
+    <string name="flag_this_app_virus">Virus</string>
+    <string name="appview_recommended_for_you_title">Rekommenderat till dig</string>
+    <string name="appview_additional_information_title">Ytterligare information</string>
+    <string name="appview_comment_reply_button_text">Svara</string>
+    <string name="appview_header_trusted_text">Pålitlig</string>
+    <string name="appview_subscribe_store_button_text">Prenumerera?</string>
+    <string name="appview_subscribed_store_button_text">Prenumererade</string>
+    <string name="appview_rate_this_app_text">Betygsätt den här appen</string>
+    <string name="appview_other_versions_in_others_stores">Andra versioner i andra butiker</string>
+    <string name="appview_rate_Success">App betygsatt</string>
+    <string name="ignoreUpdateText">Ignorera uppdatering</string>
+    <string name="noIgnoreUpdateText">Den nya versionen av en app fungerar inte på enheten eller någon funktion saknas. Blockera appar från uppdatering. Gå till \'Updates\'-fliken och tryck länge på appen som du vill stoppa från att uppdateras.</string>
+    <string name="createReviewButtonText">Skapa\nGranskning</string>
+    <string name="navigation_drawer_signup_login">Registrera eller Logga in</string>
+    <string name="active">Aktiv</string>
+    <string name="completed">Slutförda</string>
+    <string name="_downloads"> nedladdningar</string>
+    <string name="no_description">Ingen beskrivning</string>
+    <string name="description">Beskrivning</string>
+    <string name="version">Version</string>
+    <string name="version_placeholder">Version: %s</string>
+
+    <string name="results_subscribed">Prenumererade butiker</string>
+    <string name="results_in_store">Sökresultat i %s butik</string>
+    <string name="other_stores">Ej prenumererade butiker</string>
+    <string name="comments">Kommentarer</string>
+    <string name="reviews">Recensioner</string>
+    <string name="store">Butik</string>
+    <string name="title_caps">TITEL</string>
+
+    <string name="unsubscribe_yes_no">Är du säker på att du vill säga upp prenumerationen?</string>
+    <string name="unsubscribed_">"Prenumerationen uppsagd "</string>
+    <string name="error_occured_uploading">Du behöver ladda upp den här appen först.</string>
+
+    <string name="update_self_title">Uppdatering tillgänglig</string>
+    <string name="update_self_msg">Det finns en ny version av %s tillgänglig\nVill du uppdatera?</string>
+    <string name="retrieving_update">Tar emot uppdatering…</string>
+
+    <string name="menu_search_item_go_to_store">Gå till butik</string>
+    <string name="srch_hint">Sök efter appar…</string>
+
+    <string name="app_trusted">%s är pålitlig</string>
+    <string name="app_warning">Varning: %s</string>
+    <string name="scanned_with_av">Skannad med Anti-Virus:</string>
+    <string name="compared_with_another_marketplace">Jämförd med en annan Android Market-plats:</string>
+    <string name="application_signature_analysis">Program-signatur jämförd med utvecklar-signatur:</string>
+    <string name="application_signature_matched">Program-signatur matchar signatur relaterad till programutvecklaren.</string>
+    <string name="application_signature_not_matched">Program-signatur matchar inte signaturen relaterad till program-utvecklaren. Programmet kan ha blivit förfalskat.</string>
+    <string name="warning">Varning</string>
+    <string name="trusted_app">Pålitlig app</string>
+    <string name="unknown">Okänd</string>
+
+    <string name="reason_third_party">Vi har kontrollerat appens signatur och den matchar den på Google Play-butiken, så du kan lita på och ha det så trevligt med appen.</string>
+    <string name="reason_scanned">Skannad med AptoideGuard plus 2 olika anti-virus (Zoner 1.8 och Sophos 3.0).</string>
+    <string name="reason_signature">Den kryptografiska signaturen garanterar att filen är säker att installera och inte manipulerats med på något sätt.</string>
+    <string name="reason_failed">Program-signaturen matchade inte utvecklarens signatur. Appen kan ha manipulerats.</string>
+    <string name="reply_to">Svara till %s</string>
+    <string name="comment_submitted">Din kommentar skickades</string>
+    <string name="write_your_comment">Skriv din kommentar</string>
+    <string name="write_a_comment">Skriv en kommentar</string>
+    <string name="no_comment_be_the_first">Inga kommentarer än. Bli först!</string>
+
+    <string name="installapp_alrt">Vill du installera:\n\n%s?</string>
+
+    <string name="suggested_app">Föreslagen app</string>
+
+    <string name="abTest1_label_1">Hämta appen</string>
+    <string name="abTest1_label_2">Installera</string>
+    <string name="abTest1_label_3">Installera</string>
+
+
+    <string name="notification_timeline_new_likes">Du har %s nya gilla-markeringar. Kolla in sociala tidslinjen!</string>
+    <string name="notification_timeline_new_comments">Du har %s nya kommentarer. Kolla in sociala tidslinjen!</string>
+    <string name="notification_timeline_activity">Du har %1$s nya kommentarer och %2$s gilla-markeringar. Kolla in sociala tidslinjen!</string>
+    <string name="notification_social_timeline">Aptoides sociala tidslinje. Kolla in den nu!</string>
+    <string name="notification_timeline_posts">Dina vänner installerade nya appar!</string>
+
+    <string name="has_updates">%s har nya uppdateringar tillgängliga!</string>
+    <string name="new_updates">Det finns %s nya uppdateringar tillgängliga!</string>
+    <string name="one_new_update">Det finns %s ny uppdatering tillgänglig!</string>
+    <string name="updates_tab_adapter_uninstalled">Avinstallerad</string>
+    <string name="updatesTabAdapterUninstall">Avinstallera</string>
+    <string name="flag_good">Bra</string>
+    <string name="flag_license">Behöver licens</string>
+    <string name="flag_fake">Falsk</string>
+    <string name="flag_freeze">Frys</string>
+    <string name="flag_virus">Virus</string>
+    <string name="flag_this_app">Flagga den här appen</string>
+    <string name="flag_added">Flagga tillagd</string>
+    <string name="skip">Hoppa över</string>
+    <string name="wizard_title_01">Välkommen till Aptoide</string>
+    <string name="wizard_description_01">Skapa ett gratis konto och registera dig för att börja bygga din egen personliga App-butik.\n\n Surfa efter tema-butiker och upptäck nya och spännande program.</string>
+    <string name="wizard_title_02">Utökad säkerhet</string>
+    <string name="wizard_description_02">Sök efter säkra märken och ladda säkert ner appar.\n\n Kompatibilitetsproblem? Sök efter tidigare programversioner.</string>
+    <string name="wizard_title_03">Nya medlemmar av vår familj</string>
+    <string name="wizard_subtitle_03_1">Aptoide Light</string>
+    <string name="wizard_description_03_1">för gamla enheter och långsam internet-uppkoppling</string>
+    <string name="wizard_subtitle_03_2">Aptoide TV</string>
+    <string name="wizard_description_03_2">optimerad App-butik för set-top boxar och smart-TV</string>
+    <string name="wizard_reviews_title">Recensioner</string>
+    <string name="wizard_reviews">Du kan nu skapa din apps recension med Aptoide!</string>
+    <string name="wizard_new_and_improved">Förbättrad prestanda!</string>
+    <string name="wizard_new_and_improved_bullet_1">Spara batteritid</string>
+    <string name="wizard_new_and_improved_bullet_2">Minska processor- och bandbreddsanvändande</string>
+    <string name="wizard_new_and_improved_bullet_3">Ladda färre resurser</string>
+    <string name="wizard_new_and_improved_bullet_4">Rensa användargränssnitt</string>
+    <string name="wizard_new_homepage">Ny hemside-layout</string>
+    <string name="wizard_new_top">Ny topp-flik</string>
+    <string name="subscribe_apps_official_store">Prenumerera på \'appar\' på AptAptoide officiella app-butik</string>
+    <string name="wizard_next">Nästa</string>
+    <string name="wizard_prev">Föregående</string>
+    <string name="search_activity_title">\'%s\'</string>
+
+    <string name="share">Dela</string>
+    <string name="share_on_timeline">Dela på tidslinjen</string>
+
+    <string name="search_for_apps">Sök efter appar…</string>
+    <string name="empty_search">Tom sökning, skriv ett programnamn</string>
+    <string name="manually_reviewed">Garanterat säker app: detta program klarade säkerhetstesten för virus, skadlig kod och andra angrepp och innehåller inget hotfullt</string>
+
+    <string name="no_apps_found">Inga appar hittades med nuvarande filter</string>
+    <string name="no_search_results_message">Din sökning gav inget resultat.\nVar vänlig försök med andra sökord.</string>
+
+    <string name="developer">Utvecklare</string>
+    <string name="website">Webbplats: %s</string>
+    <string name="email">E-post: %s</string>
+    <string name="privacy_policy">Sekretesspolicy: %s</string>
+    <string name="dialog_version_size">Version: %1$s | Storlek: %2$s</string>
+    <string name="na">Inte tillgänglig</string>
+    <string name="no_email_and_pass_error_message">Skriv in e-post och lösenord för att registrera dig.</string>
+    <string name="no_pass_error_message">Skriv in ett lösenord för att registrera dig.</string>
+    <string name="no_email_error_message">Skriv in e-post för att registrera dig.</string>
+    <string name="website_copied">Webbplats kopierades till urklipp</string>
+    <string name="email_copied">E-post kopierades till urklipp</string>
+    <string name="privacy_copied">Sekretess-länk kopierades till urklipp</string>
+    </resources>

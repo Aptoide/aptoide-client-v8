@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="one_account_allowed">تەنیا یەک هەژمار ڕێپێدراوە</string>
+    <string name="or">یان</string>
+    <string name="username">پۆستی ئەلیکترۆنی</string>
+    <string name="password">تێپەڕەوشە</string>
+    <string name="register">خۆتۆمارکردن</string>
+    <string name="forgot_passwd">تێپەڕەوشەت لەبیرکردووە؟</string>
+    <string name="fields_cannot_empty">تکایە پۆستی ئەلیکترۆنی و تێپەڕەوشەکەت بپشکنەوە.</string>
+    <string name="unknown_error">هەڵەی نەناسراو</string>
+    <string name="no_email_error_message">تکایە پۆستێکی ئەلیکترۆنی بنووسە بۆ خۆتۆمارکردن.</string>
+    <string name="no_email_and_pass_error_message">"تکایە پۆستێکی ئەلیکترۆنی و تێپەڕەوشەیەک بنووسە بۆ
+خۆتۆمارکردن.
+ "</string>
+    <string name="no_pass_error_message">تکایە تێپەڕەوشەیەک بنووسە بۆ خۆتۆمارکردن.</string>
+    <string name="password_validation_text">"تێپەڕەوشە پێویستە بەلایەنی کەم 8 نووسە بێت و پێویستیشە
+ بەلایەنی کەم وشەیەک و ژمارەیەکی تێدابێت یان نووسیەکی تایبەتی (!@#%*)
+ "</string>
+    <string name="logged_as">تۆ لە ژوورەوەی بە:</string>
+    <string name="sign_out">چوونەدەر</string>
+    <string name="default_account_type">cm.aptoide.pt</string>
+
+    <string name="facebook_email_permission_regected_message">"ئەپتۆید پێویستی بە پۆستی ئەلیکترۆنی هەیە بۆ دروستکردنی
+هەژمارێک
+ "</string>
+    <string name="error_occured">هەڵەیەک ڕوویدا. تکایە دووبارە هەوڵبدەوە</string>
+    <string name="ws_error_IARG_106">پۆستە ئەلیکترۆنییەکە هەڵەیە</string>
+    <string name="login_successful">چوونەژۆر سەرکەوتوو بوو</string>
+    <string name="user_created">بەکارهێنەرەکە دروست کرا</string>
+    <string name="wizard_skip"><b>تێپەڕاندن</b></string>
+
+</resources>

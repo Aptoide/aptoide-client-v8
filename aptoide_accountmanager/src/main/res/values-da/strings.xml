@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="one_account_allowed">Kun en konto er tilladt</string>
+    <string name="username">Email</string>
+    <string name="password">Adgangskode</string>
+    <string name="link_device_webinstall">Link konto til Webinstall</string>
+    <string name="register">Tilmeld Dig</string>
+    <string name="forgot_passwd">Glemt adgangskode?</string>
+    <string name="fields_cannot_empty">Tjek venligst din email og adgangskode.</string>
+    <string name="no_email_and_pass_error_message">Indtast venligst en email og adgangskode for at registrere.</string>
+    <string name="no_pass_error_message">Indtast venligst en adgangskode for at registrere.</string>
+    <string name="no_email_error_message">Indtast venligst en email for at registrere.</string>
+    <string name="password_validation_text">"Adgangskoden skal være på mindst 8 karakterer og bør som minimum have et bogstav og et tal eller specielle karakterer (!@#$%*) "</string>
+    <string name="logged_as">Du er logget på som:</string>
+    <string name="sign_out">Log Ud</string>
+    <string name="error_occured">En fejl opstod. Prøv venligst igen</string>
+    <string name="ws_error_AUTH_2">Ugyldige oplysninger!</string>
+    <string name="ws_error_AUTH_101">Kunne ikke logge ind med Google. Prøv venligst igen.</string>
+    <string name="ws_error_AUTH_103">Kunne ikke logge ind med Facebook. Prøv venligst igen.</string>
+    <string name="ws_error_MARG_12">Mangler hmac parameter</string>
+    <string name="ws_error_MARG_109">Mangler email parameter</string>
+    <string name="ws_error_MARG_110">Mangler passhash parameter</string>
+    <string name="ws_error_MARG_111">Mangler navn parameter</string>
+    <string name="ws_error_MARG_112">Mangler bruger-agent parameter</string>
+    <string name="ws_error_IARG_5">Ugyldigt hmac format</string>
+    <string name="ws_error_IARG_106">Emailadressen er ikke gyldig</string>
+    <string name="ws_error_REPO_7">Denne bruger har allerede et gyldigt repo.</string>
+    <string name="ws_error_WOP_11">Butikken kunne ikke oprettes. Prøv venligst igen.</string>
+    </resources>

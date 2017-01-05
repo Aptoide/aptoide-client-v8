@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="developer_website">Веб страна: %s</string>
+    <string name="not_available">Недостапно</string>
+    <string name="developer_email">Емаил: %s</string>
+    <string name="developer_privacy_policy">Политика за приватност: %s</string>
+
+
+    <string name="open">Отвори</string>
+    <string name="button_header_more">повеќе</string>
+    <string name="search">Пребарај</string>
+
+    <string name="update">Надградба</string>
+    <string name="uninstall">Деинсталирај</string>
+    <string name="downgrade">Преминување на постара верзија</string>
+    <string name="menu_select_all">Селектирај сѐ</string>
+    <string name="menu_select_none">Избришете селекција</string>
+    <string name="clear">Отстрани</string>
+
+    <string name="excluded_updates">Исклучени надградби</string>
+    <string name="no_excluded_updates_msg">Новата верзија на апликацијата не работи на Вашиот уред или недостига некоја функција? Блокирајте ги апликациите од надградување. Одете во јазичето за надградби и долго притиснете на апликацијата на која сакате да ги прекинете надградбите.</string>
+
+    <string name="restore_updates">Вратете ги надградбите</string>
+    <string name="rollback">Вратете се назад</string>
+    <string name="menu_card_timeline_clear">Отстрани</string>
+    <string name="fragment_social_timeline_no_connection">Нема мрежна конекција</string>
+    <string name="fragment_social_timeline_general_error">Имате проблеми. Можете ли да се обидете подоцна?</string>
+
+    <string name="displayable_social_timeline_app_update">Надградба</string>
+    <string name="appview_rate_this_app">Оцени ја оваа апликација</string>
+    <string name="needs_license">Потребна е лиценца</string>
+    <string name="virus">Вирус</string>
+    <string name="additional_information">Дополнителни информации</string>
+    <string name="displayable_social_timeline_app_update_updated">Надградени</string>
+    <string name="displayable_social_timeline_recommendation_similar_and">и</string>
+    <string name="social_facebook_screen_title">Facebook</string>
+    <string name="social_twitter_screen_title">Twitter</string>
+    <string name="title">НАСЛОВ</string>
+    <string name="feedback_not_valid">Ве молиме внесете валиден Наслов!</string>
+    <string name="ignore_update">Игнорирајте ја надградбата</string>
+    <string name="added_to_scheduled">Додадено во Menu &gt; Scheduled Downloads</string>
+    </resources>

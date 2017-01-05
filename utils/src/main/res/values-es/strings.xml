@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="please_wait">Por favor, espera…</string>
+
+    <string name="WidgetProvider_timestamp_today">Hoy</string>
+    <string name="WidgetProvider_timestamp_yesterday">Ayer</string>
+    <string name="WidgetProvider_timestamp_hour_ago">Hace %s hora</string>
+    <string name="WidgetProvider_timestamp_hours_ago">Hace %s horas</string>
+    <string name="WidgetProvider_timestamp_minutes_ago">Hace %s minutos</string>
+    <string name="WidgetProvider_timestamp_just_now">Justo ahora</string>
+    <string name="WidgetProvider_timestamp_weeks_ago">Hace %s semanas</string>
+    <string name="WidgetProvider_timestamp_week_ago2">Hace 1 semana</string>
+    <string name="WidgetProvider_timestamp_days_ago">Hace %s días</string>
+    <string name="WidgetProvider_timestamp_month_ago">Hace 1 mes</string>
+    <string name="WidgetProvider_timestamp_months_ago">Hace %s meses</string>
+    <string name="WidgetProvider_timestamp_year_ago">Hace 1 año</string>
+    <string name="WidgetProvider_timestamp_years_ago">Hace %s años</string>
+
+<string name="continue_option">Continuar</string>
+
+  <string name="more_info">Más información</string>
+
+  </resources>

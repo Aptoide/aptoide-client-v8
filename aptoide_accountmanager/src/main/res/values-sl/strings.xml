@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="one_account_allowed">Dovoljen je le en uporabniški račun</string>
+    <string name="username">Email</string>
+    <string name="password">Geslo</string>
+    <string name="link_device_webinstall">Povežite vaš račun z Webinstall</string>
+    <string name="register">Registracija</string>
+    <string name="forgot_passwd">Pozabljeno geslo?</string>
+    <string name="fields_cannot_empty">Prosimo, preverite vaš email in geslo.</string>
+    <string name="no_email_and_pass_error_message">Prosimo, vnesite email in geslo za registracijo.</string>
+    <string name="no_pass_error_message">Prosimo, vnesite geslo za registracijo.</string>
+    <string name="no_email_error_message">Prosimo, vnesite email za registracijo.</string>
+    <string name="password_validation_text">"Geslo mora biti dolgo vsaj 8 znakov, vsebovati mora vsaj eno črko in eno številko ali posebne znake (!@#$%*) "</string>
+    <string name="logged_as">Vpisani ste kot:</string>
+    <string name="sign_out">Izpis</string>
+    <string name="error_occured">Prišlo je do napake. Prosimo, poskusite ponovno</string>
+    <string name="ws_error_AUTH_2">Nepravilne reference!</string>
+    <string name="ws_error_AUTH_101">Vpis z Google ni uspel. Prosimo, poskusite ponovno.</string>
+    <string name="ws_error_AUTH_103">Vpis s Facebook ni uspel. Prosimo, poskusite ponovno.</string>
+    <string name="ws_error_MARG_12">Manjkajoči hmac parameter</string>
+    <string name="ws_error_MARG_109">Manjkajoči email parameter</string>
+    <string name="ws_error_MARG_110">Manjkajoči passhash parameter</string>
+    <string name="ws_error_MARG_111">Manjkajoči imenski parameter</string>
+    <string name="ws_error_MARG_112">Manjkajoči user-agent parameter</string>
+    <string name="ws_error_IARG_5">Nepravilni hmac format</string>
+    <string name="ws_error_IARG_106">E-mail naslov ni veljaven</string>
+    <string name="ws_error_REPO_7">Ta uporabnik že ima potrjen prodajni dogovor.</string>
+    <string name="ws_error_WOP_11">Trgovine ni bilo mogoče ustanoviti. Prosimo, poskusite ponovno.</string>
+    </resources>

@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="download_completed">İndirme tamamlandı</string>
+  <string name="download_paused">İndirme duraklatıldı</string>
+  <string name="download_progress">İndirme devam ediyor</string>
+  <string name="download_queue">Sırada</string>
+</resources>

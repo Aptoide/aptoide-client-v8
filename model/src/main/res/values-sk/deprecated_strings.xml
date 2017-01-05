@@ -1,0 +1,477 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="error_MARG_1">Chýba obchod</string>
+    <string name="error_MARG_2">Chýba info o aplikácii</string>
+    <string name="error_MARG_3">Chýba verzia aplikácie</string>
+    <string name="error_MARG_4">Chýba login</string>
+    <string name="error_MARG_5">Chýba aplikácia</string>
+    <string name="error_MARG_6">Chýbajú MD5 údaje</string>
+    <string name="error_MARG_7">Chýba parameter balenia</string>
+    <string name="error_MARG_8">Chýba parameter hmac</string>
+    <string name="error_MARG_9">Chýba parameter limit</string>
+    <string name="error_MARG_10">chýba offset parameter</string>
+    <string name="error_MARG_11">Chýba lang parameter</string>
+    <string name="error_MARG_100">Chýba názov aplikácie</string>
+    <string name="error_MARG_101">Chýba popis</string>
+    <string name="error_MARG_102">Chýba kategória</string>
+    <string name="error_MARG_103">Chýba hodnotenie</string>
+    <string name="error_MARG_104">Chýba vlajočka</string>
+    <string name="error_MARG_105">Chýba komentár</string>
+    <string name="error_MARG_106">Chýba hlas</string>
+    <string name="error_MARG_107">Chýba text</string>
+    <string name="error_MARG_108">Chýba parameter like</string>
+    <string name="error_MARG_109">Chýba parameter email</string>
+    <string name="error_MARG_110">Chýba parameter passhash</string>
+    <string name="error_MARG_111">Chýba parameter meno</string>
+    <string name="error_MARG_112">Chýba parameter user-agent</string>
+    <string name="error_MARG_113">Chýba parameter hash</string>
+    <string name="error_MARG_200">Chyba overenia</string>
+    <string name="error_MARG_201">Neplatná kombinácia mena/hesla</string>
+    <string name="error_MARG_202">Neplatný token alebo užívateľský pass</string>
+
+    <string name="error_IARG_1">Neplatný obchod</string>
+    <string name="error_IARG_2">Neplatné prihlásenie</string>
+    <string name="error_IARG_3">Neplatný identifikátor</string>
+    <string name="error_IARG_4">Neplatné MD5 údaje</string>
+    <string name="error_IARG_5">Neplatný hmac formát</string>
+    <string name="error_IARG_6">Neplatný lang</string>
+    <string name="error_IARG_100">Minimálny počet povolených znakov v komentári je 10</string>
+    <string name="error_IARG_101">Minimálny počet povolených znakov v odpovedi na komentár je 10</string>
+    <string name="error_IARG_102">Neplatný argument</string>
+    <string name="error_IARG_103">Neplatná kategória</string>
+    <string name="error_IARG_104">Neplatné hodnotenie</string>
+    <string name="error_IARG_105">Webstránka nie je platná adresa URL</string>
+    <string name="error_IARG_106">E-mailová adresa je neplatná</string>
+    <string name="error_IARG_107">Neplatná vlajočka</string>
+    <string name="error_IARG_108">Neplatný komentár</string>
+    <string name="error_IARG_109">Neplatný hlas</string>
+    <string name="error_IARG_110">Neplatná odpoveď na komentár</string>
+    <string name="error_IARG_200">Neplatný prihlasovací token</string>
+    <string name="error_IARG_201">Neplatný prihlasovací režim</string>
+    <string name="error_IARG_300">Neplatná vlastná kategória</string>
+    <string name="error_IARG_301">Neplatná kategória</string>
+    <string name="error_IARG_302">Aplikácia už existuje v tejto kategórii</string>
+
+    <string name="error_AUTH_1">Neplatné prihlasovacie údaje!</string>
+    <string name="error_AUTH_2">Neplatné poverenia!</string>
+    <string name="error_AUTH_3">Váš účet bol zrušený. S akýmikoľvek otázkami sa obráťte na Aptoide podporný tím.</string>
+    <string name="error_AUTH_4">Zlyhanie HMAC overenia</string>
+    <string name="error_AUTH_100">Nepodarilo sa prihlásiť pomocou Googlu. Skontrolujte prosím svoj Google účet (možno budete musieť overiť svoju e-mailovú adresu).</string>
+    <string name="error_AUTH_101">Nepodarilo sa prihlásiť pomocou Google. Prosím, skúste to znovu.</string>
+    <string name="error_AUTH_102">Nepodarilo sa prihlásiť pomocou Facebooku. Skontrolujte prosím svoj Facebook účet (možno budete musieť overiť svoju e-mailovú adresu).</string>
+    <string name="error_AUTH_103">Nepodarilo sa prihlásiť pomocou Facebooku. Prosím, skúste to znovu.</string>
+
+    <string name="error_WOP_6">Ak chcete pridať komentár, musíte vložiť svoje meno (bude viditeľné)</string>
+    <string name="error_WOP_7">Chyba komentáru</string>
+    <string name="error_WOP_8">Chyba hlasu za komentár</string>
+    <string name="error_WOP_9">Tento e-mail už existuje v systéme</string>
+    <string name="error_WOP_10">Zadaný E-mail ešte v systéme neexistuje</string>
+    <string name="error_WOP_11">Obchod sa nepodarilo vytvoriť. Prosím, skúste to znovu.</string>
+
+    <string name="error_REPO_1">Obchod neexistuje.</string>
+    <string name="error_REPO_2">Obchod bol zrušený.</string>
+    <string name="error_REPO_3">Obchod nepatrí tomuto užívateľovi.</string>
+    <string name="error_REPO_4_no_store">K Vášmu účtu nie je vytvorený žiadny obchod. Musíte si nejaký vytvoriť pre napísanie recenzie.</string>
+    <string name="error_REPO_7">Tento užívateľ už má platnú repo.</string>
+
+    <string name="error_APK_1">Nemožno otvoriť túto aplikáciu s danou informáciou a verziou</string>
+    <string name="error_APK_4">Nemožno otvoriť túto aplikáciu</string>
+    <string name="error_APK_Description">Popis nedostupný</string>
+
+    <string name="error_SYS_1">Vyskytla sa neznáma chyba, skúste to prosím znova</string>
+    <string name="error_SYS_2">Neboli nájdené žiadne dáta, skúste to prosím neskôr</string>
+    <string name="error_SYS_3">Systém je teraz v údržbu, skúste to prosím neskôr</string>
+    <string name="error_SYS_4">Tento hovor nie je podporovaný aktuálnou verziou API</string>
+    <string name="error_SYS_Billing">In-App Billing nie je podporované v tomto zariadení.</string>
+
+    <string name="error_410">Ľutujeme, požadovaná aplikácia nebola nájdená na tomto serveri.</string>
+
+    <string name="please_wait">Prosím čakajte…</string>
+    <string name="simple_error_occured">Vyskytla sa chyba. </string>
+    <string name="yes">Áno</string>
+    <string name="no">Nie</string>
+    <string name="feedback_subject">Predmet</string>
+    <string name="feedback_to_write2">Píšte tu a pošlite nám svoj názor ...\n\n Prosím, dajte nám všetky možné podrobnosti:
+\n Kroky, ktoré ste vykonali
+\nChyby, ktoré vidíte</string>
+    <string name="feedback_include_logs">Zahrňte aj screenshoty a protokoly</string>
+    <string name="feedback_no_email">Nenainštalovaný žiadny emailový klient!</string>
+    <string name="username_tip">Zadajte Váš email</string>
+    <string name="store_already_added">Obchod už bol pridaný!</string>
+    <string name="subscribe_store">Obchod na odoberanie</string>
+    <string name="permissions">Pozrieť oprávnenia</string>
+    <string name="permissions_na">Oprávnenia: N/A</string>
+    <string name="additional_permissions">Dodatočné oprávnenia</string>
+    <string name="no_permissions_required">Žiadna oprávnenie sa pre túto aplikáciu nevyžaduje.</string>
+    <string name="restore">Inštalovať</string>
+
+    <string name="timeout">Časový limit pripojenia k sieti</string>
+    <string name="ip_blacklisted">Zakázané IP</string>
+    <string name="connection_error">Žiadne pripojenie k sieti</string>
+    <string name="apk_not_found">Apk sa nenašlo</string>
+    <string name="invalid_apk">neplatné apk</string>
+    <string name="remote_in_nospace">nedostatok miesta na vašom zariadení.</string>
+    <string name="server_error">Chyba servera</string>
+    <string name="paidapp_not_found">Chyba pri sťahovaní aplikácie. Skúste to znova alebo sa obráťte na podporu.</string>
+    <string name="sd_error">Nemožno zapisovať na SD kartu.</string>
+    <string name="sd_error_jolla">Nemožno stiahnuť správne</string>
+    <string name="starting_download">Spúšťa sa sťahovanie</string>
+    <string name="installing">%s sa inštaluje…</string>
+    <string name="finished_install">%s sa nainštalovalo.</string>
+    <string name="aptoide_downloading">%s sa sťahuje</string>
+    <string name="remaining_time">ostáva</string>
+    <string name="data_usage_constraint">Stiahnutie nie je povolené v Nastavenia&gt; Všeobecné pravidlá sťahovania</string>
+    <string name="download_pending">Čaká sa</string>
+
+    <string name="download_retry">Skúsiť znovu</string>
+    <string name="error503">Ufff ... Zdá sa mi to alebo všetci inštalujú aplikácie naraz?</string>
+    <string name="having_some_trouble">Máte nejaké ťažkosti. Môžete opakovať neskôr?</string>
+
+    <string name="reply">Odpovedať</string>
+    <string name="vote_down">Zamietnuť</string>
+    <string name="vote_up">Hlasovať za</string>
+    <string name="casting_vote">Vhadzuje sa hlas…</string>
+    <string name="vote_submitted">Váš hlas bol úspešne odoslaný</string>
+    <string name="votes">%s hlasov</string>
+
+    <string name="reviewed_by">Hodnotilo - %s</string>
+    <string name="installed_this">%s si to nainštalovalo.</string>
+
+    <string name="adult_pin_wrong">Chybný pin, skúste to znovu.</string>
+    <string name="request_adult_pin">Vložte pin pre odomknutie</string>
+    <string name="are_you_adult">Máte aspoň 21 rokov?</string>
+    <string name="facebook_logout_and_login">Odhlásiť a prihlásiť pomocou Facebooku</string>
+
+    <string name="schDown_nodownloadselect">Nič na stiahnutie zvolené</string>
+    <string name="no_sch_downloads">Prechádzate aplikácie využitím mobilných dát a chcete ich stiahnuť neskôr, keď ste na Wi-Fi pripojení k internetu? Použite Naplánovať sťahovanie a zmente svoje preferencie v Nastavenia -&gt; Všeobecné pravidlá sťahovania - na Wi-Fi.</string>
+    <string name="schDown_installselected">Inštalácia zvolená</string>
+    <string name="schDown_removeselected">Odstránenie zvolené</string>
+    <string name="schDown_invertselection">Opačný výber</string>
+
+    <string name="schDwnBtn">Naplánovať stiahnutie</string>
+    <string name="schDown_install">Chcete inštalovať všetky naplánované stiahnutia?</string>
+    <string name="dont_show_again">Viac nezobrazovať tento dialóg</string>
+
+    <string name="see_more">Pozrieť viac</string>
+    <string name="see_less">Pozrieť menej</string>
+    <string name="get_latest">Získať najnovšiu verziu</string>
+
+    <string name="installed_tab">Nainštalované</string>
+    <string name="updates_tab">Aktualizácie</string>
+
+    <string name="feedback_send_button">Poslať spätnú väzbu</string>
+
+    <string name="my_account">Môj účet</string>
+    <string name="setting_schdwntitle">Naplánované stiahnutia</string>
+    <string name="settings">Nastavenia</string>
+    <string name="facebook">Facebook</string>
+    <string name="twitter">Twitter</string>
+    <string name="backup_apps">Záloha aplikácií</string>
+
+    <string name="menu_context_reparse">Znovu načítať</string>
+    <string name="menu_context_remove">Odstrániť</string>
+
+    <string name="search_other_stores">Alebo hľadať iné…</string>
+    <string name="see_top_stores">Pozrieť najlepšie obchody</string>
+    <string name="store_name">Názov obchodu</string>
+    <string name="insert_store_name">Vložiť názov obchodu:</string>
+    <string name="subscribe_pvt_store">Prihlásiť na odber súkromný obchod</string>
+
+    <string name="no_excluded_updates">Žiadne vylúčené aktualizácie</string>
+    <string name="no_excluded_updates_selected">Žiadne vylúčené aktualizácie zvolené</string>
+    <string name="exclude_update">Ignorovať aktualizáciu</string>
+    <string name="install_update">Inštalovať aktualizáciu</string>
+
+    <string name="payment_methods">Platiť s:</string>
+    <string name="cancel">Zrušiť</string>
+    <string name="no_payments_available">Žiadne platby dostupné.</string>
+    <string name="failed_auth_code">Nepodarilo sa autorizovať účet. Skúste prosím znovu.</string>
+    <string name="error_occured_paying">Vyskytla sa chyba. Platba sa nedokončila.</string>
+    <string name="account">Účet</string>
+    <string name="confirm_carrier_payment">"Chcete kúpiť \'{title}\'pre {value}? BUde Vám to zaúčtované vaším operátorom. "</string>
+    <string name="buy">Kúpiť</string>
+    <string name="billing_result">"Výsledok transakcie je: "</string>
+
+    <string name="change_payment">Späť</string>
+    <string name="rollback_installed">Nainštalované</string>
+    <string name="rollback_uninstalled">Odinštalované</string>
+    <string name="rollback_updated">Aktualizované</string>
+    <string name="rollback_downgraded">Znížené</string>
+    <string name="install">Inštalovať</string>
+    <string name="cannot_uninstall_self">Nemožno odinštalovať inštalačný program.</string>
+    <string name="at_time">na %s</string>
+    <string name="root_access_dialog">Zdá sa, že máte root. Chceli by ste povoliť automatickú inštaláciu aplikácie po stiahnutí?</string>
+    <string name="downgrade_requires_uninstall">Zníženie vyžaduje odinštalovanie aplikácie</string>
+
+    <string name="order_popup_title3">Obsah pre dospelých</string>
+    <string name="invite_friends">Pozvať priateľov</string>
+    <string name="timeline_is_empty_send_email">Pošleme email tým, ktorých zvolíte</string>
+    <string name="facebook_timeline_friends_invited">Priatelia pozvaní!</string>
+    <string name="select_friends_to_invite">Prosím, vyberte svojich priateľov na pozvanie!</string>
+    <string name="facebook_friends_list_using_timeline">už využívajú Aptoide sociálnu časovú os</string>
+    <string name="and">a</string>
+    <string name="more_friends">viac</string>
+    <string name="more_reviews">Recenzie</string>
+    <string name="more_editors_choice">Viac výberu editora</string>
+    <string name="more_versions">Viac verzií</string>
+    <string name="facebook_friends_list_using_timeline_empty">Sociálna časová os umožňuje zdieľať svoje aplikácie s priateľmi na Facebooku. Chcete sa pripojiť k sieti?</string>
+    <string name="X_download_number">%s dole.</string>
+    <string name="timeline_not_compatible">Oooh ... Táto funkcia nie je kompatibilná s Vašou Android verziou</string>
+    <string name="sponsored">Sponzorované</string>
+    <string name="friends_installs">Inštalácie Vašich priateľov</string>
+    <string name="recommended_for_you">Odporúčané pre Vás</string>
+    <string name="highlighted_apps">Zvýraznené</string>
+    <string name="button_more">viac</string>
+    <string name="unhide_post">ODKRYŤ</string>
+    <string name="hide_post">SKRYŤ</string>
+    <string name="like">Páči sa</string>
+    <string name="comment">Komentár</string>
+    <string name="hide_post_info">Vaši priatelia neuvidia túto správu</string>
+    <string name="timeline_like">Páči sa</string>
+    <string name="likes">Páči sa</string>
+    <string name="unlike">Nepáči sa</string>
+    <string name="timeline_empty_no_friends_send_email">Zdá sa, že vaši priatelia sa neprihlásili do Aptoide pomocou svojho Facebooku účtu. Pošlite im e-mail, aby sa prihlásili pomocou svojho Facebooku účtu</string>
+    <string name="timeline_empty_send_email_to_friends">Poslať email priateľom</string>
+    <string name="aptoide_timeline">Aptoide časová os</string>
+    <string name="timeline_email_invitation">Vás pozýva na svoju Aptoide sociálnu časovú os. Buďte pripojení!</string>
+    <string name="timeline_email_how_to_join">Ako sa môžete zapojiť do sociálnej časovej osi?</string>
+    <string name="timeline_email_step1">1- Stiahnuť najnovšiu verziu Aptoide:</string>
+    <string name="timeline_email_step2">2- Prejdite na kartu \"Sociálna časová os\" a pripojte sa k sieti</string>
+    <string name="timeline_ad">Navrhovaná aplikácia Facebookom</string>
+    <string name="facebook_start_timeline">Pridajte sa k sociálnej časovej osi</string>
+    <string name="facebook_join_friends">Chcete sa k nim pripojiť na sociálnej časovej osi?</string>
+    <string name="timeline_is_empty_no_friends">Vaša časová os je prázdna. Je to pravdepodobne preto, že nemáte priateľov na Aptoide alebo ešte nemajú žiadne príspevky.</string>
+    <string name="timeline_is_empty_start_invite">Začnime tým, že pozvete niekoľko priateľov:</string>
+
+    <string name="review_get_app">Získať aplikáciu</string>
+    <string name="review_final_verdict">Konečný verdikt</string>
+    <string name="review_speed">Rýchlosť</string>
+    <string name="review_usability">Použiteľnosť</string>
+    <string name="review_addictive">Návykové</string>
+    <string name="review_stability">Stabilita</string>
+    <string name="review_by">Skontrolované:\n%s</string>
+    <string name="review_title">Recenzie</string>
+    <string name="review_good">Dobré</string>
+    <string name="review_bad">Zlé</string>
+    <string name="review_finish">Dokončiť</string>
+    <string name="review_final_score">Skóre</string>
+    <string name="make_review_title">Urobiť recenziu</string>
+    <string name="size">Veľkosť</string>
+    <string name="set_sliders">Nastaviť posuvníky</string>
+    <string name="write_one_pro">Napíšte aspoň jedno pre</string>
+    <string name="write_one_con">Napíšte aspoň jedno proti</string>
+    <string name="write_your_final_verdict">Napíšte Váš konečný verdikt</string>
+    <string name="review_success">Recenzia úspešne uložená!</string>
+    <string name="store_privacy">Súkromie obchodu</string>
+    <string name="public_key">verejné</string>
+    <string name="private_key">súkromie</string>
+    <string name="store_username">Užívateľské meno</string>
+    <string name="store_password">Heslo</string>
+    <string name="upload_app">Uploadovať aplikáciu</string>
+    <string name="create_review">Vytvoriť recenziu</string>
+
+    <string name="asksetadultpinmessage">Chceli by ste nastaviť PIN pre odomknutie obsahu pre dospelých?</string>
+    <string name="setpin">Nastaviť Pin</string>
+    <string name="remove_mature_pin_title">Odstrániť pin obsahu pre dospelých</string>
+    <string name="remove_mature_pin_summary">Odstrániť pi potrebný na odomknutie obsahu pre dospelých</string>
+    <string name="set_mature_pin_title">Nastaviť pin na obsah pre dospelých</string>
+    <string name="set_mature_pin_summary">Nastaviť pin, ktorý bude potrebný pre odomknutie obsahu pre dospelých</string>
+    <string name="settings_title_bar">Nastavenia</string>
+    <string name="settings_dwn_network_rules">Možnosti mobilnej siete</string>
+    <string name="setting_sum_icon_download_rules">Povoliť sťahovanie ikon cez mobilné dátové pripojenie</string>
+    <string name="setting_icon_download_rules">Pravidlá sťahovania ikon</string>
+    <string name="setting_wifi">Wi-Fi</string>
+    <string name="setting_mobile">Mobilná sieť 3G/4G</string>
+    <string name="setting_3g">3G</string>
+    <string name="setting_4g">4G</string>
+    <string name="setting_ethernet">Ethernet</string>
+    <string name="setting_sum_general_download_rules">Sťahovať aplikácie, voľby editora, najlepšie aplikácie a obchody povolené cez mobilné dátové pripojenie</string>
+    <string name="setting_general_download_rules">Všeobecné pravidlá sťahovania</string>
+    <string name="setting_hwspecstitle">Technické údaje o hardvéri</string>
+    <string name="setting_hwspecssum">Informácie o hardvéri Vášho telefónu</string>
+    <string name="setting_appfiltersum">Nezobrazovať aplikácie, ktoré nie sú kompatibilné s týmto zariadením</string>
+    <string name="setting_appfiltertitle">Filtrovať aplikácie</string>
+    <string name="setting_dont_show_mature_content">Zobraziť obsah pre dospelých</string>
+    <string name="setting_mature_filtering">Obsah pre dospelých</string>
+    <string name="setting_updates">Aktualizácie</string>
+    <string name="update_all">Aktualizovať všeko</string>
+    <string name="whats_new">Čo je nové?</string>
+    <string name="setting_updates_notification_sum">Zobraziť upozornenia o nových aktualizáciách</string>
+    <string name="setting_updates_notification_title">Upozornenia o aktualizáciách</string>
+    <string name="setting_auto_update_sum">Povoliť automatickú aktualizáciu aplikácie</string>
+    <string name="setting_auto_update_title">Povoliť automatickú aktualizáciu</string>
+    <string name="show_all_updates">Nezobrazovať aktualizácie aplikácií s rôznymi podpismi</string>
+    <string name="setting_allUpdates_filtering">Filtrovať aktualizácie</string>
+    <string name="setting_schdwninstallsum">Nainštalovať naplánované sťahovanie automaticky, ak je prítomné Wi-Fi pripojenie</string>
+    <string name="setting_schdwninstalltitle">Automatická inštalácia</string>
+    <string name="setting_clear_memory">Vyčistiť pamäť</string>
+    <string name="clearcontent_title">Odstrániť údaje a konfigurácie</string>
+    <string name="settings_maxFileCache_sum">Nastaviť maximálnu veľkosť pre ponechanie Vašich APK súborov</string>
+    <string name="settings_maxFileCache_title">Stiahnuť cache súboru (MB)</string>
+    <string name="change_theme">Zmeniť tému</string>
+    <string name="theme">Témy</string>
+    <string name="root">Root</string>
+    <string name="allow_root">Povoliť root inštaláciu</string>
+    <string name="disable_social_timeline">Vypnúť sociálnu časovú os</string>
+    <string name="social_timeline_notifications">Oznámenia časovej osi</string>
+    <string name="about_us">O nás</string>
+    <string name="restart_aptoide">Prosím, pre zmenu témy reštartuje aplikáciu</string>
+    <string name="setting_sdk_version">SDK verzia</string>
+    <string name="setting_screen_size">Veľkosť obrazovky</string>
+    <string name="setting_esgl_version">ESGL verzia</string>
+    <string name="screenCode">Kód obrazovky</string>
+    <string name="cpuAbi">CPU</string>
+    <string name="about_site">Webstránka:</string>
+    <string name="about_mail">Kontakt:</string>
+    <string name="clear_cache_sucess">Obsha úspešne vymazaný</string>
+    <string name="clearcontent_sum">Vymaže údaje z SD karty.</string>
+    <string name="cache_using_X_mb">Pomocou %s MB</string>
+    <string name="clearcache_sum">Vymaže cache (ikony, screenshoty) z SD karty.</string>
+    <string name="clearcontent_sum_jolla">Vymaže údaje</string>
+    <string name="clearcache_sum_jolla">Vymaže cache (ikony, screenshoty)</string>
+    <string name="drawer_social_media_title">Zostaňme v spojení</string>
+    <string name="read_more">Čítať viac</string>
+    <string name="read_less">Pozrieť menej</string>
+    <string name="flag_this_app_good">Dobré</string>
+    <string name="flag_this_app_button_text">Označiť túto aplikáciu</string>
+    <string name="appview_rating_card_text">Hodnotenie</string>
+    <string name="flag_this_app_need_licence">Potrebuje licenciu</string>
+    <string name="flag_this_app_fake">Falzifikát</string>
+    <string name="flag_this_app_freeze">Zablokovať</string>
+    <string name="flag_this_app_virus">Vírus</string>
+    <string name="appview_recommended_for_you_title">Odporúčané pre Vás</string>
+    <string name="appview_additional_information_title">Dodatočné informácie</string>
+    <string name="appview_comment_reply_button_text">Odpovedať</string>
+    <string name="appview_header_trusted_text">Overené</string>
+    <string name="appview_subscribe_store_button_text">Prihlásiť na odoberanie?</string>
+    <string name="appview_subscribed_store_button_text">Prihlásené na odoberanie</string>
+    <string name="appview_rate_this_app_text">Hodnotiť túto aplikáciu</string>
+    <string name="appview_other_versions_in_others_stores">Iné verzie v iných obchodoch</string>
+    <string name="appview_rate_Success">Aplikácia hodnotená</string>
+    <string name="ignoreUpdateText">Ignorovať aktualizáciu</string>
+    <string name="noIgnoreUpdateText">Nová verzia aplikácie nefunguje na Vašom zariadení alebo niektoré funkcie chýbajú? Blokujte aplikácie z aktualizácií. Prejdite na kartu Aktualizácie a dlhým stlačením na aplikáciu, ktorú chcete odnastaviť z aktualizácie.</string>
+    <string name="createReviewButtonText">Vytvorť
+\nRecenziu</string>
+    <string name="navigation_drawer_signup_login">Registrovať sa alebo sa prihlásiť</string>
+    <string name="active">Aktívny</string>
+    <string name="completed">Dokončené</string>
+    <string name="_downloads"> stiahnutia</string>
+    <string name="no_description">Žiadny popis</string>
+    <string name="description">Popis</string>
+    <string name="version">Verzia</string>
+    <string name="version_placeholder">Verzia: %s</string>
+
+    <string name="results_subscribed">Obchody prihlásené na odoberanie</string>
+    <string name="results_in_store">Výsledky hľadanie v %s obchode</string>
+    <string name="other_stores">Obchody neprihlásené na odber</string>
+    <string name="comments">Komentáre</string>
+    <string name="reviews">Recenzie</string>
+    <string name="store">Obchod</string>
+    <string name="title_caps">NÁZOV</string>
+
+    <string name="unsubscribe_yes_no">Ste si istí, že sa chcete odhlásiť z odberu?</string>
+    <string name="unsubscribed_">"Odhlásené z odberu "</string>
+    <string name="error_occured_uploading">Najprv musíte aktualizovať túto aplikáciu.</string>
+
+    <string name="update_self_title">Aktualizácia dostupná</string>
+    <string name="update_self_msg">Je dostupná nová verzia %s\nChcete aktualizovať?</string>
+    <string name="retrieving_update">Načítanie aktualizácie …</string>
+
+    <string name="menu_search_item_go_to_store">Ísť do obchodu</string>
+    <string name="srch_hint">Hľadať aplikácie…</string>
+
+    <string name="app_trusted">%s je overené</string>
+    <string name="app_warning">Varovanie: %s</string>
+    <string name="scanned_with_av">Skenované s Antivírusom:</string>
+    <string name="compared_with_another_marketplace">Porovnané s inými Android trhmi:</string>
+    <string name="application_signature_analysis">Podpis aplikácie porovnaný s podpisom vývojára:</string>
+    <string name="application_signature_matched">Podpis aplikácie sa zhoduje s podpisom spojeným s vývojárom aplikácie.</string>
+    <string name="application_signature_not_matched">Podpis aplikácie nesúhlasí s podpisom súvisiacim s vývojárom aplikácie. Aplikácia môže byť sfalšovaná.</string>
+    <string name="warning">Varovanie</string>
+    <string name="trusted_app">Dôveryhodná aplikácia</string>
+    <string name="unknown">Neznáme</string>
+
+    <string name="reason_third_party">Skontrolovali sme podpis aplikácie a zhoduje sa s obchodom Google Play, tak buďte kľudní a užívajte si aplikáciu.</string>
+    <string name="reason_scanned">Skenované s AptoideGuard plus 2 rozličnými antivírusovými programami (Zoner 1.8 a Sophos 3.0).</string>
+    <string name="reason_signature">Kryptografický podpisuzaručuje, že súbor je bezpečný pre inštaláciu a nebol manipulovaný žiadnom spôsobom.</string>
+    <string name="reason_failed">Podpis aplikácie nezodpovedá podpisu vývojárov. S aplikáciou mohlo byť manipulované.</string>
+    <string name="reply_to">Odpovedať %s</string>
+    <string name="comment_submitted">Váš komentár bol úspešne odoslaný</string>
+    <string name="write_your_comment">Napíšte svoj komentár</string>
+    <string name="write_a_comment">Napíšte komentár</string>
+    <string name="no_comment_be_the_first">Zatiaľ žiadne komentáre. Buďte prví!</string>
+
+    <string name="installapp_alrt">Chcete inštalovať:
+\n\n %s?</string>
+
+    <string name="suggested_app">Navrhovaná aplikácia</string>
+
+    <string name="abTest1_label_1">Získať aplikáciu</string>
+    <string name="abTest1_label_2">Inštalovať</string>
+    <string name="abTest1_label_3">Inštalovať</string>
+
+
+    <string name="notification_timeline_new_likes">Máte %s nových páči sa mi. Skontrolujte na sociálnej časovej osi!</string>
+    <string name="notification_timeline_new_comments">Máte %s nových komentárov. Skontrolujte na sociálnej časovej osi!</string>
+    <string name="notification_timeline_activity">Máte %1$s nových komentárov a %2$s páči sa mi. Skontrolujte na sociálnej časovej osi!</string>
+    <string name="notification_social_timeline">Aptoide Sociálna Časová os. Pozrite si ju hneď!</string>
+    <string name="notification_timeline_posts">Vaši priatelia nainštalovali nové aplikácie!</string>
+
+    <string name="has_updates">%s má k dispozícii nové aktualizácie!</string>
+    <string name="new_updates">Sú %s nové aktualizácie k dispozícii!</string>
+    <string name="one_new_update">Je dostupných %s nových aktualizácií!</string>
+    <string name="updates_tab_adapter_uninstalled">Odinštalované</string>
+    <string name="updatesTabAdapterUninstall">Odinštalovať</string>
+    <string name="flag_good">Dobré</string>
+    <string name="flag_license">Potrebuje licenciu</string>
+    <string name="flag_fake">Falzifikát</string>
+    <string name="flag_freeze">Zablokovať</string>
+    <string name="flag_virus">Vírus</string>
+    <string name="flag_this_app">Označiť túto aplikáciu</string>
+    <string name="flag_added">Označenie pridané</string>
+    <string name="skip">Preskočiť</string>
+    <string name="wizard_title_01">Vitajte na Aptoide</string>
+    <string name="wizard_description_01">Vytvorte si účet zdarma a začnite budovať svoj vlastný osobný App Store.\n\nPrechádzajte podľa témy obchody a objavte nové a zaujímavé aplikácie.</string>
+    <string name="wizard_title_02">Zvýšená bezpečnosť</string>
+    <string name="wizard_description_02">Vyhľadajte dôveryhodné znaky a bezpečne sťahujte aplikácie.\n\nNekompatibilné problémy? Vyhľadávajte predchádzajúce verzie aplikácií.</string>
+    <string name="wizard_title_03">Nový členovia našej rodiny</string>
+    <string name="wizard_subtitle_03_1">Aptoide Lite verzia</string>
+    <string name="wizard_description_03_1">pre staré zariadenia a pomalé internetové pripojenie</string>
+    <string name="wizard_subtitle_03_2">Aptoide Televízia</string>
+    <string name="wizard_description_03_2">optimalizovaný App store pre Set top boxy a chytré TV</string>
+    <string name="wizard_reviews_title">Recenzie</string>
+    <string name="wizard_reviews">Teraz môžete vytvoriť recenzie aplikácií s Aptoide!</string>
+    <string name="wizard_new_and_improved">Zlepšený výkon!</string>
+    <string name="wizard_new_and_improved_bullet_1">Šetriť výdrž batérie</string>
+    <string name="wizard_new_and_improved_bullet_2">Znížiť CPU a bandwidth používanie</string>
+    <string name="wizard_new_and_improved_bullet_3">Načítať menej zdrojov</string>
+    <string name="wizard_new_and_improved_bullet_4">Čisté užívateľské rozhranie</string>
+    <string name="wizard_new_homepage">Nové rozloženie domovskej stránky</string>
+    <string name="wizard_new_top">Nová záložka Top</string>
+    <string name="subscribe_apps_official_store">Prihlásiť na odber \"aplikácií\" Aptoide oficiálneho Obchodu aplikácií</string>
+    <string name="wizard_next">Ďalšie</string>
+    <string name="wizard_prev">Predošlé</string>
+    <string name="search_activity_title">\'%s\'</string>
+
+    <string name="share">Zdieľať</string>
+    <string name="share_on_timeline">Zdieľať na časovej osi</string>
+
+    <string name="search_for_apps">Hľadať aplikácie…</string>
+    <string name="empty_search">Prázdne hľadanie, napíšte názov aplikácie</string>
+    <string name="manually_reviewed">Záruka dobrej aplikácie: táto aplikácia prešla bezpečnostným testom na škodlivé útoky vírusmi, malwarom a ďalšími škodlivými útokmi a neobsahuje žiadne hrozby</string>
+
+    <string name="no_apps_found">Nenašli sa žiadne aplikácie s aktuálnym filtrom</string>
+    <string name="no_search_results_message">Nie sú k dispozícii žiadne výsledky Vášho vyhľadávania.\nProsím, skúste iné kľúčové slová.</string>
+
+    <string name="developer">Vývojár</string>
+    <string name="website">Webstránka: %s</string>
+    <string name="email">Email: %s</string>
+    <string name="privacy_policy">Zásady ochrany osobných údajov: %s</string>
+    <string name="dialog_version_size">Verzia: %1$s | Veľkosť: %2$s</string>
+    <string name="na">N/A</string>
+    <string name="no_email_and_pass_error_message">Prosím, pre registrovanie vložte e-mail a heslo.</string>
+    <string name="no_pass_error_message">Prosím, pre registrovanie zadajte heslo.</string>
+    <string name="no_email_error_message">Prosím, pre registrovanie zadajte email.</string>
+    <string name="website_copied">Webstránka skopírovaná do schránky</string>
+    <string name="email_copied">E-mail skopírovaný do schránky</string>
+    <string name="privacy_copied">Odkaz ochrany osobných údajov skopírovaný do schránky</string>
+    </resources>

@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="please_wait">Ju lutem prisni…</string>
+
+    <string name="WidgetProvider_timestamp_today">Sot</string>
+    <string name="WidgetProvider_timestamp_yesterday">Dje</string>
+    <string name="WidgetProvider_timestamp_hour_ago">%s orë më parë</string>
+    <string name="WidgetProvider_timestamp_hours_ago">%s orë më parë</string>
+    <string name="WidgetProvider_timestamp_minutes_ago">%s minuta më parë</string>
+    <string name="WidgetProvider_timestamp_just_now">Tani</string>
+    <string name="WidgetProvider_timestamp_weeks_ago">%s javë më parë</string>
+    </resources>

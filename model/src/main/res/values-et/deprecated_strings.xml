@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="error_MARG_1">Puudub pood</string>
+    <string name="error_MARG_2">Puuduvad rakenduse andmed</string>
+    <string name="error_MARG_3">Puudub rakendused versioon</string>
+    <string name="error_MARG_4">Puudub konto</string>
+    <string name="error_MARG_5">Puudub rakendus</string>
+    <string name="error_MARG_6">Puuduvad MD5 andmed</string>
+    <string name="error_MARG_7">Puudub paketi parameeter</string>
+    <string name="error_MARG_8">Puudub HMAC parameeter</string>
+    <string name="error_MARG_9">Puudub limiidi parameeter</string>
+    <string name="error_MARG_10">Puudub nihke parameeter</string>
+    <string name="error_MARG_11">Puudub keele parameeter</string>
+    <string name="error_MARG_100">Puudub rakenduse nimi</string>
+    <string name="error_MARG_101">Puudub kirjeldus</string>
+    <string name="error_MARG_102">Puudub kategooria</string>
+    <string name="error_MARG_103">Puudub hinnang</string>
+    <string name="error_MARG_104">Puudub lipp</string>
+    <string name="error_MARG_105">Puudub kommentaar</string>
+    <string name="error_MARG_106">Puudub hääl</string>
+    <string name="error_MARG_107">Puudub tekst</string>
+    <string name="error_MARG_108">Puudub meeldivuse parameeter</string>
+    <string name="error_MARG_109">Puudub e-maili parameeter</string>
+    <string name="error_MARG_110">Puudub passhash parameeter</string>
+    <string name="error_MARG_111">Puudub nime parameeter</string>
+    <string name="error_MARG_112">Puudub user-agent parameeter</string>
+    <string name="error_MARG_113">Puudub räsi parameeter</string>
+    <string name="error_MARG_200">Autentimise viga</string>
+    <string name="error_MARG_201">Vigane kasutaja/salasõna kombinatsioon</string>
+    <string name="error_MARG_202">Vigane autoriseering või kasutaja/salasõna</string>
+
+    <string name="error_IARG_1">Vigane pood</string>
+    <string name="error_IARG_2">Vigane meldimine</string>
+    <string name="error_IARG_3">Vigane identifikaator</string>
+    <string name="error_IARG_4">Vigased MD5 andmed</string>
+    <string name="error_IARG_5">Vigane hmac vorming</string>
+    <string name="error_IARG_6">Vigane keel</string>
+    <string name="error_IARG_100">Kommentaari peab olema vähemalt 10 tähemärki</string>
+    <string name="error_IARG_101">Kommentaari vastuses peab olema vähamelt 10 tähemärki</string>
+    <string name="error_IARG_102">Vigane parameeter</string>
+    <string name="error_IARG_103">Vigane kategooria</string>
+    <string name="error_IARG_104">Vigane reiting</string>
+    <string name="error_IARG_105">See URL ei vasta veebisaidile</string>
+    <string name="error_IARG_106">E-maili aadress on vigane</string>
+    <string name="error_IARG_107">Vigane lipp</string>
+    <string name="error_IARG_108">Vigane kommentaar</string>
+    <string name="error_IARG_109">Vigane hääl</string>
+    <string name="error_IARG_110">Vigane kommentaari vastus</string>
+    <string name="error_IARG_200">Vigane meldimismärgend</string>
+    <string name="error_IARG_201">Vigane meldimisrežiim</string>
+    <string name="error_IARG_300">Vigane kohandatud kategooria</string>
+    <string name="error_IARG_301">Vigane kategooria</string>
+    <string name="error_IARG_302">See rakendus on antud kategoorias juba olemas</string>
+
+    <string name="error_AUTH_1">Vigane sisselogimise mandaat!</string>
+    <string name="error_AUTH_2">Vigane mandaat!</string>
+    <string name="error_AUTH_3">Sinu konto tühistati. Küsimuste korral võta ühendust Aptoide kasutajatoega.</string>
+    <string name="error_AUTH_4">HMAC autentimise viga</string>
+    <string name="error_AUTH_100">Google kontoga sisselogimine nurjus. Palun kontrolli oma Google kontot (võib-olla pead valideerima oma meiliaadressi).</string>
+    <string name="error_AUTH_101">Google kontoga sisselogimine nurjus. Palun proovi uuesti.</string>
+    <string name="error_AUTH_102">Facebooki kontoga sisselogimine nurjus. Palun kontrolli oma Facebooki kontot (võib-olla pead valideerima oma meiliaadressi).</string>
+    <string name="error_AUTH_103">Facebooki kontoga sisselogimine nurjus. Palun proovi uuesti.</string>
+
+    <string name="error_WOP_6">Kommenteerimiseks pead sisestama oma nime (see on kõigile näha)</string>
+    <string name="error_WOP_7">Kommentaari viga</string>
+    <string name="please_wait">Palu oota…</string>
+    </resources>

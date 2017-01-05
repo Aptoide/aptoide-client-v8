@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="please_wait">Ве молиме почекајте…</string>
+
+    <string name="WidgetProvider_timestamp_today">Денес</string>
+    <string name="WidgetProvider_timestamp_yesterday">Вчера</string>
+    <string name="WidgetProvider_timestamp_hour_ago">пред %s час</string>
+    <string name="WidgetProvider_timestamp_hours_ago">пред %s часа</string>
+    <string name="WidgetProvider_timestamp_minutes_ago">пред %s минути</string>
+    <string name="WidgetProvider_timestamp_just_now">Штотуку</string>
+    <string name="WidgetProvider_timestamp_weeks_ago">пред %s седмици</string>
+    <string name="WidgetProvider_timestamp_week_ago2">пред 1 седмица</string>
+    <string name="WidgetProvider_timestamp_days_ago">пред %s дена</string>
+    <string name="WidgetProvider_timestamp_month_ago">пред 1 месец</string>
+    <string name="WidgetProvider_timestamp_months_ago">пред %s месеци</string>
+    <string name="WidgetProvider_timestamp_year_ago">пред 1 година</string>
+    <string name="WidgetProvider_timestamp_years_ago">пред %s години</string>
+
+<string name="continue_option">Продолжи</string>
+
+  </resources>

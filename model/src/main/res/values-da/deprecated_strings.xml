@@ -1,0 +1,478 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="error_MARG_1">Mangler butik</string>
+    <string name="error_MARG_2">Mangler app info</string>
+    <string name="error_MARG_3">Mangler app version</string>
+    <string name="error_MARG_4">Mangler login</string>
+    <string name="error_MARG_5">Mangler app</string>
+    <string name="error_MARG_6">Mangler MD5 data</string>
+    <string name="error_MARG_7">Mangler pakke parameter</string>
+    <string name="error_MARG_8">Mangler hmac parameter</string>
+    <string name="error_MARG_9">Mangler begrænser parameter</string>
+    <string name="error_MARG_10">Mangler offset parameter</string>
+    <string name="error_MARG_11">Mangler sprog parameter</string>
+    <string name="error_MARG_100">Mangler app navn</string>
+    <string name="error_MARG_101">Mangler beskrivelse</string>
+    <string name="error_MARG_102">Mangler kategori</string>
+    <string name="error_MARG_103">Mangler bedømmelse</string>
+    <string name="error_MARG_104">Mangler flag</string>
+    <string name="error_MARG_105">Mangler kommentar</string>
+    <string name="error_MARG_106">Mangler stemme</string>
+    <string name="error_MARG_107">Mangler tekst</string>
+    <string name="error_MARG_108">Mangler synes godt om parameter</string>
+    <string name="error_MARG_109">Mangler email parameter</string>
+    <string name="error_MARG_110">Mangler passhash parameter</string>
+    <string name="error_MARG_111">Mangler navn parameter</string>
+    <string name="error_MARG_112">Mangler bruger-agent parameter</string>
+    <string name="error_MARG_113">Mangler hash parameter</string>
+    <string name="error_MARG_200">Fejl i autentifikation</string>
+    <string name="error_MARG_201">Ugyldig brugernavn/adgangskode kombination</string>
+    <string name="error_MARG_202">Ugyldig token eller bruger/adgangskode</string>
+
+    <string name="error_IARG_1">Ugyldig butik</string>
+    <string name="error_IARG_2">Ugyldigt login</string>
+    <string name="error_IARG_3">Ugyldig identifier</string>
+    <string name="error_IARG_4">Ugyldigt MD5 data</string>
+    <string name="error_IARG_5">Ugyldigt hmac format</string>
+    <string name="error_IARG_6">Ugyldigt sprog</string>
+    <string name="error_IARG_100">Det mindst tilladte antal karakterer i en kommentar er 10</string>
+    <string name="error_IARG_101">Det mindst tilladte antal karakterer i en besvarelse af en kommentar er 10</string>
+    <string name="error_IARG_102">Ugyldigt argument</string>
+    <string name="error_IARG_103">Ugyldig kategori</string>
+    <string name="error_IARG_104">Ugyldig bedømmelse</string>
+    <string name="error_IARG_105">Hjemmesiden er ikke en gyldig URL</string>
+    <string name="error_IARG_106">Emailadressen er ikke gyldig</string>
+    <string name="error_IARG_107">Ugyldigt flag</string>
+    <string name="error_IARG_108">Ugyldig kommentar</string>
+    <string name="error_IARG_109">Ugyldig stemme</string>
+    <string name="error_IARG_110">Ugyldig besvarelse af kommentar</string>
+    <string name="error_IARG_200">Ugyldig login token</string>
+    <string name="error_IARG_201">Ugyldig login mode</string>
+    <string name="error_IARG_300">Ugyldig standard kategori</string>
+    <string name="error_IARG_301">Ugyldig kategori</string>
+    <string name="error_IARG_302">Den valgte applikation eksisterer allerede i denne kategori</string>
+
+    <string name="error_AUTH_1">Ugyldige login oplysninger!</string>
+    <string name="error_AUTH_2">Ugyldige oplysninger!</string>
+    <string name="error_AUTH_3">Din konto blev annulleret. Hvis du har spørgsmål, kontakt venligst Aptoide Support teamet.</string>
+    <string name="error_AUTH_4">HMAC Autentifikationsfejl</string>
+    <string name="error_AUTH_100">Kunne ikke logge ind med Google. Check venligst din Google konto (du skal muligvis bekræfte din emailadresse).</string>
+    <string name="error_AUTH_101">Kunne ikke logge ind med Google. Prøv venligst igen.</string>
+    <string name="error_AUTH_102">Kunne ikke logge ind med Facebook. Check venligst din Facebook konto (du skal muligvis bekræfte din emailadresse).</string>
+    <string name="error_AUTH_103">Kunne ikke logge ind med Facebook. Prøv venligst igen.</string>
+
+    <string name="error_WOP_6">For at tilføje en kommentar skal du indsætte dit navn (det vil blive vist)</string>
+    <string name="error_WOP_7">Kommentar fejl</string>
+    <string name="error_WOP_8">Kommentar stemme fejl</string>
+    <string name="error_WOP_9">Den oplyste email eksisterer allerede i systemet</string>
+    <string name="error_WOP_10">Den oplyste email eksisterer ikke i systemet endnu</string>
+    <string name="error_WOP_11">Butikken kunne ikke oprettes. Prøv venligst igen.</string>
+
+    <string name="error_REPO_1">Butikken eksisterer ikke.</string>
+    <string name="error_REPO_2">Butikken blev annulleret.</string>
+    <string name="error_REPO_3">Butikken tilhører ikke denne bruger.</string>
+    <string name="error_REPO_4_no_store">Du har ingen butik oprettet på din konto. Du skal oprette en for at kunne give en bedømmelse.</string>
+    <string name="error_REPO_7">Denne bruger har allerede et gyldigt repo.</string>
+
+    <string name="error_APK_1">Kan ikke åbne denne app med den oplyste info og version</string>
+    <string name="error_APK_4">Kan ikke åbne denne app</string>
+    <string name="error_APK_Description">Beskrivelse ikke tilgængelig</string>
+
+    <string name="error_SYS_1">En ukendt fejl opstod, prøv venligst igen</string>
+    <string name="error_SYS_2">Ingen data fundet, prøv venligst igen senere</string>
+    <string name="error_SYS_3">Systemet er under vedligeholdelse, prøv venligst igen senere</string>
+    <string name="error_SYS_4">Dette kald er ikke understøttet af den nuværende API version</string>
+    <string name="error_SYS_Billing">In-App Fakturering er ikke understøttet på denne enhed.</string>
+
+    <string name="error_410">Beklager, den anmodede App blev ikke fundet på denne server.</string>
+
+    <string name="please_wait">Vent venligst…</string>
+    <string name="simple_error_occured">En fejl opstod. </string>
+    <string name="yes">Ja</string>
+    <string name="no">Nej</string>
+    <string name="feedback_subject">Emne</string>
+    <string name="feedback_to_write2">Skriv her for at sende os din feedback…\n\n Giv os venligst alle de oplysninger du har:
+\n Trin du har udført
+\n Fejl du modtager</string>
+    <string name="feedback_include_logs">Inkluder Skærmdumps og Logfiler</string>
+    <string name="feedback_no_email">Ingen email klient installeret!</string>
+    <string name="username_tip">Indtast din email</string>
+    <string name="store_already_added">Butik allerede tilføjet!</string>
+    <string name="subscribe_store">Abonner Butik</string>
+    <string name="permissions">Se Tilladelser</string>
+    <string name="permissions_na">Tilladelser: N/A</string>
+    <string name="additional_permissions">Yderligere Tilladelser</string>
+    <string name="no_permissions_required">Ingen tilladelser nødvendige for denne app.</string>
+    <string name="restore">Installer</string>
+
+    <string name="timeout">Netværksforbindelse timeout</string>
+    <string name="ip_blacklisted">Sortlistet IP</string>
+    <string name="connection_error">Ingen netværksforbindelse</string>
+    <string name="apk_not_found">Apk ikke fundet</string>
+    <string name="invalid_apk">Ugyldig apk</string>
+    <string name="remote_in_nospace">ikke nok plads på din enhed.</string>
+    <string name="server_error">Server fejl</string>
+    <string name="paidapp_not_found">Fejl ved download af app. Prøv venligst igen eller kontakt support.</string>
+    <string name="sd_error">Kunne ikke skrive til SDCard.</string>
+    <string name="sd_error_jolla">Kunne ikke downloade korrekt</string>
+    <string name="starting_download">Starter download</string>
+    <string name="installing">%s installerer…</string>
+    <string name="finished_install">%s er blevet installeret.</string>
+    <string name="aptoide_downloading">%s downloader</string>
+    <string name="remaining_time">tilbage</string>
+    <string name="data_usage_constraint">Download er ikke tilladt i Indstillinger &gt; Generelle Download Regler</string>
+    <string name="download_pending">Venter</string>
+
+    <string name="download_retry">Prøv igen</string>
+    <string name="error503">Ufff... Er det bare mig eller installerer alle apps samtidigt?</string>
+    <string name="having_some_trouble">Vi har lidt problemer. Kan du prøve igen senere?</string>
+
+    <string name="reply">Besvar</string>
+    <string name="vote_down">Stem Ned</string>
+    <string name="vote_up">Stem Op</string>
+    <string name="casting_vote">Afgiver stemme…</string>
+    <string name="vote_submitted">Din stemme blev afgivet</string>
+    <string name="votes">%s stemmer</string>
+
+    <string name="reviewed_by">Anmeldelse af - %s</string>
+    <string name="installed_this">%s installerede denne.</string>
+
+    <string name="adult_pin_wrong">Forkert pin, prøv igen.</string>
+    <string name="request_adult_pin">Indtast pin for at låse op</string>
+    <string name="are_you_adult">Er du mindst 21 år gammel?</string>
+    <string name="facebook_logout_and_login">Log ud og Log ind med Facebook</string>
+
+    <string name="schDown_nodownloadselect">Ingen Downloads Valgt</string>
+    <string name="no_sch_downloads">Gennemser du apps ved brug af mobil data og vil downloade senere når du er på en wifi forbindelse? Brug Planlæg downloads og skift dine præferencer i Indstillinger -&gt; Generelle Download Regler - til WiFi.</string>
+    <string name="schDown_installselected">Installation Valgt</string>
+    <string name="schDown_removeselected">Fjern Valgte</string>
+    <string name="schDown_invertselection">Omvend Valg</string>
+
+    <string name="schDwnBtn">Planlæg Download</string>
+    <string name="schDown_install">Ønsker du at installere alle planlagte downloads?</string>
+    <string name="dont_show_again">Vis ikke denne dialog igen</string>
+
+    <string name="see_more">Se Mere</string>
+    <string name="see_less">Se Mindre</string>
+    <string name="get_latest">Få seneste version</string>
+
+    <string name="installed_tab">Installeret</string>
+    <string name="updates_tab">Opdateringer</string>
+
+    <string name="feedback_send_button">Send Feedback</string>
+
+    <string name="my_account">Min Konto</string>
+    <string name="setting_schdwntitle">Planlagte Downloads</string>
+    <string name="settings">Indstillinger</string>
+    <string name="facebook">Facebook</string>
+    <string name="twitter">Twitter</string>
+    <string name="backup_apps">Backup Apps</string>
+
+    <string name="menu_context_reparse">Genindlæs</string>
+    <string name="menu_context_remove">Fjern</string>
+
+    <string name="search_other_stores">Eller søg efter andre…</string>
+    <string name="see_top_stores">Se Top Butikker</string>
+    <string name="store_name">Butiksnavn</string>
+    <string name="insert_store_name">Indsæt butiksnavn:</string>
+    <string name="subscribe_pvt_store">Abonner på privat butik</string>
+
+    <string name="no_excluded_updates">Ingen Ekskluderede Opdateringer</string>
+    <string name="no_excluded_updates_selected">Ingen Ekskluderede Opdateringer valgt</string>
+    <string name="exclude_update">Ignorer Opdatering</string>
+    <string name="install_update">Installer Opdatering</string>
+
+    <string name="payment_methods">Betal med:</string>
+    <string name="cancel">Annuller</string>
+    <string name="no_payments_available">Ingen betalinger tilgængelige.</string>
+    <string name="failed_auth_code">Fejl i godkendelse af konto. Prøv venligst igen.</string>
+    <string name="error_occured_paying">En fejl opstod. Betalingen blev ikke gennemført.</string>
+    <string name="account">Konto</string>
+    <string name="confirm_carrier_payment">"Ønsker du at købe \'{title}\' for {value}? Du vil blive opkrævet fra din udbyder. "</string>
+    <string name="buy">Køb</string>
+    <string name="billing_result">"Transaktionens resultat er: "</string>
+
+    <string name="change_payment">Tilbage</string>
+    <string name="rollback_installed">Installeret</string>
+    <string name="rollback_uninstalled">Afinstalleret</string>
+    <string name="rollback_updated">Opdateret</string>
+    <string name="rollback_downgraded">Nedgraderet</string>
+    <string name="install">Installer</string>
+    <string name="cannot_uninstall_self">Kan ikke afinstallere installationen.</string>
+    <string name="at_time">på %s</string>
+    <string name="root_access_dialog">Det ser ud til at du har root. Ønsker du at tillade automatisk installation af app efter download?</string>
+    <string name="downgrade_requires_uninstall">Nedgradering kræver afinstallation af Applikation</string>
+
+    <string name="order_popup_title3">Voksen Indhold</string>
+    <string name="invite_friends">Inviter Venner</string>
+    <string name="timeline_is_empty_send_email">Vi sender en email til dem du vælger</string>
+    <string name="facebook_timeline_friends_invited">Venner inviteret!</string>
+    <string name="select_friends_to_invite">Vælg venligst dine venner for at invitere dem!</string>
+    <string name="facebook_friends_list_using_timeline">bruger allerede Aptoide Social Tidslinje</string>
+    <string name="and">og</string>
+    <string name="more_friends">mere</string>
+    <string name="more_reviews">Anmeldelser</string>
+    <string name="more_editors_choice">Mere Editors Choice</string>
+    <string name="more_versions">Flere Versioner</string>
+    <string name="facebook_friends_list_using_timeline_empty">Social Tidslinje lader dig dele dine applikationer med dine Facebook venner. Vil du tilslutte dig netværket?</string>
+    <string name="X_download_number">%s ned.</string>
+    <string name="timeline_not_compatible">Hovsa... Denne funktion er ikke kompatibel med din Android version</string>
+    <string name="sponsored">Sponsoreret</string>
+    <string name="friends_installs">Dine venners installationer</string>
+    <string name="recommended_for_you">Anbefalet til dig</string>
+    <string name="highlighted_apps">Fremhævet</string>
+    <string name="button_more">mere</string>
+    <string name="unhide_post">VIS SKJULTE</string>
+    <string name="hide_post">SKJUL</string>
+    <string name="like">Synes godt om</string>
+    <string name="comment">Kommenter</string>
+    <string name="hide_post_info">Dine venner vil ikke se denne post</string>
+    <string name="timeline_like">Synes godt om</string>
+    <string name="likes">Synes godt om</string>
+    <string name="unlike">Synes ikke godt om</string>
+    <string name="timeline_empty_no_friends_send_email">Det ser ud til at dine venner ikke loggede in i Aptoide med deres Facebook konto. Send dem en email så de kan logge ind med deres Facebook Konto</string>
+    <string name="timeline_empty_send_email_to_friends">Email Venner</string>
+    <string name="aptoide_timeline">Aptoide Tidslinje</string>
+    <string name="timeline_email_invitation">Inviterede dig til at tilslutte dig hans Aptoide Sociale Tidslinje. Bliv forbundet!</string>
+    <string name="timeline_email_how_to_join">Hvordan kan du tilslutte dig den Sociale Tidslinje?</string>
+    <string name="timeline_email_step1">1- Download den seneste version af Aptoide:</string>
+    <string name="timeline_email_step2">2- Gå til fanen \"Social Tidslinje\" og tilslut dig netværket</string>
+    <string name="timeline_ad">Foreslået App af Facebook</string>
+    <string name="facebook_start_timeline">Tilslut Social Tidslinje</string>
+    <string name="facebook_join_friends">Vil du tilslutte dig dem på den Sociale Tidslinje?</string>
+    <string name="timeline_is_empty_no_friends">Din Tidslinje er tom. Det er sikker fordi du endnu ikke har venner på Aptoide eller fordi de ikke har nogle posts.</string>
+    <string name="timeline_is_empty_start_invite">Lad os starte med at invitere nogle venner:</string>
+
+    <string name="review_get_app">Få App</string>
+    <string name="review_final_verdict">Endelig Bedømmelse</string>
+    <string name="review_speed">Hastighed</string>
+    <string name="review_usability">Anvendelighed</string>
+    <string name="review_addictive">Vanedannende</string>
+    <string name="review_stability">Stabilitet</string>
+    <string name="review_by">Anmeldelse af:\n%s</string>
+    <string name="review_title">Anmeldelser</string>
+    <string name="review_good">God</string>
+    <string name="review_bad">Dårlig</string>
+    <string name="review_finish">Afslut</string>
+    <string name="review_final_score">Score</string>
+    <string name="make_review_title">Skriv Anmeldelse</string>
+    <string name="size">Størrelse</string>
+    <string name="set_sliders">Indstil sliderne</string>
+    <string name="write_one_pro">Skriv mindst en fordel</string>
+    <string name="write_one_con">Skriv mindst en ulempe</string>
+    <string name="write_your_final_verdict">Skriv Din endelige Bedømmelse</string>
+    <string name="review_success">Anmeldelse modtaget!</string>
+    <string name="store_privacy">Butik privatliv</string>
+    <string name="public_key">offentlig</string>
+    <string name="private_key">privat</string>
+    <string name="store_username">Brugernavn</string>
+    <string name="store_password">Adgangskode</string>
+    <string name="upload_app">Upload app</string>
+    <string name="create_review">Skriv anmeldelse</string>
+
+    <string name="asksetadultpinmessage">Vil du gerne oprette en pin for at kunne låse op for Voksen indhold?</string>
+    <string name="setpin">Indstil Pin</string>
+    <string name="remove_mature_pin_title">Fjern pin for Voksen Indhold</string>
+    <string name="remove_mature_pin_summary">Fjern Pin som er nødvendig for at låse op for voksen Indhold</string>
+    <string name="set_mature_pin_title">Indstil pin for Voksen Indhold</string>
+    <string name="set_mature_pin_summary">Indstil en Pin som skal bruges til at låse op for voksen Indhold</string>
+    <string name="settings_title_bar">Indstillinger</string>
+    <string name="settings_dwn_network_rules">Indstillinger for Mobil Netværk</string>
+    <string name="setting_sum_icon_download_rules">Tillad download af ikoner når forbundet med mobil data</string>
+    <string name="setting_icon_download_rules">Regler for Download af Ikoner</string>
+    <string name="setting_wifi">WiFi</string>
+    <string name="setting_mobile">Mobil 3G/4G</string>
+    <string name="setting_3g">3G</string>
+    <string name="setting_4g">4G</string>
+    <string name="setting_ethernet">Ethernet</string>
+    <string name="setting_sum_general_download_rules">Download Apps, Editors Choice, Top Apps og Butikker og tilladte mobil data forbindelser</string>
+    <string name="setting_general_download_rules">Generelle Regler for Downloads</string>
+    <string name="setting_hwspecstitle">Hardware Specifikationer</string>
+    <string name="setting_hwspecssum">Hardware Info om din telefon</string>
+    <string name="setting_appfiltersum">Vis ikke applikationer som ikke er kompatible med denne enhed</string>
+    <string name="setting_appfiltertitle">Filtrer Applikationer</string>
+    <string name="setting_dont_show_mature_content">Vis voksen indhold</string>
+    <string name="setting_mature_filtering">Voksen Indhold</string>
+    <string name="setting_updates">Opdateringer</string>
+    <string name="update_all">Opdater alle</string>
+    <string name="whats_new">Hvad er nyt?</string>
+    <string name="setting_updates_notification_sum">Vis notifikationer om nye opdateringer</string>
+    <string name="setting_updates_notification_title">Notifikation om Opdateringer</string>
+    <string name="setting_auto_update_sum">Aktiver automatisk opdatering af applikationer</string>
+    <string name="setting_auto_update_title">Aktiver auto opdatering</string>
+    <string name="show_all_updates">Vis ikke opdateringer for applikationer med andre underskrifter</string>
+    <string name="setting_allUpdates_filtering">Filtrer Opdateringer</string>
+    <string name="setting_schdwninstallsum">Installer automatisk planlagte downloads når forbundet med WiFi</string>
+    <string name="setting_schdwninstalltitle">Automatisk Installation</string>
+    <string name="setting_clear_memory">Ryd Hukommelse</string>
+    <string name="clearcontent_title">Fjern data og konfigurationer</string>
+    <string name="settings_maxFileCache_sum">Indstil maksimal størrelse til dine apk filer</string>
+    <string name="settings_maxFileCache_title">Download Fil Cache (MB)</string>
+    <string name="change_theme">Skift tema</string>
+    <string name="theme">Temaer</string>
+    <string name="root">Root</string>
+    <string name="allow_root">Tillad root installation</string>
+    <string name="disable_social_timeline">Deaktiver Social Tidslinje</string>
+    <string name="social_timeline_notifications">Tidslinje Notifikationer</string>
+    <string name="about_us">Om os</string>
+    <string name="restart_aptoide">Genstart venligst applikationen for at skifte tema</string>
+    <string name="setting_sdk_version">SDK Version</string>
+    <string name="setting_screen_size">Skærm Størrelse</string>
+    <string name="setting_esgl_version">ESGL Version</string>
+    <string name="screenCode">Skærm kode</string>
+    <string name="cpuAbi">CPU</string>
+    <string name="about_site">Hjemmeside:</string>
+    <string name="about_mail">Kontakt:</string>
+    <string name="clear_cache_sucess">Indholdet er slettet</string>
+    <string name="clearcontent_sum">Sletter data fra SD kortet.</string>
+    <string name="cache_using_X_mb">Anvender %s MB</string>
+    <string name="clearcache_sum">Sletter cache (ikoner, skærm dumps) fra SD kortet.</string>
+    <string name="clearcontent_sum_jolla">Sletter data</string>
+    <string name="clearcache_sum_jolla">Sletter cache (ikoner, skærm dumps)</string>
+    <string name="drawer_social_media_title">Lad os forblive forbundet</string>
+    <string name="read_more">Læs Mere</string>
+    <string name="read_less">Se Mindre</string>
+    <string name="flag_this_app_good">God</string>
+    <string name="flag_this_app_button_text">Marker denne app</string>
+    <string name="appview_rating_card_text">Bedømmelse</string>
+    <string name="flag_this_app_need_licence">Licens Nødvendig</string>
+    <string name="flag_this_app_fake">Falsk</string>
+    <string name="flag_this_app_freeze">Frys</string>
+    <string name="flag_this_app_virus">Virus</string>
+    <string name="appview_recommended_for_you_title">Anbefalet til dig</string>
+    <string name="appview_additional_information_title">Yderligere Information</string>
+    <string name="appview_comment_reply_button_text">Besvar</string>
+    <string name="appview_header_trusted_text">Betroede</string>
+    <string name="appview_subscribe_store_button_text">Abonner?</string>
+    <string name="appview_subscribed_store_button_text">Tilmeldt</string>
+    <string name="appview_rate_this_app_text">Bedøm denne app</string>
+    <string name="appview_other_versions_in_others_stores">Andre versioner i andre butikker</string>
+    <string name="appview_rate_Success">App Bedømt</string>
+    <string name="ignoreUpdateText">Ignorer Opdatering</string>
+    <string name="noIgnoreUpdateText">Virker den nye version af en app ikke på din enhed eller mangler der en funktion? Bloker apps fra at opdatere. Gå til Opdateringer fanen og tryk på den app du vil stoppe med at opdatere.</string>
+    <string name="createReviewButtonText">Skriv
+\nAnmeldelse</string>
+    <string name="navigation_drawer_signup_login">Tilmeld Dig eller Login</string>
+    <string name="active">Aktiv</string>
+    <string name="completed">Gennemført</string>
+    <string name="_downloads"> downloads</string>
+    <string name="no_description">Ingen beskrivelse</string>
+    <string name="description">Beskrivelse</string>
+    <string name="version">Version</string>
+    <string name="version_placeholder">Version: %s</string>
+
+    <string name="results_subscribed">Tilmeldte Butikker</string>
+    <string name="results_in_store">Søgeresultater i %s butik</string>
+    <string name="other_stores">Ikke-tilmeldte Butikker</string>
+    <string name="comments">Kommentarer</string>
+    <string name="reviews">Anmeldelser</string>
+    <string name="store">Butik</string>
+    <string name="title_caps">TITEL</string>
+
+    <string name="unsubscribe_yes_no">Er du sikker på at du vil afmelde?</string>
+    <string name="unsubscribed_">"Afmeldt "</string>
+    <string name="error_occured_uploading">Du skal først uploade denne app.</string>
+
+    <string name="update_self_title">Opdatering tilgængelig</string>
+    <string name="update_self_msg">Der er en ny version af %s tilgængelig\nØnsker du at opdatere?</string>
+    <string name="retrieving_update">Henter opdatering…</string>
+
+    <string name="menu_search_item_go_to_store">Gå til butik</string>
+    <string name="srch_hint">Søg efter apps…</string>
+
+    <string name="app_trusted">%s er Betroet</string>
+    <string name="app_warning">Advarsel: %s</string>
+    <string name="scanned_with_av">Scannet med Anti-Virus:</string>
+    <string name="compared_with_another_marketplace">Sammenlignet med en anden Android Markedsplads:</string>
+    <string name="application_signature_analysis">Applikationssignatur sammenlignet med udvikler signatur:</string>
+    <string name="application_signature_matched">Applikationssignaturen matcher med signaturen relateret til applikationens udvikler.</string>
+    <string name="application_signature_not_matched">Applikationssignaturen matcher ikke med signaturen relateret til applikationens udvikler. Applikationen er muligvis blevet forfalsket.</string>
+    <string name="warning">Advarsel</string>
+    <string name="trusted_app">Betroet App</string>
+    <string name="unknown">Ukendt</string>
+
+    <string name="reason_third_party">Vi har checket appens signatur og den matcher med Googles Play Butik, så bare tag det roligt og nyd appen.</string>
+    <string name="reason_scanned">Scannet med AptoideGuard plus 2 andre anti-virus (Zoner 1.8 og Sophos 3.0).</string>
+    <string name="reason_signature">Den kryptografiske signature garanterer at det er sikkert at installere filen og at den ikke på nogen måder har været modificeret.</string>
+    <string name="reason_failed">Applikationssignaturen matcher ikke udviklerens signatur. Appen er muligvis blevet modificeret.</string>
+    <string name="reply_to">Svar til %s</string>
+    <string name="comment_submitted">Din kommentar er modtaget</string>
+    <string name="write_your_comment">Skriv din kommentar</string>
+    <string name="write_a_comment">Skriv en kommentar</string>
+    <string name="no_comment_be_the_first">Ingen kommentarer endnu. Vær den første!</string>
+
+    <string name="installapp_alrt">Ønsker du at installere:
+\n\n %s?</string>
+
+    <string name="suggested_app">Foreslået App</string>
+
+    <string name="abTest1_label_1">Få App</string>
+    <string name="abTest1_label_2">Installer</string>
+    <string name="abTest1_label_3">Installer</string>
+
+
+    <string name="notification_timeline_new_likes">Du har %s nye der synes godt om. Check på den Sociale Tidslinje!</string>
+    <string name="notification_timeline_new_comments">Du har %s nye kommentar. Check på den Sociale Tidslinje!</string>
+    <string name="notification_timeline_activity">Du har %1$s nye kommentarer og %2$ der synes godt om. Check på den Sociale Tidslinje!</string>
+    <string name="notification_social_timeline">Aptoide Social Tidslinje. Check det ud nu!</string>
+    <string name="notification_timeline_posts">Dine venner har installeret nye apps!</string>
+
+    <string name="has_updates">%s har nye opdateringer tilgængelige!</string>
+    <string name="new_updates">Der er %s nye opdateringer tilgængelige!</string>
+    <string name="one_new_update">Der er %s ny opdatering tilgængelig!</string>
+    <string name="updates_tab_adapter_uninstalled">Afinstalleret</string>
+    <string name="updatesTabAdapterUninstall">Afinstaller</string>
+    <string name="flag_good">God</string>
+    <string name="flag_license">Licens nødvendigt</string>
+    <string name="flag_fake">Falsk</string>
+    <string name="flag_freeze">Frys</string>
+    <string name="flag_virus">Virus</string>
+    <string name="flag_this_app">Marker denne app</string>
+    <string name="flag_added">Markering tilføjet</string>
+    <string name="skip">Spring over</string>
+    <string name="wizard_title_01">Velkommen til Aptoide</string>
+    <string name="wizard_description_01">Opret en gratis konto og registrer og kom igang med at bygge din egen personlige App Butik.\n\n Søg efter tema butikker og find nye og spændende applikationer.</string>
+    <string name="wizard_title_02">Forøget Sikkerhed</string>
+    <string name="wizard_description_02">Søg efter betroede badges og download sikkert apps.\n\n Kompatibilitetsproblemer? Søg efter tidligere versioner af applikationer.</string>
+    <string name="wizard_title_03">Ny medlemmer af vores familie</string>
+    <string name="wizard_subtitle_03_1">Aptoide Lite</string>
+    <string name="wizard_description_03_1">for ældre enheder og langsom internetforbindelse</string>
+    <string name="wizard_subtitle_03_2">Aptoide TV</string>
+    <string name="wizard_description_03_2">optimeret App Butik til Modtagerbokse og smart TV</string>
+    <string name="wizard_reviews_title">Anmeldelser</string>
+    <string name="wizard_reviews">Du kan nu skrive anmeldelser af dine apps med Aptoide!</string>
+    <string name="wizard_new_and_improved">Forbedret ydeevne!</string>
+    <string name="wizard_new_and_improved_bullet_1">Spar på batteriet</string>
+    <string name="wizard_new_and_improved_bullet_2">Reducer CPU og bredbåndsbrug</string>
+    <string name="wizard_new_and_improved_bullet_3">Indlæs færre resourcer</string>
+    <string name="wizard_new_and_improved_bullet_4">Ryd Bruger Interface</string>
+    <string name="wizard_new_homepage">Nyt hjemmeside layout</string>
+    <string name="wizard_new_top">Ny Top fane</string>
+    <string name="subscribe_apps_official_store">Abonner \'apps\' Aptoide Officiel App Butik</string>
+    <string name="wizard_next">Næste</string>
+    <string name="wizard_prev">Forrige</string>
+    <string name="search_activity_title">\'%s\'</string>
+
+    <string name="share">Del</string>
+    <string name="share_on_timeline">Del på tidslinje</string>
+
+    <string name="search_for_apps">Søg efter apps…</string>
+    <string name="empty_search">Tom søgning, indtast et app navn</string>
+    <string name="manually_reviewed">God App Garanteret: denne applikation bestod sikkerhedstesten for virus, malware og andre mulige angreb og indeholder ingen trusler</string>
+
+    <string name="no_apps_found">Ingen apps fundet med nuværende filtrering</string>
+    <string name="no_search_results_message">Der er ingen resultater på din søgning.
+\nPrøv venligst med andre nøgleord.</string>
+
+    <string name="developer">Udvikler</string>
+    <string name="website">Hjemmeside: %s</string>
+    <string name="email">Email: %s</string>
+    <string name="privacy_policy">Privatlivspolitik: %s</string>
+    <string name="dialog_version_size">Version: %1$s | Størrelse: %2$s</string>
+    <string name="na">N/A</string>
+    <string name="no_email_and_pass_error_message">Indtast venligst en email og adgangskode for at registrere.</string>
+    <string name="no_pass_error_message">Indtast venligst en adgangskode for at registrere.</string>
+    <string name="no_email_error_message">Indtast venligst en email for at registrere.</string>
+    <string name="website_copied">Hjemmeside kopieret til udklipsholder</string>
+    <string name="email_copied">E-mail kopieret til udklipsholder</string>
+    <string name="privacy_copied">Privat link kopieret til udklipsholder</string>
+    </resources>

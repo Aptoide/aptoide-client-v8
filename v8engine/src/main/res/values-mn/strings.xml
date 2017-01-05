@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="open">Нээх</string>
+    <string name="search">Хайх</string>
+
+    <string name="update">Update</string>
+    <string name="uninstall">Устгах</string>
+    <string name="downgrade">Downgrade</string>
+    <string name="menu_select_all">Бүгдийг сонгох</string>
+    <string name="clear">Цэвэрлэх</string>
+
+    <string name="excluded_updates">Шинэчлэл хийхгүй апп-ууд</string>
+    <string name="restore_updates">Restore Updates</string>
+    <string name="rollback">Роллбак</string>
+    <string name="menu_card_timeline_clear">Цэвэрлэх</string>
+    <string name="displayable_social_timeline_app_update">Update</string>
+    <string name="appview_rate_this_app">Апп-д үнэлгээ өгөх</string>
+    <string name="displayable_social_timeline_app_update_updated">Шинэчилсэн</string>
+    <string name="ignore_update">Шинэчлэхгүй байх</string>
+    </resources>

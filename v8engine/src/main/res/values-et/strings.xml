@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+
+    <string name="dark">Tume</string>
+    <string name="light">Hele</string>
+
+    <string name="updates_filter_summary">Märge siin peidab teated beetaversioonide saadavusest.</string>
+    <string name="updates_filter_setting_title">Näita rakenduse stabiilsete versioonide uuendusi</string>
+    <string name="aptoide_email">aptoide@aptoide.com</string>
+    <string name="aptoide_url">http://www.aptoide.com/</string>
+
+    <string name="access_to_get_accounts_rationale">Sa pead lubama juurdepääsu kontodele</string>
+    <string name="unsubscribe">Tühista tellimus</string>
+    <string name="developer_website">Veebileht: %s</string>
+    </resources>

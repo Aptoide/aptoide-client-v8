@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="download_completed">Симнувањето е завршено</string>
+  <string name="download_paused">Симнувањето е паузирано</string>
+  <string name="download_progress">Симнувањето е во тек</string>
+  <string name="download_queue">Во редица</string>
+</resources>

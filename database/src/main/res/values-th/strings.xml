@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="download_completed">ดาวน์โหลดสำเร็จ</string>
+    <string name="download_paused">หยุดดาวน์โหลด</string>
+    <string name="download_progress">กำลังดาวน์โหลดอยู่</string>
+    <string name="download_queue">ในคิว</string>
+</resources>

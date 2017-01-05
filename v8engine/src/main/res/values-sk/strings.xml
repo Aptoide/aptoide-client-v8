@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="developer_website">Webstránka: %s</string>
+    <string name="not_available">N/A</string>
+    <string name="developer_email">Email: %s</string>
+    <string name="developer_privacy_policy">Zásady ochrany osobných údajov: %s</string>
+
+
+    <string name="open">Otvoriť</string>
+    <string name="button_header_more">viac</string>
+    <string name="search">Hľadať</string>
+
+    <string name="update">Aktualizovať</string>
+    <string name="uninstall">Odinštalovať</string>
+    <string name="downgrade">Znížiť</string>
+    <string name="menu_select_all">Zvoliť všetko</string>
+    <string name="menu_select_none">Zvoliť nič</string>
+    <string name="clear">Zrušiť</string>
+
+    <string name="excluded_updates">Vylúčené aktualizácie</string>
+    <string name="no_excluded_updates_msg">Nová verzia aplikácie nefunguje na Vašom zariadení alebo niektoré funkcie chýbajú? Blokujte aplikácie z aktualizácií. Prejdite na kartu Aktualizácie a dlhým stlačením na aplikáciu, ktorú chcete odnastaviť z aktualizácie.</string>
+
+    <string name="restore_updates">Obnoviť aktualizácie</string>
+    <string name="rollback">Vrátiť</string>
+    <string name="menu_card_timeline_clear">Zrušiť</string>
+    <string name="fragment_social_timeline_no_connection">Žiadne pripojenie k sieti</string>
+    <string name="fragment_social_timeline_general_error">Máte nejaké ťažkosti. Môžete opakovať neskôr?</string>
+
+    <string name="displayable_social_timeline_app_update">Aktualizovať</string>
+    <string name="appview_rate_this_app">Hodnotiť túto aplikáciu</string>
+    <string name="needs_license">Potrebuje licenciu</string>
+    <string name="virus">Vírus</string>
+    <string name="additional_information">Dodatočné informácie</string>
+    <string name="displayable_social_timeline_app_update_updated">Aktualizované</string>
+    <string name="displayable_social_timeline_recommendation_similar_and">a</string>
+    <string name="social_facebook_screen_title">Facebook</string>
+    <string name="social_twitter_screen_title">Twitter</string>
+    <string name="title">NÁZOV</string>
+    <string name="feedback_not_valid">Prosím zadajte nejaký platný predmet!</string>
+    <string name="ignore_update">Ignorovať aktualizáciu</string>
+    <string name="added_to_scheduled">Pridané do Menu &gt; Naplánované stiahnutia</string>
+    </resources>

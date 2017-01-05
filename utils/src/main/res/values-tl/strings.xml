@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="please_wait">Paki-hintay…</string>
+
+    <string name="WidgetProvider_timestamp_today">Ngayong araw</string>
+    <string name="WidgetProvider_timestamp_yesterday">Kahapon</string>
+    <string name="WidgetProvider_timestamp_hour_ago">%s oras nakakaraan</string>
+    <string name="WidgetProvider_timestamp_hours_ago">mga %s oras nakakaraan</string>
+    <string name="WidgetProvider_timestamp_minutes_ago">mga %s minuto nakakaraan</string>
+    <string name="WidgetProvider_timestamp_just_now">Ngayon lang</string>
+    <string name="WidgetProvider_timestamp_weeks_ago">mga %s linggo nakakaraan</string>
+    <string name="WidgetProvider_timestamp_week_ago2">1 linggo nakakaraan</string>
+    <string name="WidgetProvider_timestamp_days_ago">mga %s araw nakakaraan</string>
+    <string name="WidgetProvider_timestamp_month_ago">1 buwan nakakaraan</string>
+    <string name="WidgetProvider_timestamp_months_ago">mga %s buwan nakakaraan</string>
+    <string name="WidgetProvider_timestamp_year_ago">1 taon nakakaraan</string>
+    <string name="WidgetProvider_timestamp_years_ago">mga %s taon nakakaraan</string>
+
+</resources>

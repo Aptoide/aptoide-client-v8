@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="one_account_allowed">Povolený len jeden účet</string>
+    <string name="username">Email</string>
+    <string name="password">Heslo</string>
+    <string name="link_device_webinstall">Spojiť účet s Webinstall</string>
+    <string name="register">Zaregistrovať sa</string>
+    <string name="forgot_passwd">Zabudli ste heslo?</string>
+    <string name="fields_cannot_empty">Skontrolujte svoj e-mail a heslo.</string>
+    <string name="no_email_and_pass_error_message">Prosím, pre registrovanie vložte e-mail a heslo.</string>
+    <string name="no_pass_error_message">Prosím, pre registrovanie zadajte heslo.</string>
+    <string name="no_email_error_message">Prosím, pre registrovanie zadajte email.</string>
+    <string name="password_validation_text">"Heslo musí mať najmenej 8 znakov a malo by mať aspoň jedno písmeno a jedno číslo alebo špeciálne znaky (!@#$%*) "</string>
+    <string name="logged_as">Ste prihlásení ako:</string>
+    <string name="sign_out">Odhlásiť</string>
+    <string name="error_occured">Nastala chyba. Prosím skúste znovu</string>
+    <string name="ws_error_AUTH_2">Neplatné poverenia!</string>
+    <string name="ws_error_AUTH_101">Nepodarilo sa prihlásiť pomocou Google. Prosím, skúste to znovu.</string>
+    <string name="ws_error_AUTH_103">Nepodarilo sa prihlásiť pomocou Facebooku. Prosím, skúste to znovu.</string>
+    <string name="ws_error_MARG_12">Chýba parameter hmac</string>
+    <string name="ws_error_MARG_109">Chýba parameter email</string>
+    <string name="ws_error_MARG_110">Chýba parameter passhash</string>
+    <string name="ws_error_MARG_111">Chýba parameter meno</string>
+    <string name="ws_error_MARG_112">Chýba parameter user-agent</string>
+    <string name="ws_error_IARG_5">Neplatný hmac formát</string>
+    <string name="ws_error_IARG_106">E-mailová adresa je neplatná</string>
+    <string name="ws_error_REPO_7">Tento užívateľ už má platnú repo.</string>
+    <string name="ws_error_WOP_11">Obchod sa nepodarilo vytvoriť. Prosím, skúste to znovu.</string>
+    </resources>

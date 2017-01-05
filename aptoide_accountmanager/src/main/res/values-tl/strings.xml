@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="one_account_allowed">Isang account lamang ang pinapayagan</string>
+    <string name="username">Email</string>
+    <string name="password">Password</string>
+    <string name="link_device_webinstall">I-link ang account sa pamamagitan ng Webinstall</string>
+    <string name="register">Mag-sign Up</string>
+    <string name="forgot_passwd">Nakalimutan ang password?</string>
+    <string name="fields_cannot_empty">Paki-tsek ang iyong email at password.</string>
+    <string name="no_email_and_pass_error_message">Paki-lagay ang isang email at password para makapag-rehistro.</string>
+    <string name="no_pass_error_message">Paki-lagay ang isang password para makapag-rehistro.</string>
+    <string name="no_email_error_message">Paki-lagay ang isang email para makapag-rehistro.</string>
+    <string name="password_validation_text">"Ang password ay dapat na 8 karakter man lamang at dapat man lamang na may isang letra at isang numero o mga espesyal na karakter (!@#$%*) "</string>
+    <string name="logged_as">Ikaw ay naka-log bilang:</string>
+    <string name="sign_out">Pag-Sign Out</string>
+    <string name="error_occured">Isang pagkakamali ang naganap. Paki-subukan muli</string>
+    <string name="ws_error_AUTH_2">Imbalidong mga kredensyal!</string>
+    <string name="ws_error_AUTH_101">Hindi makapag-login gamit ang Google. Paki-subukan muli.</string>
+    <string name="ws_error_AUTH_103">Hindi makapag-login gamit ang Facebook. Paki-subukan muli.</string>
+    <string name="ws_error_MARG_12">Nawawalang parametro ng hmac</string>
+    <string name="ws_error_MARG_109">Nawawalang parametro ng email</string>
+    <string name="ws_error_MARG_110">Nawawalang parametro ng passhash</string>
+    <string name="ws_error_MARG_111">Nawawalang parametro ng pangalan</string>
+    <string name="ws_error_MARG_112">Nawawalang parametro ng gumagamit-ahente (user-agent)</string>
+    <string name="ws_error_IARG_5">Imbalidong pormat ng hmac</string>
+    <string name="ws_error_IARG_106">Ang e-mail address ay hindi balido</string>
+    <string name="ws_error_REPO_7">Ang gumagamit na ito ay mayroong balidong repositoryo.</string>
+    <string name="ws_error_WOP_11">Ang store ay hindi magagawang malikha. Paki-subukan muli.</string>
+    </resources>

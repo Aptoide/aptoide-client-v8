@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="download_completed">Download ay nakumpleto na</string>
+    <string name="download_paused">Download ay sandaling inihinto</string>
+    <string name="download_progress">Download ay kasalukuyang nagaganap</string>
+    <string name="download_queue">Nasa Pila</string>
+</resources>

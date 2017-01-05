@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="developer_website">Web stranica</string>
+    <string name="developer_privacy_policy">Pravila o privatnosti</string>
+
+
+    <string name="open">Otvori</string>
+    <string name="search">Pretraga</string>
+
+    <string name="update">Ažuriraj</string>
+    <string name="uninstall">Ukloni</string>
+    <string name="downgrade">Vraćanje</string>
+    <string name="menu_select_all">Označi sve</string>
+    <string name="clear">Očisti</string>
+
+    <string name="excluded_updates">Izuzeta ažuriranja</string>
+    <string name="restore_updates">Povratiti ažuriranja</string>
+    <string name="rollback">Vrati na staro</string>
+    <string name="menu_card_timeline_clear">Očisti</string>
+    <string name="fragment_social_timeline_no_connection">nema internet veze</string>
+    <string name="displayable_social_timeline_app_update">Ažuriraj</string>
+    <string name="needs_license">Treba licenca</string>
+    <string name="virus">Virus</string>
+    <string name="displayable_social_timeline_app_update_updated">Ažurirano</string>
+    <string name="feedback_not_valid">Molimo unesite validan predmet!</string>
+    <string name="ignore_update">Zanemari Ažuriranje</string>
+    <string name="added_to_scheduled">Dodano u meni &gt; Planirana preuzimanja</string>
+    </resources>

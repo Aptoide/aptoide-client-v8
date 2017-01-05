@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="wizard_skip"><b>تێپەڕاندن</b></string>
+    <string name="dialog_install_warning_trusted_version_button">وەشانی باوەڕپێکراو</string>
+    <string name="dialog_install_warning_get_trusted_version_button">بەدەستهێنان</string>
+    <string name="dark">تاریک</string>
+    <string name="light">ڕووناک</string>
+
+    <string name="aptoide_email">aptoide@aptoide.com</string>
+    <string name="aptoide_url">http://www.aptoide.com/</string>
+
+    <string name="access_to_get_accounts_rationale"/>
+    <string name="developer_website">ماڵپەڕ: %s</string>
+    <string name="not_available">بەردەست نییە</string>
+    <string name="developer_email">پۆستی ئەلیکترۆنی: %s</string>
+    <string name="open">کردنەوە</string>
+    <string name="button_header_more">زیاتر</string>
+    <string name="search">گەڕان</string>
+
+    <string name="update">نوێکردنەوە</string>
+    <string name="uninstall">دامەزرێنسڕینەوە</string>
+    <string name="appview_followers_count_text">%1$s شوێنکەوتوو</string>
+    <string name="other_versions_downloads_count_text">%1$s داگرتن</string>
+
+    <string name="menu_select_all">دیاریکردنی هەمووی</string>
+    <string name="menu_select_none">دیارینەکردنی هیچیان</string>
+    <string name="clear">خاوێنکردنەوە</string>
+
+    <string name="open_apps_manager">کردنەوەی بەڕێوەبەری نەرمەواڵەکان</string>
+
+    <string name="menu_card_timeline_clear">خاوێنکردنەوە</string>
+    <string name="fragment_social_timeline_aptoide_team">دەستەی ئەپتۆید</string>
+    <string name="fragment_social_timeline_no_connection">ئینتەرنێت بەردەست نییە</string>
+    <string name="displayable_social_timeline_app_update_name">نەرمەواڵە %1$s</string>
+    <string name="dialog_install_warning_trusted_app_button">نەرمەواڵەی متمانەپێکراو</string>
+    <string name="dialog_install_warning_search_for_trusted_app_button">گەڕان بۆ</string>
+    <string name="music_video">مۆسیقا و ڤیدیۆ</string>
+    <string name="apps_for_kids">نەرمەواڵە بۆ منداڵان</string>
+    <string name="aptoide_publishers">پەخشکەرانی ئەپتۆید</string>
+    <string name="word">وشە</string>
+    <string name="shopping">بازاڕکردن</string>
+    <string name="weather">کەشوهەوا</string>
+    <string name="latest_applications">نوێترین نەرمەواڵەکان</string>
+    <string name="travel">گەشت</string>
+    <string name="transport">گواستنەوە</string>
+    <string name="top_games">دیارترین یارییەکان</string>
+    <string name="top_apps">دیارترین نەرمەواڵەکان</string>
+    <string name="tools">ئامرازەکان</string>
+    <string name="social">کۆمەڵایەتی</string>
+    <string name="software_libraries">پەڕتووکخانەی نەرمەکاڵاکان</string>
+    <string name="sports">وەرزشی</string>
+    <string name="sports_games">یارییە وەرزشییەکان</string>
+    <string name="strategy">ستراتیژی</string>
+    <string name="local_top_apps">دیارترین نەرمەواڵە ناوخۆییەکان</string>
+    <string name="lifestyle"/>
+    <string name="medical">پزیشکی</string>
+    <string name="music">مۆسیقا</string>
+    <string name="music_audio">دەنگ و مۆسیقا</string>
+    <string name="news_magazines">هەواڵ و گۆڤار</string>
+    <string name="news_weather">هەواڵ و کەشوهەوا</string>
+    <string name="photography">فۆتۆگرافی</string>
+    <string name="racing">پێشبڕکێ</string>
+    <string name="education">فێرکردن</string>
+    <string name="educational">فێرکاریی</string>
+    <string name="family">خێزانی</string>
+    <string name="finance">سەرمایەگوزاری</string>
+    <string name="games">یارییەکان</string>
+    <string name="health">تەندروستی</string>
+    <string name="health_fitness">تەندروستی و لەشڕێکی</string>
+    <string name="communication">گەیاندن</string>
+    <string name="casino">گازینۆ</string>
+    <string name="applications">نەرمەواڵەکان</string>
+    <string name="all">هەموو</string>
+    <string name="rollback"/>
+    <string name="excluded_updates"/>
+    </resources>

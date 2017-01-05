@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="one_account_allowed">Само еден профил е дозволен</string>
+    <string name="username">еМаил</string>
+    <string name="password">Лозинка</string>
+    <string name="link_device_webinstall">Поврзете го Вашиот профил со Webinstall</string>
+    <string name="register">Регистрирајте се</string>
+    <string name="forgot_passwd">Ја заборавивте лозинката?</string>
+    <string name="fields_cannot_empty">Ве молиме проверете ги Вашите емаил и лозинка.</string>
+    <string name="no_email_and_pass_error_message">"Ве молиме внесете емаил и лозинка 
+за да се регистрирате.
+ "</string>
+    <string name="no_pass_error_message">Ве молиме внесете лозинка за да се регистрирате.</string>
+    <string name="no_email_error_message">Ве молиме внесете емаил за да се регистрирате.</string>
+    <string name="password_validation_text">"Лозинката мора да содржи најмалку 8 карактери и мора да има
+ најмалку една буква и една бројка или специјални карактери (!@#$%*)
+ "</string>
+    <string name="logged_as">Најавени сте како:</string>
+    <string name="sign_out">Одјавете се</string>
+    <string name="error_occured">Се случи грешка. Ве молиме обидете се повторно</string>
+    <string name="ws_error_AUTH_2">Невалидни податоци!</string>
+    <string name="ws_error_AUTH_101">Не можете да се најавите со Google. Ве молиме обидете се повторно.</string>
+    <string name="ws_error_AUTH_103">Не можете да се најавите со Facebook. Ве молиме обидете се повторно.</string>
+    <string name="ws_error_MARG_12">Недостасува hmac параметарот</string>
+    <string name="ws_error_MARG_109">Недостасува емаил параметар</string>
+    <string name="ws_error_MARG_110">Недостасува passhash параметар</string>
+    <string name="ws_error_MARG_111">Недостасува параметарот име</string>
+    <string name="ws_error_MARG_112">Недостасува параметарот кориснички агент</string>
+    <string name="ws_error_IARG_5">Невалиден hmac формат</string>
+    <string name="ws_error_IARG_106">Е-маил адресата не е валидна</string>
+    <string name="ws_error_REPO_7">Овој корисник веќе има валидна архива.</string>
+    <string name="ws_error_WOP_11">Продавницата не може да се креира. Ве молиме обидете се повторно.</string>
+    <string name="or">или</string>
+  <string name="login">Логирај Се</string>
+  <string name="unknown_error">Непозната грешка</string>
+    <string name="accept_terms">"Со регистрирањето вие  се согласувате со нашите Aptoide Услови на користење и 
+правила за Политика за програмери
+ "</string>
+    <string name="default_account_type">cm.aptoide.pt</string>
+
+  <string name="facebook_garant_permission_button">Побарај дозвола</string>
+  <string name="facebook_email_permission_regected_message">"Aptoide има потреба од вашата e-mail за да се направите
+ профил
+ "</string>
+  <string name="error_invalid_grant">Неправилно корисничко име и лозинка комбинација</string>
+  <string name="ws_error_MARG_200">\@string/error_occured</string>
+  </resources>

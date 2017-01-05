@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="updates_filter_summary">"در نظر داشته باشید که  درمورد نسخه های بتا شما مطلع نخواهید شد."</string>
+    <string name="updates_filter_setting_title">فقط برنامه هایی را نشان بده که به بالاترین نسخه به روز رسانی شده است</string>
+    <string name="unsubscribe">لغو عضویت</string>
+    <string name="developer_website">وب سایت: %s</string>
+    <string name="not_available">N/A</string>
+    <string name="developer_email">ایمیل: %s</string>
+    <string name="developer_privacy_policy">سیاست حفظ حریم خصوصی: %s</string>
+
+
+    <string name="open">باز کردن</string>
+    <string name="button_header_more">بیشتر</string>
+    <string name="search">جستجو</string>
+
+    <string name="update">به‌روزرسانی</string>
+    <string name="uninstall">حذف</string>
+    <string name="downgrade">بازگشت به نسخه قدیمی‌تر</string>
+    <string name="menu_select_all">انتخاب همه</string>
+    <string name="menu_select_none">عدم انتخاب</string>
+    <string name="clear">پاک کردن</string>
+
+    <string name="excluded_updates">به‌روزرسانی‌های کنار گذاشته شده</string>
+    <string name="no_excluded_updates_msg">نسخه جدید اپ روی دستگاه شما کار نمی‌کند یا برخی از قسمت‌های آن نشان داده نمی‌شود؟ به‌روز‌رسانی برنامه را متوقف کنید. به قسمت به‌روزرسانی‌ها رفته و بر روی برنامه‌ای که می‌خواهید به‌روزرسانی آن را متوقف کنید کلیک کنید.</string>
+
+    <string name="restore_updates">بازیابی به‌روزرسانی‌ها</string>
+    <string name="rollback">بازگرداندن</string>
+    <string name="menu_card_timeline_clear">پاک کردن</string>
+    <string name="fragment_social_timeline_no_connection">به اینترنت متصل نیستید</string>
+    <string name="fragment_social_timeline_general_error">عملیات با خطا مواجه شده است. می‌توانید در زمانی دیگر مجدداً تلاش کنید؟</string>
+
+    <string name="displayable_social_timeline_app_update">به‌روزرسانی</string>
+    <string name="appview_rate_this_app">به این برنامه امتیاز دهید</string>
+    <string name="needs_license">نیاز به مجوز دارد</string>
+    <string name="virus">ویروس</string>
+    <string name="additional_information">اطلاعات تکمیلی</string>
+    <string name="displayable_social_timeline_app_update_updated">به‌روزرسانی شده</string>
+    <string name="displayable_social_timeline_recommendation_similar_and">و</string>
+    <string name="social_facebook_screen_title">فیسبوک</string>
+    <string name="social_twitter_screen_title">توییتر</string>
+    <string name="title">عنوان</string>
+    <string name="feedback_not_valid">نظر شما باید دارای عنوان موضوعی باشد!</string>
+    <string name="ignore_update">به‌روز‌رسانی نکردن</string>
+    <string name="added_to_scheduled">اضافه شد به منوی &gt; دانلودهای زمان‌بندی شده</string>
+    </resources>

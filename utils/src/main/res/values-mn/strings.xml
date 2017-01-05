@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="please_wait">Түр хүлээнэ үү...</string>
+
+    <string name="WidgetProvider_timestamp_today">Өнөөдөр</string>
+    <string name="WidgetProvider_timestamp_yesterday">Өчигдөр</string>
+    <string name="WidgetProvider_timestamp_hour_ago">%s цагийн өмнө</string>
+    <string name="WidgetProvider_timestamp_hours_ago">%s цагийн өмнө</string>
+    <string name="WidgetProvider_timestamp_minutes_ago">%s минутын өмнө</string>
+    <string name="WidgetProvider_timestamp_just_now">Саяхан</string>
+    <string name="WidgetProvider_timestamp_weeks_ago">%s долоо хоногийн өмнө</string>
+    </resources>

@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="developer_website">Hjemmeside: %s</string>
+    <string name="not_available">N/A</string>
+    <string name="developer_email">Email: %s</string>
+    <string name="developer_privacy_policy">Privatlivspolitik: %s</string>
+
+
+    <string name="open">Åben</string>
+    <string name="button_header_more">mere</string>
+    <string name="search">Søg</string>
+
+    <string name="update">Opdater</string>
+    <string name="uninstall">Afinstaller</string>
+    <string name="downgrade">Nedgrader</string>
+    <string name="menu_select_all">Vælg Alle</string>
+    <string name="menu_select_none">Vælg Ingen</string>
+    <string name="clear">Ryd</string>
+
+    <string name="excluded_updates">Ekskluderede Opdateringer</string>
+    <string name="no_excluded_updates_msg">Virker den nye version af en app ikke på din enhed eller mangler der en funktion? Bloker apps fra at opdatere. Gå til Opdateringer fanen og tryk på den app du vil stoppe med at opdatere.</string>
+
+    <string name="restore_updates">Gendan Opdateringer</string>
+    <string name="rollback">Rul tilbage</string>
+    <string name="menu_card_timeline_clear">Ryd</string>
+    <string name="fragment_social_timeline_no_connection">Ingen netværksforbindelse</string>
+    <string name="fragment_social_timeline_general_error">Vi har lidt problemer. Kan du prøve igen senere?</string>
+
+    <string name="displayable_social_timeline_app_update">Opdater</string>
+    <string name="appview_rate_this_app">Bedøm denne app</string>
+    <string name="needs_license">Licens nødvendigt</string>
+    <string name="virus">Virus</string>
+    <string name="additional_information">Yderligere Information</string>
+    <string name="displayable_social_timeline_app_update_updated">Opdateret</string>
+    <string name="displayable_social_timeline_recommendation_similar_and">og</string>
+    <string name="social_facebook_screen_title">Facebook</string>
+    <string name="social_twitter_screen_title">Twitter</string>
+    <string name="title">TITEL</string>
+    <string name="feedback_not_valid">Indsæt venligst et gyldigt Emne!</string>
+    <string name="ignore_update">Ignorer Opdatering</string>
+    <string name="added_to_scheduled">Tilføjet til Menu &gt; Planlagte Downloads</string>
+    </resources>

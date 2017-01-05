@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="aptoide_downloading">%s се симнува</string>
+    <string name="pause_download">Паузирај</string>
+  <string name="resume_download">Продолжи</string>
+  <string name="general_downloads_dialog_only_mobile_message">Сте одбрале да преземете на мобилен 3G / 4G интернет. Дали сакате да направите промена?</string>
+  <string name="general_downloads_dialog_only_wifi_message">Сте одбрале да преземете само на WiFi. Дали сакате да направите промена?</string>
+  </resources>

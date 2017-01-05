@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="one_account_allowed">Зөвхөн нэг аккаунт зөвшөөрнө</string>
+    <string name="username">Имэйл</string>
+    <string name="password">Нууц үг</string>
+    <string name="link_device_webinstall">WebInstall-той бүртгэлээ холбох</string>
+    <string name="register">Бүртгүүлэх</string>
+    <string name="forgot_passwd">Нууц үгээ мартсан уу?</string>
+    <string name="logged_as">Нэвтэрсэн хэрэглэгчийн нэр:</string>
+    <string name="sign_out">Гарах</string>
+    <string name="error_occured">Алдаа гарлаа. Дахин оролдоно уу</string>
+    </resources>

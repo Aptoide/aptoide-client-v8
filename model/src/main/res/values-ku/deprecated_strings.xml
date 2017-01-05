@@ -1,0 +1,234 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="no_email_error_message">تکایە پۆستێکی ئەلیکترۆنی بنووسە بۆ خۆتۆمارکردن.</string>
+    <string name="no_pass_error_message">تکایە تێپەڕەوشەیەک بنووسە بۆ خۆتۆمارکردن.</string>
+    <string name="error_MARG_5">نەرمەواڵەی بزر</string>
+    <string name="error_MARG_101">پێناسەی بزر</string>
+    <string name="error_MARG_102">هاوپۆلی بزر</string>
+    <string name="error_MARG_107">دەقی بزر</string>
+    <string name="aptoide_downloading">%s دادەگرێت</string>
+    <string name="please_wait">تکایە چاوەڕوان بە…</string>
+    <string name="no_email_and_pass_error_message">تکایە پۆستێکی ئەلیکترۆنی و تێپەڕەوشەیەک بووسە بۆ خۆتۆمارکردن.</string>
+    <string name="dialog_version_size">وەشان: %1$s | قەبارە: %2$s</string>
+    <string name="email">پۆستی ئەلیکترۆنی: %s</string>
+    <string name="developer">گەشەپێدەر</string>
+    <string name="website">ماڵپەڕ: %s</string>
+    <string name="search_for_apps">گەڕان بۆ نەرمەواڵەکان…</string>
+    <string name="share">هاوبەشکردن</string>
+    <string name="search_activity_title">\'%s\'</string>
+
+    <string name="wizard_prev">پێشوو</string>
+    <string name="wizard_next">دواتر</string>
+    <string name="wizard_description_03_1">بۆ ئامێرە کۆنەکان و ئینتەرنێتە خاوەکان</string>
+    <string name="wizard_title_01">بەخێربێت بۆ ئەپتۆید</string>
+    <string name="skip">تێپەڕاندن</string>
+    <string name="flag_virus">ڤایرۆس</string>
+    <string name="flag_fake">ساختە</string>
+    <string name="trusted_app">نەرمەواڵەی متمانەپێکراو</string>
+    <string name="unknown">نەناسراو</string>
+
+    <string name="write_your_comment">سەرنجی خۆت بنووسە</string>
+    <string name="write_a_comment">سەرنجێک بنووسە</string>
+    <string name="no_comment_be_the_first">هیچ سەرنجێک نەنووسراوە تاکو ئێستا. ببە بە یەکەم کەس!</string>
+
+    <string name="suggested_app">نەرمەواڵە پێشنیارکراوەکان</string>
+
+    <string name="abTest1_label_1">بەدەستهێنانی نەرمەواڵە</string>
+    <string name="abTest1_label_2">دامەزراندن</string>
+    <string name="abTest1_label_3">دامەزراندن</string>
+
+
+    <string name="notification_timeline_posts">هاوڕێکانت نەرمەواڵەی نوێیان دامەزراندووە!</string>
+
+    <string name="updatesTabAdapterUninstall">دامەزرێنسڕینەوە</string>
+    <string name="flag_good">باش</string>
+    <string name="flag_license">پێویستی بە مۆڵەتە</string>
+    <string name="flag_this_app_good">باش</string>
+    <string name="flag_this_app_fake">ساختە</string>
+    <string name="flag_this_app_virus">ڤایرۆس</string>
+    <string name="appview_recommended_for_you_title">پێشنیازکراو بۆ تۆ</string>
+    <string name="appview_comment_reply_button_text">وەڵامدانەوە</string>
+    <string name="appview_header_trusted_text">متمانەپێکراو</string>
+    <string name="appview_subscribe_store_button_text"/>
+    <string name="appview_subscribed_store_button_text"/>
+    <string name="appview_rate_this_app_text"/>
+    <string name="appview_other_versions_in_others_stores"/>
+    <string name="appview_rate_Success"/>
+    <string name="ignoreUpdateText"/>
+    <string name="noIgnoreUpdateText"/>
+    <string name="createReviewButtonText">دروستکردن
+پێداچوونەوە</string>
+    <string name="active">کارا</string>
+    <string name="_downloads"> داگرتنەکان</string>
+    <string name="no_description"/>
+    <string name="description"/>
+    <string name="version">وەشان</string>
+    <string name="version_placeholder">وەشان: %s</string>
+
+    <string name="comments">سەرنجەکان</string>
+    <string name="reviews">پێداچوونەوەکان</string>
+    <string name="store"/>
+    <string name="title_caps">سەردێڕ</string>
+
+    <string name="unsubscribe_yes_no"/>
+    <string name="unsubscribed_"/>
+    <string name="error_occured_uploading">پێویستە سەرەتا ئەم نەرمەواڵەیە باربکەی.</string>
+
+    <string name="update_self_title">بەڕۆژکردن بەردەستە</string>
+    <string name="update_self_msg">وەشانی نوێی %s بەردەستە
+ئارەزوو دەکەیت بەڕۆژی بکەیت؟</string>
+    <string name="srch_hint">گەڕان بۆ نەرمەواڵەکان…</string>
+
+    <string name="app_trusted">%s متمانەپێکراوە</string>
+    <string name="app_warning"/>
+    <string name="scanned_with_av">پشکنراوە بە دژەڤایرۆسی:</string>
+    <string name="compared_with_another_marketplace"/>
+    <string name="application_signature_analysis"/>
+    <string name="application_signature_matched"/>
+    <string name="application_signature_not_matched"/>
+    <string name="timeline_email_step1"/>
+    <string name="timeline_email_step2"/>
+    <string name="timeline_ad">نەرمەواڵەی پێشنیارکراو لەلایەن فەیسبووک</string>
+    <string name="facebook_start_timeline"/>
+    <string name="facebook_join_friends"/>
+    <string name="timeline_is_empty_no_friends"/>
+    <string name="timeline_is_empty_start_invite"/>
+
+    <string name="review_get_app">بەدەستهێنانی نەرمەواڵه</string>
+    <string name="review_final_verdict"/>
+    <string name="review_speed">خێرایی</string>
+    <string name="review_usability"/>
+    <string name="review_addictive"/>
+    <string name="review_stability"/>
+    <string name="review_title">پێداچوونەوەکان</string>
+    <string name="review_good">باش</string>
+    <string name="review_bad">خراپ</string>
+    <string name="review_finish">کۆتایی</string>
+    <string name="review_final_score"/>
+    <string name="make_review_title"/>
+    <string name="size">قەبارە</string>
+    <string name="set_sliders"/>
+    <string name="write_one_pro"/>
+    <string name="write_one_con"/>
+    <string name="write_your_final_verdict"/>
+    <string name="review_success"/>
+    <string name="store_privacy"/>
+    <string name="public_key">گشتی</string>
+    <string name="private_key">تایبەت</string>
+    <string name="store_username">ناوی بەکارهێنەر</string>
+    <string name="store_password">تێپەڕەوشە</string>
+    <string name="upload_app">بارکردنی نەرمەواڵه</string>
+    <string name="create_review"/>
+
+    <string name="asksetadultpinmessage"/>
+    <string name="setpin"/>
+    <string name="remove_mature_pin_title"/>
+    <string name="remove_mature_pin_summary"/>
+    <string name="set_mature_pin_title"/>
+    <string name="set_mature_pin_summary"/>
+    <string name="settings_title_bar">ڕێکخستنەکان</string>
+    <string name="settings_dwn_network_rules"/>
+    <string name="setting_sum_icon_download_rules"/>
+    <string name="setting_icon_download_rules"/>
+    <string name="setting_wifi">وای فای</string>
+    <string name="setting_mobile"/>
+    <string name="setting_3g">3G</string>
+    <string name="setting_4g">4G</string>
+    <string name="setting_ethernet">ئێسەرنێت</string>
+    <string name="setting_sum_general_download_rules"/>
+    <string name="setting_general_download_rules"/>
+    <string name="setting_hwspecstitle"/>
+    <string name="setting_hwspecssum">زانیاری ڕەقەکاڵایی مۆبایلەکەت</string>
+    <string name="setting_appfiltersum"/>
+    <string name="setting_appfiltertitle"/>
+    <string name="setting_dont_show_mature_content"/>
+    <string name="setting_mature_filtering"/>
+    <string name="setting_updates">بەڕۆژکردنەکان</string>
+    <string name="update_all">بەڕۆژکردنی هەموویان</string>
+    <string name="whats_new">چی نوێ هەیە؟</string>
+    <string name="setting_updates_notification_sum"/>
+    <string name="setting_updates_notification_title"/>
+    <string name="setting_auto_update_sum"/>
+    <string name="setting_auto_update_title"/>
+    <string name="show_all_updates"/>
+    <string name="setting_allUpdates_filtering"/>
+    <string name="setting_schdwninstallsum"/>
+    <string name="setting_schdwninstalltitle">دامەزراندنی خۆکار</string>
+    <string name="setting_clear_memory"/>
+    <string name="clearcontent_title"/>
+    <string name="settings_maxFileCache_sum"/>
+    <string name="settings_maxFileCache_title">
+</string>
+    <string name="change_theme">
+</string>
+    <string name="theme"/>
+    <string name="root"/>
+    <string name="allow_root"/>
+    <string name="disable_social_timeline"/>
+    <string name="social_timeline_notifications"/>
+    <string name="about_us">دەربارەی ئێمە</string>
+    <string name="restart_aptoide"/>
+    <string name="setting_sdk_version">وەشانی SDK</string>
+    <string name="setting_screen_size"/>
+    <string name="setting_esgl_version">وەشانی ESGL</string>
+    <string name="screenCode"/>
+    <string name="cpuAbi">یەکەی ڕێکخەری ناوەندی</string>
+    <string name="about_site">ماڵپەڕ:</string>
+    <string name="about_mail">پەیوەندیکردن:</string>
+    <string name="username_tip">پۆستی ئەلیکترۆنیت بنووسە</string>
+    <string name="restore">دامەزراندن</string>
+
+    <string name="apk_not_found">Apk نەدۆزرایەوە</string>
+    <string name="invalid_apk">Apk نادروست</string>
+    <string name="remote_in_nospace">شوێنی بەتاڵی پێویست نییە لەسەر ئامێرەک.</string>
+    <string name="server_error">هەڵەی ڕاژەکار</string>
+    <string name="finished_install">%s دامەزرێنرا.</string>
+    <string name="remaining_time">ماوە</string>
+    <string name="data_usage_constraint"/>
+    <string name="download_pending"/>
+
+    <string name="download_retry">دووبارەی بکەوە</string>
+    <string name="error503"/>
+    <string name="having_some_trouble"/>
+
+    <string name="reply">وەڵامدانەوە</string>
+    <string name="vote_down"/>
+    <string name="vote_up"/>
+    <string name="casting_vote"/>
+    <string name="vote_submitted"/>
+    <string name="votes">%s دەنگ</string>
+
+    <string name="reviewed_by"/>
+    <string name="installed_this">%s ئەمە دامەزرێنرا.</string>
+
+    <string name="adult_pin_wrong"/>
+    <string name="request_adult_pin"/>
+    <string name="are_you_adult"/>
+    <string name="facebook_logout_and_login">چوونەدەر و چوونەژۆر بە فەیسبووک</string>
+
+    <string name="schDown_nodownloadselect"/>
+    <string name="no_sch_downloads"/>
+    <string name="schDown_installselected">دامەزراندنی هەڵبژێردراوەکان</string>
+    <string name="schDown_removeselected">سڕینەوەی هەڵبژێردراوەکان</string>
+    <string name="schDown_invertselection">پێچەوانەکردنەوەی دیاریکراوەکان</string>
+
+    <string name="see_more">بینینی زیاتر</string>
+    <string name="see_less">بینینی کەمتر</string>
+    <string name="get_latest">دوا وەشان بەدەست بهێنە</string>
+
+    <string name="installed_tab">دامەزرێنرا</string>
+    <string name="updates_tab">بەڕۆژکردنەکان</string>
+
+    <string name="feedback_send_button"/>
+
+    <string name="my_account">هەژمارەکەم</string>
+    <string name="setting_schdwntitle"/>
+    <string name="settings">ڕێکخستنەکان</string>
+    <string name="facebook">فەیسبووک</string>
+    <string name="twitter">تویتەر</string>
+    <string name="backup_apps"/>
+
+    <string name="menu_context_reparse"/>
+    <string name="menu_context_remove">سڕینەوە</string>
+
+    <string name="search_other_stores"/>
+    </resources>

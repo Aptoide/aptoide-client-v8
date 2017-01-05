@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="please_wait">Prosím čakajte…</string>
+
+    <string name="WidgetProvider_timestamp_today">Dnes</string>
+    <string name="WidgetProvider_timestamp_yesterday">Včera</string>
+    <string name="WidgetProvider_timestamp_hour_ago">Pred %s hodinami</string>
+    <string name="WidgetProvider_timestamp_hours_ago">Pred %s hodinami</string>
+    <string name="WidgetProvider_timestamp_minutes_ago">Pred %s minútami</string>
+    <string name="WidgetProvider_timestamp_just_now">Práve teraz</string>
+    <string name="WidgetProvider_timestamp_weeks_ago">Pred %s týždňami</string>
+    <string name="WidgetProvider_timestamp_week_ago2">Pred týždňom</string>
+    <string name="WidgetProvider_timestamp_days_ago">Pred %s dňami</string>
+    <string name="WidgetProvider_timestamp_month_ago">Pred mesiacom</string>
+    <string name="WidgetProvider_timestamp_months_ago">Pred %s mesiacmi</string>
+    <string name="WidgetProvider_timestamp_year_ago">Pred rokom</string>
+    <string name="WidgetProvider_timestamp_years_ago">Pred %s rokmi</string>
+
+</resources>

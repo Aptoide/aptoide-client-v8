@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="download_completed">Allalaadimine lõpetatud</string>
+    <string name="download_paused">Allalaadimine peatatud</string>
+    <string name="download_progress">Allalaadimine on pooleli</string>
+    <string name="download_queue">Järjekorras</string>
+</resources>

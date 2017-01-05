@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="please_wait">Palu oota…</string>
+
+    <string name="WidgetProvider_timestamp_today">Täna</string>
+    <string name="WidgetProvider_timestamp_yesterday">Eile</string>
+    <string name="WidgetProvider_timestamp_hour_ago">%s tund tagasi</string>
+    <string name="WidgetProvider_timestamp_hours_ago">%s tundi tagasi</string>
+    <string name="WidgetProvider_timestamp_minutes_ago">%s minutit tagasi</string>
+    <string name="WidgetProvider_timestamp_just_now">Just nüüd</string>
+    <string name="WidgetProvider_timestamp_weeks_ago">%s nädalat tagasi</string>
+    <string name="WidgetProvider_timestamp_week_ago2">1 nädal tagasi</string>
+    <string name="WidgetProvider_timestamp_days_ago">%s päeva tagasi</string>
+    <string name="WidgetProvider_timestamp_month_ago">1 kuu tagasi</string>
+    <string name="WidgetProvider_timestamp_months_ago">%s kuud tagasi</string>
+    <string name="WidgetProvider_timestamp_year_ago">1 aasta tagasi</string>
+    <string name="WidgetProvider_timestamp_years_ago">%s aastat tagasi</string>
+
+</resources>

@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="one_account_allowed">Bare en konto tillatt</string>
+    <string name="username">E-post</string>
+    <string name="password">Passord</string>
+    <string name="link_device_webinstall">Link bruker med Webinstall</string>
+    <string name="register">Registrer</string>
+    <string name="forgot_passwd">Glemt passord?</string>
+    <string name="fields_cannot_empty">Vennligst sjekk din e-post og passord.</string>
+    <string name="no_email_and_pass_error_message">Vennligst skriv inn en e-post og passord for å registrere.</string>
+    <string name="no_pass_error_message">Skriv inn passord for å registrere.</string>
+    <string name="no_email_error_message">Skriv inn e-postadresse for å registrere.</string>
+    <string name="password_validation_text">"Passordet må være minst 8 tegn og burde inneholde minst en bokstav og et tall eller spesielt tegn (!@#$%*) "</string>
+    <string name="logged_as">Du er logget inn som:</string>
+    <string name="sign_out">Logg ut</string>
+    <string name="error_occured">En feil oppstod. Vennligst prøv igjen</string>
+    <string name="ws_error_AUTH_2">Ugyldig informasjon!</string>
+    <string name="ws_error_AUTH_101">Kunne ikke logge inn med Google. Vennligst prøv igjen.</string>
+    <string name="ws_error_AUTH_103">Kunne ikke logge inn med Facebook. Vennligst prøv igjen.</string>
+    <string name="ws_error_MARG_12">Manglende hmac parameter</string>
+    <string name="ws_error_MARG_109">Manglende e-post parameter</string>
+    <string name="ws_error_MARG_110">Manglende passhash parameter</string>
+    <string name="ws_error_MARG_111">Manglende navn parameter</string>
+    <string name="ws_error_MARG_112">Manglende user-agent parameter</string>
+    <string name="ws_error_IARG_5">Ugyldig hmac format</string>
+    <string name="ws_error_IARG_106">E-postadressen er ikke gyldig</string>
+    <string name="ws_error_REPO_7">Denne brukeren har allerede en gyldig repo.</string>
+    <string name="ws_error_WOP_11">Butikken kunne ikke bli lagd. Vennligst prøv igjen.</string>
+    </resources>

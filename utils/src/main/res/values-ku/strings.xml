@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="please_wait">تکایە چاوەڕوان بە…</string>
+
+    <string name="WidgetProvider_timestamp_today">ئەمڕۆ</string>
+    <string name="WidgetProvider_timestamp_yesterday">دوێنێ</string>
+    <string name="WidgetProvider_timestamp_hour_ago">پێش %s کاتژمێر</string>
+    <string name="WidgetProvider_timestamp_hours_ago">پێش %s کاتژمێر</string>
+    <string name="WidgetProvider_timestamp_minutes_ago">پێش %s خولەک</string>
+    <string name="WidgetProvider_timestamp_just_now">هەر ئێستا</string>
+    <string name="WidgetProvider_timestamp_weeks_ago">پێش %s حەفتە</string>
+    <string name="WidgetProvider_timestamp_week_ago2">هەفتەیەک لەمەوبەر</string>
+    <string name="WidgetProvider_timestamp_days_ago">پێش %s ڕۆژ</string>
+    <string name="WidgetProvider_timestamp_month_ago">مانگێک لەمەوبەر</string>
+    <string name="WidgetProvider_timestamp_months_ago">پێش %s مانگ</string>
+    <string name="WidgetProvider_timestamp_year_ago">ساڵێک لەمەوبەر</string>
+    <string name="WidgetProvider_timestamp_years_ago">پێش %s ساڵ</string>
+
+</resources>
