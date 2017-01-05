@@ -52,7 +52,7 @@ abstract class v3accountManager<U> extends WebService<v3accountManager.Interface
       @Override public String generateUserAgent() {
         return AptoideAccountManager.getUserEmail();
       }
-    }), WebService.getDefaultConverter(), BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
+    }, false), WebService.getDefaultConverter(), BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
         + "://"
         + BuildConfig.APTOIDE_WEB_SERVICES_HOST
         + "/webservices/");
