@@ -210,9 +210,11 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
       description.setText("Add a description to your store by editing it.");
     }
 
-    if (AccountManagerPreferences.getUserRepo().equals(store.getName())) {
-      editStoreButton.setVisibility(View.VISIBLE);
-      compositeSubscription.add(RxView.clicks(editStoreButton).subscribe(click -> editStore(store.getId())));
+    if (!TextUtils.isEmpty(AccountManagerPreferences.getUserRepo())) {
+      if (AccountManagerPreferences.getUserRepo().equals(store.getName())) {
+        editStoreButton.setVisibility(View.VISIBLE);
+        compositeSubscription.add(RxView.clicks(editStoreButton).subscribe(click -> editStore(store.getId())));
+      }
     }
   }
 
