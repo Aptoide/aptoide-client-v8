@@ -69,16 +69,16 @@ abstract class DownloadInstallEventConverter<T extends DownloadInstallBaseEvent>
     DownloadInstallBaseEvent.Origin origin;
     switch (download.getAction()) {
       case Download.ACTION_INSTALL:
-        origin = DownloadInstallBaseEvent.Origin.install;
+        origin = DownloadInstallBaseEvent.Origin.INSTALL;
         break;
       case Download.ACTION_UPDATE:
-        origin = DownloadInstallBaseEvent.Origin.update;
+        origin = DownloadInstallBaseEvent.Origin.UPDATE;
         break;
       case Download.ACTION_DOWNGRADE:
-        origin = DownloadInstallBaseEvent.Origin.downgrade;
+        origin = DownloadInstallBaseEvent.Origin.DOWNGRADE;
         break;
       default:
-        origin = DownloadInstallBaseEvent.Origin.install;
+        origin = DownloadInstallBaseEvent.Origin.INSTALL;
     }
     return origin;
   }

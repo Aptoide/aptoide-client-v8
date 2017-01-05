@@ -304,7 +304,7 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
   }
 
   public void setupDownloadEvent(Download download, DownloadEvent.Action action) {
-    DownloadEvent report = converter.create(download, action, DownloadEvent.AppContext.scheduled);
+    DownloadEvent report = converter.create(download, action, DownloadEvent.AppContext.SCHEDULED);
     analytics.save(download.getPackageName() + download.getVersionCode(), report);
   }
 

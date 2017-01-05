@@ -99,7 +99,7 @@ public class CompletedDownloadDisplayable extends DisplayablePojo<Progress<Downl
 
   public void setupDownloadEvent(Download download) {
     DownloadEvent report = converter.create(download, DownloadEvent.Action.CLICK,
-        DownloadEvent.AppContext.downloads);
+        DownloadEvent.AppContext.DOWNLOADS);
     analytics.save(download.getPackageName() + download.getVersionCode(), report);
   }
 }

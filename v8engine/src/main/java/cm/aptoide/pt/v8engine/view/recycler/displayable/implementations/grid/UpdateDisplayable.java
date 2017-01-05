@@ -116,7 +116,7 @@ public class UpdateDisplayable extends Displayable {
 
   public void setupDownloadEvent(Download download) {
     DownloadEvent report = converter.create(download, DownloadEvent.Action.CLICK,
-        DownloadEvent.AppContext.updatetab);
+        DownloadEvent.AppContext.UPDATE_TAB);
     analytics.save(download.getPackageName() + download.getVersionCode(), report);
   }
   @Override public int getViewLayout() {

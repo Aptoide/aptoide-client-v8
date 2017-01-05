@@ -40,7 +40,7 @@ public class DownloadAnalyticsRequest extends
   }
 
   public enum DataOrigin {
-    install, update, downgrade, update_all
+    INSTALL, UPDATE, DOWNGRADE, UPDATE_ALL
   }
 
   public @Data static class DownloadEventBody extends DownloadInstallAnalyticsBaseBody.Data {

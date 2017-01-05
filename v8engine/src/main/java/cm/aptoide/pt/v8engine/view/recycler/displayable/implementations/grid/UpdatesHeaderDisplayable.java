@@ -64,8 +64,8 @@ public class UpdatesHeaderDisplayable extends Displayable {
 
   public void setupDownloadEvent(Download download) {
     DownloadEvent report =
-        converter.create(download, DownloadEvent.Action.CLICK, DownloadEvent.AppContext.updatetab,
-            DownloadEvent.Origin.update_all);
+        converter.create(download, DownloadEvent.Action.CLICK, DownloadEvent.AppContext.UPDATE_TAB,
+            DownloadEvent.Origin.UPDATE_ALL);
     analytics.save(download.getPackageName() + download.getVersionCode(), report);
   }
 }

@@ -295,7 +295,7 @@ import rx.android.schedulers.AndroidSchedulers;
 
   private void setupDownloadEvent(Download download) {
     DownloadEvent report = downloadInstallEventConverter.create(download, DownloadEvent.Action.CLICK,
-        DownloadEvent.AppContext.appview);
+        DownloadEvent.AppContext.APPVIEW);
 
     analytics.save(report.getPackageName() + report.getVersionCode(), report);
   }
@@ -507,16 +507,16 @@ import rx.android.schedulers.AndroidSchedulers;
     DownloadEvent.Origin origin;
     switch (progress.getRequest().getAction()) {
       case Download.ACTION_INSTALL:
-        origin = DownloadEvent.Origin.install;
+        origin = DownloadEvent.Origin.INSTALL;
         break;
       case Download.ACTION_UPDATE:
-        origin = DownloadEvent.Origin.update;
+        origin = DownloadEvent.Origin.UPDATE;
         break;
       case Download.ACTION_DOWNGRADE:
-        origin = DownloadEvent.Origin.downgrade;
+        origin = DownloadEvent.Origin.DOWNGRADE;
         break;
       default:
-        origin = DownloadEvent.Origin.install;
+        origin = DownloadEvent.Origin.INSTALL;
     }
     return origin;
   }

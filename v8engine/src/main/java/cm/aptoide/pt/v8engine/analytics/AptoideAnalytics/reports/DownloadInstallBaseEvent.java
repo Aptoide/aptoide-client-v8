@@ -39,9 +39,9 @@ public @Data @ToString class DownloadInstallBaseEvent extends Event {
     this.origin = origin;
     this.packageName = packageName;
     this.url = url;
-    this.obbType = ObbType.main;
+    this.obbType = ObbType.MAIN;
     this.obbUrl = obbUrl;
-    this.patchObbType = ObbType.patch;
+    this.patchObbType = ObbType.PATCH;
     this.patchObbUrl = patchObbUrl;
     this.name = eventName;
     this.context = context;
@@ -68,14 +68,14 @@ public @Data @ToString class DownloadInstallBaseEvent extends Event {
   }
 
   public enum Origin {
-    install, update, downgrade, update_all
+    INSTALL, UPDATE, DOWNGRADE, UPDATE_ALL
   }
 
-  protected enum ObbType {
-    main, patch
+  private enum ObbType {
+    MAIN, PATCH
   }
 
   public enum AppContext {
-    timeline, appview, updatetab, scheduled, downloads
+    TIMELINE, APPVIEW, UPDATE_TAB, SCHEDULED, DOWNLOADS
   }
 }

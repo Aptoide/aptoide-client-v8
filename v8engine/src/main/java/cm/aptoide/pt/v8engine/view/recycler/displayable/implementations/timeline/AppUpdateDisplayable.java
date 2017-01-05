@@ -127,7 +127,7 @@ public class AppUpdateDisplayable extends CardDisplayable {
 
   private void setupDownloadEvent() {
     DownloadEvent report = downloadConverter.create(download, DownloadEvent.Action.CLICK,
-        DownloadEvent.AppContext.timeline);
+        DownloadEvent.AppContext.TIMELINE);
     analytics.save(packageName + download.getVersionCode(), report);
   }
 
