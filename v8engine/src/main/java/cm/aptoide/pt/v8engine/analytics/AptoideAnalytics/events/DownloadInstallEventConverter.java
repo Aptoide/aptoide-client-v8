@@ -32,12 +32,12 @@ abstract class DownloadInstallEventConverter<T extends DownloadInstallBaseEvent>
       LinkedList<DownloadInstallAnalyticsBaseBody.Obb> obbs = new LinkedList<>();
       DownloadInstallAnalyticsBaseBody.Obb obb = new DownloadInstallAnalyticsBaseBody.Obb();
       obb.setUrl(report.getObbUrl());
-      obb.setType(DownloadInstallAnalyticsBaseBody.ObbType.main);
+      obb.setType(DownloadInstallAnalyticsBaseBody.ObbType.MAIN);
       obbs.add(obb);
       if (!TextUtils.isEmpty(report.getPatchObbUrl())) {
         obb = new DownloadInstallAnalyticsBaseBody.Obb();
+        obb.setType(DownloadInstallAnalyticsBaseBody.ObbType.PATCH);
         obb.setUrl(report.getPatchObbUrl());
-        obb.setType(DownloadInstallAnalyticsBaseBody.ObbType.patch);
         obbs.add(obb);
       }
       data.setObb(obbs);

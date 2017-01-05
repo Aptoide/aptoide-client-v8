@@ -15,7 +15,6 @@ public @Data @ToString class DownloadEvent extends DownloadInstallBaseEvent {
    * event to be sent if download was cached
    */
   @Setter private boolean downloadHadProgress;
-  private Throwable error;
 
   public DownloadEvent(Action action, Origin origin, String packageName, String url, String obbUrl,
       String patchObbUrl, AppContext context, int versionCode,

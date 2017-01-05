@@ -14,7 +14,7 @@ public class DownloadInstallAnalyticsBaseBody
   }
 
   public enum ObbType {
-    main, patch
+    MAIN, PATCH
   }
 
   public enum ResultStatus {
