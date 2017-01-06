@@ -37,6 +37,7 @@ import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadInstallB
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEvent;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEventConverter;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
+import cm.aptoide.pt.v8engine.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
@@ -54,7 +55,7 @@ import static cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver.SCHEDULE_D
 /**
  * Created by sithengineer on 19/07/16.
  */
-public class ScheduledDownloadsFragment extends GridRecyclerFragment {
+public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter> {
 
   public static final String OPEN_SCHEDULE_DOWNLOADS_WITH_POPUP_URI =
       "aptoide://cm.aptoide.pt/" + SCHEDULE_DOWNLOADS + "?openMode=AskInstallAll";

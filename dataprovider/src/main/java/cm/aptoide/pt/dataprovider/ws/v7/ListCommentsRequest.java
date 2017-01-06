@@ -1,5 +1,6 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.Api;
@@ -23,15 +24,17 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
   }
 
   public static ListCommentsRequest ofStoreAction(String url, boolean refresh,
-      BaseRequestWithStore.StoreCredentials storeCredentials, String accessToken,
+      @Nullable BaseRequestWithStore.StoreCredentials storeCredentials, String accessToken,
       String aptoideClientUuid) {
 
     ListCommentsRequest.url = url;
 
     Body body = new Body(refresh, Order.desc);
-    body.setStoreUser(storeCredentials.getUsername());
-    body.setStorePassSha1(storeCredentials.getPasswordSha1());
-    body.setStoreId(storeCredentials.getId());
+    if (storeCredentials != null) {
+      body.setStoreUser(storeCredentials.getUsername());
+      body.setStorePassSha1(storeCredentials.getPasswordSha1());
+      body.setStoreId(storeCredentials.getId());
+    }
 
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUuid);
     return new ListCommentsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
@@ -235,12 +238,12 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
       this.subLimit = subLimit;
     }
 
-    public void setTimelineCardId(String timelineCardId) {
-      this.timelineCardId = timelineCardId;
-    }
-
     public String getTimelineCardId() {
       return timelineCardId;
+    }
+
+    public void setTimelineCardId(String timelineCardId) {
+      this.timelineCardId = timelineCardId;
     }
   }
 }

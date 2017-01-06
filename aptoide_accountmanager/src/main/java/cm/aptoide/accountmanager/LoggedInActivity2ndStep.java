@@ -22,6 +22,10 @@ public class LoggedInActivity2ndStep extends BaseActivity {
 
   private static final String TAG = LoggedInActivity2ndStep.class.getSimpleName();
 
+  private final IdsRepositoryImpl idsRepository =
+      new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+          DataProvider.getContext());
+
   private Button mContinueButton;
   private Button mPrivateProfile;
   private CompositeSubscription mSubscriptions;
@@ -37,17 +41,17 @@ public class LoggedInActivity2ndStep extends BaseActivity {
     setupListeners();
   }
 
-  private void setupToolbar() {
-    setSupportActionBar(mToolbar);
-    getSupportActionBar().setTitle(getActivityTitle());
-  }
-
   @Override protected String getActivityTitle() {
     return getString(R.string.create_profile_logged_in_activity_title);
   }
 
   @Override int getLayoutId() {
     return R.layout.logged_in_second_screen;
+  }
+
+  private void setupToolbar() {
+    setSupportActionBar(mToolbar);
+    getSupportActionBar().setTitle(getActivityTitle());
   }
 
   private void bindViews() {
@@ -64,8 +68,7 @@ public class LoggedInActivity2ndStep extends BaseActivity {
           getApplicationContext().getString(R.string.please_wait));
       pleaseWaitDialog.show();
 
-      SetUserRequest.of(new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-              DataProvider.getContext()).getAptoideClientUUID(), UserAccessState.PUBLIC.toString(),
+      SetUserRequest.of(idsRepository.getAptoideClientUUID(), UserAccessState.PUBLIC.toString(),
           AptoideAccountManager.getAccessToken()).execute(answer -> {
         if (answer.isOk()) {
           Logger.v(TAG, "user is public");
@@ -87,8 +90,7 @@ public class LoggedInActivity2ndStep extends BaseActivity {
           getApplicationContext().getString(R.string.please_wait));
       pleaseWaitDialog.show();
 
-      SetUserRequest.of(new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-              DataProvider.getContext()).getAptoideClientUUID(), UserAccessState.UNLISTED.toString(),
+      SetUserRequest.of(idsRepository.getAptoideClientUUID(), UserAccessState.UNLISTED.toString(),
           AptoideAccountManager.getAccessToken()).execute(answer -> {
         if (answer.isOk()) {
           Logger.v(TAG, "user is private");

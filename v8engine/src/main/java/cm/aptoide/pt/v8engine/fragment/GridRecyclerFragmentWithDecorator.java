@@ -14,7 +14,7 @@ import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
  * Created by neuro on 25-05-2016.
  */
 public abstract class GridRecyclerFragmentWithDecorator<T extends BaseAdapter>
-    extends GridRecyclerFragment<T> {
+    extends AptoideBaseFragment<T> {
 
   public GridRecyclerFragmentWithDecorator() {
   }

@@ -9,7 +9,6 @@ import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
-import cm.aptoide.pt.dataprovider.ws.v7.V7Url;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
@@ -32,72 +31,26 @@ public class StoreUtils {
   public static final String PRIVATE_STORE_ERROR = "STORE-3";
   public static final String PRIVATE_STORE_WRONG_CREDENTIALS = "STORE-4";
 
+  private static StoreCredentialsProviderImpl storeCredentialsProvider;
+
+  static {
+    storeCredentialsProvider = new StoreCredentialsProviderImpl();
+  }
+
+  @Deprecated
   public static BaseRequestWithStore.StoreCredentials getStoreCredentials(long storeId) {
-
-    StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
-
-    Store store = storeAccessor.get(storeId).toBlocking().first();
-
-    String username = null;
-    String passwordSha1 = null;
-
-    if (store != null) {
-      username = store.getUsername();
-      passwordSha1 = store.getPasswordSha1();
-      return new BaseRequestWithStore.StoreCredentials(storeId, store.getStoreName(), username,
-          passwordSha1);
-    }
-
-    return new BaseRequestWithStore.StoreCredentials(storeId, username, passwordSha1);
+    return storeCredentialsProvider.get(storeId);
   }
 
+  @Deprecated
   public static BaseRequestWithStore.StoreCredentials getStoreCredentials(String storeName) {
-
-    StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
-
-    Store store = storeAccessor.get(storeName).toBlocking().first();
-
-    String username = null;
-    String passwordSha1 = null;
-
-    if (store != null) {
-      username = store.getUsername();
-      passwordSha1 = store.getPasswordSha1();
-
-      return new BaseRequestWithStore.StoreCredentials(store.getStoreId(), storeName, username,
-          passwordSha1);
-    }
-
-    return new BaseRequestWithStore.StoreCredentials(storeName, username, passwordSha1);
+    return storeCredentialsProvider.get(storeName);
   }
 
-  public static BaseRequestWithStore.StoreCredentials getStoreCredentialsFromUrl(String url) {
-
-    V7Url v7Url = new V7Url(url);
-    Long storeId = v7Url.getStoreId();
-    String storeName = v7Url.getStoreName();
-
-    if (storeId != null) {
-      return getStoreCredentials(storeId);
-    } else if (storeName != null) {
-      return getStoreCredentials(storeName);
-    } else {
-      return new BaseRequestWithStore.StoreCredentials();
-    }
-  }
-
-  public static BaseRequestWithStore.StoreCredentials getStoreCredentialsFromUrlOrNull(String url) {
-
-    V7Url v7Url = new V7Url(url);
-    Long storeId = v7Url.getStoreId();
-    String storeName = v7Url.getStoreName();
-
-    if (storeId != null) {
-      return getStoreCredentials(storeId);
-    } else if (storeName != null) {
-      return getStoreCredentials(storeName);
-    }
-    return null;
+  @Deprecated
+  public static @Nullable BaseRequestWithStore.StoreCredentials getStoreCredentialsFromUrl(
+      String url) {
+    return storeCredentialsProvider.fromUrl(url);
   }
 
   /**
