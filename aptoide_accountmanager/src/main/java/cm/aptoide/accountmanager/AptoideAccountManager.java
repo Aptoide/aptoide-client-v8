@@ -202,13 +202,16 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 
   /**
    * This method should be used to login users for ABAN
+   *
    * @param phoneNumber users inserted phonenumber
    * @param token users token sended by Aban
    * @param username users inserted username
    */
-  public static void openAccountManager(ILoginInterface loginInterface, Context context, String phoneNumber, String token, String username){
+  public static void openAccountManager(ILoginInterface loginInterface, Context context,
+      String phoneNumber, String token, String username) {
     setMCallback(loginInterface);
-    AptoideAccountManager.loginUserCredentials(LoginMode.ABAN, phoneNumber, token, username, context);
+    AptoideAccountManager.loginUserCredentials(LoginMode.ABAN, phoneNumber, token, username,
+        context);
   }
 
   public static boolean isLoggedIn() {
@@ -232,7 +235,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     });
   }
 
-  @PackagePrivate static void logout(WeakReference<FragmentActivity> activityRef) {
+  public static void logout(WeakReference<FragmentActivity> activityRef) {
     if (getConfiguration().isLoginAvailable(AptoidePreferencesConfiguration.SocialLogin.FACEBOOK)) {
       FacebookLoginUtils.logout();
     }
@@ -368,7 +371,8 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
    */
   static void loginUserCredentials(LoginMode mode, final String userName,
       final String passwordOrToken, final String nameForGoogle) {
-    loginUserCredentials(mode,userName,passwordOrToken,nameForGoogle,getInstance().mContextWeakReference.get());
+    loginUserCredentials(mode, userName, passwordOrToken, nameForGoogle,
+        getInstance().mContextWeakReference.get());
   }
 
   /**
@@ -768,9 +772,10 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
         });
   }
 
-  private void removeLocalAccount() {
+  public static void removeLocalAccount() {
     AccountManager manager = AccountManager.get(getContext());
     Account[] accounts = manager.getAccountsByType(Constants.ACCOUNT_TYPE);
+    userIsLoggedIn = false;
     for (Account account : accounts) {
       if (Build.VERSION.SDK_INT >= 22) {
         manager.removeAccountExplicitly(account);
@@ -832,7 +837,8 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
    */
   Observable<Boolean> addLocalUserAccount(String userName, String userPassword,
       @Nullable String accountType, String refreshToken, String accessToken) {
-    return addLocalUserAccount(userName,userPassword,accountType,refreshToken,accessToken,mContextWeakReference.get());
+    return addLocalUserAccount(userName, userPassword, accountType, refreshToken, accessToken,
+        mContextWeakReference.get());
   }
 
   /**
@@ -847,7 +853,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
    * @return true if the account was added successfully, false otherwise
    */
   Observable<Boolean> addLocalUserAccount(String userName, String userPassword,
-      @Nullable String accountType, String refreshToken, String accessToken,Context context) {
+      @Nullable String accountType, String refreshToken, String accessToken, Context context) {
     if (context != null) {
       AccountManager accountManager = AccountManager.get(context);
       accountType = accountType != null ? accountType

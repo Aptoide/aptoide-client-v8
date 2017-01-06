@@ -61,7 +61,7 @@ public class UserAgentTest {
     String url = server.url("/").toString();
 
     Request testRequest = new Request.Builder().url(url).build();
-    String result = OkHttpClientFactory.getSingletonClient(() -> userData)
+    String result = OkHttpClientFactory.getSingletonClient(() -> userData, false)
         .newCall(testRequest)
         .execute()
         .body()

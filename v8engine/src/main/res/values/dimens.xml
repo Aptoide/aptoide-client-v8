@@ -74,6 +74,8 @@
   <dimen name="appview_top_rating_top_margin">80dp</dimen>
   <dimen name="custom_snackbar_height">44dp</dimen>
   <dimen name="flag_width">84dp</dimen>
+  <dimen name="appview_description_left">36dp</dimen>
+  <dimen name="appview_description_right">20dp</dimen>
   <dimen name="appview_vertical_margin">4dp</dimen>
   <dimen name="appview_vertical_margin_first">8dp</dimen>
   <dimen name="appview_header_side_margin">10dp</dimen>

@@ -109,6 +109,7 @@
         android:layout_height="29.7dp"
         android:layout_weight="1"
         android:background="@drawable/button_border_orange3"
+        android:fontFamily="roboto_medium"
         android:textAllCaps="true"
         android:textAppearance="?android:attr/textAppearanceSmallInverse"
         android:textColor="@color/app_view_follow_orange"
