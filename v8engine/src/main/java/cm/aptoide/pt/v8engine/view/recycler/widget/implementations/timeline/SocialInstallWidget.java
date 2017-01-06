@@ -5,10 +5,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.TimelineClickEvent;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.SocialInstallDisplayable;
 import com.like.LikeButton;
@@ -102,14 +104,12 @@ public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayab
       Analytics.AppsTimeline.clickOnCard(CARD_TYPE_NAME, displayable.getPackageName(),
           Analytics.AppsTimeline.BLANK, displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_APP_VIEW);
-      //displayable.sendClickEvent(SendEventRequest.Body.Data.builder()
-      //    .cardType(cardType)
-      //    .source(AptoideAnalytics.SOURCE_APTOIDE)
-      //    .specific(SendEventRequest.Body.Specific.builder()
-      //        .app(displayable.getPackageName())
-      //        .based_on(displayable.getSimilarAppPackageName())
-      //        .build())
-      //    .build(), AptoideAnalytics.OPEN_APP);
+      displayable.sendClickEvent(SendEventRequest.Body.Data.builder()
+          .cardType(CARD_TYPE_NAME)
+          .source(TimelineClickEvent.SOURCE_APTOIDE)
+          .specific(
+              SendEventRequest.Body.Specific.builder().app(displayable.getPackageName()).build())
+          .build(), TimelineClickEvent.OPEN_APP);
       ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
           .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
     });
