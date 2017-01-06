@@ -3,6 +3,7 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
+import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.AnalyticsBaseBody;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import lombok.Builder;
@@ -19,7 +20,7 @@ public class SendEventRequest extends V7<BaseV7Response, SendEventRequest.Body> 
 
   private static String NAME;
   private static String ACTION = "CLICK";
-  private static String CONTEXT = "timeline";
+  private static String CONTEXT = "TIMELINE";
 
   protected SendEventRequest(Body body, String baseHost) {
     super(body, baseHost);
@@ -30,7 +31,8 @@ public class SendEventRequest extends V7<BaseV7Response, SendEventRequest.Body> 
     BaseBodyDecorator decorator = new BaseBodyDecorator(
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()).getAptoideClientUUID());
-    SendEventRequest.Body body = new SendEventRequest.Body(data);
+    SendEventRequest.Body body =
+        new SendEventRequest.Body(data, DataProvider.getConfiguration().getAppId());
 
     return new SendEventRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
@@ -41,11 +43,12 @@ public class SendEventRequest extends V7<BaseV7Response, SendEventRequest.Body> 
   }
 
   @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) public static class Body
-      extends BaseBody {
+      extends AnalyticsBaseBody<Body.Data> {
 
     private Data data;
 
-    public Body(Data data) {
+    public Body(Data data, String packageName) {
+      super(packageName);
       this.data = data;
     }
 

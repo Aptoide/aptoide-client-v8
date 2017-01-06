@@ -27,19 +27,19 @@ public class Logger {
   }
 
   public static void v(String tag, String msg) {
-    if (DBG) {
+    if (DBG && msg != null) {
       Log.v(tag, msg);
     }
   }
 
   public static void v(String tag, String msg, Throwable tr) {
-    if (DBG) {
+    if (DBG && msg != null) {
       Log.v(tag, msg, tr);
     }
   }
 
   public static void d(String tag, String msg) {
-    if (DBG) {
+    if (DBG && msg != null) {
       Log.d(tag, msg);
     }
   }
@@ -49,7 +49,7 @@ public class Logger {
   }
 
   public static void d(String tag, String msg, Throwable tr) {
-    if (DBG) {
+    if (DBG && msg != null) {
       Log.d(tag, msg, tr);
     }
   }
@@ -63,21 +63,27 @@ public class Logger {
   }
 
   public static void i(String tag, String msg) {
-    if (DBG) {
+    if (DBG && msg != null) {
       Log.i(tag, msg);
     }
   }
 
   public static void w(String TAG, String msg) {
-    Log.w(TAG, msg);
+    if (msg != null) {
+      Log.w(TAG, msg);
+    }
   }
 
   public static void w(String TAG, String msg, Throwable tr) {
-    Log.w(TAG, msg, tr);
+    if (msg != null) {
+      Log.w(TAG, msg, tr);
+    }
   }
 
   public static void e(String TAG, String msg) {
-    Log.e(TAG, msg);
+    if (msg != null) {
+      Log.e(TAG, msg);
+    }
   }
 
   public static void e(Object object, String msg) {
@@ -93,6 +99,8 @@ public class Logger {
   }
 
   public static void e(String TAG, String msg, Throwable tr) {
-    Log.e(TAG, msg, tr);
+    if (msg != null) {
+      Log.e(TAG, msg, tr);
+    }
   }
 }

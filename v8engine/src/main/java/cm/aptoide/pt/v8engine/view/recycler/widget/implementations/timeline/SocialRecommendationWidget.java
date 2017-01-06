@@ -17,7 +17,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline
  */
 public class SocialRecommendationWidget extends SocialCardWidget<SocialRecommendationDisplayable> {
 
-  private final String CARD_TYPE_NAME = "Social Recommendation";
+  private final String CARD_TYPE_NAME = "SOCIAL_RECOMMENDATION";
   private TextView storeName;
   private TextView userName;
   private ImageView storeAvatar;
