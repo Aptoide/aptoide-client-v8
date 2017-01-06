@@ -93,7 +93,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
   @Override public void onCreate(Bundle savedInstanceState) {
     getData();
     super.onCreate(savedInstanceState);
-    setContentView(getLayoutId());
+     setContentView(getLayoutId());
     mSubscriptions = new CompositeSubscription();
     bindViews();
     editViews();
