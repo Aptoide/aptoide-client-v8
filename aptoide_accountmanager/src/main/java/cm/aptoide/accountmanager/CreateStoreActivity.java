@@ -14,7 +14,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import cm.aptoide.accountmanager.ws.AptoideWsV3Exception;
 import cm.aptoide.accountmanager.ws.CheckUserCredentialsRequest;
 import cm.aptoide.accountmanager.ws.ErrorsMapper;
 import cm.aptoide.pt.dataprovider.DataProvider;
@@ -42,6 +41,10 @@ public class CreateStoreActivity extends PermissionsBaseActivity
     implements AptoideAccountManager.ICreateStore {
 
   private static final String TAG = CreateStoreActivity.class.getSimpleName();
+
+  private final IdsRepositoryImpl idsRepository =
+      new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+          DataProvider.getContext());
 
   private Toolbar mToolbar;
   private Button mCreateStore;
@@ -102,11 +105,6 @@ public class CreateStoreActivity extends PermissionsBaseActivity
     setupThemeListeners();
   }
 
-  private void getData() {
-    from = getIntent().getStringExtra("from") == null ? "" : getIntent().getStringExtra("from");
-    storeId = getIntent().getLongExtra("storeId", -1);
-  }
-
   @Override protected void onDestroy() {
     super.onDestroy();
     mSubscriptions.clear();
@@ -122,6 +120,11 @@ public class CreateStoreActivity extends PermissionsBaseActivity
 
   @Override int getLayoutId() {
     return R.layout.activity_create_store;
+  }
+
+  private void getData() {
+    from = getIntent().getStringExtra("from") == null ? "" : getIntent().getStringExtra("from");
+    storeId = getIntent().getLongExtra("storeId", -1);
   }
 
   private void setupToolbar() {
@@ -227,9 +230,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
             });
           } else if (CREATE_STORE_REQUEST_CODE == 4) {
             progressDialog.show();
-            mSubscriptions.add(SetStoreRequest.of(
-                new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                    DataProvider.getContext()).getAptoideClientUUID(),
+            mSubscriptions.add(SetStoreRequest.of(idsRepository.getAptoideClientUUID(),
                 AptoideAccountManager.getAccessToken(), null, storeTheme, storeAvatarPath,
                 storeDescription, true, storeId).observe().subscribe(answer -> {
               AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
@@ -259,8 +260,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
              */
             progressDialog.show();
             mSubscriptions.add(SimpleSetStoreRequest.of(AptoideAccountManager.getAccessToken(),
-                new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                    DataProvider.getContext()).getAptoideClientUUID(), storeId, storeTheme,
+                idsRepository.getAptoideClientUUID(), storeId, storeTheme,
                 storeDescription).observe().subscribe(answer -> {
               AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
                 progressDialog.dismiss();
@@ -324,9 +324,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
       /*
        * Multipart
        */
-      mSubscriptions.add(SetStoreRequest.of(
-          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-              DataProvider.getContext()).getAptoideClientUUID(),
+      mSubscriptions.add(SetStoreRequest.of(idsRepository.getAptoideClientUUID(),
           AptoideAccountManager.getAccessToken(), storeName, storeTheme, storeAvatarPath)
           .observe()
           .timeout(90, TimeUnit.SECONDS)
@@ -385,8 +383,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
        * not multipart
        */
       SimpleSetStoreRequest.of(AptoideAccountManager.getAccessToken(),
-          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-              DataProvider.getContext()).getAptoideClientUUID(), storeName, storeTheme)
+          idsRepository.getAptoideClientUUID(), storeName, storeTheme)
           .execute(answer -> {
             AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
               progressDialog.dismiss();
@@ -526,10 +523,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
   }
 
   private boolean checkThemeClicked(String color) {
-    if (color.equals(storeTheme)) {
-      return true;
-    }
-    return false;
+    return color.equals(storeTheme);
   }
 
   /**

@@ -41,10 +41,13 @@ import cm.aptoide.accountmanager.ws.responses.GenericResponseV3;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
 import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.preferences.AptoidePreferencesConfiguration;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -94,6 +97,9 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
       ".removedaccount.broadcast";
 
   private final static AptoideAccountManager instance = new AptoideAccountManager();
+  private static final IdsRepositoryImpl idsRepository =
+      new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+          DataProvider.getContext());
   private static String TAG = AptoideAccountManager.class.getSimpleName();
   /**
    * This variable indicates if the user is logged or not. It's used because in some cases the
@@ -388,7 +394,8 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
       genericPleaseWaitDialog.show();
     }
     OAuth2AuthenticationRequest oAuth2AuthenticationRequest =
-        OAuth2AuthenticationRequest.of(userName, passwordOrToken, mode, nameForGoogle);
+        OAuth2AuthenticationRequest.of(userName, passwordOrToken, mode, nameForGoogle,
+            idsRepository.getAptoideClientUUID());
     final ProgressDialog finalGenericPleaseWaitDialog = genericPleaseWaitDialog;
     oAuth2AuthenticationRequest.execute(oAuth -> {
       Logger.d(TAG, "onSuccess() called with: " + "oAuth = [" + oAuth + "]");
@@ -580,7 +587,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 
   private static Observable<String> getNewAccessTokenFromRefreshToken(String refreshToken,
       Action1<Throwable> action1) {
-    return OAuth2AuthenticationRequest.of(refreshToken)
+    return OAuth2AuthenticationRequest.of(refreshToken, idsRepository.getAptoideClientUUID())
         .observe()
         .observeOn(AndroidSchedulers.mainThread())
         .map(OAuth::getAccessToken)
@@ -611,7 +618,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     String email = callback.getUserEmail();
     String password = callback.getUserPassword();
     if (validateUserCredentials(callback, email, password)) {
-      CreateUserRequest.of(email, password).execute(oAuth -> {
+      CreateUserRequest.of(email, password, idsRepository.getAptoideClientUUID()).execute(oAuth -> {
         if (oAuth.hasErrors()) {
           if (oAuth.getErrors() != null && oAuth.getErrors().size() > 0) {
             callback.onRegisterFail(
@@ -802,7 +809,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
    */
   protected void setupLogins(ILoginInterface callback, FragmentActivity activity,
       LoginButton facebookLoginButton, Button loginButton, Button registerButton) {
-    this.mCallback = callback;
+    mCallback = callback;
     this.mContextWeakReference = new WeakReference<>(activity);
     View googleSignInButton = activity.findViewById(R.id.g_sign_in_button);
     if (getConfiguration().isLoginAvailable(AptoidePreferencesConfiguration.SocialLogin.GOOGLE)
@@ -945,7 +952,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 
   @Override public void onActivityDestroyed(Activity activity) {
     if (activity instanceof LoginActivity) {
-      instance.mCallback = null;
+      mCallback = null;
     }
   }
 

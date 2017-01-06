@@ -8,10 +8,7 @@ package cm.aptoide.accountmanager.ws;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
-import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.preferences.Application;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -32,26 +29,30 @@ public class OAuth2AuthenticationRequest extends v3accountManager<OAuth> {
   private String nameForGoogle;
   private String grantType;
   private String refreshToken;
+  private String aptoideClientUUID;
 
-  public OAuth2AuthenticationRequest() {
+  public OAuth2AuthenticationRequest(String aptoideClientUUID) {
+    this.aptoideClientUUID = aptoideClientUUID;
   }
 
-  public OAuth2AuthenticationRequest(OkHttpClient httpClient, Converter.Factory converterFactory) {
+  public OAuth2AuthenticationRequest(OkHttpClient httpClient, Converter.Factory converterFactory,
+      String aptoideClientUUID) {
     super(httpClient, converterFactory);
+    this.aptoideClientUUID = aptoideClientUUID;
   }
 
   public static OAuth2AuthenticationRequest of(String username, String password, LoginMode mode,
-      @Nullable String nameForGoogle) {
-    return new OAuth2AuthenticationRequest().setUsername(username)
+      @Nullable String nameForGoogle, String aptoideClientUUID) {
+    return new OAuth2AuthenticationRequest(aptoideClientUUID).setUsername(username)
         .setPassword(password)
         .setMode(mode)
         .setGrantType("password")
         .setNameForGoogle(nameForGoogle);
   }
 
-  public static OAuth2AuthenticationRequest of(String refreshToken) {
+  public static OAuth2AuthenticationRequest of(String refreshToken, String aptoideClientUUID) {
 
-    return new OAuth2AuthenticationRequest().setGrantType("refresh_token")
+    return new OAuth2AuthenticationRequest(aptoideClientUUID).setGrantType("refresh_token")
         .setRefreshToken(refreshToken);
   }
 
@@ -62,9 +63,7 @@ public class OAuth2AuthenticationRequest extends v3accountManager<OAuth> {
     parameters.put("grant_type", grantType);
     parameters.put("client_id", "Aptoide");
     parameters.put("mode", "json");
-    parameters.put("aptoide_uid",
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID());
+    parameters.put("aptoide_uid", aptoideClientUUID);
 
     if (mode != null) {
       switch (mode) {
