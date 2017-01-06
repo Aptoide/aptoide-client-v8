@@ -15,7 +15,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.TimelineClickEvent;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.ArticleDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.android.schedulers.AndroidSchedulers;
@@ -89,7 +89,7 @@ public class ArticleWidget extends CardWidget<ArticleDisplayable> {
               .url(displayable.getLink().getUrl())
               .app(packageName)
               .build())
-          .build(), AptoideAnalytics.OPEN_ARTICLE);
+          .build(), TimelineClickEvent.OPEN_ARTICLE);
     });
 
     compositeSubscription.add(displayable.getRelatedToApplication()
@@ -125,7 +125,7 @@ public class ArticleWidget extends CardWidget<ArticleDisplayable> {
               .url(displayable.getDeveloperLink().getUrl())
               .app(packageName)
               .build())
-          .build(), AptoideAnalytics.OPEN_BLOG);
+          .build(), TimelineClickEvent.OPEN_BLOG);
     }));
   }
 

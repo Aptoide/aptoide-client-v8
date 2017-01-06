@@ -15,7 +15,7 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.TimelineClickEvent;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.RecommendationDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
@@ -92,12 +92,12 @@ public class RecommendationWidget extends CardWidget<RecommendationDisplayable> 
           Analytics.AppsTimeline.OPEN_APP_VIEW);
       displayable.sendClickEvent(SendEventRequest.Body.Data.builder()
           .cardType(CARD_TYPE_NAME)
-          .source(AptoideAnalytics.SOURCE_APTOIDE)
+          .source(TimelineClickEvent.SOURCE_APTOIDE)
           .specific(SendEventRequest.Body.Specific.builder()
               .app(displayable.getPackageName())
               .based_on(displayable.getSimilarAppPackageName())
               .build())
-          .build(), AptoideAnalytics.OPEN_APP);
+          .build(), TimelineClickEvent.OPEN_APP);
       ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
           .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
     }));

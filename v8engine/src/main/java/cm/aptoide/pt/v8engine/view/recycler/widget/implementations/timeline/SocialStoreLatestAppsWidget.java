@@ -13,7 +13,7 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.TimelineClickEvent;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
@@ -143,12 +143,12 @@ public class SocialStoreLatestAppsWidget
             Analytics.AppsTimeline.OPEN_APP_VIEW);
         displayable.sendClickEvent(SendEventRequest.Body.Data.builder()
             .cardType(getCardTypeName())
-            .source(AptoideAnalytics.SOURCE_APTOIDE)
+            .source(TimelineClickEvent.SOURCE_APTOIDE)
             .specific(SendEventRequest.Body.Specific.builder()
                 .app(packageName)
                 .store(displayable.getStoreName())
                 .build())
-            .build(), AptoideAnalytics.OPEN_APP);
+            .build(), TimelineClickEvent.OPEN_APP);
         ((FragmentShower) getContext()).pushFragmentV4(
             V8Engine.getFragmentProvider().newAppViewFragment(apps.get(app), packageName));
       }));
@@ -161,10 +161,10 @@ public class SocialStoreLatestAppsWidget
           Analytics.AppsTimeline.OPEN_STORE);
       displayable.sendClickEvent(SendEventRequest.Body.Data.builder()
           .cardType(getCardTypeName())
-          .source(AptoideAnalytics.SOURCE_APTOIDE)
+          .source(TimelineClickEvent.SOURCE_APTOIDE)
           .specific(
               SendEventRequest.Body.Specific.builder().store(displayable.getStoreName()).build())
-          .build(), AptoideAnalytics.OPEN_STORE);
+          .build(), TimelineClickEvent.OPEN_STORE);
       ((FragmentShower) getContext()).pushFragmentV4(
           V8Engine.getFragmentProvider().newStoreFragment(displayable.getStoreName()));
     }));

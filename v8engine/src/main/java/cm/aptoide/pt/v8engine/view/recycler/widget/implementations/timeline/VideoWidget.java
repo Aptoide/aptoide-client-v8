@@ -17,7 +17,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.TimelineClickEvent;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.VideoDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.android.schedulers.AndroidSchedulers;
@@ -100,7 +100,7 @@ public class VideoWidget extends CardWidget<VideoDisplayable> {
               .url(displayable.getLink().getUrl())
               .app(packageName)
               .build())
-          .build(), AptoideAnalytics.OPEN_VIDEO);
+          .build(), TimelineClickEvent.OPEN_VIDEO);
     });
 
     compositeSubscription.add(displayable.getRelatedToApplication()
@@ -136,7 +136,7 @@ public class VideoWidget extends CardWidget<VideoDisplayable> {
               .url(displayable.getBaseLink().getUrl())
               .app(packageName)
               .build())
-          .build(), AptoideAnalytics.OPEN_CHANNEL);
+          .build(), TimelineClickEvent.OPEN_CHANNEL);
     }));
   }
 

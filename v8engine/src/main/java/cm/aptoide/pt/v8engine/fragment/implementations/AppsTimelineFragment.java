@@ -33,7 +33,6 @@ import cm.aptoide.pt.model.v7.timeline.SocialVideo;
 import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.model.v7.timeline.Video;
-import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -126,7 +125,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     installManager = new InstallManager(AptoideDownloadManager.getInstance(), installer,
         AccessorFactory.getAccessorFor(Download.class),
         AccessorFactory.getAccessorFor(Installed.class));
-    timelineMetricsManager = new TimelineMetricsManager();
+    timelineMetricsManager = new TimelineMetricsManager(Analytics.getInstance());
     socialRepository = new SocialRepository();
   }
 
