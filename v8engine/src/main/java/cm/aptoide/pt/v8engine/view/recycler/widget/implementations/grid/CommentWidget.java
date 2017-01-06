@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.os.Build;
 import android.support.annotation.ColorRes;
+import android.support.annotation.Dimension;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -29,7 +30,8 @@ public class CommentWidget extends Widget<CommentDisplayable> {
   private View outerLayout;
   private ImageView userAvatar;
   private TextView userName;
-  private TextView date;
+  private TextView datePos1;
+  private TextView datePos2;
   private TextView comment;
 
   public CommentWidget(View itemView) {
@@ -40,80 +42,72 @@ public class CommentWidget extends Widget<CommentDisplayable> {
     userAvatar = (ImageView) itemView.findViewById(R.id.user_icon);
     outerLayout = itemView.findViewById(R.id.outer_layout);
     userName = (TextView) itemView.findViewById(R.id.user_name);
-    date = (TextView) itemView.findViewById(R.id.added_date);
+    datePos1 = (TextView) itemView.findViewById(R.id.added_date_pos1);
+    datePos2 = (TextView) itemView.findViewById(R.id.added_date_pos2);
     comment = (TextView) itemView.findViewById(R.id.comment);
     replyLayout = itemView.findViewById(R.id.reply_layout);
   }
 
   @Override public void bindView(CommentDisplayable displayable) {
     Comment comment = displayable.getComment();
+
     ImageLoader.loadWithCircleTransformAndPlaceHolderAvatarSize(comment.getUser().getAvatar(),
         userAvatar, R.drawable.layer_1);
     userName.setText(comment.getUser().getName());
-    date.setText(AptoideUtils.DateTimeU.getInstance()
-        .getTimeDiffString(getContext(), comment.getAdded().getTime()));
+
+    String date = AptoideUtils.DateTimeU.getInstance()
+        .getTimeDiffString(getContext(), comment.getAdded().getTime());
+    datePos1.setText(date);
+    datePos2.setText(date);
+
     this.comment.setText(comment.getBody());
 
     if (ComplexComment.class.isAssignableFrom(comment.getClass())) {
-      final ComplexComment complexComment = (ComplexComment) comment;
+      datePos2.setVisibility(View.VISIBLE);
+      bindComplexComment((ComplexComment) comment);
+    } else {
+      datePos1.setVisibility(View.VISIBLE);
+    }
+  }
 
-      @ColorRes int bgColor = R.color.white;
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        outerLayout.setBackgroundColor(getContext().getColor(bgColor));
-      } else {
-        outerLayout.setBackgroundColor(getContext().getResources().getColor(bgColor));
-      }
+  private void bindComplexComment(ComplexComment comment) {
+    final ComplexComment complexComment = comment;
 
-      // set left/start margin width in default comment
-      setLayoutLeftPadding(complexComment);
+    // switch background color according to level
+    @ColorRes int bgColor = (complexComment.getLevel() == 1) ? R.color.comment_gray : R.color.white;
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      outerLayout.setBackgroundColor(getContext().getColor(bgColor));
+    } else {
+      outerLayout.setBackgroundColor(getContext().getResources().getColor(bgColor));
+    }
 
-      if (complexComment.getLevel() == 1) {
-        replyLayout.setVisibility(View.VISIBLE);
-        compositeSubscription.add(RxView.clicks(replyLayout)
-            .flatMap(aVoid -> complexComment.observeReplySubmission().doOnError(err -> {
-              ShowMessage.asSnack(userAvatar, R.string.error_occured);
-            }))
-            .retry()
-            .subscribe(aVoid -> { /* nothing else to do */ }, err -> {
-              Logger.e(TAG, err);
-              CrashReports.logException(err);
-            }));
-      } else {
-        replyLayout.setVisibility(View.GONE);
-      }
+    // set left/start margin width in default comment
+    setLayoutLeftPadding(complexComment);
+
+    if (complexComment.getLevel() == 1) {
+      // first level
+      replyLayout.setVisibility(View.VISIBLE);
+      compositeSubscription.add(RxView.clicks(replyLayout)
+          .flatMap(aVoid -> complexComment.observeReplySubmission().doOnError(err -> {
+            ShowMessage.asSnack(userAvatar, R.string.error_occured);
+          }))
+          .retry()
+          .subscribe(aVoid -> { /* nothing else to do */ }, err -> {
+            Logger.e(TAG, err);
+            CrashReports.logException(err);
+          }));
+    } else {
+      // other levels
+      replyLayout.setVisibility(View.GONE);
+      userAvatar.setScaleX(0.7F);
+      userAvatar.setScaleY(0.7F);
     }
   }
 
   private void setLayoutLeftPadding(ComplexComment complexComment) {
     final int level = complexComment.getLevel();
-
-    /*
-    outerLayout.setPadding(outerLayout.getPaddingRight(), outerLayout.getPaddingTop(),
-        outerLayout.getPaddingRight(), outerLayout.getPaddingBottom());
-
     int baseMargin = AptoideUtils.ScreenU.getPixels(MARGIN_IN_DIP);
-    RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) rootView.getLayoutParams();
-    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
-      if (level == 2) {
-        params.setMarginStart(baseMargin);
-      } else {
-        params.setMarginStart(0);
-      }
-    }
-    if (level == 2) {
-      params.leftMargin = baseMargin;
-    } else {
-      params.leftMargin = 0;
-    }
-    rootView.setLayoutParams(params);
-    */
-
-    //int baseMargin = level < 2 ? 0 : AptoideUtils.ScreenU.getPixels(MARGIN_IN_DIP);
-    //rootView.setPadding(baseMargin, rootView.getPaddingTop(), rootView.getPaddingRight(),
-    //    rootView.getPaddingBottom());
-
-    int baseMargin = AptoideUtils.ScreenU.getPixels(MARGIN_IN_DIP);
-    int leftMargin = level < 2 ? baseMargin : baseMargin * level;
+    @Dimension int leftMargin = level < 2 ? baseMargin : baseMargin * level;
     outerLayout.setPadding(leftMargin, outerLayout.getPaddingTop(), baseMargin,
         outerLayout.getPaddingBottom());
   }
