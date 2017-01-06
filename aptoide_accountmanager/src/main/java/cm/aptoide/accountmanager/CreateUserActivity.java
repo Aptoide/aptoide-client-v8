@@ -221,13 +221,6 @@ public class CreateUserActivity extends PermissionsBaseActivity
     return resolution.get(0) > 300 && resolution.get(1) > 300;
   }
 
-  private boolean checkImageResolution(String avatarPath) {
-    ArrayList<Integer> resolution;
-    FileUtils fileUtils = new FileUtils();
-    resolution = fileUtils.getImageResolution(avatarPath);
-    return resolution.get(0) > 300 && resolution.get(1) > 300;
-  }
-
   @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
       @NonNull int[] grantResults) {
     switch (requestCode) {
