@@ -25,7 +25,7 @@ import com.jakewharton.rxbinding.view.RxView;
  */
 public class RecommendationWidget extends CardWidget<RecommendationDisplayable> {
 
-  private static final String CARD_TYPE_NAME = "Recommendation";
+  private static final String CARD_TYPE_NAME = "RECOMMENDATION";
   private TextView title;
   private TextView subtitle;
   private ImageView image;

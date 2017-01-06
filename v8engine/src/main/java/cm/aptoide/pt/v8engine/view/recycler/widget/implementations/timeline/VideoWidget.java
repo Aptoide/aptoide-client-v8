@@ -27,7 +27,7 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class VideoWidget extends CardWidget<VideoDisplayable> {
 
-  private static final String CARD_TYPE_NAME = "Video";
+  private static final String CARD_TYPE_NAME = "VIDEO";
   private TextView title;
   private TextView subtitle;
   private ImageView image;

@@ -24,7 +24,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline
  */
 public class SimilarWidget extends CardWidget<SimilarDisplayable> {
 
-  private final String CARD_TYPE_NAME = "Similar";
+  private final String CARD_TYPE_NAME = "SIMILAR";
   private TextView title;
   private TextView subtitle;
   private ImageView image;

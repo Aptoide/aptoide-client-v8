@@ -22,7 +22,7 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class SocialVideoWidget extends SocialCardWidget<SocialVideoDisplayable> {
 
-  private static final String CARD_TYPE_NAME = "Social Video";
+  private static final String CARD_TYPE_NAME = "SOCIAL_VIDEO";
 
   private TextView title;
   private TextView subtitle;

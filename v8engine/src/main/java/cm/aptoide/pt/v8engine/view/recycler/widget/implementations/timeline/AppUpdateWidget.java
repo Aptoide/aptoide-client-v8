@@ -29,7 +29,7 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
 
-  private static final String CARD_TYPE_NAME = "App Update";
+  private static final String CARD_TYPE_NAME = "APP_UPDATE";
   private TextView appName;
   private TextView appVersion;
   private ImageView appIcon;

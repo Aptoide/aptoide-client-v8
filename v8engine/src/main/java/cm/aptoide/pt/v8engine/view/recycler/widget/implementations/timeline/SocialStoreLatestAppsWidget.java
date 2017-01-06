@@ -32,7 +32,7 @@ import rx.android.schedulers.AndroidSchedulers;
 public class SocialStoreLatestAppsWidget
     extends SocialCardWidget<SocialStoreLatestAppsDisplayable> {
 
-  private static final String CARD_TYPE_NAME = "Social Latest Apps";
+  private static final String CARD_TYPE_NAME = "SOCIAL_LATEST_APPS";
   private final LayoutInflater inflater;
   private TextView storeName;
   private TextView userName;

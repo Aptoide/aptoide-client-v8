@@ -18,7 +18,7 @@ import com.like.LikeButton;
  */
 public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayable> {
 
-  private static final String CARD_TYPE_NAME = "Social Install";
+  private static final String CARD_TYPE_NAME = "SOCIAL_INSTALL";
 
   private TextView storeName;
   private TextView userName;

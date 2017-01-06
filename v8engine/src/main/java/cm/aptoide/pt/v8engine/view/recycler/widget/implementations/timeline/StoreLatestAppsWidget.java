@@ -24,7 +24,7 @@ import java.util.Map;
  */
 public class StoreLatestAppsWidget extends CardWidget<StoreLatestAppsDisplayable> {
 
-  private static final String CARD_TYPE_NAME = "Latest Apps";
+  private static final String CARD_TYPE_NAME = "LATEST_APPS";
   private final LayoutInflater inflater;
   private TextView title;
   private TextView subtitle;

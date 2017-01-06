@@ -21,7 +21,7 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayable> {
 
-  private static final String CARD_TYPE_NAME = "Social Article";
+  private static final String CARD_TYPE_NAME = "SOCIAL_ARTICLE";
 
   private TextView title;
   private TextView subtitle;

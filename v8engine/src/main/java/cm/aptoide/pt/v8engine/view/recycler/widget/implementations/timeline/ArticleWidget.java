@@ -25,7 +25,7 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class ArticleWidget extends CardWidget<ArticleDisplayable> {
 
-  private final String CARD_TYPE_NAME = "Article";
+  private final String CARD_TYPE_NAME = "ARTICLE";
   private TextView title;
   private TextView subtitle;
   private ImageView image;
