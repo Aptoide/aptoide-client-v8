@@ -14,7 +14,7 @@ public @Data @EqualsAndHashCode(callSuper = true) class AnalyticsBaseBody<T> ext
   @Getter @Setter T data;
   String aptoidePackage;
 
-  AnalyticsBaseBody(String aptoidePackage) {
+  public AnalyticsBaseBody(String aptoidePackage) {
     this.aptoidePackage = aptoidePackage;
   }
 }

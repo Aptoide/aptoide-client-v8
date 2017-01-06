@@ -1,16 +1,15 @@
-package cm.aptoide.pt.v8engine.analytics.AptoideAnalytics;
+package cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.Event;
 import rx.schedulers.Schedulers;
 
 /**
- * Created by jdandrade on 28/10/2016.
- * This class will handle analytics events that are meant to be sent to our webservices to store.
+ * Created by trinkes on 06/01/2017.
  */
 
-public class AptoideAnalytics {
-
+public class TimelineClickEvent extends Event {
   public static final String SOURCE_APTOIDE = "Aptoide";
   public static final String OPEN_ARTICLE = "Open_Article";
   public static final String OPEN_BLOG = "Open_Blog";
@@ -19,12 +18,15 @@ public class AptoideAnalytics {
   public static final String OPEN_STORE = "Open_Store";
   public static final String OPEN_APP = "Open_App";
   public static final String UPDATE_APP = "Update_App";
+  private final SendEventRequest.Body.Data data;
+  private final String eventName;
 
-  private AptoideAnalytics() {
-    throw new IllegalStateException("You shall not instantiate this class!");
+  public TimelineClickEvent(SendEventRequest.Body.Data data, String eventName) {
+    this.data = data;
+    this.eventName = eventName;
   }
 
-  public static void logTimelineEvent(SendEventRequest.Body.Data data, String eventName) {
+  @Override public void send() {
     SendEventRequest.of(AptoideAccountManager.getAccessToken(), data, eventName)
         .observe()
         .observeOn(Schedulers.io())
