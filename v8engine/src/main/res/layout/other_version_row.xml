@@ -38,9 +38,9 @@
           android:id="@+id/version_name"
           android:layout_width="wrap_content"
           android:layout_height="@dimen/other_version_icon_size_with_icon"
-          android:drawableLeft="@drawable/ic_appview_version"
+          android:drawableLeft="@drawable/ic_appview_version_green"
           android:drawablePadding="4dp"
-          android:drawableStart="@drawable/ic_appview_version"
+          android:drawableStart="@drawable/ic_appview_version_green"
           android:drawableTint="@color/green_tint_default"
           android:ellipsize="end"
           android:fontFamily="@string/font_family_regular"
@@ -110,7 +110,7 @@
         android:id="@+id/store_icon"
         android:layout_width="match_parent"
         android:layout_height="44dp"
-        tools:src="@drawable/user_account_white"
+        tools:src="@drawable/ic_avatar_apps"
         />
 
     <TextView
