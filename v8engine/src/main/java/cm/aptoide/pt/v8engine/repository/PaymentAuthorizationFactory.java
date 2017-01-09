@@ -18,8 +18,8 @@ public class PaymentAuthorizationFactory {
     this.context = context;
   }
 
-  public Authorization syncingError(int paymentId) {
-    return new WebAuthorization(context, paymentId, "", "", WebAuthorization.Status.SYNCING_ERROR);
+  public Authorization create(int paymentId, Authorization.Status status) {
+    return new WebAuthorization(context, paymentId, "", "", status);
   }
 
   public cm.aptoide.pt.database.realm.PaymentAuthorization convertToDatabasePaymentAuthorization(
@@ -34,6 +34,11 @@ public class PaymentAuthorizationFactory {
         paymentAuthorization.getPaymentId(), ((WebAuthorization) paymentAuthorization).getUrl(),
         ((WebAuthorization) paymentAuthorization).getRedirectUrl(),
         paymentAuthorization.getStatus().name());
+  }
+
+  public cm.aptoide.pt.database.realm.PaymentAuthorization convertToDatabasePaymentAuthorization(int paymentId,
+      Authorization.Status status) {
+    return new cm.aptoide.pt.database.realm.PaymentAuthorization(paymentId, "", "", status.name());
   }
 
   public Authorization convertToPaymentAuthorization(

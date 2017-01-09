@@ -16,7 +16,6 @@ import cm.aptoide.pt.database.realm.PaymentConfirmation;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationFactory;
 import cm.aptoide.pt.v8engine.repository.PaymentConfirmationConverter;
-import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 
 /**
  * Created by marcelobenites on 18/11/16.
@@ -30,9 +29,7 @@ public class AptoideSyncService extends Service {
     super.onCreate();
     synchronized (lock) {
       if (syncAdapter == null) {
-        syncAdapter = new AptoideSyncAdapter(getApplicationContext(), true, false,
-            RepositoryFactory.getPaymentAuthorizationRepository(getApplicationContext()),
-            new PaymentConfirmationConverter(), new PaymentAuthorizationFactory(this),
+        syncAdapter = new AptoideSyncAdapter(getApplicationContext(), true, false, new PaymentConfirmationConverter(), new PaymentAuthorizationFactory(this),
             new SyncDataConverter(), new NetworkOperatorManager(
                 (TelephonyManager) getApplicationContext().getSystemService(TELEPHONY_SERVICE)),
             AccessorFactory.getAccessorFor(PaymentConfirmation.class),

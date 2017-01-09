@@ -106,7 +106,7 @@ public class SyncDataConverter {
     if (listString == null) {
       return Collections.emptyList();
     }
-    final String[] strings = TextUtils.split(",", listString);
+    final String[] strings = TextUtils.split(listString, ",");
     if (strings.length == 1) {
       return Collections.singletonList(listString);
     }

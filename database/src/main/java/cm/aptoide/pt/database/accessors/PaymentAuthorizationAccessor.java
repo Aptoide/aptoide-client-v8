@@ -19,12 +19,12 @@ public class PaymentAuthorizationAccessor extends SimpleAccessor<PaymentAuthoriz
     super(db, PaymentAuthorization.class);
   }
 
-  public Observable<List<PaymentAuthorization>> getPaymentAuthorizations(int paymentId) {
-    return database.getAsList(PaymentAuthorization.class, PaymentAuthorization.PAYMENT_ID, paymentId);
-  }
-
   public Observable<List<PaymentAuthorization>> getPaymentAuthorizations() {
     return database.getAllSorted(PaymentAuthorization.class, PaymentAuthorization.PAYMENT_ID);
+  }
+
+  public void saveAll(List<PaymentAuthorization> paymentAuthorizations) {
+    database.insertAll(paymentAuthorizations);
   }
 
   public void save(PaymentAuthorization paymentAuthorization) {

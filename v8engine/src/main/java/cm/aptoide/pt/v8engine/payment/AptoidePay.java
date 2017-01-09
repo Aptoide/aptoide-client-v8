@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.payment;
 
 import cm.aptoide.pt.v8engine.payment.products.AptoideProduct;
+import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationFactory;
 import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationRepository;
 import cm.aptoide.pt.v8engine.repository.PaymentConfirmationRepository;
 import cm.aptoide.pt.v8engine.repository.ProductRepository;
@@ -21,13 +22,16 @@ public class AptoidePay {
 
   private final PaymentConfirmationRepository confirmationRepository;
   private final PaymentAuthorizationRepository authorizationRepository;
-  private ProductRepository productRepository;
+  private final PaymentAuthorizationFactory authorizationFactory;
+  private final ProductRepository productRepository;
 
   public AptoidePay(PaymentConfirmationRepository confirmationRepository,
-      PaymentAuthorizationRepository authorizationRepository, ProductRepository productRepository) {
+      PaymentAuthorizationRepository authorizationRepository, ProductRepository productRepository,
+      PaymentAuthorizationFactory authorizationFactory) {
     this.confirmationRepository = confirmationRepository;
     this.authorizationRepository = authorizationRepository;
     this.productRepository = productRepository;
+    this.authorizationFactory = authorizationFactory;
   }
 
   public Observable<List<Payment>> availablePayments(AptoideProduct product) {
@@ -36,27 +40,11 @@ public class AptoidePay {
   }
 
   public Completable authorize(Payment payment) {
-    return authorizationRepository.getPaymentAuthorization(payment.getId())
-        .distinctUntilChanged(authorization -> authorization.getStatus())
-        .flatMap(authorization -> {
-
-          if (authorization.isAuthorized()) {
-            return Observable.just(authorization);
-          }
-
-          if (authorization.isPending()) {
-            return Observable.empty();
-          }
-
-          if (authorization.isInvalid()) {
-            return authorizationRepository.createPaymentAuthorization(payment.getId())
-                .andThen(Observable.empty());
-          }
-
-          authorization.authorize();
-          return Observable.empty();
-        })
-        .first()
+    return authorizationRepository.createPaymentAuthorization(payment.getId())
+        .andThen(authorizationRepository.getPaymentAuthorization(payment.getId()))
+        .takeUntil(authorization -> authorization.isInitiated() || authorization.isInvalid())
+        .filter(authorization -> authorization.isInitiated())
+        .doOnNext(authorization -> authorization.authorize())
         .toCompletable();
   }
 
@@ -75,12 +63,22 @@ public class AptoidePay {
         .map(success -> payments);
   }
 
-  private Observable<Void> addAuthorization(List<Payment> payments, List<Authorization> authorizations) {
-    return Observable.from(authorizations)
-        .flatMap(authorization -> Observable.from(payments)
-            .filter(payment -> isPaymentAuthorization(authorization, payment))
-            .doOnNext(orderedPayment -> orderedPayment.setAuthorization(authorization))
-            .toList())
+  private Observable<Void> addAuthorization(List<Payment> payments,
+      List<Authorization> authorizations) {
+    return Observable.from(payments)
+        .filter(payment -> {
+          if (payment.isAuthorizationRequired()) {
+            return true;
+          }
+          payment.setAuthorization(authorizationFactory.create(payment.getId(), Authorization.Status.NONE));
+          return false;
+        })
+        .flatMap(authorizationRequiredPayment -> Observable.from(authorizations)
+            .doOnNext(authorization -> {
+              if (authorizationRequiredPayment.getId() == authorization.getPaymentId()) {
+                authorizationRequiredPayment.setAuthorization(authorization);
+              }
+            }))
         .toList()
         .map(success -> null);
   }
@@ -91,9 +89,5 @@ public class AptoidePay {
         .map(payment -> payment.getId())
         .toList()
         .toSingle();
-  }
-
-  private boolean isPaymentAuthorization(Authorization authorization, Payment payment) {
-    return payment.isAuthorizationRequired() && (payment.getId() == authorization.getPaymentId());
   }
 }
