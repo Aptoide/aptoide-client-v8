@@ -167,10 +167,11 @@ public class PaymentPresenter implements Presenter {
     return view.registerPaymentSelection()
         .doOnNext(selection -> view.showGlobalLoading())
         .flatMap(paymentViewModel -> getSelectedPayment(getAllPayments(),
-            paymentViewModel)).<Void>flatMap(payment -> aptoidePay.authorize(payment)
+            paymentViewModel))
+        .<Void>flatMap(payment -> aptoidePay.authorize(payment)
+            .observeOn(AndroidSchedulers.mainThread())
             .doOnCompleted(() -> view.hideGlobalLoading())
-            .toObservable())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE));
+              .toObservable());
   }
 
   private Observable<Void> buySelection() {

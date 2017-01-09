@@ -80,7 +80,8 @@ public class PaymentAuthorizationSync extends RepositorySync {
           final cm.aptoide.pt.v8engine.payment.Authorization paymentAuthorization =
               authorizationFactory.convertToPaymentAuthorization(response);
           authorizations.add(authorizationFactory.convertToDatabasePaymentAuthorization(response));
-          if (paymentAuthorization.isPending()) {
+          if (paymentAuthorization.isPending()
+              || paymentAuthorization.isInitiated()) {
             rescheduleSync(syncResult);
           }
         }
