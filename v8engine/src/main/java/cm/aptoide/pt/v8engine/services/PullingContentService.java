@@ -92,6 +92,7 @@ public class PullingContentService extends Service {
         case BOOT_COMPLETED_ACTION:
           setUpdatesAction(startId);
           setPushNotificationsAction(startId);
+          break;
       }
     }
     return START_NOT_STICKY;
