@@ -26,80 +26,70 @@
   </android.support.design.widget.AppBarLayout>
 
   <LinearLayout
-      android:layout_width="fill_parent"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:orientation="vertical"
       >
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:padding="5dp"
-        >
+    <TextView
+        android:id="@+id/logged_as"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="2dp"
+        android:layout_marginTop="2dp"
+        android:text="@string/logged_as"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        />
 
-      <TextView
-          android:id="@+id/logged_as"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_gravity="center_horizontal"
-          android:layout_marginLeft="2dp"
-          android:layout_marginTop="2dp"
-          android:text="@string/logged_as"
-          android:textAppearance="?android:attr/textAppearanceMedium"
-          />
-
-      <TextView
-          android:id="@+id/username"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_gravity="center_horizontal"
-          android:layout_marginLeft="2dp"
-          android:layout_marginTop="2dp"
-          android:textAppearance="?android:attr/textAppearanceMedium"
-          />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="2dp"
+        android:layout_marginTop="2dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        />
 
     <Button
         android:id="@+id/button_logout"
-        style="?attr/customButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:text="@string/sign_out"
+        style="?attr/customButton"
         />
 
     <Button
         android:id="@+id/btn_user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         android:text="User Name"
+        android:visibility="gone"
         />
 
     <Button
         android:id="@+id/btn_access_token"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         android:text="Access Token"
+        android:visibility="gone"
         />
 
     <Button
         android:id="@+id/btn_refresh_token"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         android:text="Refresh Token"
+        android:visibility="gone"
         />
 
     <Button
         android:id="@+id/btn_invalidate_token"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         android:text="Invalidate Token"
+        android:visibility="gone"
         />
 
 
