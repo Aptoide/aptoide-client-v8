@@ -8,14 +8,15 @@ package cm.aptoide.pt.v8engine.repository.sync;
 import android.content.SyncResult;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.PaymentAuthorizationAccessor;
+import cm.aptoide.pt.database.realm.PaymentAuthorization;
 import cm.aptoide.pt.dataprovider.ws.v3.GetPaymentAuthorizationsRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.model.v3.PaymentAuthorizationsResponse;
-import cm.aptoide.pt.v8engine.payment.authorizations.WebAuthorization;
+import cm.aptoide.pt.v8engine.payment.Authorization;
 import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationFactory;
-import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationRepository;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import rx.Single;
 
@@ -25,16 +26,13 @@ import rx.Single;
 public class PaymentAuthorizationSync extends RepositorySync {
 
   private final List<String> paymentIds;
-  private final PaymentAuthorizationRepository authorizationRepository;
   private final PaymentAuthorizationAccessor authorizationAccessor;
   private final PaymentAuthorizationFactory authorizationFactory;
 
   public PaymentAuthorizationSync(List<String> paymentIds,
-      PaymentAuthorizationRepository authorizationRepository,
       PaymentAuthorizationAccessor authorizationAccessor,
       PaymentAuthorizationFactory authorizationFactory) {
     this.paymentIds = paymentIds;
-    this.authorizationRepository = authorizationRepository;
     this.authorizationAccessor = authorizationAccessor;
     this.authorizationFactory = authorizationFactory;
   }
@@ -59,24 +57,41 @@ public class PaymentAuthorizationSync extends RepositorySync {
     if (throwable instanceof IOException) {
       rescheduleSync(syncResult);
     } else {
+      final List<PaymentAuthorization> authorizations = new ArrayList<>();
       for (String paymentId : paymentIds) {
-        authorizationAccessor.save(authorizationFactory.convertToDatabasePaymentAuthorization(
-            authorizationFactory.syncingError(Integer.valueOf(paymentId))));
+        authorizations.add(authorizationFactory.convertToDatabasePaymentAuthorization(
+            authorizationFactory.create(Integer.valueOf(paymentId), Authorization.Status.ERROR)));
       }
+      authorizationAccessor.saveAll(authorizations);
     }
   }
 
-  private void saveAndReschedulePendingAuthorization(List<PaymentAuthorizationsResponse.PaymentAuthorizationResponse> responses,
+  private void saveAndReschedulePendingAuthorization(
+      List<PaymentAuthorizationsResponse.PaymentAuthorizationResponse> responses,
       SyncResult syncResult) {
-    for (PaymentAuthorizationsResponse.PaymentAuthorizationResponse response : responses) {
-      final cm.aptoide.pt.v8engine.payment.Authorization paymentAuthorization =
-          authorizationFactory.convertToPaymentAuthorization(response);
-      authorizationAccessor.save(
-          authorizationFactory.convertToDatabasePaymentAuthorization(response));
-      if (paymentAuthorization.isPending()) {
-        rescheduleSync(syncResult);
+    final List<PaymentAuthorization> authorizations = new ArrayList<>();
+    PaymentAuthorizationsResponse.PaymentAuthorizationResponse currentResponse;
+    for (String paymentId : paymentIds) {
+      currentResponse = null;
+
+      for (PaymentAuthorizationsResponse.PaymentAuthorizationResponse response : responses) {
+        if (response.getPaymentId() == Integer.valueOf(paymentId)) {
+          currentResponse = response;
+          final cm.aptoide.pt.v8engine.payment.Authorization paymentAuthorization =
+              authorizationFactory.convertToPaymentAuthorization(response);
+          authorizations.add(authorizationFactory.convertToDatabasePaymentAuthorization(response));
+          if (paymentAuthorization.isPending()) {
+            rescheduleSync(syncResult);
+          }
+        }
+      }
+
+      if (currentResponse == null) {
+        authorizations.add(authorizationFactory.convertToDatabasePaymentAuthorization(
+            authorizationFactory.create(Integer.valueOf(paymentId), Authorization.Status.NEW)));
       }
     }
+    authorizationAccessor.saveAll(authorizations);
   }
 
   private Single<List<PaymentAuthorizationsResponse.PaymentAuthorizationResponse>> getServerAuthorizations() {

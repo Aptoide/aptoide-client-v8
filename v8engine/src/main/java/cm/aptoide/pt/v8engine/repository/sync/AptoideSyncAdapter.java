@@ -16,7 +16,6 @@ import cm.aptoide.pt.database.accessors.PaymentConfirmationAccessor;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationFactory;
-import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationRepository;
 import cm.aptoide.pt.v8engine.repository.PaymentConfirmationConverter;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import java.util.List;
@@ -33,7 +32,6 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
   public static final String EXTRA_PAYMENT_AUTHORIZATIONS = "cm.aptoide.pt.v8engine.repository.sync.EXTRA_PAYMENT_AUTHORIZATIONS";
   public static final String EXTRA_PAYMENT_CONFIRMATIONS = "cm.aptoide.pt.v8engine.repository.sync.EXTRA_PAYMENT_CONFIRMATIONS";
 
-  private final PaymentAuthorizationRepository authorizationRepository;
   private final SyncDataConverter productConverter;
   private final NetworkOperatorManager operatorManager;
   private final PaymentConfirmationConverter confirmationConverter;
@@ -42,13 +40,11 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
   private final PaymentAuthorizationAccessor authorizationAcessor;
 
   public AptoideSyncAdapter(Context context, boolean autoInitialize, boolean allowParallelSyncs,
-      PaymentAuthorizationRepository authorizationRepository,
       PaymentConfirmationConverter confirmationConverter,
       PaymentAuthorizationFactory authorizationConverter, SyncDataConverter productConverter,
       NetworkOperatorManager operatorManager, PaymentConfirmationAccessor confirmationAccessor,
       PaymentAuthorizationAccessor authorizationAcessor) {
     super(context, autoInitialize, allowParallelSyncs);
-    this.authorizationRepository = authorizationRepository;
     this.confirmationConverter = confirmationConverter;
     this.authorizationConverter = authorizationConverter;
     this.productConverter = productConverter;
@@ -79,7 +75,7 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
             Integer.valueOf(paymentIds.get(0))).sync(syncResult);
       }
     } else if (authorizations){
-        new PaymentAuthorizationSync(paymentIds, authorizationRepository, authorizationAcessor,
+        new PaymentAuthorizationSync(paymentIds, authorizationAcessor,
             authorizationConverter).sync(syncResult);
     }
   }

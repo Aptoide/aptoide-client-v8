@@ -6,9 +6,9 @@
 package cm.aptoide.pt.v8engine.presenter;
 
 import android.os.Bundle;
+import cm.aptoide.pt.v8engine.payment.AptoidePay;
 import cm.aptoide.pt.v8engine.payment.Payer;
 import cm.aptoide.pt.v8engine.payment.Payment;
-import cm.aptoide.pt.v8engine.payment.AptoidePay;
 import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.payment.Purchase;
 import cm.aptoide.pt.v8engine.payment.products.AptoideProduct;
@@ -57,18 +57,19 @@ public class PaymentPresenter implements Presenter {
 
     view.getLifecycle()
         .filter(event -> View.LifecycleEvent.RESUME.equals(event))
-        .flatMap(resumed -> Observable.merge(paymentUseSelection(), paymentRegisterSelection(),
-            otherPaymentsSelection(), cancellationSelection()))
+        .flatMap(resumed -> Observable.merge(paymentUseSelection(), otherPaymentsSelection(),
+            cancellationSelection()))
+        .retry()
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
 
     view.getLifecycle()
         .filter(event -> View.LifecycleEvent.CREATE.equals(event))
-        .flatMap(created -> buySelection())
+        .flatMap(created -> Observable.merge(buySelection(), paymentRegisterSelection()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(selected -> {},
-            throwable -> hideGlobalAndPaymentsLoadingAndDismiss(throwable));
+        .subscribe(selected -> {
+        }, throwable -> hideGlobalAndPaymentsLoadingAndDismiss(throwable));
 
     view.getLifecycle()
         .filter(event -> View.LifecycleEvent.CREATE.equals(event))
@@ -153,14 +154,6 @@ public class PaymentPresenter implements Presenter {
             view.bindUntilEvent(View.LifecycleEvent.PAUSE));
   }
 
-  private Observable<Void> paymentRegisterSelection() {
-    return view.registerPaymentSelection()
-        .flatMap(paymentViewModel -> getSelectedPayment(getAllPayments(),
-            paymentViewModel)).<Void>flatMap(
-            payment -> aptoidePay.authorize(payment).toObservable()).compose(
-            view.bindUntilEvent(View.LifecycleEvent.PAUSE));
-  }
-
   private List<Payment> getAllPayments() {
     final List<Payment> allPayments = new ArrayList<>(otherPayments.size());
     allPayments.addAll(otherPayments);
@@ -168,6 +161,16 @@ public class PaymentPresenter implements Presenter {
       allPayments.add(selectedPayment);
     }
     return allPayments;
+  }
+
+  private Observable<Void> paymentRegisterSelection() {
+    return view.registerPaymentSelection()
+        .doOnNext(selection -> view.showGlobalLoading())
+        .flatMap(paymentViewModel -> getSelectedPayment(getAllPayments(),
+            paymentViewModel)).<Void>flatMap(payment -> aptoidePay.authorize(payment)
+            .doOnCompleted(() -> view.hideGlobalLoading())
+            .toObservable())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE));
   }
 
   private Observable<Void> buySelection() {

@@ -24,6 +24,7 @@ import cm.aptoide.pt.v8engine.payment.Purchase;
 import cm.aptoide.pt.v8engine.payment.PurchaseIntentFactory;
 import cm.aptoide.pt.v8engine.payment.products.AptoideProduct;
 import cm.aptoide.pt.v8engine.presenter.PaymentPresenter;
+import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationFactory;
 import cm.aptoide.pt.v8engine.repository.ProductRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.view.PaymentView;
@@ -98,12 +99,12 @@ public class PaymentActivity extends ActivityView implements PaymentView {
     paymentClicks = new CompositeSubscription();
 
     final AptoideProduct product = getIntent().getParcelableExtra(PRODUCT_EXTRA);
-    final ProductRepository productRepository = RepositoryFactory.getProductRepository(this, product);
+    final ProductRepository productRepository =
+        RepositoryFactory.getProductRepository(this, product);
     attachPresenter(new PaymentPresenter(this,
             new AptoidePay(RepositoryFactory.getPaymentConfirmationRepository(this, product),
-                RepositoryFactory.getPaymentAuthorizationRepository(this),
-                productRepository), product, new Payer(this),
-            productRepository),
+                RepositoryFactory.getPaymentAuthorizationRepository(this), productRepository,
+                new PaymentAuthorizationFactory(this)), product, new Payer(this), productRepository),
         savedInstanceState);
   }
 
