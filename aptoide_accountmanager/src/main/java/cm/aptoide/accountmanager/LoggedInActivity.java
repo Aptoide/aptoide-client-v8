@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.widget.Button;
-import android.widget.Toast;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.SetUserRequest;
@@ -23,6 +22,10 @@ public class LoggedInActivity extends BaseActivity {
 
   private static final String TAG = LoggedInActivity.class.getSimpleName();
 
+  private final IdsRepositoryImpl idsRepository =
+      new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+          DataProvider.getContext());
+
   private Toolbar mToolbar;
   private Button mContinueButton;
   private Button mMoreInfoButton;
@@ -38,6 +41,14 @@ public class LoggedInActivity extends BaseActivity {
     setupListeners();
   }
 
+  @Override protected String getActivityTitle() {
+    return getString(R.string.create_profile_logged_in_activity_title);
+  }
+
+  @Override int getLayoutId() {
+    return R.layout.logged_in_first_screen;
+  }
+
   private void bindViews() {
     mContinueButton = (Button) findViewById(R.id.logged_in_continue);
     mMoreInfoButton = (Button) findViewById(R.id.logged_in_more_info_button);
@@ -49,14 +60,6 @@ public class LoggedInActivity extends BaseActivity {
     getSupportActionBar().setTitle(getActivityTitle());
   }
 
-  @Override protected String getActivityTitle() {
-    return getString(R.string.create_profile_logged_in_activity_title);
-  }
-
-  @Override int getLayoutId() {
-    return R.layout.logged_in_first_screen;
-  }
-
   private void setupListeners() {
     mSubscriptions.add(RxView.clicks(mContinueButton).subscribe(clicks -> {
 
@@ -64,8 +67,7 @@ public class LoggedInActivity extends BaseActivity {
           getApplicationContext().getString(R.string.please_wait));
       pleaseWaitDialog.show();
 
-      SetUserRequest.of(new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-              DataProvider.getContext()).getAptoideClientUUID(), UserAccessState.PUBLIC.toString(),
+      SetUserRequest.of(idsRepository.getAptoideClientUUID(), UserAccessState.PUBLIC.toString(),
           AptoideAccountManager.getAccessToken()).execute(answer -> {
         if (answer.isOk()) {
           Logger.v(TAG, "user is public");

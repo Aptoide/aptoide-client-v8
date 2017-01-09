@@ -2,22 +2,22 @@ package cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events;
 
 import android.support.annotation.CallSuper;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.DownloadAnalyticsRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.Event;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
  * Created by trinkes on 02/01/2017.
  */
 
-public @Data @ToString class DownloadInstallBaseEvent extends Event {
+public @EqualsAndHashCode(callSuper = false) @Data @ToString class DownloadInstallBaseEvent
+    extends Event {
   private Action action;
   private int versionCode;
   private Origin origin;
@@ -30,7 +30,7 @@ public @Data @ToString class DownloadInstallBaseEvent extends Event {
   private String name;
   private AppContext context;
   private DownloadInstallEventConverter downloadInstallEventConverter;
-  private DownloadInstallAnalyticsBaseBody.ResultStatus resultStatus;
+  private cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody.ResultStatus resultStatus;
   private Throwable error;
 
   public DownloadInstallBaseEvent(Action action, Origin origin, String packageName, String url,
@@ -61,8 +61,6 @@ public @Data @ToString class DownloadInstallBaseEvent extends Event {
           .subscribe(baseV7Response -> Logger.d(this, "onResume: " + baseV7Response),
               throwable -> throwable.printStackTrace());
     } else {
-      CrashReports.logException(
-          new IllegalArgumentException("The Result status should be added before send the event"));
       Logger.e(this, "The event was not ready to send!");
     }
   }

@@ -8,7 +8,7 @@ import java.util.Map;
  * Created by trinkes on 30/12/2016.
  */
 public class AnalyticsDataSaver {
-  Map<String, Event> map;
+  private Map<String, Event> map;
 
   public AnalyticsDataSaver() {
     map = new HashMap<>();
@@ -27,6 +27,6 @@ public class AnalyticsDataSaver {
   }
 
   public void remove(@NonNull Event event) {
-    map.remove(event);
+    map.values().remove(event);
   }
 }

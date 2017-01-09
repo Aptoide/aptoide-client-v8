@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -8,7 +9,8 @@ import lombok.ToString;
  * Created by trinkes on 02/01/2017.
  */
 
-public @Data @ToString class DownloadEvent extends DownloadInstallBaseEvent {
+public @EqualsAndHashCode(callSuper = false) @Data @ToString class DownloadEvent
+    extends DownloadInstallBaseEvent {
   private static final String EVENT_NAME = "DOWNLOAD";
   /**
    * this variable should be activated when the download progress starts, this will prevent the

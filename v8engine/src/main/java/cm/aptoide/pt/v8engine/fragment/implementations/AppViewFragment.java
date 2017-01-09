@@ -67,7 +67,7 @@ import cm.aptoide.pt.v8engine.activity.PaymentActivity;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.dialog.DialogBadgeV7;
 import cm.aptoide.pt.v8engine.dialog.RemoteInstallDialog;
-import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
+import cm.aptoide.pt.v8engine.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
@@ -105,7 +105,7 @@ import rx.functions.Action0;
 /**
  * Created by sithengineer on 04/05/16.
  */
-public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
+public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     implements Scrollable, AppMenuOptions, Payments {
 
   public static final int VIEW_ID = R.layout.fragment_app_view;
@@ -158,10 +158,6 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
   private AppAction appAction = AppAction.OPEN;
   private InstalledRepository installedRepository;
   private GetApp getApp;
-
-  public AppViewFragment() {
-    super(BaseAdapter.class);
-  }
 
   public static AppViewFragment newInstance(String packageName, String storeName,
       OpenType openType) {
