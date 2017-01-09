@@ -105,12 +105,15 @@ public class InstalledIntentService extends IntentService {
 
   private void sendInstallEvent(String packageName, PackageInfo packageInfo) {
     if (packageInfo != null) {
-      Logger.d(TAG, "sendInstallEvent: " + packageInfo.versionCode);
+      Logger.d(TAG, "sending event with the id = " + packageName + packageInfo.versionCode);
       InstallEvent event =
           (InstallEvent) analytics.get(packageName + packageInfo.versionCode, InstallEvent.class);
       if (event != null) {
         event.setResultStatus(DownloadInstallAnalyticsBaseBody.ResultStatus.SUCC);
         analytics.sendEvent(event);
+        Logger.d(TAG, "Event sent");
+      } else {
+        Logger.e(TAG, new NullPointerException("Event not sent, the event was null"));
       }
     } else {
       Logger.e(TAG, new NullPointerException("PackageInfo is null"));
