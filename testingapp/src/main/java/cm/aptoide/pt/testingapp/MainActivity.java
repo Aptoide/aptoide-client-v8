@@ -18,8 +18,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.aptoidesdk.Ad;
 import cm.aptoide.pt.aptoidesdk.Aptoide;
+import cm.aptoide.pt.aptoidesdk.entities.util.SyncEndlessController;
 import cm.aptoide.pt.aptoidesdk.entities.App;
 import cm.aptoide.pt.aptoidesdk.entities.SearchResult;
+import cm.aptoide.pt.aptoidesdk.entities.misc.Group;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import java.io.File;
 import java.util.List;
@@ -27,7 +29,6 @@ import java.util.List;
 /**
  * Created by neuro on 28-10-2016.
  */
-
 public class MainActivity extends AppCompatActivity {
 
   private TextView tv;
@@ -136,6 +137,21 @@ public class MainActivity extends AppCompatActivity {
       tv.setText("app response: empty");
     } else {
       tv.setText("app name: " + l.getName());
+    }
+  }
+
+  SyncEndlessController<App> appEndlessController;
+
+  public void listAppsClick(View view) {
+
+    if (appEndlessController == null) {
+      appEndlessController = Aptoide.listApps(Group.GAMES);
+    }
+    List<App> first = appEndlessController.loadMore();
+    if (first.size() == 0) {
+      tv.setText("ListApps response: empty");
+    } else {
+      tv.setText("app name: " + first.get(0).getName());
     }
   }
 

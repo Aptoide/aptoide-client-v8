@@ -36,6 +36,28 @@ public class EntitiesFactory {
         developer, store, file, obb);
   }
 
+  public static App createApp(cm.aptoide.pt.model.v7.listapp.App app) {
+
+    long id = app.getId();
+    String name = app.getName();
+    String packageName = app.getPackageName();
+    String iconPath = app.getIcon();
+    String featuredGraphicPath = app.getGraphic();
+
+    int vercode = app.getFile().getVercode();
+    String vername = app.getFile().getVername();
+
+    Media media = null;
+    Developer developer = null;
+
+    Store store = createStore(app.getStore());
+    File file = createFile(app.getFile());
+    Obb obb = createObb(app.getObb());
+
+    return new App(id, name, packageName, iconPath, featuredGraphicPath, vercode, vername, media,
+        developer, store, file, obb);
+  }
+
   public static Developer createDeveloper(GetAppMeta.Developer developer) {
 
     String name = developer.getName();
@@ -46,6 +68,16 @@ public class EntitiesFactory {
   }
 
   public static File createFile(GetAppMeta.GetAppMetaFile file) {
+
+    String path = file.getPath() + getQueryString();
+    String alternativePath = file.getPathAlt() + getQueryString();
+    long size = file.getFilesize();
+    String md5sum = file.getMd5sum();
+
+    return new File(path, alternativePath, size, md5sum);
+  }
+
+  public static File createFile(cm.aptoide.pt.model.v7.listapp.File file) {
 
     String path = file.getPath() + getQueryString();
     String alternativePath = file.getPathAlt() + getQueryString();

@@ -4,6 +4,9 @@ import android.content.Context;
 import cm.aptoide.pt.aptoidesdk.ads.RxAptoide;
 import cm.aptoide.pt.aptoidesdk.entities.App;
 import cm.aptoide.pt.aptoidesdk.entities.SearchResult;
+import cm.aptoide.pt.aptoidesdk.entities.util.SyncEndlessController;
+import cm.aptoide.pt.aptoidesdk.entities.misc.Group;
+import cm.aptoide.pt.aptoidesdk.entities.util.SyncEndlessControllerImpl;
 import java.util.List;
 
 /**
@@ -128,6 +131,10 @@ public class Aptoide {
    */
   public static List<SearchResult> searchApps(String query, String storeName) {
     return RxAptoide.searchApps(query, storeName).toBlocking().first();
+  }
+
+  public static SyncEndlessController<App> listApps(Group group) {
+    return new SyncEndlessControllerImpl<>(RxAptoide.listApps(group));
   }
 
   public static void setDebug(boolean debug) {

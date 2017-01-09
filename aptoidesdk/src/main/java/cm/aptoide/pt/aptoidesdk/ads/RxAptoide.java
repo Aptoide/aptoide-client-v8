@@ -7,13 +7,17 @@ import cm.aptoide.pt.aptoidesdk.BuildConfig;
 import cm.aptoide.pt.aptoidesdk.entities.App;
 import cm.aptoide.pt.aptoidesdk.entities.EntitiesFactory;
 import cm.aptoide.pt.aptoidesdk.entities.SearchResult;
+import cm.aptoide.pt.aptoidesdk.entities.misc.Group;
 import cm.aptoide.pt.aptoidesdk.misc.RemoteLogger;
 import cm.aptoide.pt.aptoidesdk.parser.Parsers;
 import cm.aptoide.pt.aptoidesdk.proxys.GetAdsProxy;
 import cm.aptoide.pt.aptoidesdk.proxys.GetAppProxy;
 import cm.aptoide.pt.aptoidesdk.proxys.ListSearchAppsProxy;
+import cm.aptoide.pt.dataprovider.DatalistEndlessController;
+import cm.aptoide.pt.dataprovider.interfaces.EndlessController;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
@@ -201,6 +205,11 @@ public class RxAptoide {
           RemoteLogger.getInstance().log(throwable);
           return new LinkedList<>();
         });
+  }
+
+  public static EndlessController<App> listApps(Group group) {
+    return new DatalistEndlessController<>(ListAppsRequest.of(group.getId()),
+        EntitiesFactory::createApp);
   }
 
   private static Subscription handleOrganicAds(String packageName) {

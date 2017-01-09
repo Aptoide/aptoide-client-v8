@@ -8,8 +8,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by neuro on 03-01-2017.
@@ -44,8 +42,6 @@ public class DatalistEndlessController<T, U> implements EndlessControllerWithCac
     if (!loading) {
       if (hasMoreElements()) {
         return v7request.observe(bypassCache)
-            .observeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe(() -> {
               loading = true;
             })
