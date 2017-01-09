@@ -39,7 +39,7 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
       @Override public String generateUserAgent() {
         return SecurePreferences.getUserAgent();
       }
-    }), WebService.getDefaultConverter(), baseHost);
+    }, isDebug()), WebService.getDefaultConverter(), baseHost);
   }
 
   public static ListReviewsRequest of(String storeName, String packageName, String accessToken,

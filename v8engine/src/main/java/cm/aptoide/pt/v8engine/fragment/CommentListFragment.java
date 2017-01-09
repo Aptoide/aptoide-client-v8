@@ -26,8 +26,8 @@ import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.util.CommentOperations;
-import cm.aptoide.pt.v8engine.util.RecyclerViewUtils;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
+import cm.aptoide.pt.v8engine.view.custom.HorizontalDividerItemDecoration;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.CommentsDisplayableGroup;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.DisplayableGroupWithMargin;
@@ -105,7 +105,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
     // extracting store data from the URL...
     if (commentType == CommentType.STORE) {
       BaseRequestWithStore.StoreCredentials storeCredentials =
-          StoreUtils.getStoreCredentialsFromUrlOrNull(url);
+          StoreUtils.getStoreCredentialsFromUrl(url);
       if (storeCredentials != null) {
 
         Long id = storeCredentials.getId();
@@ -177,7 +177,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
   }
 
   @Override protected RecyclerView.ItemDecoration getItemDecoration() {
-    return RecyclerViewUtils.newHorizontalGraySeparator(getContext());
+    return new HorizontalDividerItemDecoration(getContext(), 0);
   }
 
   @Override public void setupViews() {
@@ -219,7 +219,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
   }
 
   //
-  // create new comment different fragment constructions
+  // Re-Do: 6/1/2017 sithengineer create new comment different fragment constructions
   //
 
   //
@@ -361,9 +361,11 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
         ListCommentsRequest.ofStoreAction(url, refresh, storeCredentials,
             AptoideAccountManager.getAccessToken(), aptoideClientUuid);
 
-    if (storeCredentials.getId() == null) {
-      CrashReports.logException(
-          new IllegalStateException("Current store credentials does not have a store id"));
+    if (storeCredentials == null || storeCredentials.getId() == null) {
+      IllegalStateException illegalStateException =
+          new IllegalStateException("Current store credentials does not have a store id");
+      CrashReports.logException(illegalStateException);
+      throw illegalStateException;
     }
 
     final long storeId = storeCredentials.getId() != null ? storeCredentials.getId() : -1;

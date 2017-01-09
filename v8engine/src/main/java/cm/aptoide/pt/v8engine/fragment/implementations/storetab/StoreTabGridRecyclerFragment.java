@@ -120,7 +120,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
           buildDisplayables(refresh, url);
       if (displayablesObservable != null) {
         displayablesObservable.compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW))
-            .subscribe(this::setDisplayables);
+            .subscribe(this::setDisplayables, this::finishLoading);
       }
     }
   }

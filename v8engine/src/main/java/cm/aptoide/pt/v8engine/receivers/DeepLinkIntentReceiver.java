@@ -80,6 +80,8 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
     String uri = getIntent().getDataString();
     Analytics.ApplicationLaunch.website(uri);
 
+    Logger.v(TAG, "uri: " + uri);
+
     if (uri.startsWith("aptoiderepo")) {
 
       ArrayList<String> repo = new ArrayList<>();
@@ -111,13 +113,20 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
     } else if (uri.startsWith("https://market.android.com/details?id=")) {
       String param = uri.split("=")[1];
       startFromPackageName(param);
-    } else if (uri.startsWith("https://play.google.com/store/apps/details?id=")) {
+    } else if (uri.startsWith("https://play.google.com/store/apps/details?id=") || uri.startsWith(
+        "http://play.google.com/store/apps/details?id=")) {
       String params = uri.split("&")[0];
       String param = params.split("=")[1];
       if (param.contains("pname:")) {
         param = param.substring(6);
       } else if (param.contains("pub:")) {
         param = param.substring(4);
+      } else {
+        try {
+          param = Uri.parse(uri).getQueryParameter("id");
+        } catch (NullPointerException e) {
+          Logger.e(TAG, "NullPointerException: no uri: " + uri, e);
+        }
       }
       startFromPackageName(param);
     } else if (uri.contains("aptword://")) {

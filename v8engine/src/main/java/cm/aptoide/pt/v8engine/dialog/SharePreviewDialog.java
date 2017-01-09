@@ -47,6 +47,7 @@ public class SharePreviewDialog {
 
   public AlertDialog.Builder showPreviewDialog(Context context) {
     AlertDialog.Builder alertadd = new AlertDialog.Builder(context);
+
     if (displayable instanceof ArticleDisplayable) {
       LayoutInflater factory = LayoutInflater.from(context);
       final View view =
@@ -143,10 +144,8 @@ public class SharePreviewDialog {
           factory.inflate(R.layout.displayable_social_timeline_social_store_latest_apps_preview,
               null);
 
-      TextView storeName = (TextView) view.findViewById(
-          R.id.displayable_social_timeline_store_latest_apps_card_title);
-      TextView userName = (TextView) view.findViewById(
-          R.id.displayable_social_timeline_store_latest_apps_card_subtitle);
+      TextView storeName = (TextView) view.findViewById(R.id.card_title);
+      TextView userName = (TextView) view.findViewById(R.id.card_subtitle);
       TextView sharedStoreName = (TextView) view.findViewById(R.id.store_name);
       ImageView storeAvatar = (ImageView) view.findViewById(R.id.card_image);
       ImageView userAvatar = (ImageView) view.findViewById(R.id.card_user_avatar);
@@ -203,10 +202,8 @@ public class SharePreviewDialog {
       final View view =
           factory.inflate(R.layout.displayable_social_timeline_social_recommendation_preview, null);
 
-      TextView storeName =
-          (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_card_title);
-      TextView userName = (TextView) view.findViewById(
-          R.id.displayable_social_timeline_recommendation_card_subtitle);
+      TextView storeName = (TextView) view.findViewById(R.id.card_title);
+      TextView userName = (TextView) view.findViewById(R.id.card_subtitle);
       ImageView storeAvatar = (ImageView) view.findViewById(R.id.card_image);
       ImageView userAvatar = (ImageView) view.findViewById(R.id.card_user_avatar);
       ImageView appIcon =
@@ -258,10 +255,8 @@ public class SharePreviewDialog {
       final View view =
           factory.inflate(R.layout.displayable_social_timeline_social_recommendation_preview, null);
 
-      TextView storeName =
-          (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_card_title);
-      TextView userName = (TextView) view.findViewById(
-          R.id.displayable_social_timeline_recommendation_card_subtitle);
+      TextView storeName = (TextView) view.findViewById(R.id.card_title);
+      TextView userName = (TextView) view.findViewById(R.id.card_subtitle);
       ImageView storeAvatar = (ImageView) view.findViewById(R.id.card_image);
       ImageView userAvatar = (ImageView) view.findViewById(R.id.card_user_avatar);
       ImageView appIcon =
@@ -313,10 +308,8 @@ public class SharePreviewDialog {
       final View view =
           factory.inflate(R.layout.displayable_social_timeline_social_recommendation_preview, null);
 
-      TextView storeName =
-          (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_card_title);
-      TextView userName = (TextView) view.findViewById(
-          R.id.displayable_social_timeline_recommendation_card_subtitle);
+      TextView storeName = (TextView) view.findViewById(R.id.card_title);
+      TextView userName = (TextView) view.findViewById(R.id.card_subtitle);
       ImageView storeAvatar = (ImageView) view.findViewById(R.id.card_image);
       ImageView userAvatar = (ImageView) view.findViewById(R.id.card_user_avatar);
       ImageView appIcon =
@@ -368,10 +361,8 @@ public class SharePreviewDialog {
       final View view =
           factory.inflate(R.layout.displayable_social_timeline_social_install_preview, null);
 
-      TextView storeName =
-          (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_card_title);
-      TextView userName = (TextView) view.findViewById(
-          R.id.displayable_social_timeline_recommendation_card_subtitle);
+      TextView storeName = (TextView) view.findViewById(R.id.card_title);
+      TextView userName = (TextView) view.findViewById(R.id.card_subtitle);
       ImageView storeAvatar = (ImageView) view.findViewById(R.id.card_image);
       ImageView userAvatar = (ImageView) view.findViewById(R.id.card_user_avatar);
       ImageView appIcon =
@@ -816,13 +807,14 @@ public class SharePreviewDialog {
       LayoutInflater factory = LayoutInflater.from(context);
       final View view =
           factory.inflate(R.layout.displayable_social_timeline_social_install_preview, null);
-
-      TextView storeName =
-          (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_card_title);
-      TextView userName = (TextView) view.findViewById(
-          R.id.displayable_social_timeline_recommendation_card_subtitle);
+      TextView storeName = (TextView) view.findViewById(R.id.card_title);
+      TextView userName = (TextView) view.findViewById(R.id.card_subtitle);
       ImageView storeAvatar = (ImageView) view.findViewById(R.id.card_image);
       ImageView userAvatar = (ImageView) view.findViewById(R.id.card_user_avatar);
+
+      TextView sharedStoreName = (TextView) view.findViewById(R.id.store_name);
+      ImageView sharedStoreAvatar = (ImageView) view.findViewById(R.id.social_shared_store_avatar);
+
       ImageView appIcon =
           (ImageView) view.findViewById(R.id.displayable_social_timeline_recommendation_icon);
       TextView appName = (TextView) view.findViewById(
@@ -901,7 +893,6 @@ public class SharePreviewDialog {
         checkBox.setClickable(true);
         handlePrivacyCheckBoxChanges(userName, userAvatar, checkBox, socialTerms);
       }
-
     }
     return alertadd;
   }

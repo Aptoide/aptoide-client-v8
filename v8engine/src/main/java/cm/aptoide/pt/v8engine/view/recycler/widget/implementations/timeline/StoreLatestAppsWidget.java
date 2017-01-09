@@ -12,7 +12,7 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.TimelineClickEvent;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.StoreLatestAppsDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
@@ -24,7 +24,7 @@ import java.util.Map;
  */
 public class StoreLatestAppsWidget extends CardWidget<StoreLatestAppsDisplayable> {
 
-  private static final String CARD_TYPE_NAME = "Latest Apps";
+  private static final String CARD_TYPE_NAME = "LATEST_APPS";
   private final LayoutInflater inflater;
   private TextView title;
   private TextView subtitle;
@@ -91,12 +91,12 @@ public class StoreLatestAppsWidget extends CardWidget<StoreLatestAppsDisplayable
             Analytics.AppsTimeline.OPEN_APP_VIEW);
         displayable.sendClickEvent(SendEventRequest.Body.Data.builder()
             .cardType(CARD_TYPE_NAME)
-            .source(AptoideAnalytics.SOURCE_APTOIDE)
+            .source(TimelineClickEvent.SOURCE_APTOIDE)
             .specific(SendEventRequest.Body.Specific.builder()
                 .app(packageName)
                 .store(displayable.getStoreName())
                 .build())
-            .build(), AptoideAnalytics.OPEN_APP);
+            .build(), TimelineClickEvent.OPEN_APP);
         ((FragmentShower) getContext()).pushFragmentV4(
             V8Engine.getFragmentProvider().newAppViewFragment(apps.get(app), packageName));
       }));
@@ -109,10 +109,10 @@ public class StoreLatestAppsWidget extends CardWidget<StoreLatestAppsDisplayable
           Analytics.AppsTimeline.OPEN_STORE);
       displayable.sendClickEvent(SendEventRequest.Body.Data.builder()
           .cardType(CARD_TYPE_NAME)
-          .source(AptoideAnalytics.SOURCE_APTOIDE)
+          .source(TimelineClickEvent.SOURCE_APTOIDE)
           .specific(
               SendEventRequest.Body.Specific.builder().store(displayable.getStoreName()).build())
-          .build(), AptoideAnalytics.OPEN_STORE);
+          .build(), TimelineClickEvent.OPEN_STORE);
       ((FragmentShower) getContext()).pushFragmentV4(
           V8Engine.getFragmentProvider().newStoreFragment(displayable.getStoreName()));
     }));

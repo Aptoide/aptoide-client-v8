@@ -15,6 +15,7 @@
   <color name="navdrawer_body_text_2_inverse">#d2ffffff</color>
   <color name="medium_gray">#b8b8b8</color>
   <color name="darker_gray">#858585</color>
+  <color name="comment_gray">#f2f2f2</color>
 
   <color name="aptoide_color_focused">#e55c1b</color>
   <color name="aptoide_color_pressed">#000000</color>

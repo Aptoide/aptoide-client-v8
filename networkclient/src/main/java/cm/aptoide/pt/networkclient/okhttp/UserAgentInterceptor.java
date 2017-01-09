@@ -8,10 +8,6 @@ import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
 
-/**
- * Created by sithengineer on 13/10/2016.
- */
-
 public class UserAgentInterceptor implements Interceptor {
 
   private static final String TAG = UserAgentInterceptor.class.getName();
@@ -26,19 +22,28 @@ public class UserAgentInterceptor implements Interceptor {
     Request originalRequest = chain.request();
 
     String userAgent = null;
-    try{
-     userAgent = userAgentGenerator.generateUserAgent();
-    }catch (Exception e) {
+    try {
+      userAgent = userAgentGenerator.generateUserAgent();
+    } catch (Exception e) {
       CrashReports.logException(e);
       Logger.e(TAG, e);
     }
 
-    if(!TextUtils.isEmpty(userAgent)) {
-      Request requestWithUserAgent =
-          originalRequest.newBuilder().header("User-Agent", userAgent).build();
-      return chain.proceed(requestWithUserAgent);
+    Response response;
+    try {
+      if (!TextUtils.isEmpty(userAgent)) {
+        Request requestWithUserAgent =
+            originalRequest.newBuilder().header("User-Agent", userAgent).build();
+        response = chain.proceed(requestWithUserAgent);
+      } else {
+        response = chain.proceed(originalRequest);
+      }
+      return response;
+    } catch (IOException e) {
+      // something bad happened if we reached here.
+      CrashReports.logException(e);
+      Logger.e(TAG, e);
+      throw e;
     }
-
-    return chain.proceed(originalRequest);
   }
 }

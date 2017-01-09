@@ -404,9 +404,7 @@ import rx.android.schedulers.AndroidSchedulers;
               }).subscribeOn(AndroidSchedulers.mainThread()).subscribe(eResponse -> {
                 switch (eResponse) {
                   case YES:
-                    GenericDialogs.createGenericContinueMessage(getContext(), "",
-                        getContext().getResources()
-                            .getString(R.string.social_timeline_share_dialog_title)).subscribe();
+                    ShowMessage.asSnack(getContext(),R.string.social_timeline_share_dialog_title);
                     break;
                   case NO:
                     break;

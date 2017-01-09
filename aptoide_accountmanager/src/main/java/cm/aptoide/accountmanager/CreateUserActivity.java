@@ -16,7 +16,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import cm.aptoide.accountmanager.ws.CreateUserRequest;
 import cm.aptoide.accountmanager.ws.ErrorsMapper;
+import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -26,7 +29,6 @@ import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import rx.Observable;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -36,6 +38,9 @@ import rx.subscriptions.CompositeSubscription;
 public class CreateUserActivity extends PermissionsBaseActivity
     implements AptoideAccountManager.ICreateProfile {
 
+  private final IdsRepositoryImpl idsRepository =
+      new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+          DataProvider.getContext());
   private String userEmail;
   private String userPassword;
   private String username;
@@ -114,7 +119,8 @@ public class CreateUserActivity extends PermissionsBaseActivity
             getApplicationContext().getString(R.string.please_wait_upload));
         pleaseWaitDialog.show();
         mSubscriptions.add(
-            CreateUserRequest.of("true", userEmail, username, userPassword, avatarPath)
+            CreateUserRequest.of("true", userEmail, username, userPassword, avatarPath,
+                idsRepository.getAptoideClientUUID())
                 .observe()
                 .filter(answer -> {
                   if(answer.hasErrors()){
@@ -161,7 +167,8 @@ public class CreateUserActivity extends PermissionsBaseActivity
             getApplicationContext().getString(R.string.please_wait));
         pleaseWaitDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         pleaseWaitDialog.show();
-        CreateUserRequest.of("true", userEmail, username, userPassword, avatarPath)
+        CreateUserRequest.of("true", userEmail, username, userPassword, avatarPath,
+            idsRepository.getAptoideClientUUID())
             .execute(answer -> {
               if (answer.hasErrors()) {
                 if (answer.getErrors() != null && answer.getErrors().size() > 0) {
@@ -211,10 +218,7 @@ public class CreateUserActivity extends PermissionsBaseActivity
     ArrayList<Integer> resolution;
     FileUtils fileUtils = new FileUtils();
     resolution = fileUtils.getImageResolution(avatarPath);
-    if (resolution.get(0) > 300 && resolution.get(1) > 300) {
-      return true;
-    }
-    return false;
+    return resolution.get(0) > 300 && resolution.get(1) > 300;
   }
 
   @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
