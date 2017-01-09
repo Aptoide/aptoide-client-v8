@@ -2,7 +2,6 @@ package cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events;
 
 import android.support.annotation.CallSuper;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.DownloadAnalyticsRequest;
@@ -62,8 +61,6 @@ public @EqualsAndHashCode(callSuper = false) @Data @ToString class DownloadInsta
           .subscribe(baseV7Response -> Logger.d(this, "onResume: " + baseV7Response),
               throwable -> throwable.printStackTrace());
     } else {
-      CrashReports.logException(
-          new IllegalArgumentException("The Result status should be added before send the event"));
       Logger.e(this, "The event was not ready to send!");
     }
   }
