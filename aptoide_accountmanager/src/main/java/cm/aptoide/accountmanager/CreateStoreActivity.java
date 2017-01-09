@@ -187,7 +187,6 @@ public class CreateStoreActivity extends PermissionsBaseActivity
   }
 
   private void setupListeners() {
-
     mSubscriptions.add(RxView.clicks(mStoreAvatarLayout).subscribe(click -> chooseAvatarSource()));
     mSubscriptions.add(RxView.clicks(mCreateStore).subscribe(click -> {
           AptoideUtils.SystemU.hideKeyboard(this);
@@ -228,18 +227,18 @@ public class CreateStoreActivity extends PermissionsBaseActivity
                 progressDialog.dismiss();
                 ShowMessage.asLongObservableSnack(this, R.string.create_store_store_created).subscribe(visibility -> {
                   if (visibility == ShowMessage.DISMISSED) {
-
                     finish();
                   }
                 });
               }
             });
           } else if (CREATE_STORE_REQUEST_CODE == 4) {
+            setStoreData();
             progressDialog.show();
             mSubscriptions.add(SetStoreRequest.of(
                 new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                     DataProvider.getContext()).getAptoideClientUUID(),
-                AptoideAccountManager.getAccessToken(), null, storeTheme, storeAvatarPath,
+                AptoideAccountManager.getAccessToken(), storeName, storeTheme, storeAvatarPath,
                 storeDescription, true, storeId).observe().subscribe(answer -> {
               AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
                 progressDialog.dismiss();
@@ -266,6 +265,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
             /*
              * not multipart
              */
+            setStoreData();
             progressDialog.show();
             mSubscriptions.add(SimpleSetStoreRequest.of(AptoideAccountManager.getAccessToken(),
                 new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
@@ -291,6 +291,23 @@ public class CreateStoreActivity extends PermissionsBaseActivity
         }, throwable -> {
           finish();
         }));
+  }
+
+  /**
+   * This method sets stores data for the request
+   */
+  private void setStoreData() {
+    if (storeName.length() == 0){
+      storeName = null;
+    }
+
+    if (storeTheme.equals("")) {
+      storeTheme = null;
+    }
+
+    if (storeDescription.equals("")) {
+      storeDescription = null;
+    }
   }
 
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -333,6 +350,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
       /*
        * Multipart
        */
+      setStoreData();
       mSubscriptions.add(SetStoreRequest.of(
           new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
               DataProvider.getContext()).getAptoideClientUUID(),
@@ -393,6 +411,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
       /*
        * not multipart
        */
+      setStoreData();
       SimpleSetStoreRequest.of(AptoideAccountManager.getAccessToken(),
           new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
               DataProvider.getContext()).getAptoideClientUUID(), storeName, storeTheme)
