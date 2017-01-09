@@ -14,143 +14,29 @@ import io.realm.annotations.PrimaryKey;
  */
 public class PaymentConfirmation extends RealmObject {
 
-  public static final String PAYMENT_CONFIRMATION_ID = "paymentConfirmationId";
   public static final String PRODUCT_ID = "productId";
 
-  @PrimaryKey private String paymentConfirmationId;
-
-  private int paymentId;
-
-  private double price;
-  private String currency;
-  private double taxRate;
-
-  @Index private int productId;
-  private String icon;
-  private String title;
-  private String description;
-  private String priceDescription;
-
-  private int apiVersion;
-  private String sku;
-  private String packageName;
-  private String developerPayload;
-  private String type;
-
-  private long appId;
-  private String storeName;
+  @PrimaryKey private int productId;
+  private String paymentConfirmationId;
+  private String status;
 
   public PaymentConfirmation() {
   }
 
-  public PaymentConfirmation(String paymentConfirmationId, int paymentId, double price,
-      String currency, double taxRate, int productId, String icon, String title, String description,
-      String priceDescription) {
+  public PaymentConfirmation(String paymentConfirmationId, int productId, String status) {
     this.paymentConfirmationId = paymentConfirmationId;
-    this.paymentId = paymentId;
-    this.price = price;
-    this.currency = currency;
-    this.taxRate = taxRate;
+    this.status = status;
     this.productId = productId;
-    this.icon = icon;
-    this.title = title;
-    this.description = description;
-    this.priceDescription = priceDescription;
   }
-
   public String getPaymentConfirmationId() {
     return paymentConfirmationId;
-  }
-
-  public int getPaymentId() {
-    return paymentId;
-  }
-
-  public String getPriceDescription() {
-    return priceDescription;
-  }
-
-  public double getPrice() {
-    return price;
-  }
-
-  public int getApiVersion() {
-    return apiVersion;
-  }
-
-  public void setApiVersion(int apiVersion) {
-    this.apiVersion = apiVersion;
-  }
-
-  public String getSku() {
-    return sku;
-  }
-
-  public void setSku(String sku) {
-    this.sku = sku;
-  }
-
-  public String getPackageName() {
-    return packageName;
-  }
-
-  public void setPackageName(String packageName) {
-    this.packageName = packageName;
-  }
-
-  public String getDeveloperPayload() {
-    return developerPayload;
-  }
-
-  public void setDeveloperPayload(String developerPayload) {
-    this.developerPayload = developerPayload;
-  }
-
-  public String getType() {
-    return type;
-  }
-
-  public void setType(String type) {
-    this.type = type;
-  }
-
-  public long getAppId() {
-    return appId;
-  }
-
-  public void setAppId(long appId) {
-    this.appId = appId;
-  }
-
-  public String getStoreName() {
-    return storeName;
-  }
-
-  public void setStoreName(String storeName) {
-    this.storeName = storeName;
-  }
-
-  public String getCurrency() {
-    return currency;
-  }
-
-  public double getTaxRate() {
-    return taxRate;
   }
 
   public int getProductId() {
     return productId;
   }
 
-  public String getIcon() {
-    return icon;
-  }
-
-  public String getTitle() {
-    return title;
-  }
-
-  public String getDescription() {
-    return description;
+  public String getStatus() {
+    return status;
   }
 }

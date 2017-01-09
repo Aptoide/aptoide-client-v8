@@ -207,7 +207,6 @@
   <string name="install_update">Install Update</string>
 
   <!-- Payments -->
-  <string name="payment_methods">Pay with:</string>
   <string name="cancel">Cancel</string>
   <string name="no_payments_available">No payments available.</string>
   <string name="failed_auth_code">Failed to authorize account. Please try again.</string>

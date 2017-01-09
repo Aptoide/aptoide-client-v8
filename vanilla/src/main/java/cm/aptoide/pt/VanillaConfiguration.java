@@ -67,8 +67,8 @@ public class VanillaConfiguration implements AptoidePreferencesConfiguration {
     return DEFAULT_STORE;
   }
 
-  @Override public String getUpdatesSyncAdapterAuthority() {
-    return APP_ID + ".UpdatesProvider";
+  @Override public String getSyncAdapterAuthority() {
+    return BuildConfig.CONTENT_AUTHORITY;
   }
 
   @Override public String getSearchAuthority() {

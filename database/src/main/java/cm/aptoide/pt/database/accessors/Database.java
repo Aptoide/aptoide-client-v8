@@ -99,6 +99,12 @@ public final class Database {
     isInitialized = true;
   }
 
+  /**
+   * Returns realm database default instance. Do not use this method it is deprecated and will be made private in future releases,
+   * use {@link #getRealm()} instead.
+   * @return
+   */
+  @Deprecated
   protected static Realm get() {
     if (!isInitialized) {
       throw new IllegalStateException("You need to call Database.initialize(Context) first");
@@ -127,7 +133,7 @@ public final class Database {
   // Instance methods
   //
 
-  private Observable<Realm> getRealm() {
+  public Observable<Realm> getRealm() {
     return Observable.just(null)
         .observeOn(RealmSchedulers.getScheduler())
         .map(something -> Database.getInternal());
@@ -171,6 +177,12 @@ public final class Database {
   public <E extends RealmObject> Observable<List<E>> getAll(Class<E> clazz) {
     return getRealm().flatMap(
         realm -> realm.where(clazz).findAll().<List<E>>asObservable().unsubscribeOn(
+            RealmSchedulers.getScheduler())).flatMap(results -> copyFromRealm(results));
+  }
+
+  public <E extends RealmObject> Observable<List<E>> getAllSorted(Class<E> clazz, String fieldName) {
+    return getRealm().flatMap(
+        realm -> realm.where(clazz).findAllSorted(fieldName).<List<E>>asObservable().unsubscribeOn(
             RealmSchedulers.getScheduler())).flatMap(results -> copyFromRealm(results));
   }
 
