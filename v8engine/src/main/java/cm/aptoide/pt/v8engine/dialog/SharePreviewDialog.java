@@ -361,10 +361,8 @@ public class SharePreviewDialog {
       final View view =
           factory.inflate(R.layout.displayable_social_timeline_social_install_preview, null);
 
-      TextView storeName =
-          (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_card_title);
-      TextView userName = (TextView) view.findViewById(
-          R.id.displayable_social_timeline_recommendation_card_subtitle);
+      TextView storeName = (TextView) view.findViewById(R.id.card_title);
+      TextView userName = (TextView) view.findViewById(R.id.card_subtitle);
       ImageView storeAvatar = (ImageView) view.findViewById(R.id.card_image);
       ImageView userAvatar = (ImageView) view.findViewById(R.id.card_user_avatar);
       ImageView appIcon =
