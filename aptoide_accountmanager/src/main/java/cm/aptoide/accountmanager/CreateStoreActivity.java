@@ -228,18 +228,19 @@ public class CreateStoreActivity extends PermissionsBaseActivity
                 onCreateSuccess(progressDialog);
               } else {
                 progressDialog.dismiss();
-                ShowMessage.asLongObservableSnack(this, R.string.create_store_store_created)
-                    .subscribe(visibility -> {
-                      if (visibility == ShowMessage.DISMISSED) {
-                        finish();
-                      }
-                    });
+                ShowMessage.asLongObservableSnack(this, R.string.create_store_store_created).subscribe(visibility -> {
+                  if (visibility == ShowMessage.DISMISSED) {
+                    finish();
+                  }
+                });
               }
             });
           } else if (CREATE_STORE_REQUEST_CODE == 4) {
             setStoreData();
             progressDialog.show();
-            mSubscriptions.add(SetStoreRequest.of(idsRepository.getAptoideClientUUID(),
+            mSubscriptions.add(SetStoreRequest.of(
+                new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+                    DataProvider.getContext()).getAptoideClientUUID(),
                 AptoideAccountManager.getAccessToken(), storeName, storeTheme, storeAvatarPath,
                 storeDescription, true, storeId).observe().subscribe(answer -> {
               AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
@@ -299,7 +300,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
    * This method sets stores data for the request
    */
   private void setStoreData() {
-    if (storeName.length() == 0) {
+    if (storeName.length() == 0){
       storeName = null;
     }
 
@@ -353,7 +354,9 @@ public class CreateStoreActivity extends PermissionsBaseActivity
        * Multipart
        */
       setStoreData();
-      mSubscriptions.add(SetStoreRequest.of(idsRepository.getAptoideClientUUID(),
+      mSubscriptions.add(SetStoreRequest.of(
+          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+              DataProvider.getContext()).getAptoideClientUUID(),
           AptoideAccountManager.getAccessToken(), storeName, storeTheme, storeAvatarPath)
           .observe()
           .timeout(90, TimeUnit.SECONDS)
