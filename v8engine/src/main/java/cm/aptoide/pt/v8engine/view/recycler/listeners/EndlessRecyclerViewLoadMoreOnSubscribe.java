@@ -2,10 +2,10 @@ package cm.aptoide.pt.v8engine.view.recycler.listeners;
 
 import android.support.v7.widget.RecyclerView;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
-import com.jakewharton.rxbinding.internal.Preconditions;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.MainThreadSubscription;
+import static rx.android.MainThreadSubscription.verifyMainThread;
 
 /**
  * Created by marcelobenites on 6/27/16.
@@ -21,7 +21,7 @@ public class EndlessRecyclerViewLoadMoreOnSubscribe implements Observable.OnSubs
   }
 
   @Override public void call(Subscriber<? super Integer> subscriber) {
-    Preconditions.checkUiThread();
+    verifyMainThread();
 
     final EndlessRecyclerOnScrollListener listener =
         new EndlessRecyclerOnScrollListener(adapter) {

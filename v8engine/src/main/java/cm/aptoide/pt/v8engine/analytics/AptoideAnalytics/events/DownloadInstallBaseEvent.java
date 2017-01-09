@@ -52,9 +52,8 @@ public @EqualsAndHashCode(callSuper = false) @Data @ToString class DownloadInsta
 
   @Override public void send() {
     if (isReadyToSend()) {
-      DownloadAnalyticsRequest.of(AptoideAccountManager.getAccessToken(),
-          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-              DataProvider.getContext()).getAptoideClientUUID(),
+      DownloadAnalyticsRequest.of(new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+              DataProvider.getContext()).getAptoideClientUUID(), AptoideAccountManager.getAccessToken(),
           downloadInstallEventConverter.convert(this, resultStatus, error), action.name(), name,
           context.name())
           .observe()

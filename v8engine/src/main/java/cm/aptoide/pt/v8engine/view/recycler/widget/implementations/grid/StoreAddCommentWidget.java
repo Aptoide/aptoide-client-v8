@@ -19,7 +19,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Sto
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import cm.aptoide.pt.viewRateAndCommentReviews.CommentDialogFragment;
 import com.jakewharton.rxbinding.view.RxView;
-import com.trello.rxlifecycle.FragmentEvent;
+import com.trello.rxlifecycle.android.FragmentEvent;
 import rx.Observable;
 
 public class StoreAddCommentWidget extends Widget<StoreAddCommentDisplayable> {
