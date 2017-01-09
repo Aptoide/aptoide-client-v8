@@ -23,7 +23,9 @@ public interface PaymentView extends View {
 
   Observable<Void> otherPaymentsSelection();
 
-  void showLoading();
+  void showGlobalLoading();
+
+  void showPaymentsLoading();
 
   void showOtherPayments(List<PaymentViewModel> paymentList);
 
@@ -33,7 +35,9 @@ public interface PaymentView extends View {
 
   void showSelectedPayment(PaymentViewModel selectedPayment);
 
-  void hideLoading();
+  void hideGlobalLoading();
+
+  void hidePaymentsLoading();
 
   void dismiss(Purchase purchase);
 

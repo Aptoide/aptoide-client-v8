@@ -28,10 +28,6 @@ public abstract class ActivityView extends RxAppCompatActivity implements View {
     return RxLifecycle.bindUntilEvent(getLifecycle(), lifecycleEvent);
   }
 
-  @Override public Context getContext() {
-    return this;
-  }
-
   @Override public Observable<LifecycleEvent> getLifecycle() {
     return lifecycle().map(event -> convertToEvent(event));
   }

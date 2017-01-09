@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.repository;
 
-import android.content.Context;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
 import cm.aptoide.pt.model.v3.PaymentServiceResponse;
 import cm.aptoide.pt.v8engine.payment.Payment;
@@ -42,12 +41,12 @@ public class InAppBillingProductRepository implements ProductRepository {
         .subscribeOn(Schedulers.io());
   }
 
-  @Override public Single<List<Payment>> getPayments(Context context, AptoideProduct product) {
+  @Override public Single<List<Payment>> getPayments(AptoideProduct product) {
     return getServerInAppBillingPaymentServices(((InAppBillingProduct) product).getApiVersion(),
         ((InAppBillingProduct) product).getPackageName(), ((InAppBillingProduct) product).getSku(),
         ((InAppBillingProduct) product).getType()).flatMapIterable(
         paymentServices -> paymentServices)
-        .map(paymentService -> paymentFactory.create(context, paymentService, product))
+        .map(paymentService -> paymentFactory.create(paymentService, product))
         .toList().toSingle()
         .subscribeOn(Schedulers.io());
   }

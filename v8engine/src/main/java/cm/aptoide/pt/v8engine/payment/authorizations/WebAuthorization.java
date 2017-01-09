@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.payment.authorizations;
 
+import android.content.Context;
 import cm.aptoide.pt.v8engine.payment.Authorization;
 
 /**
@@ -12,19 +13,13 @@ import cm.aptoide.pt.v8engine.payment.Authorization;
  */
 public class WebAuthorization extends Authorization {
 
+  private final Context context;
   private final String url;
   private final String redirectUrl;
 
-  public static Authorization syncingError(int paymentId) {
-    return new WebAuthorization(paymentId, "", "", WebAuthorization.Status.SYNCING_ERROR);
-  }
-
-  public static Authorization syncing(int paymentId) {
-    return new WebAuthorization(paymentId, "", "", WebAuthorization.Status.SYNCING);
-  }
-
-  public WebAuthorization(int paymentId, String url, String redirectUrl, Status status) {
+  public WebAuthorization(Context context, int paymentId, String url, String redirectUrl, Status status) {
     super(paymentId, status);
+    this.context = context;
     this.url = url;
     this.redirectUrl = redirectUrl;
   }
@@ -35,5 +30,9 @@ public class WebAuthorization extends Authorization {
 
   public String getRedirectUrl() {
     return redirectUrl;
+  }
+
+  @Override public void authorize() {
+    context.startActivity(WebAuthorizationActivity.getIntent(context, url, redirectUrl));
   }
 }

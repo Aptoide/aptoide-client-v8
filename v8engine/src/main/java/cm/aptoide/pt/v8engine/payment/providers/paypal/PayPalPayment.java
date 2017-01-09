@@ -38,13 +38,16 @@ public class PayPalPayment extends AptoidePayment {
 
   private final Context context;
   private final PayPalConfiguration configuration;
+  private final PaymentConfirmationRepository confirmationRepository;
 
   public PayPalPayment(Context context, int id, String type, String name, String sign, Price price,
       PayPalConfiguration configuration, Product product, String description,
       PaymentConfirmationRepository confirmationRepository, boolean requiresAuthorization) {
-    super(id, type, name, description, product, price, requiresAuthorization, confirmationRepository);
+    super(id, type, name, description, product, price, requiresAuthorization,
+        confirmationRepository);
     this.context = context;
     this.configuration = configuration;
+    this.confirmationRepository = confirmationRepository;
   }
 
   @Override public Completable process() {
@@ -55,7 +58,8 @@ public class PayPalPayment extends AptoidePayment {
         .doOnSubscribe(() -> startPayPalActivity(getPrice(), getProduct()))
         .first(intent -> isPaymentConfirmationIntent(intent))
         .flatMap(intent -> getIntentPaymentConfirmationId(intent, getId(), getProduct().getId()))
-        .flatMap(paymentConfirmationId -> process(paymentConfirmationId).toObservable())
+        .flatMap(paymentConfirmationId -> confirmationRepository.createPaymentConfirmation(getId(),
+            paymentConfirmationId).toObservable())
         .toCompletable();
   }
 

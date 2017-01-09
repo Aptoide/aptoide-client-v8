@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.repository;
 
-import android.content.Context;
 import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.Purchase;
 import cm.aptoide.pt.v8engine.payment.products.AptoideProduct;
@@ -19,5 +18,5 @@ public interface ProductRepository {
 
   Single<Purchase> getPurchase(AptoideProduct product);
 
-  Single<List<Payment>> getPayments(Context context, AptoideProduct product);
+  Single<List<Payment>> getPayments(AptoideProduct product);
 }

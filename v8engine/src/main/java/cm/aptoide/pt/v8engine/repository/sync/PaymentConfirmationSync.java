@@ -19,6 +19,7 @@ import cm.aptoide.pt.v8engine.payment.products.InAppBillingProduct;
 import cm.aptoide.pt.v8engine.payment.products.PaidAppProduct;
 import cm.aptoide.pt.v8engine.repository.PaymentConfirmationConverter;
 import cm.aptoide.pt.v8engine.repository.PaymentConfirmationRepository;
+import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.io.IOException;
 import rx.Completable;
@@ -35,7 +36,7 @@ public class PaymentConfirmationSync extends RepositorySync {
   private final NetworkOperatorManager operatorManager;
   private final PaymentConfirmationAccessor confirmationAccessor;
   private final PaymentConfirmationConverter confirmationConverter;
-  private final String paymentConfirmationId;
+  private String paymentConfirmationId;
   private int paymentId;
 
   public PaymentConfirmationSync(PaymentConfirmationRepository paymentConfirmationRepository,
@@ -50,6 +51,17 @@ public class PaymentConfirmationSync extends RepositorySync {
     this.confirmationConverter = confirmationConverter;
     this.paymentConfirmationId = paymentConfirmationId;
     this.paymentId = paymentId;
+  }
+
+  public PaymentConfirmationSync(PaymentConfirmationRepository paymentConfirmationRepository,
+      Product product, NetworkOperatorManager operatorManager,
+      PaymentConfirmationAccessor confirmationAccessor,
+      PaymentConfirmationConverter confirmationConverter) {
+    this.paymentConfirmationRepository = paymentConfirmationRepository;
+    this.product = product;
+    this.operatorManager = operatorManager;
+    this.confirmationAccessor = confirmationAccessor;
+    this.confirmationConverter = confirmationConverter;
   }
 
   @Override public void sync(SyncResult syncResult) {
@@ -78,7 +90,7 @@ public class PaymentConfirmationSync extends RepositorySync {
       rescheduleSync(syncResult);
     } else {
       confirmationAccessor.save(confirmationConverter.convertToDatabasePaymentConfirmation(
-          PaymentConfirmation.syncingError(product.getId())));
+          PaymentConfirmation.syncingError(product.getId(), paymentConfirmationId)));
     }
   }
 
@@ -108,7 +120,7 @@ public class PaymentConfirmationSync extends RepositorySync {
       if (response != null && response.isOk()) {
         return Completable.complete();
       }
-      return Completable.error(new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
+      return Completable.error(new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
     });
   }
 

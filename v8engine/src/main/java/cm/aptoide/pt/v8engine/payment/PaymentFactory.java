@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.payment;
 
-import android.accounts.Account;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.model.v3.PaymentServiceResponse;
@@ -23,9 +22,14 @@ public class PaymentFactory {
   public static final String BOACOMPRA = "boacompra";
   public static final String BOACOMPRAGOLD = "boacompragold";
   public static final String DUMMY = "dummy";
-  private Account account;
 
-  public Payment create(Context context, PaymentServiceResponse paymentService, Product product) {
+  private final Context context;
+
+  public PaymentFactory(Context context) {
+    this.context = context;
+  }
+
+  public Payment create(PaymentServiceResponse paymentService, Product product) {
     switch (paymentService.getShortName()) {
       case PAYPAL:
         return new PayPalPayment(context, paymentService.getId(), paymentService.getShortName(),
@@ -58,9 +62,5 @@ public class PaymentFactory {
     configuration.environment(BuildConfig.PAYPAL_ENVIRONMENT);
     configuration.clientId(BuildConfig.PAYPAL_KEY);
     return configuration;
-  }
-
-  public Account getAccount() {
-    return account;
   }
 }

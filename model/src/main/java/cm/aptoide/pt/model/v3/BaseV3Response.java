@@ -11,7 +11,8 @@ import lombok.Data;
 /**
  * Created by marcelobenites on 8/11/16.
  */
-@Data public class BaseV3Response {
+@Data
+public class BaseV3Response {
 
   private String status;
   private List<ErrorResponse> errors;

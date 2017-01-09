@@ -8,13 +8,12 @@ package cm.aptoide.pt.v8engine.repository.sync;
 import android.content.SyncResult;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.PaymentAuthorizationAccessor;
-import cm.aptoide.pt.dataprovider.ws.v3.GetPaymentAuthorizationRequest;
+import cm.aptoide.pt.dataprovider.ws.v3.GetPaymentAuthorizationsRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
-import cm.aptoide.pt.model.v3.PaymentAuthorizationResponse;
+import cm.aptoide.pt.model.v3.PaymentAuthorizationsResponse;
 import cm.aptoide.pt.v8engine.payment.authorizations.WebAuthorization;
-import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationConverter;
+import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationFactory;
 import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationRepository;
-import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.io.IOException;
 import java.util.List;
@@ -25,60 +24,68 @@ import rx.Single;
  */
 public class PaymentAuthorizationSync extends RepositorySync {
 
-  private final int paymentId;
+  private final List<String> paymentIds;
   private final PaymentAuthorizationRepository authorizationRepository;
   private final PaymentAuthorizationAccessor authorizationAccessor;
-  private final PaymentAuthorizationConverter authorizationConverter;
+  private final PaymentAuthorizationFactory authorizationFactory;
 
-  public PaymentAuthorizationSync(int paymentId, PaymentAuthorizationRepository authorizationRepository,
+  public PaymentAuthorizationSync(List<String> paymentIds,
+      PaymentAuthorizationRepository authorizationRepository,
       PaymentAuthorizationAccessor authorizationAccessor,
-      PaymentAuthorizationConverter authorizationConverter) {
-    this.paymentId = paymentId;
+      PaymentAuthorizationFactory authorizationFactory) {
+    this.paymentIds = paymentIds;
     this.authorizationRepository = authorizationRepository;
     this.authorizationAccessor = authorizationAccessor;
-    this.authorizationConverter = authorizationConverter;
+    this.authorizationFactory = authorizationFactory;
   }
 
   @Override public void sync(SyncResult syncResult) {
     try {
-      getServerAuthorization(paymentId)
-          .doOnSuccess(response -> saveAndReschedulePendingAuthorization(response, syncResult))
+      getServerAuthorizations().doOnSuccess(
+          response -> saveAndReschedulePendingAuthorization(response, syncResult))
           .onErrorReturn(throwable -> {
-            saveAndRescheduleOnNetworkError(syncResult, throwable);
+            saveAndRescheduleOnNetworkError(syncResult, throwable, paymentIds);
             return null;
-          }).toBlocking().value();
+          })
+          .toBlocking()
+          .value();
     } catch (RuntimeException e) {
       rescheduleSync(syncResult);
     }
   }
 
-  private void saveAndRescheduleOnNetworkError(SyncResult syncResult, Throwable throwable) {
+  private void saveAndRescheduleOnNetworkError(SyncResult syncResult, Throwable throwable,
+      List<String> paymentIds) {
     if (throwable instanceof IOException) {
       rescheduleSync(syncResult);
     } else {
-      authorizationAccessor.save(authorizationConverter.convertToDatabasePaymentAuthorization(
-          WebAuthorization.syncingError(paymentId)));
+      for (String paymentId : paymentIds) {
+        authorizationAccessor.save(authorizationFactory.convertToDatabasePaymentAuthorization(
+            authorizationFactory.syncingError(Integer.valueOf(paymentId))));
+      }
     }
   }
 
-  private void saveAndReschedulePendingAuthorization(PaymentAuthorizationResponse response,
+  private void saveAndReschedulePendingAuthorization(List<PaymentAuthorizationsResponse.PaymentAuthorizationResponse> responses,
       SyncResult syncResult) {
-    final cm.aptoide.pt.v8engine.payment.Authorization paymentAuthorization =
-        authorizationConverter.convertToPaymentAuthorization(paymentId, response);
-    authorizationAccessor.save(
-        authorizationConverter.convertToDatabasePaymentAuthorization(paymentId, response));
-    if (paymentAuthorization.isPending()) {
-      rescheduleSync(syncResult);
+    for (PaymentAuthorizationsResponse.PaymentAuthorizationResponse response : responses) {
+      final cm.aptoide.pt.v8engine.payment.Authorization paymentAuthorization =
+          authorizationFactory.convertToPaymentAuthorization(response);
+      authorizationAccessor.save(
+          authorizationFactory.convertToDatabasePaymentAuthorization(response));
+      if (paymentAuthorization.isPending()) {
+        rescheduleSync(syncResult);
+      }
     }
   }
 
-  private Single<PaymentAuthorizationResponse> getServerAuthorization(int paymentId) {
-    return GetPaymentAuthorizationRequest.of(paymentId, AptoideAccountManager.getAccessToken())
+  private Single<List<PaymentAuthorizationsResponse.PaymentAuthorizationResponse>> getServerAuthorizations() {
+    return GetPaymentAuthorizationsRequest.of(AptoideAccountManager.getAccessToken())
         .observe()
         .toSingle()
         .flatMap(response -> {
           if (response != null && response.isOk()) {
-            return Single.just(response);
+            return Single.just(response.getAuthorizations());
           }
           return Single.error(new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
         });

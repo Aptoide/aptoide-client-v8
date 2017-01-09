@@ -14,16 +14,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import cm.aptoide.pt.iab.ErrorCodeFactory;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.payment.AptoidePay;
+import cm.aptoide.pt.v8engine.payment.Payer;
 import cm.aptoide.pt.v8engine.payment.Purchase;
 import cm.aptoide.pt.v8engine.payment.PurchaseIntentFactory;
 import cm.aptoide.pt.v8engine.payment.products.AptoideProduct;
 import cm.aptoide.pt.v8engine.presenter.PaymentPresenter;
+import cm.aptoide.pt.v8engine.repository.ProductRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.view.PaymentView;
 import com.jakewharton.rxbinding.view.RxView;
@@ -31,8 +32,6 @@ import com.jakewharton.rxrelay.PublishRelay;
 import java.util.List;
 import java.util.Locale;
 import rx.Observable;
-import rx.internal.operators.BlockingOperatorLatest;
-import rx.subjects.PublishSubject;
 import rx.subscriptions.CompositeSubscription;
 
 public class PaymentActivity extends ActivityView implements PaymentView {
@@ -43,7 +42,8 @@ public class PaymentActivity extends ActivityView implements PaymentView {
   private View header;
   private View body;
   private View actionButtons;
-  private ProgressBar progressBar;
+  private View globalProgressView;
+  private View paymentsProgressView;
   private ViewGroup morePaymentsContainer;
   private ImageView productIcon;
   private TextView productName;
@@ -72,7 +72,8 @@ public class PaymentActivity extends ActivityView implements PaymentView {
     setContentView(R.layout.activity_payment);
 
     overlay = findViewById(R.id.payment_activity_overlay);
-    progressBar = (ProgressBar) findViewById(R.id.activity_payment_progress_bar);
+    globalProgressView = findViewById(R.id.activity_payment_global_progress_bar);
+    paymentsProgressView = findViewById(R.id.activity_payment_list_progress_bar);
     noPaymentsText = (TextView) findViewById(R.id.activity_payment_no_payments_text);
 
     header = findViewById(R.id.activity_payment_header);
@@ -97,10 +98,13 @@ public class PaymentActivity extends ActivityView implements PaymentView {
     paymentClicks = new CompositeSubscription();
 
     final AptoideProduct product = getIntent().getParcelableExtra(PRODUCT_EXTRA);
+    final ProductRepository productRepository = RepositoryFactory.getProductRepository(this, product);
     attachPresenter(new PaymentPresenter(this,
-        new AptoidePay(RepositoryFactory.getPaymentConfirmationRepository(this, product),
-            RepositoryFactory.getPaymentAuthorizationRepository(this),
-            RepositoryFactory.getProductRepository(this, product)), product), savedInstanceState);
+            new AptoidePay(RepositoryFactory.getPaymentConfirmationRepository(this, product),
+                RepositoryFactory.getPaymentAuthorizationRepository(this),
+                productRepository), product, new Payer(this),
+            productRepository),
+        savedInstanceState);
   }
 
   @Override protected void onDestroy() {
@@ -124,7 +128,6 @@ public class PaymentActivity extends ActivityView implements PaymentView {
     ImageLoader.load(product.getIcon(), productIcon);
     productName.setText(product.getTitle());
     productPriceDescription.setText(product.getPriceDescription());
-    header.setVisibility(View.VISIBLE);
   }
 
   @Override public Observable<Void> cancellationSelection() {
@@ -169,15 +172,17 @@ public class PaymentActivity extends ActivityView implements PaymentView {
       description.setText(otherPayment.getDescription());
       switch (otherPayment.getStatus()) {
         case USE:
-          paymentClicks.add(
-              RxView.clicks(useButton).doOnNext(click -> usePaymentClick.call(otherPayment)).subscribe());
+          paymentClicks.add(RxView.clicks(useButton)
+              .doOnNext(click -> usePaymentClick.call(otherPayment))
+              .subscribe());
           useButton.setVisibility(View.VISIBLE);
           approving.setVisibility(View.GONE);
           registerButton.setVisibility(View.GONE);
           break;
         case REGISTER:
-          paymentClicks.add(
-              RxView.clicks(registerButton).doOnNext(click -> registerPaymentClick.call(otherPayment)).subscribe());
+          paymentClicks.add(RxView.clicks(registerButton)
+              .doOnNext(click -> registerPaymentClick.call(otherPayment))
+              .subscribe());
           registerButton.setVisibility(View.VISIBLE);
           approving.setVisibility(View.GONE);
           useButton.setVisibility(View.GONE);
@@ -206,26 +211,29 @@ public class PaymentActivity extends ActivityView implements PaymentView {
   }
 
   @Override public void showPaymentsNotFoundMessage() {
-    header.setVisibility(View.VISIBLE);
-    body.setVisibility(View.GONE);
-    actionButtons.setVisibility(View.GONE);
     noPaymentsText.setVisibility(View.VISIBLE);
   }
 
-  @Override public void showLoading() {
+  @Override public void showPaymentsLoading() {
+    paymentsProgressView.setVisibility(View.VISIBLE);
+  }
+
+  @Override public void hidePaymentsLoading() {
+    paymentsProgressView.setVisibility(View.GONE);
+  }
+
+  @Override public void showGlobalLoading() {
     header.setVisibility(View.GONE);
     body.setVisibility(View.GONE);
     actionButtons.setVisibility(View.GONE);
-    progressBar.setVisibility(View.VISIBLE);
-    noPaymentsText.setVisibility(View.GONE);
+    globalProgressView.setVisibility(View.VISIBLE);
   }
 
-  @Override public void hideLoading() {
+  @Override public void hideGlobalLoading() {
     header.setVisibility(View.VISIBLE);
     body.setVisibility(View.VISIBLE);
     actionButtons.setVisibility(View.VISIBLE);
-    progressBar.setVisibility(View.GONE);
-    noPaymentsText.setVisibility(View.GONE);
+    globalProgressView.setVisibility(View.GONE);
   }
 
   @Override public Observable<PaymentViewModel> usePaymentSelection() {

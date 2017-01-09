@@ -25,8 +25,8 @@ public class PaymentConfirmation {
 
   private Status status;
 
-  public static PaymentConfirmation syncingError(int productId) {
-    return new PaymentConfirmation(productId, "", Status.SYNCING_ERROR);
+  public static PaymentConfirmation syncingError(int productId, String paymentConfirmationId) {
+    return new PaymentConfirmation(productId, paymentConfirmationId, Status.SYNCING_ERROR);
   }
 
   public PaymentConfirmation(int productId, String paymentConfirmationId, Status status) {
