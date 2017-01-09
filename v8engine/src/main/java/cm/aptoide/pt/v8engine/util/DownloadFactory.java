@@ -119,7 +119,7 @@ public class DownloadFactory {
     download.setAppName(update.getLabel());
     download.setAction(Download.ACTION_UPDATE);
     download.setPackageName(update.getPackageName());
-    download.setVersionCode(update.getVersionCode());
+    download.setVersionCode(update.getUpdateVersionCode());
     download.setVersionName(update.getUpdateVersionName());
     download.setFilesToDownload(createFileList(update.getMd5(), update.getPackageName(),
         update.getApkPath() + UPDATE_ACTION, update.getAlternativeApkPath() + UPDATE_ACTION,

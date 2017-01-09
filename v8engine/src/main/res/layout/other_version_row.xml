@@ -23,6 +23,7 @@
       android:id="@+id/version_and_info_layout"
       android:layout_width="wrap_content"
       android:layout_height="match_parent"
+      android:gravity="center_vertical"
       android:orientation="vertical"
       tools:background="@android:color/transparent"
       >
@@ -35,13 +36,20 @@
         >
 
       <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:fontFamily="@string/font_family_regular"
+          android:padding="4dp"
+          android:text="v"
+          android:textColor="@color/green_tint_default"
+          android:textSize="@dimen/text_size_medium_large"
+          android:textStyle="bold"
+          />
+
+      <TextView
           android:id="@+id/version_name"
           android:layout_width="wrap_content"
           android:layout_height="@dimen/other_version_icon_size_with_icon"
-          android:drawableLeft="@drawable/ic_appview_version"
-          android:drawablePadding="4dp"
-          android:drawableStart="@drawable/ic_appview_version"
-          android:drawableTint="@color/green_tint_default"
           android:ellipsize="end"
           android:fontFamily="@string/font_family_regular"
           android:gravity="center_vertical"
@@ -102,6 +110,7 @@
       android:id="@+id/app_name_layout"
       android:layout_width="105dp"
       android:layout_height="match_parent"
+      android:gravity="center_vertical"
       android:orientation="vertical"
       tools:background="@android:color/transparent"
       >
@@ -110,7 +119,7 @@
         android:id="@+id/store_icon"
         android:layout_width="match_parent"
         android:layout_height="44dp"
-        tools:src="@drawable/user_account_white"
+        tools:src="@drawable/ic_avatar_apps"
         />
 
     <TextView

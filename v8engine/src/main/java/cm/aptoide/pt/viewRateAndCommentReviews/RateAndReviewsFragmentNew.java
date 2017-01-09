@@ -28,7 +28,7 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.adapters.CommentsAdapter;
-import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
+import cm.aptoide.pt.v8engine.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.util.DialogUtils;
@@ -45,7 +45,7 @@ import java.util.List;
 import lombok.Getter;
 import rx.Observable;
 
-public class RateAndReviewsFragmentNew extends GridRecyclerFragment<CommentsAdapter>
+public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapter>
     implements ItemCommentAdderView<Review, CommentsAdapter>, RateAndReviewsView {
 
   private static final String TAG = RateAndReviewsFragmentNew.class.getSimpleName();
@@ -113,27 +113,6 @@ public class RateAndReviewsFragmentNew extends GridRecyclerFragment<CommentsAdap
     storeTheme = args.getString(STORE_THEME);
   }
 
-  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    // ??
-  }
-
-  @Override public int getContentViewId() {
-    return R.layout.fragment_rate_and_reviews;
-  }
-
-  @Override public void bindViews(View view) {
-    super.bindViews(view);
-    floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fab);
-    setHasOptionsMenu(true);
-
-    ratingTotalsLayout = new RatingTotalsLayout(view);
-    ratingBarsLayout = new RatingBarsLayout(view);
-  }
-
-  //
-  // ???
-  //
-
   private void setupRating(GetAppMeta.App data) {
     ratingTotalsLayout.setup(data);
     ratingBarsLayout.setup(data);
@@ -158,7 +137,7 @@ public class RateAndReviewsFragmentNew extends GridRecyclerFragment<CommentsAdap
   }
 
   //
-  // from CommentAdderView
+  // ???
   //
 
   @Override @NonNull public CommentsReadMoreDisplayable createReadMoreDisplayable(final int itemPosition, Review review) {
@@ -172,10 +151,6 @@ public class RateAndReviewsFragmentNew extends GridRecyclerFragment<CommentsAdap
     }
   }
 
-  //
-  // MVP methods
-  //
-
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
@@ -184,6 +159,10 @@ public class RateAndReviewsFragmentNew extends GridRecyclerFragment<CommentsAdap
 
     attachPresenter(presenter, savedInstanceState);
   }
+
+  //
+  // from CommentAdderView
+  //
 
   @Override public void setupToolbar() {
     super.setupToolbar();
@@ -201,12 +180,25 @@ public class RateAndReviewsFragmentNew extends GridRecyclerFragment<CommentsAdap
     }
   }
 
-  @Override public Observable<Void> rateApp() {
-    return RxView.clicks(floatingActionButton);
+  //
+  // MVP methods
+  //
+
+  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    // ??
   }
 
-  @Override public Observable<GenericDialogs.EResponse> showRateView() {
-    return DialogUtils.showRateDialog(getActivity(), appName, packageName, storeName);
+  @Override public int getContentViewId() {
+    return R.layout.fragment_rate_and_reviews;
+  }
+
+  @Override public void bindViews(View view) {
+    super.bindViews(view);
+    floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fab);
+    setHasOptionsMenu(true);
+
+    ratingTotalsLayout = new RatingTotalsLayout(view);
+    ratingBarsLayout = new RatingBarsLayout(view);
   }
 
   @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
@@ -247,6 +239,14 @@ public class RateAndReviewsFragmentNew extends GridRecyclerFragment<CommentsAdap
 
   @Override public Observable<Integer> nextReviews() {
     return RxEndlessRecyclerView.loadMore(recyclerView, getAdapter());
+  }
+
+  @Override public Observable<Void> rateApp() {
+    return RxView.clicks(floatingActionButton);
+  }
+
+  @Override public Observable<GenericDialogs.EResponse> showRateView() {
+    return DialogUtils.showRateDialog(getActivity(), appName, packageName, storeName);
   }
 
   @Override public void showNextReviews(int offset, List<Review> reviews) {
