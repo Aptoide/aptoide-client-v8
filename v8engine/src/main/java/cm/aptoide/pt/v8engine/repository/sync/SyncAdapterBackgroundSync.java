@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.preferences.AptoidePreferencesConfiguration;
 import cm.aptoide.pt.v8engine.payment.products.AptoideProduct;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by marcelobenites on 22/11/16.
@@ -21,34 +23,39 @@ public class SyncAdapterBackgroundSync {
 
   private final AptoidePreferencesConfiguration configuration;
   private final AccountManager accountManager;
-  private final ProductBundleConverter productConverter;
+  private final SyncDataConverter syncDataConverter;
 
   public SyncAdapterBackgroundSync(AptoidePreferencesConfiguration configuration,
-      AccountManager accountManager, ProductBundleConverter productConverter) {
+      AccountManager accountManager, SyncDataConverter converter) {
     this.configuration = configuration;
     this.accountManager = accountManager;
-    this.productConverter = productConverter;
+    this.syncDataConverter = converter;
   }
 
   public void syncAuthorization(int paymentId) {
+    syncAuthorizations(Collections.singletonList(String.valueOf(paymentId)));
+  }
+
+  public void syncAuthorizations(List<String> paymentIds) {
     final Bundle bundle = new Bundle();
     bundle.putBoolean(AptoideSyncAdapter.EXTRA_PAYMENT_AUTHORIZATIONS, true);
-    bundle.putInt(AptoideSyncAdapter.EXTRA_PAYMENT_ID, paymentId);
+    bundle.putString(AptoideSyncAdapter.EXTRA_PAYMENT_IDS, syncDataConverter.toString(paymentIds));
     schedule(bundle);
   }
 
   public void syncConfirmation(AptoideProduct product) {
-    final Bundle bundle = productConverter.toBundle(product);
+    final Bundle bundle = syncDataConverter.toBundle(product);
     bundle.putBoolean(AptoideSyncAdapter.EXTRA_PAYMENT_CONFIRMATIONS, true);
     schedule(bundle);
   }
 
   public void syncConfirmation(AptoideProduct product, int paymentId,
       String paymentConfirmationId) {
-    final Bundle bundle = productConverter.toBundle(product);
+    final Bundle bundle = syncDataConverter.toBundle(product);
     bundle.putBoolean(AptoideSyncAdapter.EXTRA_PAYMENT_CONFIRMATIONS, true);
     bundle.putString(AptoideSyncAdapter.EXTRA_PAYMENT_CONFIRMATION_ID, paymentConfirmationId);
-    bundle.putInt(AptoideSyncAdapter.EXTRA_PAYMENT_ID, paymentId);
+    bundle.putString(AptoideSyncAdapter.EXTRA_PAYMENT_IDS,
+        syncDataConverter.toString(Collections.singletonList(String.valueOf(paymentId))));
     schedule(bundle);
   }
 

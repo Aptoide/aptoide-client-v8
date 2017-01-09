@@ -25,7 +25,7 @@ import cm.aptoide.pt.v8engine.payment.PurchaseFactory;
 import cm.aptoide.pt.v8engine.payment.products.AptoideProduct;
 import cm.aptoide.pt.v8engine.payment.products.InAppBillingProduct;
 import cm.aptoide.pt.v8engine.payment.products.PaidAppProduct;
-import cm.aptoide.pt.v8engine.repository.sync.ProductBundleConverter;
+import cm.aptoide.pt.v8engine.repository.sync.SyncDataConverter;
 import cm.aptoide.pt.v8engine.repository.sync.SyncAdapterBackgroundSync;
 
 /**
@@ -60,7 +60,7 @@ public final class RepositoryFactory {
 
   public static ProductRepository getProductRepository(Context context, AptoideProduct product) {
     final PurchaseFactory purchaseFactory = new PurchaseFactory(new InAppBillingSerializer());
-    final PaymentFactory paymentFactory = new PaymentFactory();
+    final PaymentFactory paymentFactory = new PaymentFactory(context);
     final NetworkOperatorManager operatorManager = getNetworkOperatorManager(context);
     if (product instanceof InAppBillingProduct) {
       return new InAppBillingProductRepository(new InAppBillingRepository(operatorManager),
@@ -89,13 +89,13 @@ public final class RepositoryFactory {
   public static PaymentAuthorizationRepository getPaymentAuthorizationRepository(Context context) {
     return new PaymentAuthorizationRepository(
         AccessorFactory.getAccessorFor(PaymentAuthorization.class), getBackgroundSync(context),
-        new PaymentAuthorizationConverter());
+        new PaymentAuthorizationFactory(context));
   }
 
   private static SyncAdapterBackgroundSync getBackgroundSync(Context context) {
     return new SyncAdapterBackgroundSync(Application.getConfiguration(),
         (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE),
-        new ProductBundleConverter());
+        new SyncDataConverter());
   }
 
   private static NetworkOperatorManager getNetworkOperatorManager(Context context) {

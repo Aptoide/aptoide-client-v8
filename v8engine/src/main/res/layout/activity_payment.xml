@@ -23,22 +23,22 @@
   <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:minHeight="200dp"
       android:layout_centerInParent="true"
       android:layout_margin="16dp"
       android:background="@drawable/dialog_bg"
       android:clickable="true"
+      android:minHeight="200dp"
       android:orientation="vertical"
       android:padding="16dp"
       >
 
     <RelativeLayout
-        tools:visibility="visible"
-        android:visibility="gone"
         android:id="@+id/activity_payment_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:visibility="gone"
+        tools:visibility="visible"
         >
 
       <ImageView
@@ -71,15 +71,15 @@
     </RelativeLayout>
 
     <LinearLayout
-        android:animateLayoutChanges="true"
-        tools:visibility="visible"
-        android:visibility="gone"
-        android:layout_marginBottom="16dp"
-        android:layout_marginTop="16dp"
         android:id="@+id/activity_payment_body"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
+        android:animateLayoutChanges="true"
         android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible"
         >
 
       <RelativeLayout
@@ -137,41 +137,42 @@
 
       <Button
           android:id="@+id/activity_payment_more_payments_button"
-          android:gravity="start|center_vertical"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:drawableEnd="@drawable/arrow_down"
+          android:gravity="start|center_vertical"
           android:text="@string/activity_payment_more_payments_button"
           style="@style/Widget.AppBaseTheme.Button.Borderless"
           />
 
       <LinearLayout
-          android:visibility="gone"
           android:id="@+id/activity_payment_list"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:orientation="vertical"
+          android:visibility="gone"
           >
       </LinearLayout>
     </LinearLayout>
 
     <TextView
-        android:layout_marginBottom="16dp"
-        android:layout_marginTop="16dp"
         android:id="@+id/activity_payment_no_payments_text"
         android:layout_width="match_parent"
         android:layout_height="100dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
         android:gravity="center"
         android:text="@string/no_payments_available"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        />
 
     <RelativeLayout
-        tools:visibility="visible"
-        android:visibility="gone"
         android:id="@+id/activity_payment_buttons"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="8dp"
+        android:visibility="gone"
+        tools:visibility="visible"
         >
 
       <Button
@@ -195,12 +196,26 @@
   </LinearLayout>
 
   <ProgressBar
-      android:id="@+id/activity_payment_progress_bar"
+      android:id="@+id/activity_payment_global_progress_bar"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_centerInParent="true"
       android:visibility="gone"
       tools:visibility="visible"
       />
+
+  <LinearLayout
+      android:id="@+id/activity_payment_list_progress_bar"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:visibility="gone"
+      tools:visibility="visible"
+      android:clickable="true"
+      android:focusable="true"
+      android:gravity="center">
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+  </LinearLayout>
 </RelativeLayout>
 

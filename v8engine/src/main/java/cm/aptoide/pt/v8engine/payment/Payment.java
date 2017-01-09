@@ -34,6 +34,4 @@ public interface Payment {
 
   Completable process();
 
-  Observable<PaymentConfirmation> getConfirmation();
-
 }

@@ -42,8 +42,7 @@ public abstract class PaymentConfirmationRepository {
   public Observable<PaymentConfirmation> getPaymentConfirmation(Product product) {
     return confirmationAccessor.getPaymentConfirmations(product.getId())
         .flatMap(paymentConfirmations -> Observable.from(paymentConfirmations)
-            .map(paymentConfirmation -> confirmationConverter.convertToPaymentConfirmation(
-                paymentConfirmation)))
+            .map(paymentConfirmation -> confirmationConverter.convertToPaymentConfirmation(paymentConfirmation)))
         .doOnSubscribe(() -> backgroundSync.syncConfirmation(((AptoideProduct) product)));
   }
 

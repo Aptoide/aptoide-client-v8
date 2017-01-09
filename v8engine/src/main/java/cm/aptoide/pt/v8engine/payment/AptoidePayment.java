@@ -5,10 +5,8 @@
 
 package cm.aptoide.pt.v8engine.payment;
 
-import cm.aptoide.pt.v8engine.payment.exception.PaymentFailureException;
 import cm.aptoide.pt.v8engine.repository.PaymentConfirmationRepository;
 import rx.Completable;
-import rx.Observable;
 
 /**
  * Created by marcelobenites on 25/11/16.
@@ -16,7 +14,7 @@ import rx.Observable;
 
 public class AptoidePayment implements Payment {
 
-  protected final PaymentConfirmationRepository confirmationRepository;
+  private final PaymentConfirmationRepository confirmationRepository;
   private final int id;
   private final String type;
   private final String name;
@@ -75,29 +73,7 @@ public class AptoidePayment implements Payment {
     return requiresAuthorization;
   }
 
-  @Override public Observable<PaymentConfirmation> getConfirmation() {
-    return confirmationRepository.getPaymentConfirmation(getProduct());
-  }
-
   @Override public Completable process() {
-    return confirmationRepository.createPaymentConfirmation(id).andThen(completePaymentOrFail());
+    return confirmationRepository.createPaymentConfirmation(id);
   }
-
-  protected Completable process(String paymentConfirmationId) {
-    return confirmationRepository.createPaymentConfirmation(id, paymentConfirmationId)
-        .andThen(completePaymentOrFail());
-  }
-
-  private Completable completePaymentOrFail() {
-    return getConfirmation().first(paymentConfirmation -> paymentConfirmation.isCompleted()
-            || paymentConfirmation.isFailed())
-        .flatMap(paymentConfirmation -> {
-          if (paymentConfirmation.isFailed()) {
-            return Observable.error(new PaymentFailureException(
-                "Payment " + getId() + "failed for product " + getProduct().getId()));
-          }
-          return Observable.empty();
-        }).toCompletable();
-  }
-
 }

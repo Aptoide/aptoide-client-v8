@@ -6,16 +6,21 @@
 package cm.aptoide.pt.v8engine.repository.sync;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import cm.aptoide.pt.model.v3.PaidApp;
 import cm.aptoide.pt.v8engine.payment.products.AptoideProduct;
 import cm.aptoide.pt.v8engine.payment.products.InAppBillingProduct;
 import cm.aptoide.pt.v8engine.payment.products.PaidAppProduct;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by marcelobenites on 19/12/16.
  */
 
-public class ProductBundleConverter {
+public class SyncDataConverter {
 
   private static final String ID = "cm.aptoide.pt.v8engine.repository.sync.PRODUCT_ID";
   private static final String ICON = "cm.aptoide.pt.v8engine.repository.sync.PRODUCT_ICON";
@@ -91,5 +96,20 @@ public class ProductBundleConverter {
     }
 
     return bundle;
+  }
+
+  public String toString(List<String> list) {
+    return TextUtils.join(",", list);
+  }
+
+  public List<String> toList(String listString) {
+    if (listString == null) {
+      return Collections.emptyList();
+    }
+    final String[] strings = TextUtils.split(",", listString);
+    if (strings.length == 1) {
+      return Collections.singletonList(listString);
+    }
+    return Arrays.asList(strings);
   }
 }

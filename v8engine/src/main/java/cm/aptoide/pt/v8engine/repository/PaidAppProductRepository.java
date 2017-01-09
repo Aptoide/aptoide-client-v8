@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.repository;
 
-import android.content.Context;
 import cm.aptoide.pt.model.v3.PaymentServiceResponse;
 import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.PaymentFactory;
@@ -46,11 +45,11 @@ public class PaidAppProductRepository implements ProductRepository {
     });
   }
 
-  @Override public Single<List<Payment>> getPayments(Context context, AptoideProduct product) {
+  @Override public Single<List<Payment>> getPayments(AptoideProduct product) {
     return getServerPaidAppPaymentServices(((PaidAppProduct) product).getAppId(), false,
         ((PaidAppProduct) product).getStoreName(), true).toObservable()
         .flatMapIterable(paymentServices -> paymentServices)
-        .map(paymentService -> paymentFactory.create(context, paymentService, product))
+        .map(paymentService -> paymentFactory.create(paymentService, product))
         .toList().toSingle();
   }
 

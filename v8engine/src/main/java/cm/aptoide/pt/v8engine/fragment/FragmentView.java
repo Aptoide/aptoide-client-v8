@@ -20,10 +20,6 @@ public abstract class FragmentView extends RxFragment implements cm.aptoide.pt.v
     return RxLifecycle.bindUntilEvent(getLifecycle(), lifecycleEvent);
   }
 
-  @Override public Context getContext() {
-    return super.getContext();
-  }
-
   @Override public Observable<LifecycleEvent> getLifecycle() {
     return lifecycle().map(event -> convertToEvent(event));
   }
