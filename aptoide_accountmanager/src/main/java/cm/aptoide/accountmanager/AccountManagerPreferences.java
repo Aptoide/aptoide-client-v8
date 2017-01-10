@@ -52,6 +52,14 @@ public class AccountManagerPreferences {
     SecurePreferences.putString(SecureKeys.QUEUE_NAME, queueName);
   }
 
+  static void setUserId(int userId) {
+    SecurePreferences.putString(SecureKeys.USER_ID, String.valueOf(userId));
+  }
+
+  static String getUserId() {
+    return SecurePreferences.getString(SecureKeys.USER_ID);
+  }
+
   static void removeQueueName() {
     SecurePreferences.remove(SecureKeys.QUEUE_NAME);
   }

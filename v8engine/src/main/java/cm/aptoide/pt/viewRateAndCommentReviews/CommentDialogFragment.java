@@ -26,7 +26,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import com.jakewharton.rxbinding.view.RxView;
-import com.trello.rxlifecycle.FragmentEvent;
+import com.trello.rxlifecycle.android.FragmentEvent;
 import com.trello.rxlifecycle.components.RxDialogFragment;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;

@@ -462,6 +462,8 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
       // TODO are these validations really needed?
       // why not just store the values, null or not?
 
+      AccountManagerPreferences.setUserId(checkUserCredentialsJson.getId());
+
       if (!TextUtils.isEmpty(checkUserCredentialsJson.getQueueName())) {
         //hasQueue = true;
         AccountManagerPreferences.setQueueName(checkUserCredentialsJson.getQueueName());
@@ -511,6 +513,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
    */
   public static UserCompleteData getUserData() {
     UserCompleteData userCompleteData = new UserCompleteData();
+    userCompleteData.setId(AccountManagerPreferences.getUserId());
     userCompleteData.setUserName(AccountManagerPreferences.getUserNickName());
     userCompleteData.setUserEmail(AccountManagerPreferences.getUserEmail());
     userCompleteData.setQueueName(AccountManagerPreferences.getQueueName());

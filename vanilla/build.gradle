@@ -62,11 +62,13 @@ android {
     internal {
       // applicationIdSuffix does not work properly, as the application ID gets changed after the buildFlavor
       applicationIdSuffix ".internal"
-      minSdkVersion 21
+
       versionName "8.1.1." + getDate()
       versionCode project.INTERNAL_VERSION_CODE.toInteger()
 
-      resValue "string", "authenticatorAccountType", APPLICATION_ID + ".internal"
+      resValue "string", "authenticator_account_type", APPLICATION_ID + ".internal"
+      resValue "string", "content_authority", APPLICATION_ID + ".StubProvider.internal"
+      buildConfigField "String", "CONTENT_AUTHORITY", "\"" + APPLICATION_ID + ".StubProvider.internal\""
 
       manifestPlaceholders = [toolboxProviderAuthority   : "cm.aptoide.pt.StubProvider.internal",
                               suggestionProviderAuthority: "cm.aptoide.pt.v8engine.provider.SuggestionProvider.internal",
@@ -81,7 +83,9 @@ android {
       versionName "8.1.1." + getDate()
       versionCode project.DEV_VERSION_CODE.toInteger()
 
-      resValue "string", "authenticatorAccountType", APPLICATION_ID + ".dev"
+      resValue "string", "authenticator_account_type", APPLICATION_ID + ".dev"
+      resValue "string", "content_authority", APPLICATION_ID + ".StubProvider.dev"
+      buildConfigField "String", "CONTENT_AUTHORITY", "\"" + APPLICATION_ID + ".StubProvider.dev\""
 
       manifestPlaceholders = [toolboxProviderAuthority   : "cm.aptoide.pt.StubProvider.dev",
                               suggestionProviderAuthority: "cm.aptoide.pt.v8engine.provider.SuggestionProvider.dev",
@@ -91,7 +95,9 @@ android {
     prod {
       versionCode project.PROD_VERSION_CODE.toInteger()
       versionName "8.1.1.0"
-      resValue "string", "authenticatorAccountType", APPLICATION_ID
+      resValue "string", "authenticator_account_type", APPLICATION_ID
+      resValue "string", "content_authority", APPLICATION_ID + ".StubProvider"
+      buildConfigField "String", "CONTENT_AUTHORITY", "\"" + APPLICATION_ID + ".StubProvider\""
     }
   }
 

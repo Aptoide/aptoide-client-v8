@@ -46,7 +46,7 @@ import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
 import com.astuetz.PagerSlidingTabStrip;
-import com.trello.rxlifecycle.FragmentEvent;
+import com.trello.rxlifecycle.android.FragmentEvent;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**

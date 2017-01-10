@@ -17,7 +17,8 @@ import cm.aptoide.pt.model.v3.InAppBillingAvailableResponse;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
 import cm.aptoide.pt.model.v3.InAppBillingSkuDetailsResponse;
 import cm.aptoide.pt.model.v3.PaidApp;
-import cm.aptoide.pt.model.v3.PaymentResponse;
+import cm.aptoide.pt.model.v3.PaymentAuthorizationsResponse;
+import cm.aptoide.pt.model.v3.PaymentConfirmationResponse;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.okhttp.cache.PostCacheInterceptor;
@@ -132,7 +133,16 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
     @POST("processInAppBilling") @FormUrlEncoded
     Observable<BaseV3Response> deleteInAppBillingPurchase(@FieldMap BaseBody args);
 
-    @POST("checkProductPayment") @FormUrlEncoded Observable<PaymentResponse> checkProductPayment(
-        @FieldMap BaseBody args);
+    @POST("checkProductPayment") @FormUrlEncoded
+    Observable<PaymentConfirmationResponse> getPaymentConfirmation(@FieldMap BaseBody args);
+
+    @POST("productPurchaseAuthorization") @FormUrlEncoded
+    Observable<PaymentAuthorizationsResponse> getPaymentAuthorization(@FieldMap BaseBody args);
+
+    @POST("payProduct") @FormUrlEncoded
+    Observable<BaseV3Response> createPaymentConfirmation(@FieldMap BaseBody args);
+
+    @POST("createPurchaseAuthorization") @FormUrlEncoded
+    Observable<BaseV3Response> createPaymentAuthorization(@FieldMap BaseBody args);
   }
 }
