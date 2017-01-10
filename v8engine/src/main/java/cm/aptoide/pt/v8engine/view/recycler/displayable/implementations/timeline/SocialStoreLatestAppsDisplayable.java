@@ -24,7 +24,6 @@ public class SocialStoreLatestAppsDisplayable extends SocialCardDisplayable {
   @Getter private String avatarUrl;
   @Getter private List<SocialStoreLatestAppsDisplayable.LatestApp> latestApps;
   @Getter private String abTestingUrl;
-  @Getter private Store store;
   @Getter private Store sharedStore;
   @Getter private Comment.User user;
   @Getter private Comment.User userSharer;
@@ -45,9 +44,9 @@ public class SocialStoreLatestAppsDisplayable extends SocialCardDisplayable {
       long likes, long comments, DateCalculator dateCalculator,
       TimelineMetricsManager timelineMetricsManager, SocialRepository socialRepository,
       SpannableFactory spannableFactory) {
-    super(socialStoreLatestApps, likes, comments, socialStoreLatestApps.getUser(),
-        socialStoreLatestApps.getUserSharer(), socialStoreLatestApps.getDate(), spannableFactory,
-        dateCalculator);
+    super(socialStoreLatestApps, likes, comments, socialStoreLatestApps.getOwnerStore(),
+        socialStoreLatestApps.getUser(), socialStoreLatestApps.getUserSharer(),
+        socialStoreLatestApps.getDate(), spannableFactory, dateCalculator);
     this.storeName = storeName;
     socialStoreLatestApps.getSharedStore().getId();
     this.avatarUrl = avatarUrl;
@@ -57,7 +56,6 @@ public class SocialStoreLatestAppsDisplayable extends SocialCardDisplayable {
     //this.latestUpdate = latestUpdate;
     this.timelineMetricsManager = timelineMetricsManager;
     this.socialRepository = socialRepository;
-    this.store = socialStoreLatestApps.getOwnerStore();
     this.sharedStore = socialStoreLatestApps.getSharedStore();
     this.user = socialStoreLatestApps.getUser();
     this.userSharer = socialStoreLatestApps.getUserSharer();

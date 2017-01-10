@@ -24,7 +24,6 @@ import lombok.Getter;
 public class SocialInstallDisplayable extends SocialCardDisplayable {
 
   @Getter private int avatarResource;
-  @Getter private Store store;
   @Getter private int titleResource;
   @Getter private Comment.User user;
   @Getter private long appId;
@@ -45,10 +44,9 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
       String appIcon, String abTestingURL, long likes, long comments, Date date,
       TimelineMetricsManager timelineMetricsManager, SpannableFactory spannableFactory,
       SocialRepository socialRepository, DateCalculator dateCalculator) {
-    super(socialInstall, likes, comments, socialInstall.getUser(), socialInstall.getUserSharer(),
-        date, spannableFactory, dateCalculator);
+    super(socialInstall, likes, comments, store, socialInstall.getUser(),
+        socialInstall.getUserSharer(), date, spannableFactory, dateCalculator);
     this.avatarResource = icon;
-    this.store = store;
     this.titleResource = titleResource;
     this.user = user;
     this.appId = appId;

@@ -23,7 +23,6 @@ import lombok.Getter;
 public class SocialRecommendationDisplayable extends SocialCardDisplayable {
 
   @Getter private int avatarResource;
-  @Getter private Store store;
   @Getter private int titleResource;
   @Getter private Comment.User user;
   @Getter private long appId;
@@ -45,11 +44,10 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
       long numberOfComments, TimelineMetricsManager timelineMetricsManager,
       SpannableFactory spannableFactory, SocialRepository socialRepository,
       DateCalculator dateCalculator) {
-    super(socialRecommendation, numberOfLikes, numberOfComments, socialRecommendation.getUser(),
-        socialRecommendation.getUserSharer(), socialRecommendation.getDate(), spannableFactory,
-        dateCalculator);
+    super(socialRecommendation, numberOfLikes, numberOfComments, store,
+        socialRecommendation.getUser(), socialRecommendation.getUserSharer(),
+        socialRecommendation.getDate(), spannableFactory, dateCalculator);
     this.avatarResource = avatarResource;
-    this.store = store;
     this.titleResource = titleResource;
     this.user = user;
     this.appId = appId;
