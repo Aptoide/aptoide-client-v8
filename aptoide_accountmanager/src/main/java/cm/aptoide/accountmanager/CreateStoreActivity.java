@@ -82,7 +82,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
   private ImageView mLightblueTick;
 
   private String CREATE_STORE_CODE = "1";
-  private String storeName;
+  private String storeName = "";
   private String storeAvatarPath;
   private String storeDescription;
   private long storeId;
@@ -90,6 +90,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
   private boolean THEME_CLICKED_FLAG = false;
   private String storeTheme = "";
   private String from;
+  ProgressDialog progressDialog;
 
   private int CREATE_STORE_REQUEST_CODE = 0; //1: all (Multipart)  2: user and theme 3:user 4/5:edit
 
@@ -108,6 +109,9 @@ public class CreateStoreActivity extends PermissionsBaseActivity
   @Override protected void onDestroy() {
     super.onDestroy();
     mSubscriptions.clear();
+    if (progressDialog.isShowing()) {
+      progressDialog.dismiss();
+    }
   }
 
   @Override protected String getActivityTitle() {
@@ -196,45 +200,50 @@ public class CreateStoreActivity extends PermissionsBaseActivity
           storeName = mStoreName.getText().toString().trim().toLowerCase();
           storeDescription = mStoreDescription.getText().toString();
           validateData();
-          ProgressDialog progressDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
+          progressDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
               getApplicationContext().getString(R.string.please_wait_upload));
           if (CREATE_STORE_REQUEST_CODE == 1
               || CREATE_STORE_REQUEST_CODE == 2
               || CREATE_STORE_REQUEST_CODE == 3) {
             progressDialog.show();
-            CheckUserCredentialsRequest.of(AptoideAccountManager.getAccessToken(), storeName,
-                CREATE_STORE_CODE).execute(answer -> {
-              if (answer.hasErrors()) {
-                if (answer.getErrors() != null && answer.getErrors().size() > 0) {
-                  progressDialog.dismiss();
-                  if (answer.getErrors().get(0).code.equals("WOP-2")) {
-                    mSubscriptions.add(GenericDialogs.createGenericContinueMessage(this, "",
-                        getApplicationContext().getResources().getString(R.string.ws_error_WOP_2))
-                        .subscribe());
-                  } else if (answer.getErrors().get(0).code.equals("WOP-3")) {
-                    ShowMessage.asSnack(this,
-                        ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors().get(0).code));
+            mSubscriptions.add(
+                CheckUserCredentialsRequest.of(AptoideAccountManager.getAccessToken(), storeName,
+                    CREATE_STORE_CODE).observe().subscribe(answer -> {
+                  if (answer.hasErrors()) {
+                    if (answer.getErrors() != null && answer.getErrors().size() > 0) {
+                      progressDialog.dismiss();
+                      if (answer.getErrors().get(0).code.equals("WOP-2")) {
+                        mSubscriptions.add(GenericDialogs.createGenericContinueMessage(this, "",
+                            getApplicationContext().getResources().getString(R.string.ws_error_WOP_2))
+                            .subscribe());
+                      } else if (answer.getErrors().get(0).code.equals("WOP-3")) {
+                        ShowMessage.asSnack(this, ErrorsMapper.getWebServiceErrorMessageFromCode(
+                            answer.getErrors().get(0).code));
+                      } else {
+                        ShowMessage.asObservableSnack(this,
+                            ErrorsMapper.getWebServiceErrorMessageFromCode(
+                                answer.getErrors().get(0).code)).subscribe(visibility -> {
+                          if (visibility == ShowMessage.DISMISSED) {
+                            finish();
+                          }
+                        });
+                      }
+                    }
+                  } else if (!(CREATE_STORE_REQUEST_CODE == 3)) {
+                    onCreateSuccess(progressDialog);
                   } else {
-                    ShowMessage.asObservableSnack(this,
-                        ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors().get(0).code))
+                    progressDialog.dismiss();
+                    ShowMessage.asLongObservableSnack(this, R.string.create_store_store_created)
                         .subscribe(visibility -> {
                           if (visibility == ShowMessage.DISMISSED) {
                             finish();
                           }
                         });
                   }
-                }
-              } else if (!(CREATE_STORE_REQUEST_CODE == 3)) {
-                onCreateSuccess(progressDialog);
-              } else {
-                progressDialog.dismiss();
-                ShowMessage.asLongObservableSnack(this, R.string.create_store_store_created).subscribe(visibility -> {
-                  if (visibility == ShowMessage.DISMISSED) {
-                    finish();
-                  }
-                });
-              }
-            });
+                }, throwable -> {
+                  onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
+                  progressDialog.dismiss();
+                }));
           } else if (CREATE_STORE_REQUEST_CODE == 4) {
             setStoreData();
             progressDialog.show();
@@ -286,8 +295,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
           }
         }
 
-    ));
-    mSubscriptions.add(RxView.clicks(mSkip)
+    )); mSubscriptions.add(RxView.clicks(mSkip)
         .flatMap(click -> AptoideAccountManager.refreshAndSaveUserInfoData())
         .subscribe(refreshed -> {
           finish();
@@ -299,8 +307,8 @@ public class CreateStoreActivity extends PermissionsBaseActivity
   /**
    * This method sets stores data for the request
    */
-  private void setStoreData() {
-    if (storeName.length() == 0){
+  private void                                        setStoreData() {
+    if (storeName.length() == 0) {
       storeName = null;
     }
 
