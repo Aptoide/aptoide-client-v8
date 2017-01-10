@@ -14,7 +14,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import cm.aptoide.accountmanager.ws.AptoideWsV3Exception;
 import cm.aptoide.accountmanager.ws.CheckUserCredentialsRequest;
 import cm.aptoide.accountmanager.ws.ErrorsMapper;
 import cm.aptoide.pt.dataprovider.DataProvider;
@@ -88,6 +87,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
   private String storeTheme = "";
   private String from;
   ProgressDialog progressDialog;
+  private String storeRemoteUrl;
 
   private int CREATE_STORE_REQUEST_CODE = 0; //1: all (Multipart)  2: user and theme 3:user 4/5:edit
 
@@ -106,13 +106,18 @@ public class CreateStoreActivity extends PermissionsBaseActivity
   private void getData() {
     from = getIntent().getStringExtra("from") == null ? "" : getIntent().getStringExtra("from");
     storeId = getIntent().getLongExtra("storeId", -1);
+    storeRemoteUrl = getIntent().getStringExtra("storeAvatar");
+    storeTheme = getIntent().getStringExtra("storeTheme");
+    storeDescription = getIntent().getStringExtra("storeDescription");
   }
 
   @Override protected void onDestroy() {
     super.onDestroy();
     mSubscriptions.clear();
-    if (progressDialog.isShowing()) {
-      progressDialog.dismiss();
+    if (progressDialog != null) {
+      if (progressDialog.isShowing()) {
+        progressDialog.dismiss();
+      }
     }
   }
 
@@ -173,6 +178,10 @@ public class CreateStoreActivity extends PermissionsBaseActivity
     mLightblueTick = (ImageView) findViewById(R.id.create_store_theme_check_lightblue);
   }
 
+  /**
+   * Changes views according to context (edit or create) and shows current values for the store
+   * that's being edited
+   */
   private void editViews() {
     if (!from.equals("store")) {
       mHeader.setText(
@@ -185,9 +194,17 @@ public class CreateStoreActivity extends PermissionsBaseActivity
           AptoideUtils.StringU.getFormattedString(R.string.create_store_description_title));
       mStoreName.setVisibility(View.GONE);
       mStoreDescription.setVisibility(View.VISIBLE);
+      mStoreDescription.setText(storeDescription);
+      if (storeRemoteUrl != null) {
+        ImageLoader.loadWithCircleTransform(storeRemoteUrl, mStoreAvatar);
+      }
+      handleThemeTick(storeTheme, "visible");
       mCreateStore.setText(R.string.save_edit_store);
       mSkip.setText(R.string.cancel);
     }
+  }
+
+  private void setPreviousStoreThemeTick() {
   }
 
   private void setupListeners() {
@@ -461,52 +478,52 @@ public class CreateStoreActivity extends PermissionsBaseActivity
 
   private void setupThemeListeners() {
     mSubscriptions.add(RxView.clicks(mOrangeShape).subscribe(click -> {
-      resetPreviousTickedTheme(storeTheme);
+      handleThemeTick(storeTheme, "gone");
       mOrangeTick.setVisibility(View.VISIBLE);
       storeTheme = "orange";
     }));
     mSubscriptions.add(RxView.clicks(mGreenShape).subscribe(click -> {
-      resetPreviousTickedTheme(storeTheme);
+      handleThemeTick(storeTheme, "gone");
       mGreenTick.setVisibility(View.VISIBLE);
       storeTheme = "green";
     }));
     mSubscriptions.add(RxView.clicks(mRedShape).subscribe(click -> {
-      resetPreviousTickedTheme(storeTheme);
+      handleThemeTick(storeTheme, "gone");
       mRedTick.setVisibility(View.VISIBLE);
       storeTheme = "red";
     }));
     mSubscriptions.add(RxView.clicks(mIndigoShape).subscribe(click -> {
-      resetPreviousTickedTheme(storeTheme);
+      handleThemeTick(storeTheme, "gone");
       mIndigoTick.setVisibility(View.VISIBLE);
       storeTheme = "indigo";
     }));
     mSubscriptions.add(RxView.clicks(mTealShape).subscribe(click -> {
-      resetPreviousTickedTheme(storeTheme);
+      handleThemeTick(storeTheme, "gone");
       mTealTick.setVisibility(View.VISIBLE);
       storeTheme = "teal";
     }));
     mSubscriptions.add(RxView.clicks(mPinkShape).subscribe(click -> {
-      resetPreviousTickedTheme(storeTheme);
+      handleThemeTick(storeTheme, "gone");
       mPinkTick.setVisibility(View.VISIBLE);
       storeTheme = "pink";
     }));
     mSubscriptions.add(RxView.clicks(mLimeShape).subscribe(click -> {
-      resetPreviousTickedTheme(storeTheme);
+      handleThemeTick(storeTheme, "gone");
       mLimeTick.setVisibility(View.VISIBLE);
       storeTheme = "lime";
     }));
     mSubscriptions.add(RxView.clicks(mAmberShape).subscribe(click -> {
-      resetPreviousTickedTheme(storeTheme);
+      handleThemeTick(storeTheme, "gone");
       mAmberTick.setVisibility(View.VISIBLE);
       storeTheme = "amber";
     }));
     mSubscriptions.add(RxView.clicks(mBrownShape).subscribe(click -> {
-      resetPreviousTickedTheme(storeTheme);
+      handleThemeTick(storeTheme, "gone");
       mBrownTick.setVisibility(View.VISIBLE);
       storeTheme = "brown";
     }));
     mSubscriptions.add(RxView.clicks(mLightblueShape).subscribe(click -> {
-      resetPreviousTickedTheme(storeTheme);
+      handleThemeTick(storeTheme, "gone");
       mLightblueTick.setVisibility(View.VISIBLE);
       storeTheme = "light-blue";
     }));
@@ -545,37 +562,41 @@ public class CreateStoreActivity extends PermissionsBaseActivity
   /**
    * This method resets previously ticked theme tick
    */
-  private void resetPreviousTickedTheme(String storeTheme) {
+  private void handleThemeTick(String storeTheme, String visibility) {
+    int visible = View.GONE;
+    if (visibility.equals("visible")) {
+      visible = View.VISIBLE;
+    }
     switch (storeTheme) {
       case "orange":
-        mOrangeTick.setVisibility(View.GONE);
+        mOrangeTick.setVisibility(visible);
         break;
       case "green":
-        mGreenTick.setVisibility(View.GONE);
+        mGreenTick.setVisibility(visible);
         break;
       case "red":
-        mRedTick.setVisibility(View.GONE);
+        mRedTick.setVisibility(visible);
         break;
       case "indigo":
-        mIndigoTick.setVisibility(View.GONE);
+        mIndigoTick.setVisibility(visible);
         break;
       case "teal":
-        mTealTick.setVisibility(View.GONE);
+        mTealTick.setVisibility(visible);
         break;
       case "pink":
-        mPinkTick.setVisibility(View.GONE);
+        mPinkTick.setVisibility(visible);
         break;
       case "lime":
-        mLimeTick.setVisibility(View.GONE);
+        mLimeTick.setVisibility(visible);
         break;
       case "amber":
-        mAmberTick.setVisibility(View.GONE);
+        mAmberTick.setVisibility(visible);
         break;
       case "brown":
-        mBrownTick.setVisibility(View.GONE);
+        mBrownTick.setVisibility(visible);
         break;
       case "light-blue":
-        mLightblueTick.setVisibility(View.GONE);
+        mLightblueTick.setVisibility(visible);
         break;
       default:
         break;

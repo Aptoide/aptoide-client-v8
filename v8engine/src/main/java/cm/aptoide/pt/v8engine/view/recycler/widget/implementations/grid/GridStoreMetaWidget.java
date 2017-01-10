@@ -213,7 +213,7 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
     if (!TextUtils.isEmpty(AccountManagerPreferences.getUserRepo())) {
       if (AccountManagerPreferences.getUserRepo().equals(store.getName())) {
         editStoreButton.setVisibility(View.VISIBLE);
-        compositeSubscription.add(RxView.clicks(editStoreButton).subscribe(click -> editStore(store.getId())));
+        compositeSubscription.add(RxView.clicks(editStoreButton).subscribe(click -> editStore(store.getId(), store.getAppearance().getTheme(), store.getAppearance().getDescription(), store.getAvatar())));
       }
     }
   }
@@ -263,9 +263,12 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
     }
   }
 
-  private void editStore(long storeId) {
+  private void editStore(long storeId, String storeTheme, String storeDescription, String storeAvatar) {
     Intent intent = new Intent(getContext(), CreateStoreActivity.class);
     intent.putExtra("storeId", storeId);
+    intent.putExtra("storeTheme", storeTheme);
+    intent.putExtra("storeDescription", storeDescription);
+    intent.putExtra("storeAvatar", storeAvatar);
     intent.putExtra("from", "store");
     getContext().startActivity(intent);
   }
