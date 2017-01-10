@@ -47,6 +47,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.preferences.AptoidePreferencesConfiguration;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
@@ -61,7 +62,6 @@ import javax.security.auth.login.LoginException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.experimental.PackagePrivate;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -245,7 +245,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     if (getConfiguration().isLoginAvailable(AptoidePreferencesConfiguration.SocialLogin.FACEBOOK)) {
       FacebookLoginUtils.logout();
     }
-    getInstance().removeLocalAccount();
+    removeLocalAccount();
     userIsLoggedIn = false;
     if (activityRef != null) {
       Activity activity = activityRef.get();
@@ -735,7 +735,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
   private static Action1<Throwable> getOnErrorAction(Context context) {
     return new Action1<Throwable>() {
       @Override public void call(Throwable throwable) {
-        getInstance().removeLocalAccount();
+        removeLocalAccount();
         openAccountManager(context);
       }
     };
@@ -876,8 +876,10 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
       // Creating the account on the device and setting the auth token we got
       // (Not setting the auth token will cause another call to the server to authenticate
       // the user)
+      SecureCoderDecoder secureCoderDecoder = new SecureCoderDecoder.Builder(context).create();
+      String encryptPassword = secureCoderDecoder.encrypt(userPassword);
       try {
-        accountManager.addAccountExplicitly(account, userPassword, null);
+        accountManager.addAccountExplicitly(account, encryptPassword, null);
       } catch (SecurityException e) {
         e.printStackTrace();
         CrashReports.logException(e);
