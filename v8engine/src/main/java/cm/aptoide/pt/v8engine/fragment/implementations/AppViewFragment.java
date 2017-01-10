@@ -446,7 +446,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
 
-    if (create) {
       if (subscription != null) {
         subscription.unsubscribe();
       }
@@ -493,9 +492,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
               CrashReports.logString(key_md5sum, md5);
             });
       }
-    } else {
-      header.setup(getApp);
-    }
   }
 
   @Override public int getContentViewId() {
