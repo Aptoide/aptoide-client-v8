@@ -23,7 +23,7 @@ public class InAppBillingService extends Service {
         new NetworkOperatorManager((TelephonyManager) getSystemService(TELEPHONY_SERVICE));
     final InAppBillingSerializer serializer = new InAppBillingSerializer();
     billingBinder =
-        new BillingBinder(this, new InAppBillingRepository(operatorManager, new ProductFactory()),
+        new BillingBinder(this, new InAppBillingRepository(operatorManager),
             serializer, new ErrorCodeFactory(), new PurchaseErrorCodeFactory(),
             new ProductFactory());
   }

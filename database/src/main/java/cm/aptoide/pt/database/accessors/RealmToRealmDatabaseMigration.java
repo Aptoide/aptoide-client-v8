@@ -167,6 +167,40 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
       if (!downloadSchema.hasField("versionName")) {
         downloadSchema.addField("versionName", String.class);
       }
+
+      oldVersion++;
+    }
+
+    if (oldVersion == 8079) {
+
+      schema.get("PaymentConfirmation")
+          .addField("status", String.class, FieldAttribute.REQUIRED)
+          .transform(paymentConfirmation -> paymentConfirmation.set("status", "SYNCING_ERROR"))
+          .removePrimaryKey()
+          .addPrimaryKey("productId")
+          .removeField("paymentId")
+          .removeField("price")
+          .removeField("currency")
+          .removeField("taxRate")
+          .removeField("icon")
+          .removeField("title")
+          .removeField("description")
+          .removeField("priceDescription")
+          .removeField("apiVersion")
+          .removeField("sku")
+          .removeField("packageName")
+          .removeField("developerPayload")
+          .removeField("type")
+          .removeField("appId")
+          .removeField("storeName");
+
+      schema.create("PaymentAuthorization")
+          .addField("paymentId", Integer.class, FieldAttribute.PRIMARY_KEY)
+          .addField("url", String.class)
+          .addField("redirectUrl", String.class)
+          .addField("status", String.class, FieldAttribute.REQUIRED);
+
+      oldVersion++;
     }
   }
 }

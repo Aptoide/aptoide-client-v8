@@ -32,7 +32,7 @@ import lombok.EqualsAndHashCode;
 
     @JsonProperty("metadata") private Metadata metadata;
 
-    @JsonProperty("payment_services") private List<PaymentService> paymentServices;
+    @JsonProperty("payment_services") private List<PaymentServiceResponse> paymentServices;
 
     @JsonProperty("status") private String status;
 

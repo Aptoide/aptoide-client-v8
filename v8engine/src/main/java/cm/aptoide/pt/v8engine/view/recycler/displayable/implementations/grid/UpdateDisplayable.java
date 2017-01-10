@@ -65,7 +65,8 @@ public class UpdateDisplayable extends Displayable {
       String updateVersionName, String mainObbName, String mainObbPath, String mainObbMd5,
       String patchObbName, String patchObbPath, String patchObbMd5, Download download,
       InstallManager installManager, Analytics analytics,
-      DownloadEventConverter downloadInstallEventConverter, InstallEventConverter installConverter) {
+      DownloadEventConverter downloadInstallEventConverter,
+      InstallEventConverter installConverter) {
     this.packageName = packageName;
     this.appId = appId;
     this.label = label;
@@ -90,7 +91,8 @@ public class UpdateDisplayable extends Displayable {
 
   public static UpdateDisplayable create(Update update, InstallManager installManager,
       DownloadFactory downloadFactory, Analytics analytics,
-      DownloadEventConverter downloadInstallEventConverter, InstallEventConverter installConverter) {
+      DownloadEventConverter downloadInstallEventConverter,
+      InstallEventConverter installConverter) {
 
     return new UpdateDisplayable(update.getPackageName(), update.getAppId(), update.getLabel(),
         update.getIcon(), update.getVersionCode(), update.getMd5(), update.getApkPath(),

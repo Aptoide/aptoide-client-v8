@@ -14,7 +14,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import cm.aptoide.accountmanager.ws.AptoideWsV3Exception;
 import cm.aptoide.accountmanager.ws.CheckUserCredentialsRequest;
 import cm.aptoide.accountmanager.ws.ErrorsMapper;
 import cm.aptoide.pt.dataprovider.DataProvider;
@@ -79,7 +78,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
   private ImageView mLightblueTick;
 
   private String CREATE_STORE_CODE = "1";
-  private String storeName;
+  private String storeName = "";
   private String storeAvatarPath;
   private String storeDescription;
   private long storeId;
@@ -87,6 +86,8 @@ public class CreateStoreActivity extends PermissionsBaseActivity
   private boolean THEME_CLICKED_FLAG = false;
   private String storeTheme = "";
   private String from;
+  ProgressDialog progressDialog;
+  private String storeRemoteUrl;
 
   private int CREATE_STORE_REQUEST_CODE = 0; //1: all (Multipart)  2: user and theme 3:user 4/5:edit
 
@@ -105,11 +106,19 @@ public class CreateStoreActivity extends PermissionsBaseActivity
   private void getData() {
     from = getIntent().getStringExtra("from") == null ? "" : getIntent().getStringExtra("from");
     storeId = getIntent().getLongExtra("storeId", -1);
+    storeRemoteUrl = getIntent().getStringExtra("storeAvatar");
+    storeTheme = getIntent().getStringExtra("storeTheme");
+    storeDescription = getIntent().getStringExtra("storeDescription");
   }
 
   @Override protected void onDestroy() {
     super.onDestroy();
     mSubscriptions.clear();
+    if (progressDialog != null) {
+      if (progressDialog.isShowing()) {
+        progressDialog.dismiss();
+      }
+    }
   }
 
   @Override protected String getActivityTitle() {
@@ -169,6 +178,10 @@ public class CreateStoreActivity extends PermissionsBaseActivity
     mLightblueTick = (ImageView) findViewById(R.id.create_store_theme_check_lightblue);
   }
 
+  /**
+   * Changes views according to context (edit or create) and shows current values for the store
+   * that's being edited
+   */
   private void editViews() {
     if (!from.equals("store")) {
       mHeader.setText(
@@ -181,65 +194,77 @@ public class CreateStoreActivity extends PermissionsBaseActivity
           AptoideUtils.StringU.getFormattedString(R.string.create_store_description_title));
       mStoreName.setVisibility(View.GONE);
       mStoreDescription.setVisibility(View.VISIBLE);
+      mStoreDescription.setText(storeDescription);
+      if (storeRemoteUrl != null) {
+        ImageLoader.loadWithCircleTransform(storeRemoteUrl, mStoreAvatar);
+      }
+      handleThemeTick(storeTheme, "visible");
       mCreateStore.setText(R.string.save_edit_store);
       mSkip.setText(R.string.cancel);
     }
   }
 
-  private void setupListeners() {
+  private void setPreviousStoreThemeTick() {
+  }
 
+  private void setupListeners() {
     mSubscriptions.add(RxView.clicks(mStoreAvatarLayout).subscribe(click -> chooseAvatarSource()));
     mSubscriptions.add(RxView.clicks(mCreateStore).subscribe(click -> {
           AptoideUtils.SystemU.hideKeyboard(this);
           storeName = mStoreName.getText().toString().trim().toLowerCase();
           storeDescription = mStoreDescription.getText().toString();
           validateData();
-          ProgressDialog progressDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
+          progressDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
               getApplicationContext().getString(R.string.please_wait_upload));
           if (CREATE_STORE_REQUEST_CODE == 1
               || CREATE_STORE_REQUEST_CODE == 2
               || CREATE_STORE_REQUEST_CODE == 3) {
             progressDialog.show();
-            CheckUserCredentialsRequest.of(AptoideAccountManager.getAccessToken(), storeName,
-                CREATE_STORE_CODE).execute(answer -> {
-              if (answer.hasErrors()) {
-                if (answer.getErrors() != null && answer.getErrors().size() > 0) {
-                  progressDialog.dismiss();
-                  if (answer.getErrors().get(0).code.equals("WOP-2")) {
-                    mSubscriptions.add(GenericDialogs.createGenericContinueMessage(this, "",
-                        getApplicationContext().getResources().getString(R.string.ws_error_WOP_2))
-                        .subscribe());
-                  } else if (answer.getErrors().get(0).code.equals("WOP-3")) {
-                    ShowMessage.asSnack(this,
-                        ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors().get(0).code));
+            mSubscriptions.add(
+                CheckUserCredentialsRequest.of(AptoideAccountManager.getAccessToken(), storeName,
+                    CREATE_STORE_CODE).observe().subscribe(answer -> {
+                  if (answer.hasErrors()) {
+                    if (answer.getErrors() != null && answer.getErrors().size() > 0) {
+                      progressDialog.dismiss();
+                      if (answer.getErrors().get(0).code.equals("WOP-2")) {
+                        mSubscriptions.add(GenericDialogs.createGenericContinueMessage(this, "",
+                            getApplicationContext().getResources().getString(R.string.ws_error_WOP_2))
+                            .subscribe());
+                      } else if (answer.getErrors().get(0).code.equals("WOP-3")) {
+                        ShowMessage.asSnack(this, ErrorsMapper.getWebServiceErrorMessageFromCode(
+                            answer.getErrors().get(0).code));
+                      } else {
+                        ShowMessage.asObservableSnack(this,
+                            ErrorsMapper.getWebServiceErrorMessageFromCode(
+                                answer.getErrors().get(0).code)).subscribe(visibility -> {
+                          if (visibility == ShowMessage.DISMISSED) {
+                            finish();
+                          }
+                        });
+                      }
+                    }
+                  } else if (!(CREATE_STORE_REQUEST_CODE == 3)) {
+                    onCreateSuccess(progressDialog);
                   } else {
-                    ShowMessage.asObservableSnack(this,
-                        ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors().get(0).code))
+                    progressDialog.dismiss();
+                    ShowMessage.asLongObservableSnack(this, R.string.create_store_store_created)
                         .subscribe(visibility -> {
                           if (visibility == ShowMessage.DISMISSED) {
                             finish();
                           }
                         });
                   }
-                }
-              } else if (!(CREATE_STORE_REQUEST_CODE == 3)) {
-                onCreateSuccess(progressDialog);
-              } else {
-                progressDialog.dismiss();
-                ShowMessage.asLongObservableSnack(this, R.string.create_store_store_created).subscribe(visibility -> {
-                  if (visibility == ShowMessage.DISMISSED) {
-
-                    finish();
-                  }
-                });
-              }
-            });
+                }, throwable -> {
+                  onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
+                  progressDialog.dismiss();
+                }));
           } else if (CREATE_STORE_REQUEST_CODE == 4) {
+            setStoreData();
             progressDialog.show();
             mSubscriptions.add(SetStoreRequest.of(
                 new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                     DataProvider.getContext()).getAptoideClientUUID(),
-                AptoideAccountManager.getAccessToken(), null, storeTheme, storeAvatarPath,
+                AptoideAccountManager.getAccessToken(), storeName, storeTheme, storeAvatarPath,
                 storeDescription, true, storeId).observe().subscribe(answer -> {
               AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
                 progressDialog.dismiss();
@@ -266,6 +291,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
             /*
              * not multipart
              */
+            setStoreData();
             progressDialog.show();
             mSubscriptions.add(SimpleSetStoreRequest.of(AptoideAccountManager.getAccessToken(),
                 new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
@@ -283,14 +309,30 @@ public class CreateStoreActivity extends PermissionsBaseActivity
           }
         }
 
-    ));
-    mSubscriptions.add(RxView.clicks(mSkip)
+    )); mSubscriptions.add(RxView.clicks(mSkip)
         .flatMap(click -> AptoideAccountManager.refreshAndSaveUserInfoData())
         .subscribe(refreshed -> {
           finish();
         }, throwable -> {
           finish();
         }));
+  }
+
+  /**
+   * This method sets stores data for the request
+   */
+  private void                                        setStoreData() {
+    if (storeName.length() == 0) {
+      storeName = null;
+    }
+
+    if (storeTheme.equals("")) {
+      storeTheme = null;
+    }
+
+    if (storeDescription.equals("")) {
+      storeDescription = null;
+    }
   }
 
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -333,6 +375,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
       /*
        * Multipart
        */
+      setStoreData();
       mSubscriptions.add(SetStoreRequest.of(
           new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
               DataProvider.getContext()).getAptoideClientUUID(),
@@ -368,11 +411,12 @@ public class CreateStoreActivity extends PermissionsBaseActivity
                 .getCode()
                 .equals("API-1")) {
               progressDialog.dismiss();
-              ShowMessage.asLongObservableSnack(this, R.string.ws_error_API_1).subscribe(visibility -> {
-                if (visibility == ShowMessage.DISMISSED) {
-                  finish();
-                }
-              });
+              ShowMessage.asLongObservableSnack(this, R.string.ws_error_API_1)
+                  .subscribe(visibility -> {
+                    if (visibility == ShowMessage.DISMISSED) {
+                      finish();
+                    }
+                  });
             } else {
               progressDialog.dismiss();
               ShowMessage.asLongObservableSnack(this,
@@ -393,6 +437,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
       /*
        * not multipart
        */
+      setStoreData();
       SimpleSetStoreRequest.of(AptoideAccountManager.getAccessToken(),
           new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
               DataProvider.getContext()).getAptoideClientUUID(), storeName, storeTheme)
@@ -433,54 +478,54 @@ public class CreateStoreActivity extends PermissionsBaseActivity
 
   private void setupThemeListeners() {
     mSubscriptions.add(RxView.clicks(mOrangeShape).subscribe(click -> {
-        resetPreviousTickedTheme(storeTheme);
-        mOrangeTick.setVisibility(View.VISIBLE);
-        storeTheme = "orange";
+      handleThemeTick(storeTheme, "gone");
+      mOrangeTick.setVisibility(View.VISIBLE);
+      storeTheme = "orange";
     }));
     mSubscriptions.add(RxView.clicks(mGreenShape).subscribe(click -> {
-        resetPreviousTickedTheme(storeTheme);
-        mGreenTick.setVisibility(View.VISIBLE);
-        storeTheme = "green";
+      handleThemeTick(storeTheme, "gone");
+      mGreenTick.setVisibility(View.VISIBLE);
+      storeTheme = "green";
     }));
     mSubscriptions.add(RxView.clicks(mRedShape).subscribe(click -> {
-        resetPreviousTickedTheme(storeTheme);
-        mRedTick.setVisibility(View.VISIBLE);
-        storeTheme = "red";
+      handleThemeTick(storeTheme, "gone");
+      mRedTick.setVisibility(View.VISIBLE);
+      storeTheme = "red";
     }));
     mSubscriptions.add(RxView.clicks(mIndigoShape).subscribe(click -> {
-        resetPreviousTickedTheme(storeTheme);
-        mIndigoTick.setVisibility(View.VISIBLE);
-        storeTheme = "indigo";
+      handleThemeTick(storeTheme, "gone");
+      mIndigoTick.setVisibility(View.VISIBLE);
+      storeTheme = "indigo";
     }));
     mSubscriptions.add(RxView.clicks(mTealShape).subscribe(click -> {
-        resetPreviousTickedTheme(storeTheme);
-        mTealTick.setVisibility(View.VISIBLE);
-        storeTheme = "teal";
+      handleThemeTick(storeTheme, "gone");
+      mTealTick.setVisibility(View.VISIBLE);
+      storeTheme = "teal";
     }));
     mSubscriptions.add(RxView.clicks(mPinkShape).subscribe(click -> {
-        resetPreviousTickedTheme(storeTheme);
-        mPinkTick.setVisibility(View.VISIBLE);
-        storeTheme = "pink";
+      handleThemeTick(storeTheme, "gone");
+      mPinkTick.setVisibility(View.VISIBLE);
+      storeTheme = "pink";
     }));
     mSubscriptions.add(RxView.clicks(mLimeShape).subscribe(click -> {
-      resetPreviousTickedTheme(storeTheme);
-        mLimeTick.setVisibility(View.VISIBLE);
-        storeTheme = "lime";
+      handleThemeTick(storeTheme, "gone");
+      mLimeTick.setVisibility(View.VISIBLE);
+      storeTheme = "lime";
     }));
     mSubscriptions.add(RxView.clicks(mAmberShape).subscribe(click -> {
-        resetPreviousTickedTheme(storeTheme);
-        mAmberTick.setVisibility(View.VISIBLE);
-        storeTheme = "amber";
+      handleThemeTick(storeTheme, "gone");
+      mAmberTick.setVisibility(View.VISIBLE);
+      storeTheme = "amber";
     }));
     mSubscriptions.add(RxView.clicks(mBrownShape).subscribe(click -> {
-        resetPreviousTickedTheme(storeTheme);
-        mBrownTick.setVisibility(View.VISIBLE);
-        storeTheme = "brown";
+      handleThemeTick(storeTheme, "gone");
+      mBrownTick.setVisibility(View.VISIBLE);
+      storeTheme = "brown";
     }));
     mSubscriptions.add(RxView.clicks(mLightblueShape).subscribe(click -> {
-        resetPreviousTickedTheme(storeTheme);
-        mLightblueTick.setVisibility(View.VISIBLE);
-        storeTheme = "light-blue";
+      handleThemeTick(storeTheme, "gone");
+      mLightblueTick.setVisibility(View.VISIBLE);
+      storeTheme = "light-blue";
     }));
   }
 
@@ -517,37 +562,41 @@ public class CreateStoreActivity extends PermissionsBaseActivity
   /**
    * This method resets previously ticked theme tick
    */
-  private void resetPreviousTickedTheme(String storeTheme) {
+  private void handleThemeTick(String storeTheme, String visibility) {
+    int visible = View.GONE;
+    if (visibility.equals("visible")) {
+      visible = View.VISIBLE;
+    }
     switch (storeTheme) {
       case "orange":
-        mOrangeTick.setVisibility(View.GONE);
+        mOrangeTick.setVisibility(visible);
         break;
       case "green":
-        mGreenTick.setVisibility(View.GONE);
+        mGreenTick.setVisibility(visible);
         break;
       case "red":
-        mRedTick.setVisibility(View.GONE);
+        mRedTick.setVisibility(visible);
         break;
       case "indigo":
-        mIndigoTick.setVisibility(View.GONE);
+        mIndigoTick.setVisibility(visible);
         break;
       case "teal":
-        mTealTick.setVisibility(View.GONE);
+        mTealTick.setVisibility(visible);
         break;
       case "pink":
-        mPinkTick.setVisibility(View.GONE);
+        mPinkTick.setVisibility(visible);
         break;
       case "lime":
-        mLimeTick.setVisibility(View.GONE);
+        mLimeTick.setVisibility(visible);
         break;
       case "amber":
-        mAmberTick.setVisibility(View.GONE);
+        mAmberTick.setVisibility(visible);
         break;
       case "brown":
-        mBrownTick.setVisibility(View.GONE);
+        mBrownTick.setVisibility(visible);
         break;
       case "light-blue":
-        mLightblueTick.setVisibility(View.GONE);
+        mLightblueTick.setVisibility(visible);
         break;
       default:
         break;

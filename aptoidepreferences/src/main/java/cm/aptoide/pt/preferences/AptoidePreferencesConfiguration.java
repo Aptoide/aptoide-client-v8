@@ -36,7 +36,7 @@ public interface AptoidePreferencesConfiguration {
   String getDefaultStore();
 
   // Providers
-  String getUpdatesSyncAdapterAuthority();
+  String getSyncAdapterAuthority();
 
   String getSearchAuthority();
 

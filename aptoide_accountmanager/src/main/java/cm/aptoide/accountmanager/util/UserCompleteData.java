@@ -18,6 +18,11 @@ import lombok.Data;
 @Data public class UserCompleteData implements UserData {
 
   /**
+   * User id
+   */
+  String id;
+
+  /**
    * User name it's usually the email address. It has to be unique
    */
   String userEmail;
