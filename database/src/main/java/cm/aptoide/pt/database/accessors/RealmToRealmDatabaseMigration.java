@@ -168,12 +168,17 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
         downloadSchema.addField("versionName", String.class);
       }
 
-      RealmObjectSchema paymentConfirmationSchema = schema.get("PaymentConfirmation")
+      oldVersion++;
+    }
+
+    if (oldVersion == 8079) {
+
+      schema.get("PaymentConfirmation")
           .addField("status", String.class, FieldAttribute.REQUIRED)
-          .transform(paymentConfirmation -> paymentConfirmation.set("status", "UNKNOWN"))
-          .setNullable("status", false)
+          .transform(paymentConfirmation -> paymentConfirmation.set("status", "SYNCING_ERROR"))
           .removePrimaryKey()
           .addPrimaryKey("productId")
+          .removeField("paymentId")
           .removeField("price")
           .removeField("currency")
           .removeField("taxRate")
@@ -188,6 +193,12 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
           .removeField("type")
           .removeField("appId")
           .removeField("storeName");
+
+      schema.create("PaymentAuthorization")
+          .addField("paymentId", Integer.class, FieldAttribute.PRIMARY_KEY)
+          .addField("url", String.class)
+          .addField("redirectUrl", String.class)
+          .addField("status", String.class, FieldAttribute.REQUIRED);
 
       oldVersion++;
     }

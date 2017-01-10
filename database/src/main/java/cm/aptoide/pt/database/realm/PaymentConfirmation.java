@@ -8,6 +8,7 @@ package cm.aptoide.pt.database.realm;
 import io.realm.RealmObject;
 import io.realm.annotations.Index;
 import io.realm.annotations.PrimaryKey;
+import io.realm.annotations.Required;
 
 /**
  * Created by marcelobenites on 8/18/16.
@@ -18,7 +19,7 @@ public class PaymentConfirmation extends RealmObject {
 
   @PrimaryKey private int productId;
   private String paymentConfirmationId;
-  private String status;
+  @Required private String status;
 
   public PaymentConfirmation() {
   }

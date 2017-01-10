@@ -5,8 +5,10 @@
 
 package cm.aptoide.pt.database.realm;
 
+import android.support.annotation.NonNull;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
+import io.realm.annotations.Required;
 
 /**
  * Created by marcelobenites on 15/11/16.
@@ -18,7 +20,7 @@ public class PaymentAuthorization extends RealmObject {
   @PrimaryKey private int paymentId;
   private String url;
   private String redirectUrl;
-  private String status;
+  @Required private String status;
 
   public PaymentAuthorization() {
   }
