@@ -3,17 +3,12 @@
  * Modified by Neurophobic Animal on 24/05/2016.
  */
 
-include ':vanilla', ':testingapp',
-    ':v8engine',
+include ':testingapp',
     ':dataprovider',
     ':model',
     ':networkclient',
     ':aptoidepreferences',
-    ':utilsdesign',
     ':crashreports',
     ':utils',
-    ':aptoide_accountmanager',
-    ':database',
     ':imageloader',
-    ':downloadmanager',
     ':aptoidesdk'
