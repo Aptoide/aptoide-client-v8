@@ -18,6 +18,7 @@ import cm.aptoide.accountmanager.ws.CheckUserCredentialsRequest;
 import cm.aptoide.accountmanager.ws.ErrorsMapper;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
+import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.SetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SimpleSetStoreRequest;
@@ -92,6 +93,10 @@ public class CreateStoreActivity extends PermissionsBaseActivity
   private String from;
   ProgressDialog progressDialog;
   private String storeRemoteUrl;
+
+  private IdsRepository idsRepository =
+      new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+          DataProvider.getContext());
 
   private int CREATE_STORE_REQUEST_CODE = 0; //1: all (Multipart)  2: user and theme 3:user 4/5:edit
 
@@ -213,9 +218,6 @@ public class CreateStoreActivity extends PermissionsBaseActivity
     }
   }
 
-  private void setPreviousStoreThemeTick() {
-  }
-
   private void setupListeners() {
     mSubscriptions.add(RxView.clicks(mStoreAvatarLayout).subscribe(click -> chooseAvatarSource()));
     mSubscriptions.add(RxView.clicks(mCreateStore).subscribe(click -> {
@@ -258,6 +260,10 @@ public class CreateStoreActivity extends PermissionsBaseActivity
                     progressDialog.dismiss();
                     ShowMessage.asLongObservableSnack(this, R.string.create_store_store_created)
                         .subscribe(visibility -> {
+                          mSubscriptions.add(AptoideAccountManager.refreshAndSaveUserInfoData()
+                              .subscribe(refreshed -> {
+                                AptoideAccountManager.sendLoginBroadcast();
+                              }, Throwable::printStackTrace));
                           if (visibility == ShowMessage.DISMISSED) {
                             finish();
                           }
@@ -318,7 +324,8 @@ public class CreateStoreActivity extends PermissionsBaseActivity
           }
         }
 
-    )); mSubscriptions.add(RxView.clicks(mSkip)
+    ));
+    mSubscriptions.add(RxView.clicks(mSkip)
         .flatMap(click -> AptoideAccountManager.refreshAndSaveUserInfoData())
         .subscribe(refreshed -> {
           finish();
