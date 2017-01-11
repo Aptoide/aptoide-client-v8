@@ -326,23 +326,6 @@ public class CreateStoreActivity extends PermissionsBaseActivity
         }));
   }
 
-  /**
-   * This method sets stores data for the request
-   */
-  private void                                        setStoreData() {
-    if (storeName.length() == 0) {
-      storeName = null;
-    }
-
-    if (storeTheme.equals("")) {
-      storeTheme = null;
-    }
-
-    if (storeDescription.equals("")) {
-      storeDescription = null;
-    }
-  }
-
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     FileUtils fileUtils = new FileUtils();
     if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
@@ -480,6 +463,23 @@ public class CreateStoreActivity extends PermissionsBaseActivity
 
   @Override public String getRepoDescription() {
     return storeDescription == null ? "" : mStoreDescription.getText().toString();
+  }
+
+  /**
+   * This method sets stores data for the request
+   */
+  private void setStoreData() {
+    if (storeName.length() == 0) {
+      storeName = null;
+    }
+
+    if (storeTheme.equals("")) {
+      storeTheme = null;
+    }
+
+    if (storeDescription.equals("")) {
+      storeDescription = null;
+    }
   }
 
   private void setupThemeListeners() {
