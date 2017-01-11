@@ -125,6 +125,10 @@ public class VanillaConfiguration implements AptoidePreferencesConfiguration {
     return "smartphone";
   }
 
+  @Override public boolean isCreateStoreAndSetUserPrivacyAvailable() {
+    return true;
+  }
+
   @Override public int getDefaultThemeRes() {
     return StoreThemeEnum.get(getDefaultTheme()).getThemeResource();
   }
