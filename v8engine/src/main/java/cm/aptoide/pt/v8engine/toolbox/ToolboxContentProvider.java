@@ -30,10 +30,10 @@ import cm.aptoide.accountmanager.ws.LoginMode;
 import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagedKeys;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.services.PullingContentService;
 import java.util.Locale;
 import java.util.Map;
@@ -57,6 +57,7 @@ public class ToolboxContentProvider extends ContentProvider {
   private static final int LOGIN_TYPE = 4;
   private static final int LOGIN_NAME = 5;
   private static final int CHANGE_PREFERENCE = 6;
+  private static final int INVALIDATE = 7;
 
   private UriMatcher uriMatcher;
   private ToolboxSecurityManager securityManager;
@@ -66,6 +67,7 @@ public class ToolboxContentProvider extends ContentProvider {
     final String authority = Application.getConfiguration().getContentAuthority();
     uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
     uriMatcher.addURI(authority, "token", TOKEN);
+    uriMatcher.addURI(authority, "invalidate", INVALIDATE);
     uriMatcher.addURI(authority, "repo", REPO);
     uriMatcher.addURI(authority, "loginType", LOGIN_TYPE);
     uriMatcher.addURI(authority, "passHash", PASSHASH);
@@ -82,11 +84,20 @@ public class ToolboxContentProvider extends ContentProvider {
         UPLOADER_PACKAGE)) {
       switch (uriMatcher.match(uri)) {
         case TOKEN:
-
           final String accessToken = AptoideAccountManager.getAccessToken();
           if (accessToken != null) {
             final MatrixCursor tokenCursor = new MatrixCursor(new String[] { "userToken" }, 1);
             tokenCursor.addRow(new Object[] { accessToken });
+            return tokenCursor;
+          }
+          throw new IllegalStateException("User not logged in.");
+        case INVALIDATE:
+          final String refreshedToken = AptoideAccountManager.invalidateAccessToken(V8Engine.getContext())
+              .toBlocking()
+              .first();
+          if (refreshedToken != null) {
+            final MatrixCursor tokenCursor = new MatrixCursor(new String[] { "userRefreshedToken" }, 1);
+            tokenCursor.addRow(new Object[] { refreshedToken });
             return tokenCursor;
           }
           throw new IllegalStateException("User not logged in.");
