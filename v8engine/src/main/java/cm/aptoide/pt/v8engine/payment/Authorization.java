@@ -33,18 +33,17 @@ public abstract class Authorization {
 
   public boolean isPending() {
     return Status.PENDING.equals(status)
-        || Status.PENDING_PAYMENT_METHOD.equals(status)
-        || Status.UNKNOWN.equals(status);
+        || Status.PENDING_PAYMENT_METHOD.equals(status);
   }
 
   public boolean isInvalid() {
     return Status.CANCELLED.equals(status)
         || Status.REJECTED.equals(status)
-        || Status.NEW.equals(status)
+        || Status.INACTIVE.equals(status)
         || Status.EXPIRED.equals(status)
         || Status.SESSION_EXPIRED.equals(status)
         || Status.CANCELLED_BY_CHARGEBACK.equals(status)
-        || Status.ERROR.equals(status);
+        || Status.SYNCING_ERROR.equals(status);
   }
 
   public Status getStatus() {
@@ -54,10 +53,9 @@ public abstract class Authorization {
   public abstract void authorize();
 
   public enum Status {
-    UNKNOWN,
+    SYNCING_ERROR,
     NONE,
-    ERROR,
-    NEW,
+    INACTIVE,
     ACTIVE,
     INITIATED,
     PAYMENT_METHOD_CHANGE,
