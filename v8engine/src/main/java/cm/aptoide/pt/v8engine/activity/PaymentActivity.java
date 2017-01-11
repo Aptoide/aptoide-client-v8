@@ -45,10 +45,11 @@ public class PaymentActivity extends ActivityView implements PaymentView {
   private View actionButtons;
   private View globalProgressView;
   private View paymentsProgressView;
-  private ViewGroup morePaymentsContainer;
+  private ViewGroup morePaymentsList;
+  private View morePaymentsContainer;
   private ImageView productIcon;
   private TextView productName;
-  private TextView productPriceDescription;
+  private TextView productDescription;
   private TextView noPaymentsText;
   private Button morePaymentsButton;
   private Button cancelButton;
@@ -80,14 +81,15 @@ public class PaymentActivity extends ActivityView implements PaymentView {
     header = findViewById(R.id.activity_payment_header);
     productIcon = (ImageView) findViewById(R.id.activity_payment_product_icon);
     productName = (TextView) findViewById(R.id.activity_payment_product_name);
-    productPriceDescription =
-        (TextView) findViewById(R.id.activity_payment_product_price_description);
+    productDescription =
+        (TextView) findViewById(R.id.activity_payment_product_description);
 
     body = findViewById(R.id.activity_payment_body);
     selectedPaymentName = (TextView) findViewById(R.id.activity_selected_payment_name);
     selectedPaymentPrice = (TextView) findViewById(R.id.activity_selected_payment_price);
     morePaymentsButton = (Button) findViewById(R.id.activity_payment_more_payments_button);
-    morePaymentsContainer = (ViewGroup) findViewById(R.id.activity_payment_list);
+    morePaymentsList = (ViewGroup) findViewById(R.id.activity_payment_list);
+    morePaymentsContainer = findViewById(R.id.activity_payment_list_container);
 
     actionButtons = findViewById(R.id.activity_payment_buttons);
     cancelButton = (Button) findViewById(R.id.activity_payment_cancel_button);
@@ -128,7 +130,7 @@ public class PaymentActivity extends ActivityView implements PaymentView {
   @Override public void showProduct(AptoideProduct product) {
     ImageLoader.load(product.getIcon(), productIcon);
     productName.setText(product.getTitle());
-    productPriceDescription.setText(product.getPriceDescription());
+    productDescription.setText(product.getDescription());
   }
 
   @Override public Observable<Void> cancellationSelection() {
@@ -140,13 +142,15 @@ public class PaymentActivity extends ActivityView implements PaymentView {
   }
 
   @Override public void hideOtherPayments() {
+    morePaymentsButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.arrow_down, 0);
     morePaymentsContainer.setVisibility(View.GONE);
   }
 
   @Override public void showOtherPayments(List<PaymentViewModel> otherPayments) {
-    morePaymentsContainer.removeAllViews();
+    morePaymentsList.removeAllViews();
     morePaymentsContainer.setVisibility(View.VISIBLE);
     noPaymentsText.setVisibility(View.GONE);
+    morePaymentsButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.arrow_up, 0);
     paymentClicks.clear();
 
     if (otherPayments.isEmpty()) {
@@ -162,7 +166,7 @@ public class PaymentActivity extends ActivityView implements PaymentView {
     Button useButton;
     Button registerButton;
     for (PaymentViewModel otherPayment : otherPayments) {
-      view = getLayoutInflater().inflate(R.layout.payment_item, morePaymentsContainer, false);
+      view = getLayoutInflater().inflate(R.layout.payment_item, morePaymentsList, false);
       name = (TextView) view.findViewById(R.id.item_payment_name);
       description = (TextView) view.findViewById(R.id.item_payment_description);
       useButton = (Button) view.findViewById(R.id.item_payment_button_use);
@@ -196,7 +200,7 @@ public class PaymentActivity extends ActivityView implements PaymentView {
         default:
           throw new IllegalStateException("Invalid payment view model state");
       }
-      morePaymentsContainer.addView(view);
+      morePaymentsList.addView(view);
     }
   }
 
