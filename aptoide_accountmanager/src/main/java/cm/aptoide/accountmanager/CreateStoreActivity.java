@@ -42,11 +42,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
     implements AptoideAccountManager.ICreateStore {
 
   private static final String TAG = CreateStoreActivity.class.getSimpleName();
-
-  private final IdsRepositoryImpl idsRepository =
-      new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-          DataProvider.getContext());
-
+  ProgressDialog progressDialog;
   private Toolbar mToolbar;
   private Button mCreateStore;
   private Button mSkip;
@@ -59,7 +55,6 @@ public class CreateStoreActivity extends PermissionsBaseActivity
   private EditText mStoreDescription;
   private View content;
   private CompositeSubscription mSubscriptions;
-
   //Theme related views
   private ImageView mOrangeShape;
   private ImageView mOrangeTick;
@@ -81,17 +76,14 @@ public class CreateStoreActivity extends PermissionsBaseActivity
   private ImageView mBrownTick;
   private ImageView mLightblueShape;
   private ImageView mLightblueTick;
-
   private String CREATE_STORE_CODE = "1";
   private String storeName = "";
   private String storeAvatarPath;
   private String storeDescription;
   private long storeId;
-
   private boolean THEME_CLICKED_FLAG = false;
   private String storeTheme = "";
   private String from;
-  ProgressDialog progressDialog;
   private String storeRemoteUrl;
 
   private IdsRepository idsRepository =
@@ -116,7 +108,8 @@ public class CreateStoreActivity extends PermissionsBaseActivity
     from = getIntent().getStringExtra("from") == null ? "" : getIntent().getStringExtra("from");
     storeId = getIntent().getLongExtra("storeId", -1);
     storeRemoteUrl = getIntent().getStringExtra("storeAvatar");
-    storeTheme = getIntent().getStringExtra("storeTheme");
+    storeTheme = getIntent().getStringExtra("storeTheme") == null ? ""
+        : getIntent().getStringExtra("storeTheme");
     storeDescription = getIntent().getStringExtra("storeDescription");
   }
 
@@ -142,9 +135,14 @@ public class CreateStoreActivity extends PermissionsBaseActivity
     return R.layout.activity_create_store;
   }
 
-  private void getData() {
-    from = getIntent().getStringExtra("from") == null ? "" : getIntent().getStringExtra("from");
-    storeId = getIntent().getLongExtra("storeId", -1);
+  @Override void showIconPropertiesError(String errors) {
+    mSubscriptions.add(
+        GenericDialogs.createGenericOkMessage(this, getString(R.string.image_requirements_error_popup_title), errors)
+            .subscribe());
+  }
+
+  @Override void loadImage(Uri imagePath) {
+    ImageLoader.loadWithCircleTransform(imagePath, mStoreAvatar);
   }
 
   private void setupToolbar() {
@@ -334,34 +332,17 @@ public class CreateStoreActivity extends PermissionsBaseActivity
         }));
   }
 
-  /**
-   * This method sets stores data for the request
-   */
-  private void                                        setStoreData() {
-    if (storeName.length() == 0) {
-      storeName = null;
-    }
-
-    if (storeTheme.equals("")) {
-      storeTheme = null;
-    }
-
-    if (storeDescription.equals("")) {
-      storeDescription = null;
-    }
-  }
-
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     FileUtils fileUtils = new FileUtils();
+    Uri avatarUrl = null;
     if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-      Uri avatarUrl = getPhotoFileUri(PermissionsBaseActivity.createAvatarPhotoName(photoAvatar));
-      ImageLoader.loadWithCircleTransform(avatarUrl, mStoreAvatar);
+      avatarUrl = getPhotoFileUri(PermissionsBaseActivity.createAvatarPhotoName(photoAvatar));
       storeAvatarPath = fileUtils.getPathAlt(avatarUrl, getApplicationContext());
     } else if (requestCode == GALLERY_CODE && resultCode == RESULT_OK) {
-      Uri avatarUrl = data.getData();
-      ImageLoader.loadWithCircleTransform(avatarUrl, mStoreAvatar);
+      avatarUrl = data.getData();
       storeAvatarPath = fileUtils.getPath(avatarUrl, getApplicationContext());
     }
+    checkAvatarRequirements(storeAvatarPath, avatarUrl);
   }
 
   @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
@@ -488,6 +469,23 @@ public class CreateStoreActivity extends PermissionsBaseActivity
 
   @Override public String getRepoDescription() {
     return storeDescription == null ? "" : mStoreDescription.getText().toString();
+  }
+
+  /**
+   * This method sets stores data for the request
+   */
+  private void setStoreData() {
+    if (storeName.length() == 0) {
+      storeName = null;
+    }
+
+    if (storeTheme.equals("")) {
+      storeTheme = null;
+    }
+
+    if (storeDescription.equals("")) {
+      storeDescription = null;
+    }
   }
 
   private void setupThemeListeners() {

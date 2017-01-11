@@ -40,6 +40,9 @@ import rx.subscriptions.CompositeSubscription;
 public class CreateUserActivity extends PermissionsBaseActivity
     implements AptoideAccountManager.ICreateProfile {
 
+  private static final String TYPE_STORAGE = "storage";
+  private static final String TYPE_CAMERA = "camera";
+  private static int CREATE_USER_REQUEST_CODE = 0; //1:Username and Avatar 2: Username
   private final IdsRepositoryImpl idsRepository =
       new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
           DataProvider.getContext());
@@ -50,24 +53,15 @@ public class CreateUserActivity extends PermissionsBaseActivity
   private String accessToken;
   private Boolean UPDATE = true;
   private String SIGNUP = "signup";
-
   private Toolbar mToolbar;
   private RelativeLayout mUserAvatar;
   private EditText mUsername;
   private Button mCreateButton;
   private ImageView mAvatar;
   private View content;
-
-  private static int CREATE_USER_REQUEST_CODE = 0; //1:Username and Avatar 2: Username
-
   private CompositeSubscription mSubscriptions;
-
   private Boolean result = false;
-
   private String ERROR_TAG = "Error update user";
-
-  private static final String TYPE_STORAGE = "storage";
-  private static final String TYPE_CAMERA = "camera";
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -193,29 +187,27 @@ public class CreateUserActivity extends PermissionsBaseActivity
     accessToken = getIntent().getStringExtra(AptoideLoginUtils.APTOIDE_LOGIN_ACCESS_TOKEN_KEY);
   }
 
-  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    FileUtils fileUtils = new FileUtils();
-    if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-      Uri avatarUrl = getPhotoFileUri(PermissionsBaseActivity.createAvatarPhotoName(photoAvatar));
-      ImageLoader.loadWithCircleTransform(avatarUrl, mAvatar);
-      avatarPath = fileUtils.getPathAlt(avatarUrl, getApplicationContext());
-    } else if (requestCode == GALLERY_CODE && resultCode == RESULT_OK) {
-      Uri avatarUrl = data.getData();
-      avatarPath = fileUtils.getPath(avatarUrl, getApplicationContext());
-      if (checkImageResolution(avatarPath)) {
-        ImageLoader.loadWithCircleTransform(avatarUrl, mAvatar);
-      } else {
-        ShowMessage.asSnack(this, R.string.create_user_bad_photo);
-        avatarPath = "";
-      }
-    }
+  @Override void showIconPropertiesError(String errors) {
+    mSubscriptions.add(
+        GenericDialogs.createGenericOkMessage(this, getString(R.string.image_requirements_error_popup_title), errors)
+            .subscribe());
   }
 
-  private boolean checkImageResolution(String avatarPath) {
-    ArrayList<Integer> resolution;
+  @Override void loadImage(Uri imagePath) {
+    ImageLoader.loadWithCircleTransform(imagePath, mAvatar);
+  }
+
+  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     FileUtils fileUtils = new FileUtils();
-    resolution = fileUtils.getImageResolution(avatarPath);
-    return resolution.get(0) > 300 && resolution.get(1) > 300;
+    Uri avatarUrl = null;
+    if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+      avatarUrl = getPhotoFileUri(PermissionsBaseActivity.createAvatarPhotoName(photoAvatar));
+      avatarPath = fileUtils.getPathAlt(avatarUrl, getApplicationContext());
+    } else if (requestCode == GALLERY_CODE && resultCode == RESULT_OK) {
+      avatarUrl = data.getData();
+      avatarPath = fileUtils.getPath(avatarUrl, getApplicationContext());
+    }
+    checkAvatarRequirements(avatarPath, avatarUrl);
   }
 
   @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
@@ -249,9 +241,10 @@ public class CreateUserActivity extends PermissionsBaseActivity
     ShowMessage.asSnack(content, R.string.user_created);
     //data.putString(AptoideLoginUtils.APTOIDE_LOGIN_FROM, SIGNUP);
     progressDialog.dismiss();
-    if (Application.getConfiguration().getPartnerId() == null) {
+    if(Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
       startActivity(new Intent(this, LoggedInActivity.class));
-    } else {
+    }
+    else{
       Toast.makeText(this, R.string.create_profile_pub_pri_suc_login, Toast.LENGTH_LONG).show();
       AptoideAccountManager.sendLoginCancelledBroadcast();
     }
