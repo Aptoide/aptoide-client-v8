@@ -1,0 +1,253 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+
+    <string name="updates_filter_summary">Đang kiểm tra điều này, bạn sẽ không được thông báo về phiên bản beta.</string>
+    <string name="updates_filter_setting_title">Chỉ hiện thị những phiên bản ứng dụng ổn định</string>
+    <string name="unsubscribe">Bỏ theo dõi</string>
+    <string name="developer_website">Trang web: %s</string>
+    <string name="not_available">N/A</string>
+    <string name="developer_email">Email: %s</string>
+    <string name="developer_privacy_policy">Chính sách riêng tư: %s</string>
+
+
+    <string name="open">Mở</string>
+    <string name="button_header_more">Xem thêm</string>
+    <string name="search">Tìm kiếm</string>
+
+    <string name="update">Cập nhật</string>
+    <string name="uninstall">Gỡ bỏ</string>
+    <string name="downgrade">Hạ cấp</string>
+    <string name="menu_select_all">Chọn Tất Cả</string>
+    <string name="menu_select_none">Chọn không có</string>
+    <string name="clear">Xóa</string>
+
+    <string name="excluded_updates">Loại Trừ Cập Nhật</string>
+    <string name="no_excluded_updates_msg">Phiên bản mới của ứng dụng không hoạt động trên thiết bị của bạn hoặc một số tính năng còn thiếu?
+Chặn ứng dụng khỏi cập nhật. Tới tab Cập nhật và ấn giữ trên ứng dụng mà bạn muốn dừng cập nhật.</string>
+
+    <string name="restore_updates">Phục Hồi Cập Nhật</string>
+    <string name="rollback">Ứng dụng gần đây</string>
+    <string name="menu_card_timeline_clear">Xóa</string>
+    <string name="fragment_social_timeline_no_connection">không có kết nối mạng</string>
+    <string name="fragment_social_timeline_general_error">Đang gặp vấn đề. Bạn có thể thử lại sau không?</string>
+
+    <string name="displayable_social_timeline_app_update">Cập nhật</string>
+    <string name="appview_rate_this_app">Bình chọn ứng dụng này</string>
+    <string name="needs_license">Cần giấy phép</string>
+    <string name="virus">Virus</string>
+    <string name="additional_information">Thông tin bổ sung</string>
+    <string name="displayable_social_timeline_app_update_updated">Đã cập nhật</string>
+    <string name="displayable_social_timeline_recommendation_similar_and">và</string>
+    <string name="social_facebook_screen_title">Facebook</string>
+    <string name="social_twitter_screen_title">Twitter</string>
+    <string name="title">TIÊU ĐỀ</string>
+    <string name="feedback_not_valid">Xin nhập một số Chủ Đề hợp lệ!</string>
+    <string name="ignore_update">Bỏ qua cập nhật</string>
+    <string name="added_to_scheduled">Được thêm vào Trình đơn &gt; Tải theo lịch trình</string>
+    <string name="aptoide_email">aptoide@aptoide.com</string>
+    <string name="aptoide_url">http://www.aptoide.com/</string>
+
+    <string name="appview_follow_store_button_text">Bạn đã theo dõi chưa?</string>
+    <string name="appview_followers_count_text">%1$s người theo dõi</string>
+    <string name="other_versions_downloads_count_text">%1$s lượt tải về</string>
+
+    <string name="no_rollbacks_msg">Hạ cấp nhanh chóng bất kỳ ứng dụng phiên bản cũ nào và giải quyết vấn đề tương thích. Giữ một bản ghi tất cả các ứng dụng đã cài đặt
+của bạn (thông qua Aptoide) bao gồm cả phiên bản và ngày cài đặt.</string>
+
+    <string name="fragment_social_timeline_aptoide_team">Nhóm Aptoide</string>
+    <string name="displayable_social_timeline_store_latest_apps_headline">Cửa hàng này có các Ứng dụng mới</string>
+    <string name="displayable_social_timeline_app_update_name">Ứng dụng %1$s</string>
+    <string name="displayable_social_timeline_app_has_update">có một %1$s</string>
+    <string name="displayable_social_timeline_app_update_version">Phiên bản: %1$s</string>
+    <string name="displayable_social_timeline_app_update_button">Bản cập nhật %1$s</string>
+    <string name="appview_latest_version_text">Phiên bản mới nhất</string>
+    <string name="appview_read_all">đọc tất cả &gt;</string>
+    <string name="zero">0</string>
+    <string name="working_well">Hoạt động tốt</string>
+    <string name="fake_app">Ứng dụng giả mạo</string>
+    <string name="displayable_social_timeline_app_update_updating">Đang cập nhật</string>
+    <string name="displayable_social_timeline_app_update_error">Lỗi cập nhật</string>
+
+    <string name="other_versions_partial_title_1">Khác</string>
+    <string name="other_versions_partial_title_2">Các phiên bản trên các cửa hàng khác nhau</string>
+    <string name="displayable_social_timeline_recommendation_similar_to">dựa trên %1$s</string>
+    <string name="displayable_social_timeline_recommendation_atptoide_team_recommends">Aptoide khuyến cáo</string>
+    <string name="top_comments">Các bình luận hàng đầu</string>
+    <string name="rate">Đánh giá</string>
+    <string name="rate_app">Đánh giá %s</string>
+    <string name="tap_a_star">Nhấp vào ngôi sao để đánh giá</string>
+    <string name="other_versions_on_different_stores">Các phiên bản khác trên các cửa hàng khác nhau</string>
+    <string name="review_optional">Đánh giá (tùy chọn)</string>
+    <string name="thank_you_for_your_opinion">Cảm ơn vì quan điểm của bạn!</string>
+    <string name="five_numeric">5</string>
+    <string name="four_numeric">4</string>
+    <string name="three_numeric">3</string>
+    <string name="two_numeric">2</string>
+    <string name="one_numeric">1</string>
+    <string name="updating_msg">Đang cập nhật</string>
+    <string name="installing_msg">Đang cài đặt</string>
+    <string name="pause_all_downloads">Tạm dừng tải về</string>
+    <string name="all_stores">Tất cả cửa hàng</string>
+    <string name="followed_stores">Đã theo dõi cửa hàng</string>
+    <string name="storage_access_permission_request_message">Vui lòng cho phép truy cập vào bộ nhớ điện thoại của bạn để chúng tôi có thể tải về và cài đặt ứng dụng này.</string>
+
+    <string name="wizard_register_now_button">Đăng ký ngay</string>
+    <string name="wizard_be_a_part_of_aptoide">Hãy trở thành một phần của Aptoide!</string>
+    <string name="you_need_to_be_logged_in">Bạn cần phải đăng nhập</string>
+    <string name="follow">Theo dõi</string>
+    <string name="followed">Theo dõi</string>
+    
+    <string name="dialog_install_warning_search_for_trusted_app_button">Tìm kiếm</string>
+    <string name="dialog_install_warning_trusted_app_button">App tin cậy</string>
+    <string name="dialog_install_warning_careful_text">Hãy cẩn thận khi cài đặt ứng dụng này. Nó có thể bị giả mạo, có virus hoặc phần mềm độc hại.</string>
+    <string name="dialog_install_warning_credibility_text">Trước khi tiến hành, hãy kiểm tra sự tín nhiệm và các bình luận của những người dùng khác của Cửa hàng.
+Aptoide luôn khuyến cáo bạn chỉ nên cài đặt các ứng dụng tin cậy %1$s.</string>
+    <string name="dialog_install_warning_trusted_version_button">Phiên bản tin cậy</string>
+    <string name="dialog_install_warning_get_trusted_version_button">Nhận được</string>
+<string name="access_to_get_accounts_rationale">Bạn cần cho phép truy cập vào Get Accounts</string>
+    <string name="displayable_social_timeline_article_get_app_button">Tải ứng dụng %1$s</string>
+    <string name="just_reviews">Đánh giá gần đấy</string>
+    <string name="needs_permission_to_fs">Cần quyền để sử dụng Hệ thống tập tin bên ngoài</string>
+
+    <string name="dialog_install_warning_proceed_button">Tiến hành</string>
+    <string name="appview_other_versions"><u>Phiên bản khác</u></string>
+    <string name="downgrading_msg">Hạ cấp</string>
+    <string name="wizard_skip"><b>BỎ QUA</b></string>
+    <string name="wizard_welcome_message"><b>Chào mừng bạn!</b></string>
+    <string name="wizard_description_part_one_viewpager_one"><b>Hãy tìm các ứng dụng </b> với
+huy hiệu tin cậy cho
+cài đặt an toàn.</string>
+    <string name="wizard_description_part_two_viewpager_one"><b>Khám phá các ứng dụng</b> mà bạn muốn nhưng không tìm thấy.</string>
+
+    <string name="dark">Đậm</string>
+    <string name="light">Nhạt</string>
+
+    <string name="wizard_sub_title_viewpager_two">Hãy tải các ứng dụng mới nhất <b/>, tìm kiếm các cửa hàng chủ đề <b/> và truy cập nội dung cá nhân <b>.</b></string>
+
+    <string name="wizard_title_viewpager_three"><b>Tham gia vào cộng đồng</b></string>
+    <string name="wizard_description_part_one_viewpager_three"><b>Theo dõi</b> bạn của bạn</string>
+    <string name="wizard_description_part_two_viewpager_three"><b>Nhận xét</b> và Đánh giá ứng dụng</string>
+    <string name="wizard_description_part_three_viewpager_three"><b>Tạo</b> cửa hàng của bạn</string>
+    <string name="wizard_or_login"><u>hoặc Đăng nhập</u></string>
+
+    <string name="wizard_sub_title_viewpager_one">Bắt đầu một <b>hành trình</b> an toàn <b> và </b> vui vẻ.</string>
+    <string name="wizard_title_viewpager_two"><b>Dòng thời gian ứng dụng</b></string>
+    <string name="open_apps_manager">Mở Apps Manager</string>
+
+    <string name="appview_good_app_description">Ứng dụng này thông qua các bài kiểm tra an ninh cho virus, phần mềm độc hại và các cuộc tấn công độc hại khác và không
+chứa bất kỳ mối đe dọa nào!</string>
+
+    <string name="unfollow_yes_no">Bạn có chắc rằng bạn muốn hủy theo dõi?</string>
+    <string name="unfollow">Hủy theo dõi</string>
+    <string name="unfollowing_store_message">Hủy theo dõi %s</string>
+    <string name="be_the_first_to_rate_this_app">Hãy trở thành người đầu tiên đánh giá ứng dụng này</string>
+    <string name="rate_this_app">Đánh giá ứng dụng này</string>
+
+    <string name="helpful">Hữu ích</string>
+    <string name="not_helpful">Không hữu ích</string>
+    <string name="description_not_available">Không có mô tả nào cho ứng dụng này</string>
+    <string name="top_stores_fragment_title">Các cửa hàng hàng đầu</string>
+
+    <string name="home_title">Home</string>
+    <string name="community">Cộng đồng</string>
+    <string name="stores">Cửa hàng</string>
+    <string name="updates">Cập nhật</string>
+    <string name="social_timeline">Dòng thời gian xã hội</string>
+    <string name="downloads">Tải về</string>
+    <string name="latest_reviews">Đánh giá mới nhất</string>
+    <string name="latest_comments">Bình luận mới nhất</string>
+    <string name="action">Hành động</string>
+    <string name="all">Tất cả</string>
+    <string name="applications">Ứng dụng</string>
+    <string name="arcade_action">Hành động và giải trí</string>
+    <string name="board">Bảng</string>
+    <string name="books_reference">Sách và tham khảo</string>
+    <string name="brain_puzzle">Trò chơi ghép hình và trí tuệ</string>
+    <string name="business">Kinh doanh</string>
+    <string name="card">Thẻ</string>
+    <string name="cards_casino">Thẻ và sòng bạc</string>
+    <string name="casino">Sòng bạc</string>
+    <string name="casual">Bình thường</string>
+    <string name="comics">Truyện cười</string>
+    <string name="communication">Giao tiếp</string>
+    <string name="demo">Thử nghiệm</string>
+    <string name="education">Giáo dục</string>
+    <string name="educational">Thuộc về giáo dục</string>
+    <string name="entertainment">Giải trí</string>
+    <string name="family">Gia đình</string>
+    <string name="finance">Tài chính</string>
+    <string name="games">Trò chơi</string>
+    <string name="health">Sức khỏe</string>
+    <string name="health_fitness">Sức khỏe và thể hình</string>
+    <string name="highlighted">Được nhấn mạnh</string>
+    <string name="local_top_apps">Các ứng dụng hàng đầu địa phương</string>
+    <string name="lifestyle">Phong cách sống</string>
+    <string name="media_video">Truyền thông và video</string>
+    <string name="medical">Y khoa</string>
+    <string name="multimedia">Đa phương tiện</string>
+    <string name="music">Âm nhạc</string>
+    <string name="music_audio">Âm nhạc và âm thanh</string>
+    <string name="news_magazines">Tin tức và tạp chí</string>
+    <string name="news_weather">Bản tin &amp; Thời tiết</string>
+    <string name="personalization">Cá nhân hóa</string>
+    <string name="photography">Nhiếp ảnh</string>
+    <string name="puzzle">Câu đố</string>
+    <string name="racing">Cuộc đua</string>
+    <string name="reference">Tham khảo</string>
+    <string name="role_playing">Trò chơi nhập vai</string>
+    <string name="simulation">Mô phỏng</string>
+    <string name="social">Xã hội</string>
+    <string name="software_libraries">Thư viện phần mềm</string>
+    <string name="sports">Thể thao</string>
+    <string name="sports_games">Trò chơi thể thao</string>
+    <string name="strategy">Chiến lược</string>
+    <string name="themes">Chủ đề</string>
+    <string name="tools">Công cụ</string>
+    <string name="top_apps">Những ứng dụng hàng đầu</string>
+    <string name="top_games">Những trò chơi hàng đầu</string>
+    <string name="transport">Giao thông</string>
+    <string name="transportation">Phương tiện giao thông</string>
+    <string name="travel">Du lịch</string>
+    <string name="trending">Theo xu hướng</string>
+    <string name="trivia">Chuyện vặt</string>
+    <string name="word">Từ</string>
+    <string name="libraries_demo">Các thư viện và Demo</string>
+    <string name="shopping">Mua sắm</string>
+    <string name="weather">Thời tiết</string>
+    <string name="latest_applications">Ứng dụng mới nhất</string>
+    <string name="top_apps_in_store">Những ứng dụng hàng đầu trong cửa hàng này</string>
+    <string name="apps_for_kids">Các ứng dụng cho trẻ con</string>
+    <string name="aptoide_publishers">Các nhà xuất bản Aptoide</string>
+    <string name="music_video">Âm nhạc và Video</string>
+    <string name="essential_apps">Các ứng dụng thiết yếu</string>
+    <string name="summer_apps">Các ứng dụng mùa hè</string>
+    <string name="play_it">Chơi đi!</string>
+
+<string name="appview_good_app_guaranteed">Ứng dụng tốt được đảm bảo!</string>
+    <string name="store_followed">Đã theo dõi cửa hàng %s</string>
+
+    <string name="flag_results">Kết quả gắn cờ</string>
+    <string name="adventure">Hành trình</string>
+    <string name="arcade">Trò chơi trên một loại máy sử dụng đồng xu</string>
+    <string name="productivity">Làm việc hiệu quả</string>
+    <string name="travel_local">Điểm đến du lịch</string>
+    <string name="subscribers">Thuê bao</string>
+  <string name="apps">Ứng dụng</string>
+
+  <string name="apps_timeline"><b>Dòng thời gian ứng dụng</b></string>
+  <string name="displayable_social_timeline_article_related_to">Liên quan đến %1$s</string>
+  <string name="appstimeline_update_app">ứng dụng</string>
+  <string name="customtabs_open_native_app">Mở trong ứng dụng</string>
+
+
+  <string name="fragment_download_no_connection">Không có ứng dụng nào được tải về</string>
+  <string name="fragment_download_no_connection_subtitle">Ứng dụng mới sẽ hiển thị ở đây ngay khi bạn bắt đầu tải về chúng!</string>
+  <string name="newer_version_available">Phiên bản mới hơn</string>
+
+  <string name="add_store">Thêm cửa hàng</string>
+
+<string name="downgrade_warning_dialog">Khi hạ phiên bản bạn có thể mất các dữ liệu liên quan đến ứng dụng và có thể bị đăng xuất khỏi tài khoản của ứng dụng.</string>
+
+  <string name="displayable_social_timeline_similar_to">tương tự như %1$s</string>
+
+</resources>

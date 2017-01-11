@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="please_wait">ေခတၱေစာင့္ဆိုင္းပါ…</string>
+
+    <string name="WidgetProvider_timestamp_today">ယေန႔</string>
+    <string name="WidgetProvider_timestamp_yesterday">မေန႔က</string>
+    <string name="WidgetProvider_timestamp_hour_ago">%s နာရီပိုင္းအၾကာ</string>
+    <string name="WidgetProvider_timestamp_hours_ago">%s နာရီအၾကာ</string>
+    <string name="WidgetProvider_timestamp_minutes_ago">%s မိနစ္အနည္းငယ္အၾကာ</string>
+    <string name="WidgetProvider_timestamp_just_now">မၾကာေသးခင္က</string>
+    <string name="WidgetProvider_timestamp_weeks_ago">%s ပတ္အၾကာ</string>
+    <string name="WidgetProvider_timestamp_week_ago2">တပတ္အၾကာ</string>
+    <string name="WidgetProvider_timestamp_days_ago">%s ရက္အၾကာ</string>
+    <string name="WidgetProvider_timestamp_month_ago">တစ္လအၾကာ</string>
+    <string name="WidgetProvider_timestamp_months_ago">%s လ အၾကာ</string>
+    <string name="WidgetProvider_timestamp_year_ago">တစ္ႏွစ္အၾကာ</string>
+    <string name="WidgetProvider_timestamp_years_ago">%s ႏွစ္အၾကာ</string>
+
+<string name="continue_option">ေ႐ွ႕ဆက္ပါ</string>
+
+  </resources>

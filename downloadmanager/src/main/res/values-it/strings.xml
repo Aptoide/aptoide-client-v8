@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="aptoide_downloading">%s è in download</string>
+    <string name="pause_download">Pausa</string>
+    <string name="resume_download">Riprendi</string>
+<string name="general_downloads_dialog_only_mobile_message">Hai scelto di scaricare solo tramite traffico dati 3G/4G. Desideri cambiare le impostazioni?</string>
+  <string name="general_downloads_dialog_only_wifi_message">Hai scelto di scaricare solo tramite WiFi. Desideri cambiare le impostazioni?</string>
+  <string name="general_downloads_dialog_no_download_rule_message">Nessuna regola per i download. Desideri cambiare le impostazioni?</string>
+</resources>

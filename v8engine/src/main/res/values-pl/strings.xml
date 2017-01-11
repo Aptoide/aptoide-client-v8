@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="developer_website">Strona internetowa: %s</string>
+    <string name="not_available">BRAK</string>
+    <string name="developer_email">Email: %s</string>
+    <string name="developer_privacy_policy">Polityka Prywatności: %s</string>
+
+
+    <string name="open">Otwórz</string>
+    <string name="button_header_more">więcej</string>
+    <string name="search">Szukaj</string>
+
+    <string name="update">Aktualizacja</string>
+    <string name="uninstall">Odinstaluj</string>
+    <string name="downgrade">Deaktualizuj</string>
+    <string name="menu_select_all">Wybierz wszystko</string>
+    <string name="menu_select_none">Wybierz Żaden</string>
+    <string name="clear">Wyczyść</string>
+
+    <string name="excluded_updates">Pominięte aktualizacje</string>
+    <string name="no_excluded_updates_msg">Nowa wersja aplikacji lub niektóre funkcje nie działają na Twoim urządzeniu? Zablokuj aktualizowanie aplikacji. Idź do zakładki Aktualizacje i naciśnij oraz przytrzymaj aplikację, której aktualizacje chcesz wyłączyć.</string>
+
+    <string name="restore_updates">Przywróć aktualizacje</string>
+    <string name="rollback">Przywróć</string>
+    <string name="menu_card_timeline_clear">Wyczyść</string>
+    <string name="fragment_social_timeline_no_connection">Brak połączania z siecią</string>
+    <string name="fragment_social_timeline_general_error">Mamy trochę problemów. Możesz spróbować później?</string>
+
+    <string name="displayable_social_timeline_app_update">Aktualizacja</string>
+    <string name="appview_rate_this_app">Oceń aplikację</string>
+    <string name="needs_license">Wymaga Licencji</string>
+    <string name="virus">Wirus</string>
+    <string name="additional_information">Dodatkowe Informacje</string>
+    <string name="displayable_social_timeline_app_update_updated">Zaktualizowane</string>
+    <string name="displayable_social_timeline_recommendation_similar_and">i</string>
+    <string name="social_facebook_screen_title">Facebook</string>
+    <string name="social_twitter_screen_title">Twitter</string>
+    <string name="title">NAZWA</string>
+    <string name="feedback_not_valid">Proszę podać poprawny temat!</string>
+    <string name="ignore_update">Ignoruj aktualizacje</string>
+    <string name="added_to_scheduled">Dodano do Menu &gt; Zaplanowane Pobierania</string>
+    <string name="updates_filter_setting_title">Proponuj tylko stabilne wersje</string>
+  <string name="updates_filter_summary">Po zaznaczeniu, nie będziesz powiadamiany o wersjach beta.</string>
+  <string name="highlighted">Wyróźnione</string>
+  <string name="top_apps_in_store">Najlepsze aplikacje</string>
+  <string name="apps_for_kids">Aplikacje dla dzieci</string>
+  <string name="aptoide_publishers">Partnerzy Aptoide</string>
+  <string name="music_video">Muzyka i Wideo</string>
+  <string name="essential_apps">Niezbędne aplikacje</string>
+  <string name="dialog_install_warning_proceed_button">Kontynuuj</string>
+  <string name="dialog_install_warning_trusted_app_button">Zaufana aplikacja</string>
+  <string name="dialog_install_warning_careful_text">Uważaj na tę aplikację. Mogła zostać zmodyfikowana, posiadać wirusa lub malware.</string>
+    <string name="dialog_install_warning_credibility_text">Zanim kontynuujesz, sprawdź w sklepie
+ oceny oraz komentarze. Aptoide zaleca instalację wyłącznie Zaufanych aplikacji %1$s.</string>
+  <string name="dialog_install_warning_trusted_version_button">Zaufana wersja</string>
+  <string name="dialog_install_warning_get_trusted_version_button">Pobierz</string>
+  <string name="latest_comments">Ostatnie komentarze</string>
+  <string name="home_title">Strona domowa</string>
+  <string name="community">Społeczność</string>
+  <string name="stores">Sklepy</string>
+  <string name="updates">Aktualizacje</string>
+  <string name="social_timeline">Socjalna linia czasu</string>
+  <string name="dark">Ciemny</string>
+  <string name="light">Jasny</string>
+
+  <string name="travel_local">Podróże i Lokalne</string>
+  <string name="unsubscribe">Anuluj subskrybcję</string>
+  <string name="summer_apps">Aplikacje na lato</string>
+  <string name="play_it">Play-It!</string>
+
+  <string name="dialog_install_warning_search_for_trusted_app_button">Znajdź</string>
+  </resources>

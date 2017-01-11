@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="one_account_allowed">အေကာင့္တစ္ခုသာ ခြင့္ျပဳသည္</string>
+    <string name="username">အီးေမးလ္</string>
+    <string name="password">စကားဝွက္</string>
+    <string name="link_device_webinstall">အေကာင့္အား Webinstall ျဖင့္ ခ်ိတ္ဆက္မည္</string>
+    <string name="register">စာရင္းသြင္းရန္</string>
+    <string name="forgot_passwd">စကားဝွက္ေမ့ေနပါသလား</string>
+    <string name="fields_cannot_empty">Email ႏွင့္စကားဝွက္ကို စစ္ေဆးပါ.</string>
+    <string name="unknown_error">အမည်မသိအမှား</string>
+    <string name="no_email_and_pass_error_message">"စာရင်းသွင်းရန်အတွက်ကျေးဇူးပြု၍ အီးမေးလ်နှင့် လျှို့ဝှက်စကားလုံးကို ထည့်သွင်းပါ.
+ "</string>
+    <string name="no_pass_error_message">စာရင္းသြင္းရန္ စကားဝွက္တစ္ခုထည့္ေပးပါ.</string>
+    <string name="no_email_error_message">စာရင္းသြင္းရန္ အီးေမးလ္တစ္ခုထည့္ေပးပါ.</string>
+    <string name="password_validation_text">"လွ်ို႕ဝွက္စကားလံုးသည္ အနည္းဆံုး စာလံုး ၈ လံုး ပါဝင္ရမည္ျဖစ္ၿပီး အနည္းဆံုး အကၡရာတစ္လံုးႏွင့္ နံပါတ္တစ္လံုး သို႕မဟုတ္ အထူးစာလံုး (!@#$%*) တစ္လံုး ပါဝင္သင့္ပါသည္
+ "</string>
+    <string name="logged_as">: အေနျဖင့္ အေကာင့္ဝင္ထားသည္</string>
+    <string name="sign_out">အေကာင့္ထြက္မည္</string>
+    <string name="error_occured">မွားယြင္းမႈရွိေနပါသျဖင့္ ျပန္လည္ၾကိဳးစားေပးပါ</string>
+    <string name="ws_error_AUTH_2">သတ္မွတ္ခ်က္မ်ား မျပည့္စံုပါ!</string>
+    <string name="ws_error_AUTH_101">Google ျဖင့္ ၀င္၍မရသျဖင့္ ေနာက္တၾကိမ္ ထပ္ၾကိဳးစားပါ.</string>
+    <string name="ws_error_AUTH_103">Facebook ျဖင့္ အေကာင့္၀င္၍ မရသျဖင့္ ျပန္လည္ ၾကိဳးစားေပးပါ.</string>
+    <string name="ws_error_MARG_12">Hmac parameter ေပ်ာက္ဆုံးေနသည္</string>
+    <string name="ws_error_MARG_109">Email parameterေပ်ာက္ဆုံးေနသည္</string>
+    <string name="ws_error_MARG_110">Passhash parameter ေပ်ာက္ဆုံးေနသည္</string>
+    <string name="ws_error_MARG_111">Parameter အမည္ေပ်ာက္ဆုံးေနသည္</string>
+    <string name="ws_error_MARG_112">User-agent parameter ေပ်ာက္ဆုံးေနသည္</string>
+    <string name="ws_error_IARG_5">hmac format မွားေနသည္</string>
+    <string name="ws_error_IARG_106">Email လိပ္စာ မွားေနသည္</string>
+    <string name="ws_error_REPO_7">ယခုအသံုးျပဳသူတြင္ မွန္ကန္သည့္ repo ရွိေနၿပီးၿပီ.</string>
+    <string name="ws_error_WOP_11">စတိုး ျပဳလုပ္မႈမေအာင္ျမင္ပါ၊ ျပန္လည္ႀကိဳးစားပါ.</string>
+    <string name="or">သို႔မဟုတ္</string>
+    <string name="accept_terms">"အေကာင့္ဖြင့္ျခင္းျဖင့္ သင္သည္ Aptoide ဝန္ေဆာင္မႈ အခ်က္အလက္မ်ားႏွင့္ ထုတ္လုပ္သူမ်ားအတြက္ ပါဝင္မႈ မူဝါဒကို သေဘာတူသည္
+ "</string>
+    <string name="default_account_type">cm.aptoide.pt</string>
+
+    <string name="facebook_garant_permission_button">ခြင့္ျပဳခ်က္အား အာမခံပါ</string>
+    <string name="facebook_email_permission_regected_message">"အေကာင့္တစ္ခု ျပဳလုပ္ရန္အတြက္ Aptoide သည္ သင့္အီးေမးလ္အား လိုအပ္ပါသည္
+ "</string>
+    <string name="error_invalid_grant">အသံုးျပဳသူအမည္ႏွင့္ လွ်ိဳ႕ဝွက္စကားလံုး တဲြဖက္မႈ မွားယြင္းေနပါသည္</string>
+    <string name="ws_error_MARG_200">\@စာကြောင်း/အမှား_ဖြစ်ပေါ်ခဲ့သည်</string>
+    <string name="ws_error_MARG_203">\@စာေၾကာင္း/အမွား_ျဖစ္ေပၚခဲ့သည္</string>
+    <string name="ws_error_MARG_204">\@စာေၾကာင္း/အမွား_ျဖစ္ေပၚခဲ့သည္</string>
+    <string name="ws_error_IARG_200">\@စာေၾကာင္း/အမွား_ျဖစ္ေပၚခဲ့သည္</string>
+    <string name="ws_error_AUTH_7">\@စာေၾကာင္း/အမွား_ျဖစ္ေပၚခဲ့သည္</string>
+    <string name="ws_error_AUTH_100">Google ျဖင့္ အေကာင့္ဝင္၍ မရပါ. ေက်းဇူးျပဳ၍ သင့္ Google အေကာင့္အား စစ္ေဆးပါ (သင့္အီးေမးလ္လိပ္စာအား အတည္ျပဳရန္ လိုအပ္ႏိုင္ပါသည္)</string>
+    <string name="ws_error_AUTH_102">Facebook ျဖင့္ အေကာင့္ဝင္၍ မရပါ. ေက်းဇူးျပဳ၍ သင့္ Facebook အေကာင့္အား စစ္ေဆးပါ (သင့္အီးေမးလ္လိပ္စာအား အတည္ျပဳရန္ လိုအပ္ႏိုင္ပါသည္)</string>
+    <string name="ws_error_invalid_grant">အသံုးျပဳသူအမည္ႏွင့္ လွ်ိဳ႕ဝွက္စကားလံုး တြဲဖက္မႈ မွားယြင္းေနပါသည္</string>
+    <string name="ws_error_IARG_111">passhash ပံုစံ မွားယြင္းေနပါသည္</string>
+    <string name="ws_error_REPO_4">စတိုးအမည္ မွားယြင္းေနပါသည္၊ သင္သည္ စာလံုးမ်ား၊ ဂဏန္းမ်ားႏွင့္ ဒက္႐ွ္မ်ားကိုသာ အသံုးျပဳႏိုင္ပါသည္.</string>
+    <string name="ws_error_REPO_5">စတိုးအမည္သည္ အနည္းဆံုး စာလံုး ၃ လံုး ႐ွိရပါမည္.</string>
+    <string name="ws_error_REPO_6">ထိုစတိုးအမည္သည္ ႐ွိႏွင့္ၿပီးျဖစ္ပါသည္၊ သင္သည္ အျခားတစ္ခုအား ေရြးခ်ယ္ရန္ လိုအပ္ပါသည္.</string>
+    <string name="ws_error_WOP_9">ေပးထားေသာအီးေမးလ္သည္ Aptoide တြင္ ႐ွိႏွင့္ၿပီး ျဖစ္ပါသည္</string>
+    <string name="ws_error_WOP_10">ေပးထားေသာအီးေမးလ္သည္ Aptoide တြင္ မ႐ွိေသးပါ</string>
+    <string name="ws_error_QUOTA_2">ယေန႔အတြက္ ဖန္တီးထားေသာအသံုးျပဳသူမ်ားအတြက္ ေန႔စဥ္ကန္႔သတ္ခ်က္သို႔ ေရာက္႐ွိပါၿပီ. အကယ္၍ ဤကန္႔သတ္ခ်က္အား တိုးျမႇင့္ရန္ လိုအပ္ပါက support@apetoide.com တြင္ အကူအညီရယူရန္ ဆက္သြယ္ပါ သို႔မဟုတ္ မနက္ျဖန္တြင္ အသံုးျပဳသူမ်ားအား ပို၍ဖန္တီးပါ</string>
+    <string name="ws_error_AUTH_1">အီးေမးလ္သို႔မဟုတ္ လ်ိဳ႕ဝွက္စကားလံုးသည္ အေကာင့္ဝင္ရန္ မွားယြင္းေနပါသည္ (အမည္အဆင့္ျမႇင့္တင္မႈအေပၚ)</string>
+    <string name="login_successful">အကောင့်၀င်ခြင်း အောင်မြင်ပါသည်</string>
+    <string name="user_created">အသုံးပြုသူ ဖန်တီးပြီးပါပြီ</string>
+    <string name="wizard_skip"><b>ကျော်ပါ</b></string>
+
+</resources>
