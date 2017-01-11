@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
+package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.content.Intent;
 import android.view.View;
@@ -6,6 +6,7 @@ import android.widget.Button;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.CreateStoreActivity;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CreateStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 

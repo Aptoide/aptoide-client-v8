@@ -104,15 +104,6 @@ public class CreateStoreActivity extends PermissionsBaseActivity
     setupThemeListeners();
   }
 
-  private void getData() {
-    from = getIntent().getStringExtra("from") == null ? "" : getIntent().getStringExtra("from");
-    storeId = getIntent().getLongExtra("storeId", -1);
-    storeRemoteUrl = getIntent().getStringExtra("storeAvatar");
-    storeTheme = getIntent().getStringExtra("storeTheme") == null ? ""
-        : getIntent().getStringExtra("storeTheme");
-    storeDescription = getIntent().getStringExtra("storeDescription");
-  }
-
   @Override protected void onDestroy() {
     super.onDestroy();
     mSubscriptions.clear();
@@ -136,13 +127,21 @@ public class CreateStoreActivity extends PermissionsBaseActivity
   }
 
   @Override void showIconPropertiesError(String errors) {
-    mSubscriptions.add(
-        GenericDialogs.createGenericOkMessage(this, getString(R.string.image_requirements_error_popup_title), errors)
-            .subscribe());
+    mSubscriptions.add(GenericDialogs.createGenericOkMessage(this,
+        getString(R.string.image_requirements_error_popup_title), errors).subscribe());
   }
 
   @Override void loadImage(Uri imagePath) {
     ImageLoader.loadWithCircleTransform(imagePath, mStoreAvatar);
+  }
+
+  private void getData() {
+    from = getIntent().getStringExtra("from") == null ? "" : getIntent().getStringExtra("from");
+    storeId = getIntent().getLongExtra("storeId", -1);
+    storeRemoteUrl = getIntent().getStringExtra("storeAvatar");
+    storeTheme = getIntent().getStringExtra("storeTheme") == null ? ""
+        : getIntent().getStringExtra("storeTheme");
+    storeDescription = getIntent().getStringExtra("storeDescription");
   }
 
   private void setupToolbar() {

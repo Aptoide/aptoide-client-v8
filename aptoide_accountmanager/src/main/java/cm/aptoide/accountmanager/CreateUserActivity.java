@@ -28,7 +28,6 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import com.jakewharton.rxbinding.view.RxView;
 import java.net.SocketTimeoutException;
-import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import rx.subscriptions.CompositeSubscription;
@@ -73,6 +72,11 @@ public class CreateUserActivity extends PermissionsBaseActivity
     setupListeners();
   }
 
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    mSubscriptions.clear();
+  }
+
   @Override protected String getActivityTitle() {
     return getString(R.string.create_user_title);
   }
@@ -81,9 +85,13 @@ public class CreateUserActivity extends PermissionsBaseActivity
     return R.layout.activity_create_user;
   }
 
-  @Override protected void onDestroy() {
-    super.onDestroy();
-    mSubscriptions.clear();
+  @Override void showIconPropertiesError(String errors) {
+    mSubscriptions.add(GenericDialogs.createGenericOkMessage(this,
+        getString(R.string.image_requirements_error_popup_title), errors).subscribe());
+  }
+
+  @Override void loadImage(Uri imagePath) {
+    ImageLoader.loadWithCircleTransform(imagePath, mAvatar);
   }
 
   private void setupToolbar() {
@@ -187,16 +195,6 @@ public class CreateUserActivity extends PermissionsBaseActivity
     accessToken = getIntent().getStringExtra(AptoideLoginUtils.APTOIDE_LOGIN_ACCESS_TOKEN_KEY);
   }
 
-  @Override void showIconPropertiesError(String errors) {
-    mSubscriptions.add(
-        GenericDialogs.createGenericOkMessage(this, getString(R.string.image_requirements_error_popup_title), errors)
-            .subscribe());
-  }
-
-  @Override void loadImage(Uri imagePath) {
-    ImageLoader.loadWithCircleTransform(imagePath, mAvatar);
-  }
-
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     FileUtils fileUtils = new FileUtils();
     Uri avatarUrl = null;
@@ -241,10 +239,9 @@ public class CreateUserActivity extends PermissionsBaseActivity
     ShowMessage.asSnack(content, R.string.user_created);
     //data.putString(AptoideLoginUtils.APTOIDE_LOGIN_FROM, SIGNUP);
     progressDialog.dismiss();
-    if(Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
+    if (Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
       startActivity(new Intent(this, LoggedInActivity.class));
-    }
-    else{
+    } else {
       Toast.makeText(this, R.string.create_profile_pub_pri_suc_login, Toast.LENGTH_LONG).show();
       AptoideAccountManager.sendLoginCancelledBroadcast();
     }
