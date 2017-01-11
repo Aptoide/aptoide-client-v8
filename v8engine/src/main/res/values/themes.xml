@@ -121,13 +121,15 @@
   </style>
 
 
-  <style name="AppBaseThemeTransparent" parent="AppBaseTheme">
+  <style name="AppBaseTheme.Payment">
     <item name="android:windowIsTranslucent">true</item>
     <item name="android:windowBackground">@android:color/transparent</item>
     <item name="android:windowContentOverlay">@null</item>
     <item name="android:windowNoTitle">true</item>
     <item name="android:windowIsFloating">false</item>
     <item name="android:backgroundDimEnabled">false</item>
+    <item name="colorButtonNormal">@color/white</item>
+    <item name="colorAccent">@color/activity_payment_green</item>
   </style>
 
   <style name="AppBaseThemeDark" parent="@style/Theme.AppCompat.NoActionBar">
