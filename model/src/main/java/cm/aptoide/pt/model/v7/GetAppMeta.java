@@ -5,7 +5,7 @@
 
 package cm.aptoide.pt.model.v7;
 
-import cm.aptoide.pt.model.v3.PaymentService;
+import cm.aptoide.pt.model.v3.PaymentServiceResponse;
 import cm.aptoide.pt.model.v7.listapp.File;
 import cm.aptoide.pt.model.v7.store.Store;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -51,7 +51,7 @@ import lombok.EqualsAndHashCode;
   @Data public static class Pay {
 
     private int productId;
-    private List<PaymentService> paymentServices;
+    private List<PaymentServiceResponse> paymentServices;
     private Number price;
     private String currency;
     private String symbol;

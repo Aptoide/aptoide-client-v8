@@ -23,8 +23,6 @@ public interface View {
 
   Observable<LifecycleEvent> getLifecycle();
 
-  Context getContext();
-
   void attachPresenter(Presenter presenter, Bundle savedInstanceState);
 
   // TODO: Make it simple. We need to abstract implementation details (e.g. Activity and Fragment life cycle events).

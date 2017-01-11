@@ -8,6 +8,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.listapp.File;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.Application;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -70,11 +71,13 @@ public class AccessTokenRequestBodyAdapter implements AccessTokenBody {
   public HashMapNotNull<String, RequestBody> get() {
     decorator.decorate(baseBody, accessToken);
     HashMapNotNull<String, RequestBody> body = new HashMapNotNull<>();
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
     if (storeEdit) {
       body.put("store_id", createBodyPartFromLong(storeid));
       try {
-        body.put("store_properties", createBodyPartFromString(new ObjectMapper().writeValueAsString(storeProperties)));
+        body.put("store_properties", createBodyPartFromString(mapper.writeValueAsString(storeProperties)));
       } catch (JsonProcessingException e) {
         e.printStackTrace();
       }

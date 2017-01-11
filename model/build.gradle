@@ -62,7 +62,7 @@ dependencies {
   //noinspection GradleDependency
   compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
 
-  compile "com.fasterxml.jackson.core:jackson-annotations:${JACKSON_ANNOTATIONS_VERSION}"
+  compile "com.fasterxml.jackson.core:jackson-annotations:${JACKSON_VERSION}"
 
   provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
   // Just for lombok not to complain

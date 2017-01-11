@@ -140,6 +140,16 @@
         <action android:name="${currentApplicationId}.iab.action.BIND"/>
       </intent-filter>
     </service>
+
+    <service
+        android:name=".v8engine.repository.sync.AptoideSyncService"
+        android:exported="true">
+      <intent-filter>
+        <action android:name="android.content.SyncAdapter"/>
+      </intent-filter>
+      <meta-data android:name="android.content.SyncAdapter"
+          android:resource="@xml/sync" />
+    </service>
   </application>
 
 </manifest>

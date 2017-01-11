@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.iab;
 
-import cm.aptoide.pt.v8engine.payment.exception.PaymentAlreadyProcessedException;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentCancellationException;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
@@ -22,10 +21,6 @@ public class ErrorCodeFactory {
 
     if (throwable instanceof PaymentCancellationException) {
       errorCode = BillingBinder.RESULT_USER_CANCELLED;
-    }
-
-    if (throwable instanceof PaymentAlreadyProcessedException) {
-      errorCode = BillingBinder.RESULT_ITEM_ALREADY_OWNED;
     }
 
     if (throwable instanceof IOException) {
