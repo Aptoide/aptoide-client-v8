@@ -20,13 +20,16 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
 
   private SpannableFactory spannableFactory;
+  private String storeTheme;
 
   public TimeLineStatsDisplayable() {
   }
 
-  public TimeLineStatsDisplayable(TimelineStats pojo, SpannableFactory spannableFactory) {
+  public TimeLineStatsDisplayable(TimelineStats pojo, SpannableFactory spannableFactory,
+      String storeTheme) {
     super(pojo);
     this.spannableFactory = spannableFactory;
+    this.storeTheme = storeTheme;
   }
 
   @Override public int getViewLayout() {
@@ -42,10 +45,8 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
     return spannableFactory.createSpan(
         context.getString(R.string.timeline_followers, getPojo().getData().getFollowers()),
         new ParcelableSpan[] { new ForegroundColorSpan(Color.BLACK), new UnderlineSpan() },
-        new String[] {
-            String.valueOf(getPojo().getData().getFollowers()),
-            String.valueOf(getPojo().getData().getFollowers())
-        });
+        String.valueOf(getPojo().getData().getFollowers()),
+        String.valueOf(getPojo().getData().getFollowers()));
   }
 
   CharSequence getFollowingText(Context context) {
@@ -53,23 +54,21 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
     return spannableFactory.createSpan(
         context.getString(R.string.timeline_followed, getPojo().getData().getFollowing()),
         new ParcelableSpan[] { new ForegroundColorSpan(Color.BLACK), new UnderlineSpan() },
-        new String[] {
-            String.valueOf(getPojo().getData().getFollowing()),
-            String.valueOf(getPojo().getData().getFollowing())
-        });
+        String.valueOf(getPojo().getData().getFollowing()),
+        String.valueOf(getPojo().getData().getFollowing()));
   }
 
   public Void followersClick(FragmentShower fragmentShower) {
     fragmentShower.pushFragmentV4(V8Engine.getFragmentProvider()
         .newTimeLineFollowStatsFragment(TimeLineFollowFragment.FollowFragmentOpenMode.FOLLOWERS,
-            getPojo().getData().getFollowers()));
+            getPojo().getData().getFollowers(), storeTheme));
     return null;
   }
 
   public Void followingClick(FragmentShower fragmentShower) {
     fragmentShower.pushFragmentV4(V8Engine.getFragmentProvider()
         .newTimeLineFollowStatsFragment(TimeLineFollowFragment.FollowFragmentOpenMode.FOLLOWING,
-            getPojo().getData().getFollowing()));
+            getPojo().getData().getFollowing(), storeTheme));
     return null;
   }
 }

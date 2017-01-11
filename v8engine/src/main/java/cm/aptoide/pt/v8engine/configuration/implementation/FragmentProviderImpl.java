@@ -174,8 +174,8 @@ public class FragmentProviderImpl implements FragmentProvider {
     return new ListStoresFragment();
   }
 
-  @Override public Fragment newAppsTimelineFragment(String action) {
-    return AppsTimelineFragment.newInstance(action);
+  @Override public Fragment newAppsTimelineFragment(String action, String storeTheme) {
+    return AppsTimelineFragment.newInstance(action, storeTheme);
   }
 
   @Override
@@ -247,8 +247,9 @@ public class FragmentProviderImpl implements FragmentProvider {
   }
 
   @Override public Fragment newTimeLineFollowStatsFragment(
-      TimeLineFollowFragment.FollowFragmentOpenMode openMode, long followNumber) {
-    return TimeLineFollowFragment.newInstance(openMode, followNumber);
+      TimeLineFollowFragment.FollowFragmentOpenMode openMode, long followNumber,
+      String storeTheme) {
+    return TimeLineFollowFragment.newInstance(openMode, followNumber, storeTheme);
   }
 
   @Override
