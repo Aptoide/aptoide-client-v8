@@ -122,56 +122,7 @@ public class CreateUserActivity extends PermissionsBaseActivity
         pleaseWaitDialog.show();
         mSubscriptions.add(
             CreateUserRequest.of("true", userEmail, username, userPassword, avatarPath,
-                idsRepository.getAptoideClientUUID())
-                .observe()
-                .filter(answer -> {
-                  if(answer.hasErrors()){
-                    if (answer.getErrors() != null && answer.getErrors().size() > 0) {
-                      onRegisterFail(ErrorsMapper.getWebServiceErrorMessageFromCode(
-                          answer.getErrors().get(0).code));
-                      pleaseWaitDialog.dismiss();
-                    } else {
-                      onRegisterFail(R.string.unknown_error);
-                      pleaseWaitDialog.dismiss();
-                    }
-                    return false;
-                  }
-                  return true;
-                })
-                .timeout(90, TimeUnit.SECONDS)
-                .subscribe(answer -> {
-                  //Successfull update
-                  saveUserDataOnPreferences();
-                  onRegisterSuccess(pleaseWaitDialog);
-                  pleaseWaitDialog.dismiss();
-                }, err -> {
-                  if (err.getClass().equals(SocketTimeoutException.class)) {
-                    pleaseWaitDialog.dismiss();
-                    ShowMessage.asObservableSnack(this, R.string.user_upload_photo_failed)
-                        .subscribe(visibility -> {
-                          if(visibility == ShowMessage.DISMISSED) {
-                            finish();
-                          }
-                        });
-                  } else if (err.getClass().equals(TimeoutException.class)) {
-                    pleaseWaitDialog.dismiss();
-                    ShowMessage.asObservableSnack(this, R.string.user_upload_photo_failed)
-                        .subscribe(visibility -> {
-                          if(visibility == ShowMessage.DISMISSED) {
-                            finish();
-                          }
-                        });
-                  }
-                }));
-      } else if (CREATE_USER_REQUEST_CODE == 2) {
-        avatarPath = "";
-        ProgressDialog pleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
-            getApplicationContext().getString(R.string.please_wait));
-        pleaseWaitDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        pleaseWaitDialog.show();
-        CreateUserRequest.of("true", userEmail, username, userPassword, avatarPath,
-            idsRepository.getAptoideClientUUID())
-            .execute(answer -> {
+                idsRepository.getAptoideClientUUID()).observe().filter(answer -> {
               if (answer.hasErrors()) {
                 if (answer.getErrors() != null && answer.getErrors().size() > 0) {
                   onRegisterFail(ErrorsMapper.getWebServiceErrorMessageFromCode(
@@ -181,13 +132,57 @@ public class CreateUserActivity extends PermissionsBaseActivity
                   onRegisterFail(R.string.unknown_error);
                   pleaseWaitDialog.dismiss();
                 }
-              } else {
-                //Successfull update
-                saveUserDataOnPreferences();
-                onRegisterSuccess(pleaseWaitDialog);
-                pleaseWaitDialog.dismiss();
+                return false;
               }
-            });
+              return true;
+            }).timeout(90, TimeUnit.SECONDS).subscribe(answer -> {
+              //Successfull update
+              saveUserDataOnPreferences();
+              onRegisterSuccess(pleaseWaitDialog);
+              pleaseWaitDialog.dismiss();
+            }, err -> {
+              if (err.getClass().equals(SocketTimeoutException.class)) {
+                pleaseWaitDialog.dismiss();
+                ShowMessage.asObservableSnack(this, R.string.user_upload_photo_failed)
+                    .subscribe(visibility -> {
+                      if (visibility == ShowMessage.DISMISSED) {
+                        finish();
+                      }
+                    });
+              } else if (err.getClass().equals(TimeoutException.class)) {
+                pleaseWaitDialog.dismiss();
+                ShowMessage.asObservableSnack(this, R.string.user_upload_photo_failed)
+                    .subscribe(visibility -> {
+                      if (visibility == ShowMessage.DISMISSED) {
+                        finish();
+                      }
+                    });
+              }
+            }));
+      } else if (CREATE_USER_REQUEST_CODE == 2) {
+        avatarPath = "";
+        ProgressDialog pleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
+            getApplicationContext().getString(R.string.please_wait));
+        pleaseWaitDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        pleaseWaitDialog.show();
+        CreateUserRequest.of("true", userEmail, username, userPassword, avatarPath,
+            idsRepository.getAptoideClientUUID()).execute(answer -> {
+          if (answer.hasErrors()) {
+            if (answer.getErrors() != null && answer.getErrors().size() > 0) {
+              onRegisterFail(
+                  ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors().get(0).code));
+              pleaseWaitDialog.dismiss();
+            } else {
+              onRegisterFail(R.string.unknown_error);
+              pleaseWaitDialog.dismiss();
+            }
+          } else {
+            //Successfull update
+            saveUserDataOnPreferences();
+            onRegisterSuccess(pleaseWaitDialog);
+            pleaseWaitDialog.dismiss();
+          }
+        });
       }
     }));
   }
@@ -254,10 +249,9 @@ public class CreateUserActivity extends PermissionsBaseActivity
     ShowMessage.asSnack(content, R.string.user_created);
     //data.putString(AptoideLoginUtils.APTOIDE_LOGIN_FROM, SIGNUP);
     progressDialog.dismiss();
-    if(Application.getConfiguration().getPartnerId()==null) {
+    if (Application.getConfiguration().getPartnerId() == null) {
       startActivity(new Intent(this, LoggedInActivity.class));
-    }
-    else{
+    } else {
       Toast.makeText(this, R.string.create_profile_pub_pri_suc_login, Toast.LENGTH_LONG).show();
       AptoideAccountManager.sendLoginCancelledBroadcast();
     }
