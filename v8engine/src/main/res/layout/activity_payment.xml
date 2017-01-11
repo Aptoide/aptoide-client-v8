@@ -103,7 +103,9 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="16dp"
             android:layout_toStartOf="@+id/activity_selected_payment_price"
-            tools:text="Paypal"
+            tools:text="Boa Compra Gold"
+            android:lines="1"
+            android:ellipsize="end"
             style="@style/TextAppearance.Aptoide.Title"
             />
 
@@ -114,7 +116,6 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
             android:scaleType="centerInside"
             android:src="@drawable/selected_payment_icon"
             tools:ignore="contentDescription"
@@ -129,7 +130,8 @@
             android:layout_marginStart="16dp"
             android:layout_toStartOf="@id/activity_selected_payment_checked_image"
             android:gravity="end"
-            tools:text="0,03 R$"
+            android:lines="1"
+            tools:text="6,50 R$"
             style="@style/TextAppearance.Aptoide.Title"
             />
 
