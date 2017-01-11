@@ -12,12 +12,18 @@ public class Price {
 
   private final double amount;
   private final String currency;
+  private final String currencySymbol;
   private final double taxRate;
 
-  public Price(double amount, String currency, double taxRate) {
+  public Price(double amount, String currency, String currencySymbol, double taxRate) {
     this.amount = amount;
     this.currency = currency;
+    this.currencySymbol = currencySymbol;
     this.taxRate = taxRate;
+  }
+
+  public String getCurrencySymbol() {
+    return currencySymbol;
   }
 
   public double getAmount() {
