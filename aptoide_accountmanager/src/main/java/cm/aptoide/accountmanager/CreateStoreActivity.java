@@ -136,9 +136,8 @@ public class CreateStoreActivity extends PermissionsBaseActivity
   }
 
   @Override void showIconPropertiesError(String errors) {
-    mSubscriptions.add(
-        GenericDialogs.createGenericOkMessage(this, getString(R.string.image_requirements_error_popup_title), errors)
-            .subscribe());
+    mSubscriptions.add(GenericDialogs.createGenericOkMessage(this,
+        getString(R.string.image_requirements_error_popup_title), errors).subscribe());
   }
 
   @Override void loadImage(Uri imagePath) {

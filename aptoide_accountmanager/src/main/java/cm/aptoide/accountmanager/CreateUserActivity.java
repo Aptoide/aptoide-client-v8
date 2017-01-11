@@ -111,7 +111,7 @@ public class CreateUserActivity extends PermissionsBaseActivity
             CreateUserRequest.of("true", userEmail, username, userPassword, avatarPath)
                 .observe()
                 .filter(answer -> {
-                  if(answer.hasErrors()){
+                  if (answer.hasErrors()) {
                     if (answer.getErrors() != null && answer.getErrors().size() > 0) {
                       onRegisterFail(ErrorsMapper.getWebServiceErrorMessageFromCode(
                           answer.getErrors().get(0).code));
@@ -135,7 +135,7 @@ public class CreateUserActivity extends PermissionsBaseActivity
                     pleaseWaitDialog.dismiss();
                     ShowMessage.asObservableSnack(this, R.string.user_upload_photo_failed)
                         .subscribe(visibility -> {
-                          if(visibility == ShowMessage.DISMISSED) {
+                          if (visibility == ShowMessage.DISMISSED) {
                             finish();
                           }
                         });
@@ -143,7 +143,7 @@ public class CreateUserActivity extends PermissionsBaseActivity
                     pleaseWaitDialog.dismiss();
                     ShowMessage.asObservableSnack(this, R.string.user_upload_photo_failed)
                         .subscribe(visibility -> {
-                          if(visibility == ShowMessage.DISMISSED) {
+                          if (visibility == ShowMessage.DISMISSED) {
                             finish();
                           }
                         });
@@ -184,9 +184,8 @@ public class CreateUserActivity extends PermissionsBaseActivity
   }
 
   @Override void showIconPropertiesError(String errors) {
-    mSubscriptions.add(
-        GenericDialogs.createGenericOkMessage(this, getString(R.string.image_requirements_error_popup_title), errors)
-            .subscribe());
+    mSubscriptions.add(GenericDialogs.createGenericOkMessage(this,
+        getString(R.string.image_requirements_error_popup_title), errors).subscribe());
   }
 
   @Override void loadImage(Uri imagePath) {
@@ -237,10 +236,9 @@ public class CreateUserActivity extends PermissionsBaseActivity
     ShowMessage.asSnack(content, R.string.user_created);
     //data.putString(AptoideLoginUtils.APTOIDE_LOGIN_FROM, SIGNUP);
     progressDialog.dismiss();
-    if(Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
+    if (Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
       startActivity(new Intent(this, LoggedInActivity.class));
-    }
-    else{
+    } else {
       Toast.makeText(this, R.string.create_profile_pub_pri_suc_login, Toast.LENGTH_LONG).show();
       AptoideAccountManager.sendLoginCancelledBroadcast();
     }
