@@ -220,7 +220,7 @@ public class PaymentPresenter implements Presenter {
 
   private PaymentView.PaymentViewModel convertToPaymentViewModel(Payment payment) {
     return new PaymentView.PaymentViewModel(payment.getId(), payment.getName(),
-        payment.getDescription(), payment.getPrice().getAmount(), payment.getPrice().getCurrency(),
+        payment.getDescription(), payment.getPrice().getAmount(), payment.getPrice().getCurrencySymbol(),
         getPaymentViewStatus(payment));
   }
 
