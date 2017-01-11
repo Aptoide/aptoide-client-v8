@@ -35,6 +35,7 @@ import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Malware;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -368,7 +369,8 @@ import rx.android.schedulers.AndroidSchedulers;
           .first()
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(progress -> {
-            if (AptoideAccountManager.isLoggedIn() && ManagerPreferences.getShowPreview()) {
+            if (AptoideAccountManager.isLoggedIn() && ManagerPreferences.getShowPreview() &&
+                Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
               SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(displayable);
               AlertDialog.Builder alertDialog = sharePreviewDialog.showPreviewDialog(getContext());
               SocialRepository socialRepository = new SocialRepository();
