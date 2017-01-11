@@ -76,13 +76,13 @@ public final class RepositoryFactory {
     if (product instanceof InAppBillingProduct) {
       return new InAppPaymentConfirmationRepository(getNetworkOperatorManager(context),
           AccessorFactory.getAccessorFor(PaymentConfirmation.class),
-          getBackgroundSync(context), new PaymentConfirmationConverter(),
+          getBackgroundSync(context), new PaymentConfirmationFactory(),
           (InAppBillingProduct) product);
     } else {
       return new PaidAppPaymentConfirmationRepository(getNetworkOperatorManager(context),
           AccessorFactory.getAccessorFor(PaymentConfirmation.class),
           getBackgroundSync(context),
-          new PaymentConfirmationConverter(), (PaidAppProduct)product);
+          new PaymentConfirmationFactory(), (PaidAppProduct)product);
     }
   }
 
