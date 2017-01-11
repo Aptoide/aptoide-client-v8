@@ -52,7 +52,7 @@ public class SimpleSetStoreRequest extends V7<BaseV7Response, SimpleSetStoreRequ
     private String storeName;
     //private String storeProperties;
     private String accessToken;
-    private long storeId;
+    private Long storeId;
     @Getter @Setter private StoreProperties storeProperties;
 
     public Body(String accessToken, String storeName, String storeTheme) {
