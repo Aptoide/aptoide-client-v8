@@ -112,7 +112,8 @@ public class CreateStoreActivity extends PermissionsBaseActivity
     from = getIntent().getStringExtra("from") == null ? "" : getIntent().getStringExtra("from");
     storeId = getIntent().getLongExtra("storeId", -1);
     storeRemoteUrl = getIntent().getStringExtra("storeAvatar");
-    storeTheme = getIntent().getStringExtra("storeTheme");
+    storeTheme = getIntent().getStringExtra("storeTheme") == null ? ""
+        : getIntent().getStringExtra("storeTheme");
     storeDescription = getIntent().getStringExtra("storeDescription");
   }
 
