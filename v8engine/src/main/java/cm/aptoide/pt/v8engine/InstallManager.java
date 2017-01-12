@@ -36,6 +36,7 @@ public class InstallManager {
   private DownloadAccessor downloadAccessor;
   private InstalledAccessor installedAccessor;
 
+  // FIXME: 12/1/2017 use repositories instead of accessors
   public InstallManager(AptoideDownloadManager aptoideDownloadManager, Installer installer,
       DownloadAccessor downloadAccessor, InstalledAccessor installedDatabase) {
     this.aptoideDownloadManager = aptoideDownloadManager;

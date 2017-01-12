@@ -139,4 +139,12 @@ public class UpdateRepository implements Repository {
       return null;
     });
   }
+
+  public Observable<List<Update>> getAllSorted(boolean isExcluded) {
+    return updateAccessor.getAllSorted(isExcluded);
+  }
+
+  public Observable<Boolean> contains(String packageName, boolean isExcluded) {
+    return updateAccessor.contains(packageName, isExcluded);
+  }
 }
