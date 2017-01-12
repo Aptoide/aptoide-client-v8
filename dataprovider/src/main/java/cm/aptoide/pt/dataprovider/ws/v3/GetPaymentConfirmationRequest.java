@@ -42,9 +42,7 @@ public class GetPaymentConfirmationRequest extends V3<PaymentConfirmationRespons
     args.put("productid", String.valueOf(productId));
     args.put("access_token", accessToken);
 
-    if (operatorManager.isSimStateReady()) {
-      args.put("simcc", operatorManager.getSimCountryISO());
-    }
+    addNetworkInformation(operatorManager, args);
     return args;
   }
 

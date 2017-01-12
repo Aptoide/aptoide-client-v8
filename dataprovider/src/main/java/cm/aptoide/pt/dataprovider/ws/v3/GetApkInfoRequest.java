@@ -43,16 +43,7 @@ public class GetApkInfoRequest extends V3<PaidApp> {
     options.put("q", Api.Q);
     options.put("lang", Api.LANG);
 
-    String forceCountry = ManagerPreferences.getForceCountry();
-    if (ManagerPreferences.isDebug() && !TextUtils.isEmpty(forceCountry)) {
-      args.put("simcc", forceCountry);
-    } else {
-      if (operatorManager.isSimStateReady()) {
-        args.put("mcc", operatorManager.getMobileCountryCode());
-        args.put("mnc", operatorManager.getMobileNetworkCode());
-        args.put("simcc", operatorManager.getSimCountryISO());
-      }
-    }
+    addNetworkInformation(operatorManager, options);
 
     StringBuilder optionsBuilder = new StringBuilder();
     optionsBuilder.append("(");
