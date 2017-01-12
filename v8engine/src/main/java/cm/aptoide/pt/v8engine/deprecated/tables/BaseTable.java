@@ -71,7 +71,7 @@ public abstract class BaseTable {
       Logger.d(TAG, "Table " + tableName + " migrated with success.");
     } catch (Exception e) {
       Logger.e(TAG, e);
-      //CrashReports.logException(e);
+      //CrashReport.getInstance().log(e);
     } finally {
       if (cursor != null && !cursor.isClosed()) {
         cursor.close();

@@ -566,6 +566,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
           } else {
             setUnInstallMenuOptionVisible(null);
           }
+        }, err -> {
+          CrashReports.logException(err);
+          Logger.e(err);
         });
 
     header.setup(getApp);

@@ -40,7 +40,7 @@ public class ApkFy {
         CrashReports.logString("APKFY_APP_ID", appId);
       }
       Logger.d(TAG, e.getMessage());
-      CrashReports.logException(e);
+      CrashReport.getInstance().log(e);
     }
     return null;
   }

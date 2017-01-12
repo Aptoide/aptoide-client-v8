@@ -14,13 +14,13 @@ import android.content.pm.PackageInfo;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
-import cm.aptoide.accountmanager.AccountManagerPreferences;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.util.UserCompleteData;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
 import cm.aptoide.pt.actions.UserData;
-import cm.aptoide.pt.crashreports.AptoideCrashLogger;
+import cm.aptoide.pt.crashreports.ConsoleLogger;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.FabricCrashLogger;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
@@ -99,7 +99,7 @@ public abstract class V8Engine extends DataProvider {
       checkUpdates();
     }, e -> {
       Logger.e(TAG, e);
-      //CrashReports.logException(e);
+      //CrashReport.getInstance().log(e);
     });
   }
 
@@ -150,8 +150,7 @@ public abstract class V8Engine extends DataProvider {
     try {
       PRNGFixes.apply();
     } catch (Exception e) {
-      Logger.e(TAG, "onCreate: " + e);
-      CrashReports.logException(e);
+      CrashReport.getInstance().log(e);
     }
     long l = System.currentTimeMillis();
     AptoideUtils.setContext(this);
@@ -278,7 +277,9 @@ public abstract class V8Engine extends DataProvider {
   }
 
   protected void setupCrashReports(boolean isDisabled) {
-    CrashReports.setup(AptoideCrashLogger.getInstance().setup(this, isDisabled));
+    CrashReport.getInstance()
+        .addLogger(new FabricCrashLogger(this, isDisabled))
+        .addLogger(new ConsoleLogger());
   }
 
   protected FragmentProvider createFragmentProvider() {

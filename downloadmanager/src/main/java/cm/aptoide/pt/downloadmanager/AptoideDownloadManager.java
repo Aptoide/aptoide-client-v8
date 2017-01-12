@@ -7,7 +7,7 @@ package cm.aptoide.pt.downloadmanager;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
@@ -201,7 +201,7 @@ public class AptoideDownloadManager {
           downloadAccessor.save(downloads);
           Logger.d(TAG, "Downloads paused");
         }, err -> {
-          CrashReports.logException(err);
+          CrashReport.getInstance().log(err);
         });
   }
 
@@ -269,8 +269,7 @@ public class AptoideDownloadManager {
               .subscribe(cleanedSize -> Logger.d(TAG,
                   "cleaned size: " + AptoideUtils.StringU.formatBytes(cleanedSize, false)),
                   throwable -> {
-                Logger.e(TAG, throwable);
-                CrashReports.logException(throwable);
+                CrashReport.getInstance().log(throwable);
               });
         }
       }, throwable -> throwable.printStackTrace());

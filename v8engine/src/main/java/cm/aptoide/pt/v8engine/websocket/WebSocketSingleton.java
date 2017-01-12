@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.websocket;
 import android.app.SearchManager;
 import android.database.Cursor;
 import android.database.MatrixCursor;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.logger.Logger;
 import com.fasterxml.jackson.core.JsonFactory;
@@ -67,7 +68,7 @@ public class WebSocketSingleton {
         blockingQueue.add(mCursor);
       } catch (JSONException e) {
         Logger.printException(e);
-        CrashReports.logException(e);
+        CrashReport.getInstance().log(e);
       }
     }
 
@@ -111,7 +112,7 @@ public class WebSocketSingleton {
           g.close();
         } catch (IOException e) {
           Logger.printException(e);
-          CrashReports.logException(e);
+          CrashReport.getInstance().log(e);
         }
         //"{\"query\":\"" + query + "\"}"
 

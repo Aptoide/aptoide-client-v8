@@ -215,7 +215,7 @@ public class DefaultInstaller implements Installer {
       //  throw new RuntimeException("Device not rooted.");
       //}
     } catch (Exception e) {
-      CrashReports.logException(e);
+      CrashReport.getInstance().log(e);
       sendErrorEvent(packageName, versionCode, e);
       throw new InstallationException("Installation with root failed for "
           + packageName
@@ -243,7 +243,7 @@ public class DefaultInstaller implements Installer {
       intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
       context.startActivity(intent);
     } catch (PackageManager.NameNotFoundException e) {
-      CrashReports.logException(e);
+      CrashReport.getInstance().log(e);
       throw new InstallationException(e);
     }
   }
@@ -261,7 +261,7 @@ public class DefaultInstaller implements Installer {
       info = packageManager.getPackageInfo(packageName, 0);
       return (info != null && info.versionCode == versionCode);
     } catch (PackageManager.NameNotFoundException e) {
-      CrashReports.logException(e);
+      CrashReport.getInstance().log(e);
       return false;
     }
   }

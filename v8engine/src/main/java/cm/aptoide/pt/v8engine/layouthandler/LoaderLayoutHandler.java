@@ -86,7 +86,7 @@ public class LoaderLayoutHandler {
     }).subscribeOn(AndroidSchedulers.mainThread()).subscribe(o -> {
     }, e -> {
       Logger.printException(e);
-      CrashReports.logException(e);
+      CrashReport.getInstance().log(e);
     });
   }
 

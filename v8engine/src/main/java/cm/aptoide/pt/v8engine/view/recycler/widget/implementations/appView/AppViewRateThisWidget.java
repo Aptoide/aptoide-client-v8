@@ -125,7 +125,7 @@ import java.util.Locale;
         }
       } catch (Exception e) {
         Logger.e(TAG, e);
-        CrashReports.logException(e);
+        CrashReport.getInstance().log(e);
       }
     }
 
@@ -267,7 +267,7 @@ import java.util.Locale;
         }
       } catch (Exception e) {
         Logger.e(TAG, e);
-        CrashReports.logException(e);
+        CrashReport.getInstance().log(e);
       }
     }
 

@@ -16,7 +16,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Base64;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
@@ -146,7 +146,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
         try {
           ad = new ObjectMapper().readValue(json, GetAdsResponse.Ad.class);
         } catch (IOException e) {
-          CrashReports.logException(e);
+          CrashReport.getInstance().log(e);
           Logger.printException(e);
         }
 
@@ -171,7 +171,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
       try {
         params = AptoideUtils.StringU.splitQuery(URI.create(uri));
       } catch (UnsupportedEncodingException e) {
-        CrashReports.logException(e);
+        CrashReport.getInstance().log(e);
         Logger.printException(e);
       }
 
@@ -188,7 +188,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
             long id = Long.parseLong(uid);
             startFromAppView(id, null, true);
           } catch (NumberFormatException e) {
-            CrashReports.logException(e);
+            CrashReport.getInstance().log(e);
             Logger.printException(e);
             ShowMessage.asToast(getApplicationContext(), R.string.simple_error_occured + uid);
           }
@@ -251,7 +251,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
           startFromAppView(id, packageName, false);
           return;
         } catch (NumberFormatException e) {
-          CrashReports.logException(e);
+          CrashReport.getInstance().log(e);
           Logger.printException(e);
         }
       }
@@ -337,7 +337,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
       server = handler.getServers();
       app = handler.getApp();
     } catch (IOException | SAXException | ParserConfigurationException e) {
-      CrashReports.logException(e);
+      CrashReport.getInstance().log(e);
       Logger.printException(e);
     }
   }
@@ -367,8 +367,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
         startFromSearch(packageName);
       }
     }, err -> {
-      Logger.e(TAG, err);
-      CrashReports.logException(err);
+      CrashReport.getInstance().log(err);
     });
   }
 
@@ -381,7 +380,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
     asyncTask = new MyAppDownloader().execute(getIntent().getDataString());
   }
 
-  private void downloadMyappFile(String myappUri) throws Exception {
+  private void downloadMyAppFile(String myappUri) throws Exception {
     try {
       URL url = new URL(myappUri);
       URLConnection connection;
@@ -414,7 +413,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
       getit.close();
       saveit.close();
     } catch (Exception e) {
-      CrashReports.logException(e);
+      CrashReport.getInstance().log(e);
       Logger.printException(e);
     }
   }
@@ -429,7 +428,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
       server = handler.getServers();
       app = handler.getApp();
     } catch (IOException | SAXException | ParserConfigurationException e) {
-      CrashReports.logException(e);
+      CrashReport.getInstance().log(e);
       Logger.printException(e);
     }
   }
@@ -482,10 +481,10 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
     @Override protected Void doInBackground(String... params) {
 
       try {
-        downloadMyappFile(params[0]);
+        downloadMyAppFile(params[0]);
         parseXmlMyapp(TMP_MYAPP_FILE);
       } catch (Exception e) {
-        CrashReports.logException(e);
+        CrashReport.getInstance().log(e);
         Logger.printException(e);
       }
 

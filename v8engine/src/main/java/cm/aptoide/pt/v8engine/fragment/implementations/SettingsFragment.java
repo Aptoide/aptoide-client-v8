@@ -317,14 +317,14 @@ public class SettingsFragment extends PreferenceFragmentCompat
               .getPackageInfo(getActivity().getPackageName(), 0).versionName;
         } catch (PackageManager.NameNotFoundException e) {
           Logger.printException(e);
-          CrashReports.logException(e);
+          CrashReport.getInstance().log(e);
         }
         try {
           versionCode = getActivity().getPackageManager()
               .getPackageInfo(getActivity().getPackageName(), 0).versionCode;
         } catch (PackageManager.NameNotFoundException e) {
           Logger.printException(e);
-          CrashReports.logException(e);
+          CrashReport.getInstance().log(e);
         }
 
         ((TextView) view.findViewById(R.id.aptoide_version)).setText(

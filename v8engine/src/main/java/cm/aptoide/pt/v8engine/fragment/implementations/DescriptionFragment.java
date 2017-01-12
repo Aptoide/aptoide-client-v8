@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
@@ -135,7 +134,7 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
         }
       }
     } catch (NullPointerException e) {
-      CrashReports.logException(e);
+      CrashReport.getInstance().log(e);
       Logger.e(TAG, e);
     }
     setDataUnavailable();
@@ -149,7 +148,7 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
         return;
       }
     } catch (NullPointerException e) {
-      CrashReports.logException(e);
+      CrashReport.getInstance().log(e);
       Logger.e(TAG, e);
     }
     setDataUnavailable();

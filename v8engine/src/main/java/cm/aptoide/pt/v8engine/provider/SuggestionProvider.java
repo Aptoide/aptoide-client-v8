@@ -11,7 +11,6 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
 import android.os.Build;
-import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.websocket.WebSocketSingleton;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -60,7 +59,7 @@ public class SuggestionProvider extends SearchRecentSuggestionsProvider {
         }
       } catch (InterruptedException e) {
         Logger.printException(e);
-        CrashReports.logException(e);
+        CrashReport.getInstance().log(e);
       } finally {
         c.close();
       }

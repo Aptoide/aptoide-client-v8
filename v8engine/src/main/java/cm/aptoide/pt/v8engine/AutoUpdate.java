@@ -92,22 +92,22 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
             return autoUpdateInfo;
           }
         } catch (PackageManager.NameNotFoundException e) {
-          CrashReports.logException(e);
+          CrashReport.getInstance().log(e);
           e.printStackTrace();
         }
       }
     } catch (ParserConfigurationException e) {
       e.printStackTrace();
-      CrashReports.logException(e);
+      CrashReport.getInstance().log(e);
     } catch (SAXException e) {
       e.printStackTrace();
-      CrashReports.logException(e);
+      CrashReport.getInstance().log(e);
     } catch (MalformedURLException e) {
       e.printStackTrace();
-      CrashReports.logException(e);
+      CrashReport.getInstance().log(e);
     } catch (IOException e) {
       e.printStackTrace();
-      CrashReports.logException(e);
+      CrashReport.getInstance().log(e);
     } finally {
       if (connection != null) {
         connection.disconnect();

@@ -115,7 +115,7 @@ public class BillingBinder extends AptoideInAppBillingService.Stub {
             try {
               return Observable.just(serializer.serializeProducts(products));
             } catch (IOException e) {
-              CrashReports.logException(e);
+              CrashReport.getInstance().log(e);
               return Observable.error(e);
             }
           }).toBlocking().first();
