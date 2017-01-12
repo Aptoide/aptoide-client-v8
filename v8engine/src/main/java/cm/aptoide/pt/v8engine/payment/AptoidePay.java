@@ -59,28 +59,36 @@ public class AptoidePay {
   private Observable<List<Payment>> getPaymentsWithAuthorizations(List<Payment> payments) {
     return getAuthorizationRequiredPaymentIds(payments).flatMapObservable(
         paymentIds -> authorizationRepository.getPaymentAuthorizations(paymentIds))
-        .flatMap(authorizations -> addAuthorization(payments, authorizations))
+        .flatMap(authorizations -> addAuthorizations(payments, authorizations))
         .map(success -> payments);
   }
 
-  private Observable<Void> addAuthorization(List<Payment> payments,
+  private Observable<Void> addAuthorizations(List<Payment> payments,
       List<Authorization> authorizations) {
     return Observable.from(payments)
-        .filter(payment -> {
+        .flatMap(payment -> addAuthorization(authorizations, payment).map(success -> payment))
+        .doOnNext(payment -> {
           if (payment.isAuthorizationRequired()) {
-            return true;
+            if (payment.getAuthorization() == null) {
+              payment.setAuthorization(
+                  authorizationFactory.create(payment.getId(), Authorization.Status.INACTIVE));
+            }
+          } else {
+            payment.setAuthorization(
+              authorizationFactory.create(payment.getId(), Authorization.Status.NONE));
           }
-          payment.setAuthorization(authorizationFactory.create(payment.getId(), Authorization.Status.NONE));
-          return false;
         })
-        .flatMap(authorizationRequiredPayment -> Observable.from(authorizations)
-            .doOnNext(authorization -> {
-              if (authorizationRequiredPayment.getId() == authorization.getPaymentId()) {
-                authorizationRequiredPayment.setAuthorization(authorization);
-              }
-            }))
         .toList()
         .map(success -> null);
+  }
+
+  private Observable<Void> addAuthorization(List<Authorization> payment,
+      Payment authorizationRequiredPayment) {
+    return Observable.from(payment).doOnNext(authorization -> {
+      if (authorizationRequiredPayment.getId() == authorization.getPaymentId()) {
+        authorizationRequiredPayment.setAuthorization(authorization);
+      }
+    }).toList().map(success -> null);
   }
 
   private Single<List<Integer>> getAuthorizationRequiredPaymentIds(List<Payment> payments) {
