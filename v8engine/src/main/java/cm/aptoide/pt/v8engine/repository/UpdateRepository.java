@@ -122,11 +122,8 @@ public class UpdateRepository implements Repository {
     });
   }
 
-  public Observable<Void> remove(String packageName) {
-    return Observable.fromCallable(() -> {
-      updateAccessor.remove(packageName);
-      return null;
-    });
+  public void remove(String packageName) {
+    updateAccessor.remove(packageName);
   }
 
   public Observable<List<Update>> getNonExcludedUpdates() {
