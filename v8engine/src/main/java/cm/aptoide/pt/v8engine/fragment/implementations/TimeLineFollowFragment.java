@@ -13,6 +13,7 @@ import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.GetFollowersRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetFollowingRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.GetFollowers;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -33,8 +34,14 @@ import rx.functions.Action1;
 public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment {
 
   public static final String OPEN_MODE = "OPEN_MODE";
+  private final AptoideClientUUID aptoideClientUUID;
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
   private TimeLineFollowFragment.FollowFragmentOpenMode openMode;
+
+  public TimeLineFollowFragment() {
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+  }
 
   public static TimeLineFollowFragment newInstance(FollowFragmentOpenMode openMode,
       long followNumber, String storeTheme) {
@@ -91,14 +98,12 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
       switch (openMode) {
         case FOLLOWERS:
           request = GetFollowersRequest.of(AptoideAccountManager.getAccessToken(),
-              new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                  DataProvider.getContext()).getAptoideClientUUID());
+              aptoideClientUUID.getAptoideClientUUID());
           break;
         default:
         case FOLLOWING:
           request = GetFollowingRequest.of(AptoideAccountManager.getAccessToken(),
-              new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                  DataProvider.getContext()).getAptoideClientUUID());
+              aptoideClientUUID.getAptoideClientUUID());
           break;
       }
       LinkedList<Displayable> dispList = new LinkedList<>();

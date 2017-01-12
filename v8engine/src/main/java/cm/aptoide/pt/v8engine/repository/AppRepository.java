@@ -11,6 +11,7 @@ import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v3.GetApkInfoRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v3.PaidApp;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -24,17 +25,20 @@ import rx.Observable;
 public class AppRepository {
 
   private final NetworkOperatorManager operatorManager;
+  private final AptoideClientUUID aptoideClientUUID;
 
   public AppRepository(NetworkOperatorManager operatorManager) {
     this.operatorManager = operatorManager;
+
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
   }
 
   public Observable<GetApp> getApp(long appId, boolean refresh, boolean sponsored,
       String storeName, String packageName) {
     return GetAppRequest.of(appId, storeName, StoreUtils.getStoreCredentials(storeName),
-        AptoideAccountManager.getAccessToken(),
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID(), packageName)
+        AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID(),
+        packageName)
         .observe(refresh)
         .flatMap(response -> {
           if (response != null && response.isOk()) {
@@ -53,8 +57,7 @@ public class AppRepository {
   public Observable<GetApp> getApp(String packageName, boolean refresh, boolean sponsored,
       String storeName) {
     return GetAppRequest.of(packageName, storeName, AptoideAccountManager.getAccessToken(),
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID())
+        aptoideClientUUID.getAptoideClientUUID())
         .observe(refresh)
         .flatMap(response -> {
           if (response != null && response.isOk()) {
@@ -86,8 +89,7 @@ public class AppRepository {
 
   public Observable<GetApp> getAppFromMd5(String md5, boolean refresh, boolean sponsored) {
     return GetAppRequest.ofMd5(md5, AptoideAccountManager.getAccessToken(),
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID())
+        aptoideClientUUID.getAptoideClientUUID())
         .observe(refresh)
         .flatMap(response -> {
           if (response != null && response.isOk()) {

@@ -14,9 +14,7 @@ import android.content.pm.PackageInfo;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
-import cm.aptoide.accountmanager.AccountManagerPreferences;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.util.UserCompleteData;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
 import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.crashreports.AptoideCrashLogger;
@@ -32,6 +30,7 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.PRNGFixes;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -76,6 +75,12 @@ public abstract class V8Engine extends DataProvider {
   @Getter private static DisplayableWidgetMapping displayableWidgetMapping;
   @Setter @Getter private static boolean autoUpdateWasCalled = false;
 
+  private static AptoideClientUUID aptoideClientUUID;
+
+  public V8Engine() {
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this);
+  }
+
   public static void loadStores() {
 
     AptoideAccountManager.getUserRepos().subscribe(subscriptions -> {
@@ -119,8 +124,7 @@ public abstract class V8Engine extends DataProvider {
   }
 
   private static void regenerateUserAgent() {
-    SecurePreferences.setUserAgent(AptoideUtils.NetworkUtils.getDefaultUserAgent(
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext()),
+    SecurePreferences.setUserAgent(AptoideUtils.NetworkUtils.getDefaultUserAgent(aptoideClientUUID,
         new UserData() {
           @Override public String getUserEmail() {
             return AptoideAccountManager.getUserEmail();
@@ -234,14 +238,9 @@ public abstract class V8Engine extends DataProvider {
     AptoideDownloadManager.getInstance()
         .init(this, new DownloadNotificationActionsActionsInterface(),
             new DownloadManagerSettingsI(), downloadAccessor, CacheHelper.build(),
-            new FileUtils(action -> Analytics.File.moveFile(action)), new TokenHttpClient(
-                new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this),
-                new UserData() {
-                  @Override public String getUserEmail() {
-                    return AptoideAccountManager.getUserEmail();
-                  }
-                }, getConfiguration().getPartnerId()),
-            new DownloadAnalytics(Analytics.getInstance()));
+            new FileUtils(action -> Analytics.File.moveFile(action)),
+            new TokenHttpClient(aptoideClientUUID, AptoideAccountManager::getUserEmail,
+                getConfiguration().getPartnerId()), new DownloadAnalytics(Analytics.getInstance()));
 
     fileManager.purgeCache()
         .subscribe(cleanedSize -> Logger.d(TAG,
@@ -260,9 +259,7 @@ public abstract class V8Engine extends DataProvider {
     SQLiteDatabase db = new SQLiteDatabaseHelper(this).getWritableDatabase();
     db.close();
 
-    ABTestManager.getInstance()
-        .initialize(new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            this).getAptoideClientUUID())
+    ABTestManager.getInstance().initialize(aptoideClientUUID.getAptoideClientUUID())
         .subscribe(success -> {
         }, throwable -> {
           Logger.d(TAG, "An error has occurred when initializing the ABTestManager");
@@ -294,9 +291,8 @@ public abstract class V8Engine extends DataProvider {
   }
 
   Observable<String> generateAptoideUUID() {
-    return Observable.fromCallable(
-        () -> new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            this).getAptoideClientUUID()).subscribeOn(Schedulers.computation());
+    return Observable.fromCallable(() -> aptoideClientUUID.getAptoideClientUUID())
+        .subscribeOn(Schedulers.computation());
   }
 
   //

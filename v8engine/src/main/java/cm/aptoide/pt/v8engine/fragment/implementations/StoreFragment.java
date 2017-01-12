@@ -28,6 +28,7 @@ import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.Event;
@@ -57,11 +58,17 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private static final String TAG = StoreFragment.class.getSimpleName();
 
   private final int PRIVATE_STORE_REQUEST_CODE = 20;
+  private final AptoideClientUUID aptoideClientUUID;
   protected PagerSlidingTabStrip pagerSlidingTabStrip;
   private String storeName;
   private StoreContext storeContext;
   private GetStore getStore;
   private String storeTheme;
+
+  public StoreFragment() {
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+  }
 
   public static StoreFragment newInstance(String storeName, String storeTheme) {
     return newInstance(storeName, StoreContext.store, storeTheme);
@@ -104,32 +111,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
     return super.onCreateView(inflater, container, savedInstanceState);
   }
 
-  @Override public void onDestroyView() {
-    super.onDestroyView();
-    if (storeTheme != null && !storeContext.equals(StoreContext.store)) {
-      ThemeUtils.setAptoideTheme(getActivity());
-    }
-  }
-
-  @Override public void onDestroy() {
-    super.onDestroy();
-    if (storeTheme != null) {
-      ThemeUtils.setStatusBarThemeColor(getActivity(),
-          StoreThemeEnum.get(V8Engine.getConfiguration().getDefaultTheme()));
-    }
-  }
-
-  @Override public void loadExtras(Bundle args) {
-    super.loadExtras(args);
-    storeName = args.getString(BundleCons.STORE_NAME);
-    storeContext = (StoreContext) args.get(BundleCons.STORE_CONTEXT);
-    storeTheme = args.getString(BundleCons.STORE_THEME);
-  }
-
-  @Override public int getContentViewId() {
-    return R.layout.store_activity;
-  }
-
   @Override protected int getViewToShowAfterLoadingId() {
     return R.id.app_bar_layout;
   }
@@ -137,9 +118,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     if (create || getStore == null) {
       GetStoreRequest.of(StoreUtils.getStoreCredentials(storeName), storeContext,
-          AptoideAccountManager.getAccessToken(),
-          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-              DataProvider.getContext()).getAptoideClientUUID())
+          AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
           .observe(refresh)
           .observeOn(AndroidSchedulers.mainThread())
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
@@ -168,6 +147,13 @@ public class StoreFragment extends BasePagerToolbarFragment {
           });
     } else {
       setupViewPager();
+    }
+  }
+
+  @Override public void onDestroyView() {
+    super.onDestroyView();
+    if (storeTheme != null && !storeContext.equals(StoreContext.store)) {
+      ThemeUtils.setAptoideTheme(getActivity());
     }
   }
 
@@ -248,6 +234,25 @@ public class StoreFragment extends BasePagerToolbarFragment {
     return new StorePagerAdapter(getChildFragmentManager(), getStore);
   }
 
+  @Override public void onDestroy() {
+    super.onDestroy();
+    if (storeTheme != null) {
+      ThemeUtils.setStatusBarThemeColor(getActivity(),
+          StoreThemeEnum.get(V8Engine.getConfiguration().getDefaultTheme()));
+    }
+  }
+
+  @Override public void loadExtras(Bundle args) {
+    super.loadExtras(args);
+    storeName = args.getString(BundleCons.STORE_NAME);
+    storeContext = (StoreContext) args.get(BundleCons.STORE_CONTEXT);
+    storeTheme = args.getString(BundleCons.STORE_THEME);
+  }
+
+  @Override public int getContentViewId() {
+    return R.layout.store_activity;
+  }
+
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
 
@@ -260,6 +265,13 @@ public class StoreFragment extends BasePagerToolbarFragment {
     }
   }
 
+  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+    inflater.inflate(R.menu.menu_search, menu);
+
+    setupSearch(menu);
+  }
+
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     int i = item.getItemId();
 
@@ -268,13 +280,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
       return true;
     }
     return super.onOptionsItemSelected(item);
-  }
-
-  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    super.onCreateOptionsMenu(menu, inflater);
-    inflater.inflate(R.menu.menu_search, menu);
-
-    setupSearch(menu);
   }
 
   protected void setupSearch(Menu menu) {

@@ -18,11 +18,11 @@ import cm.aptoide.accountmanager.ws.CheckUserCredentialsRequest;
 import cm.aptoide.accountmanager.ws.ErrorsMapper;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
-import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.SetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SimpleSetStoreRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
@@ -86,7 +86,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
   private String from;
   private String storeRemoteUrl;
 
-  private IdsRepository idsRepository =
+  private AptoideClientUUID aptoideClientUUID =
       new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
           DataProvider.getContext());
 
@@ -273,9 +273,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
           } else if (CREATE_STORE_REQUEST_CODE == 4) {
             setStoreData();
             progressDialog.show();
-            mSubscriptions.add(SetStoreRequest.of(
-                new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                    DataProvider.getContext()).getAptoideClientUUID(),
+            mSubscriptions.add(SetStoreRequest.of(aptoideClientUUID.getAptoideClientUUID(),
                 AptoideAccountManager.getAccessToken(), storeName, storeTheme, storeAvatarPath,
                 storeDescription, true, storeId).observe().subscribe(answer -> {
               AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
@@ -306,7 +304,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
             setStoreData();
             progressDialog.show();
             mSubscriptions.add(SimpleSetStoreRequest.of(AptoideAccountManager.getAccessToken(),
-                idsRepository.getAptoideClientUUID(), storeId, storeTheme, storeDescription)
+                aptoideClientUUID.getAptoideClientUUID(), storeId, storeTheme, storeDescription)
                 .observe()
                 .subscribe(answer -> {
                   AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
@@ -372,9 +370,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
        * Multipart
        */
       setStoreData();
-      mSubscriptions.add(SetStoreRequest.of(
-          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-              DataProvider.getContext()).getAptoideClientUUID(),
+      mSubscriptions.add(SetStoreRequest.of(aptoideClientUUID.getAptoideClientUUID(),
           AptoideAccountManager.getAccessToken(), storeName, storeTheme, storeAvatarPath)
           .observe()
           .timeout(90, TimeUnit.SECONDS)
@@ -435,7 +431,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
        */
       setStoreData();
       SimpleSetStoreRequest.of(AptoideAccountManager.getAccessToken(),
-          idsRepository.getAptoideClientUUID(), storeName, storeTheme).execute(answer -> {
+          aptoideClientUUID.getAptoideClientUUID(), storeName, storeTheme).execute(answer -> {
         AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
           progressDialog.dismiss();
           AptoideAccountManager.sendLoginBroadcast();

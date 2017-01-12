@@ -24,6 +24,7 @@ import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -40,11 +41,17 @@ import cm.aptoide.pt.v8engine.util.StoreUtils;
 public class PrivateStoreDialog extends DialogFragment {
 
   public static final String TAG = "PrivateStoreDialog";
+  private final AptoideClientUUID aptoideClientUUID;
   private ProgressDialog loadingDialog;
   private String storeName;
   private String storeUser;
   private String storePassSha1;
   private boolean isInsideStore;
+
+  public PrivateStoreDialog() {
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+  }
 
   public static PrivateStoreDialog newInstance(Fragment returnFragment, int requestCode,
       String storeName, boolean isInsideStore) {
@@ -143,9 +150,7 @@ public class PrivateStoreDialog extends DialogFragment {
   private GetStoreMetaRequest buildRequest() {
     return GetStoreMetaRequest.of(
         new BaseRequestWithStore.StoreCredentials(storeName, storeUser, storePassSha1),
-        AptoideAccountManager.getAccessToken(),
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID());
+        AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID());
   }
 
   public void setIsInsideStore(boolean isInsideStore) {

@@ -20,6 +20,7 @@ import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
@@ -43,6 +44,7 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
   @Getter private static final String PACKAGE_NAME = "packageName";
   @Getter private static final String STORE_NAME = "store_name";
   @Getter private static final String STORE_THEME = "store_theme";
+  private final AptoideClientUUID aptoideClientUUID;
   private boolean hasAppId = false;
   private long appId;
   private String packageName;
@@ -50,6 +52,11 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
   private TextView descriptionContainer;
   private String storeName;
   private String storeTheme;
+
+  public DescriptionFragment() {
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+  }
 
   public static DescriptionFragment newInstance(long appId, String packageName, String storeName,
       String storeTheme) {
@@ -91,9 +98,8 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     if (hasAppId) {
       GetAppRequest.of(appId, storeName, StoreUtils.getStoreCredentials(storeName),
-          AptoideAccountManager.getAccessToken(),
-          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-              DataProvider.getContext()).getAptoideClientUUID(), packageName).execute(getApp -> {
+          AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID(),
+          packageName).execute(getApp -> {
         setupAppDescription(getApp);
         setupTitle(getApp);
         finishLoading();

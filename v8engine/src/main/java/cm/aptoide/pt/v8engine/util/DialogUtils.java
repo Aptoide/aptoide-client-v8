@@ -20,6 +20,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.PostReviewRequest;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
@@ -40,6 +41,12 @@ public class DialogUtils {
 
   private static final String TAG = DialogUtils.class.getSimpleName();
   private static final Locale LOCALE = Locale.getDefault();
+  private static AptoideClientUUID aptoideClientUUID;
+
+  public DialogUtils() {
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+  }
 
   public static Observable<GenericDialogs.EResponse> showRateDialog(@NonNull Activity activity,
       @NonNull String appName, @NonNull String packageName, @Nullable String storeName) {
@@ -128,15 +135,11 @@ public class DialogUtils {
         // WS call
         if (storeName != null) {
           PostReviewRequest.of(storeName, packageName, reviewTitle, reviewText, reviewRating,
-              AptoideAccountManager.getAccessToken(),
-              new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                  DataProvider.getContext()).getAptoideClientUUID())
+              AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
               .execute(successRequestListener, errorRequestListener);
         } else {
           PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating,
-              AptoideAccountManager.getAccessToken(),
-              new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                  DataProvider.getContext()).getAptoideClientUUID())
+              AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
               .execute(successRequestListener, errorRequestListener);
         }
       });
@@ -213,15 +216,11 @@ public class DialogUtils {
 
       if (storeName != null) {
         PostReviewRequest.of(storeName, packageName, reviewTitle, reviewText, reviewRating,
-            AptoideAccountManager.getAccessToken(),
-            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                DataProvider.getContext()).getAptoideClientUUID())
+            AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
             .execute(successRequestListener, errorRequestListener);
       } else {
         PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating,
-            AptoideAccountManager.getAccessToken(),
-            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                DataProvider.getContext()).getAptoideClientUUID())
+            AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
             .execute(successRequestListener, errorRequestListener);
       }
     });
