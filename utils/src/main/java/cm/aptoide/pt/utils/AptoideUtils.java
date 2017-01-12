@@ -649,7 +649,6 @@ public class AptoideUtils {
     }
 
     /**
-     *
      * @param bytes file size
      * @return formatted string for file file showing a Human perceptible file size
      */
@@ -930,7 +929,8 @@ public class AptoideUtils {
               }
             }
           } catch (Exception e) {
-            Logger.printException(e);
+            Logger.e(TAG, e);
+            throw new RuntimeException(e);
           }
         }
       }
@@ -1029,9 +1029,12 @@ public class AptoideUtils {
 
   public static final class ThreadU {
 
+    private static final String TAG = ThreadU.class.getName();
+
     public static void runOnIoThread(Runnable runnable) {
       Observable.just(null).observeOn(Schedulers.io()).subscribe(o -> runnable.run(), e -> {
-        Logger.printException(e);
+        Logger.e(TAG, e);
+        throw new RuntimeException(e);
       });
     }
 
@@ -1253,6 +1256,8 @@ public class AptoideUtils {
    */
   public static class IconSizeU {
 
+    private static final String TAG = IconSizeU.class.getName();
+
     public static final int DEFAULT_SCREEN_DENSITY = -1;
     public static final HashMap<Integer, String> mStoreIconSizes;
     public static final int ICONS_SIZE_TYPE = 0;
@@ -1421,7 +1426,8 @@ public class AptoideUtils {
           screen = db.toString();
         }
       } catch (Exception e) {
-        Logger.printException(e);
+        Logger.e(TAG, e);
+        throw e;
       }
 
       return screen;
@@ -1515,7 +1521,8 @@ public class AptoideUtils {
           }
         }
       } catch (Exception e) {
-        Logger.printException(e);
+        Logger.e(TAG, e);
+        throw e;
       }
       return iconUrl;
     }
@@ -1550,8 +1557,8 @@ public class AptoideUtils {
       return originalUrl;
     }
 
-    public static List<ImageSizeErrors> checkIconSizeProperties(String avatarPath, int minHeight, int maxHeight,
-        int minWidth, int maxWidth, int maxImageSize) {
+    public static List<ImageSizeErrors> checkIconSizeProperties(String avatarPath, int minHeight,
+        int maxHeight, int minWidth, int maxWidth, int maxImageSize) {
       ImageInfo imageInfo = getImageInfo(avatarPath);
       List<ImageSizeErrors> errors = new LinkedList<>();
       if (imageInfo.getHeight() < minHeight) {

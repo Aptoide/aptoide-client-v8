@@ -1,6 +1,6 @@
 package cm.aptoide.pt.util;
 
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import java.util.ArrayList;
 
@@ -44,7 +44,7 @@ public class ScreenTrackingUtils {
       history.remove(0);
     }
     history.add(screenName);
-    CrashReports.logString(SCREEN_HISTORY, history.toString());
+    CrashReport.getInstance().log(SCREEN_HISTORY, history.toString());
     Logger.d(TAG, "addScreenToHistory: " + history.toString());
   }
 
@@ -55,10 +55,10 @@ public class ScreenTrackingUtils {
   public void incrementNumberOfScreens() {
     totalNumberScreens++;
     numberScreensOnBackStack++;
-    CrashReports.logString(NUMBER_OF_SCREENS, String.valueOf(totalNumberScreens));
-    CrashReports.logString(NUMBER_OF_SCREENS_ON_BACK_STACK,
-        String.valueOf(numberScreensOnBackStack));
-    CrashReports.logString(LIFE_CYCLE_STATE, LifeCycle.CREATE.toString());
+    CrashReport.getInstance().log(NUMBER_OF_SCREENS, String.valueOf(totalNumberScreens));
+    CrashReport.getInstance()
+        .log(NUMBER_OF_SCREENS_ON_BACK_STACK, String.valueOf(numberScreensOnBackStack));
+    CrashReport.getInstance().log(LIFE_CYCLE_STATE, LifeCycle.CREATE.toString());
     Logger.d(TAG, "incrementNumberOfScreens: NOS: "
         + NUMBER_OF_SCREENS
         + ", NOSOBS: "
@@ -70,9 +70,9 @@ public class ScreenTrackingUtils {
    */
   public void decrementNumberOfScreens() {
     numberScreensOnBackStack--;
-    CrashReports.logString(NUMBER_OF_SCREENS_ON_BACK_STACK,
-        String.valueOf(numberScreensOnBackStack));
-    CrashReports.logString(LIFE_CYCLE_STATE, LifeCycle.DESTROY.toString());
+    CrashReport.getInstance()
+        .log(NUMBER_OF_SCREENS_ON_BACK_STACK, String.valueOf(numberScreensOnBackStack));
+    CrashReport.getInstance().log(LIFE_CYCLE_STATE, LifeCycle.DESTROY.toString());
     Logger.d(TAG, "decrementNumberOfScreens: NOSOBS: " + String.valueOf(numberScreensOnBackStack));
   }
 

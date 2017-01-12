@@ -28,6 +28,7 @@ import cm.aptoide.accountmanager.Constants;
 import cm.aptoide.accountmanager.util.UserCompleteData;
 import cm.aptoide.accountmanager.ws.LoginMode;
 import cm.aptoide.pt.actions.UserData;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagedKeys;
@@ -215,7 +216,6 @@ public class ToolboxContentProvider extends ContentProvider {
     } catch (NullPointerException e) {
       //it can happen if package manager or context is null
       CrashReport.getInstance().log(e);
-      Logger.e(TAG, "update: " + e);
     }
     return changed;
   }

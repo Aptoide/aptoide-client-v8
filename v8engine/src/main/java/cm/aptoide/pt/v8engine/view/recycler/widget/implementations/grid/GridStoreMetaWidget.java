@@ -16,7 +16,7 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.AccountManagerPreferences;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.CreateStoreActivity;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
@@ -185,7 +185,6 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
     final StoreThemeEnum theme = StoreThemeEnum.get(store.getAppearance().getTheme());
     final Context context = itemView.getContext();
 
-
     StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
     boolean isStoreSubscribed =
         storeAccessor.get(store.getId()).toBlocking().firstOrDefault(null) != null;
@@ -213,7 +212,9 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
     if (!TextUtils.isEmpty(AccountManagerPreferences.getUserRepo())) {
       if (AccountManagerPreferences.getUserRepo().equals(store.getName())) {
         editStoreButton.setVisibility(View.VISIBLE);
-        compositeSubscription.add(RxView.clicks(editStoreButton).subscribe(click -> editStore(store.getId(), store.getAppearance().getTheme(), store.getAppearance().getDescription(), store.getAvatar())));
+        compositeSubscription.add(RxView.clicks(editStoreButton)
+            .subscribe(click -> editStore(store.getId(), store.getAppearance().getTheme(),
+                store.getAppearance().getDescription(), store.getAvatar())));
       }
     }
   }
@@ -246,7 +247,7 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
               AptoideUtils.StringU.getFormattedString(R.string.store_followed,
                   subscribedStoreMeta.getData().getName()));
         }, err -> {
-          CrashReports.logException(err);
+          CrashReport.getInstance().log(err);
         });
       }
       updateSubscribeButtonText(storeWrapper.isStoreSubscribed());
@@ -263,7 +264,8 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
     }
   }
 
-  private void editStore(long storeId, String storeTheme, String storeDescription, String storeAvatar) {
+  private void editStore(long storeId, String storeTheme, String storeDescription,
+      String storeAvatar) {
     Intent intent = new Intent(getContext(), CreateStoreActivity.class);
     intent.putExtra("storeId", storeId);
     intent.putExtra("storeTheme", storeTheme);

@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.fragment;
 
 import android.support.v7.widget.RecyclerView;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseGridLayoutManager;

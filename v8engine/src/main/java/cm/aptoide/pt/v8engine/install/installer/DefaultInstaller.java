@@ -15,7 +15,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 import cm.aptoide.pt.logger.Logger;
@@ -84,8 +84,7 @@ public class DefaultInstaller implements Installer {
           }
         })
         .doOnError((throwable) -> {
-          Logger.e(TAG, throwable);
-          CrashReports.logException(throwable);
+          CrashReport.getInstance().log(throwable);
         });
   }
 
@@ -181,7 +180,7 @@ public class DefaultInstaller implements Installer {
       Shell.Interactive interactiveShell = shellBuilder.useSU().setWatchdogTimeout(10) // seconds
           .addCommand("pm install -r " + file.getAbsolutePath(), 0,
               (commandCode, exitCode, output) -> {
-                CrashReports.logException(new Exception("install -r exitCode: " + exitCode));
+                CrashReport.getInstance().log(new Exception("install -r exitCode: " + exitCode));
                 Observable.fromCallable(() -> exitCode)
                     .observeOn(Schedulers.computation())
                     .delay(20, TimeUnit.SECONDS)

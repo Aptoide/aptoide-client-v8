@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.CommentType;
@@ -61,7 +61,7 @@ public class CommentDialogFragment extends RxDialogFragment {
     args.putLong(RESOURCE_ID_AS_LONG, storeId);
     args.putLong(PREVIOUS_COMMENT_ID, previousCommentId);
 
-    if(!TextUtils.isEmpty(storeName)) {
+    if (!TextUtils.isEmpty(storeName)) {
       args.putString(APP_OR_STORE_NAME, storeName);
     }
 
@@ -75,7 +75,7 @@ public class CommentDialogFragment extends RxDialogFragment {
     args.putString(COMMENT_TYPE, CommentType.REVIEW.name());
     args.putLong(RESOURCE_ID_AS_LONG, id);
 
-    if(!TextUtils.isEmpty(appName)) {
+    if (!TextUtils.isEmpty(appName)) {
       args.putString(APP_OR_STORE_NAME, appName);
     }
 
@@ -89,7 +89,7 @@ public class CommentDialogFragment extends RxDialogFragment {
     args.putString(COMMENT_TYPE, CommentType.STORE.name());
     args.putLong(RESOURCE_ID_AS_LONG, storeId);
 
-    if(!TextUtils.isEmpty(storeName)) {
+    if (!TextUtils.isEmpty(storeName)) {
       args.putString(APP_OR_STORE_NAME, storeName);
     }
 
@@ -235,8 +235,7 @@ public class CommentDialogFragment extends RxDialogFragment {
           }
           ShowMessage.asSnack(CommentDialogFragment.this, R.string.error_occured);
         }, err -> {
-          Logger.e(TAG, err);
-          CrashReports.logException(err);
+          CrashReport.getInstance().log(err);
         });
   }
 

@@ -11,7 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
@@ -123,8 +123,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
         installMenuItem.setTitle(R.string.open);
       }
     }, err -> {
-      Logger.e(TAG, err);
-      CrashReports.logException(err);
+      CrashReport.getInstance().log(err);
     });
   }
 
@@ -158,7 +157,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
           }
           finishLoading();
         }, err -> {
-          CrashReports.logException(err);
+          CrashReport.getInstance().log(err);
         });
   }
 
@@ -189,6 +188,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    super.load(create, refresh, savedInstanceState);
     Logger.d(TAG, "Other versions should refresh? " + create);
     fetchRating(refresh);
     fetchReviews();
@@ -214,9 +214,11 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   }
 
   @NonNull @Override
-  public CommentsReadMoreDisplayable createReadMoreDisplayable(final int itemPosition, Review review) {
+  public CommentsReadMoreDisplayable createReadMoreDisplayable(final int itemPosition,
+      Review review) {
     return new CommentsReadMoreDisplayable(review.getId(), true,
-        review.getCommentList().getDatalist().getNext(), new SimpleReviewCommentAdder(itemPosition, this));
+        review.getCommentList().getDatalist().getNext(),
+        new SimpleReviewCommentAdder(itemPosition, this));
   }
 
   /*

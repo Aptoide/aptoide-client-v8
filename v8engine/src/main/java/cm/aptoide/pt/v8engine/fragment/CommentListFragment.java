@@ -14,7 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.CommentType;
@@ -121,6 +121,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
   }
 
   @Override public void setupToolbar() {
+    super.setupToolbar();
     // It's not calling super cause it does nothing in the middle class}
     // StoreTabGridRecyclerFragment.
     if (toolbar != null) {
@@ -364,7 +365,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
     if (storeCredentials == null || storeCredentials.getId() == null) {
       IllegalStateException illegalStateException =
           new IllegalStateException("Current store credentials does not have a store id");
-      CrashReports.logException(illegalStateException);
+      CrashReport.getInstance().log(illegalStateException);
       throw illegalStateException;
     }
 

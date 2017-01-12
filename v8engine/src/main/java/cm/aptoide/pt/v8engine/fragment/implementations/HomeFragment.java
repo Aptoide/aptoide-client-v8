@@ -26,7 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.util.UserCompleteData;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
@@ -50,7 +50,6 @@ import cm.aptoide.pt.v8engine.view.BadgeView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import lombok.Getter;
 import lombok.Setter;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -137,8 +136,6 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
     //  startActivity(i);
     //}
 
-
-
     InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
     installedAccessor.get(BACKUP_APPS_PACKAGE_NAME)
         .observeOn(AndroidSchedulers.mainThread())
@@ -153,8 +150,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
             startActivity(i);
           }
         }, err -> {
-          Logger.e(TAG, err);
-          CrashReports.logException(err);
+          CrashReport.getInstance().log(err);
         });
   }
 
@@ -180,7 +176,8 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
     //            installedFacebook == null ? 0 : installedFacebook.getVersionCode(),
     //            APTOIDE_FACEBOOK_LINK)));
     InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
-    Subscription unManagedSubscription = installedAccessor.get(FACEBOOK_PACKAGE_NAME)
+    installedAccessor.get(FACEBOOK_PACKAGE_NAME)
+        .compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(installedFacebook -> {
           openSocialLink(FACEBOOK_PACKAGE_NAME, APTOIDE_FACEBOOK_LINK,
@@ -189,8 +186,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
                       installedFacebook == null ? 0 : installedFacebook.getVersionCode(),
                       APTOIDE_FACEBOOK_LINK)));
         }, err -> {
-          Logger.e(TAG, err);
-          CrashReports.logException(err);
+          CrashReport.getInstance().log(err);
         });
   }
 
@@ -218,8 +214,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
             getContext().startActivity(sharingIntent);
           }
         }, err -> {
-          Logger.e(TAG, err);
-          CrashReports.logException(err);
+          CrashReport.getInstance().log(err);
         });
   }
 
@@ -352,7 +347,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(size -> refreshUpdatesBadge(size), throwable -> {
           Logger.e(TAG, throwable);
-          CrashReports.logException(throwable);
+          CrashReport.getInstance().log(throwable);
         });
 
     if (desiredViewPagerItem != null) {
@@ -372,6 +367,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
   }
 
   @Override public void setupToolbar() {
+    super.setupToolbar();
     if (toolbar != null) {
       ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
       toolbar.setLogo(R.drawable.ic_aptoide_toolbar);

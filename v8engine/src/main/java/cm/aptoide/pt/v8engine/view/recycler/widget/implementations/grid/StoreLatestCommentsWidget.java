@@ -6,11 +6,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -83,8 +82,7 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
             .subscribe(listComments -> {
               setAdapter(listComments.getDatalist().getList());
             }, err -> {
-              Logger.e(TAG, err);
-              CrashReports.logException(err);
+              CrashReport.getInstance().log(err);
             }));
     return null;
   }

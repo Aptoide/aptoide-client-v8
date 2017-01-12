@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -125,8 +125,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
 
   @NonNull private Action1<Throwable> showError() {
     return err -> {
-      Logger.e(TAG, err);
-      CrashReports.logException(err);
+      CrashReport.getInstance().log(err);
     };
   }
 

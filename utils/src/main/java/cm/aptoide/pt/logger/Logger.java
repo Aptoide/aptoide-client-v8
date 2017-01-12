@@ -15,17 +15,6 @@ public class Logger {
 
   @Setter private static boolean DBG;
 
-  /**
-   * Prints the stacktrace
-   *
-   * @param e exception to log.
-   */
-  public static void printException(Throwable e) {
-    if (e != null) {
-      e.printStackTrace();
-    }
-  }
-
   public static void v(String tag, String msg) {
     if (DBG && msg != null) {
       Log.v(tag, msg);
@@ -80,25 +69,40 @@ public class Logger {
     }
   }
 
-  public static void e(String TAG, String msg) {
+  /**
+   * Consider using CrashReport.getInstance().log(Exception)
+   */
+  @Deprecated public static void e(String TAG, String msg) {
     if (msg != null) {
       Log.e(TAG, msg);
     }
   }
 
-  public static void e(Object object, String msg) {
+  /**
+   * Consider using CrashReport.getInstance().log(Exception)
+   */
+  @Deprecated public static void e(Object object, String msg) {
     e(object.getClass().getName(), msg);
   }
 
-  public static void e(String TAG, Throwable tr) {
+  /**
+   * Consider using CrashReport.getInstance().log(Exception)
+   */
+  @Deprecated public static void e(String TAG, Throwable tr) {
     Log.e(TAG, "", tr);
   }
 
-  public static void e(Object object, Throwable tr) {
+  /**
+   * Consider using CrashReport.getInstance().log(Exception)
+   */
+  @Deprecated public static void e(Object object, Throwable tr) {
     e(object.getClass().getName(), tr);
   }
 
-  public static void e(String TAG, String msg, Throwable tr) {
+  /**
+   * Consider using CrashReport.getInstance().log(Exception)
+   */
+  @Deprecated public static void e(String TAG, String msg, Throwable tr) {
     if (msg != null) {
       Log.e(TAG, msg, tr);
     }

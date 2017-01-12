@@ -14,7 +14,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.view.ContextThemeWrapper;
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
@@ -161,8 +161,7 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
                 }
                 dismissDialog();
               }, throwable -> {
-                throwable.printStackTrace();
-                CrashReports.logException(throwable);
+                CrashReport.getInstance().log(throwable);
                 dismissDialog();
               });
 

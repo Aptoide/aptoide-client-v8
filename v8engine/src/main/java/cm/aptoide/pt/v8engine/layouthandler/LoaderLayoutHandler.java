@@ -10,9 +10,8 @@ import android.support.annotation.IdRes;
 import android.support.annotation.UiThread;
 import android.view.View;
 import android.widget.ProgressBar;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.util.ErrorUtils;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.interfaces.LoadInterface;
@@ -53,8 +52,7 @@ public class LoaderLayoutHandler {
   }
 
   public void finishLoading(Throwable throwable) {
-    Logger.printException(throwable);
-    CrashReports.logException(throwable);
+    CrashReport.getInstance().log(throwable);
 
     AptoideUtils.ThreadU.runOnUiThread(() -> onFinishLoading(throwable));
   }
@@ -86,7 +84,6 @@ public class LoaderLayoutHandler {
       return null;
     }).subscribeOn(AndroidSchedulers.mainThread()).subscribe(o -> {
     }, e -> {
-      Logger.printException(e);
       CrashReport.getInstance().log(e);
     });
   }

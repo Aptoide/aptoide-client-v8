@@ -147,7 +147,6 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
           ad = new ObjectMapper().readValue(json, GetAdsResponse.Ad.class);
         } catch (IOException e) {
           CrashReport.getInstance().log(e);
-          Logger.printException(e);
         }
 
         if (ad != null) {
@@ -172,7 +171,6 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
         params = AptoideUtils.StringU.splitQuery(URI.create(uri));
       } catch (UnsupportedEncodingException e) {
         CrashReport.getInstance().log(e);
-        Logger.printException(e);
       }
 
       if (params != null) {
@@ -189,7 +187,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
             startFromAppView(id, null, true);
           } catch (NumberFormatException e) {
             CrashReport.getInstance().log(e);
-            Logger.printException(e);
+            CrashReport.getInstance().log(e);
             ShowMessage.asToast(getApplicationContext(), R.string.simple_error_occured + uid);
           }
         }
@@ -252,7 +250,6 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
           return;
         } catch (NumberFormatException e) {
           CrashReport.getInstance().log(e);
-          Logger.printException(e);
         }
       }
     }
@@ -337,8 +334,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
       server = handler.getServers();
       app = handler.getApp();
     } catch (IOException | SAXException | ParserConfigurationException e) {
-      CrashReport.getInstance().log(e);
-      Logger.printException(e);
+       CrashReport.getInstance().log(e);
     }
   }
 
@@ -413,8 +409,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
       getit.close();
       saveit.close();
     } catch (Exception e) {
-      CrashReport.getInstance().log(e);
-      Logger.printException(e);
+       CrashReport.getInstance().log(e);
     }
   }
 
@@ -429,7 +424,6 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
       app = handler.getApp();
     } catch (IOException | SAXException | ParserConfigurationException e) {
       CrashReport.getInstance().log(e);
-      Logger.printException(e);
     }
   }
 
@@ -485,7 +479,6 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
         parseXmlMyapp(TMP_MYAPP_FILE);
       } catch (Exception e) {
         CrashReport.getInstance().log(e);
-        Logger.printException(e);
       }
 
       return null;

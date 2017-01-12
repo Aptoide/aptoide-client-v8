@@ -35,11 +35,11 @@ public class CrashReport implements CrashLogger {
   }
 
   private boolean isInitialized() {
-    return crashLoggers!=null && !crashLoggers.isEmpty();
+    return crashLoggers != null && !crashLoggers.isEmpty();
   }
 
   @Override public void log(Throwable throwable) {
-    if(!isInitialized()) {
+    if (!isInitialized()) {
       Log.e(TAG, "not initialized");
       return;
     }
@@ -50,7 +50,7 @@ public class CrashReport implements CrashLogger {
   }
 
   @Override public void log(String key, String value) {
-    if(!isInitialized()) {
+    if (!isInitialized()) {
       Log.e(TAG, "not initialized");
       return;
     }
@@ -60,4 +60,17 @@ public class CrashReport implements CrashLogger {
     }
   }
 
+  public CrashLogger getLogger(Class<? extends CrashLogger> clazz) {
+    if (!isInitialized()) {
+      Log.e(TAG, "not initialized");
+      return null;
+    }
+
+    for (int i = 0; i < crashLoggers.size(); i++) {
+      if (clazz.isAssignableFrom(crashLoggers.get(i).getClass())) {
+        return crashLoggers.get(i);
+      }
+    }
+    return null;
+  }
 }

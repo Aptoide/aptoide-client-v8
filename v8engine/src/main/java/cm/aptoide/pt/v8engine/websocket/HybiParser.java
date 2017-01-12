@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.websocket;
 
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;

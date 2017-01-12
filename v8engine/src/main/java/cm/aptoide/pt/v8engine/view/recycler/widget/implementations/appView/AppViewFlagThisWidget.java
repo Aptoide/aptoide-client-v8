@@ -8,7 +8,7 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.ws.v2.ErrorResponse;
 import cm.aptoide.pt.dataprovider.ws.v3.AddApkFlagRequest;
 import cm.aptoide.pt.logger.Logger;
@@ -83,7 +83,7 @@ import rx.android.schedulers.AndroidSchedulers;
       bindFlagViews(app);
     }
   }
-  
+
   private void bindFlagViews(GetAppMeta.App app) {
     try {
       GetAppMeta.GetAppMetaFile.Flags flags = app.getFile().getFlags();
@@ -93,8 +93,7 @@ import rx.android.schedulers.AndroidSchedulers;
         }
       }
     } catch (NullPointerException ex) {
-      Logger.e(TAG, ex);
-      CrashReports.logException(ex);
+      CrashReport.getInstance().log(ex);
     }
 
     View.OnClickListener buttonListener =
@@ -125,60 +124,60 @@ import rx.android.schedulers.AndroidSchedulers;
           .observe(true)
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(response -> {
-        if (response.isOk() && !response.hasErrors()) {
-          boolean voteSubmitted = false;
-          switch (type) {
-            case GOOD:
-              voteSubmitted = true;
-              workingWellText.setText(
-                  Integer.toString(Integer.parseInt(workingWellText.getText().toString()) + 1));
-              break;
+            if (response.isOk() && !response.hasErrors()) {
+              boolean voteSubmitted = false;
+              switch (type) {
+                case GOOD:
+                  voteSubmitted = true;
+                  workingWellText.setText(
+                      Integer.toString(Integer.parseInt(workingWellText.getText().toString()) + 1));
+                  break;
 
-            case LICENSE:
-              voteSubmitted = true;
-              needsLicenceText.setText(
-                  Integer.toString(Integer.parseInt(needsLicenceText.getText().toString()) + 1));
-              break;
+                case LICENSE:
+                  voteSubmitted = true;
+                  needsLicenceText.setText(Integer.toString(
+                      Integer.parseInt(needsLicenceText.getText().toString()) + 1));
+                  break;
 
-            case FAKE:
-              voteSubmitted = true;
-              fakeAppText.setText(
-                  Integer.toString(Integer.parseInt(fakeAppText.getText().toString()) + 1));
-              break;
+                case FAKE:
+                  voteSubmitted = true;
+                  fakeAppText.setText(
+                      Integer.toString(Integer.parseInt(fakeAppText.getText().toString()) + 1));
+                  break;
 
-            case VIRUS:
-              voteSubmitted = true;
-              virusText.setText(
-                  Integer.toString(Integer.parseInt(virusText.getText().toString()) + 1));
-              break;
+                case VIRUS:
+                  voteSubmitted = true;
+                  virusText.setText(
+                      Integer.toString(Integer.parseInt(virusText.getText().toString()) + 1));
+                  break;
 
-            case FREEZE:
-              // un-used type
-              break;
+                case FREEZE:
+                  // un-used type
+                  break;
 
-            default:
-              throw new IllegalArgumentException("Unable to find Type " + type.name());
-          }
+                default:
+                  throw new IllegalArgumentException("Unable to find Type " + type.name());
+              }
 
-          if (voteSubmitted) {
-            ShowMessage.asSnack(v, R.string.vote_submitted);
-            return;
-          }
-        }
+              if (voteSubmitted) {
+                ShowMessage.asSnack(v, R.string.vote_submitted);
+                return;
+              }
+            }
 
-        if (response.hasErrors()) {
-          for (final ErrorResponse errorResponse : response.getErrors()) {
-            Logger.e(TAG, errorResponse.getErrorDescription());
-          }
-        }
+            if (response.hasErrors()) {
+              for (final ErrorResponse errorResponse : response.getErrors()) {
+                Logger.e(TAG, errorResponse.getErrorDescription());
+              }
+            }
 
-        setAllButtonsUnPressed(v);
-        ShowMessage.asSnack(v, R.string.unknown_error);
-      }, error -> {
-        Logger.e(TAG, error);
-        setAllButtonsUnPressed(v);
-        ShowMessage.asSnack(v, R.string.unknown_error);
-      }));
+            setAllButtonsUnPressed(v);
+            ShowMessage.asSnack(v, R.string.unknown_error);
+          }, error -> {
+            Logger.e(TAG, error);
+            setAllButtonsUnPressed(v);
+            ShowMessage.asSnack(v, R.string.unknown_error);
+          }));
     };
   }
 

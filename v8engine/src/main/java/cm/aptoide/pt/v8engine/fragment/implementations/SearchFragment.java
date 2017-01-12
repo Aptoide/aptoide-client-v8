@@ -19,11 +19,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.R;
@@ -157,8 +156,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
         //only show the search results after choosing the tab to show
         setupAbTest().compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW))
             .subscribe(setup -> finishLoading(), throwable -> {
-              CrashReports.logException(throwable);
-              Logger.e(TAG, throwable);
+              CrashReport.getInstance().log(throwable);
               finishLoading();
             });
       } else {

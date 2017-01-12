@@ -3,7 +3,7 @@ package cm.aptoide.pt.v8engine.install;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreMinimalAdAccessor;
 import cm.aptoide.pt.database.realm.Installed;
@@ -134,12 +134,12 @@ public class InstalledIntentService extends IntentService {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(
                     minimalAd -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES,
-                        true)).onErrorReturn(throwable1 -> null)
+                        true))
+                .onErrorReturn(throwable1 -> null)
                 .subscribe();
           }
         }, err -> {
-          Logger.e(TAG, err);
-          CrashReports.logException(err);
+          CrashReport.getInstance().log(err);
         });
 
     subscriptions.add(unManagedSubscription);
@@ -168,8 +168,7 @@ public class InstalledIntentService extends IntentService {
 
   private PackageInfo databaseOnPackageReplaced(String packageName) {
     final Update update = updatesRepository.get(packageName).doOnError(throwable -> {
-      Logger.e(TAG, throwable);
-      CrashReports.logException(throwable);
+      CrashReport.getInstance().log(throwable);
     }).onErrorReturn(throwable -> null).toBlocking().first();
 
     if (update != null && update.getPackageName() != null && update.getTrustedBadge() != null) {
@@ -185,8 +184,7 @@ public class InstalledIntentService extends IntentService {
     if (update != null) {
       if (packageInfo.versionCode >= update.getVersionCode()) {
         updatesRepository.remove(update).doOnError(throwable -> {
-          Logger.e(TAG, throwable);
-          CrashReports.logException(throwable);
+          CrashReport.getInstance().log(throwable);
         }).toBlocking().first();
       }
     }
@@ -201,8 +199,8 @@ public class InstalledIntentService extends IntentService {
    */
   private boolean checkAndLogNullPackageInfo(PackageInfo packageInfo, String packageName) {
     if (packageInfo == null) {
-      CrashReports.logException(
-          new IllegalArgumentException("PackageName null for package " + packageName));
+      CrashReport.getInstance()
+          .log(new IllegalArgumentException("PackageName null for package " + packageName));
       return true;
     } else {
       return false;

@@ -10,8 +10,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.RemoteException;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReports;
-import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
 import cm.aptoide.pt.v8engine.activity.PaymentActivity;
 import cm.aptoide.pt.v8engine.payment.ProductFactory;
@@ -83,10 +82,7 @@ public class BillingBinder extends AptoideInAppBillingService.Stub {
           .toBlocking()
           .first();
     } catch (Exception exception) {
-      CrashReports.logException(exception);
-      Logger.e("BillingBinder", exception.getMessage());
-      exception.printStackTrace();
-
+      CrashReport.getInstance().log(exception);
       return errorCodeFactory.create(exception.getCause());
     }
   }
@@ -124,10 +120,7 @@ public class BillingBinder extends AptoideInAppBillingService.Stub {
       result.putStringArrayList(DETAILS_LIST, new ArrayList<>(serializedProducts));
       return result;
     } catch (Exception exception) {
-      CrashReports.logException(exception);
-      Logger.e("BillingBinder", exception.getMessage());
-      exception.printStackTrace();
-
+      CrashReport.getInstance().log(exception);
       result.putInt(RESPONSE_CODE, errorCodeFactory.create(exception.getCause()));
       return result;
     }
@@ -157,10 +150,7 @@ public class BillingBinder extends AptoideInAppBillingService.Stub {
 
         result.putParcelable(BUY_INTENT, pendingIntent);
       } catch (Exception exception) {
-        CrashReports.logException(exception);
-        Logger.e("BillingBinder", exception.getMessage());
-        exception.printStackTrace();
-
+        CrashReport.getInstance().log(exception);
         result.putInt(RESPONSE_CODE, errorCodeFactory.create(exception.getCause()));
       }
     }
@@ -202,10 +192,7 @@ public class BillingBinder extends AptoideInAppBillingService.Stub {
       result.putInt(RESPONSE_CODE, RESULT_OK);
       return result;
     } catch (Exception exception) {
-      CrashReports.logException(exception);
-      Logger.e("BillingBinder", exception.getMessage());
-      exception.printStackTrace();
-
+      CrashReport.getInstance().log(exception);
       result.putInt(RESPONSE_CODE, errorCodeFactory.create(exception.getCause()));
       return result;
     }
@@ -219,10 +206,7 @@ public class BillingBinder extends AptoideInAppBillingService.Stub {
           .toBlocking()
           .first();
     } catch (Exception exception) {
-      CrashReports.logException(exception);
-      Logger.e("BillingBinder", exception.getMessage());
-      exception.printStackTrace();
-
+      CrashReport.getInstance().log(exception);
       return purchaseErrorCodeFactory.create(exception.getCause());
     }
   }

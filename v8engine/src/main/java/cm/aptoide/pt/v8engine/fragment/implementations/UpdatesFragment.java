@@ -7,7 +7,7 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
@@ -110,9 +110,8 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
         })
         .subscribe(installeds -> {
           Logger.v(TAG, "listing updates and installed apps");
-        }, err -> {
-          Logger.e(TAG, "finished loading not being called in fetchInstalled");
-          CrashReports.logException(err);
+        }, e -> {
+          CrashReport.getInstance().log(e);
           finishLoading();
         });
   }
@@ -128,12 +127,11 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
           } else if (updates.size() == updatesDisplayablesList.size() - 1) {
             ShowMessage.asSnack(getView(), R.string.no_new_updates_available);
           }
-        }, throwable -> {
-          if (throwable instanceof RepositoryItemNotFoundException) {
+        }, e -> {
+          if (e instanceof RepositoryItemNotFoundException) {
             ShowMessage.asSnack(getView(), R.string.add_store);
           } else {
-            Logger.e(TAG, throwable);
-            CrashReports.logException(throwable);
+            CrashReport.getInstance().log(e);
           }
           finishLoading();
         });

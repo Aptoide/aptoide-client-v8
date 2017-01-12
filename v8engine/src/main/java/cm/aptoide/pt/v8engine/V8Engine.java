@@ -19,7 +19,6 @@ import cm.aptoide.accountmanager.ws.responses.Subscription;
 import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.crashreports.ConsoleLogger;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.crashreports.FabricCrashLogger;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
@@ -98,8 +97,7 @@ public abstract class V8Engine extends DataProvider {
 
       checkUpdates();
     }, e -> {
-      Logger.e(TAG, e);
-      //CrashReport.getInstance().log(e);
+      CrashReport.getInstance().log(e);
     });
   }
 
@@ -108,8 +106,7 @@ public abstract class V8Engine extends DataProvider {
     repository.getUpdates(true)
         .first()
         .subscribe(updates -> Logger.d(TAG, "updates are up to date now"), throwable -> {
-          Logger.e(TAG, throwable);
-          CrashReports.logException(throwable);
+          CrashReport.getInstance().log(throwable);
         });
   }
 
@@ -209,7 +206,7 @@ public abstract class V8Engine extends DataProvider {
       AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(userData -> {
         Logger.v(TAG, "hello " + userData.getUsername());
       }, e -> {
-        Logger.e(TAG, e);
+        CrashReport.getInstance().log(e);
       });
     } else {
       loadInstalledApps().subscribe();
@@ -246,7 +243,7 @@ public abstract class V8Engine extends DataProvider {
         .subscribe(cleanedSize -> Logger.d(TAG,
             "cleaned size: " + AptoideUtils.StringU.formatBytes(cleanedSize, false)), throwable -> {
           Logger.e(TAG, throwable);
-          CrashReports.logException(throwable);
+          CrashReport.getInstance().log(throwable);
         });
     // setupCurrentActivityListener();
 
@@ -264,8 +261,7 @@ public abstract class V8Engine extends DataProvider {
             this).getAptoideClientUUID())
         .subscribe(success -> {
         }, throwable -> {
-          Logger.d(TAG, "An error has occurred when initializing the ABTestManager");
-          CrashReports.logException(throwable);
+          CrashReport.getInstance().log(throwable);
         });
 
     AptoideAccountManager.setAnalytics(new AccountAnalytcsImp());

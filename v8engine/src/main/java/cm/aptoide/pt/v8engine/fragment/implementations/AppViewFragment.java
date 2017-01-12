@@ -32,7 +32,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AppAction;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
@@ -472,9 +472,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
               setupAppView(getApp);
             }, throwable -> {
               finishLoading(throwable);
-              CrashReports.logString(key_appId, String.valueOf(appId));
-              CrashReports.logString(key_packageName, String.valueOf(packageName));
-              CrashReports.logString(key_md5sum, md5);
+              CrashReport.getInstance().log(key_appId, String.valueOf(appId));
+              CrashReport.getInstance().log(key_packageName, String.valueOf(packageName));
+              CrashReport.getInstance().log(key_md5sum, md5);
             });
       } else {
         Logger.d(TAG, "loading app info using app package name");
@@ -487,9 +487,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
               setupAppView(getApp);
             }, throwable -> {
               finishLoading(throwable);
-              CrashReports.logString(key_appId, String.valueOf(appId));
-              CrashReports.logString(key_packageName, String.valueOf(packageName));
-              CrashReports.logString(key_md5sum, md5);
+              CrashReport.getInstance().log(key_appId, String.valueOf(appId));
+              CrashReport.getInstance().log(key_packageName, String.valueOf(packageName));
+              CrashReport.getInstance().log(key_md5sum, md5);
             });
       }
   }
@@ -567,8 +567,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             setUnInstallMenuOptionVisible(null);
           }
         }, err -> {
-          CrashReports.logException(err);
-          Logger.e(err);
+          CrashReport.getInstance().log(err);
         });
 
     header.setup(getApp);
