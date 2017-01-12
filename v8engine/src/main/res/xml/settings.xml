@@ -39,8 +39,8 @@
         android:title="@string/setting_appfiltertitle"/>
   </PreferenceCategory>
 
-  <PreferenceCategory android:title="@string/setting_category_autoupdate"
-  android:key="checkautoupdatecategory">
+  <PreferenceCategory android:key="checkautoupdatecategory"
+  android:title="@string/setting_category_autoupdate">
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="checkautoupdate"
@@ -72,11 +72,6 @@
         android:key="auto_update"
         android:summary="@string/setting_auto_update_sum"
         android:title="@string/setting_auto_update_title"/>
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="showAllUpdates"
-        android:summary="@string/show_all_updates"
-        android:title="@string/setting_allUpdates_filtering"/>
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="updatesFilterAlphaBetaKey"

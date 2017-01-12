@@ -198,14 +198,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
       return true;
     });
 
-    findPreference(SettingsConstants.SHOW_ALL_UPDATES).setOnPreferenceClickListener(
-        new Preference.OnPreferenceClickListener() {
-          @Override public boolean onPreferenceClick(Preference preference) {
-            settingsResult();
-            return true;
-          }
-        });
-
     findPreference(SettingsConstants.CLEAR_CACHE).setOnPreferenceClickListener(
         new Preference.OnPreferenceClickListener() {
           @Override public boolean onPreferenceClick(Preference preference) {

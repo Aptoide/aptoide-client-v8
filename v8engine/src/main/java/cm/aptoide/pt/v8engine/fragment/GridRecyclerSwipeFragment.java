@@ -38,10 +38,6 @@ public abstract class GridRecyclerSwipeFragment<T extends BaseAdapter>
     return super.onCreateView(inflater, container, savedInstanceState);
   }
 
-  //public GridRecyclerSwipeFragment(Class<T> adapterClass) {
-  //  super(adapterClass);
-  //}
-
   @NonNull @Override protected LoaderLayoutHandler createLoaderLayoutHandler() {
     return new SwipeLoaderLayoutHandler(getViewToShowAfterLoadingId(), this);
   }

@@ -20,11 +20,18 @@ public abstract class Application extends android.app.Application {
     return AptoideUtils.getContext();
   }
 
+  @Override protected void attachBaseContext(Context base) {
+    super.attachBaseContext(base);
+    // ToolboxContentProvider depends on this configuration.
+    // This callback runs before Content Provider's onCreate is called.
+    // Application's onCreate can't be used because it runs after ContentProvider' onCreate.
+    // https://code.google.com/p/android/issues/detail?id=8727
+    configuration = createConfiguration();
+  }
+
   @Override public void onCreate() {
     super.onCreate();
-
     AptoideUtils.setContext(this);
-    configuration = createConfiguration();
   }
 
   protected abstract AptoidePreferencesConfiguration createConfiguration();

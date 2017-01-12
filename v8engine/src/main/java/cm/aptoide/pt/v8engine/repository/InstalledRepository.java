@@ -53,4 +53,8 @@ public class InstalledRepository implements Repository {
   public boolean contains(String packageName) {
     return accessor.isInstalled(packageName).toBlocking().first();
   }
+
+  public Observable<List<Installed>> getAllSorted() {
+    return accessor.getAllSorted();
+  }
 }
