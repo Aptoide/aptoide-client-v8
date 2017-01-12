@@ -9,7 +9,6 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.DefaultDisplayableGroup;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RowReviewDisplayable;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import rx.functions.Action1;
 
@@ -30,13 +29,11 @@ public class ListReviewsFragment extends GetStoreEndlessFragment<ListFullReviews
           && listFullReviews.getDatalist() != null
           && listFullReviews.getDatalist().getList() != null) {
         List<FullReview> reviews = listFullReviews.getDatalist().getList();
-        List<Displayable> displayables = new LinkedList<>();
+        ArrayList<Displayable> displayables = new ArrayList<>(reviews.size());
         for (int i = 0; i < reviews.size(); i++) {
           FullReview review = reviews.get(i);
           displayables.add(new RowReviewDisplayable(review));
         }
-        displayables = new ArrayList<>(reviews.size());
-        displayables.add(new DefaultDisplayableGroup(displayables));
         addDisplayable(new DefaultDisplayableGroup(displayables));
       }
     };
