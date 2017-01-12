@@ -5,9 +5,11 @@
 
 package cm.aptoide.pt.dataprovider.ws.v3;
 
+import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.model.v3.PaidApp;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import rx.Observable;
 
 /**
@@ -34,16 +36,22 @@ public class GetApkInfoRequest extends V3<PaidApp> {
     return new GetApkInfoRequest(args);
   }
 
-  private static void addOptions(BaseBody args, NetworkOperatorManager operatorRepository) {
+  private static void addOptions(BaseBody args, NetworkOperatorManager operatorManager) {
     BaseBody options = new BaseBody();
     options.put("cmtlimit", "5");
     options.put("payinfo", "true");
     options.put("q", Api.Q);
     options.put("lang", Api.LANG);
 
-    if (operatorRepository.isSimStateReady()) {
-      options.put("mcc", operatorRepository.getMobileCountryCode());
-      options.put("mnc", operatorRepository.getMobileNetworkCode());
+    String forceCountry = ManagerPreferences.getForceCountry();
+    if (ManagerPreferences.isDebug() && !TextUtils.isEmpty(forceCountry)) {
+      args.put("simcc", forceCountry);
+    } else {
+      if (operatorManager.isSimStateReady()) {
+        args.put("mcc", operatorManager.getMobileCountryCode());
+        args.put("mnc", operatorManager.getMobileNetworkCode());
+        args.put("simcc", operatorManager.getSimCountryISO());
+      }
     }
 
     StringBuilder optionsBuilder = new StringBuilder();
