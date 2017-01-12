@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.fragment;
 
+import android.support.annotation.CallSuper;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -17,25 +18,25 @@ public abstract class BaseLoaderToolbarFragment extends BaseLoaderFragment {
 
   protected Toolbar toolbar;
 
-  @Override public void setupViews() {
+  @CallSuper @Override public void setupViews() {
     setupToolbar();
   }
 
   /**
    * Setup the toolbar, if present.
    */
-  public void setupToolbar() {
+  @CallSuper @Override public void setupToolbar() {
     if (toolbar != null) {
       ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
     }
   }
 
-  @Override public void onDestroyView() {
+  @CallSuper @Override public void onDestroyView() {
     super.onDestroyView();
     toolbar = null;
   }
 
-  @Override public void bindViews(View view) {
+  @CallSuper @Override public void bindViews(View view) {
     super.bindViews(view);
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
   }
