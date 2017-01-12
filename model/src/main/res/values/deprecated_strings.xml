@@ -103,7 +103,6 @@
         \n\• Errors you are seeing</string>
   <string name="feedback_include_logs">Include ScreenShot and Logs</string>
   <string name="feedback_no_email">No email client installed!</string>
-  <string name="username_tip">Type your email</string>
 
   <string name="store_already_added">Store already added!</string>
   <string name="subscribe_store">Subscribe Store</string>
