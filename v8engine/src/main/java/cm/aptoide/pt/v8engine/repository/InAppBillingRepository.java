@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.repository;
 
 import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.database.accessors.PaymentConfirmationAccessor;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingAvailableRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingConsumeRequest;
@@ -29,9 +30,12 @@ import rx.Observable;
 public class InAppBillingRepository {
 
   private final NetworkOperatorManager operatorManager;
+  private final PaymentConfirmationAccessor confirmationAccessor;
 
-  public InAppBillingRepository(NetworkOperatorManager operatorManager) {
+  public InAppBillingRepository(NetworkOperatorManager operatorManager,
+      PaymentConfirmationAccessor confirmationAccessor) {
     this.operatorManager = operatorManager;
+    this.confirmationAccessor = confirmationAccessor;
   }
 
   public Observable<Void> getInAppBilling(int apiVersion, String packageName, String type) {
@@ -83,6 +87,8 @@ public class InAppBillingRepository {
         .observe()
         .flatMap(response -> {
           if (response != null && response.isOk()) {
+            // TODO sync all payment confirmations instead. For now there is no web service for that.
+            confirmationAccessor.removeAll();
             return Observable.just(null);
           }
           if (isDeletionItemNotFound(response.getErrors())) {

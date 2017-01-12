@@ -63,8 +63,9 @@ public final class RepositoryFactory {
     final PaymentFactory paymentFactory = new PaymentFactory(context);
     final NetworkOperatorManager operatorManager = getNetworkOperatorManager(context);
     if (product instanceof InAppBillingProduct) {
-      return new InAppBillingProductRepository(new InAppBillingRepository(operatorManager),
-          purchaseFactory, paymentFactory);
+      return new InAppBillingProductRepository(new InAppBillingRepository(operatorManager,
+          AccessorFactory.getAccessorFor(PaymentConfirmation.class)), purchaseFactory,
+          paymentFactory);
     } else {
       return new PaidAppProductRepository(new AppRepository(operatorManager), purchaseFactory,
           paymentFactory);
@@ -75,14 +76,12 @@ public final class RepositoryFactory {
       Product product) {
     if (product instanceof InAppBillingProduct) {
       return new InAppPaymentConfirmationRepository(getNetworkOperatorManager(context),
-          AccessorFactory.getAccessorFor(PaymentConfirmation.class),
-          getBackgroundSync(context), new PaymentConfirmationFactory(),
-          (InAppBillingProduct) product);
+          AccessorFactory.getAccessorFor(PaymentConfirmation.class), getBackgroundSync(context),
+          new PaymentConfirmationFactory(), (InAppBillingProduct) product);
     } else {
       return new PaidAppPaymentConfirmationRepository(getNetworkOperatorManager(context),
-          AccessorFactory.getAccessorFor(PaymentConfirmation.class),
-          getBackgroundSync(context),
-          new PaymentConfirmationFactory(), (PaidAppProduct)product);
+          AccessorFactory.getAccessorFor(PaymentConfirmation.class), getBackgroundSync(context),
+          new PaymentConfirmationFactory(), (PaidAppProduct) product);
     }
   }
 
@@ -90,6 +89,11 @@ public final class RepositoryFactory {
     return new PaymentAuthorizationRepository(
         AccessorFactory.getAccessorFor(PaymentAuthorization.class), getBackgroundSync(context),
         new PaymentAuthorizationFactory(context));
+  }
+
+  public static InAppBillingRepository getInAppBillingRepository(Context context) {
+    return new InAppBillingRepository(getNetworkOperatorManager(context),
+        AccessorFactory.getAccessorFor(PaymentConfirmation.class));
   }
 
   private static SyncAdapterBackgroundSync getBackgroundSync(Context context) {
