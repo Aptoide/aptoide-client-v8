@@ -30,6 +30,7 @@ import cm.aptoide.accountmanager.ws.LoginMode;
 import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagedKeys;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -42,7 +43,6 @@ import java.util.Map;
  */
 public class ToolboxContentProvider extends ContentProvider {
   private static final String TAG = ToolboxContentProvider.class.getSimpleName();
-  private static final String TOOLBOX_PROVIDER_AUTHORITY = "cm.aptoide.pt.StubProvider";
 
   private static final String BACKUP_PACKAGE = "pt.aptoide.backupapps";
   private static final String BACKUP_SIGNATURE =
@@ -58,22 +58,19 @@ public class ToolboxContentProvider extends ContentProvider {
   private static final int LOGIN_NAME = 5;
   private static final int CHANGE_PREFERENCE = 6;
 
-  private final static UriMatcher uriMatcher;
-
-  static {
-    uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-    uriMatcher.addURI(TOOLBOX_PROVIDER_AUTHORITY, "token", TOKEN);
-    uriMatcher.addURI(TOOLBOX_PROVIDER_AUTHORITY, "repo", REPO);
-    uriMatcher.addURI(TOOLBOX_PROVIDER_AUTHORITY, "loginType", LOGIN_TYPE);
-    uriMatcher.addURI(TOOLBOX_PROVIDER_AUTHORITY, "passHash", PASSHASH);
-    uriMatcher.addURI(TOOLBOX_PROVIDER_AUTHORITY, "loginName", LOGIN_NAME);
-    uriMatcher.addURI(TOOLBOX_PROVIDER_AUTHORITY, "changePreference", CHANGE_PREFERENCE);
-  }
-
+  private UriMatcher uriMatcher;
   private ToolboxSecurityManager securityManager;
 
   @Override public boolean onCreate() {
     securityManager = new ToolboxSecurityManager(getContext().getPackageManager());
+    final String authority = Application.getConfiguration().getContentAuthority();
+    uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+    uriMatcher.addURI(authority, "token", TOKEN);
+    uriMatcher.addURI(authority, "repo", REPO);
+    uriMatcher.addURI(authority, "loginType", LOGIN_TYPE);
+    uriMatcher.addURI(authority, "passHash", PASSHASH);
+    uriMatcher.addURI(authority, "loginName", LOGIN_NAME);
+    uriMatcher.addURI(authority, "changePreference", CHANGE_PREFERENCE);
     return true;
   }
 

@@ -5,8 +5,10 @@
 
 package cm.aptoide.pt.dataprovider.ws.v3;
 
+import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.model.v3.InAppBillingSkuDetailsResponse;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import java.util.List;
 import rx.Observable;
 
@@ -40,10 +42,15 @@ public class InAppBillingSkuDetailsRequest extends V3<InAppBillingSkuDetailsResp
       args.put("skulist", stringBuilder.toString());
     }
 
-    if (operatorManager.isSimStateReady()) {
-      args.put("mcc", operatorManager.getMobileCountryCode());
-      args.put("mnc", operatorManager.getMobileNetworkCode());
-      args.put("simcc", operatorManager.getSimCountryISO());
+    String forceCountry = ManagerPreferences.getForceCountry();
+    if (ManagerPreferences.isDebug() && !TextUtils.isEmpty(forceCountry)) {
+      args.put("simcc", forceCountry);
+    } else {
+      if (operatorManager.isSimStateReady()) {
+        args.put("mcc", operatorManager.getMobileCountryCode());
+        args.put("mnc", operatorManager.getMobileNetworkCode());
+        args.put("simcc", operatorManager.getSimCountryISO());
+      }
     }
 
     return new InAppBillingSkuDetailsRequest(BASE_HOST, args);
