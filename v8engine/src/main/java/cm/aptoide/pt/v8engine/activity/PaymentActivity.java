@@ -148,14 +148,15 @@ public class PaymentActivity extends ActivityView implements PaymentView {
 
   @Override public void showOtherPayments(List<PaymentViewModel> otherPayments) {
     morePaymentsList.removeAllViews();
-    morePaymentsContainer.setVisibility(View.VISIBLE);
     noPaymentsText.setVisibility(View.GONE);
     morePaymentsButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.arrow_up, 0);
     paymentClicks.clear();
 
     if (otherPayments.isEmpty()) {
+      morePaymentsContainer.setVisibility(View.GONE);
       morePaymentsButton.setVisibility(View.GONE);
     } else {
+      morePaymentsContainer.setVisibility(View.VISIBLE);
       morePaymentsButton.setVisibility(View.VISIBLE);
     }
 
