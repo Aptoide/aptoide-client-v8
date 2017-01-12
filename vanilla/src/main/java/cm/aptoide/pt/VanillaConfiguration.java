@@ -67,7 +67,7 @@ public class VanillaConfiguration implements AptoidePreferencesConfiguration {
     return DEFAULT_STORE;
   }
 
-  @Override public String getSyncAdapterAuthority() {
+  @Override public String getContentAuthority() {
     return BuildConfig.CONTENT_AUTHORITY;
   }
 
