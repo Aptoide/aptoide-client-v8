@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 04/08/2016.
- */
-
 package cm.aptoide.pt.downloadmanager;
 
 import android.content.Context;
@@ -103,7 +98,7 @@ public class AptoideDownloadManager {
           startNewDownload(download);
           return null;
         }).subscribeOn(Schedulers.computation()).subscribe(o -> {
-        }, throwable -> Logger.e(TAG, throwable));
+        }, throwable -> CrashReport.getInstance().log(throwable));
         return getDownload(download.getMd5());
       }
     });
@@ -269,8 +264,8 @@ public class AptoideDownloadManager {
               .subscribe(cleanedSize -> Logger.d(TAG,
                   "cleaned size: " + AptoideUtils.StringU.formatBytes(cleanedSize, false)),
                   throwable -> {
-                CrashReport.getInstance().log(throwable);
-              });
+                    CrashReport.getInstance().log(throwable);
+                  });
         }
       }, throwable -> throwable.printStackTrace());
     }

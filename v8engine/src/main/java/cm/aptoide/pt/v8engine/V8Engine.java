@@ -214,7 +214,7 @@ public abstract class V8Engine extends DataProvider {
 
     final int appSignature = SecurityUtils.checkAppSignature(this);
     if (appSignature != SecurityUtils.VALID_APP_SIGNATURE) {
-      Logger.e(TAG, "app signature is not valid!");
+      Logger.w(TAG, "app signature is not valid!");
     }
 
     if (SecurityUtils.checkEmulator()) {

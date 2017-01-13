@@ -9,6 +9,7 @@ import android.accounts.AccountManager;
 import android.content.Context;
 import android.telephony.TelephonyManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.PaymentAuthorization;
 import cm.aptoide.pt.database.realm.PaymentConfirmation;
@@ -54,6 +55,10 @@ public final class RepositoryFactory {
     return new StoreRepository(AccessorFactory.getAccessorFor(Store.class));
   }
 
+  public static DownloadRepository getDownloadRepository() {
+    return new DownloadRepository(AccessorFactory.getAccessorFor(Download.class));
+  }
+
   public static ProductRepository getProductRepository(Context context, AptoideProduct product) {
     final PurchaseFactory purchaseFactory = new PurchaseFactory(new InAppBillingSerializer());
     final PaymentFactory paymentFactory = new PaymentFactory(context);
@@ -71,14 +76,12 @@ public final class RepositoryFactory {
       Product product) {
     if (product instanceof InAppBillingProduct) {
       return new InAppPaymentConfirmationRepository(getNetworkOperatorManager(context),
-          AccessorFactory.getAccessorFor(PaymentConfirmation.class),
-          getBackgroundSync(context), new PaymentConfirmationFactory(),
-          (InAppBillingProduct) product);
+          AccessorFactory.getAccessorFor(PaymentConfirmation.class), getBackgroundSync(context),
+          new PaymentConfirmationFactory(), (InAppBillingProduct) product);
     } else {
       return new PaidAppPaymentConfirmationRepository(getNetworkOperatorManager(context),
-          AccessorFactory.getAccessorFor(PaymentConfirmation.class),
-          getBackgroundSync(context),
-          new PaymentConfirmationFactory(), (PaidAppProduct)product);
+          AccessorFactory.getAccessorFor(PaymentConfirmation.class), getBackgroundSync(context),
+          new PaymentConfirmationFactory(), (PaidAppProduct) product);
     }
   }
 

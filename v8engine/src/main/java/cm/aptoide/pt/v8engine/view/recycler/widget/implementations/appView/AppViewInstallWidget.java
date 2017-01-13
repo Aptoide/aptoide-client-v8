@@ -23,9 +23,7 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
@@ -139,9 +137,7 @@ import rx.android.schedulers.AndroidSchedulers;
     AptoideDownloadManager downloadManager = AptoideDownloadManager.getInstance();
     downloadManager.initDownloadService(getContext());
     Installer installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
-    installManager = new InstallManager(downloadManager, installer,
-        AccessorFactory.getAccessorFor(Download.class),
-        AccessorFactory.getAccessorFor(Installed.class));
+    installManager = new InstallManager(downloadManager, installer);
     downloadInstallEventConverter = new DownloadEventConverter();
     installConverter = new InstallEventConverter();
     analytics = Analytics.getInstance();
@@ -407,7 +403,7 @@ import rx.android.schedulers.AndroidSchedulers;
               }).subscribeOn(AndroidSchedulers.mainThread()).subscribe(eResponse -> {
                 switch (eResponse) {
                   case YES:
-                    ShowMessage.asSnack(getContext(),R.string.social_timeline_share_dialog_title);
+                    ShowMessage.asSnack(getContext(), R.string.social_timeline_share_dialog_title);
                     break;
                   case NO:
                     break;

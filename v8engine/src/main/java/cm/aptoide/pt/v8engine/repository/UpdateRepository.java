@@ -20,12 +20,12 @@ import rx.schedulers.Schedulers;
  * Created by trinkes on 9/23/16.
  */
 
-public class UpdateRepository implements Repository {
-  private static final String TAG = UpdateRepository.class.getName();
+public class UpdateRepository implements Repository<Update, String> {
+
   private UpdateAccessor updateAccessor;
   private StoreAccessor storeAccessor;
 
-  public UpdateRepository(UpdateAccessor updateAccessor, StoreAccessor storeAccessor) {
+  UpdateRepository(UpdateAccessor updateAccessor, StoreAccessor storeAccessor) {
     this.updateAccessor = updateAccessor;
     this.storeAccessor = storeAccessor;
   }
@@ -66,6 +66,10 @@ public class UpdateRepository implements Repository {
       }
       return Collections.<App>emptyList();
     }).onErrorReturn(throwable -> Collections.emptyList());
+  }
+
+  @Override public void save(Update entity) {
+    updateAccessor.insert(entity);
   }
 
   @NonNull private Observable<Void> saveUpdate(App app) {

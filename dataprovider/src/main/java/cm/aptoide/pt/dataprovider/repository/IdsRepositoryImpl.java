@@ -67,8 +67,8 @@ public class IdsRepositoryImpl implements IdsRepository, AptoideClientUUID {
     String androidId = sharedPreferences.getString(ANDROID_ID_CLIENT, null);
 
     if (androidId == null) {
-      androidId = Settings.Secure.getString(context.getContentResolver(),
-          Settings.Secure.ANDROID_ID);
+      androidId =
+          Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
       setAndroidId(androidId);
     }
 

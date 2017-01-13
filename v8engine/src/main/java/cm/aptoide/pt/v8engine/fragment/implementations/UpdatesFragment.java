@@ -8,8 +8,6 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
@@ -64,9 +62,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     super.setupViews();
 
     installManager = new InstallManager(AptoideDownloadManager.getInstance(),
-        new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK),
-        AccessorFactory.getAccessorFor(Download.class),
-        AccessorFactory.getAccessorFor(Installed.class));
+        new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK));
     analytics = Analytics.getInstance();
     downloadInstallEventConverter = new DownloadEventConverter();
     installConverter = new InstallEventConverter();

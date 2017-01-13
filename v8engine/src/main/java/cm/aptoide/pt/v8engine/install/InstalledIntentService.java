@@ -162,7 +162,7 @@ public class InstalledIntentService extends IntentService {
     if (checkAndLogNullPackageInfo(packageInfo, packageName)) {
       return packageInfo;
     }
-    installedRepository.insert(new Installed(packageInfo));
+    installedRepository.save(new Installed(packageInfo));
     return packageInfo;
   }
 
@@ -189,7 +189,7 @@ public class InstalledIntentService extends IntentService {
       }
     }
 
-    installedRepository.insert(new Installed(packageInfo));
+    installedRepository.save(new Installed(packageInfo));
     return packageInfo;
   }
 
