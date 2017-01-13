@@ -8,10 +8,8 @@ package cm.aptoide.pt.iab;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import android.telephony.TelephonyManager;
-import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.v8engine.payment.ProductFactory;
-import cm.aptoide.pt.v8engine.repository.InAppBillingRepository;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 
 public class InAppBillingService extends Service {
 
@@ -19,13 +17,9 @@ public class InAppBillingService extends Service {
 
   @Override public void onCreate() {
     super.onCreate();
-    final NetworkOperatorManager operatorManager =
-        new NetworkOperatorManager((TelephonyManager) getSystemService(TELEPHONY_SERVICE));
-    final InAppBillingSerializer serializer = new InAppBillingSerializer();
-    billingBinder =
-        new BillingBinder(this, new InAppBillingRepository(operatorManager),
-            serializer, new ErrorCodeFactory(), new PurchaseErrorCodeFactory(),
-            new ProductFactory());
+    billingBinder = new BillingBinder(this, RepositoryFactory.getInAppBillingRepository(this),
+        new InAppBillingSerializer(), new ErrorCodeFactory(), new PurchaseErrorCodeFactory(),
+        new ProductFactory());
   }
 
   @Override public IBinder onBind(Intent intent) {
