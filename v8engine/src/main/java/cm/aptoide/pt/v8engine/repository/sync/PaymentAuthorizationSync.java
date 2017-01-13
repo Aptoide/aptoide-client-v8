@@ -40,7 +40,7 @@ public class PaymentAuthorizationSync extends RepositorySync {
   @Override public void sync(SyncResult syncResult) {
     try {
       getServerAuthorizations().doOnSuccess(
-          response -> saveAndReschedulePendingAuthorization(response, syncResult))
+          response -> saveAndReschedulePendingAuthorization(response, syncResult, paymentIds))
           .onErrorReturn(throwable -> {
             saveAndRescheduleOnNetworkError(syncResult, throwable, paymentIds);
             return null;
@@ -60,7 +60,8 @@ public class PaymentAuthorizationSync extends RepositorySync {
       final List<PaymentAuthorization> authorizations = new ArrayList<>();
       for (String paymentId : paymentIds) {
         authorizations.add(authorizationFactory.convertToDatabasePaymentAuthorization(
-            authorizationFactory.create(Integer.valueOf(paymentId), Authorization.Status.ERROR)));
+            authorizationFactory.create(Integer.valueOf(paymentId),
+                Authorization.Status.SYNCING_ERROR)));
       }
       authorizationAccessor.saveAll(authorizations);
     }
@@ -68,30 +69,19 @@ public class PaymentAuthorizationSync extends RepositorySync {
 
   private void saveAndReschedulePendingAuthorization(
       List<PaymentAuthorizationsResponse.PaymentAuthorizationResponse> responses,
-      SyncResult syncResult) {
+      SyncResult syncResult, List<String> paymentIds) {
+
     final List<PaymentAuthorization> authorizations = new ArrayList<>();
-    PaymentAuthorizationsResponse.PaymentAuthorizationResponse currentResponse;
-    for (String paymentId : paymentIds) {
-      currentResponse = null;
 
-      for (PaymentAuthorizationsResponse.PaymentAuthorizationResponse response : responses) {
-        if (response.getPaymentId() == Integer.valueOf(paymentId)) {
-          currentResponse = response;
-          final cm.aptoide.pt.v8engine.payment.Authorization paymentAuthorization =
-              authorizationFactory.convertToPaymentAuthorization(response);
-          authorizations.add(authorizationFactory.convertToDatabasePaymentAuthorization(response));
-          if (paymentAuthorization.isPending()
-              || paymentAuthorization.isInitiated()) {
-            rescheduleSync(syncResult);
-          }
-        }
-      }
-
-      if (currentResponse == null) {
-        authorizations.add(authorizationFactory.convertToDatabasePaymentAuthorization(
-            authorizationFactory.create(Integer.valueOf(paymentId), Authorization.Status.NEW)));
+    for (PaymentAuthorizationsResponse.PaymentAuthorizationResponse response : responses) {
+      final cm.aptoide.pt.v8engine.payment.Authorization paymentAuthorization =
+          authorizationFactory.convertToPaymentAuthorization(response);
+      authorizations.add(authorizationFactory.convertToDatabasePaymentAuthorization(response));
+      if (paymentAuthorization.isPending() || paymentAuthorization.isInitiated()) {
+        rescheduleSync(syncResult);
       }
     }
+
     authorizationAccessor.saveAll(authorizations);
   }
 

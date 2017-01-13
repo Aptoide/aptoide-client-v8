@@ -44,7 +44,7 @@ public class AccessTokenRequestBodyAdapter implements AccessTokenBody {
     this.baseBody = baseBody;
     this.decorator = decorator;
     this.storeName = storeName;
-    this.storeTheme = storeTheme;
+    storeProperties = new SimpleSetStoreRequest.StoreProperties(storeTheme, null);
     this.accessToken = accessToken;
   }
 
@@ -83,13 +83,10 @@ public class AccessTokenRequestBodyAdapter implements AccessTokenBody {
       }
     } else {
       body.put("store_name", createBodyPartFromString(storeName));
-      if (storeTheme.length() > 0) {
-        try {
-          body.put("store_properties",
-              createBodyPartFromString(new JSONObject().put("theme", storeTheme).toString()));
-        } catch (JSONException e) {
-          Logger.e(AccessTokenRequestBodyAdapter.class.getSimpleName(), JSONOBJECT_ERROR, e);
-        }
+      try {
+        body.put("store_properties", createBodyPartFromString(mapper.writeValueAsString(storeProperties)));
+      } catch (JsonProcessingException e) {
+        e.printStackTrace();
       }
     }
     body.put("access_token", createBodyPartFromString(accessToken));

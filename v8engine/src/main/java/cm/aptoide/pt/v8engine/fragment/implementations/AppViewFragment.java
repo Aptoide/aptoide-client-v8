@@ -304,8 +304,10 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     GetAppMeta.App app = getApp.getNodes().getMeta().getData();
     GetAppMeta.Media media = app.getMedia();
 
+    final boolean shouldInstall = openType == OpenType.OPEN_AND_INSTALL;
+    openType = null;
     installDisplayable = AppViewInstallDisplayable.newInstance(getApp, installManager, minimalAd,
-        openType == OpenType.OPEN_AND_INSTALL, installedRepository);
+        shouldInstall, installedRepository);
     displayables.add(installDisplayable);
     displayables.add(new AppViewStoreDisplayable(getApp));
     displayables.add(new AppViewRateAndCommentsDisplayable(getApp));

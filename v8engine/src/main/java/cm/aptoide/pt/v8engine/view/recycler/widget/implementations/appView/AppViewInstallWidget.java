@@ -369,8 +369,9 @@ import rx.android.schedulers.AndroidSchedulers;
           .first()
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(progress -> {
-            if (AptoideAccountManager.isLoggedIn() && ManagerPreferences.getShowPreview() &&
-                Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
+            if (AptoideAccountManager.isLoggedIn()
+                && ManagerPreferences.getShowPreview()
+                && Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
               SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(displayable);
               AlertDialog.Builder alertDialog = sharePreviewDialog.showPreviewDialog(getContext());
               SocialRepository socialRepository = new SocialRepository();

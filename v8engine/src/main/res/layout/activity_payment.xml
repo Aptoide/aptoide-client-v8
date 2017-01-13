@@ -43,8 +43,8 @@
 
       <ImageView
           android:id="@+id/activity_payment_product_icon"
-          android:layout_width="56dp"
-          android:layout_height="56dp"
+          android:layout_width="80dp"
+          android:layout_height="80dp"
           tools:ignore="contentDescription"
           tools:src="@drawable/icon_user"
           />
@@ -53,19 +53,27 @@
           android:id="@+id/activity_payment_product_name"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginLeft="72dp"
-          android:layout_marginStart="72dp"
+          android:layout_marginBottom="12dp"
+          android:layout_marginLeft="96dp"
+          android:layout_marginStart="96dp"
+          android:layout_marginTop="8dp"
           tools:text="Cut the Rope"
+          style="@style/TextAppearance.Aptoide.Subhead"
           />
 
+
       <TextView
-          android:id="@+id/activity_payment_product_price_description"
+          android:id="@+id/activity_payment_product_description"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_below="@id/activity_payment_product_name"
-          android:layout_marginLeft="72dp"
-          android:layout_marginStart="72dp"
-          tools:text="R$ 20,00"
+          android:layout_below="@+id/activity_payment_product_name"
+          android:layout_marginBottom="16dp"
+          android:layout_marginLeft="96dp"
+          android:layout_marginStart="96dp"
+          android:ellipsize="end"
+          android:lines="2"
+          tools:text="Golden coins for you to conquer the world with Cut the Rope the best mobile application you'e ever seen"
+          style="@style/TextAppearance.Aptoide.Caption.Inverse"
           />
 
     </RelativeLayout>
@@ -75,7 +83,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:layout_marginTop="16dp"
         android:animateLayoutChanges="true"
         android:orientation="vertical"
         android:visibility="gone"
@@ -96,18 +103,19 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="16dp"
             android:layout_toStartOf="@+id/activity_selected_payment_price"
-            tools:text="Paypal"
-            style="@style/TextAppearance.AppCompat.Medium"
+            android:ellipsize="end"
+            android:lines="1"
+            tools:text="Boa Compra Gold"
+            style="@style/TextAppearance.Aptoide.Title"
             />
 
         <ImageView
             android:id="@+id/activity_selected_payment_checked_image"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
             android:scaleType="centerInside"
             android:src="@drawable/selected_payment_icon"
             tools:ignore="contentDescription"
@@ -122,8 +130,9 @@
             android:layout_marginStart="16dp"
             android:layout_toStartOf="@id/activity_selected_payment_checked_image"
             android:gravity="end"
-            tools:text="0,03 R$"
-            style="@style/TextAppearance.AppCompat.Medium"
+            android:lines="1"
+            tools:text="6,50 R$"
+            style="@style/TextAppearance.Aptoide.Title"
             />
 
       </RelativeLayout>
@@ -132,7 +141,7 @@
           android:id="@+id/activity_payment_selected_divider"
           android:layout_width="match_parent"
           android:layout_height="0.5dp"
-          android:background="@color/dark_custom_gray"
+          android:background="@color/activity_payment_dark_gray"
           />
 
       <Button
@@ -142,17 +151,25 @@
           android:drawableEnd="@drawable/arrow_down"
           android:gravity="start|center_vertical"
           android:text="@string/activity_payment_more_payments_button"
-          style="@style/Widget.AppBaseTheme.Button.Borderless"
+          android:visibility="gone"
+          tools:visibility="visible"
+          style="@style/Widget.Aptoide.DropDown.Borderless"
           />
 
-      <LinearLayout
-          android:id="@+id/activity_payment_list"
+      <ScrollView
+          android:id="@+id/activity_payment_list_container"
           android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:orientation="vertical"
+          android:layout_height="144dp"
           android:visibility="gone"
           >
-      </LinearLayout>
+        <LinearLayout
+            android:id="@+id/activity_payment_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            tools:ignore="UselessLeaf"
+            />
+      </ScrollView>
     </LinearLayout>
 
     <TextView
@@ -181,7 +198,7 @@
           android:layout_height="wrap_content"
           android:layout_alignParentStart="true"
           android:text="@string/cancel"
-          style="@style/Widget.AppBaseTheme.Button.Borderless.Colored"
+          style="@style/Widget.Aptoide.Button.Borderless"
           />
 
       <Button
@@ -190,7 +207,7 @@
           android:layout_height="wrap_content"
           android:layout_alignParentEnd="true"
           android:text="@string/buy"
-          style="@style/Widget.AppCompat.Button"
+          style="@style/Widget.Aptoide.Button.Borderless.Colored"
           />
     </RelativeLayout>
   </LinearLayout>
@@ -208,14 +225,18 @@
       android:id="@+id/activity_payment_list_progress_bar"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:visibility="gone"
-      tools:visibility="visible"
+      android:layout_alignParentLeft="true"
+      android:layout_alignParentTop="true"
       android:clickable="true"
       android:focusable="true"
-      android:gravity="center">
+      android:gravity="center"
+      android:visibility="gone"
+      tools:visibility="visible"
+      >
     <ProgressBar
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        />
   </LinearLayout>
 </RelativeLayout>
 

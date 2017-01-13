@@ -14,9 +14,7 @@ import android.content.pm.PackageInfo;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
-import cm.aptoide.accountmanager.AccountManagerPreferences;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.util.UserCompleteData;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
 import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.crashreports.AptoideCrashLogger;
@@ -236,11 +234,8 @@ public abstract class V8Engine extends DataProvider {
             new DownloadManagerSettingsI(), downloadAccessor, CacheHelper.build(),
             new FileUtils(action -> Analytics.File.moveFile(action)), new TokenHttpClient(
                 new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this),
-                new UserData() {
-                  @Override public String getUserEmail() {
-                    return AptoideAccountManager.getUserEmail();
-                  }
-                }, getConfiguration().getPartnerId()),
+                () -> AptoideAccountManager.getUserEmail(),
+                getConfiguration().getPartnerId()).customMake(),
             new DownloadAnalytics(Analytics.getInstance()));
 
     fileManager.purgeCache()
