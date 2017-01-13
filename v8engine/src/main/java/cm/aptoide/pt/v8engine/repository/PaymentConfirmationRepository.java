@@ -21,17 +21,17 @@ import rx.schedulers.Schedulers;
 public abstract class PaymentConfirmationRepository {
 
   protected final NetworkOperatorManager operatorManager;
-  protected final PaymentConfirmationConverter confirmationConverter;
+  protected final PaymentConfirmationFactory confirmationFactory;
   private final PaymentConfirmationAccessor confirmationAccessor;
   private final SyncAdapterBackgroundSync backgroundSync;
 
   public PaymentConfirmationRepository(NetworkOperatorManager operatorManager,
       PaymentConfirmationAccessor confirmationAccessor, SyncAdapterBackgroundSync backgroundSync,
-      PaymentConfirmationConverter confirmationConverter) {
+      PaymentConfirmationFactory confirmationFactory) {
     this.operatorManager = operatorManager;
     this.confirmationAccessor = confirmationAccessor;
     this.backgroundSync = backgroundSync;
-    this.confirmationConverter = confirmationConverter;
+    this.confirmationFactory = confirmationFactory;
   }
 
   public abstract Completable createPaymentConfirmation(int paymentId);
@@ -42,7 +42,7 @@ public abstract class PaymentConfirmationRepository {
   public Observable<PaymentConfirmation> getPaymentConfirmation(Product product) {
     return confirmationAccessor.getPaymentConfirmations(product.getId())
         .flatMap(paymentConfirmations -> Observable.from(paymentConfirmations)
-            .map(paymentConfirmation -> confirmationConverter.convertToPaymentConfirmation(paymentConfirmation)))
+            .map(paymentConfirmation -> confirmationFactory.convertToPaymentConfirmation(paymentConfirmation)))
         .doOnSubscribe(() -> backgroundSync.syncConfirmation(((AptoideProduct) product)));
   }
 

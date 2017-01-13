@@ -26,8 +26,8 @@ public class PaidAppPaymentConfirmationRepository extends PaymentConfirmationRep
 
   public PaidAppPaymentConfirmationRepository(NetworkOperatorManager operatorManager,
       PaymentConfirmationAccessor paymentDatabase, SyncAdapterBackgroundSync backgroundSync,
-      PaymentConfirmationConverter paymentConfirmationConverter, PaidAppProduct product) {
-    super(operatorManager, paymentDatabase, backgroundSync, paymentConfirmationConverter);
+      PaymentConfirmationFactory confirmationFactory, PaidAppProduct product) {
+    super(operatorManager, paymentDatabase, backgroundSync, confirmationFactory);
     this.product = product;
   }
 
