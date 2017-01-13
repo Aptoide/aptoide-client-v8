@@ -58,7 +58,6 @@ import javax.security.auth.login.LoginException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.experimental.PackagePrivate;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -252,7 +251,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     getContext().sendBroadcast(new Intent().setAction(LOGOUT));
   }
 
-  private static @Nullable String getRefreshToken() {
+  public static @Nullable String getRefreshToken() {
     String refreshToken = AccountManagerPreferences.getRefreshToken();
 
     if (refreshToken == null || TextUtils.isEmpty(refreshToken)) {

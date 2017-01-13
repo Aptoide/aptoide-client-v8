@@ -19,6 +19,7 @@ import android.content.pm.PermissionInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
@@ -82,6 +83,7 @@ import java.util.UnknownFormatConversionException;
 import java.util.regex.Pattern;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import rx.Observable;
@@ -1546,6 +1548,47 @@ public class AptoideUtils {
       }
 
       return originalUrl;
+    }
+
+    public static List<ImageSizeErrors> checkIconSizeProperties(String avatarPath, int minHeight, int maxHeight,
+        int minWidth, int maxWidth, int maxImageSize) {
+      ImageInfo imageInfo = getImageInfo(avatarPath);
+      List<ImageSizeErrors> errors = new LinkedList<>();
+      if (imageInfo.getHeight() < minHeight) {
+        errors.add(ImageSizeErrors.MIN_HEIGHT);
+      }
+      if (imageInfo.getWidth() < minWidth) {
+        errors.add(ImageSizeErrors.MIN_WIDTH);
+      }
+      if (imageInfo.getHeight() > maxHeight) {
+        errors.add(ImageSizeErrors.MAX_HEIGHT);
+      }
+      if (imageInfo.getWidth() > maxWidth) {
+        errors.add(ImageSizeErrors.MAX_WIDTH);
+      }
+      if (imageInfo.getSize() > maxImageSize) {
+        errors.add(ImageSizeErrors.MAX_IMAGE_SIZE);
+      }
+      return errors;
+    }
+
+    public static ImageInfo getImageInfo(String imagePath) {
+      ImageInfo imageInfo = new ImageInfo();
+      Bitmap image = BitmapFactory.decodeFile(imagePath);
+      imageInfo.setWidth(image.getWidth());
+      imageInfo.setHeight(image.getHeight());
+      imageInfo.setSize(new File(imagePath).length());
+
+      return imageInfo;
+    }
+
+    public enum ImageSizeErrors {
+      MIN_HEIGHT, MAX_HEIGHT, MIN_WIDTH, MAX_WIDTH, MAX_IMAGE_SIZE
+    }
+
+    @Data public static class ImageInfo {
+      int height, width;
+      long size;
     }
   }
 

@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.layouthandler;
 
 import android.support.annotation.CallSuper;
 import android.support.annotation.IdRes;
+import android.support.annotation.UiThread;
 import android.view.View;
 import android.widget.ProgressBar;
 import cm.aptoide.pt.crashreports.CrashReports;
@@ -90,7 +91,7 @@ public class LoaderLayoutHandler {
     });
   }
 
-  protected void onFinishLoading() {
+  @UiThread protected void onFinishLoading() {
     progressBar.setVisibility(View.GONE);
     viewToShowAfterLoading.setVisibility(View.VISIBLE);
   }

@@ -57,9 +57,8 @@ public class CreatePaymentConfirmationRequest extends V3<BaseV3Response> {
     body.put("payType", String.valueOf(paymentId));
     body.put("reqType", "rest");
 
-    if (operatorManager.isSimStateReady()) {
-      body.put("simcc", operatorManager.getSimCountryISO());
-    }
+    addNetworkInformation(operatorManager, body);
+
     return body;
   }
 
