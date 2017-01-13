@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.repository;
 
 import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.database.accessors.PaymentConfirmationAccessor;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingAvailableRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingConsumeRequest;
@@ -17,8 +18,6 @@ import cm.aptoide.pt.iab.SKU;
 import cm.aptoide.pt.model.v3.ErrorResponse;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
 import cm.aptoide.pt.model.v3.InAppBillingSkuDetailsResponse;
-import cm.aptoide.pt.model.v3.PaymentService;
-import cm.aptoide.pt.v8engine.payment.ProductFactory;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.util.Collections;
@@ -31,12 +30,12 @@ import rx.Observable;
 public class InAppBillingRepository {
 
   private final NetworkOperatorManager operatorManager;
-  private final ProductFactory productFactory;
+  private final PaymentConfirmationAccessor confirmationAccessor;
 
   public InAppBillingRepository(NetworkOperatorManager operatorManager,
-      ProductFactory productFactory) {
+      PaymentConfirmationAccessor confirmationAccessor) {
     this.operatorManager = operatorManager;
-    this.productFactory = productFactory;
+    this.confirmationAccessor = confirmationAccessor;
   }
 
   public Observable<Void> getInAppBilling(int apiVersion, String packageName, String type) {
@@ -88,6 +87,8 @@ public class InAppBillingRepository {
         .observe()
         .flatMap(response -> {
           if (response != null && response.isOk()) {
+            // TODO sync all payment confirmations instead. For now there is no web service for that.
+            confirmationAccessor.removeAll();
             return Observable.just(null);
           }
           if (isDeletionItemNotFound(response.getErrors())) {
@@ -97,12 +98,6 @@ public class InAppBillingRepository {
           return Observable.error(
               new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
         });
-  }
-
-  public Observable<List<PaymentService>> getPaymentServices(int apiVersion, String packageName,
-      String sku, String type) {
-    return getSKUDetails(apiVersion, packageName, sku, type).map(
-        response -> response.getPaymentServices());
   }
 
   public Observable<InAppBillingSkuDetailsResponse> getSKUDetails(int apiVersion,

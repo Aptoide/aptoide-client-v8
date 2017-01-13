@@ -77,7 +77,7 @@ public interface FragmentProvider {
 
   Fragment newListStoresFragment();
 
-  Fragment newAppsTimelineFragment(String action);
+  Fragment newAppsTimelineFragment(String action, String storeTheme);
 
   Fragment newSubscribedStoresFragment(Event event, String title, String storeTheme, String tag);
 
@@ -114,7 +114,7 @@ public interface FragmentProvider {
   Fragment newCreateUserFragment();
 
   Fragment newTimeLineFollowStatsFragment(TimeLineFollowFragment.FollowFragmentOpenMode openMode,
-      long followNumber);
+      long followNumber, String storeTheme);
 
   Fragment newCommentGridRecyclerFragment(CommentType commentType, String elementId);
 

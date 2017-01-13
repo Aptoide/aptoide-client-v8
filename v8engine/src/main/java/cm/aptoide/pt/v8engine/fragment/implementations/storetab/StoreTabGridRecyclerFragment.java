@@ -10,12 +10,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.Layout;
@@ -23,8 +20,6 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
-import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
-import cm.aptoide.pt.v8engine.util.ThemeUtils;
 import cm.aptoide.pt.v8engine.util.Translator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import java.util.List;
@@ -43,7 +38,6 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
   protected String action;
   protected String title;
   protected String tag;
-  protected String storeTheme;
 
   public static Fragment newInstance(Event event, String title,
       String storeTheme, String tag) {
@@ -163,16 +157,6 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
     setHasOptionsMenu(true);
   }
 
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    if (storeTheme != null) {
-      ThemeUtils.setStoreTheme(getActivity(), storeTheme);
-      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
-    }
-    return super.onCreateView(inflater, container, savedInstanceState);
-  }
-
   @Nullable protected abstract Observable<List<Displayable>> buildDisplayables(boolean refresh,
       String url);
 
@@ -182,7 +166,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
     public static final String NAME = "name";
     public static final String TITLE = "title";
     public static final String ACTION = "action";
-    public static final String STORE_THEME = "storeTheme";
+    public static final String STORE_THEME = GridRecyclerSwipeFragment.BundleCons.STORE_THEME;
     public static final String LAYOUT = "layout";
     public static final String TAG = "tag";
   }

@@ -6,6 +6,8 @@
 package cm.aptoide.pt.v8engine.payment;
 
 import cm.aptoide.pt.v8engine.payment.exception.PaymentException;
+import rx.Completable;
+import rx.Observable;
 
 /**
  * Created by marcelobenites on 8/10/16.
@@ -13,6 +15,8 @@ import cm.aptoide.pt.v8engine.payment.exception.PaymentException;
 public interface Payment {
 
   int getId();
+
+  String getName();
 
   String getType();
 
@@ -22,16 +26,12 @@ public interface Payment {
 
   String getDescription();
 
-  void removeListener();
+  Authorization getAuthorization();
 
-  boolean isProcessing();
+  void setAuthorization(Authorization authorization);
 
-  void process(PaymentConfirmationListener listener);
+  boolean isAuthorizationRequired();
 
-  static interface PaymentConfirmationListener {
+  Completable process();
 
-    void onSuccess(PaymentConfirmation paymentConfirmation);
-
-    void onError(PaymentException exception);
-  }
 }

@@ -16,8 +16,7 @@ public interface EndlessController<U> {
   /**
    * Load more objects.
    *
-   * @param bypassCache bypassCache.
    * @return a new set of objects.
    */
-  Observable<List<U>> loadMore(boolean bypassCache);
+  Observable<List<U>> loadMore();
 }

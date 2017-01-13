@@ -72,10 +72,6 @@ public class PullingContentService extends Service {
     if (!isAlarmUp(this, UPDATES_ACTION)) {
       setAlarm(alarm, this, UPDATES_ACTION, UPDATES_INTERVAL);
     }
-    if (!isAlarmUp(this, BOOT_COMPLETED_ACTION)) {
-      setAlarm(alarm, this, PUSH_NOTIFICATIONS_ACTION, PUSH_NOTIFICATION_INTERVAL);
-      setAlarm(alarm, this, UPDATES_ACTION, UPDATES_INTERVAL);
-    }
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {

@@ -93,7 +93,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewScreenshotsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewSuggestedAppsDisplayable;
-import com.trello.rxlifecycle.FragmentEvent;
+import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.LinkedList;
 import java.util.List;
 import lombok.Getter;
@@ -229,9 +229,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         AccessorFactory.getAccessorFor(Installed.class));
 
     productFactory = new ProductFactory();
-    appRepository = new AppRepository(new NetworkOperatorManager(
-        (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE)),
-        productFactory);
+    appRepository = new AppRepository(new NetworkOperatorManager((TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE)));
     adsRepository = new AdsRepository();
     installedRepository = RepositoryFactory.getInstalledRepository();
   }
@@ -306,8 +304,10 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     GetAppMeta.App app = getApp.getNodes().getMeta().getData();
     GetAppMeta.Media media = app.getMedia();
 
+    final boolean shouldInstall = openType == OpenType.OPEN_AND_INSTALL;
+    openType = null;
     installDisplayable = AppViewInstallDisplayable.newInstance(getApp, installManager, minimalAd,
-        openType == OpenType.OPEN_AND_INSTALL, installedRepository);
+        shouldInstall, installedRepository);
     displayables.add(installDisplayable);
     displayables.add(new AppViewStoreDisplayable(getApp));
     displayables.add(new AppViewRateAndCommentsDisplayable(getApp));
@@ -448,7 +448,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
 
-    if (create) {
       if (subscription != null) {
         subscription.unsubscribe();
       }
@@ -495,9 +494,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
               CrashReports.logString(key_md5sum, md5);
             });
       }
-    } else {
-      header.setup(getApp);
-    }
   }
 
   @Override public int getContentViewId() {
@@ -552,7 +548,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       storeTheme = getApp.getNodes().getMeta().getData().getStore().getAppearance().getTheme();
     }
 
-    // useful data for the schedule updates menu option
+    // useful data for the syncAuthorization updates menu option
     installAction().observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(appAction -> {

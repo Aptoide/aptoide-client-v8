@@ -1,19 +1,12 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
-
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
-import cm.aptoide.pt.model.v7.store.Store;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import org.json.JSONException;
-import org.json.JSONObject;
 import rx.Observable;
 
 /**
@@ -52,7 +45,7 @@ public class SimpleSetStoreRequest extends V7<BaseV7Response, SimpleSetStoreRequ
     private String storeName;
     //private String storeProperties;
     private String accessToken;
-    private long storeId;
+    private Long storeId;
     @Getter @Setter private StoreProperties storeProperties;
 
     public Body(String accessToken, String storeName, String storeTheme) {

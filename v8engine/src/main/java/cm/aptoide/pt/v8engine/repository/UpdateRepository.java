@@ -122,11 +122,8 @@ public class UpdateRepository implements Repository {
     });
   }
 
-  public Observable<Void> remove(String packageName) {
-    return Observable.fromCallable(() -> {
-      updateAccessor.remove(packageName);
-      return null;
-    });
+  public void remove(String packageName) {
+    updateAccessor.remove(packageName);
   }
 
   public Observable<List<Update>> getNonExcludedUpdates() {
@@ -141,5 +138,13 @@ public class UpdateRepository implements Repository {
       updateAccessor.insert(update);
       return null;
     });
+  }
+
+  public Observable<List<Update>> getAllSorted(boolean isExcluded) {
+    return updateAccessor.getAllSorted(isExcluded);
+  }
+
+  public Observable<Boolean> contains(String packageName, boolean isExcluded) {
+    return updateAccessor.contains(packageName, isExcluded);
   }
 }

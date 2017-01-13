@@ -10,53 +10,55 @@ package cm.aptoide.pt.v8engine.payment;
  */
 public class PaymentConfirmation {
 
-  private final String paymentConfirmationId;
-  private final int paymentId;
-  private final Product product;
-  private final Price price;
-
-  public PaymentConfirmation(String paymentConfirmationId, int paymentId, Product product,
-      Price price) {
-    this.paymentConfirmationId = paymentConfirmationId;
-    this.paymentId = paymentId;
-    this.product = product;
-    this.price = price;
+  public static enum Status {
+    SYNCING_ERROR,
+    CREATED,
+    PROCESSING,
+    PENDING,
+    COMPLETED,
+    FAILED,
+    CANCELED
   }
 
-  public Product getProduct() {
-    return product;
+  private final int productId;
+  private final String paymentConfirmationId;
+
+  private Status status;
+
+  public PaymentConfirmation(int productId, String paymentConfirmationId, Status status) {
+    this.productId = productId;
+    this.paymentConfirmationId = paymentConfirmationId;
+    this.status = status;
+  }
+
+  public int getProductId() {
+    return productId;
   }
 
   public String getPaymentConfirmationId() {
     return paymentConfirmationId;
   }
 
-  public int getPaymentId() {
-    return paymentId;
+  public Status getStatus() {
+    return status;
   }
 
-  public Price getPrice() {
-    return price;
+  public void setStatus(Status status) {
+    this.status = status;
   }
 
-  @Override public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    final PaymentConfirmation that = (PaymentConfirmation) o;
-
-    if (!paymentConfirmationId.equals(that.paymentConfirmationId)) {
-      return false;
-    }
-
-    return true;
+  public boolean isCompleted() {
+    return Status.COMPLETED.equals(status);
   }
 
-  @Override public int hashCode() {
-    return paymentConfirmationId.hashCode();
+  public boolean isPending() {
+    return Status.CREATED.equals(status)
+        || Status.PROCESSING.equals(status)
+        || Status.PENDING.equals(status);
+  }
+  public boolean isFailed() {
+    return Status.FAILED.equals(status)
+        || Status.CANCELED.equals(status)
+        || Status.SYNCING_ERROR.equals(status);
   }
 }

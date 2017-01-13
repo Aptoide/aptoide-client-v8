@@ -36,7 +36,7 @@ public interface AptoidePreferencesConfiguration {
   String getDefaultStore();
 
   // Providers
-  String getUpdatesSyncAdapterAuthority();
+  String getContentAuthority();
 
   String getSearchAuthority();
 
@@ -78,4 +78,9 @@ public interface AptoidePreferencesConfiguration {
   String getPartnerDimension();
 
   String getVerticalDimension();
+
+  /**
+   * @return true to show create store and user timeline privacy configurations
+   */
+  boolean isCreateStoreAndSetUserPrivacyAvailable();
 }

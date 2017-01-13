@@ -1,6 +1,6 @@
 package cm.aptoide.pt.dataprovider;
 
-import cm.aptoide.pt.dataprovider.interfaces.EndlessController;
+import cm.aptoide.pt.dataprovider.interfaces.EndlessControllerWithCache;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.BaseV7EndlessDatalistResponse;
@@ -14,9 +14,10 @@ import rx.schedulers.Schedulers;
 /**
  * Created by neuro on 03-01-2017.
  */
-public class DatalistEndlessController<U> implements EndlessController<U> {
+public class DatalistEndlessController<T, U> implements EndlessControllerWithCache<U> {
 
-  private final V7<? extends BaseV7EndlessDatalistResponse<U>, ? extends Endless> v7request;
+  private final V7<? extends BaseV7EndlessDatalistResponse<T>, ? extends Endless> v7request;
+  private final Mapper<T, U> mapper;
   private int total;
   private int offset;
   private boolean loading;
@@ -24,12 +25,18 @@ public class DatalistEndlessController<U> implements EndlessController<U> {
   private List<U> list = new LinkedList<>();
 
   public DatalistEndlessController(
-      V7<? extends BaseV7EndlessDatalistResponse<U>, ? extends Endless> v7request) {
+      V7<? extends BaseV7EndlessDatalistResponse<T>, ? extends Endless> v7request,
+      Mapper<T, U> mapper) {
     this.v7request = v7request;
+    this.mapper = mapper;
   }
 
   @Override public Observable<List<U>> get() {
     return Observable.just(list);
+  }
+
+  @Override public Observable<List<U>> loadMore() {
+    return loadMore(false);
   }
 
   public Observable<List<U>> loadMore(boolean bypassCache) {
@@ -45,10 +52,9 @@ public class DatalistEndlessController<U> implements EndlessController<U> {
             .doOnError(error -> {
               //remove spinner if webservice respond with error
               loading = false;
-            })
-            .map(response -> {
+            }).flatMap(response -> {
 
-              List<U> list;
+              List<T> list;
 
               if (response.hasData()) {
 
@@ -68,8 +74,7 @@ public class DatalistEndlessController<U> implements EndlessController<U> {
 
               loading = false;
 
-              this.list.addAll(list);
-              return list;
+              return Observable.from(list).map(mapper::map).toList();
             });
       } else {
         return Observable.just(Collections.emptyList());
@@ -81,5 +86,9 @@ public class DatalistEndlessController<U> implements EndlessController<U> {
 
   private boolean hasMoreElements() {
     return (stableData) ? offset < total : offset <= total;
+  }
+
+  public interface Mapper<T, U> {
+    U map(T t);
   }
 }

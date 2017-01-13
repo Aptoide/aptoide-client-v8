@@ -67,7 +67,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.StoreLatestAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.VideoDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.listeners.RxEndlessRecyclerView;
-import com.trello.rxlifecycle.FragmentEvent;
+import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -101,7 +101,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
   private TimelineMetricsManager timelineMetricsManager;
   private SocialRepository socialRepository;
 
-  public static AppsTimelineFragment newInstance(String action) {
+  public static AppsTimelineFragment newInstance(String action, String storeName) {
     AppsTimelineFragment fragment = new AppsTimelineFragment();
 
     final Bundle args = new Bundle();
@@ -198,7 +198,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
         if (AptoideAccountManager.isLoggedIn()) {
           return timelineRepository.getTimelineStats(refresh).map(timelineStats -> {
             displayableDatalist.getList()
-                .add(0, new TimeLineStatsDisplayable(timelineStats, spannableFactory));
+                .add(0, new TimeLineStatsDisplayable(timelineStats, spannableFactory, storeTheme));
             return displayableDatalist;
           }).onErrorReturn(throwable -> {
             Logger.e(this, throwable);

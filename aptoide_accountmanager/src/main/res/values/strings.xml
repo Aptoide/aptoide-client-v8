@@ -134,5 +134,12 @@
   <string name="create_profile_pub_pri_sub_text_3">You can choose to make your profile private, losing sharing features.</string>
   <string name="create_profile_pub_pri_make_priv">Make my profile private</string>
   <string name="create_profile_logged_in_activity_title">Logged in</string>
+  <string name="image_requirements_popup_message">The image has the following problems:\n</string>
+  <string name="image_requirements_error_min_height">- Minimum height is lower than 600px\n</string>
+  <string name="image_requirements_error_max_height">- Maximum height is higher than 10240px\n</string>
+  <string name="image_requirements_error_min_width">- Minimum width is lower than 600px\n</string>
+  <string name="image_requirements_error_max_width">- Maximum width is higher than 10240px\n</string>
+  <string name="image_requirements_error_max_file_size">- Maximum size is higher than 5 MB\n</string>
+  <string name="image_requirements_error_popup_title">Image</string>
 
 </resources>

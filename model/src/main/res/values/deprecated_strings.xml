@@ -103,7 +103,6 @@
         \n\• Errors you are seeing</string>
   <string name="feedback_include_logs">Include ScreenShot and Logs</string>
   <string name="feedback_no_email">No email client installed!</string>
-  <string name="username_tip">Type your email</string>
 
   <string name="store_already_added">Store already added!</string>
   <string name="subscribe_store">Subscribe Store</string>
@@ -207,7 +206,6 @@
   <string name="install_update">Install Update</string>
 
   <!-- Payments -->
-  <string name="payment_methods">Pay with:</string>
   <string name="cancel">Cancel</string>
   <string name="no_payments_available">No payments available.</string>
   <string name="failed_auth_code">Failed to authorize account. Please try again.</string>
@@ -260,7 +258,7 @@
   <string name="timeline_like">Like</string>
   <string name="likes">Likes</string>
   <string name="unlike">Unlike</string>
-  <string name="timeline_empty_no_friends_send_email">It seems that your friends did not logged-in in Aptoide with their Facebook account. Send them an email to login with their Facebook Account</string>
+  <string name="timeline_empty_no_friends_send_email">It seems that your friends did not log in to Aptoide with their Facebook account. Send them an email to login with their Facebook Account</string>
   <string name="timeline_empty_send_email_to_friends">Email Friends</string>
   <string name="aptoide_timeline">Aptoide Timeline</string>
   <string name="timeline_email_invitation">Invited you to join his Aptoide Social Timeline. Be connected!</string>
@@ -508,7 +506,6 @@
   <string name="subscribe_apps_official_store">Subscribe \'apps\' Aptoide Official App Store</string>
   <string name="wizard_next">Next</string>
   <string name="wizard_prev">Previous</string>
-  <string name="search_activity_title">"'%s'"</string>
 
   <string name="share">Share</string>
   <string name="share_on_timeline">Share on timeline</string>
