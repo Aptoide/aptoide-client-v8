@@ -23,7 +23,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
-import android.net.Network;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Looper;
@@ -1665,37 +1664,37 @@ public class AptoideUtils {
    */
   public static class NetworkUtils {
 
-    public static boolean isGeneralDownloadPermitted(Context context, boolean wifiAllowed,
-        boolean mobileAllowed) {
-      final boolean wifiAvailable = isAvailable(context, TYPE_WIFI);
-      final boolean mobileAvailable = isAvailable(context, TYPE_MOBILE);
-      return !(wifiAvailable && !wifiAllowed) && !(mobileAvailable && !mobileAllowed);
-    }
+    //public static boolean isGeneralDownloadPermitted(Context context, boolean wifiAllowed,
+    //    boolean mobileAllowed) {
+    //  final boolean wifiAvailable = isAvailable(context, TYPE_WIFI);
+    //  final boolean mobileAvailable = isAvailable(context, TYPE_MOBILE);
+    //  return !(wifiAvailable && !wifiAllowed) && !(mobileAvailable && !mobileAllowed);
+    //}
 
-    public static boolean isAvailable(Context context, int networkType) {
-      final ConnectivityManager manager =
-          (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-      return Build.VERSION.SDK_INT < 21 ? isAvailableSdk1(manager, networkType)
-          : isAvailableSdk21(manager, networkType);
-    }
+    //public static boolean isAvailable(Context context, int networkType) {
+    //  final ConnectivityManager manager =
+    //      (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+    //  return Build.VERSION.SDK_INT < 21 ? isAvailableSdk1(manager, networkType)
+    //      : isAvailableSdk21(manager, networkType);
+    //}
 
-    private static boolean isAvailableSdk1(final ConnectivityManager manager,
-        final int networkType) {
-      final NetworkInfo info = manager.getActiveNetworkInfo();
-      return info != null && info.getType() == networkType;
-    }
+    //private static boolean isAvailableSdk1(final ConnectivityManager manager,
+    //    final int networkType) {
+    //  final NetworkInfo info = manager.getActiveNetworkInfo();
+    //  return info != null && info.getType() == networkType;
+    //}
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private static boolean isAvailableSdk21(final ConnectivityManager manager,
-        final int networkType) {
-      for (final Network network : manager.getAllNetworks()) {
-        final NetworkInfo info = manager.getNetworkInfo(network);
-        if (info != null && info.isConnected() && info.getType() == networkType) {
-          return true;
-        }
-      }
-      return false;
-    }
+    //@TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    //private static boolean isAvailableSdk21(final ConnectivityManager manager,
+    //    final int networkType) {
+    //  for (final Network network : manager.getAllNetworks()) {
+    //    final NetworkInfo info = manager.getNetworkInfo(network);
+    //    if (info != null && info.isConnected() && info.getType() == networkType) {
+    //      return true;
+    //    }
+    //  }
+    //  return false;
+    //}
 
     public static String getDefaultUserAgent(AptoideClientUUID aptoideClientUUID, UserData userData,
         String vername, String oemid) {

@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 16/08/2016.
- */
-
 package cm.aptoide.pt.v8engine;
 
 import android.app.AlertDialog;
@@ -46,9 +41,8 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
   private ProgressDialog dialog;
   private PermissionManager permissionManager;
 
-  public AutoUpdate(AptoideBaseActivity activity, Installer installer,
-      DownloadFactory downloadFactory, AptoideDownloadManager downloadManager,
-      PermissionManager permissionManager) {
+  AutoUpdate(AptoideBaseActivity activity, Installer installer, DownloadFactory downloadFactory,
+      AptoideDownloadManager downloadManager, PermissionManager permissionManager) {
     this.activity = activity;
     this.installer = installer;
     this.permissionManager = permissionManager;

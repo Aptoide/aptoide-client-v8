@@ -267,6 +267,9 @@ public class Translator {
       case "More Editors' Choice":
         translated = Application.getContext().getString(R.string.more_editors_choice);
         break;
+      case "Comments in this store":
+        translated = Application.getContext().getString(R.string.comment_store_title);
+        break;
       default:
         translated = string;
         break;

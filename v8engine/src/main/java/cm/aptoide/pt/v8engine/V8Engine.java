@@ -232,11 +232,8 @@ public abstract class V8Engine extends DataProvider {
             new DownloadManagerSettingsI(), downloadAccessor, CacheHelper.build(),
             new FileUtils(action -> Analytics.File.moveFile(action)), new TokenHttpClient(
                 new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this),
-                new UserData() {
-                  @Override public String getUserEmail() {
-                    return AptoideAccountManager.getUserEmail();
-                  }
-                }, getConfiguration().getPartnerId()),
+                () -> AptoideAccountManager.getUserEmail(),
+                getConfiguration().getPartnerId()).customMake(),
             new DownloadAnalytics(Analytics.getInstance()));
 
     fileManager.purgeCache()

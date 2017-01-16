@@ -14,11 +14,13 @@ import cm.aptoide.pt.downloadmanager.interfaces.DownloadSettingsInterface;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
+import cn.dreamtobe.filedownloader.OkHttp3Connection;
 import com.liulishuo.filedownloader.FileDownloader;
-import com.liulishuo.filedownloader.util.FileDownloadHelper;
+import com.liulishuo.filedownloader.services.DownloadMgrInitialParams;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
+import okhttp3.OkHttpClient;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -216,11 +218,12 @@ public class AptoideDownloadManager {
   public void init(Context context,
       DownloadNotificationActionsInterface downloadNotificationActionsInterface,
       DownloadSettingsInterface settingsInterface, DownloadAccessor downloadAccessor,
-      CacheManager cacheHelper, FileUtils fileUtils,
-      FileDownloadHelper.OkHttpClientCustomMaker httpClientFactory, Analytics analytics) {
+      CacheManager cacheHelper, FileUtils fileUtils, OkHttpClient.Builder httpClientBuilder,
+      Analytics analytics) {
     this.analytics = analytics;
 
-    FileDownloader.init(context, httpClientFactory);
+    FileDownloader.init(context, new DownloadMgrInitialParams.InitCustomMaker().connectionCreator(
+        new OkHttp3Connection.Creator(httpClientBuilder)));
     this.downloadNotificationActionsInterface = downloadNotificationActionsInterface;
     this.settingsInterface = settingsInterface;
     this.cacheHelper = cacheHelper;
