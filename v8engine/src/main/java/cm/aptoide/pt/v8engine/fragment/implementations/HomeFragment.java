@@ -372,6 +372,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
   }
 
   @Override public void setupToolbar() {
+    super.setupToolbar();
     if (toolbar != null) {
       ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
       toolbar.setLogo(R.drawable.ic_aptoide_toolbar);

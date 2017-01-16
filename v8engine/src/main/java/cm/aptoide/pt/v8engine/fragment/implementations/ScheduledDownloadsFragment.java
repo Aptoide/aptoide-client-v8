@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
- */
-
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.content.Context;
@@ -102,6 +97,7 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    super.load(create, refresh, savedInstanceState);
     Logger.d(TAG, "refresh excluded updates? " + (create ? "yes" : "no"));
     if (create) {
       switch (openMode) {
@@ -309,7 +305,8 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
   }
 
   public void setupEvents(Download download, DownloadEvent.Action action) {
-    DownloadEvent report = downloadConverter.create(download, action, DownloadEvent.AppContext.SCHEDULED);
+    DownloadEvent report =
+        downloadConverter.create(download, action, DownloadEvent.AppContext.SCHEDULED);
     analytics.save(download.getPackageName() + download.getVersionCode(), report);
 
     InstallEvent installEvent =
