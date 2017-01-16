@@ -8,18 +8,28 @@ package cm.aptoide.pt.v8engine.download;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.dataprovider.BuildConfig;
+import cm.aptoide.pt.downloadmanager.Constants;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.okhttp.UserAgentInterceptor;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEvent;
+import java.io.IOException;
+import okhttp3.Headers;
+import okhttp3.Interceptor;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
+import okhttp3.Response;
 
 /**
  * Created by marcelobenites on 9/12/16.
  */
 public class TokenHttpClient {
+
+  private static final String TAG = "TokenHttpClient";
 
   private final AptoideClientUUID aptoideClientUUID;
   private final UserData userData;
@@ -47,6 +57,50 @@ public class TokenHttpClient {
     })
         .addInterceptor(new UserAgentInterceptor(
             () -> AptoideUtils.NetworkUtils.getDefaultUserAgent(aptoideClientUUID, userData,
-                AptoideUtils.Core.getDefaultVername(), oemid)));
+                AptoideUtils.Core.getDefaultVername(), oemid)))
+
+        .addInterceptor(new Interceptor() {
+          @Override public Response intercept(Chain chain) throws IOException {
+
+
+        /*
+         * Aptoide - events 2 : download
+         * Get X-Mirror and add to the event
+         */
+
+            Request request = chain.request();
+            String v = request.header(Constants.VERSION_CODE);
+            String packageName = request.header(Constants.PACKAGE);
+            int fileType = Integer.valueOf(request.header(Constants.FILE_TYPE));
+
+            Response response = chain.proceed(request.newBuilder()
+                .removeHeader(Constants.VERSION_CODE)
+                .removeHeader(Constants.PACKAGE)
+                .removeHeader(Constants.FILE_TYPE)
+                .build());
+            if (response != null) {
+              Headers allHeaders = response.headers();
+              if (allHeaders != null) {
+                String headerValue = allHeaders.get("X-Mirror");
+                Logger.v(TAG, headerValue);
+                DownloadEvent event = (DownloadEvent) Analytics.getInstance()
+                    .get(packageName + v, DownloadEvent.class);
+                if (event != null) {
+                  if (fileType == 0) {
+                    event.setUrl(headerValue);
+                  } else if (fileType == 1) {
+                    event.setObbUrl(headerValue);
+                  } else if (fileType == 2) {
+                    event.setPatchObbUrl(headerValue);
+                  }
+                }
+                for (String s : response.headers().names()) {
+                  Logger.w(TAG, s);
+                }
+              }
+            }
+            return response;
+          }
+        });
   }
 }

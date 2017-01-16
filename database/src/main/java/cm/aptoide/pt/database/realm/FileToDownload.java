@@ -27,7 +27,7 @@ public class FileToDownload extends RealmObject {
   private String link;
   private String packageName;
   private String path;
-  private int fileType = GENERIC;
+  private @FileType int fileType = GENERIC;
   private int progress;
   private @Download.DownloadState int status;
   private String fileName;
