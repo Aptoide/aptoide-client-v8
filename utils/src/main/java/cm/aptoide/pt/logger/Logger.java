@@ -70,39 +70,39 @@ public class Logger {
   }
 
   /**
-   * Consider using CrashReport.getInstance().log(Exception)
+   * Instead of calling this method, consider using CrashReport.getInstance().log(Exception)
    */
-  @Deprecated public static void e(String TAG, String msg) {
+  public static void e(String TAG, String msg) {
     if (msg != null) {
       Log.e(TAG, msg);
     }
   }
 
   /**
-   * Consider using CrashReport.getInstance().log(Exception)
+   * Instead of calling this method, consider using CrashReport.getInstance().log(Exception)
    */
-  @Deprecated public static void e(Object object, String msg) {
+  public static void e(Object object, String msg) {
     e(object.getClass().getName(), msg);
   }
 
   /**
-   * Consider using CrashReport.getInstance().log(Exception)
+   * Instead of calling this method, consider using CrashReport.getInstance().log(Exception)
    */
-  @Deprecated public static void e(String TAG, Throwable tr) {
+  public static void e(String TAG, Throwable tr) {
     Log.e(TAG, "", tr);
   }
 
   /**
-   * Consider using CrashReport.getInstance().log(Exception)
+   * Instead of calling this method, consider using CrashReport.getInstance().log(Exception)
    */
-  @Deprecated public static void e(Object object, Throwable tr) {
+  public static void e(Object object, Throwable tr) {
     e(object.getClass().getName(), tr);
   }
 
   /**
-   * Consider using CrashReport.getInstance().log(Exception)
+   * Instead of calling this method, consider using CrashReport.getInstance().log(Exception)
    */
-  @Deprecated public static void e(String TAG, String msg, Throwable tr) {
+  public static void e(String TAG, String msg, Throwable tr) {
     if (msg != null) {
       Log.e(TAG, msg, tr);
     }

@@ -9,6 +9,7 @@ import android.app.FragmentManager;
 import android.content.res.Resources;
 import android.os.Build;
 import android.support.v7.widget.AppCompatRatingBar;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -91,6 +92,11 @@ import rx.Observable;
     reviewText.setText(review.getBody());
     reviewDate.setText(DATE_TIME_U.getTimeDiffString(getContext(), review.getAdded().getTime()));
 
+    if (DisplayMetrics.DENSITY_300 > getContext().getResources().getDisplayMetrics().densityDpi) {
+      flagHelfull.setText("");
+      flagNotHelfull.setText("");
+    }
+
     final CommentAdder commentAdder = displayable.getCommentAdder();
     final long reviewId = review.getId();
 
@@ -164,7 +170,7 @@ import rx.Observable;
         ShowMessage.asSnack(flagHelfull, R.string.unknown_error);
       }
     }, err -> {
-      CrashReport.getInstance().log(err);
+      Logger.e(TAG, err);
       ShowMessage.asSnack(flagHelfull, R.string.unknown_error);
     }, true);
   }
@@ -202,7 +208,7 @@ import rx.Observable;
         Logger.d(TAG, String.format("review %d was marked as %s", reviewId,
             positive ? "positive" : "negative"));
       }, err -> {
-        CrashReport.getInstance().log(err);
+        Logger.e(TAG, err);
       }, true);
     }
 
