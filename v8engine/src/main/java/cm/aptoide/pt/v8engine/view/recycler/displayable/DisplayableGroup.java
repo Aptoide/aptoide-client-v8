@@ -1,34 +1,26 @@
+
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
 import cm.aptoide.pt.annotation.Ignore;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.WidgetFactory;
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import lombok.Getter;
 
 /**
  * Created by neuro on 16-04-2016.
  */
-@Ignore public abstract class AbstractDisplayableGroup extends Displayable {
+@Ignore public class DisplayableGroup extends Displayable {
 
-  @Getter private List<Displayable> children;
+  @Getter private final List<Displayable> children;
 
-  public AbstractDisplayableGroup() {
-  }
-
-  AbstractDisplayableGroup(List<Displayable> children, boolean computeLeftSpaces) {
-    this.children = new LinkedList<>(children);
+  DisplayableGroup(List<Displayable> children, boolean computeLeftSpaces) {
+    this.children = children;
     if (computeLeftSpaces) computeLeftSpaces();
   }
 
-  public AbstractDisplayableGroup(List<Displayable> children) {
+  public DisplayableGroup(List<Displayable> children) {
     this(children, true);
-  }
-
-  public AbstractDisplayableGroup(Displayable child) {
-    this(new LinkedList<>(Collections.singletonList(child)), true);
   }
 
   private void computeLeftSpaces() {
@@ -48,7 +40,19 @@ import lombok.Getter;
     }
   }
 
+  @Override public int getViewLayout() {
+    throw new IllegalStateException(
+        "getViewLayout() on DisplayableGroup should not be " + "called!");
+  }
+
   @Override protected Configs getConfig() {
+    // Stub
+    // Should not be used
     return new Configs(1, true);
+  }
+
+  @Override public int getDefaultPerLineCount() {
+    throw new IllegalStateException(
+        "getDefaultPerLineCount() on DisplayableGroup should not " + "be called!");
   }
 }
