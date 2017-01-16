@@ -1,5 +1,6 @@
 package cm.aptoide.pt.networkclient.okhttp.cache;
 
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -95,7 +96,7 @@ public class L2Cache extends StringBaseCache<Request, Response> {
         }
       }
     } catch (Exception e) {
-      Logger.e(TAG, e);
+      CrashReport.getInstance().log(e);
     }
 
     return 0;
@@ -130,7 +131,7 @@ public class L2Cache extends StringBaseCache<Request, Response> {
     try{
       store();
     } catch (IOException e) {
-      Logger.e(TAG, e);
+      CrashReport.getInstance().log(e);
     }
 
     int value;

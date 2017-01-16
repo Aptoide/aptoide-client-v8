@@ -139,7 +139,7 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
   }
 
   private void logException(Exception ex) {
-    Logger.e(TAG, ex);
+    CrashReport.getInstance().log(ex);
 
     if (agregateExceptions == null) {
       agregateExceptions = ex;

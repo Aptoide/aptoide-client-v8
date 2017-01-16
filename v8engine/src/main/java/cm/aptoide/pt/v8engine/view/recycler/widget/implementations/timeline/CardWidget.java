@@ -10,6 +10,7 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.BaseActivity;
 import cm.aptoide.accountmanager.CreateStoreActivity;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -64,7 +65,7 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
         .subscribe(click -> {
           shareCard(displayable);
         }, err -> {
-          Logger.e(TAG, err);
+          CrashReport.getInstance().log(err);
         }));
   }
 

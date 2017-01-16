@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.PostReviewRequest;
@@ -119,7 +120,7 @@ public class DialogUtils {
 
         // WS error listener
         final ErrorRequestListener errorRequestListener = e -> {
-          Logger.e(TAG, e);
+          CrashReport.getInstance().log(e);
           ShowMessage.asSnack(activity, R.string.error_occured);
           subscriber.onNext(GenericDialogs.EResponse.CANCEL);
           subscriber.onCompleted();
@@ -207,7 +208,7 @@ public class DialogUtils {
       };
 
       final ErrorRequestListener errorRequestListener = e -> {
-        Logger.e(TAG, e);
+        CrashReport.getInstance().log(e);
         ShowMessage.asSnack(activity, R.string.error_occured);
       };
 

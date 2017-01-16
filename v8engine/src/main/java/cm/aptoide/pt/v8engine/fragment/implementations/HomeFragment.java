@@ -32,7 +32,6 @@ import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -346,7 +345,6 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(size -> refreshUpdatesBadge(size), throwable -> {
-          Logger.e(TAG, throwable);
           CrashReport.getInstance().log(throwable);
         });
 

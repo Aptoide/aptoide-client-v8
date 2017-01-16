@@ -9,7 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import rx.subscriptions.CompositeSubscription;
@@ -31,7 +31,7 @@ public abstract class Widget<T extends Displayable> extends RecyclerView.ViewHol
     try {
       assignViews(itemView);
     } catch (Exception e) {
-      Logger.e(TAG, "assignViews(View)", e);
+      CrashReport.getInstance().log(e);
     }
   }
 

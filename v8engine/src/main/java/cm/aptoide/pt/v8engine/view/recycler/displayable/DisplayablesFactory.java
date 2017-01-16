@@ -9,9 +9,9 @@ import android.text.TextUtils;
 import android.util.Pair;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.FullReview;
@@ -235,9 +235,11 @@ public class DisplayablesFactory {
 
       // Header hammered
       LinkedList<GetStoreWidgets.WSWidget.Action> actions = new LinkedList<>();
-      actions.add(new GetStoreWidgets.WSWidget.Action().setEvent(new Event().setName(Event.Name.getAds)));
+      actions.add(
+          new GetStoreWidgets.WSWidget.Action().setEvent(new Event().setName(Event.Name.getAds)));
       wsWidget.setActions(actions);
-      StoreGridHeaderDisplayable storeGridHeaderDisplayable = new StoreGridHeaderDisplayable(wsWidget, null, wsWidget.getTag());
+      StoreGridHeaderDisplayable storeGridHeaderDisplayable =
+          new StoreGridHeaderDisplayable(wsWidget, null, wsWidget.getTag());
       tmp.add(storeGridHeaderDisplayable);
 
       for (GetAdsResponse.Ad ad : ads) {
@@ -360,7 +362,7 @@ public class DisplayablesFactory {
       }
       return tmp;
     }).onErrorReturn(throwable -> {
-      Logger.e(TAG, throwable);
+      CrashReport.getInstance().log(throwable);
       return Collections.emptyList();
     }).toBlocking().first());
   }

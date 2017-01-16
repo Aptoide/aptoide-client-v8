@@ -239,7 +239,6 @@ public abstract class V8Engine extends DataProvider {
     fileManager.purgeCache()
         .subscribe(cleanedSize -> Logger.d(TAG,
             "cleaned size: " + AptoideUtils.StringU.formatBytes(cleanedSize, false)), throwable -> {
-          Logger.e(TAG, throwable);
           CrashReport.getInstance().log(throwable);
         });
     // setupCurrentActivityListener();

@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.deprecated.tables;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.Accessor;
 import cm.aptoide.pt.logger.Logger;
 import io.realm.RealmObject;
@@ -70,8 +71,7 @@ public abstract class BaseTable {
 
       Logger.d(TAG, "Table " + tableName + " migrated with success.");
     } catch (Exception e) {
-      Logger.e(TAG, e);
-      //CrashReport.getInstance().log(e);
+      CrashReport.getInstance().log(e);
     } finally {
       if (cursor != null && !cursor.isClosed()) {
         cursor.close();

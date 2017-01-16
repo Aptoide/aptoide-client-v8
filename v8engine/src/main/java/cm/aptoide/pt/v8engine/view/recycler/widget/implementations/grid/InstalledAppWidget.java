@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
@@ -146,7 +147,7 @@ import java.util.Locale;
           ShowMessage.asSnack(labelTextView, R.string.error_occured);
         }
       }, e -> {
-        Logger.e(TAG, e);
+        CrashReport.getInstance().log(e);
         ShowMessage.asSnack(labelTextView, R.string.error_occured);
       });
     });

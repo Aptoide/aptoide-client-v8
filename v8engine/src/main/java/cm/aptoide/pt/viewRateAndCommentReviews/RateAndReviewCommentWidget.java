@@ -164,7 +164,7 @@ import rx.Observable;
         ShowMessage.asSnack(flagHelfull, R.string.unknown_error);
       }
     }, err -> {
-      Logger.e(TAG, err);
+      CrashReport.getInstance().log(err);
       ShowMessage.asSnack(flagHelfull, R.string.unknown_error);
     }, true);
   }
@@ -202,7 +202,7 @@ import rx.Observable;
         Logger.d(TAG, String.format("review %d was marked as %s", reviewId,
             positive ? "positive" : "negative"));
       }, err -> {
-        Logger.e(TAG, err);
+        CrashReport.getInstance().log(err);
       }, true);
     }
 

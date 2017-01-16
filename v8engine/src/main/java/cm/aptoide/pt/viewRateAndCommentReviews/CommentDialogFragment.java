@@ -221,7 +221,7 @@ public class CommentDialogFragment extends RxDialogFragment {
         .flatMap(inputText -> submitComment(inputText).observeOn(AndroidSchedulers.mainThread()))
         .map(wsResponse -> wsResponse.isOk())
         .doOnError(e -> {
-          Logger.e(TAG, e);
+          CrashReport.getInstance().log(e);
           ShowMessage.asSnack(CommentDialogFragment.this, R.string.error_occured);
         })
         .retry()

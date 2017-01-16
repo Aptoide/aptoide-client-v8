@@ -174,7 +174,7 @@ import rx.android.schedulers.AndroidSchedulers;
             setAllButtonsUnPressed(v);
             ShowMessage.asSnack(v, R.string.unknown_error);
           }, error -> {
-            Logger.e(TAG, error);
+            CrashReport.getInstance().log(error);
             setAllButtonsUnPressed(v);
             ShowMessage.asSnack(v, R.string.unknown_error);
           }));

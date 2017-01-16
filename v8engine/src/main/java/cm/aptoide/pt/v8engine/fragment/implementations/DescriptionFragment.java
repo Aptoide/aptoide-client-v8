@@ -149,7 +149,6 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
       }
     } catch (NullPointerException e) {
       CrashReport.getInstance().log(e);
-      Logger.e(TAG, e);
     }
     setDataUnavailable();
   }

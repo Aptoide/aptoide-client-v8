@@ -12,7 +12,6 @@ import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -121,7 +120,6 @@ import java.util.Locale;
           bindVoteView(vote);
         }
       } catch (Exception e) {
-        Logger.e(TAG, e);
         CrashReport.getInstance().log(e);
       }
     }

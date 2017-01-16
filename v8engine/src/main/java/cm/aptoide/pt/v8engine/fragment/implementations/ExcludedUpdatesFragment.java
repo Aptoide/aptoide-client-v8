@@ -190,7 +190,7 @@ public class ExcludedUpdatesFragment extends AptoideBaseFragment<BaseAdapter> {
             setDisplayables(displayables);
           }
         }, t -> {
-          Logger.e(TAG, t);
+          CrashReport.getInstance().log(t);
           emptyData.setText(R.string.no_excluded_updates_msg);
           emptyData.setVisibility(View.VISIBLE);
           clearDisplayables();

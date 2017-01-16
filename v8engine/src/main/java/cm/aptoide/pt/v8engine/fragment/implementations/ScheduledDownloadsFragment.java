@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
@@ -159,7 +160,7 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
         .subscribe(scheduledDownloads -> {
           updateUi(scheduledDownloads);
         }, t -> {
-          Logger.e(TAG, t);
+          CrashReport.getInstance().log(t);
           emptyData.setText(R.string.no_sch_downloads);
           emptyData.setVisibility(View.VISIBLE);
           clearDisplayables();

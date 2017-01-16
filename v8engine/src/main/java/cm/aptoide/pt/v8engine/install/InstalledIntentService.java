@@ -113,10 +113,10 @@ public class InstalledIntentService extends IntentService {
         analytics.sendEvent(event);
         Logger.d(TAG, "Event sent");
       } else {
-        Logger.e(TAG, new NullPointerException("Event not sent, the event was null"));
+        CrashReport.getInstance().log(new NullPointerException("Event not sent, the event was null"));
       }
     } else {
-      Logger.e(TAG, new NullPointerException("PackageInfo is null"));
+      CrashReport.getInstance().log(new NullPointerException("PackageInfo is null"));
     }
   }
 

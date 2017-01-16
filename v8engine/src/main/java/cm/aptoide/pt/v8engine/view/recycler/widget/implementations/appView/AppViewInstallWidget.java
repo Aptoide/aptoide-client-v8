@@ -23,6 +23,7 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
@@ -285,7 +286,7 @@ import rx.android.schedulers.AndroidSchedulers;
                           .observeOn(AndroidSchedulers.mainThread())
                           .subscribe(progress -> {
                             Logger.d(TAG, "Installing");
-                          }, throwable -> Logger.e(TAG, throwable)));
+                          }, throwable -> CrashReport.getInstance().log(throwable)));
                   Analytics.Rollback.downgradeDialogContinue();
                 } else {
                   Analytics.Rollback.downgradeDialogCancel();
@@ -417,7 +418,7 @@ import rx.android.schedulers.AndroidSchedulers;
             if (err instanceof SecurityException) {
               ShowMessage.asSnack(v, R.string.needs_permission_to_fs);
             }
-            Logger.e(TAG, err);
+            CrashReport.getInstance().log(err);
           }));
     };
 
@@ -512,7 +513,7 @@ import rx.android.schedulers.AndroidSchedulers;
           .subscribe(downloadProgress -> {
             Logger.d(TAG, "Installing");
           }, err -> {
-            Logger.e(TAG, err);
+            CrashReport.getInstance().log(err);
           }));
     });
   }

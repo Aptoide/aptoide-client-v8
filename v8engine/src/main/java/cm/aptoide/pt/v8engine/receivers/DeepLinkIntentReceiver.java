@@ -125,7 +125,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
         try {
           param = Uri.parse(uri).getQueryParameter("id");
         } catch (NullPointerException e) {
-          Logger.e(TAG, "NullPointerException: no uri: " + uri, e);
+          CrashReport.getInstance().log(e);
         }
       }
       startFromPackageName(param);

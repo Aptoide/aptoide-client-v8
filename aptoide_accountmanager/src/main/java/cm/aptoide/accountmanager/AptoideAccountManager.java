@@ -271,7 +271,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
         refreshToken = getRefreshTokenFromAccountManager(); // as it is done in V7
         AccountManagerPreferences.setRefreshToken(refreshToken);
       } catch (Exception e) {
-        Logger.e(TAG, e);
+        CrashReport.getInstance().log(e);
       }
     }
 
@@ -777,7 +777,6 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
         .observeOn(AndroidSchedulers.mainThread())
         .subscribeOn(Schedulers.io())
         .doOnError(e -> {
-          Logger.e(TAG, e);
           CrashReport.getInstance().log(e);
         });
   }
@@ -887,7 +886,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
       AccountManagerPreferences.setRefreshToken(refreshToken);
 
       return refreshAndSaveUserInfoData().doOnError(e -> {
-        Logger.e(TAG, e);
+        CrashReport.getInstance().log(e);
       }).map(userData -> true);
     }
     return Observable.just(false);
