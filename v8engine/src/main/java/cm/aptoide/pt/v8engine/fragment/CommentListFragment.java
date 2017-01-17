@@ -388,9 +388,6 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
       }
     });
 
-    // remove recycler view left and right padding
-    recyclerView.setPadding(0, recyclerView.getPaddingTop(), 0, recyclerView.getPaddingBottom());
-
     recyclerView.clearOnScrollListeners();
     EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(getAdapter(), listCommentsRequest, listCommentsAction,
