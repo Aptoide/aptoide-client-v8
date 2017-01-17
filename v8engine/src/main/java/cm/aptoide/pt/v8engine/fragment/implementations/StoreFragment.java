@@ -16,7 +16,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -285,17 +284,18 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override public void setupViews() {
     super.setupViews();
-
     setHasOptionsMenu(true);
   }
 
   @CallSuper @Override public void setupToolbar() {
     super.setupToolbar();
-    if (hasToolbar()) {
-      ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
+    // FIXME: 17/1/2017 sithengineer is this the right place to have this event ?? why ??
     Logger.d(TAG, "LOCALYTICS TESTING - STORES ACTION ENTER " + storeName);
     Analytics.Stores.enter(storeName);
+  }
+
+  protected boolean displayHomeUpAsEnabled() {
+    return true;
   }
 
   @Override protected void setupToolbarDetails(Toolbar toolbar) {
