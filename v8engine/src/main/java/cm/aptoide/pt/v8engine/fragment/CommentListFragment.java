@@ -6,8 +6,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -119,20 +119,18 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
     }
   }
 
-  @Override public void setupToolbar() {
-    // It's not calling super cause it does nothing in the middle class}
-    // StoreTabGridRecyclerFragment.
-    if (toolbar != null) {
-      ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-      if (commentType == CommentType.STORE && !TextUtils.isEmpty(storeName)) {
-        String title = String.format(getString(R.string.comment_on_store), storeName);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(title);
-      } else {
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.comments);
-      }
-      ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-      toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
+  @Override public void setupToolbarDetails(Toolbar toolbar) {
+    if (commentType == CommentType.STORE && !TextUtils.isEmpty(storeName)) {
+      String title = String.format(getString(R.string.comment_on_store), storeName);
+      toolbar.setTitle(title);
+    } else {
+      toolbar.setTitle(R.string.comments);
     }
+    toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
+  }
+
+  @Override protected boolean displayHomeUpAsEnabled() {
+    return true;
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

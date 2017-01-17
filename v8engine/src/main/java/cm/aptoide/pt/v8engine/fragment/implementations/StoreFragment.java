@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.DialogFragment;
@@ -16,6 +17,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -287,15 +289,18 @@ public class StoreFragment extends BasePagerToolbarFragment {
     setHasOptionsMenu(true);
   }
 
-  @Override public void setupToolbar() {
+  @CallSuper @Override public void setupToolbar() {
     super.setupToolbar();
-    if (toolbar != null) {
-      ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(storeName);
+    if (hasToolbar()) {
       ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-      toolbar.setLogo(R.drawable.ic_store);
     }
     Logger.d(TAG, "LOCALYTICS TESTING - STORES ACTION ENTER " + storeName);
     Analytics.Stores.enter(storeName);
+  }
+
+  @Override protected void setupToolbarDetails(Toolbar toolbar) {
+    toolbar.setTitle(storeName);
+    toolbar.setLogo(R.drawable.ic_store);
   }
 
   protected static class BundleCons {
