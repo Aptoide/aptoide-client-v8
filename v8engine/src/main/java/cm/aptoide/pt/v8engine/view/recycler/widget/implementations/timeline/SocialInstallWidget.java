@@ -13,7 +13,7 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.TimelineClickEvent;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.SocialInstallDisplayable;
-import com.like.LikeButton;
+//import com.like.LikeButton;
 
 /**
  * Created by jdandrade on 15/12/2016.
@@ -32,7 +32,7 @@ public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayab
   private CardView cardView;
   private RelativeLayout cardContent;
   //private LinearLayout share;
-  private LikeButton likeButton;
+  //private LikeButton likeButton;
   private TextView numberLikes;
   private TextView numberComments;
 
@@ -57,7 +57,7 @@ public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayab
     cardContent = (RelativeLayout) itemView.findViewById(
         R.id.displayable_social_timeline_recommendation_card_content);
     //share = (LinearLayout) itemView.findViewById(R.id.social_share);
-    likeButton = (LikeButton) itemView.findViewById(R.id.social_like_test);
+    //likeButton = (LikeButton) itemView.findViewById(R.id.social_like_test);
     numberLikes = (TextView) itemView.findViewById(R.id.social_number_of_likes);
     numberComments = (TextView) itemView.findViewById(R.id.social_number_of_comments);
   }
@@ -120,7 +120,7 @@ public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayab
   }
 
   private void showFullSocialBar(SocialInstallDisplayable displayable) {
-    likeButton.setLiked(false);
+    //likeButton.setLiked(false);
     numberLikes.setVisibility(View.VISIBLE);
     numberLikes.setText(String.valueOf(displayable.getNumberOfLikes()));
     numberComments.setVisibility(View.VISIBLE);
