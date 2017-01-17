@@ -119,6 +119,10 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
     }
   }
 
+  @Override protected boolean displayHomeUpAsEnabled() {
+    return true;
+  }
+
   @Override public void setupToolbarDetails(Toolbar toolbar) {
     if (commentType == CommentType.STORE && !TextUtils.isEmpty(storeName)) {
       String title = String.format(getString(R.string.comment_on_store), storeName);
@@ -127,10 +131,6 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
       toolbar.setTitle(R.string.comments);
     }
     toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
-  }
-
-  @Override protected boolean displayHomeUpAsEnabled() {
-    return true;
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -387,9 +387,6 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
         addDisplayables(this.displayables);
       }
     });
-
-    // remove recycler view left and right padding
-    recyclerView.setPadding(0, recyclerView.getPaddingTop(), 0, recyclerView.getPaddingBottom());
 
     recyclerView.clearOnScrollListeners();
     EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener =
