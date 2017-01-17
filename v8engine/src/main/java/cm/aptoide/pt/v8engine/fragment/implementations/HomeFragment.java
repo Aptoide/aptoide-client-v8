@@ -272,14 +272,6 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
     ImageLoader.load(R.drawable.user_account_white, userAvatarImage);
   }
 
-  //	@Override
-  //	public void onDestroyView() {
-  //		super.onDestroyView();
-  //
-  //		mDrawerLayout = null;
-  //		mNavigationView = null;
-  //	}
-
   @Override public void onResume() {
     super.onResume();
     setUserDataOnHeader();
@@ -373,6 +365,10 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
     toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
     toolbar.setNavigationIcon(R.drawable.ic_drawer);
     toolbar.setNavigationOnClickListener(v -> mDrawerLayout.openDrawer(GravityCompat.START));
+  }
+
+  protected boolean displayHomeUpAsEnabled() {
+    return false;
   }
 
   @Override public boolean isDrawerOpened() {

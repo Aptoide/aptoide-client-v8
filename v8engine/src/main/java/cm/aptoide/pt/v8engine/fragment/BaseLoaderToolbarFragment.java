@@ -37,8 +37,11 @@ public abstract class BaseLoaderToolbarFragment extends BaseLoaderFragment {
   @CallSuper @Override public void setupToolbar() {
     if (hasToolbar()) {
       ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+      boolean showUp = displayHomeUpAsEnabled();
+
       ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-      actionBar.setDisplayHomeAsUpEnabled(displayHomeUpAsEnabled());
+      actionBar.setDisplayHomeAsUpEnabled(showUp);
+
       setupToolbarDetails(toolbar);
     }
   }
