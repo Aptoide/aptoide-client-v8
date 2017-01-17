@@ -1,8 +1,6 @@
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -56,12 +54,8 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
     return fragment;
   }
 
-  @Override public void setupToolbar() {
-    super.setupToolbar();
-    if (toolbar != null) {
-      ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-      bar.setDisplayHomeAsUpEnabled(true);
-    }
+  @Override protected boolean displayHomeUpAsEnabled() {
+    return true;
   }
 
   @Override public void loadExtras(Bundle args) {

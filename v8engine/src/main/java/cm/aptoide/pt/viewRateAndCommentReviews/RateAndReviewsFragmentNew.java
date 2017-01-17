@@ -1,16 +1,9 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
- */
-
 package cm.aptoide.pt.viewRateAndCommentReviews;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -34,7 +27,6 @@ import cm.aptoide.pt.v8engine.util.DialogUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.ProgressBarDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.listeners.RxEndlessRecyclerView;
 import cm.aptoide.pt.viewRateAndCommentReviews.layout.RatingBarsLayout;
@@ -112,39 +104,20 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
     storeTheme = args.getString(STORE_THEME);
   }
 
-  private void setupRating(GetAppMeta.App data) {
-    ratingTotalsLayout.setup(data);
-    ratingBarsLayout.setup(data);
+  @Override protected boolean displayHomeUpAsEnabled() {
+    return true;
   }
 
-  public void setupTitle(String title) {
-    super.setupToolbar();
-    if (toolbar != null) {
-      ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-      bar.setTitle(title);
-    }
-  }
-
-  void checkAndRemoveProgressBarDisplayable() {
-    for (int i = 0; i < adapter.getItemCount(); i++) {
-      Displayable displayable = adapter.getDisplayable(i);
-      if (displayable instanceof ProgressBarDisplayable) {
-        adapter.removeDisplayable(i);
-        adapter.notifyItemRemoved(i);
-      }
-    }
-  }
-
-  //
-  // ???
-  //
-
-  @Override @NonNull public CommentsReadMoreDisplayable createReadMoreDisplayable(final int itemPosition, Review review) {
-    return new CommentsReadMoreDisplayable(review.getId(), true, review.getCommentList().getDatalist().getNext(),
+  @Override @NonNull
+  public CommentsReadMoreDisplayable createReadMoreDisplayable(final int itemPosition,
+      Review review) {
+    return new CommentsReadMoreDisplayable(review.getId(), true,
+        review.getCommentList().getDatalist().getNext(),
         new SimpleReviewCommentAdder(itemPosition, this));
   }
 
-  @Override public void createDisplayableComments(List<Comment> comments, List<Displayable> displayables) {
+  @Override
+  public void createDisplayableComments(List<Comment> comments, List<Displayable> displayables) {
     for (final Comment comment : comments) {
       displayables.add(new CommentDisplayable(comment));
     }
@@ -153,22 +126,11 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    final RateAndReviewsPresenter presenter = new RateAndReviewsPresenter(appId, storeName, packageName, this,
-        ConcreteSchedulerProvider.getInstance());
+    final RateAndReviewsPresenter presenter =
+        new RateAndReviewsPresenter(appId, storeName, packageName, this,
+            ConcreteSchedulerProvider.getInstance());
 
     attachPresenter(presenter, savedInstanceState);
-  }
-
-  //
-  // from CommentAdderView
-  //
-
-  @Override public void setupToolbar() {
-    super.setupToolbar();
-    if (toolbar != null) {
-      ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-      bar.setDisplayHomeAsUpEnabled(true);
-    }
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

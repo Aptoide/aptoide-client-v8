@@ -1,14 +1,10 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 07/07/2016.
- */
-
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,9 +28,6 @@ import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
 import lombok.Getter;
 
-/**
- * Created by sithengineer on 28/06/16.
- */
 public class DescriptionFragment extends BaseLoaderToolbarFragment {
 
   private static final String TAG = DescriptionFragment.class.getSimpleName();
@@ -104,17 +97,17 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
     }
   }
 
-  @Override public void setupToolbar() {
-    super.setupToolbar();
-    if (toolbar != null) {
-      ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-      if (bar != null) {
-        ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
-        bar.setBackgroundDrawable(new ColorDrawable(getActivity().getResources()
-            .getColor(StoreThemeEnum.get(storeTheme).getStoreHeader())));
-        bar.setDisplayHomeAsUpEnabled(true);
-      }
+  @Override public void setupToolbarDetails(Toolbar toolbar) {
+    ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+    if (bar != null) {
+      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
+      bar.setBackgroundDrawable(new ColorDrawable(getActivity().getResources()
+          .getColor(StoreThemeEnum.get(storeTheme).getStoreHeader())));
     }
+  }
+
+  @Override protected boolean displayHomeUpAsEnabled() {
+    return true;
   }
 
   @Override public void bindViews(View view) {
@@ -128,7 +121,7 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
     try {
       String appName = getApp.getNodes().getMeta().getData().getName();
       if (!TextUtils.isEmpty(appName)) {
-        if (toolbar != null) {
+        if (hasToolbar()) {
           ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
           bar.setTitle(appName);
           return;

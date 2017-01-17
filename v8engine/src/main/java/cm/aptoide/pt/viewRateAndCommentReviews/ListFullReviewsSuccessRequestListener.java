@@ -58,7 +58,7 @@ class ListFullReviewsSuccessRequestListener implements SuccessRequestListener<Li
   }
 
   private void addRateAndReviewDisplayables(List<Review> reviews, List<Displayable> displayables) {
-    int index = -1;
+    int index = 0;
     int count = 0;
     for (final Review review : reviews) {
       displayables.add(

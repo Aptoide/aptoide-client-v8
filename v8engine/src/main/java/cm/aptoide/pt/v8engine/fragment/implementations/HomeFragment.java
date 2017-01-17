@@ -15,7 +15,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -364,14 +364,10 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
     setupNavigationView();
   }
 
-  @Override public void setupToolbar() {
-    super.setupToolbar();
-    if (toolbar != null) {
-      ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-      toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
-      toolbar.setNavigationIcon(R.drawable.ic_drawer);
-      toolbar.setNavigationOnClickListener(v -> mDrawerLayout.openDrawer(GravityCompat.START));
-    }
+  @Override public void setupToolbarDetails(Toolbar toolbar) {
+    toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
+    toolbar.setNavigationIcon(R.drawable.ic_drawer);
+    toolbar.setNavigationOnClickListener(v -> mDrawerLayout.openDrawer(GravityCompat.START));
   }
 
   @Override public boolean isDrawerOpened() {
