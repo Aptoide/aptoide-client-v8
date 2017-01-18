@@ -353,41 +353,6 @@ public class SharePreviewDialog {
     }
   }
 
-  private void setSocialCardHeader1(TextView storeName, TextView userName, ImageView storeAvatar,
-      ImageView userAvatar) {
-    if (((SocialCardDisplayable) displayable).getStore() != null) {
-      storeName.setVisibility(View.VISIBLE);
-      storeAvatar.setVisibility(View.VISIBLE);
-      if (((SocialCardDisplayable) displayable).getStore().getName() != null) {
-        storeName.setText(((SocialCardDisplayable) displayable).getStore().getName());
-      }
-
-      if (((SocialCardDisplayable) displayable).getStore().getAvatar() != null) {
-        ImageLoader.loadWithShadowCircleTransform(
-            ((SocialCardDisplayable) displayable).getStore().getAvatar(), storeAvatar);
-      }
-    } else {
-      storeName.setVisibility(View.GONE);
-      storeAvatar.setVisibility(View.GONE);
-    }
-
-    if (((SocialCardDisplayable) displayable).getUser() != null) {
-      userName.setVisibility(View.VISIBLE);
-      userAvatar.setVisibility(View.VISIBLE);
-      if (((SocialCardDisplayable) displayable).getUser().getName() != null) {
-        userName.setText(((SocialCardDisplayable) displayable).getUser().getName());
-      }
-
-      if (((SocialCardDisplayable) displayable).getUser().getAvatar() != null) {
-        ImageLoader.loadWithShadowCircleTransform(
-            ((SocialCardDisplayable) displayable).getUser().getAvatar(), userAvatar);
-      }
-    } else {
-      userName.setVisibility(View.GONE);
-      userAvatar.setVisibility(View.GONE);
-    }
-  }
-
   private void setSocialCardHeader(TextView storeName, TextView userName, ImageView storeAvatar,
       ImageView userAvatar) {
     if (((SocialCardDisplayable) displayable).getStore() != null) {
