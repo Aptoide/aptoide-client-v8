@@ -8,6 +8,7 @@ package cm.aptoide.pt.database.realm;
 import android.content.Context;
 import android.support.annotation.IntDef;
 import android.support.annotation.IntRange;
+import android.support.annotation.NonNull;
 import cm.aptoide.pt.database.R;
 import io.realm.RealmList;
 import io.realm.RealmObject;
@@ -61,7 +62,7 @@ public class Download extends RealmObject {
   public Download() {
   }
 
-  public int getDownloadError() {
+  public @Download.DownloadError int getDownloadError() {
     return downloadError;
   }
 
@@ -107,7 +108,17 @@ public class Download extends RealmObject {
       case ERROR:
       case FILE_MISSING:
       default:
-        toReturn = context.getString(R.string.simple_error_occured);
+        toReturn = getErrorMessage(context);
+    }
+    return toReturn;
+  }
+
+  @NonNull private String getErrorMessage(Context context) {
+    String toReturn;
+    if (downloadError == NOT_ENOUGH_SPACE_ERROR) {
+      toReturn = context.getString(R.string.out_of_space_error);
+    } else {
+      toReturn = context.getString(R.string.simple_error_occured);
     }
     return toReturn;
   }
