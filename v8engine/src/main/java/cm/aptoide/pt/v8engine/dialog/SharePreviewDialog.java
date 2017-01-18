@@ -16,6 +16,7 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.animations.LikeButtonView;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewInstallDisplayable;
@@ -53,6 +54,7 @@ public class SharePreviewDialog {
     CardView cardView;
     TextView sharedBy;
     LinearLayout like;
+    LikeButtonView likeButtonView;
     TextView comments;
 
     if (displayable instanceof ArticleDisplayable) {
@@ -305,6 +307,7 @@ public class SharePreviewDialog {
       TextView privacyText = (TextView) view.findViewById(R.id.social_text_privacy);
       cardView = (CardView) view.findViewById(R.id.card);
       like = (LinearLayout) view.findViewById(R.id.social_like);
+      likeButtonView = (LikeButtonView) view.findViewById(R.id.social_like_button);
       comments = (TextView) view.findViewById(R.id.social_comment);
 
       cardView.setRadius(8);
@@ -312,6 +315,9 @@ public class SharePreviewDialog {
       like.setClickable(false);
       like.setOnClickListener(null);
       like.setVisibility(View.VISIBLE);
+      likeButtonView.setClickable(false);
+      likeButtonView.setOnClickListener(null);
+      likeButtonView.setVisibility(View.VISIBLE);
       comments.setVisibility(View.VISIBLE);
       alertadd.setView(view).setCancelable(false);
       alertadd.setTitle(R.string.social_timeline_you_will_share);
