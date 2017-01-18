@@ -8,7 +8,7 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import cm.aptoide.pt.actions.PermissionRequest;
+import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
@@ -84,7 +84,7 @@ public class RollbackWidget extends Widget<RollbackDisplayable> {
       //			Realm realm = Database.get();
       //			Database.RollbackQ.upadteRollbackWithAction(realm, pojo, Rollback.Action.UPDATE);
 
-      final PermissionRequest permissionRequest = ((PermissionRequest) getContext());
+      final PermissionService permissionRequest = ((PermissionService) getContext());
 
       permissionRequest.requestAccessToExternalFileSystem(() -> {
         Rollback.Action action = Rollback.Action.valueOf(pojo.getAction());

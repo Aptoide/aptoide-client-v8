@@ -16,7 +16,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.v8engine.activity.AptoideBaseActivity;
+import cm.aptoide.pt.v8engine.activity.UIComponentActivity;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import java.io.IOException;
@@ -34,14 +34,14 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
 
   private static final String TAG = AutoUpdate.class.getSimpleName();
   private final String url = Application.getConfiguration().getAutoUpdateUrl();
-  private AptoideBaseActivity activity;
+  private UIComponentActivity activity;
   private Installer installer;
   private DownloadFactory downloadFactory;
   private AptoideDownloadManager downloadManager;
   private ProgressDialog dialog;
   private PermissionManager permissionManager;
 
-  AutoUpdate(AptoideBaseActivity activity, Installer installer, DownloadFactory downloadFactory,
+  AutoUpdate(UIComponentActivity activity, Installer installer, DownloadFactory downloadFactory,
       AptoideDownloadManager downloadManager, PermissionManager permissionManager) {
     this.activity = activity;
     this.installer = installer;

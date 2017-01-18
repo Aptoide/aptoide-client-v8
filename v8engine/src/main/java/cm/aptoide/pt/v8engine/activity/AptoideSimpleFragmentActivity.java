@@ -8,13 +8,12 @@ package cm.aptoide.pt.v8engine.activity;
 import android.os.Bundle;
 import android.view.View;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.interfaces.UiComponentBasics;
+import cm.aptoide.pt.v8engine.interfaces.UiComponent;
 
 /**
  * Created by neuro on 06-05-2016.
  */
-public abstract class AptoideSimpleFragmentActivity extends AptoideFragmentActivity
-    implements UiComponentBasics {
+public abstract class AptoideSimpleFragmentActivity extends AptoideFragmentActivity {
 
   @Override public void bindViews(View view) {
 

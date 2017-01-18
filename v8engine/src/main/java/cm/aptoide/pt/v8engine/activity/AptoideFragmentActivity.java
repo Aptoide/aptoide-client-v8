@@ -12,7 +12,7 @@ import cm.aptoide.pt.v8engine.R;
 /**
  * Created by neuro on 05-05-2016.
  */
-public abstract class AptoideFragmentActivity extends AptoideBaseActivity {
+public abstract class AptoideFragmentActivity extends UIComponentActivity {
 
 	/*
   private WeakReference<Fragment> weakFragment;

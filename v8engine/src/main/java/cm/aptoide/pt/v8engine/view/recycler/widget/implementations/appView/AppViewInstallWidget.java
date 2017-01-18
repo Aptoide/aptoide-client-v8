@@ -22,7 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.actions.PermissionRequest;
+import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.MinimalAd;
@@ -98,7 +98,7 @@ import rx.android.schedulers.AndroidSchedulers;
 
   private App trustedVersion;
   //private DownloadServiceHelper downloadServiceHelper;
-  private PermissionRequest permissionRequest;
+  private PermissionService permissionRequest;
   private InstallManager installManager;
   private boolean isUpdate;
   private DownloadEventConverter downloadInstallEventConverter;
@@ -178,7 +178,7 @@ import rx.android.schedulers.AndroidSchedulers;
       latestAvailableLayout.setVisibility(View.GONE);
     }
 
-    permissionRequest = ((PermissionRequest) getContext());
+    permissionRequest = ((PermissionService) getContext());
   }
 
   private void updateUi(AppViewInstallDisplayable displayable, GetApp getApp,
@@ -273,7 +273,7 @@ import rx.android.schedulers.AndroidSchedulers;
   private View.OnClickListener downgradeListener(final GetAppMeta.App app) {
     return view -> {
       final Context context = view.getContext();
-      final PermissionRequest permissionRequest = (PermissionRequest) getContext();
+      final PermissionService permissionRequest = (PermissionService) getContext();
 
       permissionRequest.requestAccessToExternalFileSystem(() -> {
 
@@ -494,7 +494,7 @@ import rx.android.schedulers.AndroidSchedulers;
       PermissionManager permissionManager = new PermissionManager();
       compositeSubscription.add(permissionManager.requestDownloadAccess(permissionRequest)
           .flatMap(permissionGranted -> permissionManager.requestExternalStoragePermission(
-              (PermissionRequest) getContext()))
+              (PermissionService) getContext()))
           .flatMap(success -> {
             Download download =
                 new DownloadFactory().create(displayable.getPojo().getNodes().getMeta().getData(),
