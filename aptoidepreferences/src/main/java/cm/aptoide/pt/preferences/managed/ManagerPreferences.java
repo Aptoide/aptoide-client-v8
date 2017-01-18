@@ -7,6 +7,7 @@ package cm.aptoide.pt.preferences.managed;
 
 import android.preference.PreferenceManager;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.preferences.secure.SecureKeys;
 
 /**
  * Created by neuro on 21-04-2016.
@@ -178,10 +179,7 @@ public class ManagerPreferences {
   }
 
   public static void setUserAccess(String access) {
-    Preferences.get()
-        .edit()
-        .putString(ManagedKeys.ACCESS, access)
-        .apply();
+    Preferences.get().edit().putString(ManagedKeys.ACCESS, access).apply();
   }
 
   public static Boolean getUserAccessConfirmed() {
@@ -190,9 +188,11 @@ public class ManagerPreferences {
   }
 
   public static void setUserAccessConfirmed(Boolean accessConfirmed) {
-    Preferences.get()
-        .edit()
-        .putBoolean(ManagedKeys.ACCESS_CONFIRMED, accessConfirmed)
-        .apply();
+    Preferences.get().edit().putBoolean(ManagedKeys.ACCESS_CONFIRMED, accessConfirmed).apply();
+  }
+
+  public static boolean isFirstRunV7() {
+    return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
+        .getBoolean(ManagedKeys.FIRST_RUN_V7, true);
   }
 }

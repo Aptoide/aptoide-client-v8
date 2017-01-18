@@ -28,9 +28,9 @@ public class InAppBillingProduct extends AptoideProduct {
   private final String developerPayload;
   private final String type;
 
-  public InAppBillingProduct(int id, String icon, String title, String description, String price,
-      int apiVersion, String sku, String packageName, String developerPayload, String type) {
-    super(id, icon, title, description, price);
+  public InAppBillingProduct(int id, String icon, String title, String description, int apiVersion,
+      String sku, String packageName, String developerPayload, String type) {
+    super(id, icon, title, description);
     this.apiVersion = apiVersion;
     this.sku = sku;
     this.packageName = packageName;
