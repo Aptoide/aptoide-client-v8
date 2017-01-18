@@ -185,7 +185,6 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
     final StoreThemeEnum theme = StoreThemeEnum.get(store.getAppearance().getTheme());
     final Context context = itemView.getContext();
 
-
     StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
     boolean isStoreSubscribed =
         storeAccessor.get(store.getId()).toBlocking().firstOrDefault(null) != null;
@@ -203,17 +202,23 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
 
     // if there is no channels nor description, hide that area
     if (socialChannels == null || socialChannels.isEmpty()) {
+      if (TextUtils.isEmpty(store.getAppearance().getDescription())) {
+        descriptionContentLayout.setVisibility(View.GONE);
+      }
       this.socialChannelsLayout.setVisibility(View.GONE);
     }
 
-    if (TextUtils.isEmpty(store.getAppearance().getDescription())) {
-      description.setText("Add a description to your store by editing it.");
-    }
 
     if (!TextUtils.isEmpty(AccountManagerPreferences.getUserRepo())) {
       if (AccountManagerPreferences.getUserRepo().equals(store.getName())) {
+        descriptionContentLayout.setVisibility(View.VISIBLE);
+        if (TextUtils.isEmpty(store.getAppearance().getDescription())) {
+          description.setText("Add a description to your store by editing it.");
+        }
         editStoreButton.setVisibility(View.VISIBLE);
-        compositeSubscription.add(RxView.clicks(editStoreButton).subscribe(click -> editStore(store.getId(), store.getAppearance().getTheme(), store.getAppearance().getDescription(), store.getAvatar())));
+        compositeSubscription.add(RxView.clicks(editStoreButton)
+            .subscribe(click -> editStore(store.getId(), store.getAppearance().getTheme(),
+                store.getAppearance().getDescription(), store.getAvatar())));
       }
     }
   }
@@ -263,7 +268,8 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
     }
   }
 
-  private void editStore(long storeId, String storeTheme, String storeDescription, String storeAvatar) {
+  private void editStore(long storeId, String storeTheme, String storeDescription,
+      String storeAvatar) {
     Intent intent = new Intent(getContext(), CreateStoreActivity.class);
     intent.putExtra("storeId", storeId);
     intent.putExtra("storeTheme", storeTheme);
