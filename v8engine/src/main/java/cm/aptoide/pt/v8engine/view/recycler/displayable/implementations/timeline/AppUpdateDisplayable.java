@@ -193,6 +193,10 @@ public class AppUpdateDisplayable extends CardDisplayable {
     return context.getString(R.string.displayable_social_timeline_app_update_error);
   }
 
+  public String getUpdateNoSpaceErrorText(Context context) {
+    return context.getString(R.string.out_of_space_error);
+  }
+
   @Override public int getViewLayout() {
     return R.layout.displayable_social_timeline_app_update;
   }
