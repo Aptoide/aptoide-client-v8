@@ -128,7 +128,7 @@ import rx.functions.Action1;
         .subscribe(longClickListener, throwable -> throwable.printStackTrace()));
     compositeSubscription.add(RxView.clicks(updateButtonLayout)
         .flatMap(
-            click -> displayable.downloadAndInstall(getContext(), (PermissionService) context))
+            click -> displayable.downloadAndInstall(context, (PermissionService) context))
         .retry()
         .subscribe(o -> {
         }, throwable -> throwable.printStackTrace()));

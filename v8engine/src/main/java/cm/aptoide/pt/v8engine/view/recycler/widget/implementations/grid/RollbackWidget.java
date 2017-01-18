@@ -75,7 +75,7 @@ public class RollbackWidget extends Widget<RollbackDisplayable> {
 
     compositeSubscription.add(RxView.clicks(rollbackAction).subscribe(view -> {
 
-      final PermissionService permissionRequest = ((PermissionService) getContext());
+      final PermissionService permissionRequest = ((PermissionService) context);
 
       permissionRequest.requestAccessToExternalFileSystem(() -> {
         Rollback.Action action = Rollback.Action.valueOf(pojo.getAction());
