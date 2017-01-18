@@ -31,8 +31,6 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-import static cm.aptoide.pt.aptoidesdk.ads.OemIds.INDUS;
-
 /**
  * Created by neuro on 10-11-2016.
  */
@@ -90,15 +88,15 @@ public class RxAptoide {
 
   private static void setupEndpointsBasedOnOemId(String oemid) {
     switch (oemid) {
-      case INDUS:
-        GetAdsRequest.setBaseUrl("http://indusos.aptoide.com/api/2/");
+      case OemIds.INDUS:
+        GetAdsRequest.setBaseUrl(EndPoints.INDUS);
         break;
     }
   }
 
   private static void setupForcedCountryBasedOnOemId(String oemid) {
     switch (oemid) {
-      case INDUS:
+      case OemIds.INDUS:
         GetAdsRequest.setForcedCountry("IN");
         break;
     }
