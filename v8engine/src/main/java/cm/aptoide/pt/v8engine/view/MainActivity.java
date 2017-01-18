@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.annotation.Partners;
@@ -256,9 +257,9 @@ public class MainActivity extends BaseActivity implements MainView, FragmentShow
         && StoreTabFragmentChooser.validateAcceptedName(Event.Name.valueOf(queryName));
   }
 
-  @Override public android.support.v4.app.Fragment getLast() {
-    android.support.v4.app.FragmentManager fragmentManager = this.getSupportFragmentManager();
-    android.support.v4.app.FragmentManager.BackStackEntry backStackEntry =
+  @Override public Fragment getLast() {
+    FragmentManager fragmentManager = this.getSupportFragmentManager();
+    FragmentManager.BackStackEntry backStackEntry =
         fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1);
     return this.getSupportFragmentManager().findFragmentByTag(backStackEntry.getName());
   }

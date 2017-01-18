@@ -8,10 +8,12 @@ package cm.aptoide.pt.v8engine.activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.interfaces.UiComponent;
 import cm.aptoide.pt.v8engine.view.PermissionServiceActivity;
 import lombok.Getter;
 
