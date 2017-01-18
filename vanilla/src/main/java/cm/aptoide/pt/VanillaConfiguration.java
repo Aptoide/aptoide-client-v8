@@ -67,8 +67,8 @@ public class VanillaConfiguration implements AptoidePreferencesConfiguration {
     return DEFAULT_STORE;
   }
 
-  @Override public String getUpdatesSyncAdapterAuthority() {
-    return APP_ID + ".UpdatesProvider";
+  @Override public String getContentAuthority() {
+    return BuildConfig.CONTENT_AUTHORITY;
   }
 
   @Override public String getSearchAuthority() {
@@ -123,6 +123,10 @@ public class VanillaConfiguration implements AptoidePreferencesConfiguration {
 
   @Override public String getVerticalDimension() {
     return "smartphone";
+  }
+
+  @Override public boolean isCreateStoreAndSetUserPrivacyAvailable() {
+    return true;
   }
 
   @Override public int getDefaultThemeRes() {

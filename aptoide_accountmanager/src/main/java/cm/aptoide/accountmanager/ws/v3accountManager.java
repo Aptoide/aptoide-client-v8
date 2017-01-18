@@ -5,6 +5,7 @@
 
 package cm.aptoide.accountmanager.ws;
 
+import android.accounts.NetworkErrorException;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.ChangeUserSettingsResponse;
 import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
@@ -100,6 +101,8 @@ abstract class v3accountManager<U> extends WebService<v3accountManager.Interface
                             .delaySubscription(REFRESH_TOKEN_DELAY, TimeUnit.MILLISECONDS)
                             .observeOn(AndroidSchedulers.mainThread());
                       });
+                } else {
+                  return Observable.error(new NetworkErrorException());
                 }
               } else {
                 return Observable.error(

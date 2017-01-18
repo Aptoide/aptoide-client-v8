@@ -53,7 +53,7 @@ import rx.Observable;
 
   @Override
   protected Observable<ListApps> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-    return interfaces.listApps(url, body, bypassCache);
+    return interfaces.listApps(url != null ? url : "", body, bypassCache);
   }
 
   @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBodyWithStore

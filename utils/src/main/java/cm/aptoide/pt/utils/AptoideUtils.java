@@ -19,10 +19,10 @@ import android.content.pm.PermissionInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
-import android.net.Network;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Looper;
@@ -82,6 +82,7 @@ import java.util.UnknownFormatConversionException;
 import java.util.regex.Pattern;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import rx.Observable;
@@ -1547,6 +1548,47 @@ public class AptoideUtils {
 
       return originalUrl;
     }
+
+    public static List<ImageSizeErrors> checkIconSizeProperties(String avatarPath, int minHeight, int maxHeight,
+        int minWidth, int maxWidth, int maxImageSize) {
+      ImageInfo imageInfo = getImageInfo(avatarPath);
+      List<ImageSizeErrors> errors = new LinkedList<>();
+      if (imageInfo.getHeight() < minHeight) {
+        errors.add(ImageSizeErrors.MIN_HEIGHT);
+      }
+      if (imageInfo.getWidth() < minWidth) {
+        errors.add(ImageSizeErrors.MIN_WIDTH);
+      }
+      if (imageInfo.getHeight() > maxHeight) {
+        errors.add(ImageSizeErrors.MAX_HEIGHT);
+      }
+      if (imageInfo.getWidth() > maxWidth) {
+        errors.add(ImageSizeErrors.MAX_WIDTH);
+      }
+      if (imageInfo.getSize() > maxImageSize) {
+        errors.add(ImageSizeErrors.MAX_IMAGE_SIZE);
+      }
+      return errors;
+    }
+
+    public static ImageInfo getImageInfo(String imagePath) {
+      ImageInfo imageInfo = new ImageInfo();
+      Bitmap image = BitmapFactory.decodeFile(imagePath);
+      imageInfo.setWidth(image.getWidth());
+      imageInfo.setHeight(image.getHeight());
+      imageInfo.setSize(new File(imagePath).length());
+
+      return imageInfo;
+    }
+
+    public enum ImageSizeErrors {
+      MIN_HEIGHT, MAX_HEIGHT, MIN_WIDTH, MAX_WIDTH, MAX_IMAGE_SIZE
+    }
+
+    @Data public static class ImageInfo {
+      int height, width;
+      long size;
+    }
   }
 
   public static class Benchmarking {
@@ -1615,37 +1657,37 @@ public class AptoideUtils {
    */
   public static class NetworkUtils {
 
-    public static boolean isGeneralDownloadPermitted(Context context, boolean wifiAllowed,
-        boolean mobileAllowed) {
-      final boolean wifiAvailable = isAvailable(context, TYPE_WIFI);
-      final boolean mobileAvailable = isAvailable(context, TYPE_MOBILE);
-      return !(wifiAvailable && !wifiAllowed) && !(mobileAvailable && !mobileAllowed);
-    }
+    //public static boolean isGeneralDownloadPermitted(Context context, boolean wifiAllowed,
+    //    boolean mobileAllowed) {
+    //  final boolean wifiAvailable = isAvailable(context, TYPE_WIFI);
+    //  final boolean mobileAvailable = isAvailable(context, TYPE_MOBILE);
+    //  return !(wifiAvailable && !wifiAllowed) && !(mobileAvailable && !mobileAllowed);
+    //}
 
-    public static boolean isAvailable(Context context, int networkType) {
-      final ConnectivityManager manager =
-          (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-      return Build.VERSION.SDK_INT < 21 ? isAvailableSdk1(manager, networkType)
-          : isAvailableSdk21(manager, networkType);
-    }
+    //public static boolean isAvailable(Context context, int networkType) {
+    //  final ConnectivityManager manager =
+    //      (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+    //  return Build.VERSION.SDK_INT < 21 ? isAvailableSdk1(manager, networkType)
+    //      : isAvailableSdk21(manager, networkType);
+    //}
 
-    private static boolean isAvailableSdk1(final ConnectivityManager manager,
-        final int networkType) {
-      final NetworkInfo info = manager.getActiveNetworkInfo();
-      return info != null && info.getType() == networkType;
-    }
+    //private static boolean isAvailableSdk1(final ConnectivityManager manager,
+    //    final int networkType) {
+    //  final NetworkInfo info = manager.getActiveNetworkInfo();
+    //  return info != null && info.getType() == networkType;
+    //}
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private static boolean isAvailableSdk21(final ConnectivityManager manager,
-        final int networkType) {
-      for (final Network network : manager.getAllNetworks()) {
-        final NetworkInfo info = manager.getNetworkInfo(network);
-        if (info != null && info.isConnected() && info.getType() == networkType) {
-          return true;
-        }
-      }
-      return false;
-    }
+    //@TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    //private static boolean isAvailableSdk21(final ConnectivityManager manager,
+    //    final int networkType) {
+    //  for (final Network network : manager.getAllNetworks()) {
+    //    final NetworkInfo info = manager.getNetworkInfo(network);
+    //    if (info != null && info.isConnected() && info.getType() == networkType) {
+    //      return true;
+    //    }
+    //  }
+    //  return false;
+    //}
 
     public static String getDefaultUserAgent(AptoideClientUUID aptoideClientUUID, UserData userData,
         String vername, String oemid) {

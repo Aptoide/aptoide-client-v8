@@ -79,6 +79,7 @@
         android:paddingRight="@dimen/appview_description_right"
         android:paddingTop="@dimen/appview_description_left"
         android:textSize="@dimen/text_size_medium_large"
+        android:typeface="serif"
         android:visibility="visible"
         tools:text="this TextView will have the app description"
         tools:visibility="gone"

@@ -29,7 +29,6 @@ import cm.aptoide.pt.v8engine.util.CommentOperations;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.view.custom.HorizontalDividerItemDecoration;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.CommentsDisplayableGroup;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.DisplayableGroupWithMargin;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
@@ -37,7 +36,7 @@ import cm.aptoide.pt.viewRateAndCommentReviews.CommentDialogFragment;
 import cm.aptoide.pt.viewRateAndCommentReviews.CommentNode;
 import cm.aptoide.pt.viewRateAndCommentReviews.ComplexComment;
 import com.jakewharton.rxbinding.view.RxView;
-import com.trello.rxlifecycle.FragmentEvent;
+import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.ArrayList;
 import java.util.List;
 import rx.Observable;
@@ -385,7 +384,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
         }
 
         this.displayables = new ArrayList<>(displayables.size());
-        this.displayables.add(new CommentsDisplayableGroup(displayables));
+        this.displayables.add(new DisplayableGroupWithMargin(displayables));
 
         addDisplayables(this.displayables);
       }

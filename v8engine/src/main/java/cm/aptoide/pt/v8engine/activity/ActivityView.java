@@ -10,7 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.view.View;
-import com.trello.rxlifecycle.ActivityEvent;
+import com.trello.rxlifecycle.android.ActivityEvent;
 import com.trello.rxlifecycle.LifecycleTransformer;
 import com.trello.rxlifecycle.RxLifecycle;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
@@ -26,10 +26,6 @@ public abstract class ActivityView extends RxAppCompatActivity implements View {
   @NonNull @Override public final <T> LifecycleTransformer<T> bindUntilEvent(@NonNull
       LifecycleEvent lifecycleEvent) {
     return RxLifecycle.bindUntilEvent(getLifecycle(), lifecycleEvent);
-  }
-
-  @Override public Context getContext() {
-    return this;
   }
 
   @Override public Observable<LifecycleEvent> getLifecycle() {

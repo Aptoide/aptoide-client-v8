@@ -8,6 +8,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.listapp.File;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.Application;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -43,7 +44,7 @@ public class AccessTokenRequestBodyAdapter implements AccessTokenBody {
     this.baseBody = baseBody;
     this.decorator = decorator;
     this.storeName = storeName;
-    this.storeTheme = storeTheme;
+    storeProperties = new SimpleSetStoreRequest.StoreProperties(storeTheme, null);
     this.accessToken = accessToken;
   }
 
@@ -70,23 +71,22 @@ public class AccessTokenRequestBodyAdapter implements AccessTokenBody {
   public HashMapNotNull<String, RequestBody> get() {
     decorator.decorate(baseBody, accessToken);
     HashMapNotNull<String, RequestBody> body = new HashMapNotNull<>();
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
     if (storeEdit) {
       body.put("store_id", createBodyPartFromLong(storeid));
       try {
-        body.put("store_properties", createBodyPartFromString(new ObjectMapper().writeValueAsString(storeProperties)));
+        body.put("store_properties", createBodyPartFromString(mapper.writeValueAsString(storeProperties)));
       } catch (JsonProcessingException e) {
         e.printStackTrace();
       }
     } else {
       body.put("store_name", createBodyPartFromString(storeName));
-      if (storeTheme.length() > 0) {
-        try {
-          body.put("store_properties",
-              createBodyPartFromString(new JSONObject().put("theme", storeTheme).toString()));
-        } catch (JSONException e) {
-          Logger.e(AccessTokenRequestBodyAdapter.class.getSimpleName(), JSONOBJECT_ERROR, e);
-        }
+      try {
+        body.put("store_properties", createBodyPartFromString(mapper.writeValueAsString(storeProperties)));
+      } catch (JsonProcessingException e) {
+        e.printStackTrace();
       }
     }
     body.put("access_token", createBodyPartFromString(accessToken));

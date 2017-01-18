@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
- */
-
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.content.Context;
@@ -45,7 +40,7 @@ import cm.aptoide.pt.v8engine.repository.ScheduledDownloadRepository;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ScheduledDownloadDisplayable;
-import com.trello.rxlifecycle.FragmentEvent;
+import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.ArrayList;
 import java.util.List;
 import rx.android.schedulers.AndroidSchedulers;
@@ -103,6 +98,7 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    super.load(create, refresh, savedInstanceState);
     Logger.d(TAG, "refresh excluded updates? " + (create ? "yes" : "no"));
     if (create) {
       switch (openMode) {
@@ -310,7 +306,8 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
   }
 
   public void setupEvents(Download download, DownloadEvent.Action action) {
-    DownloadEvent report = downloadConverter.create(download, action, DownloadEvent.AppContext.SCHEDULED);
+    DownloadEvent report =
+        downloadConverter.create(download, action, DownloadEvent.AppContext.SCHEDULED);
     analytics.save(download.getPackageName() + download.getVersionCode(), report);
 
     InstallEvent installEvent =

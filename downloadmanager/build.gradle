@@ -65,6 +65,7 @@ dependencies {
   compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
 
   compile "com.liulishuo.filedownloader:library:${FILE_DOWNLOADER_VERSION}"
+  compile "cn.dreamtobe.filedownloader:filedownloader-okhttp3-connection:${FILE_DOWNLOADER_OKHTTP_IMP_VERSION}"
 
   compile "io.reactivex:rxjava:${RXJAVA_VERSION}"
   // And ProGuard rules for RxJava!

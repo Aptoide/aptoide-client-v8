@@ -37,7 +37,7 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
   private TimeLineFollowFragment.FollowFragmentOpenMode openMode;
 
   public static TimeLineFollowFragment newInstance(FollowFragmentOpenMode openMode,
-      long followNumber) {
+      long followNumber, String storeTheme) {
     Bundle args = new Bundle();
     switch (openMode) {
       case FOLLOWERS:
@@ -50,6 +50,7 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
         break;
     }
     args.putSerializable(OPEN_MODE, openMode);
+    args.putString(BundleCons.STORE_THEME, storeTheme);
     TimeLineFollowFragment fragment = new TimeLineFollowFragment();
     fragment.setArguments(args);
     return fragment;

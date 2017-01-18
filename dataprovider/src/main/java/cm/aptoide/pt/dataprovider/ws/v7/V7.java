@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import android.accounts.NetworkErrorException;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.DataProvider;
@@ -154,6 +155,8 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
               return V7.this.observe(bypassCache)
                   .delaySubscription(REFRESH_TOKEN_DELAY, TimeUnit.MILLISECONDS);
             });
+          } else {
+            return Observable.error(new NetworkErrorException());
           }
         } else {
           return Observable.error(throwable);

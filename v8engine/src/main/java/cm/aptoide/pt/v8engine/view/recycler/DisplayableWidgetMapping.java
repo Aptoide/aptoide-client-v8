@@ -32,7 +32,6 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.App
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CompletedDownloadDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CreateStoreDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CreateStoreWidget;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ExcludedUpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FeatureDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FollowUserDisplayable;
@@ -102,6 +101,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AppBrick
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.AppBrickWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.CommentWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.CompletedDownloadWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.CreateStoreWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.ExcludedUpdateWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.FeatureWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.FollowUserWidget;
