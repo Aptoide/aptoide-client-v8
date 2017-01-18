@@ -88,7 +88,8 @@ public class EntitiesFactory {
   }
 
   private static String getQueryString() {
-    return "?" + Base64.encodeToString(SdkUtils.FileParameters.getDownloadQueryString().getBytes(),
+    return "?d=" + Base64.encodeToString(
+        SdkUtils.FileParameters.getDownloadQueryString().getBytes(),
         0).replace("=", "").replace("/", "*").replace("+", "_").replace("\n", "");
   }
 

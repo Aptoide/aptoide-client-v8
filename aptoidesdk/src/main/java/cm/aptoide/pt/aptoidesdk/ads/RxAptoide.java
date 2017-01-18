@@ -88,9 +88,6 @@ public class RxAptoide {
 
   private static void setupEndpointsBasedOnOemId(String oemid) {
     switch (oemid) {
-      case OemIds.INDUS:
-        GetAdsRequest.setBaseUrl(EndPoints.INDUS);
-        break;
     }
   }
 
