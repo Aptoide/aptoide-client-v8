@@ -14,9 +14,7 @@ import android.content.pm.PackageInfo;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
-import cm.aptoide.accountmanager.AccountManagerPreferences;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.util.UserCompleteData;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
 import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.crashreports.AptoideCrashLogger;
@@ -190,7 +188,7 @@ public abstract class V8Engine extends DataProvider {
     if (SecurePreferences.isFirstRun()) {
       createShortCut();
       PreferenceManager.setDefaultValues(this, R.xml.settings, false);
-      if (AptoideAccountManager.isLoggedIn()) {
+      if (AptoideAccountManager.isLoggedIn() && ManagerPreferences.isFirstRunV7()) {
         AptoideAccountManager.removeLocalAccount();
       }
       loadInstalledApps().doOnNext(o -> {
