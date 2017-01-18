@@ -125,7 +125,7 @@ import java.util.List;
     //rateThisAppButton.setOnClickListener(rateOnClickListener);
 
     View.OnClickListener commentsOnClickListener = v -> {
-      ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
+      ((FragmentShower) getContext()).pushFragment(V8Engine.getFragmentProvider()
           .newRateAndReviewsFragment(app.getId(), app.getName(), app.getStore().getName(),
               app.getPackageName(), app.getStore().getAppearance().getTheme()));
     };

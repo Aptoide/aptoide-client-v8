@@ -151,7 +151,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
       final String elementId = displayable.getTimelineCard().getCardId();
       Fragment fragment = V8Engine.getFragmentProvider()
           .newCommentGridRecyclerFragment(CommentType.TIMELINE, elementId);
-      ((FragmentShower) getContext()).pushFragmentV4(fragment);
+      ((FragmentShower) getContext()).pushFragment(fragment);
       return null;
     });
   }

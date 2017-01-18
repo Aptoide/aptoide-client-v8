@@ -47,7 +47,7 @@ public class GridAdWidget extends Widget<GridAdDisplayable> {
 
     itemView.setOnClickListener(v -> {
       Analytics.AppViewViewedFrom.addStepToList(displayable.getTag());
-      ((FragmentShower) v.getContext()).pushFragmentV4(
+      ((FragmentShower) v.getContext()).pushFragment(
           V8Engine.getFragmentProvider().newAppViewFragment(pojo));
     });
   }

@@ -78,7 +78,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
     itemView.setOnClickListener(v -> {
       // FIXME
       Analytics.AppViewViewedFrom.addStepToList(displayable.getTag());
-      ((FragmentShower) v.getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
+      ((FragmentShower) v.getContext()).pushFragment(V8Engine.getFragmentProvider()
           .newAppViewFragment(appId, pojo.getPackageName(),
               pojo.getStore().getAppearance().getTheme(), tvStoreName.getText().toString()));
     });

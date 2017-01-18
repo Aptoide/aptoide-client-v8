@@ -64,7 +64,7 @@ public class MyStoreWidget extends Widget<MyStoreDisplayable> {
 
     storeName.setText(store.getName());
     compositeSubscription.add(RxView.clicks(exploreButton)
-        .subscribe(click -> ((FragmentShower) context).pushFragmentV4(
+        .subscribe(click -> ((FragmentShower) context).pushFragment(
             V8Engine.getFragmentProvider().newStoreFragment(store.getName(), storeTheme))));
   }
 

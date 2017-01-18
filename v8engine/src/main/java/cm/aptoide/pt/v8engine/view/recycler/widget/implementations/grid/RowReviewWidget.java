@@ -62,7 +62,7 @@ public class RowReviewWidget extends Widget<RowReviewDisplayable> {
         avatar, R.drawable.layer_1);
 
     compositeSubscription.add(RxView.clicks(itemView).subscribe(aVoid -> {
-      ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
+      ((FragmentShower) getContext()).pushFragment(V8Engine.getFragmentProvider()
           .newRateAndReviewsFragment(app.getId(), app.getName(), app.getStore().getName(),
               app.getPackageName(), review.getId()));
     }));

@@ -49,7 +49,7 @@ public class AppViewSuggestedAppWidget extends Widget<AppViewSuggestedAppDisplay
     descriptionTextView.setText(AptoideUtils.HtmlU.parse(pojo.getDescription()));
 
     layout.setOnClickListener(v -> {
-      ((FragmentShower) v.getContext()).pushFragmentV4(
+      ((FragmentShower) v.getContext()).pushFragment(
           V8Engine.getFragmentProvider().newAppViewFragment(pojo));
     });
   }

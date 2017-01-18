@@ -189,7 +189,7 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
     }
     if (itemId == R.id.menu_install) {
       // todo Navigator n = new Navigator();
-      ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
+      ((FragmentShower) getContext()).pushFragment(V8Engine.getFragmentProvider()
           .newAppViewFragment(packageName, storeName, AppViewFragment.OpenType.OPEN_AND_INSTALL));
       return true;
     }

@@ -25,7 +25,7 @@ import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.v8engine.MainActivityFragment;
+import cm.aptoide.pt.v8engine.view.MainActivity;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
@@ -84,7 +84,7 @@ public class AddStoreDialog extends DialogFragment {
     });
 
     view.findViewById(R.id.button_top_stores).setOnClickListener(v -> {
-      ((MainActivityFragment) getActivity()).pushFragmentV4(
+      ((MainActivity) getActivity()).pushFragment(
           V8Engine.getFragmentProvider().newFragmentTopStores());
       if (isAdded()) {
         dismiss();

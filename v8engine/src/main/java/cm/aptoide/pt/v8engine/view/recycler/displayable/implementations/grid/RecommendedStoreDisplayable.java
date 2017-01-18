@@ -50,7 +50,7 @@ public class RecommendedStoreDisplayable extends DisplayablePojo<Store> {
   }
 
   public void openStoreFragment(FragmentShower fragmentShower) {
-    fragmentShower.pushFragmentV4(V8Engine.getFragmentProvider()
+    fragmentShower.pushFragment(V8Engine.getFragmentProvider()
         .newStoreFragment(getPojo().getName(), getPojo().getAppearance().getTheme()));
   }
 }

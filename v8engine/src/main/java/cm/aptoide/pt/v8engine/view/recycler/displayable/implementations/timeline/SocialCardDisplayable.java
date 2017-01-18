@@ -65,7 +65,7 @@ public abstract class SocialCardDisplayable extends CardDisplayable {
   public abstract void like(Context context, String cardType, int rating);
 
   public void likesPreviewClick(FragmentShower fragmentShower) {
-    fragmentShower.pushFragmentV4(V8Engine.getFragmentProvider()
+    fragmentShower.pushFragment(V8Engine.getFragmentProvider()
         .newTimeLineFollowStatsFragment(TimeLineFollowFragment.FollowFragmentOpenMode.LIKE_PREVIEW,
             "default", this.getTimelineCard().getCardId(), numberOfLikes));
   }

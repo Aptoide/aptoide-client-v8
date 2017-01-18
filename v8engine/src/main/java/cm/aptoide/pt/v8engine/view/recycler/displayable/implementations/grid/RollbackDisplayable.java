@@ -52,7 +52,7 @@ public class RollbackDisplayable extends DisplayablePojo<Rollback> {
   }
 
   public void openAppview(FragmentShower fragmentShower) {
-    fragmentShower.pushFragmentV4(
+    fragmentShower.pushFragment(
         V8Engine.getFragmentProvider().newAppViewFragment(getPojo().getMd5()));
   }
 

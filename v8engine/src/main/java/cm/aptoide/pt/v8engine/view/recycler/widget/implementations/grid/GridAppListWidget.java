@@ -62,7 +62,7 @@ public class GridAppListWidget extends Widget<GridAppListDisplayable> {
     tvStoreName.setTypeface(null, Typeface.BOLD);
     itemView.setOnClickListener(v -> {
       // FIXME
-      ((FragmentShower) v.getContext()).pushFragmentV4(
+      ((FragmentShower) v.getContext()).pushFragment(
           V8Engine.getFragmentProvider().newAppViewFragment(app.getId(), app.getPackageName()));
     });
     ImageLoader.load(app.getIcon(), icon);

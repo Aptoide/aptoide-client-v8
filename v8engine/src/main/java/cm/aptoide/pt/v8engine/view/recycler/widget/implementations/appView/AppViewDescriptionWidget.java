@@ -50,7 +50,7 @@ import com.jakewharton.rxbinding.view.RxView;
     if (!TextUtils.isEmpty(media.getDescription())) {
       descriptionTextView.setText(AptoideUtils.HtmlU.parse(media.getDescription()));
       compositeSubscription.add(RxView.clicks(readMoreBtn).subscribe(click -> {
-        ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
+        ((FragmentShower) getContext()).pushFragment(V8Engine.getFragmentProvider()
             .newDescriptionFragment(app.getName(), media.getDescription(), storeTheme));
       }));
     } else {
@@ -62,7 +62,7 @@ import com.jakewharton.rxbinding.view.RxView;
     if (!TextUtils.isEmpty(media.getDescription())) {
       descriptionTextView.setText(AptoideUtils.HtmlU.parse(media.getDescription()));
       compositeSubscription.add(RxView.clicks(readMoreBtn).subscribe(click -> {
-        ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
+        ((FragmentShower) getContext()).pushFragment(V8Engine.getFragmentProvider()
             .newDescriptionFragment(app.getName(), media.getDescription(), storeTheme));
       }));
     } else {

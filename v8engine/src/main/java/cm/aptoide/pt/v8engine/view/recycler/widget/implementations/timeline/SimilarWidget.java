@@ -91,7 +91,7 @@ public class SimilarWidget extends CardWidget<SimilarDisplayable> {
               .similar_to(displayable.getSimilarToAppPackageName())
               .build())
           .build(), TimelineClickEvent.OPEN_APP);
-      ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
+      ((FragmentShower) getContext()).pushFragment(V8Engine.getFragmentProvider()
           .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
     });
   }

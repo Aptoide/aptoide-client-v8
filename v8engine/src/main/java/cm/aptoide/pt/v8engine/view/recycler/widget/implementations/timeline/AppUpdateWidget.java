@@ -97,7 +97,7 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
               .app(displayable.getPackageName())
               .build())
           .build(), TimelineClickEvent.OPEN_STORE);
-      ((FragmentShower) getContext()).pushFragmentV4(
+      ((FragmentShower) getContext()).pushFragment(
           V8Engine.getFragmentProvider().newStoreFragment(displayable.getStoreName()));
     }));
 
@@ -109,7 +109,7 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
           .specific(
               SendEventRequest.Body.Specific.builder().app(displayable.getPackageName()).build())
           .build(), TimelineClickEvent.OPEN_APP);
-      ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
+      ((FragmentShower) getContext()).pushFragment(V8Engine.getFragmentProvider()
           .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
     }));
 

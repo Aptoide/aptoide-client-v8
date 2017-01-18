@@ -1,16 +1,17 @@
 /*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 23/08/2016.
+ * Copyright (c) 2017.
+ * Modified by Marcelo Benites on 18/01/2017.
  */
 
-package cm.aptoide.pt.v8engine;
+package cm.aptoide.pt.v8engine.view;
 
-import android.app.Fragment;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -21,11 +22,12 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.Layout;
-import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.v8engine.activity.AptoideSimpleFragmentActivity;
+import cm.aptoide.pt.v8engine.AutoUpdate;
+import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.activity.BaseActivity;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.BaseWizardViewerFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
@@ -35,8 +37,9 @@ import cm.aptoide.pt.v8engine.fragment.implementations.storetab.StoreTabFragment
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.interfaces.DrawerFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
+import cm.aptoide.pt.v8engine.presenter.MainPresenter;
 import cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver;
-import cm.aptoide.pt.v8engine.services.PullingContentService;
+import cm.aptoide.pt.v8engine.services.ContentPuller;
 import cm.aptoide.pt.v8engine.util.ApkFy;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
@@ -51,44 +54,42 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created by neuro on 06-05-2016.
  */
-public class MainActivityFragment extends AptoideSimpleFragmentActivity implements FragmentShower {
-  private static final String TAG = MainActivityFragment.class.getSimpleName();
+public class MainActivity extends BaseActivity implements MainView, FragmentShower {
 
-  @Override protected android.support.v4.app.Fragment createFragment() {
-    return V8Engine.getFragmentProvider()
-        .newHomeFragment(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home,
-            V8Engine.getConfiguration().getDefaultTheme());
-  }
+  private static final String TAG = MainActivity.class.getSimpleName();
 
-  @Override public void onCreate(Bundle savedInstanceState) {
+  @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    Analytics.Lifecycle.Activity.onCreate(this);
-    new ApkFy().run(this);
+    setContentView(R.layout.frame_layout);
 
-    if (savedInstanceState == null) {
-      startService(new Intent(this, PullingContentService.class));
-      if (ManagerPreferences.isAutoUpdateEnable() && !V8Engine.isAutoUpdateWasCalled()) {
-
-        // only call auto update when the app was not on the background
+    final AutoUpdate autoUpdate =
         new AutoUpdate(this, new InstallerFactory().create(this, InstallerFactory.DEFAULT),
-            new DownloadFactory(), AptoideDownloadManager.getInstance(),
-            new PermissionManager()).execute();
-      }
-      if (SecurePreferences.isWizardAvailable()) {
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        pushFragmentV4(new BaseWizardViewerFragment());
-        SecurePreferences.setWizardAvailable(false);
-      }
-
-      handleDeepLinks(getIntent());
-    }
+            new DownloadFactory(), AptoideDownloadManager.getInstance(), new PermissionManager());
+    attachPresenter(
+        new MainPresenter(this, new ApkFy(this, getIntent()), autoUpdate, new ContentPuller(this)),
+        savedInstanceState);
   }
 
-  @Override public void pushFragmentV4(android.support.v4.app.Fragment fragment) {
-    FragmentUtils.replaceFragmentV4(this, fragment);
+  @Override public void changeOrientationToPortrait() {
+    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
   }
 
-  private void handleDeepLinks(Intent intent) {
+  @Override public void showWizard() {
+    pushFragment(new BaseWizardViewerFragment());
+  }
+
+  @Override public void showHome() {
+    pushFragment(V8Engine.getFragmentProvider()
+        .newHomeFragment(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home,
+            V8Engine.getConfiguration().getDefaultTheme()));
+  }
+
+  @Override public void showDeepLink() {
+    handleDeepLinks();
+  }
+
+  private void handleDeepLinks() {
+    final Intent intent = getIntent();
     if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.APP_VIEW_FRAGMENT)) {
 
       if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_MD5_KEY)) {
@@ -126,24 +127,24 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
   }
 
   private void appViewDeepLink(String md5) {
-    pushFragmentV4(AppViewFragment.newInstance(md5));
+    pushFragment(AppViewFragment.newInstance(md5));
   }
 
   private void appViewDeepLink(long appId, String packageName, boolean showPopup) {
     AppViewFragment.OpenType openType = showPopup ? AppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP
         : AppViewFragment.OpenType.OPEN_ONLY;
-    pushFragmentV4(V8Engine.getFragmentProvider().newAppViewFragment(appId, packageName, openType));
+    pushFragment(V8Engine.getFragmentProvider().newAppViewFragment(appId, packageName, openType));
   }
 
   private void appViewDeepLink(String packageName, String storeName, boolean showPopup) {
     AppViewFragment.OpenType openType = showPopup ? AppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP
         : AppViewFragment.OpenType.OPEN_ONLY;
-    pushFragmentV4(
+    pushFragment(
         V8Engine.getFragmentProvider().newAppViewFragment(packageName, storeName, openType));
   }
 
   private void searchDeepLink(String query) {
-    pushFragmentV4(V8Engine.getFragmentProvider().newSearchFragment(query));
+    pushFragment(V8Engine.getFragmentProvider().newSearchFragment(query));
   }
 
   private void newrepoDeepLink(ArrayList<String> repos) {
@@ -204,7 +205,7 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
         GetStoreWidgets.WSWidget.Data data = new GetStoreWidgets.WSWidget.Data();
         data.setLayout(Layout.valueOf(queryLayout));
         event.setData(data);
-        pushFragmentV4(V8Engine.getFragmentProvider()
+        pushFragment(V8Engine.getFragmentProvider()
             .newStoreTabGridRecyclerFragment(event,
                 uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.TITLE),
                 uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.STORE_THEME),
@@ -219,7 +220,7 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
     if (uri != null) {
       String openMode = uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.OPEN_MODE);
       if (!TextUtils.isEmpty(openMode)) {
-        pushFragmentV4(V8Engine.getFragmentProvider()
+        pushFragment(V8Engine.getFragmentProvider()
             .newScheduledDownloadsFragment(ScheduledDownloadsFragment.OpenMode.valueOf(openMode)));
       }
     }
@@ -246,24 +247,12 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
         && StoreTabFragmentChooser.validateAcceptedName(Event.Name.valueOf(queryName));
   }
 
-  public android.support.v4.app.Fragment getCurrentV4() {
-    return FragmentUtils.getFirstFragmentV4(this);
-  }
-
-  public android.support.v4.app.Fragment getLastV4() {
-    return FragmentUtils.getLastFragmentV4(this);
-  }
-
   @Override public void pushFragment(Fragment fragment) {
-    FragmentUtils.replaceFragment(this, fragment);
+    FragmentUtils.replaceFragmentV4(this, fragment);
   }
 
-  public Fragment getCurrent() {
-    return FragmentUtils.getFirstFragment(this);
-  }
-
-  public Fragment getLast() {
-    return FragmentUtils.getLastFragment(this);
+  @Override public Fragment getLast() {
+    return FragmentUtils.getLastFragmentV4(this);
   }
 
   @Override public void onBackPressed() {
@@ -284,8 +273,13 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
     }
   }
 
-  @Override protected void onNewIntent(Intent intent) {
-    super.onNewIntent(intent);
-    Analytics.Lifecycle.Activity.onNewIntent(this, intent);
+  private Fragment getCurrentFragment() {
+    if (getSupportFragmentManager().getFragments() != null
+        && getSupportFragmentManager().getFragments().size() > 0) {
+      return getSupportFragmentManager().getFragments()
+          .get(getSupportFragmentManager().getFragments().size() - 1);
+    } else {
+      return null;
+    }
   }
 }

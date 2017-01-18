@@ -59,14 +59,14 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
   }
 
   public Void followersClick(FragmentShower fragmentShower) {
-    fragmentShower.pushFragmentV4(V8Engine.getFragmentProvider()
+    fragmentShower.pushFragment(V8Engine.getFragmentProvider()
         .newTimeLineFollowStatsFragment(TimeLineFollowFragment.FollowFragmentOpenMode.FOLLOWERS,
             getPojo().getData().getFollowers(), storeTheme));
     return null;
   }
 
   public Void followingClick(FragmentShower fragmentShower) {
-    fragmentShower.pushFragmentV4(V8Engine.getFragmentProvider()
+    fragmentShower.pushFragment(V8Engine.getFragmentProvider()
         .newTimeLineFollowStatsFragment(TimeLineFollowFragment.FollowFragmentOpenMode.FOLLOWING,
             getPojo().getData().getFollowing(), storeTheme));
     return null;

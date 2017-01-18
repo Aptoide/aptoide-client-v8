@@ -120,7 +120,7 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
     } else {
       theme = V8Engine.getConfiguration().getDefaultTheme();
     }
-    shower.pushFragmentV4(V8Engine.getFragmentProvider().newStoreFragment(store.getName(), theme));
+    shower.pushFragment(V8Engine.getFragmentProvider().newStoreFragment(store.getName(), theme));
   }
 
   public TimeLineFollowFragment.FollowFragmentOpenMode getOpenMode() {

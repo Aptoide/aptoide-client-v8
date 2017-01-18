@@ -93,7 +93,7 @@ public class RecommendationWidget extends CardWidget<RecommendationDisplayable> 
               .based_on(displayable.getSimilarAppPackageName())
               .build())
           .build(), TimelineClickEvent.OPEN_APP);
-      ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
+      ((FragmentShower) getContext()).pushFragment(V8Engine.getFragmentProvider()
           .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
     }));
   }

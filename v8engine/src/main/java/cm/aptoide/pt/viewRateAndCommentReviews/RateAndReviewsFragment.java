@@ -125,7 +125,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
       return true;
     }
     if (itemId == R.id.menu_install) {
-      ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
+      ((FragmentShower) getContext()).pushFragment(V8Engine.getFragmentProvider()
           .newAppViewFragment(packageName, storeName, AppViewFragment.OpenType.OPEN_AND_INSTALL));
       return true;
     }

@@ -54,6 +54,7 @@ import cm.aptoide.pt.v8engine.filemanager.FileManager;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
+import cm.aptoide.pt.v8engine.view.MainActivity;
 import cm.aptoide.pt.v8engine.view.recycler.DisplayableWidgetMapping;
 import com.flurry.android.FlurryAgent;
 import java.util.Collections;
@@ -380,7 +381,7 @@ public abstract class V8Engine extends DataProvider {
   }
 
   public void createShortCut() {
-    Intent shortcutIntent = new Intent(this, MainActivityFragment.class);
+    Intent shortcutIntent = new Intent(this, MainActivity.class);
     shortcutIntent.setAction(Intent.ACTION_MAIN);
     Intent intent = new Intent();
     intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
