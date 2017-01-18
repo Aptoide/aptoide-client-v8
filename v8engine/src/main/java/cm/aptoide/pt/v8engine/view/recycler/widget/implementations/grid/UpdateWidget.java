@@ -16,7 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import cm.aptoide.pt.actions.PermissionRequest;
+import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
@@ -127,7 +127,8 @@ import rx.functions.Action1;
     compositeSubscription.add(RxView.longClicks(updateRowRelativeLayout)
         .subscribe(longClickListener, throwable -> throwable.printStackTrace()));
     compositeSubscription.add(RxView.clicks(updateButtonLayout)
-        .flatMap(click -> displayable.downloadAndInstall(context, (PermissionRequest) context))
+        .flatMap(
+            click -> displayable.downloadAndInstall(getContext(), (PermissionService) context))
         .retry()
         .subscribe(o -> {
         }, throwable -> throwable.printStackTrace()));

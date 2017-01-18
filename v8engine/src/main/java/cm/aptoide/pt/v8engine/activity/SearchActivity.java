@@ -11,7 +11,7 @@ import android.view.View;
 /**
  * Created by sithengineer on 10/05/16.
  */
-public class SearchActivity extends AptoideBaseActivity {
+public class SearchActivity extends UIComponentActivity {
 
   @Override public void bindViews(View view) {
 

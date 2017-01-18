@@ -27,7 +27,7 @@ import lombok.Getter;
 /**
  * Created by neuro on 16-04-2016.
  */
-public abstract class BaseLoaderFragment extends SupportV4BaseFragment implements LoadInterface {
+public abstract class BaseLoaderFragment extends UIComponentFragment implements LoadInterface {
 
   private LoaderLayoutHandler loaderLayoutHandler;
   @Getter private boolean create = true;

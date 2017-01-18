@@ -1,14 +1,20 @@
+/*
+ * Copyright (c) 2016.
+ * Modified by Neurophobic Animal on 28/06/2016.
+ */
+
 package cm.aptoide.pt.v8engine.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.View;
 import cm.aptoide.pt.v8engine.R;
 
 /**
- * Created by neuro on 06-05-2016.
+ * Created by neuro on 05-05-2016.
  */
-public abstract class AptoideSimpleFragmentActivity extends AptoideFragmentActivity {
+public abstract class AptoideFragmentActivity extends UIComponentActivity {
+
+
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -21,14 +27,6 @@ public abstract class AptoideSimpleFragmentActivity extends AptoideFragmentActiv
 
   protected abstract Fragment createFragment();
 
-  @Override public int getContentViewId() {
-    return R.layout.frame_layout;
-  }
-
-  @Override protected String getAnalyticsScreenName() {
-    return null;
-  }
-
   protected Fragment getCurrentFragment() {
     if (getSupportFragmentManager().getFragments() != null
         && getSupportFragmentManager().getFragments().size() > 0) {
@@ -37,21 +35,5 @@ public abstract class AptoideSimpleFragmentActivity extends AptoideFragmentActiv
     } else {
       return null;
     }
-  }
-
-  @Override public void bindViews(View view) {
-    // does nothing
-  }
-
-  @Override public void loadExtras(Bundle extras) {
-    // does nothing
-  }
-
-  @Override public void setupViews() {
-    // does nothing
-  }
-
-  @Override public void setupToolbar() {
-    // does nothing
   }
 }
