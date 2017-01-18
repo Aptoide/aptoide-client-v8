@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -255,14 +255,13 @@ public class SearchFragment extends BasePagerToolbarFragment {
     }
   }
 
-  @Override public void setupToolbar() {
-    super.setupToolbar();
+  @Override public void setupToolbarDetails(Toolbar toolbar) {
+    toolbar.setTitle(query);
+    toolbar.setLogo(R.drawable.ic_store);
+  }
 
-    if (toolbar != null) {
-      ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(query);
-      ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-      toolbar.setLogo(R.drawable.ic_store);
-    }
+  @Override protected boolean displayHomeUpAsEnabled() {
+    return true;
   }
 
   private void setButtonBackgrounds(int currentItem) {

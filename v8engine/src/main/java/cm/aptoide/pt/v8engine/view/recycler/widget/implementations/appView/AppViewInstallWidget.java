@@ -231,8 +231,12 @@ import rx.android.schedulers.AndroidSchedulers;
 
     //check if the app is paid
     if (app.isPaid() && !app.getPay().isPaid()) {
-      actionButton.setText(
-          getContext().getString(R.string.buy) + " (" + app.getPay().getPriceDescription() + ")");
+      actionButton.setText(getContext().getString(R.string.buy)
+          + " ("
+          + app.getPay().getSymbol()
+          + " "
+          + app.getPay().getPrice()
+          + ")");
       actionButton.setOnClickListener(v -> displayable.buyApp(getContext(), app));
       AppBoughtReceiver receiver = new AppBoughtReceiver() {
         @Override public void appBought(long appId, String path) {
@@ -369,7 +373,8 @@ import rx.android.schedulers.AndroidSchedulers;
           .first()
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(progress -> {
-            if (AptoideAccountManager.isLoggedIn() && ManagerPreferences.getShowPreview()
+            if (AptoideAccountManager.isLoggedIn()
+                && ManagerPreferences.getShowPreview()
                 && Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
               SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(displayable);
               AlertDialog.Builder alertDialog = sharePreviewDialog.showPreviewDialog(getContext());
@@ -406,7 +411,7 @@ import rx.android.schedulers.AndroidSchedulers;
               }).subscribeOn(AndroidSchedulers.mainThread()).subscribe(eResponse -> {
                 switch (eResponse) {
                   case YES:
-                    ShowMessage.asSnack(getContext(),R.string.social_timeline_share_dialog_title);
+                    ShowMessage.asSnack(getContext(), R.string.social_timeline_share_dialog_title);
                     break;
                   case NO:
                     break;
