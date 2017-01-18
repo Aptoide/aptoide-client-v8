@@ -13,7 +13,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -23,6 +22,7 @@ import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.activity.ActivityView;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import rx.functions.Action0;
 
@@ -30,7 +30,7 @@ import rx.functions.Action0;
  * Created by marcelobenites on 18/01/17.
  */
 
-public class PermissionServiceActivity extends AppCompatActivity implements PermissionService {
+public class PermissionServiceActivity extends ActivityView implements PermissionService {
 
   private static final String TAG = PermissionServiceActivity.class.getName();
   private static final int ACCESS_TO_EXTERNAL_FS_REQUEST_ID = 61;
@@ -225,7 +225,7 @@ public class PermissionServiceActivity extends AppCompatActivity implements Perm
           super.onNext(eResponse);
           if (eResponse == GenericDialogs.EResponse.YES) {
             if (PermissionServiceActivity.this instanceof FragmentShower) {
-              ((FragmentShower) PermissionServiceActivity.this).pushFragmentV4(
+              ((FragmentShower) PermissionServiceActivity.this).pushFragment(
                   V8Engine.getFragmentProvider().newSettingsFragment());
             } else {
               Logger.e(PermissionServiceActivity.class.getSimpleName(), new IllegalArgumentException(

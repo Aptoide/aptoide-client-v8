@@ -132,7 +132,7 @@ import rx.functions.Action1;
 
     final FragmentShower fragmentShower = (FragmentShower) context;
     Action1<Void> commentsOnClickListener = __ -> {
-      fragmentShower.pushFragmentV4(V8Engine.getFragmentProvider()
+      fragmentShower.pushFragment(V8Engine.getFragmentProvider()
           .newRateAndReviewsFragment(app.getId(), app.getName(), app.getStore().getName(),
               app.getPackageName(), app.getStore().getAppearance().getTheme()));
     };

@@ -5,39 +5,28 @@
 
 package cm.aptoide.pt.v8engine.activity;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.LayoutRes;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
-import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.interfaces.UiComponent;
 import cm.aptoide.pt.v8engine.view.PermissionServiceActivity;
 import lombok.Getter;
 
 /**
  * Created by neuro on 01-05-2016.
  */
-public abstract class UIComponentActivity extends PermissionServiceActivity
-    implements UiComponent {
-
-  private NavigationManagerV4 navigator;
-
-  public NavigationManagerV4 getNavigationManager() {
-    return navigator;
-  }
+public abstract class BaseActivity extends PermissionServiceActivity {
 
   @Getter private boolean _resumed = false;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
-
     super.onCreate(savedInstanceState);
+    Analytics.Lifecycle.Activity.onCreate(this);
     // https://fabric.io/downloads/gradle/ndk
     // Fabric.with(this, new Crashlytics(), new CrashlyticsNdk());
-
-    navigator = NavigationManagerV4.Builder.buildWith(this);
 
     if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
       ((CrashlyticsCrashLogger) CrashReport.getInstance()
@@ -50,23 +39,11 @@ public abstract class UIComponentActivity extends PermissionServiceActivity
     }
 
     setUpAnalytics();
-
-    if (getIntent().getExtras() != null) {
-      loadExtras(getIntent().getExtras());
-    }
-    setContentView(getContentViewId());
-    bindViews(getWindow().getDecorView().getRootView());
-    setupToolbar();
-    setupViews();
   }
 
   @Override protected void onStop() {
     super.onStop();
     Analytics.Lifecycle.Activity.onStop(this);
-  }
-
-  @Override protected void onDestroy() {
-    super.onDestroy();
   }
 
   private void setUpAnalytics() {
@@ -75,11 +52,6 @@ public abstract class UIComponentActivity extends PermissionServiceActivity
     Analytics.Dimensions.setGmsPresent(
         DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(this));
   }
-
-  /**
-   * @return the LayoutRes to be set on {@link #setContentView(int)}.
-   */
-  @LayoutRes public abstract int getContentViewId();
 
   @Override protected void onPause() {
     super.onPause();
@@ -98,9 +70,8 @@ public abstract class UIComponentActivity extends PermissionServiceActivity
     Analytics.Lifecycle.Activity.onStart(this);
   }
 
-  /**
-   * @return o nome so monitor associado a esta activity, para efeitos de Analytics.
-   */
-  protected abstract String getAnalyticsScreenName();
-
+  @Override protected void onNewIntent(Intent intent) {
+    super.onNewIntent(intent);
+    Analytics.Lifecycle.Activity.onNewIntent(this, intent);
+  }
 }

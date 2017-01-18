@@ -110,7 +110,7 @@ public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayab
           .specific(
               SendEventRequest.Body.Specific.builder().app(displayable.getPackageName()).build())
           .build(), TimelineClickEvent.OPEN_APP);
-      ((FragmentShower) context).pushFragmentV4(V8Engine.getFragmentProvider()
+      ((FragmentShower) context).pushFragment(V8Engine.getFragmentProvider()
           .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
     });
   }

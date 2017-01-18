@@ -141,7 +141,7 @@ import java.util.Locale;
 
   @Override public void onClick(View v) {
     Logger.d(TAG, "showing other version for app with id = " + appId);
-    ((FragmentShower) getContext()).pushFragmentV4(
+    ((FragmentShower) getContext()).pushFragment(
         V8Engine.getFragmentProvider().newAppViewFragment(appId, packageName, null, storeName));
   }
 }

@@ -43,7 +43,7 @@ import com.jakewharton.rxbinding.view.RxView;
     final FragmentShower fragmentShower = (FragmentShower) context;
     compositeSubscription.add(RxView.clicks(itemView).subscribe(v -> {
       Analytics.AppViewViewedFrom.addStepToList(displayable.getTag());
-      fragmentShower.pushFragmentV4(V8Engine.getFragmentProvider()
+      fragmentShower.pushFragment(V8Engine.getFragmentProvider()
           .newAppViewFragment(displayable.getPojo().getId(),
               displayable.getPojo().getPackageName()));
       Analytics.HomePageEditorsChoice.clickOnEditorsChoiceItem(getAdapterPosition(),

@@ -42,7 +42,7 @@ public class GridAdWidget extends Widget<GridAdDisplayable> {
     final FragmentShower fragmentShower = (FragmentShower) context;
     compositeSubscription.add(RxView.clicks(itemView).subscribe(v -> {
       Analytics.AppViewViewedFrom.addStepToList(displayable.getTag());
-      fragmentShower.pushFragmentV4(V8Engine.getFragmentProvider().newAppViewFragment(pojo));
+      fragmentShower.pushFragment(V8Engine.getFragmentProvider().newAppViewFragment(pojo));
     }, throwable -> CrashReport.getInstance().log(throwable)));
   }
 }

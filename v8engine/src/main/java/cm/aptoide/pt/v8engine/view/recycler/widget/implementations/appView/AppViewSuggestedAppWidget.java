@@ -45,7 +45,7 @@ public class AppViewSuggestedAppWidget extends Widget<AppViewSuggestedAppDisplay
 
     final FragmentShower fragmentShower = (FragmentShower) context;
     compositeSubscription.add(RxView.clicks(layout)
-        .subscribe(__ -> fragmentShower.pushFragmentV4(
+        .subscribe(__ -> fragmentShower.pushFragment(
             V8Engine.getFragmentProvider().newAppViewFragment(pojo))));
   }
 }

@@ -151,7 +151,7 @@ import rx.android.schedulers.AndroidSchedulers;
       Fragment fragment = V8Engine.getFragmentProvider()
           .newOtherVersionsFragment(currentApp.getName(), currentApp.getIcon(),
               currentApp.getPackageName());
-      fragmentShower.pushFragmentV4(fragment);
+      fragmentShower.pushFragment(fragment);
     });
 
     final boolean[] isSetupView = { true };
@@ -198,7 +198,7 @@ import rx.android.schedulers.AndroidSchedulers;
         //App not installed
         setDownloadBarInvisible();
         setupInstallOrBuyButton(displayable, getApp);
-        ((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(null);
+        ((AppMenuOptions) fragmentShower.getLast()).setUnInstallMenuOptionVisible(null);
         break;
       case AppViewInstallDisplayable.ACTION_DOWNGRADE:
         //downgrade
@@ -406,7 +406,7 @@ import rx.android.schedulers.AndroidSchedulers;
         // search for a trusted version
         fragment = V8Engine.getFragmentProvider().newSearchFragment(app.getName(), true);
       }
-      ((FragmentShower) context).pushFragmentV4(fragment);
+      ((FragmentShower) context).pushFragment(fragment);
     };
 
     return v -> {

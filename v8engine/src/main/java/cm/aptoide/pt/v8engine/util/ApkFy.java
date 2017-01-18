@@ -1,7 +1,7 @@
 package cm.aptoide.pt.v8engine.util;
 
-import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
@@ -19,13 +19,20 @@ import static com.google.android.gms.internal.zzs.TAG;
 
 public class ApkFy {
 
-  public void run(Activity activity) {
+  private final Context context;
+  private final Intent intent;
+
+  public ApkFy(Context context, Intent intent) {
+    this.context = context;
+    this.intent = intent;
+  }
+
+  public void run() {
     if (SecurePreferences.shouldRunApkFy()) {
-      Long aLong = extractAppId(activity);
-      if (aLong != null) {
-        activity.getIntent()
-            .putExtra(DeepLinkIntentReceiver.DeepLinksTargets.APP_VIEW_FRAGMENT, true);
-        activity.getIntent().putExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_ID_KEY, aLong);
+      Long appId = extractAppId(context);
+      if (appId != null) {
+        intent.putExtra(DeepLinkIntentReceiver.DeepLinksTargets.APP_VIEW_FRAGMENT, true);
+        intent.putExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_ID_KEY, appId);
       }
       SecurePreferences.setApkFyRun();
     }
