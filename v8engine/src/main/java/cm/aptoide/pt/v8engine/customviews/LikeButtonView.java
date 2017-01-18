@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.animations;
+package cm.aptoide.pt.v8engine.customviews;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -65,15 +65,17 @@ public class LikeButtonView extends FrameLayout implements View.OnClickListener 
 
   @Override public void setOnClickListener(OnClickListener onClickListener) {
     this.onClickListener = onClickListener;
-    super.setOnClickListener(this);
+    if (onClickListener != null) {
+      super.setOnClickListener(this);
+    } else {
+      super.setOnClickListener(null);
+    }
   }
 
   @Override public void onClick(View v) {
     if (animatorSet != null) {
       animatorSet.cancel();
     }
-
-
 
     if (!isChecked) {
       if (AptoideAccountManager.isLoggedIn()) {

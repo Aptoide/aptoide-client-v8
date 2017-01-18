@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.animations;
+package cm.aptoide.pt.v8engine.customviews;
 
 import android.animation.ArgbEvaluator;
 import android.content.Context;
@@ -10,6 +10,7 @@ import android.graphics.PorterDuffXfermode;
 import android.util.AttributeSet;
 import android.util.Property;
 import android.view.View;
+import cm.aptoide.pt.utils.AptoideUtils;
 
 public class CircleView extends View {
   public static final Property<CircleView, Float> INNER_CIRCLE_RADIUS_PROGRESS =
@@ -90,8 +91,8 @@ public class CircleView extends View {
   }
 
   private void updateCircleColor() {
-    float colorProgress = (float) Utils.clamp(outerCircleRadiusProgress, 0.5, 1);
-    colorProgress = (float) Utils.mapValueFromRangeToRange(colorProgress, 0.5f, 1f, 0f, 1f);
+    float colorProgress = (float) AptoideUtils.MathU.clamp(outerCircleRadiusProgress, 0.5, 1);
+    colorProgress = (float) AptoideUtils.MathU.mapValueFromRangeToRange(colorProgress, 0.5f, 1f, 0f, 1f);
     this.circlePaint.setColor(
         (Integer) argbEvaluator.evaluate(colorProgress, START_COLOR, END_COLOR));
   }

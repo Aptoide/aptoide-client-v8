@@ -16,7 +16,7 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.animations.LikeButtonView;
+import cm.aptoide.pt.v8engine.customviews.LikeButtonView;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewInstallDisplayable;
@@ -140,8 +140,7 @@ public class SharePreviewDialog {
           (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_name);
       TextView getApp = (TextView) view.findViewById(
           R.id.displayable_social_timeline_recommendation_get_app_button);
-      ImageLoader.load(
-          ((AppUpdateDisplayable) displayable).getAppIconUrl(), appIcon);
+      ImageLoader.load(((AppUpdateDisplayable) displayable).getAppIconUrl(), appIcon);
       appName.setText(((AppUpdateDisplayable) displayable).getAppName());
       appSubTitle.setText(AptoideUtils.StringU.getFormattedString(
           R.string.displayable_social_timeline_recommendation_atptoide_team_recommends, ""));
@@ -312,13 +311,14 @@ public class SharePreviewDialog {
 
       cardView.setRadius(8);
       cardView.setCardElevation(10);
-      like.setClickable(false);
       like.setOnClickListener(null);
+      like.setOnTouchListener(null);
       like.setVisibility(View.VISIBLE);
-      likeButtonView.setClickable(false);
       likeButtonView.setOnClickListener(null);
+      likeButtonView.setOnTouchListener(null);
       likeButtonView.setVisibility(View.VISIBLE);
       comments.setVisibility(View.VISIBLE);
+
       alertadd.setView(view).setCancelable(false);
       alertadd.setTitle(R.string.social_timeline_you_will_share);
 

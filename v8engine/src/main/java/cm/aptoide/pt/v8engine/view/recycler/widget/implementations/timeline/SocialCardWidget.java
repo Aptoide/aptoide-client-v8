@@ -13,7 +13,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.animations.LikeButtonView;
+import cm.aptoide.pt.v8engine.customviews.LikeButtonView;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.SocialCardDisplayable;
 import com.jakewharton.rxbinding.view.RxView;

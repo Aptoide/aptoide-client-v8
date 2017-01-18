@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.animations;
+package cm.aptoide.pt.v8engine.customviews;
 
 import android.animation.ArgbEvaluator;
 import android.content.Context;
@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.util.Property;
 import android.view.View;
+import cm.aptoide.pt.utils.AptoideUtils;
 
 public class DotsView extends View {
   private static final int DOTS_COUNT = 7;
@@ -113,7 +114,7 @@ public class DotsView extends View {
   private void updateInnerDotsPosition() {
     if (currentProgress < 0.3f) {
       this.currentRadius2 =
-          (float) Utils.mapValueFromRangeToRange(currentProgress, 0, 0.3f, 0.f, maxInnerDotsRadius);
+          (float) AptoideUtils.MathU.mapValueFromRangeToRange(currentProgress, 0, 0.3f, 0.f, maxInnerDotsRadius);
     } else {
       this.currentRadius2 = maxInnerDotsRadius;
     }
@@ -122,20 +123,20 @@ public class DotsView extends View {
       this.currentDotSize2 = maxDotSize;
     } else if (currentProgress < 0.5) {
       this.currentDotSize2 =
-          (float) Utils.mapValueFromRangeToRange(currentProgress, 0.2f, 0.5f, maxDotSize,
+          (float) AptoideUtils.MathU.mapValueFromRangeToRange(currentProgress, 0.2f, 0.5f, maxDotSize,
               0.3 * maxDotSize);
     } else {
       this.currentDotSize2 =
-          (float) Utils.mapValueFromRangeToRange(currentProgress, 0.5f, 1f, maxDotSize * 0.3f, 0);
+          (float) AptoideUtils.MathU.mapValueFromRangeToRange(currentProgress, 0.5f, 1f, maxDotSize * 0.3f, 0);
     }
   }
 
   private void updateOuterDotsPosition() {
     if (currentProgress < 0.3f) {
-      this.currentRadius1 = (float) Utils.mapValueFromRangeToRange(currentProgress, 0.0f, 0.3f, 0,
+      this.currentRadius1 = (float) AptoideUtils.MathU.mapValueFromRangeToRange(currentProgress, 0.0f, 0.3f, 0,
           maxOuterDotsRadius * 0.8f);
     } else {
-      this.currentRadius1 = (float) Utils.mapValueFromRangeToRange(currentProgress, 0.3f, 1f,
+      this.currentRadius1 = (float) AptoideUtils.MathU.mapValueFromRangeToRange(currentProgress, 0.3f, 1f,
           0.8f * maxOuterDotsRadius, maxOuterDotsRadius);
     }
 
@@ -143,19 +144,19 @@ public class DotsView extends View {
       this.currentDotSize1 = maxDotSize;
     } else {
       this.currentDotSize1 =
-          (float) Utils.mapValueFromRangeToRange(currentProgress, 0.7f, 1f, maxDotSize, 0);
+          (float) AptoideUtils.MathU.mapValueFromRangeToRange(currentProgress, 0.7f, 1f, maxDotSize, 0);
     }
   }
 
   private void updateDotsPaints() {
     if (currentProgress < 0.5f) {
-      float progress = (float) Utils.mapValueFromRangeToRange(currentProgress, 0f, 0.5f, 0, 1f);
+      float progress = (float) AptoideUtils.MathU.mapValueFromRangeToRange(currentProgress, 0f, 0.5f, 0, 1f);
       circlePaints[0].setColor((Integer) argbEvaluator.evaluate(progress, COLOR_1, COLOR_2));
       circlePaints[1].setColor((Integer) argbEvaluator.evaluate(progress, COLOR_2, COLOR_3));
       circlePaints[2].setColor((Integer) argbEvaluator.evaluate(progress, COLOR_3, COLOR_4));
       circlePaints[3].setColor((Integer) argbEvaluator.evaluate(progress, COLOR_4, COLOR_1));
     } else {
-      float progress = (float) Utils.mapValueFromRangeToRange(currentProgress, 0.5f, 1f, 0, 1f);
+      float progress = (float) AptoideUtils.MathU.mapValueFromRangeToRange(currentProgress, 0.5f, 1f, 0, 1f);
       circlePaints[0].setColor((Integer) argbEvaluator.evaluate(progress, COLOR_2, COLOR_3));
       circlePaints[1].setColor((Integer) argbEvaluator.evaluate(progress, COLOR_3, COLOR_4));
       circlePaints[2].setColor((Integer) argbEvaluator.evaluate(progress, COLOR_4, COLOR_1));
@@ -164,8 +165,8 @@ public class DotsView extends View {
   }
 
   private void updateDotsAlpha() {
-    float progress = (float) Utils.clamp(currentProgress, 0.6f, 1f);
-    int alpha = (int) Utils.mapValueFromRangeToRange(progress, 0.6f, 1f, 255, 0);
+    float progress = (float) AptoideUtils.MathU.clamp(currentProgress, 0.6f, 1f);
+    int alpha = (int) AptoideUtils.MathU.mapValueFromRangeToRange(progress, 0.6f, 1f, 255, 0);
     circlePaints[0].setAlpha(alpha);
     circlePaints[1].setAlpha(alpha);
     circlePaints[2].setAlpha(alpha);

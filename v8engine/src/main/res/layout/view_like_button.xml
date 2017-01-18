@@ -3,13 +3,13 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent">
 
-  <cm.aptoide.pt.v8engine.animations.DotsView
+  <cm.aptoide.pt.v8engine.customviews.DotsView
     android:id="@+id/vDotsView"
     android:layout_width="60dp"
     android:layout_height="60dp"
     android:layout_gravity="center" />
 
-  <cm.aptoide.pt.v8engine.animations.CircleView
+  <cm.aptoide.pt.v8engine.customviews.CircleView
     android:id="@+id/vCircle"
     android:layout_width="40dp"
     android:layout_height="40dp"
