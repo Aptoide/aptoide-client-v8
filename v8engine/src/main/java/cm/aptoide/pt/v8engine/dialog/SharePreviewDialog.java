@@ -117,8 +117,7 @@ public class SharePreviewDialog {
           (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_name);
       TextView getApp = (TextView) view.findViewById(
           R.id.displayable_social_timeline_recommendation_get_app_button);
-      ImageLoader.loadWithShadowCircleTransform(
-          ((RecommendationDisplayable) displayable).getAppIcon(), appIcon);
+      ImageLoader.load(((RecommendationDisplayable) displayable).getAppIcon(), appIcon);
       appName.setText(((RecommendationDisplayable) displayable).getAppName());
       appSubTitle.setText(AptoideUtils.StringU.getFormattedString(
           R.string.displayable_social_timeline_recommendation_atptoide_team_recommends, ""));
@@ -139,7 +138,7 @@ public class SharePreviewDialog {
           (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_name);
       TextView getApp = (TextView) view.findViewById(
           R.id.displayable_social_timeline_recommendation_get_app_button);
-      ImageLoader.loadWithShadowCircleTransform(
+      ImageLoader.load(
           ((AppUpdateDisplayable) displayable).getAppIconUrl(), appIcon);
       appName.setText(((AppUpdateDisplayable) displayable).getAppName());
       appSubTitle.setText(AptoideUtils.StringU.getFormattedString(
@@ -161,8 +160,7 @@ public class SharePreviewDialog {
           (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_name);
       TextView getApp = (TextView) view.findViewById(
           R.id.displayable_social_timeline_recommendation_get_app_button);
-      ImageLoader.loadWithShadowCircleTransform(((SimilarDisplayable) displayable).getAppIcon(),
-          appIcon);
+      ImageLoader.load(((SimilarDisplayable) displayable).getAppIcon(), appIcon);
       appName.setText(((SimilarDisplayable) displayable).getAppName());
       appSubTitle.setText(AptoideUtils.StringU.getFormattedString(
           R.string.displayable_social_timeline_recommendation_atptoide_team_recommends, ""));
@@ -182,7 +180,7 @@ public class SharePreviewDialog {
           (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_name);
       TextView getApp = (TextView) view.findViewById(
           R.id.displayable_social_timeline_recommendation_get_app_button);
-      ImageLoader.loadWithShadowCircleTransform(((AppViewInstallDisplayable) displayable).getPojo()
+      ImageLoader.load(((AppViewInstallDisplayable) displayable).getPojo()
           .getNodes()
           .getMeta()
           .getData()
@@ -236,8 +234,7 @@ public class SharePreviewDialog {
 
       TextView getApp = (TextView) view.findViewById(
           R.id.displayable_social_timeline_recommendation_get_app_button);
-      ImageLoader.loadWithShadowCircleTransform(
-          ((SocialRecommendationDisplayable) displayable).getAppIcon(), appIcon);
+      ImageLoader.load(((SocialRecommendationDisplayable) displayable).getAppIcon(), appIcon);
       appName.setText(((SocialRecommendationDisplayable) displayable).getAppName());
       appSubTitle.setText(AptoideUtils.StringU.getFormattedString(
           R.string.displayable_social_timeline_recommendation_atptoide_team_recommends, ""));
@@ -286,8 +283,7 @@ public class SharePreviewDialog {
           (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_name);
       TextView getApp = (TextView) view.findViewById(
           R.id.displayable_social_timeline_recommendation_get_app_button);
-      ImageLoader.loadWithShadowCircleTransform(
-          ((SocialInstallDisplayable) displayable).getAppIcon(), appIcon);
+      ImageLoader.load(((SocialInstallDisplayable) displayable).getAppIcon(), appIcon);
       appName.setText(((SocialInstallDisplayable) displayable).getAppName());
       appSubTitle.setText(AptoideUtils.StringU.getFormattedString(
           R.string.displayable_social_timeline_recommendation_atptoide_team_recommends, ""));
