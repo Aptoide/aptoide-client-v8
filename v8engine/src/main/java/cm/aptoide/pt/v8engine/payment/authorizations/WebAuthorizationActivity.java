@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.payment.authorizations;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -49,8 +50,8 @@ public class WebAuthorizationActivity extends AppCompatActivity {
       webView.setWebChromeClient(new WebChromeClient());
       webView.setWebViewClient(new WebViewClient() {
 
-        @Override public void onPageFinished(WebView view, String url) {
-          super.onPageFinished(view, url);
+        @Override public void onPageStarted(WebView view, String url, Bitmap favicon) {
+          super.onPageStarted(view, url, favicon);
           if (url.equals(resultUrl)) {
             finish();
           }
