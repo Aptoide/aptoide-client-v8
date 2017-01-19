@@ -22,6 +22,7 @@ public @EqualsAndHashCode(callSuper = false) @Data @ToString class DownloadEvent
   @Setter @Getter private String mirrorObbMain;
   @Setter @Getter private String mirrorObbPatch;
 
+
   public DownloadEvent(Action action, Origin origin, String packageName, String url, String obbUrl,
       String patchObbUrl, AppContext context, int versionCode,
       DownloadEventConverter downloadInstallEventConverter) {
