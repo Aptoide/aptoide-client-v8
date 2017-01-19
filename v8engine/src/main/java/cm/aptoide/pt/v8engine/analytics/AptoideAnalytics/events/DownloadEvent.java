@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -17,6 +18,10 @@ public @EqualsAndHashCode(callSuper = false) @Data @ToString class DownloadEvent
    * event to be sent if download was cached
    */
   @Setter private boolean downloadHadProgress;
+  @Setter @Getter private String mirrorApk;
+  @Setter @Getter private String mirrorObbMain;
+  @Setter @Getter private String mirrorObbPatch;
+
 
   public DownloadEvent(Action action, Origin origin, String packageName, String url, String obbUrl,
       String patchObbUrl, AppContext context, int versionCode,

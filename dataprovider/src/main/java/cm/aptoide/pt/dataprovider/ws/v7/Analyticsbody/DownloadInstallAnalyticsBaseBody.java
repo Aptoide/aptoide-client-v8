@@ -37,11 +37,13 @@ public class DownloadInstallAnalyticsBaseBody
   @lombok.Data public static class App {
     @JsonProperty("package") String packageName;
     String url;
+    String mirror;
   }
 
   @lombok.Data public static class Obb {
     ObbType type;
     String url;
+    String mirror;
   }
 
   @lombok.Data public static class Result {
