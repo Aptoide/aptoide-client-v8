@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 04/08/2016.
- */
-
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,9 +15,6 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Created by sithengineer on 04/05/16.
- */
 @Displayables({ AppViewSuggestedAppsDisplayable.class }) public class AppViewSuggestedAppsWidget
     extends Widget<AppViewSuggestedAppsDisplayable> {
 

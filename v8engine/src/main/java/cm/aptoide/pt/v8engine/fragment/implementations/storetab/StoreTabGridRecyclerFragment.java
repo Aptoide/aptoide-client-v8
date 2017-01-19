@@ -10,6 +10,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -38,17 +40,16 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
   protected String action;
   protected String title;
   protected String tag;
+  protected String storeTheme;
 
-  public static Fragment newInstance(Event event, String title,
-      String storeTheme, String tag) {
+  public static Fragment newInstance(Event event, String title, String storeTheme, String tag) {
     Bundle args = buildBundle(event, title, storeTheme, tag);
     Fragment fragment = StoreTabFragmentChooser.choose(event.getName());
     fragment.setArguments(args);
     return fragment;
   }
 
-  public static Fragment newInstance(Event event, String storeTheme,
-      String tag) {
+  public static Fragment newInstance(Event event, String storeTheme, String tag) {
     return newInstance(event, null, storeTheme, tag);
   }
 
@@ -110,8 +111,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
       }
 
       // TODO: 28-12-2016 neuro martelo martelo martelo
-      Observable<List<Displayable>> displayablesObservable =
-          buildDisplayables(refresh, url);
+      Observable<List<Displayable>> displayablesObservable = buildDisplayables(refresh, url);
       if (displayablesObservable != null) {
         displayablesObservable.compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW))
             .subscribe(this::setDisplayables, this::finishLoading);
@@ -128,14 +128,13 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
     }
   }
 
-  @Override public void setupToolbar() {
-    super.setupToolbar();
-    if (toolbar != null) {
-      ((AppCompatActivity) getActivity()).getSupportActionBar()
-          .setTitle(Translator.translate(title));
-      ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-      toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
-    }
+  @Override public void setupToolbarDetails(Toolbar toolbar) {
+    toolbar.setTitle(Translator.translate(title));
+    toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
+  }
+
+  @Override protected boolean displayHomeUpAsEnabled() {
+    return true;
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -166,7 +165,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
     public static final String NAME = "name";
     public static final String TITLE = "title";
     public static final String ACTION = "action";
-    public static final String STORE_THEME = GridRecyclerSwipeFragment.BundleCons.STORE_THEME;
+    public static final String STORE_THEME = "storeTheme";
     public static final String LAYOUT = "layout";
     public static final String TAG = "tag";
   }

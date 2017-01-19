@@ -2,7 +2,7 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
@@ -72,15 +72,13 @@ public class FragmentTopStores extends AptoideBaseFragment<BaseAdapter> implemen
     endlessRecyclerOnScrollListener.onLoadMore(false);
   }
 
-  @Override public void setupToolbar() {
-    super.setupToolbar();
-    if (toolbar != null) {
-      ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-      ((AppCompatActivity) getActivity()).getSupportActionBar()
-          .setTitle(R.string.top_stores_fragment_title);
-      ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-      toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
-    }
+  @Override public void setupToolbarDetails(Toolbar toolbar) {
+    toolbar.setTitle(R.string.top_stores_fragment_title);
+    toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
+  }
+
+  @Override protected boolean displayHomeUpAsEnabled() {
+    return true;
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {

@@ -15,7 +15,7 @@ import java.util.LinkedList;
  */
 
 abstract class DownloadInstallEventConverter<T extends DownloadInstallBaseEvent> {
-  public DownloadInstallAnalyticsBaseBody convert(DownloadInstallBaseEvent report,
+  public DownloadInstallAnalyticsBaseBody convert(T report,
       DownloadInstallAnalyticsBaseBody.ResultStatus status, @Nullable Throwable error) {
     DownloadInstallAnalyticsBaseBody body =
         new DownloadInstallAnalyticsBaseBody(DataProvider.getConfiguration().getAppId());
@@ -58,9 +58,12 @@ abstract class DownloadInstallEventConverter<T extends DownloadInstallBaseEvent>
     }
 
     data.setResult(result);
-    body.setData(data);
+    body.setData(convertSpecificFields(report, data));
     return body;
   }
+
+  protected abstract DownloadInstallAnalyticsBaseBody.Data convertSpecificFields(T report,
+      DownloadInstallAnalyticsBaseBody.Data data);
 
   public DownloadInstallBaseEvent.Origin getOrigin(Download download) {
     DownloadInstallBaseEvent.Origin origin;
