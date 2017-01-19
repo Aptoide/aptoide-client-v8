@@ -10,7 +10,6 @@ import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.downloadmanager.Constants;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.okhttp.UserAgentInterceptor;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -81,26 +80,27 @@ public class TokenHttpClient {
             if (response != null) {
               Headers allHeaders = response.headers();
               if (allHeaders != null) {
-                String headerValue = allHeaders.get("X-Mirror");
-                Logger.v(TAG, headerValue);
-                DownloadEvent event = (DownloadEvent) Analytics.getInstance()
-                    .get(packageName + v, DownloadEvent.class);
-                if (event != null) {
-                  if (fileType == 0) {
-                    event.setUrl(headerValue);
-                  } else if (fileType == 1) {
-                    event.setObbUrl(headerValue);
-                  } else if (fileType == 2) {
-                    event.setPatchObbUrl(headerValue);
-                  }
-                }
-                for (String s : response.headers().names()) {
-                  Logger.w(TAG, s);
-                }
+                String mirror = allHeaders.get("X-Mirror");
+                addMirrorToDownloadEvent(v, packageName, fileType, mirror);
               }
             }
             return response;
           }
         });
+  }
+
+  private void addMirrorToDownloadEvent(String v, String packageName, int fileType,
+      String headerValue) {
+    DownloadEvent event =
+        (DownloadEvent) Analytics.getInstance().get(packageName + v, DownloadEvent.class);
+    if (event != null) {
+      if (fileType == 0) {
+        event.setMirrorApk(headerValue);
+      } else if (fileType == 1) {
+        event.setMirrorObbMain(headerValue);
+      } else if (fileType == 2) {
+        event.setMirrorObbPatch(headerValue);
+      }
+    }
   }
 }
