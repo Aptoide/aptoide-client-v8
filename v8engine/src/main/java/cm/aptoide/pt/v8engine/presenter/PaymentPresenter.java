@@ -76,7 +76,7 @@ public class PaymentPresenter implements Presenter {
         .flatMap(created -> login())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(loggedIn -> showGlobalAndPaymentsLoading())
-        .flatMap(loggedIn -> Observable.merge(aptoidePay.getConfirmation(product),
+        .flatMap(loggedIn -> Observable.merge(aptoidePay.getConfirmation(product, payer.getId()),
             loadPayments().cast(PaymentConfirmation.class)))
         .observeOn(AndroidSchedulers.mainThread())
         .flatMap(paymentConfirmation -> {
@@ -121,7 +121,7 @@ public class PaymentPresenter implements Presenter {
   }
 
   private Observable<Void> loadPayments() {
-    return aptoidePay.availablePayments(product)
+    return aptoidePay.availablePayments(product, payer.getId())
         .observeOn(AndroidSchedulers.mainThread())
         .flatMap(payments -> {
           if (payments.isEmpty()) {
@@ -168,7 +168,7 @@ public class PaymentPresenter implements Presenter {
         .doOnNext(selection -> view.showGlobalLoading())
         .flatMap(paymentViewModel -> getSelectedPayment(getAllPayments(),
             paymentViewModel))
-        .<Void>flatMap(payment -> aptoidePay.authorize(payment)
+        .<Void>flatMap(payment -> aptoidePay.authorize(payment, payer.getId())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnCompleted(() -> view.hideGlobalLoading())
               .toObservable());

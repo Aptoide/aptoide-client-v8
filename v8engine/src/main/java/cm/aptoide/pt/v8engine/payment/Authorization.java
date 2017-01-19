@@ -11,11 +11,17 @@ package cm.aptoide.pt.v8engine.payment;
 public abstract class Authorization {
 
   private final int paymentId;
+  private final String payerId;
   private Status status;
 
-  public Authorization(int paymentId, Status status) {
+  public Authorization(int paymentId, String payerId, Status status) {
     this.paymentId = paymentId;
+    this.payerId = payerId;
     this.status = status;
+  }
+
+  public String getPayerId() {
+    return payerId;
   }
 
   public int getPaymentId() {

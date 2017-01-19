@@ -47,14 +47,20 @@ public class PaymentAuthorizationRepository implements Repository<Authorization,
     /* no-op */
   }
 
-  public Observable<Authorization> get(Integer paymentId) {
-    return getPaymentAuthorizations(Collections.singletonList(paymentId)).flatMapIterable(
-        authorizations -> authorizations)
+  @Override public Observable<Authorization> get(Integer id) {
+    return null;
+  }
+
+  public Observable<Authorization> getPaymentAuthorization(int paymentId, String payerId) {
+    return getPaymentAuthorizations(Collections.singletonList(paymentId), payerId)
+        .flatMapIterable(authorizations -> authorizations)
         .filter(authorization -> authorization.getPaymentId() == paymentId);
   }
 
-  public Observable<List<Authorization>> getPaymentAuthorizations(List<Integer> paymentIds) {
-    return syncAuthorizations(paymentIds).andThen(authotizationAccessor.getPaymentAuthorizations()
+  public Observable<List<Authorization>> getPaymentAuthorizations(List<Integer> paymentIds,
+      String payerId) {
+    return syncAuthorizations(paymentIds).andThen(authotizationAccessor.getPaymentAuthorizations(
+        payerId)
         .flatMap(paymentAuthorizations -> Observable.from(paymentAuthorizations)
             .map(paymentAuthorization -> authorizationFactory.convertToPaymentAuthorization(
                 paymentAuthorization))

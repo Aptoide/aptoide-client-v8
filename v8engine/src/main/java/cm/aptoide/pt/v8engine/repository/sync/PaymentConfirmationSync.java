@@ -36,6 +36,7 @@ public class PaymentConfirmationSync extends RepositorySync {
   private final NetworkOperatorManager operatorManager;
   private final PaymentConfirmationAccessor confirmationAccessor;
   private final PaymentConfirmationFactory confirmationFactory;
+
   private String paymentConfirmationId;
   private int paymentId;
 
@@ -65,20 +66,23 @@ public class PaymentConfirmationSync extends RepositorySync {
 
   @Override public void sync(SyncResult syncResult) {
     try {
+      final String accessToken = AptoideAccountManager.getAccessToken();
+      final String payerId = AptoideAccountManager.getUserEmail();
       final Single<PaymentConfirmation> serverPaymentConfirmation;
       if (paymentConfirmationId != null) {
         serverPaymentConfirmation =
-            createServerPaymentConfirmation(product, paymentConfirmationId, paymentId).andThen(
-                Single.fromCallable(
-                    () -> confirmationFactory.create(product.getId(), paymentConfirmationId,
-                        PaymentConfirmation.Status.COMPLETED)));
+            createServerPaymentConfirmation(product, paymentConfirmationId, paymentId,
+                accessToken).andThen(Single.fromCallable(
+                () -> confirmationFactory.create(product.getId(), paymentConfirmationId,
+                    PaymentConfirmation.Status.COMPLETED, payerId)));
       } else {
-        serverPaymentConfirmation = getServerPaymentConfirmation(product);
+        serverPaymentConfirmation =
+            getServerPaymentConfirmation(product, payerId, accessToken);
       }
       serverPaymentConfirmation.doOnSuccess(
           paymentConfirmation -> saveAndReschedulePendingConfirmation(paymentConfirmation,
               syncResult)).onErrorReturn(throwable -> {
-        saveAndRescheduleOnNetworkError(syncResult, throwable);
+        saveAndRescheduleOnNetworkError(syncResult, throwable, payerId);
         return null;
       }).toBlocking().value();
     } catch (RuntimeException e) {
@@ -86,13 +90,14 @@ public class PaymentConfirmationSync extends RepositorySync {
     }
   }
 
-  private void saveAndRescheduleOnNetworkError(SyncResult syncResult, Throwable throwable) {
+  private void saveAndRescheduleOnNetworkError(SyncResult syncResult, Throwable throwable,
+      String payerId) {
     if (throwable instanceof IOException) {
       rescheduleSync(syncResult);
     } else {
       confirmationAccessor.save(confirmationFactory.convertToDatabasePaymentConfirmation(
           confirmationFactory.create(product.getId(), paymentConfirmationId,
-              PaymentConfirmation.Status.SYNCING_ERROR)));
+              PaymentConfirmation.Status.SYNCING_ERROR, payerId)));
     }
   }
 
@@ -106,16 +111,17 @@ public class PaymentConfirmationSync extends RepositorySync {
   }
 
   private Completable createServerPaymentConfirmation(Product product, String paymentConfirmationId,
-      int paymentId) {
+      int paymentId, String accessToken) {
     return Single.just(product instanceof InAppBillingProduct).flatMap(isInAppBilling -> {
       if (isInAppBilling) {
         return CreatePaymentConfirmationRequest.ofInApp(product.getId(), paymentId, operatorManager,
-            ((InAppBillingProduct) product).getDeveloperPayload(),
-            AptoideAccountManager.getAccessToken(), paymentConfirmationId).observe().toSingle();
+            ((InAppBillingProduct) product).getDeveloperPayload(), accessToken,
+            paymentConfirmationId).observe().toSingle();
       }
       return CreatePaymentConfirmationRequest.ofPaidApp(product.getId(), paymentId, operatorManager,
-          ((PaidAppProduct) product).getStoreName(), AptoideAccountManager.getAccessToken(),
-          paymentConfirmationId).observe().toSingle();
+          ((PaidAppProduct) product).getStoreName(), accessToken, paymentConfirmationId)
+          .observe()
+          .toSingle();
     }).flatMapCompletable(response -> {
       if (response != null && response.isOk()) {
         return Completable.complete();
@@ -125,21 +131,23 @@ public class PaymentConfirmationSync extends RepositorySync {
     });
   }
 
-  private Single<PaymentConfirmation> getServerPaymentConfirmation(Product product) {
+  private Single<PaymentConfirmation> getServerPaymentConfirmation(Product product, String payerId,
+      String accessToken) {
     return Single.just(product instanceof InAppBillingProduct).flatMap(isInAppBilling -> {
       if (isInAppBilling) {
         return GetPaymentConfirmationRequest.of(product.getId(), operatorManager,
-            ((InAppBillingProduct) product).getApiVersion(), AptoideAccountManager.getAccessToken())
+            ((InAppBillingProduct) product).getApiVersion(), accessToken)
             .observe()
             .cast(PaymentConfirmationResponse.class)
             .toSingle();
       }
-      return GetPaymentConfirmationRequest.of(product.getId(), operatorManager,
-          AptoideAccountManager.getAccessToken()).observe().toSingle();
+      return GetPaymentConfirmationRequest.of(product.getId(), operatorManager, accessToken)
+          .observe()
+          .toSingle();
     }).flatMap(response -> {
       if (response != null && response.isOk()) {
         return Single.just(
-            confirmationFactory.convertToPaymentConfirmation(product.getId(), response));
+            confirmationFactory.convertToPaymentConfirmation(product.getId(), response, payerId));
       }
       return Single.error(new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
     });
