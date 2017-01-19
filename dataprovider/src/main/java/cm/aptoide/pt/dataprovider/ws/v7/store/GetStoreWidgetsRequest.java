@@ -38,7 +38,7 @@ import rx.Observable;
   }
 
   public static GetStoreWidgetsRequest ofAction(String url, StoreCredentials storeCredentials,
-      String accessToken, String email, String aptoideClientUUID) {
+      String accessToken, String aptoideClientUUID) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
     final Body body = new Body(storeCredentials, WidgetsArgs.createDefault());
@@ -48,7 +48,7 @@ import rx.Observable;
   }
 
   public static GetStoreWidgetsRequest ofActionFirstInstall(String url, StoreCredentials storeCredentials,
-      String accessToken, String email, String storeName, String aptoideClientUUID) {
+      String accessToken, String storeName, String aptoideClientUUID) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
     final Body body = new Body(storeCredentials, WidgetsArgs.createDefault(), StoreContext.first_install, "response", storeName);
