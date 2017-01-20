@@ -5,9 +5,6 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.CommentsDisplayableGroup;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.DefaultDisplayableGroup;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.DisplayableGroupWithMargin;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.ProgressBarDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewCommentsDisplayable;
@@ -76,10 +73,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.StoreLatestAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.VideoDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
-import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.CommentsWidgetGroup;
-import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.DefaultWidgetGroup;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.EmptyWidget;
-import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.WidgetGroupWithMargin;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewCommentsWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewDescriptionWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewDeveloperWidget;
@@ -191,14 +185,6 @@ public class DisplayableWidgetMapping {
     // empty widget
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(EmptyWidget.class, EmptyDisplayable.class));
-
-    // Group
-    displayableWidgetMappings.add(
-        new DisplayableWidgetMapping(DefaultWidgetGroup.class, DefaultDisplayableGroup.class));
-    displayableWidgetMappings.add(new DisplayableWidgetMapping(WidgetGroupWithMargin.class,
-        DisplayableGroupWithMargin.class));
-    displayableWidgetMappings.add(
-        new DisplayableWidgetMapping(CommentsWidgetGroup.class, CommentsDisplayableGroup.class));
 
     // common widgets / displayables
     displayableWidgetMappings.add(

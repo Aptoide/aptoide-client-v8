@@ -18,14 +18,12 @@ public abstract class AptoideProduct implements Product, Parcelable {
   private final String icon;
   private final String title;
   private final String description;
-  private final String price;
 
-  public AptoideProduct(int id, String icon, String title, String description, String price) {
+  public AptoideProduct(int id, String icon, String title, String description) {
     this.id = id;
     this.icon = icon;
     this.title = title;
     this.description = description;
-    this.price = price;
   }
 
   protected AptoideProduct(Parcel in) {
@@ -33,7 +31,6 @@ public abstract class AptoideProduct implements Product, Parcelable {
     icon = in.readString();
     title = in.readString();
     description = in.readString();
-    price = in.readString();
   }
 
   @Override public int getId() {
@@ -52,10 +49,6 @@ public abstract class AptoideProduct implements Product, Parcelable {
     return description;
   }
 
-  @Override public String getPriceDescription() {
-    return price;
-  }
-
   @Override public int describeContents() {
     return 0;
   }
@@ -65,6 +58,5 @@ public abstract class AptoideProduct implements Product, Parcelable {
     dest.writeString(icon);
     dest.writeString(title);
     dest.writeString(description);
-    dest.writeString(price);
   }
 }

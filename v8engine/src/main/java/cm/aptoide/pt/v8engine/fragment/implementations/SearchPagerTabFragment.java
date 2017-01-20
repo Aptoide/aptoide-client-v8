@@ -23,7 +23,6 @@ import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragmentWithDecorator;
 import cm.aptoide.pt.v8engine.repository.AdsRepository;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.DefaultDisplayableGroup;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SearchAdDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SearchDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
@@ -78,7 +77,7 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
           displayables.add(new SearchDisplayable(searchAppsApp, callback));
         });
 
-        addDisplayable(new DefaultDisplayableGroup(displayables));
+        addDisplayables(displayables);
       };
 
   public static SearchPagerTabFragment newInstance(String query, boolean subscribedStores,
@@ -134,7 +133,7 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
           .filter(minimalAd -> minimalAd != null)
           .subscribe(minimalAd -> {
             refreshed = true;
-            addDisplayable(0, new DefaultDisplayableGroup(new SearchAdDisplayable(minimalAd)));
+            addDisplayable(0, new SearchAdDisplayable(minimalAd));
           });
 
       recyclerView.clearOnScrollListeners();

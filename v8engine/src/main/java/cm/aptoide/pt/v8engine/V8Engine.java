@@ -186,7 +186,7 @@ public abstract class V8Engine extends DataProvider {
     if (SecurePreferences.isFirstRun()) {
       createShortCut();
       PreferenceManager.setDefaultValues(this, R.xml.settings, false);
-      if (AptoideAccountManager.isLoggedIn()) {
+      if (AptoideAccountManager.isLoggedIn() && ManagerPreferences.isFirstRunV7()) {
         AptoideAccountManager.removeLocalAccount();
       }
       loadInstalledApps().doOnNext(o -> {

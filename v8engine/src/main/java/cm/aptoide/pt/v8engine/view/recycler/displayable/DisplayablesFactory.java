@@ -30,8 +30,6 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.DefaultDisplayableGroup;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.DisplayableGroupWithMargin;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CreateStoreDisplayable;
@@ -92,30 +90,38 @@ public class DisplayablesFactory {
           case ADS:
             Displayable ads = getAds(wsWidget);
             if (ads != null) {
+              // Header hammered
+              LinkedList<GetStoreWidgets.WSWidget.Action> actions = new LinkedList<>();
+              actions.add(new GetStoreWidgets.WSWidget.Action().setEvent(
+                  new Event().setName(Event.Name.getAds)));
+              wsWidget.setActions(actions);
+              StoreGridHeaderDisplayable storeGridHeaderDisplayable =
+                  new StoreGridHeaderDisplayable(wsWidget, null, wsWidget.getTag());
+              displayables.add(storeGridHeaderDisplayable);
+
               displayables.add(ads);
             }
             break;
           case STORE_META:
-            displayables.add(new DefaultDisplayableGroup(
-                new GridStoreMetaDisplayable((GetStoreMeta) wsWidget.getViewObject())));
+            displayables.add(new GridStoreMetaDisplayable((GetStoreMeta) wsWidget.getViewObject()));
             break;
           case REVIEWS_GROUP:
-            displayables.add(createReviewsGroupDisplayables(wsWidget));
+            displayables.addAll(createReviewsGroupDisplayables(wsWidget));
             break;
           case MY_STORE_META:
-            displayables.add(createMyStoreDisplayables(wsWidget.getViewObject()));
+            displayables.addAll(createMyStoreDisplayables(wsWidget.getViewObject()));
             break;
           case STORES_RECOMMENDED:
             displayables.add(createRecommendedStores(wsWidget, storeTheme, storeRepository));
             break;
           case COMMENTS_GROUP:
-            displayables.add(createCommentsGroup(wsWidget));
+            displayables.addAll(createCommentsGroup(wsWidget));
             break;
           case APP_META:
             GetStoreWidgets.WSWidget.Data dataObj = wsWidget.getData();
             String message = dataObj.getMessage();
-            displayables.add(new DefaultDisplayableGroup(new OfficialAppDisplayable(
-                new Pair<>(message, (GetApp) wsWidget.getViewObject()))));
+            displayables.add(
+                new OfficialAppDisplayable(new Pair<>(message, (GetApp) wsWidget.getViewObject())));
             break;
         }
       }
@@ -124,13 +130,13 @@ public class DisplayablesFactory {
     return displayables;
   }
 
-  private static Displayable createCommentsGroup(GetStoreWidgets.WSWidget wsWidget) {
+  private static List<Displayable> createCommentsGroup(GetStoreWidgets.WSWidget wsWidget) {
     List<Displayable> displayables = new LinkedList<>();
 
     Pair<ListComments, BaseRequestWithStore.StoreCredentials> data =
         (Pair<ListComments, BaseRequestWithStore.StoreCredentials>) wsWidget.getViewObject();
     ListComments comments = data.first;
-    displayables.add(new DefaultDisplayableGroup(new StoreGridHeaderDisplayable(wsWidget)));
+    displayables.add(new StoreGridHeaderDisplayable(wsWidget));
     if (comments != null
         && comments.getDatalist() != null
         && comments.getDatalist().getList().size() > 0) {
@@ -142,10 +148,10 @@ public class DisplayablesFactory {
           StoreThemeEnum.APTOIDE_STORE_THEME_DEFAULT));
     }
 
-    return new DisplayableGroupWithMargin(displayables);
+    return displayables;
   }
 
-  private static DefaultDisplayableGroup createReviewsGroupDisplayables(
+  private static List<Displayable> createReviewsGroupDisplayables(
       GetStoreWidgets.WSWidget wsWidget) {
     List<Displayable> displayables = new LinkedList<>();
 
@@ -157,10 +163,10 @@ public class DisplayablesFactory {
       displayables.add(createReviewsDisplayables(reviewsList));
     }
 
-    return new DefaultDisplayableGroup(displayables);
+    return displayables;
   }
 
-  private static Displayable createMyStoreDisplayables(Object viewObject) {
+  private static List<Displayable> createMyStoreDisplayables(Object viewObject) {
     LinkedList<Displayable> displayables = new LinkedList<>();
     if (viewObject instanceof GetStoreMeta && ((GetStoreMeta) viewObject).getData() != null) {
       displayables.add(new MyStoreDisplayable(((GetStoreMeta) viewObject)));
@@ -177,7 +183,7 @@ public class DisplayablesFactory {
         displayables.add(new MyStoreDisplayable(meta));
       }
     }
-    return new DefaultDisplayableGroup(displayables);
+    return displayables;
   }
 
   private static GetStoreMeta convertUserInfoStore(CheckUserCredentialsJson userInfo) {
@@ -213,10 +219,10 @@ public class DisplayablesFactory {
       }
     }
 
-    return new DefaultDisplayableGroup(displayables);
+    return new DisplayableGroup(displayables);
   }
 
-  private static DefaultDisplayableGroup createReviewsDisplayables(
+  private static Displayable createReviewsDisplayables(
       ListFullReviews listFullReviews) {
     List<FullReview> reviews = listFullReviews.getDatalist().getList();
     final List<Displayable> displayables = new ArrayList<>(reviews.size());
@@ -224,7 +230,7 @@ public class DisplayablesFactory {
       displayables.add(new RowReviewDisplayable(reviews.get(i)));
     }
 
-    return new DefaultDisplayableGroup(displayables);
+    return new DisplayableGroup(displayables);
   }
 
   private static Displayable getAds(GetStoreWidgets.WSWidget wsWidget) {
@@ -232,22 +238,12 @@ public class DisplayablesFactory {
     if (wsWidget.getViewObject() != null) {
       List<GetAdsResponse.Ad> ads = getAdsResponse.getAds();
       List<Displayable> tmp = new ArrayList<>(ads.size());
-
-      // Header hammered
-      LinkedList<GetStoreWidgets.WSWidget.Action> actions = new LinkedList<>();
-      actions.add(
-          new GetStoreWidgets.WSWidget.Action().setEvent(new Event().setName(Event.Name.getAds)));
-      wsWidget.setActions(actions);
-      StoreGridHeaderDisplayable storeGridHeaderDisplayable =
-          new StoreGridHeaderDisplayable(wsWidget, null, wsWidget.getTag());
-      tmp.add(storeGridHeaderDisplayable);
-
       for (GetAdsResponse.Ad ad : ads) {
 
         GridAdDisplayable diplayable = new GridAdDisplayable(MinimalAd.from(ad), wsWidget.getTag());
         tmp.add(diplayable);
       }
-      return new DefaultDisplayableGroup(tmp);
+      return new DisplayableGroup(tmp);
     }
 
     return null;
@@ -314,7 +310,7 @@ public class DisplayablesFactory {
         displayables.add(diplayable);
       }
     }
-    return new DefaultDisplayableGroup(displayables);
+    return new DisplayableGroup(displayables);
   }
 
   private static Displayable getStores(GetStoreWidgets.WSWidget wsWidget, String storeTheme) {
@@ -331,12 +327,12 @@ public class DisplayablesFactory {
       GridStoreDisplayable diplayable = new GridStoreDisplayable(store);
       tmp.add(diplayable);
     }
-    return new DefaultDisplayableGroup(tmp);
+    return new DisplayableGroup(tmp);
   }
 
   private static Displayable getMyStores(GetStoreWidgets.WSWidget wsWidget,
       StoreRepository storeRepository, String storeTheme) {
-    return new DefaultDisplayableGroup(loadLocalSubscribedStores(storeRepository).map(stores -> {
+    return new DisplayableGroup(loadLocalSubscribedStores(storeRepository).map(stores -> {
       List<Displayable> tmp = new ArrayList<>(stores.size());
       int maxStoresToShow = stores.size();
       if (wsWidget.getViewObject() instanceof ListStores) {
@@ -400,6 +396,6 @@ public class DisplayablesFactory {
       }
       tmp.add(displayablePojo);
     }
-    return new DefaultDisplayableGroup(tmp);
+    return new DisplayableGroup(tmp);
   }
 }

@@ -1,10 +1,7 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 29/07/2016.
- */
-
 package cm.aptoide.pt.v8engine.fragment;
 
+import android.support.annotation.CallSuper;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -15,7 +12,38 @@ import cm.aptoide.pt.v8engine.R;
  */
 public abstract class BaseToolbarFragment extends SupportV4BaseFragment {
 
-  protected Toolbar toolbar;
+  private Toolbar toolbar;
+
+  protected Toolbar getToolbar() {
+    return toolbar;
+  }
+
+  protected boolean hasToolbar() {
+    return toolbar != null;
+  }
+
+  protected boolean displayHomeUpAsEnabled() {
+    return false;
+  }
+
+  protected void setupToolbarDetails(Toolbar toolbar) {
+    // does nothing. placeholder method.
+  }
+
+  /**
+   * Setup the toolbar, if present.
+   */
+  @CallSuper @Override public void setupToolbar() {
+    if (hasToolbar()) {
+      ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+      boolean showUp = displayHomeUpAsEnabled();
+
+      ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+      actionBar.setDisplayHomeAsUpEnabled(showUp);
+
+      setupToolbarDetails(toolbar);
+    }
+  }
 
   @Override public void onDestroyView() {
     super.onDestroyView();
@@ -24,15 +52,6 @@ public abstract class BaseToolbarFragment extends SupportV4BaseFragment {
 
   @Override public void setupViews() {
     setupToolbar();
-  }
-
-  /**
-   * Setup the toolbar, if present.
-   */
-  public void setupToolbar() {
-    if (toolbar != null) {
-      ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-    }
   }
 
   @Override public void bindViews(View view) {

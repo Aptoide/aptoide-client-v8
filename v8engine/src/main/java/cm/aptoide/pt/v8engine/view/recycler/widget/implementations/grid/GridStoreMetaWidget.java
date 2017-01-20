@@ -202,15 +202,19 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
 
     // if there is no channels nor description, hide that area
     if (socialChannels == null || socialChannels.isEmpty()) {
+      if (TextUtils.isEmpty(store.getAppearance().getDescription())) {
+        descriptionContentLayout.setVisibility(View.GONE);
+      }
       this.socialChannelsLayout.setVisibility(View.GONE);
     }
 
-    if (TextUtils.isEmpty(store.getAppearance().getDescription())) {
-      description.setText("Add a description to your store by editing it.");
-    }
 
     if (!TextUtils.isEmpty(AccountManagerPreferences.getUserRepo())) {
       if (AccountManagerPreferences.getUserRepo().equals(store.getName())) {
+        descriptionContentLayout.setVisibility(View.VISIBLE);
+        if (TextUtils.isEmpty(store.getAppearance().getDescription())) {
+          description.setText("Add a description to your store by editing it.");
+        }
         editStoreButton.setVisibility(View.VISIBLE);
         compositeSubscription.add(RxView.clicks(editStoreButton)
             .subscribe(click -> editStore(store.getId(), store.getAppearance().getTheme(),

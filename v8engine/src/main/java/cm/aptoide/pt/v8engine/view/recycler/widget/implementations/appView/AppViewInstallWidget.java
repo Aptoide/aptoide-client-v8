@@ -228,8 +228,12 @@ import rx.android.schedulers.AndroidSchedulers;
 
     //check if the app is paid
     if (app.isPaid() && !app.getPay().isPaid()) {
-      actionButton.setText(
-          getContext().getString(R.string.buy) + " (" + app.getPay().getPriceDescription() + ")");
+      actionButton.setText(getContext().getString(R.string.buy)
+          + " ("
+          + app.getPay().getSymbol()
+          + " "
+          + app.getPay().getPrice()
+          + ")");
       actionButton.setOnClickListener(v -> displayable.buyApp(getContext(), app));
       AppBoughtReceiver receiver = new AppBoughtReceiver() {
         @Override public void appBought(long appId, String path) {
