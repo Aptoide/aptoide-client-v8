@@ -19,10 +19,10 @@ import android.content.pm.PermissionInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
-import android.net.Network;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Looper;
@@ -31,6 +31,7 @@ import android.support.annotation.IntegerRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
@@ -41,8 +42,8 @@ import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import cm.aptoide.pt.actions.AptoideClientUUID;
 import cm.aptoide.pt.actions.UserData;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.permissions.ApkPermission;
 import java.io.BufferedReader;
@@ -81,6 +82,7 @@ import java.util.UnknownFormatConversionException;
 import java.util.regex.Pattern;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import rx.Observable;
@@ -633,14 +635,16 @@ public class AptoideUtils {
           "kMBTPE".charAt(exp - 1));
     }
 
-    public static String withBinarySuffix(long bytes) {
+    public static String formatBytesToBits(long bytes, boolean speed) {
+      bytes *= 8;
       int unit = 1024;
       if (bytes < unit) {
         return bytes + " B";
       }
       int exp = (int) (Math.log(bytes) / Math.log(unit));
       String pre = ("KMGTPE").charAt(exp - 1) + "";
-      return String.format(Locale.ENGLISH, "%.1f %sb", bytes / Math.pow(unit, exp), pre);
+      String string = String.format(Locale.ENGLISH, "%.1f %sb", bytes / Math.pow(unit, exp), pre);
+      return speed ? string + "ps" : string;
     }
 
     /**
@@ -648,14 +652,15 @@ public class AptoideUtils {
      * @param bytes file size
      * @return formatted string for file file showing a Human perceptible file size
      */
-    public static String formatBytes(long bytes) {
+    public static String formatBytes(long bytes, boolean speed) {
       int unit = 1024;
       if (bytes < unit) {
         return bytes + " B";
       }
       int exp = (int) (Math.log(bytes) / Math.log(unit));
       String pre = ("KMGTPE").charAt(exp - 1) + "";
-      return String.format(Locale.ENGLISH, "%.1f %sB", bytes / Math.pow(unit, exp), pre);
+      String string = String.format(Locale.ENGLISH, "%.1f %sB", bytes / Math.pow(unit, exp), pre);
+      return speed ? string + "/s" : string;
     }
 
     public static String getResString(@StringRes int stringResId) {
@@ -852,6 +857,12 @@ public class AptoideUtils {
         }
       }
       return "unknown";
+    }
+
+    public static String getCarrierName() {
+      TelephonyManager manager =
+          (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+      return manager.getNetworkOperatorName();
     }
 
     public static File readLogs(String mPath, String fileName) {
@@ -1537,6 +1548,47 @@ public class AptoideUtils {
 
       return originalUrl;
     }
+
+    public static List<ImageSizeErrors> checkIconSizeProperties(String avatarPath, int minHeight, int maxHeight,
+        int minWidth, int maxWidth, int maxImageSize) {
+      ImageInfo imageInfo = getImageInfo(avatarPath);
+      List<ImageSizeErrors> errors = new LinkedList<>();
+      if (imageInfo.getHeight() < minHeight) {
+        errors.add(ImageSizeErrors.MIN_HEIGHT);
+      }
+      if (imageInfo.getWidth() < minWidth) {
+        errors.add(ImageSizeErrors.MIN_WIDTH);
+      }
+      if (imageInfo.getHeight() > maxHeight) {
+        errors.add(ImageSizeErrors.MAX_HEIGHT);
+      }
+      if (imageInfo.getWidth() > maxWidth) {
+        errors.add(ImageSizeErrors.MAX_WIDTH);
+      }
+      if (imageInfo.getSize() > maxImageSize) {
+        errors.add(ImageSizeErrors.MAX_IMAGE_SIZE);
+      }
+      return errors;
+    }
+
+    public static ImageInfo getImageInfo(String imagePath) {
+      ImageInfo imageInfo = new ImageInfo();
+      Bitmap image = BitmapFactory.decodeFile(imagePath);
+      imageInfo.setWidth(image.getWidth());
+      imageInfo.setHeight(image.getHeight());
+      imageInfo.setSize(new File(imagePath).length());
+
+      return imageInfo;
+    }
+
+    public enum ImageSizeErrors {
+      MIN_HEIGHT, MAX_HEIGHT, MIN_WIDTH, MAX_WIDTH, MAX_IMAGE_SIZE
+    }
+
+    @Data public static class ImageInfo {
+      int height, width;
+      long size;
+    }
   }
 
   public static class Benchmarking {
@@ -1605,37 +1657,37 @@ public class AptoideUtils {
    */
   public static class NetworkUtils {
 
-    public static boolean isGeneralDownloadPermitted(Context context, boolean wifiAllowed,
-        boolean mobileAllowed) {
-      final boolean wifiAvailable = isAvailable(context, TYPE_WIFI);
-      final boolean mobileAvailable = isAvailable(context, TYPE_MOBILE);
-      return !(wifiAvailable && !wifiAllowed) && !(mobileAvailable && !mobileAllowed);
-    }
+    //public static boolean isGeneralDownloadPermitted(Context context, boolean wifiAllowed,
+    //    boolean mobileAllowed) {
+    //  final boolean wifiAvailable = isAvailable(context, TYPE_WIFI);
+    //  final boolean mobileAvailable = isAvailable(context, TYPE_MOBILE);
+    //  return !(wifiAvailable && !wifiAllowed) && !(mobileAvailable && !mobileAllowed);
+    //}
 
-    public static boolean isAvailable(Context context, int networkType) {
-      final ConnectivityManager manager =
-          (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-      return Build.VERSION.SDK_INT < 21 ? isAvailableSdk1(manager, networkType)
-          : isAvailableSdk21(manager, networkType);
-    }
+    //public static boolean isAvailable(Context context, int networkType) {
+    //  final ConnectivityManager manager =
+    //      (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+    //  return Build.VERSION.SDK_INT < 21 ? isAvailableSdk1(manager, networkType)
+    //      : isAvailableSdk21(manager, networkType);
+    //}
 
-    private static boolean isAvailableSdk1(final ConnectivityManager manager,
-        final int networkType) {
-      final NetworkInfo info = manager.getActiveNetworkInfo();
-      return info != null && info.getType() == networkType;
-    }
+    //private static boolean isAvailableSdk1(final ConnectivityManager manager,
+    //    final int networkType) {
+    //  final NetworkInfo info = manager.getActiveNetworkInfo();
+    //  return info != null && info.getType() == networkType;
+    //}
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private static boolean isAvailableSdk21(final ConnectivityManager manager,
-        final int networkType) {
-      for (final Network network : manager.getAllNetworks()) {
-        final NetworkInfo info = manager.getNetworkInfo(network);
-        if (info != null && info.isConnected() && info.getType() == networkType) {
-          return true;
-        }
-      }
-      return false;
-    }
+    //@TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    //private static boolean isAvailableSdk21(final ConnectivityManager manager,
+    //    final int networkType) {
+    //  for (final Network network : manager.getAllNetworks()) {
+    //    final NetworkInfo info = manager.getNetworkInfo(network);
+    //    if (info != null && info.isConnected() && info.getType() == networkType) {
+    //      return true;
+    //    }
+    //  }
+    //  return false;
+    //}
 
     public static String getDefaultUserAgent(AptoideClientUUID aptoideClientUUID, UserData userData,
         String vername, String oemid) {

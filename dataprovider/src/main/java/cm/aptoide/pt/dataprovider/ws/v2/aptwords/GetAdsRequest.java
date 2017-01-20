@@ -11,8 +11,7 @@ import cm.aptoide.pt.dataprovider.util.referrer.ReferrerUtils;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Type;
-import cm.aptoide.pt.networkclient.okhttp.UserAgentGenerator;
-import cm.aptoide.pt.networkclient.okhttp.UserAgentInterceptor;
+import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
@@ -20,6 +19,8 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 import okhttp3.OkHttpClient;
 import rx.Observable;
@@ -30,13 +31,9 @@ import rx.Observable;
 @Data @Accessors(chain = true) @EqualsAndHashCode(callSuper = true) public class GetAdsRequest
     extends Aptwords<GetAdsResponse> {
 
-  private static OkHttpClient client = new OkHttpClient.Builder()
-      .addInterceptor(new UserAgentInterceptor(new UserAgentGenerator() {
-        @Override public String generateUserAgent() {
-          return SecurePreferences.getUserAgent();
-        }
-      }))
-      .build();
+  private static final OkHttpClient client =
+      OkHttpClientFactory.newClient(SecurePreferences::getUserAgent, isDebug());
+  @Getter @Setter private static String forcedCountry = null;
   private final String aptoideClientUUID;
   private final boolean googlePlayServicesAvailable;
   private final String oemid;
@@ -48,32 +45,37 @@ import rx.Observable;
   private String repo;
   private String categories;
   private String excludedNetworks;
+  private boolean mature;
 
-  private GetAdsRequest(String aptoideClientUUID, boolean googlePlayServicesAvailable,
-      String oemid) {
+  private GetAdsRequest(String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid,
+      boolean mature) {
     super(client);
     this.aptoideClientUUID = aptoideClientUUID;
     this.googlePlayServicesAvailable = googlePlayServicesAvailable;
     this.oemid = oemid;
+    this.mature = mature;
   }
 
   public static GetAdsRequest of(Location location, String keyword, Integer limit,
-      String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid) {
-    return new GetAdsRequest(aptoideClientUUID, googlePlayServicesAvailable, oemid).setLocation(
+      String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid, boolean mature) {
+    return new GetAdsRequest(aptoideClientUUID, googlePlayServicesAvailable, oemid,
+        mature).setLocation(
         location)
         .setKeyword(keyword)
         .setLimit(limit);
   }
 
   private static GetAdsRequest of(Location location, Integer limit, String aptoideClientUUID,
-      boolean googlePlayServicesAvailable, String oemid) {
-    return of(location, "__NULL__", limit, aptoideClientUUID, googlePlayServicesAvailable, oemid);
+      boolean googlePlayServicesAvailable, String oemid, boolean mature) {
+    return of(location, "__NULL__", limit, aptoideClientUUID, googlePlayServicesAvailable, oemid,
+        mature);
   }
 
   private static GetAdsRequest ofPackageName(Location location, String packageName,
-      String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid) {
+      String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid, boolean mature) {
     GetAdsRequest getAdsRequest =
-        of(location, 1, aptoideClientUUID, googlePlayServicesAvailable, oemid).setPackageName(
+        of(location, 1, aptoideClientUUID, googlePlayServicesAvailable, oemid,
+            mature).setPackageName(
             packageName);
 
     // Add excluded networks
@@ -86,23 +88,23 @@ import rx.Observable;
   }
 
   public static GetAdsRequest ofHomepage(String aptoideClientUUID,
-      boolean googlePlayServicesAvailable, String oemid) {
+      boolean googlePlayServicesAvailable, String oemid, boolean mature) {
     // TODO: 09-06-2016 neuro limit based on max colums
     return of(Location.homepage, Type.ADS.getPerLineCount(), aptoideClientUUID,
-        googlePlayServicesAvailable, oemid);
+        googlePlayServicesAvailable, oemid, mature);
   }
 
   public static GetAdsRequest ofHomepageMore(String aptoideClientUUID,
-      boolean googlePlayServicesAvailable, String oemid) {
+      boolean googlePlayServicesAvailable, String oemid, boolean mature) {
     // TODO: 09-06-2016 neuro limit based on max colums
-    return of(Location.homepage, 50, aptoideClientUUID, googlePlayServicesAvailable, oemid);
+    return of(Location.homepage, 50, aptoideClientUUID, googlePlayServicesAvailable, oemid, mature);
   }
 
   public static GetAdsRequest ofAppviewOrganic(String packageName, String storeName,
-      String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid) {
+      String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid, boolean mature) {
 
     GetAdsRequest getAdsRequest = ofPackageName(Location.appview, packageName, aptoideClientUUID,
-        googlePlayServicesAvailable, oemid);
+        googlePlayServicesAvailable, oemid, mature);
 
     getAdsRequest.setRepo(storeName);
 
@@ -110,10 +112,11 @@ import rx.Observable;
   }
 
   public static GetAdsRequest ofAppviewSuggested(List<String> keywords, String aptoideClientUUID,
-      boolean googlePlayServicesAvailable, String excludedPackage, String oemid) {
+      boolean googlePlayServicesAvailable, String excludedPackage, String oemid, boolean mature) {
 
     GetAdsRequest getAdsRequest =
-        of(Location.middleappview, 3, aptoideClientUUID, googlePlayServicesAvailable, oemid);
+        of(Location.middleappview, 3, aptoideClientUUID, googlePlayServicesAvailable, oemid,
+            mature);
 
     getAdsRequest.setExcludedPackage(excludedPackage)
         .setKeyword(AptoideUtils.StringU.join(keywords, ",") + "," + "__null__");
@@ -122,20 +125,21 @@ import rx.Observable;
   }
 
   public static GetAdsRequest ofSearch(String query, String aptoideClientUUID,
-      boolean googlePlayServicesAvailable, String oemid) {
-    return of(Location.search, query, 1, aptoideClientUUID, googlePlayServicesAvailable, oemid);
+      boolean googlePlayServicesAvailable, String oemid, boolean mature) {
+    return of(Location.search, query, 1, aptoideClientUUID, googlePlayServicesAvailable, oemid,
+        mature);
   }
 
   public static GetAdsRequest ofSecondInstall(String packageName, String aptoideClientUUID,
-      boolean googlePlayServicesAvailable, String oemid) {
+      boolean googlePlayServicesAvailable, String oemid, boolean mature) {
     return ofPackageName(Location.secondinstall, packageName, aptoideClientUUID,
-        googlePlayServicesAvailable, oemid);
+        googlePlayServicesAvailable, oemid, mature);
   }
 
   public static GetAdsRequest ofSecondTry(String packageName, String aptoideClientUUID,
-      boolean googlePlayServicesAvailable, String oemid) {
+      boolean googlePlayServicesAvailable, String oemid, boolean mature) {
     return ofPackageName(Location.secondtry, packageName, aptoideClientUUID,
-        googlePlayServicesAvailable, oemid);
+        googlePlayServicesAvailable, oemid, mature);
   }
 
   @Override protected Observable<GetAdsResponse> loadDataFromNetwork(Interfaces interfaces,
@@ -147,11 +151,13 @@ import rx.Observable;
     parameters.put("lang", Api.LANG);
     parameters.put("cpuid", aptoideClientUUID);
     parameters.put("aptvercode", Integer.toString(AptoideUtils.Core.getVerCode()));
-    parameters.put("location", "native-aptoide:" + location);
+    parameters.put("location", location.toString());
     parameters.put("type", "1-3");
     parameters.put("partners", "1-3,5-10");
     parameters.put("keywords", keyword);
     parameters.put("oem_id", oemid);
+    parameters.put("country", forcedCountry);
+
     if (ManagerPreferences.isDebug()) {
       String forceCountry = ManagerPreferences.getForceCountry();
       if (!TextUtils.isEmpty(forceCountry)) {
@@ -165,7 +171,7 @@ import rx.Observable;
     parameters.put("excluded_pkg", getExcludedPackages());
 
     parameters.put("limit", String.valueOf(limit));
-    parameters.put("get_mature", Integer.toString(SecurePreferences.getMatureSwitch()));
+    parameters.put("get_mature", Integer.toString(mature ? 1 : 0));
     parameters.put("app_pkg", packageName);
     parameters.put("app_store", repo);
     parameters.put("filter_pkg", "true");
@@ -201,12 +207,23 @@ import rx.Observable;
   }
 
   public enum Location {
-    homepage,
-    appview,
-    middleappview,
-    search,
-    secondinstall,
-    secondtry,
-    aptoidesdk
+    homepage("native-aptoide:homepage"),
+    appview("native-aptoide:appview"),
+    middleappview("native-aptoide:middleappview"),
+    search("native-aptoide:search"),
+    secondinstall("native-aptoide:secondinstall"),
+    secondtry("native-aptoide:secondtry"),
+    aptoidesdk("sdk-aptoide:generic"),
+    firstinstall("native-aptoide:firstinstall");
+
+    private final String value;
+
+    Location(String value) {
+      this.value = value;
+    }
+
+    @Override public String toString() {
+      return value;
+    }
   }
 }

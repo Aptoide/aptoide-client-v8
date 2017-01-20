@@ -20,6 +20,12 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEvent;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEventConverter;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadInstallBaseEvent;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEvent;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEventConverter;
 import cm.aptoide.pt.v8engine.repository.SocialRepository;
 import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
@@ -51,16 +57,20 @@ public class AppUpdateDisplayable extends CardDisplayable {
   private PermissionManager permissionManager;
   private TimelineMetricsManager timelineMetricsManager;
   private SocialRepository socialRepository;
+  private DownloadEventConverter downloadConverter;
+  private InstallEventConverter installConverter;
+  private Analytics analytics;
 
   public AppUpdateDisplayable() {
   }
 
-  public AppUpdateDisplayable(AppUpdate appUpdate, String appIconUrl,
-      String storeIconUrl, String storeName, Date dateUpdated, String appVersionName,
-      SpannableFactory spannableFactory, String appName, String packageName, Download download,
-      DateCalculator dateCalculator, long appId, String abUrl, InstallManager installManager,
-      PermissionManager permissionManager, TimelineMetricsManager timelineMetricsManager,
-      SocialRepository socialRepository) {
+  public AppUpdateDisplayable(AppUpdate appUpdate, String appIconUrl, String storeIconUrl,
+      String storeName, Date dateUpdated, String appVersionName, SpannableFactory spannableFactory,
+      String appName, String packageName, Download download, DateCalculator dateCalculator,
+      long appId, String abUrl, InstallManager installManager, PermissionManager permissionManager,
+      TimelineMetricsManager timelineMetricsManager, SocialRepository socialRepository,
+      DownloadEventConverter downloadConverter, InstallEventConverter installConverter,
+      Analytics analytics) {
     super(appUpdate);
     this.appIconUrl = appIconUrl;
     this.storeIconUrl = storeIconUrl;
@@ -78,6 +88,9 @@ public class AppUpdateDisplayable extends CardDisplayable {
     this.permissionManager = permissionManager;
     this.timelineMetricsManager = timelineMetricsManager;
     this.socialRepository = socialRepository;
+    this.downloadConverter = downloadConverter;
+    this.installConverter = installConverter;
+    this.analytics = analytics;
   }
 
   public static AppUpdateDisplayable from(AppUpdate appUpdate, SpannableFactory spannableFactory,
@@ -96,7 +109,8 @@ public class AppUpdateDisplayable extends CardDisplayable {
         appUpdate.getFile().getVername(), spannableFactory, appUpdate.getName(),
         appUpdate.getPackageName(), downloadFactory.create(appUpdate, Download.ACTION_UPDATE),
         dateCalculator, appUpdate.getId(), abTestingURL, installManager, permissionManager,
-        timelineMetricsManager, socialRepository);
+        timelineMetricsManager, socialRepository, new DownloadEventConverter(),
+        new InstallEventConverter(), Analytics.getInstance());
   }
 
   public Observable<Progress<Download>> update(Context context) {
@@ -114,7 +128,18 @@ public class AppUpdateDisplayable extends CardDisplayable {
             }
           });
     }
-    return installManager.install(context, download);
+    return installManager.install(context, download).doOnSubscribe(() -> setupEvents());
+  }
+
+  private void setupEvents() {
+    DownloadEvent report = downloadConverter.create(download, DownloadEvent.Action.CLICK,
+        DownloadEvent.AppContext.TIMELINE);
+    analytics.save(packageName + download.getVersionCode(), report);
+
+    InstallEvent installEvent =
+        installConverter.create(download, DownloadInstallBaseEvent.Action.CLICK,
+            DownloadInstallBaseEvent.AppContext.TIMELINE);
+    analytics.save(packageName + download.getVersionCode(), installEvent);
   }
 
   public Observable<Progress<Download>> updateProgress() {

@@ -12,7 +12,7 @@ import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
-import com.trello.rxlifecycle.FragmentEvent;
+import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.LinkedList;
 import java.util.List;
 import rx.Observable;
@@ -62,7 +62,7 @@ class ListFullReviewsSuccessRequestListener implements SuccessRequestListener<Li
   }
 
   private void addRateAndReviewDisplayables(List<Review> reviews, List<Displayable> displayables) {
-    int index = -1;
+    int index = 0;
     int count = 0;
     for (final Review review : reviews) {
       displayables.add(

@@ -45,14 +45,14 @@ import lombok.Getter;
         "getViewLayout() on DisplayableGroup should not be " + "called!");
   }
 
-  @Override public int getDefaultPerLineCount() {
-    throw new IllegalStateException(
-        "getDefaultPerLineCount() on DisplayableGroup should not " + "be called!");
-  }
-
   @Override protected Configs getConfig() {
     // Stub
     // Should not be used
     return new Configs(1, true);
+  }
+
+  @Override public int getDefaultPerLineCount() {
+    throw new IllegalStateException(
+        "getDefaultPerLineCount() on DisplayableGroup should not " + "be called!");
   }
 }

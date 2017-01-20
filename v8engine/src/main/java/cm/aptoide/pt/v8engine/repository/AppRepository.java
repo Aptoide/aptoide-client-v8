@@ -12,30 +12,29 @@ import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v3.GetApkInfoRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.model.v3.PaidApp;
-import cm.aptoide.pt.model.v3.PaymentService;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
-import cm.aptoide.pt.v8engine.payment.ProductFactory;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
-import java.util.List;
-import lombok.AllArgsConstructor;
 import rx.Observable;
 
 /**
  * Created by marcelobenites on 7/27/16.
  */
-@AllArgsConstructor public class AppRepository {
+public class AppRepository {
 
   private final NetworkOperatorManager operatorManager;
-  private final ProductFactory productFactory;
+
+  public AppRepository(NetworkOperatorManager operatorManager) {
+    this.operatorManager = operatorManager;
+  }
 
   public Observable<GetApp> getApp(long appId, boolean refresh, boolean sponsored,
-      String storeName) {
+      String storeName, String packageName) {
     return GetAppRequest.of(appId, storeName, StoreUtils.getStoreCredentials(storeName),
         AptoideAccountManager.getAccessToken(),
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID())
+            DataProvider.getContext()).getAptoideClientUUID(), packageName)
         .observe(refresh)
         .flatMap(response -> {
           if (response != null && response.isOk()) {
@@ -71,40 +70,6 @@ import rx.Observable;
         });
   }
 
-  public Observable<List<PaymentService>> getPaymentServices(long appId, boolean sponsored,
-      String storeName, boolean refresh) {
-    return getPaidApp(appId, sponsored, storeName, refresh).map(
-        paidApp -> paidApp.getPayment().getPaymentServices());
-  }
-
-  private Observable<GetApp> addPayment(boolean sponsored, GetApp getApp, boolean refresh) {
-    return getPaidApp(getApp.getNodes().getMeta().getData().getId(), sponsored,
-        getApp.getNodes().getMeta().getData().getStore().getName(), refresh).map(paidApp -> {
-
-      if (paidApp.getPayment().isPaid()) {
-        getApp.getNodes().getMeta().getData().getFile().setPath(paidApp.getPath().getStringPath());
-      } else {
-        getApp.getNodes()
-            .getMeta()
-            .getData()
-            .getPay()
-            .setProductId(paidApp.getPayment().getMetadata().getId());
-        getApp.getNodes()
-            .getMeta()
-            .getData()
-            .getPay()
-            .setPaymentServices(paidApp.getPayment().getPaymentServices());
-      }
-      getApp.getNodes().getMeta().getData().getPay().setStatus(paidApp.getPayment().getStatus());
-      return getApp;
-    }).onErrorResumeNext(throwable -> {
-      if (throwable instanceof RepositoryItemNotFoundException) {
-        return Observable.just(getApp);
-      }
-      return Observable.error(throwable);
-    });
-  }
-
   public Observable<PaidApp> getPaidApp(long appId, boolean sponsored, String storeName,
       boolean refresh) {
     return GetApkInfoRequest.of(appId, operatorManager, sponsored, storeName,
@@ -137,4 +102,38 @@ import rx.Observable;
           }
         });
   }
+
+  private Observable<GetApp> addPayment(boolean sponsored, GetApp getApp, boolean refresh) {
+    return getPaidApp(getApp.getNodes().getMeta().getData().getId(), sponsored,
+        getApp.getNodes().getMeta().getData().getStore().getName(), refresh).map(paidApp -> {
+
+      if (paidApp.getPayment().isPaid()) {
+        getApp.getNodes().getMeta().getData().getFile().setPath(paidApp.getPath().getStringPath());
+      } else {
+        getApp.getNodes()
+            .getMeta()
+            .getData()
+            .getPay()
+            .setProductId(paidApp.getPayment().getMetadata().getId());
+      }
+      getApp.getNodes()
+          .getMeta()
+          .getData()
+          .getPay()
+          .setPrice(paidApp.getPayment().getAmount());
+      getApp.getNodes()
+          .getMeta()
+          .getData()
+          .getPay()
+          .setSymbol(paidApp.getPayment().getSymbol());
+      getApp.getNodes().getMeta().getData().getPay().setStatus(paidApp.getPayment().getStatus());
+      return getApp;
+    }).onErrorResumeNext(throwable -> {
+      if (throwable instanceof RepositoryItemNotFoundException) {
+        return Observable.just(getApp);
+      }
+      return Observable.error(throwable);
+    });
+  }
+
 }

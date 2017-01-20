@@ -67,7 +67,7 @@ public class CacheHelper implements CacheManager {
           for (int i = 0; i < sizes.size(); i++) {
             size += sizes.get(i);
           }
-          Logger.d(TAG, "Cache cleaned: " + AptoideUtils.StringU.formatBytes(size));
+          Logger.d(TAG, "Cache cleaned: " + AptoideUtils.StringU.formatBytes(size, false));
           return size;
         })
         .subscribeOn(Schedulers.io());

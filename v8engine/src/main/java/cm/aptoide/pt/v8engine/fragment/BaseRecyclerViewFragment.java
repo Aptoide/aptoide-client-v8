@@ -42,7 +42,7 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
 
   @CallSuper @Override
   public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    if (create) {
+    if (create || refresh) {
       clearDisplayables();
     } else {
       setDisplayables(new LinkedList<>(displayables));

@@ -7,7 +7,8 @@
   <!-- Main colors -->
   <color name="green">#2E8B57</color>
   <color name="teal">#009688</color>
-  <color name="red">#F44336</color>
+  <!--<color name="red">#F44336</color>-->
+  <color name="red">#ED1C24</color>
   <color name="indigo">#3F51B5</color>
   <color name="pink">#E91E63</color>
   <color name="orange">#FF9800</color>

@@ -11,8 +11,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
 import android.view.Menu;
@@ -35,6 +33,7 @@ import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.util.AppBarStateChangeListener;
+import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.OtherVersionDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
@@ -92,13 +91,6 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
     setHeader();
   }
 
-  protected void setHeader(){
-    if (header != null) {
-      header.setImage(appImgUrl);
-      setTitle(appName);
-    }
-  }
-
   @Override public int getContentViewId() {
     return R.layout.fragment_other_versions;
   }
@@ -114,6 +106,13 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
     super.onResume();
   }
 
+  protected void setHeader() {
+    if (header != null) {
+      header.setImage(appImgUrl);
+      setTitle(appName);
+    }
+  }
+
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
     appName = args.getString(APP_NAME);
@@ -121,18 +120,13 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
     appPackge = args.getString(APP_PACKAGE);
   }
 
-  @Override public void setupToolbar() {
-    super.setupToolbar();
-    if (toolbar != null) {
-      ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-      bar.setDisplayHomeAsUpEnabled(true);
-    }
+  @Override protected boolean displayHomeUpAsEnabled() {
+    return true;
   }
 
   private void setTitle(String title) {
-    if (toolbar != null) {
-      ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-      bar.setTitle(title);
+    if (hasToolbar()) {
+      getToolbar().setTitle(title);
     }
   }
 
@@ -164,10 +158,10 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
 
     endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(this.getAdapter(),
         ListAppVersionsRequest.of(appPackge, storeNames, AptoideAccountManager.getAccessToken(),
-            AptoideAccountManager.getUserEmail(),
             new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                DataProvider.getContext()).getAptoideClientUUID()),
-        otherVersionsSuccessRequestListener, errorRequestListener);
+                DataProvider.getContext()).getAptoideClientUUID(),
+            StoreUtils.getSubscribedStoresAuthMap()), otherVersionsSuccessRequestListener,
+        Throwable::printStackTrace);
 
     recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(false);

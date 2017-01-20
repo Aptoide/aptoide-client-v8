@@ -7,21 +7,18 @@ import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreMinimalAdAccessor;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.database.realm.Rollback;
-import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
-import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEvent;
+import cm.aptoide.pt.v8engine.repository.AdsRepository;
 import cm.aptoide.pt.v8engine.repository.InstalledRepository;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.RollbackRepository;
 import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import cm.aptoide.pt.v8engine.util.referrer.ReferrerUtils;
@@ -33,10 +30,12 @@ public class InstalledIntentService extends IntentService {
 
   private static final String TAG = InstalledIntentService.class.getName();
 
+  private final AdsRepository adsRepository;
   private final RollbackRepository repository;
   private final InstalledRepository installedRepository;
   private final UpdateRepository updatesRepository;
   private final CompositeSubscription subscriptions;
+  private Analytics analytics;
 
   public InstalledIntentService() {
     this("InstalledIntentService");
@@ -50,12 +49,13 @@ public class InstalledIntentService extends IntentService {
   public InstalledIntentService(String name) {
     super(name);
 
-    repository = new RollbackRepository(AccessorFactory.getAccessorFor(Rollback.class));
-    installedRepository = new InstalledRepository(AccessorFactory.getAccessorFor(Installed.class));
-    updatesRepository = new UpdateRepository(AccessorFactory.getAccessorFor(Update.class),
-        AccessorFactory.getAccessorFor(Store.class));
+    adsRepository = new AdsRepository();
+    repository = RepositoryFactory.getRollbackRepository();
+    installedRepository = RepositoryFactory.getInstalledRepository();
+    updatesRepository = RepositoryFactory.getUpdateRepository();
 
     subscriptions = new CompositeSubscription();
+    analytics = Analytics.getInstance();
   }
 
   @Override protected void onHandleIntent(Intent intent) {
@@ -98,8 +98,26 @@ public class InstalledIntentService extends IntentService {
   protected void onPackageAdded(String packageName) {
     Logger.d(TAG, "Package added: " + packageName);
 
-    databaseOnPackageAdded(packageName);
+    PackageInfo packageInfo = databaseOnPackageAdded(packageName);
     checkAndBroadcastReferrer(packageName);
+    sendInstallEvent(packageName, packageInfo);
+  }
+
+  private void sendInstallEvent(String packageName, PackageInfo packageInfo) {
+    if (packageInfo != null) {
+      Logger.d(TAG, "sending event with the id = " + packageName + packageInfo.versionCode);
+      InstallEvent event =
+          (InstallEvent) analytics.get(packageName + packageInfo.versionCode, InstallEvent.class);
+      if (event != null) {
+        event.setResultStatus(DownloadInstallAnalyticsBaseBody.ResultStatus.SUCC);
+        analytics.sendEvent(event);
+        Logger.d(TAG, "Event sent");
+      } else {
+        Logger.e(TAG, new NullPointerException("Event not sent, the event was null"));
+      }
+    } else {
+      Logger.e(TAG, new NullPointerException("PackageInfo is null"));
+    }
   }
 
   private void checkAndBroadcastReferrer(String packageName) {
@@ -112,18 +130,11 @@ public class InstalledIntentService extends IntentService {
             DataproviderUtils.AdNetworksUtils.knockCpi(storeMinimalAd);
             storeMinimalAdAccessor.remove(storeMinimalAd);
           } else {
-            GetAdsRequest.ofSecondInstall(packageName,
-                new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                    DataProvider.getContext()).getAptoideClientUUID(),
-                DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(
-                    V8Engine.getContext()), DataProvider.getConfiguration().getPartnerId())
-                .observe()
-                .map(getAdsResponse -> MinimalAd.from(getAdsResponse.getAds().get(0)))
+            adsRepository.getAdsFromSecondInstall(packageName)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(
                     minimalAd -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES,
-                        true))
-                .onErrorReturn(throwable1 -> new MinimalAd())
+                        true)).onErrorReturn(throwable1 -> null)
                 .subscribe();
           }
         }, err -> {
@@ -136,7 +147,8 @@ public class InstalledIntentService extends IntentService {
 
   protected void onPackageReplaced(String packageName) {
     Logger.d(TAG, "Packaged replaced: " + packageName);
-    databaseOnPackageReplaced(packageName);
+    PackageInfo packageInfo = databaseOnPackageReplaced(packageName);
+    sendInstallEvent(packageName, packageInfo);
   }
 
   protected void onPackageRemoved(String packageName) {
@@ -144,16 +156,17 @@ public class InstalledIntentService extends IntentService {
     databaseOnPackageRemoved(packageName);
   }
 
-  private void databaseOnPackageAdded(String packageName) {
+  private PackageInfo databaseOnPackageAdded(String packageName) {
     PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName);
 
     if (checkAndLogNullPackageInfo(packageInfo, packageName)) {
-      return;
+      return packageInfo;
     }
     installedRepository.insert(new Installed(packageInfo));
+    return packageInfo;
   }
 
-  private void databaseOnPackageReplaced(String packageName) {
+  private PackageInfo databaseOnPackageReplaced(String packageName) {
     final Update update = updatesRepository.get(packageName).doOnError(throwable -> {
       Logger.e(TAG, throwable);
       CrashReports.logException(throwable);
@@ -166,7 +179,7 @@ public class InstalledIntentService extends IntentService {
     PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName);
 
     if (checkAndLogNullPackageInfo(packageInfo, packageName)) {
-      return;
+      return packageInfo;
     }
 
     if (update != null) {
@@ -179,6 +192,7 @@ public class InstalledIntentService extends IntentService {
     }
 
     installedRepository.insert(new Installed(packageInfo));
+    return packageInfo;
   }
 
   /**

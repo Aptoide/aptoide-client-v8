@@ -5,7 +5,7 @@
 
 package cm.aptoide.pt.networkclient;
 
-import cm.aptoide.pt.actions.AptoideClientUUID;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.okhttp.UserAgentGenerator;
 import cm.aptoide.pt.networkclient.okhttp.UserAgentInterceptor;
@@ -61,7 +61,7 @@ public class UserAgentTest {
     String url = server.url("/").toString();
 
     Request testRequest = new Request.Builder().url(url).build();
-    String result = OkHttpClientFactory.getSingletonClient(() -> userData)
+    String result = OkHttpClientFactory.getSingletonClient(() -> userData, false)
         .newCall(testRequest)
         .execute()
         .body()

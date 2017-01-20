@@ -44,10 +44,9 @@ import java.util.List;
 @Displayables({ AppViewRateAndCommentsDisplayable.class }) public class AppViewRateAndReviewsWidget
     extends Widget<AppViewRateAndCommentsDisplayable> {
 
+  public static final long TIME_BETWEEN_SCROLL = 2 * DateUtils.SECOND_IN_MILLIS;
   private static final String TAG = AppViewRateAndReviewsWidget.class.getSimpleName();
   private static final int MAX_COMMENTS = 3;
-  public static final long TIME_BETWEEN_SCROLL = DateUtils.SECOND_IN_MILLIS;
-
   private View emptyReviewsLayout;
   private View ratingLayout;
   private View commentsLayout;
@@ -157,7 +156,7 @@ import java.util.List;
 
   public void loadTopReviews(String storeName, String packageName) {
     ListReviewsRequest.ofTopReviews(storeName, packageName, MAX_COMMENTS,
-        AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
+        AptoideAccountManager.getAccessToken(),
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()).getAptoideClientUUID()).execute(listReviews -> {
 

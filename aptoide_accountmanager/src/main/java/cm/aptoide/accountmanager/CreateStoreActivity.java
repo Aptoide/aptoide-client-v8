@@ -17,6 +17,8 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.ws.CheckUserCredentialsRequest;
 import cm.aptoide.accountmanager.ws.ErrorsMapper;
 import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
+import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.SetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SimpleSetStoreRequest;
@@ -40,7 +42,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
     implements AptoideAccountManager.ICreateStore {
 
   private static final String TAG = CreateStoreActivity.class.getSimpleName();
-
+  ProgressDialog progressDialog;
   private Toolbar mToolbar;
   private Button mCreateStore;
   private Button mSkip;
@@ -50,9 +52,9 @@ public class CreateStoreActivity extends PermissionsBaseActivity
   private TextView mHeader;
   private TextView mChooseNameTitle;
   private EditText mStoreName;
+  private EditText mStoreDescription;
   private View content;
   private CompositeSubscription mSubscriptions;
-
   //Theme related views
   private ImageView mOrangeShape;
   private ImageView mOrangeTick;
@@ -74,19 +76,24 @@ public class CreateStoreActivity extends PermissionsBaseActivity
   private ImageView mBrownTick;
   private ImageView mLightblueShape;
   private ImageView mLightblueTick;
-
   private String CREATE_STORE_CODE = "1";
-  private String storeName;
-  private String username;
-  private String password;
+  private String storeName = "";
   private String storeAvatarPath;
-
+  private String storeDescription;
+  private long storeId;
   private boolean THEME_CLICKED_FLAG = false;
   private String storeTheme = "";
+  private String from;
+  private String storeRemoteUrl;
 
-  private int CREATE_STORE_REQUEST_CODE = 0; //1: all (Multipart)  2: user and theme 3:user
+  private IdsRepository idsRepository =
+      new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+          DataProvider.getContext());
+
+  private int CREATE_STORE_REQUEST_CODE = 0; //1: all (Multipart)  2: user and theme 3:user 4/5:edit
 
   @Override public void onCreate(Bundle savedInstanceState) {
+    getData();
     super.onCreate(savedInstanceState);
     setContentView(getLayoutId());
     mSubscriptions = new CompositeSubscription();
@@ -97,17 +104,44 @@ public class CreateStoreActivity extends PermissionsBaseActivity
     setupThemeListeners();
   }
 
+  private void getData() {
+    from = getIntent().getStringExtra("from") == null ? "" : getIntent().getStringExtra("from");
+    storeId = getIntent().getLongExtra("storeId", -1);
+    storeRemoteUrl = getIntent().getStringExtra("storeAvatar");
+    storeTheme = getIntent().getStringExtra("storeTheme") == null ? ""
+        : getIntent().getStringExtra("storeTheme");
+    storeDescription = getIntent().getStringExtra("storeDescription");
+  }
+
   @Override protected void onDestroy() {
     super.onDestroy();
     mSubscriptions.clear();
+    if (progressDialog != null) {
+      if (progressDialog.isShowing()) {
+        progressDialog.dismiss();
+      }
+    }
   }
 
   @Override protected String getActivityTitle() {
-    return getString(R.string.create_store_title);
+    if (!from.equals("store")) {
+      return getString(R.string.create_store_title);
+    } else {
+      return getString(R.string.edit_store_title);
+    }
   }
 
   @Override int getLayoutId() {
     return R.layout.activity_create_store;
+  }
+
+  @Override void showIconPropertiesError(String errors) {
+    mSubscriptions.add(GenericDialogs.createGenericOkMessage(this,
+        getString(R.string.image_requirements_error_popup_title), errors).subscribe());
+  }
+
+  @Override void loadImage(Uri imagePath) {
+    ImageLoader.loadWithCircleTransform(imagePath, mStoreAvatar);
   }
 
   private void setupToolbar() {
@@ -126,6 +160,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
     mStoreAvatarLayout = (RelativeLayout) findViewById(R.id.create_store_image_action);
     mTakePictureText = (TextView) findViewById(R.id.create_store_take_picture_text);
     mStoreName = (EditText) findViewById(R.id.create_store_name);
+    mStoreDescription = (EditText) findViewById(R.id.edit_store_description);
     mHeader = (TextView) findViewById(R.id.create_store_header_textview);
     mChooseNameTitle = (TextView) findViewById(R.id.create_store_choose_name_title);
     mStoreAvatar = (ImageView) findViewById(R.id.create_store_image);
@@ -154,53 +189,135 @@ public class CreateStoreActivity extends PermissionsBaseActivity
     mLightblueTick = (ImageView) findViewById(R.id.create_store_theme_check_lightblue);
   }
 
+  /**
+   * Changes views according to context (edit or create) and shows current values for the store
+   * that's being edited
+   */
   private void editViews() {
-    mHeader.setText(
-        AptoideUtils.StringU.getFormattedString(R.string.create_store_header, "Aptoide"));
-    mChooseNameTitle.setText(
-        AptoideUtils.StringU.getFormattedString(R.string.create_store_name, "Aptoide"));
+    if (!from.equals("store")) {
+      mHeader.setText(
+          AptoideUtils.StringU.getFormattedString(R.string.create_store_header, "Aptoide"));
+      mChooseNameTitle.setText(
+          AptoideUtils.StringU.getFormattedString(R.string.create_store_name, "Aptoide"));
+    } else {
+      mHeader.setText(R.string.edit_store_header);
+      mChooseNameTitle.setText(
+          AptoideUtils.StringU.getFormattedString(R.string.create_store_description_title));
+      mStoreName.setVisibility(View.GONE);
+      mStoreDescription.setVisibility(View.VISIBLE);
+      mStoreDescription.setText(storeDescription);
+      if (storeRemoteUrl != null) {
+        ImageLoader.loadWithCircleTransform(storeRemoteUrl, mStoreAvatar);
+      }
+      handleThemeTick(storeTheme, "visible");
+      mCreateStore.setText(R.string.save_edit_store);
+      mSkip.setText(R.string.cancel);
+    }
   }
 
   private void setupListeners() {
-
     mSubscriptions.add(RxView.clicks(mStoreAvatarLayout).subscribe(click -> chooseAvatarSource()));
     mSubscriptions.add(RxView.clicks(mCreateStore).subscribe(click -> {
           AptoideUtils.SystemU.hideKeyboard(this);
           storeName = mStoreName.getText().toString().trim().toLowerCase();
+          storeDescription = mStoreDescription.getText().toString();
           validateData();
-          if (CREATE_STORE_REQUEST_CODE == 2
-              || CREATE_STORE_REQUEST_CODE == 3
-              || CREATE_STORE_REQUEST_CODE == 1) {
-            ProgressDialog progressDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
-                getApplicationContext().getString(R.string.please_wait_upload));
+          progressDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
+              getApplicationContext().getString(R.string.please_wait_upload));
+          if (CREATE_STORE_REQUEST_CODE == 1
+              || CREATE_STORE_REQUEST_CODE == 2
+              || CREATE_STORE_REQUEST_CODE == 3) {
             progressDialog.show();
-            CheckUserCredentialsRequest.of(AptoideAccountManager.getAccessToken(), storeName,
-                CREATE_STORE_CODE).execute(answer -> {
-              if (answer.hasErrors()) {
-                if (answer.getErrors() != null && answer.getErrors().size() > 0) {
-                  progressDialog.dismiss();
-                  //TODO check more errors
-                  if (answer.getErrors().get(0).code.equals("WOP-2")) {
-                    mSubscriptions.add(GenericDialogs.createGenericContinueMessage(this, "",
-                        getApplicationContext().getResources().getString(R.string.ws_error_WOP_2))
-                        .subscribe());
-                  } else if (answer.getErrors().get(0).code.equals("WOP-3")) {
-                    ShowMessage.asSnack(this,
-                        ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors().get(0).code));
+            mSubscriptions.add(
+                CheckUserCredentialsRequest.of(AptoideAccountManager.getAccessToken(), storeName,
+                    CREATE_STORE_CODE).observe().subscribe(answer -> {
+                  if (answer.hasErrors()) {
+                    if (answer.getErrors() != null && answer.getErrors().size() > 0) {
+                      progressDialog.dismiss();
+                      if (answer.getErrors().get(0).code.equals("WOP-2")) {
+                        mSubscriptions.add(GenericDialogs.createGenericContinueMessage(this, "",
+                            getApplicationContext().getResources().getString(R.string.ws_error_WOP_2))
+                            .subscribe());
+                      } else if (answer.getErrors().get(0).code.equals("WOP-3")) {
+                        ShowMessage.asSnack(this, ErrorsMapper.getWebServiceErrorMessageFromCode(
+                            answer.getErrors().get(0).code));
+                      } else {
+                        ShowMessage.asObservableSnack(this,
+                            ErrorsMapper.getWebServiceErrorMessageFromCode(
+                                answer.getErrors().get(0).code)).subscribe(visibility -> {
+                          if (visibility == ShowMessage.DISMISSED) {
+                            finish();
+                          }
+                        });
+                      }
+                    }
+                  } else if (!(CREATE_STORE_REQUEST_CODE == 3)) {
+                    onCreateSuccess(progressDialog);
                   } else {
-                    ShowMessage.asObservableSnack(this,
-                        ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors().get(0).code))
+                    progressDialog.dismiss();
+                    ShowMessage.asLongObservableSnack(this, R.string.create_store_store_created)
                         .subscribe(visibility -> {
+                          mSubscriptions.add(AptoideAccountManager.refreshAndSaveUserInfoData()
+                              .subscribe(refreshed -> {
+                                AptoideAccountManager.sendLoginBroadcast();
+                              }, Throwable::printStackTrace));
                           if (visibility == ShowMessage.DISMISSED) {
                             finish();
                           }
                         });
                   }
-                }
+                }, throwable -> {
+                  onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
+                  progressDialog.dismiss();
+                }));
+          } else if (CREATE_STORE_REQUEST_CODE == 4) {
+            setStoreData();
+            progressDialog.show();
+            mSubscriptions.add(SetStoreRequest.of(
+                new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+                    DataProvider.getContext()).getAptoideClientUUID(),
+                AptoideAccountManager.getAccessToken(), storeName, storeTheme, storeAvatarPath,
+                storeDescription, true, storeId).observe().subscribe(answer -> {
+              AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
+                progressDialog.dismiss();
+                finish();
+              }, Throwable::printStackTrace);
+            }, throwable -> {
+              if (((AptoideWsV7Exception) throwable).getBaseResponse()
+                  .getErrors()
+                  .get(0)
+                  .getCode()
+                  .equals("API-1")) {
+                progressDialog.dismiss();
+                ShowMessage.asObservableSnack(this, R.string.ws_error_API_1).subscribe(visibility -> {
+                  if (visibility == ShowMessage.DISMISSED) {
+                    finish();
+                  }
+                });
               } else {
-                onCreateSuccess(progressDialog);
+                onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
+                progressDialog.dismiss();
               }
-            });
+            }));
+          } else if (CREATE_STORE_REQUEST_CODE == 5) {
+            /*
+             * not multipart
+             */
+            setStoreData();
+            progressDialog.show();
+            mSubscriptions.add(SimpleSetStoreRequest.of(AptoideAccountManager.getAccessToken(),
+                idsRepository.getAptoideClientUUID(), storeId, storeTheme, storeDescription)
+                .observe()
+                .subscribe(answer -> {
+                  AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
+                    progressDialog.dismiss();
+                    AptoideAccountManager.sendLoginBroadcast();
+                    finish();
+                  }, Throwable::printStackTrace);
+                }, throwable -> {
+                  onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
+                  progressDialog.dismiss();
+                }));
           }
         }
 
@@ -216,15 +333,15 @@ public class CreateStoreActivity extends PermissionsBaseActivity
 
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     FileUtils fileUtils = new FileUtils();
+    Uri avatarUrl = null;
     if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-      Uri avatarUrl = getPhotoFileUri(PermissionsBaseActivity.createAvatarPhotoName(photoAvatar));
-      ImageLoader.loadWithCircleTransform(avatarUrl, mStoreAvatar);
+      avatarUrl = getPhotoFileUri(PermissionsBaseActivity.createAvatarPhotoName(photoAvatar));
       storeAvatarPath = fileUtils.getPathAlt(avatarUrl, getApplicationContext());
     } else if (requestCode == GALLERY_CODE && resultCode == RESULT_OK) {
-      Uri avatarUrl = data.getData();
-      ImageLoader.loadWithCircleTransform(avatarUrl, mStoreAvatar);
+      avatarUrl = data.getData();
       storeAvatarPath = fileUtils.getPath(avatarUrl, getApplicationContext());
     }
+    checkAvatarRequirements(storeAvatarPath, avatarUrl);
   }
 
   @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
@@ -254,6 +371,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
       /*
        * Multipart
        */
+      setStoreData();
       mSubscriptions.add(SetStoreRequest.of(
           new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
               DataProvider.getContext()).getAptoideClientUUID(),
@@ -269,7 +387,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
           }, throwable -> {
             if (throwable.getClass().equals(SocketTimeoutException.class)) {
               progressDialog.dismiss();
-              ShowMessage.asObservableSnack(this, R.string.store_upload_photo_failed)
+              ShowMessage.asLongObservableSnack(this, R.string.store_upload_photo_failed)
                   .subscribe(visibility -> {
                     if (visibility == ShowMessage.DISMISSED) {
                       finish();
@@ -277,7 +395,19 @@ public class CreateStoreActivity extends PermissionsBaseActivity
                   });
             } else if (throwable.getClass().equals(TimeoutException.class)) {
               progressDialog.dismiss();
-              ShowMessage.asObservableSnack(this, R.string.store_upload_photo_failed)
+              ShowMessage.asLongObservableSnack(this, R.string.store_upload_photo_failed)
+                  .subscribe(visibility -> {
+                    if (visibility == ShowMessage.DISMISSED) {
+                      finish();
+                    }
+                  });
+            } else if (((AptoideWsV7Exception) throwable).getBaseResponse()
+                .getErrors()
+                .get(0)
+                .getCode()
+                .equals("API-1")) {
+              progressDialog.dismiss();
+              ShowMessage.asLongObservableSnack(this, R.string.ws_error_API_1)
                   .subscribe(visibility -> {
                     if (visibility == ShowMessage.DISMISSED) {
                       finish();
@@ -285,7 +415,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
                   });
             } else {
               progressDialog.dismiss();
-              ShowMessage.asObservableSnack(this,
+              ShowMessage.asLongObservableSnack(this,
                   ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()))
                   .subscribe(visibility -> {
                     if (visibility == ShowMessage.DISMISSED) {
@@ -303,21 +433,20 @@ public class CreateStoreActivity extends PermissionsBaseActivity
       /*
        * not multipart
        */
+      setStoreData();
       SimpleSetStoreRequest.of(AptoideAccountManager.getAccessToken(),
-          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-              DataProvider.getContext()).getAptoideClientUUID(), storeName, storeTheme)
-          .execute(answer -> {
-            AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
-              progressDialog.dismiss();
-              AptoideAccountManager.sendLoginBroadcast();
-              finish();
-            }, Throwable::printStackTrace);
-          }, throwable -> {
-            onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
-            AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
-              progressDialog.dismiss();
-            }, Throwable::printStackTrace);
-          });
+          idsRepository.getAptoideClientUUID(), storeName, storeTheme).execute(answer -> {
+        AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
+          progressDialog.dismiss();
+          AptoideAccountManager.sendLoginBroadcast();
+          finish();
+        }, Throwable::printStackTrace);
+      }, throwable -> {
+        onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
+        AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
+          progressDialog.dismiss();
+        }, Throwable::printStackTrace);
+      });
     }
   }
 
@@ -337,131 +466,151 @@ public class CreateStoreActivity extends PermissionsBaseActivity
     return storeAvatarPath == null ? "" : storeAvatarPath;
   }
 
+  @Override public String getRepoDescription() {
+    return storeDescription == null ? "" : mStoreDescription.getText().toString();
+  }
+
+  /**
+   * This method sets stores data for the request
+   */
+  private void setStoreData() {
+    if (storeName.length() == 0) {
+      storeName = null;
+    }
+
+    if (storeTheme.equals("")) {
+      storeTheme = null;
+    }
+
+    if (storeDescription.equals("")) {
+      storeDescription = null;
+    }
+  }
+
   private void setupThemeListeners() {
     mSubscriptions.add(RxView.clicks(mOrangeShape).subscribe(click -> {
-      if (!THEME_CLICKED_FLAG) {
-        mOrangeTick.setVisibility(View.VISIBLE);
-        storeTheme = "orange";
-        THEME_CLICKED_FLAG = true;
-      } else if (THEME_CLICKED_FLAG && checkThemeClicked("orange")) {
-        mOrangeTick.setVisibility(View.INVISIBLE);
-        THEME_CLICKED_FLAG = false;
-      }
+      handleThemeTick(storeTheme, "gone");
+      mOrangeTick.setVisibility(View.VISIBLE);
+      storeTheme = "orange";
     }));
     mSubscriptions.add(RxView.clicks(mGreenShape).subscribe(click -> {
-      if (!THEME_CLICKED_FLAG) {
-        mGreenTick.setVisibility(View.VISIBLE);
-        storeTheme = "green";
-        THEME_CLICKED_FLAG = true;
-      } else if (THEME_CLICKED_FLAG && checkThemeClicked("green")) {
-        mGreenTick.setVisibility(View.INVISIBLE);
-        THEME_CLICKED_FLAG = false;
-      }
+      handleThemeTick(storeTheme, "gone");
+      mGreenTick.setVisibility(View.VISIBLE);
+      storeTheme = "green";
     }));
     mSubscriptions.add(RxView.clicks(mRedShape).subscribe(click -> {
-      if (!THEME_CLICKED_FLAG) {
-        mRedTick.setVisibility(View.VISIBLE);
-        storeTheme = "red";
-        THEME_CLICKED_FLAG = true;
-      } else if (THEME_CLICKED_FLAG && checkThemeClicked("red")) {
-        mRedTick.setVisibility(View.INVISIBLE);
-        THEME_CLICKED_FLAG = false;
-      }
+      handleThemeTick(storeTheme, "gone");
+      mRedTick.setVisibility(View.VISIBLE);
+      storeTheme = "red";
     }));
     mSubscriptions.add(RxView.clicks(mIndigoShape).subscribe(click -> {
-      if (!THEME_CLICKED_FLAG) {
-        mIndigoTick.setVisibility(View.VISIBLE);
-        storeTheme = "indigo";
-        THEME_CLICKED_FLAG = true;
-      } else if (THEME_CLICKED_FLAG && checkThemeClicked("indigo")) {
-        mIndigoTick.setVisibility(View.INVISIBLE);
-        THEME_CLICKED_FLAG = false;
-      }
+      handleThemeTick(storeTheme, "gone");
+      mIndigoTick.setVisibility(View.VISIBLE);
+      storeTheme = "indigo";
     }));
     mSubscriptions.add(RxView.clicks(mTealShape).subscribe(click -> {
-      if (!THEME_CLICKED_FLAG) {
-        mTealTick.setVisibility(View.VISIBLE);
-        storeTheme = "teal";
-        THEME_CLICKED_FLAG = true;
-      } else if (THEME_CLICKED_FLAG && checkThemeClicked("teal")) {
-        mTealTick.setVisibility(View.INVISIBLE);
-        THEME_CLICKED_FLAG = false;
-      }
+      handleThemeTick(storeTheme, "gone");
+      mTealTick.setVisibility(View.VISIBLE);
+      storeTheme = "teal";
     }));
     mSubscriptions.add(RxView.clicks(mPinkShape).subscribe(click -> {
-      if (!THEME_CLICKED_FLAG) {
-        mPinkTick.setVisibility(View.VISIBLE);
-        storeTheme = "pink";
-        THEME_CLICKED_FLAG = true;
-      } else if (THEME_CLICKED_FLAG && checkThemeClicked("pink")) {
-        mPinkTick.setVisibility(View.INVISIBLE);
-        THEME_CLICKED_FLAG = false;
-      }
+      handleThemeTick(storeTheme, "gone");
+      mPinkTick.setVisibility(View.VISIBLE);
+      storeTheme = "pink";
     }));
     mSubscriptions.add(RxView.clicks(mLimeShape).subscribe(click -> {
-      if (!THEME_CLICKED_FLAG) {
-        mLimeTick.setVisibility(View.VISIBLE);
-        storeTheme = "lime";
-        THEME_CLICKED_FLAG = true;
-      } else if (THEME_CLICKED_FLAG && checkThemeClicked("lime")) {
-        mLimeTick.setVisibility(View.INVISIBLE);
-        THEME_CLICKED_FLAG = false;
-      }
+      handleThemeTick(storeTheme, "gone");
+      mLimeTick.setVisibility(View.VISIBLE);
+      storeTheme = "lime";
     }));
     mSubscriptions.add(RxView.clicks(mAmberShape).subscribe(click -> {
-      if (!THEME_CLICKED_FLAG) {
-        mAmberTick.setVisibility(View.VISIBLE);
-        storeTheme = "amber";
-        THEME_CLICKED_FLAG = true;
-      } else if (THEME_CLICKED_FLAG && checkThemeClicked("amber")) {
-        mAmberTick.setVisibility(View.INVISIBLE);
-        THEME_CLICKED_FLAG = false;
-      }
+      handleThemeTick(storeTheme, "gone");
+      mAmberTick.setVisibility(View.VISIBLE);
+      storeTheme = "amber";
     }));
     mSubscriptions.add(RxView.clicks(mBrownShape).subscribe(click -> {
-      if (!THEME_CLICKED_FLAG) {
-        mBrownTick.setVisibility(View.VISIBLE);
-        storeTheme = "brown";
-        THEME_CLICKED_FLAG = true;
-      } else if (THEME_CLICKED_FLAG && checkThemeClicked("brown")) {
-        mBrownTick.setVisibility(View.INVISIBLE);
-        THEME_CLICKED_FLAG = false;
-      }
+      handleThemeTick(storeTheme, "gone");
+      mBrownTick.setVisibility(View.VISIBLE);
+      storeTheme = "brown";
     }));
     mSubscriptions.add(RxView.clicks(mLightblueShape).subscribe(click -> {
-      if (!THEME_CLICKED_FLAG) {
-        mLightblueTick.setVisibility(View.VISIBLE);
-        storeTheme = "light-blue";
-        THEME_CLICKED_FLAG = true;
-      } else if (THEME_CLICKED_FLAG && checkThemeClicked("light-blue")) {
-        mLightblueTick.setVisibility(View.INVISIBLE);
-        THEME_CLICKED_FLAG = false;
-      }
+      handleThemeTick(storeTheme, "gone");
+      mLightblueTick.setVisibility(View.VISIBLE);
+      storeTheme = "light-blue";
     }));
   }
 
-  private boolean checkThemeClicked(String color) {
-    if (color.equals(storeTheme)) {
-      return true;
-    }
-    return false;
-  }
-
+  /**
+   * This method validates the data inserted (or not) when the create store button was pressed and
+   * return a code for the corresponding request.
+   */
   private int validateData() {
-
-    if (getRepoName().length() != 0) {
-
-      if (getRepoAvatar().length() != 0) {
-        CREATE_STORE_REQUEST_CODE = 1;
-      } else if (getRepoTheme().length() != 0) {
-        CREATE_STORE_REQUEST_CODE = 2;
-      } else {
-        CREATE_STORE_REQUEST_CODE = 3;
+    if (from.equals("store")) {
+      if (getRepoDescription().length() != 0 || getRepoTheme().length() > 0) {
+        if (getRepoAvatar().length() != 0) {
+          return CREATE_STORE_REQUEST_CODE = 4;
+        } else {
+          return CREATE_STORE_REQUEST_CODE = 5;
+        }
       }
     } else {
-      CREATE_STORE_REQUEST_CODE = 0;
-      onCreateFail(R.string.nothing_inserted_store);
+      if (getRepoName().length() != 0) {
+        if (getRepoAvatar().length() != 0) {
+          CREATE_STORE_REQUEST_CODE = 1;
+        } else if (getRepoTheme().length() != 0) {
+          CREATE_STORE_REQUEST_CODE = 2;
+        } else {
+          CREATE_STORE_REQUEST_CODE = 3;
+        }
+      } else {
+        CREATE_STORE_REQUEST_CODE = 0;
+        onCreateFail(R.string.nothing_inserted_store);
+      }
     }
     return CREATE_STORE_REQUEST_CODE;
+  }
+
+  /**
+   * This method resets previously ticked theme tick
+   */
+  private void handleThemeTick(String storeTheme, String visibility) {
+    int visible = View.GONE;
+    if (visibility.equals("visible")) {
+      visible = View.VISIBLE;
+    }
+    switch (storeTheme) {
+      case "orange":
+        mOrangeTick.setVisibility(visible);
+        break;
+      case "green":
+        mGreenTick.setVisibility(visible);
+        break;
+      case "red":
+        mRedTick.setVisibility(visible);
+        break;
+      case "indigo":
+        mIndigoTick.setVisibility(visible);
+        break;
+      case "teal":
+        mTealTick.setVisibility(visible);
+        break;
+      case "pink":
+        mPinkTick.setVisibility(visible);
+        break;
+      case "lime":
+        mLimeTick.setVisibility(visible);
+        break;
+      case "amber":
+        mAmberTick.setVisibility(visible);
+        break;
+      case "brown":
+        mBrownTick.setVisibility(visible);
+        break;
+      case "light-blue":
+        mLightblueTick.setVisibility(visible);
+        break;
+      default:
+        break;
+    }
   }
 }

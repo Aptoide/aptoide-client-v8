@@ -36,7 +36,7 @@ public class TimelineRepository {
   public Observable<Datalist<TimelineCard>> getTimelineCards(Integer limit, int offset,
       List<String> packageNames, boolean refresh) {
     return GetUserTimelineRequest.of(action, limit, offset, packageNames,
-        AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail(),
+        AptoideAccountManager.getAccessToken(),
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()).getAptoideClientUUID())
         .observe(refresh)

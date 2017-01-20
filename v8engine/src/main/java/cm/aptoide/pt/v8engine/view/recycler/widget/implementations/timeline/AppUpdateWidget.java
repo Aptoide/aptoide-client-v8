@@ -17,7 +17,7 @@ import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.TimelineClickEvent;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.AppUpdateDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
@@ -29,7 +29,7 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
 
-  private static final String CARD_TYPE_NAME = "App Update";
+  private static final String CARD_TYPE_NAME = "APP_UPDATE";
   private TextView appName;
   private TextView appVersion;
   private ImageView appIcon;
@@ -95,10 +95,12 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
           Analytics.AppsTimeline.OPEN_STORE);
       displayable.sendClickEvent(SendEventRequest.Body.Data.builder()
           .cardType(CARD_TYPE_NAME)
-          .source(AptoideAnalytics.SOURCE_APTOIDE)
-          .specific(
-              SendEventRequest.Body.Specific.builder().store(displayable.getStoreName()).build())
-          .build(), AptoideAnalytics.OPEN_STORE);
+          .source(TimelineClickEvent.SOURCE_APTOIDE)
+          .specific(SendEventRequest.Body.Specific.builder()
+              .store(displayable.getStoreName())
+              .app(displayable.getPackageName())
+              .build())
+          .build(), TimelineClickEvent.OPEN_STORE);
       ((FragmentShower) getContext()).pushFragmentV4(
           V8Engine.getFragmentProvider().newStoreFragment(displayable.getStoreName()));
     }));
@@ -107,12 +109,12 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
       knockWithSixpackCredentials(displayable.getAbUrl());
       displayable.sendClickEvent(SendEventRequest.Body.Data.builder()
           .cardType(CARD_TYPE_NAME)
-          .source(AptoideAnalytics.SOURCE_APTOIDE)
+          .source(TimelineClickEvent.SOURCE_APTOIDE)
           .specific(
               SendEventRequest.Body.Specific.builder().app(displayable.getPackageName()).build())
-          .build(), AptoideAnalytics.OPEN_APP);
-      ((FragmentShower) getContext()).pushFragmentV4(
-          V8Engine.getFragmentProvider().newAppViewFragment(displayable.getAppId()));
+          .build(), TimelineClickEvent.OPEN_APP);
+      ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
+          .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
     }));
 
     compositeSubscription.add(RxView.clicks(updateButton).flatMap(click -> {
@@ -122,10 +124,10 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
           Analytics.AppsTimeline.UPDATE_APP);
       displayable.sendClickEvent(SendEventRequest.Body.Data.builder()
           .cardType(CARD_TYPE_NAME)
-          .source(AptoideAnalytics.SOURCE_APTOIDE)
+          .source(TimelineClickEvent.SOURCE_APTOIDE)
           .specific(
               SendEventRequest.Body.Specific.builder().app(displayable.getPackageName()).build())
-          .build(), AptoideAnalytics.UPDATE_APP);
+          .build(), TimelineClickEvent.UPDATE_APP);
       return displayable.requestPermission(getContext())
           .flatMap(success -> displayable.update(getContext()));
     }).retryWhen(errors -> errors.observeOn(AndroidSchedulers.mainThread()).flatMap(error -> {

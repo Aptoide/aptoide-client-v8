@@ -5,12 +5,11 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.BaseV7Response;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
 import rx.Observable;
 
 /**
@@ -18,7 +17,10 @@ import rx.Observable;
  */
 public class PostReviewRequest extends V7<BaseV7Response, PostReviewRequest.Body> {
 
-  private static final String BASE_HOST = "http://ws75-primary.aptoide.com/api/7/";
+  private static final String BASE_HOST = BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
+      + "://"
+      + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
+      + "/api/7/";
 
   protected PostReviewRequest(Body body, String baseHost) {
     super(body, baseHost);
@@ -51,8 +53,7 @@ public class PostReviewRequest extends V7<BaseV7Response, PostReviewRequest.Body
     return interfaces.postReview(body, true);
   }
 
-  @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) @AllArgsConstructor
-  public static class Body extends BaseBody {
+  @Data @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody {
 
     private String storeName;
     private String packageName;
@@ -61,6 +62,14 @@ public class PostReviewRequest extends V7<BaseV7Response, PostReviewRequest.Body
     private Integer rating;
 
     public Body(String packageName, String title, String body, Integer rating) {
+      this.packageName = packageName;
+      this.title = title;
+      this.body = body;
+      this.rating = rating;
+    }
+
+    public Body(String storeName, String packageName, String title, String body, Integer rating) {
+      this.storeName = storeName;
       this.packageName = packageName;
       this.title = title;
       this.body = body;

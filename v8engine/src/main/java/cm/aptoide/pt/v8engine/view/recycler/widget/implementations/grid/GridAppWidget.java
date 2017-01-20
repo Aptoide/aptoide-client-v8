@@ -75,7 +75,8 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
       // FIXME
       Analytics.AppViewViewedFrom.addStepToList(displayable.getTag());
       ((FragmentShower) v.getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
-          .newAppViewFragment(appId, pojo.getStore().getAppearance().getTheme(),
+          .newAppViewFragment(appId, pojo.getPackageName(),
+              pojo.getStore().getAppearance().getTheme(),
               tvStoreName.getText().toString()));
     });
   }

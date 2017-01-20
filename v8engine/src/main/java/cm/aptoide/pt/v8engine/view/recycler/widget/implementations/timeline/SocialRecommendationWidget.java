@@ -17,7 +17,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline
  */
 public class SocialRecommendationWidget extends SocialCardWidget<SocialRecommendationDisplayable> {
 
-  private final String CARD_TYPE_NAME = "Social Recommendation";
+  private final String CARD_TYPE_NAME = "SOCIAL_RECOMMENDATION";
   private TextView storeName;
   private TextView userName;
   private ImageView storeAvatar;
@@ -34,10 +34,8 @@ public class SocialRecommendationWidget extends SocialCardWidget<SocialRecommend
 
   @Override protected void assignViews(View itemView) {
     super.assignViews(itemView);
-    storeName = (TextView) itemView.findViewById(
-        R.id.displayable_social_timeline_recommendation_card_title);
-    userName = (TextView) itemView.findViewById(
-        R.id.displayable_social_timeline_recommendation_card_subtitle);
+    storeName = (TextView) itemView.findViewById(R.id.card_title);
+    userName = (TextView) itemView.findViewById(R.id.card_subtitle);
     storeAvatar = (ImageView) itemView.findViewById(R.id.card_image);
     userAvatar = (ImageView) itemView.findViewById(R.id.card_user_avatar);
     appName = (TextView) itemView.findViewById(
@@ -100,8 +98,8 @@ public class SocialRecommendationWidget extends SocialCardWidget<SocialRecommend
       //        .based_on(displayable.getSimilarAppPackageName())
       //        .build())
       //    .build(), AptoideAnalytics.OPEN_APP);
-      ((FragmentShower) getContext()).pushFragmentV4(
-          V8Engine.getFragmentProvider().newAppViewFragment(displayable.getAppId()));
+      ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
+          .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
     });
   }
 

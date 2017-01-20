@@ -7,7 +7,6 @@ package cm.aptoide.pt.dataprovider.ws.v7.store;
 
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
@@ -42,8 +41,12 @@ public class WidgetsArgs extends HashMapNotNull<WidgetsArgs.Key, WidgetsArgs.Gri
     APPS_GROUP, MY_STORES_SUBSCRIBED, STORES_RECOMMENDED, STORES_GROUP
   }
 
-  @Data @AllArgsConstructor protected static class GridSizeObject {
+  @Data protected static class GridSizeObject {
 
     private int grid_row_size;
+
+    public GridSizeObject(int grid_row_size) {
+      this.grid_row_size = grid_row_size;
+    }
   }
 }

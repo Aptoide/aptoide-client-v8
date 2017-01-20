@@ -63,6 +63,7 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
       AptoideCrashLogger.getInstance()
           .setLanguage(getResources().getConfiguration().getLocales().get(0).getLanguage());
     }
+
     setUpAnalytics();
 
     if (getIntent().getExtras() != null) {

@@ -34,7 +34,6 @@ public class SocialRepository {
     ShareCardRequest.of(timelineCard, accessToken, aptoideClientUUID)
         .observe()
         .subscribe(baseV7Response -> {
-          ShowMessage.asSnack((Activity) context, R.string.social_timeline_share_soon);
           final String userAccess = privacy ? BaseActivity.UserAccessState.UNLISTED.toString()
               : BaseActivity.UserAccessState.PUBLIC.toString();
           SetUserRequest.of(aptoideClientUUID, userAccess, accessToken)
@@ -51,8 +50,7 @@ public class SocialRepository {
     String aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext()).getAptoideClientUUID();
     String email = AptoideAccountManager.getUserEmail();
-    LikeCardRequest.of(timelineCard, cardType, ownerHash, accessToken, aptoideClientUUID, email,
-        rating)
+    LikeCardRequest.of(timelineCard, cardType, ownerHash, accessToken, aptoideClientUUID, rating)
         .observe()
         .observeOn(Schedulers.io())
         .subscribe(
@@ -67,7 +65,6 @@ public class SocialRepository {
     ShareInstallCardRequest.of(
         displayable.getPojo().getNodes().getMeta().getData().getPackageName(), accessToken,
         aptoideClientUUID).observe().subscribe(baseV7Response -> {
-      ShowMessage.asSnack((Activity) context, R.string.social_timeline_share_soon);
       final String userAccess = privacy ? BaseActivity.UserAccessState.UNLISTED.toString()
           : BaseActivity.UserAccessState.PUBLIC.toString();
       SetUserRequest.of(aptoideClientUUID, userAccess, accessToken)

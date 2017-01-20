@@ -15,7 +15,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,7 +30,6 @@ import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
@@ -48,7 +47,7 @@ import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.view.BadgeView;
-import com.trello.rxlifecycle.FragmentEvent;
+import com.trello.rxlifecycle.android.FragmentEvent;
 import lombok.Getter;
 import lombok.Setter;
 import rx.Subscription;
@@ -85,7 +84,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    updateRepository = RepositoryFactory.getRepositoryFor(Update.class);
+    updateRepository = RepositoryFactory.getUpdateRepository();
   }
 
   private void setupNavigationView() {
@@ -137,8 +136,6 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
     //      getContext().getPackageManager().getLaunchIntentForPackage(BACKUP_APPS_PACKAGE_NAME);
     //  startActivity(i);
     //}
-
-
 
     InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
     installedAccessor.get(BACKUP_APPS_PACKAGE_NAME)
@@ -275,17 +272,44 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
     ImageLoader.load(R.drawable.user_account_white, userAvatarImage);
   }
 
-  //	@Override
-  //	public void onDestroyView() {
-  //		super.onDestroyView();
-  //
-  //		mDrawerLayout = null;
-  //		mNavigationView = null;
-  //	}
-
   @Override public void onResume() {
     super.onResume();
     setUserDataOnHeader();
+  }
+
+  public void refreshUpdatesBadge(int num) {
+    // No updates present
+    if (updatesBadge == null) {
+      return;
+    }
+
+    updatesBadge.setTextSize(11);
+
+    if (num > 0) {
+      updatesBadge.setText(String.valueOf(num));
+      if (!updatesBadge.isShown()) {
+        updatesBadge.show(true);
+      }
+    } else {
+      if (updatesBadge.isShown()) {
+        updatesBadge.hide(true);
+      }
+    }
+  }
+
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    View view = super.onCreateView(inflater, container, savedInstanceState);
+    receiver = new ChangeTabReceiver();
+    getContext().registerReceiver(receiver, new IntentFilter(ChangeTabReceiver.SET_TAB_EVENT));
+    return view;
+  }
+
+  @Override public void onDestroyView() {
+    getContext().unregisterReceiver(receiver);
+    receiver = null;
+    super.onDestroyView();
   }
 
   @Override public int getContentViewId() {
@@ -337,48 +361,14 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
     setupNavigationView();
   }
 
-  @Override public void setupToolbar() {
-    if (toolbar != null) {
-      ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-      toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
-      toolbar.setNavigationIcon(R.drawable.ic_drawer);
-      toolbar.setNavigationOnClickListener(v -> mDrawerLayout.openDrawer(GravityCompat.START));
-    }
+  @Override public void setupToolbarDetails(Toolbar toolbar) {
+    toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
+    toolbar.setNavigationIcon(R.drawable.ic_drawer);
+    toolbar.setNavigationOnClickListener(v -> mDrawerLayout.openDrawer(GravityCompat.START));
   }
 
-  public void refreshUpdatesBadge(int num) {
-    // No updates present
-    if (updatesBadge == null) {
-      return;
-    }
-
-    updatesBadge.setTextSize(11);
-
-    if (num > 0) {
-      updatesBadge.setText(String.valueOf(num));
-      if (!updatesBadge.isShown()) {
-        updatesBadge.show(true);
-      }
-    } else {
-      if (updatesBadge.isShown()) {
-        updatesBadge.hide(true);
-      }
-    }
-  }
-
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    View view = super.onCreateView(inflater, container, savedInstanceState);
-    receiver = new ChangeTabReceiver();
-    getContext().registerReceiver(receiver, new IntentFilter(ChangeTabReceiver.SET_TAB_EVENT));
-    return view;
-  }
-
-  @Override public void onDestroyView() {
-    getContext().unregisterReceiver(receiver);
-    receiver = null;
-    super.onDestroyView();
+  protected boolean displayHomeUpAsEnabled() {
+    return false;
   }
 
   @Override public boolean isDrawerOpened() {

@@ -59,7 +59,7 @@ public class GridAppListWidget extends Widget<GridAppListDisplayable> {
     itemView.setOnClickListener(v -> {
       // FIXME
       ((FragmentShower) v.getContext()).pushFragmentV4(
-          V8Engine.getFragmentProvider().newAppViewFragment(app.getId()));
+          V8Engine.getFragmentProvider().newAppViewFragment(app.getId(), app.getPackageName()));
     });
     ImageLoader.load(app.getIcon(), icon);
   }

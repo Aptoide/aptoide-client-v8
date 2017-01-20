@@ -5,11 +5,14 @@
 
 package cm.aptoide.pt.dataprovider.ws.v2.aptwords;
 
+import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import lombok.Getter;
+import lombok.Setter;
 import okhttp3.OkHttpClient;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
@@ -21,19 +24,19 @@ import rx.Observable;
  */
 abstract class Aptwords<U> extends WebService<Aptwords.Interfaces, U> {
 
-  private static final String BASE_URL = "http://webservices.aptwords.net/api/2/";
+  @Getter @Setter private static String baseUrl = BuildConfig.APTOIDE_WEB_SERVICES_APTWORDS_SCHEME
+      + "://"
+      + BuildConfig.APTOIDE_WEB_SERVICES_APTWORDS_HOST
+      + "/api/2/";
 
   Aptwords() {
-    super(
-        Interfaces.class,
-        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent()),
-        WebService.getDefaultConverter(),
-        BASE_URL
-    );
+    super(Interfaces.class,
+        OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), isDebug()),
+        WebService.getDefaultConverter(), baseUrl);
   }
 
   Aptwords(OkHttpClient httpClient) {
-    super(Interfaces.class, httpClient, WebService.getDefaultConverter(), BASE_URL);
+    super(Interfaces.class, httpClient, WebService.getDefaultConverter(), baseUrl);
   }
 
   interface Interfaces {

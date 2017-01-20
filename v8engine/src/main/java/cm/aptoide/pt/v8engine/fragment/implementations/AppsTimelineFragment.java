@@ -66,7 +66,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.StoreLatestAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.VideoDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.listeners.RxEndlessRecyclerView;
-import com.trello.rxlifecycle.FragmentEvent;
+import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -124,7 +124,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     installManager = new InstallManager(AptoideDownloadManager.getInstance(), installer,
         AccessorFactory.getAccessorFor(Download.class),
         AccessorFactory.getAccessorFor(Installed.class));
-    timelineMetricsManager = new TimelineMetricsManager();
+    timelineMetricsManager = new TimelineMetricsManager(Analytics.getInstance());
     socialRepository = new SocialRepository();
   }
 
@@ -264,6 +264,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     } else {
       errorString = R.string.fragment_social_timeline_general_error;
     }
+    //Todo: switch to showmessage snack
     Snackbar.make(getView(), errorString, Snackbar.LENGTH_SHORT).show();
   }
 
@@ -350,7 +351,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
           linksHandlerFactory, timelineMetricsManager, socialRepository);
     } else if (card instanceof SocialStoreLatestApps) {
       return SocialStoreLatestAppsDisplayable.from((SocialStoreLatestApps) card, dateCalculator,
-          timelineMetricsManager, socialRepository);
+          timelineMetricsManager, socialRepository, spannableFactory);
     } else if (card instanceof Feature) {
       return FeatureDisplayable.from((Feature) card, dateCalculator, spannableFactory);
     } else if (card instanceof StoreLatestApps) {
@@ -368,10 +369,10 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
           timelineMetricsManager, socialRepository);
     } else if (card instanceof SocialInstall) {
       return SocialInstallDisplayable.from((SocialInstall) card, timelineMetricsManager,
-          spannableFactory, socialRepository);
+          spannableFactory, socialRepository, dateCalculator);
     } else if (card instanceof SocialRecommendation) {
       return SocialRecommendationDisplayable.from((SocialRecommendation) card,
-          timelineMetricsManager, spannableFactory, socialRepository);
+          timelineMetricsManager, spannableFactory, socialRepository, dateCalculator);
     }
     throw new IllegalArgumentException(
         "Only articles, features, store latest apps, app updates, videos, recommendations and similar cards supported.");

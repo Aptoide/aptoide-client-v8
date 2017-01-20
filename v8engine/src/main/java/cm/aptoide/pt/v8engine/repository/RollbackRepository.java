@@ -7,15 +7,18 @@ package cm.aptoide.pt.v8engine.repository;
 
 import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.realm.Rollback;
-import lombok.AllArgsConstructor;
 import rx.Observable;
 
 /**
  * Created by sithengineer on 30/08/16.
  */
-@AllArgsConstructor public class RollbackRepository implements Repository {
+public class RollbackRepository implements Repository {
 
   private final RollbackAccessor accessor;
+
+  public RollbackRepository(RollbackAccessor accessor) {
+    this.accessor = accessor;
+  }
 
   /*
 

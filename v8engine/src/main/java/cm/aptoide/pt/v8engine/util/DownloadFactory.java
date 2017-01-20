@@ -27,6 +27,10 @@ import io.realm.RealmList;
  */
 public class DownloadFactory {
 
+  private static final String UPDATE_ACTION = "?action=update";
+  private static final String INSTALL_ACTION = "?action=install";
+  private static final String DOWNGRADE_ACTION = "?action=downgrade";
+
   public Download create(GetAppMeta.App appToDownload, int downloadAction)
       throws IllegalArgumentException {
     final GetAppMeta.GetAppMetaFile file = appToDownload.getFile();
@@ -34,6 +38,11 @@ public class DownloadFactory {
     validateApp(appToDownload.getMd5(), appToDownload.getObb(), appToDownload.getPackageName(),
         appToDownload.getName(), file != null ? file.getPath() : null,
         file != null ? file.getPathAlt() : null);
+
+    String path = appToDownload.getFile().getPath();
+    String altPath = appToDownload.getFile().getPathAlt();
+
+    ApkPaths downloadPaths = getDownloadPaths(downloadAction, path, altPath);
 
     Download download = new Download();
     download.setMd5(appToDownload.getFile().getMd5sum());
@@ -45,9 +54,8 @@ public class DownloadFactory {
     download.setVersionName(appToDownload.getFile().getVername());
 
     download.setFilesToDownload(
-        createFileList(appToDownload.getMd5(), appToDownload.getPackageName(),
-            appToDownload.getFile().getPath(), appToDownload.getFile().getMd5sum(),
-            appToDownload.getObb(), appToDownload.getFile().getPathAlt(),
+        createFileList(appToDownload.getMd5(), appToDownload.getPackageName(), downloadPaths.path,
+            appToDownload.getFile().getMd5sum(), appToDownload.getObb(), downloadPaths.altPath,
             appToDownload.getFile().getVercode(), appToDownload.getFile().getVername()));
 
     return download;
@@ -67,12 +75,12 @@ public class DownloadFactory {
     download.setVersionName(updateDisplayable.getUpdateVersionName());
     download.setFilesToDownload(
         createFileList(updateDisplayable.getMd5(), updateDisplayable.getPackageName(),
-            updateDisplayable.getApkPath(), updateDisplayable.getAlternativeApkPath(),
-            updateDisplayable.getMd5(), updateDisplayable.getMainObbPath(),
-            updateDisplayable.getMainObbMd5(), updateDisplayable.getPatchObbPath(),
-            updateDisplayable.getPatchObbMd5(), updateDisplayable.getVersionCode(),
-            updateDisplayable.getUpdateVersionName(), updateDisplayable.getMainObbName(),
-            updateDisplayable.getPatchObbName()));
+            updateDisplayable.getApkPath() + UPDATE_ACTION,
+            updateDisplayable.getAlternativeApkPath() + UPDATE_ACTION, updateDisplayable.getMd5(),
+            updateDisplayable.getMainObbPath(), updateDisplayable.getMainObbMd5(),
+            updateDisplayable.getPatchObbPath(), updateDisplayable.getPatchObbMd5(),
+            updateDisplayable.getVersionCode(), updateDisplayable.getUpdateVersionName(),
+            updateDisplayable.getMainObbName(), updateDisplayable.getPatchObbName()));
     return download;
   }
 
@@ -81,6 +89,11 @@ public class DownloadFactory {
     validateApp(appToDownload.getFile().getMd5sum(), appToDownload.getObb(),
         appToDownload.getPackageName(), appToDownload.getName(),
         file != null ? file.getPath() : null, file != null ? file.getPathAlt() : null);
+
+    String path = appToDownload.getFile().getPath();
+    String altPath = appToDownload.getFile().getPathAlt();
+    ApkPaths downloadPaths = getDownloadPaths(downloadAction, path, altPath);
+
     Download download = new Download();
     download.setMd5(appToDownload.getFile().getMd5sum());
     download.setIcon(appToDownload.getIcon());
@@ -91,9 +104,9 @@ public class DownloadFactory {
     download.setVersionName(appToDownload.getFile().getVername());
     download.setFilesToDownload(
         createFileList(appToDownload.getFile().getMd5sum(), appToDownload.getPackageName(),
-            appToDownload.getFile().getPath(), appToDownload.getFile().getMd5sum(),
-            appToDownload.getObb(), appToDownload.getFile().getPathAlt(),
-            appToDownload.getFile().getVercode(), appToDownload.getFile().getVername()));
+            downloadPaths.path, appToDownload.getFile().getMd5sum(), appToDownload.getObb(),
+            downloadPaths.altPath, appToDownload.getFile().getVercode(),
+            appToDownload.getFile().getVername()));
     return download;
   }
 
@@ -106,14 +119,13 @@ public class DownloadFactory {
     download.setAppName(update.getLabel());
     download.setAction(Download.ACTION_UPDATE);
     download.setPackageName(update.getPackageName());
-    download.setVersionCode(update.getVersionCode());
+    download.setVersionCode(update.getUpdateVersionCode());
     download.setVersionName(update.getUpdateVersionName());
-    download.setFilesToDownload(
-        createFileList(update.getMd5(), update.getPackageName(), update.getApkPath(),
-            update.getAlternativeApkPath(), update.getMd5(), update.getMainObbPath(),
-            update.getMainObbMd5(), update.getPatchObbPath(), update.getPatchObbMd5(),
-            update.getVersionCode(), update.getUpdateVersionName(), update.getMainObbName(),
-            update.getPatchObbName()));
+    download.setFilesToDownload(createFileList(update.getMd5(), update.getPackageName(),
+        update.getApkPath() + UPDATE_ACTION, update.getAlternativeApkPath() + UPDATE_ACTION,
+        update.getMd5(), update.getMainObbPath(), update.getMainObbMd5(), update.getPatchObbPath(),
+        update.getPatchObbMd5(), update.getVersionCode(), update.getUpdateVersionName(),
+        update.getMainObbName(), update.getPatchObbName()));
     return download;
   }
 
@@ -130,24 +142,31 @@ public class DownloadFactory {
     download.setVersionCode(rollback.getVersionCode());
     download.setVersionName(rollback.getVersionName());
 
+    String alternativePath = rollback.getAlternativeApkPath();
+    String path = rollback.getApkPath();
     switch (Rollback.Action.valueOf(rollback.getAction())) {
       case INSTALL:
         download.setAction(Download.ACTION_INSTALL);
+        path += INSTALL_ACTION;
+        alternativePath += INSTALL_ACTION;
         break;
       case DOWNGRADE:
         download.setAction(Download.ACTION_DOWNGRADE);
+        path += DOWNGRADE_ACTION;
+        alternativePath += DOWNGRADE_ACTION;
         break;
       case UPDATE:
         download.setAction(Download.ACTION_UPDATE);
+        path += UPDATE_ACTION;
+        alternativePath += UPDATE_ACTION;
         break;
     }
 
     download.setFilesToDownload(
-        createFileList(rollback.getMd5(), rollback.getPackageName(), rollback.getApkPath(),
-            rollback.getAlternativeApkPath(), rollback.getMd5(), rollback.getMainObbPath(),
-            rollback.getMainObbMd5(), rollback.getPatchObbPath(), rollback.getPatchObbMd5(),
-            rollback.getVersionCode(), rollback.getVersionName(), rollback.getMainObbName(),
-            rollback.getPatchObbName()));
+        createFileList(rollback.getMd5(), rollback.getPackageName(), path, alternativePath,
+            rollback.getMd5(), rollback.getMainObbPath(), rollback.getMainObbMd5(),
+            rollback.getPatchObbPath(), rollback.getPatchObbMd5(), rollback.getVersionCode(),
+            rollback.getVersionName(), rollback.getMainObbName(), rollback.getPatchObbName()));
     return download;
   }
 
@@ -244,24 +263,59 @@ public class DownloadFactory {
     download.setVersionName(scheduled.getVersionName());
     download.setMd5(scheduled.getMd5());
     download.setIcon(scheduled.getIcon());
-
+    String path = scheduled.getPath();
+    String alternativePath = scheduled.getAlternativeApkPath();
     switch (scheduled.getAppActionAsEnum()) {
       case DOWNGRADE:
         download.setAction(Download.ACTION_DOWNGRADE);
+        path += DOWNGRADE_ACTION;
+        alternativePath += DOWNGRADE_ACTION;
         break;
       case UPDATE:
         download.setAction(Download.ACTION_UPDATE);
+        path += UPDATE_ACTION;
+        alternativePath += UPDATE_ACTION;
         break;
       case INSTALL:
       case OPEN:
       default:
         download.setAction(Download.ACTION_INSTALL);
+        path += INSTALL_ACTION;
+        alternativePath += INSTALL_ACTION;
     }
     download.setScheduled(true);
     download.setFilesToDownload(
-        createFileList(scheduled.getMd5(), scheduled.getPackageName(), scheduled.getPath(),
-            scheduled.getMd5(), scheduled.getObb(), scheduled.getAlternativeApkPath(),
-            scheduled.getVerCode(), scheduled.getVersionName()));
+        createFileList(scheduled.getMd5(), scheduled.getPackageName(), path, scheduled.getMd5(),
+            scheduled.getObb(), alternativePath, scheduled.getVerCode(),
+            scheduled.getVersionName()));
     return download;
+  }
+
+  ApkPaths getDownloadPaths(int downloadAction, String path, String altPath) {
+    switch (downloadAction) {
+      case Download.ACTION_INSTALL:
+        path += INSTALL_ACTION;
+        altPath += INSTALL_ACTION;
+        break;
+      case Download.ACTION_DOWNGRADE:
+        path += DOWNGRADE_ACTION;
+        altPath += DOWNGRADE_ACTION;
+        break;
+      case Download.ACTION_UPDATE:
+        path += UPDATE_ACTION;
+        altPath += UPDATE_ACTION;
+        break;
+    }
+    return new ApkPaths(path, altPath);
+  }
+
+  private class ApkPaths {
+    String path;
+    String altPath;
+
+    public ApkPaths(String path, String altPath) {
+      this.path = path;
+      this.altPath = altPath;
+    }
   }
 }

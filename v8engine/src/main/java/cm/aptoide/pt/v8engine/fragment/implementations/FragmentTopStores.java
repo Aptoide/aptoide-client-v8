@@ -2,7 +2,7 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
@@ -18,7 +18,7 @@ import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
-import com.trello.rxlifecycle.FragmentEvent;
+import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.ArrayList;
 import java.util.List;
 import rx.Observable;
@@ -73,20 +73,18 @@ public class FragmentTopStores extends GridRecyclerFragment implements Endless {
                 DataProvider.getContext()).getAptoideClientUUID());
     EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(this.getAdapter(), listStoresRequest, listener,
-            errorRequestListener);
+            Throwable::printStackTrace);
     recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(false);
   }
 
-  @Override public void setupToolbar() {
-    super.setupToolbar();
-    if (toolbar != null) {
-      ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-      ((AppCompatActivity) getActivity()).getSupportActionBar()
-          .setTitle(R.string.top_stores_fragment_title);
-      ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-      toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
-    }
+  @Override public void setupToolbarDetails(Toolbar toolbar) {
+    toolbar.setTitle(R.string.top_stores_fragment_title);
+    toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
+  }
+
+  @Override protected boolean displayHomeUpAsEnabled() {
+    return true;
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {

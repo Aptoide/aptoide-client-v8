@@ -33,7 +33,7 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 
   public static ListSearchAppsRequest of(String query, String storeName,
       HashMapNotNull<String, List<String>> subscribedStoresAuthMap, String accessToken,
-      String email, String aptoideClientUUID) {
+      String aptoideClientUUID) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
     List<String> stores = null;
@@ -55,7 +55,7 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 
   public static ListSearchAppsRequest of(String query, boolean addSubscribedStores,
       List<Long> subscribedStoresIds, HashMapNotNull<String, List<String>> subscribedStoresAuthMap,
-      String accessToken, String email, String aptoideClientUUID) {
+      String accessToken, String aptoideClientUUID) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
     if (addSubscribedStores) {
@@ -70,7 +70,7 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
   }
 
   public static ListSearchAppsRequest of(String query, boolean addSubscribedStores,
-      boolean trustedOnly, List<Long> subscribedStoresIds, String accessToken, String email,
+      boolean trustedOnly, List<Long> subscribedStoresIds, String accessToken,
       String aptoideClientUUID) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 

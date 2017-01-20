@@ -14,6 +14,7 @@ import cm.aptoide.pt.v8engine.repository.SocialRepository;
 import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.DateCalculator;
 import lombok.Getter;
 
 /**
@@ -38,12 +39,15 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
   public SocialRecommendationDisplayable() {
   }
 
-  public SocialRecommendationDisplayable(SocialRecommendation socialRecommendation, int avatarResource,
-      Store store, int titleResource, Comment.User user, long appId, String packageName,
-      String appName, String appIcon, String abUrl, long numberOfLikes, long numberOfComments,
-      TimelineMetricsManager timelineMetricsManager, SpannableFactory spannableFactory,
-      SocialRepository socialRepository) {
-    super(socialRecommendation, numberOfLikes, numberOfComments);
+  public SocialRecommendationDisplayable(SocialRecommendation socialRecommendation,
+      int avatarResource, Store store, int titleResource, Comment.User user, long appId,
+      String packageName, String appName, String appIcon, String abUrl, long numberOfLikes,
+      long numberOfComments, TimelineMetricsManager timelineMetricsManager,
+      SpannableFactory spannableFactory, SocialRepository socialRepository,
+      DateCalculator dateCalculator) {
+    super(socialRecommendation, numberOfLikes, numberOfComments, socialRecommendation.getUser(),
+        socialRecommendation.getUserSharer(), socialRecommendation.getDate(), spannableFactory,
+        dateCalculator);
     this.avatarResource = avatarResource;
     this.store = store;
     this.titleResource = titleResource;
@@ -60,7 +64,7 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
 
   public static Displayable from(SocialRecommendation socialRecommendation,
       TimelineMetricsManager timelineMetricsManager, SpannableFactory spannableFactory,
-      SocialRepository socialRepository) {
+      SocialRepository socialRepository, DateCalculator dateCalculator) {
 
     //for (App similarApp : socialRecommendation.getSimilarApps()) {
     //  similarAppsNames.add(similarApp.getName());
@@ -82,7 +86,7 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
         socialRecommendation.getApp().getPackageName(), socialRecommendation.getApp().getName(),
         socialRecommendation.getApp().getIcon(), abTestingURL, socialRecommendation.getLikes(),
         socialRecommendation.getComments(), timelineMetricsManager, spannableFactory,
-        socialRepository);
+        socialRepository, dateCalculator);
   }
 
   public String getTitle() {

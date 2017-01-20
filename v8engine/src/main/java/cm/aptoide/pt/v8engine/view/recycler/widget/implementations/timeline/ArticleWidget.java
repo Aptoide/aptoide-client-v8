@@ -14,10 +14,8 @@ import android.widget.TextView;
 import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.TimelineClickEvent;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.ArticleDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.android.schedulers.AndroidSchedulers;
@@ -27,7 +25,7 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class ArticleWidget extends CardWidget<ArticleDisplayable> {
 
-  private final String CARD_TYPE_NAME = "Article";
+  private final String CARD_TYPE_NAME = "ARTICLE";
   private TextView title;
   private TextView subtitle;
   private ImageView image;
@@ -78,18 +76,6 @@ public class ArticleWidget extends CardWidget<ArticleDisplayable> {
     ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
     ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
 
-    //relatedTo.setText(displayable.getAppRelatedToText(getContext(), appName));
-
-    if (getAppButton.getVisibility() != View.GONE && displayable.isGetApp(appName)) {
-      getAppButton.setVisibility(View.VISIBLE);
-      getAppButton.setText(displayable.getAppText(getContext(), appName));
-      getAppButton.setOnClickListener(view -> ((FragmentShower) getContext()).pushFragmentV4(
-          V8Engine.getFragmentProvider().newAppViewFragment(displayable.getAppId())));
-    }
-
-    //		CustomTabsHelper.getInstance()
-    //				.setUpCustomTabsService(displayable.getLink().getUrl(), getContext());
-
     url.setOnClickListener(v -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
       displayable.getLink().launch(getContext());
@@ -103,7 +89,7 @@ public class ArticleWidget extends CardWidget<ArticleDisplayable> {
               .url(displayable.getLink().getUrl())
               .app(packageName)
               .build())
-          .build(), AptoideAnalytics.OPEN_ARTICLE);
+          .build(), TimelineClickEvent.OPEN_ARTICLE);
     });
 
     compositeSubscription.add(displayable.getRelatedToApplication()
@@ -139,7 +125,7 @@ public class ArticleWidget extends CardWidget<ArticleDisplayable> {
               .url(displayable.getDeveloperLink().getUrl())
               .app(packageName)
               .build())
-          .build(), AptoideAnalytics.OPEN_BLOG);
+          .build(), TimelineClickEvent.OPEN_BLOG);
     }));
   }
 

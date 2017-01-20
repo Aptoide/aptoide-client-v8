@@ -26,7 +26,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import com.jakewharton.rxbinding.view.RxView;
-import com.trello.rxlifecycle.FragmentEvent;
+import com.trello.rxlifecycle.android.FragmentEvent;
 import com.trello.rxlifecycle.components.RxDialogFragment;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -84,10 +84,10 @@ public class CommentDialogFragment extends RxDialogFragment {
     return fragment;
   }
 
-  public static CommentDialogFragment newInstanceStoreComment(long id, String storeName) {
+  public static CommentDialogFragment newInstanceStoreComment(long storeId, String storeName) {
     Bundle args = new Bundle();
     args.putString(COMMENT_TYPE, CommentType.STORE.name());
-    args.putLong(RESOURCE_ID_AS_LONG, id);
+    args.putLong(RESOURCE_ID_AS_LONG, storeId);
 
     if(!TextUtils.isEmpty(storeName)) {
       args.putString(APP_OR_STORE_NAME, storeName);

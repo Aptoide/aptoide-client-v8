@@ -6,19 +6,22 @@
 package cm.aptoide.pt.dataprovider;
 
 import android.telephony.TelephonyManager;
-import lombok.AllArgsConstructor;
 
 /**
  * Created by marcelobenites on 7/27/16.
  */
-@AllArgsConstructor public class NetworkOperatorManager {
+public class NetworkOperatorManager {
 
   private final TelephonyManager telephonyManager;
+
+  public NetworkOperatorManager(TelephonyManager telephonyManager) {
+    this.telephonyManager = telephonyManager;
+  }
 
   public String getMobileCountryCode() {
     final String networkOperator = telephonyManager.getNetworkOperator();
     return networkOperator == null ? ""
-        : networkOperator.substring(0, mncPortionLength(networkOperator));
+        : networkOperator.substring(0, codePortionLength(networkOperator));
   }
 
   public boolean isSimStateReady() {
@@ -28,10 +31,10 @@ import lombok.AllArgsConstructor;
   public String getMobileNetworkCode() {
     final String networkOperator = telephonyManager.getNetworkOperator();
     return networkOperator == null ? ""
-        : networkOperator.substring(mncPortionLength(networkOperator));
+        : networkOperator.substring(codePortionLength(networkOperator));
   }
 
-  private int mncPortionLength(String networkOperator) {
+  private int codePortionLength(String networkOperator) {
     return Math.min(3, networkOperator.length());
   }
 

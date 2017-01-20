@@ -14,6 +14,8 @@ import cm.aptoide.pt.v8engine.repository.SocialRepository;
 import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.DateCalculator;
+import java.util.Date;
 import lombok.Getter;
 
 /**
@@ -40,10 +42,11 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
 
   public SocialInstallDisplayable(SocialInstall socialInstall, int icon, Store store,
       int titleResource, Comment.User user, long appId, String packageName, String appName,
-      String appIcon, String abTestingURL, long likes, long comments,
+      String appIcon, String abTestingURL, long likes, long comments, Date date,
       TimelineMetricsManager timelineMetricsManager, SpannableFactory spannableFactory,
-      SocialRepository socialRepository) {
-    super(socialInstall, likes, comments);
+      SocialRepository socialRepository, DateCalculator dateCalculator) {
+    super(socialInstall, likes, comments, socialInstall.getUser(), socialInstall.getUserSharer(),
+        date, spannableFactory, dateCalculator);
     this.avatarResource = icon;
     this.store = store;
     this.titleResource = titleResource;
@@ -60,7 +63,7 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
 
   public static Displayable from(SocialInstall socialInstall,
       TimelineMetricsManager timelineMetricsManager, SpannableFactory spannableFactory,
-      SocialRepository socialRepository) {
+      SocialRepository socialRepository, DateCalculator dateCalculator) {
 
     //for (App similarApp : socialInstall.getSimilarApps()) {
     //  similarAppsNames.add(similarApp.getName());
@@ -81,7 +84,8 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
         socialInstall.getUser(), socialInstall.getApp().getId(),
         socialInstall.getApp().getPackageName(), socialInstall.getApp().getName(),
         socialInstall.getApp().getIcon(), abTestingURL, socialInstall.getLikes(),
-        socialInstall.getComments(), timelineMetricsManager, spannableFactory, socialRepository);
+        socialInstall.getComments(), socialInstall.getDate(), timelineMetricsManager,
+        spannableFactory, socialRepository, dateCalculator);
   }
 
   public String getTitle() {

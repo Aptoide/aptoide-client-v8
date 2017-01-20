@@ -38,15 +38,17 @@ import java.util.Locale;
   // left side
   //private ImageView versionBadge;
   private TextView version;
-  //private ImageView trustedBadge;
+  private ImageView trustedBadge;
   private TextView date;
   private TextView downloads;
   // right side
   private ImageView storeIcon;
-  private TextView storeName;
+  private TextView storeNameView;
   private TextView followers;
 
   private long appId;
+  private String packageName;
+  private String storeName;
 
   public OtherVersionWidget(View itemView) {
     super(itemView);
@@ -56,12 +58,12 @@ import java.util.Locale;
     // left side
     //versionBadge = (ImageView) itemView.findViewById(R.id.version_icon);
     version = (TextView) itemView.findViewById(R.id.version_name);
-    //trustedBadge = (ImageView) itemView.findViewById(R.id.badge_icon);
+    trustedBadge = (ImageView) itemView.findViewById(R.id.badge_icon);
     date = (TextView) itemView.findViewById(R.id.version_date);
     downloads = (TextView) itemView.findViewById(R.id.downloads);
     // right side
     storeIcon = (ImageView) itemView.findViewById(R.id.store_icon);
-    storeName = (TextView) itemView.findViewById(R.id.store_name);
+    storeNameView = (TextView) itemView.findViewById(R.id.store_name);
     followers = (TextView) itemView.findViewById(R.id.store_followers);
 
     itemView.setOnClickListener(this);
@@ -72,6 +74,8 @@ import java.util.Locale;
     try {
       final App app = displayable.getPojo();
       appId = app.getId();
+      storeName = app.getStore().getName();
+      packageName = app.getPackageName();
 
       version.setText(app.getFile().getVername());
       setBadge(app);
@@ -81,7 +85,7 @@ import java.util.Locale;
           AptoideUtils.StringU.withSuffix(app.getStats().getDownloads())));
 
       ImageLoader.load(app.getStore().getAvatar(), storeIcon);
-      storeName.setText(app.getStore().getName());
+      storeNameView.setText(app.getStore().getName());
       followers.setText(String.format(DEFAULT_LOCALE,
           getContext().getString(R.string.appview_followers_count_text),
           app.getStore().getStats().getSubscribers()));
@@ -122,8 +126,7 @@ import java.util.Locale;
     //version.setCompoundDrawables(drawables[0], drawables[1], ImageLoader.load(badgeResId), drawables[3]);
     // does not work properly because "The Drawables must already have had setBounds(Rect) called". info from:
     // https://developer.android.com/reference/android/widget/TextView.html#setCompoundDrawables
-    version.setCompoundDrawablesWithIntrinsicBounds(drawables[0], drawables[1],
-        ImageLoader.load(badgeResId), drawables[3]);
+    trustedBadge.setImageResource(badgeResId);
   }
 
   private void setItemBackgroundColor(View itemView) {
@@ -151,6 +154,6 @@ import java.util.Locale;
   @Override public void onClick(View v) {
     Logger.d(TAG, "showing other version for app with id = " + appId);
     ((FragmentShower) getContext()).pushFragmentV4(
-        V8Engine.getFragmentProvider().newAppViewFragment(appId));
+        V8Engine.getFragmentProvider().newAppViewFragment(appId, packageName, null, storeName));
   }
 }

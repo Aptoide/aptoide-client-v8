@@ -1,10 +1,14 @@
 package cm.aptoide.pt.viewRateAndCommentReviews;
 
 import cm.aptoide.pt.model.v7.Review;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
-@AllArgsConstructor @Data final class ReviewWithAppName {
+@Data final class ReviewWithAppName {
   private final String appName;
   private final Review review;
+
+  public ReviewWithAppName(String appName, Review review) {
+    this.appName = appName;
+    this.review = review;
+  }
 }

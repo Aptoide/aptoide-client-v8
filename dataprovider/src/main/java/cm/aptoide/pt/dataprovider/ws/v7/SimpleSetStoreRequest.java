@@ -4,8 +4,14 @@ import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
+import cm.aptoide.pt.model.v7.store.Store;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import org.json.JSONException;
 import org.json.JSONObject;
 import rx.Observable;
@@ -22,9 +28,17 @@ public class SimpleSetStoreRequest extends V7<BaseV7Response, SimpleSetStoreRequ
     super(body, baseHost);
   }
 
-  public static SimpleSetStoreRequest of(String accessToken, String aptoideClientUUID, String storeName, String storeTheme) {
+  public static SimpleSetStoreRequest of(String accessToken, String aptoideClientUUID,
+      String storeName, String storeTheme) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
     Body body = new Body(accessToken, storeName, storeTheme);
+    return new SimpleSetStoreRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
+  }
+
+  public static SimpleSetStoreRequest of(String accessToken, String aptoideClientUUID,
+      long storeId, String storeTheme, String storeDescription) {
+    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+    Body body = new Body(accessToken, storeId, storeTheme, storeDescription);
     return new SimpleSetStoreRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
@@ -36,21 +50,36 @@ public class SimpleSetStoreRequest extends V7<BaseV7Response, SimpleSetStoreRequ
   @Data @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody {
 
     private String storeName;
-    private String storeProperties;
+    //private String storeProperties;
     private String accessToken;
+    private Long storeId;
+    @Getter @Setter private StoreProperties storeProperties;
 
     public Body(String accessToken, String storeName, String storeTheme) {
       this.accessToken = accessToken;
       this.storeName = storeName;
-      if (storeTheme.length() > 0 ) {
-        try {
-          storeProperties = (new JSONObject().put("theme", storeTheme)).toString();
-        } catch (JSONException e) {
-          Logger.e(SimpleSetStoreRequest.Body.class.getSimpleName(),
-              "Couldn't build store_properties json", e);
-        }
-      }
+      storeProperties = new StoreProperties(storeTheme, null);
+    }
+
+    public Body(String accessToken, long storeId, String storeTheme, String storeDescription) {
+      this.accessToken = accessToken;
+      this.storeId = storeId;
+      storeProperties = new StoreProperties(storeTheme, storeDescription);
+    }
   }
+
+  @Data
+  public static class StoreProperties {
+
+    @JsonProperty("theme")
+    private String theme;
+    @JsonProperty("description")
+    private String description;
+
+    public StoreProperties(String theme, String description) {
+      this.theme = theme;
+      this.description = description;
+    }
 
   }
 }

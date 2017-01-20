@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.util.Pair;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
+import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
@@ -79,9 +80,7 @@ public class DisplayablesFactory {
             displayables.add(getMyStores(wsWidget, storeRepository, storeTheme));
             break;
           case STORES_GROUP:
-            displayables.add(
-                new StoreGridHeaderDisplayable(wsWidget, storeTheme, wsWidget.getTag()));
-            displayables.add(getStores(wsWidget.getViewObject()));
+            displayables.add(getStores(wsWidget, storeTheme));
             break;
 
           case DISPLAYS:
@@ -107,13 +106,7 @@ public class DisplayablesFactory {
             displayables.add(new GridStoreMetaDisplayable((GetStoreMeta) wsWidget.getViewObject()));
             break;
           case REVIEWS_GROUP:
-            ListFullReviews reviewsList = (ListFullReviews) wsWidget.getViewObject();
-            if (reviewsList != null
-                && reviewsList.getDatalist() != null
-                && reviewsList.getDatalist().getList().size() > 0) {
-              displayables.add(new StoreGridHeaderDisplayable(wsWidget));
-              displayables.add(createReviewsDisplayables(reviewsList));
-            }
+            displayables.addAll(createReviewsGroupDisplayables(wsWidget));
             break;
           case MY_STORE_META:
             displayables.addAll(createMyStoreDisplayables(wsWidget.getViewObject()));
@@ -122,24 +115,8 @@ public class DisplayablesFactory {
             displayables.add(createRecommendedStores(wsWidget, storeTheme, storeRepository));
             break;
           case COMMENTS_GROUP:
-            Pair<ListComments, BaseRequestWithStore.StoreCredentials> data =
-                (Pair<ListComments, BaseRequestWithStore.StoreCredentials>) wsWidget.getViewObject();
-            ListComments comments = data.first;
-            if (comments != null
-                && comments.getDatalist() != null
-                && comments.getDatalist().getList().size() > 0) {
-              displayables.add(new StoreGridHeaderDisplayable(wsWidget));
-              displayables.add(
-                  new StoreLatestCommentsDisplayable(data.second.getId(), data.second.getName(),
-                      comments.getDatalist().getList()));
-            } else {
-              displayables.add(new StoreGridHeaderDisplayable(wsWidget));
-              displayables.add(
-                  new StoreAddCommentDisplayable(data.second.getId(), data.second.getName(),
-                      StoreThemeEnum.APTOIDE_STORE_THEME_DEFAULT));
-            }
+            displayables.addAll(createCommentsGroup(wsWidget));
             break;
-
           case APP_META:
             GetStoreWidgets.WSWidget.Data dataObj = wsWidget.getData();
             String message = dataObj.getMessage();
@@ -148,6 +125,42 @@ public class DisplayablesFactory {
             break;
         }
       }
+    }
+
+    return displayables;
+  }
+
+  private static List<Displayable> createCommentsGroup(GetStoreWidgets.WSWidget wsWidget) {
+    List<Displayable> displayables = new LinkedList<>();
+
+    Pair<ListComments, BaseRequestWithStore.StoreCredentials> data =
+        (Pair<ListComments, BaseRequestWithStore.StoreCredentials>) wsWidget.getViewObject();
+    ListComments comments = data.first;
+    displayables.add(new StoreGridHeaderDisplayable(wsWidget));
+    if (comments != null
+        && comments.getDatalist() != null
+        && comments.getDatalist().getList().size() > 0) {
+      displayables.add(
+          new StoreLatestCommentsDisplayable(data.second.getId(), data.second.getName(),
+              comments.getDatalist().getList()));
+    } else {
+      displayables.add(new StoreAddCommentDisplayable(data.second.getId(), data.second.getName(),
+          StoreThemeEnum.APTOIDE_STORE_THEME_DEFAULT));
+    }
+
+    return displayables;
+  }
+
+  private static List<Displayable> createReviewsGroupDisplayables(
+      GetStoreWidgets.WSWidget wsWidget) {
+    List<Displayable> displayables = new LinkedList<>();
+
+    ListFullReviews reviewsList = (ListFullReviews) wsWidget.getViewObject();
+    if (reviewsList != null
+        && reviewsList.getDatalist() != null
+        && reviewsList.getDatalist().getList().size() > 0) {
+      displayables.add(new StoreGridHeaderDisplayable(wsWidget));
+      displayables.add(createReviewsDisplayables(reviewsList));
     }
 
     return displayables;
@@ -209,7 +222,8 @@ public class DisplayablesFactory {
     return new DisplayableGroup(displayables);
   }
 
-  private static DisplayableGroup createReviewsDisplayables(ListFullReviews listFullReviews) {
+  private static Displayable createReviewsDisplayables(
+      ListFullReviews listFullReviews) {
     List<FullReview> reviews = listFullReviews.getDatalist().getList();
     final List<Displayable> displayables = new ArrayList<>(reviews.size());
     for (int i = 0; i < reviews.size(); i++) {
@@ -226,7 +240,7 @@ public class DisplayablesFactory {
       List<Displayable> tmp = new ArrayList<>(ads.size());
       for (GetAdsResponse.Ad ad : ads) {
 
-        GridAdDisplayable diplayable = new GridAdDisplayable(ad, wsWidget.getTag());
+        GridAdDisplayable diplayable = new GridAdDisplayable(MinimalAd.from(ad), wsWidget.getTag());
         tmp.add(diplayable);
       }
       return new DisplayableGroup(tmp);
@@ -299,13 +313,15 @@ public class DisplayablesFactory {
     return new DisplayableGroup(displayables);
   }
 
-  private static Displayable getStores(Object viewObject) {
+  private static Displayable getStores(GetStoreWidgets.WSWidget wsWidget, String storeTheme) {
+    Object viewObject = wsWidget.getViewObject();
     ListStores listStores = (ListStores) viewObject;
     if (listStores == null) {
       return new EmptyDisplayable();
     }
     List<Store> stores = listStores.getDatalist().getList();
     List<Displayable> tmp = new ArrayList<>(stores.size());
+    tmp.add(new StoreGridHeaderDisplayable(wsWidget, storeTheme, wsWidget.getTag()));
     for (Store store : stores) {
 
       GridStoreDisplayable diplayable = new GridStoreDisplayable(store);

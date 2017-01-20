@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.repository;
 
 import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.database.accessors.PaymentConfirmationAccessor;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingAvailableRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.InAppBillingConsumeRequest;
@@ -17,26 +18,30 @@ import cm.aptoide.pt.iab.SKU;
 import cm.aptoide.pt.model.v3.ErrorResponse;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
 import cm.aptoide.pt.model.v3.InAppBillingSkuDetailsResponse;
-import cm.aptoide.pt.model.v3.PaymentService;
-import cm.aptoide.pt.v8engine.payment.ProductFactory;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.util.Collections;
 import java.util.List;
-import lombok.AllArgsConstructor;
 import rx.Observable;
 
 /**
  * Created by marcelobenites on 8/11/16.
  */
-@AllArgsConstructor public class InAppBillingRepository {
+public class InAppBillingRepository {
 
   private final NetworkOperatorManager operatorManager;
-  private final ProductFactory productFactory;
+  private final PaymentConfirmationAccessor confirmationAccessor;
+
+  public InAppBillingRepository(NetworkOperatorManager operatorManager,
+      PaymentConfirmationAccessor confirmationAccessor) {
+    this.operatorManager = operatorManager;
+    this.confirmationAccessor = confirmationAccessor;
+  }
 
   public Observable<Void> getInAppBilling(int apiVersion, String packageName, String type) {
-    return InAppBillingAvailableRequest.of(apiVersion, packageName, type,
-        AptoideAccountManager.getUserEmail()).observe().flatMap(response -> {
+    return InAppBillingAvailableRequest.of(apiVersion, packageName, type)
+        .observe()
+        .flatMap(response -> {
       if (response != null && response.isOk()) {
         if (response.getInAppBillingAvailable().isAvailable()) {
           return Observable.just(null);
@@ -64,7 +69,7 @@ import rx.Observable;
   public Observable<InAppBillingPurchasesResponse.PurchaseInformation> getInAppPurchaseInformation(
       int apiVersion, String packageName, String type) {
     return InAppBillingPurchasesRequest.of(apiVersion, packageName, type,
-        AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail())
+        AptoideAccountManager.getAccessToken())
         .observe()
         .flatMap(response -> {
           if (response != null && response.isOk()) {
@@ -78,10 +83,12 @@ import rx.Observable;
   public Observable<Void> deleteInAppPurchase(int apiVersion, String packageName,
       String purchaseToken) {
     return InAppBillingConsumeRequest.of(apiVersion, packageName, purchaseToken,
-        AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail())
+        AptoideAccountManager.getAccessToken())
         .observe()
         .flatMap(response -> {
           if (response != null && response.isOk()) {
+            // TODO sync all payment confirmations instead. For now there is no web service for that.
+            confirmationAccessor.removeAll();
             return Observable.just(null);
           }
           if (isDeletionItemNotFound(response.getErrors())) {
@@ -93,12 +100,6 @@ import rx.Observable;
         });
   }
 
-  public Observable<List<PaymentService>> getPaymentServices(int apiVersion, String packageName,
-      String sku, String type) {
-    return getSKUDetails(apiVersion, packageName, sku, type).map(
-        response -> response.getPaymentServices());
-  }
-
   public Observable<InAppBillingSkuDetailsResponse> getSKUDetails(int apiVersion,
       String packageName, String sku, String type) {
     return getSKUListDetails(apiVersion, packageName, Collections.singletonList(sku), type);
@@ -107,7 +108,7 @@ import rx.Observable;
   private Observable<InAppBillingSkuDetailsResponse> getSKUListDetails(int apiVersion,
       String packageName, List<String> skuList, String type) {
     return InAppBillingSkuDetailsRequest.of(apiVersion, packageName, skuList, operatorManager, type,
-        AptoideAccountManager.getAccessToken(), AptoideAccountManager.getUserEmail())
+        AptoideAccountManager.getAccessToken())
         .observe()
         .flatMap(response -> {
           if (response != null && response.isOk()) {

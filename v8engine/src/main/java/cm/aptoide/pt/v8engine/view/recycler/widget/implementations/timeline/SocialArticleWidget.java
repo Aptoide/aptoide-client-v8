@@ -8,12 +8,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.TimelineClickEvent;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.SocialArticleDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.android.schedulers.AndroidSchedulers;
@@ -24,10 +21,11 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayable> {
 
-  private static final String CARD_TYPE_NAME = "Social Article";
+  private static final String CARD_TYPE_NAME = "SOCIAL_ARTICLE";
 
   private TextView title;
   private TextView subtitle;
+  //private TextView time;
   private ImageView storeAvatar;
   private ImageView userAvatar;
   private TextView articleTitle;
@@ -61,7 +59,7 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
     getAppButton =
         (Button) itemView.findViewById(R.id.partial_social_timeline_thumbnail_get_app_button);
     cardView = (CardView) itemView.findViewById(R.id.card);
-    articleHeader = itemView.findViewById(R.id.displayable_social_timeline_article_header);
+    articleHeader = itemView.findViewById(R.id.social_header);
     relatedTo = (TextView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_related_to);
   }
 
@@ -99,14 +97,9 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
     articleTitle.setText(displayable.getArticleTitle());
     setCardViewMargin(displayable, cardView);
 
+    //time.setText(displayable.getTimeSinceLastUpdate(getContext()));
 
     ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
-    if (getAppButton.getVisibility() != View.GONE && displayable.isGetApp(appName)) {
-      getAppButton.setVisibility(View.VISIBLE);
-      getAppButton.setText(displayable.getAppText(getContext(), appName));
-      getAppButton.setOnClickListener(view -> ((FragmentShower) getContext()).pushFragmentV4(
-          V8Engine.getFragmentProvider().newAppViewFragment(displayable.getAppId())));
-    }
 
     url.setOnClickListener(v -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
@@ -121,7 +114,7 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
               .url(displayable.getLink().getUrl())
               .app(packageName)
               .build())
-          .build(), AptoideAnalytics.OPEN_ARTICLE);
+          .build(), TimelineClickEvent.OPEN_ARTICLE);
     });
 
     compositeSubscription.add(displayable.getRelatedToApplication()
@@ -157,7 +150,7 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
               .url(displayable.getDeveloperLink().getUrl())
               .app(packageName)
               .build())
-          .build(), AptoideAnalytics.OPEN_BLOG);
+          .build(), TimelineClickEvent.OPEN_BLOG);
     }));
   }
 

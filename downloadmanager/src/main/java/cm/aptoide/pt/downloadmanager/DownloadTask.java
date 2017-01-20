@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
+import cm.aptoide.pt.downloadmanager.interfaces.Analytics;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
@@ -19,6 +20,7 @@ import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadLargeFileListener;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.exception.FileDownloadHttpException;
+import io.realm.RealmList;
 import java.io.File;
 import java.util.concurrent.TimeUnit;
 import lombok.Setter;
@@ -46,8 +48,11 @@ class DownloadTask extends FileDownloadLargeFileListener {
    */
   @Setter boolean isSerial = true;
   private ConnectableObservable<Download> observable;
+  private Analytics analytics;
 
-  DownloadTask(DownloadAccessor downloadAccessor, Download download, FileUtils fileUtils) {
+  DownloadTask(DownloadAccessor downloadAccessor, Download download, FileUtils fileUtils,
+      Analytics analytics) {
+    this.analytics = analytics;
     this.download = download;
     this.md5 = download.getMd5();
     this.downloadAccessor = downloadAccessor;
@@ -123,12 +128,30 @@ class DownloadTask extends FileDownloadLargeFileListener {
   public void startDownload() throws IllegalArgumentException {
     observable.connect();
     if (download.getFilesToDownload() != null) {
-      for (FileToDownload fileToDownload : download.getFilesToDownload()) {
+
+      RealmList<FileToDownload> filesToDownload = download.getFilesToDownload();
+      FileToDownload fileToDownload = null;
+      for (int i = 0; i < filesToDownload.size(); i++) {
+
+        fileToDownload = filesToDownload.get(i);
+
         if (TextUtils.isEmpty(fileToDownload.getLink())) {
           throw new IllegalArgumentException("A link to download must be provided");
         }
         BaseDownloadTask baseDownloadTask =
             FileDownloader.getImpl().create(fileToDownload.getLink());
+        /*
+         * Aptoide - events 2 : download
+         * Get X-Mirror and add to the event
+         */
+        baseDownloadTask.addHeader(Constants.VERSION_CODE,
+            String.valueOf(download.getVersionCode()));
+        baseDownloadTask.addHeader(Constants.PACKAGE, download.getPackageName());
+        baseDownloadTask.addHeader(Constants.FILE_TYPE, String.valueOf(i));
+        /*
+         * end
+         */
+
         baseDownloadTask.setTag(APTOIDE_DOWNLOAD_TASK_TAG_KEY, this);
         if (fileToDownload.getFileName().endsWith(".temp")) {
           fileToDownload.setFileName(fileToDownload.getFileName().replace(".temp", ""));
@@ -259,6 +282,9 @@ class DownloadTask extends FileDownloadLargeFileListener {
       // Apparently throwable e can be null.
       if (e != null) {
         e.printStackTrace();
+      }
+      if (analytics != null) {
+        analytics.onError(download, e);
       }
     }
     setDownloadStatus(Download.ERROR, download, task);

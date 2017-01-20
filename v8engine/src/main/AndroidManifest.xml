@@ -8,16 +8,18 @@
     package="cm.aptoide.pt.v8engine">
 
 
+  <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT"/>
   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
   <uses-permission android:name="android.permission.INSTALL_PACKAGES"/>
+  <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"/>
+  <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+  <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
+  <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
 
-    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-
-    <uses-sdk
-      android:minSdkVersion="15"
-      tools:overrideLibrary="com.paypal.android.sdk.payments"
-      />
+  <uses-sdk
+    android:minSdkVersion="15"
+    tools:overrideLibrary="com.paypal.android.sdk.payments"
+    />
 
   <application
       android:allowBackup="true"
@@ -34,8 +36,10 @@
 
     <activity
         android:name=".activity.PaymentActivity"
-        android:theme="@style/AppBaseThemeTransparent"/>
-    <activity android:name=".payment.paypal.PayPalPaymentActivity"/>
+        android:theme="@style/AppBaseTheme.Payment"/>
+
+    <activity android:name=".payment.providers.paypal.PayPalPaymentActivity"/>
+    <activity android:name=".payment.authorizations.WebAuthorizationActivity"/>
 
     <activity
         android:name=".receivers.DeepLinkIntentReceiver"
@@ -161,7 +165,8 @@
         android:enabled="true"
         android:exported="false">
       <intent-filter>
-        <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+        <!--<action android:name="android.net.conn.CONNECTIVITY_CHANGE"/> -->
+        <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
       </intent-filter>
     </receiver>
 

@@ -64,8 +64,6 @@ public class Displayables implements LifecycleSchim {
 
   /**
    * Uses a breadth-first-search to reach all leaf nodes transversing the list in width.
-   *
-   * @param displayable
    */
   private void addDisplayableGroup(DisplayableGroup displayable) {
     temporaryDisplayables.clear();
@@ -82,8 +80,6 @@ public class Displayables implements LifecycleSchim {
 
   /**
    * Uses a breadth-first-search to reach all leaf nodes transversing the list in width.
-   *
-   * @param position
    */
   private void addDisplayableGroup(int position, DisplayableGroup displayable) {
     temporaryDisplayables.clear();

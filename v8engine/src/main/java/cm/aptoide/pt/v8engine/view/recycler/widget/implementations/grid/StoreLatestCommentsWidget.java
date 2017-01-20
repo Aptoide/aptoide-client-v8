@@ -17,6 +17,7 @@ import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.util.CommentOperations;
+import cm.aptoide.pt.v8engine.view.custom.HorizontalDividerItemDecoration;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentDisplayable;
@@ -25,7 +26,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import cm.aptoide.pt.viewRateAndCommentReviews.CommentDialogFragment;
 import cm.aptoide.pt.viewRateAndCommentReviews.CommentNode;
 import cm.aptoide.pt.viewRateAndCommentReviews.ComplexComment;
-import com.trello.rxlifecycle.FragmentEvent;
+import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.ArrayList;
 import java.util.List;
 import rx.Observable;
@@ -53,6 +54,8 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
     LinearLayoutManager layoutManager = new LinearLayoutManager(recyclerView.getContext());
     layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
     recyclerView.setLayoutManager(layoutManager);
+
+    recyclerView.addItemDecoration(new HorizontalDividerItemDecoration(getContext()));
 
     storeId = displayable.getStoreId();
     storeName = displayable.getStoreName();

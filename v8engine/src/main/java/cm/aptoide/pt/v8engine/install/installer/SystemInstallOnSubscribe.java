@@ -13,20 +13,25 @@ import android.net.Uri;
 import android.os.RemoteException;
 import cm.aptoide.pt.v8engine.install.exception.InstallationException;
 import java.lang.reflect.Method;
-import lombok.AllArgsConstructor;
 import rx.Observable;
 import rx.Subscriber;
 
 /**
  * Created by marcelobenites on 7/19/16.
  */
-@AllArgsConstructor public class SystemInstallOnSubscribe implements Observable.OnSubscribe<Void> {
+public class SystemInstallOnSubscribe implements Observable.OnSubscribe<Void> {
 
   private static final int INSTALL_SUCCEEDED = 0x00000001;
   private static final int INSTALL_REPLACE_EXISTING = 0x00000002;
   private final Context context;
   private final PackageManager packageManager;
   private final Uri packageUri;
+
+  public SystemInstallOnSubscribe(Context context, PackageManager packageManager, Uri packageUri) {
+    this.context = context;
+    this.packageManager = packageManager;
+    this.packageUri = packageUri;
+  }
 
   @Override public void call(Subscriber<? super Void> subscriber) {
     final IPackageInstallObserver.Stub silentObserver = new IPackageInstallObserver.Stub() {

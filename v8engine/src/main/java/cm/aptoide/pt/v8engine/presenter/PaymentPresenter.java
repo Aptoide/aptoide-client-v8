@@ -6,18 +6,21 @@
 package cm.aptoide.pt.v8engine.presenter;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.v8engine.payment.AptoidePay;
+import cm.aptoide.pt.v8engine.payment.Payer;
 import cm.aptoide.pt.v8engine.payment.Payment;
-import cm.aptoide.pt.v8engine.payment.PaymentManager;
+import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.payment.Purchase;
-import cm.aptoide.pt.v8engine.payment.exception.PaymentCancellationException;
-import cm.aptoide.pt.v8engine.payment.product.AptoideProduct;
+import cm.aptoide.pt.v8engine.payment.products.AptoideProduct;
+import cm.aptoide.pt.v8engine.repository.ProductRepository;
 import cm.aptoide.pt.v8engine.view.PaymentView;
 import cm.aptoide.pt.v8engine.view.View;
+import java.util.ArrayList;
 import java.util.List;
 import javax.security.auth.login.LoginException;
+import rx.Completable;
 import rx.Observable;
+import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -26,179 +29,265 @@ import rx.schedulers.Schedulers;
  */
 public class PaymentPresenter implements Presenter {
 
-  private static final String EXTRA_CURRENT_PAYMENT_TYPE =
-      "cm.aptoide.pt.v8engine.payment.extra.CURRENT_PAYMENT_TYPE";
-  private static final String EXTRA_IS_PROCESSING_PAYMENT =
-      "cm.aptoide.pt.v8engine.payment.extra.IS_PROCESSING_PAYMENT";
   private static final String EXTRA_IS_PROCESSING_LOGIN =
       "cm.aptoide.pt.v8engine.payment.extra.IS_PROCESSING_LOGIN";
 
   private final PaymentView view;
-  private final PaymentManager paymentManager;
+  private final AptoidePay aptoidePay;
   private final AptoideProduct product;
+  private final Payer payer;
+  private final List<Payment> otherPayments;
+  private final ProductRepository productRepository;
 
-  private String currentPaymentType;
-  private boolean isProcessingPayment;
-  private boolean isProcessingLogin;
+  private boolean processingLogin;
+  private Payment selectedPayment;
+  private boolean otherPaymentsVisible;
 
-  public PaymentPresenter(PaymentView view, PaymentManager paymentManager, AptoideProduct product) {
+  public PaymentPresenter(PaymentView view, AptoidePay aptoidePay, AptoideProduct product,
+      Payer payer, ProductRepository productRepository) {
     this.view = view;
-    this.paymentManager = paymentManager;
+    this.aptoidePay = aptoidePay;
     this.product = product;
+    this.payer = payer;
+    this.productRepository = productRepository;
+    this.otherPayments = new ArrayList<>();
   }
 
   @Override public void present() {
 
     view.getLifecycle()
         .filter(event -> View.LifecycleEvent.RESUME.equals(event))
-        .flatMap(resumed -> Observable.merge(login(), cancellationSelection()))
+        .flatMap(resumed -> Observable.merge(paymentUseSelection(), otherPaymentsSelection(),
+            cancellationSelection()))
+        .retry()
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
 
     view.getLifecycle()
         .filter(event -> View.LifecycleEvent.CREATE.equals(event))
-        .flatMap(created -> pay())
+        .flatMap(created -> Observable.merge(buySelection(), paymentRegisterSelection()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe();
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(selected -> {
+        }, throwable -> hideGlobalAndPaymentsLoadingAndDismiss(throwable));
+
+    view.getLifecycle()
+        .filter(event -> View.LifecycleEvent.CREATE.equals(event))
+        .flatMap(created -> login())
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(loggedIn -> showGlobalAndPaymentsLoading())
+        .flatMap(loggedIn -> Observable.merge(aptoidePay.getConfirmation(product),
+            loadPayments().cast(PaymentConfirmation.class)))
+        .observeOn(AndroidSchedulers.mainThread())
+        .flatMap(paymentConfirmation -> {
+
+          if (paymentConfirmation.isPending()) {
+            view.showGlobalLoading();
+          } else {
+            showProduct(product);
+            view.hideGlobalLoading();
+          }
+
+          if (paymentConfirmation.isCompleted()) {
+            return productRepository.getPurchase(product).toObservable();
+          }
+          return Observable.empty();
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(purchase -> hideGlobalAndPaymentsLoadingAndDismiss(purchase),
+            throwable -> hideGlobalAndPaymentsLoadingAndDismiss(throwable));
   }
 
   @Override public void saveState(Bundle state) {
-    state.putBoolean(EXTRA_IS_PROCESSING_PAYMENT, isProcessingPayment);
-    state.putBoolean(EXTRA_IS_PROCESSING_LOGIN, isProcessingLogin);
-    state.putString(EXTRA_CURRENT_PAYMENT_TYPE, currentPaymentType);
+    state.putBoolean(EXTRA_IS_PROCESSING_LOGIN, processingLogin);
   }
 
   @Override public void restoreState(Bundle state) {
-    this.currentPaymentType = state.getString(EXTRA_CURRENT_PAYMENT_TYPE);
-    this.isProcessingPayment = state.getBoolean(EXTRA_IS_PROCESSING_PAYMENT);
-    this.isProcessingLogin = state.getBoolean(EXTRA_IS_PROCESSING_LOGIN);
+    this.processingLogin = state.getBoolean(EXTRA_IS_PROCESSING_LOGIN);
   }
 
   private Observable<Void> login() {
-    return getProcessingLoginResult().onErrorResumeNext(
-        AptoideAccountManager.login(view.getContext())
-            .doOnSubscribe(() -> saveLoginState())
-            .map(success -> true)).<Void>flatMap(loggedIn -> (loggedIn) ? Observable.just(null)
-        : Observable.error(new LoginException("Not logged In. Payment can not be " + "processed!")))
+    return Observable.defer(() -> {
+      if (processingLogin) {
+        return Observable.just(payer.isLoggedIn())
+            .flatMap(loggedIn -> (loggedIn) ? Observable.just(null) : Observable.error(
+                new LoginException("Not logged In. Payment can not be processed!")));
+      }
+      return payer.login().doOnSubscribe(() -> saveLoginState());
+    })
         .doOnNext(loggedIn -> clearLoginState())
-        .doOnError(throwable -> clearLoginStateAndDismiss(throwable))
-        .onErrorReturn(throwable -> null)
+        .doOnError(throwable -> clearLoginState())
         .subscribeOn(Schedulers.computation());
   }
 
-  private Observable<Purchase> pay() {
-    return getProcessingPaymentPurchase().doOnSubscribe(() -> showProductAndShowLoading(product))
-        .flatMap(purchase -> {
-          if (purchase == null) {
-            return paymentManager.getProductPayments(view.getContext(), product)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(payments -> removeLoadingAndShowPayments(payments))
-                .filter(payments -> !payments.isEmpty())
-                .flatMap(payments -> paymentSelection());
+  private Observable<Void> loadPayments() {
+    return aptoidePay.availablePayments(product)
+        .observeOn(AndroidSchedulers.mainThread())
+        .flatMap(payments -> {
+          if (payments.isEmpty()) {
+            view.hidePaymentsLoading();
+            view.showPaymentsNotFoundMessage();
+            return Observable.empty();
+          } else {
+            view.hidePaymentsLoading();
+            return getDefaultPayment(payments).flatMapCompletable(
+                defaultPayment -> showPayments(payments, defaultPayment)).<Void>toObservable();
           }
-          return Observable.just(purchase);
+        });
+  }
+
+  private Completable showPayments(List<Payment> allPayments, Payment selectedPayment) {
+    return Completable.fromAction(() -> showSelectedPayment(selectedPayment))
+        .andThen(Observable.from(allPayments)
+            .filter(payment -> payment.getId() != selectedPayment.getId())
+            .toList()
+            .toSingle()
+            .flatMapCompletable(otherPayments -> showOtherPayments(otherPayments)));
+  }
+
+  private Observable<Void> paymentUseSelection() {
+    return view.usePaymentSelection()
+        .flatMap(
+            paymentViewModel -> getSelectedPayment(otherPayments, paymentViewModel)).<Void>flatMap(
+            selectedPayment -> showPayments(getAllPayments(), selectedPayment).doOnCompleted(
+                () -> hideOtherPayments()).toObservable()).compose(
+            view.bindUntilEvent(View.LifecycleEvent.PAUSE));
+  }
+
+  private List<Payment> getAllPayments() {
+    final List<Payment> allPayments = new ArrayList<>(otherPayments.size());
+    allPayments.addAll(otherPayments);
+    if (selectedPayment != null) {
+      allPayments.add(selectedPayment);
+    }
+    return allPayments;
+  }
+
+  private Observable<Void> paymentRegisterSelection() {
+    return view.registerPaymentSelection()
+        .doOnNext(selection -> view.showGlobalLoading())
+        .flatMap(paymentViewModel -> getSelectedPayment(getAllPayments(),
+            paymentViewModel))
+        .<Void>flatMap(payment -> aptoidePay.authorize(payment)
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnCompleted(() -> view.hideGlobalLoading())
+              .toObservable());
+  }
+
+  private Observable<Void> buySelection() {
+    return view.buySelection()
+        .doOnNext(payment -> view.showGlobalLoading())
+        .flatMap(payment -> aptoidePay.process(selectedPayment).toObservable());
+  }
+
+  private Observable<Void> otherPaymentsSelection() {
+    return view.otherPaymentsSelection().<Void>flatMap(event -> {
+      if (!otherPaymentsVisible) {
+        return showPayments(getAllPayments(), selectedPayment).toObservable();
+      }
+      hideOtherPayments();
+      return Observable.empty();
+    }).compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE));
+  }
+
+  private void hideOtherPayments() {
+    view.hideOtherPayments();
+    otherPaymentsVisible = false;
+  }
+
+  private Completable showOtherPayments(List<Payment> otherPayments) {
+    return Observable.from(otherPayments)
+        .map(payment -> convertToPaymentViewModel(payment))
+        .toList()
+        .doOnNext(paymentViewModels -> view.showOtherPayments(paymentViewModels))
+        .doOnNext(paymentViewModels -> otherPaymentsVisible = true)
+        .doOnCompleted(() -> {
+          this.otherPayments.clear();
+          this.otherPayments.addAll(otherPayments);
         })
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnError(throwable -> removeLoadingAndDismiss(throwable))
-        .doOnNext(purchase -> removeLoadingAndDismiss(purchase))
-        .onErrorReturn(throwable -> null)
-        .subscribeOn(AndroidSchedulers.mainThread());
+        .toCompletable();
   }
 
-  @NonNull private Observable<Purchase> paymentSelection() {
-    return view.paymentSelection()
-        .doOnNext(payment -> showLoadingAndSavePaymentState(payment))
-        .flatMap(payment -> paymentManager.pay(payment))
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(purchase -> removeLoadingAndClearPaymentState())
-        .retryWhen(errors -> errors.observeOn(AndroidSchedulers.mainThread())
-            .doOnNext(throwable -> removeLoadingAndClearPaymentState())
-            .flatMap(throwable -> {
-              if (throwable instanceof PaymentCancellationException) {
-                return Observable.just(throwable);
-              }
-              return Observable.error(throwable);
-            }));
+  private Observable<Void> cancellationSelection() {
+    return view.cancellationSelection()
+        .doOnNext(cancellation -> view.dismiss())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE));
   }
 
-  private void showProductAndShowLoading(AptoideProduct product) {
-    view.showLoading();
+  private void showProduct(AptoideProduct product) {
     view.showProduct(product);
   }
 
-  private void removeLoadingAndShowPayments(List<Payment> payments) {
-    view.removeLoading();
-    if (payments.isEmpty()) {
-      view.showPaymentsNotFoundMessage();
-    } else {
-      view.showPayments(payments);
+  private PaymentView.PaymentViewModel convertToPaymentViewModel(Payment payment) {
+    return new PaymentView.PaymentViewModel(payment.getId(), payment.getName(),
+        payment.getDescription(), payment.getPrice().getAmount(), payment.getPrice().getCurrencySymbol(),
+        getPaymentViewStatus(payment));
+  }
+
+  private PaymentView.PaymentViewModel.Status getPaymentViewStatus(Payment payment) {
+
+    if (!payment.isAuthorizationRequired()) {
+      return PaymentView.PaymentViewModel.Status.USE;
     }
+
+    if (payment.getAuthorization() != null) {
+      if (payment.getAuthorization().isAuthorized()) {
+        return PaymentView.PaymentViewModel.Status.USE;
+      } else if (payment.getAuthorization().isPending()) {
+        return PaymentView.PaymentViewModel.Status.APPROVING;
+      }
+    }
+
+    return PaymentView.PaymentViewModel.Status.REGISTER;
   }
 
-  private void showLoadingAndSavePaymentState(Payment payment) {
-    view.showLoading();
-    savePaymentState(payment);
+  private void showSelectedPayment(Payment selectedPayment) {
+    this.selectedPayment = selectedPayment;
+    view.showSelectedPayment(convertToPaymentViewModel(selectedPayment));
   }
 
-  private void removeLoadingAndClearPaymentState() {
-    view.removeLoading();
-    clearPaymentState();
+  private Observable<Payment> getSelectedPayment(List<Payment> payments,
+      PaymentView.PaymentViewModel selectedPaymentViewModel) {
+    return Observable.from(payments)
+        .first(payment -> payment.getId() == selectedPaymentViewModel.getId());
   }
 
-  private void savePaymentState(Payment payment) {
-    this.currentPaymentType = payment.getType();
-    this.isProcessingPayment = true;
+  private Single<Payment> getDefaultPayment(List<Payment> payments) {
+    return Observable.from(payments).first(payment -> isDefaultPayment(payment)).toSingle();
   }
 
-  private void clearPaymentState() {
-    this.currentPaymentType = null;
-    this.isProcessingPayment = false;
+  private boolean isDefaultPayment(Payment payment) {
+    if (selectedPayment != null && selectedPayment.getId() == payment.getId()) {
+      return true;
+    }
+    if (selectedPayment == null && payment.getId() == 1) { // PayPal
+      return true;
+    }
+    return false;
   }
 
-  private void clearLoginStateAndDismiss(Throwable throwable) {
-    clearLoginState();
+  private void showGlobalAndPaymentsLoading() {
+    view.showGlobalLoading();
+    view.showPaymentsLoading();
+  }
+
+  private void hideGlobalAndPaymentsLoadingAndDismiss(Throwable throwable) {
+    view.hideGlobalLoading();
+    view.hidePaymentsLoading();
     view.dismiss(throwable);
   }
 
-  private void removeLoadingAndDismiss(Throwable throwable) {
-    view.removeLoading();
-    view.dismiss(throwable);
-  }
-
-  private void removeLoadingAndDismiss(Purchase purchase) {
-    view.removeLoading();
+  private void hideGlobalAndPaymentsLoadingAndDismiss(Purchase purchase) {
+    view.hideGlobalLoading();
+    view.hidePaymentsLoading();
     view.dismiss(purchase);
   }
 
   private boolean clearLoginState() {
-    return isProcessingLogin = false;
+    return processingLogin = false;
   }
 
   private boolean saveLoginState() {
-    return isProcessingLogin = true;
-  }
-
-  private Observable<Boolean> getProcessingLoginResult() {
-    return Observable.just(isProcessingLogin).flatMap(isProcessingLogin -> {
-      if (isProcessingLogin) {
-        return Observable.just(AptoideAccountManager.isLoggedIn());
-      }
-      return Observable.error(new IllegalStateException("No login currently being processed."));
-    });
-  }
-
-  private Observable<Purchase> getProcessingPaymentPurchase() {
-    return Observable.just(isProcessingPayment).flatMap(isProcessingPayment -> {
-      if (isProcessingPayment) {
-        return paymentManager.getPurchase(product).doOnSubscribe(() -> clearPaymentState());
-      }
-      return Observable.just(null);
-    });
-  }
-
-  @NonNull private Observable<Void> cancellationSelection() {
-    return view.cancellationSelection()
-        .doOnNext(cancellation -> view.dismiss())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE));
+    return processingLogin = true;
   }
 }

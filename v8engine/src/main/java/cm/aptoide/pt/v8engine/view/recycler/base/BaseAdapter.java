@@ -79,7 +79,7 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> implements Lifecyc
   public void addDisplayable(Displayable displayable) {
     AptoideUtils.ThreadU.runOnUiThread(() -> {
       this.displayables.add(displayable);
-      notifyDataSetChanged();
+      notifyItemInserted(this.displayables.size() - 1);
     });
   }
 

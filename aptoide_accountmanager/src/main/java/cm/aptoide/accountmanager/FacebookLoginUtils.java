@@ -10,9 +10,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import cm.aptoide.accountmanager.ws.LoginMode;
 import cm.aptoide.pt.crashreports.CrashReports;
-import cm.aptoide.pt.dialog.AndroidBasicDialog;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.utils.GenericDialogs;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -184,45 +184,15 @@ class FacebookLoginUtils {
     private void askForMailAgain() {
       final Activity activity = mActivityWeakReference.get();
       if (activity != null) {
-
-        final AndroidBasicDialog dialog = AndroidBasicDialog.build(activity);
-        dialog.setMessage(R.string.facebook_email_permission_regected_message)
-            .setPositiveButton(R.string.facebook_garant_permission_button, v -> {
-              LoginManager.getInstance()
-                  .logInWithReadPermissions(activity, Collections.singletonList(EMAIL));
-              dialog.dismiss();
-            })
-            .setNegativeButton("exit", v -> {
-              dialog.dismiss();
+        GenericDialogs.createGenericOkCancelMessage(activity, null,
+            R.string.facebook_email_permission_regected_message,
+            R.string.facebook_grant_permission_button, android.R.string.cancel)
+            .subscribe(eResponse -> {
+              if (eResponse == GenericDialogs.EResponse.YES) {
+                LoginManager.getInstance()
+                    .logInWithReadPermissions(activity, Collections.singletonList(EMAIL));
+              }
             });
-
-        dialog.show();
-
-				/*
-        AlertDialog dialog = new AlertDialog.Builder(activity).setMessage(R.string
-						.facebook_email_permission_regected_message)
-						.setPositiveButton(R.string.facebook_garant_permission_button, new
-								DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int which) {
-								Activity activity = mActivityWeakReference.get();
-								if (activity != null) {
-									LoginManager.getInstance()
-											.logInWithReadPermissions(activity, Collections
-													.singletonList(EMAIL));
-								}
-								dialog.dismiss();
-							}
-						})
-						.setNegativeButton("exit", new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int which) {
-								dialog.dismiss();
-							}
-						})
-						.create();
-				dialog.show();
-				*/
       }
     }
   }

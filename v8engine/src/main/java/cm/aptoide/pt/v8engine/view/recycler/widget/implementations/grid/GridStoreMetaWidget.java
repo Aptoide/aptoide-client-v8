@@ -13,7 +13,9 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cm.aptoide.accountmanager.AccountManagerPreferences;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.accountmanager.CreateStoreActivity;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
@@ -44,10 +46,12 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
 
   private View containerLayout;
   private View descriptionContentLayout;
+  private View socialChannelsLayout;
   private ImageView image;
   private TextView name;
   private TextView description;
   private Button subscribeButton;
+  private Button editStoreButton;
   private TextView subscribersCount;
   private TextView appsCount;
   private TextView downloadsCount;
@@ -62,10 +66,12 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
   @Override protected void assignViews(View itemView) {
     containerLayout = itemView.findViewById(R.id.outter_layout);
     descriptionContentLayout = itemView.findViewById(R.id.descriptionContent);
+    socialChannelsLayout = itemView.findViewById(R.id.social_channels);
     image = (ImageView) itemView.findViewById(R.id.image);
     name = (TextView) itemView.findViewById(R.id.name);
     description = (TextView) itemView.findViewById(R.id.description);
     subscribeButton = (Button) itemView.findViewById(R.id.follow_btn);
+    editStoreButton = (Button) itemView.findViewById(R.id.edit_store_btn);
     subscribersCount = (TextView) itemView.findViewById(R.id.subscribers);
     appsCount = (TextView) itemView.findViewById(R.id.apps);
     downloadsCount = (TextView) itemView.findViewById(R.id.downloads);
@@ -88,6 +94,7 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
       containerLayout.setBackgroundDrawable(d);
     }
     subscribeButton.setTextColor(color);
+    editStoreButton.setTextColor(color);
 
     name.setText(store.getName());
     description.setText(store.getAppearance().getDescription());
@@ -194,9 +201,25 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
     setupSocialChannelButtons(socialChannels);
 
     // if there is no channels nor description, hide that area
-    if ((socialChannels == null || socialChannels.isEmpty()) && TextUtils.isEmpty(
-        store.getAppearance().getDescription())) {
-      descriptionContentLayout.setVisibility(View.GONE);
+    if (socialChannels == null || socialChannels.isEmpty()) {
+      if (TextUtils.isEmpty(store.getAppearance().getDescription())) {
+        descriptionContentLayout.setVisibility(View.GONE);
+      }
+      this.socialChannelsLayout.setVisibility(View.GONE);
+    }
+
+
+    if (!TextUtils.isEmpty(AccountManagerPreferences.getUserRepo())) {
+      if (AccountManagerPreferences.getUserRepo().equals(store.getName())) {
+        descriptionContentLayout.setVisibility(View.VISIBLE);
+        if (TextUtils.isEmpty(store.getAppearance().getDescription())) {
+          description.setText("Add a description to your store by editing it.");
+        }
+        editStoreButton.setVisibility(View.VISIBLE);
+        compositeSubscription.add(RxView.clicks(editStoreButton)
+            .subscribe(click -> editStore(store.getId(), store.getAppearance().getTheme(),
+                store.getAppearance().getDescription(), store.getAvatar())));
+      }
     }
   }
 
@@ -243,5 +266,16 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
       this.store = store;
       this.storeSubscribed = isStoreSubscribed;
     }
+  }
+
+  private void editStore(long storeId, String storeTheme, String storeDescription,
+      String storeAvatar) {
+    Intent intent = new Intent(getContext(), CreateStoreActivity.class);
+    intent.putExtra("storeId", storeId);
+    intent.putExtra("storeTheme", storeTheme);
+    intent.putExtra("storeDescription", storeDescription);
+    intent.putExtra("storeAvatar", storeAvatar);
+    intent.putExtra("from", "store");
+    getContext().startActivity(intent);
   }
 }

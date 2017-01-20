@@ -14,14 +14,16 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.v8engine.install.installer.RollbackInstallation;
 import java.io.File;
-import lombok.AllArgsConstructor;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
 /**
  * Created by trinkes on 9/8/16.
  */
-@AllArgsConstructor public class RollbackFactory {
+public class RollbackFactory {
+
+  public RollbackFactory() {
+  }
 
   /**
    * @param context used to get app info context.getPackageManager().getPackageInfo()

@@ -2,7 +2,6 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.BaseV7Response;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -14,7 +13,6 @@ import rx.Observable;
 
 public class ShareInstallCardRequest extends V7<BaseV7Response, ShareInstallCardRequest.Body> {
 
-  private static String email;
   private static String packageName;
   private static String access_token;
 
@@ -37,10 +35,14 @@ public class ShareInstallCardRequest extends V7<BaseV7Response, ShareInstallCard
     return interfaces.shareInstallCard(body, packageName, access_token);
   }
 
-  @AllArgsConstructor @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true)
+  @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true)
   public static class Body extends BaseBody {
 
     private String packageName;
+
+    public Body(String packageName) {
+      this.packageName = packageName;
+    }
   }
 }
 

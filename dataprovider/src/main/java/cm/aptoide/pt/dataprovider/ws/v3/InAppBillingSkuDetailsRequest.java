@@ -20,8 +20,8 @@ public class InAppBillingSkuDetailsRequest extends V3<InAppBillingSkuDetailsResp
   }
 
   public static InAppBillingSkuDetailsRequest of(int apiVersion, String packageName,
-      List<String> skuList, NetworkOperatorManager operatorManager, String type, String accessToken,
-      String email) {
+      List<String> skuList, NetworkOperatorManager operatorManager, String type,
+      String accessToken) {
     BaseBody args = new BaseBody();
     args.put("mode", "json");
     args.put("package", packageName);
@@ -40,11 +40,7 @@ public class InAppBillingSkuDetailsRequest extends V3<InAppBillingSkuDetailsResp
       args.put("skulist", stringBuilder.toString());
     }
 
-    if (operatorManager.isSimStateReady()) {
-      args.put("mcc", operatorManager.getMobileCountryCode());
-      args.put("mnc", operatorManager.getMobileNetworkCode());
-      args.put("simcc", operatorManager.getSimCountryISO());
-    }
+    addNetworkInformation(operatorManager, args);
 
     return new InAppBillingSkuDetailsRequest(BASE_HOST, args);
   }

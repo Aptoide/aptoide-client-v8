@@ -41,6 +41,7 @@ public class SocialVideoDisplayable extends SocialCardDisplayable {
   @Getter private String abUrl;
   @Getter private Store store;
   @Getter private Comment.User user;
+  @Getter private Comment.User userSharer;
 
   @Getter private List<App> relatedToAppsList;
   private Date date;
@@ -58,7 +59,8 @@ public class SocialVideoDisplayable extends SocialCardDisplayable {
       List<App> relatedToAppsList, Date date, DateCalculator dateCalculator,
       SpannableFactory spannableFactory, TimelineMetricsManager timelineMetricsManager,
       SocialRepository socialRepository) {
-    super(socialVideo, numberOfLikes, numberOfComments);
+    super(socialVideo, numberOfLikes, numberOfComments, socialVideo.getUser(),
+        socialVideo.getUserSharer(), date, spannableFactory, dateCalculator);
     this.videoTitle = videoTitle;
     this.link = link;
     this.baseLink = baseLink;
@@ -69,6 +71,7 @@ public class SocialVideoDisplayable extends SocialCardDisplayable {
     this.abUrl = abUrl;
     this.store = socialVideo.getStore();
     this.user = user;
+    this.userSharer = socialVideo.getUserSharer();
     this.relatedToAppsList = relatedToAppsList;
     this.date = date;
     this.dateCalculator = dateCalculator;
@@ -117,6 +120,12 @@ public class SocialVideoDisplayable extends SocialCardDisplayable {
       //appId = video.getApps().get(0).getId();
     }
     return Observable.just(null);
+  }
+
+  public Spannable getSharedBy(Context context) {
+    return spannableFactory.createColorSpan(
+        context.getString(R.string.social_timeline_shared_by, userSharer.getName()),
+        ContextCompat.getColor(context, R.color.black), userSharer.getName());
   }
 
   public String getTimeSinceLastUpdate(Context context) {

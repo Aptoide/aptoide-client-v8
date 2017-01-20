@@ -48,10 +48,10 @@
             android:layout_centerHorizontal="true"
             android:background="#c16114"
             android:gravity="center_vertical"
-            android:paddingLeft="24dp"
-            android:paddingStart="24dp"
-            android:paddingRight="23dp"
             android:paddingEnd="23dp"
+            android:paddingLeft="24dp"
+            android:paddingRight="23dp"
+            android:paddingStart="24dp"
             android:text="@string/create_user_header"
             android:textColor="@color/white"
             />
@@ -87,14 +87,14 @@
                 android:layout_width="33.3dp"
                 android:layout_height="33.3dp"
                 android:layout_alignBottom="@+id/create_user_image"
-                android:layout_alignRight="@+id/create_user_image"
                 android:layout_alignEnd="@+id/create_user_image"
+                android:layout_alignRight="@+id/create_user_image"
                 android:background="@drawable/create_user_camera_background_shape"
                 android:paddingBottom="8dp"
-                android:paddingLeft="8dp"
-                android:paddingStart="8dp"
-                android:paddingRight="8dp"
                 android:paddingEnd="8dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingStart="8dp"
                 android:paddingTop="8dp"
                 android:src="@drawable/create_user_camera"
                 />
@@ -111,10 +111,10 @@
                 android:id="@+id/create_user_take_picture_text"
                 android:layout_width="96dp"
                 android:layout_height="33dp"
-                android:layout_marginLeft="57dp"
-                android:layout_marginStart="57dp"
-                android:layout_marginRight="63dp"
                 android:layout_marginEnd="63dp"
+                android:layout_marginLeft="57dp"
+                android:layout_marginRight="63dp"
+                android:layout_marginStart="57dp"
                 android:layout_marginTop="48.7dp"
                 android:gravity="center_vertical"
                 android:text="@string/create_user_take_picture"
@@ -127,10 +127,10 @@
                 android:id="@+id/create_user_random_photo"
                 android:layout_width="98dp"
                 android:layout_height="12dp"
-                android:layout_marginLeft="56dp"
-                android:layout_marginStart="56dp"
-                android:layout_marginRight="62dp"
                 android:layout_marginEnd="62dp"
+                android:layout_marginLeft="56dp"
+                android:layout_marginRight="62dp"
+                android:layout_marginStart="56dp"
                 android:layout_marginTop="21dp"
                 android:text="@string/create_user_random_photo"
                 android:textColor="#a9a9a9"
@@ -165,8 +165,8 @@
               android:id="@+id/create_user_username_inserted"
               android:layout_width="match_parent"
               android:layout_height="43dp"
-              android:layout_marginRight="15dp"
               android:layout_marginEnd="15dp"
+              android:layout_marginRight="15dp"
               android:layout_marginTop="8.7dp"
               android:background="@color/create_store_edit_text_background"
               android:hint="@string/create_user_username"
@@ -191,30 +191,39 @@
       </LinearLayout>
     </ScrollView>
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="66dp"
-        android:gravity="top|center_horizontal"
+        android:gravity="center"
         android:orientation="horizontal"
+        android:paddingEnd="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingStart="16dp"
         >
+
 
       <!--fake space-->
       <Button
-          android:layout_width="152dp"
+          android:layout_width="0dp"
           android:layout_height="46dp"
+          android:layout_marginRight="23dp"
+          android:layout_weight="1"
+          android:gravity="center"
           android:visibility="invisible"
           style="?attr/customButton"
           />
 
       <Button
           android:id="@+id/create_user_create_profile"
-          android:layout_width="152dp"
+          android:layout_width="0dp"
           android:layout_height="46dp"
-          android:layout_marginRight="15dp"
-          android:layout_marginEnd="15dp"
+          android:layout_weight="1"
           android:text="@string/create_user_create_button"
           style="?attr/customButton"
           />
+
     </LinearLayout>
 
   </LinearLayout>

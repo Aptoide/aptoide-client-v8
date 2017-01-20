@@ -17,11 +17,10 @@ import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.ListComments;
 import cm.aptoide.pt.model.v7.Type;
-import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import rx.functions.Action1;
+import rx.Observable;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by neuro on 27-04-2016.
@@ -30,10 +29,10 @@ public class WSWidgetsUtils {
   public static final String USER_DONT_HAVE_STORE_ERROR = "MYSTORE-1";
   public static final String USER_NOT_LOGGED_ERROR = "AUTH-5";
 
-  public static void loadInnerNodes(GetStoreWidgets.WSWidget wsWidget,
-      BaseRequestWithStore.StoreCredentials storeCredentials, CountDownLatch countDownLatch,
-      boolean refresh, Action1<Throwable> action1, String accessToken, String email,
-      String aptoideClientUuid, boolean googlePlayServicesAvailable, String oemid) {
+  public static Observable<GetStoreWidgets.WSWidget> loadWidgetNode(
+      GetStoreWidgets.WSWidget wsWidget, BaseRequestWithStore.StoreCredentials storeCredentials,
+      boolean refresh, String accessToken, String aptoideClientUuid,
+      boolean googlePlayServicesAvailable, String oemid, boolean mature) {
 
     if (isKnownType(wsWidget.getType())) {
 
@@ -44,115 +43,116 @@ public class WSWidgetsUtils {
       }
       switch (wsWidget.getType()) {
         case APPS_GROUP:
-          ListAppsRequest.ofAction(url, storeCredentials, accessToken, email, aptoideClientUuid)
+          return ListAppsRequest.ofAction(url, storeCredentials, accessToken, aptoideClientUuid)
               .observe(refresh)
-              .compose(AptoideUtils.ObservableU.applySchedulers())
-              .subscribe(listApps -> setObjectView(wsWidget, countDownLatch, listApps), action1);
-          break;
+              .observeOn(Schedulers.io())
+              .doOnNext(wsWidget::setViewObject)
+              .onErrorResumeNext(throwable -> Observable.empty())
+              .map(listApps -> wsWidget);
 
         case STORES_GROUP:
-          ListStoresRequest.ofAction(url, accessToken, aptoideClientUuid)
+          return ListStoresRequest.ofAction(url, accessToken, aptoideClientUuid)
               .observe(refresh)
-              .compose(AptoideUtils.ObservableU.applySchedulers())
-              .subscribe(listStores -> setObjectView(wsWidget, countDownLatch, listStores),
-                  action1);
-          break;
+              .observeOn(Schedulers.io())
+              .doOnNext(wsWidget::setViewObject)
+              .onErrorResumeNext(throwable -> Observable.empty())
+              .map(listApps -> wsWidget);
 
         case DISPLAYS:
-          GetStoreDisplaysRequest.ofAction(url, storeCredentials, accessToken, email,
+          return GetStoreDisplaysRequest.ofAction(url, storeCredentials, accessToken,
               aptoideClientUuid)
               .observe(refresh)
-              .compose(AptoideUtils.ObservableU.applySchedulers())
-              .subscribe(
-                  getStoreDisplays -> setObjectView(wsWidget, countDownLatch, getStoreDisplays),
-                  action1);
-          break;
+              .observeOn(Schedulers.io())
+              .doOnNext(wsWidget::setViewObject)
+              .onErrorResumeNext(throwable -> Observable.empty())
+              .map(listApps -> wsWidget);
 
         case ADS:
-          GetAdsRequest.ofHomepage(aptoideClientUuid, googlePlayServicesAvailable, oemid)
+          return GetAdsRequest.ofHomepage(aptoideClientUuid, googlePlayServicesAvailable, oemid,
+              mature)
               .observe()
-              .compose(AptoideUtils.ObservableU.applySchedulers())
-              .subscribe(getAdsResponse -> setObjectView(wsWidget, countDownLatch, getAdsResponse),
-                  action1);
-          break;
+              .observeOn(Schedulers.io())
+              .doOnNext(wsWidget::setViewObject)
+              .onErrorResumeNext(throwable -> Observable.empty())
+              .map(listApps -> wsWidget);
 
         case STORE_META:
-          GetStoreMetaRequest.ofAction(url, storeCredentials, accessToken, email, aptoideClientUuid)
+          return GetStoreMetaRequest.ofAction(url, storeCredentials, accessToken, aptoideClientUuid)
               .observe(refresh)
-              .compose(AptoideUtils.ObservableU.applySchedulers())
-              .subscribe(getStoreMeta -> setObjectView(wsWidget, countDownLatch, getStoreMeta),
-                  action1);
-          break;
+              .observeOn(Schedulers.io())
+              .doOnNext(wsWidget::setViewObject)
+              .onErrorResumeNext(throwable -> Observable.empty())
+              .map(listApps -> wsWidget);
 
         case COMMENTS_GROUP:
-          ListCommentsRequest.ofStoreAction(url, refresh, storeCredentials, accessToken,
+          return ListCommentsRequest.ofStoreAction(url, refresh, storeCredentials, accessToken,
               aptoideClientUuid)
               .observe(refresh)
-              .compose(AptoideUtils.ObservableU.applySchedulers())
-              .subscribe(listComments -> setObjectView(wsWidget, countDownLatch,
+              .observeOn(Schedulers.io())
+              .doOnNext(listComments -> wsWidget.setViewObject(
                   new Pair<ListComments, BaseRequestWithStore.StoreCredentials>(listComments,
-                      storeCredentials)), action1);
-          break;
+                      storeCredentials)))
+              .onErrorResumeNext(throwable -> Observable.empty())
+              .map(listApps -> wsWidget);
 
         case REVIEWS_GROUP:
-          ListFullReviewsRequest.ofAction(url, refresh, accessToken, aptoideClientUuid)
+          return ListFullReviewsRequest.ofAction(url, refresh, accessToken, aptoideClientUuid)
               .observe(refresh)
-              .compose(AptoideUtils.ObservableU.applySchedulers())
-              .subscribe(reviews -> setObjectView(wsWidget, countDownLatch, reviews), action1);
-          break;
+              .observeOn(Schedulers.io())
+              .doOnNext(wsWidget::setViewObject)
+              .onErrorResumeNext(throwable -> Observable.empty())
+              .map(listApps -> wsWidget);
 
         case MY_STORES_SUBSCRIBED:
         case STORES_RECOMMENDED:
-          GetMyStoreListRequest.of(url, accessToken, aptoideClientUuid)
+          return GetMyStoreListRequest.of(url, accessToken, aptoideClientUuid)
               .observe(refresh)
-              .compose(AptoideUtils.ObservableU.applySchedulers())
-              .subscribe(getStoreMeta -> setObjectView(wsWidget, countDownLatch, getStoreMeta),
-                  throwable -> {
-                    LinkedList<String> errorsList = new LinkedList<>();
-                    errorsList.add(USER_NOT_LOGGED_ERROR);
-                    if (throwable instanceof AptoideWsV7Exception && shouldAddObjectView(errorsList,
-                        throwable)) {
-                      setObjectView(wsWidget, countDownLatch,
-                          ((AptoideWsV7Exception) throwable).getBaseResponse());
-                      return;
-                    }
-                    action1.call(throwable);
-                  });
-          break;
+              .observeOn(Schedulers.io())
+              .doOnNext(wsWidget::setViewObject)
+              .doOnError(throwable -> {
+                LinkedList<String> errorsList = new LinkedList<>();
+                errorsList.add(USER_NOT_LOGGED_ERROR);
+                if (throwable instanceof AptoideWsV7Exception && shouldAddObjectView(errorsList,
+                    throwable)) {
+                  wsWidget.setViewObject(((AptoideWsV7Exception) throwable).getBaseResponse());
+                }
+              })
+              .onErrorResumeNext(throwable -> Observable.empty())
+              .map(listApps -> wsWidget);
 
         case MY_STORE_META:
-          GetMyStoreMetaRequest.of(accessToken, aptoideClientUuid)
+          return GetMyStoreMetaRequest.of(accessToken, aptoideClientUuid)
               .observe(refresh)
-              .compose(AptoideUtils.ObservableU.applySchedulers())
-              .subscribe(getStoreMeta -> setObjectView(wsWidget, countDownLatch, getStoreMeta),
-                  throwable -> {
-                    LinkedList<String> errorsList = new LinkedList<>();
-                    errorsList.add(USER_NOT_LOGGED_ERROR);
-                    errorsList.add(USER_DONT_HAVE_STORE_ERROR);
-                    if (shouldAddObjectView(errorsList, throwable)) {
-                      setObjectView(wsWidget, countDownLatch,
-                          ((AptoideWsV7Exception) throwable).getBaseResponse());
-                      return;
-                    }
-                    action1.call(throwable);
-                  });
-          break;
+              .observeOn(Schedulers.io())
+              .doOnNext(wsWidget::setViewObject)
+              .doOnError(throwable -> {
+                LinkedList<String> errorsList = new LinkedList<>();
+                errorsList.add(USER_NOT_LOGGED_ERROR);
+                errorsList.add(USER_DONT_HAVE_STORE_ERROR);
+                if (shouldAddObjectView(errorsList, throwable)) {
+                  wsWidget.setViewObject(((AptoideWsV7Exception) throwable).getBaseResponse());
+                }
+              })
+              .onErrorResumeNext(throwable -> Observable.empty())
+              .map(listApps -> wsWidget);
 
         case APP_META:
-          GetAppRequest.ofAction(url, accessToken, aptoideClientUuid)
+          return GetAppRequest.ofAction(url, accessToken, aptoideClientUuid)
               .observe(refresh)
-              .compose(AptoideUtils.ObservableU.applySchedulers())
-              .subscribe(getApp -> setObjectView(wsWidget, countDownLatch, getApp), action1);
-          break;
+              .observeOn(Schedulers.io())
+              .doOnNext(wsWidget::setViewObject)
+              .onErrorResumeNext(throwable -> Observable.empty())
+              .map(listApps -> wsWidget);
 
         default:
           // In case a known enum is not implemented
-          countDownLatch.countDown();
-          break;
+          //countDownLatch.countDown();
+          //
+          return Observable.empty();
       }
     } else {
       // Case we don't have the enum defined we still need to countDown the latch
-      countDownLatch.countDown();
+      return Observable.empty();
     }
   }
 
@@ -166,12 +166,6 @@ public class WSWidgetsUtils {
       }
     }
     return false;
-  }
-
-  private static void setObjectView(GetStoreWidgets.WSWidget wsWidget,
-      CountDownLatch countDownLatch, Object o) {
-    wsWidget.setViewObject(o);
-    countDownLatch.countDown();
   }
 
   private static boolean isKnownType(Type type) {

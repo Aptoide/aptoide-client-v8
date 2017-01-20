@@ -122,10 +122,6 @@ public class ArticleDisplayable extends CardDisplayable {
     return dateCalculator.getTimeSinceDate(context, date);
   }
 
-  public boolean isGetApp(String appName) {
-    return appName != null && appId != 0;
-  }
-
   public Spannable getAppText(Context context, String appName) {
     return spannableFactory.createStyleSpan(
         context.getString(R.string.displayable_social_timeline_article_get_app_button, appName),

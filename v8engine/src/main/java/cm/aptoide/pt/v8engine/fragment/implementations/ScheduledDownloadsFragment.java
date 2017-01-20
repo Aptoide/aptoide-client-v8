@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
- */
-
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.content.Context;
@@ -10,8 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -30,6 +24,12 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEvent;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEventConverter;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadInstallBaseEvent;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEvent;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEventConverter;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
@@ -38,7 +38,7 @@ import cm.aptoide.pt.v8engine.repository.ScheduledDownloadRepository;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ScheduledDownloadDisplayable;
-import com.trello.rxlifecycle.FragmentEvent;
+import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.ArrayList;
 import java.util.List;
 import rx.android.schedulers.AndroidSchedulers;
@@ -58,6 +58,9 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
   private TextView emptyData;
   private ScheduledDownloadRepository scheduledDownloadRepository;
   private OpenMode openMode = OpenMode.normal;
+  private DownloadEventConverter downloadConverter;
+  private Analytics analytics;
+  private InstallEventConverter installConverter;
 
   //	private CompositeSubscription compositeSubscription;
 
@@ -82,6 +85,9 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
     installManager = new InstallManager(AptoideDownloadManager.getInstance(), installer,
         AccessorFactory.getAccessorFor(Download.class),
         AccessorFactory.getAccessorFor(Installed.class));
+    downloadConverter = new DownloadEventConverter();
+    installConverter = new InstallEventConverter();
+    analytics = Analytics.getInstance();
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -90,6 +96,7 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    super.load(create, refresh, savedInstanceState);
     Logger.d(TAG, "refresh excluded updates? " + (create ? "yes" : "no"));
     if (create) {
       switch (openMode) {
@@ -105,7 +112,7 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
                         .first()
                         .observeOn(AndroidSchedulers.mainThread())
                         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-                        .subscribe(scheduleds -> downloadAndInstallScheduledList(scheduleds));
+                        .subscribe(scheduleds -> downloadAndInstallScheduledList(scheduleds, true));
                     break;
                   case NO:
                     break;
@@ -137,18 +144,17 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
   @Override public void bindViews(View view) {
     super.bindViews(view);
     emptyData = (TextView) view.findViewById(R.id.empty_data);
-    scheduledDownloadRepository = RepositoryFactory.getRepositoryFor(Scheduled.class);
+    scheduledDownloadRepository = RepositoryFactory.getScheduledDownloadRepository();
     //		compositeSubscription = new CompositeSubscription();
     setHasOptionsMenu(true);
   }
 
-  @Override public void setupToolbar() {
-    super.setupToolbar();
-    if (toolbar != null) {
-      ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-      bar.setDisplayHomeAsUpEnabled(true);
-      bar.setTitle(R.string.setting_schdwntitle);
-    }
+  @Override public void setupToolbarDetails(Toolbar toolbar) {
+    toolbar.setTitle(R.string.setting_schdwntitle);
+  }
+
+  @Override protected boolean displayHomeUpAsEnabled() {
+    return true;
   }
 
   private void fetchScheduledDownloads() {
@@ -218,7 +224,7 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
         }
       }
 
-      if (downloadAndInstallScheduledList(scheduledList)) {
+      if (downloadAndInstallScheduledList(scheduledList, false)) {
         ShowMessage.asSnack(this.emptyData, R.string.installing_msg);
       } else {
         ShowMessage.asSnack(this.emptyData, R.string.schDown_nodownloadselect);
@@ -260,7 +266,8 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
     return super.onOptionsItemSelected(item);
   }
 
-  private boolean downloadAndInstallScheduledList(List<Scheduled> installing) {
+  private boolean downloadAndInstallScheduledList(List<Scheduled> installing,
+      boolean isStartedAutomatic) {
 
     if (installing == null || installing.isEmpty()) return false;
 
@@ -280,6 +287,8 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
         .flatMapIterable(scheduleds -> scheduleds)
         .map(scheduled -> downloadFactory.create(scheduled))
         .flatMap(downloadItem -> installManager.install(context, downloadItem)
+            .doOnSubscribe(() -> setupEvents(downloadItem,
+                isStartedAutomatic ? DownloadEvent.Action.AUTO : DownloadEvent.Action.CLICK))
             .filter(downloadProgress -> downloadProgress.getState() == Progress.DONE)
             .doOnNext(success -> scheduledDownloadRepository.deleteScheduledDownload(
                 downloadItem.getMd5())))
@@ -291,6 +300,17 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
         });
 
     return true;
+  }
+
+  public void setupEvents(Download download, DownloadEvent.Action action) {
+    DownloadEvent report =
+        downloadConverter.create(download, action, DownloadEvent.AppContext.SCHEDULED);
+    analytics.save(download.getPackageName() + download.getVersionCode(), report);
+
+    InstallEvent installEvent =
+        installConverter.create(download, DownloadInstallBaseEvent.Action.CLICK,
+            DownloadInstallBaseEvent.AppContext.SCHEDULED);
+    analytics.save(download.getPackageName() + download.getVersionCode(), installEvent);
   }
 
   public enum OpenMode {

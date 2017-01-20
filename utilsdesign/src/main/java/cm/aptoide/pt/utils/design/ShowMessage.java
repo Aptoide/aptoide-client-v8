@@ -142,6 +142,11 @@ public class ShowMessage {
     return Snackbar.make(view, msg, Snackbar.LENGTH_SHORT);
   }
 
+  private static Snackbar asLongSnackInternal(Activity activity, @StringRes int msg) {
+    View view = getViewFromActivity(activity);
+    return Snackbar.make(view, msg, Snackbar.LENGTH_LONG);
+  }
+
   public static void asSnack(Activity activity, @StringRes int msg) {
     asSnackInternal(activity, msg).show();
   }
@@ -152,6 +157,13 @@ public class ShowMessage {
   @NonNull public static Observable<Integer> asObservableSnack(Activity activity,
       @StringRes int msg) {
     return asSnackObservableInternal(asSnackInternal(activity, msg));
+  }
+  /**
+   * @return {@link Observable} that returns a {@link ShowMessage.SnackbarVisibility} integer
+   */
+  @NonNull public static Observable<Integer> asLongObservableSnack(Activity activity,
+      @StringRes int msg) {
+    return asSnackObservableInternal(asLongSnackInternal(activity, msg));
   }
 
   //

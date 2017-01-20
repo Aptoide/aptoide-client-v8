@@ -14,10 +14,13 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.utils.AptoideUtils;
 import com.jakewharton.rxbinding.view.RxView;
 import java.io.File;
+import java.util.List;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -196,4 +199,57 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
     avatar = storageDir;
     return Uri.fromFile(new File(storageDir.getPath() + File.separator + fileName));
   }
+
+  protected void checkAvatarRequirements(String avatarPath, Uri avatarUrl) {
+    if (!TextUtils.isEmpty(avatarPath)) {
+      List<AptoideUtils.IconSizeU.ImageSizeErrors> imageSizeErrors =
+          AptoideUtils.IconSizeU.checkIconSizeProperties(avatarPath,
+              getResources().getInteger(R.integer.min_avatar_height),
+              getResources().getInteger(R.integer.max_avatar_height),
+              getResources().getInteger(R.integer.min_avatar_width),
+              getResources().getInteger(R.integer.max_avatar_width),
+              getResources().getInteger(R.integer.max_avatar_Size));
+      if (imageSizeErrors.isEmpty()) {
+        loadImage(avatarUrl);
+      } else {
+        showIconPropertiesError(getErrorsMessage(imageSizeErrors));
+      }
+    }
+  }
+
+  private String getErrorsMessage(List<AptoideUtils.IconSizeU.ImageSizeErrors> imageSizeErrors) {
+    StringBuilder message = new StringBuilder();
+    message.append(getString(R.string.image_requirements_popup_message));
+    for (AptoideUtils.IconSizeU.ImageSizeErrors imageSizeError : imageSizeErrors) {
+      switch (imageSizeError) {
+        case MIN_HEIGHT:
+          message.append(getString(R.string.image_requirements_error_min_height));
+          break;
+        case MAX_HEIGHT:
+          message.append(getString(R.string.image_requirements_error_max_height));
+          break;
+        case MIN_WIDTH:
+          message.append(getString(R.string.image_requirements_error_min_width));
+          break;
+        case MAX_WIDTH:
+          message.append(getString(R.string.image_requirements_error_max_width));
+          break;
+        case MAX_IMAGE_SIZE:
+          message.append(getString(R.string.image_requirements_error_max_file_size));
+          break;
+      }
+    }
+
+    //remove last \n
+    int index = message.lastIndexOf("\n");
+    if (index > 0) {
+      message.delete(index, message.length());
+    }
+
+    return message.toString();
+  }
+
+  abstract void showIconPropertiesError(String errors);
+
+  abstract void loadImage(Uri imagePath);
 }

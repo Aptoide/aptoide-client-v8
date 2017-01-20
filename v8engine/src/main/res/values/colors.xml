@@ -15,6 +15,7 @@
   <color name="navdrawer_body_text_2_inverse">#d2ffffff</color>
   <color name="medium_gray">#b8b8b8</color>
   <color name="darker_gray">#858585</color>
+  <color name="comment_gray">#f2f2f2</color>
 
   <color name="aptoide_color_focused">#e55c1b</color>
   <color name="aptoide_color_pressed">#000000</color>
@@ -26,7 +27,8 @@
   <!-- Main colors -->
   <color name="green">#2E8B57</color>
   <color name="teal">#009688</color>
-  <color name="red">#F44336</color>
+  <!--<color name="red">#F44336</color>-->
+  <color name="red">#ED1C24</color>
   <color name="indigo">#3F51B5</color>
   <color name="pink">#E91E63</color>
   <color name="orange">#FF9800</color>
@@ -51,7 +53,8 @@
   <color name="magenta">#ef82ef</color>
   <color name="slategray">#008081</color>
   <color name="seagreen">#2e8b57</color>
-  <color name="silver">#a9a9a9</color>
+  <color name="silver">#c6c6c6</color>
+  <color name="silver_dark">#999999</color>
   <color name="dimgray">#808080</color>
   <color name="yellow">#e9be40</color>
   <color name="crimson">#EF3E42</color>
@@ -61,7 +64,8 @@
   <!-- 700 tint for Lolipop status bar -->
   <color name="green_700">#388E3C</color>
   <color name="teal_700">#00796B</color>
-  <color name="red_700">#D32F2F</color>
+  <!--<color name="red_700">#D32F2F</color>-->
+  <color name="red_700">#BA161B</color>
   <color name="indigo_700">#303F9F</color>
   <color name="pink_700">#E67E8F</color>
   <color name="orange_700">#E64A19</color>
@@ -88,7 +92,8 @@
   <!-- Transparent -->
   <color name="transparent_green">#992E8B57</color>
   <color name="transparent_teal">#99009688</color>
-  <color name="transparent_red">#99F44336</color>
+  <!--<color name="transparent_red">#99F44336</color>-->
+  <color name="transparent_red">#99ED1C24</color>
   <color name="transparent_indigo">#993F51B5</color>
   <color name="transparent_pink">#99E91E63</color>
   <color name="transparent_orange">#99FF9800</color>
@@ -122,7 +127,7 @@
   <color name="transparent_white">#CCFFFFFF</color>
   <color name="semi_transparent_black">#55000000</color>
   <color name="light_custom_gray">#ececec</color>
-  <color name="lighter_custom_gray">#cccccc</color>
+  <color name="lighter_custom_gray">#c6c6c6</color>
   <color name="dark_custom_gray">#4c4c4c</color>
   <color name="medium_custom_gray">#c6c7c6</color>
   <color name="screenshots_background_color">#6b6b6b</color>
@@ -166,5 +171,9 @@
   <color name="create_store_hint_color">#7e7e7e</color>
   <color name="followed_stores_store_name_color">#5c5c5c</color>
   <color name="recommended_stores_numbers_color">#aaaaaa</color>
+  <color name="activity_payment_dark_gray">#4d4d4d</color>
+  <color name="activity_payment_light_gray">#e8e8e8</color>
+  <color name="activity_payment_gray">#9b9b9b</color>
+  <color name="activity_payment_green">#B4DC84</color>
 
 </resources>

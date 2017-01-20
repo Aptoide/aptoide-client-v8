@@ -30,6 +30,8 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
   private LikeButton likeButton;
   private TextView numberLikes;
   private TextView numberComments;
+  private TextView sharedBy;
+  private TextView time;
 
   SocialCardWidget(View itemView) {
     super(itemView);
@@ -37,15 +39,31 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
 
   @Override @CallSuper protected void assignViews(View itemView) {
     super.assignViews(itemView);
+    time = (TextView) itemView.findViewById(R.id.card_date);
     comments = (TextView) itemView.findViewById(R.id.social_comment);
     like = (LinearLayout) itemView.findViewById(R.id.social_like);
     likeButton = (LikeButton) itemView.findViewById(R.id.social_like_test);
     numberLikes = (TextView) itemView.findViewById(R.id.social_number_of_likes);
     numberComments = (TextView) itemView.findViewById(R.id.social_number_of_comments);
+    sharedBy = (TextView) itemView.findViewById(R.id.social_shared_by);
   }
 
   @Override @CallSuper public void bindView(T displayable) {
     super.bindView(displayable);
+
+    if (displayable.getUserSharer() != null) {
+      if (displayable.getUserSharer().getName() != null && !displayable.getUser()
+          .getName()
+          .equals(displayable.getUserSharer().getName())) {
+        sharedBy.setVisibility(View.VISIBLE);
+        sharedBy.setText(
+            displayable.getSharedBy(getContext(), displayable.getUserSharer().getName()));
+      } else {
+        sharedBy.setVisibility(View.GONE);
+      }
+    } else {
+      sharedBy.setVisibility(View.GONE);
+    }
 
     if (comments != null) {
       compositeSubscription.add(
@@ -56,6 +74,8 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
     } else {
       Logger.w(TAG, "comment button is null in this view");
     }
+
+    time.setText(displayable.getTimeSinceLastUpdate(getContext()));
 
     if (like != null) {
       //compositeSubscription.add(
@@ -84,7 +104,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
     numberComments.setVisibility(View.VISIBLE);
     numberComments.setText(String.valueOf(displayable.getNumberOfComments()));
 
-    shareButton.setVisibility(View.INVISIBLE);
+    shareButton.setVisibility(View.VISIBLE);
 
     //
     // should this be inside the like button logic ??

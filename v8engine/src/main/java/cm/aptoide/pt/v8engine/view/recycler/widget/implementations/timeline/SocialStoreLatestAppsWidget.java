@@ -8,14 +8,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.TimelineClickEvent;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.SocialStoreLatestAppsDisplayable;
@@ -32,7 +32,7 @@ import rx.android.schedulers.AndroidSchedulers;
 public class SocialStoreLatestAppsWidget
     extends SocialCardWidget<SocialStoreLatestAppsDisplayable> {
 
-  private static final String CARD_TYPE_NAME = "Social Latest Apps";
+  private static final String CARD_TYPE_NAME = "SOCIAL_LATEST_APPS";
   private final LayoutInflater inflater;
   private TextView storeName;
   private TextView userName;
@@ -49,26 +49,24 @@ public class SocialStoreLatestAppsWidget
   private CardView cardView;
   private Button followStore;
   private StoreRepository storeRepository;
+  //private TextView sharedBy;
 
   public SocialStoreLatestAppsWidget(View itemView) {
     super(itemView);
     inflater = LayoutInflater.from(itemView.getContext());
     apps = new HashMap<>();
     appsPackages = new HashMap<>();
-    storeRepository = new StoreRepository(
-        AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Store.class));
+    storeRepository = RepositoryFactory.getStoreRepository();
   }
 
   @Override protected void assignViews(View itemView) {
     super.assignViews(itemView);
-    store = itemView.findViewById(R.id.displayable_social_timeline_store_latest_apps_header);
-    storeName = (TextView) itemView.findViewById(
-        R.id.displayable_social_timeline_store_latest_apps_card_title);
-    userName = (TextView) itemView.findViewById(
-        R.id.displayable_social_timeline_store_latest_apps_card_subtitle);
-    sharedStoreName = (TextView) itemView.findViewById(R.id.store_name);
+    store = itemView.findViewById(R.id.social_header);
+    storeName = (TextView) itemView.findViewById(R.id.card_title);
+    userName = (TextView) itemView.findViewById(R.id.card_subtitle);
     storeAvatar = (ImageView) itemView.findViewById(R.id.card_image);
     userAvatar = (ImageView) itemView.findViewById(R.id.card_user_avatar);
+    sharedStoreName = (TextView) itemView.findViewById(R.id.store_name);
     sharedStoreAvatar = (ImageView) itemView.findViewById(R.id.social_shared_store_avatar);
     appsContaner = (LinearLayout) itemView.findViewById(
         R.id.displayable_social_timeline_store_latest_apps_container);
@@ -77,6 +75,7 @@ public class SocialStoreLatestAppsWidget
     followStore = (Button) itemView.findViewById(R.id.follow_btn);
     sharedStoreSubscribersNumber = (TextView) itemView.findViewById(R.id.number_of_followers);
     sharedStoreAppsNumber = (TextView) itemView.findViewById(R.id.number_of_apps);
+    //sharedBy = (TextView) itemView.findViewById(R.id.social_shared_by);
   }
 
   @Override public void bindView(SocialStoreLatestAppsDisplayable displayable) {
@@ -109,6 +108,13 @@ public class SocialStoreLatestAppsWidget
       }
     }
 
+    //if ((displayable.getUserSharer() != null || displayable.getUserSharer().getName() != null)) {
+    //  if (!displayable.getUser().getName().equals(displayable.getUserSharer().getName())) {
+    //    sharedBy.setVisibility(View.VISIBLE);
+    //    sharedBy.setText(displayable.getSharedBy(getContext()));
+    //  }
+    //}
+
     ImageLoader.loadWithShadowCircleTransform(displayable.getSharedStore().getAvatar(),
         sharedStoreAvatar);
     sharedStoreName.setText(displayable.getSharedStore().getName());
@@ -137,14 +143,14 @@ public class SocialStoreLatestAppsWidget
             Analytics.AppsTimeline.OPEN_APP_VIEW);
         displayable.sendClickEvent(SendEventRequest.Body.Data.builder()
             .cardType(getCardTypeName())
-            .source(AptoideAnalytics.SOURCE_APTOIDE)
+            .source(TimelineClickEvent.SOURCE_APTOIDE)
             .specific(SendEventRequest.Body.Specific.builder()
                 .app(packageName)
                 .store(displayable.getStoreName())
                 .build())
-            .build(), AptoideAnalytics.OPEN_APP);
+            .build(), TimelineClickEvent.OPEN_APP);
         ((FragmentShower) getContext()).pushFragmentV4(
-            V8Engine.getFragmentProvider().newAppViewFragment(apps.get(app)));
+            V8Engine.getFragmentProvider().newAppViewFragment(apps.get(app), packageName));
       }));
     }
 
@@ -155,10 +161,10 @@ public class SocialStoreLatestAppsWidget
           Analytics.AppsTimeline.OPEN_STORE);
       displayable.sendClickEvent(SendEventRequest.Body.Data.builder()
           .cardType(getCardTypeName())
-          .source(AptoideAnalytics.SOURCE_APTOIDE)
+          .source(TimelineClickEvent.SOURCE_APTOIDE)
           .specific(
               SendEventRequest.Body.Specific.builder().store(displayable.getStoreName()).build())
-          .build(), AptoideAnalytics.OPEN_STORE);
+          .build(), TimelineClickEvent.OPEN_STORE);
       ((FragmentShower) getContext()).pushFragmentV4(
           V8Engine.getFragmentProvider().newStoreFragment(displayable.getStoreName()));
     }));

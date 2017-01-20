@@ -5,7 +5,7 @@
 
 package cm.aptoide.pt.model.v7;
 
-import cm.aptoide.pt.model.v3.PaymentService;
+import cm.aptoide.pt.model.v3.PaymentServiceResponse;
 import cm.aptoide.pt.model.v7.listapp.File;
 import cm.aptoide.pt.model.v7.store.Store;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -51,9 +51,7 @@ import lombok.EqualsAndHashCode;
   @Data public static class Pay {
 
     private int productId;
-    private List<PaymentService> paymentServices;
     private Number price;
-    private String currency;
     private String symbol;
     private String status;
 
@@ -63,10 +61,6 @@ import lombok.EqualsAndHashCode;
 
     public void setPaid() {
       status = "OK";
-    }
-
-    public String getPriceDescription() {
-      return symbol + " " + price;
     }
   }
 
@@ -86,6 +80,7 @@ import lombok.EqualsAndHashCode;
     private GetAppMetaFile.Flags flags;
     private List<String> usedFeatures;
     private List<String> usedPermissions;
+    private List<String> tags;
 
     public boolean isGoodApp() {
       return this.flags != null && flags.review != null && flags.review.equalsIgnoreCase(

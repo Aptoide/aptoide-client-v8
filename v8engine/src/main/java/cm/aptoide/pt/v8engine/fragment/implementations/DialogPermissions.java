@@ -51,7 +51,7 @@ public class DialogPermissions extends DialogFragment {
     dialog.versionName = app.getFile().getVername();
     dialog.icon = app.getIcon();
     dialog.size = AptoideUtils.StringU.formatBytes(
-        AppUtils.sumFileSizes(app.getFile().getFilesize(), app.getObb()));
+        AppUtils.sumFileSizes(app.getFile().getFilesize(), app.getObb()), false);
     return dialog;
   }
 

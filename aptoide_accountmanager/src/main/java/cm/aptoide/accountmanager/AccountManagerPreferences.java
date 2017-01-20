@@ -6,7 +6,7 @@ import cm.aptoide.pt.preferences.secure.SecurePreferences;
 /**
  * Created by trinkes on 5/2/16.
  */
-class AccountManagerPreferences {
+public class AccountManagerPreferences {
 
   static String getAccessToken() {
     return SecurePreferences.getString(SecureKeys.ACCESS_TOKEN);
@@ -52,6 +52,14 @@ class AccountManagerPreferences {
     SecurePreferences.putString(SecureKeys.QUEUE_NAME, queueName);
   }
 
+  static void setUserId(int userId) {
+    SecurePreferences.putString(SecureKeys.USER_ID, String.valueOf(userId));
+  }
+
+  static String getUserId() {
+    return SecurePreferences.getString(SecureKeys.USER_ID);
+  }
+
   static void removeQueueName() {
     SecurePreferences.remove(SecureKeys.QUEUE_NAME);
   }
@@ -68,7 +76,7 @@ class AccountManagerPreferences {
     SecurePreferences.remove(SecureKeys.USER_AVATAR);
   }
 
-  static String getUserRepo() {
+  public static String getUserRepo() {
     return SecurePreferences.getString(SecureKeys.USER_REPO);
   }
 

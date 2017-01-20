@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.crashreports.CrashReports;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
@@ -22,6 +21,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
 import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
@@ -47,8 +47,7 @@ import rx.android.schedulers.AndroidSchedulers;
 
   public AppViewStoreWidget(View itemView) {
     super(itemView);
-    storeRepository = new StoreRepository(
-        AccessorFactory.getAccessorFor(cm.aptoide.pt.database.realm.Store.class));
+    storeRepository = RepositoryFactory.getStoreRepository();
   }
 
   @Override protected void assignViews(View itemView) {

@@ -129,11 +129,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_toEndOf="@id/main_info_layout"
         android:layout_toRightOf="@id/main_info_layout"
-        android:layout_marginStart="12dp"
         android:layout_marginLeft="12dp"
+        android:layout_marginStart="12dp"
         android:layout_marginRight="12dp"
         android:layout_marginEnd="12dp"
         >
@@ -143,7 +144,7 @@
           android:layout_height="match_parent"
           android:textSize="@dimen/text_size_medium_small"
           android:textAllCaps="true"
-          android:layout_gravity="right"
+          android:layout_gravity="right|end"
           tools:text="Install"
           />
     </FrameLayout>

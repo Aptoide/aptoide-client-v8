@@ -80,6 +80,8 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
     String uri = getIntent().getDataString();
     Analytics.ApplicationLaunch.website(uri);
 
+    Logger.v(TAG, "uri: " + uri);
+
     if (uri.startsWith("aptoiderepo")) {
 
       ArrayList<String> repo = new ArrayList<>();
@@ -111,13 +113,20 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
     } else if (uri.startsWith("https://market.android.com/details?id=")) {
       String param = uri.split("=")[1];
       startFromPackageName(param);
-    } else if (uri.startsWith("https://play.google.com/store/apps/details?id=")) {
+    } else if (uri.startsWith("https://play.google.com/store/apps/details?id=") || uri.startsWith(
+        "http://play.google.com/store/apps/details?id=")) {
       String params = uri.split("&")[0];
       String param = params.split("=")[1];
       if (param.contains("pname:")) {
         param = param.substring(6);
       } else if (param.contains("pub:")) {
         param = param.substring(4);
+      } else {
+        try {
+          param = Uri.parse(uri).getQueryParameter("id");
+        } catch (NullPointerException e) {
+          Logger.e(TAG, "NullPointerException: no uri: " + uri, e);
+        }
       }
       startFromPackageName(param);
     } else if (uri.contains("aptword://")) {
@@ -154,7 +163,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
       String[] strings = uri.split("-");
       long id = Long.parseLong(strings[strings.length - 1].split("\\.myapp")[0]);
 
-      startFromAppView(id);
+      startFromAppView(id, null, false);
     } else if (uri.startsWith("http://webservices.aptoide.com")) {
       /** refactored to remove org.apache libs */
       Map<String, String> params = null;
@@ -177,7 +186,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
         if (uid != null) {
           try {
             long id = Long.parseLong(uid);
-            startFromAppView(id);
+            startFromAppView(id, null, true);
           } catch (NumberFormatException e) {
             CrashReports.logException(e);
             Logger.printException(e);
@@ -239,7 +248,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
         //old version only with app id
         try {
           long id = Long.parseLong(split[0]);
-          startFromAppView(id);
+          startFromAppView(id, packageName, false);
           return;
         } catch (NumberFormatException e) {
           CrashReports.logException(e);
@@ -264,11 +273,13 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
     startActivity(intent);
   }
 
-  public void startFromAppView(long id) {
+  public void startFromAppView(long id, String packageName, boolean showPopup) {
     Intent i = new Intent(this, startClass);
 
     i.putExtra(DeepLinksTargets.APP_VIEW_FRAGMENT, true);
     i.putExtra(DeepLinksKeys.APP_ID_KEY, id);
+    i.putExtra(DeepLinksKeys.PACKAGE_NAME_KEY, packageName);
+    i.putExtra(DeepLinksKeys.SHOW_AUTO_INSTALL_POPUP, showPopup);
 
     startActivity(i);
   }

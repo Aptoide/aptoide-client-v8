@@ -5,10 +5,14 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
+import android.accounts.NetworkErrorException;
+import android.support.annotation.NonNull;
+import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.util.ToRetryThrowable;
+import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppVersionsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetMyStoreListRequest;
@@ -65,37 +69,24 @@ import rx.schedulers.Schedulers;
  */
 public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Interfaces, U> {
 
-  public static final String BASE_HOST = "http://ws75.aptoide.com/api/7/";
-  public static final String BASE_PRIMARY_HOST = "http://ws75-primary.aptoide.com/api/7/";
+  public static final String BASE_HOST = BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
+      + "://"
+      + BuildConfig.APTOIDE_WEB_SERVICES_V7_HOST
+      + "/api/7/";
+
   private static final int REFRESH_TOKEN_DELAY = 1000;
   @Getter protected final B body;
   private final String INVALID_ACCESS_TOKEN_CODE = "AUTH-2";
   private boolean accessTokenRetry = false;
 
   protected V7(B body, String baseHost) {
-    super(Interfaces.class, new UserAgentGenerator() {
-      @Override public String generateUserAgent() {
-        return SecurePreferences.getUserAgent();
-      }
-    }, WebService.getDefaultConverter(), baseHost);
-    this.body = body;
-  }
-
-  protected V7(B body, String baseHost, MultipartBody.Part file) {
-    super(Interfaces.class, new UserAgentGenerator() {
-      @Override public String generateUserAgent() {
-        return SecurePreferences.getUserAgent();
-      }
-    }, WebService.getDefaultConverter(), baseHost, file);
+    super(Interfaces.class, getDefaultUserAgentGenerator(), WebService.getDefaultConverter(),
+        baseHost);
     this.body = body;
   }
 
   protected V7(B body, Converter.Factory converterFactory, String baseHost) {
-    super(Interfaces.class, new UserAgentGenerator() {
-      @Override public String generateUserAgent() {
-        return SecurePreferences.getUserAgent();
-      }
-    }, converterFactory, baseHost);
+    super(Interfaces.class, getDefaultUserAgentGenerator(), converterFactory, baseHost);
     this.body = body;
   }
 
@@ -108,6 +99,10 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
       String baseHost) {
     super(Interfaces.class, httpClient, converterFactory, baseHost);
     this.body = body;
+  }
+
+  @NonNull private static UserAgentGenerator getDefaultUserAgentGenerator() {
+    return () -> SecurePreferences.getUserAgent();
   }
 
   @Override public Observable<U> observe(boolean bypassCache) {
@@ -160,6 +155,8 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
               return V7.this.observe(bypassCache)
                   .delaySubscription(REFRESH_TOKEN_DELAY, TimeUnit.MILLISECONDS);
             });
+          } else {
+            return Observable.error(new NetworkErrorException());
           }
         } else {
           return Observable.error(throwable);
@@ -309,6 +306,11 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
     @POST("store/set") Observable<BaseV7Response> editStore(@Body SimpleSetStoreRequest.Body body);
 
     @POST("user/set") Observable<BaseV7Response> setUser(@Body SetUserRequest.Body body);
+
+    @POST("user/addEvent/name={name}/action={action}/context={context}")
+    Observable<BaseV7Response> setDownloadAnalyticsEvent(@Path(value = "name") String name,
+        @Path(value = "action") String action, @Path(value = "context") String context,
+        @Body DownloadInstallAnalyticsBaseBody body);
   }
 }
 

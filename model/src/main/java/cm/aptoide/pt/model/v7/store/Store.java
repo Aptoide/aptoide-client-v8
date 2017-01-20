@@ -9,9 +9,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 import java.util.List;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 /**
@@ -27,15 +25,30 @@ import lombok.experimental.Accessors;
   private Stats stats;
   @JsonProperty("links") private List<SocialChannel> socialChannels;
 
+  public enum SocialChannelType {
+    FACEBOOK,
+    TWITTER,
+    YOUTUBE,
+    TWITCH
+  }
+
   @Data public static class Stats {
     private int apps;
     private int subscribers;
     private int downloads;
   }
 
-  @Data @NoArgsConstructor @AllArgsConstructor() public static class Appearance {
+  @Data public static class Appearance {
     private String theme;
     private String description;
+
+    public Appearance() {
+    }
+
+    public Appearance(String theme, String description) {
+      this.theme = theme;
+      this.description = description;
+    }
   }
 
   @Data public static class SocialChannel {
@@ -43,13 +56,6 @@ import lombok.experimental.Accessors;
     private String name;
     private String graphic;
     private String url;
-  }
-
-  public enum SocialChannelType {
-    FACEBOOK,
-    TWITTER,
-    YOUTUBE,
-    TWITCH
   }
 
 }

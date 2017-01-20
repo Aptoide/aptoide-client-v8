@@ -27,39 +27,19 @@
         android:layout_marginBottom="20dp"
         android:drawablePadding="4dp"
         android:gravity="center_vertical"
-        android:visibility="gone"
         android:textAppearance="?android:attr/textAppearanceMedium"
+        android:visibility="gone"
         tools:text="this is a sample title"
         tools:visibility="visible"
-        />
-
-    <TextView
-        android:id="@+id/username"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="2dp"
-        android:layout_marginTop="2dp"
-        android:text="@string/username"
-        android:textAppearance="?android:attr/textAppearanceMedium"
         />
 
     <EditText
         android:id="@+id/edit_store_username"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/username_tip"
+        android:hint="@string/store_username"
         android:inputType="textEmailAddress"
-        android:singleLine="true"
-        />
-
-    <TextView
-        android:id="@+id/password"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="2dp"
-        android:layout_marginTop="2dp"
-        android:text="@string/password"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:maxLines="1"
         />
 
     <EditText
@@ -68,10 +48,8 @@
         android:layout_height="wrap_content"
         android:hint="@string/password"
         android:inputType="textPassword"
-        android:singleLine="true"
+        android:maxLines="1"
         />
-
-    <include layout="@layout/basic_dialog_buttons" />
 
   </LinearLayout>
 

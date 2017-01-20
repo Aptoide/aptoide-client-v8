@@ -41,10 +41,11 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:background="@drawable/button_border_silver"
+      android:fontFamily="@string/font_family_medium"
       android:padding="12dp"
       android:text="@string/read_more"
       android:textAllCaps="true"
-      android:textColor="@color/silver"
+      android:textColor="@color/silver_dark"
       android:textSize="@dimen/text_size_small"
       />
 

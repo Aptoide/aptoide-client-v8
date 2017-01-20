@@ -12,7 +12,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AptoideAnalytics;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.TimelineClickEvent;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.SocialVideoDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.android.schedulers.AndroidSchedulers;
@@ -22,7 +22,7 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class SocialVideoWidget extends SocialCardWidget<SocialVideoDisplayable> {
 
-  private static final String CARD_TYPE_NAME = "Social Video";
+  private static final String CARD_TYPE_NAME = "SOCIAL_VIDEO";
 
   private TextView title;
   private TextView subtitle;
@@ -39,6 +39,7 @@ public class SocialVideoWidget extends SocialCardWidget<SocialVideoDisplayable> 
   private TextView relatedTo;
   private String appName;
   private String packageName;
+  //private TextView sharedBy;
 
   public SocialVideoWidget(View itemView) {
     super(itemView);
@@ -58,8 +59,9 @@ public class SocialVideoWidget extends SocialCardWidget<SocialVideoDisplayable> 
     getAppButton =
         (Button) itemView.findViewById(R.id.partial_social_timeline_thumbnail_get_app_button);
     cardView = (CardView) itemView.findViewById(R.id.card);
-    videoHeader = itemView.findViewById(R.id.displayable_social_timeline_video_header);
+    videoHeader = itemView.findViewById(R.id.social_header);
     relatedTo = (TextView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_related_to);
+    //sharedBy = (TextView) itemView.findViewById(R.id.social_shared_by);
   }
 
   @Override public void bindView(SocialVideoDisplayable displayable) {
@@ -119,7 +121,7 @@ public class SocialVideoWidget extends SocialCardWidget<SocialVideoDisplayable> 
               .url(displayable.getLink().getUrl())
               .app(packageName)
               .build())
-          .build(), AptoideAnalytics.OPEN_VIDEO);
+          .build(), TimelineClickEvent.OPEN_VIDEO);
     }));
 
     compositeSubscription.add(displayable.getRelatedToApplication()
@@ -155,7 +157,7 @@ public class SocialVideoWidget extends SocialCardWidget<SocialVideoDisplayable> 
               .url(displayable.getBaseLink().getUrl())
               .app(packageName)
               .build())
-          .build(), AptoideAnalytics.OPEN_CHANNEL);
+          .build(), TimelineClickEvent.OPEN_CHANNEL);
     }));
   }
 

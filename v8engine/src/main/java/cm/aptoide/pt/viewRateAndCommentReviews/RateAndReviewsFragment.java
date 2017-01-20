@@ -4,8 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -39,7 +37,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Com
 import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
 import cm.aptoide.pt.viewRateAndCommentReviews.layout.RatingBarsLayout;
 import cm.aptoide.pt.viewRateAndCommentReviews.layout.RatingTotalsLayout;
-import com.trello.rxlifecycle.FragmentEvent;
+import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.List;
 import lombok.Getter;
 import rx.android.schedulers.AndroidSchedulers;
@@ -49,12 +47,12 @@ public class RateAndReviewsFragment extends GridRecyclerFragment<CommentsAdapter
     implements ItemCommentAdderView<Review, CommentsAdapter> {
 
   private static final String TAG = RateAndReviewsFragment.class.getSimpleName();
-  private static final String APP_ID = "app_id";
-  private static final String PACKAGE_NAME = "package_name";
-  private static final String STORE_NAME = "store_name";
-  private static final String APP_NAME = "app_name";
-  private static final String REVIEW_ID = "review_id";
-  private static final String STORE_THEME = "store_theme";
+  @Getter private static final String APP_ID = "app_id";
+  @Getter private static final String PACKAGE_NAME = "package_name";
+  @Getter private static final String STORE_NAME = "store_name";
+  @Getter private static final String APP_NAME = "app_name";
+  @Getter private static final String REVIEW_ID = "review_id";
+  @Getter private static final String STORE_THEME = "store_theme";
 
   private long appId;
   @Getter private long reviewId;
@@ -107,37 +105,8 @@ public class RateAndReviewsFragment extends GridRecyclerFragment<CommentsAdapter
     storeTheme = args.getString(STORE_THEME);
   }
 
-  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    Logger.d(TAG, "Other versions should refresh? " + create);
-    fetchRating(refresh);
-    fetchReviews();
-  }
-
-  @Override public int getContentViewId() {
-    return R.layout.fragment_rate_and_reviews;
-  }
-
-  @Override public void bindViews(View view) {
-    super.bindViews(view);
-    final FloatingActionButton floatingActionButton =
-        (FloatingActionButton) view.findViewById(R.id.fab);
-    setHasOptionsMenu(true);
-
-    ratingTotalsLayout = new RatingTotalsLayout(view);
-    ratingBarsLayout = new RatingBarsLayout(view);
-
-    floatingActionButton.setOnClickListener(v -> {
-      DialogUtils.showRateDialog(getActivity(), appName, packageName, storeName,
-          () -> fetchReviews());
-    });
-  }
-
-  @Override public void setupToolbar() {
-    super.setupToolbar();
-    if (toolbar != null) {
-      ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-      bar.setDisplayHomeAsUpEnabled(true);
-    }
+  @Override protected boolean displayHomeUpAsEnabled() {
+    return true;
   }
 
   @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
@@ -174,7 +143,7 @@ public class RateAndReviewsFragment extends GridRecyclerFragment<CommentsAdapter
   private void fetchRating(boolean refresh) {
     GetAppRequest.of(appId, AptoideAccountManager.getAccessToken(),
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID())
+            DataProvider.getContext()).getAptoideClientUUID(), packageName)
         .observe(refresh)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
@@ -199,13 +168,12 @@ public class RateAndReviewsFragment extends GridRecyclerFragment<CommentsAdapter
   private void fetchReviews() {
     ListReviewsRequest reviewsRequest =
         ListReviewsRequest.of(storeName, packageName, AptoideAccountManager.getAccessToken(),
-            AptoideAccountManager.getUserEmail(),
             new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                 DataProvider.getContext()).getAptoideClientUUID());
 
     endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(this.getAdapter(), reviewsRequest,
-            new ListFullReviewsSuccessRequestListener(this), errorRequestListener);
+            new ListFullReviewsSuccessRequestListener(this), Throwable::printStackTrace);
     recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(false);
   }
@@ -218,10 +186,37 @@ public class RateAndReviewsFragment extends GridRecyclerFragment<CommentsAdapter
     }
   }
 
+  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    Logger.d(TAG, "Other versions should refresh? " + create);
+    fetchRating(refresh);
+    fetchReviews();
+  }
+
+  @Override public int getContentViewId() {
+    return R.layout.fragment_rate_and_reviews;
+  }
+
+  @Override public void bindViews(View view) {
+    super.bindViews(view);
+    final FloatingActionButton floatingActionButton =
+        (FloatingActionButton) view.findViewById(R.id.fab);
+    setHasOptionsMenu(true);
+
+    ratingTotalsLayout = new RatingTotalsLayout(view);
+    ratingBarsLayout = new RatingBarsLayout(view);
+
+    floatingActionButton.setOnClickListener(v -> {
+      DialogUtils.showRateDialog(getActivity(), appName, packageName, storeName,
+          () -> fetchReviews());
+    });
+  }
+
   @NonNull @Override
-  public CommentsReadMoreDisplayable createReadMoreDisplayable(final int itemPosition, Review review) {
+  public CommentsReadMoreDisplayable createReadMoreDisplayable(final int itemPosition,
+      Review review) {
     return new CommentsReadMoreDisplayable(review.getId(), true,
-        review.getCommentList().getDatalist().getNext(), new SimpleReviewCommentAdder(itemPosition, this));
+        review.getCommentList().getDatalist().getNext(),
+        new SimpleReviewCommentAdder(itemPosition, this));
   }
 
   /*
@@ -244,10 +239,8 @@ public class RateAndReviewsFragment extends GridRecyclerFragment<CommentsAdapter
   }
 
   public void setupTitle(String title) {
-    super.setupToolbar();
-    if (toolbar != null) {
-      ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-      bar.setTitle(title);
+    if (hasToolbar()) {
+      getToolbar().setTitle(title);
     }
   }
 

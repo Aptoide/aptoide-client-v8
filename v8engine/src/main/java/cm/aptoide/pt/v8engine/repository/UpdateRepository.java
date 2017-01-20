@@ -13,7 +13,6 @@ import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import java.util.Collections;
 import java.util.List;
-import lombok.AllArgsConstructor;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -21,10 +20,15 @@ import rx.schedulers.Schedulers;
  * Created by trinkes on 9/23/16.
  */
 
-@AllArgsConstructor public class UpdateRepository implements Repository {
+public class UpdateRepository implements Repository {
   private static final String TAG = UpdateRepository.class.getName();
   private UpdateAccessor updateAccessor;
   private StoreAccessor storeAccessor;
+
+  public UpdateRepository(UpdateAccessor updateAccessor, StoreAccessor storeAccessor) {
+    this.updateAccessor = updateAccessor;
+    this.storeAccessor = storeAccessor;
+  }
 
   public Observable<List<Update>> getUpdates() {
     return getUpdates(false);
@@ -55,7 +59,6 @@ import rx.schedulers.Schedulers;
 
   private Observable<List<App>> getNetworkUpdates(List<Long> storeIds, boolean bypassCache) {
     return ListAppsUpdatesRequest.of(storeIds, AptoideAccountManager.getAccessToken(),
-        AptoideAccountManager.getUserEmail(),
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()).getAptoideClientUUID()).observe(bypassCache).map(result -> {
       if (result.isOk()) {
@@ -119,11 +122,8 @@ import rx.schedulers.Schedulers;
     });
   }
 
-  public Observable<Void> remove(String packageName) {
-    return Observable.fromCallable(() -> {
-      updateAccessor.remove(packageName);
-      return null;
-    });
+  public void remove(String packageName) {
+    updateAccessor.remove(packageName);
   }
 
   public Observable<List<Update>> getNonExcludedUpdates() {
@@ -138,5 +138,13 @@ import rx.schedulers.Schedulers;
       updateAccessor.insert(update);
       return null;
     });
+  }
+
+  public Observable<List<Update>> getAllSorted(boolean isExcluded) {
+    return updateAccessor.getAllSorted(isExcluded);
+  }
+
+  public Observable<Boolean> contains(String packageName, boolean isExcluded) {
+    return updateAccessor.contains(packageName, isExcluded);
   }
 }

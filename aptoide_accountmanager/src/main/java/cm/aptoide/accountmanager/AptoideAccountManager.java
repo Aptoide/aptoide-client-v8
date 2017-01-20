@@ -58,7 +58,6 @@ import javax.security.auth.login.LoginException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.experimental.PackagePrivate;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -105,7 +104,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
    * private variables
    */
 
-  private ILoginInterface mCallback;
+  @Setter private static ILoginInterface mCallback;
   private WeakReference<Context> mContextWeakReference;
 
   public static Observable<Void> login(Context context) {
@@ -200,6 +199,20 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     openAccountManager(context, null);
   }
 
+  /**
+   * This method should be used to login users for ABAN
+   *
+   * @param phoneNumber users inserted phonenumber
+   * @param token users token sended by Aban
+   * @param username users inserted username
+   */
+  public static void openAccountManager(ILoginInterface loginInterface, Context context,
+      String phoneNumber, String token, String username) {
+    setMCallback(loginInterface);
+    AptoideAccountManager.loginUserCredentials(LoginMode.ABAN, phoneNumber, token, username,
+        context);
+  }
+
   public static boolean isLoggedIn() {
     AccountManager manager = AccountManager.get(getContext());
     return manager.getAccountsByType(Constants.ACCOUNT_TYPE).length != 0;
@@ -221,7 +234,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     });
   }
 
-  @PackagePrivate static void logout(WeakReference<FragmentActivity> activityRef) {
+  public static void logout(WeakReference<FragmentActivity> activityRef) {
     if (getConfiguration().isLoginAvailable(AptoidePreferencesConfiguration.SocialLogin.FACEBOOK)) {
       FacebookLoginUtils.logout();
     }
@@ -238,7 +251,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     getContext().sendBroadcast(new Intent().setAction(LOGOUT));
   }
 
-  private static @Nullable String getRefreshToken() {
+  public static @Nullable String getRefreshToken() {
     String refreshToken = AccountManagerPreferences.getRefreshToken();
 
     if (refreshToken == null || TextUtils.isEmpty(refreshToken)) {
@@ -357,7 +370,21 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
    */
   static void loginUserCredentials(LoginMode mode, final String userName,
       final String passwordOrToken, final String nameForGoogle) {
-    Context context = getInstance().mContextWeakReference.get();
+    loginUserCredentials(mode, userName, passwordOrToken, nameForGoogle,
+        getInstance().mContextWeakReference.get());
+  }
+
+  /**
+   * make the request to the server for login using the user credentials
+   *
+   * @param mode login mode, ca be facebook, aptoide or google
+   * @param userName user's username usually the email address
+   * @param passwordOrToken user password or token given by google or facebook
+   * @param nameForGoogle name given by google
+   * @param context given context
+   */
+  static void loginUserCredentials(LoginMode mode, final String userName,
+      final String passwordOrToken, final String nameForGoogle, Context context) {
     ProgressDialog genericPleaseWaitDialog = null;
     if (context != null) {
       genericPleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(context);
@@ -373,7 +400,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
         AccountManagerPreferences.setAccessToken(oAuth.getAccessToken());
 
         getInstance().addLocalUserAccount(userName, passwordOrToken, null, oAuth.getRefresh_token(),
-            oAuth.getAccessToken()).subscribe(isSuccess -> {
+            oAuth.getAccessToken(), context).subscribe(isSuccess -> {
           if (isSuccess) {
             setAccessTokenOnLocalAccount(oAuth.getAccessToken(), null, SecureKeys.ACCESS_TOKEN);
             AccountManagerPreferences.setLoginMode(mode);
@@ -427,6 +454,8 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
       // TODO are these validations really needed?
       // why not just store the values, null or not?
 
+      AccountManagerPreferences.setUserId(checkUserCredentialsJson.getId());
+
       if (!TextUtils.isEmpty(checkUserCredentialsJson.getQueueName())) {
         //hasQueue = true;
         AccountManagerPreferences.setQueueName(checkUserCredentialsJson.getQueueName());
@@ -476,6 +505,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
    */
   public static UserCompleteData getUserData() {
     UserCompleteData userCompleteData = new UserCompleteData();
+    userCompleteData.setId(AccountManagerPreferences.getUserId());
     userCompleteData.setUserName(AccountManagerPreferences.getUserNickName());
     userCompleteData.setUserEmail(AccountManagerPreferences.getUserEmail());
     userCompleteData.setQueueName(AccountManagerPreferences.getQueueName());
@@ -744,9 +774,10 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
         });
   }
 
-  private void removeLocalAccount() {
+  public static void removeLocalAccount() {
     AccountManager manager = AccountManager.get(getContext());
     Account[] accounts = manager.getAccountsByType(Constants.ACCOUNT_TYPE);
+    userIsLoggedIn = false;
     for (Account account : accounts) {
       if (Build.VERSION.SDK_INT >= 22) {
         manager.removeAccountExplicitly(account);
@@ -808,7 +839,23 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
    */
   Observable<Boolean> addLocalUserAccount(String userName, String userPassword,
       @Nullable String accountType, String refreshToken, String accessToken) {
-    Context context = mContextWeakReference.get();
+    return addLocalUserAccount(userName, userPassword, accountType, refreshToken, accessToken,
+        mContextWeakReference.get());
+  }
+
+  /**
+   * This method adds an new local account
+   *
+   * @param userName This will be used to identify the account
+   * @param userPassword password to access the account
+   * @param accountType account type
+   * @param refreshToken Refresh token to be saved
+   * @param accessToken AccessToken to be used on CheckUserCredentialsRequest
+   * @param context given context
+   * @return true if the account was added successfully, false otherwise
+   */
+  Observable<Boolean> addLocalUserAccount(String userName, String userPassword,
+      @Nullable String accountType, String refreshToken, String accessToken, Context context) {
     if (context != null) {
       AccountManager accountManager = AccountManager.get(context);
       accountType = accountType != null ? accountType
@@ -963,6 +1010,8 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     String getRepoTheme();
 
     String getRepoAvatar();
+
+    String getRepoDescription();
   }
 
   /**

@@ -6,8 +6,7 @@
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,7 +22,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ExcludedUpdateDisplayable;
-import com.trello.rxlifecycle.FragmentEvent;
+import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -62,13 +61,12 @@ public class ExcludedUpdatesFragment extends GridRecyclerFragment {
     setHasOptionsMenu(true);
   }
 
-  @Override public void setupToolbar() {
-    super.setupToolbar();
-    if (toolbar != null) {
-      ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-      bar.setDisplayHomeAsUpEnabled(true);
-      bar.setTitle(R.string.excluded_updates);
-    }
+  @Override public void setupToolbarDetails(Toolbar toolbar) {
+    toolbar.setTitle(R.string.excluded_updates);
+  }
+
+  @Override protected boolean displayHomeUpAsEnabled() {
+    return true;
   }
 
   @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {

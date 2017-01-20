@@ -14,19 +14,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 import cm.aptoide.accountmanager.ws.CreateUserRequest;
 import cm.aptoide.accountmanager.ws.ErrorsMapper;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import com.jakewharton.rxbinding.view.RxView;
 import java.net.SocketTimeoutException;
-import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import rx.Observable;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -36,6 +36,9 @@ import rx.subscriptions.CompositeSubscription;
 public class CreateUserActivity extends PermissionsBaseActivity
     implements AptoideAccountManager.ICreateProfile {
 
+  private static final String TYPE_STORAGE = "storage";
+  private static final String TYPE_CAMERA = "camera";
+  private static int CREATE_USER_REQUEST_CODE = 0; //1:Username and Avatar 2: Username
   private String userEmail;
   private String userPassword;
   private String username;
@@ -43,24 +46,15 @@ public class CreateUserActivity extends PermissionsBaseActivity
   private String accessToken;
   private Boolean UPDATE = true;
   private String SIGNUP = "signup";
-
   private Toolbar mToolbar;
   private RelativeLayout mUserAvatar;
   private EditText mUsername;
   private Button mCreateButton;
   private ImageView mAvatar;
   private View content;
-
-  private static int CREATE_USER_REQUEST_CODE = 0; //1:Username and Avatar 2: Username
-
   private CompositeSubscription mSubscriptions;
-
   private Boolean result = false;
-
   private String ERROR_TAG = "Error update user";
-
-  private static final String TYPE_STORAGE = "storage";
-  private static final String TYPE_CAMERA = "camera";
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -117,7 +111,7 @@ public class CreateUserActivity extends PermissionsBaseActivity
             CreateUserRequest.of("true", userEmail, username, userPassword, avatarPath)
                 .observe()
                 .filter(answer -> {
-                  if(answer.hasErrors()){
+                  if (answer.hasErrors()) {
                     if (answer.getErrors() != null && answer.getErrors().size() > 0) {
                       onRegisterFail(ErrorsMapper.getWebServiceErrorMessageFromCode(
                           answer.getErrors().get(0).code));
@@ -141,7 +135,7 @@ public class CreateUserActivity extends PermissionsBaseActivity
                     pleaseWaitDialog.dismiss();
                     ShowMessage.asObservableSnack(this, R.string.user_upload_photo_failed)
                         .subscribe(visibility -> {
-                          if(visibility == ShowMessage.DISMISSED) {
+                          if (visibility == ShowMessage.DISMISSED) {
                             finish();
                           }
                         });
@@ -149,7 +143,7 @@ public class CreateUserActivity extends PermissionsBaseActivity
                     pleaseWaitDialog.dismiss();
                     ShowMessage.asObservableSnack(this, R.string.user_upload_photo_failed)
                         .subscribe(visibility -> {
-                          if(visibility == ShowMessage.DISMISSED) {
+                          if (visibility == ShowMessage.DISMISSED) {
                             finish();
                           }
                         });
@@ -189,32 +183,26 @@ public class CreateUserActivity extends PermissionsBaseActivity
     accessToken = getIntent().getStringExtra(AptoideLoginUtils.APTOIDE_LOGIN_ACCESS_TOKEN_KEY);
   }
 
-  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    FileUtils fileUtils = new FileUtils();
-    if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-      Uri avatarUrl = getPhotoFileUri(PermissionsBaseActivity.createAvatarPhotoName(photoAvatar));
-      ImageLoader.loadWithCircleTransform(avatarUrl, mAvatar);
-      avatarPath = fileUtils.getPathAlt(avatarUrl, getApplicationContext());
-    } else if (requestCode == GALLERY_CODE && resultCode == RESULT_OK) {
-      Uri avatarUrl = data.getData();
-      avatarPath = fileUtils.getPath(avatarUrl, getApplicationContext());
-      if (checkImageResolution(avatarPath)) {
-        ImageLoader.loadWithCircleTransform(avatarUrl, mAvatar);
-      } else {
-        ShowMessage.asSnack(this, R.string.create_user_bad_photo);
-        avatarPath = "";
-      }
-    }
+  @Override void showIconPropertiesError(String errors) {
+    mSubscriptions.add(GenericDialogs.createGenericOkMessage(this,
+        getString(R.string.image_requirements_error_popup_title), errors).subscribe());
   }
 
-  private boolean checkImageResolution(String avatarPath) {
-    ArrayList<Integer> resolution;
+  @Override void loadImage(Uri imagePath) {
+    ImageLoader.loadWithCircleTransform(imagePath, mAvatar);
+  }
+
+  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     FileUtils fileUtils = new FileUtils();
-    resolution = fileUtils.getImageResolution(avatarPath);
-    if (resolution.get(0) > 300 && resolution.get(1) > 300) {
-      return true;
+    Uri avatarUrl = null;
+    if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+      avatarUrl = getPhotoFileUri(PermissionsBaseActivity.createAvatarPhotoName(photoAvatar));
+      avatarPath = fileUtils.getPathAlt(avatarUrl, getApplicationContext());
+    } else if (requestCode == GALLERY_CODE && resultCode == RESULT_OK) {
+      avatarUrl = data.getData();
+      avatarPath = fileUtils.getPath(avatarUrl, getApplicationContext());
     }
-    return false;
+    checkAvatarRequirements(avatarPath, avatarUrl);
   }
 
   @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
@@ -248,7 +236,12 @@ public class CreateUserActivity extends PermissionsBaseActivity
     ShowMessage.asSnack(content, R.string.user_created);
     //data.putString(AptoideLoginUtils.APTOIDE_LOGIN_FROM, SIGNUP);
     progressDialog.dismiss();
-    startActivity(new Intent(this, LoggedInActivity.class));
+    if (Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
+      startActivity(new Intent(this, LoggedInActivity.class));
+    } else {
+      Toast.makeText(this, R.string.create_profile_pub_pri_suc_login, Toast.LENGTH_LONG).show();
+      AptoideAccountManager.sendLoginCancelledBroadcast();
+    }
     finish();
   }
 

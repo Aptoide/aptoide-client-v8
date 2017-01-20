@@ -6,8 +6,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,6 +27,7 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.util.CommentOperations;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
+import cm.aptoide.pt.v8engine.view.custom.HorizontalDividerItemDecoration;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayableGroup;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentDisplayable;
@@ -35,7 +36,7 @@ import cm.aptoide.pt.viewRateAndCommentReviews.CommentDialogFragment;
 import cm.aptoide.pt.viewRateAndCommentReviews.CommentNode;
 import cm.aptoide.pt.viewRateAndCommentReviews.ComplexComment;
 import com.jakewharton.rxbinding.view.RxView;
-import com.trello.rxlifecycle.FragmentEvent;
+import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.ArrayList;
 import java.util.List;
 import rx.Observable;
@@ -104,27 +105,32 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
     if (commentType == CommentType.STORE) {
       BaseRequestWithStore.StoreCredentials storeCredentials =
           StoreUtils.getStoreCredentialsFromUrlOrNull(url);
-      if (storeCredentials != null && !TextUtils.isEmpty(storeCredentials.getName())) {
-        storeName = storeCredentials.getName();
-        elementIdAsLong = storeCredentials.getId();
+      if (storeCredentials != null) {
+
+        Long id = storeCredentials.getId();
+        if (id != null) {
+          elementIdAsLong = id;
+        }
+
+        if (!TextUtils.isEmpty(storeCredentials.getName())) {
+          storeName = storeCredentials.getName();
+        }
       }
     }
   }
 
-  @Override public void setupToolbar() {
-    // It's not calling super cause it does nothing in the middle class}
-    // StoreTabGridRecyclerFragment.
-    if (toolbar != null) {
-      ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-      if (commentType == CommentType.STORE && !TextUtils.isEmpty(storeName)) {
-        String title = String.format(getString(R.string.comment_on_store), storeName);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(title);
-      } else {
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.comments);
-      }
-      ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-      toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
+  @Override public void setupToolbarDetails(Toolbar toolbar) {
+    if (commentType == CommentType.STORE && !TextUtils.isEmpty(storeName)) {
+      String title = String.format(getString(R.string.comment_on_store), storeName);
+      toolbar.setTitle(title);
+    } else {
+      toolbar.setTitle(R.string.comments);
     }
+    toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
+  }
+
+  @Override protected boolean displayHomeUpAsEnabled() {
+    return true;
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -144,19 +150,11 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
     return R.layout.recycler_swipe_fragment_with_toolbar;
   }
 
-  @Override public void setupViews() {
-    super.setupViews();
-    setupToolbar();
-    setHasOptionsMenu(true);
-
-    RxView.clicks(floatingActionButton).flatMap(a -> {
-      if (commentType == CommentType.TIMELINE) {
-        return createNewCommentFragment(elementIdAsString);
-      }
-      return createNewCommentFragment(elementIdAsLong, storeName);
-    }).compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW)).subscribe(a -> {
-      // no-op
-    });
+  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    super.load(create, refresh, savedInstanceState);
+    if (create || refresh) {
+      refreshData();
+    }
   }
 
   @Override public void bindViews(View view) {
@@ -175,15 +173,23 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
     }
   }
 
-  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    super.load(create, refresh, savedInstanceState);
-    if (create || refresh) {
-      refreshData();
-    }
+  @Override protected RecyclerView.ItemDecoration getItemDecoration() {
+    return new HorizontalDividerItemDecoration(getContext(), 0);
   }
 
-  @Override protected RecyclerView.ItemDecoration getItemDecoration() {
-    return null;
+  @Override public void setupViews() {
+    super.setupViews();
+    setupToolbar();
+    setHasOptionsMenu(true);
+
+    RxView.clicks(floatingActionButton).flatMap(a -> {
+      if (commentType == CommentType.TIMELINE) {
+        return createNewCommentFragment(elementIdAsString);
+      }
+      return createNewCommentFragment(elementIdAsLong, storeName);
+    }).compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW)).subscribe(a -> {
+      // no-op
+    });
   }
 
   void refreshData() {
@@ -197,7 +203,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
   private Observable<Void> reloadComments() {
     return Observable.fromCallable(() -> {
       ManagerPreferences.setForceServerRefreshFlag(true);
-      //super.reload();
+      super.reload();
       return null;
     });
   }
@@ -210,7 +216,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
   }
 
   //
-  // create new comment different fragment constructions
+  // Re-Do: 6/1/2017 sithengineer create new comment different fragment constructions
   //
 
   //
@@ -290,7 +296,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
     recyclerView.clearOnScrollListeners();
     EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(getAdapter(), listCommentsRequest, listCommentsAction,
-            errorRequestListener, true);
+            Throwable::printStackTrace, true);
 
     recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(refresh);
@@ -383,7 +389,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
     recyclerView.clearOnScrollListeners();
     EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(getAdapter(), listCommentsRequest, listCommentsAction,
-            errorRequestListener, true);
+            Throwable::printStackTrace, true);
 
     recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(refresh);

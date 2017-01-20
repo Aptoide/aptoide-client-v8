@@ -20,6 +20,9 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEventConverter;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEventConverter;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragmentWithDecorator;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -27,7 +30,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Act
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ActiveDownloadsHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CompletedDownloadDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
-import com.trello.rxlifecycle.FragmentEvent;
+import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -46,6 +49,9 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
   private List<Displayable> completedDisplayablesList = new LinkedList<>();
   private InstallManager installManager;
   private List<Progress<Download>> oldDownloadsList;
+  private Analytics analytics;
+  private InstallEventConverter installConverter;
+  private DownloadEventConverter downloadConverter;
 
   public static DownloadsFragment newInstance() {
     return new DownloadsFragment();
@@ -59,6 +65,9 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
         AccessorFactory.getAccessorFor(Installed.class));
 
     oldDownloadsList = new ArrayList<>();
+    analytics = Analytics.getInstance();
+    installConverter = new InstallEventConverter();
+    downloadConverter = new DownloadEventConverter();
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
@@ -85,14 +94,14 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
         });
   }
 
+  @Override public int getContentViewId() {
+    return R.layout.recycler_fragment_downloads;
+  }
+
   private List<Progress<Download>> sortDownloads(List<Progress<Download>> progressList) {
     Collections.sort(progressList, (lhs, rhs) -> Long.valueOf(lhs.getRequest().getTimeStamp())
         .compareTo(rhs.getRequest().getTimeStamp()) * -1);
     return progressList;
-  }
-
-  @Override public int getContentViewId() {
-    return R.layout.recycler_fragment_downloads;
   }
 
   private void updateUi(List<Progress<Download>> progressList) {
@@ -115,7 +124,9 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
       if (isDownloading(progress)) {
         activeDisplayablesList.add(new ActiveDownloadDisplayable(progress, installManager));
       } else {
-        completedDisplayablesList.add(new CompletedDownloadDisplayable(progress, installManager));
+        completedDisplayablesList.add(
+            new CompletedDownloadDisplayable(progress, installManager, downloadConverter, analytics,
+                installConverter));
       }
     }
     Collections.reverse(activeDisplayablesList);

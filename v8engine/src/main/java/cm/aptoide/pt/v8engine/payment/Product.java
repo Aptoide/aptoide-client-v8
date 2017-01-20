@@ -18,5 +18,4 @@ public interface Product {
 
   String getDescription();
 
-  String getPriceDescription();
 }

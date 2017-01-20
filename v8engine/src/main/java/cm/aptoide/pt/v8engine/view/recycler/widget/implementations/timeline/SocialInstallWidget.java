@@ -3,25 +3,24 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.timeline;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.TimelineClickEvent;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.SocialInstallDisplayable;
-import com.jakewharton.rxbinding.view.RxView;
 import com.like.LikeButton;
-import com.like.OnLikeListener;
 
 /**
  * Created by jdandrade on 15/12/2016.
  */
 public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayable> {
 
-  private static final String CARD_TYPE_NAME = "Social Install";
+  private static final String CARD_TYPE_NAME = "SOCIAL_INSTALL";
 
   private TextView storeName;
   private TextView userName;
@@ -43,10 +42,8 @@ public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayab
 
   @Override protected void assignViews(View itemView) {
     super.assignViews(itemView);
-    storeName = (TextView) itemView.findViewById(
-        R.id.displayable_social_timeline_recommendation_card_title);
-    userName = (TextView) itemView.findViewById(
-        R.id.displayable_social_timeline_recommendation_card_subtitle);
+    storeName = (TextView) itemView.findViewById(R.id.card_title);
+    userName = (TextView) itemView.findViewById(R.id.card_subtitle);
     storeAvatar = (ImageView) itemView.findViewById(R.id.card_image);
     userAvatar = (ImageView) itemView.findViewById(R.id.card_user_avatar);
     appName = (TextView) itemView.findViewById(
@@ -107,16 +104,14 @@ public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayab
       Analytics.AppsTimeline.clickOnCard(CARD_TYPE_NAME, displayable.getPackageName(),
           Analytics.AppsTimeline.BLANK, displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_APP_VIEW);
-      //displayable.sendClickEvent(SendEventRequest.Body.Data.builder()
-      //    .cardType(cardType)
-      //    .source(AptoideAnalytics.SOURCE_APTOIDE)
-      //    .specific(SendEventRequest.Body.Specific.builder()
-      //        .app(displayable.getPackageName())
-      //        .based_on(displayable.getSimilarAppPackageName())
-      //        .build())
-      //    .build(), AptoideAnalytics.OPEN_APP);
-      ((FragmentShower) getContext()).pushFragmentV4(
-          V8Engine.getFragmentProvider().newAppViewFragment(displayable.getAppId()));
+      displayable.sendClickEvent(SendEventRequest.Body.Data.builder()
+          .cardType(CARD_TYPE_NAME)
+          .source(TimelineClickEvent.SOURCE_APTOIDE)
+          .specific(
+              SendEventRequest.Body.Specific.builder().app(displayable.getPackageName()).build())
+          .build(), TimelineClickEvent.OPEN_APP);
+      ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
+          .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
     });
   }
 
