@@ -13,6 +13,7 @@ import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -46,6 +47,16 @@ import rx.Observable;
         (Body) decorator.decorate(body, accessToken));
   }
 
+  public static GetStoreWidgetsRequest ofActionFirstInstall(String url, StoreCredentials storeCredentials,
+      String accessToken, String storeName, String aptoideClientUUID) {
+    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+
+    final Body body = new Body(storeCredentials, WidgetsArgs.createDefault(), StoreContext.first_install, "response", storeName);
+
+    return new GetStoreWidgetsRequest(new V7Url(url).remove("getStoreWidgets").get(), BASE_HOST,
+        (Body) decorator.decorate(body, accessToken));
+  }
+
   @Override protected Observable<GetStoreWidgets> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
     return interfaces.getStoreWidgets(url, body, bypassCache);
@@ -54,10 +65,19 @@ import rx.Observable;
   @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBodyWithStore {
 
     @Getter private WidgetsArgs widgetsArgs;
+    @Getter @Setter private StoreContext context;
+    @Getter private String storeName;
 
     public Body(StoreCredentials storeCredentials, WidgetsArgs widgetsArgs) {
       super(storeCredentials);
       this.widgetsArgs = widgetsArgs;
+    }
+
+    public Body(StoreCredentials storeCredentials, WidgetsArgs widgetsArgs, StoreContext storeContext, String nview, String storeName) {
+      super(storeCredentials);
+      this.widgetsArgs = widgetsArgs;
+      this.context = storeContext;
+      this.storeName = storeName;
     }
   }
 }
