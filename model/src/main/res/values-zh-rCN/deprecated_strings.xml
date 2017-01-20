@@ -95,7 +95,6 @@
 \n 您看到的错误</string>
     <string name="feedback_include_logs">包括屏幕截图和日志</string>
     <string name="feedback_no_email">未安装电子邮件客户端！</string>
-    <string name="username_tip">输入您的电子邮件</string>
     <string name="store_already_added">已添加商店！</string>
     <string name="subscribe_store">订阅商店</string>
     <string name="permissions">参见权限</string>
@@ -182,7 +181,6 @@
     <string name="exclude_update">忽略更新</string>
     <string name="install_update">安装更新</string>
 
-    <string name="payment_methods">支付方式：</string>
     <string name="cancel">取消</string>
     <string name="no_payments_available">无可用付款。</string>
     <string name="failed_auth_code">帐户授权失败。请重试。</string>
@@ -451,8 +449,6 @@
     <string name="subscribe_apps_official_store">订阅Aptoide官方应用商店</string>
     <string name="wizard_next">下一步</string>
     <string name="wizard_prev">上一步</string>
-    <string name="search_activity_title">“%s”</string>
-
     <string name="share">分享</string>
     <string name="share_on_timeline">在时间轴上分享</string>
 

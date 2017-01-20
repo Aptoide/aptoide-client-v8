@@ -95,7 +95,6 @@
 \n Erros que você está vendo</string>
     <string name="feedback_include_logs">Incluir captura de tela e logs</string>
     <string name="feedback_no_email">Nenhum cliente de e-mail instalado!</string>
-    <string name="username_tip">Digite seu e-mail</string>
     <string name="store_already_added">Loja já adicionada!</string>
     <string name="subscribe_store">Assinar loja</string>
     <string name="permissions">Ver permissões</string>
@@ -182,7 +181,6 @@
     <string name="exclude_update">Ignorar atualização</string>
     <string name="install_update">Instalar atualização</string>
 
-    <string name="payment_methods">Pagar com:</string>
     <string name="cancel">Cancelar</string>
     <string name="no_payments_available">Nenhum pagamento disponível.</string>
     <string name="failed_auth_code">Falha ao autorizar a conta. Por favor, tente novamente.</string>
@@ -458,8 +456,6 @@ análise</string>
     <string name="subscribe_apps_official_store">Assinar a loja de aplicativos \'apps\' oficial do Aptoide</string>
     <string name="wizard_next">Próximo</string>
     <string name="wizard_prev">Anterior</string>
-    <string name="search_activity_title">\'%s\'</string>
-
     <string name="share">Compartilhar</string>
     <string name="share_on_timeline">Compartilhar na linha do tempo</string>
 

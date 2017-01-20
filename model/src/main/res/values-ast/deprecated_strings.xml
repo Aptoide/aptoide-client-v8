@@ -181,7 +181,6 @@
  Fallos que teas viendo</string>
   <string name="feedback_include_logs">Incluyir captures de pantalla y anicios de sesión</string>
   <string name="feedback_no_email">¡Nun hai instaláu un veceru de corréu!</string>
-  <string name="username_tip">Teclexa\'l to corréu</string>
   <string name="permissions">Mirar permisos</string>
   <string name="permissions_na">Permisos: N/A</string>
   <string name="additional_permissions">Permisos adicionales</string>
@@ -247,7 +246,6 @@
   <string name="exclude_update">Inorar anovamientu</string>
   <string name="install_update">Instalar anovamientu</string>
 
-  <string name="payment_methods">Pagar con:</string>
   <string name="no_payments_available">Nun hai pagos disponibles.</string>
   <string name="failed_auth_code">Fallu al autorizar la cuenta. Volvi tentalo, por favor.</string>
   <string name="error_occured_paying">Asocedió un fallu. Nun se completó\'l pagu.</string>
@@ -341,8 +339,6 @@ Prueba otres pallabres clave, por favor.</string>
   <string name="no_apps_found">Nun s\'alcontraron aplicaciones cola peñera actual</string>
   <string name="search_for_apps">Gueta aplicaciones…</string>
   <string name="share">Compartir</string>
-  <string name="search_activity_title">«%s»</string>
-
   <string name="wizard_prev">Previo</string>
   <string name="wizard_next">Siguiente</string>
   <string name="wizard_new_and_improved">¡Rindimientu ameyoráu!</string>

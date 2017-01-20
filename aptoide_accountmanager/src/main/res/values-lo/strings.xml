@@ -34,7 +34,6 @@
     <string name="accept_terms">"ໂດຍການລົງທະບຽນນີ້ແມ່ນທ່ານຍິນຍອມຕໍ່ເງື່ອນໄຂການໃຫ້ບໍລິການ Aptoide ແລະ
  ນະໂຍບາຍເນື້ອຫາສຳລັບຜູ້ພັດທະນາ
  "</string>
-    <string name="facebook_garant_permission_button">ມອບສິດ</string>
     <string name="facebook_email_permission_regected_message">"Aptoide ຕ້ອງການອີເມວຂອງທ່ານເພື່ອສ້າງ
  ບັນຊີ
  "</string>
@@ -64,4 +63,9 @@
   <string name="ws_error_MARG_204">\@string/error_occured</string>
   <string name="ws_error_IARG_200">\@string/error_occured</string>
   <string name="ws_error_AUTH_7">\@string/error_occured</string>
+  <string name="login">ເຂົ້າສູ່ລະບົບ</string>
+  <string name="successful">ປະສົບຜົນສຳເລັດ</string>
+  <string name="facebook_grant_permission_button">ການອະນຸຍາດ ຊ່ວຍເຫຼືອລ້າ</string>
+  <string name="user_cancelled">ຍົກເລີກໂດຍຜູ້ນຳໃຊ້</string>
+
   </resources>

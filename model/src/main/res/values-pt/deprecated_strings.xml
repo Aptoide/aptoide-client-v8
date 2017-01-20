@@ -71,7 +71,7 @@
     <string name="error_REPO_2">A loja foi cancelada.</string>
     <string name="error_REPO_3">A loja não pertence a este utilizador.</string>
     <string name="error_REPO_4_no_store">A sua conta não tem loja criada. Necessita criar uma para poder fazer uma crítica.</string>
-    <string name="error_REPO_7">Este utilizador já tem um repositório válido.</string>
+    <string name="error_REPO_7">Este utilizador já tem uma loja válida.</string>
 
     <string name="error_APK_1">Não foi possível abrir esta aplicação com a informação e versão dada</string>
     <string name="error_APK_4">"Não foi possível abrir esta aplicação "</string>
@@ -100,7 +100,6 @@
  Errros que está a ver</string>
     <string name="feedback_include_logs">Incluir capturas de ecrã e logs</string>
     <string name="feedback_no_email">Sem cliente de email instalado!</string>
-    <string name="username_tip">Escreva o seu email</string>
     <string name="store_already_added">Loja adicionada!</string>
     <string name="subscribe_store">Subscrever loja</string>
     <string name="permissions">Ver permissões</string>
@@ -131,7 +130,7 @@
     <string name="error503">Ufff… É impressão minha ou estão todos a instalar aplicações ao mesmo tempo?</string>
     <string name="having_some_trouble">Está a ocorrer algum problema. Tentar mais tarde?</string>
 
-    <string name="reply">Resposta</string>
+    <string name="reply">Responder</string>
     <string name="vote_down">Votar -1</string>
     <string name="vote_up">Votar +1</string>
     <string name="casting_vote">A enviar voto…</string>
@@ -187,7 +186,6 @@
     <string name="exclude_update">Ignorar Actualização</string>
     <string name="install_update">Instalar update</string>
 
-    <string name="payment_methods">Comprar com:</string>
     <string name="cancel">Cancelar</string>
     <string name="no_payments_available">Sem pagamentos disponíveis.</string>
     <string name="failed_auth_code">Falha de autorização da conta. Por favor tente novamente.</string>
@@ -232,7 +230,7 @@
     <string name="unhide_post">Permitir</string>
     <string name="hide_post">Ocultar</string>
     <string name="like">Gosto</string>
-    <string name="comment">Comentário</string>
+    <string name="comment">Comentar</string>
     <string name="hide_post_info">Os seus amigos não vão ver esta publicação</string>
     <string name="timeline_like">Gosto</string>
     <string name="likes">Gostos</string>
@@ -311,7 +309,7 @@
     <string name="setting_allUpdates_filtering">Filtrar actualizações</string>
     <string name="setting_schdwninstallsum">Instalar downloads agendados automaticamente quando estiver presente uma ligação WiFi</string>
     <string name="setting_schdwninstalltitle">Instalação automática</string>
-    <string name="setting_clear_memory">Apagar memoria</string>
+    <string name="setting_clear_memory">Armazenamento</string>
     <string name="clearcontent_title">Remover dados e configurações do Aptoide</string>
     <string name="settings_maxFileCache_sum">Definir um limite máximo para guardar os seus ficheiros</string>
     <string name="settings_maxFileCache_title">Cache dos ficheiros descarregados (MB)</string>
@@ -457,8 +455,6 @@ Crítica</string>
     <string name="subscribe_apps_official_store">Subscrever \'apps\' a Loja Oficial Aptoide</string>
     <string name="wizard_next">Seguinte</string>
     <string name="wizard_prev">Anterior</string>
-    <string name="search_activity_title">\'%s\'</string>
-
     <string name="share">Partilhar</string>
     <string name="share_on_timeline">Partilhar na cronologia</string>
 
@@ -489,8 +485,8 @@ Crítica</string>
     <string name="friends_to_invite">Todos os amigos Facebook no Aptoide</string>
     <string name="upload_app_backup_apps_installed">Tem de carregar esta app para a sua loja primeiro. Pode usar o Aptoide Backup Apps.</string>
     <string name="upload_app_backup_apps_not_installed">Tem de carregar esta app para a sua loja primeiro. Por favor, instale e use o Aptoide Backup Apps.</string>
-    <string name="setting_category_autoupdate">Auto-actualização Aptoide</string>
-    <string name="setting_category_autoupdate_title">Activar a Auto-actualização Aptoide</string>
+    <string name="setting_category_autoupdate">Auto-actualização de %s</string>
+    <string name="setting_category_autoupdate_title">Activar a auto-actualização de %s</string>
     <string name="social_timeline_notifications_sum2">Activar as notificações da cronologia social Aptoide. Irá receber as últimas novidades na barra de notificações.</string>
     <string name="ignored">Ignorado</string>
     <string name="application_signature_blacklisted">A assinatura da aplicação não é uma assinatura fidedigna na plataforma Anti-Malware da Aptoide porque foi usada para verificar outra aplicação que não corresponde à assinatura do developer legítimo.</string>
@@ -509,4 +505,6 @@ Crítica</string>
     <string name="unsubscribing_store_message">A remover subscrição de %s</string>
 
     <string name="change_theme_soon">Brevemente</string>
+  <string name="critical">Crítico</string>
+
   </resources>

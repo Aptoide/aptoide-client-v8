@@ -281,8 +281,8 @@ ja tutustu <b>personoituun sisältöön.</b></string>
 
   <string name="install_app_outter_pt1">Kaupassasi ei ole vielä sovelluksia.</string>
   <string name="install_app_outter_pt2">ja lataa sovelluksia jakaaksesi ne maailmalle!</string>
-  <string name="install_app_inner">Asenna %1$s</string>
-  <string name="open_app_inner">Avaa %1$s</string>
+  <string name="install_app_inner">" Asenna %1$s "</string>
+  <string name="open_app_inner">" Avaa %1$s "</string>
   <string name="downloads_count">Lataukset: %1$s</string>
   <string name="version_number">Versio: %1$s</string>
   <string name="app_size">Koko: %1$s</string>
@@ -319,4 +319,16 @@ ja tutustu <b>personoituun sisältöön.</b></string>
 
   <string name="timeline_stats_followers">Seuraajat</string>
   <string name="timeline_login_message">Mitä ystäväsi asentavat?</string>
+<string name="social_timeline_shared_by">%1$s jakoi</string>
+
+  <string name="edit_store">Muokkaa</string>
+
+  <string name="private_followers_message">%d seuraajaa ovat yksityisiä</string>
+  <string name="private_following_message">seuraat %d yksityistä käyttäjää/kauppaa</string>
+
+  <string name="item_payment_button_use">käytä</string>
+  <string name="item_payment_button_register">rekisteröi</string>
+  <string name="item_payment_approving_text">Hyväksytään</string>
+  <string name="activity_payment_more_payments_button">Käytä toista maksutapaa</string>
+
 </resources>

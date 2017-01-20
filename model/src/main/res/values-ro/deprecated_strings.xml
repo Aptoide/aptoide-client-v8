@@ -100,7 +100,6 @@ Pașii pe care i-ai urmat
 Erorile pe care le vezi</string>
     <string name="feedback_include_logs">Include Captură ecran și Jurnale</string>
     <string name="feedback_no_email">Nu este instalat niciun client de e-mail!</string>
-    <string name="username_tip">Introdu adresa ta de e-mail</string>
     <string name="store_already_added">Magazin adăugat deja!</string>
     <string name="subscribe_store">Abonare la Magazin</string>
     <string name="permissions">Vezi permisiuni</string>
@@ -185,7 +184,6 @@ Erorile pe care le vezi</string>
     <string name="exclude_update">Ignoră actualizare</string>
     <string name="install_update">Instalează actualizare</string>
 
-    <string name="payment_methods">Plătește cu:</string>
     <string name="cancel">Anulează</string>
     <string name="no_payments_available">Nu există plăți disponibile.</string>
     <string name="failed_auth_code">Autorizarea contului a eșuat. Te rugăm să încerci din nou.</string>
@@ -455,8 +453,6 @@ Probleme de incompatibilitate? Caută versiuni anterioare ale aplicației.</stri
     <string name="subscribe_apps_official_store">Abonează-te la aplicații din Magazinul oficial de aplicații Aptoide</string>
     <string name="wizard_next">Următor</string>
     <string name="wizard_prev">Anterior</string>
-    <string name="search_activity_title">\'%s\'</string>
-
     <string name="share">Distribuie</string>
     <string name="share_on_timeline">Distribuie în cronologie</string>
 

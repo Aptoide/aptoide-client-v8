@@ -2,7 +2,7 @@
 <resources><string name="update">ਅਪਡੇਟ</string>
     <string name="uninstall">ਅਨਇੰਸਟਾਲ</string>
     <string name="displayable_social_timeline_app_update">ਅਪਡੇਟ</string>
-    <string name="wizard_skip"><b> 1ਛੱਡੋ</b> 2</string>
+    <string name="wizard_skip"><b> ਛੱਡੋ</b></string>
   <string name="home_title">ਘਰ</string>
   <string name="community">ਕਮਿਊਨਿਟੀ</string>
   <string name="stores">ਸਟੋਰ</string>
@@ -42,14 +42,14 @@
   <string name="clear">ਸਾਫ ਕਰੋ</string>
 
   <string name="excluded_updates">ਛੱਡੇ ਗਏ ਅੱਪਡੇਟ</string>
-    <string name="no_excluded_updates_msg">ਐਪ ਦਾ ਨਵਾਂ ਵਰਜਨ ਤੁਹਾਡੇ ਜੰਤਰ ਤੇ ਕੰਮ ਨਹੀਂ ਕਰ ਰਿਹਾ ਜਾਂ ਕੁਝ ਵਿਸ਼ੇਸ਼ਤਾ 
+    <string name="no_excluded_updates_msg">ਐਪ ਦਾ ਨਵਾਂ ਵਰਜਨ ਤੁਹਾਡੇ ਜੰਤਰ ਤੇ ਕੰਮ ਨਹੀਂ ਕਰ ਰਿਹਾ ਜਾਂ ਕੁਝ ਵਿਸ਼ੇਸ਼ਤਾ
 ਘੱਟ ਹੈ? ਐਪਸ ਨੂੰ ਅੱਪਡੇਟ ਹੋਣ ਤੋਂ ਰੋਕੋ| ਅੱਪਡੇਟ ਐਪ ਤੇ ਜਾਓ ਅਤੇ ਲੰਬਾ ਪ੍ਰੈਸ ਕਰੋ ਜਿਸ ਨੂੰ ਵੀ ਤੁਸੀ ਬੰਦ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ</string>
 
   <string name="restore_updates">ਅੱਪਡੇਟ ਰਿਸਟੋਰ ਕਰੋ</string>
   <string name="open_apps_manager">ਐਪਸ ਮੈਨੇਜਰ ਖੋਲੋ</string>
 
   <string name="rollback">ਰੋਲਬੈਕ</string>
-    <string name="no_rollbacks_msg">"ਜਲਦੀ ਕਿਸੇ ਵੀ ਐਪਲੀਕੇਸ਼ ਨੂੰ ਪਿਛਲੇ ਵਰਜਨ ਵਿਚ  ਡਾਊਨਗਰੇਡ ਕਰੋ ਅਤੇ ਅਨੁਕੂਲਤਾ ਦੇ ਮੁੱਦੇ ਦਾ ਹੱਲ ਕਰੋ| ਆਪਣੀਆਂ ਸਭ ਇੰਸਟਾਲ ਕੀਤੀਆਂ ਐਪਸ ਦੀ 
+    <string name="no_rollbacks_msg">"ਜਲਦੀ ਕਿਸੇ ਵੀ ਐਪਲੀਕੇਸ਼ ਨੂੰ ਪਿਛਲੇ ਵਰਜਨ ਵਿਚ  ਡਾਊਨਗਰੇਡ ਕਰੋ ਅਤੇ ਅਨੁਕੂਲਤਾ ਦੇ ਮੁੱਦੇ ਦਾ ਹੱਲ ਕਰੋ| ਆਪਣੀਆਂ ਸਭ ਇੰਸਟਾਲ ਕੀਤੀਆਂ ਐਪਸ ਦੀ
 ਲਾਗ ਰੱਖੋ (%s ਦੁਆਰਾ) ਵਰਜਨ ਅਤੇ ਇੰਸਟਾਲ ਮਿਤੀ ਨਾਲ|"</string>
 
   <string name="menu_card_timeline_clear">ਮਿਟਾਓ</string>
@@ -78,7 +78,7 @@
   <string name="displayable_social_timeline_app_update_error">ਅੱਪਡੇਟ ਵਿਚ ਪਰੇਸ਼ਾਨੀ</string>
 
   <string name="appview_good_app_guaranteed">ਚੰਗੀ ਐਪ ਦੀ ਗਾਰੰਟੀ!</string>
-    <string name="appview_good_app_description">ਇਸ ਅੈਪਲੀਕੇਸ਼ਨਾਂ ਨੇ ਵਾਇਰਸ, ਮਾਲਵੇਅਰ ਅਤੇ ਹੋਰ ਖਤਰਨਾਕ ਹਮਲੇ ਲਈ ਸੁਰੱਖਿਆ ਟੈਸਟ ਪਾਸ ਕਰ ਲਿਆ ਹੈ ਅਤੇ ਇਸ ਵਿਚ ਕੋਈ ਵੀ 
+    <string name="appview_good_app_description">ਇਸ ਅੈਪਲੀਕੇਸ਼ਨਾਂ ਨੇ ਵਾਇਰਸ, ਮਾਲਵੇਅਰ ਅਤੇ ਹੋਰ ਖਤਰਨਾਕ ਹਮਲੇ ਲਈ ਸੁਰੱਖਿਆ ਟੈਸਟ ਪਾਸ ਕਰ ਲਿਆ ਹੈ ਅਤੇ ਇਸ ਵਿਚ ਕੋਈ ਵੀ
 ਖਤਰੇ ਸ਼ਾਮਿਲ ਨਹੀਂ ਹਨ!</string>
   <string name="other_versions_partial_title_1">ਹੋਰ</string>
   <string name="other_versions_partial_title_2">ਵੱਖ-ਵੱਖ ਸਟੋਰਾਂ ਤੇ ਵਰਜਨ</string>
@@ -129,26 +129,26 @@ http://aptoi.de/tv</string>
     <string name="remote_install_help">ਮਦਦ</string>
     <string name="remote_install_help_url">http://blog.aptoide.com/remote-tv-install</string>
 
-    <string name="wizard_welcome_message"><b> 1ਸੁਆਗਤ ਹੈ!</b> 2</string>
-  <string name="wizard_sub_title_viewpager_one">ਇਕ ਸੁਖੀ <b> 1ਅਤੇ </b> 2ਮਜ਼ੇਦਾਰ <b> 3ਸਫਰ ਦੀ ਸ਼ੁਰੂਆਤ </b> 4 ਕਰੋ ਜੀ|</string>
-  <string name="wizard_description_part_one_viewpager_one"><b> 1ਇੱਕ ਸੁਰੱਖਿਅਤ </b>" 2ਇੰਸਟਾਲ ਲਈ  
-ਭਰੋਸੇਯੋਗ ਬੈਜ ਨਾਲ 
+    <string name="wizard_welcome_message"><b> ਸੁਆਗਤ ਹੈ!</b> </string>
+  <string name="wizard_sub_title_viewpager_one">ਇਕ ਸੁਖੀ <b> ਅਤੇ </b> ਮਜ਼ੇਦਾਰ <b> ਸਫਰ ਦੀ ਸ਼ੁਰੂਆਤ </b> ਕਰੋ ਜੀ|</string>
+  <string name="wizard_description_part_one_viewpager_one"><b> ਇੱਕ ਸੁਰੱਖਿਅਤ </b>" ਇੰਸਟਾਲ ਲਈ
+ਭਰੋਸੇਯੋਗ ਬੈਜ ਨਾਲ
 ਉਪਲੱਬਧ ਐਪਸ ਵੇਖੋ|"</string>
-  <string name="wizard_description_part_two_viewpager_one"><b> 1ਓਹ ਐਪਸ ਪਾਓ</b> 2 ਜੋ ਕਿ
+  <string name="wizard_description_part_two_viewpager_one"><b> ਓਹ ਐਪਸ ਪਾਓ</b> ਜੋ ਕਿ
 ਤੁਸੀ ਚਾਹੁੰਦੇ ਸੀ, ਪਰ
 ਕਦੇ ਵੀ ਮਿਲੀਆਂ ਨਹੀਂ|</string>
 
-  <string name="wizard_title_viewpager_two"><b> 1ਐਪਸ ਟਾਈਮਲਾਈਨ</b> 2</string>
-  <string name="wizard_sub_title_viewpager_two">ਨਵੀਨਤਮ ਐਪਸ <b> 1 ਪ੍ਰਾਪਤ ਕਰੋ</b> 2, ਥੀਮੈਟਿਕ <b> 3 ਸਟੋਰ ਲਭੋ</b> 4
-ਅਤੇ ਵਿਅਕਤੀਗਤ <b> 5ਸਮੱਗਰੀ ਨੂੰ ਵਰਤੋ|</b> 6</string>
+  <string name="wizard_title_viewpager_two"><b> ਐਪਸ ਟਾਈਮਲਾਈਨ</b> </string>
+  <string name="wizard_sub_title_viewpager_two">ਨਵੀਨਤਮ ਐਪਸ <b> ਪ੍ਰਾਪਤ ਕਰੋ</b>, ਥੀਮੈਟਿਕ <b> ਸਟੋਰ ਲਭੋ</b>
+ਅਤੇ ਵਿਅਕਤੀਗਤ <b> ਸਮੱਗਰੀ ਨੂੰ ਵਰਤੋ|</b></string>
 
-  <string name="wizard_title_viewpager_three"><b> 1ਭਾਈਚਾਰੇ ਵਿੱਚ ਸ਼ਾਮਲ ਹੋ ਜਾਓ</b> 2</string>
-  <string name="wizard_description_part_one_viewpager_three"><b> 1ਆਪਣੇ</b> 2 ਦੋਸਤਾਂ ਨੂੰ ਫੋਲੋ ਕਰੋ</string>
-  <string name="wizard_description_part_two_viewpager_three"><b> 1ਐਪਸ ਨੂੰ ਰਿਵਿਊ</b> 2 ਅਤੇ ਰੇਟ ਕਰੋ</string>
-  <string name="wizard_description_part_three_viewpager_three"><b> 1ਆਪਣਾ </b> 2ਸਟੋਰ ਬਣਾਓ</string>
+  <string name="wizard_title_viewpager_three"><b>ਭਾਈਚਾਰੇ ਵਿੱਚ ਸ਼ਾਮਲ ਹੋ ਜਾਓ</b></string>
+  <string name="wizard_description_part_one_viewpager_three"><b> ਆਪਣੇ</b> ਦੋਸਤਾਂ ਨੂੰ ਫੋਲੋ ਕਰੋ</string>
+  <string name="wizard_description_part_two_viewpager_three"><b> ਐਪਸ ਨੂੰ ਰਿਵਿਊ</b> ਅਤੇ ਰੇਟ ਕਰੋ</string>
+  <string name="wizard_description_part_three_viewpager_three"><b>ਆਪਣਾ </b> ਸਟੋਰ ਬਣਾਓ</string>
   <string name="wizard_register_now_button">ਹੁਣੇ ਰਜਿਸਟਰ ਕਰੋ</string>
   <string name="wizard_be_a_part_of_aptoide">ਐਪਟਾਇਡ ਦਾ ਹਿੱਸਾ ਬਣੋ!</string>
-  <string name="wizard_or_login"><u> 1ਜਾਂ ਲਾਗਇਨ</u> 2</string>
+  <string name="wizard_or_login"><u> ਜਾਂ ਲਾਗਇਨ</u> </string>
 
   <string name="you_need_to_be_logged_in">ਤੁਹਾਡੇ ਲਾਗਇਨ ਕਰਨ ਦੀ ਲੋੜ ਹੈ</string>
   <string name="follow">ਫੋਲੋ</string>
@@ -168,7 +168,7 @@ http://aptoi.de/tv</string>
   <string name="dialog_install_warning_search_for_trusted_app_button">ਲਈ ਖੋਜੋ</string>
   <string name="dialog_install_warning_trusted_app_button">ਭਰੋਸੇਯੋਗ ਐਪਲੀਕੇਸ਼ਨ</string>
   <string name="dialog_install_warning_careful_text">ਸਾਵਧਾਨ ਰਹੋ, ਜੇਕਰ ਤੁਸੀ ਇਸ ਐਪ ਨੂੰ ਇੰਸਟਾਲ ਕਰਨ ਲਈ ਚੁਣਿਆ ਹੈ ਤਾਂ ਇਸਦੇ ਨਾਲ ਛੇੜਛਾੜ ਕੀਤੀ ਗਈ ਹੋ ਸਕਦੀ ਹੈ, ਵਾਇਰਸ ਜਾਂ ਮਾਲਵੇਅਰ ਵੀ ਹੋ ਸਕਦਾ ਹੈ|</string>
-    <string name="dialog_install_warning_credibility_text">ਅੱਗੇ ਵਧਣ ਤੋਂ ਪਹਿਲਾਂ ਸਟੋਰ, ਭਰੋਸੇਯੋਗਤਾ ਅਤੇ 
+    <string name="dialog_install_warning_credibility_text">ਅੱਗੇ ਵਧਣ ਤੋਂ ਪਹਿਲਾਂ ਸਟੋਰ, ਭਰੋਸੇਯੋਗਤਾ ਅਤੇ
 ਹੋਰ ਯੂਜ਼ਰ ਨੂੰ ਟਿੱਪਣੀਆਂ ਚੈੱਕ ਕਰੋ| ਐਪਟਾਇਡ ਹਮੇਸ਼ਾ ਭਰੋਸੇਯੋਗ ਐਪਸ ਭਰਨ %1$s ਲਈ ਆਖਦਾ ਹੈ|</string>
   <string name="dialog_install_warning_trusted_version_button">ਭਰੋਸੇਯੋਗ ਵਰਜਨ</string>
   <string name="dialog_install_warning_get_trusted_version_button">ਪ੍ਰਾਪਤ ਕਰੋ</string>
@@ -178,7 +178,7 @@ http://aptoi.de/tv</string>
   <string name="description_not_available">ਇਸ ਐਪ ਲਈ ਕੋਈ ਵੇਰਵਾ ਉਪਲੱਬਧ ਨਹੀਂ</string>
   <string name="top_stores_fragment_title">ਸੱਭ ਤੋਂ ਵਧੀਆ ਸਟੋਰ</string>
 
-  <string name="apps_timeline"><b> 1ਐਪਸ ਟਾਈਮਲਾਈਨ</b> 2</string>
+  <string name="apps_timeline"><b>ਐਪਸ ਟਾਈਮਲਾਈਨ</b></string>
   <string name="latest_reviews">ਤਾਜ਼ਾ ਸਮੀਖਿਆਵਾਂ</string>
   <string name="latest_comments">ਤਾਜ਼ਾ ਕੋਮੇਂਟ</string>
   <string name="action">ਐਕਸ਼ਨ</string>
@@ -295,9 +295,9 @@ http://aptoi.de/tv</string>
   <string name="social_timeline_share_title_checkbox_fb">ਉਪਭੋਗੀ ਪਰੋਫਾਇਲ ਨੂੰ ਐਪਸ ਟਾਈਮਲਾਈਨ ਤੇ ਜਾ ਕੇ ਜਨਤਕ ਕਰੋ</string>
   <string name="social_timeline_share_dialog_title">ਸ਼ੇਅਰ ਕਰਨ ਲਈ ਧੰਨਵਾਦ</string>
   <string name="social_timeline_share_dialog_opt_in_text_1">ਤੁਹਾਡੇ ਦੋਸਤ ਤੁਹਾਨੂੰ ਲੱਭ ਕੇ ਫੋਲੋ ਕਰ ਸਕਣਗੇ|</string>
-  <string name="social_timeline_share_dialog_opt_in_text_2">"ਜੇ ਤੁਸੀ ਆਪਣੀ ਪ੍ਰੋਫ਼ਾਈਲ ਐਪਸ ਟਾਈਮਲਾਈਨ ਤੇ ਪ੍ਰਾਈਵੇਟ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ ਤਾਂ ਆਪਣੀ ਗੋਪਨੀਯਤਾ  ਸੇਟਿੰਗ ਨੂੰ ਇਥੇ ਬਦਲੋ  "<b> 1www.aptoide.com</b> 2|</string>
+  <string name="social_timeline_share_dialog_opt_in_text_2">"ਜੇ ਤੁਸੀ ਆਪਣੀ ਪ੍ਰੋਫ਼ਾਈਲ ਐਪਸ ਟਾਈਮਲਾਈਨ ਤੇ ਪ੍ਰਾਈਵੇਟ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ ਤਾਂ ਆਪਣੀ ਗੋਪਨੀਯਤਾ  ਸੇਟਿੰਗ ਨੂੰ ਇਥੇ ਬਦਲੋ  "<b> www.aptoide.com</b>|</string>
   <string name="social_timeline_share_dialog_opt_out_text_1">ਆਪਣੀ ਪ੍ਰੋਫਾਈਲ ਗੁਪਤ ਬਣਾਉਣ ਨਾਲ, ਤੁਹਾਡੇ ਦੋਸਤ ਤੁਹਾਨੂੰ ਲੱਭ ਕੇ ਫੋਲੋ ਕਰਨ ਦੇ ਯੋਗ ਨਹੀ ਰਹਿਣਗੇ|</string>
-  <string name="social_timeline_share_dialog_opt_out_text_2"><b> 1www.aptoide.com</b> 2 ਖੋਲੋ, ਆਪਣੇ ਖਾਤੇ ਤੇ ਲਾਗਇਨ ਕਰੋ ਅਤੇ ਗੋਪਨੀਯਤਾ ਪਰਿਭਾਸ਼ਾ ਨੂੰ ਤਬਦੀਲ ਕਰਨ ਲਈ <b>" 3 ਸੈਟਿੰਗ  "</b> 4 ਤੇ ਜਾਓ|</string>
+  <string name="social_timeline_share_dialog_opt_out_text_2"><b>www.aptoide.com</b>ਖੋਲੋ, ਆਪਣੇ ਖਾਤੇ ਤੇ ਲਾਗਇਨ ਕਰੋ ਅਤੇ ਗੋਪਨੀਯਤਾ ਪਰਿਭਾਸ਼ਾ ਨੂੰ ਤਬਦੀਲ ਕਰਨ ਲਈ <b>" ਸੈਟਿੰਗ  "</b> ਤੇ ਜਾਓ|</string>
   <string name="social_timeline_share_dialog_installed_and_recommended">ਇੰਸਟਾਲ ਅਤੇ ਸਿਫਾਰਸ਼ ਕੀਤਾ ਗਿਆ</string>
   <string name="social_timeline_share_bar_login">ਤੁਹਾਡੇ ਦੋਸਤ ਕੀ ਇੰਸਟਾਲ ਕਰ ਰਹੇ ਹਨ?</string>
   <string name="social_timeline_share_bar_following">ਹੋਰ ਸਟੋਰ ਫੋਲੋ ਕਰੋ ਅਤੇ ਆਪਣੇ ਦੋਸਤਾਂ ਦੇ ਨਾਲ ਜੁੜੋ|</string>

@@ -36,7 +36,6 @@
  "</string>
     <string name="default_account_type">cm.aptoide.pt</string>
 
-    <string name="facebook_garant_permission_button">अनुमति प्रदान करें</string>
     <string name="facebook_email_permission_regected_message">"एक खाता बनाने के लिए Aptoide को आपके ईमेल की 
 जरूरत है
  "</string>

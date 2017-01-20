@@ -100,7 +100,6 @@
  Kesilapan yang anda lihat"</string>
     <string name="feedback_include_logs">Termasuk Syot Layar dan Log</string>
     <string name="feedback_no_email">Tiada klien e-mel dipasang!</string>
-    <string name="username_tip">Taip e-mel anda</string>
     <string name="store_already_added">Kedai telah ditambah!</string>
     <string name="subscribe_store">Langgan Kedai</string>
     <string name="permissions">Lihat Kebenaran</string>
@@ -187,7 +186,6 @@
     <string name="exclude_update">Abaikan Kemas Kini</string>
     <string name="install_update">Pasang Kemas Kini</string>
 
-    <string name="payment_methods">Bayar dengan:</string>
     <string name="cancel">Batal</string>
     <string name="no_payments_available">Tiada bayaran boleh didapati.</string>
     <string name="failed_auth_code">Gagal memberi kuasa kepada akaun. Sila cuba lagi.</string>
@@ -456,8 +454,6 @@
     <string name="subscribe_apps_official_store">Langgan \'aplikasi\' Kedai Aplikasi Rasmi Aptoide</string>
     <string name="wizard_next">Seterusnya</string>
     <string name="wizard_prev">Sebelum</string>
-    <string name="search_activity_title">\'%s\'</string>
-
     <string name="share">Kongsi</string>
     <string name="share_on_timeline">Kongsi di garis masa</string>
 
@@ -488,8 +484,8 @@
     <string name="friends_to_invite">Semua rakan-rakan Facebook lain di Aptoide</string>
     <string name="upload_app_backup_apps_installed">Anda perlu memuat naik aplikasi ini ke kedai anda terlebih dahulu. Anda boleh menggunakan Aptoide Backup Apps.</string>
     <string name="upload_app_backup_apps_not_installed">Anda perlu memuat naik aplikasi ini ke kedai anda terlebih dahulu. Anda boleh menggunakan Aptoide Backup Apps.</string>
-    <string name="setting_category_autoupdate">Pemgemaskinian Auto Aptoide</string>
-    <string name="setting_category_autoupdate_title">Membolehkan kemas kini automatik Aptoide</string>
+    <string name="setting_category_autoupdate">Pemgemaskinian Auto %s</string>
+    <string name="setting_category_autoupdate_title">Membolehkan kemas kini automatik %s</string>
     <string name="social_timeline_notifications_sum2">Membolehkan Pemberitahuan Garis Waktu Sosial Aptoide . Anda akan menerima berita terkini di bahagian pemberitahuan.</string>
     <string name="ignored">diabaikan</string>
     <string name="application_signature_blacklisted">Tandatangan aplikasi bukanlah tandatangan Dipercayai di platform Anti-Perisian Hasad Aptoide kerana ia telah digunakan untuk menandatangani satu lagi aplikasi yang tidak sepadan dengan tandatangan yang berhubung dengan pemaju legit.</string>

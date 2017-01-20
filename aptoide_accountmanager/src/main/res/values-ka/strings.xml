@@ -36,7 +36,6 @@
   <string name="login_successful">ავტორიზაცია წარმატებულია</string>
   <string name="ws_error_WOP_9">ეს ელ,ფოსტა უკვე დარეგისტრირებულია Aptoide-ზე</string>
   <string name="ws_error_REPO_5">მარკეტის სახელი, სულ მცირე, უნდა შედგებოდეს 3 სიმბოლოსგან.</string>
-    <string name="facebook_garant_permission_button">უფლების მიცემა</string>
     <string name="error_invalid_grant">არასწორი პაროლი ან მომხმარებლის სახელი</string>
   <string name="ws_error_AUTH_100">Google-ით ავტორიზაცია ვერ მოხერხდა. შეამოწმეთ თქვენი Google-ის ანგარიში (შესაძლოა ის გააქტიურებას საჭიროებს)</string>
   <string name="ws_error_AUTH_102">Facebook-ით ავტორიზაცია ვერ მოხერხდა. შეამოწმეთ თქვენი Facebook-ის ანგარიში (შესაძლოა ის გააქტიურებას საჭიროებს)</string>

@@ -36,7 +36,6 @@ le Norme dei Contenuti per gli Sviluppatori di Aptoide
  "</string>
     <string name="default_account_type">cm.aptoide.PT</string>
 
-    <string name="facebook_garant_permission_button">Concedi l\'autorizzazione</string>
     <string name="facebook_email_permission_regected_message">"Aptoide ha bisogno della tua e-mail per creare un
 account
  "</string>

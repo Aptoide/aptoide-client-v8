@@ -35,7 +35,6 @@
     <string name="no_email_error_message">Чтобы зарегистрироваться, введите email.</string>
     <string name="default_account_type">cm.aptoide.pt</string>
 
-    <string name="facebook_garant_permission_button">Разрешить доступ</string>
     <string name="facebook_email_permission_regected_message">"Aptoide нужен ваш email, чтобы создать
  учетную запись
  "</string>
@@ -63,7 +62,7 @@
  имени)</string>
     <string name="login_successful">Вход успешно выполнен</string>
     <string name="user_created">Пользователь создан</string>
-    <string name="wizard_skip"><b> Пропустить</b></string>
+    <string name="wizard_skip"><b>Пропустить</b></string>
 
 <string name="login">Войти</string>
   <string name="user_cancelled">Отменено пользователем</string>

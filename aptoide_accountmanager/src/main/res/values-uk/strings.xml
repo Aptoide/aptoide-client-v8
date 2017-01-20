@@ -35,7 +35,6 @@
  "</string>
     <string name="default_account_type">cm.aptoide.pt</string>
 
-    <string name="facebook_garant_permission_button">Дозволити</string>
     <string name="facebook_email_permission_regected_message">"Ваш email потрібен Aptoide, щоб створити акаунт
  "</string>
     <string name="error_invalid_grant">Невірна комбінація імені користувача та пароля</string>

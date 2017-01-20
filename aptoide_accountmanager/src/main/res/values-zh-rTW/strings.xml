@@ -34,7 +34,6 @@
  "</string>
     <string name="default_account_type">cm.aptoide.pt</string>
 
-    <string name="facebook_garant_permission_button">授予權限</string>
     <string name="facebook_email_permission_regected_message">"Aptoide需要您的電子郵件來建立帳號
  "</string>
     <string name="error_invalid_grant">無效的使用者名稱和密碼組合</string>

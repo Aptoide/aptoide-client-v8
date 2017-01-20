@@ -100,7 +100,6 @@
  Błędy, które się pojawiły</string>
     <string name="feedback_include_logs">Zawiera zrzut ekranu i logi</string>
     <string name="feedback_no_email">Brak zainstalowanego klienta poczty!</string>
-    <string name="username_tip">Podaj swój email</string>
     <string name="store_already_added">Repozytorium jest już dodane!</string>
     <string name="subscribe_store">Subskrybuj Repozytorium</string>
     <string name="permissions">Zobacz Uprawnienia</string>
@@ -186,7 +185,6 @@
     <string name="exclude_update">Ignoruj aktualizacje</string>
     <string name="install_update">Zainstaluj Aktualizację</string>
 
-    <string name="payment_methods">Zapłać przez:</string>
     <string name="cancel">Anuluj</string>
     <string name="no_payments_available">Brak dostępnych metod płatności.</string>
     <string name="failed_auth_code">Nie można uwierzytelnić konta. Proszę spróbować ponownie.</string>
@@ -456,8 +454,6 @@
     <string name="subscribe_apps_official_store">Subskrybuj \'aplikacje\' Oficjalnego Aptoide App Store</string>
     <string name="wizard_next">Następne</string>
     <string name="wizard_prev">Poprzednie</string>
-    <string name="search_activity_title">\'%s\'</string>
-
     <string name="share">Udostępnij</string>
     <string name="share_on_timeline">Udostępnij na osi czasu</string>
 

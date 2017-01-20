@@ -95,7 +95,6 @@
 \n 出現的錯誤</string>
     <string name="feedback_include_logs">包括截屏和日志</string>
     <string name="feedback_no_email">未安裝電子郵件用戶端！</string>
-    <string name="username_tip">輸入您的郵箱</string>
     <string name="store_already_added">商店已添加！</string>
     <string name="subscribe_store">訂閱商店</string>
     <string name="permissions">檢視權限</string>
@@ -182,7 +181,6 @@
     <string name="exclude_update">忽略更新</string>
     <string name="install_update">安裝更新</string>
 
-    <string name="payment_methods">支付：</string>
     <string name="cancel">取消</string>
     <string name="no_payments_available">沒有支付可用。</string>
     <string name="failed_auth_code">不能成功地授權帳號。請再次嘗試。</string>
@@ -398,8 +396,8 @@
     <string name="friends_to_invite">Aptoide中的所有其他Facebook好友</string>
     <string name="upload_app_backup_apps_installed">您需要先將此應用上載至商店。您可以使用Aptoide備份應用。</string>
     <string name="upload_app_backup_apps_not_installed">您需要先將此應用上載至商店。請安裝和使用Aptoide備份應用。</string>
-    <string name="setting_category_autoupdate">Aptoide自動更新</string>
-    <string name="setting_category_autoupdate_title">啟用Aptoide自動更新</string>
+    <string name="setting_category_autoupdate">%s 自動更新</string>
+    <string name="setting_category_autoupdate_title">啟用%s自動更新</string>
     <string name="social_timeline_notifications_sum2">啟用Aptoide社交時間表通知。您將在通知列上接收最新訊息。</string>
     <string name="ignored">已忽略</string>
     <string name="application_signature_matched">應用簽章與應用開發人員相關的簽章匹配。</string>
@@ -483,8 +481,6 @@
     <string name="subscribe_apps_official_store">訂閱「應用」Aptoide官方應用商店</string>
     <string name="wizard_next">下一步</string>
     <string name="wizard_prev">上一步</string>
-    <string name="search_activity_title">「%s」</string>
-
     <string name="share">分享</string>
     <string name="share_on_timeline">在時間表上分享</string>
 

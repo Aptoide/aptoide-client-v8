@@ -100,7 +100,6 @@
  الأخطاء التي تراها</string>
     <string name="feedback_include_logs">إدراج لقطات شاشة وسجلات</string>
     <string name="feedback_no_email">لا يوجد عميل بريد إلكتروني!</string>
-    <string name="username_tip">أكتب بريدك الإلكتروني</string>
     <string name="store_already_added">المتجر مضاف من قبل!</string>
     <string name="subscribe_store">الاشتراك في المتجر</string>
     <string name="permissions">الاطلاع على الأذونات</string>
@@ -121,7 +120,7 @@
     <string name="sd_error_jolla">تعذر التحميل بشكل صحيح</string>
     <string name="starting_download">بدء التحميل</string>
     <string name="installing">يتم تثبيت %s…</string>
-    <string name="finished_install">تم تثبيت s%.</string>
+    <string name="finished_install">تم تثبيت %s.</string>
     <string name="aptoide_downloading">%s قيد التحميل</string>
     <string name="remaining_time">متبقية</string>
     <string name="data_usage_constraint">التحميل غير مسموح به في الخيارات &gt; القواعد العامة للتحميل</string>
@@ -187,7 +186,6 @@
     <string name="exclude_update">تجاهل التحديث</string>
     <string name="install_update">تثبيت التحديث</string>
 
-    <string name="payment_methods">الدفع بواسطة:</string>
     <string name="cancel">إلغاء الأمر</string>
     <string name="no_payments_available">لا توجد مدفوعات متاحة.</string>
     <string name="failed_auth_code">فشل ترخيص الحساب. يرجى المحاولة مرة أخرى.</string>
@@ -457,8 +455,6 @@
     <string name="subscribe_apps_official_store">الاشتراك في \'apps\' متجر تطبيقات Aptoide الرسمي</string>
     <string name="wizard_next">التالي</string>
     <string name="wizard_prev">السابق</string>
-    <string name="search_activity_title">\'%s\'</string>
-
     <string name="share">شارك</string>
     <string name="share_on_timeline">المشاركة على صفحة اليوميات</string>
 
@@ -506,7 +502,7 @@
     <string name="search_minimum_chars">استعلام البحث يجب أن يكون مكون من حرفين على الأقل.</string>
 <string name="all_stores">جميع المتاجر</string>
     <string name="followed_stores">المتاجر المتبعة</string>
-    <string name="unsubscribing_store_message">إلغاء الاشتراك من s%</string>
+    <string name="unsubscribing_store_message">إلغاء الاشتراك من %s</string>
 
     <string name="change_theme_soon">قريباً</string>
   <string name="critical">حرج</string>

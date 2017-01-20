@@ -36,7 +36,6 @@ sekä kehittäjien sisältökäytännön
  "</string>
     <string name="default_account_type">cm.aptoide.pt</string>
 
-    <string name="facebook_garant_permission_button">Myönnä lupa</string>
     <string name="facebook_email_permission_regected_message">"Aptoide tarvitsee sähköpostiosoitteesi
 luodakseen tilin
  "</string>
@@ -127,5 +126,27 @@ numeroita ja ajatusviivoja.</string>
   <string name="nothing_inserted_user">Ole hyvä ja syötä käyttäjänimi ja kuva (vapaaehtoinen) luodaksesi profiilin</string>
   <string name="create_user_bad_photo">Ole hyvä, ja valitse kuva jonka koko on vähintään 300x300</string>
   <string name="create_profile_logged_in_activity_title">Kirjautunut</string>
+
+<string name="facebook_grant_permission_button">Anna lupa</string>
+  <string name="ws_error_API_1">Kuva ei ole kelvollinen.</string>
+    <string name="edit_store_header">Muokkaa kauppaasi kauniilla kuvalla ja mukavalla kuvauksella</string>
+  <string name="create_store_description_title">Kauppasi kuvaus</string>
+  <string name="create_store_description_hint">Kauppasi kuvaus</string>
+  <string name="edit_store_title">Muokkaa kauppaasi</string>
+  <string name="save_edit_store">Tallenna</string>
+
+  <string name="image_requirements_popup_message">Kuvassa on seuraavat ongelmat:
+</string>
+  <string name="image_requirements_error_min_height">- Minimikorkeus on pienempi kuin 600 px
+</string>
+  <string name="image_requirements_error_max_height">- Maksimikorkeus on enemmän kuin 10240 px
+</string>
+  <string name="image_requirements_error_min_width">- Minimileveys on vähemmän kuin 600 px
+</string>
+  <string name="image_requirements_error_max_width">- Maksimileveys on enemmän kuin 10240 px
+</string>
+  <string name="image_requirements_error_max_file_size">- Maksimikoko on suurempi kuin 5 Mb
+</string>
+  <string name="image_requirements_error_popup_title">Kuva</string>
 
 </resources>

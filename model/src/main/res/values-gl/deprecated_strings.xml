@@ -95,7 +95,6 @@
 \n Os erros que atopas</string>
     <string name="feedback_include_logs">Inclúe captura de pantalla e logs</string>
     <string name="feedback_no_email">Non hai cliente de email instalado!</string>
-    <string name="username_tip">Escribe o teu email</string>
     <string name="store_already_added">A tenda xa está engadida!</string>
     <string name="subscribe_store">Subscribirse á tenda</string>
     <string name="permissions">Ver permisos</string>
@@ -134,7 +133,7 @@
     <string name="votes">%s vota</string>
 
     <string name="reviewed_by">Reseña feita por - %s</string>
-    <string name="installed_this">% instalaron isto.</string>
+    <string name="installed_this">%s instalaron isto.</string>
 
     <string name="adult_pin_wrong">Pin equivocado, inténtao de novo.</string>
     <string name="request_adult_pin">Introduce o pin para desbloquear</string>
@@ -181,7 +180,6 @@
     <string name="exclude_update">Ignorar actualización</string>
     <string name="install_update">Instalar actualización</string>
 
-    <string name="payment_methods">Pagar con:</string>
     <string name="cancel">Cancelar</string>
     <string name="no_payments_available">Non hai pagamentos dispoñíbeis.</string>
     <string name="failed_auth_code">Erro ao autorizar a conta. Inténtao de novo.</string>
@@ -449,8 +447,6 @@
     <string name="subscribe_apps_official_store">Subscríbete a \'apps\' Aptoide Official App Store</string>
     <string name="wizard_next">Seguinte</string>
     <string name="wizard_prev">Anterior</string>
-    <string name="search_activity_title">\'%s\'</string>
-
     <string name="share">Compartir</string>
     <string name="share_on_timeline">Compartir no Muro</string>
 

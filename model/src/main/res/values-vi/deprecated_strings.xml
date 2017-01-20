@@ -100,7 +100,6 @@ Các bước bạn phải làm
 Các lỗi sai bạn sẽ thấy</string>
     <string name="feedback_include_logs">Bao gồm Ảnh Chụp Màn Hình và Bản Ghi (Log)</string>
     <string name="feedback_no_email">Không có email khách hàng được cài đặt!</string>
-    <string name="username_tip">Nhập email của bạn</string>
     <string name="store_already_added">Cửa hàng vừa được thêm vào!</string>
     <string name="subscribe_store">Theo dõi cửa hàng</string>
     <string name="permissions">Xem Quyền hạn</string>
@@ -187,7 +186,6 @@ Các lỗi sai bạn sẽ thấy</string>
     <string name="exclude_update">Bỏ qua cập nhật</string>
     <string name="install_update">Đài đặt cập nhật</string>
 
-    <string name="payment_methods">Thanh toán với:</string>
     <string name="cancel">Hủy</string>
     <string name="no_payments_available">Không có sẵn thanh toán.</string>
     <string name="failed_auth_code">Cấp phép tài khoản thất bại. Xin thử lại.</string>
@@ -455,8 +453,6 @@ Các lỗi sai bạn sẽ thấy</string>
     <string name="subscribe_apps_official_store">Theo dõi cửa hàng ứng dụng chính thức Aptoide</string>
     <string name="wizard_next">Tiếp</string>
     <string name="wizard_prev">Trước</string>
-    <string name="search_activity_title">\'%s\'</string>
-
     <string name="share">Chia sẻ</string>
     <string name="share_on_timeline">Chia sẻ trên dòng thời gian</string>
 
@@ -483,8 +479,8 @@ Các lỗi sai bạn sẽ thấy</string>
     <string name="error_occured_retry_later">Đã xảy ra lỗi. Aptoide sẽ tự động thử lại sau.</string>
     <string name="rollback_updated_at">Cập nhật tại %1$s</string>
     <string name="friends_to_invite">Tất cả bạn bè Facebook khác trong Aptoide</string>
-    <string name="setting_category_autoupdate">Aptoide tự động cập nhật</string>
-    <string name="setting_category_autoupdate_title">Kích hoạt Aptoide tự động cập nhật</string>
+    <string name="setting_category_autoupdate">%s tự động cập nhật</string>
+    <string name="setting_category_autoupdate_title">Kích hoạt %s tự động cập nhật</string>
     <string name="no_updates_available_retoric">Mọi thứ đã được cập nhật!</string>
     <string name="no_new_updates_available">Không có bản cập nhật mới nào!</string>
     <string name="search_minimum_chars">Truy vấn tìm kiếm phải có ít nhất 2 kí tự.</string>

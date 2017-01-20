@@ -36,7 +36,6 @@
  "</string>
     <string name="default_account_type">cm.aptoide.pt</string>
 
-    <string name="facebook_garant_permission_button">Dar permissão</string>
     <string name="facebook_email_permission_regected_message">"A Aptoide precisa do seu e-mail para
  criar uma conta
  "</string>
@@ -50,7 +49,7 @@
     <string name="ws_error_REPO_5">O nome da loja tem de ter pelo menos 3 caracteres.</string>
     <string name="ws_error_REPO_6">Este nome para loja já existe, tem de escolher
  outro.</string>
-    <string name="ws_error_WOP_9">O e-mail fornecido já existe no Aptoide</string>
+    <string name="ws_error_WOP_9">O e-mail fornecido já existe na Aptoide</string>
     <string name="ws_error_WOP_10">O e-mail fornecido ainda não existe na Aptoide</string>
     <string name="ws_error_QUOTA_2">Limite diário para criação de utilizadores atingido. Se precisar de
  aumentar este limite contacte o suport@aptoide.com ou crie mais utilizadores amanhã</string>
@@ -67,4 +66,5 @@
     <string name="ws_error_AUTH_7">\@string/error_occured</string>
     <string name="next">Próximo</string>
 
+  <string name="login">Iniciar sessão</string>
   </resources>

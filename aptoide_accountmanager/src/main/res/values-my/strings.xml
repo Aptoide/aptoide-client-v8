@@ -33,7 +33,6 @@
  "</string>
     <string name="default_account_type">cm.aptoide.pt</string>
 
-    <string name="facebook_garant_permission_button">ခြင့္ျပဳခ်က္အား အာမခံပါ</string>
     <string name="facebook_email_permission_regected_message">"အေကာင့္တစ္ခု ျပဳလုပ္ရန္အတြက္ Aptoide သည္ သင့္အီးေမးလ္အား လိုအပ္ပါသည္
  "</string>
     <string name="error_invalid_grant">အသံုးျပဳသူအမည္ႏွင့္ လွ်ိဳ႕ဝွက္စကားလံုး တဲြဖက္မႈ မွားယြင္းေနပါသည္</string>

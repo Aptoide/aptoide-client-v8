@@ -94,7 +94,6 @@
 \n 行った手順\n あなたが見たエラー</string>
     <string name="feedback_include_logs">スクリーンショットとログを含める</string>
     <string name="feedback_no_email">Eメールクライアントがインストールされていません！</string>
-    <string name="username_tip">メールアドレスをご記入ください</string>
     <string name="store_already_added">ストアが追加されました！</string>
     <string name="subscribe_store">ストアを追加する</string>
     <string name="permissions">アクセス許可を参照</string>
@@ -181,7 +180,6 @@
     <string name="exclude_update">更新を無視</string>
     <string name="install_update">更新をインストール</string>
 
-    <string name="payment_methods">支払い:</string>
     <string name="cancel">キャンセル</string>
     <string name="no_payments_available">利用可能な支払いがありません。</string>
     <string name="failed_auth_code">アカウントの認証に失敗しました。再度お試しください。</string>
@@ -452,8 +450,6 @@
     <string name="subscribe_apps_official_store">Aptoide 公式アプリ ストア \'アプリ\' を購読</string>
     <string name="wizard_next">次へ</string>
     <string name="wizard_prev">前へ</string>
-    <string name="search_activity_title">\'%s\'</string>
-
     <string name="share">共有</string>
     <string name="share_on_timeline">タイムライン上で共有</string>
 

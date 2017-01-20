@@ -36,7 +36,6 @@
  "</string>
     <string name="default_account_type">cm.aptoide.pt</string>
 
-    <string name="facebook_garant_permission_button">授予权限</string>
     <string name="facebook_email_permission_regected_message">"Aptoide需要您的电子邮件以创建
 帐户
  "</string>

@@ -35,4 +35,33 @@
  oraz Politykę zawartości dla Deweloperów
  "</string>
     <string name="error_invalid_grant">Błędna kombinacja nazwy użytkownika i hasła</string>
+  <string name="user_cancelled">Anulowane przez użytkownika</string>
+
+  <string name="ws_error_WOP_3">Sklep o takiej nazwie już istnieje. Proszę wybrać inną nazwę dla swojego sklepu.</string>
+  <string name="user_created">Utworzono Użytkownika</string>
+  <string name="ws_error_WOP_9">Podany e-mail istnieje już w Aptoide</string>
+  <string name="ws_error_WOP_10">Podany e-mail jeszcze nie istnieje w Aptoide</string>
+  <string name="ws_error_API_1">Obraz jest nieprawidłowy.</string>
+    <string name="ws_error_QUOTA_2">Dzienny limit użytkowników został osiągnięty. Jeśli musisz
+go podnieść skontaktuj się ze wsparciem pod support@aptoide.com lub utwórz więcej użytkowników jutro</string>
+    <string name="wizard_skip"><b>POMIŃ</b></string>
+  <string name="create_user_title">Utwórz Profil Użytkownika</string>
+  <string name="create_user_choose_username">Wybierz nazwę użytkownika</string>
+  <string name="create_user_username">Nazwa użytkownika</string>
+  <string name="create_user_dialog_camera">Zrób zdjęcie</string>
+  <string name="create_user_dialog_gallery">Wybierz z galerii</string>
+  <string name="create_user_dialog_cancel">Anuluj</string>
+  <string name="nothing_inserted_store">Proszę podać nazwę sklepu aby go utworzyć</string>
+  <string name="nothing_inserted_user">Proszę wstawić nazwę użytkownika i zdjęcie (opcjonalnie) aby utworzyć swój profil</string>
+  <string name="create_user_bad_photo">Proszę wybrać obraz o rozdzielczości co najmniej 300x300</string>
+  <string name="no_username_inserted">Proszę podać nazwę użytkownika aby utworzyć swój profil</string>
+  <string name="no_photo_inserted">Proszę wybrać zdjęcie aby utworzyć swój profil</string>
+
+  <string name="user_interests_title">Twoje zainteresowania</string>
+  <string name="user_interests_header"><b>Powiedz nam co Cię interesuje</b> i pomóż nam znaleźć najlepsze aplikacje dla Ciebie</string>
+  <string name="user_interests_adult_gambling">Dla dorosłych &amp; Hazard</string>
+  <string name="user_interests_photography_video">Fotografia &amp; Video</string>
+  <string name="next">Następny</string>
+
+  <string name="create_store_title">Utwórz Swój Sklep</string>
   </resources>

@@ -7,7 +7,7 @@
     <string name="WidgetProvider_timestamp_hours_ago">%sঘণ্টা আগে</string>
     <string name="WidgetProvider_timestamp_minutes_ago">%sমিনিট আগে</string>
     <string name="WidgetProvider_timestamp_just_now">"মাত্র "</string>
-    <string name="WidgetProvider_timestamp_weeks_ago">"সপ্তাহ আগে "</string>
+    <string name="WidgetProvider_timestamp_weeks_ago">%s সপ্তাহ আগে</string>
     <string name="continue_option">চলমান</string>
   <string name="more_info">আরও তথ্য</string>
 

@@ -100,7 +100,6 @@
 កំហុសដែលអ្នកបានឃើញ</string>
     <string name="feedback_include_logs">បញ្ចូល​ទាំង​រូបថតអេក្រង់និងកំណត់ហេតុ</string>
     <string name="feedback_no_email">គ្មានអ៊ីម៉ែលអតិថិជនត្រូវបានដំឡើង!</string>
-    <string name="username_tip">វាយបញ្ចូលអ៊ីម៉ែលរបស់អ្នក</string>
     <string name="store_already_added">ហាងលក់ទំនិញ​ត្រូវបានបន្ថែមរួចហើយ!</string>
     <string name="subscribe_store">ជាវហាងលក់ទំនិញ</string>
     <string name="permissions">មើលការអនុញ្ញាត</string>
@@ -187,7 +186,6 @@
     <string name="exclude_update">ទុកចោលការធ្វើបច្ចុប្បន្នភាព</string>
     <string name="install_update">ដំឡើងការធ្វើបច្ចុប្បន្នភាព</string>
 
-    <string name="payment_methods">បង់ប្រាក់ជាមួយ៖</string>
     <string name="cancel">បោះបង់</string>
     <string name="no_payments_available">គ្មានការទូទាត់នៅមានឡើយ។</string>
     <string name="failed_auth_code">បរាជ័យក្នុងការផ្ទៀងផ្ទាត់ភាពត្រឹមត្រូវគណនេយ្យ។ សូមព្យាយាមម្តងទៀត។</string>
@@ -457,8 +455,6 @@
     <string name="subscribe_apps_official_store">ជាវ ‘កម្មវិធី’ ហាងលក់ទំនិញកម្មវិធីផ្លូវការ Aptoide</string>
     <string name="wizard_next">បន្ទាប់</string>
     <string name="wizard_prev">ពីមុន</string>
-    <string name="search_activity_title">\'%s\'</string>
-
     <string name="share">ចែករំលែក</string>
     <string name="share_on_timeline">ចែករំលែកលើផ្ទាំងបង្ហាញតាមពេលវេលា</string>
 
@@ -489,8 +485,8 @@
     <string name="friends_to_invite">មិត្តនៅក្នុង Facebook ទាំងអស់ផ្សេងទៀតនៅ Aptoide</string>
     <string name="upload_app_backup_apps_installed">អ្នកត្រូវបញ្ចូលកម្មវិធីនេះទៅកាន់ហាងទីមួយរបស់អ្នក។ អ្នកអាចប្រើកម្មវិធីរក្សាទុករបស់ Aptoide។</string>
     <string name="upload_app_backup_apps_not_installed">អ្នកត្រូវបញ្ចូលកម្មវិធីនេះទៅហាងដំបូងរបស់អ្នក។ សូមតម្លើងនិងប្រើកម្មវិធីរក្សាទុករបស់ Aptoide។</string>
-    <string name="setting_category_autoupdate">ការធ្វើឱ្យទាន់សម័យស្វ័យប្រវត្ត Aptoide</string>
-    <string name="setting_category_autoupdate_title">ភ្ជាប់ការធ្វើឱ្យទាន់សម័យស្វ័យប្រវត្ត Aptoide</string>
+    <string name="setting_category_autoupdate">ការធ្វើឱ្យទាន់សម័យស្វ័យប្រវត្ត %s</string>
+    <string name="setting_category_autoupdate_title">ភ្ជាប់ការធ្វើឱ្យទាន់សម័យស្វ័យប្រវត្ត %s</string>
     <string name="social_timeline_notifications_sum2">ភ្ជាប់ការជូនដំណឹងការបង្ហោះថ្មី Aptoide។ អ្នកនឹង​ទទួលនូវព័ត៌មានថ្មីៗបំផុតនៅលើរបារជូនដំណឹង។</string>
     <string name="ignored">មិនចាប់អារម្មណ៍</string>
     <string name="application_signature_blacklisted">ហត្ថលេខាកម្មវិធីមិនមែនហត្ថលេខាដែលជឿជាក់នៅលើទម្រង់ប្រឆាំងមេរោគរបស់ Aptoide ពីព្រោះវាត្រូវបានចុះឈ្មោះប្រើ​ដោយកម្មវិធីផ្សេងដែលមិនដូច​ហត្ថលេខារបស់អ្នកអភិវឌ្ឍដែលត្រឹមត្រូវ។</string>

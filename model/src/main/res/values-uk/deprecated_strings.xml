@@ -95,7 +95,6 @@
 \n Помилки, з якими зіткнулися"</string>
     <string name="feedback_include_logs">Включити скріншот та журнали</string>
     <string name="feedback_no_email">Відсутній клієнт електронної пошти!</string>
-    <string name="username_tip">Введіть ваш email</string>
     <string name="store_already_added">Магазин вже додано!</string>
     <string name="subscribe_store">Підписатися на магазин</string>
     <string name="permissions">Дозволи</string>
@@ -181,13 +180,14 @@
     <string name="exclude_update">Ігнорувати оновлення</string>
     <string name="install_update">Встановити оновлення</string>
 
-    <string name="payment_methods">Оплатити за допомогою:</string>
     <string name="cancel">Відміна</string>
     <string name="no_payments_available">Немає доступних платежів.</string>
     <string name="failed_auth_code">Не вдалося авторизуватись. Будь ласка, спробуйте ще раз.</string>
     <string name="error_occured_paying">Виникла помилка. Платіж не був завершений.</string>
     <string name="account">Акаунт</string>
-    <string name="confirm_carrier_payment">"Бажаєте придбати \'{title}\' за {value}? Буде враховано тариф вашого мобільного оператора. "</string>
+    <string name="confirm_carrier_payment">"Бажаєте придбати \'{title}\' за {value}? Буде враховано тариф вашого 
+мобільного оператора.
+ "</string>
     <string name="buy">Купити</string>
     <string name="billing_result">"Результат транзакції: "</string>
 
@@ -451,8 +451,6 @@
     <string name="subscribe_apps_official_store">Підпишіться на \'додатки\' офіційного магазину додатків Aptoide</string>
     <string name="wizard_next">Далі</string>
     <string name="wizard_prev">Назад</string>
-    <string name="search_activity_title">\'%s\'</string>
-
     <string name="share">Поділитися</string>
     <string name="share_on_timeline">Поділитися у TimeLine</string>
 
@@ -485,8 +483,8 @@
     <string name="friends_to_invite">Усі інші друзі з Фейсбук в Aptoide</string>
     <string name="upload_app_backup_apps_installed">Вам треба спочатку завантажити додаток у ваш магазин. Ви можете використовувати Aptoide Backup Apps.</string>
     <string name="upload_app_backup_apps_not_installed">Вам треба спочатку завантажити додаток у ваш магазин. Спочатку встановіть Aptoide Backup Apps.</string>
-    <string name="setting_category_autoupdate">Авто-оновлення Aptoide</string>
-    <string name="setting_category_autoupdate_title">"Дозволити Авто-оновлення в  Aptoide"</string>
+    <string name="setting_category_autoupdate">Авто-оновлення %s</string>
+    <string name="setting_category_autoupdate_title">Дозволити Авто-оновлення в %s</string>
     <string name="social_timeline_notifications_sum2">Дозволити Оповіщення соціальної стрічки Aptoide. Ви отримаєте останні новини у стрічці повідомленнь.</string>
     <string name="ignored">Проігноровано</string>
     <string name="application_signature_blacklisted">Підпис додатку не є перевіреним підписом на антивірусній платформі Aptoide тому, що він був використаний щоб підписати додаток, який не відповідає підпису справжнього розробника цього додатку.</string>

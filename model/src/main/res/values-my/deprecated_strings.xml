@@ -99,7 +99,6 @@
 ျမင္ရတဲ့ အမွားအယြင္းျဖစ္ရာေနရာမ်ား</string>
     <string name="feedback_include_logs">Screenshot ေတြ၊ Log ေတြထည့္ပါ</string>
     <string name="feedback_no_email">Email ျဖင့္ install လုပ္သူမရွိပါ!</string>
-    <string name="username_tip">Email လိပ္စာထည့္ပါ</string>
     <string name="store_already_added">စတိုး အားထည့္ေပးၿပီးပါျပီ!</string>
     <string name="subscribe_store">စတိုးအတြက္ စာရင္းသြင္းမည္</string>
     <string name="permissions">ခြင့္ျပဳခ်က္မ်ား ၾကည့္သည္</string>
@@ -186,7 +185,6 @@
     <string name="exclude_update">အဆင့္ျမွင့္တင္မည္မဟုတ္</string>
     <string name="install_update">အဆင့္ျမွင့္တင္သည္မ်ားကို install မည္</string>
 
-    <string name="payment_methods">ေပးေခ်မည္:</string>
     <string name="cancel">ပယ္ဖ်က္မည္</string>
     <string name="no_payments_available">ေငြေပးေခ်မႈမ်ား မရရွိပါ.</string>
     <string name="failed_auth_code">အေကာင့္ကို အတည္မျပဳႏိုင္ပါ. ေနာက္တစ္ႀကိမ္ႀကိဳးစားပါ.</string>
@@ -457,8 +455,6 @@
     <string name="subscribe_apps_official_store">Aptoide Official App စတုိး၏ \'apps\'ကုိ ၾကည့္ရႈမည္</string>
     <string name="wizard_next">ေရွ႕သုိ႕</string>
     <string name="wizard_prev">ေနာက္သုိ႔</string>
-    <string name="search_activity_title">\'%s\'</string>
-
     <string name="share">ေဝမွ်မည္</string>
     <string name="share_on_timeline">Timeline တြင္ေဝမွ်မည္</string>
 
@@ -490,8 +486,8 @@
     <string name="friends_to_invite">Aptoide ရှိ အခြားသော Facebook သူငယ်ချင်းများအားလုံး</string>
     <string name="upload_app_backup_apps_installed">သင်သည် ဤ app အား သင့်စတိုးသို့ ဦးစွာ တင်ရန် လိုအပ်ပါသည်. သင်သည် Aptoide Backup Apps အား အသုံးပြုနိုင်ပါသည်.</string>
     <string name="upload_app_backup_apps_not_installed">"သင်သည် ဤ app အား သင့်စတိုးတွင်  ဦးစွာထည့်သွင်းရန် လိုအပ်ပါသည်. ကျေးဇူးပြု၍ Aptoide Backup Apps အား ထည့်သွင်းပြီး အသုံးပြုပါ."</string>
-    <string name="setting_category_autoupdate">Aptoide အလိုအလျောက် အဆင့်မြှင့်တင်ခြင်း</string>
-    <string name="setting_category_autoupdate_title">Aptoide အလိုအလျောက် အဆင့်မြှင့်တင်ခြင်းအား ဖွင့်ပါ</string>
+    <string name="setting_category_autoupdate">%s အလိုအလျောက် အဆင့်မြှင့်တင်ခြင်း</string>
+    <string name="setting_category_autoupdate_title">%s အလိုအလျောက် အဆင့်မြှင့်တင်ခြင်းအား ဖွင့်ပါ</string>
     <string name="social_timeline_notifications_sum2">Aptoide လူမှုမီဒီယာ Timeline Notifications အား ဖွင့်ပါ. သင်သည် နောက်ဆုံးသတင်းများအား notification bar တွင် ရရှိပါလိမ့်မည်.</string>
     <string name="ignored">လစ်လျူရှုထားသော</string>
     <string name="application_signature_blacklisted">Application လက်မှတ်သည် Aptoide Anti-Malware ပလက်ဖောင်းတွင် ယုံကြည်ရသော လက်မှတ်တစ်ခု မဟုတ်ပါ အဘယ်ကြောင့်ဆိုသော် ယင်းအား တရား၀င်ထုတ်လုပ်သူနှင့် သက်ဆိုင်သော လက်မှတ်နှင့် ကိုက်ညီမှု မရှိသည့် အခြား application တစ်ခုတွင် ထည့်သွင်းထားသောကြောင့် ဖြစ်ပါသည်.</string>

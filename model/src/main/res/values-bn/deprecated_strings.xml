@@ -80,7 +80,6 @@
     <string name="feedback_subject">"বিষয় "</string>
     <string name="feedback_include_logs">স্ক্রিনশট এবং লগ অন্তর্ভুক্ত করুন</string>
     <string name="feedback_no_email">কোন ইমেইল ক্লায়েন্ট ইনস্টল করা হয়নি!</string>
-    <string name="username_tip">আপনার ই-মেইল টাইপ করুন</string>
     <string name="store_already_added">স্টোর ইতিমধ্যে যোগ করা হয়েছে!</string>
     <string name="no_permissions_required">এই অ্যাপের জন্য অনুমতির দরকার নেই।</string>
     <string name="restore">ইনস্টল করুন</string>
@@ -94,7 +93,7 @@
     <string name="sd_error">এসডি কার্ডে লেখা যায়নি।</string>
     <string name="sd_error_jolla">সঠিকভাবে ডাউনলোড করা যায়নি</string>
     <string name="starting_download">"ডাউনলোড শুরু হচ্ছে "</string>
-    <string name="finished_install">% ইন্সটল হয়েছে।</string>
+    <string name="finished_install">%s ইন্সটল হয়েছে।</string>
     <string name="aptoide_downloading">%s ডাউনলোড হচ্ছে</string>
     <string name="remaining_time">অবশিষ্ট</string>
     <string name="download_retry">"পুনরায় চেষ্টা করুন "</string>
@@ -105,7 +104,7 @@
 উত্তর</string>
     <string name="vote_down">"ভোট ডাউন "</string>
     <string name="vote_up">"ভোট আপ "</string>
-    <string name="votes">"%টি ভোট "</string>
+    <string name="votes">%s ভোট</string>
 
     <string name="adult_pin_wrong">প্রাপ্তবয়স্ক
 ভুল পিন, আবার চেষ্টা করুন।</string>
@@ -136,8 +135,6 @@
     <string name="no_excluded_updates">"কোন বাদ দেওয়া আপডেট নেই "</string>
     <string name="no_excluded_updates_selected">"কোন বাদ দেওয়া আপডেট বাছাই করা হয়নি "</string>
     <string name="exclude_update">আপডেট অগ্রাহ্য করুন</string>
-    <string name="payment_methods">মুল্য পরিশোধ
-দিয়ে পরিশোধ:</string>
     <string name="cancel">বাতিল</string>
     <string name="no_payments_available">কোন পেমেন্ট পাওয়া যায়নি।</string>
     <string name="failed_auth_code">অ্যাকাউন্ট অথোরাইজ করতে ব্যর্থ। আবার চেষ্টা করুন।</string>
@@ -151,9 +148,9 @@
     <string name="rollback_downgraded">"ডাউনগ্রেড করা হয়ছে "</string>
     <string name="install">ইনস্টল</string>
     <string name="cannot_uninstall_self">ইনস্টলার আনইনস্টল করা যাবে না।</string>
-    <string name="at_time">অতে %</string>
+    <string name="at_time">অতে %s</string>
     <string name="root_access_dialog">আপনার রুট আছে বলে মনে হয়। আপনি কি ডাউনলোডের পরে অ্যাপ্লিকেশন স্বয়ংক্রিয়ভাবে ইনস্টল করার অনুমতি দিতে চান?</string>
-    <string name="downgrade_requires_uninstall">"ডাউনগ্রেডের জন্য অ্যাপ্লিকেশন আনইন্সটল করতে হবে "</string>
+    <string name="downgrade_requires_uninstall">ডাউনগ্রেডের জন্য অ্যাপ্লিকেশন আনইন্সটল করতে হবে</string>
 
     <string name="order_popup_title3">প্রাপ্তবয়স্ক বিষয়বস্তু</string>
     <string name="invite_friends">বন্ধুদের আমন্ত্রণ জানান</string>
@@ -163,9 +160,9 @@
     <string name="and">এবং</string>
     <string name="more_friends">"আরও "</string>
     <string name="facebook_friends_list_using_timeline_empty">সোশ্যাল টাইমলাইনের মাধ্যমে আপনি সুযোগ পাবেন অ্যাপ্লিকেশনটিকে আপনার ফেসবুক বন্ধুদের সাথে শেয়ার করার। আপনি কি নেটওয়ার্কটিতে যোগ দিতে চান?</string>
-    <string name="X_download_number">% সম্পন্ন।</string>
+    <string name="X_download_number">%s সম্পন্ন।</string>
     <string name="timeline_not_compatible">উহ্‌... এই ফিচারটি আপনার অ্যান্ড্রয়েড ভার্সনের সাথে সামঞ্জস্যপূর্ণ নয়</string>
-    <string name="sponsored">"স্পন্সর প্রাপ্ত "</string>
+    <string name="sponsored">স্পন্সর প্রাপ্ত</string>
     <string name="friends_installs">"আপনার বন্ধুরা যেসব ইনস্টল করেছেন "</string>
     <string name="recommended_for_you">আপনার জন্য সুপারিশকৃত</string>
     <string name="highlighted_apps">"হাইলাইট করা "</string>
@@ -241,9 +238,9 @@
     <string name="about_mail">যোগাযোগ:</string>
     <string name="clear_cache_sucess">"বিষয়বস্তু সফলভাবে মুছে ফেলা হয়েছে "</string>
     <string name="clearcontent_sum">এসডি কার্ড থেকে তথ্য মুছে ফেলা।</string>
-    <string name="cache_using_X_mb">% মেগাবাইট ব্যবহৃত হচ্ছে</string>
+    <string name="cache_using_X_mb">%s মেগাবাইট ব্যবহৃত হচ্ছে</string>
     <string name="clearcache_sum">এসডি কার্ড থেকে ক্যাচে (আইকন, স্ক্রিনশট) মুছে ফেলে।</string>
-    <string name="clearcontent_sum_jolla">"তথ্য মুছে ফেলে "</string>
+    <string name="clearcontent_sum_jolla">তথ্য মুছে ফেলে</string>
     <string name="clearcache_sum_jolla">"ক্যাশে মুছে ফেলে (আইকন, স্ক্রিনশট) "</string>
     <string name="flag_this_app_good">"ভাল "</string>
     <string name="flag_this_app_button_text">"এই অ্যাপ্লিকেশন ফ্ল্যাগ করুন "</string>
@@ -454,7 +451,7 @@
   <string name="reason_unknown">অ্যাপটো্‌ইড এন্টি-ম্যালওয়ার প্লাটফর্মে এই অ্যাপটি সম্পর্কে যথেষ্ট তথ্য নেই।</string>
 
 
-  <string name="reply_to">মন্তব্য</string>
+  <string name="reply_to">মন্তব্য %s</string>
   <string name="comment_submitted">আপনার মন্তব্য সফলভাবে দাখিল করা হয়েছিল</string>
   <string name="write_a_comment">একটি মন্তব্য লিখুন</string>
   <string name="no_comment_be_the_first">অদ্যবধি মন্তব্য বিহীন। প্রথম হয়ে যান!</string>
@@ -507,8 +504,6 @@
   <string name="subscribe_apps_official_store">অ্যাপটোইড অফিসিয়াল অ্যাপ স্টোর \'অ্যাপ\' সাবস্ক্রাইব</string>
   <string name="wizard_next">পরবর্তি</string>
   <string name="wizard_prev">পূর্ববর্তী</string>
-  <string name="search_activity_title">\'%s\'</string>
-
   <string name="share">শেয়ার</string>
   <string name="share_on_timeline">টাইমলাইনে শেয়ারকরন</string>
 

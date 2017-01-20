@@ -98,7 +98,6 @@
 보게되는 에러들</string>
     <string name="feedback_include_logs">스크린샷과 로그 첨부하기</string>
     <string name="feedback_no_email">이메일 클라이언트가 설치되지 않았습니다!</string>
-    <string name="username_tip">이메일을 입력하세요</string>
     <string name="store_already_added">스토어가 이미 추가되었습니다!</string>
     <string name="subscribe_store">스토어 구독하기</string>
     <string name="permissions">승인 보기</string>
@@ -185,7 +184,6 @@
     <string name="exclude_update">업데이트 무시</string>
     <string name="install_update">업데이트 설치</string>
 
-    <string name="payment_methods">결제방법:</string>
     <string name="cancel">취소</string>
     <string name="no_payments_available">결제 방법 없음.</string>
     <string name="failed_auth_code">계정을 인가하는데 실패했습니다. 다시 시도하십시오.</string>
@@ -453,8 +451,6 @@
     <string name="subscribe_apps_official_store">앱토이드 공식 앱스토어 앱 구독하기</string>
     <string name="wizard_next">다음</string>
     <string name="wizard_prev">이전</string>
-    <string name="search_activity_title">\'%s\'</string>
-
     <string name="share">공유</string>
     <string name="share_on_timeline">타임라인에 공유</string>
 
@@ -485,8 +481,8 @@
     <string name="friends_to_invite">Aptoide 의 모든 다른 페이스북 친구들</string>
     <string name="upload_app_backup_apps_installed">이 앱을 귀하의 스토에어 먼저 업로드 하셔야 합니다. Aptoide Backup Apps을 이용하실 수 있습니다.</string>
     <string name="upload_app_backup_apps_not_installed">이 앱을 귀하의 스토에어 먼저 업로드 하셔야 합니다. 인스톨 하시고 Aptoide Backup Apps 을 사용하세요.</string>
-    <string name="setting_category_autoupdate">Aptoide 자동 업데이트</string>
-    <string name="setting_category_autoupdate_title">Aptoide 자동 업데이트 활성</string>
+    <string name="setting_category_autoupdate">%s 자동 업데이트</string>
+    <string name="setting_category_autoupdate_title">%s 자동 업데이트 활성</string>
     <string name="social_timeline_notifications_sum2">Aptoide 소셜 타임라인 알림 사용하기. 알림 바에 최신의 뉴스를 받을 것 입니다.</string>
     <string name="ignored">무시됨</string>
     <string name="application_signature_blacklisted">어플리케이션 서명이 다른 어플리케이션에서 서명으로 사용되었고 합법적인 개발자와 관련된 서명과 일치하지 않기 때문에 검증된 Aptoide 의 안티-멜웨어 플랫폼 서명이 아닙니다.</string>

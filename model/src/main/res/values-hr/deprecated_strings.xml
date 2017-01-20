@@ -95,7 +95,6 @@
 \n Greške koje vidite</string>
     <string name="feedback_include_logs">Uključi snimku zaslona i logove</string>
     <string name="feedback_no_email">Servis za e-mail nije instaliran!</string>
-    <string name="username_tip">Upišite vašu e-mail adresu</string>
     <string name="store_already_added">Trgovina već dodana!</string>
     <string name="subscribe_store">Pretplata na trgovinu</string>
     <string name="permissions">Pogledajte dozvole</string>
@@ -181,7 +180,6 @@
     <string name="exclude_update">Zanemarite ažuriranje</string>
     <string name="install_update">Instalirajte ažuriranje</string>
 
-    <string name="payment_methods">Plati s:</string>
     <string name="cancel">Odustani</string>
     <string name="no_payments_available">Nema dostupnih plaćanja.</string>
     <string name="failed_auth_code">Pogreška pri autorizaciji računa. Pokušajte ponovno.</string>
@@ -451,8 +449,6 @@
     <string name="subscribe_apps_official_store">Pretplatite se na \'apps\' službene Aptoide trgovine aplikacijama</string>
     <string name="wizard_next">Dalje</string>
     <string name="wizard_prev">Nazad</string>
-    <string name="search_activity_title">\'%s\'</string>
-
     <string name="share">Podijeli</string>
     <string name="share_on_timeline">Podijeli na vremenskoj crti</string>
 
@@ -487,8 +483,8 @@
   <string name="friends_to_invite">Svi ostali Facebook prijatelji unutar Aptoide</string>
   <string name="upload_app_backup_apps_installed">Morate prvo poslati ovu aplikaciju u svoju trgovinu. Možete koristiti Aptoide Backup Apps.</string>
   <string name="upload_app_backup_apps_not_installed">Morate prvo poslati ovu aplikaciju u svoju trgovinu. Molimo vas, instalirajte Aptoide Backup Apps.</string>
-  <string name="setting_category_autoupdate">Aptoide automatsko ažuriranje</string>
-  <string name="setting_category_autoupdate_title">Uključi Aptoide automatsko ažuriranje</string>
+  <string name="setting_category_autoupdate">%s automatsko ažuriranje</string>
+  <string name="setting_category_autoupdate_title">Uključi %s automatsko ažuriranje</string>
   <string name="change_theme_soon">Dolazi uskoro</string>
   <string name="social_timeline_notifications_sum2">Uključite Aptoide notifikacije na socijalnoj vremenskoj crti. Dobivat ćete najnovije vijesti u notifikacijama.</string>
   <string name="ignored">Ignorirano</string>

@@ -70,7 +70,7 @@
     <string name="error_REPO_1">La boutique n\'existe pas.</string>
     <string name="error_REPO_2">La boutique a été annulée.</string>
     <string name="error_REPO_3">La boutique n\'appartient pas à cet utilisateur.</string>
-    <string name="error_REPO_4_no_store">Votre compte n\'a pas de boutique créée. Vous devez en créer un pour donner votre avis.</string>
+    <string name="error_REPO_4_no_store">Vous ne possédez pas de boutique. Vous devez créer une boutique pour donner votre avis.</string>
     <string name="error_REPO_7">Cet utilisateur possède déjà une boutique active.</string>
 
     <string name="error_APK_1">Impossible d\'ouvrir cette appli avec les infos et la version fournies</string>
@@ -99,7 +99,6 @@
  les anomalies que vous constatez</string>
     <string name="feedback_include_logs">Inclure capture d\'écran et logs</string>
     <string name="feedback_no_email">Aucun client e-mail installé !</string>
-    <string name="username_tip">Saisissez votre email</string>
     <string name="store_already_added">Boutique déjà ajoutée !</string>
     <string name="subscribe_store">S\'abonner à la boutique</string>
     <string name="permissions">Afficher les autorisations</string>
@@ -186,7 +185,6 @@
     <string name="exclude_update">Ignorer la mise à jour</string>
     <string name="install_update">Installer la mise à jour</string>
 
-    <string name="payment_methods">Payer avec :</string>
     <string name="cancel">Annuler</string>
     <string name="no_payments_available">Aucun paiement disponible.</string>
     <string name="failed_auth_code">L’autorisation du compte a échoué. Merci de réessayer.</string>
@@ -236,7 +234,7 @@ votre opérateur téléphonique.
     <string name="timeline_like">J\'aime</string>
     <string name="likes">Mentions \"J\'aime\"</string>
     <string name="unlike">Je n\'aime plus</string>
-    <string name="timeline_empty_no_friends_send_email">Il semble que vos amis n\'aient pas ouvert une session Aptoide avec leur compte Facebook. Envoyez-leur un e-mail pour qu\'ils se connectent avec leur compte Facebook.</string>
+    <string name="timeline_empty_no_friends_send_email">Il semble que vos amis ne soient pas connectés à Aptoide avec leur compte Facebook. Envoyez-leur un e-mail pour qu\'ils se connectent avec leur compte Facebook.</string>
     <string name="timeline_empty_send_email_to_friends">Envoyer un e-mail aux amis</string>
     <string name="aptoide_timeline">Flux Aptoide</string>
     <string name="timeline_email_invitation">Vous a invité à rejoindre son flux social Aptoide. Soyez connecté !</string>
@@ -367,7 +365,7 @@ votre opérateur téléphonique.
     <string name="version_placeholder">Version : %s</string>
 
     <string name="results_subscribed">Abonné aux boutiques</string>
-    <string name="results_in_store">Résultats pour la boutique %</string>
+    <string name="results_in_store">Résultats pour la boutique %s</string>
     <string name="other_stores">Boutiques auxquelles vous n’êtes pas abonnés</string>
     <string name="comments">Commentaires</string>
     <string name="reviews">Avis</string>
@@ -456,8 +454,6 @@ votre opérateur téléphonique.
     <string name="subscribe_apps_official_store">S\'abonner à \"apps\" Aptoide sur l\'App Store Officiel</string>
     <string name="wizard_next">Suivant</string>
     <string name="wizard_prev">Précédent</string>
-    <string name="search_activity_title">\'%s\'</string>
-
     <string name="share">Partager</string>
     <string name="share_on_timeline">Partagez sur le flux</string>
 
@@ -484,8 +480,8 @@ votre opérateur téléphonique.
     <string name="error_occured_retry_later">Une erreur est survenue. Aptoid ressayera automatiquement plus tard.</string>
     <string name="rollback_updated_at">Mise à jour à %1$s</string>
     <string name="friends_to_invite">Tous vos autres amis Facebook dans Aptoide</string>
-    <string name="setting_category_autoupdate">Mise à jour automatique pour %1</string>
-    <string name="setting_category_autoupdate_title">Activer la Mise à jour automatique pour %1</string>
+    <string name="setting_category_autoupdate">Mise à jour automatique pour %s</string>
+    <string name="setting_category_autoupdate_title">Activer la Mise à jour automatique pour %s</string>
     <string name="ignored">Ignoré</string>
     <string name="scanned_manually_by_aptoide_team">Vérifié manuellement par l\'équipe Aptoide :</string>
     <string name="scanned_verified_by_tester">L\'application a été vérifiée manuellement par un testeur de l\'équipe Aptoide ce qui garantit la sécurité de cette application.</string>

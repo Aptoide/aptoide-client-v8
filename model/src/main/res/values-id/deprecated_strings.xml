@@ -95,7 +95,6 @@
 \n Kesalahan yang ditemukan</string>
     <string name="feedback_include_logs">Cantumkan ScreenShot dan Log</string>
     <string name="feedback_no_email">Klien email tidak terpasang!</string>
-    <string name="username_tip">Masukkan email Anda</string>
     <string name="store_already_added">Toko telah ditambahkan!</string>
     <string name="subscribe_store">Berlangganan Toko</string>
     <string name="permissions">Lihat Izin</string>
@@ -182,7 +181,6 @@
     <string name="exclude_update">Abaikan Pembaruan</string>
     <string name="install_update">Unduh Pembaruan</string>
 
-    <string name="payment_methods">Bayar dengan:</string>
     <string name="cancel">Batalkan</string>
     <string name="no_payments_available">Tidak ada pembayaran yang tersedia.</string>
     <string name="failed_auth_code">Gagal mengesahkan akun. Harap coba lagi.</string>
@@ -453,8 +451,6 @@ oleh operator.
     <string name="subscribe_apps_official_store">Langganan \'aplikasi\' di App Store Resmi Aptoide</string>
     <string name="wizard_next">Berikutnya</string>
     <string name="wizard_prev">Sebelumnya</string>
-    <string name="search_activity_title">\'%s\'</string>
-
     <string name="share">Bagikan</string>
     <string name="share_on_timeline">Bagikan di timeline</string>
 

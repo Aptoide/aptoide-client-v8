@@ -94,7 +94,6 @@
 \nข้อผิดพลาดที่คุณเห็น</string>
     <string name="feedback_include_logs">รวมสกรีนช็อตและการบันทึก</string>
     <string name="feedback_no_email">ไม่มีการติดตั้งไคลเอนต์อีเมล!</string>
-    <string name="username_tip">พิมพ์อีเมลของคุณ</string>
     <string name="store_already_added">เพิ่มร้านค้าเรียบร้อยแล้ว!</string>
     <string name="subscribe_store">ตอบรับสมาชิกร้านค้า</string>
     <string name="permissions">สำรวจการได้รับอนุญาต</string>
@@ -181,7 +180,6 @@
     <string name="exclude_update">เพิกเฉยการอัพเดต</string>
     <string name="install_update">ติดตั้งการอัพเดต</string>
 
-    <string name="payment_methods">ชำระด้วย:</string>
     <string name="cancel">ยกเลิก</string>
     <string name="no_payments_available">ไม่มีการชำระเงินที่ใช้ได้</string>
     <string name="failed_auth_code">ล้มเหลวในการพิสูจน์ตัวตน โปรดลองอีกครั้ง</string>
@@ -449,8 +447,6 @@
     <string name="subscribe_apps_official_store">ตอบรับแอปบนAptoideอย่างเป็นทางการบนแอปสโตร์</string>
     <string name="wizard_next">ต่อไป</string>
     <string name="wizard_prev">ก่อนหน้านี้</string>
-    <string name="search_activity_title">\'%s\'</string>
-
     <string name="share">แบ่งปัน</string>
     <string name="share_on_timeline">แชร์บนไทม์ไลน์</string>
 
@@ -481,8 +477,8 @@
     <string name="friends_to_invite">เพื่อนอื่นๆบนเฟสบุ๊คในAptoide</string>
     <string name="upload_app_backup_apps_installed">คุณจำเป็นต้องอัพโหลดแอปนี้ไปยังร้านค้าของคุณก่อน คุณสามารถใช้แอปสำรองAptoideได้</string>
     <string name="upload_app_backup_apps_not_installed">คุณจำเป็นต้องอัพโหลดแอปนี้ไปยังร้านค้าของคุณก่อน โปรดติดตั้งและใช้แอปสำรองAptoide</string>
-    <string name="setting_category_autoupdate">อัพเดตAptoideอัตโนมัติ</string>
-    <string name="setting_category_autoupdate_title">เปิดการใช้งานการอัพเดตAptoideอัตโนมัติ</string>
+    <string name="setting_category_autoupdate">อัพเดต%sอัตโนมัติ</string>
+    <string name="setting_category_autoupdate_title">เปิดการใช้งานการอัพเดต%sอัตโนมัติ</string>
     <string name="social_timeline_notifications_sum2">เปิดการใช้งานการแจ้งเตือนไทม์ไลน์โซเชียลAptoide คุณจะได้รับข่าวสารล่าสุดบนแถบการแจ้งเตือน</string>
     <string name="ignored">ไม่สนใจ</string>
     <string name="application_signature_blacklisted">ลงชื่อแอปพลิเคชั่นไม่ใช่การลงชื่อที่น่าเชื่อถือที่แพลตฟอร์มแอนตี้มัลแวร์ Aptoide เพราะมันถูกใช้เพื่อเซ็นต์แอปพลิเคชั่นอื่นซึ่งไม่เข้าคู่กับลายเซ็นต์ของนักพัฒนา</string>

@@ -12,7 +12,7 @@
     <string name="button_header_more">plus</string>
     <string name="search">Rechercher</string>
 
-    <string name="update">Mise à jour</string>
+    <string name="update">Mettre à jour</string>
     <string name="uninstall">Désinstaller</string>
     <string name="downgrade">Rétrograder</string>
     <string name="menu_select_all">Tout sélectionner</string>
@@ -26,10 +26,10 @@ Bloquez la mise à jour des applications. Allez sur l\'onglet des Mises à jour 
     <string name="restore_updates">Restaurer les mises à jour</string>
     <string name="rollback">Restauration</string>
     <string name="menu_card_timeline_clear">Réinitialiser</string>
-    <string name="fragment_social_timeline_no_connection">Aucune connexion réseau</string>
+    <string name="fragment_social_timeline_no_connection">Aucune connexion réseau !</string>
     <string name="fragment_social_timeline_general_error">Il y a un petit souci. Pouvez-vous réessayer plus tard ?</string>
 
-    <string name="displayable_social_timeline_app_update">Mise à jour</string>
+    <string name="displayable_social_timeline_app_update">Mettre à jour</string>
     <string name="appview_rate_this_app">Évaluer cette application</string>
     <string name="needs_license">Requiert une licence</string>
     <string name="virus">Virus</string>
@@ -48,10 +48,10 @@ Bloquez la mise à jour des applications. Allez sur l\'onglet des Mises à jour 
     <string name="aptoide_email">aptoide@aptoide.com</string>
     <string name="aptoide_url">http://www.aptoide.com</string>
 
-    <string name="follow">Suivre</string>
+    <string name="follow">Abonné</string>
     <string name="followed">Suivre</string>
-<string name="appview_follow_store_button_text">Suivre ?</string>
-    <string name="appview_followers_count_text">%1$s Suiveurs</string>
+<string name="appview_follow_store_button_text">S\'abonner</string>
+    <string name="appview_followers_count_text">%1$s suiveurs</string>
     <string name="other_versions_downloads_count_text">%1$s téléchargements</string>
 
     <string name="open_apps_manager">Ouvrir le gestionnaire d\'applications</string>
@@ -64,7 +64,7 @@ Bloquez la mise à jour des applications. Allez sur l\'onglet des Mises à jour 
     <string name="displayable_social_timeline_app_update_version">Version : %1$s</string>
     <string name="displayable_social_timeline_app_update_button">Mise à jour %1$s</string>
     <string name="appview_other_versions"><u>Autres versions</u></string>
-    <string name="appview_latest_version_text">Version la plus récente</string>
+    <string name="appview_latest_version_text">Dernière version</string>
     <string name="appview_read_all">lire tout &gt;</string>
     <string name="zero">0</string>
     <string name="working_well">Fonctionne correctement</string>
@@ -130,7 +130,7 @@ Conservez un journal de toutes les applications installées (via %s), incluant l
     <string name="wizard_description_part_one_viewpager_one"><b>Rechercher</b> des apps avec le
 Badge Approuvé pour
 une installation sécurisée.</string>
-    <string name="wizard_title_viewpager_two"><b>Historique Apps</b></string>
+    <string name="wizard_title_viewpager_two"><b>Flux d\'Applications</b></string>
     <string name="home_title">Accueil</string>
     <string name="community">Communauté</string>
     <string name="stores">Boutiques</string>
@@ -143,8 +143,8 @@ et ne contient pas de menace !</string>
 
     <string name="unfollow_yes_no">Êtes-vous certain de ne plus vouloir nous suivre ?</string>
     <string name="unfollow">Ne plus suivre</string>
-    <string name="unfollowing_store_message">Ne plus suivre %s</string>
-    <string name="store_followed">Boutique %s suivi</string>
+    <string name="unfollowing_store_message">Vous ne suivez plus %s</string>
+    <string name="store_followed">Vous êtes abonnés à la boutique %s</string>
 
     <string name="be_the_first_to_rate_this_app">Soyez le premier à évaluer cette application</string>
     <string name="rate_this_app">Évaluer cette application</string>
@@ -164,7 +164,7 @@ et ne contient pas de menace !</string>
     <string name="arcade">Arcade</string>
     <string name="arcade_action">Arcade &amp; Action</string>
     <string name="board">Tableau</string>
-    <string name="books_reference">Livres &amp; référence</string>
+    <string name="books_reference">Livres &amp; Culture</string>
     <string name="brain_puzzle">Jeux mentaux &amp; Puzzle</string>
     <string name="business">Affaires</string>
     <string name="card">Cartes</string>
@@ -191,7 +191,7 @@ et ne contient pas de menace !</string>
     <string name="music">Musique</string>
     <string name="music_audio">Musique &amp; Audio</string>
     <string name="news_magazines">Actualités &amp; Magazines</string>
-    <string name="news_weather">Nouvelles &amp; Météo</string>
+    <string name="news_weather">Actualités &amp; Météo</string>
     <string name="personalization">Personnalisation</string>
     <string name="photography">Photographie</string>
     <string name="productivity">Productivité</string>
@@ -231,13 +231,13 @@ et ne contient pas de menace !</string>
 <string name="subscribers">Abonnés</string>
   <string name="apps">Apps</string>
 
-  <string name="apps_timeline"><b>Historique Apps</b></string>
+  <string name="apps_timeline"><b>Flux d\'Apps</b></string>
   <string name="displayable_social_timeline_article_related_to">Associés à %1$s</string>
   <string name="appstimeline_update_app">app</string>
   <string name="customtabs_open_native_app">Ouvrir dans l\'application</string>
 
 
-  <string name="fragment_download_no_connection">Aucune applications téléchargées</string>
+  <string name="fragment_download_no_connection">Aucune application téléchargée.</string>
   <string name="fragment_download_no_connection_subtitle">Les nouvelles applications apparaîtront ici dès que vous commencerez à les télécharger !</string>
   <string name="newer_version_available">Nouvelle version disponible</string>
 
@@ -264,15 +264,15 @@ et ne contient pas de menace !</string>
     <string name="recommended_stores">Boutiques recommandées</string>
   <string name="create_store_displayable_message">Créez une boutique et partagez vos applications !</string>
   <string name="create_store_displayable_button">CRÉER LA BOUTIQUE</string>
-  <string name="create_store_displayable_created_store_message">Vous venez de créer votre boutique !</string>
+  <string name="create_store_displayable_created_store_message">Bravo, vous avez créé votre boutique !</string>
   <string name="create_store_displayable_explore_button">Explorer</string>
 
-  <string name="install_app_inner">Installer %1$s</string>
-  <string name="open_app_inner">Ouvrir %1$s</string>
+  <string name="install_app_inner">" Installer %1$s "</string>
+  <string name="open_app_inner">" Ouvrir %1$s "</string>
   <string name="downloads_count">Téléchargements : %1$s</string>
   <string name="version_number">Version : %1$s</string>
   <string name="app_size">Taille : %1$s</string>
-  <string name="social_timeline_you_will_share">Ce que verront vos followers :</string>
+  <string name="social_timeline_you_will_share">Ce que verront vos %d suiveurs :</string>
 
 <string name="install_app_outter_pt1">Votre boutique ne contient pas encore d\'application.</string>
   <string name="install_app_outter_pt2">et téléchargez des applications pour les partager !</string>
@@ -285,12 +285,12 @@ et ne contient pas de menace !</string>
   <string name="clearcache_title">Supprimer les données</string>
 
   <string name="my_store_created_displayable_message">Votre boutique d\'applications Android</string>
-  <string name="create_store_displayable_explore_message">Entrez et explorez toutes les possibilités</string>
+  <string name="create_store_displayable_explore_message">Entrez et explorez toutes les possibilités...</string>
   <string name="social_timeline_share_dialog_opt_in_text_1">Vos amis pourront vous trouver et vous suivre.</string>
   <string name="social_timeline_share_dialog_installed_and_recommended">Installé et recommandé</string>
 
-  <string name="comment_store">Donnez votre avis sur cette boutique</string>
-  <string name="be_the_first_to_send_feedback_about_this_store">Soyez le premier à donner votre avis sur cette boutique</string>
+  <string name="comment_store">Evaluez cette boutique</string>
+  <string name="be_the_first_to_send_feedback_about_this_store">Soyez le premier à donner votre avis sur cette boutique.</string>
   <string name="social_timeline_share_bar_login">Quelles applications vos amis ont-ils installé ?</string>
   <string name="social_timeline_share_bar_following">Suivez plus de boutiques et connectez-vous à vos amis.</string>
   <string name="social_timeline_share_bar_followers">Améliorez votre boutique pour avoir plus de suiveurs.</string>
@@ -304,21 +304,31 @@ et ne contient pas de menace !</string>
   <string name="word_this">ce</string>
 
   <string name="social_timeline_share_title">Aperçu de carte partagée</string>
-  <string name="social_timeline_share_title_checkbox">Rendre mon profil d’utilisateur privé dans l\'historique et ne partager que les infos de ma boutique.</string>
-  <string name="social_timeline_share_title_checkbox_fb">Permettre à mon profil d\'être public sur l\'historique des applications</string>
-  <string name="social_timeline_share_dialog_opt_in_text_2">Si vous souhaitez que votre profil soit privé dans l\'Historique des applications, modifiez vos paramètres de Confidentialité sur <b>www.aptoide.com</b>.</string>
-  <string name="social_timeline_share_dialog_opt_out_text_1">En masquant votre profil, vos amis ne seront pas capables de vous trouver et de vous suivre sur l\'historique des applications.</string>
-  <string name="timeline_followers">%d personnes qui vous suivent</string>
+  <string name="social_timeline_share_title_checkbox">Rendre mon profil d’utilisateur privé dans le Flux d\'applications et ne partager que les infos de ma boutique.</string>
+  <string name="social_timeline_share_title_checkbox_fb">Permettre à mon profil d\'être public dans le Flux des applications.</string>
+  <string name="social_timeline_share_dialog_opt_in_text_2">Si vous souhaitez que votre profil soit privé dans le Flux des applications, modifiez vos paramètres de Confidentialité sur <b>www.aptoide.com</b>.</string>
+  <string name="social_timeline_share_dialog_opt_out_text_1">En masquant votre profil, vos amis ne seront pas capables de vous trouver ni de vous suivre dans le Flux des applications.</string>
+  <string name="timeline_followers">%d vous suivent</string>
   <string name="timeline_followed">Vous suivez %d</string>
 
 <string name="install_on_tv_mobile_error">Vérifiez que votre appareil est connecté au Wi-fi afin d\'utiliser cette fonctionnalité.</string>
     <string name="social_timeline_recommends">Recommande</string>
   <string name="timeline_login_message">Qu\'ont installé vos amis ?</string>
 <string name="timeline_stats_followers">Personnes qui vous suivent</string>
-  <string name="social_timeline_followers_fragment_title">%d follower(s)</string>
+  <string name="social_timeline_followers_fragment_title">%d suiveurs</string>
   <string name="social_timeline_following_fragment_title">Vous suivez %d personnes</string>
   <string name="social_timeline_share_soon">L’action sera publiée prochainement</string>
   <string name="private_profile_create_store">Pour avoir un profil privé, vous devez créer un magasin</string>
 
+
+  <string name="social_timeline_shared_by">partagé par %1$s</string>
+
+  <string name="item_payment_button_use">Utiliser</string>
+  <string name="item_payment_button_register">S\'enregistrer</string>
+  <string name="item_payment_approving_text">Approuver</string>
+  <string name="activity_payment_more_payments_button">Utiliser un autre moyen de paiement</string>
+
+<string name="private_followers_message">%d suiveurs sont privés</string>
+  <string name="private_following_message">vous suivez %d utilisateurs / boutiques privés</string>
 
   </resources>

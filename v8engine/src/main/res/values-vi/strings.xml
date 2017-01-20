@@ -52,7 +52,7 @@ Chặn ứng dụng khỏi cập nhật. Tới tab Cập nhật và ấn giữ 
     <string name="other_versions_downloads_count_text">%1$s lượt tải về</string>
 
     <string name="no_rollbacks_msg">Hạ cấp nhanh chóng bất kỳ ứng dụng phiên bản cũ nào và giải quyết vấn đề tương thích. Giữ một bản ghi tất cả các ứng dụng đã cài đặt
-của bạn (thông qua Aptoide) bao gồm cả phiên bản và ngày cài đặt.</string>
+của bạn (thông qua %s) bao gồm cả phiên bản và ngày cài đặt.</string>
 
     <string name="fragment_social_timeline_aptoide_team">Nhóm Aptoide</string>
     <string name="displayable_social_timeline_store_latest_apps_headline">Cửa hàng này có các Ứng dụng mới</string>
@@ -71,7 +71,7 @@ của bạn (thông qua Aptoide) bao gồm cả phiên bản và ngày cài đ�
     <string name="other_versions_partial_title_1">Khác</string>
     <string name="other_versions_partial_title_2">Các phiên bản trên các cửa hàng khác nhau</string>
     <string name="displayable_social_timeline_recommendation_similar_to">dựa trên %1$s</string>
-    <string name="displayable_social_timeline_recommendation_atptoide_team_recommends">Aptoide khuyến cáo</string>
+    <string name="displayable_social_timeline_recommendation_atptoide_team_recommends">%s khuyến cáo</string>
     <string name="top_comments">Các bình luận hàng đầu</string>
     <string name="rate">Đánh giá</string>
     <string name="rate_app">Đánh giá %s</string>

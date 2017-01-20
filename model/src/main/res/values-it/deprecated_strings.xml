@@ -100,7 +100,6 @@ Passi che hai fatto
 Errori che hai notato</string>
     <string name="feedback_include_logs">Includi Screenshot e Log</string>
     <string name="feedback_no_email">Nessun client di posta elettronica installato!</string>
-    <string name="username_tip">Inserisci il tuo indirizzo e-mail</string>
     <string name="store_already_added">Store già aggiunto!</string>
     <string name="subscribe_store">Iscriviti allo Store</string>
     <string name="permissions">Controlla i permessi</string>
@@ -187,7 +186,6 @@ Errori che hai notato</string>
     <string name="exclude_update">Ignorare Aggiornamento</string>
     <string name="install_update">Installare Aggiornamento</string>
 
-    <string name="payment_methods">Paga con:</string>
     <string name="cancel">Annulla</string>
     <string name="no_payments_available">Nessun pagamento disponibile.</string>
     <string name="failed_auth_code">Impossibile autorizzare account. Per favore riprova.</string>
@@ -456,8 +454,6 @@ Errori che hai notato</string>
     <string name="subscribe_apps_official_store">Iscriviti ad \'apps\' nell\'App Store Ufficiale di Aptoide</string>
     <string name="wizard_next">Successivo</string>
     <string name="wizard_prev">Precedente</string>
-    <string name="search_activity_title">\'%s\'</string>
-
     <string name="share">Condividi</string>
     <string name="share_on_timeline">Condividi sul diario</string>
 

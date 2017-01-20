@@ -100,7 +100,6 @@
  Fouten die je ziet</string>
     <string name="feedback_include_logs">Voeg schermafbeelding en loggegevens toe</string>
     <string name="feedback_no_email">Geen e-mailprogramma geïnstalleerd!</string>
-    <string name="username_tip">Typ je e-mailadres</string>
     <string name="store_already_added">Winkel is al toegevoegd!</string>
     <string name="subscribe_store">Winkel toevoegen</string>
     <string name="permissions">Bekijk machtigingen</string>
@@ -187,7 +186,6 @@
     <string name="exclude_update">Update negeren</string>
     <string name="install_update">Update installeren</string>
 
-    <string name="payment_methods">Betalen met:</string>
     <string name="cancel">Annuleren</string>
     <string name="no_payments_available">Geen betalingsmogelijkheden.</string>
     <string name="failed_auth_code">Accountverificatie mislukt. Probeer het opnieuw.</string>
@@ -457,8 +455,6 @@
     <string name="subscribe_apps_official_store">Abonneer op \'apps\', de officiële appstore van Aptoide</string>
     <string name="wizard_next">Volgende</string>
     <string name="wizard_prev">Vorige</string>
-    <string name="search_activity_title">\'%s\'</string>
-
     <string name="share">Delen</string>
     <string name="share_on_timeline">Delen op tijdlijn</string>
 
@@ -492,8 +488,8 @@
   <string name="friends_to_invite">Alle andere Facebookvrienden in Aptoide</string>
   <string name="upload_app_backup_apps_installed">Je moet deze app eerst uploaden naar je winkel. Je kan gebruik maken van Aptoide app-back-ups.</string>
   <string name="upload_app_backup_apps_not_installed">Je moet deze app eerst uploaden naar je winkel. Installeer en gebruik hiervoor Aptoide app-back-ups.</string>
-  <string name="setting_category_autoupdate">Aptoide automatische updates</string>
-  <string name="setting_category_autoupdate_title">Aptoide automatische updates inschakelen</string>
+  <string name="setting_category_autoupdate">%s automatische updates</string>
+  <string name="setting_category_autoupdate_title">%s automatische updates inschakelen</string>
   <string name="social_timeline_notifications_sum2">Aptoide socialetijdslijnmeldingen inschakelen. Je zal het laatste nieuws ontvangen in de meldingsbalk.</string>
   <string name="ignored">Genegeerd</string>
   <string name="application_signature_blacklisted">Applicatieondertekening is geen vertrouwde ondertekening op het Aptoide anti-malwareplatform omdat ze is gebruikt om een andere applicatie te ondertekenen die niet overeenkomt met de ondertekening van de echte ontwikkelaar.</string>
