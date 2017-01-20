@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.activity;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
@@ -16,6 +17,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.crashreports.AptoideCrashLogger;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
@@ -30,6 +32,7 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.interfaces.UiComponentBasics;
+import java.util.Locale;
 import lombok.Getter;
 import rx.functions.Action0;
 
@@ -73,6 +76,20 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
     bindViews(getWindow().getDecorView().getRootView());
     setupToolbar();
     setupViews();
+    setLocale("fa");
+  }
+
+  /**
+   * Force language on app
+   * @param lang language the app should embebed
+   */
+  private void setLocale(String lang) {
+    Locale myLocale = new Locale(lang,lang);
+    Resources res = getResources();
+    DisplayMetrics dm = res.getDisplayMetrics();
+    android.content.res.Configuration conf = res.getConfiguration();
+    conf.locale = myLocale;
+    res.updateConfiguration(conf, dm);
   }
 
   @Override protected void onStop() {
