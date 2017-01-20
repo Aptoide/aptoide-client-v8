@@ -95,7 +95,6 @@
 \n Грешке које видите</string>
     <string name="feedback_include_logs">Укључите снимке екрана и логове</string>
     <string name="feedback_no_email">Ниједан имејл клијент није инсталиран!</string>
-    <string name="username_tip">Укуцајте ваш имејл</string>
     <string name="store_already_added">Радња већ додата!</string>
     <string name="subscribe_store">Претплата на радњу</string>
     <string name="permissions">Погледајте дозволе</string>
@@ -115,9 +114,9 @@
     <string name="sd_error">Немогуће уписати на СД картицу.</string>
     <string name="sd_error_jolla">Немогуће правилно преузимање</string>
     <string name="starting_download">Почетак преузимања</string>
-    <string name="installing">% се инсталира…</string>
-    <string name="finished_install">% је инсталирано.</string>
-    <string name="aptoide_downloading">% се преузима</string>
+    <string name="installing">%s се инсталира…</string>
+    <string name="finished_install">%s је инсталирано.</string>
+    <string name="aptoide_downloading">%s преузима</string>
     <string name="remaining_time">преостало</string>
     <string name="data_usage_constraint">Преузимање није дозвољено у Поставкама &gt; Општа правила преузимања</string>
     <string name="download_pending">На чекању</string>
@@ -131,10 +130,10 @@
     <string name="vote_up">Гласајте за</string>
     <string name="casting_vote">Гласање…</string>
     <string name="vote_submitted">Ваш глас успешно је послат</string>
-    <string name="votes">% гласова</string>
+    <string name="votes">%s гласова</string>
 
-    <string name="reviewed_by">Оцењен од - %</string>
-    <string name="installed_this">% је инсталирало ово.</string>
+    <string name="reviewed_by">Оцењен од - %s</string>
+    <string name="installed_this">%s је инсталирало ово.</string>
 
     <string name="adult_pin_wrong">Погрешан пин, покушајте поново.</string>
     <string name="request_adult_pin">Унесите пин за откључавање</string>
@@ -181,7 +180,6 @@
     <string name="exclude_update">Игноришите ажурирање</string>
     <string name="install_update">Инсталирајте најновије</string>
 
-    <string name="payment_methods">Платите са:</string>
     <string name="cancel">Откажите</string>
     <string name="no_payments_available">Нема доступних исплата.</string>
     <string name="failed_auth_code">Неуспешно потврђивање налога. Молимо покушајте поново.</string>
@@ -198,7 +196,7 @@
     <string name="rollback_downgraded">Враћено на претходну верзију</string>
     <string name="install">Инсталирајте</string>
     <string name="cannot_uninstall_self">Немогуће деинсталирати инсталациони програм.</string>
-    <string name="at_time">у %</string>
+    <string name="at_time">у %s</string>
     <string name="root_access_dialog">Изгледа да имате рут. Желите ли да дозволите аутоматско инсталирање апликације после преузимања?</string>
     <string name="downgrade_requires_uninstall">Враћање на стару верзију захтева деинсталицју апликације</string>
 
@@ -214,7 +212,7 @@
     <string name="more_editors_choice">Више избора Уредника</string>
     <string name="more_versions">Више верзија</string>
     <string name="facebook_friends_list_using_timeline_empty">Друштвена агенда омогућава да делите своје апликације са Фејсбук пријатељима. Желите ли да се придружите мрежи?</string>
-    <string name="X_download_number">% преуз.</string>
+    <string name="X_download_number">%s преуз.</string>
     <string name="timeline_not_compatible">Ух...Ова функција није компатибилна са вашом Андроид верзијом</string>
     <string name="sponsored">Спонзорисан</string>
     <string name="friends_installs">Инсталирања ваших пријатеља</string>
@@ -248,7 +246,8 @@
     <string name="review_usability">Употребљивост</string>
     <string name="review_addictive">Заразан</string>
     <string name="review_stability">Стабилност</string>
-    <string name="review_by">Оцена од:\n%</string>
+    <string name="review_by">Оцена од:
+%s</string>
     <string name="review_title">Оцене</string>
     <string name="review_good">Добар</string>
     <string name="review_bad">Лош</string>
@@ -324,7 +323,7 @@
     <string name="about_mail">Контакт:</string>
     <string name="clear_cache_sucess">Садржај успешно обрисан</string>
     <string name="clearcontent_sum">Брише податке са СД картице.</string>
-    <string name="cache_using_X_mb">Користи % МБ</string>
+    <string name="cache_using_X_mb">Користи %s МБ</string>
     <string name="clearcache_sum">Брише кеш (иконе, снимке екрана) са СД картице.</string>
     <string name="clearcontent_sum_jolla">Брише податке</string>
     <string name="clearcache_sum_jolla">Брише кеш (иконе, снимке екрана)</string>
@@ -357,10 +356,10 @@
     <string name="no_description">Без описа</string>
     <string name="description">Опис</string>
     <string name="version">Верзија</string>
-    <string name="version_placeholder">Верзија: %</string>
+    <string name="version_placeholder">Верзија: %s</string>
 
     <string name="results_subscribed">Претплаћене радње</string>
-    <string name="results_in_store">Резултати претраге у % радњи</string>
+    <string name="results_in_store">Резултати претраге у %s радњи</string>
     <string name="other_stores">Непретплаћене радње</string>
     <string name="comments">Коментари</string>
     <string name="reviews">Оцене</string>
@@ -372,14 +371,15 @@
     <string name="error_occured_uploading">Морате прво учитати ову апликацију.</string>
 
     <string name="update_self_title">Ажурирање доступно</string>
-    <string name="update_self_msg">Доступна је нова верзија %\nЖелите ли ажурирање?</string>
+    <string name="update_self_msg">Доступна је нова верзија %s
+Желите ли ажурирање?</string>
     <string name="retrieving_update">Преузимање ажурирања…</string>
 
     <string name="menu_search_item_go_to_store">Иди у радњу</string>
     <string name="srch_hint">Претражи апликације…</string>
 
-    <string name="app_trusted">% је безбедно</string>
-    <string name="app_warning">Упозорење: %</string>
+    <string name="app_trusted">%s је безбедно</string>
+    <string name="app_warning">Упозорење: %s</string>
     <string name="scanned_with_av">Скенирано антивирусним програмом:</string>
     <string name="compared_with_another_marketplace">Упоређено са другим Андроид тржиштима:</string>
     <string name="application_signature_analysis">Потпис апликације упоређен са потписом програмера:</string>
@@ -393,13 +393,15 @@
     <string name="reason_scanned">Скенирано са АптоидГардом и још 2 различита антивирусна програма (Зонер 1.8 и Софос 3.0).</string>
     <string name="reason_signature">Шифровани потпис гарантује да је фајл безбедан за инсталирање и да није фалсификован.</string>
     <string name="reason_failed">Потпис апликације не одговара потпису програмера. Апликација је можда фалсификована.</string>
-    <string name="reply_to">Одговор на %</string>
+    <string name="reply_to">Одговор на %s</string>
     <string name="comment_submitted">Ваш коментар успешно је послат</string>
     <string name="write_your_comment">Напишите ваш коментар</string>
     <string name="write_a_comment">Напишите коментар</string>
     <string name="no_comment_be_the_first">Још нема коментара. Будите први!</string>
 
-    <string name="installapp_alrt">Желите ли да инсталирате:\n\n%?</string>
+    <string name="installapp_alrt">Желите ли да инсталирате:
+
+%s?</string>
 
     <string name="suggested_app">Препоручена апликација</string>
 
@@ -408,15 +410,15 @@
     <string name="abTest1_label_3">Инсталирајте</string>
 
 
-    <string name="notification_timeline_new_likes">Имате % нових лајкова. Проверите на Друштвеној агенди!</string>
-    <string name="notification_timeline_new_comments">Имате % нових коментара. Проверите на Друштвеној агенди!</string>
-    <string name="notification_timeline_activity">Имате %1$ нових коментара и %2$ лајкова. Проверите на Друштвеној агенди!</string>
+    <string name="notification_timeline_new_likes">Имате %s нових лајкова. Проверите на Друштвеној агенди!</string>
+    <string name="notification_timeline_new_comments">Имате %s нових коментара. Проверите на Друштвеној агенди!</string>
+    <string name="notification_timeline_activity">Имате %1$s нових коментара и %2$s лајкова. Проверите на Друштвеној агенди!</string>
     <string name="notification_social_timeline">Аптоид Друштвена агенда. Проверите одмах!</string>
     <string name="notification_timeline_posts">Ваши пријатељи инсталирали су нове апликације!</string>
 
-    <string name="has_updates">% има доступна нова ажурирања!</string>
-    <string name="new_updates">Доступно је % нових ажурирања!</string>
-    <string name="one_new_update">Доступно је % ново ажурирање!</string>
+    <string name="has_updates">%s има доступна нова ажурирања!</string>
+    <string name="new_updates">Доступно је %s нових ажурирања!</string>
+    <string name="one_new_update">Доступно је %s ново ажурирање!</string>
     <string name="updates_tab_adapter_uninstalled">Деинсталирано</string>
     <string name="updatesTabAdapterUninstall">Деинсталирај</string>
     <string name="flag_good">Добар</string>
@@ -448,8 +450,6 @@
     <string name="subscribe_apps_official_store">Претплатите се на \'апс\' Аптоид Званичну Ап радњу</string>
     <string name="wizard_next">Следеће</string>
     <string name="wizard_prev">Претходно</string>
-    <string name="search_activity_title">\'%\'</string>
-
     <string name="share">Поделите</string>
     <string name="share_on_timeline">Поделите на агенди</string>
 
@@ -461,10 +461,10 @@
     <string name="no_search_results_message">Ваша претрага није дала резултате.\nМолимо, пробајте друге кључне речи.</string>
 
     <string name="developer">Програмер</string>
-    <string name="website">Вебсајт: %</string>
-    <string name="email">Имејл: %</string>
-    <string name="privacy_policy">Правила приватности: %</string>
-    <string name="dialog_version_size">Верзија: %1$ | Величина: %2$</string>
+    <string name="website">Вебсајт: %s</string>
+    <string name="email">Имејл: %s</string>
+    <string name="privacy_policy">Правила приватности: %s</string>
+    <string name="dialog_version_size">Верзија: %1$s | Величина: %2$s</string>
     <string name="na">Н/Д</string>
     <string name="no_email_and_pass_error_message">Молимо унесите имејл и лозинку ради регистрације.</string>
     <string name="no_pass_error_message">Молимо унесите лозинку ради регистрације.</string>
@@ -472,4 +472,5 @@
     <string name="website_copied">Вебсајт копиран на клипборд</string>
     <string name="email_copied">Имејл копиран на клипборд</string>
     <string name="privacy_copied">Линк приватности копиран на клипборд</string>
-    </resources>
+    <string name="setting_category_autoupdate_title">Омогући аутоматско ажурирање %s</string>
+  </resources>

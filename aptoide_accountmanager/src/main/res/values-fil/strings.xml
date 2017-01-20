@@ -36,7 +36,6 @@
  "</string>
     <string name="default_account_type">cm.aptoide.pt</string>
 
-    <string name="facebook_garant_permission_button">Bigyan ng permiso</string>
     <string name="facebook_email_permission_regected_message">"Ang Aptoide ay nangangailangan ng iyong email upang makagawa ng
  account
  "</string>

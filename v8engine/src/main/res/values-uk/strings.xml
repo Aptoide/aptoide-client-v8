@@ -60,7 +60,7 @@
 
     <string name="open_apps_manager">Відкрити Менеджер додатків</string>
 
-    <string name="no_rollbacks_msg">Швидко відкатіть будь-який додаток до попередньої версії та вирішіть питання сумісності нової версії з вашим пристроєм. Збережіть логі усіх ваших встановлених додатків, а також версію і дату встановлення.</string>
+    <string name="no_rollbacks_msg"></string>
 
     <string name="fragment_social_timeline_aptoide_team">Команда Aptoide</string>
     <string name="displayable_social_timeline_store_latest_apps_headline">У цьому магазині є нові Додатки</string>
@@ -106,29 +106,29 @@
     <string name="storage_access_permission_request_message">Будь ласка, відкрийте доступ до пам\'яті вашого телефону, щоб ми змогли завантажити та встановити додаток.</string>
 
     <string name="wizard_skip"><b>Пропустити</b></string>
-    <string name="wizard_welcome_message"><b> 1Ласкаво просимо!</b> 2</string>
-    <string name="wizard_sub_title_viewpager_one">Розпочати<b> 1безпечну</b> 2 та <b> 3веселу</b> 4 подорож</string>
-    <string name="wizard_description_part_one_viewpager_one"><b> 1Шукайте</b> 2 додатки з поміткою
+    <string name="wizard_welcome_message"><b> Ласкаво просимо!</b> </string>
+    <string name="wizard_sub_title_viewpager_one">Розпочати<b> безпечну</b> та <b>веселу</b> подорож</string>
+    <string name="wizard_description_part_one_viewpager_one"><b> Шукайте</b> додатки з поміткою
 \"Перевірено\" для безпечного встановлення додатків</string>
-    <string name="wizard_description_part_two_viewpager_one"><b> 1Знайдіть</b> 2 додатки,
+    <string name="wizard_description_part_two_viewpager_one"><b> найдіть</b> додатки,
 які ви хотіли,
 але не могли знайти.</string>
 
-    <string name="wizard_title_viewpager_two"><b> 1Стрічка додатків</b> 2</string>
-    <string name="wizard_sub_title_viewpager_two">Завантажуйте <b> 1 найновіші додатки</b> 2, знаходьте <b> 3тематичні магазини</b> 4
-та отримуйте <b> 5 персоналізований контент.</b> 6</string>
+    <string name="wizard_title_viewpager_two"><b> Стрічка додатків</b> </string>
+    <string name="wizard_sub_title_viewpager_two">авантажуйте <b>  найновіші додатки</b>, знаходьте <b> тематичні магазини</b>
+та отримуйте <b>  персоналізований контент.</b> </string>
 
-    <string name="wizard_title_viewpager_three"><b> 1приєднатися до спільноти</b> 2</string>
-    <string name="wizard_description_part_one_viewpager_three"><b> 1Підпишіться </b> 2 на своїх друзів</string>
-    <string name="wizard_description_part_two_viewpager_three"><b> 1Коментуйте</b> 2 та оцінюйте додатки</string>
-    <string name="wizard_description_part_three_viewpager_three"><b> 1Cтворіть</b> 2 ваш магазин</string>
+    <string name="wizard_title_viewpager_three"><b> приєднатися до спільноти</b></string>
+    <string name="wizard_description_part_one_viewpager_three"><b>Підпишіться </b> на своїх друзів</string>
+    <string name="wizard_description_part_two_viewpager_three"><b>Коментуйте</b> та оцінюйте додатки</string>
+    <string name="wizard_description_part_three_viewpager_three"><b>Cтворіть</b> ваш магазин</string>
     <string name="wizard_register_now_button">Зареєструватися зараз</string>
     <string name="wizard_be_a_part_of_aptoide">Приєднатися до Aptoide!</string>
-    <string name="wizard_or_login"><u> 1 або Залогінитися </u> 2</string>
+    <string name="wizard_or_login"><u> або Залогінитися </u></string>
 
     <string name="you_need_to_be_logged_in">Вам треба залогінитись</string>
     <string name="follow">Підписатися</string>
     <string name="followed">Ви підписалися</string>
-    
+
     <string name="dialog_install_warning_credibility_text">Перед продовженням, перевірте надійність магазину, перегляньте коментарі користувачів. Ми радимо вам встановлювати лише з %1$s Перевірених додатків.</string>
     </resources>

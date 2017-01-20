@@ -36,7 +36,6 @@
  "</string>
     <string name="default_account_type">cm.aptoide.pt</string>
 
-    <string name="facebook_garant_permission_button">Conceder permissão</string>
     <string name="facebook_email_permission_regected_message">"O Aptoide precisa do seu e-mail para fazer uma
  conta
  "</string>

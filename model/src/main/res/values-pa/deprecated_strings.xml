@@ -107,8 +107,6 @@
 ਗਲਤੀਆਂ ਜੋ ਤੁਹਾਨੂੰ ਦਿਖ ਰਹੀਆਂ ਹਨ</string>
   <string name="feedback_include_logs">ਸਕਰੀਨਸ਼ਾਟ ਅਤੇ ਲਾਗ ਵੀ ਸ਼ਾਮਲ ਕਰੋ</string>
   <string name="feedback_no_email">ਕੋਈ ਈ-ਮੇਲ ਕਲਾਇਟ ਇੰਸਟਾਲ ਨਹੀਂ!</string>
-  <string name="username_tip">ਆਪਣੀ ਈ-ਮੇਲ ਲਿਖੋ</string>
-
   <string name="store_already_added">ਸਟੋਰ ਪਹਿਲਾਂ ਤੋਂ ਹੀ ਸ਼ਾਮਿਲ ਹੈ!</string>
   <string name="subscribe_store">ਸਟੋਰ ਸਬਸਕ੍ਰਾਇਬ ਕਰੋ</string>
 
@@ -203,7 +201,6 @@
   <string name="exclude_update">ਅੱਪਡੇਟ ਅਣਡਿੱਠਾ ਕਰੋ</string>
   <string name="install_update">ਅੱਪਡੇਟ ਇੰਸਟਾਲ ਕਰੋ</string>
 
-  <string name="payment_methods">ਨਾਲ ਭੁਗਤਾਨ ਕਰੋ:</string>
   <string name="cancel">ਰੱਦ ਕਰੋ</string>
   <string name="no_payments_available">ਕੋਈ ਭੁਗਤਾਨ ਉਪਲੱਬਧ ਨਹੀਂ|</string>
   <string name="failed_auth_code">ਖਾਤੇ ਦਾ ਅਧਿਕਾਰ ਫੇਲ੍ਹ ਹੋ ਗਿਆ ਹੈ| ਮੁੜ ਕੋਸ਼ਿਸ ਕਰੋ ਜੀ|</string>
@@ -496,8 +493,6 @@
   <string name="subscribe_apps_official_store">\'ਐਪਸ\' ਐਪਟਾਇਡ ਦੇ ਦਰਜ ਐਪ ਸਟੋਰ ਨੂੰ ਸਬਸਕ੍ਰਾਇਬ ਕਰੋ</string>
   <string name="wizard_next">ਅਗਲਾ</string>
   <string name="wizard_prev">ਪਿਛਲਾ</string>
-  <string name="search_activity_title">\'%s\'</string>
-
   <string name="share">ਸ਼ੇਅਰ</string>
   <string name="share_on_timeline">ਟਾਈਮਲਾਈਨ ਤੇ ਸ਼ੇਅਰ</string>
 

@@ -100,7 +100,6 @@ Mga hakbang na iyong ginawa
 Mga Kamalian na iyong nakikita</string>
     <string name="feedback_include_logs">Isasma ang ScreenShot at mga Log</string>
     <string name="feedback_no_email">Walang naka-install na email client!</string>
-    <string name="username_tip">Ilagay ang iyong email</string>
     <string name="store_already_added">Naidagdag na ang store!</string>
     <string name="subscribe_store">Mag- subskrayb sa Store</string>
     <string name="permissions">Tignan ang mga Permiso</string>
@@ -187,7 +186,6 @@ Mga Kamalian na iyong nakikita</string>
     <string name="exclude_update">Balewalain ang update</string>
     <string name="install_update">Iinstala ang update</string>
 
-    <string name="payment_methods">Bayaran gamit ang:</string>
     <string name="cancel">Kanselahin</string>
     <string name="no_payments_available">Walang pagbabayad ang pwedeng magamit.</string>
     <string name="failed_auth_code">Nabigong i-authorize ang account. Subuking muli.</string>
@@ -456,8 +454,6 @@ Mga Kamalian na iyong nakikita</string>
     <string name="subscribe_apps_official_store">Mag subskrayb \'apps\' Aptoide Official App Store</string>
     <string name="wizard_next">Susunod</string>
     <string name="wizard_prev">Nakaraan</string>
-    <string name="search_activity_title">Ang \'%s\'</string>
-
     <string name="share">Magbahagi</string>
     <string name="share_on_timeline">Magbahagi sa timeline</string>
 
@@ -488,8 +484,8 @@ Mga Kamalian na iyong nakikita</string>
     <string name="friends_to_invite">Ang iba pang Facebook na mga kaibigan sa Aptoide</string>
     <string name="upload_app_backup_apps_installed">Kailangan mo munang i-upload ang app na ito sa iyong store. Maaari mo ng magamit ang Aptoide Backup Apps.</string>
     <string name="upload_app_backup_apps_not_installed">Kailangan mo munang i-upload ang app na ito sa iyong store. Paki-instala at gamitin ang Aptoide Backup Apps.</string>
-    <string name="setting_category_autoupdate">Aptoide Otomatikong update</string>
-    <string name="setting_category_autoupdate_title">Paganahin ang Aptoide otomatikong update</string>
+    <string name="setting_category_autoupdate">%s Otomatikong update</string>
+    <string name="setting_category_autoupdate_title">Paganahin ang %s otomatikong update</string>
     <string name="social_timeline_notifications_sum2">Paganahin ang mga Abiso ng Aptoide Social Timeline. Ikaw ay makakatanggap ng mga pinakabagong balita sa notification bar.</string>
     <string name="ignored">Hindi pinansin</string>
     <string name="application_signature_blacklisted">Ang aplikasyon na lagda ay isang hindi Mapagkakatiwalaang lagda sa Aptoide Anti-Malware na plataporma dahil ito ay nagamit na upang lagdaan ang isa pang aplikasyon na hindi tugma sa lagda na kaugnay sa lehitimong tagalikha (developer).</string>

@@ -106,8 +106,6 @@
 आपणास दिसणाऱ्या त्रुटी</string>
   <string name="feedback_include_logs">स्क्रीनशॉट आणि लॉगचा समावेश करा</string>
   <string name="feedback_no_email">कुठेलेही ईमेल क्लायंट इन्स्टॉल केलेले नाही!</string>
-  <string name="username_tip">आपला ईमेल लिहा</string>
-
   <string name="store_already_added">स्टोर आधीपासूनच जोडलेले आहे!</string>
   <string name="subscribe_store">स्टोरला सब्सक्राइब करा</string>
 
@@ -196,7 +194,6 @@
   <string name="exclude_update">अपडेट दुर्लक्षित करा</string>
   <string name="install_update">अपडेट इन्स्टॉल करा</string>
 
-  <string name="payment_methods">याद्वारे पैसे द्या:</string>
   <string name="cancel">रद्द करा</string>
   <string name="no_payments_available">कुठलेही पेमेंट उपलब्ध नाही.</string>
   <string name="failed_auth_code">खाते अधिकृत करता आले नाही. कृपया पुन्हा प्रयत्न करा.</string>
@@ -491,8 +488,6 @@
   <string name="subscribe_apps_official_store">Aptoide अधिकृत अॅप स्टोर मध्ये \'अॅप्स\' साब्स्कक्राईब करा</string>
   <string name="wizard_next">पुढे</string>
   <string name="wizard_prev">मागे</string>
-  <string name="search_activity_title">\'%s\'</string>
-
   <string name="share">शेअर</string>
   <string name="share_on_timeline">टाईमलाईन वर शेअर करा</string>
 

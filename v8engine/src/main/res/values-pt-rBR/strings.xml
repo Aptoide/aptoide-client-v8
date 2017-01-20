@@ -322,4 +322,9 @@ e acesse um <b>conteúdo personalizado</b>.</string>
 
   <string name="timeline_stats_followers">Seguidores</string>
   <string name="timeline_login_message">O que seus amigos estão instalando?</string>
+    
+  <string name="item_payment_button_use">usar</string>
+  <string name="item_payment_button_register">registrar</string>
+  <string name="item_payment_approving_text">Registrando</string>
+  <string name="activity_payment_more_payments_button">Usar outra opção de pagamento</string>
 </resources>

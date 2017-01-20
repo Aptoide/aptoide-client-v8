@@ -18,14 +18,13 @@
  "</string>
   <string name="no_pass_error_message">ਰਜਿਸਟਰ ਕਰਨ ਲਈ ਇੱਕ ਪਾਸਵਰਡ ਪਾਓ ਜੀ|</string>
   <string name="no_email_error_message">ਰਜਿਸਟਰ ਕਰਨ ਲਈ ਇੱਕ ਈ-ਮੇਲ ਪਾਓ ਜੀ|</string>
-    <string name="password_validation_text">"ਪਾਸਵਰਡ ਘੱਟੋਂ-ਘੱਟ 8 ਅੱਖਰਾਂ ਦਾ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ ਅਤੇ ਇਸ ਵਿਚ 
+    <string name="password_validation_text">"ਪਾਸਵਰਡ ਘੱਟੋਂ-ਘੱਟ 8 ਅੱਖਰਾਂ ਦਾ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ ਅਤੇ ਇਸ ਵਿਚ
 ਘੱਟੋਂ-ਘੱਟ ਇੱਕ ਅੰਗਰੇਜ਼ੀ ਅੱਖਰ ਅਤੇ ਇੱਕ ਨੰਬਰ ਜਾਂ ਖਾਸ ਅੱਖਰ (!@#$%*) ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ
  "</string>
   <string name="logged_as">ਤੁਸੀ ਇਸ ਨਾਮ ਤੋਂ ਲਾਗਇਨ ਹੋ:</string>
   <string name="sign_out">ਸਾਇਨ ਆਉਟ</string>
   <string name="default_account_type">cm.aptoide.pt</string>
 
-  <string name="facebook_garant_permission_button">ਇਜਾਜ਼ਤ ਦਿਓ</string>
   <string name="facebook_email_permission_regected_message">"ਖਾਤਾ ਬਣਾਉਣ ਲਈ ਐਪਟਾਇਡ ਨੂੰ ਇੱਕ ਈ-ਮੇਲ ਦੀ ਲੋੜ ਹੈ
  "</string>
   <string name="user_cancelled">ਉਪਭੋਗਤਾ ਵੱਲੋਂ ਰੱਦ</string>
@@ -51,11 +50,11 @@
   <string name="ws_error_IARG_5">ਗਲਤ hmac ਰੂਪ</string>
   <string name="ws_error_IARG_106">ਈ-ਮੇਲ ਐਡਰੈੱਸ ਸਹੀ ਨਹੀ ਹੈ</string>
   <string name="ws_error_IARG_111">ਗਲਤ passhash ਰੂਪ</string>
-    <string name="ws_error_REPO_4">"ਸਟੋਰ ਦਾ ਨਾਮ ਗਲਤ ਹੈ, ਤੁਸੀ ਸਿਰਫ ਅੱਖਰ, ਅੰਕ  ਜਾਂ ਡੈਸ਼ ਇਸਤੇਮਾਲ ਕਰ 
+    <string name="ws_error_REPO_4">"ਸਟੋਰ ਦਾ ਨਾਮ ਗਲਤ ਹੈ, ਤੁਸੀ ਸਿਰਫ ਅੱਖਰ, ਅੰਕ  ਜਾਂ ਡੈਸ਼ ਇਸਤੇਮਾਲ ਕਰ
 ਸਕਦੇ ਹੋ|"</string>
   <string name="ws_error_REPO_7">ਇਸ ਯੂਜ਼ਰ ਕੋਲ ਪਹਿਲਾਂ ਹੀ ਇੱਕ ਸਹੀ ਸਟੋਰ ਹੈ|</string>
   <string name="ws_error_REPO_5">ਸਟੋਰ ਦਾ ਨਾਮ ਘੱਟੋ-ਘੱਟ 3 ਅੱਖਰ ਲੰਮਾ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ|</string>
-    <string name="ws_error_REPO_6">ਇਹ ਸਟੋਰ ਨਾਮ ਪਹਿਲਾਂ ਹੀ ਲਿਆ ਗਿਆ ਹੈ, ਤੁਹਾਨੂੰ ਕੁੱਝ ਹੋਰ ਨਾਮ ਦੀ ਚੋਣ ਕਰਨ ਦੀ 
+    <string name="ws_error_REPO_6">ਇਹ ਸਟੋਰ ਨਾਮ ਪਹਿਲਾਂ ਹੀ ਲਿਆ ਗਿਆ ਹੈ, ਤੁਹਾਨੂੰ ਕੁੱਝ ਹੋਰ ਨਾਮ ਦੀ ਚੋਣ ਕਰਨ ਦੀ
 ਲੋੜ ਹੈ|</string>
   <string name="ws_error_WOP_3">ਇੱਕ ਸਟੋਰ ਇਸ ਨਾਮ ਦੇ ਨਾਲ ਪਹਿਲਾਂ ਹੀ ਮੌਜੂਦ ਹੈ| ਆਪਣੇ ਸਟੋਰ ਦੇ ਲਈ ਕੋਈ ਹੋਰ ਨਾਮ ਦਿਓ ਜੀ|</string>
   <string name="ws_error_WOP_9">ਦਿੱਤੀ ਗਈ ਈ-ਮੇਲ ਐਪਟਾਇਡ ਵਿੱਚ ਪਹਿਲਾਂ ਹੀ ਮੌਜੂਦ ਹੈ</string>
@@ -66,12 +65,12 @@
     <string name="ws_error_AUTH_1">ਈ-ਮੇਲ ਜਾਂ ਪਾਸਵਰਡ ਲਾਗਇਨ ਕਰਨ ਲਈ ਸਹੀ ਨਹੀ ਹੈ (ਨਾਮ ਦੇ ਅੱਪਡੇਟ
 ਉੱਤੇ)</string>
   <string name="user_created">ਯੂਜ਼ਰ ਬਣਾਇਆ ਗਿਆ</string>
-  <string name="wizard_skip"><b> 1ਛੱਡੋ</b> 2</string>
+  <string name="wizard_skip"><b> ਛੱਡੋ</b> </string>
   <string name="please_wait_upload">ਕਿਰਪਾ ਕਰਕੇ ਉਡੀਕ ਕਰੋ, ਜੇਕਰ ਤੁਸੀ ਅੱਪਲੋਡ ਕਰ ਰਹੇ ਹੋ ਤਾਂ ਸਮਾਂ ਲੱਗ ਸਕਦਾ ਹੈ|</string>
 
 
   <string name="create_user_title">ਇੱਕ ਉਪਭੋਗੀ ਪਰੋਫਾਇਲ ਬਣਾਓ</string>
-  <string name="create_user_header"><b> 1ਆਪਣੀ ਯੂਜ਼ਰ ਪਰੋਫਾਇਲ ਬਣਾਓ</b> 2 ਤਾਂ ਕਿ ਤੁਸੀ ਆਪਣੇ ਦੋਸਤ ਦੇ ਨਾਲ ਰੇਟ, ਕੋਮੇਂਟ ਅਤੇ ਸ਼ੇਅਰ ਕਰ ਸਕੋਂ</string>
+  <string name="create_user_header"><b> ਆਪਣੀ ਯੂਜ਼ਰ ਪਰੋਫਾਇਲ ਬਣਾਓ</b> ਤਾਂ ਕਿ ਤੁਸੀ ਆਪਣੇ ਦੋਸਤ ਦੇ ਨਾਲ ਰੇਟ, ਕੋਮੇਂਟ ਅਤੇ ਸ਼ੇਅਰ ਕਰ ਸਕੋਂ</string>
   <string name="create_user_take_picture">ਆਪਣੀ ਪਰੋਫਾਈਲ ਲਈ ਇੱਕ ਤਸਵੀਰ ਲਵੋ</string>
   <string name="create_user_random_photo">ਜਾਂ ਕੋਈ ਵੀ ਫੋਟੋ ਦਾ ਇਸਤੇਮਾਲ ਕਰੋ</string>
   <string name="create_user_choose_username">ਆਪਣਾ ਉਪਭੋਗਤਾ ਨਾਮ ਚੁਣੋ</string>
@@ -85,13 +84,13 @@
   <string name="no_photo_inserted">ਪ੍ਰੋਫਾਈਲ ਬਣਾਉਣ ਇੱਕ ਫੋਟੋ ਪਾਓ ਜੀ</string>
 
   <string name="user_interests_title">ਤੁਹਾਡੀਆਂ ਪਸੰਦਾਂ</string>
-  <string name="user_interests_header"><b> 1ਸਾਨੂੰ ਆਪਣੀਆ ਪਸੰਦਾਂ ਦਿਖਾਓ</b>" 2 ਅਤੇ  ਤੁਹਾਡੇ ਲਈ ਵਧੀਆ ਐਪਸ ਲਭਣ ਵਿਚ ਸਾਡੀ ਸਹਾਇਤਾ ਕਰੋ ਜੀ"</string>
+  <string name="user_interests_header"><b>ਸਾਨੂੰ ਆਪਣੀਆ ਪਸੰਦਾਂ ਦਿਖਾਓ</b>" ਅਤੇ  ਤੁਹਾਡੇ ਲਈ ਵਧੀਆ ਐਪਸ ਲਭਣ ਵਿਚ ਸਾਡੀ ਸਹਾਇਤਾ ਕਰੋ ਜੀ"</string>
   <string name="user_interests_adult_gambling">ਬਾਲਗ ਅਤੇ ਜੂਆ</string>
   <string name="user_interests_photography_video">ਫੋਟੋਗ੍ਰਾਫੀ ਅਤੇ ਵੀਡੀਓ</string>
   <string name="next">ਅਗਲਾ</string>
 
   <string name="create_store_title">ਆਪਣਾ ਸਟੋਰ ਬਣਾਓ</string>
-  <string name="create_store_header"><b> 1ਆਪਣਾ ਸਟੋਰ ਬਣਾਓ</b> 2 ਅਤੇ %s ਭਾਈਚਾਰੇ ਨਾਲ ਆਪਣੀ ਐਪਸ ਦੀ ਚੋਣ ਸ਼ੇਅਰ ਕਰੋ| <b> 3 ਇਸ ਨੂੰ ਇੱਕ ਕੋਸ਼ਿਸ਼ ਦਿਓ</b> 4</string>
+  <string name="create_store_header"><b> ਆਪਣਾ ਸਟੋਰ ਬਣਾਓ</b> ਅਤੇ %s ਭਾਈਚਾਰੇ ਨਾਲ ਆਪਣੀ ਐਪਸ ਦੀ ਚੋਣ ਸ਼ੇਅਰ ਕਰੋ| <b> ਇਸ ਨੂੰ ਇੱਕ ਕੋਸ਼ਿਸ਼ ਦਿਓ</b></string>
   <string name="create_store_name">ਆਪਣੇ %s ਸਟੋਰ ਲਈ ਇੱਕ ਨਾਮ ਚੁਣੋ</string>
   <string name="create_store_name_inserted">ਤੁਹਾਡੇ ਸਟੋਰ ਦਾ ਨਾਮ</string>
   <string name="create_store_theme">ਸਟੋਰ ਥੀਮ</string>

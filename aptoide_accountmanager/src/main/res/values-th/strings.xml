@@ -33,7 +33,6 @@
     <string name="or">หรือ</string>
     <string name="default_account_type">cm.aptoide.pt</string>
 
-    <string name="facebook_garant_permission_button">รับรองคำอนุญาต</string>
     <string name="facebook_email_permission_regected_message">"Aptoide ต้องการอีเมล์ของคุณเพื่อสร้างบัญชี
  "</string>
     <string name="error_invalid_grant">ไม่มีชื่อผู้ใช้และรหัสผ่านที่เข้ากันได้</string>

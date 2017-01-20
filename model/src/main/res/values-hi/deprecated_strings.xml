@@ -94,7 +94,6 @@
 \n आपके द्वारा किये गये चरण\n त्रुटियाँ जिन्हें आप देख रहें हैं"</string>
     <string name="feedback_include_logs">स्क्रीनशॉट और लॉग शामिल करें</string>
     <string name="feedback_no_email">कोई ईमेल क्लाइंट इन्स्टाल नहीं हुआ!</string>
-    <string name="username_tip">अपना ईमेल लिखें</string>
     <string name="store_already_added">स्टोर पहले से ही जोड़ा जा चुका है!</string>
     <string name="subscribe_store">स्टोर में सब्सक्राइब करें</string>
     <string name="permissions">अनुमतियाँ देखें</string>
@@ -181,7 +180,6 @@
     <string name="exclude_update">अपडेट को अनदेखा करें</string>
     <string name="install_update">अपडेट इन्स्टाल करें</string>
 
-    <string name="payment_methods">इससे पेमेंट करें:</string>
     <string name="cancel">रद्द करें</string>
     <string name="no_payments_available">कोई पेमेंट उपलब्ध नहीं|</string>
     <string name="failed_auth_code">अकाउंट को अधिकृत करने में विफल रहा । कृपया पुन: प्रयास करें।</string>
@@ -362,7 +360,7 @@
     <string name="version_placeholder">वर्शन: %s</string>
 
     <string name="results_subscribed">सब्सक्राइब्ड स्टोर</string>
-    <string name="results_in_store">% स्टोर में खोज परिणाम</string>
+    <string name="results_in_store">%s स्टोर में खोज परिणाम</string>
     <string name="other_stores">स्टोर जिन्हें सब्सक्राइब नहीं किया गया है</string>
     <string name="comments">कमेंट्स</string>
     <string name="reviews">रिव्यूस</string>
@@ -451,8 +449,6 @@
     <string name="subscribe_apps_official_store">\'एप्स\' Aptoide Official App Store में सब्सक्राइब करें</string>
     <string name="wizard_next">आगे</string>
     <string name="wizard_prev">पीछे</string>
-    <string name="search_activity_title">\'%s\'</string>
-
     <string name="share">शेयर करें</string>
     <string name="share_on_timeline">टाइमलाइन पर शेयर करें</string>
 

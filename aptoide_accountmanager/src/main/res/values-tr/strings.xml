@@ -37,7 +37,6 @@ veya özel karakter içermesi gerekmektedir (!@#$%*)
  "</string>
     <string name="default_account_type">cm.aptoide.pt</string>
 
-  <string name="facebook_garant_permission_button">İzin ver</string>
   <string name="facebook_email_permission_regected_message">"Aptoide bir hesap açmak için e-postaya
 ihtiyaç duyuyor
  "</string>

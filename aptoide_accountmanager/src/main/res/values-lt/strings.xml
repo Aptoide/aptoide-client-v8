@@ -35,7 +35,6 @@ bent viena raidė ir bent vienas skaitmuo arba specialusis simbolis (!@#$%*)
  "</string>
     <string name="default_account_type">cm.aptoide.pt</string>
 
-    <string name="facebook_garant_permission_button">Suteikti teisę</string>
     <string name="facebook_email_permission_regected_message">"Aptoide reikalingas jūsų el. pašto adresas, kad būtų sukurta
  paskyra
  "</string>

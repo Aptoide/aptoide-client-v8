@@ -30,7 +30,7 @@
     <string name="feedback_not_valid">Пожалуйста, введите правильный заголовок!</string>
     <string name="ignore_update">Проигнорировать обновление</string>
     <string name="added_to_scheduled">Добавлено в Меню &gt; Загрузки по Расписанию</string>
-    <string name="wizard_skip"><b> Пропустить</b></string>
+    <string name="wizard_skip"><b>Пропустить</b></string>
     <string name="dark">Темный</string>
     <string name="light">Светлый</string>
 
@@ -101,29 +101,29 @@
     <string name="followed_stores">Ваши магазины</string>
     <string name="storage_access_permission_request_message">Пожалуйста откройте доступ к памяти вашего телефона, чтобы мы могли загрузить и установить приложение.</string>
 
-    <string name="wizard_welcome_message"><b> 1Добро пожаловать!</b> 2</string>
-    <string name="wizard_sub_title_viewpager_one">Начать <b>безопасное</b> 2 и <b>веселоe</b> приключение.</string>
+    <string name="wizard_welcome_message"><b>Добро пожаловать!</b></string>
+    <string name="wizard_sub_title_viewpager_one">Начать <b>безопасное</b> и <b>веселоe</b> приключение.</string>
     <string name="wizard_description_part_one_viewpager_one"><b>Ищите</b> приложения со
-значком \"Проверено\" для 
+значком \"Проверено\" для
 безопасной установки.</string>
-    <string name="wizard_description_part_two_viewpager_one"><b> 1Откройте для себя</b> 2 Приложения\nкоторые вы хотели установить,
-\nно не могли найти.</string>
-
+    <string name="wizard_description_part_two_viewpager_one"><b>Откройте для себя</b> Приложения
+которые вы хотели установить,
+но не могли найти.</string>
     <string name="wizard_title_viewpager_two"><b>Лента приложений</b></string>
-    <string name="wizard_sub_title_viewpager_two">Скачайте <b> 1 новинки приложений</b> 2, найдите <b> 3тематические магазины</b> 4\nи получите <b> 5 персонализированный контент.</b> 6</string>
-
-    <string name="wizard_title_viewpager_three"><b> 1присоединитесь к сообществу</b> 2</string>
-    <string name="wizard_description_part_one_viewpager_three"><b> 1Подпишись </b> 2 на своих друзей</string>
-    <string name="wizard_description_part_two_viewpager_three"><b> 1Комментируйте</b> 2 и оценивайте приложения</string>
-    <string name="wizard_description_part_three_viewpager_three"><b> 1Cоздайте</b> 2 ваш магазин</string>
+    <string name="wizard_sub_title_viewpager_two">Скачайте <b> новинки приложений</b>, найдите <b>тематические магазины</b>
+и получите <b> персонализированный контент.</b></string>
+    <string name="wizard_title_viewpager_three"><b>присоединитесь к сообществу</b></string>
+    <string name="wizard_description_part_one_viewpager_three"><b>Подпишись </b> на своих друзей</string>
+    <string name="wizard_description_part_two_viewpager_three"><b>Комментируйте</b> и оценивайте приложения</string>
+    <string name="wizard_description_part_three_viewpager_three"><b>Cоздайте</b> ваш магазин</string>
     <string name="wizard_register_now_button">Зарегистрироваться сейчас</string>
     <string name="wizard_be_a_part_of_aptoide">Присоединиться к Aptoide!</string>
-    <string name="wizard_or_login"><u> 1или Залогиниться </u> 2</string>
+    <string name="wizard_or_login"><u>или Залогиниться </u></string>
 
     <string name="you_need_to_be_logged_in">Вам нужно залогиниться</string>
     <string name="follow">Подписаться</string>
     <string name="followed">Подписка</string>
-    
+
     <string name="dialog_install_warning_proceed_button">Продолжить</string>
     <string name="dialog_install_warning_search_for_trusted_app_button">Искать</string>
     <string name="dialog_install_warning_trusted_app_button">Проверенное Приложение</string>

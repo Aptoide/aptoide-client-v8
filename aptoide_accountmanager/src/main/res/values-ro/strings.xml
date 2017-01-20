@@ -38,7 +38,6 @@ a te înregistra.
   <string name="no_email_error_message">Introdu o adresă de e-mail pentru a te înregistra.</string>
     <string name="default_account_type">cm.aptoide.pt</string>
 
-  <string name="facebook_garant_permission_button">Acordă permisiune</string>
   <string name="error_invalid_grant">Combinație nume de utilizator și parolă nevalidă</string>
   <string name="ws_error_MARG_200">\@string/error_occured</string>
   <string name="ws_error_MARG_203">\@string/error_occured</string>

@@ -36,7 +36,6 @@ Content-Richtlinien für Entwickler zu
  "</string>
     <string name="default_account_type">cm.aptoide.pt</string>
 
-    <string name="facebook_garant_permission_button">Erlaubnis geben</string>
     <string name="facebook_email_permission_regected_message">"Aptoide benötigt Ihre E-Mail, um ein 
 Konto zu erstellen
  "</string>

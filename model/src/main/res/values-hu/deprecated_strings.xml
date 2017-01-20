@@ -95,7 +95,6 @@
 \n Milyen hibákat tapasztal</string>
     <string name="feedback_include_logs">Képernyőképek és naplók mellékelése</string>
     <string name="feedback_no_email">Nincs telepítve e-mail kliens!</string>
-    <string name="username_tip">Adja meg az e-mail címét</string>
     <string name="store_already_added">Az áruház már hozzáadásra került korábban!</string>
     <string name="subscribe_store">Feliratkozás az áruházra</string>
     <string name="permissions">Engedélyek mutatása</string>
@@ -181,7 +180,6 @@
     <string name="exclude_update">Frissítés mellőzése</string>
     <string name="install_update">Frissítés telepítése</string>
 
-    <string name="payment_methods">Fizetés az alábbi módon:</string>
     <string name="cancel">Mégse</string>
     <string name="no_payments_available">Nincs elérhető fizetési mód.</string>
     <string name="failed_auth_code">Sikertelen azonosítás. Kérjük próbálja ismét.</string>
@@ -449,8 +447,6 @@
     <string name="subscribe_apps_official_store">Feliratkozás \'apps\' Aptoide Hivatalos Alkalmazásboltjára</string>
     <string name="wizard_next">Következő</string>
     <string name="wizard_prev">Előző</string>
-    <string name="search_activity_title">\'%s\'</string>
-
     <string name="share">Megosztás</string>
     <string name="share_on_timeline">Megosztás az idővonalon</string>
 

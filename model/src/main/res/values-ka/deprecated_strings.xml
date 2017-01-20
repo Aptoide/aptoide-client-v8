@@ -93,7 +93,6 @@
 მიუთითეთ რაც შეიძლება მეტი დეტალი</string>
     <string name="feedback_include_logs">თან დაურთე სურათი და ინფორმაცია</string>
     <string name="feedback_no_email">ელ.ფოსტის კლიენტი არ არის დაყენებული!</string>
-    <string name="username_tip">შეიყვანეთ თქვენი ელ.ფოსტის მისამართი</string>
     <string name="store_already_added">მარკეტი უკვე დამატებულია!</string>
     <string name="subscribe_store">გამოიწერე მარკეტი</string>
     <string name="permissions">ნახეთ ნებართვები</string>
@@ -115,7 +114,7 @@
     <string name="starting_download">იწყება გადმოწერა</string>
     <string name="installing">%s ყენდება…</string>
     <string name="finished_install">%s დაყენდა.</string>
-    <string name="aptoide_downloading">მიმდინარეობს გადმოწერა</string>
+    <string name="aptoide_downloading">მიმდინარეობს გადმოწერა %s</string>
     <string name="remaining_time">დარჩა</string>
     <string name="data_usage_constraint">გადმოწერა არ არის ნებადართული. იხილეთ: პარამეტრები &gt; გადმოწერის წესები</string>
     <string name="download_pending">მოლოდინში</string>
@@ -180,7 +179,6 @@
     <string name="exclude_update">განახლების იგნორირება</string>
     <string name="install_update">დააყენე განახლება</string>
 
-    <string name="payment_methods">გადაიხადეთ:</string>
     <string name="cancel">გაუქმება</string>
     <string name="no_payments_available">გადახდის ფორმები ხელმიუწვდომელია.</string>
     <string name="failed_auth_code">ავტორიცაზიის დროს დაფიქსირდა შეცდომა. სცადეთ ახლიდან.</string>
@@ -403,7 +401,7 @@
     <string name="notification_timeline_activity">თქვენ გაქვთ %1$s ახალი კომენტარი და %2$s ახალი მოწონება. შეამოწმეთ სოციალური გვერდი!</string>
     <string name="notification_timeline_posts">თქვენმა მეგობრებმა ახალი აპლიკაციები დააყენეს!</string>
 
-    <string name="has_updates">ხელმისაწვდომია განახლებები!</string>
+    <string name="has_updates">%s ხელმისაწვდომია განახლებები!</string>
     <string name="new_updates">ხელმისაწვდომია %s განახლება!</string>
     <string name="one_new_update">ხელმისაწვდომია %s განახლება!</string>
     <string name="updates_tab_adapter_uninstalled">წაშლილი</string>
@@ -434,8 +432,6 @@
     <string name="subscribe_apps_official_store">გამოიწერე \"apps\", Aptoide-ის ოფიციალური მარკეტი</string>
     <string name="wizard_next">შემდეგი</string>
     <string name="wizard_prev">წინა</string>
-    <string name="search_activity_title">\' %s \'</string>
-
     <string name="share">გააზიარე</string>
     <string name="share_on_timeline">გააზიარე სოციალურ გვერდზე</string>
 
@@ -485,7 +481,7 @@
   <string name="rollback_empty">ხარვეზის აღმოჩენი შემთხვევაში, მარტივად დააყენეთ აპლიკაციის ძველი ვერსია.</string>
 
   <string name="error_occured_retry_later">დაფიქსირდა ხერვეზი. Aptoide მოგვიანებით ავტომატურად სცდის თავიდან.</string>
-  <string name="unsubscribing_store_message">გამოწერა უქმდება</string>
+  <string name="unsubscribing_store_message">გამოწერა უქმდება %s</string>
 
   <string name="reason_unknown">%s -ის ანტი საზიანო ბაზაში, ამ აპლიკაციაზე არ არის საკმარისი ინფორმაცია.</string>
 

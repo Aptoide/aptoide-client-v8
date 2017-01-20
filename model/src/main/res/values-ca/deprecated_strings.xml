@@ -80,7 +80,6 @@
     <string name="feedback_subject">Assumpte</string>
     <string name="feedback_include_logs">Inclou captures de pantalla i registres</string>
     <string name="feedback_no_email">No hi ha cap client d\'email instal·lat!</string>
-    <string name="username_tip">Introdueix el teu email</string>
     <string name="store_already_added">Botiga ja afegida!</string>
     <string name="permissions">Permisos</string>
     <string name="no_permissions_required">No es requereixen permisos per a aquesta app.</string>
@@ -132,7 +131,6 @@
     <string name="no_excluded_updates">No hi ha actualitzacions excloses</string>
     <string name="no_excluded_updates_selected">No hi ha actualitzacions excloses seleccionades</string>
     <string name="exclude_update">Ignorar actualització</string>
-    <string name="payment_methods">Pagar amb:</string>
     <string name="cancel">Cancel·lar</string>
     <string name="no_payments_available">No hi ha pagaments disponibles.</string>
     <string name="failed_auth_code">Error en l\'autorització del compte. Sisplau, intenta-ho de nou.</string>

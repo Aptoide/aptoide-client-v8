@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<resources><string name="developer_website">Вебсајт: %</string>
+<resources><string name="developer_website">Вебсајт: %s</string>
     <string name="not_available">Н/Д</string>
-    <string name="developer_email">Имејл: %</string>
-    <string name="developer_privacy_policy">Правила приватности: %</string>
+    <string name="developer_email">Имејл: %s</string>
+    <string name="developer_privacy_policy">Правила приватности: %s</string>
 
 
     <string name="open">Отвори</string>

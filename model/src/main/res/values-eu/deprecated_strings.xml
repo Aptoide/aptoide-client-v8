@@ -94,7 +94,6 @@
 \n Aurrera eramandako pausuak\n Ikusi ditusun akatsak</string>
     <string name="feedback_include_logs">ScreenShot eta sarbideak sartu</string>
     <string name="feedback_no_email">Ez da email bezerorik instalatu!</string>
-    <string name="username_tip">Idatzi zure emaila</string>
     <string name="store_already_added">Denda gehitu da dagoeneko!</string>
     <string name="subscribe_store">Dendara harpidetu</string>
     <string name="permissions">Baimenak ikusi</string>
@@ -181,7 +180,6 @@
     <string name="exclude_update">Eguneratzea alde batera utzi</string>
     <string name="install_update">Eguneratzea instalatu</string>
 
-    <string name="payment_methods">Ordaintzeko sistema:</string>
     <string name="cancel">Kantzelatu</string>
     <string name="no_payments_available">Ez dago ordainketarik eskuragarri.</string>
     <string name="failed_auth_code">Ezin izan da kontua baimendu. Mesedez saiatu berriro.</string>
@@ -448,8 +446,6 @@
     <string name="subscribe_apps_official_store">Aptoide Official App Store aplikazioetara harpidetu</string>
     <string name="wizard_next">Hurrengoa</string>
     <string name="wizard_prev">Aurrekoa</string>
-    <string name="search_activity_title">\'%s\'</string>
-
     <string name="share">Konpartitu</string>
     <string name="share_on_timeline">Denbora-lerroan konpartitu</string>
 

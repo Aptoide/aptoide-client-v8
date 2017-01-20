@@ -94,7 +94,6 @@
 \n הצעדים שביצעת\n השגיאות המופיעות</string>
     <string name="feedback_include_logs">הוספת צילומי מסך ורשומות יומן</string>
     <string name="feedback_no_email">אין לקוח דוא״ל מותקן!</string>
-    <string name="username_tip">נא להזין את הדוא״ל שלך</string>
     <string name="store_already_added">החנות כבר נוספה!</string>
     <string name="subscribe_store">הרשמה לחנות</string>
     <string name="permissions">הצגת ההרשאות</string>
@@ -180,7 +179,6 @@
     <string name="exclude_update">התעלמות מעדכון</string>
     <string name="install_update">התקנת עדכון</string>
 
-    <string name="payment_methods">תשלום באמצעות:</string>
     <string name="cancel">ביטול</string>
     <string name="no_payments_available">אין תשלומים זמינים.</string>
     <string name="failed_auth_code">אימות החשבון נכשל. נא לנסות שוב.</string>
@@ -416,7 +414,7 @@
 
     <string name="has_updates">ליישומון %s יש עדכונים חדשים זמינים!</string>
     <string name="new_updates">ישנם %s עדכונים חדשים זמינים!</string>
-    <string name="one_new_update">קיים עדכון אחד חדש זמין!</string>
+    <string name="one_new_update">קיים %s עדכון אחד חדש זמין!</string>
     <string name="updates_tab_adapter_uninstalled">לא מותקן</string>
     <string name="updatesTabAdapterUninstall">הסרה</string>
     <string name="flag_good">טוב</string>
@@ -448,8 +446,6 @@
     <string name="subscribe_apps_official_store">הרשמה ל־‚apps‘ בחנות היישומונים הרשמית של אפטויד</string>
     <string name="wizard_next">הבא</string>
     <string name="wizard_prev">הקודם</string>
-    <string name="search_activity_title">\'%s\'</string>
-
     <string name="share">שיתוף</string>
     <string name="share_on_timeline">שיתוף בציר הזמן</string>
 

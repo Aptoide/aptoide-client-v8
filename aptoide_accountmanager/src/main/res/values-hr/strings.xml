@@ -36,8 +36,7 @@ najmanje jedno slovo i jedan broj ili specijalni znak (!@#$%*)
  "</string>
     <string name="default_account_type">cm.aptoide.pt</string>
 
-  <string name="facebook_garant_permission_button">Odobri dozvolu</string>
-    <string name="facebook_email_permission_regected_message">"Aptoide zahtjeva vaš e-mail za izradu
+  <string name="facebook_email_permission_regected_message">"Aptoide zahtjeva vaš e-mail za izradu
  računa
  "</string>
   <string name="error_invalid_grant">Netočna kombinacija korisničkog imena i šifre</string>

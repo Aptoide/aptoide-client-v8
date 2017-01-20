@@ -40,7 +40,6 @@ courriel
     <string name="accept_terms">"En vous inscrivant vous acceptez les Conditions d\'Utilisation d\'Aptoide
 et la Politique de Contenu pour développeurs
  "</string>
-    <string name="facebook_garant_permission_button">Autoriser</string>
     <string name="ws_error_invalid_grant">Combinaison utilisateur / mot de passe non valide</string>
     <string name="ws_error_REPO_4">Le nom de boutique est erroné, vous ne pouvez utiliser que
 des lettres, nombres et tirets.</string>
@@ -129,4 +128,26 @@ vous connecter (après mise à jour du nom)</string>
   <string name="nothing_inserted_store">Veuillez saisir un nom pour créer votre boutique</string>
   <string name="nothing_inserted_user">Veuillez saisir un nom d’utilisateur et une photo (facultative) pour créer votre profil</string>
   <string name="create_user_bad_photo">Veuillez choisir une image avec une résolution d’au moins 300 x 300</string>
-  </resources>
+  <string name="facebook_grant_permission_button">Donner le droit</string>
+  <string name="ws_error_API_1">L\'image est incorrecte.</string>
+    <string name="edit_store_header">Mettez à jour votre boutique avec une belle image et une description attirante.</string>
+  <string name="create_store_description_title">Description de votre boutique</string>
+  <string name="create_store_description_hint">Description de votre boutique</string>
+  <string name="edit_store_title">Modifier votre boutique</string>
+  <string name="save_edit_store">Enregistrer</string>
+
+  <string name="image_requirements_popup_message">L\'image présente les erreurs suivantes :
+</string>
+  <string name="image_requirements_error_min_height">- La hauteur est inférieure à la taille minimale de 600px
+</string>
+  <string name="image_requirements_error_max_height">- La hauteur est supérieure à taille maximale de 10240px
+</string>
+  <string name="image_requirements_error_min_width">- La largeur est inférieure à la taille minimale de 600px
+</string>
+  <string name="image_requirements_error_max_width">- La largeur est supérieure à la taille maximale de 10240px
+</string>
+  <string name="image_requirements_error_max_file_size">- La taille est supérieure au maximum autorisé (5 Mb)
+</string>
+  <string name="image_requirements_error_popup_title">Image</string>
+
+</resources>

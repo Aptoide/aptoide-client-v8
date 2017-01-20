@@ -43,7 +43,7 @@
   <string name="highlighted">Wyróźnione</string>
   <string name="top_apps_in_store">Najlepsze aplikacje</string>
   <string name="apps_for_kids">Aplikacje dla dzieci</string>
-  <string name="aptoide_publishers">Partnerzy Aptoide</string>
+  <string name="aptoide_publishers">Partnerzy %s</string>
   <string name="music_video">Muzyka i Wideo</string>
   <string name="essential_apps">Niezbędne aplikacje</string>
   <string name="dialog_install_warning_proceed_button">Kontynuuj</string>
@@ -68,4 +68,6 @@
   <string name="play_it">Play-It!</string>
 
   <string name="dialog_install_warning_search_for_trusted_app_button">Znajdź</string>
+  <string name="wizard_skip"><b>POMIŃ</b></string>
+  <string name="include_system_apps_title">Uwzględnij aplikacje systemowe</string>
   </resources>

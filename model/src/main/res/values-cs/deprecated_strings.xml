@@ -95,7 +95,6 @@
 \n Chyby, na které jste narazili</string>
     <string name="feedback_include_logs">Připojit screenshoty a logy</string>
     <string name="feedback_no_email">Žádný emailový klient není nainstalován!</string>
-    <string name="username_tip">Zadejte Váš e-mail</string>
     <string name="store_already_added">Obchod je již přidán!</string>
     <string name="subscribe_store">Přihlásit obchod</string>
     <string name="permissions">Oprávnění</string>
@@ -181,7 +180,6 @@
     <string name="exclude_update">Ignorovat aktualizaci</string>
     <string name="install_update">Instalovat aktualizaci</string>
 
-    <string name="payment_methods">Způsob platby:</string>
     <string name="cancel">Zrušit</string>
     <string name="no_payments_available">Žádné platby nejsou k dispozici.</string>
     <string name="failed_auth_code">Nepodařilo se autorizovat účet. Zkuste to prosím znovu.</string>
@@ -451,8 +449,6 @@
     <string name="subscribe_apps_official_store">Přihlásit se k odběru novinek z aplikací Aptoide Official App Store</string>
     <string name="wizard_next">Další</string>
     <string name="wizard_prev">Předchozí</string>
-    <string name="search_activity_title">\'%s\'</string>
-
     <string name="share">Sdílet</string>
     <string name="share_on_timeline">Sdílet na časové ose</string>
 

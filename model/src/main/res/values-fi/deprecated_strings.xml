@@ -95,7 +95,6 @@
 \n Mitä virheitä näit</string>
     <string name="feedback_include_logs">Sisällytä kuvaruutukopio ja lokit</string>
     <string name="feedback_no_email">Sähköpostiohjelmaa ei ole asennettuna!</string>
-    <string name="username_tip">Kirjoita sähköpostiosoitteesi</string>
     <string name="store_already_added">Kauppa on jo lisätty!</string>
     <string name="subscribe_store">Tilaa kauppa</string>
     <string name="permissions">Näytä luvat</string>
@@ -182,7 +181,6 @@
     <string name="exclude_update">Ohita päivitys</string>
     <string name="install_update">Asenna päivitys</string>
 
-    <string name="payment_methods">Maksutapa:</string>
     <string name="cancel">Peruuta</string>
     <string name="no_payments_available">Ei maksuja saatavilla.</string>
     <string name="failed_auth_code">Tilin valtuutus epäonnistui. Yritä uudelleen.</string>
@@ -454,8 +452,6 @@ arvostelu</string>
     <string name="subscribe_apps_official_store">Tilaa \'apps\', Aptoiden virallinen sovelluskauppa</string>
     <string name="wizard_next">Seuraava</string>
     <string name="wizard_prev">Edellinen</string>
-    <string name="search_activity_title">\'%s\'</string>
-
     <string name="share">Jaa</string>
     <string name="share_on_timeline">Jaa aikajanalla</string>
 

@@ -95,7 +95,6 @@
 \n خطاهایی که مشاهده کرده‌اید</string>
     <string name="feedback_include_logs">ضمیمه کردن اسکرین‌شات و لاگ</string>
     <string name="feedback_no_email">برای نظر دادن باید یک برنامه دریافت و ارسال ایمیل روی گوشی خود نصب کنید!</string>
-    <string name="username_tip">ایمیل خود را وارد کنید</string>
     <string name="store_already_added">فروشگاه قبلا اضافه شده!</string>
     <string name="subscribe_store">مشترک فروشگاه شوید</string>
     <string name="permissions">مشاهده مجوزها</string>
@@ -116,7 +115,7 @@
     <string name="sd_error_jolla">به درستی دانلود نشد</string>
     <string name="starting_download">شروع دانلود</string>
     <string name="installing">%s در حال نصب…</string>
-    <string name="finished_install">s% نصب شده است.</string>
+    <string name="finished_install">%s نصب شده است.</string>
     <string name="aptoide_downloading">%s در حال دانلود است</string>
     <string name="remaining_time">باقی‌مانده</string>
     <string name="data_usage_constraint">عملیات دانلود در تنظیمات داری مجوز نمی باشد &gt; قوانین دانلود عمومی</string>
@@ -182,7 +181,6 @@
     <string name="exclude_update">به‌روز‌رسانی نکردن</string>
     <string name="install_update">به‌روزرسانی اپ</string>
 
-    <string name="payment_methods">پرداخت با:</string>
     <string name="cancel">انصراف</string>
     <string name="no_payments_available">هیچ روش پرداختی در دسترس نیست.</string>
     <string name="failed_auth_code">اعتبارسنجی حساب ممکن نیست. لطفاً دوباره تلاش کنید.</string>
@@ -450,8 +448,6 @@
     <string name="subscribe_apps_official_store">مشترک \'apps\' در فروشگاه رسمی اپ‌توید شوید</string>
     <string name="wizard_next">بعدی</string>
     <string name="wizard_prev">قبلی</string>
-    <string name="search_activity_title">\'%s\'</string>
-
     <string name="share">به اشتراک گذاشتن</string>
     <string name="share_on_timeline">به اشتراک گذاشتن در تایم‌لاین</string>
 
@@ -469,9 +465,11 @@
     <string name="dialog_version_size">نسخه: %1$s | سایز: %2$s</string>
     <string name="na">N/A</string>
     <string name="no_email_and_pass_error_message">لطفاً برای ثبت نام ایمیل و رمز خود را وارد کنید.</string>
-    <string name="no_pass_error_message">لطفاً برای ثبت نام یک رمز عبور وارد نمایید.</string>
+    <string name="no_pass_error_message">لطفاً برای ثبت نام یک رمز عبور وارد کنید.</string>
     <string name="no_email_error_message">لطفاً برای ثبت نام یک ایمیل وارد کنید.</string>
     <string name="website_copied">وب سایت در کلیپ بورد کپی شد</string>
     <string name="email_copied">ایمیل در کلیپ بورد کپی شد</string>
     <string name="privacy_copied">لینک حریم خصوصی در کلیپ بورد کپی شد</string>
-    </resources>
+    <string name="all_stores">همه فروشگاه‌ها</string>
+  <string name="followed_stores">فروشگاه‌های دنبال شده</string>
+  </resources>

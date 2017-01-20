@@ -22,7 +22,6 @@
   <string name="sign_out">साइन आऊट</string>
   <string name="default_account_type">cm.aptoide.pt</string>
 
-  <string name="facebook_garant_permission_button">परवानगी द्या</string>
   <string name="facebook_email_permission_regected_message">"खाते तयार करण्यासाठी Aptoide ला आपल्या इमेलची
 गरज आहे.
  "</string>

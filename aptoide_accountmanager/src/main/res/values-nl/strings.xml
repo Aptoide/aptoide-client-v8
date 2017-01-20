@@ -38,8 +38,7 @@
  "</string>
     <string name="default_account_type">cm.aptoide.pt</string>
 
-  <string name="facebook_garant_permission_button">Toestemming geven</string>
-    <string name="facebook_email_permission_regected_message">"Aptoide heeft je e-mail nodig om een
+  <string name="facebook_email_permission_regected_message">"Aptoide heeft je e-mail nodig om een
  account te maken
  "</string>
   <string name="error_invalid_grant">Ongeldige combinatie van gebruikersnaam en wachtwoord</string>

@@ -282,8 +282,8 @@
 
   <string name="install_app_outter_pt1">ストアは、まだアプリケーションがありません。</string>
   <string name="install_app_outter_pt2">世界と共有するアプリをアップロードしましょう!</string>
-  <string name="install_app_inner">%1$s をインストール</string>
-  <string name="open_app_inner">%1$s を開く</string>
+  <string name="install_app_inner">" %1$s をインストール "</string>
+  <string name="open_app_inner">" %1$s を開く "</string>
   <string name="downloads_count">ダウンロード: %1$s</string>
   <string name="version_number">バージョン: %1$s</string>
   <string name="app_size">サイズ: %1$s</string>
@@ -323,4 +323,16 @@
 
   <string name="timeline_stats_followers">フォロワー</string>
   <string name="timeline_login_message">友達は何をインストールしていますか?</string>
+<string name="social_timeline_shared_by">%1$s が共有</string>
+
+  <string name="edit_store">編集</string>
+
+  <string name="private_followers_message">%d のフォロワーが非公開</string>
+  <string name="private_following_message">%d の非公開ユーザー/ストアをフォローしています</string>
+
+  <string name="item_payment_button_use">使用</string>
+  <string name="item_payment_button_register">登録</string>
+  <string name="item_payment_approving_text">承認中</string>
+  <string name="activity_payment_more_payments_button">別の支払方法を使用する</string>
+
 </resources>

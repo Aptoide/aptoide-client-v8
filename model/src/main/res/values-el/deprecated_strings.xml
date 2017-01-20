@@ -100,7 +100,6 @@
  Προβλήματα που είδατε</string>
     <string name="feedback_include_logs">Συμπεριλάβετε Αποτύπωμα οθόνης (ScreenShot) και Αρχεία καταγραφής</string>
     <string name="feedback_no_email">Δεν έχει εγκατασταθεί εφαρμογή ηλεκτρονικού ταχυδρομείου!</string>
-    <string name="username_tip">Πληκτρολογείστε το email σας</string>
     <string name="store_already_added">Το κατάστημα έχει ήδη προστεθεί!</string>
     <string name="subscribe_store">Εγγραφή Καταστήματος</string>
     <string name="permissions">Δικαιώματα</string>
@@ -185,7 +184,6 @@
     <string name="exclude_update">Αγνόηση Ενημέρωσης</string>
     <string name="install_update">Εγκατάσταση Ενημέρωσης</string>
 
-    <string name="payment_methods">Πληρωμή με:</string>
     <string name="cancel">Άκυρο</string>
     <string name="no_payments_available">Καμία πληρωμή διαθέσιμη.</string>
     <string name="failed_auth_code">Αποτυχία πιστοποίησης λογαριασμού. Παρακαλώ προσπαθήστε πάλι.</string>
@@ -449,8 +447,6 @@
     <string name="subscribe_apps_official_store">Εγγραφή στο \'apps\' Επίσημο Κατάστημα Aptoide</string>
     <string name="wizard_next">Επόμενο</string>
     <string name="wizard_prev">Προηγούμενο</string>
-    <string name="search_activity_title">\'%s\'</string>
-
     <string name="share">Κοινοποίηση</string>
     <string name="share_on_timeline">Κοινοποίηση στο Χρονολόγιο</string>
 

@@ -100,7 +100,6 @@
  Gördüğünüz hatalar</string>
     <string name="feedback_include_logs">Ekran fotoğraflarını ve kütükleri dahil et</string>
     <string name="feedback_no_email">Hiçbir e-posta istemcisi kurulu değil!</string>
-    <string name="username_tip">E-postanızı yazın</string>
     <string name="store_already_added">Mağaza zaten eklendi!</string>
     <string name="subscribe_store">Mağazaya abone ol</string>
     <string name="permissions">İzinleri Gör</string>
@@ -186,7 +185,6 @@
     <string name="exclude_update">Güncellemeyi Görmezden Gel</string>
     <string name="install_update">Güncellemeyi Kur</string>
 
-    <string name="payment_methods">Birlikte öde:</string>
     <string name="cancel">İptal et</string>
     <string name="no_payments_available">Hiçbir ödeme bulunamadı.</string>
     <string name="failed_auth_code">Hesabın izninin açılması başarısız oldu. Tekrar deneyiniz.</string>
@@ -221,7 +219,7 @@ Telefon operatörünüz faturalandıracaktır.
     <string name="more_editors_choice">Daha Fazla Editörün Seçimi</string>
     <string name="more_versions">Daha Fazla Sürüm</string>
     <string name="facebook_friends_list_using_timeline_empty">Sosyal Zaman Çizelgesi uygulamalarınızı Facebook arkadaşlarınız ile paylaşmanıza izin veriyor. Ağa katılmak istiyor musunuz?</string>
-    <string name="X_download_number">indirme.</string>
+    <string name="X_download_number">%s indirme.</string>
     <string name="timeline_not_compatible">Ooohhh… Bu işlev Android sürümünüzle uyumlu değildir</string>
     <string name="sponsored">Sponsorlu</string>
     <string name="friends_installs">Arkadaşlarının kurdukları</string>
@@ -454,8 +452,6 @@ Telefon operatörünüz faturalandıracaktır.
     <string name="subscribe_apps_official_store">Resmî Aptoide Uyglama Mağazasında \'uygulamalara\' abone olun</string>
     <string name="wizard_next">Sonraki</string>
     <string name="wizard_prev">Önceki</string>
-    <string name="search_activity_title">\'%s\'</string>
-
     <string name="share">Paylaş</string>
     <string name="share_on_timeline">Zaman Çizelgesinde paylaş</string>
 
@@ -489,7 +485,7 @@ Telefon operatörünüz faturalandıracaktır.
   <string name="upload_app_backup_apps_installed">Önce bu uygulamayı mağazanıza yüklemeniz gerekir. Aptoide Yedekleme Uygulamalarını kullanabilirsiniz.</string>
   <string name="upload_app_backup_apps_not_installed">Önce bu uygulamayı mağazanıza yüklemeniz gerekir. Lütfen kurun ve Aptoide Yedekleme Uygulamalarını kullanın.</string>
   <string name="setting_category_autoupdate">%s Otomatik güncelleme</string>
-  <string name="setting_category_autoupdate_title">%S otomatik güncelleştirmeyi etkinleştir</string>
+  <string name="setting_category_autoupdate_title">%s otomatik güncelleştirmeyi etkinleştir</string>
   <string name="change_theme_soon">Çok yakında</string>
   <string name="social_timeline_notifications_sum2">Aptoide Sosyal Zaman Tüneli Bildirimlerini etkinleştirin. Son haberleri bildirim çubuğunda alacaksınız.</string>
   <string name="ignored">Görmezden gelindi</string>

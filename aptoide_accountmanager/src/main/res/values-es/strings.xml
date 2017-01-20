@@ -36,7 +36,6 @@ y la Política de Contenido de los Desarrolladores
  "</string>
     <string name="default_account_type">cm.aptoide.pt</string>
 
-    <string name="facebook_garant_permission_button">Conceder permiso</string>
     <string name="facebook_email_permission_regected_message">"Aptoide necesita tu email para crear una
  cuenta
  "</string>

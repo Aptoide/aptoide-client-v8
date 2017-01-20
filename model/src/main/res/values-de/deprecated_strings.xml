@@ -99,7 +99,6 @@ Schritte, die Sie durchgeführt haben
 Probleme, die Sie begegnet sind</string>
     <string name="feedback_include_logs">Bildschirmaufnahme und Protokolle miteinbeziehen</string>
     <string name="feedback_no_email">Keine E-Mail-Anwendung installiert!</string>
-    <string name="username_tip">Geben Sie Ihre E-Mail ein</string>
     <string name="store_already_added">Store bereits hinzugefügt!</string>
     <string name="subscribe_store">Store abonnieren</string>
     <string name="permissions">Siehe Berechtigungen</string>
@@ -186,7 +185,6 @@ Probleme, die Sie begegnet sind</string>
     <string name="exclude_update">Aktualisierung ignorieren</string>
     <string name="install_update">Aktualisierung installieren</string>
 
-    <string name="payment_methods">Bezahlen mit:</string>
     <string name="cancel">Abbrechen</string>
     <string name="no_payments_available">Keine Zahlungen zur Verfügung.</string>
     <string name="failed_auth_code">Die Autorisierung des Kontos ist fehlgeschlagen. Bitte versuchen Sie es erneut.</string>
@@ -456,8 +454,6 @@ Probleme, die Sie begegnet sind</string>
     <string name="subscribe_apps_official_store">Abonnieren Sie \'apps\' Aptoide Official App Store</string>
     <string name="wizard_next">Nächstes</string>
     <string name="wizard_prev">Vorhergehendes</string>
-    <string name="search_activity_title">\'%s\'</string>
-
     <string name="share">Teilen</string>
     <string name="share_on_timeline">Auf Timeline teilen</string>
 

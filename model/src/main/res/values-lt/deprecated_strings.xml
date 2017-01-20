@@ -95,7 +95,6 @@
 \n Kokias klaidas matote</string>
     <string name="feedback_include_logs">Įtraukti ekrano nuotrauką ir registrus</string>
     <string name="feedback_no_email">Nėra įdiegto el. pašto kliento!</string>
-    <string name="username_tip">Įrašykite savo el. paštą</string>
     <string name="store_already_added">Saugykla jau pridėta!</string>
     <string name="subscribe_store">Prenumeruoti parduotuvę</string>
     <string name="permissions">Peržiūrėti teises</string>
@@ -181,7 +180,6 @@
     <string name="exclude_update">Ignoruoti atnaujinimą</string>
     <string name="install_update">Įdiegti atnaujinimą</string>
 
-    <string name="payment_methods">Mokėti su:</string>
     <string name="cancel">Atšaukti</string>
     <string name="no_payments_available">Nėra galimų mokėjimų.</string>
     <string name="failed_auth_code">Sąskaitos autorizacija nepavyko. Bandykite dar kartą.</string>
@@ -451,8 +449,6 @@ teikėjas.
     <string name="subscribe_apps_official_store">Prenumeruoti \'apps\' Aptoide oficialioje programėlių parduotuvėje</string>
     <string name="wizard_next">Kitas</string>
     <string name="wizard_prev">Ankstesnis</string>
-    <string name="search_activity_title">\'%s\'</string>
-
     <string name="share">Dalintis</string>
     <string name="share_on_timeline">Dalintis ant sienos</string>
 
@@ -485,8 +481,8 @@ teikėjas.
     <string name="friends_to_invite">Visi kiti Facebook draugai Aptoide</string>
     <string name="upload_app_backup_apps_installed">Jums reikia įkelti šią programėlę į savo parduotuvę. Galite naudoti Aptoide atsarginių kopijų kūrimo programėles.</string>
     <string name="upload_app_backup_apps_not_installed">Jums reikia įkelti šią programėlę į savo parduotuvę. Prašome įdiegti ir naudoti Aptoide atsarginių kopijų kūrimo programėles.</string>
-    <string name="setting_category_autoupdate">Aptoide Automatinis naujinimas</string>
-    <string name="setting_category_autoupdate_title">Įgalinti Aptoide Automatinis naujinimą</string>
+    <string name="setting_category_autoupdate">%s Automatinis naujinimas</string>
+    <string name="setting_category_autoupdate_title">Įgalinti %s Automatinis naujinimą</string>
     <string name="social_timeline_notifications_sum2">Įgalinti Aptoide bendravimo sienos pranešimus. Jūs gausite naujausią informaciją pranešimų juostoje.</string>
     <string name="ignored">Ignoruojama</string>
     <string name="application_signature_blacklisted">Programa nėra patikimų sąraše Aptoide anti-kenkėjiškų programų platformoje, nes ji buvo naudojama pasirašant kitą programą, kuri nesutampa su teisėto kūrėjo parašu.</string>

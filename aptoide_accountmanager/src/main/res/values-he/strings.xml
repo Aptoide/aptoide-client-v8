@@ -35,7 +35,6 @@
     <string name="unknown_error">שגיאה בלתי ידועה</string>
     <string name="default_account_type">cm.aptoide.pt</string>
 
-    <string name="facebook_garant_permission_button">הענקת הרשאה</string>
     <string name="error_invalid_grant">הצירוף בין שם המשתמש והססמה שגוי</string>
     <string name="ws_error_MARG_200">\@string/error_occured</string>
     <string name="ws_error_MARG_203">\@string/error_occured</string>

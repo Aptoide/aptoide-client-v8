@@ -80,7 +80,6 @@
     <string name="feedback_subject">subject</string>
     <string name="feedback_include_logs">screen shot ané logs include karo</string>
     <string name="feedback_no_email">koi grahk no email install nathi</string>
-    <string name="username_tip">tamaró email type karo</string>
     <string name="store_already_added">store added</string>
     <string name="subscribe_store">subscribe store</string>
     <string name="no_permissions_required">á app mate koi parvangi ni jarur nathi</string>
@@ -139,7 +138,6 @@
     <string name="no_excluded_updates">koi pan excluded updates nathi</string>
     <string name="no_excluded_updates_selected">koi pan exculded updates tame select nathi karia</string>
     <string name="exclude_update">update ignore karo</string>
-    <string name="payment_methods">thi pay karo</string>
     <string name="cancel">cancel</string>
     <string name="no_payments_available">koi pan payment sulabh nathi</string>
     <string name="failed_auth_code">account authorize fail thaiyu che. Mehrbani kari farithi koshish karo</string>

@@ -97,7 +97,6 @@
  Ошибки, которые вы видите</string>
     <string name="feedback_include_logs">Включить снимок экрана и логи</string>
     <string name="feedback_no_email">Нет установленных email клиентов!</string>
-    <string name="username_tip">Введите email</string>
     <string name="store_already_added">Магазин уже добавлен!</string>
     <string name="subscribe_store">Подписаться на магазин</string>
     <string name="additional_permissions">Дополнительные Разрешения</string>
@@ -180,7 +179,6 @@
     <string name="exclude_update">Проигнорировать обновление</string>
     <string name="install_update">Установить Обновление</string>
 
-    <string name="payment_methods">Оплатить с помощью:</string>
     <string name="cancel">Отмена</string>
     <string name="no_payments_available">Нет доступных платежей.</string>
     <string name="failed_auth_code">Не удалось авторизироваться. Пожалуйста, попробуйте еще раз.</string>
@@ -441,8 +439,6 @@
     <string name="subscribe_apps_official_store">Подпишитесь на приложения официального магазина приложений Aptoide</string>
     <string name="wizard_next">Следующий</string>
     <string name="wizard_prev">Предыдущий</string>
-    <string name="search_activity_title">\'%s\'</string>
-
     <string name="share">Поделиться</string>
     <string name="share_on_timeline">Поделиться в социальной ленте</string>
 
@@ -509,7 +505,7 @@
     <string name="search_minimum_chars">Запрос должен быть не менее 2 знаков.</string>
 <string name="all_stores">Все магазины</string>
     <string name="followed_stores">Ваши магазины</string>
-    <string name="unsubscribing_store_message">Отмена подписки % s</string>
+    <string name="unsubscribing_store_message">Отмена подписки %s</string>
 
     <string name="change_theme_soon">Скоро будет возможно</string>
   <string name="critical">Критическое</string>

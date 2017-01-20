@@ -66,7 +66,7 @@
   <string name="weather">Vrijeme</string>
   <string name="top_apps_in_store">Popularne aplikacije u ovoj trgovini</string>
   <string name="apps_for_kids">Aplikacije za djecu</string>
-  <string name="aptoide_publishers">Aptoide izdavatelji</string>
+  <string name="aptoide_publishers">%s izdavatelji</string>
   <string name="music_video">Glazba i video</string>
   <string name="essential_apps">Osnovne aplikacije</string>
   <string name="summer_apps">Ljetne aplikacije</string>
@@ -140,7 +140,7 @@
   <string name="open_apps_manager">Otvori upravitelj aplikacijama</string>
 
   <string name="no_rollbacks_msg">Brzo vratite bilokoju aplikaciju na prijašnju verziju i tako spriječite probleme inkompatibilnosti.
-Čuvajte zapisnik svih instaliranih aplikacija (preko Aptoide) uključujući verziju i datum instaliranja.</string>
+Čuvajte zapisnik svih instaliranih aplikacija (preko %s) uključujući verziju i datum instaliranja.</string>
 
   <string name="fragment_social_timeline_aptoide_team">Aptoide Team</string>
   <string name="displayable_social_timeline_store_latest_apps_headline">Ova trgovina ima nove aplikacije</string>

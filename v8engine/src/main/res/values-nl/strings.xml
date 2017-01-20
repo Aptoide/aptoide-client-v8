@@ -117,7 +117,7 @@ een app die je niet meer wil bijwerken.</string>
   <string name="weather">Weer</string>
   <string name="top_apps_in_store">Top-apps in deze winkel</string>
   <string name="apps_for_kids">Apps voor kinderen</string>
-  <string name="aptoide_publishers">Aptoide-uitgevers</string>
+  <string name="aptoide_publishers">%s-uitgevers</string>
   <string name="music_video">Muziek &amp; video</string>
   <string name="essential_apps">Essentiële apps</string>
   <string name="summer_apps">Zomer-apps</string>
@@ -142,7 +142,7 @@ een app die je niet meer wil bijwerken.</string>
   <string name="open_apps_manager">Open appbeheerder</string>
 
   <string name="no_rollbacks_msg">Keer snel terug naar een vorige versie van een app en los incompatibiliteitsproblemen op. Bewaar een logboek van
-al je (via Aptoide) geïnstalleerde apps, inclusief versie en installatiedatum.</string>
+al je (via %s) geïnstalleerde apps, inclusief versie en installatiedatum.</string>
 
   <string name="fragment_social_timeline_aptoide_team">Aptoide-team</string>
   <string name="displayable_social_timeline_store_latest_apps_headline">Deze winkel heeft nieuwe apps</string>

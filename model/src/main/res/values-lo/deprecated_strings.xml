@@ -95,7 +95,6 @@
 \n ຂໍ້ຜິດພາດທີ່ທ່ານເຫັນ</string>
     <string name="feedback_include_logs">ລວມທັງພາບຖ່າຍໜ້າຈໍ ແລະ ບັນທຶກການເຮັດວຽກ</string>
     <string name="feedback_no_email">ບໍ່ມີໂປຣແກຣມອີເມວຕິດຕັ້ງຢູ່!</string>
-    <string name="username_tip">ພິມອີເມວຂອງທ່ານ</string>
     <string name="store_already_added">ຮ້ານຄ້າໄດ້ຖືກເພີ່ມແລ້ວ!</string>
     <string name="subscribe_store">ຕິດຕາມຮ້ານຄ້າ</string>
     <string name="permissions">ເບິ່ງສິດ</string>
@@ -182,7 +181,6 @@
     <string name="exclude_update">ບໍ່ສົນໃຈການອັບເດດ</string>
     <string name="install_update">ຕິດຕັ້ງການອັບເດດ</string>
 
-    <string name="payment_methods">ຈ່າຍດ້ວຍ:</string>
     <string name="cancel">ຍົກເລີກ</string>
     <string name="no_payments_available">ບໍ່ມີການຊຳລະເງິນທີ່ໃຊ້ໄດ້.</string>
     <string name="failed_auth_code">ການຢືນຢັນບັນຊີລົ້ມເຫຼວ. ກະລຸນາລອງໃໝ່ອີກຄັ້ງ.</string>
@@ -453,8 +451,6 @@
     <string name="subscribe_apps_official_store">ຕິດຕາມ \'ແອັບຯ\' ຈາກຮ້ານຄ້າແອັບຯຢ່າງເປັນທາງການຂອງ Aptoide</string>
     <string name="wizard_next">ຕໍ່ໄປ</string>
     <string name="wizard_prev">ກ່ອນໜ້າ</string>
-    <string name="search_activity_title">\'%s\'</string>
-
     <string name="share">ແບ່ງປັນ</string>
     <string name="share_on_timeline">ແບ່ງປັນຢູ່ທາມລາຍ</string>
 
@@ -485,8 +481,8 @@
     <string name="friends_to_invite">ໝູ່ Facebook ອື່ນໆໃນ Aptoide</string>
     <string name="upload_app_backup_apps_installed">ທ່ານຕ້ອງອັບໂຫຼດແອັບນີ້ໃສ່ຮ້ານຄ້າຂອງທ່ານກ່ອນ. ທ່ານສາມາດໃຊ້ແອັບ Aptoide Backup ໄດ້.</string>
     <string name="upload_app_backup_apps_not_installed">ທ່ານຕ້ອງອັບໂຫຼດແອັບນີ້ໃສ່ຮ້ານຄ້າຂອງທ່ານກ່ອນ. ກະລຸນາຕິດຕັ້ງແອັບ Aptoide Backup.</string>
-    <string name="setting_category_autoupdate">ອັບເດດ Aptoide ອັດຕະໂນມັດ</string>
-    <string name="setting_category_autoupdate_title">ເປີດອັບເດດ Aptoide ອັດຕະໂນມັດ</string>
+    <string name="setting_category_autoupdate">ອັບເດດ %s ອັດຕະໂນມັດ</string>
+    <string name="setting_category_autoupdate_title">ເປີດອັບເດດ %s ອັດຕະໂນມັດ</string>
     <string name="social_timeline_notifications_sum2">ເປີດນຳໃຊ້ການແຈ້ງເຕືອນທາມລາຍສັງຄົມ Aptoide. ທ່ານຈະໄດ້ຮັບຂ່າວສານຫຼ້າສຸດຢູ່ແຖບການແຈ້ງເຕືອນ.</string>
     <string name="ignored">ບໍ່ສົນໃຈ</string>
     <string name="application_signature_blacklisted">ລາຍເຊັນແອັບພລິເຄຊັນບໍ່ແມ່ນລາຍເຊັນທີ່ໜ້າເຊື່ອຖືຢູ່ໃນແພລັດຟອມປ້ອງກັນໄວຣັສ Aptoide ເນື່ອງຈາກມັນໄດ້ຖືກໃຊ້ເພື່ອເຊັນແອັບພລິເຄຊັນອື່ນ ທີ່ບໍ່ກົງກັບລາຍເຊັນທີ່ກ່ຽວຂ້ອງກັບຜູ້ພັດທະນາທີ່ໜ້າເຊື່ອຖື.</string>

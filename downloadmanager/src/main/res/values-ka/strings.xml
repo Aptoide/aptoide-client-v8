@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<resources><string name="aptoide_downloading">მიმდინარეობს გადმოწერა</string>
+<resources><string name="aptoide_downloading">მიმდინარეობს გადმოწერა %s</string>
     <string name="resume_download">გაგრძელება</string>
   <string name="pause_download">გაჩერება</string>
   <string name="general_downloads_dialog_only_mobile_message">თქვენ არჩეული გაქვთ გადმოწერა მხოლოდ 3G/4G ქსელით. გსურთ პარამეტრების შეცვლა?</string>

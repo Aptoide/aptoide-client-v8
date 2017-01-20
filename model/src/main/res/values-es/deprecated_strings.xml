@@ -95,7 +95,6 @@
 \n Los errores que te aparecen</string>
     <string name="feedback_include_logs">Incluye capturas de pantalla y registros</string>
     <string name="feedback_no_email">¡Ningún cliente de correo electrónico instalado!</string>
-    <string name="username_tip">Introduce tu email</string>
     <string name="store_already_added">¡Tienda ya añadida!</string>
     <string name="subscribe_store">Suscríbete a la Tienda</string>
     <string name="permissions">Ver Permisos</string>
@@ -182,7 +181,6 @@
     <string name="exclude_update">Ignorar actualización</string>
     <string name="install_update">Instalar actualización</string>
 
-    <string name="payment_methods">Pagar con:</string>
     <string name="cancel">Cancelar</string>
     <string name="no_payments_available">No hay pagos disponibles.</string>
     <string name="failed_auth_code">Error al autorizar cuenta. Por favor, inténtelo de nuevo.</string>
@@ -364,7 +362,7 @@
     <string name="version_placeholder">Versión: %s</string>
 
     <string name="results_subscribed">Tiendas suscritas</string>
-    <string name="results_in_store">Resultados de búsqueda en la tienda %*s</string>
+    <string name="results_in_store">Resultados de búsqueda en la tienda %s</string>
     <string name="other_stores">Tiendas no suscritas</string>
     <string name="comments">Comentarios</string>
     <string name="reviews">Reseñas</string>
@@ -453,8 +451,6 @@
     <string name="subscribe_apps_official_store">Subscríbete a aplicaciones de la Tienda de Aplicaciones Oficial de Aptoide</string>
     <string name="wizard_next">Siguiente</string>
     <string name="wizard_prev">Anterior</string>
-    <string name="search_activity_title">\'%s\'</string>
-
     <string name="share">Compartir</string>
     <string name="share_on_timeline">Compartir en timeline</string>
 
