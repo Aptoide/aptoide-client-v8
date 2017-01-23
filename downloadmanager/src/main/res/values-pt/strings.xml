@@ -1,8 +1,0 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<resources><string name="aptoide_downloading">%s está a descarregar</string>
-    <string name="pause_download">Pausar</string>
-    <string name="resume_download">Retomar</string>
-<string name="general_downloads_dialog_only_mobile_message">Escolheu descarregar aplicações apenas quando está com uma ligação de dados 3G/4G. Quer mudar as definições?</string>
-  <string name="general_downloads_dialog_only_wifi_message">Escolheu descarregar aplicações apenas quando está numa ligação WiFi. Quer mudar as definições?</string>
-  <string name="general_downloads_dialog_no_download_rule_message">Ainda não definiu uma regra para as descargas. Quer mudar das definições?</string>
-</resources>

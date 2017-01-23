@@ -1,6 +1,0 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<resources><string name="download_completed">გადმოწერა დასრულდა</string>
-  <string name="download_paused">გადმოწერა გაჩერებულია</string>
-  <string name="download_progress">მიმდინარეობს გადმოწერა</string>
-  <string name="download_queue">რიგშია</string>
-</resources>

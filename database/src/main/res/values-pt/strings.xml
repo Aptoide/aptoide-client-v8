@@ -1,6 +1,0 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<resources><string name="download_completed">Transferência concluída</string>
-    <string name="download_paused">Transferência em pausa</string>
-    <string name="download_progress">Transferência em decurso</string>
-    <string name="download_queue">Em espera</string>
-</resources>

@@ -1,6 +1,0 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<resources><string name="download_completed">Muat turun selesai</string>
-    <string name="download_paused">Muat turun dihentikan</string>
-    <string name="download_progress">Muat turun sedang berjalan</string>
-    <string name="download_queue">Dalam Barisan</string>
-</resources>

@@ -1,6 +1,0 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<resources><string name="download_completed">下載已完成</string>
-    <string name="download_paused">下載已暫停</string>
-    <string name="download_progress">下載正在進行中</string>
-    <string name="download_queue">佇列中</string>
-</resources>

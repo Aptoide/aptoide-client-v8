@@ -1,6 +1,0 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<resources><string name="download_completed">ດາວໂຫຼດສຳເລັດແລ້ວ</string>
-    <string name="download_paused">ໂຈະການດາວໂຫຼດແລ້ວ</string>
-    <string name="download_progress">ກຳລັງດາວໂຫຼດຢູ່</string>
-    <string name="download_queue">ຢູ່ໃນຄິວ</string>
-</resources>

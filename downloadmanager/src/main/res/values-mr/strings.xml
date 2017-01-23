@@ -1,8 +1,0 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<resources><string name="aptoide_downloading">%s डाउनलोड होत आहे</string>
-  <string name="pause_download">स्थगित करा</string>
-  <string name="resume_download">पुन्हा सुरु करा</string>
-  <string name="general_downloads_dialog_only_mobile_message">आपण केवळ मोबाईल ३G/४G द्वारे डाउनलोड करण्याची निवड केली आहे. आपल्याला ही सेटिंग बदलायची आहे का?</string>
-  <string name="general_downloads_dialog_only_wifi_message">आपण केवळ WiFi द्वारे डाउनलोड करण्याची निवड केली आहे. आपल्याला ही सेटिंग बदलायची आहे का?</string>
-  <string name="general_downloads_dialog_no_download_rule_message">डाउनलोड साठी कुठलेही नियम सेट केले नाहीत. आपल्याला ही सेटिंग बदलायची आहे का?</string>
-</resources>
