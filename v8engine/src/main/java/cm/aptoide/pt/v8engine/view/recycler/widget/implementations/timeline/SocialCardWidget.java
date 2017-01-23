@@ -3,12 +3,17 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.timeline;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.dataprovider.util.CommentType;
+import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -24,7 +29,7 @@ import rx.functions.Action1;
 abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWidget<T> {
 
   private static final String TAG = SocialCardWidget.class.getName();
-
+  private final LayoutInflater inflater;
   private TextView comments;
   private LinearLayout like;
   private LikeButton likeButton;
@@ -32,9 +37,11 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
   private TextView numberComments;
   private TextView sharedBy;
   private TextView time;
+  private RelativeLayout likePreviewContainer;
 
   SocialCardWidget(View itemView) {
     super(itemView);
+    inflater = LayoutInflater.from(itemView.getContext());
   }
 
   @Override @CallSuper protected void assignViews(View itemView) {
@@ -46,6 +53,8 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
     numberLikes = (TextView) itemView.findViewById(R.id.social_number_of_likes);
     numberComments = (TextView) itemView.findViewById(R.id.social_number_of_comments);
     sharedBy = (TextView) itemView.findViewById(R.id.social_shared_by);
+    likePreviewContainer = (RelativeLayout) itemView.findViewById(
+        R.id.displayable_social_timeline_likes_preview_container);
   }
 
   @Override @CallSuper public void bindView(T displayable) {
@@ -121,6 +130,54 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
         //numberLikes.setText("0");
       }
     });
+
+    View likeUserPreviewView;
+    ImageView likeUserPreviewIcon;
+
+    likeUserPreviewView =
+        inflater.inflate(R.layout.social_timeline_like_user_preview, likePreviewContainer, false);
+    View likeUserPreviewView1 =
+        inflater.inflate(R.layout.social_timeline_like_user_preview, likePreviewContainer, false);
+    View likeUserPreviewView2 =
+        inflater.inflate(R.layout.social_timeline_like_user_preview, likePreviewContainer, false);
+    View likeUserPreviewView3 =
+        inflater.inflate(R.layout.social_timeline_like_user_preview, likePreviewContainer, false);
+
+    likeUserPreviewIcon =
+        (ImageView) likeUserPreviewView.findViewById(R.id.social_timeline_like_user_preview);
+    ImageView likeUserPreviewIcon1 =
+        (ImageView) likeUserPreviewView1.findViewById(R.id.social_timeline_like_user_preview);
+    ImageView likeUserPreviewIcon2 =
+        (ImageView) likeUserPreviewView2.findViewById(R.id.social_timeline_like_user_preview);
+    ImageView likeUserPreviewIcon3 =
+        (ImageView) likeUserPreviewView3.findViewById(R.id.social_timeline_like_user_preview);
+
+    ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) likeUserPreviewView.getLayoutParams();
+    p.setMargins(60, 0, 0, 0);
+    likeUserPreviewView1.requestLayout();
+
+    ViewGroup.MarginLayoutParams p1 = (ViewGroup.MarginLayoutParams) likeUserPreviewView1.getLayoutParams();
+    p1.setMargins(40, 0, 0, 0);
+    likeUserPreviewView1.requestLayout();
+
+    ViewGroup.MarginLayoutParams p2 = (ViewGroup.MarginLayoutParams) likeUserPreviewView2.getLayoutParams();
+    p2.setMargins(20, 0, 0, 0);
+    likeUserPreviewView2.requestLayout();
+
+    ViewGroup.MarginLayoutParams p3 = (ViewGroup.MarginLayoutParams) likeUserPreviewView3.getLayoutParams();
+    p3.setMargins(0, 0, 0, 0);
+    likeUserPreviewView3.requestLayout();
+
+
+    ImageLoader.loadWithShadowCircleTransform(R.drawable.user_account_grey, likeUserPreviewIcon);
+    ImageLoader.loadWithShadowCircleTransform(R.drawable.icon_user, likeUserPreviewIcon1);
+    ImageLoader.loadWithShadowCircleTransform(R.drawable.user_account_white, likeUserPreviewIcon2);
+    ImageLoader.loadWithShadowCircleTransform(R.drawable.user_default, likeUserPreviewIcon3);
+
+    likePreviewContainer.addView(likeUserPreviewView);
+    likePreviewContainer.addView(likeUserPreviewView1);
+    likePreviewContainer.addView(likeUserPreviewView2);
+    likePreviewContainer.addView(likeUserPreviewView3);
   }
 
   @NonNull private Action1<Throwable> showError() {
