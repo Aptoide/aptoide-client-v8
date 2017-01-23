@@ -963,7 +963,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
    * @return The user name introduced by user
    */
   String getIntroducedUserName() {
-    return mCallback.getIntroducedUserName();
+    return mCallback == null ? null : mCallback.getIntroducedUserName();
   }
 
   /**
@@ -972,7 +972,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
    * @return The password introduced by user
    */
   String getIntroducedPassword() {
-    return mCallback.getIntroducedPassword();
+    return mCallback == null ? null : mCallback.getIntroducedPassword();
   }
 
   /*******************************************************/
