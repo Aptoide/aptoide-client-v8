@@ -165,8 +165,9 @@ public class SocialStoreLatestAppsWidget
           .specific(
               SendEventRequest.Body.Specific.builder().store(displayable.getStoreName()).build())
           .build(), TimelineClickEvent.OPEN_STORE);
-      ((FragmentShower) getContext()).pushFragmentV4(
-          V8Engine.getFragmentProvider().newStoreFragment(displayable.getStoreName()));
+      ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
+          .newStoreFragment(displayable.getStoreName(),
+              displayable.getSharedStore().getAppearance().getTheme()));
     }));
 
     compositeSubscription.add(RxView.clicks(sharedStoreAvatar).subscribe(click -> {
@@ -177,13 +178,14 @@ public class SocialStoreLatestAppsWidget
       displayable.sendClickEvent(SendEventRequest.Body.Data.builder()
           .cardType(getCardTypeName())
           .source(TimelineClickEvent.SOURCE_APTOIDE)
-          .specific(
-              SendEventRequest.Body.Specific.builder().store(displayable.getSharedStore().getName()).build())
+          .specific(SendEventRequest.Body.Specific.builder()
+              .store(displayable.getSharedStore().getName())
+              .build())
           .build(), TimelineClickEvent.OPEN_STORE);
-      ((FragmentShower) getContext()).pushFragmentV4(
-          V8Engine.getFragmentProvider().newStoreFragment(displayable.getSharedStore().getName()));
+      ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
+          .newStoreFragment(displayable.getSharedStore().getName(),
+              displayable.getSharedStore().getAppearance().getTheme()));
     }));
-
 
     StoreThemeEnum storeThemeEnum = StoreThemeEnum.get(displayable.getSharedStore());
 
