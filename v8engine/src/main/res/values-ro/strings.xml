@@ -1,0 +1,322 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="developer_website">Website: %s</string>
+    <string name="not_available">N/A</string>
+    <string name="developer_email">E-mail: %s</string>
+    <string name="developer_privacy_policy">Politică de confidențialitate: %s</string>
+
+
+    <string name="open">Deschide</string>
+    <string name="button_header_more">mai mult</string>
+    <string name="search">Căutare</string>
+
+    <string name="update">Actualizare</string>
+    <string name="uninstall">Dezinstalare</string>
+    <string name="downgrade">Instalează o versiune anterioară</string>
+    <string name="menu_select_all">Selectează toate</string>
+    <string name="menu_select_none">Nu selecta niciuna</string>
+    <string name="clear">Golire</string>
+
+    <string name="excluded_updates">Actualizări excluse</string>
+    <string name="no_excluded_updates_msg">Noua versiune a unei aplicații nu funcționează pe dispozitivul tău sau lipsesc anumite funcții? 
+Blochează actualizările aplicațiilor. Mergi la Actualizări și apasă îndelung pe aplicația ale cărei actualizări 
+vrei să le oprești.</string>
+
+    <string name="restore_updates">Restaurează actualizări</string>
+    <string name="rollback">Revenire la versiunea anterioară</string>
+    <string name="menu_card_timeline_clear">Golire</string>
+    <string name="fragment_social_timeline_no_connection">Fără conexiune la rețea</string>
+    <string name="fragment_social_timeline_general_error">Avem niște probleme. Poți încerca din nou, mai târziu?</string>
+
+    <string name="displayable_social_timeline_app_update">Actualizare</string>
+    <string name="appview_rate_this_app">evaluează această aplicație</string>
+    <string name="needs_license">Necesită licență</string>
+    <string name="virus">Virus</string>
+    <string name="additional_information">Informații suplimentare</string>
+    <string name="displayable_social_timeline_app_update_updated">Actualizat</string>
+    <string name="displayable_social_timeline_recommendation_similar_and">și</string>
+    <string name="social_facebook_screen_title">Facebook</string>
+    <string name="social_twitter_screen_title">Twitter</string>
+    <string name="title">TITLU</string>
+    <string name="feedback_not_valid">Te rugăm să introduci un Subiect valid!</string>
+    <string name="ignore_update">Ignoră actualizare</string>
+    <string name="added_to_scheduled">Adăugat la Meniu &gt; Descărcări programate</string>
+    <string name="wizard_skip"><b>IGNORĂ</b></string>
+  <string name="updates_filter_setting_title">Arată-mi doar actualizări ale versiunii aplicației stabile</string>
+  <string name="updates_filter_summary">Dacă vei bifa această căsuță, nu vei fi notificat în legătură cu versiuni beta.</string>
+  <string name="latest_reviews">Ultimele recenzii</string>
+  <string name="latest_comments">Ultimele comentarii</string>
+  <string name="action">Acțiune</string>
+  <string name="adventure">Aventură</string>
+  <string name="all">Toate</string>
+  <string name="applications">Aplicații</string>
+  <string name="arcade">Arcadă</string>
+  <string name="arcade_action">Arcadă &amp; Acțiune</string>
+  <string name="board">Jocuri de societate</string>
+  <string name="books_reference">Cărți &amp; Referință</string>
+  <string name="brain_puzzle">Inteligență &amp; Puzzle</string>
+  <string name="business">Afaceri</string>
+  <string name="card">Cărți de joc</string>
+  <string name="cards_casino">Cărți de joc &amp; Cazino</string>
+  <string name="casino">Cazino</string>
+  <string name="casual">Diverse</string>
+  <string name="comics">Benzi desenate</string>
+  <string name="communication">Comunicare</string>
+  <string name="demo">Demo</string>
+  <string name="education">Educație</string>
+  <string name="educational">Educative</string>
+  <string name="entertainment">Divertisment</string>
+  <string name="family">Familie</string>
+  <string name="finance">Finanțe</string>
+  <string name="games">Jocuri</string>
+  <string name="health">Sănătate</string>
+  <string name="health_fitness">Sănătate &amp; Fitness</string>
+  <string name="highlighted">Evidențiate</string>
+  <string name="local_top_apps">Aplicații locale populare</string>
+  <string name="lifestyle">Stil de viață</string>
+  <string name="media_video">Media &amp; Video</string>
+  <string name="medical">Medical</string>
+  <string name="multimedia">Multimedia</string>
+  <string name="music">Muzică</string>
+  <string name="music_audio">Muzică &amp; Audio</string>
+  <string name="news_magazines">Știri &amp; Reviste</string>
+  <string name="news_weather">Știri &amp; Vreme</string>
+  <string name="personalization">Personalizare</string>
+  <string name="photography">Fotografie</string>
+  <string name="productivity">Productivitate</string>
+  <string name="puzzle">Puzzle</string>
+  <string name="racing">Curse</string>
+  <string name="reference">Referință</string>
+  <string name="role_playing">Interpretare roluri</string>
+  <string name="simulation">Simulare</string>
+  <string name="social">Social</string>
+  <string name="software_libraries">Bibliotecă software</string>
+  <string name="sports">Sporturi</string>
+  <string name="sports_games">Jocuri sportive</string>
+  <string name="strategy">Strategie</string>
+  <string name="themes">Teme</string>
+  <string name="tools">Instrumente</string>
+  <string name="top_apps">Aplicații populare</string>
+  <string name="top_games">Jocuri populare</string>
+  <string name="transport">Transport</string>
+  <string name="transportation">Transporturi</string>
+  <string name="travel">Călătorii</string>
+  <string name="travel_local">Călătorii &amp; Local</string>
+  <string name="trending">Tendințe</string>
+  <string name="trivia">Trivia</string>
+  <string name="word">Cuvinte</string>
+  <string name="libraries_demo">Biblioteci &amp; Demo</string>
+  <string name="shopping">Cumpărături</string>
+  <string name="weather">Vremea</string>
+  <string name="top_apps_in_store">Aplicații populare în acest magazin</string>
+  <string name="apps_for_kids">Aplicații pentru copii</string>
+  <string name="music_video">Muzică &amp; Video</string>
+  <string name="essential_apps">Aplicații esențiale</string>
+  <string name="summer_apps">Aplicații estivale</string>
+  <string name="play_it">Play-It!</string>
+
+  <string name="unsubscribe">Dezabonează-te</string>
+  <string name="dialog_install_warning_proceed_button">Continuă</string>
+  <string name="dialog_install_warning_search_for_trusted_app_button">Caută</string>
+  <string name="dialog_install_warning_trusted_app_button">Aplicații De încredere</string>
+  <string name="dialog_install_warning_careful_text">Ai grijă dacă alegi să instalezi această aplicație. Este posibil să fie compromisă, să aibă viruși sau malware.</string>
+    <string name="dialog_install_warning_trusted_version_button">Versiune De încredere</string>
+  <string name="dialog_install_warning_get_trusted_version_button">Obține</string>
+  <string name="home_title">Acasă</string>
+  <string name="community">Comunitate</string>
+  <string name="stores">Magazine</string>
+  <string name="updates">Actualizări</string>
+  <string name="social_timeline">Cronologie socială</string>
+  <string name="downloads">Descărcări</string>
+  <string name="all_stores">Toate magazinele</string>
+  <string name="followed_stores">Magazine urmărite</string>
+  <string name="zero">0</string>
+  <string name="dark">Întunecat</string>
+  <string name="light">Luminos</string>
+
+  <string name="include_system_apps_title">Include aplicațiile sistemului</string>
+  <string name="include_system_apps_summary">Dacă bifezi această căsuță, vei fi notificat în legătură cu actualizările aplicațiilor sistemului (aplicații ce au fost instalate de producătorul dispozitivului)</string>
+  <string name="aptoide_email">aptoide@aptoide.com</string>
+  <string name="aptoide_url">http://www.aptoide.com/</string>
+
+  <string name="access_to_get_accounts_rationale">Trebuie să permiți accesul la Obține Conturi</string>
+  <string name="appview_followers_count_text">%1$s Urmăritori</string>
+  <string name="other_versions_downloads_count_text">%1$s descărcări</string>
+
+  <string name="open_apps_manager">Deschide Manager aplicații</string>
+
+  <string name="no_rollbacks_msg">Reinstalează rapid versiunea anterioară a oricărei aplicații și rezolvă problemele de incompatibilitate. Păstrează un jurnal al tuturor aplicațiilor
+instalate (via %s), incluzând versiunea și data instalării.</string>
+
+  <string name="fragment_social_timeline_aptoide_team">Echipa Aptoide</string>
+  <string name="displayable_social_timeline_store_latest_apps_headline">Acest magazin are aplicații noi</string>
+  <string name="displayable_social_timeline_app_update_name">Aplicație %1$s</string>
+  <string name="displayable_social_timeline_app_has_update">are o %1$s</string>
+  <string name="displayable_social_timeline_article_get_app_button">Descarcă aplicația %1$s</string>
+  <string name="displayable_social_timeline_app_update_version">Versiune %1$s</string>
+  <string name="displayable_social_timeline_app_update_button">Actualizare %1$s</string>
+  <string name="appview_other_versions"><u>Alte versiuni</u></string>
+  <string name="appview_latest_version_text">Ultima versiune</string>
+  <string name="appview_read_all">citește tot &gt;</string>
+  <string name="working_well">Funcționează bine</string>
+  <string name="fake_app">Aplicație falsă</string>
+  <string name="displayable_social_timeline_app_update_updating">Actualizare</string>
+  <string name="displayable_social_timeline_app_update_error">Actualizare eroare</string>
+
+  <string name="appview_good_app_guaranteed">Aplicație bună garantată!</string>
+    <string name="appview_good_app_description">Această aplicație a trecut testul de securitate pentru virus, malware și alte atacuri malițioase și nu
+ conține amenințări!</string>
+  <string name="other_versions_partial_title_1">Alte</string>
+  <string name="other_versions_partial_title_2">versiuni în magazine diferite</string>
+  <string name="displayable_social_timeline_recommendation_similar_to">bazat pe %1$s</string>
+  <string name="displayable_social_timeline_recommendation_atptoide_team_recommends">%s recomandă</string>
+  <string name="top_comments">Comentarii populare</string>
+  <string name="rate">Evaluează</string>
+  <string name="rate_app">Evaluează %s</string>
+  <string name="tap_a_star">Apasă pe o stea pentru a evalua</string>
+
+  <string name="other_versions_on_different_stores">Alte versiuni în magazine diferite</string>
+  <string name="review_optional">Recenzie (opțional)</string>
+  <string name="thank_you_for_your_opinion">Îți mulțumim pentru părerea ta!</string>
+  <string name="five_numeric">5</string>
+  <string name="four_numeric">4</string>
+  <string name="three_numeric">3</string>
+  <string name="two_numeric">2</string>
+  <string name="one_numeric">1</string>
+  <string name="just_reviews">Doar recenzii</string>
+  <string name="downgrading_msg">Instalare versiune anterioară</string>
+  <string name="updating_msg">Actualizare</string>
+  <string name="installing_msg">Instalare</string>
+  <string name="needs_permission_to_fs">Necesită permisiune pentru a folosi File System extern</string>
+
+  <string name="pause_all_downloads">Pauză descărcări</string>
+  <string name="storage_access_permission_request_message">Permite accesul la spațiul de stocare al telefonului tău pentru a putea să descărcăm și să instalăm această aplicație.</string>
+
+    <string name="remote_install_menu_title">Instalează pe TV</string>
+    <string name="remote_install_title">Alege dispozitiv destinație</string>
+    <string name="remote_install_success">Aplicația este în curs de instalare</string>
+    <string name="remote_install_fail">Instalarea de la distanță a eșuat</string>
+    <string name="remote_install_nodevices">Nu au fost găsite dispozitive</string>
+    <string name="remote_install_notinstallated">Ai Aptoide TV instalat pe Android TV?
+ http://aptoi.de/tv</string>
+    <string name="remote_install_nowifi">Fără conexiune Wi-Fi</string>
+    <string name="remote_install_nowifi_tip">Activează și conectează-te la o rețea Wi-Fi</string>
+    <string name="remote_install_empty_list">Căutare…</string>
+    <string name="remote_install_tip">Asigură-te că ai un Android TV conectat la rețea</string>
+    <string name="remote_install_retry">Încearcă din nou</string>
+    <string name="remote_install_help">Ajutor</string>
+    <string name="remote_install_help_url">http://blog.aptoide.com/remote-tv-install</string>
+
+    <string name="wizard_welcome_message"><b>Bine ai venit!</b></string>
+  <string name="wizard_sub_title_viewpager_one">Pornește într-o călătorie <b>sigură</b> și <b>plăcută</b>.</string>
+  <string name="wizard_description_part_one_viewpager_one"><b>Caută</b> aplicații cu
+insigna De încredere pentru
+o instalare sigură.</string>
+  <string name="wizard_description_part_two_viewpager_one"><b>Descoperă</b> aplicații pe care
+ți le-ai dorit, dar
+nu le-ai găsit până acum.</string>
+
+  <string name="wizard_title_viewpager_two"><b>Cronologie Apps</b></string>
+  <string name="wizard_sub_title_viewpager_two">Descarcă <b>ultimele aplicații</b>, găsește <b>magazine tematice</b>
+și accesează <b>conținut personalizat.</b></string>
+
+  <string name="wizard_title_viewpager_three"><b>Alătură-te comunității</b></string>
+  <string name="wizard_description_part_one_viewpager_three"><b>Urmărește-ți</b> prietenii</string>
+  <string name="wizard_description_part_two_viewpager_three"><b>Scrie recenzii</b> și evaluează aplicații</string>
+  <string name="wizard_description_part_three_viewpager_three"><b>Creează</b> magazinul tău</string>
+  <string name="wizard_register_now_button">Înregistrează-te acum</string>
+  <string name="wizard_be_a_part_of_aptoide">Alătură-te Aptoide!</string>
+  <string name="wizard_or_login"><u>sau Autentifică-te</u></string>
+
+  <string name="you_need_to_be_logged_in">Trebuie să fii autentificat în</string>
+  <string name="follow">Urmărește</string>
+  <string name="followed">Urmăriți</string>
+  <string name="unfollow_yes_no">Ești sigur că nu vrei să mai urmărești?</string>
+  <string name="unfollow">Oprește urmărire</string>
+  <string name="appview_follow_store_button_text">Urmărești?</string>
+  <string name="unfollowing_store_message">Anulare urmărire %s</string>
+  <string name="store_followed">Magazin %s urmărit</string>
+  <string name="subscribers">Abonați</string>
+  <string name="apps">Aplicații</string>
+
+  <string name="be_the_first_to_rate_this_app">Fii primul care evaluează această aplicație</string>
+  <string name="rate_this_app">Evaluează această aplicație</string>
+
+  <string name="dialog_install_warning_credibility_text">Înainte de a continua, verifică credibilitatea
+ magazinului și comentariile altor utilizatori. Aptoide recomandă întotdeauna să instalezi doar aplicații De încredere %1$s.</string>
+  <string name="flag_results">Semnalizează rezultate</string>
+  <string name="helpful">Util</string>
+  <string name="not_helpful">Inutil</string>
+  <string name="description_not_available">Nu există descriere pentru această aplicație</string>
+  <string name="top_stores_fragment_title">Magazine populare</string>
+
+  <string name="apps_timeline"><b>Cronologie Apps</b></string>
+  <string name="latest_applications">Ultimele aplicații</string>
+  <string name="aptoide_publishers">Editori %s</string>
+  <string name="displayable_social_timeline_article_related_to">Similar cu %1$s</string>
+  <string name="appstimeline_update_app">aplicație</string>
+  <string name="customtabs_open_native_app">Deschide în aplicație</string>
+
+
+  <string name="fragment_download_no_connection">Nu există aplicații descărcate</string>
+  <string name="fragment_download_no_connection_subtitle">Aplicații noi vor apărea aici imediat ce vei începe să le descarci!</string>
+  <string name="newer_version_available">Versiune mai nouă disponibilă</string>
+
+  <string name="add_store">Adaugă magazin</string>
+  <string name="downgrade_warning_dialog">Instalarea unei versiuni anterioare poate cauza pierderea unor date ale aplicației și este posibil să fii deconectat din contul aplicației.</string>
+
+  <string name="displayable_social_timeline_similar_to">similar cu %1$s</string>
+  <string name="freed_space">%s eliberat</string>
+  <string name="storage_dialog_title">Eliberează spațiu de stocare Aptoide</string>
+  <string name="clear_cache_dialog_message">Ești sigur că vrei să ștergi toate pictogramele, imaginile, apk descărcate, obb, date webservice, …</string>
+  <string name="clear_cache_summary">Șterge pictograme, imagini, apk descărcate, obb, date webservice, …</string>
+  <string name="clearcache_title">Eliberează spațiu de stocare</string>
+
+  <string name="recommended_stores">Magazine recomandate</string>
+  <string name="create_store_displayable_message">Creează magazinul tău acum și distribuie aplicațiile tale!</string>
+  <string name="create_store_displayable_button">CREEAZĂ MAGAZIN</string>
+  <string name="my_store_created_displayable_message">Magazinul tău Android App</string>
+  <string name="create_store_displayable_created_store_message">Magazinul tău a fost creat!</string>
+  <string name="create_store_displayable_explore_message">Intră și explorează toate posibilitățile</string>
+  <string name="create_store_displayable_explore_button">Explorează</string>
+
+  <string name="install_app_outter_pt1">Magazinul tău nu are aplicații.</string>
+  <string name="install_app_outter_pt2">și încarcă aplicații pe care le vei distribui întregii lumi!</string>
+  <string name="install_app_inner">Instalează %1$s</string>
+  <string name="open_app_inner">Deschide %1$s</string>
+  <string name="downloads_count">Descărcări: %1$s</string>
+  <string name="version_number">Versiune: %1$s</string>
+  <string name="app_size">Dimensiune: %1$s</string>
+  <string name="comment_on_store">Comentariu magazin %1$s</string>
+  <string name="word_this">acesta</string>
+
+  <string name="social_timeline_you_will_share">Ce vor vedea urmăritorii tăi:</string>
+  <string name="social_timeline_share_title">Distribuie previzualizare card</string>
+  <string name="social_timeline_share_title_checkbox">Fă-mi profilul utilizatorului privat pe Cronologia Apps. Arată/distribuie doar informațiile magazinului meu.</string>
+  <string name="social_timeline_share_title_checkbox_fb">Permite profilului meu de utilizator să fie public pe Cronologia Apps</string>
+  <string name="social_timeline_share_dialog_title">Îți mulțumim pentru distribuire</string>
+  <string name="social_timeline_share_dialog_opt_in_text_1">Prietenii tăi vor putea să te găsească și să te urmărească.</string>
+  <string name="social_timeline_share_dialog_opt_in_text_2">Dacă vrei ca profilul tău să fie privat pe Cronologia Apps, editează setările tale de confidențialitate pe <b>www.aptoide.com</b>.</string>
+  <string name="social_timeline_share_dialog_opt_out_text_1">Dacă îți vei ascunde profilul, prietenii tăi nu vor putea să te găsească și să te urmărească pe Cronologia Apps.</string>
+  <string name="social_timeline_share_dialog_opt_out_text_2">Accesează <b>www.aptoide.com</b>, autentifică-te în contul tău și mergi la <b>Setări</b> pentru a modifica definițiile confidențialității.</string>
+  <string name="social_timeline_share_dialog_installed_and_recommended">Instalat și Recomandat</string>
+  <string name="social_timeline_share_bar_login">Ce instalează prietenii tăi?</string>
+  <string name="social_timeline_share_bar_following">Urmărește mai multe Magazine și conectează-te cu prietenii tăi.</string>
+  <string name="social_timeline_share_bar_followers">Îmbunătățește-ți magazinul pentru a avea mai mulți urmăritori.</string>
+
+
+  <string name="comment_store">Comentariu magazin</string>
+  <string name="be_the_first_to_send_feedback_about_this_store">Fii primul care trimite feedback despre acest magazin</string>
+  <string name="timeline_followers">Urmăritori  %d</string>
+  <string name="timeline_followed">Urmăriți  %d</string>
+
+<string name="install_on_tv_mobile_error">Asigură-te că dispozitivul este conectat la Wi-Fi pentru a putea folosi această funcție.</string>
+    <string name="social_timeline_followers_fragment_title">%d urmăritor(i)</string>
+  <string name="social_timeline_following_fragment_title">Urmărire %d persoană (persoane)</string>
+  <string name="social_timeline_share_soon">Distribuirea va fi publicată în curând</string>
+  <string name="social_timeline_recommends">Recomandă</string>
+  <string name="private_profile_create_store">Pentru a avea un profil privat, trebuie să creezi un magazin</string>
+
+
+  <string name="timeline_stats_followers">Urmăritori</string>
+  <string name="timeline_login_message">Ce instalează prietenii tăi?</string>
+</resources>

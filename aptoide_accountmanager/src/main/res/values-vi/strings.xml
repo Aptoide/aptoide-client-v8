@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="one_account_allowed">Chỉ cho phép một tài khoản</string>
+    <string name="username">Email</string>
+    <string name="password">Mật khẩu</string>
+    <string name="link_device_webinstall">Liên kết tài khoản với Webinstall</string>
+    <string name="register">Đăng ký</string>
+    <string name="forgot_passwd">Quên mật khẩu?</string>
+    <string name="fields_cannot_empty">Vui lòng kiểm tra email và mật khẩu của bạn.</string>
+    <string name="unknown_error">Lỗi không rõ</string>
+    <string name="no_email_and_pass_error_message">"Vui lòng nhập địa chỉ email và mật mã để 
+đăng ký.
+ "</string>
+    <string name="no_pass_error_message">Nhập mật mã để đăng ký.</string>
+    <string name="no_email_error_message">Nhập địa chỉ mail để đăng ký.</string>
+    <string name="password_validation_text">"Mật khẩu cần phải có ít nhất 8 kí tự và nên có 
+ít nhất 1 chữ cái và 1 chữ số hoặc những kí tự đặc biệt khác (!@#$%*)
+ "</string>
+    <string name="logged_as">Bạn đã đăng nhập với tên:</string>
+    <string name="sign_out">Đăng xuất</string>
+    <string name="error_occured">Có lỗi xảy ra. Xin thử lại</string>
+    <string name="ws_error_AUTH_2">Thông tin không hợp lệ!</string>
+    <string name="ws_error_AUTH_101">Không thể đăng nhập với Google. Xin thử lại.</string>
+    <string name="ws_error_AUTH_103">Không thể đăng nhập với Facebook. Xin thử lại.</string>
+    <string name="ws_error_MARG_12">Thiếu thông số hmac</string>
+    <string name="ws_error_MARG_109">Thiếu thông số email</string>
+    <string name="ws_error_MARG_110">Thiếu thông số passhash</string>
+    <string name="ws_error_MARG_111">Thiếu thông số tên</string>
+    <string name="ws_error_MARG_112">Thiếu thông số người dùng-đại lý</string>
+    <string name="ws_error_IARG_5">Định dạng hmac không hợp lệ</string>
+    <string name="ws_error_IARG_106">ĐỊa chỉ email không hợp lệ</string>
+    <string name="ws_error_REPO_7">Người dùng này đã có một repo hợp lệ.</string>
+    <string name="ws_error_WOP_11">Không thể tạo cửa hàng. Xin thử lại.</string>
+    <string name="or">hoặc</string>
+    <string name="default_account_type">cm.aptoide.pt</string>
+
+    <string name="facebook_email_permission_regected_message">"Aptoide cần địa chỉ email của bạn để tạo 
+tài khoản
+ "</string>
+    <string name="error_invalid_grant">Tên đăng nhập hoặc mật khẩu không hợp lệ</string>
+    <string name="ws_error_AUTH_100">Không thể đăng nhập bằng Google. Vui lòng kiểm tra tài khoản Google của bạn (bạn cần phải xác minh địa chỉ email của mình)</string>
+    <string name="ws_error_AUTH_102">Không thể đăng nhập bằng Facebook. Vui lòng kiểm tra tài khoản Facebook của bạn (bạn có thể cần phải xác minh địa chỉ email của mình)</string>
+    <string name="ws_error_invalid_grant">Tên đăng nhập hoặc mật khẩu không hợp lệ</string>
+    <string name="ws_error_IARG_111">Định dạng passhash không hợp lệ</string>
+    <string name="ws_error_REPO_4">Tên cửa hàng đó không hợp lệ, bạn chỉ có thể sử dụng chữ cái, số hoặc 
+dấu gạch ngang.</string>
+    <string name="ws_error_REPO_5">Tên cửa hàng đó phải dài ít nhất 3 kí tự.</string>
+    <string name="ws_error_REPO_6">Tên cửa hàng đó đã được dùng, bạn cần chọn 
+tên cửa hàng khác.</string>
+    <string name="ws_error_WOP_9">Địa chỉ email được cung cấp đã tồn tại trên Aptoide</string>
+    <string name="ws_error_WOP_10">Địa chỉ email được cung cấp chưa tồn tại trong Aptoide</string>
+    <string name="login_successful">Đăng nhập thành công</string>
+    <string name="user_created">Người dùng được tạo</string>
+    <string name="ws_error_QUOTA_2">Giới hạn hàng ngày của số lượng người dùng được tạo đã chạm mốc ngày hôm nay. Nếu bạn muốn 
+giới hạn này được tăng lên, vui lòng liên hệ hỗ trợ tại suport@aptoide.com hoặc tạo thêm nhiều người dùng hơn vào ngày mai</string>
+    <string name="ws_error_AUTH_1">Hoặc địa chỉ email hoặc mật khẩu không hợp lệ để đăng nhập (do tên
+ được cập nhật)</string>
+    <string name="accept_terms">"Bằng việc đăng ký, bạn đồng ý với các Điều khoản dịch vụ của Aptoide và 
+Chính sách nội dung đối với Lập trình viên
+ "</string>
+    <string name="wizard_skip"><b>BỎ QUA</b></string>
+
+<string name="ws_error_MARG_200">\@string/error_occured</string>
+    <string name="ws_error_MARG_203">\@string/error_occured</string>
+    <string name="ws_error_MARG_204">\@string/error_occured</string>
+    <string name="ws_error_IARG_200">\@string/error_occured</string>
+    <string name="ws_error_AUTH_7">\@string/error_occured</string>
+    </resources>

@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="please_wait">Kérjük várjon…</string>
+
+    <string name="WidgetProvider_timestamp_today">Ma</string>
+    <string name="WidgetProvider_timestamp_yesterday">Tegnap</string>
+    <string name="WidgetProvider_timestamp_hour_ago">%s órával ezelőtt</string>
+    <string name="WidgetProvider_timestamp_hours_ago">%s órával ezelőtt</string>
+    <string name="WidgetProvider_timestamp_minutes_ago">%s perccel ezelőtt</string>
+    <string name="WidgetProvider_timestamp_just_now">Épp most</string>
+    <string name="WidgetProvider_timestamp_weeks_ago">%s héttel ezelőtt</string>
+    <string name="WidgetProvider_timestamp_week_ago2">1 héttel ezelőtt</string>
+    <string name="WidgetProvider_timestamp_days_ago">%s nappal ezelőtt</string>
+    <string name="WidgetProvider_timestamp_month_ago">1 hónappal ezelőtt</string>
+    <string name="WidgetProvider_timestamp_months_ago">%s hónappal ezelőtt</string>
+    <string name="WidgetProvider_timestamp_year_ago">1 évvel ezelőtt</string>
+    <string name="WidgetProvider_timestamp_years_ago">%s évvel ezelőtt</string>
+
+</resources>

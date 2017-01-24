@@ -17,6 +17,7 @@ public class PullingContentReceiver extends BroadcastReceiver {
   public static final String NOTIFICATION_PRESSED_ACTION = "NOTIFICATION_PRESSED_ACTION";
   public static final String PUSH_NOTIFICATION_TRACK_URL = "PUSH_NOTIFICATION_TRACK_URL";
   public static final String PUSH_NOTIFICATION_TARGET_URL = "PUSH_NOTIFICATION_TARGET_URL";
+  public static final String BOOT_COMPLETED_ACTION = "BOOT_COMPLETED_ACTION";
   private static final String TAG = PullingContentReceiver.class.getSimpleName();
 
   @Override public void onReceive(Context context, Intent intent) {
@@ -26,7 +27,7 @@ public class PullingContentReceiver extends BroadcastReceiver {
     if (action != null) {
       switch (action) {
         case Intent.ACTION_BOOT_COMPLETED:
-          context.startService(new Intent(context, PullingContentService.class));
+          context.startService(new Intent(context, PullingContentService.class).setAction(BOOT_COMPLETED_ACTION));
           break;
         case NOTIFICATION_PRESSED_ACTION:
           pushNotificationPressed(context, intent);

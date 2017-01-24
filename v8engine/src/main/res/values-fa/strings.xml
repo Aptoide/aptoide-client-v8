@@ -1,0 +1,328 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="updates_filter_summary">با انتخاب این گزینه، درمورد نسخه‌های بتا به شما اطلاع داده نخواهد شد.</string>
+    <string name="updates_filter_setting_title">فقط برنامه‌های دارای به روز رسانی معتبر را نشان بده</string>
+    <string name="unsubscribe">لغو عضویت</string>
+    <string name="developer_website">وب سایت: %s</string>
+    <string name="not_available">N/A</string>
+    <string name="developer_email">ایمیل: %s</string>
+    <string name="developer_privacy_policy">سیاست حفظ حریم خصوصی: %s</string>
+
+
+    <string name="open">باز کردن</string>
+    <string name="button_header_more">بیش‌تر</string>
+    <string name="search">جستجو</string>
+
+    <string name="update">به‌روزرسانی</string>
+    <string name="uninstall">حذف</string>
+    <string name="downgrade">بازگشت به نسخه قدیمی‌تر</string>
+    <string name="menu_select_all">مشترک (منو)</string>
+    <string name="menu_select_none">عدم انتخاب</string>
+    <string name="clear">پاک کردن</string>
+
+    <string name="excluded_updates">به‌روزرسانی‌های کنار گذاشته شده</string>
+    <string name="no_excluded_updates_msg">نسخه جدید اپ روی دستگاه شما کار نمی‌کند یا برخی از قسمت‌های آن نشان داده نمی‌شود؟ به‌روز‌رسانی برنامه را متوقف کنید. به قسمت به‌روزرسانی‌ها رفته و بر روی برنامه‌ای که می‌خواهید به‌روزرسانی آن را متوقف کنید، کلیک کنید.</string>
+
+    <string name="restore_updates">بازیابی به‌روزرسانی‌ها (منو)</string>
+    <string name="rollback">بازگرداندن</string>
+    <string name="menu_card_timeline_clear">تایم‌لاین</string>
+    <string name="fragment_social_timeline_no_connection">به اینترنت متصل نیستید</string>
+    <string name="fragment_social_timeline_general_error">جایی از کار می‌لنگد! به ما کمی زمان می‌دهید؟</string>
+
+    <string name="displayable_social_timeline_app_update">به‌روزرسانی</string>
+    <string name="appview_rate_this_app">به این برنامه امتیاز دهید</string>
+    <string name="needs_license">نیاز به مجوز دارد</string>
+    <string name="virus">ویروس</string>
+    <string name="additional_information">اطلاعات تکمیلی</string>
+    <string name="displayable_social_timeline_app_update_updated">به‌روزرسانی شده</string>
+    <string name="displayable_social_timeline_recommendation_similar_and">و</string>
+    <string name="social_facebook_screen_title">فیسبوک</string>
+    <string name="social_twitter_screen_title">توییتر</string>
+    <string name="title">عنوان</string>
+    <string name="feedback_not_valid">نظر شما باید دارای عنوان باشد!</string>
+    <string name="ignore_update">به‌روز‌رسانی نکردن</string>
+    <string name="added_to_scheduled">اضافه شد به منو &gt; دانلودهای زمان‌بندی شده</string>
+    <string name="wizard_skip"><b>رد کردن</b></string>
+  <string name="dark">تیره</string>
+  <string name="light">روشن</string>
+
+  <string name="include_system_apps_title">با اپ‌های سیستمی</string>
+  <string name="include_system_apps_summary">با انتخاب این گزینه از به روز رسانی اپ‌های سیستمی (که توسط سازنده روی گوشی شما نصب شده‌اند) مطلع شوید.</string>
+  <string name="aptoide_email">aptoide@aptoide.com</string>
+  <string name="aptoide_url">http://www.aptoide.com/</string>
+
+  <string name="access_to_get_accounts_rationale">پیام‌های درخواست مجوز دسترسی</string>
+  <string name="appview_followers_count_text">%1$s دنبال‌کننده</string>
+  <string name="other_versions_downloads_count_text">%1$s دانلودها</string>
+
+  <string name="open_apps_manager">باز کردن Apps Manager</string>
+
+  <string name="no_rollbacks_msg">با نگه داشتن تاریخچه نصب برنامه‌ها، می‌توانید مشکل ناهم‌خوانی برنامه با گوشی را با بازگرداندن برنامه (با %s)
+ به نسخه‌های پایین‌تر برطرف کنید.</string>
+
+  <string name="fragment_social_timeline_aptoide_team">تیم اپ‌توید</string>
+  <string name="displayable_social_timeline_store_latest_apps_headline">برنامه‌های جدیدی به این فروشگاه اضافه شده است</string>
+  <string name="displayable_social_timeline_app_update_name">برنامه %1$s</string>
+  <string name="displayable_social_timeline_app_has_update">%1$s دارد</string>
+  <string name="displayable_social_timeline_article_get_app_button">دریافت برنامه %1$s</string>
+  <string name="displayable_social_timeline_app_update_version">نسخه %1$s</string>
+  <string name="displayable_social_timeline_app_update_button">به‌روزرسانی %1$s</string>
+  <string name="appview_other_versions"><u>دیگر نسخه‌ها</u></string>
+  <string name="appview_latest_version_text">آخرین نسخه</string>
+  <string name="appview_read_all">خواندن همه&gt;</string>
+  <string name="zero">۰</string>
+  <string name="working_well">به درستی کار می‌کند</string>
+  <string name="fake_app">اپ جعلی</string>
+  <string name="displayable_social_timeline_app_update_updating">در حال به روز رسانی</string>
+  <string name="displayable_social_timeline_app_update_error">خطا در به روز رسانی</string>
+
+  <string name="appview_good_app_guaranteed">نیازمند ترجمه</string>
+    <string name="appview_good_app_description">این برنامه تست‌های امنیتی را گذرانده است و هیچ 
+ویروس و بدافزاری ندارد!</string>
+  <string name="other_versions_partial_title_1">ترجیحات
+نسخه‌های دیگر &lt;app name&gt; در فروشگاه‌های دیگر</string>
+  <string name="other_versions_partial_title_2">نسخه‌های موجود در سایر فروشگاه‌ها</string>
+  <string name="displayable_social_timeline_recommendation_similar_to">بر اساس %1$s</string>
+  <string name="displayable_social_timeline_recommendation_atptoide_team_recommends">%s توصیه می‌کند</string>
+  <string name="top_comments">نظرات برگزیده</string>
+  <string name="rate">امتیاز</string>
+  <string name="rate_app">امتیاز %s</string>
+  <string name="tap_a_star">با ستاره امتیاز بدهید</string>
+
+  <string name="other_versions_on_different_stores">نسخه‌های دیگر در فروشگاه‌های دیگر</string>
+  <string name="review_optional">نقد و بررسی (اختیاری)</string>
+  <string name="thank_you_for_your_opinion">تشکر!</string>
+  <string name="five_numeric">۵</string>
+  <string name="four_numeric">۴</string>
+  <string name="three_numeric">۳</string>
+  <string name="two_numeric">۲</string>
+  <string name="one_numeric">۱</string>
+  <string name="just_reviews">فقط نقد و بررسی‌ها</string>
+  <string name="downgrading_msg">بازگشت به نسخه قدیمی‌تر</string>
+  <string name="updating_msg">در حال به روز رسانی</string>
+  <string name="installing_msg">در حال نصب</string>
+  <string name="needs_permission_to_fs">برای استفاده از File System نیاز به اجازه شما داریم</string>
+
+  <string name="pause_all_downloads">توقف دانلودها</string>
+  <string name="all_stores">همه فروشگاه‌ها</string>
+  <string name="followed_stores">فروشگاه‌های دنبال شده</string>
+  <string name="storage_access_permission_request_message">برای دانلود و نصب این برنامه لازم است به اپ‌توید برای دسترسی به حافظه گوشی‌تان اجازه دهید.</string>
+
+  <string name="remote_install_menu_title">نصب روی تلویزیون</string>
+  <string name="install_on_tv_mobile_error">برای استفاده از این امکان، از اتصال گوشی خود به اینترنت مطمئن شوید.</string>
+  <string name="remote_install_title">دستگاه مورد نظرتان را انتخاب کنید</string>
+  <string name="remote_install_success">این برنامه در حال نصب شدن است</string>
+  <string name="remote_install_fail">نصب با خطا مواجه شد</string>
+  <string name="remote_install_nodevices">دستگاهی پیدا نشد</string>
+  <string name="remote_install_notinstallated">آیا اپ‌توید را روی تلویزیون خود نصب کرده‌اید؟
+ http://aptoi.de/tv</string>
+  <string name="remote_install_nowifi">اتصال وای‌فای قطع است</string>
+  <string name="remote_install_nowifi_tip">به وای‌فای متصل شوید</string>
+  <string name="remote_install_empty_list">در حال جست و جو…</string>
+  <string name="remote_install_tip">از اتصال تلویزیون اندرویدی خود به وای‌فای مطمئن شوید</string>
+  <string name="remote_install_retry">دوباره کاری</string>
+  <string name="remote_install_help">کمک</string>
+  <string name="wizard_welcome_message"><b>خوش آمدید!</b></string>
+  <string name="wizard_sub_title_viewpager_one">سفری <b>امن</b> و <b>لذت‌بخش</b> را شروع کنید.</string>
+  <string name="wizard_description_part_one_viewpager_one">&lt;/b&gt;تیک سبز&lt;b&gt; کنار اپ
+نشانه سلامت و
+امنیت برنامه است.<b>Look for</b> apps with the\nTrusted badge for \na secure install.</string>
+  <string name="wizard_description_part_two_viewpager_one"><b>اپ‌هایی</b> را که
+ همیشه به دنبالشان می‌گشتید
+به آسانی دانلود کنید.</string>
+
+  <string name="wizard_title_viewpager_two">&lt;b&gt;تایم‌لاین اپ‌توید&lt;b&gt;<b>Apps Timeline</b></string>
+  <string name="wizard_sub_title_viewpager_two">&lt;/b&gt;آخرین اپ‌ها&lt;b&gt; را بگیرید، &lt;b&gt;فروشگاه‌های موضوعی&lt;/b&gt; را دنبال کنید، 
+و &lt;/b&gt;محتوای انحصاری&lt;b&gt; خود را دریافت کنید.<b>latest apps</b>, find <b>thematic stores</b>\nand access <b>personalized content.</b></string>
+
+  <string name="wizard_title_viewpager_three"><b>به جمع اپ‌تویدی‌ها بپیوندید</b></string>
+  <string name="wizard_description_part_one_viewpager_three">دوستان خود را &lt;/b&gt;دنبال کنید&lt;b&gt;<b>Follow</b> your friends</string>
+  <string name="wizard_description_part_two_viewpager_three">&lt;/b&gt;نقد و بررسی بنویسید&lt;/b&gt; و امتیاز بدهید<b>Review</b> and Rate apps</string>
+  <string name="wizard_description_part_three_viewpager_three">فروشگاه خود را <b>بسازید</b></string>
+  <string name="wizard_register_now_button">ثبت نام کنید</string>
+  <string name="wizard_be_a_part_of_aptoide">عضوی از خانواده اپ‌توید باشید!</string>
+  <string name="wizard_or_login"><u>یا وارد شوید</u></string>
+
+  <string name="you_need_to_be_logged_in">باید وارد شوید</string>
+  <string name="follow">دنبال کنید</string>
+  <string name="followed">نیازمند ترجمه</string>
+  <string name="unfollow_yes_no">تصمیم‌تان برای دنبال نکردن قطعی است؟</string>
+  <string name="unfollow">دنبال نکردن</string>
+  <string name="appview_follow_store_button_text">دنبال کردن؟</string>
+  <string name="unfollowing_store_message">دنبال نکردن</string>
+  <string name="store_followed">فروشگاه دنبال شده است</string>
+  <string name="subscribers">مشترکان</string>
+  <string name="apps">اپ‌ها</string>
+
+  <string name="be_the_first_to_rate_this_app">اولین نفری باشید که امتیاز می‌دهید</string>
+  <string name="rate_this_app">به این برنامه امتیاز بدهید</string>
+
+  <string name="dialog_install_warning_proceed_button">ادامه نصب کردن</string>
+  <string name="dialog_install_warning_search_for_trusted_app_button">جست و جو برای</string>
+  <string name="dialog_install_warning_trusted_app_button">برنامه مورد اعتماد</string>
+  <string name="dialog_install_warning_careful_text">در نصب این برنامه محتاط باشید. ممکن است شامل ویروس یا بدافزار باشد.</string>
+    <string name="dialog_install_warning_credibility_text">ابتدا اعتبار فروشگاه و 
+نظرات مشترکان را بررسی کنید. توصیه اپ‌توید نصب برنامه‌های مورد اعتماد است.</string>
+  <string name="dialog_install_warning_trusted_version_button">نسخه قابل اعتماد</string>
+  <string name="dialog_install_warning_get_trusted_version_button">گرفتن</string>
+  <string name="flag_results">نشان‌گذاری نتایج</string>
+  <string name="helpful">مفید</string>
+  <string name="not_helpful">غیر مفید</string>
+  <string name="description_not_available">توضیحاتی برای این برنامه وارد نشده است</string>
+  <string name="top_stores_fragment_title">فروشگاه‌های برتر</string>
+
+  <string name="home_title">خانه</string>
+  <string name="community">حلقه</string>
+  <string name="stores">فروشگاه‌ها</string>
+  <string name="updates">به روز رسانی‌ها</string>
+  <string name="social_timeline">تایم‌لاین</string>
+  <string name="downloads">دانلودها</string>
+  <string name="apps_timeline">&lt;b&gt;تایم‌لاین&lt;b&gt;<b>Apps Timeline</b></string>
+  <string name="latest_reviews">آخرین نقد و بررسی‌ها</string>
+  <string name="latest_comments">آخرین نظرها</string>
+  <string name="action">اکشن</string>
+  <string name="adventure">ماجرایی</string>
+  <string name="all">همه</string>
+  <string name="applications">اپ‌ها</string>
+  <string name="arcade">امتیازی</string>
+  <string name="arcade_action">اکشن و امتیازی</string>
+  <string name="board">تخته‌ای</string>
+  <string name="books_reference">کتاب‌ها و منابع</string>
+  <string name="brain_puzzle">فکری و معمایی</string>
+  <string name="business">کسب و کار</string>
+  <string name="card">کارتی</string>
+  <string name="cards_casino">کارتی و کازینو</string>
+  <string name="casino">کازینو</string>
+  <string name="casual">تفننی</string>
+  <string name="comics">کمیک</string>
+  <string name="communication">پیام‌رسان‌ها‫ و برنامه‌های ارتباطی</string>
+  <string name="demo">دمو</string>
+  <string name="education">آموزش</string>
+  <string name="educational">آموزشی</string>
+  <string name="entertainment">سرگرمی</string>
+  <string name="family">خانوادگی</string>
+  <string name="finance">امور مالی</string>
+  <string name="games">بازی‌ها</string>
+  <string name="health">سلامت</string>
+  <string name="health_fitness">سلامت و تندرستی</string>
+  <string name="highlighted">پیشنهاد ما</string>
+  <string name="local_top_apps">برترین اپ‌ها</string>
+  <string name="lifestyle">سبک زندگی</string>
+  <string name="media_video">ویدئو و رسانه</string>
+  <string name="medical">دارو و درمان</string>
+  <string name="multimedia">چندرسانه‌ای</string>
+  <string name="music">موسیقایی</string>
+  <string name="music_audio">صوت و موسیقی</string>
+  <string name="news_magazines">خبرها و نشریه‌ها</string>
+  <string name="news_weather">اخبار و هواشناسی</string>
+  <string name="personalization">شخصی‌سازی</string>
+  <string name="photography">عکاسی</string>
+  <string name="productivity">کاربردی</string>
+  <string name="puzzle">معمایی</string>
+  <string name="racing">ماشین‌سواری</string>
+  <string name="reference">مراجع</string>
+  <string name="role_playing">نقش‌آفرینی</string>
+  <string name="simulation">شبیه‌سازی</string>
+  <string name="social">شبکه‌های اجتماعی</string>
+  <string name="software_libraries">نرم‌افزارها</string>
+  <string name="sports">ورزشی</string>
+  <string name="sports_games">بازی‌های ورزشی</string>
+  <string name="strategy">استراتژی</string>
+  <string name="themes">تِم‌ها و تصایر پس‌زمینه</string>
+  <string name="tools">ابزارها</string>
+  <string name="top_apps">بهترین اپ‌ها</string>
+  <string name="top_games">بهترین بازی‌ها</string>
+  <string name="transport">رفت و آمد</string>
+  <string name="transportation">رفت و آمد</string>
+  <string name="travel">سفر</string>
+  <string name="travel_local">سیر و سفر</string>
+  <string name="trending">پرطرفدار</string>
+  <string name="trivia">دانستنی‌ها</string>
+  <string name="word">کلمات</string>
+  <string name="libraries_demo">دمو و منابع نرم‌افزاری</string>
+  <string name="shopping">خرید</string>
+  <string name="weather">آب و هوا</string>
+  <string name="latest_applications">جدیدترین اپ‌ها</string>
+  <string name="top_apps_in_store">بهترین برنامه‌های این فروشگاه</string>
+  <string name="apps_for_kids">برنامه‌های ویژه کودکان</string>
+  <string name="aptoide_publishers">%s ناشرها</string>
+  <string name="music_video">موسیقی و ویدئو</string>
+  <string name="essential_apps">اپ‌های اساسی</string>
+  <string name="summer_apps">اپ‌های تابستانی</string>
+  <string name="play_it">بازی کنید!</string>
+
+  <string name="displayable_social_timeline_article_related_to">مربوط به</string>
+  <string name="appstimeline_update_app">اپ</string>
+  <string name="customtabs_open_native_app">باز کردن درون اپ</string>
+
+
+  <string name="fragment_download_no_connection">هیچ برنامه‌ای دانلود نشده است</string>
+  <string name="fragment_download_no_connection_subtitle">اپ‌های جدید به محض شروع دانلود در اینجا می‌آیند!</string>
+  <string name="newer_version_available">دارای نسخه‌های جدیدتر</string>
+
+  <string name="add_store">اضافه کردن فروشگاه</string>
+  <string name="downgrade_warning_dialog">با بازگشت به نسخه قدیمی‌تر، ممکن است اطلاعات شما پاک شود و از حساب کاربری‌تان هم خارج شوید.</string>
+
+  <string name="displayable_social_timeline_similar_to">مشابه %1$s</string>
+  <string name="freed_space">%s فضا آزاد شد</string>
+  <string name="storage_dialog_title">پاک کردن حافظه اپ‌توید</string>
+  <string name="clear_cache_dialog_message">آیا می‌خواهید همه اطلاعات مانند آیکون‌ها، تصاویر، فایل‌ها و... را پاک کنید</string>
+  <string name="clear_cache_summary">پاک کردن آیکون‌ها، تصاویر، فایل‌ها و …</string>
+  <string name="clearcache_title">پاک کردن حافظه</string>
+
+  <string name="recommended_stores">فروشگاه‌ها پیشنهادی</string>
+  <string name="create_store_displayable_message">فروشگاه‌ خود را بسازید و اپ‌های مورد علاقه‌تان را به اشتراک بگذارید!</string>
+  <string name="create_store_displayable_button">ساخت فروشگاه</string>
+  <string name="my_store_created_displayable_message">فروشگاه اندرویدی شما</string>
+  <string name="create_store_displayable_created_store_message">فروشگاه شما ساخته شد!</string>
+  <string name="create_store_displayable_explore_message">به دنیای اپ‌توید قدم بگذارید</string>
+  <string name="create_store_displayable_explore_button">گشتن</string>
+
+  <string name="install_app_outter_pt1">هنوز برنامه‌ای در فروشگاه شما قرار نگرفته است.</string>
+  <string name="install_app_outter_pt2">با بارگزاری اپ‌ها آن‌ها را با جهانی به اشتراک بگذارید!</string>
+  <string name="install_app_inner">" %1$s نصب "</string>
+  <string name="open_app_inner">" %1$s  باز کردن "</string>
+  <string name="downloads_count">دانلودها: %1$s</string>
+  <string name="version_number">نسخه: %1$s</string>
+  <string name="app_size">حجم: %1$s</string>
+  <string name="comment_on_store">"نظر دادن به %1$s  فروشگاه"</string>
+  <string name="word_this">این</string>
+
+  <string name="social_timeline_you_will_share">چیزی که دنبال‌کننده‌ها می‌بینند:</string>
+  <string name="social_timeline_share_title">اشتراک‌گذاری پیش‌نمایش</string>
+  <string name="social_timeline_share_title_checkbox">خصوصی شدن تایم‌لاین من در اپ‌توید.</string>
+  <string name="social_timeline_share_title_checkbox_fb">عمومی شدن تایم‌لاین من در اپ‌توید</string>
+  <string name="social_timeline_share_dialog_title">خدا قوت قهرمان!</string>
+  <string name="social_timeline_share_dialog_opt_in_text_1">دوستان شما می‌توانند شما را بجورند و دنبال کنند.</string>
+  <string name="social_timeline_share_dialog_opt_in_text_2">اگر میخواهید پروفایل شما در تامی‌لاین خصوصی باشد، تنظیمات حسابتان را در &lt;b&gt;www.aptoide.com&lt;b&gt; تغییر دهید.<b>www.aptoide.com</b>.</string>
+  <string name="social_timeline_share_dialog_opt_out_text_1">پروفایل خود را «مخفی» کنید تا دگیر کسی نتواند فعالیت شما را در تایم‌لاین ببیند.</string>
+  <string name="social_timeline_share_dialog_opt_out_text_2">برای تغییر تنظیمات به &lt;b&gt;www.aptoide.com&lt;b&gt; بروید و با حساب کاربری خود وارد شود و به بخش &lt;/b&gt;تنظیمات&lt;b&gt; رفته و تغییرات دلخواه‌تان را اعمال کنید.<b>www.aptoide.com</b>, login to your account and go to <b>Settings</b> to change privacy definitions.</string>
+  <string name="social_timeline_share_dialog_installed_and_recommended">نصب این برنامه پیشنهاد می‌شود</string>
+  <string name="social_timeline_share_bar_login">دوستان‌تان چه اپ‌های نصب کرده‌اند؟</string>
+  <string name="social_timeline_share_bar_following">فروشگاه‌های دیگر و دوستان‌تان را دنبال کنید.</string>
+  <string name="social_timeline_share_bar_followers">با ارتقای فروشگاه خود نظر افراد بیشتری را جلب کنید.</string>
+  <string name="social_timeline_followers_fragment_title">دنبال‌کننده‌(ها)</string>
+  <string name="social_timeline_following_fragment_title">دنبال کردن دیگران</string>
+  <string name="social_timeline_share_soon">به زودی منتشر خواهد شد</string>
+  <string name="social_timeline_recommends">توصیه می‌کند</string>
+  <string name="private_profile_create_store">با ساخت یک فروشگاه، پروفایل خود را شخصی کنید</string>
+  <string name="social_timeline_shared_by">به اشتراک گذاشته شده توسط %1$s</string>
+
+  <string name="edit_store">ویرایش</string>
+
+  <string name="comment_store">نظر بدهید</string>
+  <string name="be_the_first_to_send_feedback_about_this_store">نخستین کسی باشید که درباره این فروشگاه نظر می‌دهد</string>
+
+
+  <string name="timeline_followers">دنبال‌کننده‌ها %d</string>
+  <string name="timeline_followed">دنبال می‌کنید %d</string>
+  <string name="timeline_stats_followers">دبنال‌کننده‌ها</string>
+  <string name="timeline_login_message">دوستان‌تان چه اپ‌هایی نصب می‌کنند؟</string>
+  <string name="private_followers_message">%d دنبال‌کننده‌ها دارای پروفایل خصوصی هستند</string>
+  <string name="private_following_message">شما %d فروشگاه/کاربر خصوصی را دنبال می‌کنید</string>
+
+  <string name="item_payment_button_use">استفاده</string>
+  <string name="item_payment_button_register">ثبت نام</string>
+  <string name="item_payment_approving_text">منتظر تایید</string>
+  <string name="activity_payment_more_payments_button">از روش پرداخت دیگری استفاده کنید</string>
+
+</resources>
