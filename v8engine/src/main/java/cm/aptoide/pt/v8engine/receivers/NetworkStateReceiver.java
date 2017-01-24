@@ -3,16 +3,11 @@ package cm.aptoide.pt.v8engine.receivers;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
 import android.net.Uri;
-import android.support.annotation.NonNull;
+import android.net.wifi.WifiManager;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.fragment.implementations.ScheduledDownloadsFragment;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
-import cm.aptoide.pt.v8engine.repository.ScheduledDownloadRepository;
-
-import static android.net.ConnectivityManager.TYPE_WIFI;
 
 /**
  * Created by trinkes on 9/29/16.
@@ -21,25 +16,26 @@ import static android.net.ConnectivityManager.TYPE_WIFI;
 public class NetworkStateReceiver extends BroadcastReceiver {
 
   @Override public void onReceive(Context context, Intent intent) {
-    handleScheduledDownloads(context, intent);
-  }
 
-  private void handleScheduledDownloads(@NonNull final Context context,
-      @NonNull final Intent intent) {
-    if (intent.getIntExtra(ConnectivityManager.EXTRA_NETWORK_TYPE, -1) != TYPE_WIFI
-        || !AptoideUtils.NetworkUtils.isAvailable(context, TYPE_WIFI)) {
-      return;
-    }
-    if (!ManagerPreferences.isScheduleDownloadsEnable()
-        || !AptoideUtils.NetworkUtils.isGeneralDownloadPermitted(context,
-        ManagerPreferences.getGeneralDownloadsWifi(),
-        ManagerPreferences.getGeneralDownloadsMobile())) {
+    int extraWifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, -1);
+    final boolean wifiEnabled = (extraWifiState == WifiManager.WIFI_STATE_ENABLED);
+
+    if (!wifiEnabled) {
+      // connectivity change detected but wifi is not enabled
+      // does nothing
       return;
     }
 
-    ScheduledDownloadRepository scheduledRepository =
-        RepositoryFactory.getScheduledDownloadRepository();
-    if (scheduledRepository != null && scheduledRepository.hasScheduleDownloads()) {
+    final boolean scheduledDownloadsEnabled = ManagerPreferences.scheduledDownloadsEnabled();
+
+    if (!scheduledDownloadsEnabled) {
+      // scheduled downloads auto-start is not enabled
+      // does nothing
+      return;
+    }
+
+    // start scheduled downloads (if there are any)
+    if (RepositoryFactory.getScheduledDownloadRepository().hasScheduleDownloads()) {
       Intent i = new Intent(Intent.ACTION_VIEW,
           Uri.parse(ScheduledDownloadsFragment.OPEN_SCHEDULE_DOWNLOADS_WITH_POPUP_URI));
       i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

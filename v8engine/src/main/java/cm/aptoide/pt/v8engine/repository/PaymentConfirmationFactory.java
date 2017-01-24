@@ -8,7 +8,11 @@ package cm.aptoide.pt.v8engine.repository;
 import cm.aptoide.pt.model.v3.PaymentConfirmationResponse;
 import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 
-public class PaymentConfirmationConverter {
+public class PaymentConfirmationFactory {
+
+  public PaymentConfirmation create(int productId, String paymentConfirmationId, PaymentConfirmation.Status status) {
+    return new PaymentConfirmation(productId, paymentConfirmationId, status);
+  }
 
   public PaymentConfirmation convertToPaymentConfirmation(int productId, PaymentConfirmationResponse response) {
     return new PaymentConfirmation(productId, response.getPaymentConfirmationId(),

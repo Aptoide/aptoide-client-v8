@@ -86,6 +86,12 @@ class ListFullReviewsSuccessRequestListener implements SuccessRequestListener<Li
       }
       count++;
     }
+
+    // Hammered to fix layout not visible on first call.
+    if (fragment.getAdapter().getItemCount() == 0) {
+      index = 0;
+    }
+
     fragment.checkAndRemoveProgressBarDisplayable();
     fragment.addDisplayables(displayables);
     if (index >= 0) {

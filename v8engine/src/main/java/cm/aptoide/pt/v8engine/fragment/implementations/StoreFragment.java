@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.DialogFragment;
@@ -15,7 +16,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -288,19 +289,23 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override public void setupViews() {
     super.setupViews();
-
     setHasOptionsMenu(true);
   }
 
-  @Override public void setupToolbar() {
+  @CallSuper @Override public void setupToolbar() {
     super.setupToolbar();
-    if (toolbar != null) {
-      ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(storeName);
-      ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-      toolbar.setLogo(R.drawable.ic_store);
-    }
+    // FIXME: 17/1/2017 sithengineer is this the right place to have this event ?? why ??
     Logger.d(TAG, "LOCALYTICS TESTING - STORES ACTION ENTER " + storeName);
     Analytics.Stores.enter(storeName);
+  }
+
+  protected boolean displayHomeUpAsEnabled() {
+    return true;
+  }
+
+  @Override protected void setupToolbarDetails(Toolbar toolbar) {
+    toolbar.setTitle(storeName);
+    toolbar.setLogo(R.drawable.ic_store);
   }
 
   protected static class BundleCons {

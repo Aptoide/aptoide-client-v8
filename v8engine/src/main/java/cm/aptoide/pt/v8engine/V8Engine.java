@@ -194,7 +194,7 @@ public abstract class V8Engine extends DataProvider {
     if (SecurePreferences.isFirstRun()) {
       createShortCut();
       PreferenceManager.setDefaultValues(this, R.xml.settings, false);
-      if (AptoideAccountManager.isLoggedIn()) {
+      if (AptoideAccountManager.isLoggedIn() && ManagerPreferences.isFirstRunV7()) {
         AptoideAccountManager.removeLocalAccount();
       }
       loadInstalledApps().doOnNext(o -> {
@@ -238,9 +238,10 @@ public abstract class V8Engine extends DataProvider {
     AptoideDownloadManager.getInstance()
         .init(this, new DownloadNotificationActionsActionsInterface(),
             new DownloadManagerSettingsI(), downloadAccessor, CacheHelper.build(),
-            new FileUtils(action -> Analytics.File.moveFile(action)),
+            new FileUtils(Analytics.File::moveFile),
             new TokenHttpClient(aptoideClientUUID, AptoideAccountManager::getUserEmail,
-                getConfiguration().getPartnerId()), new DownloadAnalytics(Analytics.getInstance()));
+                getConfiguration().getPartnerId()).customMake(),
+            new DownloadAnalytics(Analytics.getInstance()));
 
     fileManager.purgeCache()
         .subscribe(cleanedSize -> Logger.d(TAG,

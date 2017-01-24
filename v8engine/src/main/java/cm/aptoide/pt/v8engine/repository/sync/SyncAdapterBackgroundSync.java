@@ -62,7 +62,7 @@ public class SyncAdapterBackgroundSync {
   private void schedule(Bundle bundle) {
     bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
     bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-    ContentResolver.requestSync(getAccount(), configuration.getSyncAdapterAuthority(), bundle);
+    ContentResolver.requestSync(getAccount(), configuration.getContentAuthority(), bundle);
   }
 
   @NonNull private Account getAccount() {

@@ -19,9 +19,8 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -229,7 +228,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         AccessorFactory.getAccessorFor(Installed.class));
 
     productFactory = new ProductFactory();
-    appRepository = new AppRepository(new NetworkOperatorManager((TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE)));
+    appRepository = new AppRepository(new NetworkOperatorManager(
+        (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE)));
     adsRepository = new AdsRepository();
     installedRepository = RepositoryFactory.getInstalledRepository();
   }
@@ -304,8 +304,11 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     GetAppMeta.App app = getApp.getNodes().getMeta().getData();
     GetAppMeta.Media media = app.getMedia();
 
-    installDisplayable = AppViewInstallDisplayable.newInstance(getApp, installManager, minimalAd,
-        openType == OpenType.OPEN_AND_INSTALL, installedRepository);
+    final boolean shouldInstall = openType == OpenType.OPEN_AND_INSTALL;
+    openType = null;
+    installDisplayable =
+        AppViewInstallDisplayable.newInstance(getApp, installManager, minimalAd, shouldInstall,
+            installedRepository);
     displayables.add(installDisplayable);
     displayables.add(new AppViewStoreDisplayable(getApp));
     displayables.add(new AppViewRateAndCommentsDisplayable(getApp));
@@ -446,68 +449,64 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
 
-      if (subscription != null) {
-        subscription.unsubscribe();
-      }
+    if (subscription != null) {
+      subscription.unsubscribe();
+    }
 
-      if (appId >= 0) {
-        Logger.d(TAG, "loading app info using app ID");
-        subscription = appRepository.getApp(appId, refresh, sponsored, storeName, packageName)
-            .map(getApp -> this.getApp = getApp)
-            .flatMap(getApp -> manageOrganicAds(getApp))
-            .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
-            .observeOn(AndroidSchedulers.mainThread())
-            .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-            .subscribe(getApp -> {
-              setupAppView(getApp);
-            }, throwable -> finishLoading(throwable));
-      } else if (!TextUtils.isEmpty(md5)) {
-        subscription = appRepository.getAppFromMd5(md5, refresh, sponsored)
-            .map(getApp -> this.getApp = getApp)
-            .flatMap(getApp -> manageOrganicAds(getApp))
-            .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
-            .observeOn(AndroidSchedulers.mainThread())
-            .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-            .subscribe(getApp -> {
-              setupAppView(getApp);
-            }, throwable -> {
-              finishLoading(throwable);
-              CrashReports.logString(key_appId, String.valueOf(appId));
-              CrashReports.logString(key_packageName, String.valueOf(packageName));
-              CrashReports.logString(key_md5sum, md5);
-            });
-      } else {
-        Logger.d(TAG, "loading app info using app package name");
-        subscription = appRepository.getApp(packageName, refresh, sponsored, storeName)
-            .map(getApp -> this.getApp = getApp)
-            .flatMap(getApp -> manageOrganicAds(getApp))
-            .observeOn(AndroidSchedulers.mainThread())
-            .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-            .subscribe(getApp -> {
-              setupAppView(getApp);
-            }, throwable -> {
-              finishLoading(throwable);
-              CrashReports.logString(key_appId, String.valueOf(appId));
-              CrashReports.logString(key_packageName, String.valueOf(packageName));
-              CrashReports.logString(key_md5sum, md5);
-            });
-      }
+    if (appId >= 0) {
+      Logger.d(TAG, "loading app info using app ID");
+      subscription = appRepository.getApp(appId, refresh, sponsored, storeName, packageName)
+          .map(getApp -> this.getApp = getApp)
+          .flatMap(getApp -> manageOrganicAds(getApp))
+          .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
+          .observeOn(AndroidSchedulers.mainThread())
+          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+          .subscribe(getApp -> {
+            setupAppView(getApp);
+          }, throwable -> finishLoading(throwable));
+    } else if (!TextUtils.isEmpty(md5)) {
+      subscription = appRepository.getAppFromMd5(md5, refresh, sponsored)
+          .map(getApp -> this.getApp = getApp)
+          .flatMap(getApp -> manageOrganicAds(getApp))
+          .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
+          .observeOn(AndroidSchedulers.mainThread())
+          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+          .subscribe(getApp -> {
+            setupAppView(getApp);
+          }, throwable -> {
+            finishLoading(throwable);
+            CrashReports.logString(key_appId, String.valueOf(appId));
+            CrashReports.logString(key_packageName, String.valueOf(packageName));
+            CrashReports.logString(key_md5sum, md5);
+          });
+    } else {
+      Logger.d(TAG, "loading app info using app package name");
+      subscription = appRepository.getApp(packageName, refresh, sponsored, storeName)
+          .map(getApp -> this.getApp = getApp)
+          .flatMap(getApp -> manageOrganicAds(getApp))
+          .observeOn(AndroidSchedulers.mainThread())
+          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+          .subscribe(getApp -> {
+            setupAppView(getApp);
+          }, throwable -> {
+            finishLoading(throwable);
+            CrashReports.logString(key_appId, String.valueOf(appId));
+            CrashReports.logString(key_packageName, String.valueOf(packageName));
+            CrashReports.logString(key_md5sum, md5);
+          });
+    }
   }
 
   @Override public int getContentViewId() {
     return VIEW_ID;
   }
 
-  @Override public void setupViews() {
-    super.setupViews();
-    //		this.showAppInfo();
+  @Override protected boolean displayHomeUpAsEnabled() {
+    return true;
+  }
 
-    final AppCompatActivity parentActivity = (AppCompatActivity) getActivity();
-    ActionBar supportActionBar = parentActivity.getSupportActionBar();
-    if (supportActionBar != null) {
-      supportActionBar.setDisplayHomeAsUpEnabled(true);
-      supportActionBar.setTitle("");
-    }
+  @Override protected void setupToolbarDetails(Toolbar toolbar) {
+    toolbar.setTitle("");
   }
 
   @Override public void onDestroyView() {

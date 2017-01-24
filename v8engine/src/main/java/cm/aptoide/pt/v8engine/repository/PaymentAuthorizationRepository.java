@@ -59,9 +59,6 @@ public class PaymentAuthorizationRepository implements Repository {
 
   private Completable syncAuthorizations(List<Integer> paymentIds) {
     return Observable.from(paymentIds)
-        .doOnNext(paymentId -> authotizationAccessor.save(
-            authorizationFactory.convertToDatabasePaymentAuthorization(
-                authorizationFactory.create(paymentId, Authorization.Status.UNKNOWN))))
         .map(paymentId -> String.valueOf(paymentId))
         .toList()
         .doOnNext(stringIds -> backgroundSync.syncAuthorizations(stringIds))

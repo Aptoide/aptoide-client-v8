@@ -17,7 +17,7 @@ import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.products.InAppBillingProduct;
 import cm.aptoide.pt.v8engine.payment.products.PaidAppProduct;
-import cm.aptoide.pt.v8engine.repository.PaymentConfirmationConverter;
+import cm.aptoide.pt.v8engine.repository.PaymentConfirmationFactory;
 import cm.aptoide.pt.v8engine.repository.PaymentConfirmationRepository;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
@@ -35,20 +35,19 @@ public class PaymentConfirmationSync extends RepositorySync {
   private final Product product;
   private final NetworkOperatorManager operatorManager;
   private final PaymentConfirmationAccessor confirmationAccessor;
-  private final PaymentConfirmationConverter confirmationConverter;
+  private final PaymentConfirmationFactory confirmationFactory;
   private String paymentConfirmationId;
   private int paymentId;
 
   public PaymentConfirmationSync(PaymentConfirmationRepository paymentConfirmationRepository,
       Product product, NetworkOperatorManager operatorManager,
       PaymentConfirmationAccessor confirmationAccessor,
-      PaymentConfirmationConverter confirmationConverter, String paymentConfirmationId,
-      int paymentId) {
+      PaymentConfirmationFactory confirmationFactory, String paymentConfirmationId, int paymentId) {
     this.paymentConfirmationRepository = paymentConfirmationRepository;
     this.product = product;
     this.operatorManager = operatorManager;
     this.confirmationAccessor = confirmationAccessor;
-    this.confirmationConverter = confirmationConverter;
+    this.confirmationFactory = confirmationFactory;
     this.paymentConfirmationId = paymentConfirmationId;
     this.paymentId = paymentId;
   }
@@ -56,12 +55,12 @@ public class PaymentConfirmationSync extends RepositorySync {
   public PaymentConfirmationSync(PaymentConfirmationRepository paymentConfirmationRepository,
       Product product, NetworkOperatorManager operatorManager,
       PaymentConfirmationAccessor confirmationAccessor,
-      PaymentConfirmationConverter confirmationConverter) {
+      PaymentConfirmationFactory confirmationFactory) {
     this.paymentConfirmationRepository = paymentConfirmationRepository;
     this.product = product;
     this.operatorManager = operatorManager;
     this.confirmationAccessor = confirmationAccessor;
-    this.confirmationConverter = confirmationConverter;
+    this.confirmationFactory = confirmationFactory;
   }
 
   @Override public void sync(SyncResult syncResult) {
@@ -70,7 +69,9 @@ public class PaymentConfirmationSync extends RepositorySync {
       if (paymentConfirmationId != null) {
         serverPaymentConfirmation =
             createServerPaymentConfirmation(product, paymentConfirmationId, paymentId).andThen(
-                getServerPaymentConfirmation(product));
+                Single.fromCallable(
+                    () -> confirmationFactory.create(product.getId(), paymentConfirmationId,
+                        PaymentConfirmation.Status.COMPLETED)));
       } else {
         serverPaymentConfirmation = getServerPaymentConfirmation(product);
       }
@@ -89,15 +90,16 @@ public class PaymentConfirmationSync extends RepositorySync {
     if (throwable instanceof IOException) {
       rescheduleSync(syncResult);
     } else {
-      confirmationAccessor.save(confirmationConverter.convertToDatabasePaymentConfirmation(
-          PaymentConfirmation.syncingError(product.getId(), paymentConfirmationId)));
+      confirmationAccessor.save(confirmationFactory.convertToDatabasePaymentConfirmation(
+          confirmationFactory.create(product.getId(), paymentConfirmationId,
+              PaymentConfirmation.Status.SYNCING_ERROR)));
     }
   }
 
   private void saveAndReschedulePendingConfirmation(PaymentConfirmation paymentConfirmation,
       SyncResult syncResult) {
     confirmationAccessor.save(
-        confirmationConverter.convertToDatabasePaymentConfirmation(paymentConfirmation));
+        confirmationFactory.convertToDatabasePaymentConfirmation(paymentConfirmation));
     if (paymentConfirmation.isPending()) {
       rescheduleSync(syncResult);
     }
@@ -107,11 +109,9 @@ public class PaymentConfirmationSync extends RepositorySync {
       int paymentId) {
     return Single.just(product instanceof InAppBillingProduct).flatMap(isInAppBilling -> {
       if (isInAppBilling) {
-        return CreatePaymentConfirmationRequest.ofInApp(product.getId(), paymentId,
-            operatorManager, ((InAppBillingProduct) product).getDeveloperPayload(),
-            AptoideAccountManager.getAccessToken(), paymentConfirmationId)
-            .observe()
-            .toSingle();
+        return CreatePaymentConfirmationRequest.ofInApp(product.getId(), paymentId, operatorManager,
+            ((InAppBillingProduct) product).getDeveloperPayload(),
+            AptoideAccountManager.getAccessToken(), paymentConfirmationId).observe().toSingle();
       }
       return CreatePaymentConfirmationRequest.ofPaidApp(product.getId(), paymentId, operatorManager,
           ((PaidAppProduct) product).getStoreName(), AptoideAccountManager.getAccessToken(),
@@ -120,7 +120,8 @@ public class PaymentConfirmationSync extends RepositorySync {
       if (response != null && response.isOk()) {
         return Completable.complete();
       }
-      return Completable.error(new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
+      return Completable.error(
+          new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
     });
   }
 
@@ -138,7 +139,7 @@ public class PaymentConfirmationSync extends RepositorySync {
     }).flatMap(response -> {
       if (response != null && response.isOk()) {
         return Single.just(
-            confirmationConverter.convertToPaymentConfirmation(product.getId(), response));
+            confirmationFactory.convertToPaymentConfirmation(product.getId(), response));
       }
       return Single.error(new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
     });

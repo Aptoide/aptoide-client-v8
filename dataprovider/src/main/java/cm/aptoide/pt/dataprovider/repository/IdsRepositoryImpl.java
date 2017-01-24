@@ -96,6 +96,7 @@ public class IdsRepositoryImpl implements IdsRepository, AptoideClientUUID {
     sharedPreferences.edit().putString(APTOIDE_CLIENT_UUID, aptoideId).apply();
   }
 
+  // FIXME: 16/1/2017 sithengineer don't call this in the UI thread.
   private void generateGAID() {
 
     String gaid = null;

@@ -259,7 +259,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     getContext().sendBroadcast(new Intent().setAction(LOGOUT));
   }
 
-  private static @Nullable String getRefreshToken() {
+  public static @Nullable String getRefreshToken() {
     String refreshToken = AccountManagerPreferences.getRefreshToken();
 
     if (refreshToken == null || TextUtils.isEmpty(refreshToken)) {
