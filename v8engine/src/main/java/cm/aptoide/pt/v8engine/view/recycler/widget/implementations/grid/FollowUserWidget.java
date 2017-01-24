@@ -94,7 +94,7 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
     } else {
       drawable = getContext().getResources().getDrawable(R.drawable.ic_store);
     }
-    drawable.setBounds(0, 0, 50, 50);
+    drawable.setBounds(0, 0, 30, 30);
     drawable.mutate();
 
     drawable.setColorFilter(storeColor, PorterDuff.Mode.SRC_IN);
