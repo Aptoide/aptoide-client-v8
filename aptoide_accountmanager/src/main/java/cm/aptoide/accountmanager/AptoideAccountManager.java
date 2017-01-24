@@ -388,7 +388,9 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     ProgressDialog genericPleaseWaitDialog = null;
     if (context != null) {
       genericPleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(context);
-      genericPleaseWaitDialog.show();
+      if (!((Activity) context).isFinishing()) {
+        genericPleaseWaitDialog.show();
+      }
     }
     OAuth2AuthenticationRequest oAuth2AuthenticationRequest =
         OAuth2AuthenticationRequest.of(userName, passwordOrToken, mode, nameForGoogle);
