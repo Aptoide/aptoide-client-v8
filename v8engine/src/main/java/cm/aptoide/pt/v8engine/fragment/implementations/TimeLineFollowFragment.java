@@ -53,6 +53,18 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
     return fragment;
   }
 
+  public static TimeLineFollowFragment newInstance(FollowFragmentOpenMode openMode,
+      String storeTheme) {
+    Bundle args = new Bundle();
+    args.putString(TITLE_KEY,
+        DataProvider.getContext().getString(R.string.social_timeline_who_liked));
+    args.putSerializable(OPEN_MODE, openMode);
+    args.putString(BundleCons.STORE_THEME, storeTheme);
+    TimeLineFollowFragment fragment = new TimeLineFollowFragment();
+    fragment.setArguments(args);
+    return fragment;
+  }
+
   @Override protected boolean displayHomeUpAsEnabled() {
     return true;
   }
@@ -106,17 +118,24 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
         dispList.clear();
       };
 
-      EndlessRecyclerOnScrollListener.BooleanAction<GetFollowers> firstRequest = response -> {
-        dispList.add(0, new MessageWhiteBgDisplayable(getHeaderMessage()));
-        return false;
-      };
+      EndlessRecyclerOnScrollListener.BooleanAction<GetFollowers> firstRequest = null;
+      if (openMode == FollowFragmentOpenMode.FOLLOWERS
+          || openMode == FollowFragmentOpenMode.FOLLOWING) {
+        firstRequest = response -> {
+          dispList.add(0, new MessageWhiteBgDisplayable(getHeaderMessage()));
+          return false;
+        };
+      }
 
       recyclerView.clearOnScrollListeners();
       endlessRecyclerOnScrollListener =
           new EndlessRecyclerOnScrollListener(this.getAdapter(), request, action,
               Throwable::printStackTrace, 6, true, firstRequest, null);
-      endlessRecyclerOnScrollListener.setOnEndOfListReachedListener(
-          () -> addDisplayable(new MessageWhiteBgDisplayable(getFooterMessage(hidden[0]))));
+      if (openMode == FollowFragmentOpenMode.FOLLOWERS
+          || openMode == FollowFragmentOpenMode.FOLLOWING) {
+        endlessRecyclerOnScrollListener.setOnEndOfListReachedListener(
+            () -> addDisplayable(new MessageWhiteBgDisplayable(getFooterMessage(hidden[0]))));
+      }
       recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
       endlessRecyclerOnScrollListener.onLoadMore(refresh);
     } else {
@@ -165,6 +184,6 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
   }
 
   public enum FollowFragmentOpenMode {
-    FOLLOWERS, FOLLOWING,
+    FOLLOWERS, FOLLOWING, LIKE_PREVIEW
   }
 }

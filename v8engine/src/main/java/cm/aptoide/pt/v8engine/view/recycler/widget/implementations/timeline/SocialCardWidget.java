@@ -152,22 +152,25 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
     ImageView likeUserPreviewIcon3 =
         (ImageView) likeUserPreviewView3.findViewById(R.id.social_timeline_like_user_preview);
 
-    ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) likeUserPreviewView.getLayoutParams();
+    ViewGroup.MarginLayoutParams p =
+        (ViewGroup.MarginLayoutParams) likeUserPreviewView.getLayoutParams();
     p.setMargins(60, 0, 0, 0);
     likeUserPreviewView1.requestLayout();
 
-    ViewGroup.MarginLayoutParams p1 = (ViewGroup.MarginLayoutParams) likeUserPreviewView1.getLayoutParams();
+    ViewGroup.MarginLayoutParams p1 =
+        (ViewGroup.MarginLayoutParams) likeUserPreviewView1.getLayoutParams();
     p1.setMargins(40, 0, 0, 0);
     likeUserPreviewView1.requestLayout();
 
-    ViewGroup.MarginLayoutParams p2 = (ViewGroup.MarginLayoutParams) likeUserPreviewView2.getLayoutParams();
+    ViewGroup.MarginLayoutParams p2 =
+        (ViewGroup.MarginLayoutParams) likeUserPreviewView2.getLayoutParams();
     p2.setMargins(20, 0, 0, 0);
     likeUserPreviewView2.requestLayout();
 
-    ViewGroup.MarginLayoutParams p3 = (ViewGroup.MarginLayoutParams) likeUserPreviewView3.getLayoutParams();
+    ViewGroup.MarginLayoutParams p3 =
+        (ViewGroup.MarginLayoutParams) likeUserPreviewView3.getLayoutParams();
     p3.setMargins(0, 0, 0, 0);
     likeUserPreviewView3.requestLayout();
-
 
     ImageLoader.loadWithShadowCircleTransform(R.drawable.user_account_grey, likeUserPreviewIcon);
     ImageLoader.loadWithShadowCircleTransform(R.drawable.icon_user, likeUserPreviewIcon1);
@@ -178,6 +181,12 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
     likePreviewContainer.addView(likeUserPreviewView1);
     likePreviewContainer.addView(likeUserPreviewView2);
     likePreviewContainer.addView(likeUserPreviewView3);
+
+    compositeSubscription.add(RxView.clicks(likePreviewContainer)
+        .subscribe(click -> displayable.likesPreviewClick(((FragmentShower) getContext())),
+            (throwable) -> {
+              throwable.printStackTrace();
+            }));
   }
 
   @NonNull private Action1<Throwable> showError() {

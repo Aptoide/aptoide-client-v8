@@ -6,6 +6,9 @@ import android.text.Spannable;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.fragment.implementations.TimeLineFollowFragment;
+import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.DateCalculator;
 import java.util.Date;
@@ -50,4 +53,10 @@ public abstract class SocialCardDisplayable extends CardDisplayable {
   }
 
   public abstract void like(Context context, String cardType, int rating);
+
+  public void likesPreviewClick(FragmentShower fragmentShower) {
+    fragmentShower.pushFragmentV4(V8Engine.getFragmentProvider()
+        .newTimeLineFollowStatsFragment(TimeLineFollowFragment.FollowFragmentOpenMode.LIKE_PREVIEW,
+            "default"));
+  }
 }

@@ -252,13 +252,17 @@ public class FragmentProviderImpl implements FragmentProvider {
     return TimeLineFollowFragment.newInstance(openMode, followNumber, storeTheme);
   }
 
+  @Override public Fragment newTimeLineFollowStatsFragment(
+      TimeLineFollowFragment.FollowFragmentOpenMode openMode, String storeTheme) {
+    return TimeLineFollowFragment.newInstance(openMode, storeTheme);
+  }
+
   @Override
   public Fragment newCommentGridRecyclerFragment(CommentType commentType, String elementId) {
     return CommentListFragment.newInstance(commentType, elementId);
   }
 
-  @Override
-  public Fragment newCommentGridRecyclerFragmentUrl(CommentType commentType, String url) {
+  @Override public Fragment newCommentGridRecyclerFragmentUrl(CommentType commentType, String url) {
     return CommentListFragment.newInstanceUrl(commentType, url);
   }
 }

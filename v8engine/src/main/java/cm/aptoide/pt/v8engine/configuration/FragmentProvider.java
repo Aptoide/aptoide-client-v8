@@ -116,6 +116,9 @@ public interface FragmentProvider {
   Fragment newTimeLineFollowStatsFragment(TimeLineFollowFragment.FollowFragmentOpenMode openMode,
       long followNumber, String storeTheme);
 
+  Fragment newTimeLineFollowStatsFragment(TimeLineFollowFragment.FollowFragmentOpenMode openMode,
+      String storeTheme);
+
   Fragment newCommentGridRecyclerFragment(CommentType commentType, String elementId);
 
   Fragment newCommentGridRecyclerFragmentUrl(CommentType commentType, String url);
