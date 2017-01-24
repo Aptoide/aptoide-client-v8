@@ -891,8 +891,12 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
   }
 
   void onLoginSuccess(LoginMode loginType, String loginOrigin, String username, String password) {
+
     userIsLoggedIn = true;
-    mCallback.onLoginSuccess();
+
+    if (mCallback != null) {
+      mCallback.onLoginSuccess();
+    }
     if (analytics != null) {
       analytics.login(loginType.name());
     }
