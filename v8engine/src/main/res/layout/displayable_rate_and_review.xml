@@ -9,6 +9,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/comment_gray"
     android:orientation="vertical"
     >
 
@@ -28,7 +29,6 @@
 
     <android.support.v7.widget.AppCompatRatingBar
         android:id="@+id/rating_bar"
-        style="@style/Widget.AppCompat.RatingBar.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/user_icon"
@@ -40,6 +40,7 @@
         android:progressDrawable="@drawable/rating_bar_small"
         android:stepSize="1.0"
         tools:rating="5.0"
+        style="@style/Widget.AppCompat.RatingBar.Small"
         />
 
     <TextView
@@ -63,7 +64,7 @@
         android:id="@+id/comment_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/rating_bar"
+        android:layout_alignTop="@id/rating_bar"
         android:layout_marginLeft="8.7dp"
         android:layout_marginStart="8.7dp"
         android:layout_toEndOf="@id/rating_bar"
@@ -88,6 +89,7 @@
         android:layout_toRightOf="@id/user_icon"
         android:ellipsize="end"
         android:maxLines="1"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="8.7sp"
         android:textStyle="bold"
         tools:text="Mary Pollaki"
@@ -123,7 +125,7 @@
 
     <Button
         android:id="@+id/helpful_btn"
-        android:layout_width="wrap_content"
+        android:layout_width="107dp"
         android:layout_height="26.7dp"
         android:layout_below="@id/comment"
         android:layout_marginTop="14dp"
@@ -135,12 +137,13 @@
         android:text="@string/helpful"
         android:textAllCaps="true"
         android:textColor="@color/app_view_gray"
-        android:textSize="9sp"
+        android:textSize="8sp"
+        android:textStyle="bold"
         />
 
     <Button
         android:id="@+id/not_helpful_btn"
-        android:layout_width="wrap_content"
+        android:layout_width="107dp"
         android:layout_height="26.7dp"
         android:layout_below="@id/comment"
         android:layout_marginLeft="9.7dp"
@@ -155,7 +158,8 @@
         android:text="@string/not_helpful"
         android:textAllCaps="true"
         android:textColor="@color/app_view_gray"
-        android:textSize="9sp"
+        android:textSize="8sp"
+        android:textStyle="bold"
         />
 
     <TextView
@@ -169,9 +173,9 @@
         android:drawablePadding="10dp"
         android:drawableRight="@drawable/ic_up_arrow"
         android:gravity="center"
-        android:text="@string/comments"
         android:textAllCaps="true"
         android:textSize="8sp"
+        tools:text="@string/reviews_expand_button"
         />
   </RelativeLayout>
 

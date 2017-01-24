@@ -158,6 +158,14 @@ import rx.Observable;
     } else {
       itemView.setBackgroundColor(res.getColor(color));
     }
+    int numberComments = displayable.getNumberComments();
+    if (numberComments > 0) {
+      showHideReplies.setVisibility(View.VISIBLE);
+      showHideReplies.setText(
+          AptoideUtils.StringU.getFormattedString(R.string.reviews_expand_button, numberComments));
+    } else {
+      showHideReplies.setVisibility(View.GONE);
+    }
   }
 
   private void loadCommentsForThisReview(long reviewId, int limit, CommentAdder commentAdder) {
