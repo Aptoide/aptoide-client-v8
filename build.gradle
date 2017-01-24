@@ -49,8 +49,7 @@ task wrapper(type: Wrapper) {
 ext {
 
   //JW stands for Jake Wharton
-
-  APPLICATION_ID = 'cm.aptoide.pt'
+  APPLICATION_ID = 'com.aptoide.partners'
 
   //
   // gradle build script vars
