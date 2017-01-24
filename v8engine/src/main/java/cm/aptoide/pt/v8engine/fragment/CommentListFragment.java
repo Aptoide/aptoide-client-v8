@@ -293,12 +293,12 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
         addDisplayables(this.displayables);
       }
     });
-    recyclerView.clearOnScrollListeners();
+    getRecyclerView().clearOnScrollListeners();
     EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(getAdapter(), listCommentsRequest, listCommentsAction,
             Throwable::printStackTrace, true);
 
-    recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+    getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(refresh);
   }
 
@@ -388,12 +388,12 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
       }
     });
 
-    recyclerView.clearOnScrollListeners();
+    getRecyclerView().clearOnScrollListeners();
     EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(getAdapter(), listCommentsRequest, listCommentsAction,
             Throwable::printStackTrace, true);
 
-    recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+    getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(refresh);
   }
 }

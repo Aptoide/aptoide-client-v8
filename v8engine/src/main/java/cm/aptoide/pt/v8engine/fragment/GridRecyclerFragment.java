@@ -46,6 +46,6 @@ public abstract class GridRecyclerFragment<T extends BaseAdapter>
   }
 
   @Override protected RecyclerView.LayoutManager createLayoutManager() {
-    return new BaseGridLayoutManager(getActivity(), adapter);
+    return new BaseGridLayoutManager(getActivity(), getAdapter());
   }
 }

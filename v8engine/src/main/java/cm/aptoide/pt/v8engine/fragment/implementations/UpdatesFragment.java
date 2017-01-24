@@ -48,12 +48,17 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 
   private static final String TAG = UpdatesFragment.class.getName();
 
-  private List<Displayable> updatesDisplayablesList = new LinkedList<>();
-  private List<Displayable> installedDisplayablesList = new LinkedList<>();
+  private List<Displayable> updatesDisplayablesList;
+  private List<Displayable> installedDisplayablesList;
+
   private InstallManager installManager;
   private Analytics analytics;
   private DownloadEventConverter downloadInstallEventConverter;
   private InstallEventConverter installConverter;
+
+  private StoreRepository storeRepository;
+  private InstalledRepository installedRepository;
+  private UpdateRepository updateRepository;
 
   @NonNull public static UpdatesFragment newInstance() {
     return new UpdatesFragment();
@@ -69,6 +74,13 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     analytics = Analytics.getInstance();
     downloadInstallEventConverter = new DownloadEventConverter();
     installConverter = new InstallEventConverter();
+
+    updatesDisplayablesList = new LinkedList<>();
+    installedDisplayablesList = new LinkedList<>();
+
+    storeRepository = RepositoryFactory.getStoreRepository();
+    installedRepository = RepositoryFactory.getInstalledRepository();
+    updateRepository = RepositoryFactory.getUpdateRepository();
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
@@ -118,6 +130,12 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 
   @Override public void reload() {
     super.reload();
+    // get store count
+
+    // if user has stores get updates
+
+    // show updates if existing (and message)
+
     reloadData().observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(updates -> {
@@ -139,8 +157,6 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
   }
 
   private Observable<List<Update>> reloadData() {
-    StoreRepository storeRepository = RepositoryFactory.getStoreRepository();
-    UpdateRepository updateRepository = RepositoryFactory.getUpdateRepository();
     return storeRepository.count().first().flatMap(numberStores -> {
       if (numberStores <= 0) {
         return Observable.error(new RepositoryItemNotFoundException("no stores added"));
@@ -151,23 +167,21 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
   }
 
   private Observable<List<Update>> fetchUpdates() {
-    return RepositoryFactory.getUpdateRepository().getAllSorted(false);
+    return updateRepository.getAllSorted(false);
   }
 
   private Observable<List<Installed>> fetchInstalled() {
-    UpdateRepository updateRepo = RepositoryFactory.getUpdateRepository();
-    InstalledRepository installedRepo = RepositoryFactory.getInstalledRepository();
 
-    return installedRepo.getAllSorted().flatMap(
+    return installedRepository.getAllSorted().flatMap(
         // hack to make stream of changes complete inside this observable
         listItems -> Observable.from(listItems)
-            .flatMap(item -> filterUpdates(updateRepo, item))
+            .flatMap(item -> filterUpdates(item))
             .filter(item -> !item.isSystemApp())
             .toList()); // filter for installed apps in updates
   }
 
-  private Observable<Installed> filterUpdates(UpdateRepository updateRepo, Installed item) {
-    return updateRepo.contains(item.getPackageName(), false).flatMap(isUpdate -> {
+  private Observable<Installed> filterUpdates(Installed item) {
+    return updateRepository.contains(item.getPackageName(), false).flatMap(isUpdate -> {
       if (isUpdate) {
         return Observable.empty();
       }
@@ -176,9 +190,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
   }
 
   private void setDisplayables() {
-    LinkedList<Displayable> displayables = new LinkedList<>();
-    displayables.addAll(updatesDisplayablesList);
-    displayables.addAll(installedDisplayablesList);
-    setDisplayables(displayables);
+    clearDisplayables().addDisplayables(updatesDisplayablesList, false)
+        .addDisplayables(installedDisplayablesList, true);
   }
 }

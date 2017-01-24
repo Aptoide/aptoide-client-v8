@@ -30,7 +30,6 @@ import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEventCon
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadInstallBaseEvent;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEvent;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEventConverter;
-import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
@@ -46,9 +45,6 @@ import rx.android.schedulers.AndroidSchedulers;
 
 import static cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver.SCHEDULE_DOWNLOADS;
 
-/**
- * Created by sithengineer on 19/07/16.
- */
 public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter> {
 
   public static final String OPEN_SCHEDULE_DOWNLOADS_WITH_POPUP_URI =
@@ -62,8 +58,6 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
   private DownloadEventConverter downloadConverter;
   private Analytics analytics;
   private InstallEventConverter installConverter;
-
-  //	private CompositeSubscription compositeSubscription;
 
   public ScheduledDownloadsFragment() {
   }
@@ -98,7 +92,6 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
-    Logger.d(TAG, "refresh excluded updates? " + (create ? "yes" : "no"));
     if (create) {
       switch (openMode) {
         case normal:
@@ -126,17 +119,6 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
     }
     fetchScheduledDownloads();
   }
-
-  //	@Override
-  //	public void onDestroyView() {
-  //		super.onDestroyView();
-  //		Observable.empty().observeOn(RealmSchedulers.getScheduler()).concatWith(Observable.fromCallable(() -> {
-  //			if (compositeSubscription != null && compositeSubscription.hasSubscriptions()) {
-  //				compositeSubscription.unsubscribe();
-  //			}
-  //			return null;
-  //		})).subscribe();
-  //	}
 
   @Override public int getContentViewId() {
     return R.layout.fragment_with_toolbar;
@@ -197,7 +179,7 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
       for (final Scheduled scheduledDownload : scheduledDownloadList) {
         displayables.add(new ScheduledDownloadDisplayable(scheduledDownload, installManager));
       }
-      setDisplayables(displayables);
+      clearDisplayables().addDisplayables(displayables, true);
     }
   }
 

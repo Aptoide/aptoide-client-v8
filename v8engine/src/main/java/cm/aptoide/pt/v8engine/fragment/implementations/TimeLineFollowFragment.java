@@ -111,16 +111,16 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
         return false;
       };
 
-      recyclerView.clearOnScrollListeners();
+      getRecyclerView().clearOnScrollListeners();
       endlessRecyclerOnScrollListener =
           new EndlessRecyclerOnScrollListener(this.getAdapter(), request, action,
               Throwable::printStackTrace, 6, true, firstRequest, null);
       endlessRecyclerOnScrollListener.setOnEndOfListReachedListener(
           () -> addDisplayable(new MessageWhiteBgDisplayable(getFooterMessage(hidden[0]))));
-      recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+      getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
       endlessRecyclerOnScrollListener.onLoadMore(refresh);
     } else {
-      recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+      getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     }
   }
 
