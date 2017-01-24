@@ -887,7 +887,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
   }
 
   void onLoginFail(String reason) {
-    mCallback.onLoginFail(reason);
+    if (mCallback != null) mCallback.onLoginFail(reason);
   }
 
   void onLoginSuccess(LoginMode loginType, String loginOrigin, String username, String password) {
