@@ -20,6 +20,7 @@ public class EntitiesFactory {
     String name = getApp.getNodes().getMeta().getData().getName();
     String packageName = getApp.getNodes().getMeta().getData().getPackageName();
     String iconPath = getApp.getNodes().getMeta().getData().getIcon();
+    getApp.getNodes().getMeta().getData().getIcon();
     String featuredGraphicPath = getApp.getNodes().getMeta().getData().getGraphic();
 
     int vercode = getApp.getNodes().getMeta().getData().getFile().getVercode();

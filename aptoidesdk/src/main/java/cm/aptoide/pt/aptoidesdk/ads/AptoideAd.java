@@ -3,6 +3,7 @@ package cm.aptoide.pt.aptoidesdk.ads;
 import cm.aptoide.pt.aptoidesdk.Ad;
 import cm.aptoide.pt.aptoidesdk.Aptoide;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
+import cm.aptoide.pt.utils.AptoideUtils;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -26,6 +27,10 @@ import lombok.experimental.Accessors;
    */
   @Getter final long appId;
   /**
+   * The store name of this ad.
+   */
+  @Getter final String storeName;
+  /**
    * The package name of this ad.
    */
   @Getter final String packageName;
@@ -37,6 +42,10 @@ import lombok.experimental.Accessors;
    * The path ot the icon of this ad.
    */
   @Getter final String iconPath;
+  /**
+   * The path ot the icon of this ad.
+   */
+  @Getter final String iconThumbnailPath;
   /**
    * The size of this ad.
    */
@@ -59,10 +68,11 @@ import lombok.experimental.Accessors;
   @JsonCreator
   public AptoideAd(@JsonProperty("timestamp") long timestamp, @JsonProperty("id") long id,
       @JsonProperty("clicks") Clicks clicks, @JsonProperty("network") Network network,
-      @JsonProperty("appId") long appId, @JsonProperty("packageName") String packageName,
-      @JsonProperty("name") String name, @JsonProperty("iconPath") String iconPath,
-      @JsonProperty("size") long size, @JsonProperty("vercode") int vercode,
-      @JsonProperty("vername") String vername, @JsonProperty("description") String description) {
+      @JsonProperty("appId") long appId, @JsonProperty("storeName") String storeName,
+      @JsonProperty("packageName") String packageName, @JsonProperty("name") String name,
+      @JsonProperty("iconPath") String iconPath, @JsonProperty("size") long size,
+      @JsonProperty("vercode") int vercode, @JsonProperty("vername") String vername,
+      @JsonProperty("description") String description) {
 
     this.timestamp = timestamp;
     this.id = id;
@@ -70,9 +80,11 @@ import lombok.experimental.Accessors;
     this.network = network;
 
     this.appId = appId;
+    this.storeName = storeName;
     this.packageName = packageName;
     this.name = name;
     this.iconPath = iconPath;
+    this.iconThumbnailPath = AptoideUtils.IconSizeU.getNewImageUrl(iconPath);
     this.size = size;
 
     this.vercode = vercode;
@@ -82,6 +94,7 @@ import lombok.experimental.Accessors;
 
   static AptoideAd from(GetAdsResponse.Ad ad) {
     long adId = ad.getInfo().getAdId();
+    String storeName = ad.getData().getRepo();
 
     Clicks clicks = Clicks.fromGetAds(ad);
     Network network = Network.fromGetAds(ad);
@@ -98,8 +111,12 @@ import lombok.experimental.Accessors;
 
     String description = data.getDescription();
 
-    return new AptoideAd(System.currentTimeMillis(), adId, clicks, network, appId, packageName,
-        name, iconPath, size, vercode, vername, description);
+    return new AptoideAd(System.currentTimeMillis(), adId, clicks, network, appId, storeName,
+        packageName, name, iconPath, size, vercode, vername, description);
+  }
+
+  @Override public String getStore() {
+    return storeName;
   }
 
   @AllArgsConstructor @NoArgsConstructor @EqualsAndHashCode @lombok.Data @Accessors(chain = true)

@@ -18,10 +18,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.aptoidesdk.Ad;
 import cm.aptoide.pt.aptoidesdk.Aptoide;
-import cm.aptoide.pt.aptoidesdk.entities.util.SyncEndlessController;
 import cm.aptoide.pt.aptoidesdk.entities.App;
 import cm.aptoide.pt.aptoidesdk.entities.SearchResult;
 import cm.aptoide.pt.aptoidesdk.entities.misc.Group;
+import cm.aptoide.pt.aptoidesdk.entities.util.SyncEndlessController;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import java.io.File;
 import java.util.List;
@@ -31,6 +31,7 @@ import java.util.List;
  */
 public class MainActivity extends AppCompatActivity {
 
+  SyncEndlessController<App> appEndlessController;
   private TextView tv;
   private DownloadManager downloadManager;
   private View app1;
@@ -105,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
 
     app.setOnClickListener(view -> {
 
-      System.out.println("clicked on " + ad.getName());
+      System.out.println("clicked on " + ad.getName() + " in store " + ad.getStore());
       if (sponsored) {
         downloadData(Aptoide.getApp(ad).getFile().getPath());
       } else {
@@ -139,8 +140,6 @@ public class MainActivity extends AppCompatActivity {
       tv.setText("app name: " + l.getName());
     }
   }
-
-  SyncEndlessController<App> appEndlessController;
 
   public void listAppsClick(View view) {
 

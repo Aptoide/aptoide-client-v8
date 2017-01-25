@@ -29,6 +29,11 @@ public interface Ad {
   String getIconPath();
 
   /**
+   * The path ot the thumbnail of the icon of this ad.
+   */
+  String getIconThumbnailPath();
+
+  /**
    * The size of this ad.
    */
   long getSize();
@@ -47,4 +52,9 @@ public interface Ad {
    * The description of this ad.
    */
   String getDescription();
+
+  /**
+   * @return the store name of this ad.
+   */
+  String getStore();
 }
