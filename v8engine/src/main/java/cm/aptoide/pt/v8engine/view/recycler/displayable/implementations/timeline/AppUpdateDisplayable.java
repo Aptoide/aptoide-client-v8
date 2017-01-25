@@ -193,7 +193,7 @@ public class AppUpdateDisplayable extends CardDisplayable {
     return context.getString(R.string.displayable_social_timeline_app_update_error);
   }
 
-  public String getUpdateNoSpaceErrorText(Context context) {
+  private String getUpdateNoSpaceErrorText(Context context) {
     return context.getString(R.string.out_of_space_error);
   }
 
@@ -223,5 +223,18 @@ public class AppUpdateDisplayable extends CardDisplayable {
 
   @Override public void share(Context context, boolean privacyResult) {
     socialRepository.share(getTimelineCard(), context, privacyResult);
+  }
+
+  public String getErrorMessage(Context context, int error) {
+    String toReturn = null;
+    switch (error) {
+      case Download.GENERIC_ERROR:
+        toReturn = getUpdateErrorText(context);
+        break;
+      case Download.NOT_ENOUGH_SPACE_ERROR:
+        toReturn = getUpdateNoSpaceErrorText(context);
+        break;
+    }
+    return toReturn;
   }
 }

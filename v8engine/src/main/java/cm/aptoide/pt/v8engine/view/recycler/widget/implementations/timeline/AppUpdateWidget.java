@@ -154,19 +154,6 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
     return null;
   }
 
-  private Void showDownloadError(AppUpdateDisplayable displayable,
-      @Download.DownloadError int error) {
-    switch (error) {
-      case Download.GENERIC_ERROR:
-        showDownloadError(displayable, displayable.getUpdateErrorText(getContext()));
-        break;
-      case Download.NOT_ENOUGH_SPACE_ERROR:
-        showDownloadError(displayable, displayable.getUpdateNoSpaceErrorText(getContext()));
-        break;
-    }
-    return null;
-  }
-
   private void updateInstallProgress(AppUpdateDisplayable displayable,
       Progress<Download> downloadProgress) {
     errorText.setVisibility(View.GONE);
@@ -191,7 +178,8 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
         }
         break;
       case Progress.ERROR:
-        showDownloadError(displayable, downloadProgress.getRequest().getDownloadError());
+        showDownloadError(displayable, displayable.getErrorMessage(getContext(),
+            downloadProgress.getRequest().getDownloadError()));
         break;
       case Progress.INACTIVE:
       default:
