@@ -1,5 +1,0 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<resources><string name="aptoide_downloading">%s завантажується</string>
-    <string name="pause_download">Пауза</string>
-    <string name="resume_download">Відновити</string>
-</resources>

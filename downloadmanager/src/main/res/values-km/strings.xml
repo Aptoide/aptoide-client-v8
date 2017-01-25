@@ -1,8 +1,0 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<resources><string name="aptoide_downloading">%s កំពុងទាញយក</string>
-    <string name="pause_download">ផ្អាក</string>
-    <string name="resume_download">ចាប់ផ្តើមឡើងវិញ</string>
-<string name="general_downloads_dialog_only_mobile_message">អ្នកជ្រើសដើម្បីទាញយកត្រឹមតែ​ទូរស័ព្ទចល័ត 3G/4G ប៉ុណ្ណោះ។ តើអ្នកចង់ផ្លាស់ប្តូរការកំណត់​របស់​អ្នក​ឬទេ?</string>
-  <string name="general_downloads_dialog_only_wifi_message">អ្នកជ្រើសដើម្បីទាញយកតែនៅលើ WiFi ប៉ុណ្ណោះ។ តើអ្នកចង់ផ្លាស់ប្តូរការកំណត់ឬទេ?</string>
-  <string name="general_downloads_dialog_no_download_rule_message">គ្មានវិធានការទាញយកត្រូវបានកំណត់ទេ។ តើអ្នកចង់ផ្លាស់ប្តូរការកំណត់ឬទេ?</string>
-</resources>

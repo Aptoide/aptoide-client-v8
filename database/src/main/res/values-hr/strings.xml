@@ -1,6 +1,0 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<resources><string name="download_completed">Preuzimanje završeno</string>
-  <string name="download_paused">Preuzimanje pauzirano</string>
-  <string name="download_progress">Preuzimanje u tijeku</string>
-  <string name="download_queue">U redu</string>
-</resources>
