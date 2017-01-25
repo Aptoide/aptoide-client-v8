@@ -1,7 +1,7 @@
 package cm.aptoide.pt.v8engine.fragment;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,16 +16,13 @@ public class GridRecyclerSwipeWithToolbarFragment extends GridRecyclerSwipeFragm
   public static final String TITLE_KEY = "TITLE_KEY";
   private String title;
 
-  @Override public void setupToolbar() {
-    // It's not calling super cause it does nothing in the middle class}
-    // StoreTabGridRecyclerFragment.
-    if (toolbar != null) {
-      ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-      ((AppCompatActivity) getActivity()).getSupportActionBar()
-          .setTitle(Translator.translate(title));
-      ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-      toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
-    }
+  @Override public void setupToolbarDetails(Toolbar toolbar) {
+    toolbar.setTitle(Translator.translate(title));
+    toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
+  }
+
+  @Override protected boolean displayHomeUpAsEnabled() {
+    return true;
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {

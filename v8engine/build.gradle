@@ -38,10 +38,14 @@ android {
     internal {
       buildConfigField "String", "PAYPAL_ENVIRONMENT", "\"" + project.PAYPAL_ENVIRONMENT_SANDBOX + "\""
       buildConfigField "String", "PAYPAL_KEY", "\"" + project.PAYPAL_SANDBOX_KEY + "\""
+      buildConfigField "String", "APTOIDE_WEBSOCKETS_SCHEME", "\"" + project.APTOIDE_WEBSOCKETS_SCHEME + "\""
+      buildConfigField "String", "APTOIDE_WEBSOCKETS_HOST", "\"" + project.APTOIDE_WEBSOCKETS_HOST + "\""
     }
     prod {
       buildConfigField "String", "PAYPAL_ENVIRONMENT", "\"" + project.PAYPAL_ENVIRONMENT_LIVE + "\""
       buildConfigField "String", "PAYPAL_KEY", "\"" + project.PAYPAL_PRODUCTION_KEY + "\""
+      buildConfigField "String", "APTOIDE_WEBSOCKETS_SCHEME", "\"" + project.APTOIDE_WEBSOCKETS_SCHEME + "\""
+      buildConfigField "String", "APTOIDE_WEBSOCKETS_HOST", "\"" + project.APTOIDE_WEBSOCKETS_HOST + "\""
     }
   }
 
@@ -164,7 +168,6 @@ dependencies {
   //Only used by localytics
   compile "com.google.android.gms:play-services-ads:${PLAY_SERVICES_VERSION}"
   compile "com.google.android.gms:play-services-gcm:${PLAY_SERVICES_VERSION}"
-  compile 'com.github.jd-alexander:LikeButton:0.2.0'
 
     // Flurry Android sdk
   compile "com.flurry.android:analytics:${FLURRY_VERSION}"

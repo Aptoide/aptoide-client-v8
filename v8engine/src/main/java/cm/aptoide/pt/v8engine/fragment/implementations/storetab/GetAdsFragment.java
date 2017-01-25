@@ -3,7 +3,7 @@ package cm.aptoide.pt.v8engine.fragment.implementations.storetab;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.v8engine.repository.AdsRepository;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.DefaultDisplayableGroup;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayableGroup;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAdDisplayable;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -25,7 +25,7 @@ public class GetAdsFragment extends StoreTabGridRecyclerFragment {
         displayables.add(new GridAdDisplayable(minimalAd, tag));
       }
 
-      return Collections.singletonList(new DefaultDisplayableGroup(displayables));
+      return Collections.singletonList(new DisplayableGroup(displayables));
     });
   }
 }

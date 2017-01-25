@@ -51,22 +51,16 @@ import lombok.EqualsAndHashCode;
   @Data public static class Pay {
 
     private int productId;
-    private List<PaymentServiceResponse> paymentServices;
     private Number price;
-    private String currency;
     private String symbol;
     private String status;
 
     public boolean isPaid() {
-      return status.equalsIgnoreCase("OK");
+      return "OK".equalsIgnoreCase(status);
     }
 
     public void setPaid() {
       status = "OK";
-    }
-
-    public String getPriceDescription() {
-      return symbol + " " + price;
     }
   }
 

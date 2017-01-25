@@ -40,7 +40,6 @@ public class SocialArticleDisplayable extends SocialCardDisplayable {
   @Getter private String avatarUrl;
   @Getter private long appId;
   @Getter private String abUrl;
-  @Getter private Store store;
   @Getter private Comment.User user;
   @Getter private String packageName;
 
@@ -60,7 +59,7 @@ public class SocialArticleDisplayable extends SocialCardDisplayable {
       List<App> relatedToAppsList, Date date, DateCalculator dateCalculator,
       SpannableFactory spannableFactory, TimelineMetricsManager timelineMetricsManager,
       SocialRepository socialRepository) {
-    super(socialArticle, numberOfLikes, numberOfComments, socialArticle.getUser(),
+    super(socialArticle, numberOfLikes, numberOfComments, store, user,
         socialArticle.getUserSharer(), date, spannableFactory, dateCalculator);
     this.articleTitle = articleTitle;
     this.link = link;
@@ -70,7 +69,6 @@ public class SocialArticleDisplayable extends SocialCardDisplayable {
     this.avatarUrl = avatarUrl;
     this.appId = appId;
     this.abUrl = abUrl;
-    this.store = store;
     this.user = user;
     this.relatedToAppsList = relatedToAppsList;
     this.date = date;

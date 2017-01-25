@@ -20,7 +20,6 @@ import cm.aptoide.pt.networkclient.okhttp.cache.PostCacheInterceptor;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.Application;
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 import lombok.Getter;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -43,7 +42,6 @@ import rx.schedulers.Schedulers;
  */
 abstract class v3accountManager<U> extends WebService<v3accountManager.Interfaces, U> {
 
-  private static final int REFRESH_TOKEN_DELAY = 1000;
   @Getter protected final BaseBody map;
   private final String INVALID_ACCESS_TOKEN_CODE = "invalid_token";
   private boolean accessTokenRetry = false;
@@ -98,7 +96,6 @@ abstract class v3accountManager<U> extends WebService<v3accountManager.Interface
                       .flatMap(s -> {
                         this.map.setAccess_token(s);
                         return v3accountManager.this.observe(bypassCache)
-                            .delaySubscription(REFRESH_TOKEN_DELAY, TimeUnit.MILLISECONDS)
                             .observeOn(AndroidSchedulers.mainThread());
                       });
                 } else {

@@ -115,12 +115,17 @@ public class AppRepository {
             .getData()
             .getPay()
             .setProductId(paidApp.getPayment().getMetadata().getId());
-        getApp.getNodes()
-            .getMeta()
-            .getData()
-            .getPay()
-            .setPaymentServices(paidApp.getPayment().getPaymentServices());
       }
+      getApp.getNodes()
+          .getMeta()
+          .getData()
+          .getPay()
+          .setPrice(paidApp.getPayment().getAmount());
+      getApp.getNodes()
+          .getMeta()
+          .getData()
+          .getPay()
+          .setSymbol(paidApp.getPayment().getSymbol());
       getApp.getNodes().getMeta().getData().getPay().setStatus(paidApp.getPayment().getStatus());
       return getApp;
     }).onErrorResumeNext(throwable -> {

@@ -15,7 +15,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -136,8 +136,6 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
     //      getContext().getPackageManager().getLaunchIntentForPackage(BACKUP_APPS_PACKAGE_NAME);
     //  startActivity(i);
     //}
-
-
 
     InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
     installedAccessor.get(BACKUP_APPS_PACKAGE_NAME)
@@ -274,14 +272,6 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
     ImageLoader.load(R.drawable.user_account_white, userAvatarImage);
   }
 
-  //	@Override
-  //	public void onDestroyView() {
-  //		super.onDestroyView();
-  //
-  //		mDrawerLayout = null;
-  //		mNavigationView = null;
-  //	}
-
   @Override public void onResume() {
     super.onResume();
     setUserDataOnHeader();
@@ -371,14 +361,14 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
     setupNavigationView();
   }
 
-  @Override public void setupToolbar() {
-    super.setupToolbar();
-    if (toolbar != null) {
-      ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-      toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
-      toolbar.setNavigationIcon(R.drawable.ic_drawer);
-      toolbar.setNavigationOnClickListener(v -> mDrawerLayout.openDrawer(GravityCompat.START));
-    }
+  @Override public void setupToolbarDetails(Toolbar toolbar) {
+    toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
+    toolbar.setNavigationIcon(R.drawable.ic_drawer);
+    toolbar.setNavigationOnClickListener(v -> mDrawerLayout.openDrawer(GravityCompat.START));
+  }
+
+  protected boolean displayHomeUpAsEnabled() {
+    return false;
   }
 
   @Override public boolean isDrawerOpened() {
