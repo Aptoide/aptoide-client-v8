@@ -94,7 +94,7 @@ android {
 
     prod {
       versionCode project.PROD_VERSION_CODE.toInteger()
-      versionName "8.1.1.0"
+      versionName "8.1.1.1"
       resValue "string", "authenticator_account_type", APPLICATION_ID
       resValue "string", "content_authority", APPLICATION_ID + ".StubProvider"
       buildConfigField "String", "CONTENT_AUTHORITY", "\"" + APPLICATION_ID + ".StubProvider\""

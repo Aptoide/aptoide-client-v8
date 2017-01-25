@@ -133,6 +133,7 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
       adsRepository.getAdsFromSearch(query)
           .onErrorReturn(throwable -> null)
           .filter(minimalAd -> minimalAd != null)
+          .compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW))
           .subscribe(minimalAd -> {
             refreshed = true;
             addDisplayable(0, new SearchAdDisplayable(minimalAd));

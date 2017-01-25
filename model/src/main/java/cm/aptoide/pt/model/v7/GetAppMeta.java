@@ -56,7 +56,7 @@ import lombok.EqualsAndHashCode;
     private String status;
 
     public boolean isPaid() {
-      return status.equalsIgnoreCase("OK");
+      return "OK".equalsIgnoreCase(status);
     }
 
     public void setPaid() {
