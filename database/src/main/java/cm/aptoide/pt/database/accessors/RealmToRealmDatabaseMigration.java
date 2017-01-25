@@ -202,5 +202,9 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
 
       oldVersion++;
     }
+    if (oldVersion == 8080) {
+      schema.get("Download").addField("downloadError", int.class);
+      oldVersion++;
+    }
   }
 }
