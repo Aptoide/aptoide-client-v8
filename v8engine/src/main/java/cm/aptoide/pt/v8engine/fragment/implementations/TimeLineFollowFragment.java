@@ -99,12 +99,17 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
               new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                   DataProvider.getContext()).getAptoideClientUUID());
           break;
-        default:
         case FOLLOWING:
           request = GetFollowingRequest.of(AptoideAccountManager.getAccessToken(),
               new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                   DataProvider.getContext()).getAptoideClientUUID());
           break;
+        case LIKE_PREVIEW:
+          request = null;
+          // TODO: 26/01/2017 CALL TO NEW WEBSERVICE GET USERS THAT LIKE
+          break;
+        default:
+          throw new IllegalStateException("There is case (openMode) that it is not being handled.");
       }
       LinkedList<Displayable> dispList = new LinkedList<>();
 
