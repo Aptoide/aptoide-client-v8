@@ -56,8 +56,6 @@ public abstract class Authorization {
     return status;
   }
 
-  public abstract void authorize();
-
   public enum Status {
     SYNCING_ERROR,
     NONE,

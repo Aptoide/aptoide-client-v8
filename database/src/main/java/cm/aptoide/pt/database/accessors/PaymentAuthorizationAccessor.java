@@ -29,4 +29,8 @@ public class PaymentAuthorizationAccessor extends SimpleAccessor<PaymentAuthoriz
   public void saveAll(List<PaymentAuthorization> paymentAuthorizations) {
     database.insertAll(paymentAuthorizations);
   }
+
+  public void save(PaymentAuthorization paymentAuthorization) {
+    database.insert(paymentAuthorization);
+  }
 }

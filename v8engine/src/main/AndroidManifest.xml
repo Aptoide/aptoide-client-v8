@@ -39,7 +39,7 @@
         android:theme="@style/AppBaseTheme.Payment"/>
 
     <activity android:name=".payment.providers.paypal.PayPalPaymentActivity"/>
-    <activity android:name=".payment.authorizations.WebAuthorizationActivity"/>
+    <activity android:name=".activity.WebAuthorizationActivity"/>
 
     <activity
         android:name=".receivers.DeepLinkIntentReceiver"

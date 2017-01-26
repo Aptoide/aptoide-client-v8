@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.presenter;
 
 import android.os.Bundle;
 import cm.aptoide.pt.v8engine.payment.AptoidePay;
+import cm.aptoide.pt.v8engine.payment.Authorization;
 import cm.aptoide.pt.v8engine.payment.Payer;
 import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
@@ -76,7 +77,7 @@ public class PaymentPresenter implements Presenter {
         .flatMap(created -> login())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(loggedIn -> showGlobalAndPaymentsLoading())
-        .flatMap(loggedIn -> Observable.merge(aptoidePay.getConfirmation(product, payer.getId()),
+        .flatMap(loggedIn -> Observable.merge(aptoidePay.getConfirmation(product),
             loadPayments().cast(PaymentConfirmation.class)))
         .observeOn(AndroidSchedulers.mainThread())
         .flatMap(paymentConfirmation -> {
@@ -121,7 +122,7 @@ public class PaymentPresenter implements Presenter {
   }
 
   private Observable<Void> loadPayments() {
-    return aptoidePay.availablePayments(product, payer.getId())
+    return aptoidePay.availablePayments(product)
         .observeOn(AndroidSchedulers.mainThread())
         .flatMap(payments -> {
           if (payments.isEmpty()) {
@@ -168,10 +169,18 @@ public class PaymentPresenter implements Presenter {
         .doOnNext(selection -> view.showGlobalLoading())
         .flatMap(paymentViewModel -> getSelectedPayment(getAllPayments(),
             paymentViewModel))
-        .<Void>flatMap(payment -> aptoidePay.authorize(payment, payer.getId())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnCompleted(() -> view.hideGlobalLoading())
-              .toObservable());
+        .map(payment -> payment.getAuthorization())
+        .<Void>flatMap(authorization -> {
+            return aptoidePay.initiate(authorization)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnCompleted(() -> hideGlobalLoadingAndNavigateToAuthorizationView(authorization))
+                .toObservable();
+        });
+  }
+
+  private void  hideGlobalLoadingAndNavigateToAuthorizationView(Authorization authorization) {
+    view.hideGlobalLoading();
+    view.navigateToAuthorizationView(authorization.getPaymentId(), product);
   }
 
   private Observable<Void> buySelection() {

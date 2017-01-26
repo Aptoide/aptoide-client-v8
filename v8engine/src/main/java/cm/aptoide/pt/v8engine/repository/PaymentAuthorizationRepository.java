@@ -35,6 +35,7 @@ public class PaymentAuthorizationRepository implements Repository<Authorization,
         .observe()
         .flatMap(response -> {
           if (response != null && response.isOk()) {
+            syncAuthorizations(Collections.singletonList(paymentId));
             return Observable.just(null);
           }
           return Observable.<Void>error(
@@ -52,19 +53,26 @@ public class PaymentAuthorizationRepository implements Repository<Authorization,
   }
 
   public Observable<Authorization> getPaymentAuthorization(int paymentId, String payerId) {
-    return getPaymentAuthorizations(Collections.singletonList(paymentId), payerId)
-        .flatMapIterable(authorizations -> authorizations)
+    return getPaymentAuthorizations(Collections.singletonList(paymentId), payerId).flatMapIterable(
+        authorizations -> authorizations)
         .filter(authorization -> authorization.getPaymentId() == paymentId);
   }
 
   public Observable<List<Authorization>> getPaymentAuthorizations(List<Integer> paymentIds,
       String payerId) {
-    return syncAuthorizations(paymentIds).andThen(authotizationAccessor.getPaymentAuthorizations(
-        payerId)
-        .flatMap(paymentAuthorizations -> Observable.from(paymentAuthorizations)
-            .map(paymentAuthorization -> authorizationFactory.convertToPaymentAuthorization(
-                paymentAuthorization))
-            .toList()));
+    return syncAuthorizations(paymentIds).andThen(
+        authotizationAccessor.getPaymentAuthorizations(payerId)
+            .flatMap(paymentAuthorizations -> Observable.from(paymentAuthorizations)
+                .map(paymentAuthorization -> authorizationFactory.convertToPaymentAuthorization(
+                    paymentAuthorization))
+                .toList()));
+  }
+
+  public Completable saveAuthorization(Authorization authorization) {
+    return Completable.fromAction(() -> authotizationAccessor.save(
+        authorizationFactory.convertToDatabasePaymentAuthorization(authorization)))
+        .doOnCompleted(
+            () -> syncAuthorizations(Collections.singletonList(authorization.getPaymentId())));
   }
 
   private Completable syncAuthorizations(List<Integer> paymentIds) {
@@ -74,4 +82,5 @@ public class PaymentAuthorizationRepository implements Repository<Authorization,
         .doOnNext(stringIds -> backgroundSync.syncAuthorizations(stringIds))
         .toCompletable();
   }
+
 }

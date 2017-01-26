@@ -23,33 +23,42 @@ public class AptoidePay {
   private final PaymentConfirmationRepository confirmationRepository;
   private final PaymentAuthorizationRepository authorizationRepository;
   private final PaymentAuthorizationFactory authorizationFactory;
+  private final Payer payer;
   private final ProductRepository productRepository;
 
   public AptoidePay(PaymentConfirmationRepository confirmationRepository,
       PaymentAuthorizationRepository authorizationRepository, ProductRepository productRepository,
-      PaymentAuthorizationFactory authorizationFactory) {
+      PaymentAuthorizationFactory authorizationFactory, Payer payer) {
     this.confirmationRepository = confirmationRepository;
     this.authorizationRepository = authorizationRepository;
     this.productRepository = productRepository;
     this.authorizationFactory = authorizationFactory;
+    this.payer = payer;
   }
 
-  public Observable<List<Payment>> availablePayments(AptoideProduct product, String payerId) {
+  public Observable<List<Payment>> availablePayments(AptoideProduct product) {
     return productRepository.getPayments(product)
-        .flatMapObservable(payments -> getPaymentsWithAuthorizations(payments, payerId));
+        .flatMapObservable(payments -> getPaymentsWithAuthorizations(payments, payer.getId()));
   }
 
-  public Completable authorize(Payment payment, String payerId) {
-    return authorizationRepository.createPaymentAuthorization(payment.getId())
-        .andThen(authorizationRepository.getPaymentAuthorization(payment.getId(), payerId))
-        .takeUntil(authorization -> authorization.isInitiated() || authorization.isInvalid())
-        .filter(authorization -> authorization.isInitiated())
-        .doOnNext(authorization -> authorization.authorize())
-        .toCompletable();
+  public Completable initiate(Authorization authorization) {
+    if (authorization.isInitiated()) {
+      return Completable.complete();
+    }
+    return authorizationRepository.createPaymentAuthorization(authorization.getPaymentId());
   }
 
-  public Observable<PaymentConfirmation> getConfirmation(AptoideProduct product, String payerId) {
-    return confirmationRepository.getPaymentConfirmation(product, payerId);
+  public Observable<Authorization> getAuthorization(int paymentId) {
+    return authorizationRepository.getPaymentAuthorization(paymentId, payer.getId());
+  }
+
+  public Completable authorize(int paymentId) {
+    return authorizationRepository.saveAuthorization(authorizationFactory.create(paymentId,
+        Authorization.Status.PENDING, payer.getId()));
+  }
+
+  public Observable<PaymentConfirmation> getConfirmation(AptoideProduct product) {
+    return confirmationRepository.getPaymentConfirmation(product, payer.getId());
   }
 
   public Completable process(Payment payment) {
@@ -100,4 +109,5 @@ public class AptoidePay {
         .toList()
         .toSingle();
   }
+
 }
