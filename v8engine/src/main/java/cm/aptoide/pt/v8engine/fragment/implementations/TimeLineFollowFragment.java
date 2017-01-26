@@ -10,6 +10,7 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.GetFollowersRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetFollowingRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.GetUserLikesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.GetFollowers;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -105,8 +106,9 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
                   DataProvider.getContext()).getAptoideClientUUID());
           break;
         case LIKE_PREVIEW:
-          request = null;
-          // TODO: 26/01/2017 CALL TO NEW WEBSERVICE GET USERS THAT LIKE
+          request = GetUserLikesRequest.of(AptoideAccountManager.getAccessToken(),
+              new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+                  DataProvider.getContext()).getAptoideClientUUID());
           break;
         default:
           throw new IllegalStateException("There is case (openMode) that it is not being handled.");
@@ -117,7 +119,7 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
       Action1<GetFollowers> action = (followersList) -> {
         hidden[0] += followersList.getDatalist().getHidden();
         for (GetFollowers.TimelineUser user : followersList.getDatalist().getList()) {
-          dispList.add(new FollowUserDisplayable(user));
+          dispList.add(new FollowUserDisplayable(user, openMode));
         }
         addDisplayables(dispList);
         dispList.clear();

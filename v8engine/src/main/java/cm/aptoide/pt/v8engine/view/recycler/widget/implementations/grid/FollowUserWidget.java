@@ -4,10 +4,14 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.fragment.implementations.TimeLineFollowFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FollowUserDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -27,6 +31,10 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
   private ImageView secondaryIcon;
   private TextView followingTv;
   private TextView followedTv;
+  private Button follow;
+  private LinearLayout followNumbers;
+  private LinearLayout followLayout;
+  private View separatorView;
 
   public FollowUserWidget(View itemView) {
     super(itemView);
@@ -41,11 +49,30 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
     followedTv = (TextView) itemView.findViewById(R.id.followers_tv);
     mainIcon = (ImageView) itemView.findViewById(R.id.main_icon);
     secondaryIcon = (ImageView) itemView.findViewById(R.id.secondary_icon);
+    follow = (Button) itemView.findViewById(R.id.follow_btn);
+    followNumbers = (LinearLayout) itemView.findViewById(R.id.followers_following_numbers);
+    followLayout = (LinearLayout) itemView.findViewById(R.id.follow_store_layout);
+    separatorView = itemView.findViewById(R.id.separator_vertical);
   }
 
   @Override public void bindView(FollowUserDisplayable displayable) {
-    followingNumber.setText(displayable.getFollowing());
-    followersNumber.setText(displayable.getFollowers());
+    if (!displayable.getOpenMode()
+        .equals(TimeLineFollowFragment.FollowFragmentOpenMode.LIKE_PREVIEW)) {
+      followLayout.setVisibility(View.GONE);
+      followNumbers.setVisibility(View.VISIBLE);
+      separatorView.setVisibility(View.VISIBLE);
+      followingNumber.setText(displayable.getFollowing());
+      followersNumber.setText(displayable.getFollowers());
+    } else {
+      followNumbers.setVisibility(View.GONE);
+      separatorView.setVisibility(View.GONE);
+      if (displayable.hasStore()) {
+        followLayout.setVisibility(View.VISIBLE);
+        setFollowColor(displayable);
+      }
+      compositeSubscription.add(RxView.clicks(follow)
+          .subscribe(click -> Toast.makeText(getContext(), "TODO", Toast.LENGTH_SHORT).show()));
+    }
 
     if (displayable.hasStoreAndUser()) {
       ImageLoader.loadWithCircleTransform(displayable.getStoreAvatar(), mainIcon);
@@ -82,6 +109,15 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
       compositeSubscription.add(RxView.clicks(itemView)
           .subscribe(click -> displayable.viewClicked(((FragmentShower) getContext()))));
     }
+  }
+
+  private void setFollowColor(FollowUserDisplayable displayable) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+      follow.setBackground(displayable.getButtonBackgroundStoreThemeColor());
+    } else {
+      follow.setBackgroundDrawable(displayable.getButtonBackgroundStoreThemeColor());
+    }
+    follow.setTextColor(displayable.getStoreColor());
   }
 
   private void setupStoreNameTv(int storeColor, String storeName) {
