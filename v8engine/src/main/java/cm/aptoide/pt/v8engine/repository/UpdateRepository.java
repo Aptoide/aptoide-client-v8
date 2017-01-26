@@ -21,11 +21,11 @@ import rx.schedulers.Schedulers;
  */
 
 public class UpdateRepository implements Repository {
-  private static final String TAG = UpdateRepository.class.getName();
+
   private UpdateAccessor updateAccessor;
   private StoreAccessor storeAccessor;
 
-  public UpdateRepository(UpdateAccessor updateAccessor, StoreAccessor storeAccessor) {
+  UpdateRepository(UpdateAccessor updateAccessor, StoreAccessor storeAccessor) {
     this.updateAccessor = updateAccessor;
     this.storeAccessor = storeAccessor;
   }
@@ -41,7 +41,7 @@ public class UpdateRepository implements Repository {
         .flatMapIterable(stores -> stores)
         .map(store -> store.getStoreId())
         .toList()
-        .flatMap(storeIds -> getNetworkUpdates(storeIds, bypassCache))
+        .flatMap(storeIds -> getNetworkUpdates(storeIds, bypassCache).distinctUntilChanged())
         .flatMap(updates -> {
           if (!updates.isEmpty()) {
             // network fetch succeeded. remove local non-excluded updates
