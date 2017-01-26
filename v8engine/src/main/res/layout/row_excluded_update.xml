@@ -35,7 +35,9 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/is_excluded"
+        android:layout_toStartOf="@+id/is_excluded"
         android:layout_toRightOf="@+id/icon"
+        android:layout_toEndOf="@+id/icon"
         android:orientation="vertical"
         >
 
@@ -46,7 +48,6 @@
           android:layout_gravity="center_horizontal"
           android:ellipsize="end"
           android:maxLines="1"
-          android:singleLine="true"
           android:textAppearance="?android:attr/textAppearanceMedium"
           tools:text="AliExpress"
           />
@@ -55,11 +56,8 @@
           android:id="@+id/version_code"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_below="@+id/name"
-          android:layout_toLeftOf="@+id/is_excluded"
-          android:layout_toRightOf="@+id/icon"
           android:ellipsize="end"
-          android:singleLine="true"
+          android:maxLines="1"
           android:textAppearance="?android:attr/textAppearanceSmall"
           tools:text="4.2.1"
           />
@@ -68,12 +66,9 @@
           android:id="@+id/apk_id"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_below="@+id/version_code"
           android:layout_gravity="center_horizontal"
-          android:layout_toLeftOf="@+id/is_excluded"
-          android:layout_toRightOf="@+id/icon"
           android:ellipsize="end"
-          android:singleLine="true"
+          android:maxLines="1"
           android:textAppearance="?android:attr/textAppearanceSmall"
           tools:text="com.aliexpress"
           />

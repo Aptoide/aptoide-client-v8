@@ -10,7 +10,8 @@
     android:minHeight="50dp"
     android:orientation="vertical"
     android:paddingRight="12dp"
-    >
+    android:paddingEnd="12dp"
+>
 
   <TextView
       android:id="@+id/title"
@@ -18,8 +19,10 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_alignParentLeft="true"
+      android:layout_alignParentStart="true"
       android:layout_centerVertical="true"
       android:layout_toLeftOf="@+id/more"
+      android:layout_toStartOf="@+id/more"
       android:ellipsize="end"
       android:gravity="center_vertical"
       android:maxLines="1"
@@ -33,6 +36,7 @@
       android:layout_width="wrap_content"
       android:layout_height="37dp"
       android:layout_alignParentRight="true"
+      android:layout_alignParentEnd="true"
       android:layout_centerVertical="true"
       android:gravity="center"
       android:text="@string/button_header_more"

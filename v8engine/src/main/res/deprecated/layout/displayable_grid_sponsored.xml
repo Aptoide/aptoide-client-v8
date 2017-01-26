@@ -35,7 +35,9 @@
         android:layout_below="@+id/icon"
         android:orientation="vertical"
         android:paddingLeft="3dp"
+        android:paddingStart="3dp"
         android:paddingRight="3dp"
+        android:paddingEnd="3dp"
         android:paddingTop="3dp"
         >
 
@@ -46,7 +48,9 @@
           android:ellipsize="end"
           android:lines="2"
           android:paddingLeft="3dp"
+          android:paddingStart="3dp"
           android:paddingRight="3dp"
+          android:paddingEnd="3dp"
           android:textColor="?android:attr/textColorSecondary"
           android:textSize="14sp"
           />
@@ -57,16 +61,16 @@
           android:layout_height="wrap_content"
           android:maxLines="1"
           android:paddingLeft="3dp"
+          android:paddingStart="3dp"
           android:paddingRight="3dp"
+          android:paddingEnd="3dp"
           android:text="@string/sponsored"
           android:textColor="?android:attr/textColorSecondary"
           android:textSize="12sp"
           />
 
 
-      />
-
-    </LinearLayout>
+      </LinearLayout>
 
   </RelativeLayout>
 

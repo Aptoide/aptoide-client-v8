@@ -167,6 +167,7 @@
           android:layout_marginEnd="11.7dp"
           android:layout_marginRight="11.7dp"
           android:layout_toRightOf="@id/rating_layout"
+          android:layout_toEndOf="@id/rating_layout"
           android:orientation="vertical"
           >
 
@@ -198,7 +199,9 @@
               android:layout_width="match_parent"
               android:layout_height="10dp"
               android:layout_toLeftOf="@id/five_rate_star_count"
+              android:layout_toStartOf="@id/five_rate_star_count"
               android:layout_toRightOf="@id/five_rate_star_label"
+              android:layout_toEndOf="@id/five_rate_star_label"
               tools:progress="80"
               style="@style/FragmentRateAndReviewsProgressBar"
               />
@@ -233,7 +236,9 @@
               android:layout_width="match_parent"
               android:layout_height="10dp"
               android:layout_toLeftOf="@id/four_rate_star_count"
+              android:layout_toStartOf="@id/four_rate_star_count"
               android:layout_toRightOf="@id/four_rate_star_label"
+              android:layout_toEndOf="@id/four_rate_star_label"
               tools:progress="30"
               style="@style/FragmentRateAndReviewsProgressBar"
               />
@@ -268,7 +273,9 @@
               android:layout_width="match_parent"
               android:layout_height="10dp"
               android:layout_toLeftOf="@id/three_rate_star_count"
+              android:layout_toStartOf="@id/three_rate_star_count"
               android:layout_toRightOf="@id/three_rate_star_label"
+              android:layout_toEndOf="@id/three_rate_star_label"
               tools:progress="50"
               style="@style/FragmentRateAndReviewsProgressBar"
               />
@@ -303,7 +310,9 @@
               android:layout_width="match_parent"
               android:layout_height="10dp"
               android:layout_toLeftOf="@id/two_rate_star_count"
+              android:layout_toStartOf="@id/two_rate_star_count"
               android:layout_toRightOf="@id/two_rate_star_label"
+              android:layout_toEndOf="@id/two_rate_star_label"
               tools:progress="1"
               style="@style/FragmentRateAndReviewsProgressBar"
               />
@@ -338,7 +347,9 @@
               android:layout_width="match_parent"
               android:layout_height="10dp"
               android:layout_toLeftOf="@id/one_rate_star_count"
+              android:layout_toStartOf="@id/one_rate_star_count"
               android:layout_toRightOf="@id/one_rate_star_label"
+              android:layout_toEndOf="@id/one_rate_star_label"
               tools:progress="12"
               style="@style/FragmentRateAndReviewsProgressBar"
               />
