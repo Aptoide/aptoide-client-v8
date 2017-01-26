@@ -20,10 +20,10 @@
             android:textSize="15.3sp"
             android:layout_marginStart="8sp"
             android:layout_centerVertical="true"
-            android:layout_alignParentStart="true"
             android:layout_marginTop="17dp"
             android:textIsSelectable="false"
             android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:textColor="#ff6600"
             android:paddingLeft="7dp" />
 
@@ -33,21 +33,23 @@
             android:layout_height="27dp"
             android:id="@+id/progressBar"
             android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp"
             android:indeterminate="true"
             android:visibility="visible"
             android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="5dp"
-            android:layout_alignParentRight="true" />
+            android:layout_marginTop="5dp"/>
 
         <ImageButton
             android:id="@+id/refreshButton"
             android:src="@drawable/img_refresh"
             android:layout_marginRight="16.5dp"
+            android:layout_marginEnd="16.5dp"
             android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="10dp"
-            android:layout_alignParentRight="true"
             android:contentDescription="@string/remote_install_retry"
             android:visibility="visible"
             android:scaleType="fitCenter"
@@ -63,7 +65,9 @@
         android:layout_height="0.3dp"
         android:background="#000000"
         android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
         android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
         android:alpha="0.15" />
 
     <LinearLayout
@@ -77,7 +81,9 @@
             android:id="@+id/listView"
             android:layout_height="0dp"
             android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
             android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginBottom="10dp"
             android:layout_weight="0.23"
             android:visibility="visible" />
@@ -96,7 +102,9 @@
                 android:text="@string/remote_install_empty_list"
                 android:gravity="center"
                 android:layout_marginLeft="25dp"
+                android:layout_marginStart="25dp"
                 android:layout_marginRight="25dp"
+                android:layout_marginEnd="25dp"
                 android:layout_marginBottom="25dp"
                 android:visibility="visible"
                 android:layout_marginTop="25dp"
@@ -115,7 +123,9 @@
                     android:layout_height="0.3dp"
                     android:background="#000000"
                     android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
                     android:layout_marginRight="16dp"
+                    android:layout_marginEnd="16dp"
                     android:alpha="0.15" />
 
                 <TextView
@@ -125,7 +135,9 @@
                     android:text="@string/remote_install_tip"
                     android:gravity="center"
                     android:layout_marginLeft="26dp"
+                    android:layout_marginStart="26dp"
                     android:layout_marginRight="26dp"
+                    android:layout_marginEnd="26dp"
                     android:visibility="visible"
                     android:layout_marginTop="12dp"
                     android:textSize="12.7sp"
@@ -161,6 +173,7 @@
                 android:autoLink="web"
                 android:text="@string/remote_install_nowifi"
                 android:layout_marginRight="50.7dp"
+                android:layout_marginEnd="50.7dp"
                 android:visibility="visible"
                 android:textColor="#999999"
                 android:textSize="14.1sp" />
@@ -183,7 +196,9 @@
             android:layout_height="0.3dp"
             android:background="#000000"
             android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
             android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp"
             android:alpha="0.15" />
 
         <TextView
@@ -201,7 +216,9 @@
             android:layout_marginBottom="16.2dp"
             android:layout_marginTop="12dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp" />
+            android:layout_marginStart="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp" />
 
     </LinearLayout>
 

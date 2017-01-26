@@ -46,8 +46,6 @@
         android:id="@+id/profile_email_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/profile_image"
-        android:layout_alignStart="@id/profile_image"
         android:layout_alignParentBottom="true"
         android:ellipsize="end"
         android:maxLines="1"
@@ -64,9 +62,6 @@
         android:id="@+id/profile_name_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/profile_email_text"
-        android:layout_alignLeft="@id/profile_image"
-        android:layout_alignStart="@id/profile_image"
         android:ellipsize="end"
         android:maxLines="1"
         android:singleLine="true"
@@ -75,7 +70,9 @@
         android:textSize="@dimen/text_size_large"
         android:visibility="gone"
         tools:visibility="visible"
-    />
+        android:layout_above="@+id/profile_email_text"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
 
   </RelativeLayout>
 

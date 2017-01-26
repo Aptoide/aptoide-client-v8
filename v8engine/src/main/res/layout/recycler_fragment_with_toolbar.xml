@@ -27,8 +27,10 @@
       android:layout_marginTop="?attr/actionBarSize"
       android:clipToPadding="false"
       android:paddingLeft="@dimen/recycler_margin"
+      android:paddingStart="@dimen/recycler_margin"
       android:paddingRight="@dimen/recycler_margin"
-      />
+      android:paddingEnd="@dimen/recycler_margin"
+  />
 
 </FrameLayout>
 
