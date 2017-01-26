@@ -37,6 +37,7 @@ import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.BuildConfig;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -78,7 +79,8 @@ public abstract class V8Engine extends DataProvider {
   private static AptoideClientUUID aptoideClientUUID;
 
   public V8Engine() {
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this);
+    aptoideClientUUID =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(this), this);
   }
 
   public static void loadStores() {
@@ -188,7 +190,7 @@ public abstract class V8Engine extends DataProvider {
     SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(this);
     Analytics.LocalyticsSessionControl.firstSession(sPref);
     Analytics.Lifecycle.Application.onCreate(this);
-    Logger.setDBG(ManagerPreferences.isDebug() || cm.aptoide.pt.utils.BuildConfig.DEBUG);
+    Logger.setDBG(ManagerPreferences.isDebug() || BuildConfig.DEBUG);
     new FlurryAgent.Builder().withLogEnabled(false).build(this, BuildConfig.FLURRY_KEY);
 
     if (SecurePreferences.isFirstRun()) {
