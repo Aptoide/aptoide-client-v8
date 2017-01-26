@@ -12,7 +12,6 @@ import android.support.v7.widget.AppCompatRatingBar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -49,8 +48,8 @@ import rx.Observable;
   private static final int DEFAULT_LIMIT = 3;
   private TextView reply;
   private TextView showHideReplies;
-  private Button flagHelfull;
-  private Button flagNotHelfull;
+  private TextView flagHelfull;
+  private TextView flagNotHelfull;
 
   private AppCompatRatingBar ratingBar;
   private TextView reviewTitle;
@@ -61,6 +60,8 @@ import rx.Observable;
   private TextView username;
 
   private boolean isCommentsCollapsed = false;
+  private View notHelpfullButtonLayout;
+  private View helpfullButtonLayout;
 
   public RateAndReviewCommentWidget(View itemView) {
     super(itemView);
@@ -69,8 +70,8 @@ import rx.Observable;
   @Override protected void assignViews(View itemView) {
     reply = (TextView) itemView.findViewById(R.id.write_reply_btn);
     showHideReplies = (TextView) itemView.findViewById(R.id.show_replies_btn);
-    flagHelfull = (Button) itemView.findViewById(R.id.helpful_btn);
-    flagNotHelfull = (Button) itemView.findViewById(R.id.not_helpful_btn);
+    flagHelfull = (TextView) itemView.findViewById(R.id.helpful_btn);
+    flagNotHelfull = (TextView) itemView.findViewById(R.id.not_helpful_btn);
 
     ratingBar = (AppCompatRatingBar) itemView.findViewById(R.id.rating_bar);
     reviewTitle = (TextView) itemView.findViewById(R.id.comment_title);
@@ -79,6 +80,9 @@ import rx.Observable;
 
     userImage = (ImageView) itemView.findViewById(R.id.user_icon);
     username = (TextView) itemView.findViewById(R.id.user_name);
+
+    helpfullButtonLayout = itemView.findViewById(R.id.helpful_layout);
+    notHelpfullButtonLayout = itemView.findViewById(R.id.not_helpful_layout);
   }
 
   @Override public void bindView(RateAndReviewCommentDisplayable displayable) {
@@ -127,11 +131,11 @@ import rx.Observable;
       CrashReports.logException(err);
     }));
 
-    compositeSubscription.add(RxView.clicks(flagHelfull).subscribe(a -> {
+    compositeSubscription.add(RxView.clicks(helpfullButtonLayout).subscribe(a -> {
       setReviewRating(review.getId(), true);
     }));
 
-    compositeSubscription.add(RxView.clicks(flagNotHelfull).subscribe(a -> {
+    compositeSubscription.add(RxView.clicks(notHelpfullButtonLayout).subscribe(a -> {
       setReviewRating(review.getId(), false);
     }));
 
@@ -189,8 +193,8 @@ import rx.Observable;
     flagHelfull.setClickable(false);
     flagNotHelfull.setClickable(false);
 
-    flagHelfull.setVisibility(View.INVISIBLE);
-    flagNotHelfull.setVisibility(View.INVISIBLE);
+    helpfullButtonLayout.setVisibility(View.INVISIBLE);
+    notHelpfullButtonLayout.setVisibility(View.INVISIBLE);
 
     if (AptoideAccountManager.isLoggedIn()) {
       SetReviewRatingRequest.of(reviewId, positive, AptoideAccountManager.getAccessToken(),
