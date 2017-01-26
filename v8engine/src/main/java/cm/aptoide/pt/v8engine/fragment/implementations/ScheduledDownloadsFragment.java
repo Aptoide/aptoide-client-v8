@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
- */
-
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.content.Context;
@@ -10,8 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -103,6 +97,7 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    super.load(create, refresh, savedInstanceState);
     Logger.d(TAG, "refresh excluded updates? " + (create ? "yes" : "no"));
     if (create) {
       switch (openMode) {
@@ -155,13 +150,12 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
     setHasOptionsMenu(true);
   }
 
-  @Override public void setupToolbar() {
-    super.setupToolbar();
-    if (toolbar != null) {
-      ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-      bar.setDisplayHomeAsUpEnabled(true);
-      bar.setTitle(R.string.setting_schdwntitle);
-    }
+  @Override public void setupToolbarDetails(Toolbar toolbar) {
+    toolbar.setTitle(R.string.setting_schdwntitle);
+  }
+
+  @Override protected boolean displayHomeUpAsEnabled() {
+    return true;
   }
 
   private void fetchScheduledDownloads() {
@@ -310,7 +304,8 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
   }
 
   public void setupEvents(Download download, DownloadEvent.Action action) {
-    DownloadEvent report = downloadConverter.create(download, action, DownloadEvent.AppContext.SCHEDULED);
+    DownloadEvent report =
+        downloadConverter.create(download, action, DownloadEvent.AppContext.SCHEDULED);
     analytics.save(download.getPackageName() + download.getVersionCode(), report);
 
     InstallEvent installEvent =

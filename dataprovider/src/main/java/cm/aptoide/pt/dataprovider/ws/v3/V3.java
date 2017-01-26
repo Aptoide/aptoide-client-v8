@@ -6,8 +6,10 @@
 package cm.aptoide.pt.dataprovider.ws.v3;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception;
 import cm.aptoide.pt.dataprovider.ws.v2.GenericResponseV2;
 import cm.aptoide.pt.model.v3.BaseV3Response;
@@ -22,9 +24,9 @@ import cm.aptoide.pt.model.v3.PaymentConfirmationResponse;
 import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.okhttp.cache.PostCacheInterceptor;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 import retrofit2.adapter.rxjava.HttpException;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
@@ -42,8 +44,6 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
       + "://"
       + BuildConfig.APTOIDE_WEB_SERVICES_HOST
       + "/webservices/3/";
-
-  private static final int REFRESH_TOKEN_DELAY = 1000;
 
   protected final BaseBody map;
   private final String INVALID_ACCESS_TOKEN_CODE = "invalid_token";
@@ -76,6 +76,20 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
     return builder.toString();
   }
 
+  protected static void addNetworkInformation(NetworkOperatorManager operatorManager,
+      BaseBody args) {
+    String forceCountry = ManagerPreferences.getForceCountry();
+    if (ManagerPreferences.isDebug() && !TextUtils.isEmpty(forceCountry)) {
+      args.put("simcc", forceCountry);
+    } else {
+      if (operatorManager.isSimStateReady()) {
+        args.put("mcc", operatorManager.getMobileCountryCode());
+        args.put("mnc", operatorManager.getMobileNetworkCode());
+        args.put("simcc", operatorManager.getSimCountryISO());
+      }
+    }
+  }
+
   @Override public Observable<U> observe(boolean bypassCache) {
     return super.observe(bypassCache).onErrorResumeNext(throwable -> {
       if (throwable instanceof HttpException) {
@@ -91,9 +105,7 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
               accessTokenRetry = true;
               return DataProvider.invalidateAccessToken().flatMap(s -> {
                 this.map.setAccess_token(s);
-                return V3.this.observe(bypassCache)
-                    .delaySubscription(REFRESH_TOKEN_DELAY, TimeUnit.MILLISECONDS)
-                    .observeOn(AndroidSchedulers.mainThread());
+                return V3.this.observe(bypassCache).observeOn(AndroidSchedulers.mainThread());
               });
             }
           } else {
@@ -139,8 +151,8 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
     @POST("productPurchaseAuthorization") @FormUrlEncoded
     Observable<PaymentAuthorizationsResponse> getPaymentAuthorization(@FieldMap BaseBody args);
 
-    @POST("payProduct") @FormUrlEncoded
-    Observable<BaseV3Response> createPaymentConfirmation(@FieldMap BaseBody args);
+    @POST("payProduct") @FormUrlEncoded Observable<BaseV3Response> createPaymentConfirmation(
+        @FieldMap BaseBody args);
 
     @POST("createPurchaseAuthorization") @FormUrlEncoded
     Observable<BaseV3Response> createPaymentAuthorization(@FieldMap BaseBody args);

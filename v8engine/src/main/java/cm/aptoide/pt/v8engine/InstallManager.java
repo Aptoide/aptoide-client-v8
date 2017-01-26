@@ -36,6 +36,7 @@ public class InstallManager {
   private DownloadAccessor downloadAccessor;
   private InstalledAccessor installedAccessor;
 
+  // FIXME: 12/1/2017 use repositories instead of accessors
   public InstallManager(AptoideDownloadManager aptoideDownloadManager, Installer installer,
       DownloadAccessor downloadAccessor, InstalledAccessor installedDatabase) {
     this.aptoideDownloadManager = aptoideDownloadManager;
@@ -115,6 +116,7 @@ public class InstallManager {
 
   public Observable<Progress<Download>> install(Context context, Download download) {
     return getInstallation(download.getMd5()).first()
+        .map(progress -> updateDownloadAction(download, progress))
         .retryWhen(errors -> createDownloadAndRetry(errors, download))
         .doOnNext(downloadProgress -> {
           if (downloadProgress.getRequest().getOverallDownloadStatus() == Download.ERROR) {
@@ -123,6 +125,15 @@ public class InstallManager {
           }
         })
         .flatMap(progress -> installInBackground(context, progress));
+  }
+
+  @NonNull
+  private Progress<Download> updateDownloadAction(Download download, Progress<Download> progress) {
+    if (progress.getRequest().getAction() != download.getAction()) {
+      progress.getRequest().setAction(download.getAction());
+      downloadAccessor.save(progress.getRequest());
+    }
+    return progress;
   }
 
   private Observable<Throwable> createDownloadAndRetry(Observable<? extends Throwable> errors,

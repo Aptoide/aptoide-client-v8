@@ -9,6 +9,7 @@ import android.app.FragmentManager;
 import android.content.res.Resources;
 import android.os.Build;
 import android.support.v7.widget.AppCompatRatingBar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -96,6 +97,11 @@ import rx.Observable;
     reviewTitle.setText(review.getTitle());
     reviewText.setText(review.getBody());
     reviewDate.setText(DATE_TIME_U.getTimeDiffString(getContext(), review.getAdded().getTime()));
+
+    if (DisplayMetrics.DENSITY_300 > getContext().getResources().getDisplayMetrics().densityDpi) {
+      flagHelfull.setText("");
+      flagNotHelfull.setText("");
+    }
 
     final CommentAdder commentAdder = displayable.getCommentAdder();
     final long reviewId = review.getId();

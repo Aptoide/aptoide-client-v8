@@ -40,6 +40,7 @@ public class SwipeLoaderLayoutHandler extends LoaderLayoutHandler {
   @Override protected void onFinishLoading() {
     super.onFinishLoading();
     swipeContainer.setRefreshing(false);
+    swipeContainer.setEnabled(true);
   }
 
   @Override public void restoreState() {

@@ -40,11 +40,7 @@ public class InAppBillingSkuDetailsRequest extends V3<InAppBillingSkuDetailsResp
       args.put("skulist", stringBuilder.toString());
     }
 
-    if (operatorManager.isSimStateReady()) {
-      args.put("mcc", operatorManager.getMobileCountryCode());
-      args.put("mnc", operatorManager.getMobileNetworkCode());
-      args.put("simcc", operatorManager.getSimCountryISO());
-    }
+    addNetworkInformation(operatorManager, args);
 
     return new InAppBillingSkuDetailsRequest(BASE_HOST, args);
   }

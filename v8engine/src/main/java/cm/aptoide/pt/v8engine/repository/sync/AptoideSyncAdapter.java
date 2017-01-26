@@ -16,7 +16,7 @@ import cm.aptoide.pt.database.accessors.PaymentConfirmationAccessor;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationFactory;
-import cm.aptoide.pt.v8engine.repository.PaymentConfirmationConverter;
+import cm.aptoide.pt.v8engine.repository.PaymentConfirmationFactory;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import java.util.List;
 
@@ -34,13 +34,13 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
 
   private final SyncDataConverter productConverter;
   private final NetworkOperatorManager operatorManager;
-  private final PaymentConfirmationConverter confirmationConverter;
+  private final PaymentConfirmationFactory confirmationConverter;
   private final PaymentAuthorizationFactory authorizationConverter;
   private final PaymentConfirmationAccessor confirmationAccessor;
   private final PaymentAuthorizationAccessor authorizationAcessor;
 
   public AptoideSyncAdapter(Context context, boolean autoInitialize, boolean allowParallelSyncs,
-      PaymentConfirmationConverter confirmationConverter,
+      PaymentConfirmationFactory confirmationConverter,
       PaymentAuthorizationFactory authorizationConverter, SyncDataConverter productConverter,
       NetworkOperatorManager operatorManager, PaymentConfirmationAccessor confirmationAccessor,
       PaymentAuthorizationAccessor authorizationAcessor) {

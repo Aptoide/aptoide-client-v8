@@ -11,8 +11,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
@@ -61,12 +59,8 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
     RxView.clicks(sendFeedbackBtn).subscribe(aVoid -> sendFeedback());
   }
 
-  @Override public void setupToolbar() {
-    super.setupToolbar();
-    if (toolbar != null) {
-      ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-      bar.setDisplayHomeAsUpEnabled(true);
-    }
+  @Override protected boolean displayHomeUpAsEnabled() {
+    return true;
   }
 
   @Override public void bindViews(View view) {

@@ -7,11 +7,9 @@ package cm.aptoide.pt.v8engine.repository.sync;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import cm.aptoide.pt.model.v3.PaidApp;
 import cm.aptoide.pt.v8engine.payment.products.AptoideProduct;
 import cm.aptoide.pt.v8engine.payment.products.InAppBillingProduct;
 import cm.aptoide.pt.v8engine.payment.products.PaidAppProduct;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -27,7 +25,6 @@ public class SyncDataConverter {
   private static final String TITLE = "cm.aptoide.pt.v8engine.repository.sync.PRODUCT_TITLE";
   private static final String DESCRIPTION =
       "cm.aptoide.pt.v8engine.repository.sync.PRODUCT_DESCRIPTION";
-  private static final String PRICE = "cm.aptoide.pt.v8engine.repository.sync.PRODUCT_PRICE";
 
   private static final String SKU = "cm.aptoide.pt.v8engine.repository.sync.PRODUCT_SKU";
   private static final String PACKAGE_NAME =
@@ -47,7 +44,6 @@ public class SyncDataConverter {
     final String icon = bundle.getString(ICON);
     final String title = bundle.getString(TITLE);
     final String description = bundle.getString(DESCRIPTION);
-    final String price = bundle.getString(PRICE);
 
     final String developerPayload = bundle.getString(DEVELOPER_PAYLOAD);
     final String sku = bundle.getString(SKU);
@@ -58,18 +54,18 @@ public class SyncDataConverter {
     final long appId = bundle.getLong(APP_ID, -1);
     final String storeName = bundle.getString(STORE_NAME);
 
-    if (id != -1 && icon != null && title != null && description != null && price != null) {
+    if (id != -1 && icon != null && title != null && description != null) {
       if (developerPayload != null
           && sku != null
           && packageName != null
           && packageName != null
           && type != null
           && apiVersion != -1) {
-        return new InAppBillingProduct(id, icon, title, description, price, apiVersion, sku,
+        return new InAppBillingProduct(id, icon, title, description, apiVersion, sku,
             packageName, developerPayload, type);
       }
       if (id != -1 && storeName != null) {
-        return new PaidAppProduct(id, icon, title, description, price, appId, storeName);
+        return new PaidAppProduct(id, icon, title, description, appId, storeName);
       }
     } return null;
   }
@@ -80,7 +76,6 @@ public class SyncDataConverter {
     bundle.putString(ICON, product.getIcon());
     bundle.putString(TITLE, product.getTitle());
     bundle.putString(DESCRIPTION, product.getDescription());
-    bundle.putString(PRICE, product.getPriceDescription());
 
     if (product instanceof InAppBillingProduct) {
       bundle.putString(DEVELOPER_PAYLOAD, ((InAppBillingProduct) product).getDeveloperPayload());

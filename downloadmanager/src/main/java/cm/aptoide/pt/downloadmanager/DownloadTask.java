@@ -20,6 +20,8 @@ import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadLargeFileListener;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.exception.FileDownloadHttpException;
+import com.liulishuo.filedownloader.exception.FileDownloadOutOfSpaceException;
+import io.realm.RealmList;
 import java.io.File;
 import java.util.concurrent.TimeUnit;
 import lombok.Setter;
@@ -127,12 +129,30 @@ class DownloadTask extends FileDownloadLargeFileListener {
   public void startDownload() throws IllegalArgumentException {
     observable.connect();
     if (download.getFilesToDownload() != null) {
-      for (FileToDownload fileToDownload : download.getFilesToDownload()) {
+
+      RealmList<FileToDownload> filesToDownload = download.getFilesToDownload();
+      FileToDownload fileToDownload = null;
+      for (int i = 0; i < filesToDownload.size(); i++) {
+
+        fileToDownload = filesToDownload.get(i);
+
         if (TextUtils.isEmpty(fileToDownload.getLink())) {
           throw new IllegalArgumentException("A link to download must be provided");
         }
         BaseDownloadTask baseDownloadTask =
             FileDownloader.getImpl().create(fileToDownload.getLink());
+        /*
+         * Aptoide - events 2 : download
+         * Get X-Mirror and add to the event
+         */
+        baseDownloadTask.addHeader(Constants.VERSION_CODE,
+            String.valueOf(download.getVersionCode()));
+        baseDownloadTask.addHeader(Constants.PACKAGE, download.getPackageName());
+        baseDownloadTask.addHeader(Constants.FILE_TYPE, String.valueOf(i));
+        /*
+         * end
+         */
+
         baseDownloadTask.setTag(APTOIDE_DOWNLOAD_TASK_TAG_KEY, this);
         if (fileToDownload.getFileName().endsWith(".temp")) {
           fileToDownload.setFileName(fileToDownload.getFileName().replace(".temp", ""));
@@ -267,6 +287,11 @@ class DownloadTask extends FileDownloadLargeFileListener {
       if (analytics != null) {
         analytics.onError(download, e);
       }
+    }
+    if (e instanceof FileDownloadOutOfSpaceException) {
+      download.setDownloadError(Download.NOT_ENOUGH_SPACE_ERROR);
+    } else {
+      download.setDownloadError(Download.GENERIC_ERROR);
     }
     setDownloadStatus(Download.ERROR, download, task);
     AptoideDownloadManager.getInstance().currentDownloadFinished();
