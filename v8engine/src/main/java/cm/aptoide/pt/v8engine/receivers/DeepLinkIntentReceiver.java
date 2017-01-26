@@ -98,15 +98,18 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
       startFromPackageName(uri.split("aptoidesearch://")[1]);
     } else if (uri.startsWith("aptoidevoicesearch://")) {
       aptoidevoiceSearch(uri.split("aptoidevoicesearch://")[1]);
+
     } else if (uri.startsWith("market")) {
       String params = uri.split("&")[0];
-      String param = params.split("=")[1];
-      if (param.contains("pname:")) {
-        param = param.substring(6);
-      } else if (param.contains("pub:")) {
-        param = param.substring(4);
+      String[] param = params.split("=");
+      String packageName = (param != null && param.length > 1) ? params.split("=")[1] : "";
+      if (packageName.contains("pname:")) {
+        packageName = packageName.substring(6);
+      } else if (packageName.contains("pub:")) {
+        packageName = packageName.substring(4);
       }
-      startFromPackageName(param);
+      startFromPackageName(packageName);
+
     } else if (uri.startsWith("http://market.android.com/details?id=")) {
       String param = uri.split("=")[1];
       startFromPackageName(param);

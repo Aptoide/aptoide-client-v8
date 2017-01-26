@@ -395,7 +395,9 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     ProgressDialog genericPleaseWaitDialog = null;
     if (context != null) {
       genericPleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(context);
-      genericPleaseWaitDialog.show();
+      if (!((Activity) context).isFinishing()) {
+        genericPleaseWaitDialog.show();
+      }
     }
     OAuth2AuthenticationRequest oAuth2AuthenticationRequest =
         OAuth2AuthenticationRequest.of(userName, passwordOrToken, mode, nameForGoogle,
@@ -893,12 +895,16 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
   }
 
   void onLoginFail(String reason) {
-    mCallback.onLoginFail(reason);
+    if (mCallback != null) mCallback.onLoginFail(reason);
   }
 
   void onLoginSuccess(LoginMode loginType, String loginOrigin, String username, String password) {
+
     userIsLoggedIn = true;
-    mCallback.onLoginSuccess();
+
+    if (mCallback != null) {
+      mCallback.onLoginSuccess();
+    }
     if (analytics != null) {
       analytics.login(loginType.name());
     }
@@ -971,7 +977,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
    * @return The user name introduced by user
    */
   String getIntroducedUserName() {
-    return mCallback.getIntroducedUserName();
+    return mCallback == null ? null : mCallback.getIntroducedUserName();
   }
 
   /**
@@ -980,7 +986,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
    * @return The password introduced by user
    */
   String getIntroducedPassword() {
-    return mCallback.getIntroducedPassword();
+    return mCallback == null ? null : mCallback.getIntroducedPassword();
   }
 
   /*******************************************************/

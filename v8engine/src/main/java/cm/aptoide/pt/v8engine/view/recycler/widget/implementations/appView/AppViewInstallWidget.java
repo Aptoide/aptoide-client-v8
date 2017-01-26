@@ -198,6 +198,8 @@ import rx.android.schedulers.AndroidSchedulers;
                       displayable));
               break;
           }
+        }, (throwable) -> {
+          Logger.v(TAG, throwable.getMessage());
         }));
 
     if (isThisTheLatestVersionAvailable(currentApp, getApp.getNodes().getVersions())) {

@@ -140,7 +140,12 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
   }
 
   private Void showDownloadError(AppUpdateDisplayable displayable) {
-    errorText.setText(displayable.getUpdateErrorText(getContext()));
+    showDownloadError(displayable, displayable.getUpdateErrorText(getContext()));
+    return null;
+  }
+
+  private Void showDownloadError(AppUpdateDisplayable displayable, String message) {
+    errorText.setText(message);
     errorText.setVisibility(View.VISIBLE);
     updateButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.timeline_update_app_dark, 0, 0,
         0);
@@ -173,7 +178,8 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
         }
         break;
       case Progress.ERROR:
-        showDownloadError(displayable);
+        showDownloadError(displayable, displayable.getErrorMessage(getContext(),
+            downloadProgress.getRequest().getDownloadError()));
         break;
       case Progress.INACTIVE:
       default:

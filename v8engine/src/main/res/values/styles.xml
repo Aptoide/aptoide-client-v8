@@ -18,7 +18,7 @@
 
   <style name="Widget.Aptoide.Card" parent="">
     <item name="cardCornerRadius">8.3dp</item>
-    <item name="cardBackgroundColor">@color/white</item>
+    <item name="cardBackgroundColor">?attr/backgroundCardColor</item>
     <item name="android:background">@drawable/dialog_bg</item>
   </style>
 
