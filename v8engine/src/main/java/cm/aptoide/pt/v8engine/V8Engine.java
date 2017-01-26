@@ -77,11 +77,6 @@ public abstract class V8Engine extends DataProvider {
 
   private static AptoideClientUUID aptoideClientUUID;
 
-  public V8Engine() {
-    aptoideClientUUID =
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(this), this);
-  }
-
   public static void loadStores() {
 
     AptoideAccountManager.getUserRepos().subscribe(subscriptions -> {
@@ -163,6 +158,7 @@ public abstract class V8Engine extends DataProvider {
     fragmentProvider = createFragmentProvider();
     activityProvider = createActivityProvider();
     displayableWidgetMapping = createDisplayableWidgetMapping();
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this);
 
     //
     // super
