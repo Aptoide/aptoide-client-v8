@@ -202,10 +202,9 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
         if (Event.Name.getUserTimeline.equals(adapter.getEventName(position))) {
           Analytics.AppsTimeline.openTimeline();
-          floatingActionButton.hide();
-          floatingActionButton.setOnClickListener(null);
-        } else if (Integer.valueOf(position)
-            .equals(adapter.getEventNamePosition(Event.Name.myStores))) {
+        }
+
+        if (Integer.valueOf(position).equals(adapter.getEventNamePosition(Event.Name.myStores))) {
           FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
 
           CoordinatorLayout.LayoutParams params =
