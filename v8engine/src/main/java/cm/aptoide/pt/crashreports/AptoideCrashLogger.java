@@ -13,11 +13,9 @@ import lombok.Setter;
 
 public class AptoideCrashLogger implements CrashLogger {
 
+  static final String LANGUAGE = "Language";
   private final static String TAG = AptoideCrashLogger.class.getSimpleName();   //TAG for the logger
   private static final AptoideCrashLogger instance = new AptoideCrashLogger();
-
-  static final String LANGUAGE = "Language";
-
   //var with the language the app is set to
   @Setter private String language;
 
@@ -53,6 +51,7 @@ public class AptoideCrashLogger implements CrashLogger {
     }
 
     Crashlytics.setString(LANGUAGE, language);
+    Crashlytics.logException(throwable);
     Logger.d(TAG, "logException: " + throwable.toString());
   }
 
@@ -69,6 +68,7 @@ public class AptoideCrashLogger implements CrashLogger {
     }
 
     Crashlytics.setString(LANGUAGE, language);
+    Crashlytics.setString(key, value);
     Logger.d(TAG, "logString : key: " + key + " , value: " + value);
   }
 }
