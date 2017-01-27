@@ -62,6 +62,7 @@ public class SyncAdapterBackgroundSync {
   private void schedule(Bundle bundle) {
     bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
     bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+    bundle.putBoolean(ContentResolver.SYNC_EXTRAS_IGNORE_BACKOFF, true);
     ContentResolver.requestSync(getAccount(), configuration.getContentAuthority(), bundle);
   }
 
