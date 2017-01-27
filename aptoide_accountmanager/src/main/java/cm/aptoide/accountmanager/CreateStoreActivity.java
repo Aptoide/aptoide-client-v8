@@ -56,6 +56,18 @@ public class CreateStoreActivity extends PermissionsBaseActivity
   private View content;
   private CompositeSubscription mSubscriptions;
   //Theme related views
+  private ImageView mDefaultShape;
+  private ImageView mDefaultTick;
+  private ImageView mBlackShape;
+  private ImageView mBlackTick;
+  private ImageView mBlueGreyShape;
+  private ImageView mBlueGreyTick;
+  private ImageView mDeepPurpleShape;
+  private ImageView mDeepPurpleTick;
+  private ImageView mLightGreenShape;
+  private ImageView mLightGreenTick;
+  private ImageView mGreyShape;
+  private ImageView mGreyTick;
   private ImageView mOrangeShape;
   private ImageView mOrangeTick;
   private ImageView mGreenShape;
@@ -187,6 +199,18 @@ public class CreateStoreActivity extends PermissionsBaseActivity
     mBrownTick = (ImageView) findViewById(R.id.create_store_theme_check_brown);
     mLightblueShape = (ImageView) findViewById(R.id.create_store_theme_lightblue);
     mLightblueTick = (ImageView) findViewById(R.id.create_store_theme_check_lightblue);
+    mDefaultShape = (ImageView) findViewById(R.id.create_store_theme_default);
+    mDefaultTick = (ImageView) findViewById(R.id.create_store_theme_check_default);
+    mBlackShape = (ImageView) findViewById(R.id.create_store_theme_black);
+    mBlackTick = (ImageView) findViewById(R.id.create_store_theme_check_black);
+    mBlueGreyShape = (ImageView) findViewById(R.id.create_store_theme_blue_grey);
+    mBlueGreyTick = (ImageView) findViewById(R.id.create_store_theme_check_blue_grey);
+    mDeepPurpleShape = (ImageView) findViewById(R.id.create_store_theme_deep_purple);
+    mDeepPurpleTick = (ImageView) findViewById(R.id.create_store_theme_check_deep_purple);
+    mLightGreenShape = (ImageView) findViewById(R.id.create_store_theme_light_green);
+    mLightGreenTick = (ImageView) findViewById(R.id.create_store_theme_check_light_green);
+    mGreyShape = (ImageView) findViewById(R.id.create_store_theme_grey);
+    mGreyTick = (ImageView) findViewById(R.id.create_store_theme_check_grey);
   }
 
   /**
@@ -534,6 +558,36 @@ public class CreateStoreActivity extends PermissionsBaseActivity
       mLightblueTick.setVisibility(View.VISIBLE);
       storeTheme = "light-blue";
     }));
+    mSubscriptions.add(RxView.clicks(mDefaultShape).subscribe(click -> {
+      handleThemeTick(storeTheme, "gone");
+      mDefaultTick.setVisibility(View.VISIBLE);
+      storeTheme = "default";
+    }));
+    mSubscriptions.add(RxView.clicks(mBlackShape).subscribe(click -> {
+      handleThemeTick(storeTheme, "gone");
+      mBlackTick.setVisibility(View.VISIBLE);
+      storeTheme = "black";
+    }));
+    mSubscriptions.add(RxView.clicks(mBlueGreyShape).subscribe(click -> {
+      handleThemeTick(storeTheme, "gone");
+      mBlueGreyTick.setVisibility(View.VISIBLE);
+      storeTheme = "blue-grey";
+    }));
+    mSubscriptions.add(RxView.clicks(mDeepPurpleShape).subscribe(click -> {
+      handleThemeTick(storeTheme, "gone");
+      mDeepPurpleTick.setVisibility(View.VISIBLE);
+      storeTheme = "deep-purple";
+    }));
+    mSubscriptions.add(RxView.clicks(mLightGreenShape).subscribe(click -> {
+      handleThemeTick(storeTheme, "gone");
+      mLightGreenTick.setVisibility(View.VISIBLE);
+      storeTheme = "light-green";
+    }));
+    mSubscriptions.add(RxView.clicks(mGreyShape).subscribe(click -> {
+      handleThemeTick(storeTheme, "gone");
+      mGreyTick.setVisibility(View.VISIBLE);
+      storeTheme = "grey";
+    }));
   }
 
   /**
@@ -604,6 +658,24 @@ public class CreateStoreActivity extends PermissionsBaseActivity
         break;
       case "light-blue":
         mLightblueTick.setVisibility(visible);
+        break;
+      case "default":
+        mDefaultTick.setVisibility(visible);
+        break;
+      case "black":
+        mBlackTick.setVisibility(visible);
+        break;
+      case "blue-grey":
+        mBlueGreyTick.setVisibility(visible);
+        break;
+      case "deep-purple":
+        mDeepPurpleTick.setVisibility(visible);
+        break;
+      case "grey":
+        mGreyTick.setVisibility(visible);
+        break;
+      case "light-green":
+        mLightGreenTick.setVisibility(visible);
         break;
       default:
         break;
