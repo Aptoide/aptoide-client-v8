@@ -154,7 +154,6 @@ public abstract class V8Engine extends DataProvider {
       CrashReports.logException(e);
     }
     long l = System.currentTimeMillis();
-    AptoideUtils.setContext(this);
     fragmentProvider = createFragmentProvider();
     activityProvider = createActivityProvider();
     displayableWidgetMapping = createDisplayableWidgetMapping();

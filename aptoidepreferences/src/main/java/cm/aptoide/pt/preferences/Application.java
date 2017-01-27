@@ -20,6 +20,8 @@ public abstract class Application extends android.app.Application {
     return AptoideUtils.getContext();
   }
 
+  //attachBaseContext is called before onCreate method
+  //https://github.com/fernandodev/android-training/wiki/2.-Lifecycle,-Application,-Activities-and-Fragments
   @Override protected void attachBaseContext(Context base) {
     super.attachBaseContext(base);
     // ToolboxContentProvider depends on this configuration.
@@ -27,6 +29,7 @@ public abstract class Application extends android.app.Application {
     // Application's onCreate can't be used because it runs after ContentProvider' onCreate.
     // https://code.google.com/p/android/issues/detail?id=8727
     configuration = createConfiguration();
+    AptoideUtils.setContext(this);
   }
 
   @Override public void onCreate() {
