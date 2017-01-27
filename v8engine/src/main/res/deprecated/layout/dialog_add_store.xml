@@ -32,38 +32,48 @@
         android:orientation="horizontal"
         >
 
-      <EditText
+      <!--<EditText-->
+          <!--android:id="@+id/edit_store_uri"-->
+          <!--android:layout_width="wrap_content"-->
+          <!--android:layout_height="match_parent"-->
+          <!--android:layout_alignParentLeft="true"-->
+          <!--android:layout_centerVertical="true"-->
+          <!--android:layout_toLeftOf="@+id/button_dialog_add_store"-->
+          <!--android:hint="@string/store_name"-->
+          <!--android:inputType="textUri|textNoSuggestions"-->
+          <!--android:maxLines="1"-->
+          <!--android:singleLine="true"-->
+          <!--/>-->
+      <!---->
+
+      <cm.aptoide.pt.v8engine.view.custom.StoreAutoCompleteTextView
           android:id="@+id/edit_store_uri"
           android:layout_width="wrap_content"
           android:layout_height="match_parent"
           android:layout_alignParentLeft="true"
-          android:layout_alignParentStart="true"
           android:layout_centerVertical="true"
           android:layout_toLeftOf="@+id/button_dialog_add_store"
-          android:layout_toStartOf="@+id/button_dialog_add_store"
+          android:completionThreshold="2"
           android:hint="@string/store_name"
-          android:inputType="textUri|textNoSuggestions"
+          android:imeOptions="flagNoExtractUi|actionSearch"
           android:maxLines="1"
-          android:singleLine="true"
           />
 
 
       <Button
           android:id="@+id/button_dialog_add_store"
+          style="?android:attr/segmentedButtonStyle"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_alignParentEnd="true"
           android:layout_alignParentRight="true"
           android:layout_centerHorizontal="true"
           android:layout_margin="2dp"
           android:drawableLeft="?attr/icAddStoreDrawable"
           android:drawablePadding="4dp"
-          android:drawableStart="?attr/icAddStoreDrawable"
           android:ellipsize="end"
           android:padding="10dp"
           android:singleLine="true"
           android:text="@string/follow"
-          style="?android:attr/segmentedButtonStyle"
           />
 
     </RelativeLayout>
@@ -79,17 +89,16 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"
         android:text="@string/search_other_stores"
         />
 
     <Button
         android:id="@+id/button_top_stores"
+        style="?attr/customButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:text="@string/see_top_stores"
-        style="?attr/customButton"
         />
   </LinearLayout>
 
