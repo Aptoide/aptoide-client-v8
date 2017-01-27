@@ -17,16 +17,12 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created with IntelliJ IDEA. User: brutus Date: 26-09-2013 Time: 10:32 To change this template
- * use
- * File | Settings |
- * File Templates.
+ * Refactored by pedroribeiro in 17/01/2017
  */
-@Deprecated
-public class SuggestionProvider extends SearchRecentSuggestionsProviderWrapper {
+public class SearchSuggestionProvider extends SearchRecentSuggestionsProviderWrapper {
 
   public String getSearchProvider() {
-    return "cm.aptoide.pt.v8engine.provider.SuggestionProvider";
+    return "cm.aptoide.pt.v8engine.provider.SearchSuggestionProvider";
   }
 
   @Override public boolean onCreate() {
@@ -37,22 +33,24 @@ public class SuggestionProvider extends SearchRecentSuggestionsProviderWrapper {
 
   @Override public Cursor query(final Uri uri, String[] projection, String selection,
       final String[] selectionArgs, String sortOrder) {
-    Logger.d("TAG", "query: " + selectionArgs[0]);
+    Logger.d("TAG", "search-query: " + selectionArgs[0]);
 
     Cursor c = super.query(uri, projection, selection, selectionArgs, sortOrder);
 
     if (c != null) {
       BlockingQueue<MatrixCursor> arrayBlockingQueue = new ArrayBlockingQueue<MatrixCursor>(1);
-      SearchAppsWebSocket searchAppsWebSocket = new SearchAppsWebSocket();
-      searchAppsWebSocket.setBlockingQueue(arrayBlockingQueue);
+      SearchAppsWebSocket.setBlockingQueue(arrayBlockingQueue);
 
-      MatrixCursor matrix_cursor = null;
-      searchAppsWebSocket.getWebSocket().send(buildJson(selectionArgs[0]));
+      MatrixCursor matrixCursor = null;
+
+      SearchAppsWebSocket searchAppsWebSocket = new SearchAppsWebSocket();
+      searchAppsWebSocket.send(buildJson(selectionArgs[0]));
+      //SearchWebSocketManager.getWebSocket().send();
       try {
-        matrix_cursor = arrayBlockingQueue.poll(5, TimeUnit.SECONDS);
+        matrixCursor = arrayBlockingQueue.poll(5, TimeUnit.SECONDS);
 
         for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
-          matrix_cursor.newRow()
+          matrixCursor.newRow()
               .add(c.getString(c.getColumnIndex(SearchManager.SUGGEST_COLUMN_ICON_1)))
               .add(c.getString(c.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1)))
               .add(c.getString(c.getColumnIndex(SearchManager.SUGGEST_COLUMN_QUERY)))
@@ -64,7 +62,7 @@ public class SuggestionProvider extends SearchRecentSuggestionsProviderWrapper {
       } finally {
         c.close();
       }
-      return matrix_cursor;
+      return matrixCursor;
     } else {
       return null;
     }

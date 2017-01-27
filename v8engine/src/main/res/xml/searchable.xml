@@ -10,9 +10,9 @@
     android:label="@string/srch_hint"
     android:queryAfterZeroResults="false"
 
-    android:searchSuggestAuthority="cm.aptoide.pt.v8engine.provider.SuggestionProvider"
+    android:searchSuggestAuthority="cm.aptoide.pt.v8engine.provider.SearchSuggestionProvider"
     android:searchSuggestIntentAction="android.intent.action.SEARCH"
     android:searchSuggestSelection=" ?"
-    android:searchSuggestThreshold="3">
+    android:searchSuggestThreshold="3" >
 
 </searchable>

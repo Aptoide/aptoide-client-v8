@@ -40,11 +40,11 @@ public class WebSocketManager extends WebSocketListener implements WebSocket {
     }
   }
 
-  private static WebSocket reconnect() {
+  protected WebSocket reconnect() {
     return client.newWebSocket(request, new WebSocketManager());
   }
 
-  public static WebSocket getWebSocket() {
+  public WebSocket getWebSocket() {
     if (webSocket == null) {
       webSocket = reconnect();
     }
