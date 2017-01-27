@@ -19,16 +19,18 @@ import rx.Observable;
 
 public class SendEventRequest extends V7<BaseV7Response, SendEventRequest.Body> {
 
+  private final static AptoideClientUUID aptoideClientUUID;
   private static String NAME;
   private static String ACTION = "CLICK";
   private static String CONTEXT = "TIMELINE";
-  private static AptoideClientUUID aptoideClientUUID;
+
+  static {
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+  }
 
   protected SendEventRequest(Body body, String baseHost) {
     super(body, baseHost);
-
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
   }
 
   public static SendEventRequest of(String accessToken, Body.Data data, String eventName) {
