@@ -9,9 +9,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/comment_gray"
     android:orientation="vertical"
+    android:paddingBottom="5dp"
     >
 
+  <View
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:background="@color/white"
+      />
   <RelativeLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
@@ -28,7 +35,6 @@
 
     <android.support.v7.widget.AppCompatRatingBar
         android:id="@+id/rating_bar"
-        style="@style/Widget.AppCompat.RatingBar.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/user_icon"
@@ -40,6 +46,7 @@
         android:progressDrawable="@drawable/rating_bar_small"
         android:stepSize="1.0"
         tools:rating="5.0"
+        style="@style/Widget.AppCompat.RatingBar.Small"
         />
 
     <TextView
@@ -63,7 +70,7 @@
         android:id="@+id/comment_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/rating_bar"
+        android:layout_alignTop="@id/rating_bar"
         android:layout_marginLeft="8.7dp"
         android:layout_marginStart="8.7dp"
         android:layout_toEndOf="@id/rating_bar"
@@ -72,6 +79,7 @@
         android:layout_toStartOf="@id/write_reply_btn"
         android:ellipsize="end"
         android:maxLines="1"
+        android:textAllCaps="true"
         android:textColor="@color/black"
         android:textSize="@dimen/text_size_small"
         android:textStyle="bold"
@@ -107,56 +115,68 @@
         tools:text="03/06/1992"
         />
 
-    <!--
-        android:layout_above="@id/helpful_btn"
-    -->
-    <TextView
-        android:id="@+id/comment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/user_icon"
-        android:layout_marginTop="9.3dp"
-        android:textSize="11.3sp"
-        tools:text="Run, jump, smash, and slide into new levels and adventures with Bugs Bunny, Road Runner, Tweety Bird, and other Looney Tunes favorites! Run, jump, smash, and slide into new levels and adventures with Bugs Bunny, Road Runner, Tweety Bird, and other Looney Tunes favorites!"
-        />
-
-    <Button
-        android:id="@+id/helpful_btn"
-        android:layout_width="wrap_content"
+    <FrameLayout
+        android:id="@+id/helpful_layout"
+        android:layout_width="107dp"
         android:layout_height="26.7dp"
         android:layout_below="@id/comment"
         android:layout_marginTop="14dp"
         android:background="@drawable/displayable_review_button"
-        android:drawablePadding="0dp"
-        android:drawableRight="@drawable/ic_action_good"
-        android:drawableTint="@color/app_view_gray"
-        android:gravity="center"
-        android:text="@string/helpful"
-        android:textAllCaps="true"
-        android:textColor="@color/app_view_gray"
-        android:textSize="9sp"
-        />
+        android:padding="0dp"
+        style="?android:attr/buttonStyle"
+        >
 
-    <Button
-        android:id="@+id/not_helpful_btn"
-        android:layout_width="wrap_content"
+      <TextView
+          android:id="@+id/helpful_btn"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:drawableEnd="@drawable/thumbs_up"
+          android:drawablePadding="4dp"
+          android:drawableRight="@drawable/thumbs_up"
+          android:drawableTint="@color/app_view_gray"
+          android:gravity="center"
+          android:text="@string/helpful"
+          android:textAllCaps="true"
+          android:textColor="@color/app_view_gray"
+          android:textSize="8sp"
+          android:textStyle="bold"
+          style="@style/captionOnly"
+          />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/not_helpful_layout"
+        android:layout_width="107dp"
         android:layout_height="26.7dp"
         android:layout_below="@id/comment"
         android:layout_marginLeft="9.7dp"
         android:layout_marginStart="9.7dp"
         android:layout_marginTop="14dp"
-        android:layout_toRightOf="@id/helpful_btn"
+        android:layout_toRightOf="@id/helpful_layout"
         android:background="@drawable/displayable_review_button"
-        android:drawablePadding="0dp"
-        android:drawableRight="@drawable/ic_action_bad"
-        android:drawableTint="@color/app_view_gray"
-        android:gravity="center"
-        android:text="@string/not_helpful"
-        android:textAllCaps="true"
-        android:textColor="@color/app_view_gray"
-        android:textSize="9sp"
-        />
+        android:padding="0dp"
+        style="?android:attr/buttonStyle"
+        >
+
+      <TextView
+          android:id="@+id/not_helpful_btn"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:drawableEnd="?attr/icRatingBadDrawable"
+          android:drawablePadding="4dp"
+          android:drawableRight="@drawable/thumbs_up"
+          android:drawableTint="@color/app_view_gray"
+          android:gravity="center"
+          android:text="@string/not_helpful"
+          android:textAllCaps="true"
+          android:textColor="@color/app_view_gray"
+          android:textSize="8sp"
+          android:textStyle="bold"
+          style="@style/captionOnly"
+          />
+    </FrameLayout>
 
     <TextView
         android:id="@+id/show_replies_btn"
@@ -166,19 +186,22 @@
         android:layout_alignParentRight="true"
         android:layout_below="@id/comment"
         android:layout_marginTop="23.7dp"
+        android:layout_toRightOf="@+id/not_helpful_layout"
         android:drawablePadding="10dp"
         android:drawableRight="@drawable/ic_up_arrow"
-        android:gravity="center"
-        android:text="@string/comments"
+        android:gravity="right|center_vertical"
         android:textAllCaps="true"
         android:textSize="8sp"
+        tools:text="@string/reviews_expand_button"
+        />
+    <TextView
+        android:id="@+id/comment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/user_icon"
+        android:textSize="11.3sp"
+        tools:text="Run, jump, smash, and slide into new levels and adventures with Bugs Bunny, Road Runner, Tweety Bird, and other Looney Tunes favorites! Run, jump, smash, and slide into new levels and adventures with Bugs Bunny, Road Runner, Tweety Bird, and other Looney Tunes favorites!"
         />
   </RelativeLayout>
-
-  <View
-      android:layout_width="match_parent"
-      android:layout_height="1dp"
-      android:layout_marginTop="5dp"
-      android:background="@color/white"
-      />
 </LinearLayout>

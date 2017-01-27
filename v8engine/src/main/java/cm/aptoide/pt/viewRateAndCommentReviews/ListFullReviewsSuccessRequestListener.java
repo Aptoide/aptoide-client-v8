@@ -42,13 +42,11 @@ class ListFullReviewsSuccessRequestListener implements SuccessRequestListener<Li
 
     Observable.from(reviews)
         .flatMap(review -> ListCommentsRequest.of( // fetch the list of comments for each review
-            review.getComments().getView(),
-            review.getId(),
-            3,
+            review.getComments().getView(), review.getId(), 3,
             StoreUtils.getStoreCredentials(fragment.getStoreName()),
-            AptoideAccountManager.getAccessToken(),
-            aptoideClientUuid, true
-        ).observe().subscribeOn(Schedulers.io()) // parallel I/O split point
+            AptoideAccountManager.getAccessToken(), aptoideClientUuid, true)
+            .observe()
+            .subscribeOn(Schedulers.io()) // parallel I/O split point
             .map(listComments -> {
               review.setCommentList(listComments);
               return review;
@@ -70,7 +68,8 @@ class ListFullReviewsSuccessRequestListener implements SuccessRequestListener<Li
     for (final Review review : reviews) {
       displayables.add(
           new RateAndReviewCommentDisplayable(new ReviewWithAppName(fragment.getAppName(), review),
-              new ConcreteItemCommentAdder(count, fragment, review)));
+              new ConcreteItemCommentAdder(count, fragment, review),
+              review.getCommentList().getTotal()));
 
       if (review.getId() == fragment.getReviewId()) {
         index = count;
