@@ -9,6 +9,7 @@ import cm.aptoide.pt.database.schedulers.RealmSchedulers;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import java.util.Collections;
@@ -22,12 +23,16 @@ import rx.schedulers.Schedulers;
 
 public class UpdateRepository implements Repository {
   private static final String TAG = UpdateRepository.class.getName();
+  private final AptoideClientUUID aptoideClientUUID;
   private UpdateAccessor updateAccessor;
   private StoreAccessor storeAccessor;
 
   public UpdateRepository(UpdateAccessor updateAccessor, StoreAccessor storeAccessor) {
     this.updateAccessor = updateAccessor;
     this.storeAccessor = storeAccessor;
+
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
   }
 
   public Observable<List<Update>> getUpdates() {
@@ -59,8 +64,7 @@ public class UpdateRepository implements Repository {
 
   private Observable<List<App>> getNetworkUpdates(List<Long> storeIds, boolean bypassCache) {
     return ListAppsUpdatesRequest.of(storeIds, AptoideAccountManager.getAccessToken(),
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID()).observe(bypassCache).map(result -> {
+        aptoideClientUUID.getAptoideClientUUID()).observe(bypassCache).map(result -> {
       if (result.isOk()) {
         return result.getList();
       }

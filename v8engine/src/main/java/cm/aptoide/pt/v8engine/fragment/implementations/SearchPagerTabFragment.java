@@ -12,6 +12,7 @@ import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
@@ -39,6 +40,7 @@ import rx.functions.Action0;
  */
 public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
   private static final String TAG = SearchPagerTabFragment.class.getSimpleName();
+  private final AptoideClientUUID aptoideClientUUID;
 
   private AdsRepository adsRepository;
 
@@ -81,6 +83,11 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 
         addDisplayables(displayables);
       };
+
+  public SearchPagerTabFragment() {
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+  }
 
   public static SearchPagerTabFragment newInstance(String query, boolean subscribedStores,
       boolean hasMultipleFragments) {
@@ -143,15 +150,11 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
       ListSearchAppsRequest of;
       if (storeName != null) {
         of = ListSearchAppsRequest.of(query, storeName, StoreUtils.getSubscribedStoresAuthMap(),
-            AptoideAccountManager.getAccessToken(),
-            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                DataProvider.getContext()).getAptoideClientUUID());
+            AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID());
       } else {
         of = ListSearchAppsRequest.of(query, addSubscribedStores,
             StoreUtils.getSubscribedStoresIds(), StoreUtils.getSubscribedStoresAuthMap(),
-            AptoideAccountManager.getAccessToken(),
-            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                DataProvider.getContext()).getAptoideClientUUID());
+            AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID());
       }
       endlessRecyclerOnScrollListener =
           new EndlessRecyclerOnScrollListener(this.getAdapter(), listSearchAppsRequest = of,
