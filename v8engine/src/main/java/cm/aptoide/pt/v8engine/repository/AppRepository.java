@@ -40,6 +40,7 @@ public class AppRepository {
     //Only pass the storeName if this is partners
     //If vanilla, don't pass the store name.
     //store name is already in appId
+    //[AN-1160] - [AppView] latest version bug
     return GetAppRequest.of(appId,
         V8Engine.getConfiguration().getPartnerId() == null ? null : storeName,
         StoreUtils.getStoreCredentials(storeName), AptoideAccountManager.getAccessToken(),
