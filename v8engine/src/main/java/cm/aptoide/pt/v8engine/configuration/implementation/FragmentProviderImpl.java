@@ -234,6 +234,11 @@ public class FragmentProviderImpl implements FragmentProvider {
     return DescriptionFragment.newInstance(appId, packageName, storeName, storeTheme);
   }
 
+  @Override
+  public Fragment newDescriptionFragment(String appName, String description, String storeTheme) {
+    return DescriptionFragment.newInstance(appName, description, storeTheme);
+  }
+
   @Override public Fragment newSocialFragment(String socialUrl, String pageTitle) {
     return SocialFragment.newInstance(socialUrl, pageTitle);
   }
@@ -257,8 +262,7 @@ public class FragmentProviderImpl implements FragmentProvider {
     return CommentListFragment.newInstance(commentType, elementId);
   }
 
-  @Override
-  public Fragment newCommentGridRecyclerFragmentUrl(CommentType commentType, String url) {
+  @Override public Fragment newCommentGridRecyclerFragmentUrl(CommentType commentType, String url) {
     return CommentListFragment.newInstanceUrl(commentType, url);
   }
 }

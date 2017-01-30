@@ -9,6 +9,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.LikeCardRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SetUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ShareCardRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ShareInstallCardRequest;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -20,14 +21,18 @@ import rx.schedulers.Schedulers;
  * Created by jdandrade on 21/11/2016.
  */
 public class SocialRepository {
+
+  private final AptoideClientUUID aptoideClientUUID;
+
   public SocialRepository() {
 
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
   }
 
   public void share(TimelineCard timelineCard, Context context, boolean privacy) {
     String accessToken = AptoideAccountManager.getAccessToken();
-    String aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext()).getAptoideClientUUID();
+    String aptoideClientUUID = this.aptoideClientUUID.getAptoideClientUUID();
     ShareCardRequest.of(timelineCard, accessToken, aptoideClientUUID)
         .observe()
         .subscribe(baseV7Response -> {
@@ -44,8 +49,7 @@ public class SocialRepository {
 
   public void like(TimelineCard timelineCard, String cardType, String ownerHash, int rating) {
     String accessToken = AptoideAccountManager.getAccessToken();
-    String aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext()).getAptoideClientUUID();
+    String aptoideClientUUID = this.aptoideClientUUID.getAptoideClientUUID();
     String email = AptoideAccountManager.getUserEmail();
     LikeCardRequest.of(timelineCard, cardType, ownerHash, accessToken, aptoideClientUUID, rating)
         .observe()
@@ -57,8 +61,7 @@ public class SocialRepository {
 
   public void share(AppViewInstallDisplayable displayable, Context context, boolean privacy) {
     String accessToken = AptoideAccountManager.getAccessToken();
-    String aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext()).getAptoideClientUUID();
+    String aptoideClientUUID = this.aptoideClientUUID.getAptoideClientUUID();
     ShareInstallCardRequest.of(
         displayable.getPojo().getNodes().getMeta().getData().getPackageName(), accessToken,
         aptoideClientUUID).observe().subscribe(baseV7Response -> {

@@ -10,6 +10,7 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -24,15 +25,20 @@ import rx.Observable;
  */
 public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRecyclerFragment {
 
+  private final AptoideClientUUID aptoideClientUUID;
+
+  public StoreTabWidgetsGridRecyclerFragment() {
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+  }
+
   protected Observable<List<Displayable>> loadGetStoreWidgets(GetStoreWidgets getStoreWidgets,
       boolean refresh,
       String url) {
     return Observable.from(getStoreWidgets.getDatalist().getList())
         .flatMap(wsWidget -> WSWidgetsUtils.loadWidgetNode(wsWidget,
             StoreUtils.getStoreCredentialsFromUrl(url), refresh,
-            AptoideAccountManager.getAccessToken(),
-            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                DataProvider.getContext()).getAptoideClientUUID(),
+            AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID(),
             DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(V8Engine.getContext()),
             DataProvider.getConfiguration().getPartnerId(),
             AptoideAccountManager.isMatureSwitchOn()))

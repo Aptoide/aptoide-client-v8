@@ -32,13 +32,15 @@ public class RateAndReviewsPresenter implements Presenter {
     this.view = view;
     this.schedulerProvider = schedulerProvider;
 
-    request = ListReviewsRequest.of(storeName, packageName, AptoideAccountManager.getAccessToken(),
+    String aptoideClientUUID =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID());
+            DataProvider.getContext()).getAptoideClientUUID();
+
+    request = ListReviewsRequest.of(storeName, packageName, AptoideAccountManager.getAccessToken(),
+        aptoideClientUUID);
 
     ratingRequest = GetAppRequest.of(appId, AptoideAccountManager.getAccessToken(),
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID(), packageName);
+        aptoideClientUUID, packageName);
 
     subscriptions = new CompositeSubscription();
   }

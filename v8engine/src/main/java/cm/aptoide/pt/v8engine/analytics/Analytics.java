@@ -12,6 +12,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.Constants;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -60,9 +61,16 @@ public class Analytics {
       "apps-group-top-games", "apps-group-top-stores", "apps-group-featured-stores",
       "apps-group-editors-choice"
   };
+  private static final AptoideClientUUID aptoideClientUuid;
   static @Getter Analytics instance = new Analytics(new AnalyticsDataSaver());
   private static boolean ACTIVATE_LOCALYTICS = true;
   private static boolean isFirstSession;
+
+  static {
+    aptoideClientUuid = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+  }
+
   private AnalyticsDataSaver saver;
 
   public Analytics(AnalyticsDataSaver saver) {
@@ -316,16 +324,12 @@ public class Analytics {
           }
         }
 
-        IdsRepositoryImpl idsRepository =
-            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                DataProvider.getContext());
-
-        String cpuid = idsRepository.getAptoideClientUUID();
+        String cpuid = aptoideClientUuid.getAptoideClientUUID();
 
         Localytics.setCustomerId(cpuid);
 
         //                String cpuid = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext())
-        //                        .getString(EnumPreferences.APTOIDE_CLIENT_UUID.name(), "NoInfo");
+        //                        .getString(EnumPreferences.aptoideClientUuid.name(), "NoInfo");
 
         //                Localytics.setCustomerId(cpuid);
         //

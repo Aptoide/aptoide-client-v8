@@ -20,6 +20,8 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewFlagThisDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.Map;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -129,26 +131,32 @@ import rx.android.schedulers.AndroidSchedulers;
               switch (type) {
                 case GOOD:
                   voteSubmitted = true;
-                  workingWellText.setText(
-                      Integer.toString(Integer.parseInt(workingWellText.getText().toString()) + 1));
+                  workingWellText.setText(NumberFormat.getIntegerInstance()
+                      .format(Double.parseDouble(
+                          String.valueOf(new BigDecimal(workingWellText.getText().toString())))
+                          + 1));
                   break;
 
                 case LICENSE:
                   voteSubmitted = true;
-                  needsLicenceText.setText(Integer.toString(
-                      Integer.parseInt(needsLicenceText.getText().toString()) + 1));
+                  needsLicenceText.setText(NumberFormat.getIntegerInstance()
+                      .format(Double.parseDouble(
+                          String.valueOf(new BigDecimal(needsLicenceText.getText().toString())))
+                          + 1));
                   break;
 
                 case FAKE:
                   voteSubmitted = true;
-                  fakeAppText.setText(
-                      Integer.toString(Integer.parseInt(fakeAppText.getText().toString()) + 1));
+                  fakeAppText.setText(NumberFormat.getIntegerInstance()
+                      .format(Double.parseDouble(
+                          String.valueOf(new BigDecimal(fakeAppText.getText().toString()))) + 1));
                   break;
 
                 case VIRUS:
                   voteSubmitted = true;
-                  virusText.setText(
-                      Integer.toString(Integer.parseInt(virusText.getText().toString()) + 1));
+                  virusText.setText(NumberFormat.getIntegerInstance()
+                      .format(Double.parseDouble(
+                          String.valueOf(new BigDecimal(virusText.getText().toString()))) + 1));
                   break;
 
                 case FREEZE:
@@ -203,19 +211,23 @@ import rx.android.schedulers.AndroidSchedulers;
     String countAsString = Integer.toString(count);
     switch (type) {
       case GOOD:
-        workingWellText.setText(countAsString);
+        workingWellText.setText(
+            NumberFormat.getIntegerInstance().format(Double.parseDouble(countAsString)));
         break;
 
       case VIRUS:
-        virusText.setText(countAsString);
+        virusText.setText(
+            NumberFormat.getIntegerInstance().format(Double.parseDouble(countAsString)));
         break;
 
       case FAKE:
-        fakeAppText.setText(countAsString);
+        fakeAppText.setText(
+            NumberFormat.getIntegerInstance().format(Double.parseDouble(countAsString)));
         break;
 
       case LICENSE:
-        needsLicenceText.setText(countAsString);
+        needsLicenceText.setText(
+            NumberFormat.getIntegerInstance().format(Double.parseDouble(countAsString)));
         break;
 
       case FREEZE:

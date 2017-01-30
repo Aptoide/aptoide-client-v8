@@ -25,7 +25,9 @@
       android:layout_height="73.3dp"
       android:background="#c16114"
       android:paddingLeft="24dp"
+      android:paddingStart="24dp"
       android:paddingRight="23dp"
+      android:paddingEnd="23dp"
       android:text="@string/user_interests_header"
       android:gravity="center"
       />
@@ -34,13 +36,15 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginRight="16.2dp"
-      >
+      android:layout_marginEnd="16.2dp"
+  >
 
     <Button
         android:layout_width="152dp"
         android:layout_height="45.3dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:text="@string/next"
         />
 

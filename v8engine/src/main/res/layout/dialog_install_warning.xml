@@ -25,7 +25,8 @@
       android:textColor="@color/black"
       android:textSize="@dimen/text_size_medium_large"
       tools:drawableLeft="@drawable/ic_badge_warning"
-      />
+      tools:drawableStart="@drawable/ic_badge_warning"
+  />
 
   <TextView
       android:layout_width="match_parent"

@@ -17,6 +17,7 @@
       android:layout_width="96dp"
       android:layout_height="96dp"
       android:layout_alignParentLeft="true"
+      android:layout_alignParentStart="true"
       android:layout_centerVertical="true"
       android:layout_margin="5dp"
       tools:src="@drawable/icon_brand_aptoide"
@@ -27,8 +28,10 @@
       android:layout_width="37dp"
       android:layout_height="37dp"
       android:layout_alignParentRight="true"
+      android:layout_alignParentEnd="true"
       android:layout_alignTop="@id/app_icon"
       android:layout_marginRight="5dp"
+      android:layout_marginEnd="5dp"
       android:background="@drawable/rating_shape"
       >
 
@@ -50,7 +53,9 @@
       android:layout_height="wrap_content"
       android:layout_alignTop="@id/app_icon"
       android:layout_toLeftOf="@id/score"
+      android:layout_toStartOf="@id/score"
       android:layout_toRightOf="@id/app_icon"
+      android:layout_toEndOf="@id/app_icon"
       android:gravity="center_vertical"
       >
 
@@ -88,6 +93,7 @@
           android:layout_width="match_parent"
           android:layout_height="match_parent"
           android:layout_marginLeft="10dp"
+          android:layout_marginStart="10dp"
           android:gravity="center_vertical"
           android:maxLines="1"
           android:textSize="12sp"
@@ -104,6 +110,7 @@
       android:layout_height="match_parent"
       android:layout_below="@id/content"
       android:layout_toRightOf="@id/app_icon"
+      android:layout_toEndOf="@id/app_icon"
       android:ellipsize="end"
       android:gravity="center_vertical"
       android:maxLines="2"

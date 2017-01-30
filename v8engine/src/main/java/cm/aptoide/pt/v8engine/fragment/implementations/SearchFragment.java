@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,6 +24,7 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.R;
@@ -45,6 +47,7 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class SearchFragment extends BasePagerToolbarFragment {
   private static final String TAG = SearchFragment.class.getSimpleName();
+  private final AptoideClientUUID aptoideClientUUID;
   private String query;
 
   transient private boolean hasSubscribedResults;
@@ -60,6 +63,12 @@ public class SearchFragment extends BasePagerToolbarFragment {
   private String storeName;
   private boolean onlyTrustedApps;
   private int selectedButton = 0;
+  private boolean isStoreSearch;
+
+  public SearchFragment() {
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+  }
 
   public static SearchFragment newInstance(String query) {
     return newInstance(query, false);
@@ -191,9 +200,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
       shouldFinishLoading = true;
       ListSearchAppsRequest of =
           ListSearchAppsRequest.of(query, storeName, StoreUtils.getSubscribedStoresAuthMap(),
-              AptoideAccountManager.getAccessToken(),
-              new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                  DataProvider.getContext()).getAptoideClientUUID());
+              AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID());
       of.execute(listSearchApps -> {
         List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
 
@@ -207,9 +214,8 @@ public class SearchFragment extends BasePagerToolbarFragment {
       }, e -> finishLoading());
     } else {
       ListSearchAppsRequest.of(query, true, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(),
-          AptoideAccountManager.getAccessToken(),
-          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-              DataProvider.getContext()).getAptoideClientUUID()).execute(listSearchApps -> {
+          AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
+          .execute(listSearchApps -> {
         List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
 
         if (list != null && list.size() > 0) {
@@ -223,9 +229,8 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
       // Other stores
       ListSearchAppsRequest.of(query, false, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(),
-          AptoideAccountManager.getAccessToken(),
-          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-              DataProvider.getContext()).getAptoideClientUUID()).execute(listSearchApps -> {
+          AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
+          .execute(listSearchApps -> {
         List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
 
         if (list != null && list.size() > 0) {
@@ -255,7 +260,9 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
   @Override public void setupToolbarDetails(Toolbar toolbar) {
     toolbar.setTitle(query);
-    toolbar.setLogo(R.drawable.ic_store);
+    if (isStoreSearch) {
+      toolbar.setLogo(R.drawable.ic_store);
+    }
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {
@@ -309,6 +316,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
     query = args.getString(BundleCons.QUERY);
     storeName = args.getString(BundleCons.STORE_NAME);
     onlyTrustedApps = args.getBoolean(BundleCons.ONLY_TRUSTED, false);
+    isStoreSearch = !TextUtils.isEmpty(storeName);
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {

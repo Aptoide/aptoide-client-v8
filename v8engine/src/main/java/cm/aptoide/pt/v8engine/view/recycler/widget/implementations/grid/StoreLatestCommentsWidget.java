@@ -10,6 +10,7 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -34,7 +35,7 @@ import rx.schedulers.Schedulers;
 
 public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplayable> {
 
-  private static final String TAG = StoreLatestCommentsWidget.class.getName();
+  private final AptoideClientUUID aptoideClientUUID;
 
   private RecyclerView recyclerView;
 
@@ -43,6 +44,9 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
 
   public StoreLatestCommentsWidget(View itemView) {
     super(itemView);
+
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
   }
 
   @Override protected void assignViews(View itemView) {
@@ -74,8 +78,7 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
     ManagerPreferences.setForceServerRefreshFlag(true);
     compositeSubscription.add(
         ListCommentsRequest.of(storeId, 0, 3, AptoideAccountManager.getAccessToken(),
-            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                DataProvider.getContext()).getAptoideClientUUID(), false)
+            aptoideClientUUID.getAptoideClientUUID(), false)
             .observe()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

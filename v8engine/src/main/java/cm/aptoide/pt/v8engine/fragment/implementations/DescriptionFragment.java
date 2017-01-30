@@ -16,12 +16,14 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.BaseLoaderToolbarFragment;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
@@ -36,6 +38,9 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
   @Getter private static final String PACKAGE_NAME = "packageName";
   @Getter private static final String STORE_NAME = "store_name";
   @Getter private static final String STORE_THEME = "store_theme";
+  @Getter private static final String DESCRIPTION = "description";
+  @Getter private static final String APP_NAME = "APP_NAME";
+  private final AptoideClientUUID aptoideClientUUID;
   private boolean hasAppId = false;
   private long appId;
   private String packageName;
@@ -43,6 +48,24 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
   private TextView descriptionContainer;
   private String storeName;
   private String storeTheme;
+  private String description;
+  private String appName;
+
+  public DescriptionFragment() {
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+  }
+
+  public static DescriptionFragment newInstance(String appName, String description,
+      String storeTheme) {
+    DescriptionFragment fragment = new DescriptionFragment();
+    Bundle args = new Bundle();
+    args.putString(APP_NAME, appName);
+    args.putString(STORE_THEME, storeTheme);
+    args.putString(DESCRIPTION, description);
+    fragment.setArguments(args);
+    return fragment;
+  }
 
   public static DescriptionFragment newInstance(long appId, String packageName, String storeName,
       String storeTheme) {
@@ -75,6 +98,13 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
     if (args.containsKey(STORE_THEME)) {
       storeTheme = args.getString(STORE_THEME);
     }
+
+    if (args.containsKey(DESCRIPTION)) {
+      description = args.getString(DESCRIPTION);
+    }
+    if (args.containsKey(APP_NAME)) {
+      appName = args.getString(APP_NAME);
+    }
   }
 
   @Override protected int getViewToShowAfterLoadingId() {
@@ -82,9 +112,18 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    if (hasAppId) {
-      GetAppRequest.of(appId, storeName, StoreUtils.getStoreCredentials(storeName),
-          AptoideAccountManager.getAccessToken(),
+
+    if (!TextUtils.isEmpty(description) && !TextUtils.isEmpty(appName)) {
+
+      descriptionContainer.setText(AptoideUtils.HtmlU.parse(description));
+      if (hasToolbar()) {
+        ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        bar.setTitle(appName);
+      }
+      finishLoading();
+    } else if (hasAppId) {
+      GetAppRequest.of(appId, V8Engine.getConfiguration().getPartnerId() == null ? null : storeName,
+          StoreUtils.getStoreCredentials(storeName), AptoideAccountManager.getAccessToken(),
           new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
               DataProvider.getContext()).getAptoideClientUUID(), packageName).execute(getApp -> {
         setupAppDescription(getApp);
@@ -101,8 +140,8 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
     ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
     if (bar != null) {
       ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
-      bar.setBackgroundDrawable(new ColorDrawable(getActivity().getResources()
-          .getColor(StoreThemeEnum.get(storeTheme).getStoreHeader())));
+      bar.setBackgroundDrawable(new ColorDrawable(
+          getActivity().getResources().getColor(StoreThemeEnum.get(storeTheme).getStoreHeader())));
     }
   }
 

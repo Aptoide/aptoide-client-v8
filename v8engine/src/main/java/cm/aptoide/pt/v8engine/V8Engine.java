@@ -19,7 +19,7 @@ import cm.aptoide.accountmanager.ws.responses.Subscription;
 import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.crashreports.ConsoleLogger;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.crashreports.FabricCrashLogger;
+import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
@@ -31,6 +31,7 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.PRNGFixes;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -75,6 +76,8 @@ public abstract class V8Engine extends DataProvider {
   @Getter private static DisplayableWidgetMapping displayableWidgetMapping;
   @Setter @Getter private static boolean autoUpdateWasCalled = false;
 
+  private static AptoideClientUUID aptoideClientUUID;
+
   public static void loadStores() {
 
     AptoideAccountManager.getUserRepos().subscribe(subscriptions -> {
@@ -116,8 +119,7 @@ public abstract class V8Engine extends DataProvider {
   }
 
   private static void regenerateUserAgent() {
-    SecurePreferences.setUserAgent(AptoideUtils.NetworkUtils.getDefaultUserAgent(
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext()),
+    SecurePreferences.setUserAgent(AptoideUtils.NetworkUtils.getDefaultUserAgent(aptoideClientUUID,
         new UserData() {
           @Override public String getUserEmail() {
             return AptoideAccountManager.getUserEmail();
@@ -150,10 +152,10 @@ public abstract class V8Engine extends DataProvider {
       CrashReport.getInstance().log(e);
     }
     long l = System.currentTimeMillis();
-    AptoideUtils.setContext(this);
     fragmentProvider = createFragmentProvider();
     activityProvider = createActivityProvider();
     displayableWidgetMapping = createDisplayableWidgetMapping();
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this);
 
     //
     // super
@@ -180,7 +182,7 @@ public abstract class V8Engine extends DataProvider {
     SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(this);
     Analytics.LocalyticsSessionControl.firstSession(sPref);
     Analytics.Lifecycle.Application.onCreate(this);
-    Logger.setDBG(ManagerPreferences.isDebug() || cm.aptoide.pt.utils.BuildConfig.DEBUG);
+    Logger.setDBG(ManagerPreferences.isDebug() || BuildConfig.DEBUG);
     new FlurryAgent.Builder().withLogEnabled(false).build(this, BuildConfig.FLURRY_KEY);
 
     if (SecurePreferences.isFirstRun()) {
@@ -230,9 +232,8 @@ public abstract class V8Engine extends DataProvider {
     AptoideDownloadManager.getInstance()
         .init(this, new DownloadNotificationActionsActionsInterface(),
             new DownloadManagerSettingsI(), downloadAccessor, CacheHelper.build(),
-            new FileUtils(action -> Analytics.File.moveFile(action)), new TokenHttpClient(
-                new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this),
-                () -> AptoideAccountManager.getUserEmail(),
+            new FileUtils(action -> Analytics.File.moveFile(action)),
+            new TokenHttpClient(aptoideClientUUID, () -> AptoideAccountManager.getUserEmail(),
                 getConfiguration().getPartnerId()).customMake(),
             new DownloadAnalytics(Analytics.getInstance()));
 
@@ -252,9 +253,7 @@ public abstract class V8Engine extends DataProvider {
     SQLiteDatabase db = new SQLiteDatabaseHelper(this).getWritableDatabase();
     db.close();
 
-    ABTestManager.getInstance()
-        .initialize(new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            this).getAptoideClientUUID())
+    ABTestManager.getInstance().initialize(aptoideClientUUID.getAptoideClientUUID())
         .subscribe(success -> {
         }, throwable -> {
           CrashReport.getInstance().log(throwable);
@@ -270,7 +269,7 @@ public abstract class V8Engine extends DataProvider {
 
   protected void setupCrashReports(boolean isDisabled) {
     CrashReport.getInstance()
-        .addLogger(new FabricCrashLogger(this, isDisabled))
+        .addLogger(new CrashlyticsCrashLogger(this, isDisabled))
         .addLogger(new ConsoleLogger());
   }
 
@@ -287,9 +286,8 @@ public abstract class V8Engine extends DataProvider {
   }
 
   Observable<String> generateAptoideUUID() {
-    return Observable.fromCallable(
-        () -> new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            this).getAptoideClientUUID()).subscribeOn(Schedulers.computation());
+    return Observable.fromCallable(() -> aptoideClientUUID.getAptoideClientUUID())
+        .subscribeOn(Schedulers.computation());
   }
 
   //
