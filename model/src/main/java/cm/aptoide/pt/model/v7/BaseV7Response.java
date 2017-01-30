@@ -17,7 +17,7 @@ import lombok.Data;
   private List<Error> errors;
 
   public Error getError() {
-    if (errors.size() > 0) {
+    if (errors != null && errors.size() > 0) {
       return errors.get(0);
     } else {
       return null;

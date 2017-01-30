@@ -24,6 +24,7 @@ import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import cm.aptoide.pt.v8engine.util.referrer.ReferrerUtils;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
 import rx.subscriptions.CompositeSubscription;
 
 public class InstalledIntentService extends IntentService {
@@ -113,7 +114,8 @@ public class InstalledIntentService extends IntentService {
         analytics.sendEvent(event);
         Logger.d(TAG, "Event sent");
       } else {
-        CrashReport.getInstance().log(new NullPointerException("Event not sent, the event was null"));
+        CrashReport.getInstance()
+            .log(new NullPointerException("Event not sent, the event was null"));
       }
     } else {
       CrashReport.getInstance().log(new NullPointerException("PackageInfo is null"));
@@ -181,15 +183,20 @@ public class InstalledIntentService extends IntentService {
       return packageInfo;
     }
 
+    Action0 insertApp = () -> installedRepository.save(new Installed(packageInfo));
+
     if (update != null) {
       if (packageInfo.versionCode >= update.getVersionCode()) {
+        // remove old update and on complete insert new app.
         updatesRepository.remove(update).doOnError(throwable -> {
           CrashReport.getInstance().log(throwable);
-        }).toBlocking().first();
+        }).doOnCompleted(insertApp);
       }
+    } else {
+      // sync call to insert
+      insertApp.call();
     }
 
-    installedRepository.save(new Installed(packageInfo));
     return packageInfo;
   }
 

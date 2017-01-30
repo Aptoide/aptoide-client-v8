@@ -19,10 +19,13 @@ import java.util.Queue;
  */
 public class Displayables implements LifecycleSchim {
 
-  private final Queue<Displayable> temporaryDisplayables = new LinkedList<>();
-  private final List<Displayable> displayables = new LinkedList<>();
+  private final Queue<Displayable> temporaryDisplayables;
+  private final List<Displayable> displayables;
 
-  public Displayables() { }
+  public Displayables() {
+    temporaryDisplayables = new LinkedList<>();
+    displayables = new LinkedList<>();
+  }
 
   public void add(int position, List<? extends Displayable> displayables) {
     Collections.reverse(displayables);

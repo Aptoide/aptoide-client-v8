@@ -18,10 +18,13 @@ import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
+import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.v8engine.InstallManager;
+import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
@@ -31,6 +34,8 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Upd
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
+import rx.Observable;
+import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -84,6 +89,7 @@ import rx.android.schedulers.AndroidSchedulers;
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(installed -> installedVernameTextView.setText(installed.getVersionName()),
             throwable -> throwable.printStackTrace()));
+
     labelTextView.setText(updateDisplayable.getLabel());
     updateVernameTextView.setText(updateDisplayable.getUpdateVersionName());
     ImageLoader.load(updateDisplayable.getIcon(), iconImageView);
@@ -124,17 +130,35 @@ import rx.android.schedulers.AndroidSchedulers;
         .subscribe(o -> {
         }, throwable -> throwable.printStackTrace()));
 
-    compositeSubscription.add(displayable.getUpdates()
-        .filter(downloadProgress -> downloadProgress.getRequest()
-            .getMd5()
-            .equals(displayable.getDownload().getMd5()))
-        .map(downloadProgress -> displayable.isDownloadingOrInstalling(downloadProgress))
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(shouldShow -> showProgress(shouldShow),
-            throwable -> throwable.printStackTrace()));
+    // FIXME: 24/1/2017 sithengineer do individual progress tracking
+    //compositeSubscription.add(displayable.getUpdates()
+    //    .filter(downloadProgress -> downloadProgress.getRequest()
+    //        .getMd5()
+    //        .equals(displayable.getDownload().getMd5()))
+    //    .map(downloadProgress -> displayable.isDownloadingOrInstalling(downloadProgress))
+    //    .observeOn(AndroidSchedulers.mainThread())
+    //    .subscribe(shouldShow -> showProgress(shouldShow),
+    //        throwable -> throwable.printStackTrace()));
+
+    // create the download object and listen to changes to it...
+
+    final InstallManager installManager = displayable.getInstallManager();
+    final String md5 = displayable.getMd5();
+
+    compositeSubscription.add(
+        getUpdateProgress(installManager, md5).observeOn(AndroidSchedulers.mainThread())
+            .map(downloadProgress -> isDownloadingOrInstalling(downloadProgress))
+            .subscribe(shouldShow -> showProgress(shouldShow),
+                throwable -> throwable.printStackTrace()));
   }
 
-  @UiThread private void showProgress(Boolean showProgress) {
+  private boolean isDownloadingOrInstalling(Progress<Download> progress) {
+    return progress.getRequest().getOverallDownloadStatus() == Download.PROGRESS
+        || progress.getRequest().getOverallDownloadStatus() == Download.PENDING
+        || progress.getRequest().getOverallDownloadStatus() == Download.IN_QUEUE;
+  }
+
+  @UiThread private void showProgress(boolean showProgress) {
     if (showProgress) {
       textUpdateLayout.setVisibility(View.GONE);
       imgUpdateLayout.setVisibility(View.GONE);
@@ -144,5 +168,26 @@ import rx.android.schedulers.AndroidSchedulers;
       imgUpdateLayout.setVisibility(View.VISIBLE);
       progressBar.setVisibility(View.GONE);
     }
+  }
+
+  /**
+   * *  <dt><b>Scheduler:</b></dt>
+   * <dd>{@code getUpdates} operates by default on the {@code io} {@link Scheduler}..</dd>
+   * </dl>
+   */
+  private Observable<Progress<Download>> getUpdateProgress(InstallManager installManager,
+      String md5) {
+    return installManager.getInstallationsAsList()
+        .filter(listProgress -> listProgress != null && !listProgress.isEmpty())
+        .flatMap(list -> {
+          for (Progress<Download> progress : list) {
+            if (progress.getRequest() != null && progress.getRequest()
+                .getMd5()
+                .equalsIgnoreCase(md5)) {
+              return Observable.just(progress);
+            }
+          }
+          return Observable.empty();
+        });
   }
 }

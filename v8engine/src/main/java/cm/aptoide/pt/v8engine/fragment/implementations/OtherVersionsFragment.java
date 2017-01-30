@@ -170,7 +170,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
             StoreUtils.getSubscribedStoresAuthMap()), otherVersionsSuccessRequestListener,
         Throwable::printStackTrace);
 
-    recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+    getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(false);
   }
 

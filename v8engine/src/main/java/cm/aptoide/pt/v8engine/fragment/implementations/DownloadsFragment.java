@@ -42,7 +42,6 @@ import rx.schedulers.Schedulers;
  */
 public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
 
-  private static final String TAG = DownloadsFragment.class.getSimpleName();
   private List<Displayable> activeDisplayablesList = new LinkedList<>();
   private List<Displayable> completedDisplayablesList = new LinkedList<>();
   private InstallManager installManager;
@@ -184,10 +183,8 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
     return -1;
   }
 
-  public void setDisplayables() {
-    LinkedList<Displayable> displayables = new LinkedList<>();
-    displayables.addAll(activeDisplayablesList);
-    displayables.addAll(completedDisplayablesList);
-    setDisplayables(displayables);
+  private void setDisplayables() {
+    clearDisplayables().addDisplayables(activeDisplayablesList, false)
+        .addDisplayables(completedDisplayablesList, true);
   }
 }

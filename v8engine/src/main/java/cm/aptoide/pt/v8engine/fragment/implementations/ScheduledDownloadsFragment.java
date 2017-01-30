@@ -58,8 +58,6 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
   private Analytics analytics;
   private InstallEventConverter installConverter;
 
-  //	private CompositeSubscription compositeSubscription;
-
   public ScheduledDownloadsFragment() {
   }
 
@@ -91,7 +89,6 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
-    Logger.d(TAG, "refresh excluded updates? " + (create ? "yes" : "no"));
     if (create) {
       switch (openMode) {
         case normal:
@@ -119,17 +116,6 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
     }
     fetchScheduledDownloads();
   }
-
-  //	@Override
-  //	public void onDestroyView() {
-  //		super.onDestroyView();
-  //		Observable.empty().observeOn(RealmSchedulers.getScheduler()).concatWith(Observable.fromCallable(() -> {
-  //			if (compositeSubscription != null && compositeSubscription.hasSubscriptions()) {
-  //				compositeSubscription.unsubscribe();
-  //			}
-  //			return null;
-  //		})).subscribe();
-  //	}
 
   @Override public int getContentViewId() {
     return R.layout.fragment_with_toolbar;
@@ -190,7 +176,7 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
       for (final Scheduled scheduledDownload : scheduledDownloadList) {
         displayables.add(new ScheduledDownloadDisplayable(scheduledDownload, installManager));
       }
-      setDisplayables(displayables);
+      clearDisplayables().addDisplayables(displayables, true);
     }
   }
 

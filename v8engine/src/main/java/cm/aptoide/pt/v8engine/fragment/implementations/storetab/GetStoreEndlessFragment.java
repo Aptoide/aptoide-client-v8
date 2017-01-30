@@ -26,7 +26,7 @@ public abstract class GetStoreEndlessFragment<T extends BaseV7EndlessResponse>
     if (!create) {
       // Not all requests are endless so..
       if (endlessRecyclerOnScrollListener != null) {
-        recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+        getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
       }
     }
   }
@@ -39,12 +39,12 @@ public abstract class GetStoreEndlessFragment<T extends BaseV7EndlessResponse>
 
   private void setupEndless(V7<T, ? extends Endless> v7request, Action1<T> action,
       boolean refresh) {
-    recyclerView.clearOnScrollListeners();
+    getRecyclerView().clearOnScrollListeners();
     endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(this.getAdapter(), v7request, action,
             getErrorRequestListener());
 
-    recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+    getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(refresh);
   }
 

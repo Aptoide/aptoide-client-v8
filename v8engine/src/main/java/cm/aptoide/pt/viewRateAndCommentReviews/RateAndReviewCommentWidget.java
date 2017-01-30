@@ -192,11 +192,7 @@ import rx.Observable;
   }
 
   private void setReviewRating(long reviewId, boolean positive) {
-    flagHelfull.setClickable(false);
-    flagNotHelfull.setClickable(false);
-
-    helpfullButtonLayout.setVisibility(View.INVISIBLE);
-    notHelpfullButtonLayout.setVisibility(View.INVISIBLE);
+    setHelpButtonsClickable(false);
 
     if (AptoideAccountManager.isLoggedIn()) {
       SetReviewRatingRequest.of(reviewId, positive, AptoideAccountManager.getAccessToken(),
@@ -222,11 +218,26 @@ import rx.Observable;
         // success
         Logger.d(TAG, String.format("review %d was marked as %s", reviewId,
             positive ? "positive" : "negative"));
+        setHelpButtonsClickable(true);
+        ShowMessage.asSnack(flagHelfull, R.string.thank_you_for_your_opinion);
       }, err -> {
+        ShowMessage.asSnack(flagHelfull, R.string.unknown_error);
         Logger.e(TAG, err);
+        setHelpButtonsClickable(true);
       }, true);
+    } else {
+      ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
+          snackView -> {
+            AptoideAccountManager.openAccountManager(snackView.getContext());
+          });
+      setHelpButtonsClickable(true);
     }
+  }
 
-    ShowMessage.asSnack(flagHelfull, R.string.thank_you_for_your_opinion);
+  private void setHelpButtonsClickable(boolean clickable) {
+    flagHelfull.setClickable(clickable);
+    flagNotHelfull.setClickable(clickable);
+    notHelpfullButtonLayout.setClickable(clickable);
+    helpfullButtonLayout.setClickable(clickable);
   }
 }

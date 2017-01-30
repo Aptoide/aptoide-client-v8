@@ -14,9 +14,9 @@ import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -49,8 +49,8 @@ import rx.schedulers.Schedulers;
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
     return new ListAppsUpdatesRequest((Body) decorator.decorate(
-        new Body(getInstalledApks(), subscribedStoresIds, aptoideClientUUID),
-        accessToken), BASE_HOST);
+        new Body(getInstalledApks(), subscribedStoresIds, aptoideClientUUID), accessToken),
+        BASE_HOST);
   }
 
   private static List<ApksData> getInstalledApks() {
@@ -66,45 +66,62 @@ import rx.schedulers.Schedulers;
     return apksDatas;
   }
 
+  private Body getBody(List<ApksData> apksData, int n) {
+    return new Body(body).setApksData(apksData.subList(n,
+        n + SPLIT_SIZE > apksData.size() ? n + apksData.size() % SPLIT_SIZE : n + SPLIT_SIZE));
+  }
+
   @Override protected Observable<ListAppsUpdates> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    ListAppsUpdates resultListAppsUpdates = new ListAppsUpdates();
+    return Observable.just(body.getApksData().size()).flatMap(bodySize -> {
+      if (bodySize > SPLIT_SIZE) {
+        //
+        // we need to split the request in several requests due to having too much apps
+        //
+        // necessary steps to take
+        //
+        // 1) create necessary request bodies
+        // 2) create requests with each body
+        // 3) do parallel requests
+        // 4) wait for all requests
+        // 5) merge all the request results in one object
+        //
 
-    if (body.getApksData().size() > SPLIT_SIZE) {
+        List<ApksData> apksData = body.getApksData();
+        ArrayList<Body> bodies = new ArrayList<>();
 
-      int latchCount =
-          body.getApksData().size() / SPLIT_SIZE + (body.getApksData().size() % SPLIT_SIZE > 0 ? 1
-              : 0);
-      CountDownLatch countDownLatch = new CountDownLatch(latchCount);
+        for (int n = 0; n < apksData.size(); n += SPLIT_SIZE) {
+          bodies.add(getBody(apksData, n));
+        }
 
-      resultListAppsUpdates.setList(new LinkedList<>());
-      List<ApksData> apksData = body.getApksData();
-
-      for (int n = 0; n < apksData.size(); n += SPLIT_SIZE) {
-        Body tmpBody = new Body(body).setApksData(apksData.subList(n,
-            n + SPLIT_SIZE > apksData.size() ? n + apksData.size() % SPLIT_SIZE : n + SPLIT_SIZE));
-
-        interfaces.listAppsUpdates(tmpBody, bypassCache)
-            .subscribeOn(Schedulers.io())
-            .subscribe(listAppsUpdates -> {
-              resultListAppsUpdates.getList().addAll(listAppsUpdates.getList());
-              countDownLatch.countDown();
-            }, throwable -> {
-              countDownLatch.countDown();
-              throwable.printStackTrace();
+        return Observable.from(bodies)
+            // switch to I/O scheduler
+            .observeOn(Schedulers.io())
+            // map bodies to request with bodies
+            .map(body -> interfaces.listAppsUpdates(body, bypassCache))
+            // wait for all requests to be ready and return a list of requests
+            .toList()
+            // subscribe to all observables (list of observables<request>) at the same time using merge
+            .flatMap(requestList -> Observable.merge(requestList))
+            // wait for all responses
+            .toList()
+            // flat the list of [list of updates] into a list of updates
+            .flatMapIterable(responses -> responses)
+            // get the inner list of updates
+            .map(response -> response.getList())
+            // iterate over each update
+            .flatMapIterable(responseList -> responseList)
+            // create list of updates
+            .toList()
+            // return the resulting list of updates into a single object
+            .map(listAppUpdates -> {
+              ListAppsUpdates resultListAppsUpdates = new ListAppsUpdates();
+              resultListAppsUpdates.setList(listAppUpdates);
+              return resultListAppsUpdates;
             });
       }
-
-      try {
-        countDownLatch.await();
-      } catch (InterruptedException e) {
-        CrashReport.getInstance().log(e);
-      }
-
-      return Observable.just(resultListAppsUpdates);
-    } else {
       return interfaces.listAppsUpdates(body, bypassCache);
-    }
+    });
   }
 
   @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody {

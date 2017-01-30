@@ -153,7 +153,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
         packagesObservable = refreshPackages();
       }
 
-      if (adapter.getItemCount() == 0) {
+      if (getAdapter().getItemCount() == 0) {
         displayableObservable = packagesObservable.flatMap(
             packages -> Observable.concat(getFreshDisplayables(refresh, packages),
                 getNextDisplayables(packages)));
@@ -216,7 +216,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
   }
 
   private Observable<Datalist<Displayable>> getNextDisplayables(List<String> packages) {
-    return RxEndlessRecyclerView.loadMore(recyclerView, getAdapter())
+    return RxEndlessRecyclerView.loadMore(getRecyclerView(), getAdapter())
         .filter(item -> onStartLoadNext())
         .concatMap(item -> getDisplayableList(packages, getOffset(), false))
         .delay(1, TimeUnit.SECONDS)
@@ -288,14 +288,14 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
   private void addLoading() {
     if (!loading) {
       this.loading = true;
-      adapter.addDisplayable(new ProgressBarDisplayable().setFullRow());
+      getAdapter().addDisplayable(new ProgressBarDisplayable().setFullRow());
     }
   }
 
   private void removeLoading() {
     if (loading) {
       loading = false;
-      adapter.popDisplayable();
+      getAdapter().popDisplayable();
     }
   }
 
@@ -376,7 +376,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
   }
 
   public void goToTop() {
-    GridLayoutManager layoutManager = ((GridLayoutManager) recyclerView.getLayoutManager());
+    GridLayoutManager layoutManager = ((GridLayoutManager) getRecyclerView().getLayoutManager());
     int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
     if (lastVisibleItemPosition > 10) {
       getRecyclerView().scrollToPosition(10);
