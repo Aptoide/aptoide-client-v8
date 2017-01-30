@@ -163,7 +163,7 @@
           android:text="@string/edit_store"
           android:textAlignment="center"
           android:textSize="12sp"
-          android:visibility="gone"
+          android:visibility="visible"
           />
 
 
