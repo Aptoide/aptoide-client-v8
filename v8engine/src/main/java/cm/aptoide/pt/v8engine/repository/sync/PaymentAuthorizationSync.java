@@ -66,7 +66,7 @@ public class PaymentAuthorizationSync extends RepositorySync {
             authorizationFactory.create(Integer.valueOf(paymentId),
                 Authorization.Status.SYNCING_ERROR, payerId)));
       }
-      authorizationAccessor.saveAll(authorizations);
+      authorizationAccessor.updateAll(authorizations);
     }
   }
 
@@ -86,7 +86,7 @@ public class PaymentAuthorizationSync extends RepositorySync {
       }
     }
 
-    authorizationAccessor.saveAll(authorizations);
+    authorizationAccessor.updateAll(authorizations);
   }
 
   private Single<List<PaymentAuthorizationsResponse.PaymentAuthorizationResponse>> getServerAuthorizations(

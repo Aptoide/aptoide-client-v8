@@ -35,13 +35,11 @@ public class PaymentAuthorizationRepository implements Repository<Authorization,
         .observe()
         .flatMap(response -> {
           if (response != null && response.isOk()) {
-            syncAuthorizations(Collections.singletonList(paymentId));
             return Observable.just(null);
           }
           return Observable.<Void>error(
               new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
-        })
-        .toCompletable();
+        }).toCompletable();
   }
 
   @Override public void save(Authorization entity) {
@@ -71,15 +69,14 @@ public class PaymentAuthorizationRepository implements Repository<Authorization,
   public Completable saveAuthorization(Authorization authorization) {
     return Completable.fromAction(() -> authotizationAccessor.save(
         authorizationFactory.convertToDatabasePaymentAuthorization(authorization)))
-        .doOnCompleted(
-            () -> syncAuthorizations(Collections.singletonList(authorization.getPaymentId())));
+        .andThen(syncAuthorizations(Collections.singletonList(authorization.getPaymentId())));
   }
 
   private Completable syncAuthorizations(List<Integer> paymentIds) {
     return Observable.from(paymentIds)
         .map(paymentId -> String.valueOf(paymentId))
         .toList()
-        .doOnNext(stringIds -> backgroundSync.syncAuthorizations(stringIds))
+        .flatMap(ids -> backgroundSync.syncAuthorizations(ids).toObservable())
         .toCompletable();
   }
 

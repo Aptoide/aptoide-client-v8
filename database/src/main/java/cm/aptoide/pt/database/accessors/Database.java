@@ -273,6 +273,14 @@ public final class Database {
     realm.commitTransaction();
   }
 
+  public <E extends RealmObject> void updateAll(Class<E> clazz, List<E> objects) {
+    @Cleanup Realm realm = get();
+    realm.beginTransaction();
+    realm.delete(clazz);
+    realm.insertOrUpdate(objects);
+    realm.commitTransaction();
+  }
+
   public <E extends RealmObject> void insertAll(List<E> objects) {
     @Cleanup Realm realm = get();
     realm.beginTransaction();

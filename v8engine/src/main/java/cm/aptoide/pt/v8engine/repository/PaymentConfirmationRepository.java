@@ -40,20 +40,19 @@ public abstract class PaymentConfirmationRepository {
       String paymentConfirmationId);
 
   public Observable<PaymentConfirmation> getPaymentConfirmation(Product product, String payerId) {
-    return confirmationAccessor.getPaymentConfirmations(product.getId(), payerId)
-        .flatMap(paymentConfirmations -> Observable.from(paymentConfirmations)
-            .map(paymentConfirmation -> confirmationFactory.convertToPaymentConfirmation(paymentConfirmation)))
-        .doOnSubscribe(() -> backgroundSync.syncConfirmation(((AptoideProduct) product)));
+    return syncPaymentConfirmation((AptoideProduct) product).andThen(
+        confirmationAccessor.getPaymentConfirmations(product.getId(), payerId)
+            .flatMap(paymentConfirmations -> Observable.from(paymentConfirmations)
+                .map(paymentConfirmation -> confirmationFactory.convertToPaymentConfirmation(
+                    paymentConfirmation))));
   }
 
-  protected Completable createPaymentConfirmation(int paymentId, String paymentConfirmationId,
-      AptoideProduct product) {
-    return Completable.fromAction(() -> {
-      backgroundSync.syncConfirmation(product, paymentId, paymentConfirmationId);
-    }).subscribeOn(Schedulers.io());
+  protected Completable createPaymentConfirmation(AptoideProduct product, int paymentId,
+      String paymentConfirmationId) {
+    return backgroundSync.syncConfirmation(product, paymentId, paymentConfirmationId);
   }
 
-  protected void syncPaymentConfirmation(AptoideProduct product) {
-    backgroundSync.syncConfirmation(product);
+  protected Completable syncPaymentConfirmation(AptoideProduct product) {
+    return backgroundSync.syncConfirmation(product);
   }
 }

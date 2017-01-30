@@ -26,8 +26,8 @@ public class PaymentAuthorizationAccessor extends SimpleAccessor<PaymentAuthoriz
         .flatMap(query -> database.findAsSortedList(query, PaymentAuthorization.PAYMENT_ID));
   }
 
-  public void saveAll(List<PaymentAuthorization> paymentAuthorizations) {
-    database.insertAll(paymentAuthorizations);
+  public void updateAll(List<PaymentAuthorization> paymentAuthorizations) {
+    database.updateAll(PaymentAuthorization.class, paymentAuthorizations);
   }
 
   public void save(PaymentAuthorization paymentAuthorization) {
