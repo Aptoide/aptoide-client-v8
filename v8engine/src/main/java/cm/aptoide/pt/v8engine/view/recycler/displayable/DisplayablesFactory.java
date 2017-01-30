@@ -7,7 +7,6 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
 import android.text.TextUtils;
 import android.util.Pair;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
@@ -171,17 +170,7 @@ public class DisplayablesFactory {
     if (viewObject instanceof GetStoreMeta && ((GetStoreMeta) viewObject).getData() != null) {
       displayables.add(new MyStoreDisplayable(((GetStoreMeta) viewObject)));
     } else {
-      // TODO: 22/12/2016 trinkes remove this hammered!!!!
-      GetStoreMeta meta = AptoideAccountManager.refreshUserInfoData()
-          .map(userInfo -> convertUserInfoStore(userInfo))
-          .onErrorReturn(throwable -> null)
-          .toBlocking()
-          .first();
-      if (meta == null) {
-        displayables.add(new CreateStoreDisplayable());
-      } else {
-        displayables.add(new MyStoreDisplayable(meta));
-      }
+      displayables.add(new CreateStoreDisplayable());
     }
     return displayables;
   }
@@ -222,8 +211,7 @@ public class DisplayablesFactory {
     return new DisplayableGroup(displayables);
   }
 
-  private static Displayable createReviewsDisplayables(
-      ListFullReviews listFullReviews) {
+  private static Displayable createReviewsDisplayables(ListFullReviews listFullReviews) {
     List<FullReview> reviews = listFullReviews.getDatalist().getList();
     final List<Displayable> displayables = new ArrayList<>(reviews.size());
     for (int i = 0; i < reviews.size(); i++) {

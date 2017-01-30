@@ -97,8 +97,6 @@ public class SocialVideoWidget extends SocialCardWidget<SocialVideoDisplayable> 
     videoTitle.setTypeface(typeFace);
     videoTitle.setText(displayable.getVideoTitle());
     setCardViewMargin(displayable, cardView);
-    ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarUrl(), storeAvatar);
-    ImageLoader.loadWithShadowCircleTransform(displayable.getUser().getAvatar(), userAvatar);
     ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
     play_button.setVisibility(View.VISIBLE);
 

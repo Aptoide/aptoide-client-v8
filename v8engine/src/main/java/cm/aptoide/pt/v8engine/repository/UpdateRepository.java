@@ -8,6 +8,7 @@ import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -25,29 +26,16 @@ import rx.schedulers.Schedulers;
 public class UpdateRepository implements Repository {
 
   private static final String TAG = UpdateRepository.class.getName();
-
+  private final AptoideClientUUID aptoideClientUUID;
   private UpdateAccessor updateAccessor;
   private StoreAccessor storeAccessor;
 
   UpdateRepository(UpdateAccessor updateAccessor, StoreAccessor storeAccessor) {
     this.updateAccessor = updateAccessor;
     this.storeAccessor = storeAccessor;
-  }
 
-  //public Observable<List<Update>> getUpdates() {
-  //  return getUpdates(false);
-  //}
-
-  private Observable<List<App>> getNetworkUpdates(List<Long> storeIds, boolean bypassCache) {
-    Logger.d(TAG, String.format("getNetworkUpdates() -> using %d stores", storeIds.size()));
-    return ListAppsUpdatesRequest.of(storeIds, AptoideAccountManager.getAccessToken(),
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID()).observe(bypassCache).map(result -> {
-      if (result.isOk()) {
-        return result.getList();
-      }
-      return Collections.<App>emptyList();
-    });
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
   }
 
   public @NonNull Observable<List<Update>> getUpdates(boolean bypassCache) {
@@ -68,6 +56,17 @@ public class UpdateRepository implements Repository {
         // return all the local (non-excluded) updates
         // this is a non-closing Observable, so new db modifications will trigger this observable
         .flatMap(aVoid -> getAllNonExcluded());
+  }
+
+  private Observable<List<App>> getNetworkUpdates(List<Long> storeIds, boolean bypassCache) {
+    Logger.d(TAG, String.format("getNetworkUpdates() -> using %d stores", storeIds.size()));
+    return ListAppsUpdatesRequest.of(storeIds, AptoideAccountManager.getAccessToken(),
+        aptoideClientUUID.getAptoideClientUUID()).observe(bypassCache).map(result -> {
+      if (result.isOk()) {
+        return result.getList();
+      }
+      return Collections.<App>emptyList();
+    });
   }
 
   private Completable saveNewUpdates(List<App> updates) {

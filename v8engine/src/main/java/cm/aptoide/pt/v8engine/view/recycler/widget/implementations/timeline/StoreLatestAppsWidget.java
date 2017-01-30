@@ -58,7 +58,7 @@ public class StoreLatestAppsWidget extends CardWidget<StoreLatestAppsDisplayable
     appsContaner = (LinearLayout) itemView.findViewById(
         R.id.displayable_social_timeline_store_latest_apps_container);
     cardView =
-        (CardView) itemView.findViewById(R.id.displayable_social_timeline_store_latest_apps_card);
+        (CardView) itemView.findViewById(R.id.card);
   }
 
   @Override public void bindView(StoreLatestAppsDisplayable displayable) {

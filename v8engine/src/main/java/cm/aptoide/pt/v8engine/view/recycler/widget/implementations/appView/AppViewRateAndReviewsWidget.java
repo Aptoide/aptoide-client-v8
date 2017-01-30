@@ -22,6 +22,7 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
@@ -47,6 +48,7 @@ import java.util.List;
   public static final long TIME_BETWEEN_SCROLL = 2 * DateUtils.SECOND_IN_MILLIS;
   private static final String TAG = AppViewRateAndReviewsWidget.class.getSimpleName();
   private static final int MAX_COMMENTS = 3;
+  private final AptoideClientUUID aptoideClientUUID;
   private View emptyReviewsLayout;
   private View ratingLayout;
   private View commentsLayout;
@@ -70,6 +72,9 @@ import java.util.List;
 
   public AppViewRateAndReviewsWidget(View itemView) {
     super(itemView);
+
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
   }
 
   @Override protected void assignViews(View itemView) {
@@ -156,9 +161,8 @@ import java.util.List;
 
   public void loadTopReviews(String storeName, String packageName) {
     ListReviewsRequest.ofTopReviews(storeName, packageName, MAX_COMMENTS,
-        AptoideAccountManager.getAccessToken(),
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID()).execute(listReviews -> {
+        AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
+        .execute(listReviews -> {
 
           List<Review> reviews = listReviews.getDatalist().getList();
           if (reviews == null || reviews.isEmpty()) {

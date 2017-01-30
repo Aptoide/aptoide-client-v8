@@ -232,6 +232,33 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="26dp"
+                    >
+
+                  <ImageView
+                      android:id="@+id/create_store_theme_default"
+                      android:layout_width="43.3dp"
+                      android:layout_height="43.3dp"
+                      android:background="@drawable/create_store_theme_shape_default"
+                      />
+
+                  <ImageView
+                      android:id="@+id/create_store_theme_check_default"
+                      android:layout_width="23dp"
+                      android:layout_height="23dp"
+                      android:layout_alignBottom="@+id/create_store_theme_default"
+                      android:layout_alignEnd="@+id/create_store_theme_default"
+                      android:layout_alignRight="@+id/create_store_theme_default"
+                      android:scaleType="centerInside"
+                      android:src="@drawable/create_store_theme_check"
+                      android:visibility="invisible"
+                      />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="26dp"
                     android:layout_marginRight="26dp"
                     >
 
@@ -500,6 +527,141 @@
                       android:layout_alignBottom="@+id/create_store_theme_lightblue"
                       android:layout_alignEnd="@+id/create_store_theme_lightblue"
                       android:layout_alignRight="@+id/create_store_theme_lightblue"
+                      android:scaleType="centerInside"
+                      android:src="@drawable/create_store_theme_check"
+                      android:visibility="invisible"
+                      />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="26dp"
+                    >
+
+                  <ImageView
+                      android:id="@+id/create_store_theme_black"
+                      android:layout_width="43.3dp"
+                      android:layout_height="43.3dp"
+                      android:background="@drawable/create_store_theme_shape_black"
+                      />
+
+                  <ImageView
+                      android:id="@+id/create_store_theme_check_black"
+                      android:layout_width="23dp"
+                      android:layout_height="23dp"
+                      android:layout_alignBottom="@+id/create_store_theme_black"
+                      android:layout_alignEnd="@+id/create_store_theme_black"
+                      android:layout_alignRight="@+id/create_store_theme_black"
+                      android:scaleType="centerInside"
+                      android:src="@drawable/create_store_theme_check"
+                      android:visibility="invisible"
+                      />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="26dp"
+                    >
+
+                  <ImageView
+                      android:id="@+id/create_store_theme_blue_grey"
+                      android:layout_width="43.3dp"
+                      android:layout_height="43.3dp"
+                      android:background="@drawable/create_store_theme_shape_blue_grey"
+                      />
+
+                  <ImageView
+                      android:id="@+id/create_store_theme_check_blue_grey"
+                      android:layout_width="23dp"
+                      android:layout_height="23dp"
+                      android:layout_alignBottom="@+id/create_store_theme_blue_grey"
+                      android:layout_alignEnd="@+id/create_store_theme_blue_grey"
+                      android:layout_alignRight="@+id/create_store_theme_blue_grey"
+                      android:scaleType="centerInside"
+                      android:src="@drawable/create_store_theme_check"
+                      android:visibility="invisible"
+                      />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="26dp"
+                    >
+
+                  <ImageView
+                      android:id="@+id/create_store_theme_deep_purple"
+                      android:layout_width="43.3dp"
+                      android:layout_height="43.3dp"
+                      android:background="@drawable/create_store_theme_shape_deep_purple"
+                      />
+
+                  <ImageView
+                      android:id="@+id/create_store_theme_check_deep_purple"
+                      android:layout_width="23dp"
+                      android:layout_height="23dp"
+                      android:layout_alignBottom="@+id/create_store_theme_deep_purple"
+                      android:layout_alignEnd="@+id/create_store_theme_deep_purple"
+                      android:layout_alignRight="@+id/create_store_theme_deep_purple"
+                      android:scaleType="centerInside"
+                      android:src="@drawable/create_store_theme_check"
+                      android:visibility="invisible"
+                      />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="26dp"
+                    >
+
+                  <ImageView
+                      android:id="@+id/create_store_theme_light_green"
+                      android:layout_width="43.3dp"
+                      android:layout_height="43.3dp"
+                      android:background="@drawable/create_store_theme_shape_light_green"
+                      />
+
+                  <ImageView
+                      android:id="@+id/create_store_theme_check_light_green"
+                      android:layout_width="23dp"
+                      android:layout_height="23dp"
+                      android:layout_alignBottom="@+id/create_store_theme_light_green"
+                      android:layout_alignEnd="@+id/create_store_theme_light_green"
+                      android:layout_alignRight="@+id/create_store_theme_light_green"
+                      android:scaleType="centerInside"
+                      android:src="@drawable/create_store_theme_check"
+                      android:visibility="invisible"
+                      />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="26dp"
+                    >
+
+                  <ImageView
+                      android:id="@+id/create_store_theme_grey"
+                      android:layout_width="43.3dp"
+                      android:layout_height="43.3dp"
+                      android:background="@drawable/create_store_theme_shape_grey"
+                      />
+
+                  <ImageView
+                      android:id="@+id/create_store_theme_check_grey"
+                      android:layout_width="23dp"
+                      android:layout_height="23dp"
+                      android:layout_alignBottom="@+id/create_store_theme_grey"
+                      android:layout_alignEnd="@+id/create_store_theme_grey"
+                      android:layout_alignRight="@+id/create_store_theme_grey"
                       android:scaleType="centerInside"
                       android:src="@drawable/create_store_theme_check"
                       android:visibility="invisible"

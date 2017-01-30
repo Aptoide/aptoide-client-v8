@@ -43,6 +43,7 @@ import cm.aptoide.accountmanager.ws.responses.Subscription;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.preferences.AptoidePreferencesConfiguration;
@@ -97,7 +98,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
       ".removedaccount.broadcast";
 
   private final static AptoideAccountManager instance = new AptoideAccountManager();
-  private static final IdsRepositoryImpl idsRepository =
+  private static final AptoideClientUUID aptoideClientUuid =
       new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
           DataProvider.getContext());
   private static String TAG = AptoideAccountManager.class.getSimpleName();
@@ -395,11 +396,13 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     ProgressDialog genericPleaseWaitDialog = null;
     if (context != null) {
       genericPleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(context);
-      genericPleaseWaitDialog.show();
+      if (!((Activity) context).isFinishing()) {
+        genericPleaseWaitDialog.show();
+      }
     }
     OAuth2AuthenticationRequest oAuth2AuthenticationRequest =
         OAuth2AuthenticationRequest.of(userName, passwordOrToken, mode, nameForGoogle,
-            idsRepository.getAptoideClientUUID());
+            aptoideClientUuid.getAptoideClientUUID());
     final ProgressDialog finalGenericPleaseWaitDialog = genericPleaseWaitDialog;
     oAuth2AuthenticationRequest.execute(oAuth -> {
       Logger.d(TAG, "onSuccess() called with: " + "oAuth = [" + oAuth + "]");
@@ -594,7 +597,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 
   private static Observable<String> getNewAccessTokenFromRefreshToken(String refreshToken,
       Action1<Throwable> action1) {
-    return OAuth2AuthenticationRequest.of(refreshToken, idsRepository.getAptoideClientUUID())
+    return OAuth2AuthenticationRequest.of(refreshToken, aptoideClientUuid.getAptoideClientUUID())
         .observe()
         .observeOn(AndroidSchedulers.mainThread())
         .map(OAuth::getAccessToken)
@@ -625,7 +628,8 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     String email = callback.getUserEmail();
     String password = callback.getUserPassword();
     if (validateUserCredentials(callback, email, password)) {
-      CreateUserRequest.of(email, password, idsRepository.getAptoideClientUUID()).execute(oAuth -> {
+      CreateUserRequest.of(email, password, aptoideClientUuid.getAptoideClientUUID())
+          .execute(oAuth -> {
         if (oAuth.hasErrors()) {
           if (oAuth.getErrors() != null && oAuth.getErrors().size() > 0) {
             callback.onRegisterFail(
@@ -895,12 +899,16 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
   }
 
   void onLoginFail(String reason) {
-    mCallback.onLoginFail(reason);
+    if (mCallback != null) mCallback.onLoginFail(reason);
   }
 
   void onLoginSuccess(LoginMode loginType, String loginOrigin, String username, String password) {
+
     userIsLoggedIn = true;
-    mCallback.onLoginSuccess();
+
+    if (mCallback != null) {
+      mCallback.onLoginSuccess();
+    }
     if (analytics != null) {
       analytics.login(loginType.name());
     }
@@ -973,7 +981,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
    * @return The user name introduced by user
    */
   String getIntroducedUserName() {
-    return mCallback.getIntroducedUserName();
+    return mCallback == null ? null : mCallback.getIntroducedUserName();
   }
 
   /**
@@ -982,7 +990,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
    * @return The password introduced by user
    */
   String getIntroducedPassword() {
-    return mCallback.getIntroducedPassword();
+    return mCallback == null ? null : mCallback.getIntroducedPassword();
   }
 
   /*******************************************************/

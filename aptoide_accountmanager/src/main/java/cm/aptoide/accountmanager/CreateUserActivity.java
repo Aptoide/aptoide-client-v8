@@ -20,6 +20,7 @@ import cm.aptoide.accountmanager.ws.ErrorsMapper;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -42,9 +43,9 @@ public class CreateUserActivity extends PermissionsBaseActivity
   private static final String TYPE_STORAGE = "storage";
   private static final String TYPE_CAMERA = "camera";
   private static int CREATE_USER_REQUEST_CODE = 0; //1:Username and Avatar 2: Username
-  private final IdsRepositoryImpl idsRepository =
-      new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-          DataProvider.getContext());
+
+  private final AptoideClientUUID aptoideClientUUID;
+
   private String userEmail;
   private String userPassword;
   private String username;
@@ -61,6 +62,11 @@ public class CreateUserActivity extends PermissionsBaseActivity
   private CompositeSubscription mSubscriptions;
   private Boolean result = false;
   private String ERROR_TAG = "Error update user";
+
+  public CreateUserActivity() {
+    this.aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+  }
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -124,7 +130,7 @@ public class CreateUserActivity extends PermissionsBaseActivity
         pleaseWaitDialog.show();
         mSubscriptions.add(
             CreateUserRequest.of("true", userEmail, username, userPassword, avatarPath,
-                idsRepository.getAptoideClientUUID()).observe().filter(answer -> {
+                aptoideClientUUID.getAptoideClientUUID()).observe().filter(answer -> {
               if (answer.hasErrors()) {
                 if (answer.getErrors() != null && answer.getErrors().size() > 0) {
                   onRegisterFail(ErrorsMapper.getWebServiceErrorMessageFromCode(
@@ -168,7 +174,7 @@ public class CreateUserActivity extends PermissionsBaseActivity
         pleaseWaitDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         pleaseWaitDialog.show();
         CreateUserRequest.of("true", userEmail, username, userPassword, avatarPath,
-            idsRepository.getAptoideClientUUID()).execute(answer -> {
+            aptoideClientUUID.getAptoideClientUUID()).execute(answer -> {
           if (answer.hasErrors()) {
             if (answer.getErrors() != null && answer.getErrors().size() > 0) {
               onRegisterFail(

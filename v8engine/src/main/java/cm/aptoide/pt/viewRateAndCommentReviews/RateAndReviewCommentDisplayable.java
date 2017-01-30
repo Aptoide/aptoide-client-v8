@@ -13,6 +13,7 @@ public class RateAndReviewCommentDisplayable
     extends DisplayablePojo<ReviewWithAppName> {
 
   @Getter private CommentAdder commentAdder;
+  @Getter private int numberComments;
 
   public RateAndReviewCommentDisplayable() {
   }
@@ -21,10 +22,11 @@ public class RateAndReviewCommentDisplayable
     super(pojo);
   }
 
-  public RateAndReviewCommentDisplayable(ReviewWithAppName pojo,
-      CommentAdder commentAdder) {
+  public RateAndReviewCommentDisplayable(ReviewWithAppName pojo, CommentAdder commentAdder,
+      int numberComments) {
     super(pojo);
     this.commentAdder = commentAdder;
+    this.numberComments = numberComments;
   }
 
   @Override public int getViewLayout() {

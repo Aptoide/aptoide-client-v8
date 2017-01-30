@@ -20,6 +20,7 @@ import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadLargeFileListener;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.exception.FileDownloadHttpException;
+import com.liulishuo.filedownloader.exception.FileDownloadOutOfSpaceException;
 import io.realm.RealmList;
 import java.io.File;
 import java.util.concurrent.TimeUnit;
@@ -286,6 +287,11 @@ class DownloadTask extends FileDownloadLargeFileListener {
       if (analytics != null) {
         analytics.onError(download, e);
       }
+    }
+    if (e instanceof FileDownloadOutOfSpaceException) {
+      download.setDownloadError(Download.NOT_ENOUGH_SPACE_ERROR);
+    } else {
+      download.setDownloadError(Download.GENERIC_ERROR);
     }
     setDownloadStatus(Download.ERROR, download, task);
     AptoideDownloadManager.getInstance().currentDownloadFinished();

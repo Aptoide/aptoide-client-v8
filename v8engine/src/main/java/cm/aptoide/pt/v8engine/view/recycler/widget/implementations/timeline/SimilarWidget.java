@@ -60,7 +60,7 @@ public class SimilarWidget extends CardWidget<SimilarDisplayable> {
     getApp = (TextView) itemView.findViewById(
         R.id.displayable_social_timeline_recommendation_get_app_button);
     cardView =
-        (CardView) itemView.findViewById(R.id.displayable_social_timeline_recommendation_card);
+        (CardView) itemView.findViewById(R.id.card);
     cardContent = (RelativeLayout) itemView.findViewById(
         R.id.displayable_social_timeline_recommendation_card_content);
   }

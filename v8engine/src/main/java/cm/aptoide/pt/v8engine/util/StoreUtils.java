@@ -10,6 +10,7 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.store.GetStoreMeta;
@@ -32,9 +33,13 @@ public class StoreUtils {
   public static final String PRIVATE_STORE_WRONG_CREDENTIALS = "STORE-4";
 
   private static StoreCredentialsProviderImpl storeCredentialsProvider;
+  private static AptoideClientUUID aptoideClientUUID;
 
   static {
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
+
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
   }
 
   @Deprecated
@@ -61,9 +66,8 @@ public class StoreUtils {
       @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
       @Nullable ErrorRequestListener errorRequestListener) {
     subscribeStore(GetStoreMetaRequest.of(getStoreCredentials(storeName),
-        AptoideAccountManager.getAccessToken(),
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID()), successRequestListener,
+        AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID()),
+        successRequestListener,
         errorRequestListener);
   }
 

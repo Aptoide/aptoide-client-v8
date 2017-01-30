@@ -58,6 +58,7 @@
           android:layout_width="@dimen/other_version_icon_size"
           android:layout_height="@dimen/other_version_icon_size"
           android:layout_marginLeft="@dimen/appview_recommended_for_you_image_margin_left"
+          android:layout_marginStart="@dimen/appview_recommended_for_you_image_margin_left"
           android:scaleType="centerInside"
           android:src="@drawable/ic_badge_trusted"
           />

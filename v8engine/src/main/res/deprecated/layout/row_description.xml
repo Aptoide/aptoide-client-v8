@@ -11,6 +11,7 @@
     android:ellipsize="end"
     android:maxLines="1"
     android:paddingLeft="6dp"
+    android:paddingStart="6dp"
     android:textColor="?android:attr/textColorSecondary"
     android:textSize="12sp"
     android:textStyle="italic"

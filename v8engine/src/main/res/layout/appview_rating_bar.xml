@@ -15,6 +15,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_toLeftOf="@+id/numberslayout"
+      android:layout_toStartOf="@+id/numberslayout"
       android:orientation="vertical"
       >
 
@@ -31,6 +32,7 @@
           android:layout_height="match_parent"
           android:layout_gravity="center_vertical"
           android:layout_marginRight="5dp"
+          android:layout_marginEnd="5dp"
           android:src="@drawable/grid_item_star_empty_small"
           />
 
@@ -40,7 +42,9 @@
           android:layout_height="match_parent"
           android:gravity="center_vertical"
           android:layout_marginRight="5dp"
+          android:layout_marginEnd="5dp"
           android:layout_toRightOf="@id/appview_rating_bar_star5"
+          android:layout_toEndOf="@id/appview_rating_bar_star5"
           android:text="5"
           android:textColor="?android:attr/textColorSecondary"
           />
@@ -54,6 +58,7 @@
           android:layout_marginBottom="5dp"
           android:layout_centerVertical="true"
           android:layout_toRightOf="@id/appview_rating_bar_number5"
+          android:layout_toEndOf="@id/appview_rating_bar_number5"
           android:max="100"
           android:progressDrawable="@drawable/app_rating_progress_bar_layout"
           />
@@ -74,6 +79,7 @@
           android:layout_height="match_parent"
           android:layout_gravity="center_vertical"
           android:layout_marginRight="5dp"
+          android:layout_marginEnd="5dp"
           android:src="@drawable/grid_item_star_empty_small"
           />
 
@@ -83,7 +89,9 @@
           android:layout_height="match_parent"
           android:gravity="center_vertical"
           android:layout_marginRight="5dp"
+          android:layout_marginEnd="5dp"
           android:layout_toRightOf="@id/appview_rating_bar_star4"
+          android:layout_toEndOf="@id/appview_rating_bar_star4"
           android:text="4"
           android:textColor="?android:attr/textColorSecondary"
           />
@@ -97,6 +105,7 @@
           android:layout_marginTop="5dp"
           android:layout_centerVertical="true"
           android:layout_toRightOf="@id/appview_rating_bar_number4"
+          android:layout_toEndOf="@id/appview_rating_bar_number4"
           android:max="100"
           android:progressDrawable="@drawable/app_rating_progress_bar_layout"
           />
@@ -116,6 +125,7 @@
           android:layout_height="match_parent"
           android:layout_gravity="center_vertical"
           android:layout_marginRight="5dp"
+          android:layout_marginEnd="5dp"
           android:src="@drawable/grid_item_star_empty_small"
           />
 
@@ -125,7 +135,9 @@
           android:layout_height="match_parent"
           android:gravity="center_vertical"
           android:layout_marginRight="5dp"
+          android:layout_marginEnd="5dp"
           android:layout_toRightOf="@id/appview_rating_bar_star3"
+          android:layout_toEndOf="@id/appview_rating_bar_star3"
           android:text="3"
           android:textColor="?android:attr/textColorSecondary"
           />
@@ -139,6 +151,7 @@
           android:layout_marginTop="5dp"
           android:layout_centerVertical="true"
           android:layout_toRightOf="@id/appview_rating_bar_number3"
+          android:layout_toEndOf="@id/appview_rating_bar_number3"
           android:max="100"
           android:progressDrawable="@drawable/app_rating_progress_bar_layout"
           />
@@ -158,6 +171,7 @@
           android:layout_height="match_parent"
           android:layout_gravity="center_vertical"
           android:layout_marginRight="5dp"
+          android:layout_marginEnd="5dp"
           android:src="@drawable/grid_item_star_empty_small"
           />
 
@@ -167,7 +181,9 @@
           android:layout_height="match_parent"
           android:gravity="center_vertical"
           android:layout_marginRight="5dp"
+          android:layout_marginEnd="5dp"
           android:layout_toRightOf="@id/appview_rating_bar_star2"
+          android:layout_toEndOf="@id/appview_rating_bar_star2"
           android:text="2"
           android:textColor="?android:attr/textColorSecondary"
           />
@@ -181,6 +197,7 @@
           android:layout_marginTop="5dp"
           android:layout_centerVertical="true"
           android:layout_toRightOf="@id/appview_rating_bar_number2"
+          android:layout_toEndOf="@id/appview_rating_bar_number2"
           android:max="100"
           android:progressDrawable="@drawable/app_rating_progress_bar_layout"
           />
@@ -199,6 +216,7 @@
           android:layout_height="match_parent"
           android:layout_gravity="center_vertical"
           android:layout_marginRight="5dp"
+          android:layout_marginEnd="5dp"
           android:src="@drawable/grid_item_star_empty_small"
           />
 
@@ -208,7 +226,9 @@
           android:layout_height="match_parent"
           android:gravity="center_vertical"
           android:layout_marginRight="5dp"
+          android:layout_marginEnd="5dp"
           android:layout_toRightOf="@id/appview_rating_bar_star1"
+          android:layout_toEndOf="@id/appview_rating_bar_star1"
           android:text="1"
           android:textColor="?android:attr/textColorSecondary"
           />
@@ -222,6 +242,7 @@
           android:layout_marginTop="5dp"
           android:layout_centerVertical="true"
           android:layout_toRightOf="@id/appview_rating_bar_number1"
+          android:layout_toEndOf="@id/appview_rating_bar_number1"
           android:max="100"
           android:progressDrawable="@drawable/app_rating_progress_bar_layout"
           />
@@ -236,6 +257,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_alignParentRight="true"
+      android:layout_alignParentEnd="true"
       android:orientation="vertical"
       >
 
@@ -245,6 +267,7 @@
         android:layout_height="24dp"
         android:gravity="center_vertical"
         android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
         android:layout_marginTop="2dp"
         android:text="0"
         android:textColor="?android:attr/textColorSecondary"
@@ -256,6 +279,7 @@
         android:layout_height="24dp"
         android:gravity="center_vertical"
         android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
         android:layout_marginTop="2dp"
         android:text="0"
         android:textColor="?android:attr/textColorSecondary"
@@ -267,6 +291,7 @@
         android:layout_height="24dp"
         android:gravity="center_vertical"
         android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
         android:layout_marginTop="2dp"
         android:text="0"
         android:textColor="?android:attr/textColorSecondary"
@@ -279,6 +304,7 @@
         android:layout_height="24dp"
         android:gravity="center_vertical"
         android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
         android:layout_marginTop="2dp"
         android:text="0"
         android:textColor="?android:attr/textColorSecondary"
@@ -290,6 +316,7 @@
         android:layout_height="24dp"
         android:gravity="center_vertical"
         android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
         android:layout_marginTop="2dp"
         android:text="0"
         android:textColor="?android:attr/textColorSecondary"

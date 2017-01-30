@@ -71,7 +71,7 @@ public class SocialStoreLatestAppsWidget
     appsContaner = (LinearLayout) itemView.findViewById(
         R.id.displayable_social_timeline_store_latest_apps_container);
     cardView =
-        (CardView) itemView.findViewById(R.id.displayable_social_timeline_store_latest_apps_card);
+        (CardView) itemView.findViewById(R.id.card);
     followStore = (Button) itemView.findViewById(R.id.follow_btn);
     sharedStoreSubscribersNumber = (TextView) itemView.findViewById(R.id.number_of_followers);
     sharedStoreAppsNumber = (TextView) itemView.findViewById(R.id.number_of_apps);

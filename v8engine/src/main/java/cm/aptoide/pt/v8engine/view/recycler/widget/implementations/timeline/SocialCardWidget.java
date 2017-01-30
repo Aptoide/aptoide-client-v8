@@ -13,11 +13,10 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.customviews.LikeButtonView;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.SocialCardDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
-import com.like.LikeButton;
-import com.like.OnLikeListener;
 import rx.Observable;
 import rx.functions.Action1;
 
@@ -27,7 +26,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
 
   private TextView comments;
   private LinearLayout like;
-  private LikeButton likeButton;
+  private LikeButtonView likeButton;
   private TextView numberLikes;
   private TextView numberComments;
   private TextView sharedBy;
@@ -42,7 +41,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
     time = (TextView) itemView.findViewById(R.id.card_date);
     comments = (TextView) itemView.findViewById(R.id.social_comment);
     like = (LinearLayout) itemView.findViewById(R.id.social_like);
-    likeButton = (LikeButton) itemView.findViewById(R.id.social_like_test);
+    likeButton = (LikeButtonView) itemView.findViewById(R.id.social_like_button);
     numberLikes = (TextView) itemView.findViewById(R.id.social_number_of_likes);
     numberComments = (TextView) itemView.findViewById(R.id.social_number_of_comments);
     sharedBy = (TextView) itemView.findViewById(R.id.social_shared_by);
@@ -78,18 +77,12 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
     time.setText(displayable.getTimeSinceLastUpdate(getContext()));
 
     if (like != null) {
-      //compositeSubscription.add(
-      //    RxView.clicks(like).flatMap(aVoid -> toggleLike()).subscribe(aVoid -> {
-      //    }, showError()));
+      like.setOnClickListener(view -> likeButton.performClick());
 
-      likeButton.setOnLikeListener(new OnLikeListener() {
-        @Override public void liked(LikeButton likeButton) {
-          likeCard(displayable, 1);
+      likeButton.setOnClickListener(view -> {
+        if (likeCard(displayable, 1)) {
           numberLikes.setText(String.valueOf(displayable.getNumberOfLikes() + 1));
-        }
-
-        @Override public void unLiked(LikeButton likeButton) {
-          likeButton.setLiked(true);
+          numberLikes.setVisibility(View.VISIBLE);
         }
       });
 
@@ -98,29 +91,17 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
       Logger.w(TAG, "like button is null in this view");
     }
 
-    likeButton.setLiked(false);
-    numberLikes.setVisibility(View.VISIBLE);
-    numberLikes.setText(String.valueOf(displayable.getNumberOfLikes()));
-    numberComments.setVisibility(View.VISIBLE);
-    numberComments.setText(String.valueOf(displayable.getNumberOfComments()));
+    if (displayable.getNumberOfLikes() > 0) {
+      numberLikes.setVisibility(View.VISIBLE);
+      numberLikes.setText(String.valueOf(displayable.getNumberOfLikes()));
+    }
+
+    if (displayable.getNumberOfComments() > 0) {
+      numberComments.setVisibility(View.VISIBLE);
+      numberComments.setText(String.valueOf(displayable.getNumberOfComments()));
+    }
 
     shareButton.setVisibility(View.VISIBLE);
-
-    //
-    // should this be inside the like button logic ??
-    //
-    likeButton.setOnLikeListener(new OnLikeListener() {
-      @Override public void liked(LikeButton likeButton) {
-        likeCard(displayable, 1);
-        numberLikes.setText(String.valueOf(displayable.getNumberOfLikes() + 1));
-      }
-
-      @Override public void unLiked(LikeButton likeButton) {
-        likeButton.setLiked(true);
-        //likeCard(displayable, cardType, -1);
-        //numberLikes.setText("0");
-      }
-    });
   }
 
   @NonNull private Action1<Throwable> showError() {
@@ -130,18 +111,19 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
     };
   }
 
-  void likeCard(T displayable, int rating) {
+  private boolean likeCard(T displayable, int rating) {
     if (!AptoideAccountManager.isLoggedIn()) {
       ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> {
             AptoideAccountManager.openAccountManager(snackView.getContext());
           });
-      return;
+      return false;
     }
     displayable.like(getContext(), getCardTypeName().toUpperCase(), rating);
+    return true;
   }
 
-  Observable<Void> showComments(T displayable) {
+  private Observable<Void> showComments(T displayable) {
     return Observable.fromCallable(() -> {
       final String elementId = displayable.getTimelineCard().getCardId();
       Fragment fragment = V8Engine.getFragmentProvider()

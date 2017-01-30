@@ -20,6 +20,7 @@ import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.ListComments;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -55,6 +56,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
   private static final String ELEMENT_ID_AS_STRING = "element_id_as_string";
   private static final String ELEMENT_ID_AS_LONG = "element_id_as_long";
   private static final String URL_VAL = "url_val";
+  private final AptoideClientUUID aptoideClientUUID;
 
   //
   // vars
@@ -73,6 +75,11 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
   // views
   //
   private FloatingActionButton floatingActionButton;
+
+  public CommentListFragment() {
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+  }
 
   public static Fragment newInstance(CommentType commentType, String timelineArticleId) {
     Bundle args = new Bundle();
@@ -267,8 +274,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
 
   void caseListSocialTimelineComments(boolean refresh) {
 
-    String aptoideClientUuid = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext()).getAptoideClientUUID();
+    String aptoideClientUuid = aptoideClientUUID.getAptoideClientUUID();
 
     ListCommentsRequest listCommentsRequest =
         ListCommentsRequest.ofTimeline(url, refresh, elementIdAsString,
@@ -351,8 +357,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
   void caseListStoreComments(String url, BaseRequestWithStore.StoreCredentials storeCredentials,
       boolean refresh) {
 
-    String aptoideClientUuid = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext()).getAptoideClientUUID();
+    String aptoideClientUuid = aptoideClientUUID.getAptoideClientUUID();
 
     ListCommentsRequest listCommentsRequest =
         ListCommentsRequest.ofStoreAction(url, refresh, storeCredentials,

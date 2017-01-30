@@ -20,6 +20,7 @@
       android:layout_alignParentLeft="true"
       android:layout_alignParentStart="true"
       android:layout_marginRight="4dp"
+      android:layout_marginEnd="4dp"
       tools:src="@color/red"
       />
 

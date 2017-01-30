@@ -5,6 +5,7 @@ import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.ListReviews;
 import cm.aptoide.pt.model.v7.Review;
@@ -24,28 +25,28 @@ class ListFullReviewsSuccessRequestListener implements SuccessRequestListener<Li
   private static final String TAG = ListFullReviewsSuccessRequestListener.class.getName();
 
   private final RateAndReviewsFragment fragment;
+  private final AptoideClientUUID aptoideClientUUID;
 
   ListFullReviewsSuccessRequestListener(RateAndReviewsFragment fragment) {
     this.fragment = fragment;
+
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
   }
 
   @Override public void call(ListReviews listFullReviews) {
 
     List<Review> reviews = listFullReviews.getDatalist().getList();
     List<Displayable> displayables = new LinkedList<>();
-    final String aptoideClientUuid =
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID();
+    final String aptoideClientUuid = aptoideClientUUID.getAptoideClientUUID();
 
     Observable.from(reviews)
         .flatMap(review -> ListCommentsRequest.of( // fetch the list of comments for each review
-            review.getComments().getView(),
-            review.getId(),
-            3,
+            review.getComments().getView(), review.getId(), 3,
             StoreUtils.getStoreCredentials(fragment.getStoreName()),
-            AptoideAccountManager.getAccessToken(),
-            aptoideClientUuid, true
-        ).observe().subscribeOn(Schedulers.io()) // parallel I/O split point
+            AptoideAccountManager.getAccessToken(), aptoideClientUuid, true)
+            .observe()
+            .subscribeOn(Schedulers.io()) // parallel I/O split point
             .map(listComments -> {
               review.setCommentList(listComments);
               return review;
@@ -67,7 +68,8 @@ class ListFullReviewsSuccessRequestListener implements SuccessRequestListener<Li
     for (final Review review : reviews) {
       displayables.add(
           new RateAndReviewCommentDisplayable(new ReviewWithAppName(fragment.getAppName(), review),
-              new ConcreteItemCommentAdder(count, fragment, review)));
+              new ConcreteItemCommentAdder(count, fragment, review),
+              review.getCommentList().getTotal()));
 
       if (review.getId() == fragment.getReviewId()) {
         index = count;
