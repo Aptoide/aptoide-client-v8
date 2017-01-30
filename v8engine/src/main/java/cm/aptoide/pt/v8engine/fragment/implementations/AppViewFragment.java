@@ -274,7 +274,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(store -> {
-          adapter.notifyDataSetChanged();
+          getAdapter().notifyDataSetChanged();
         });
 
     // ??
@@ -292,7 +292,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(rollbacks -> {
-          adapter.notifyDataSetChanged();
+          getAdapter().notifyDataSetChanged();
         });
 
     // TODO: 27-05-2016 neuro install actions, not present in v7
@@ -568,7 +568,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         });
 
     header.setup(getApp);
-    setDisplayables(setupDisplayables(getApp));
+    clearDisplayables().addDisplayables(setupDisplayables(getApp), true);
     setupObservables(getApp);
     showHideOptionsMenu(true);
     setupShare(getApp);

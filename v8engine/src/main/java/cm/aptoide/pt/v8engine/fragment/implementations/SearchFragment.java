@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -63,6 +64,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
   private String storeName;
   private boolean onlyTrustedApps;
   private int selectedButton = 0;
+  private boolean isStoreSearch;
 
   public SearchFragment() {
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
@@ -260,7 +262,9 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
   @Override public void setupToolbarDetails(Toolbar toolbar) {
     toolbar.setTitle(query);
-    toolbar.setLogo(R.drawable.ic_store);
+    if (isStoreSearch) {
+      toolbar.setLogo(R.drawable.ic_store);
+    }
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {
@@ -314,6 +318,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
     query = args.getString(BundleCons.QUERY);
     storeName = args.getString(BundleCons.STORE_NAME);
     onlyTrustedApps = args.getBoolean(BundleCons.ONLY_TRUSTED, false);
+    isStoreSearch = !TextUtils.isEmpty(storeName);
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {

@@ -52,7 +52,7 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
 
   @Override protected ErrorRequestListener getErrorRequestListener() {
     return (throwable) -> {
-      recyclerView.clearOnScrollListeners();
+      getRecyclerView().clearOnScrollListeners();
       LinkedList<String> errorsList = new LinkedList<>();
       errorsList.add(WSWidgetsUtils.USER_NOT_LOGGED_ERROR);
       if (WSWidgetsUtils.shouldAddObjectView(errorsList, throwable)) {

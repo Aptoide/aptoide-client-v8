@@ -1,6 +1,7 @@
 package cm.aptoide.pt.viewRateAndCommentReviews;
 
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -146,15 +147,17 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
   // MVP methods
   //
 
-  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    // ??
-  }
-
   @Override public int getContentViewId() {
     return R.layout.fragment_rate_and_reviews;
   }
 
-  @Override public void bindViews(View view) {
+  @CallSuper @Override
+  public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    super.load(create, refresh, savedInstanceState);
+    // ??
+  }
+
+  @CallSuper @Override public void bindViews(View view) {
     super.bindViews(view);
     floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fab);
     setHasOptionsMenu(true);
@@ -200,7 +203,7 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
   }
 
   @Override public Observable<Integer> nextReviews() {
-    return RxEndlessRecyclerView.loadMore(recyclerView, getAdapter());
+    return RxEndlessRecyclerView.loadMore(getRecyclerView(), getAdapter());
   }
 
   @Override public Observable<Void> rateApp() {

@@ -143,8 +143,7 @@ public class AptoideDownloadManager {
 
   /**
    * Observe changes to a download. This observable never completes it will emmit items whenever
-   * the
-   * download state changes.
+   * the download state changes.
    *
    * @return observable for download state changes.
    */

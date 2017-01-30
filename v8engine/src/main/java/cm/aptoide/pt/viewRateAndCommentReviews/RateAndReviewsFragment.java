@@ -175,7 +175,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(this.getAdapter(), reviewsRequest,
             new ListFullReviewsSuccessRequestListener(this), Throwable::printStackTrace);
-    recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+    getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(false);
   }
 
@@ -188,7 +188,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    Logger.d(TAG, "Other versions should refresh? " + create);
+    super.load(create, refresh, savedInstanceState);
     fetchRating(refresh);
     fetchReviews();
   }
@@ -246,11 +246,11 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   }
 
   void checkAndRemoveProgressBarDisplayable() {
-    for (int i = 0; i < adapter.getItemCount(); i++) {
-      Displayable displayable = adapter.getDisplayable(i);
+    for (int i = 0; i < getAdapter().getItemCount(); i++) {
+      Displayable displayable = getAdapter().getDisplayable(i);
       if (displayable instanceof ProgressBarDisplayable) {
-        adapter.removeDisplayable(i);
-        adapter.notifyItemRemoved(i);
+        getAdapter().removeDisplayable(i);
+        getAdapter().notifyItemRemoved(i);
       }
     }
   }

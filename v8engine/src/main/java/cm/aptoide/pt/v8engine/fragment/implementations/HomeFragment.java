@@ -48,6 +48,7 @@ import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.view.BadgeView;
 import com.trello.rxlifecycle.android.FragmentEvent;
+import java.text.NumberFormat;
 import lombok.Getter;
 import lombok.Setter;
 import rx.Subscription;
@@ -286,7 +287,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
     updatesBadge.setTextSize(11);
 
     if (num > 0) {
-      updatesBadge.setText(String.valueOf(num));
+      updatesBadge.setText(NumberFormat.getIntegerInstance().format(num));
       if (!updatesBadge.isShown()) {
         updatesBadge.show(true);
       }

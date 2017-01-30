@@ -85,14 +85,14 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
         addDisplayables(displayables);
       };
 
-      recyclerView.clearOnScrollListeners();
+      getRecyclerView().clearOnScrollListeners();
       endlessRecyclerOnScrollListener =
           new EndlessRecyclerOnScrollListener(this.getAdapter(), listFullReviewsRequest,
               listFullReviewsAction, Throwable::printStackTrace, true);
-      recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+      getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
       endlessRecyclerOnScrollListener.onLoadMore(refresh);
     } else {
-      recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+      getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     }
   }
 

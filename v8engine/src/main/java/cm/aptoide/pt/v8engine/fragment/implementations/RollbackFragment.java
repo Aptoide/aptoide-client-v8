@@ -12,7 +12,6 @@ import android.widget.TextView;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.realm.Rollback;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
@@ -34,7 +33,6 @@ import rx.schedulers.Schedulers;
 
 public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
 
-  private static final String TAG = RollbackFragment.class.getSimpleName();
   private TextView emptyData;
   private Installer installManager;
 
@@ -76,7 +74,7 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    Logger.d(TAG, "refresh rollbacks? " + (create ? "yes" : "no"));
+    super.load(create, refresh, savedInstanceState);
     AptoideUtils.ThreadU.runOnUiThread(this::fetchRollbacks);
   }
 
@@ -106,11 +104,14 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
             emptyData.setVisibility(View.VISIBLE);
           } else {
             emptyData.setVisibility(View.GONE);
-            setDisplayables(rollbacks);
+            clearDisplayables().addDisplayables(rollbacks, true);
           }
           finishLoading();
         });
   }
+
+  private static final SimpleDateFormat dateFormat =
+      new SimpleDateFormat("dd-MM-yyyy", AptoideUtils.LocaleU.DEFAULT);
 
   private List<Displayable> createDisplayables(List<Rollback> rollbacks) {
     List<Displayable> displayables = new LinkedList<>();
@@ -120,9 +121,7 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
       long daysAgo = TimeUnit.MILLISECONDS.toDays(rollback.getTimestamp());
       if (lastDay != daysAgo) {
         lastDay = daysAgo;
-        displayables.add(new FooterRowDisplayable(
-            new SimpleDateFormat("dd-MM-yyyy", AptoideUtils.LocaleU.DEFAULT).format(
-                rollback.getTimestamp())));
+        displayables.add(new FooterRowDisplayable(dateFormat.format(rollback.getTimestamp())));
       }
       displayables.add(new RollbackDisplayable(installManager, rollback));
     }

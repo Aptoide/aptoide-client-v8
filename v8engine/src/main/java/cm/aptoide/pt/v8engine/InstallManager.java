@@ -245,4 +245,5 @@ public class InstallManager {
     ManagerPreferences.setAllowRootInstallation(allowRoot);
     AptoideUtils.SystemU.askForRoot();
   }
+
 }

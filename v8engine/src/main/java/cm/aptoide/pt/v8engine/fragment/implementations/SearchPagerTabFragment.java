@@ -143,10 +143,10 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
           .compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW))
           .subscribe(minimalAd -> {
             refreshed = true;
-            addDisplayable(0, new SearchAdDisplayable(minimalAd));
+            addDisplayable(0, new SearchAdDisplayable(minimalAd), false);
           });
 
-      recyclerView.clearOnScrollListeners();
+      getRecyclerView().clearOnScrollListeners();
       ListSearchAppsRequest of;
       if (storeName != null) {
         of = ListSearchAppsRequest.of(query, storeName, StoreUtils.getSubscribedStoresAuthMap(),
@@ -159,10 +159,10 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
       endlessRecyclerOnScrollListener =
           new EndlessRecyclerOnScrollListener(this.getAdapter(), listSearchAppsRequest = of,
               listSearchAppsSuccessRequestListener, Throwable::printStackTrace, refresh);
-      recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+      getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
       endlessRecyclerOnScrollListener.onLoadMore(refresh);
     } else {
-      recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+      getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     }
   }
 

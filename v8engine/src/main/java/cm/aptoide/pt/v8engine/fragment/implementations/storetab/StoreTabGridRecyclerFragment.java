@@ -9,17 +9,17 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.Layout;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
+import cm.aptoide.pt.v8engine.interfaces.DisplayableManager;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
 import cm.aptoide.pt.v8engine.util.Translator;
@@ -113,8 +113,14 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
       // TODO: 28-12-2016 neuro martelo martelo martelo
       Observable<List<Displayable>> displayablesObservable = buildDisplayables(refresh, url);
       if (displayablesObservable != null) {
+        DisplayableManager displayableManager = this;
         displayablesObservable.compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW))
-            .subscribe(this::setDisplayables, this::finishLoading);
+            .subscribe(displayables -> {
+              displayableManager.clearDisplayables().addDisplayables(displayables, true);
+            }, err -> {
+              CrashReports.logException(err);
+              StoreTabGridRecyclerFragment.this.finishLoading(err);
+            });
       }
     }
   }
@@ -156,8 +162,8 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
     setHasOptionsMenu(true);
   }
 
-  @Nullable protected abstract Observable<List<Displayable>> buildDisplayables(boolean refresh,
-      String url);
+  @Nullable
+  protected abstract Observable<List<Displayable>> buildDisplayables(boolean refresh, String url);
 
   private static class BundleCons {
 
