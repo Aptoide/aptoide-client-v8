@@ -32,6 +32,8 @@ import rx.schedulers.Schedulers;
 @Data @EqualsAndHashCode(callSuper = true) public class ListAppsUpdatesRequest
     extends V7<ListAppsUpdates, ListAppsUpdatesRequest.Body> {
 
+  private static final String TAG = ListAppsUpdatesRequest.class.getName();
+
   private static final int SPLIT_SIZE = 100;
 
   private ListAppsUpdatesRequest(Body body, String baseHost) {
@@ -97,6 +99,7 @@ import rx.schedulers.Schedulers;
             // switch to I/O scheduler
             .observeOn(Schedulers.io())
             // map bodies to request with bodies
+            //.map(body -> fetchDataUsingBodyWithRetry(interfaces, body, bypassCache, 3))
             .map(body -> interfaces.listAppsUpdates(body, bypassCache))
             // wait for all requests to be ready and return a list of requests
             .toList()
@@ -122,6 +125,29 @@ import rx.schedulers.Schedulers;
       return interfaces.listAppsUpdates(body, bypassCache);
     });
   }
+
+  ///**
+  // * This method will invoke the request and return its response if everything goes well. In case
+  // * of error a maximum of 3 attempts are made with a linear backoff of [retry number x 500
+  // * millis].
+  // *
+  // * @return response or error, after n timed retries.
+  // */
+  //private Observable<ListAppsUpdates> fetchDataUsingBodyWithRetry(Interfaces interfaces, Body body,
+  //    boolean bypassCache, int retryCount) {
+  //  return interfaces.listAppsUpdates(body, bypassCache)
+  //      .retryWhen(
+  //          error -> error.zipWith(Observable.range(1, retryCount + 1), (err, retryIndex) -> {
+  //            Logger.e(TAG, "retry number " + retryIndex);
+  //            return new Pair<Integer, Throwable>(retryIndex, err);
+  //          }).flatMap(errorIndexPair -> {
+  //            final Integer retryIndex = errorIndexPair.first;
+  //            if (retryIndex >= retryCount) {
+  //              return Observable.<Integer>error(errorIndexPair.second);
+  //            }
+  //            return Observable.timer(retryIndex * 500, TimeUnit.MILLISECONDS);
+  //          }));
+  //}
 
   @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody {
 

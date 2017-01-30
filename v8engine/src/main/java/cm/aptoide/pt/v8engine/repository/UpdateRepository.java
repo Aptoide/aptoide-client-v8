@@ -46,16 +46,18 @@ public class UpdateRepository implements Repository {
         .map(store -> store.getStoreId())
         .toList()
         // distinctUntilChanged is used to avoid getting duplicate entries when fetching network updates
-        .flatMap(storeIds -> getNetworkUpdates(storeIds, bypassCache))
-        .distinctUntilChanged()
-        .flatMap(updates -> {
-          // remove local non-excluded updates
-          // save the new updates
-          return removeAllNonExcluded().andThen(saveNewUpdates(updates)).toObservable();
-        })
-        // return all the local (non-excluded) updates
-        // this is a non-closing Observable, so new db modifications will trigger this observable
-        .flatMap(aVoid -> getAllNonExcluded());
+        .flatMap(storeIds -> getNetworkUpdates(storeIds, bypassCache).doOnError(
+            err -> Logger.e(TAG, err))
+            .onErrorResumeNext(Observable.just(Collections.emptyList()))
+            .distinctUntilChanged()
+            .flatMap(updates -> {
+              // remove local non-excluded updates
+              // save the new updates
+              return removeAllNonExcluded().andThen(saveNewUpdates(updates)).toObservable();
+            })
+            // return all the local (non-excluded) updates
+            // this is a non-closing Observable, so new db modifications will trigger this observable
+            .flatMap(aVoid -> getAllNonExcluded()));
   }
 
   private Observable<List<App>> getNetworkUpdates(List<Long> storeIds, boolean bypassCache) {
