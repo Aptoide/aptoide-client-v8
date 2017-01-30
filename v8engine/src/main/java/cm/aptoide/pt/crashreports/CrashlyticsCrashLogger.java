@@ -48,56 +48,7 @@ public class CrashlyticsCrashLogger implements CrashLogger {
   @Override public void log(String key, String value) {
     if (Fabric.isInitialized()) {
       Crashlytics.setString(LANGUAGE, language);
+      Crashlytics.setString(key, value);
     }
   }
 }
-//
-// original crash logger
-//
-/*
-public class AptoideCrashLogger implements CrashLogger {
-
-  static final String LANGUAGE = "Language";
-  private final static String TAG = AptoideCrashLogger.class.getSimpleName();   //TAG for the logger
-  private static final AptoideCrashLogger instance = new AptoideCrashLogger();
-  //var with the language the app is set to
-  @Setter private String language;
-
-  protected AptoideCrashLogger() {
-  }
-
-  public static AptoideCrashLogger getInstance() {
-    return instance;
-  }
-
-  public AptoideCrashLogger setup(Context context, boolean isDisabled) {
-    Fabric.with(context,
-        new Crashlytics.Builder().core(new CrashlyticsCore.Builder().disabled(isDisabled).build())
-            .build());
-    Logger.d(TAG, "Setup of AptoideCrashLogger");
-    return this;
-  }
-
-  @Override public void logException(Throwable throwable) {
-    if (!Fabric.isInitialized()) {
-      Logger.w(TAG, "Fabric not initialized.");
-      return;
-    }
-
-    Crashlytics.setString(LANGUAGE, language);
-    Crashlytics.logException(throwable);
-    Logger.d(TAG, "logException: " + throwable.toString());
-  }
-
-  @Override public void logString(String key, String value) {
-    if (!Fabric.isInitialized()) {
-      Logger.w(TAG, "Fabric not initialized.");
-      return;
-    }
-
-    Crashlytics.setString(LANGUAGE, language);
-    Crashlytics.setString(key, value);
-    Logger.d(TAG, "logString : key: " + key + " , value: " + value);
-  }
-}
-*/
