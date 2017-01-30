@@ -223,7 +223,9 @@ public class DisplayablesFactory {
 
   private static Displayable getAds(GetStoreWidgets.WSWidget wsWidget) {
     GetAdsResponse getAdsResponse = (GetAdsResponse) wsWidget.getViewObject();
-    if (wsWidget.getViewObject() != null) {
+    if (getAdsResponse != null
+        && getAdsResponse.getAds() != null
+        && getAdsResponse.getAds().size() > 0) {
       List<GetAdsResponse.Ad> ads = getAdsResponse.getAds();
       List<Displayable> tmp = new ArrayList<>(ads.size());
       for (GetAdsResponse.Ad ad : ads) {
