@@ -26,7 +26,7 @@ import rx.Observable;
  */
 public final class Database {
 
-  public static final int SCHEMA_VERSION = 8080; // if you bump this value, also add changes to the
+  private static final int SCHEMA_VERSION = 8080; // if you bump this value, also add changes to the
   //private static final String TAG = Database.class.getName();
   private static final String KEY = "KRbjij20wgVyUFhMxm2gUHg0s1HwPUX7DLCp92VKMCt";
   private static final String DB_NAME = "aptoide.realm.db";
@@ -79,14 +79,14 @@ public final class Database {
     RealmConfiguration realmConfig;
     if (BuildConfig.DEBUG) {
       //realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME_E)
-          //.encryptionKey(key)
+      //.encryptionKey(key)
       realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME)
           .schemaVersion(SCHEMA_VERSION)
           .migration(new RealmToRealmDatabaseMigration())
           .build();
     } else {
       //realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME_E)
-          //.encryptionKey(key)
+      //.encryptionKey(key)
       realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME)
           //.encryptionKey(strBuilder.toString().substring(0, 64).getBytes()) // FIXME: 30/08/16 sithengineer activate DB encryption
           .schemaVersion(SCHEMA_VERSION).migration(new RealmToRealmDatabaseMigration()).build();
@@ -100,12 +100,11 @@ public final class Database {
   }
 
   /**
-   * Returns realm database default instance. Do not use this method it is deprecated and will be made private in future releases,
+   * Returns realm database default instance. Do not use this method it is deprecated and will be
+   * made private in future releases,
    * use {@link #getRealm()} instead.
-   * @return
    */
-  @Deprecated
-  protected static Realm get() {
+  @Deprecated protected static Realm get() {
     if (!isInitialized) {
       throw new IllegalStateException("You need to call Database.initialize(Context) first");
     }
@@ -160,6 +159,12 @@ public final class Database {
         .defaultIfEmpty(null);
   }
 
+  <E extends RealmObject> Observable<Long> count(RealmQuery<E> query) {
+    return Observable.just(query.count())
+        .flatMap(count -> Observable.just(count).unsubscribeOn(RealmSchedulers.getScheduler()))
+        .defaultIfEmpty(0L);
+  }
+
   <E extends RealmObject> Observable<List<E>> findAsList(RealmQuery<E> query) {
     return Observable.just(query.findAll())
         .filter(realmObject -> realmObject != null)
@@ -180,7 +185,8 @@ public final class Database {
             RealmSchedulers.getScheduler())).flatMap(results -> copyFromRealm(results));
   }
 
-  public <E extends RealmObject> Observable<List<E>> getAllSorted(Class<E> clazz, String fieldName) {
+  public <E extends RealmObject> Observable<List<E>> getAllSorted(Class<E> clazz,
+      String fieldName) {
     return getRealm().flatMap(
         realm -> realm.where(clazz).findAllSorted(fieldName).<List<E>>asObservable().unsubscribeOn(
             RealmSchedulers.getScheduler())).flatMap(results -> copyFromRealm(results));
@@ -239,7 +245,7 @@ public final class Database {
 
   private <E extends RealmObject> void deleteObject(Realm realm, E obj) {
     realm.beginTransaction();
-    try{
+    try {
       if (obj != null && obj.isValid()) {
         obj.deleteFromRealm();
         realm.commitTransaction();
@@ -268,6 +274,14 @@ public final class Database {
     @Cleanup Realm realm = get();
     realm.beginTransaction();
     realm.insertOrUpdate(object);
+    realm.commitTransaction();
+  }
+
+  public <E extends RealmObject> void deleteAllIn(Class<E> classType, String classField,
+      String[] fieldsIn) {
+    @Cleanup Realm realm = get();
+    realm.beginTransaction();
+    realm.where(classType).in(classField, fieldsIn).findAll().deleteAllFromRealm();
     realm.commitTransaction();
   }
 }

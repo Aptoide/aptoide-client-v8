@@ -24,6 +24,7 @@ import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import cm.aptoide.pt.v8engine.util.referrer.ReferrerUtils;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
 import rx.subscriptions.CompositeSubscription;
 
 public class InstalledIntentService extends IntentService {
@@ -134,7 +135,8 @@ public class InstalledIntentService extends IntentService {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(
                     minimalAd -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES,
-                        true)).onErrorReturn(throwable1 -> null)
+                        true))
+                .onErrorReturn(throwable1 -> null)
                 .subscribe();
           }
         }, err -> {
@@ -182,16 +184,21 @@ public class InstalledIntentService extends IntentService {
       return packageInfo;
     }
 
+    Action0 insertApp = () -> installedRepository.insert(new Installed(packageInfo));
+
     if (update != null) {
       if (packageInfo.versionCode >= update.getVersionCode()) {
+        // remove old update and on complete insert new app.
         updatesRepository.remove(update).doOnError(throwable -> {
           Logger.e(TAG, throwable);
           CrashReports.logException(throwable);
-        }).toBlocking().first();
+        }).doOnCompleted(insertApp);
       }
+    } else {
+      // sync call to insert
+      insertApp.call();
     }
 
-    installedRepository.insert(new Installed(packageInfo));
     return packageInfo;
   }
 

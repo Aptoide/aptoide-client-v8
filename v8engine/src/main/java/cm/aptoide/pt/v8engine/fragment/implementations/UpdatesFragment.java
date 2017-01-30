@@ -1,11 +1,5 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
- */
-
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
@@ -26,7 +20,6 @@ import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
-import cm.aptoide.pt.v8engine.repository.StoreRepository;
 import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
@@ -58,7 +51,6 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
   private DownloadEventConverter downloadInstallEventConverter;
   private InstallEventConverter installConverter;
 
-  private StoreRepository storeRepository;
   private InstalledRepository installedRepository;
   private UpdateRepository updateRepository;
 
@@ -82,20 +74,16 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     updatesDisplayablesList = new LinkedList<>();
     installedDisplayablesList = new LinkedList<>();
 
-    storeRepository = RepositoryFactory.getStoreRepository();
     installedRepository = RepositoryFactory.getInstalledRepository();
     updateRepository = RepositoryFactory.getUpdateRepository();
   }
 
-  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    super.load(create, refresh, savedInstanceState);
-
-    if (!create) {
-      return;
-    }
+  @Override public void onViewCreated() {
+    super.onViewCreated();
 
     // show updates
-    fetchUpdates().debounce(700, TimeUnit.MILLISECONDS)
+    fetchUpdates().buffer(750, TimeUnit.MILLISECONDS)
+        .flatMap(list -> Observable.from(list).takeLast(1))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .doOnNext(list -> clearDisplayables())
@@ -105,9 +93,9 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
         .subscribe(aVoid -> {
           // does nothing
           finishLoading();
-          Logger.d(TAG, "listing updates and installed");
+          Logger.v(TAG, "fetchUpdates() -> listing updates and installed");
         }, err -> {
-          Logger.e(TAG, "listing updates or installed threw an exception");
+          Logger.e(TAG, "fetchUpdates() -> listing updates or installed threw an exception");
           CrashReports.logException(err);
           finishLoading();
         });
@@ -118,8 +106,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
    * new updates and this call will hit the network. When new updates are found the listener in the
    * load() method above will be notified of those changes and update the list. The response of
    * this repository call will show a notification according: the number of new updates, no more
-   * new
-   * updates or no updates at all.
+   * new updates or no updates at all.
    */
   @Override public void reload() {
     super.reload();
@@ -128,13 +115,17 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
       updateReloadSubscription.unsubscribe();
     }
 
-    updateReloadSubscription = updateRepository.getUpdates(true).distinctUntilChanged()
+    updateReloadSubscription = updateRepository.getUpdates(true)
+        .distinctUntilChanged()
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(updates -> {
+          Logger.v(TAG, String.format("reloadu() -> finished with %d updates",
+              updates != null ? updates.size() : -1));
           if (updates.size() == 0) {
             ShowMessage.asSnack(getView(), R.string.no_updates_available_retoric);
           } else if (updates.size() == updatesDisplayablesList.size() - 1) {
+            // FIXME: 27/1/2017 sithengineer this calculation to check if new updates are available is not correct. need to use a set or hash of a sorted list
             ShowMessage.asSnack(getView(), R.string.no_new_updates_available);
           }
         }, throwable -> {
@@ -190,15 +181,26 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     return updateRepository.getAllSorted(false);
   }
 
+  /**
+   * Installed apps without any apps with updates pending or system apps.
+   *
+   * @return {@link Observable} to a {@link List} of {@link Installed} apps
+   */
   private Observable<List<Installed>> fetchInstalled() {
-    return installedRepository.getAllSorted().flatMap(
-        // hack to make stream of changes complete inside this observable
-        listItems -> Observable.from(listItems)
-            .flatMap(item -> filterUpdates(item))
-            .filter(item -> !item.isSystemApp())
-            .toList()); // filter for installed apps in updates
+    return installedRepository.getAllSorted()
+        .first()
+        .flatMapIterable(list -> list)
+        .flatMap(item -> filterUpdates(item))
+        .filter(item -> !item.isSystemApp())
+        .toList();
   }
 
+  /**
+   * Filters updates returning the installed app or empty item.
+   *
+   * @param item App to filter.
+   * @return {@link Observable} to a {@link Installed} or empty.
+   */
   private Observable<Installed> filterUpdates(Installed item) {
     return updateRepository.contains(item.getPackageName(), false).flatMap(isUpdate -> {
       if (isUpdate) {
