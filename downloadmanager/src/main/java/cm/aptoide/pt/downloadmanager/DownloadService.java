@@ -14,7 +14,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.logger.Logger;
@@ -55,8 +55,8 @@ import rx.subscriptions.CompositeSubscription;
         downloadManager.startDownload(download)
             .first()
             .subscribe(downloadFromRealm -> Logger.d(TAG,
-                "startDownload called with: md5 = [" + md5 + "]"), err -> {
-              CrashReports.logException(err);
+                "startDownload called with: md5 = [" + md5 + "]"), e -> {
+              CrashReport.getInstance().log(e);
             });
         setupNotifications();
       }));
@@ -84,8 +84,7 @@ import rx.subscriptions.CompositeSubscription;
             try {
               startDownload(md5);
             } catch (DownloadNotFoundException e) {
-              Logger.e(TAG, e);
-              CrashReports.logException(e);
+              CrashReport.getInstance().log(e);
             }
             break;
           case AptoideDownloadManager.DOWNLOADMANAGER_ACTION_PAUSE:
@@ -98,12 +97,11 @@ import rx.subscriptions.CompositeSubscription;
           try {
             startDownload(download.getMd5());
           } catch (DownloadNotFoundException e) {
-            Logger.e(TAG, e);
-            CrashReports.logException(e);
+            CrashReport.getInstance().log(e);
           }
         }
       }, err -> {
-        CrashReports.logException(err);
+        CrashReport.getInstance().log(err);
       });
     }
     return START_STICKY;
@@ -127,7 +125,7 @@ import rx.subscriptions.CompositeSubscription;
             Logger.d(TAG, "Download service is stopping");
             stopSelf();
           }, err -> {
-            CrashReports.logException(err);
+            CrashReport.getInstance().log(err);
           });
       subscriptions.add(stopMechanismSubscription);
     }
@@ -179,8 +177,8 @@ import rx.subscriptions.CompositeSubscription;
 
       notificationUpdateSubscription =
           downloadManager.getCurrentDownload().distinctUntilChanged().subscribe(download -> {
-          }, err -> {
-            CrashReports.logException(err);
+          }, e -> {
+            CrashReport.getInstance().log(e);
           });
       subscriptions.add(notificationUpdateSubscription);
     }

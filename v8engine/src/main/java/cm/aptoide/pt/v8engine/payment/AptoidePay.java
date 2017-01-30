@@ -41,7 +41,7 @@ public class AptoidePay {
 
   public Completable authorize(Payment payment) {
     return authorizationRepository.createPaymentAuthorization(payment.getId())
-        .andThen(authorizationRepository.getPaymentAuthorization(payment.getId()))
+        .andThen(authorizationRepository.get(payment.getId()))
         .takeUntil(authorization -> authorization.isInitiated() || authorization.isInvalid())
         .filter(authorization -> authorization.isInitiated())
         .doOnNext(authorization -> authorization.authorize())

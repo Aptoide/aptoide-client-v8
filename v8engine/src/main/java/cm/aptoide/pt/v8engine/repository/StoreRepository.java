@@ -9,10 +9,10 @@ import rx.Observable;
  * Created by sithengineer on 11/10/2016.
  */
 
-public class StoreRepository implements Repository {
+public class StoreRepository implements Repository<Store, Integer> {
   private final StoreAccessor storeAccessor;
 
-  public StoreRepository(StoreAccessor storeAccessor) {
+  StoreRepository(StoreAccessor storeAccessor) {
     this.storeAccessor = storeAccessor;
   }
 
@@ -26,5 +26,17 @@ public class StoreRepository implements Repository {
 
   public Observable<List<Store>> getAll() {
     return storeAccessor.getAll();
+  }
+
+  @Override public void save(Store entity) {
+    storeAccessor.insert(entity);
+  }
+
+  @Override public Observable<Store> get(Integer id) {
+    return storeAccessor.get(id);
+  }
+
+  public Observable<Store> getByName(String storeName) {
+    return storeAccessor.get(storeName);
   }
 }

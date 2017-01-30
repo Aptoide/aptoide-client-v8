@@ -5,9 +5,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ActiveDownloadDisplayable;
@@ -55,7 +55,8 @@ import rx.schedulers.Schedulers;
         .distinctUntilChanged()
         .map(download -> download)
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe((download) -> updateUi(download), throwable -> Logger.e(TAG, throwable)));
+        .subscribe((download) -> updateUi(download),
+            throwable -> CrashReport.getInstance().log(throwable)));
   }
 
   private Void updateUi(Download download) {

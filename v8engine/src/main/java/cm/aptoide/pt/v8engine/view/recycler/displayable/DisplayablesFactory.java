@@ -8,9 +8,9 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable;
 import android.text.TextUtils;
 import android.util.Pair;
 import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.FullReview;
@@ -348,7 +348,7 @@ public class DisplayablesFactory {
       }
       return tmp;
     }).onErrorReturn(throwable -> {
-      Logger.e(TAG, throwable);
+      CrashReport.getInstance().log(throwable);
       return Collections.emptyList();
     }).toBlocking().first());
   }

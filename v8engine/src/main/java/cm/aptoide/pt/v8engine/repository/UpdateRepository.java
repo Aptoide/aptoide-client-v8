@@ -23,10 +23,12 @@ import rx.schedulers.Schedulers;
  * Created by trinkes on 9/23/16.
  */
 
-public class UpdateRepository implements Repository {
+public class UpdateRepository implements Repository<Update, String> {
 
   private static final String TAG = UpdateRepository.class.getName();
+
   private final AptoideClientUUID aptoideClientUUID;
+
   private UpdateAccessor updateAccessor;
   private StoreAccessor storeAccessor;
 
@@ -79,6 +81,10 @@ public class UpdateRepository implements Repository {
               updateList.size()));
           return saveNonExcludedUpdates(updateList);
         }));
+  }
+
+  @Override public void save(Update entity) {
+    updateAccessor.insert(entity);
   }
 
   public Observable<List<Update>> getAllNonExcluded() {

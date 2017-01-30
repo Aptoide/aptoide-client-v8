@@ -1,12 +1,11 @@
 package cm.aptoide.pt.viewRateAndCommentReviews;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.ListReviews;
 import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
@@ -21,8 +20,6 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 class ListFullReviewsSuccessRequestListener implements SuccessRequestListener<ListReviews> {
-
-  private static final String TAG = ListFullReviewsSuccessRequestListener.class.getName();
 
   private final RateAndReviewsFragment fragment;
   private final AptoideClientUUID aptoideClientUUID;
@@ -57,8 +54,7 @@ class ListFullReviewsSuccessRequestListener implements SuccessRequestListener<Li
         .subscribe(reviewList -> {
           addRateAndReviewDisplayables(reviews, displayables);
         }, err -> {
-          CrashReports.logException(err);
-          Logger.e(TAG, err);
+          CrashReport.getInstance().log(err);
         });
   }
 

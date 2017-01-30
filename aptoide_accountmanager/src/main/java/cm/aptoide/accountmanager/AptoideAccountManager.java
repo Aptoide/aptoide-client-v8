@@ -40,7 +40,7 @@ import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
 import cm.aptoide.accountmanager.ws.responses.GenericResponseV3;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
@@ -272,7 +272,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
         refreshToken = getRefreshTokenFromAccountManager(); // as it is done in V7
         AccountManagerPreferences.setRefreshToken(refreshToken);
       } catch (Exception e) {
-        Logger.e(TAG, e);
+        CrashReport.getInstance().log(e);
       }
     }
 
@@ -550,7 +550,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
           .observeOn(AndroidSchedulers.mainThread())
           .doOnError(throwable -> {
             Logger.e(TAG, "Unable to update mature switch to " + Boolean.toString(matureSwitch));
-            CrashReports.logException(throwable);
+            CrashReport.getInstance().log(throwable);
           })
           .subscribe();
     }
@@ -781,8 +781,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
         .observeOn(AndroidSchedulers.mainThread())
         .subscribeOn(Schedulers.io())
         .doOnError(e -> {
-          Logger.e(TAG, e);
-          CrashReports.logException(e);
+          CrashReport.getInstance().log(e);
         });
   }
 
@@ -885,14 +884,13 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
       try {
         accountManager.addAccountExplicitly(account, encryptPassword, null);
       } catch (SecurityException e) {
-        e.printStackTrace();
-        CrashReports.logException(e);
+        CrashReport.getInstance().log(e);
       }
       accountManager.setUserData(account, SecureKeys.REFRESH_TOKEN, refreshToken);
       AccountManagerPreferences.setRefreshToken(refreshToken);
 
       return refreshAndSaveUserInfoData().doOnError(e -> {
-        Logger.e(TAG, e);
+        CrashReport.getInstance().log(e);
       }).map(userData -> true);
     }
     return Observable.just(false);

@@ -7,7 +7,7 @@ package cm.aptoide.pt.database.accessors;
 
 import android.content.Context;
 import android.text.TextUtils;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.BuildConfig;
 import cm.aptoide.pt.database.schedulers.RealmSchedulers;
 import io.realm.Realm;
@@ -252,7 +252,7 @@ public final class Database {
       }
     } catch (Exception ex) {
       realm.cancelTransaction();
-      CrashReports.logException(ex);
+      CrashReport.getInstance().log(ex);
     }
   }
 

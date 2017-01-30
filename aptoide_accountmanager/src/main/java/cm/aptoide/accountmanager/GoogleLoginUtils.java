@@ -11,7 +11,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import cm.aptoide.accountmanager.ws.LoginMode;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import com.google.android.gms.auth.api.Auth;
@@ -151,7 +151,7 @@ class GoogleLoginUtils implements GoogleApiClient.OnConnectionFailedListener {
           result.startResolutionForResult(activity, REQUEST_RESOLVE_ERROR);
         }
       } catch (IntentSender.SendIntentException e) {
-        CrashReports.logException(e);
+        CrashReport.getInstance().log(e);
         // There was an error with the resolution intent. Try again.
         FragmentActivity activity = (FragmentActivity) activityReference.get();
         if (activity != null) {

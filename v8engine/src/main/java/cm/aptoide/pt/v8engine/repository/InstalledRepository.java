@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 04/08/2016.
- */
-
 package cm.aptoide.pt.v8engine.repository;
 
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
@@ -14,10 +9,11 @@ import rx.Observable;
 /**
  * Created by marcelobenites on 7/27/16.
  */
-public class InstalledRepository implements Repository {
-  private InstalledAccessor accessor;
+public class InstalledRepository implements Repository<Installed, String> {
 
-  public InstalledRepository(InstalledAccessor accessor) {
+  private final InstalledAccessor accessor;
+
+  InstalledRepository(InstalledAccessor accessor) {
     this.accessor = accessor;
   }
 
@@ -38,12 +34,12 @@ public class InstalledRepository implements Repository {
     return accessor.getAsList(packageName);
   }
 
-  public Observable<Installed> get(String packageName) {
-    return accessor.get(packageName);
+  @Override public void save(Installed installed) {
+    accessor.insert(installed);
   }
 
-  public void insert(Installed installed) {
-    accessor.insert(installed);
+  @Override public Observable<Installed> get(String packageName) {
+    return accessor.get(packageName);
   }
 
   public void remove(String packageName) {

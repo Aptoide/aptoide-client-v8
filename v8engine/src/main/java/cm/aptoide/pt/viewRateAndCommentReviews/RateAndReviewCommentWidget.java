@@ -10,12 +10,11 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.support.v7.widget.AppCompatRatingBar;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
@@ -132,8 +131,7 @@ import rx.Observable;
             });
       }
     }).subscribe(a -> { /* do nothing */ }, err -> {
-      Log.e(TAG, "Exception while showing comment dialog", err);
-      CrashReports.logException(err);
+      CrashReport.getInstance().log(err);
     }));
 
     compositeSubscription.add(RxView.clicks(helpfullButtonLayout).subscribe(a -> {

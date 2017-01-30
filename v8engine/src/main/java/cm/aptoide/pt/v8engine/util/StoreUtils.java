@@ -2,7 +2,7 @@ package cm.aptoide.pt.v8engine.util;
 
 import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
@@ -145,7 +145,7 @@ public class StoreUtils {
       if (errorRequestListener != null) {
         errorRequestListener.onError(e);
       }
-      CrashReports.logException(e);
+      CrashReport.getInstance().log(e);
     });
   }
 

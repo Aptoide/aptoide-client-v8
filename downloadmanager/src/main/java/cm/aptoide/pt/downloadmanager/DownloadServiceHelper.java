@@ -9,7 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
@@ -66,14 +66,14 @@ import rx.schedulers.Schedulers;
           getDownload(download.getMd5()).first().subscribe(storedDownload -> {
             startDownloadService(download.getMd5(),
                 AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
-          }, throwable -> {
-            if (throwable instanceof DownloadNotFoundException) {
+          }, e -> {
+            if (e instanceof DownloadNotFoundException) {
               downloadAccessor.save(download);
               startDownloadService(download.getMd5(),
                   AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
             } else {
-              throwable.printStackTrace();
-              CrashReports.logException(throwable);
+              e.printStackTrace();
+              CrashReport.getInstance().log(e);
             }
           });
           return download;
@@ -83,7 +83,9 @@ import rx.schedulers.Schedulers;
   public Observable<Download> startDownload(PermissionRequest permissionRequest,
       Download download) {
     return startDownload(AccessorFactory.getAccessorFor(Download.class), permissionRequest,
-        download).doOnError(CrashReports::logException);
+        download).doOnError(e -> {
+      CrashReport.getInstance().log(e);
+    });
   }
 
   private void startDownloadService(String md5, String action) {
@@ -94,8 +96,8 @@ import rx.schedulers.Schedulers;
       Application.getContext().startService(intent);
       return null;
     }).subscribeOn(Schedulers.computation()).subscribe(o -> {
-    }, err -> {
-      CrashReports.logException(err);
+    }, e -> {
+      CrashReport.getInstance().log(e);
     });
   }
 

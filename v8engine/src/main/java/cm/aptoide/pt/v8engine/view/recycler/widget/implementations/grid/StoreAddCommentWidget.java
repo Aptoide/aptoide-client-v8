@@ -10,7 +10,7 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.Button;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -65,8 +65,7 @@ public class StoreAddCommentWidget extends Widget<StoreAddCommentDisplayable> {
         .subscribe(a -> {
           // all done when we get here.
         }, err -> {
-          Logger.e(TAG, err);
-          CrashReports.logException(err);
+          CrashReport.getInstance().log(err);
         }));
   }
 

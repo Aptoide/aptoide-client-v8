@@ -10,10 +10,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
-import cm.aptoide.pt.crashreports.CrashReports;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -59,9 +57,7 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     installManager = new InstallManager(AptoideDownloadManager.getInstance(),
-        new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK),
-        AccessorFactory.getAccessorFor(Download.class),
-        AccessorFactory.getAccessorFor(Installed.class));
+        new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK));
 
     oldDownloadsList = new ArrayList<>();
     analytics = Analytics.getInstance();
@@ -78,7 +74,7 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(downloads -> updateUi(downloads), err -> {
-          CrashReports.logException(err);
+          CrashReport.getInstance().log(err);
         });
 
     installManager.getInstallationsAsList()
@@ -89,7 +85,7 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(downloads -> updateUi(downloads), err -> {
-          CrashReports.logException(err);
+          CrashReport.getInstance().log(err);
         });
   }
 

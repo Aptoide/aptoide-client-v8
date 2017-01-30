@@ -17,12 +17,13 @@ import java.util.List;
 import rx.Completable;
 import rx.Observable;
 
-public class PaymentAuthorizationRepository implements Repository {
+public class PaymentAuthorizationRepository implements Repository<Authorization, Integer> {
+
   private final PaymentAuthorizationAccessor authotizationAccessor;
   private final SyncAdapterBackgroundSync backgroundSync;
   private final PaymentAuthorizationFactory authorizationFactory;
 
-  public PaymentAuthorizationRepository(PaymentAuthorizationAccessor authorizationAccessor,
+  PaymentAuthorizationRepository(PaymentAuthorizationAccessor authorizationAccessor,
       SyncAdapterBackgroundSync backgroundSync, PaymentAuthorizationFactory authorizationFactory) {
     this.authotizationAccessor = authorizationAccessor;
     this.backgroundSync = backgroundSync;
@@ -42,10 +43,13 @@ public class PaymentAuthorizationRepository implements Repository {
         .toCompletable();
   }
 
+  @Override public void save(Authorization entity) {
+    /* no-op */
+  }
 
-  public Observable<Authorization> getPaymentAuthorization(int paymentId) {
-    return getPaymentAuthorizations(Collections.singletonList(paymentId))
-        .flatMapIterable(authorizations -> authorizations)
+  public Observable<Authorization> get(Integer paymentId) {
+    return getPaymentAuthorizations(Collections.singletonList(paymentId)).flatMapIterable(
+        authorizations -> authorizations)
         .filter(authorization -> authorization.getPaymentId() == paymentId);
   }
 
