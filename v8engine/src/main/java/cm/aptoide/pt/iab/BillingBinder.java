@@ -77,8 +77,7 @@ public class BillingBinder extends AptoideInAppBillingService.Stub {
 
     try {
       return repository.getInAppBilling(apiVersion, packageName, type)
-          .map(billing -> AptoideAccountManager.isLoggedIn())
-          .map(loggedIn -> (loggedIn) ? RESULT_OK : RESULT_BILLING_UNAVAILABLE)
+          .map(billing -> RESULT_OK)
           .toBlocking()
           .first();
     } catch (Exception exception) {

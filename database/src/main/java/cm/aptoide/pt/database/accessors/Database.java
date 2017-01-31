@@ -159,7 +159,7 @@ public final class Database {
         .defaultIfEmpty(null);
   }
 
-  <E extends RealmObject> Observable<Long> count(RealmQuery<E> query) {
+  public <E extends RealmObject> Observable<Long> count(RealmQuery<E> query) {
     return Observable.just(query.count())
         .flatMap(count -> Observable.just(count).unsubscribeOn(RealmSchedulers.getScheduler()))
         .defaultIfEmpty(0L);
@@ -167,6 +167,16 @@ public final class Database {
 
   <E extends RealmObject> Observable<List<E>> findAsList(RealmQuery<E> query) {
     return Observable.just(query.findAll())
+        .filter(realmObject -> realmObject != null)
+        .flatMap(realmObject -> realmObject.<E>asObservable().unsubscribeOn(
+            RealmSchedulers.getScheduler()))
+        .flatMap(realmObject -> copyFromRealm(realmObject))
+        .defaultIfEmpty(null);
+  }
+
+  public <E extends RealmObject> Observable<List<E>> findAsSortedList(RealmQuery<E> query,
+      String fieldName) {
+    return Observable.just(query.findAllSorted(fieldName))
         .filter(realmObject -> realmObject != null)
         .flatMap(realmObject -> realmObject.<E>asObservable().unsubscribeOn(
             RealmSchedulers.getScheduler()))
@@ -260,6 +270,14 @@ public final class Database {
     @Cleanup Realm realm = get();
     realm.beginTransaction();
     realm.delete(clazz);
+    realm.commitTransaction();
+  }
+
+  public <E extends RealmObject> void updateAll(Class<E> clazz, List<E> objects) {
+    @Cleanup Realm realm = get();
+    realm.beginTransaction();
+    realm.delete(clazz);
+    realm.insertOrUpdate(objects);
     realm.commitTransaction();
   }
 
