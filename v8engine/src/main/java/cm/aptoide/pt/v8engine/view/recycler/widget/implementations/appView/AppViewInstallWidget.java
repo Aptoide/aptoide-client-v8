@@ -165,9 +165,6 @@ import rx.android.schedulers.AndroidSchedulers;
           Logger.v(TAG, throwable.getMessage());
         }));
 
-    //setupView(displayable, getApp, currentApp, fragmentShower);
-    //setupViewEvents(displayable, getApp, currentApp, fragmentShower);
-
     if (isThisTheLatestVersionAvailable(currentApp, getApp.getNodes().getVersions())) {
       notLatestAvailableText.setVisibility(View.GONE);
       latestAvailableLayout.setVisibility(View.VISIBLE);
@@ -180,30 +177,6 @@ import rx.android.schedulers.AndroidSchedulers;
     }
 
     permissionRequest = ((PermissionRequest) getContext());
-  }
-
-  private void setupViewEvents(AppViewInstallDisplayable displayable, GetApp getApp,
-      GetAppMeta.App currentApp, FragmentShower fragmentShower) {
-    compositeSubscription.add(displayable.getState()
-        .skip(1)
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(widgetState -> {
-          updateUi(displayable, getApp, currentApp, fragmentShower, widgetState, true);
-        }, (throwable) -> {
-          Logger.v(TAG, throwable.getMessage());
-        }));
-  }
-
-  private void setupView(AppViewInstallDisplayable displayable, GetApp getApp,
-      GetAppMeta.App currentApp, FragmentShower fragmentShower) {
-    compositeSubscription.add(displayable.getState()
-        .first()
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(widgetState -> {
-          updateUi(displayable, getApp, currentApp, fragmentShower, widgetState, false);
-        }, (throwable) -> {
-          Logger.v(TAG, throwable.getMessage());
-        }));
   }
 
   private void updateUi(AppViewInstallDisplayable displayable, GetApp getApp,
