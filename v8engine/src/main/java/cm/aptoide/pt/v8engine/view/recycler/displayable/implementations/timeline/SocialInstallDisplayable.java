@@ -46,7 +46,7 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
       TimelineMetricsManager timelineMetricsManager, SpannableFactory spannableFactory,
       SocialRepository socialRepository, DateCalculator dateCalculator) {
     super(socialInstall, likes, comments, socialInstall.getUser(), socialInstall.getUserSharer(),
-        date, spannableFactory, dateCalculator);
+        socialInstall.getUserLikes(), date, spannableFactory, dateCalculator);
     this.avatarResource = icon;
     this.store = store;
     this.titleResource = titleResource;

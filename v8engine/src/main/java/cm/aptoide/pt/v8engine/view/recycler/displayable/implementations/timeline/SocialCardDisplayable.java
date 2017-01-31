@@ -3,8 +3,10 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timelin
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
+import cm.aptoide.pt.model.v7.timeline.UserTimeline;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.implementations.TimeLineFollowFragment;
@@ -12,6 +14,7 @@ import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.DateCalculator;
 import java.util.Date;
+import java.util.List;
 import lombok.Getter;
 
 public abstract class SocialCardDisplayable extends CardDisplayable {
@@ -23,6 +26,7 @@ public abstract class SocialCardDisplayable extends CardDisplayable {
   @Getter private SpannableFactory spannableFactory;
   @Getter private DateCalculator dateCalculator;
   @Getter private Date date;
+  @Getter private List<UserTimeline> userLikes;
 
   SocialCardDisplayable() {
     numberOfLikes = 0;
@@ -30,8 +34,8 @@ public abstract class SocialCardDisplayable extends CardDisplayable {
   }
 
   SocialCardDisplayable(TimelineCard timelineCard, long numberOfLikes, long numberOfComments,
-      Comment.User user, Comment.User userSharer, Date date, SpannableFactory spannableFactory,
-      DateCalculator dateCalculator) {
+      Comment.User user, Comment.User userSharer, List<UserTimeline> userLikes, Date date,
+      SpannableFactory spannableFactory, DateCalculator dateCalculator) {
     super(timelineCard);
     this.date = date;
     this.dateCalculator = dateCalculator;
@@ -39,6 +43,7 @@ public abstract class SocialCardDisplayable extends CardDisplayable {
     this.numberOfComments = numberOfComments;
     this.userSharer = userSharer;
     this.user = user;
+    this.userLikes = userLikes;
     this.spannableFactory = spannableFactory;
   }
 
@@ -57,6 +62,13 @@ public abstract class SocialCardDisplayable extends CardDisplayable {
   public void likesPreviewClick(FragmentShower fragmentShower) {
     fragmentShower.pushFragmentV4(V8Engine.getFragmentProvider()
         .newTimeLineFollowStatsFragment(TimeLineFollowFragment.FollowFragmentOpenMode.LIKE_PREVIEW,
-            "default"));
+            "default", this.getTimelineCard().getCardId()));
+  }
+
+  public boolean checkAlreadyLiked() {
+    for (UserTimeline user : userLikes) {
+      if (AptoideAccountManager.getUserData().getUserName().equals(user.getName())) return true;
+    }
+    return false;
   }
 }

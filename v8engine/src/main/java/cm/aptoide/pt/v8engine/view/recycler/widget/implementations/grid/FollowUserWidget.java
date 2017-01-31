@@ -8,14 +8,18 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.implementations.TimeLineFollowFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
+import cm.aptoide.pt.v8engine.repository.StoreRepository;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FollowUserDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewStoreWidget;
 import com.jakewharton.rxbinding.view.RxView;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by trinkes on 16/12/2016.
@@ -65,13 +69,31 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
       followersNumber.setText(displayable.getFollowers());
     } else {
       followNumbers.setVisibility(View.GONE);
-      separatorView.setVisibility(View.GONE);
+      separatorView.setVisibility(View.INVISIBLE);
       if (displayable.hasStore()) {
         followLayout.setVisibility(View.VISIBLE);
         setFollowColor(displayable);
       }
-      compositeSubscription.add(RxView.clicks(follow)
-          .subscribe(click -> Toast.makeText(getContext(), "TODO", Toast.LENGTH_SHORT).show()));
+
+      StoreRepository storeRepository = RepositoryFactory.getStoreRepository();
+
+      compositeSubscription.add(storeRepository.isSubscribed(displayable.getStoreName())
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe(isSubscribed -> {
+            if (isSubscribed) {
+              follow.setText(R.string.followed);
+              follow.setOnClickListener(
+                  new AppViewStoreWidget.Listeners().newOpenStoreListener(itemView,
+                      displayable.getStoreName(), V8Engine.getConfiguration().getDefaultTheme()));
+            } else {
+              follow.setText(R.string.appview_follow_store_button_text);
+              follow.setOnClickListener(
+                  new AppViewStoreWidget.Listeners().newSubscribeStoreListener(itemView,
+                      displayable.getStoreName()));
+            }
+          }, (throwable) -> {
+            throwable.printStackTrace();
+          }));
     }
 
     if (displayable.hasStoreAndUser()) {

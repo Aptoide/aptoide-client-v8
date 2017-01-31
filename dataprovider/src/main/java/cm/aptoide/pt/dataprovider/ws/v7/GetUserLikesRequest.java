@@ -3,10 +3,11 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.GetFollowers;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import rx.Observable;
 
 /**
- * Created by trinkes on 16/12/2016.
+ * Created by jdandrade on 10/01/2017.
  */
 
 public class GetUserLikesRequest extends V7<GetFollowers, GetUserLikesRequest.Body> {
@@ -14,10 +15,12 @@ public class GetUserLikesRequest extends V7<GetFollowers, GetUserLikesRequest.Bo
     super(body, baseHost);
   }
 
-  public static GetUserLikesRequest of(String accessToken, String aptoideClientUUID) {
+  public static GetUserLikesRequest of(String accessToken, String aptoideClientUUID,
+      String cardUid) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
-    return new GetUserLikesRequest(((Body) decorator.decorate(new Body(), accessToken)), BASE_HOST);
+    return new GetUserLikesRequest(((Body) decorator.decorate(new Body(cardUid), accessToken)),
+        BASE_HOST);
   }
 
   @Override protected Observable<GetFollowers> loadDataFromNetwork(Interfaces interfaces,
@@ -30,9 +33,11 @@ public class GetUserLikesRequest extends V7<GetFollowers, GetUserLikesRequest.Bo
 
     private int limit = 25;
     private int offset;
+    @Getter private String cardUid;
 
-    public Body() {
+    public Body(String cardUid) {
       super();
+      this.cardUid = cardUid;
     }
 
     @Override public int getOffset() {

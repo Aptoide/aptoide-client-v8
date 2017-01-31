@@ -31,8 +31,10 @@ import rx.functions.Action1;
 public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment {
 
   public static final String OPEN_MODE = "OPEN_MODE";
+  public static final String CARD_UID = "cardUid";
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
   private TimeLineFollowFragment.FollowFragmentOpenMode openMode;
+  private String cardUid;
 
   public static TimeLineFollowFragment newInstance(FollowFragmentOpenMode openMode,
       long followNumber, String storeTheme) {
@@ -55,12 +57,13 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
   }
 
   public static TimeLineFollowFragment newInstance(FollowFragmentOpenMode openMode,
-      String storeTheme) {
+      String storeTheme, String cardUid) {
     Bundle args = new Bundle();
     args.putString(TITLE_KEY,
         DataProvider.getContext().getString(R.string.social_timeline_who_liked));
     args.putSerializable(OPEN_MODE, openMode);
     args.putString(BundleCons.STORE_THEME, storeTheme);
+    args.putString(CARD_UID, cardUid);
     TimeLineFollowFragment fragment = new TimeLineFollowFragment();
     fragment.setArguments(args);
     return fragment;
@@ -73,6 +76,7 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
     openMode = (FollowFragmentOpenMode) args.get(OPEN_MODE);
+    cardUid = (String) args.get(CARD_UID);
   }
 
   @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
@@ -108,10 +112,11 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
         case LIKE_PREVIEW:
           request = GetUserLikesRequest.of(AptoideAccountManager.getAccessToken(),
               new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                  DataProvider.getContext()).getAptoideClientUUID());
+                  DataProvider.getContext()).getAptoideClientUUID(), cardUid);
           break;
         default:
-          throw new IllegalStateException("There is case (openMode) that it is not being handled.");
+          throw new IllegalStateException(
+              "There is a case (openMode) that it is not being handled.");
       }
       LinkedList<Displayable> dispList = new LinkedList<>();
 

@@ -1,7 +1,6 @@
 package cm.aptoide.pt.model.v7.timeline;
 
 import cm.aptoide.pt.model.v7.Comment;
-import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.Store;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -15,14 +14,15 @@ import lombok.Getter;
 /**
  * Created by jdandrade on 15/12/2016.
  */
-@EqualsAndHashCode(exclude = { "app" }) public class SocialInstall implements TimelineCard {
+@EqualsAndHashCode(exclude = { "app" }) public class SocialInstall extends SocialCard
+    implements TimelineCard {
 
   @Getter private final String cardId;
   @Getter private final App app;
   @Getter private final Ab ab;
   @Getter private final long likes;
   @Getter private final long comments;
-  @Getter private final Review.Stats stats;
+  @Getter private final TimelineCardStats stats;
   @Getter private final Store store;
   @Getter private final Comment.User user;
   @Getter private final Comment.User userSharer;
@@ -31,9 +31,10 @@ import lombok.Getter;
   @JsonCreator
   public SocialInstall(@JsonProperty("uid") String cardId, @JsonProperty("apps") List<App> apps,
       @JsonProperty("ab") Ab ab, @JsonProperty("user_sharer") Comment.User userSharer,
-      @JsonProperty("user") Comment.User user, @JsonProperty("stats") Review.Stats stats,
+      @JsonProperty("user") Comment.User user, @JsonProperty("stats") TimelineCardStats stats,
       @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC") @JsonProperty("date") Date date,
       @JsonProperty("store") Store store) {
+    super(stats);
     this.ab = ab;
     this.date = date;
     this.cardId = cardId;

@@ -20,6 +20,10 @@ public class StoreRepository implements Repository {
     return storeAccessor.get(storeId).map(store -> store != null);
   }
 
+  public Observable<Boolean> isSubscribed(String storeName) {
+    return storeAccessor.get(storeName).map(store -> store != null);
+  }
+
   public Observable<Long> count() {
     return storeAccessor.count();
   }

@@ -15,6 +15,8 @@ import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.model.v7.store.Store;
+import cm.aptoide.pt.model.v7.timeline.UserTimeline;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -38,6 +40,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
   private TextView sharedBy;
   private TextView time;
   private RelativeLayout likePreviewContainer;
+  private int marginOfTheNextLikePreview;
 
   SocialCardWidget(View itemView) {
     super(itemView);
@@ -106,8 +109,11 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
     } else {
       Logger.w(TAG, "like button is null in this view");
     }
-
-    likeButton.setLiked(false);
+    if (displayable.checkAlreadyLiked()) {
+      likeButton.setLiked(true);
+    } else {
+      likeButton.setLiked(false);
+    }
     numberLikes.setVisibility(View.VISIBLE);
     numberLikes.setText(String.valueOf(displayable.getNumberOfLikes()));
     numberComments.setVisibility(View.VISIBLE);
@@ -122,71 +128,70 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
       @Override public void liked(LikeButton likeButton) {
         likeCard(displayable, 1);
         numberLikes.setText(String.valueOf(displayable.getNumberOfLikes() + 1));
+        if (likePreviewContainer.getChildCount() < 4) {
+          if (!displayable.checkAlreadyLiked()) {
+            UserTimeline user = new UserTimeline();
+            Store store = new Store();
+            store.setAvatar(AptoideAccountManager.getUserData().getUserAvatarRepo());
+            user.setAvatar(AptoideAccountManager.getUserData().getUserAvatar());
+            user.setStore(store);
+            addUserToPreview(marginOfTheNextLikePreview, user);
+            likePreviewContainer.invalidate();
+          }
+        }
       }
 
       @Override public void unLiked(LikeButton likeButton) {
         likeButton.setLiked(true);
-        //likeCard(displayable, cardType, -1);
-        //numberLikes.setText("0");
       }
     });
 
-    View likeUserPreviewView;
-    ImageView likeUserPreviewIcon;
-
-    likeUserPreviewView =
-        inflater.inflate(R.layout.social_timeline_like_user_preview, likePreviewContainer, false);
-    View likeUserPreviewView1 =
-        inflater.inflate(R.layout.social_timeline_like_user_preview, likePreviewContainer, false);
-    View likeUserPreviewView2 =
-        inflater.inflate(R.layout.social_timeline_like_user_preview, likePreviewContainer, false);
-    View likeUserPreviewView3 =
-        inflater.inflate(R.layout.social_timeline_like_user_preview, likePreviewContainer, false);
-
-    likeUserPreviewIcon =
-        (ImageView) likeUserPreviewView.findViewById(R.id.social_timeline_like_user_preview);
-    ImageView likeUserPreviewIcon1 =
-        (ImageView) likeUserPreviewView1.findViewById(R.id.social_timeline_like_user_preview);
-    ImageView likeUserPreviewIcon2 =
-        (ImageView) likeUserPreviewView2.findViewById(R.id.social_timeline_like_user_preview);
-    ImageView likeUserPreviewIcon3 =
-        (ImageView) likeUserPreviewView3.findViewById(R.id.social_timeline_like_user_preview);
-
-    ViewGroup.MarginLayoutParams p =
-        (ViewGroup.MarginLayoutParams) likeUserPreviewView.getLayoutParams();
-    p.setMargins(60, 0, 0, 0);
-    likeUserPreviewView1.requestLayout();
-
-    ViewGroup.MarginLayoutParams p1 =
-        (ViewGroup.MarginLayoutParams) likeUserPreviewView1.getLayoutParams();
-    p1.setMargins(40, 0, 0, 0);
-    likeUserPreviewView1.requestLayout();
-
-    ViewGroup.MarginLayoutParams p2 =
-        (ViewGroup.MarginLayoutParams) likeUserPreviewView2.getLayoutParams();
-    p2.setMargins(20, 0, 0, 0);
-    likeUserPreviewView2.requestLayout();
-
-    ViewGroup.MarginLayoutParams p3 =
-        (ViewGroup.MarginLayoutParams) likeUserPreviewView3.getLayoutParams();
-    p3.setMargins(0, 0, 0, 0);
-    likeUserPreviewView3.requestLayout();
-
-    ImageLoader.loadWithShadowCircleTransform(R.drawable.user_account_grey, likeUserPreviewIcon);
-    ImageLoader.loadWithShadowCircleTransform(R.drawable.icon_user, likeUserPreviewIcon1);
-    ImageLoader.loadWithShadowCircleTransform(R.drawable.user_account_white, likeUserPreviewIcon2);
-    ImageLoader.loadWithShadowCircleTransform(R.drawable.user_default, likeUserPreviewIcon3);
-
-    likePreviewContainer.addView(likeUserPreviewView);
-    likePreviewContainer.addView(likeUserPreviewView1);
-    likePreviewContainer.addView(likeUserPreviewView2);
-    likePreviewContainer.addView(likeUserPreviewView3);
+    likePreviewContainer.removeAllViews();
+    showLikesPreview(displayable);
 
     compositeSubscription.add(RxView.clicks(likePreviewContainer)
         .subscribe(click -> displayable.likesPreviewClick(((FragmentShower) getContext())),
             (throwable) -> {
               throwable.printStackTrace();
             }));
+  }
+
+  private void showLikesPreview(T displayable) {
+    marginOfTheNextLikePreview = 60;
+    for (int j = 0; j < displayable.getNumberOfLikes(); j++) {
+
+      UserTimeline user = null;
+      if (j < displayable.getUserLikes().size()) {
+        user = displayable.getUserLikes().get(j);
+      }
+      addUserToPreview(marginOfTheNextLikePreview, user);
+      marginOfTheNextLikePreview -= 20;
+      if (marginOfTheNextLikePreview < 0) {
+        break;
+      }
+    }
+  }
+
+  private void addUserToPreview(int i, UserTimeline user) {
+    View likeUserPreviewView;
+    ImageView likeUserPreviewIcon;
+    likeUserPreviewView =
+        inflater.inflate(R.layout.social_timeline_like_user_preview, likePreviewContainer, false);
+    likeUserPreviewIcon =
+        (ImageView) likeUserPreviewView.findViewById(R.id.social_timeline_like_user_preview);
+    ViewGroup.MarginLayoutParams p =
+        (ViewGroup.MarginLayoutParams) likeUserPreviewView.getLayoutParams();
+    p.setMargins(i, 0, 0, 0);
+    likeUserPreviewView.requestLayout();
+
+    if (user != null) {
+      if (user.getAvatar() != null) {
+        ImageLoader.loadWithShadowCircleTransform(user.getAvatar(), likeUserPreviewIcon);
+      } else if (user.getStore().getAvatar() != null) {
+        ImageLoader.loadWithShadowCircleTransform(user.getStore().getAvatar(), likeUserPreviewIcon);
+      }
+      likePreviewContainer.addView(likeUserPreviewView);
+    }
   }
 
   @NonNull private Action1<Throwable> showError() {

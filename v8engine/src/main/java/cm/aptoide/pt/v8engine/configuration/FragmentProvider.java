@@ -117,7 +117,7 @@ public interface FragmentProvider {
       long followNumber, String storeTheme);
 
   Fragment newTimeLineFollowStatsFragment(TimeLineFollowFragment.FollowFragmentOpenMode openMode,
-      String storeTheme);
+      String storeTheme, String cardUid);
 
   Fragment newCommentGridRecyclerFragment(CommentType commentType, String elementId);
 

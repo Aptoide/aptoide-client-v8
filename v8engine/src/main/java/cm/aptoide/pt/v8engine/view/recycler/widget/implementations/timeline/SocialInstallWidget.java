@@ -31,7 +31,6 @@ public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayab
   private TextView getApp;
   private CardView cardView;
   private RelativeLayout cardContent;
-  //private LinearLayout share;
   private LikeButton likeButton;
   private TextView numberLikes;
   private TextView numberComments;
@@ -56,7 +55,6 @@ public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayab
         (CardView) itemView.findViewById(R.id.displayable_social_timeline_recommendation_card);
     cardContent = (RelativeLayout) itemView.findViewById(
         R.id.displayable_social_timeline_recommendation_card_content);
-    //share = (LinearLayout) itemView.findViewById(R.id.social_share);
     likeButton = (LikeButton) itemView.findViewById(R.id.social_like_test);
     numberLikes = (TextView) itemView.findViewById(R.id.social_number_of_likes);
     numberComments = (TextView) itemView.findViewById(R.id.social_number_of_comments);

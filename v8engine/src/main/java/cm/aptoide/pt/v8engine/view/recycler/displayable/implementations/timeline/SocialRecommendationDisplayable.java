@@ -46,8 +46,8 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
       SpannableFactory spannableFactory, SocialRepository socialRepository,
       DateCalculator dateCalculator) {
     super(socialRecommendation, numberOfLikes, numberOfComments, socialRecommendation.getUser(),
-        socialRecommendation.getUserSharer(), socialRecommendation.getDate(), spannableFactory,
-        dateCalculator);
+        socialRecommendation.getUserSharer(), socialRecommendation.getUserLikes(),
+        socialRecommendation.getDate(), spannableFactory, dateCalculator);
     this.avatarResource = avatarResource;
     this.store = store;
     this.titleResource = titleResource;

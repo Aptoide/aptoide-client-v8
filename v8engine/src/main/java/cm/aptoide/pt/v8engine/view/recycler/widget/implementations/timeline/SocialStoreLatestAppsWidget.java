@@ -196,6 +196,8 @@ public class SocialStoreLatestAppsWidget
                 new AppViewStoreWidget.Listeners().newSubscribeStoreListener(itemView,
                     displayable.getSharedStore().getName()));
           }
+        }, (throwable) -> {
+          throwable.printStackTrace();
         }));
   }
 

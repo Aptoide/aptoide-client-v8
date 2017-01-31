@@ -1,7 +1,6 @@
 package cm.aptoide.pt.model.v7.timeline;
 
 import cm.aptoide.pt.model.v7.Comment;
-import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.Store;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -12,7 +11,8 @@ import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-@EqualsAndHashCode(exclude = { "publisher" }) public class SocialArticle implements TimelineCard {
+@EqualsAndHashCode(exclude = { "publisher" }) public class SocialArticle extends SocialCard
+    implements TimelineCard {
 
   @Getter private final Publisher publisher;
   @Getter private final Comment.User user;
@@ -33,10 +33,11 @@ import lombok.Getter;
       @JsonProperty("thumbnail") String thumbnailUrl,
       @JsonProperty("publisher") Publisher publisher,
       @JsonProperty("user_sharer") Comment.User userSharer, @JsonProperty("user") Comment.User user,
-      @JsonProperty("stats") Review.Stats stats, @JsonProperty("store") Store store,
+      @JsonProperty("stats") TimelineCardStats stats, @JsonProperty("store") Store store,
       @JsonProperty("url") String url,
       @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC") @JsonProperty("date") Date date,
       @JsonProperty("apps") List<App> apps, @JsonProperty("ab") Ab ab) {
+    super(stats);
     this.likes = stats.getLikes();
     this.comments = stats.getComments();
     this.publisher = publisher;
