@@ -51,7 +51,6 @@
       />
 
   <Button
-      tools:visibility="visible"
       android:visibility="gone"
       android:id="@+id/item_payment_button_register"
       android:layout_width="wrap_content"
@@ -64,13 +63,14 @@
       />
 
   <TextView
+      tools:visibility="visible"
       android:visibility="gone"
       android:id="@+id/item_payment_approving_text"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_alignParentEnd="true"
       android:layout_centerVertical="true"
-      android:layout_marginEnd="16dp"
+      android:layout_marginEnd="32dp"
       android:text="@string/item_payment_approving_text"
       style="@style/TextAppearance.AppCompat.Caption"
       />

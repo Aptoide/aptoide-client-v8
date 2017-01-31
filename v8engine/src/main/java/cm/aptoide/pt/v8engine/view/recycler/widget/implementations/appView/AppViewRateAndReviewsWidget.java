@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
@@ -179,7 +180,7 @@ import java.util.List;
         }, e -> {
           loadedData(false);
           topReviewsList.setAdapter(new TopReviewsAdapter(getContext()));
-          Logger.e(TAG, e);
+          CrashReport.getInstance().log(e);
         }, true // bypass cache flag
     );
   }

@@ -1,6 +1,7 @@
 package cm.aptoide.pt.viewRateAndCommentReviews;
 
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -8,11 +9,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Review;
@@ -146,15 +146,17 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
   // MVP methods
   //
 
-  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    // ??
-  }
-
   @Override public int getContentViewId() {
     return R.layout.fragment_rate_and_reviews;
   }
 
-  @Override public void bindViews(View view) {
+  @CallSuper @Override
+  public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    super.load(create, refresh, savedInstanceState);
+    // ??
+  }
+
+  @CallSuper @Override public void bindViews(View view) {
     super.bindViews(view);
     floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fab);
     setHasOptionsMenu(true);
@@ -175,8 +177,7 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
         installMenuItem.setTitle(R.string.open);
       }
     }, err -> {
-      Logger.e(TAG, err);
-      CrashReports.logException(err);
+      CrashReport.getInstance().log(err);
     });
   }
 
@@ -200,7 +201,7 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
   }
 
   @Override public Observable<Integer> nextReviews() {
-    return RxEndlessRecyclerView.loadMore(recyclerView, getAdapter());
+    return RxEndlessRecyclerView.loadMore(getRecyclerView(), getAdapter());
   }
 
   @Override public Observable<Void> rateApp() {

@@ -1,8 +1,8 @@
 package cm.aptoide.pt.networkclient;
 
-import cm.aptoide.pt.crashreports.CrashReports;
-import cm.aptoide.pt.networkclient.okhttp.cache.Sha1KeyAlgorithm;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.networkclient.okhttp.cache.L2Cache;
+import cm.aptoide.pt.networkclient.okhttp.cache.Sha1KeyAlgorithm;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Vector;
@@ -89,8 +89,7 @@ public class L2CacheUnitTest {
       assertEquals("stored response body after put() is not the same",
           response.body().source().readString(charset), resp1.body().source().readString(charset));
     } catch (Exception e) {
-      CrashReports.logException(e);
-      e.printStackTrace();
+      CrashReport.getInstance().log(e);
       fail();
     }
   }
@@ -112,8 +111,7 @@ public class L2CacheUnitTest {
       assertEquals("response body content after get() is not the same", expectedResponseBodyData,
           currentData);
     } catch (Exception e) {
-      CrashReports.logException(e);
-      e.printStackTrace();
+      CrashReport.getInstance().log(e);
       fail();
     }
   }

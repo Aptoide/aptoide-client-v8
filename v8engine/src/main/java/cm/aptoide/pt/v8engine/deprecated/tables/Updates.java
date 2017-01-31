@@ -9,10 +9,10 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.text.TextUtils;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import io.realm.Realm;
 import io.realm.RealmObject;
@@ -91,7 +91,7 @@ public class Updates extends BaseTable {
 
         return realmObject;
       } catch (PackageManager.NameNotFoundException ex) {
-        Logger.e(TAG, ex);
+        CrashReport.getInstance().log(ex);
       }
     }
 

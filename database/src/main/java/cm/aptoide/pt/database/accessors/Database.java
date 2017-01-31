@@ -7,7 +7,7 @@ package cm.aptoide.pt.database.accessors;
 
 import android.content.Context;
 import android.text.TextUtils;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.BuildConfig;
 import cm.aptoide.pt.database.schedulers.RealmSchedulers;
 import io.realm.Realm;
@@ -79,14 +79,14 @@ public final class Database {
     RealmConfiguration realmConfig;
     if (BuildConfig.DEBUG) {
       //realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME_E)
-          //.encryptionKey(key)
+      //.encryptionKey(key)
       realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME)
           .schemaVersion(SCHEMA_VERSION)
           .migration(new RealmToRealmDatabaseMigration())
           .build();
     } else {
       //realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME_E)
-          //.encryptionKey(key)
+      //.encryptionKey(key)
       realmConfig = new RealmConfiguration.Builder(context).name(DB_NAME)
           //.encryptionKey(strBuilder.toString().substring(0, 64).getBytes()) // FIXME: 30/08/16 sithengineer activate DB encryption
           .schemaVersion(SCHEMA_VERSION).migration(new RealmToRealmDatabaseMigration()).build();
@@ -100,12 +100,11 @@ public final class Database {
   }
 
   /**
-   * Returns realm database default instance. Do not use this method it is deprecated and will be made private in future releases,
+   * Returns realm database default instance. Do not use this method it is deprecated and will be
+   * made private in future releases,
    * use {@link #getRealm()} instead.
-   * @return
    */
-  @Deprecated
-  protected static Realm get() {
+  @Deprecated protected static Realm get() {
     if (!isInitialized) {
       throw new IllegalStateException("You need to call Database.initialize(Context) first");
     }
@@ -160,8 +159,24 @@ public final class Database {
         .defaultIfEmpty(null);
   }
 
+  public <E extends RealmObject> Observable<Long> count(RealmQuery<E> query) {
+    return Observable.just(query.count())
+        .flatMap(count -> Observable.just(count).unsubscribeOn(RealmSchedulers.getScheduler()))
+        .defaultIfEmpty(0L);
+  }
+
   <E extends RealmObject> Observable<List<E>> findAsList(RealmQuery<E> query) {
     return Observable.just(query.findAll())
+        .filter(realmObject -> realmObject != null)
+        .flatMap(realmObject -> realmObject.<E>asObservable().unsubscribeOn(
+            RealmSchedulers.getScheduler()))
+        .flatMap(realmObject -> copyFromRealm(realmObject))
+        .defaultIfEmpty(null);
+  }
+
+  public <E extends RealmObject> Observable<List<E>> findAsSortedList(RealmQuery<E> query,
+      String fieldName) {
+    return Observable.just(query.findAllSorted(fieldName))
         .filter(realmObject -> realmObject != null)
         .flatMap(realmObject -> realmObject.<E>asObservable().unsubscribeOn(
             RealmSchedulers.getScheduler()))
@@ -180,7 +195,8 @@ public final class Database {
             RealmSchedulers.getScheduler())).flatMap(results -> copyFromRealm(results));
   }
 
-  public <E extends RealmObject> Observable<List<E>> getAllSorted(Class<E> clazz, String fieldName) {
+  public <E extends RealmObject> Observable<List<E>> getAllSorted(Class<E> clazz,
+      String fieldName) {
     return getRealm().flatMap(
         realm -> realm.where(clazz).findAllSorted(fieldName).<List<E>>asObservable().unsubscribeOn(
             RealmSchedulers.getScheduler())).flatMap(results -> copyFromRealm(results));
@@ -239,14 +255,14 @@ public final class Database {
 
   private <E extends RealmObject> void deleteObject(Realm realm, E obj) {
     realm.beginTransaction();
-    try{
+    try {
       if (obj != null && obj.isValid()) {
         obj.deleteFromRealm();
         realm.commitTransaction();
       }
     } catch (Exception ex) {
       realm.cancelTransaction();
-      CrashReports.logException(ex);
+      CrashReport.getInstance().log(ex);
     }
   }
 
@@ -254,6 +270,14 @@ public final class Database {
     @Cleanup Realm realm = get();
     realm.beginTransaction();
     realm.delete(clazz);
+    realm.commitTransaction();
+  }
+
+  public <E extends RealmObject> void updateAll(Class<E> clazz, List<E> objects) {
+    @Cleanup Realm realm = get();
+    realm.beginTransaction();
+    realm.delete(clazz);
+    realm.insertOrUpdate(objects);
     realm.commitTransaction();
   }
 
@@ -268,6 +292,14 @@ public final class Database {
     @Cleanup Realm realm = get();
     realm.beginTransaction();
     realm.insertOrUpdate(object);
+    realm.commitTransaction();
+  }
+
+  public <E extends RealmObject> void deleteAllIn(Class<E> classType, String classField,
+      String[] fieldsIn) {
+    @Cleanup Realm realm = get();
+    realm.beginTransaction();
+    realm.where(classType).in(classField, fieldsIn).findAll().deleteAllFromRealm();
     realm.commitTransaction();
   }
 }

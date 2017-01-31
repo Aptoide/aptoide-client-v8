@@ -18,8 +18,13 @@ public class PaymentConfirmationAccessor extends SimpleAccessor<PaymentConfirmat
     super(database, PaymentConfirmation.class);
   }
 
-  public Observable<List<PaymentConfirmation>> getPaymentConfirmations(int productId) {
-    return database.getAsList(PaymentConfirmation.class, PaymentConfirmation.PRODUCT_ID, productId);
+  public Observable<List<PaymentConfirmation>> getPaymentConfirmations(int productId,
+      String payerId) {
+    return database.getRealm()
+        .map(realm -> realm.where(PaymentConfirmation.class)
+            .equalTo(PaymentConfirmation.PRODUCT_ID, productId)
+            .equalTo(PaymentConfirmation.PAYER_ID, payerId))
+        .flatMap(query -> database.findAsList(query));
   }
 
   public void save(PaymentConfirmation paymentConfirmation) {

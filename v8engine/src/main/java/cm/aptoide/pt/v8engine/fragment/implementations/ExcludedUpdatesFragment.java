@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
- */
-
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
@@ -12,7 +7,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Update;
@@ -27,17 +22,12 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import rx.Observable;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
-/**
- * Created by sithengineer on 21/06/16.
- */
 public class ExcludedUpdatesFragment extends AptoideBaseFragment<BaseAdapter> {
 
   private static final String TAG = ExcludedUpdatesFragment.class.getSimpleName();
   private TextView emptyData;
-  private Subscription subscription;
 
   public ExcludedUpdatesFragment() {
   }
@@ -47,6 +37,7 @@ public class ExcludedUpdatesFragment extends AptoideBaseFragment<BaseAdapter> {
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    super.load(create, refresh, savedInstanceState);
     Logger.d(TAG, "refresh excluded updates? " + (create ? "yes" : "no"));
     fetchExcludedUpdates();
   }
@@ -113,8 +104,7 @@ public class ExcludedUpdatesFragment extends AptoideBaseFragment<BaseAdapter> {
           .doOnNext(update -> update.setExcluded(false))
           .toList()
           .subscribe(updates -> updateAccessor.insertAll(updates), err -> {
-            Logger.e(TAG, err);
-            CrashReports.logException(err);
+            CrashReport.getInstance().log(err);
           });
 
       return true;
@@ -142,35 +132,8 @@ public class ExcludedUpdatesFragment extends AptoideBaseFragment<BaseAdapter> {
   }
 
   private void fetchExcludedUpdates() {
-    //subscription = DeprecatedDatabase.UpdatesQ.getAll(realm, true)
-    //    .asObservable()
-    //    .observeOn(AndroidSchedulers.mainThread())
-    //    .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-    //    .subscribe(excludedUpdates -> {
-    //
-    //      if (excludedUpdates == null || excludedUpdates.isEmpty()) {
-    //        emptyData.setText(R.string.no_excluded_updates_msg);
-    //        emptyData.setVisibility(View.VISIBLE);
-    //        clearDisplayables();
-    //        finishLoading();
-    //      } else {
-    //        emptyData.setVisibility(View.GONE);
-    //        List<ExcludedUpdateDisplayable> displayables = new ArrayList<>();
-    //        for (Update excludedUpdate : excludedUpdates) {
-    //          displayables.add(new ExcludedUpdateDisplayable(excludedUpdate));
-    //        }
-    //        setDisplayables(displayables);
-    //      }
-    //    }, t -> {
-    //      Logger.e(TAG, t);
-    //      emptyData.setText(R.string.no_excluded_updates_msg);
-    //      emptyData.setVisibility(View.VISIBLE);
-    //      clearDisplayables();
-    //      finishLoading();
-    //    });
-
     UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
-    Subscription unManagedSubscription = updateAccessor.getAll(true)
+    updateAccessor.getAll(true)
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(excludedUpdates -> {
@@ -185,10 +148,10 @@ public class ExcludedUpdatesFragment extends AptoideBaseFragment<BaseAdapter> {
             for (Update excludedUpdate : excludedUpdates) {
               displayables.add(new ExcludedUpdateDisplayable(excludedUpdate));
             }
-            setDisplayables(displayables);
+            clearDisplayables().addDisplayables(displayables, true);
           }
         }, t -> {
-          Logger.e(TAG, t);
+          CrashReport.getInstance().log(t);
           emptyData.setText(R.string.no_excluded_updates_msg);
           emptyData.setVisibility(View.VISIBLE);
           clearDisplayables();

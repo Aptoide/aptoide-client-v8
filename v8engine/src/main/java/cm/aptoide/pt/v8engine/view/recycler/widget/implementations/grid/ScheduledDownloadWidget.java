@@ -10,9 +10,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.imageloader.ImageLoader;
@@ -71,9 +69,7 @@ import rx.android.schedulers.AndroidSchedulers;
     AptoideDownloadManager aptoideDownloadManager = AptoideDownloadManager.getInstance();
     aptoideDownloadManager.initDownloadService(getContext());
     Installer installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
-    InstallManager installManager = new InstallManager(aptoideDownloadManager, installer,
-        AccessorFactory.getAccessorFor(Download.class),
-        AccessorFactory.getAccessorFor(Installed.class));
+    InstallManager installManager = new InstallManager(aptoideDownloadManager, installer);
 
     Observable<Progress<Download>> installation =
         installManager.getInstallation(displayable.getPojo().getMd5());

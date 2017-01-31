@@ -7,7 +7,7 @@ package cm.aptoide.pt.v8engine.view.recycler.base;
 
 import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.WidgetFactory;
 
@@ -38,11 +38,12 @@ public class BaseGridLayoutManager extends GridLayoutManager {
         if (displayable.getSpanSize() <= getSpanCount()) {
           return displayable.getSpanSize();
         } else {
-          CrashReports.logException(new IllegalArgumentException("Displayable "
-              + displayable.getClass().getSimpleName()
-              + " at position "
-              + position
-              + " spanSize > getSpanCount()! "));
+          CrashReport.getInstance()
+              .log(new IllegalArgumentException("Displayable "
+                  + displayable.getClass().getSimpleName()
+                  + " at position "
+                  + position
+                  + " spanSize > getSpanCount()! "));
           return getSpanCount();
         }
       }

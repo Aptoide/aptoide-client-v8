@@ -9,7 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
@@ -124,8 +124,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
         installMenuItem.setTitle(R.string.open);
       }
     }, err -> {
-      Logger.e(TAG, err);
-      CrashReports.logException(err);
+      CrashReport.getInstance().log(err);
     });
   }
 
@@ -158,7 +157,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
           }
           finishLoading();
         }, err -> {
-          CrashReports.logException(err);
+          CrashReport.getInstance().log(err);
         });
   }
 
@@ -175,7 +174,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(this.getAdapter(), reviewsRequest,
             new ListFullReviewsSuccessRequestListener(this), Throwable::printStackTrace);
-    recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+    getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(false);
   }
 
@@ -188,6 +187,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    super.load(create, refresh, savedInstanceState);
     Logger.d(TAG, "Other versions should refresh? " + create);
     fetchRating(refresh);
     fetchReviews();
@@ -246,11 +246,11 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   }
 
   void checkAndRemoveProgressBarDisplayable() {
-    for (int i = 0; i < adapter.getItemCount(); i++) {
-      Displayable displayable = adapter.getDisplayable(i);
+    for (int i = 0; i < getAdapter().getItemCount(); i++) {
+      Displayable displayable = getAdapter().getDisplayable(i);
       if (displayable instanceof ProgressBarDisplayable) {
-        adapter.removeDisplayable(i);
-        adapter.notifyItemRemoved(i);
+        getAdapter().removeDisplayable(i);
+        getAdapter().notifyItemRemoved(i);
       }
     }
   }

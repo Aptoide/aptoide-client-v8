@@ -1,6 +1,6 @@
 package cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events;
 
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -37,7 +37,7 @@ public @EqualsAndHashCode(callSuper = false) @Data @ToString class DownloadEvent
     super.send();
     Throwable error = getError();
     if (error != null) {
-      CrashReports.logException(error);
+      CrashReport.getInstance().log(error);
       Logger.e(TAG, "send: " + error);
     }
   }

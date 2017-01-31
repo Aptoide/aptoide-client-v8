@@ -3,8 +3,7 @@ package cm.aptoide.pt.v8engine.view.recycler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
-import cm.aptoide.pt.crashreports.CrashReports;
-import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.ProgressBarDisplayable;
@@ -395,9 +394,8 @@ public class DisplayableWidgetMapping {
     try {
       return widgetClass.getDeclaredConstructor(cArg).newInstance(view);
     } catch (Exception e) {
-      CrashReports.logException(e);
+      CrashReport.getInstance().log(e);
       String errMsg = String.format("Error instantiating widget '%s'", widgetClass.getName());
-      Logger.e(TAG, errMsg, e);
       throw new RuntimeException(errMsg);
     }
   }
@@ -406,10 +404,9 @@ public class DisplayableWidgetMapping {
     try {
       return displayableClass.newInstance();
     } catch (Exception e) {
-      CrashReports.logException(e);
+      CrashReport.getInstance().log(e);
       String errMsg =
           String.format("Error instantiating displayable '%s'", displayableClass.getName());
-      Logger.e(TAG, errMsg, e);
       throw new RuntimeException(errMsg);
     }
   }

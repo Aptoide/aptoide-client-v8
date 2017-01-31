@@ -14,7 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.CommentType;
@@ -299,12 +299,12 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
         addDisplayables(this.displayables);
       }
     });
-    recyclerView.clearOnScrollListeners();
+    getRecyclerView().clearOnScrollListeners();
     EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(getAdapter(), listCommentsRequest, listCommentsAction,
             Throwable::printStackTrace, true);
 
-    recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+    getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(refresh);
   }
 
@@ -366,7 +366,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
     if (storeCredentials == null || storeCredentials.getId() == null) {
       IllegalStateException illegalStateException =
           new IllegalStateException("Current store credentials does not have a store id");
-      CrashReports.logException(illegalStateException);
+      CrashReport.getInstance().log(illegalStateException);
       throw illegalStateException;
     }
 
@@ -393,12 +393,12 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
       }
     });
 
-    recyclerView.clearOnScrollListeners();
+    getRecyclerView().clearOnScrollListeners();
     EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(getAdapter(), listCommentsRequest, listCommentsAction,
             Throwable::printStackTrace, true);
 
-    recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+    getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(refresh);
   }
 }

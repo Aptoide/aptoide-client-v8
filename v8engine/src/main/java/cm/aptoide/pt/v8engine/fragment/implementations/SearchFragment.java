@@ -10,7 +10,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,12 +19,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.R;
@@ -64,7 +62,6 @@ public class SearchFragment extends BasePagerToolbarFragment {
   private String storeName;
   private boolean onlyTrustedApps;
   private int selectedButton = 0;
-  private boolean isStoreSearch;
 
   public SearchFragment() {
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
@@ -166,8 +163,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
         //only show the search results after choosing the tab to show
         setupAbTest().compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW))
             .subscribe(setup -> finishLoading(), throwable -> {
-              CrashReports.logException(throwable);
-              Logger.e(TAG, throwable);
+              CrashReport.getInstance().log(throwable);
               finishLoading();
             });
       } else {
@@ -262,9 +258,6 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
   @Override public void setupToolbarDetails(Toolbar toolbar) {
     toolbar.setTitle(query);
-    if (isStoreSearch) {
-      toolbar.setLogo(R.drawable.ic_store);
-    }
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {
@@ -318,7 +311,6 @@ public class SearchFragment extends BasePagerToolbarFragment {
     query = args.getString(BundleCons.QUERY);
     storeName = args.getString(BundleCons.STORE_NAME);
     onlyTrustedApps = args.getBoolean(BundleCons.ONLY_TRUSTED, false);
-    isStoreSearch = !TextUtils.isEmpty(storeName);
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {

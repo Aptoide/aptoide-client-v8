@@ -159,7 +159,7 @@
       <ScrollView
           android:id="@+id/activity_payment_list_container"
           android:layout_width="match_parent"
-          android:layout_height="144dp"
+          android:layout_height="72dp"
           android:visibility="gone"
           >
         <LinearLayout

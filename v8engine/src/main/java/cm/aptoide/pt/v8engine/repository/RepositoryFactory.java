@@ -9,6 +9,7 @@ import android.accounts.AccountManager;
 import android.content.Context;
 import android.telephony.TelephonyManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.PaymentAuthorization;
 import cm.aptoide.pt.database.realm.PaymentConfirmation;
@@ -52,6 +53,10 @@ public final class RepositoryFactory {
 
   public static StoreRepository getStoreRepository() {
     return new StoreRepository(AccessorFactory.getAccessorFor(Store.class));
+  }
+
+  public static DownloadRepository getDownloadRepository() {
+    return new DownloadRepository(AccessorFactory.getAccessorFor(Download.class));
   }
 
   public static ProductRepository getProductRepository(Context context, AptoideProduct product) {

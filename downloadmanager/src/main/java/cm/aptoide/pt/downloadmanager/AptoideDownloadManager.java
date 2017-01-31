@@ -1,13 +1,8 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 04/08/2016.
- */
-
 package cm.aptoide.pt.downloadmanager;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
@@ -105,7 +100,7 @@ public class AptoideDownloadManager {
           startNewDownload(download);
           return null;
         }).subscribeOn(Schedulers.computation()).subscribe(o -> {
-        }, throwable -> Logger.e(TAG, throwable));
+        }, throwable -> CrashReport.getInstance().log(throwable));
         return getDownload(download.getMd5());
       }
     });
@@ -143,8 +138,7 @@ public class AptoideDownloadManager {
 
   /**
    * Observe changes to a download. This observable never completes it will emmit items whenever
-   * the
-   * download state changes.
+   * the download state changes.
    *
    * @return observable for download state changes.
    */
@@ -203,7 +197,7 @@ public class AptoideDownloadManager {
           downloadAccessor.save(downloads);
           Logger.d(TAG, "Downloads paused");
         }, err -> {
-          CrashReports.logException(err);
+          CrashReport.getInstance().log(err);
         });
   }
 
@@ -272,9 +266,8 @@ public class AptoideDownloadManager {
               .subscribe(cleanedSize -> Logger.d(TAG,
                   "cleaned size: " + AptoideUtils.StringU.formatBytes(cleanedSize, false)),
                   throwable -> {
-                Logger.e(TAG, throwable);
-                CrashReports.logException(throwable);
-              });
+                    CrashReport.getInstance().log(throwable);
+                  });
         }
       }, throwable -> throwable.printStackTrace());
     }

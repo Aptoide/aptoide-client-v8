@@ -45,6 +45,8 @@ public interface PaymentView extends View {
 
   void dismiss();
 
+  void navigateToAuthorizationView(int paymentId, AptoideProduct product);
+
   void showPaymentsNotFoundMessage();
 
   Observable<PaymentViewModel> registerPaymentSelection();
