@@ -59,10 +59,7 @@ import rx.Observable;
   public static GetAdsRequest of(Location location, String keyword, Integer limit,
       String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid, boolean mature) {
     return new GetAdsRequest(aptoideClientUUID, googlePlayServicesAvailable, oemid,
-        mature).setLocation(
-        location)
-        .setKeyword(keyword)
-        .setLimit(limit);
+        mature).setLocation(location).setKeyword(keyword).setLimit(limit);
   }
 
   private static GetAdsRequest of(Location location, Integer limit, String aptoideClientUUID,
@@ -75,8 +72,7 @@ import rx.Observable;
       String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid, boolean mature) {
     GetAdsRequest getAdsRequest =
         of(location, 1, aptoideClientUUID, googlePlayServicesAvailable, oemid,
-            mature).setPackageName(
-            packageName);
+            mature).setPackageName(packageName);
 
     // Add excluded networks
     if (ReferrerUtils.excludedNetworks.containsKey(packageName)) {
@@ -103,8 +99,9 @@ import rx.Observable;
   public static GetAdsRequest ofAppviewOrganic(String packageName, String storeName,
       String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid, boolean mature) {
 
-    GetAdsRequest getAdsRequest = ofPackageName(Location.appview, packageName, aptoideClientUUID,
-        googlePlayServicesAvailable, oemid, mature);
+    GetAdsRequest getAdsRequest =
+        ofPackageName(Location.appview, packageName, aptoideClientUUID, googlePlayServicesAvailable,
+            oemid, mature);
 
     getAdsRequest.setRepo(storeName);
 
@@ -140,6 +137,12 @@ import rx.Observable;
       boolean googlePlayServicesAvailable, String oemid, boolean mature) {
     return ofPackageName(Location.secondtry, packageName, aptoideClientUUID,
         googlePlayServicesAvailable, oemid, mature);
+  }
+
+  public static GetAdsRequest ofFirstInstall(String aptoideClientUUID,
+      boolean googlePlayServicesAvailable, String oemid, int numberOfAds, boolean mature) {
+    return of(Location.firstinstall, numberOfAds, aptoideClientUUID, googlePlayServicesAvailable,
+        oemid, mature);
   }
 
   @Override protected Observable<GetAdsResponse> loadDataFromNetwork(Interfaces interfaces,
@@ -214,7 +217,7 @@ import rx.Observable;
     secondinstall("native-aptoide:secondinstall"),
     secondtry("native-aptoide:secondtry"),
     aptoidesdk("sdk-aptoide:generic"),
-    firstinstall("native-aptoide:firstinstall");
+    firstinstall("native-aptoide:first-install");
 
     private final String value;
 
