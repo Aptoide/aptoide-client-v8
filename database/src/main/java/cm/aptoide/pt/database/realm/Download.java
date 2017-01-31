@@ -15,11 +15,12 @@ import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import lombok.EqualsAndHashCode;
 
 /**
  * Created by sithengineer on 17/05/16.
  */
-public class Download extends RealmObject {
+public @EqualsAndHashCode class Download extends RealmObject {
 
   public static final int ACTION_INSTALL = 0;
   public static final int ACTION_UPDATE = 1;

@@ -156,51 +156,17 @@ import rx.android.schedulers.AndroidSchedulers;
       fragmentShower.pushFragmentV4(fragment);
     });
 
+    final boolean[] isSetupView = { true };
     compositeSubscription.add(
         displayable.getState().observeOn(AndroidSchedulers.mainThread()).subscribe(widgetState -> {
-          switch (widgetState.getButtonState()) {
-            case AppViewInstallDisplayable.ACTION_INSTALLING:
-              if (widgetState.getProgress() != null) {
-                downloadProgress.setIndeterminate(widgetState.getProgress().isIndeterminate());
-                downloadStatusUpdate(widgetState.getProgress(), currentApp);
-                if (!isDownloadBarVisible()) {
-                  setDownloadBarVisible();
-                  setupDownloadControls(currentApp, widgetState.getProgress(), displayable);
-                }
-                break;
-              }
-            case AppViewInstallDisplayable.ACTION_INSTALL:
-              //App not installed
-              setDownloadBarInvisible();
-              setupInstallOrBuyButton(displayable, getApp);
-              if (widgetState.getProgress() != null) {
-                downloadStatusUpdate(widgetState.getProgress(), currentApp);
-              }
-              ((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(null);
-              break;
-            case AppViewInstallDisplayable.ACTION_DOWNGRADE:
-              //downgrade
-              setDownloadBarInvisible();
-              setupActionButton(R.string.downgrade, downgradeListener(currentApp));
-              break;
-            case AppViewInstallDisplayable.ACTION_OPEN:
-              //current installed version
-              setDownloadBarInvisible();
-              setupActionButton(R.string.open,
-                  v -> AptoideUtils.SystemU.openApp(currentApp.getPackageName()));
-              break;
-            case AppViewInstallDisplayable.ACTION_UPDATE:
-              //update
-              isUpdate = true;
-              setDownloadBarInvisible();
-              setupActionButton(R.string.update,
-                  installOrUpgradeListener(currentApp, getApp.getNodes().getVersions(),
-                      displayable));
-              break;
-          }
+          updateUi(displayable, getApp, currentApp, fragmentShower, widgetState, !isSetupView[0]);
+          isSetupView[0] = false;
         }, (throwable) -> {
           Logger.v(TAG, throwable.getMessage());
         }));
+
+    //setupView(displayable, getApp, currentApp, fragmentShower);
+    //setupViewEvents(displayable, getApp, currentApp, fragmentShower);
 
     if (isThisTheLatestVersionAvailable(currentApp, getApp.getNodes().getVersions())) {
       notLatestAvailableText.setVisibility(View.GONE);
@@ -214,6 +180,74 @@ import rx.android.schedulers.AndroidSchedulers;
     }
 
     permissionRequest = ((PermissionRequest) getContext());
+  }
+
+  private void setupViewEvents(AppViewInstallDisplayable displayable, GetApp getApp,
+      GetAppMeta.App currentApp, FragmentShower fragmentShower) {
+    compositeSubscription.add(displayable.getState()
+        .skip(1)
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(widgetState -> {
+          updateUi(displayable, getApp, currentApp, fragmentShower, widgetState, true);
+        }, (throwable) -> {
+          Logger.v(TAG, throwable.getMessage());
+        }));
+  }
+
+  private void setupView(AppViewInstallDisplayable displayable, GetApp getApp,
+      GetAppMeta.App currentApp, FragmentShower fragmentShower) {
+    compositeSubscription.add(displayable.getState()
+        .first()
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(widgetState -> {
+          updateUi(displayable, getApp, currentApp, fragmentShower, widgetState, false);
+        }, (throwable) -> {
+          Logger.v(TAG, throwable.getMessage());
+        }));
+  }
+
+  private void updateUi(AppViewInstallDisplayable displayable, GetApp getApp,
+      GetAppMeta.App currentApp, FragmentShower fragmentShower,
+      AppViewInstallDisplayable.WidgetState widgetState, boolean shouldShowError) {
+    Logger.d(TAG, "updateUi() called with: " + shouldShowError + "]");
+    if (widgetState.getProgress() != null) {
+      downloadStatusUpdate(widgetState.getProgress(), currentApp, shouldShowError);
+    }
+    switch (widgetState.getButtonState()) {
+      case AppViewInstallDisplayable.ACTION_INSTALLING:
+        if (widgetState.getProgress() != null) {
+          downloadProgress.setIndeterminate(widgetState.getProgress().isIndeterminate());
+          if (!isDownloadBarVisible()) {
+            setDownloadBarVisible();
+            setupDownloadControls(currentApp, widgetState.getProgress(), displayable);
+          }
+          break;
+        }
+      case AppViewInstallDisplayable.ACTION_INSTALL:
+        //App not installed
+        setDownloadBarInvisible();
+        setupInstallOrBuyButton(displayable, getApp);
+        ((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(null);
+        break;
+      case AppViewInstallDisplayable.ACTION_DOWNGRADE:
+        //downgrade
+        setDownloadBarInvisible();
+        setupActionButton(R.string.downgrade, downgradeListener(currentApp));
+        break;
+      case AppViewInstallDisplayable.ACTION_OPEN:
+        //current installed version
+        setDownloadBarInvisible();
+        setupActionButton(R.string.open,
+            v -> AptoideUtils.SystemU.openApp(currentApp.getPackageName()));
+        break;
+      case AppViewInstallDisplayable.ACTION_UPDATE:
+        //update
+        isUpdate = true;
+        setDownloadBarInvisible();
+        setupActionButton(R.string.update,
+            installOrUpgradeListener(currentApp, getApp.getNodes().getVersions(), displayable));
+        break;
+    }
   }
 
   @Override public void unbindView() {
@@ -459,7 +493,8 @@ import rx.android.schedulers.AndroidSchedulers;
     };
   }
 
-  private void downloadStatusUpdate(@NonNull Progress<Download> progress, GetAppMeta.App app) {
+  private void downloadStatusUpdate(@NonNull Progress<Download> progress, GetAppMeta.App app,
+      boolean shouldShowError) {
     switch (progress.getRequest().getOverallDownloadStatus()) {
       case Download.PAUSED: {
         actionResume.setVisibility(View.VISIBLE);
@@ -475,6 +510,9 @@ import rx.android.schedulers.AndroidSchedulers;
         break;
       }
       case Download.ERROR: {
+        if (shouldShowError) {
+          showErrorMessage(progress.getRequest().getDownloadError());
+        }
         break;
       }
 
@@ -487,6 +525,21 @@ import rx.android.schedulers.AndroidSchedulers;
         }
         break;
       }
+    }
+  }
+
+  private void showErrorMessage(@Download.DownloadError int downloadError) {
+    switch (downloadError) {
+      case Download.GENERIC_ERROR:
+        ShowMessage.asSnack(getContext(), R.string.error_occured);
+        break;
+      case Download.NOT_ENOUGH_SPACE_ERROR:
+        GenericDialogs.createGenericOkMessage(getContext(),
+            getContext().getString(R.string.out_of_space_dialog_title),
+            getContext().getString(R.string.out_of_space_dialog_message))
+            .subscribe(eResponse -> Logger.d(TAG, "Showing no space dialog"),
+                throwable -> CrashReport.getInstance().log(throwable));
+        break;
     }
   }
 

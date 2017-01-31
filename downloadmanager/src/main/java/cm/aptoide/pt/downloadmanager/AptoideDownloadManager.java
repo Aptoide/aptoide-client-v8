@@ -164,7 +164,7 @@ public class AptoideDownloadManager {
         }
       }
       return downloads;
-    });
+    }).distinctUntilChanged();
   }
 
   public Observable<Download> getCurrentDownload() {

@@ -7,13 +7,14 @@ import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 /**
  * Created by trinkes on 5/16/16.
  */
 
-public class FileToDownload extends RealmObject {
+public @EqualsAndHashCode class FileToDownload extends RealmObject {
 
   public static final int APK = 0;
   public static final int OBB = 1;
