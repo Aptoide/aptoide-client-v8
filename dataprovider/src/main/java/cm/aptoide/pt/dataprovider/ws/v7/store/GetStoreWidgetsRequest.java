@@ -13,7 +13,6 @@ import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.Setter;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -37,21 +36,24 @@ import rx.Observable;
     this.url = url;
   }
 
-  public static GetStoreWidgetsRequest ofAction(String url, StoreCredentials storeCredentials,
-      String accessToken, String aptoideClientUUID) {
+  public static GetStoreWidgetsRequest ofActionFirstInstall(String url,
+      StoreCredentials storeCredentials, String accessToken, String storeName,
+      String aptoideClientUUID) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
-    final Body body = new Body(storeCredentials, WidgetsArgs.createDefault());
+    final Body body =
+        new Body(storeCredentials, WidgetsArgs.createDefault(), StoreContext.first_install,
+            storeName);
 
     return new GetStoreWidgetsRequest(new V7Url(url).remove("getStoreWidgets").get(), BASE_HOST,
         (Body) decorator.decorate(body, accessToken));
   }
 
-  public static GetStoreWidgetsRequest ofActionFirstInstall(String url, StoreCredentials storeCredentials,
-      String accessToken, String storeName, String aptoideClientUUID) {
+  public static GetStoreWidgetsRequest ofAction(String url, StoreCredentials storeCredentials,
+      String accessToken, String aptoideClientUUID) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
-    final Body body = new Body(storeCredentials, WidgetsArgs.createDefault(), StoreContext.first_install, "response", storeName);
+    final Body body = new Body(storeCredentials, WidgetsArgs.createDefault());
 
     return new GetStoreWidgetsRequest(new V7Url(url).remove("getStoreWidgets").get(), BASE_HOST,
         (Body) decorator.decorate(body, accessToken));
@@ -65,7 +67,7 @@ import rx.Observable;
   @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBodyWithStore {
 
     @Getter private WidgetsArgs widgetsArgs;
-    @Getter @Setter private StoreContext context;
+    @Getter private StoreContext context;
     @Getter private String storeName;
 
     public Body(StoreCredentials storeCredentials, WidgetsArgs widgetsArgs) {
@@ -73,7 +75,8 @@ import rx.Observable;
       this.widgetsArgs = widgetsArgs;
     }
 
-    public Body(StoreCredentials storeCredentials, WidgetsArgs widgetsArgs, StoreContext storeContext, String nview, String storeName) {
+    public Body(StoreCredentials storeCredentials, WidgetsArgs widgetsArgs,
+        StoreContext storeContext, String storeName) {
       super(storeCredentials);
       this.widgetsArgs = widgetsArgs;
       this.context = storeContext;
