@@ -126,29 +126,6 @@ import rx.schedulers.Schedulers;
     });
   }
 
-  ///**
-  // * This method will invoke the request and return its response if everything goes well. In case
-  // * of error a maximum of 3 attempts are made with a linear backoff of [retry number x 500
-  // * millis].
-  // *
-  // * @return response or error, after n timed retries.
-  // */
-  //private Observable<ListAppsUpdates> fetchDataUsingBodyWithRetry(Interfaces interfaces, Body body,
-  //    boolean bypassCache, int retryCount) {
-  //  return interfaces.listAppsUpdates(body, bypassCache)
-  //      .retryWhen(
-  //          error -> error.zipWith(Observable.range(1, retryCount + 1), (err, retryIndex) -> {
-  //            Logger.e(TAG, "retry number " + retryIndex);
-  //            return new Pair<Integer, Throwable>(retryIndex, err);
-  //          }).flatMap(errorIndexPair -> {
-  //            final Integer retryIndex = errorIndexPair.first;
-  //            if (retryIndex >= retryCount) {
-  //              return Observable.<Integer>error(errorIndexPair.second);
-  //            }
-  //            return Observable.timer(retryIndex * 500, TimeUnit.MILLISECONDS);
-  //          }));
-  //}
-
   @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody {
 
     @Accessors(chain = true) @Getter @Setter private List<ApksData> apksData;

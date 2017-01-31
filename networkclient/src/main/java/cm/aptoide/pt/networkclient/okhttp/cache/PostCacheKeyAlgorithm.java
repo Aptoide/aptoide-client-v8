@@ -1,6 +1,6 @@
 package cm.aptoide.pt.networkclient.okhttp.cache;
 
-import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.io.IOException;
 import okhttp3.Headers;
@@ -13,8 +13,6 @@ import okio.Buffer;
  */
 
 public class PostCacheKeyAlgorithm implements KeyAlgorithm<Request, String> {
-
-  private static final String TAG = PostCacheKeyAlgorithm.class.getName();
 
   @Override public String getKeyFrom(Request request) {
     final Request clonedRequest = request.newBuilder().build();
@@ -48,7 +46,7 @@ public class PostCacheKeyAlgorithm implements KeyAlgorithm<Request, String> {
       return AptoideUtils.AlgorithmU.computeSha1(content.toString());
 
     } catch (IOException e) {
-      Logger.e(TAG, ":: getKeyFrom(Request) with Url = " + url.toString(), e);
+      CrashReport.getInstance().log(e);
     }
 
     return null;

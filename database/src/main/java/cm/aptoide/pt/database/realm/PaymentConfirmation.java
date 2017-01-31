@@ -6,7 +6,6 @@
 package cm.aptoide.pt.database.realm;
 
 import io.realm.RealmObject;
-import io.realm.annotations.Index;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.Required;
 
@@ -16,19 +15,29 @@ import io.realm.annotations.Required;
 public class PaymentConfirmation extends RealmObject {
 
   public static final String PRODUCT_ID = "productId";
+  public static final String PAYER_ID = "payerId";
 
   @PrimaryKey private int productId;
-  private String paymentConfirmationId;
+  @Required private String payerId;
   @Required private String status;
+
+  private String paymentConfirmationId;
 
   public PaymentConfirmation() {
   }
 
-  public PaymentConfirmation(String paymentConfirmationId, int productId, String status) {
+  public PaymentConfirmation(String paymentConfirmationId, int productId, String status,
+      String payerId) {
     this.paymentConfirmationId = paymentConfirmationId;
     this.status = status;
     this.productId = productId;
+    this.payerId = payerId;
   }
+
+  public String getPayerId() {
+    return payerId;
+  }
+
   public String getPaymentConfirmationId() {
     return paymentConfirmationId;
   }

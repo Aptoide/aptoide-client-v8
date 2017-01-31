@@ -10,7 +10,7 @@ package cm.aptoide.pt.v8engine.payment;
  */
 public class PaymentConfirmation {
 
-  public static enum Status {
+  public enum Status {
     SYNCING_ERROR,
     CREATED,
     PROCESSING,
@@ -21,14 +21,20 @@ public class PaymentConfirmation {
   }
 
   private final int productId;
+  private final String payerId;
   private final String paymentConfirmationId;
 
   private Status status;
 
-  public PaymentConfirmation(int productId, String paymentConfirmationId, Status status) {
+  public PaymentConfirmation(int productId, String payerId, String paymentConfirmationId, Status status) {
     this.productId = productId;
+    this.payerId = payerId;
     this.paymentConfirmationId = paymentConfirmationId;
     this.status = status;
+  }
+
+  public String getPayerId() {
+    return payerId;
   }
 
   public int getProductId() {

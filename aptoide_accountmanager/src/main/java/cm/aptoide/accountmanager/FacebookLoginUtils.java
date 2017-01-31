@@ -9,7 +9,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import cm.aptoide.accountmanager.ws.LoginMode;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -85,7 +85,7 @@ class FacebookLoginUtils {
         bundle.putString(LOCATION, object.getJSONObject(LOCATION).getString("name"));
       }
     } catch (JSONException | MalformedURLException e) {
-      CrashReports.logException(e);
+      CrashReport.getInstance().log(e);
       e.printStackTrace();
     }
     return bundle;

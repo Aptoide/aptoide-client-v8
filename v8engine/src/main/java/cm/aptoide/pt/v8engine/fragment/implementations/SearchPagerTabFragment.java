@@ -8,7 +8,7 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
@@ -39,7 +39,7 @@ import rx.functions.Action0;
  * Created by neuro on 01-06-2016.
  */
 public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
-  private static final String TAG = SearchPagerTabFragment.class.getSimpleName();
+
   private final AptoideClientUUID aptoideClientUUID;
 
   private AdsRepository adsRepository;
@@ -73,8 +73,7 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
             if (isConvert(searchAbTest, addSubscribedStores)) {
               searchAbTest.convert().subscribe(success -> {
               }, throwable -> {
-                CrashReports.logException(throwable);
-                Logger.e(TAG, throwable);
+                CrashReport.getInstance().log(throwable);
               });
             }
           };

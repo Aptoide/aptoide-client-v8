@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.view.recycler.widget;
 import android.support.annotation.NonNull;
 import android.support.v4.util.LruCache;
 import android.view.View;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.MultiDexHelper;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -76,7 +77,7 @@ public enum WidgetLoader {
             }
           }
         } catch (Exception e) {
-          Logger.e(TAG, "", e);
+          CrashReport.getInstance().log(e);
         } finally {
           if (dexFile != null) {
             dexFile.close();
@@ -84,7 +85,7 @@ public enum WidgetLoader {
         }
       }
     } catch (Exception e) {
-      Logger.e(TAG, "", e);
+      CrashReport.getInstance().log(e);
     }
 
     //		nanos -= System.nanoTime();

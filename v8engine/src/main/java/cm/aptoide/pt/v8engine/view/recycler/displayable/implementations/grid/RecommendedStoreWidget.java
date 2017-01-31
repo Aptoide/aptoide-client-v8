@@ -4,8 +4,8 @@ import android.support.v7.widget.AppCompatButton;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -100,7 +100,7 @@ public class RecommendedStoreWidget extends Widget<RecommendedStoreDisplayable> 
       ShowMessage.asSnack(itemView,
           AptoideUtils.StringU.getFormattedString(message, displayable.getPojo().getName()));
     }, throwable -> {
-      Logger.e(this, throwable);
+      CrashReport.getInstance().log(throwable);
       ShowMessage.asSnack(itemView, R.string.error_occured);
     }));
   }

@@ -13,9 +13,8 @@ import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
@@ -77,9 +76,7 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     Installer installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
-    installManager = new InstallManager(AptoideDownloadManager.getInstance(), installer,
-        AccessorFactory.getAccessorFor(Download.class),
-        AccessorFactory.getAccessorFor(Installed.class));
+    installManager = new InstallManager(AptoideDownloadManager.getInstance(), installer);
     downloadConverter = new DownloadEventConverter();
     installConverter = new InstallEventConverter();
     analytics = Analytics.getInstance();
@@ -147,7 +144,7 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
         .subscribe(scheduledDownloads -> {
           updateUi(scheduledDownloads);
         }, t -> {
-          Logger.e(TAG, t);
+          CrashReport.getInstance().log(t);
           emptyData.setText(R.string.no_sch_downloads);
           emptyData.setVisibility(View.VISIBLE);
           clearDisplayables();
@@ -261,9 +258,7 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
     InstallerFactory installerFactory = new InstallerFactory();
 
     InstallManager installManager = new InstallManager(AptoideDownloadManager.getInstance(),
-        installerFactory.create(context, InstallerFactory.ROLLBACK),
-        AccessorFactory.getAccessorFor(Download.class),
-        AccessorFactory.getAccessorFor(Installed.class));
+        installerFactory.create(context, InstallerFactory.ROLLBACK));
 
     permissionManager.requestExternalStoragePermission(permissionRequest)
         .flatMap(sucess -> scheduledDownloadRepository.setInstalling(installing))

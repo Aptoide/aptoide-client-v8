@@ -23,10 +23,12 @@ import rx.schedulers.Schedulers;
  * Created by trinkes on 9/23/16.
  */
 
-public class UpdateRepository implements Repository {
+public class UpdateRepository implements Repository<Update, String> {
 
   private static final String TAG = UpdateRepository.class.getName();
+
   private final AptoideClientUUID aptoideClientUUID;
+
   private UpdateAccessor updateAccessor;
   private StoreAccessor storeAccessor;
 
@@ -38,33 +40,31 @@ public class UpdateRepository implements Repository {
         DataProvider.getContext());
   }
 
-  public @NonNull Observable<List<Update>> getUpdates(boolean bypassCache) {
+  public @NonNull Completable sync(boolean bypassCache) {
     return storeAccessor.getAll()
-        .observeOn(Schedulers.io())
         .first()
-        .flatMapIterable(stores -> stores)
-        .map(store -> store.getStoreId())
-        .toList()
-        // distinctUntilChanged is used to avoid getting duplicate entries when fetching network updates
-        .flatMap(storeIds -> getNetworkUpdates(storeIds, bypassCache).doOnError(
-            err -> Logger.e(TAG, err))
-            .onErrorResumeNext(Observable.just(Collections.emptyList()))
-            .distinctUntilChanged()
-            .flatMap(updates -> {
-              // remove local non-excluded updates
-              // save the new updates
-              return removeAllNonExcluded().andThen(saveNewUpdates(updates)).toObservable();
-            })
-            // return all the local (non-excluded) updates
-            // this is a non-closing Observable, so new db modifications will trigger this observable
-            .flatMap(aVoid -> getAllNonExcluded()));
+        .observeOn(Schedulers.io())
+        .flatMap(stores -> Observable.from(stores).map(store -> store.getStoreId()).toList())
+        .flatMap(storeIds -> getNetworkUpdates(storeIds, bypassCache))
+        .toSingle()
+        .flatMapCompletable(updates -> {
+          // remove local non-excluded updates
+          // save the new updates
+          // return all the local (non-excluded) updates
+          // this is a non-closing Observable, so new db modifications will trigger this observable
+          return removeAllNonExcluded().andThen(saveNewUpdates(updates));
+        });
+  }
+
+  public @NonNull Observable<List<Update>> getAll(boolean isExcluded) {
+    return updateAccessor.getAllSorted(isExcluded);
   }
 
   private Observable<List<App>> getNetworkUpdates(List<Long> storeIds, boolean bypassCache) {
     Logger.d(TAG, String.format("getNetworkUpdates() -> using %d stores", storeIds.size()));
     return ListAppsUpdatesRequest.of(storeIds, AptoideAccountManager.getAccessToken(),
         aptoideClientUUID.getAptoideClientUUID()).observe(bypassCache).map(result -> {
-      if (result.isOk()) {
+      if (result != null && result.isOk()) {
         return result.getList();
       }
       return Collections.<App>emptyList();
@@ -83,12 +83,15 @@ public class UpdateRepository implements Repository {
         }));
   }
 
-  public Observable<List<Update>> getAllNonExcluded() {
-    return updateAccessor.getAll(false);
+  @Override public void save(Update entity) {
+    updateAccessor.insert(entity);
   }
 
   public Completable removeAllNonExcluded() {
-    return getAllNonExcluded().first().toSingle().flatMapCompletable(updates -> removeAll(updates));
+    return updateAccessor.getAll(false)
+        .first()
+        .toSingle()
+        .flatMapCompletable(updates -> removeAll(updates));
   }
 
   public Completable removeAll(List<Update> updates) {
@@ -158,10 +161,6 @@ public class UpdateRepository implements Repository {
 
   public Observable<Boolean> contains(String packageName, boolean isExcluded) {
     return updateAccessor.contains(packageName, isExcluded);
-  }
-
-  public Observable<List<Update>> getAllSorted(boolean isExcluded) {
-    return updateAccessor.getAllSorted(isExcluded);
   }
 
   public Observable<Update> get(String packageName) {

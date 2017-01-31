@@ -8,7 +8,7 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.ws.v2.ErrorResponse;
 import cm.aptoide.pt.dataprovider.ws.v3.AddApkFlagRequest;
 import cm.aptoide.pt.logger.Logger;
@@ -95,8 +95,7 @@ import rx.android.schedulers.AndroidSchedulers;
         }
       }
     } catch (NullPointerException ex) {
-      Logger.e(TAG, ex);
-      CrashReports.logException(ex);
+      CrashReport.getInstance().log(ex);
     }
 
     View.OnClickListener buttonListener =
@@ -183,7 +182,7 @@ import rx.android.schedulers.AndroidSchedulers;
             setAllButtonsUnPressed(v);
             ShowMessage.asSnack(v, R.string.unknown_error);
           }, error -> {
-            Logger.e(TAG, error);
+            CrashReport.getInstance().log(error);
             setAllButtonsUnPressed(v);
             ShowMessage.asSnack(v, R.string.unknown_error);
           }));

@@ -15,7 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionRequest;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Download;
@@ -110,8 +110,7 @@ import rx.android.schedulers.AndroidSchedulers;
                       String.format("Update with package name %s was excluded", packageName)),
                       throwable -> {
                         ShowMessage.asSnack(getContext(), R.string.unknown_error);
-                        Logger.e(TAG, throwable);
-                        CrashReports.logException(throwable);
+                        CrashReport.getInstance().log(throwable);
                       }));
             }
             dialog.dismiss();

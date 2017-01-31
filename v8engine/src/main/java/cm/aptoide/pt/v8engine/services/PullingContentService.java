@@ -14,7 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.widget.RemoteViews;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.ws.v3.PushNotificationsRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
@@ -96,26 +96,27 @@ public class PullingContentService extends Service {
 
   /**
    * Setup on updates action received
+   *
    * @param startId service startid
    */
-  private void setUpdatesAction(int startId){
+  private void setUpdatesAction(int startId) {
     UpdateRepository repository = RepositoryFactory.getUpdateRepository();
-    subscriptions.add(repository.getUpdates(true).first().subscribe(updates -> {
+    subscriptions.add(repository.sync(true).andThen(repository.getAll(false)).first().subscribe(updates -> {
       Logger.d(TAG, "updates refreshed");
       setUpdatesNotification(updates, startId);
     }, throwable -> {
       throwable.printStackTrace();
-      CrashReports.logException(throwable);
+      CrashReport.getInstance().log(throwable);
     }));
   }
 
   /**
    * setup on push notifications action received
+   *
    * @param startId service startid
    */
-  private void setPushNotificationsAction(int startId){
-    PushNotificationsRequest.of()
-        .execute(response -> setPushNotification(response, startId));
+  private void setPushNotificationsAction(int startId) {
+    PushNotificationsRequest.of().execute(response -> setPushNotification(response, startId));
   }
 
   @Override public void onDestroy() {
@@ -154,7 +155,8 @@ public class PullingContentService extends Service {
               resultPendingIntent)
               .setOngoing(false)
               .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
-              .setLargeIcon(BitmapFactory.decodeResource(Application.getContext().getResources(), Application.getConfiguration().getIcon()))
+              .setLargeIcon(BitmapFactory.decodeResource(Application.getContext().getResources(),
+                  Application.getConfiguration().getIcon()))
               .setContentTitle(contentTitle)
               .setContentText(contentText)
               .setTicker(tickerText)
@@ -186,7 +188,8 @@ public class PullingContentService extends Service {
               resultPendingIntent)
               .setOngoing(false)
               .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
-              .setLargeIcon(BitmapFactory.decodeResource(Application.getContext().getResources(), Application.getConfiguration().getIcon()))
+              .setLargeIcon(BitmapFactory.decodeResource(Application.getContext().getResources(),
+                  Application.getConfiguration().getIcon()))
               .setContentTitle(pushNotification.getTitle())
               .setContentText(pushNotification.getMessage())
               .build();
@@ -195,8 +198,10 @@ public class PullingContentService extends Service {
       final NotificationManager managerNotification = (NotificationManager) Application.getContext()
           .getSystemService(Context.NOTIFICATION_SERVICE);
 
-      if (Build.VERSION.SDK_INT >= 16 && Build.VERSION.SDK_INT < 24 && pushNotification.getImages() != null && TextUtils.isEmpty(
-          pushNotification.getImages().getIconUrl())) {
+      if (Build.VERSION.SDK_INT >= 16
+          && Build.VERSION.SDK_INT < 24
+          && pushNotification.getImages() != null
+          && TextUtils.isEmpty(pushNotification.getImages().getIconUrl())) {
 
         String imageUrl = pushNotification.getImages().getBannerUrl();
         RemoteViews expandedView = new RemoteViews(Application.getContext().getPackageName(),

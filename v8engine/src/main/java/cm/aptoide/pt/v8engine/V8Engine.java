@@ -17,8 +17,9 @@ import android.preference.PreferenceManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
 import cm.aptoide.pt.actions.UserData;
-import cm.aptoide.pt.crashreports.AptoideCrashLogger;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.ConsoleLogger;
+import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
@@ -99,18 +100,17 @@ public abstract class V8Engine extends DataProvider {
 
       checkUpdates();
     }, e -> {
-      Logger.e(TAG, e);
-      //CrashReports.logException(e);
+      CrashReport.getInstance().log(e);
     });
   }
 
   private static void checkUpdates() {
     UpdateRepository repository = RepositoryFactory.getUpdateRepository();
-    repository.getUpdates(true)
+    repository.sync(true)
+        .andThen(repository.getAll(false))
         .first()
         .subscribe(updates -> Logger.d(TAG, "updates are up to date now"), throwable -> {
-          Logger.e(TAG, throwable);
-          CrashReports.logException(throwable);
+          CrashReport.getInstance().log(throwable);
         });
   }
 
@@ -120,8 +120,8 @@ public abstract class V8Engine extends DataProvider {
   }
 
   private static void regenerateUserAgent() {
-    SecurePreferences.setUserAgent(AptoideUtils.NetworkUtils.getDefaultUserAgent(aptoideClientUUID,
-        new UserData() {
+    SecurePreferences.setUserAgent(
+        AptoideUtils.NetworkUtils.getDefaultUserAgent(aptoideClientUUID, new UserData() {
           @Override public String getUserEmail() {
             return AptoideAccountManager.getUserEmail();
           }
@@ -150,8 +150,7 @@ public abstract class V8Engine extends DataProvider {
     try {
       PRNGFixes.apply();
     } catch (Exception e) {
-      Logger.e(TAG, "onCreate: " + e);
-      CrashReports.logException(e);
+      CrashReport.getInstance().log(e);
     }
     long l = System.currentTimeMillis();
     fragmentProvider = createFragmentProvider();
@@ -210,7 +209,7 @@ public abstract class V8Engine extends DataProvider {
       AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(userData -> {
         Logger.v(TAG, "hello " + userData.getUsername());
       }, e -> {
-        Logger.e(TAG, e);
+        CrashReport.getInstance().log(e);
       });
     } else {
       loadInstalledApps().subscribe();
@@ -218,7 +217,7 @@ public abstract class V8Engine extends DataProvider {
 
     final int appSignature = SecurityUtils.checkAppSignature(this);
     if (appSignature != SecurityUtils.VALID_APP_SIGNATURE) {
-      Logger.e(TAG, "app signature is not valid!");
+      Logger.w(TAG, "app signature is not valid!");
     }
 
     if (SecurityUtils.checkEmulator()) {
@@ -242,8 +241,7 @@ public abstract class V8Engine extends DataProvider {
     fileManager.purgeCache()
         .subscribe(cleanedSize -> Logger.d(TAG,
             "cleaned size: " + AptoideUtils.StringU.formatBytes(cleanedSize, false)), throwable -> {
-          Logger.e(TAG, throwable);
-          CrashReports.logException(throwable);
+          CrashReport.getInstance().log(throwable);
         });
     // setupCurrentActivityListener();
 
@@ -256,11 +254,11 @@ public abstract class V8Engine extends DataProvider {
     SQLiteDatabase db = new SQLiteDatabaseHelper(this).getWritableDatabase();
     db.close();
 
-    ABTestManager.getInstance().initialize(aptoideClientUUID.getAptoideClientUUID())
+    ABTestManager.getInstance()
+        .initialize(aptoideClientUUID.getAptoideClientUUID())
         .subscribe(success -> {
         }, throwable -> {
-          Logger.d(TAG, "An error has occurred when initializing the ABTestManager");
-          CrashReports.logException(throwable);
+          CrashReport.getInstance().log(throwable);
         });
 
     AptoideAccountManager.setAnalytics(new AccountAnalytcsImp());
@@ -272,7 +270,9 @@ public abstract class V8Engine extends DataProvider {
   }
 
   protected void setupCrashReports(boolean isDisabled) {
-    CrashReports.setup(AptoideCrashLogger.getInstance().setup(this, isDisabled));
+    CrashReport.getInstance()
+        .addLogger(new CrashlyticsCrashLogger(this, isDisabled))
+        .addLogger(new ConsoleLogger());
   }
 
   protected FragmentProvider createFragmentProvider() {

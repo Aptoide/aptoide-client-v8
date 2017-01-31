@@ -1,9 +1,8 @@
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
-import cm.aptoide.pt.crashreports.CrashReports;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
@@ -32,6 +31,7 @@ import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import rx.Completable;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -56,6 +56,8 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 
   private Subscription updateReloadSubscription;
 
+  private int oldUpdateListHash = 0;
+
   @NonNull public static UpdatesFragment newInstance() {
     return new UpdatesFragment();
   }
@@ -64,9 +66,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     super.setupViews();
 
     installManager = new InstallManager(AptoideDownloadManager.getInstance(),
-        new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK),
-        AccessorFactory.getAccessorFor(Download.class),
-        AccessorFactory.getAccessorFor(Installed.class));
+        new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK));
     analytics = Analytics.getInstance();
     downloadInstallEventConverter = new DownloadEventConverter();
     installConverter = new InstallEventConverter();
@@ -82,23 +82,29 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     super.onViewCreated();
 
     // show updates
-    fetchUpdates().buffer(750, TimeUnit.MILLISECONDS)
-        .flatMap(list -> Observable.from(list).takeLast(1))
+    updateRepository.getAll(false)
+        .buffer(750, TimeUnit.MILLISECONDS)
+        .flatMap(listOfUpdateList -> Observable.from(listOfUpdateList).takeLast(1))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .doOnNext(list -> clearDisplayables())
-        .flatMap(updateList -> setUpdates(updateList))
-        .flatMap(aVoid -> fetchInstalled())
-        .flatMap(installedApps -> setInstalled(installedApps))
-        .subscribe(aVoid -> {
-          // does nothing
+        .flatMap(updateList -> {
+          clearDisplayables();
+          setUpdates(updateList);
+          return fetchInstalled().doOnNext(apps -> setInstalled(apps));
+        })
+        .subscribe(__ -> {
           finishLoading();
-          Logger.v(TAG, "fetchUpdates() -> listing updates and installed");
+          Logger.v(TAG, "listing updates and installed");
         }, err -> {
-          Logger.e(TAG, "fetchUpdates() -> listing updates or installed threw an exception");
-          CrashReports.logException(err);
+          Logger.e(TAG, "listing updates or installed threw an exception");
+          CrashReport.getInstance().log(err);
           finishLoading();
         });
+  }
+
+  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    //super.load(create, refresh, savedInstanceState);
+    // overridden to avoid calling super, since it removes the displayables automatically
   }
 
   /**
@@ -115,70 +121,64 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
       updateReloadSubscription.unsubscribe();
     }
 
-    updateReloadSubscription = updateRepository.getUpdates(true)
-        .distinctUntilChanged()
-        .observeOn(AndroidSchedulers.mainThread())
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(updates -> {
-          Logger.v(TAG, String.format("reloadu() -> finished with %d updates",
-              updates != null ? updates.size() : -1));
-          if (updates.size() == 0) {
-            ShowMessage.asSnack(getView(), R.string.no_updates_available_retoric);
-          } else if (updates.size() == updatesDisplayablesList.size() - 1) {
-            // FIXME: 27/1/2017 sithengineer this calculation to check if new updates are available is not correct. need to use a set or hash of a sorted list
-            ShowMessage.asSnack(getView(), R.string.no_new_updates_available);
-          }
-        }, throwable -> {
-          if (throwable instanceof RepositoryItemNotFoundException) {
-            ShowMessage.asSnack(getView(), R.string.add_store);
-          } else {
-            Logger.e(TAG, throwable);
-            CrashReports.logException(throwable);
-          }
-          finishLoading();
-        });
+    updateReloadSubscription = updateRepository.sync(true).subscribe(() -> finishLoading(), e -> {
+      if (e instanceof RepositoryItemNotFoundException) {
+        ShowMessage.asSnack(getView(), R.string.add_store);
+      }
+      CrashReport.getInstance().log(e);
+      finishLoading();
+    });
   }
 
-  private Observable<Void> setUpdates(List<Update> updates) {
-    return Observable.just(updates).map(updateList -> {
+  private Completable showUpdateMessage(List<Update> updates) {
+    return Completable.fromCallable(() -> {
 
-      updatesDisplayablesList.clear();
+      int updateCount = updates != null ? updates.size() : 0;
+      int currentUpdateListHash = updates != null ? updates.hashCode() : 0;
 
-      if (updateList.size() > 0) {
-        updatesDisplayablesList.add(new UpdatesHeaderDisplayable(installManager,
-            AptoideUtils.StringU.getResString(R.string.updates), analytics,
-            downloadInstallEventConverter, installConverter));
-
-        for (Update update : updateList) {
-          updatesDisplayablesList.add(
-              UpdateDisplayable.newInstance(update, installManager, new DownloadFactory(),
-                  analytics, downloadInstallEventConverter, installConverter));
-        }
+      if ((updates != null && updates.isEmpty()) || currentUpdateListHash == oldUpdateListHash) {
+        ShowMessage.asSnack(getView(), R.string.no_updates_available_retoric);
+      } else if (currentUpdateListHash != oldUpdateListHash) {
+        ShowMessage.asSnack(getView(), String.format(getString(R.string.new_updates),
+            Integer.toString(updateCount))); // using this to avoid changing strings
+      } else {
+        ShowMessage.asSnack(getView(), R.string.no_new_updates_available);
       }
-      addDisplayables(updatesDisplayablesList, false);
-      Logger.v(TAG, "listed updates");
+
+      oldUpdateListHash = currentUpdateListHash;
       return null;
     });
   }
 
-  private Observable<Void> setInstalled(List<Installed> installeds) {
-    return Observable.just(installeds).map(installedApps -> {
-      installedDisplayablesList.clear();
-      installedDisplayablesList.add(new StoreGridHeaderDisplayable(
-          new GetStoreWidgets.WSWidget().setTitle(
-              AptoideUtils.StringU.getResString(R.string.installed_tab))));
+  private void setUpdates(List<Update> updateList) {
+    updatesDisplayablesList.clear();
 
-      for (Installed installedApp : installedApps) {
-        installedDisplayablesList.add(new InstalledAppDisplayable(installedApp));
+    if (updateList.size() > 0) {
+      updatesDisplayablesList.add(new UpdatesHeaderDisplayable(installManager,
+          AptoideUtils.StringU.getResString(R.string.updates), analytics,
+          downloadInstallEventConverter, installConverter));
+
+      for (Update update : updateList) {
+        updatesDisplayablesList.add(
+            UpdateDisplayable.newInstance(update, installManager, new DownloadFactory(), analytics,
+                downloadInstallEventConverter, installConverter));
       }
-      addDisplayables(installedDisplayablesList, false);
-      Logger.v(TAG, "listed installed apps");
-      return null;
-    });
+    }
+    addDisplayables(updatesDisplayablesList, false);
+    Logger.v(TAG, "listed updates");
   }
 
-  private Observable<List<Update>> fetchUpdates() {
-    return updateRepository.getAllSorted(false);
+  private void setInstalled(List<Installed> installedApps) {
+    installedDisplayablesList.clear();
+    installedDisplayablesList.add(new StoreGridHeaderDisplayable(
+        new GetStoreWidgets.WSWidget().setTitle(
+            AptoideUtils.StringU.getResString(R.string.installed_tab))));
+
+    for (Installed installedApp : installedApps) {
+      installedDisplayablesList.add(new InstalledAppDisplayable(installedApp));
+    }
+    addDisplayables(installedDisplayablesList, false);
+    Logger.v(TAG, "listed installed apps");
   }
 
   /**
@@ -190,8 +190,8 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     return installedRepository.getAllSorted()
         .first()
         .flatMapIterable(list -> list)
-        .flatMap(item -> filterUpdates(item))
         .filter(item -> !item.isSystemApp())
+        .flatMap(item -> filterUpdates(item))
         .toList();
   }
 
@@ -201,6 +201,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
    * @param item App to filter.
    * @return {@link Observable} to a {@link Installed} or empty.
    */
+  // TODO: 31/1/2017 sithengineer instead of Observable<Installed> use Single<Installed>
   private Observable<Installed> filterUpdates(Installed item) {
     return updateRepository.contains(item.getPackageName(), false).flatMap(isUpdate -> {
       if (isUpdate) {

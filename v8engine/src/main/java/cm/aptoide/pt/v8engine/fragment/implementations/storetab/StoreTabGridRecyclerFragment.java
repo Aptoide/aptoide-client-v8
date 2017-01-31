@@ -13,7 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.Layout;
@@ -118,7 +118,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
             .subscribe(displayables -> {
               displayableManager.clearDisplayables().addDisplayables(displayables, true);
             }, err -> {
-              CrashReports.logException(err);
+              CrashReport.getInstance().log(err);
               StoreTabGridRecyclerFragment.this.finishLoading(err);
             });
       }

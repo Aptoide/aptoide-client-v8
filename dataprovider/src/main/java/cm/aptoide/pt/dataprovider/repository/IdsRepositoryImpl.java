@@ -8,7 +8,7 @@ package cm.aptoide.pt.dataprovider.repository;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.provider.Settings;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
@@ -67,8 +67,8 @@ public class IdsRepositoryImpl implements IdsRepository, AptoideClientUUID {
     String androidId = sharedPreferences.getString(ANDROID_ID_CLIENT, null);
 
     if (androidId == null) {
-      androidId = Settings.Secure.getString(context.getContentResolver(),
-          Settings.Secure.ANDROID_ID);
+      androidId =
+          Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
       setAndroidId(androidId);
     }
 
@@ -105,8 +105,7 @@ public class IdsRepositoryImpl implements IdsRepository, AptoideClientUUID {
       try {
         gaid = AdvertisingIdClient.getAdvertisingIdInfo(context).getId();
       } catch (Exception e) {
-        CrashReports.logException(e);
-        e.printStackTrace();
+        CrashReport.getInstance().log(e);
       }
     }
 

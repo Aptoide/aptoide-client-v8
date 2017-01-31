@@ -7,7 +7,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Update;
@@ -38,6 +38,7 @@ public class ExcludedUpdatesFragment extends AptoideBaseFragment<BaseAdapter> {
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
+    Logger.d(TAG, "refresh excluded updates? " + (create ? "yes" : "no"));
     fetchExcludedUpdates();
   }
 
@@ -103,8 +104,7 @@ public class ExcludedUpdatesFragment extends AptoideBaseFragment<BaseAdapter> {
           .doOnNext(update -> update.setExcluded(false))
           .toList()
           .subscribe(updates -> updateAccessor.insertAll(updates), err -> {
-            Logger.e(TAG, err);
-            CrashReports.logException(err);
+            CrashReport.getInstance().log(err);
           });
 
       return true;
@@ -151,7 +151,7 @@ public class ExcludedUpdatesFragment extends AptoideBaseFragment<BaseAdapter> {
             clearDisplayables().addDisplayables(displayables, true);
           }
         }, t -> {
-          Logger.e(TAG, t);
+          CrashReport.getInstance().log(t);
           emptyData.setText(R.string.no_excluded_updates_msg);
           emptyData.setVisibility(View.VISIBLE);
           clearDisplayables();

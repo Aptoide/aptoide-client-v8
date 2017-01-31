@@ -13,12 +13,11 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.GridLayoutManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.util.ErrorUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Datalist;
 import cm.aptoide.pt.model.v7.timeline.AppUpdate;
 import cm.aptoide.pt.model.v7.timeline.Article;
@@ -121,9 +120,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     timelineRepository = new TimelineRepository(getArguments().getString(ACTION_KEY),
         new TimelineCardFilter(new TimelineCardFilter.TimelineCardDuplicateFilter(new HashSet<>()),
             AccessorFactory.getAccessorFor(Installed.class)));
-    installManager = new InstallManager(AptoideDownloadManager.getInstance(), installer,
-        AccessorFactory.getAccessorFor(Download.class),
-        AccessorFactory.getAccessorFor(Installed.class));
+    installManager = new InstallManager(AptoideDownloadManager.getInstance(), installer);
     timelineMetricsManager = new TimelineMetricsManager(Analytics.getInstance());
     socialRepository = new SocialRepository();
   }
@@ -200,7 +197,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
                 .add(0, new TimeLineStatsDisplayable(timelineStats, spannableFactory, storeTheme));
             return displayableDatalist;
           }).onErrorReturn(throwable -> {
-            Logger.e(this, throwable);
+            CrashReport.getInstance().log(throwable);
             return displayableDatalist;
           });
         } else {

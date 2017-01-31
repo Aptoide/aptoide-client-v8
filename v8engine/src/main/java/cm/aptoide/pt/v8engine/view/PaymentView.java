@@ -45,11 +45,13 @@ public interface PaymentView extends View {
 
   void dismiss();
 
+  void navigateToAuthorizationView(int paymentId, AptoideProduct product);
+
   void showPaymentsNotFoundMessage();
 
   Observable<PaymentViewModel> registerPaymentSelection();
 
-  public static class PaymentViewModel {
+  class PaymentViewModel {
 
     private final int id;
     private final String name;
@@ -92,7 +94,7 @@ public interface PaymentView extends View {
       return status;
     }
 
-    public static enum Status {
+    public enum Status {
       REGISTER,
       APPROVING,
       USE

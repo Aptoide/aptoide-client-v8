@@ -9,10 +9,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.annotation.NonNull;
-import cm.aptoide.pt.database.accessors.DownloadAccessor;
-import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
@@ -21,6 +20,10 @@ import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.installer.DefaultInstaller;
 import cm.aptoide.pt.v8engine.install.installer.RollbackInstaller;
+import cm.aptoide.pt.v8engine.repository.DownloadRepository;
+import cm.aptoide.pt.v8engine.repository.InstalledRepository;
+import cm.aptoide.pt.v8engine.repository.Repository;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import java.util.List;
 import rx.Observable;
 import rx.schedulers.Schedulers;
@@ -33,16 +36,23 @@ public class InstallManager {
 
   private final AptoideDownloadManager aptoideDownloadManager;
   private final Installer installer;
-  private DownloadAccessor downloadAccessor;
-  private InstalledAccessor installedAccessor;
+  private Repository<Download, String> downloadRepository;
+  private Repository<Installed, String> installedRepository;
 
-  // FIXME: 12/1/2017 use repositories instead of accessors
+  /**
+   * Uses the default {@link Repository} for {@link Download} and {@link Installed}
+   */
+  public InstallManager(AptoideDownloadManager aptoideDownloadManager, Installer installer) {
+    this(aptoideDownloadManager, installer, RepositoryFactory.getDownloadRepository(),
+        RepositoryFactory.getInstalledRepository());
+  }
+
   public InstallManager(AptoideDownloadManager aptoideDownloadManager, Installer installer,
-      DownloadAccessor downloadAccessor, InstalledAccessor installedDatabase) {
+      DownloadRepository downloadRepository, InstalledRepository installedRepository) {
     this.aptoideDownloadManager = aptoideDownloadManager;
     this.installer = installer;
-    this.downloadAccessor = downloadAccessor;
-    this.installedAccessor = installedDatabase;
+    this.downloadRepository = downloadRepository;
+    this.installedRepository = installedRepository;
   }
 
   public void stopInstallation(Context context, String md5) {
@@ -121,7 +131,7 @@ public class InstallManager {
         .doOnNext(downloadProgress -> {
           if (downloadProgress.getRequest().getOverallDownloadStatus() == Download.ERROR) {
             downloadProgress.getRequest().setOverallDownloadStatus(Download.INVALID_STATUS);
-            downloadAccessor.save(downloadProgress.getRequest());
+            downloadRepository.save(downloadProgress.getRequest());
           }
         })
         .flatMap(progress -> installInBackground(context, progress));
@@ -131,7 +141,7 @@ public class InstallManager {
   private Progress<Download> updateDownloadAction(Download download, Progress<Download> progress) {
     if (progress.getRequest().getAction() != download.getAction()) {
       progress.getRequest().setAction(download.getAction());
-      downloadAccessor.save(progress.getRequest());
+      downloadRepository.save(progress.getRequest());
     }
     return progress;
   }
@@ -140,7 +150,7 @@ public class InstallManager {
       Download download) {
     return errors.flatMap(throwable -> {
       if (throwable instanceof DownloadNotFoundException) {
-        downloadAccessor.save(download);
+        downloadRepository.save(download);
         return Observable.just(throwable);
       } else {
         return Observable.error(throwable);
@@ -193,7 +203,7 @@ public class InstallManager {
   }
 
   private Observable<Integer> convertToProgressStatus(Download download) {
-    return installedAccessor.get(download.getPackageName())
+    return installedRepository.get(download.getPackageName())
         .first()
         .map(installed -> installed != null
             && installed.getVersionCode() == download.getVersionCode())
