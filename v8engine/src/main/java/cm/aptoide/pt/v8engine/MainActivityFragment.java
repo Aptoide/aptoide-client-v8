@@ -13,9 +13,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.Layout;
@@ -43,11 +45,14 @@ import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by neuro on 06-05-2016.
  */
 public class MainActivityFragment extends AptoideSimpleFragmentActivity implements FragmentShower {
+  private static final String TAG = MainActivityFragment.class.getSimpleName();
 
   @Override protected android.support.v4.app.Fragment createFragment() {
     return V8Engine.getFragmentProvider()
@@ -149,20 +154,28 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 
   private void newrepoDeepLink(ArrayList<String> repos) {
     if (repos != null) {
-
-      for (final String repoUrl : repos) {
-
-        String storeName = StoreUtils.split(repoUrl);
-        if (StoreUtils.isSubscribedStore(storeName)) {
-          ShowMessage.asToast(this, getString(R.string.store_already_added));
-        } else {
-          StoreUtilsProxy.subscribeStore(storeName);
-          setMainPagerPosition(Event.Name.myStores);
-          ShowMessage.asToast(this,
-              AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
-        }
-      }
-
+      Observable.from(repos)
+          .map(storeUrl -> StoreUtils.split(storeUrl))
+          .flatMap(storeName -> StoreUtils.isSubscribedStore(storeName)
+              .first()
+              .observeOn(AndroidSchedulers.mainThread())
+              .doOnNext(isFollowed -> {
+                if (isFollowed) {
+                  ShowMessage.asSnack(this, getString(R.string.store_already_added));
+                } else {
+                  StoreUtilsProxy.subscribeStore(storeName);
+                  ShowMessage.asSnack(this,
+                      AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
+                }
+              }))
+          .toList()
+          .subscribe(storeName -> {
+            setMainPagerPosition(Event.Name.myStores);
+            Logger.d(TAG, "newrepoDeepLink: all stores added");
+          }, throwable -> {
+            Logger.e(TAG, "newrepoDeepLink: " + throwable);
+            CrashReport.getInstance().log(throwable);
+          });
       getIntent().removeExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_REPO);
     }
   }
@@ -212,8 +225,8 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
     return !TextUtils.isEmpty(queryType)
         && !TextUtils.isEmpty(queryLayout)
         && !TextUtils.isEmpty(queryName)
-        && !TextUtils.isEmpty(queryAction) && StoreTabFragmentChooser.validateAcceptedName(
-        Event.Name.valueOf(queryName));
+        && !TextUtils.isEmpty(queryAction)
+        && StoreTabFragmentChooser.validateAcceptedName(Event.Name.valueOf(queryName));
   }
 
   private void setMainPagerPosition(Event.Name name) {

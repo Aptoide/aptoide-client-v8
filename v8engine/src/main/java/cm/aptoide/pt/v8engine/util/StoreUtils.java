@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import rx.Observable;
 
 /**
  * Created by neuro on 14-10-2016.
@@ -71,9 +72,9 @@ public class StoreUtils {
         errorRequestListener);
   }
 
-  public static boolean isSubscribedStore(String storeName) {
+  public static Observable<Boolean> isSubscribedStore(String storeName) {
     StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
-    return storeAccessor.get(storeName) != null;
+    return storeAccessor.get(storeName).map(store -> store != null);
   }
 
   public static String split(String repoUrl) {
