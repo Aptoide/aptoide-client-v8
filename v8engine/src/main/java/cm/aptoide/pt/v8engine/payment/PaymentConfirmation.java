@@ -10,7 +10,7 @@ package cm.aptoide.pt.v8engine.payment;
  */
 public class PaymentConfirmation {
 
-  public static enum Status {
+  public enum Status {
     SYNCING_ERROR,
     CREATED,
     PROCESSING,

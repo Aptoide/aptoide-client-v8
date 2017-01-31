@@ -6,7 +6,6 @@
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
 
 import android.content.pm.PackageInfo;
-import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
@@ -32,6 +31,8 @@ import rx.schedulers.Schedulers;
  */
 @Data @EqualsAndHashCode(callSuper = true) public class ListAppsUpdatesRequest
     extends V7<ListAppsUpdates, ListAppsUpdatesRequest.Body> {
+
+  private static final String TAG = ListAppsUpdatesRequest.class.getName();
 
   private static final int SPLIT_SIZE = 100;
 
@@ -98,6 +99,7 @@ import rx.schedulers.Schedulers;
             // switch to I/O scheduler
             .observeOn(Schedulers.io())
             // map bodies to request with bodies
+            //.map(body -> fetchDataUsingBodyWithRetry(interfaces, body, bypassCache, 3))
             .map(body -> interfaces.listAppsUpdates(body, bypassCache))
             // wait for all requests to be ready and return a list of requests
             .toList()

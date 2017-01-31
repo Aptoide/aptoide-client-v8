@@ -40,31 +40,31 @@ public class UpdateRepository implements Repository<Update, String> {
         DataProvider.getContext());
   }
 
-  public @NonNull Observable<List<Update>> getUpdates(boolean bypassCache) {
+  public @NonNull Completable sync(boolean bypassCache) {
     return storeAccessor.getAll()
-        .observeOn(Schedulers.io())
         .first()
-        .flatMapIterable(stores -> stores)
-        .map(store -> store.getStoreId())
-        .toList()
-        // distinctUntilChanged is used to avoid getting duplicate entries when fetching network updates
+        .observeOn(Schedulers.io())
+        .flatMap(stores -> Observable.from(stores).map(store -> store.getStoreId()).toList())
         .flatMap(storeIds -> getNetworkUpdates(storeIds, bypassCache))
-        .distinctUntilChanged()
-        .flatMap(updates -> {
+        .toSingle()
+        .flatMapCompletable(updates -> {
           // remove local non-excluded updates
           // save the new updates
-          return removeAllNonExcluded().andThen(saveNewUpdates(updates)).toObservable();
-        })
-        // return all the local (non-excluded) updates
-        // this is a non-closing Observable, so new db modifications will trigger this observable
-        .flatMap(aVoid -> getAllNonExcluded());
+          // return all the local (non-excluded) updates
+          // this is a non-closing Observable, so new db modifications will trigger this observable
+          return removeAllNonExcluded().andThen(saveNewUpdates(updates));
+        });
+  }
+
+  public @NonNull Observable<List<Update>> getAll(boolean isExcluded) {
+    return updateAccessor.getAllSorted(isExcluded);
   }
 
   private Observable<List<App>> getNetworkUpdates(List<Long> storeIds, boolean bypassCache) {
     Logger.d(TAG, String.format("getNetworkUpdates() -> using %d stores", storeIds.size()));
     return ListAppsUpdatesRequest.of(storeIds, AptoideAccountManager.getAccessToken(),
         aptoideClientUUID.getAptoideClientUUID()).observe(bypassCache).map(result -> {
-      if (result.isOk()) {
+      if (result != null && result.isOk()) {
         return result.getList();
       }
       return Collections.<App>emptyList();
@@ -87,12 +87,11 @@ public class UpdateRepository implements Repository<Update, String> {
     updateAccessor.insert(entity);
   }
 
-  public Observable<List<Update>> getAllNonExcluded() {
-    return updateAccessor.getAll(false);
-  }
-
   public Completable removeAllNonExcluded() {
-    return getAllNonExcluded().first().toSingle().flatMapCompletable(updates -> removeAll(updates));
+    return updateAccessor.getAll(false)
+        .first()
+        .toSingle()
+        .flatMapCompletable(updates -> removeAll(updates));
   }
 
   public Completable removeAll(List<Update> updates) {
@@ -162,10 +161,6 @@ public class UpdateRepository implements Repository<Update, String> {
 
   public Observable<Boolean> contains(String packageName, boolean isExcluded) {
     return updateAccessor.contains(packageName, isExcluded);
-  }
-
-  public Observable<List<Update>> getAllSorted(boolean isExcluded) {
-    return updateAccessor.getAllSorted(isExcluded);
   }
 
   public Observable<Update> get(String packageName) {

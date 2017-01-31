@@ -170,7 +170,7 @@ public class PaymentPresenter implements Presenter {
         .flatMap(paymentViewModel -> getSelectedPayment(getAllPayments(),
             paymentViewModel))
         .map(payment -> payment.getAuthorization())
-        .<Void>flatMap(authorization -> {
+        .flatMap(authorization -> {
             return aptoidePay.initiate(authorization)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnCompleted(() -> hideGlobalLoadingAndNavigateToAuthorizationView(authorization))
@@ -269,10 +269,7 @@ public class PaymentPresenter implements Presenter {
     if (selectedPayment != null && selectedPayment.getId() == payment.getId()) {
       return true;
     }
-    if (selectedPayment == null && payment.getId() == 1) { // PayPal
-      return true;
-    }
-    return false;
+    return selectedPayment == null && payment.getId() == 1;
   }
 
   private void showGlobalAndPaymentsLoading() {

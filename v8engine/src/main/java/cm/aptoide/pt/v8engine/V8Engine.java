@@ -106,7 +106,8 @@ public abstract class V8Engine extends DataProvider {
 
   private static void checkUpdates() {
     UpdateRepository repository = RepositoryFactory.getUpdateRepository();
-    repository.getUpdates(true)
+    repository.sync(true)
+        .andThen(repository.getAll(false))
         .first()
         .subscribe(updates -> Logger.d(TAG, "updates are up to date now"), throwable -> {
           CrashReport.getInstance().log(throwable);
@@ -119,8 +120,8 @@ public abstract class V8Engine extends DataProvider {
   }
 
   private static void regenerateUserAgent() {
-    SecurePreferences.setUserAgent(AptoideUtils.NetworkUtils.getDefaultUserAgent(aptoideClientUUID,
-        new UserData() {
+    SecurePreferences.setUserAgent(
+        AptoideUtils.NetworkUtils.getDefaultUserAgent(aptoideClientUUID, new UserData() {
           @Override public String getUserEmail() {
             return AptoideAccountManager.getUserEmail();
           }
@@ -253,7 +254,8 @@ public abstract class V8Engine extends DataProvider {
     SQLiteDatabase db = new SQLiteDatabaseHelper(this).getWritableDatabase();
     db.close();
 
-    ABTestManager.getInstance().initialize(aptoideClientUUID.getAptoideClientUUID())
+    ABTestManager.getInstance()
+        .initialize(aptoideClientUUID.getAptoideClientUUID())
         .subscribe(success -> {
         }, throwable -> {
           CrashReport.getInstance().log(throwable);

@@ -101,7 +101,7 @@ public class PullingContentService extends Service {
    */
   private void setUpdatesAction(int startId) {
     UpdateRepository repository = RepositoryFactory.getUpdateRepository();
-    subscriptions.add(repository.getUpdates(true).first().subscribe(updates -> {
+    subscriptions.add(repository.sync(true).andThen(repository.getAll(false)).first().subscribe(updates -> {
       Logger.d(TAG, "updates refreshed");
       setUpdatesNotification(updates, startId);
     }, throwable -> {

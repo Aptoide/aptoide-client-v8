@@ -95,7 +95,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
       UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
       updateAccessor.removeAll();
       UpdateRepository repository = RepositoryFactory.getUpdateRepository();
-      repository.getUpdates(true)
+      repository.sync(true)
+          .andThen(repository.getAll(false))
           .first()
           .subscribe(updates -> Logger.d(TAG, "updates refreshed"), throwable -> {
             CrashReport.getInstance().log(throwable);

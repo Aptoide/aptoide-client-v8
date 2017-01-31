@@ -51,7 +51,7 @@ public interface PaymentView extends View {
 
   Observable<PaymentViewModel> registerPaymentSelection();
 
-  public static class PaymentViewModel {
+  class PaymentViewModel {
 
     private final int id;
     private final String name;
@@ -94,7 +94,7 @@ public interface PaymentView extends View {
       return status;
     }
 
-    public static enum Status {
+    public enum Status {
       REGISTER,
       APPROVING,
       USE
