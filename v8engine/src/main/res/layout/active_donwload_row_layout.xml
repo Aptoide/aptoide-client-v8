@@ -122,19 +122,17 @@
         android:background="?attr/separatorColor"
         />
 
-    <ImageView
-        android:id="@+id/pause_cancel_button"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:padding="5dp"
-        android:layout_margin="5dp"
-        android:scaleType="center"
-        android:layout_gravity="center"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:contentDescription="@null"
-        android:foreground="?attr/selectableItemBackground"
-        android:src="@drawable/media_pause"
-        />
+  <ImageView
+      android:id="@+id/pause_cancel_button"
+      android:layout_width="30dp"
+      android:layout_height="30dp"
+      android:padding="5dp"
+      android:scaleType="center"
+      android:layout_gravity="center"
+      android:contentDescription="@null"
+      android:foreground="?attr/selectableItemBackground"
+      android:src="@drawable/media_pause"
+      android:layout_centerVertical="true"
+      android:layout_alignParentRight="true"
+      />
 </RelativeLayout>

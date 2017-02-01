@@ -17,9 +17,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import lombok.EqualsAndHashCode;
 
-/**
- * Created by sithengineer on 17/05/16.
- */
 public @EqualsAndHashCode class Download extends RealmObject {
 
   public static final int ACTION_INSTALL = 0;
