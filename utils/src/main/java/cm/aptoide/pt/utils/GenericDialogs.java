@@ -50,8 +50,9 @@ public class GenericDialogs {
           .setOnCancelListener(listener -> {
             subscriber.onNext(EResponse.CANCEL);
             subscriber.onCompleted();
-          }).create();
-			// cleaning up
+          })
+          .create();
+      // cleaning up
       subscriber.add(Subscriptions.create(dialog::dismiss));
       dialog.show();
     }).subscribeOn(AndroidSchedulers.mainThread());
@@ -105,21 +106,24 @@ public class GenericDialogs {
   public static Observable<EResponse> createGenericContinueCancelMessage(Context context,
       String title, String message) {
     return Observable.create((Subscriber<? super EResponse> subscriber) -> {
-			final AlertDialog ad = new AlertDialog.Builder(context).setTitle(title)
-					.setMessage(message)
-					.setPositiveButton(android.R.string.ok, (dialog, which) -> {
-						subscriber.onNext(EResponse.YES);
-						subscriber.onCompleted();
-          }).setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
+      final AlertDialog ad = new AlertDialog.Builder(context).setTitle(title)
+          .setMessage(message)
+          .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+            subscriber.onNext(EResponse.YES);
+            subscriber.onCompleted();
+          })
+          .setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
             subscriber.onNext(EResponse.NO);
             subscriber.onCompleted();
-          }).setOnCancelListener(dialog -> {
+          })
+          .setOnCancelListener(dialog -> {
             subscriber.onNext(EResponse.CANCEL);
-						subscriber.onCompleted();
-          }).create();
+            subscriber.onCompleted();
+          })
+          .create();
       // cleaning up
       subscriber.add(Subscriptions.create(ad::dismiss));
-			ad.show();
+      ad.show();
     });
   }
 
@@ -194,6 +198,35 @@ public class GenericDialogs {
     return progressDialog;
   }
 
+  public static Observable<EResponse> createGenericShareDialog(Context context, String share) {
+    return Observable.create((Subscriber<? super EResponse> subscriber) -> {
+      final AlertDialog alertDialog = new AlertDialog.Builder(context).setTitle(share)
+          .setItems(R.array.share_options_array, (dialogInterface, i) -> {
+            switch (i) {
+              case 0:
+                subscriber.onNext(EResponse.SHARE_EXTERNAL);
+                subscriber.onCompleted();
+                break;
+              case 1:
+                subscriber.onNext(EResponse.SHARE_TIMELINE);
+                subscriber.onCompleted();
+                break;
+              case 2:
+                // TODO: 01/02/2017 SHARE APP
+                break;
+              default:
+                break;
+            }
+            subscriber.onNext(EResponse.YES);
+            subscriber.onCompleted();
+          })
+          .create();
+      // cleaning up
+      subscriber.add(Subscriptions.create(alertDialog::dismiss));
+      alertDialog.show();
+    });
+  }
+
   /**
    * Represents the action made by user on the dialog. <li>{@link #YES}</li> <li>{@link #NO}</li>
    * <li>{@link #CANCEL}</li>
@@ -211,6 +244,12 @@ public class GenericDialogs {
     /**
      * Used when user cancels the dialog by pressing back or clicking out of the dialog
      */
-    CANCEL
+    CANCEL,
+
+    SHARE_APP,
+
+    SHARE_EXTERNAL,
+
+    SHARE_TIMELINE
   }
 }

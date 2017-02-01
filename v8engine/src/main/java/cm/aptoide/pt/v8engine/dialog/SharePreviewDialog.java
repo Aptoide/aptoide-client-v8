@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.dialog;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -15,8 +16,11 @@ import cm.aptoide.accountmanager.BaseActivity;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.GenericDialogs;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.customviews.LikeButtonView;
+import cm.aptoide.pt.v8engine.repository.SocialRepository;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewInstallDisplayable;
@@ -34,6 +38,9 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.VideoDisplayable;
 import java.util.HashMap;
 import java.util.Map;
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by jdandrade on 09/12/2016.
@@ -47,7 +54,7 @@ public class SharePreviewDialog {
     this.displayable = cardDisplayable;
   }
 
-  public AlertDialog.Builder showPreviewDialog(Context context) {
+  public AlertDialog.Builder getPreviewDialogBuilder(Context context) {
     AlertDialog.Builder alertadd = new AlertDialog.Builder(context);
     LayoutInflater factory = LayoutInflater.from(context);
     View view = null;
@@ -456,6 +463,48 @@ public class SharePreviewDialog {
       }
     });
     socialTerms.setVisibility(View.VISIBLE);
+  }
+
+  public void showShareCardPreviewDialog(AppViewInstallDisplayable displayable, Context context,
+      SharePreviewDialog sharePreviewDialog, AlertDialog.Builder alertDialog,
+      SocialRepository socialRepository) {
+    Observable.create((Subscriber<? super GenericDialogs.EResponse> subscriber) -> {
+      if (!ManagerPreferences.getUserAccessConfirmed()) {
+        alertDialog.setPositiveButton(R.string.share, (dialogInterface, i) -> {
+          socialRepository.share(displayable, context, sharePreviewDialog.getPrivacyResult());
+          subscriber.onNext(GenericDialogs.EResponse.YES);
+          subscriber.onCompleted();
+        }).setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
+          subscriber.onNext(GenericDialogs.EResponse.NO);
+          subscriber.onCompleted();
+        });
+      } else {
+        alertDialog.setPositiveButton(R.string.continue_option, (dialogInterface, i) -> {
+          socialRepository.share(displayable, context, sharePreviewDialog.getPrivacyResult());
+          subscriber.onNext(GenericDialogs.EResponse.YES);
+          subscriber.onCompleted();
+        }).setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
+          subscriber.onNext(GenericDialogs.EResponse.NO);
+          subscriber.onCompleted();
+        }).setNeutralButton(R.string.dont_show_again, (dialogInterface, i) -> {
+          subscriber.onNext(GenericDialogs.EResponse.CANCEL);
+          subscriber.onCompleted();
+          ManagerPreferences.setShowPreview(false);
+        });
+      }
+
+      alertDialog.show();
+    }).subscribeOn(AndroidSchedulers.mainThread()).subscribe(eResponse -> {
+      switch (eResponse) {
+        case YES:
+          ShowMessage.asSnack((Activity) context, R.string.social_timeline_share_dialog_title);
+          break;
+        case NO:
+          break;
+        case CANCEL:
+          break;
+      }
+    });
   }
 
   public boolean getPrivacyResult() {

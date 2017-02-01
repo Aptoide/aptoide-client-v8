@@ -69,8 +69,7 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
   public static TimeLineFollowFragment newInstance(FollowFragmentOpenMode openMode,
       String storeTheme, String cardUid, long numberOfLikes) {
     Bundle args = new Bundle();
-    args.putString(TITLE_KEY,
-        DataProvider.getContext().getString(R.string.social_timeline_who_liked));
+    args.putString(TITLE_KEY, DataProvider.getContext().getString(R.string.likes));
     args.putSerializable(OPEN_MODE, openMode);
     args.putString(BundleCons.STORE_THEME, storeTheme);
     args.putString(CARD_UID, cardUid);

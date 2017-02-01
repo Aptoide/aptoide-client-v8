@@ -130,7 +130,7 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
     }
 
     SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(displayable);
-    AlertDialog.Builder alertDialog = sharePreviewDialog.showPreviewDialog(getContext());
+    AlertDialog.Builder alertDialog = sharePreviewDialog.getPreviewDialogBuilder(getContext());
 
     Observable.create((Subscriber<? super GenericDialogs.EResponse> subscriber) -> {
       if (!ManagerPreferences.getUserAccessConfirmed()) {
