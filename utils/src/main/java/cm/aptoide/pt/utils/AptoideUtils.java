@@ -190,6 +190,23 @@ public class AptoideUtils {
 
     private static final String TAG = AlgorithmU.class.getName();
 
+    public static String computeSha1(String text) {
+      try {
+        return convToHex(computeSha1(text.getBytes("iso-8859-1")));
+      } catch (UnsupportedEncodingException e) {
+        Logger.e(TAG, "computeSha1(String)", e);
+      }
+      return "";
+    }
+
+    private static String convToHex(byte[] data) {
+      final StringBuilder buffer = new StringBuilder();
+      for (byte b : data) {
+        buffer.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
+      }
+      return buffer.toString();
+    }
+
     public static byte[] computeSha1(byte[] bytes) {
       MessageDigest md;
       try {
@@ -201,15 +218,6 @@ public class AptoideUtils {
       }
 
       return new byte[0];
-    }
-
-    public static String computeSha1(String text) {
-      try {
-        return convToHex(computeSha1(text.getBytes("iso-8859-1")));
-      } catch (UnsupportedEncodingException e) {
-        Logger.e(TAG, "computeSha1(String)", e);
-      }
-      return "";
     }
 
     public static String computeHmacSha1(String value, @NonNull String keyString) {
@@ -255,12 +263,10 @@ public class AptoideUtils {
       return buf.toString();
     }
 
-    private static String convToHex(byte[] data) {
-      final StringBuilder buffer = new StringBuilder();
-      for (byte b : data) {
-        buffer.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
-      }
-      return buffer.toString();
+    public static String computeMd5(@NonNull PackageInfo packageInfo) {
+      String sourceDir = packageInfo.applicationInfo.sourceDir;
+      File apkFile = new File(sourceDir);
+      return computeMd5(apkFile);
     }
 
     public static String computeMd5(File f) {
@@ -293,12 +299,6 @@ public class AptoideUtils {
       return md5hash;
     }
 
-    public static String computeMd5(@NonNull PackageInfo packageInfo) {
-      String sourceDir = packageInfo.applicationInfo.sourceDir;
-      File apkFile = new File(sourceDir);
-      return computeMd5(apkFile);
-    }
-
     public static int randomBetween(int min, int max) {
       int skewedMax = max - min;
       if (skewedMax <= 0) {
@@ -310,18 +310,11 @@ public class AptoideUtils {
 
   public static final class MathU {
 
-    /**
-     * Uses Euclid's algorithm: <p>gcd(a,0) = 0</p> <p>gcd(a,b) = gcd(b, a mod b)</p>
-     *
-     * @return The greatest common divisor between a and b.
-     */
-    public static int greatestCommonDivisor(int a, int b) {
-      while (b > 0) {
-        int temp = b;
-        b = a % b; // % is remainder
-        a = temp;
-      }
-      return a;
+    public static int leastCommonMultiple(int[] input) {
+      int result = input[0];
+      for (int i = 1; i < input.length; i++)
+        result = leastCommonMultiple(result, input[i]);
+      return result;
     }
 
     /**
@@ -338,11 +331,18 @@ public class AptoideUtils {
       return (Math.abs(a) / greatestCommonDivisor(a, b)) * Math.abs(b);
     }
 
-    public static int leastCommonMultiple(int[] input) {
-      int result = input[0];
-      for (int i = 1; i < input.length; i++)
-        result = leastCommonMultiple(result, input[i]);
-      return result;
+    /**
+     * Uses Euclid's algorithm: <p>gcd(a,0) = 0</p> <p>gcd(a,b) = gcd(b, a mod b)</p>
+     *
+     * @return The greatest common divisor between a and b.
+     */
+    public static int greatestCommonDivisor(int a, int b) {
+      while (b > 0) {
+        int temp = b;
+        b = a % b; // % is remainder
+        a = temp;
+      }
+      return a;
     }
 
     public static double mapValueFromRangeToRange(double value, double fromLow, double fromHigh,
@@ -422,10 +422,6 @@ public class AptoideUtils {
       }
     }
 
-    public static int getCurrentOrientation() {
-      return context.getResources().getConfiguration().orientation;
-    }
-
     public static float getScreenWidthInDip() {
       if (getCurrentOrientation() != screenWidthInDipCache.orientation) {
         WindowManager wm = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE));
@@ -437,17 +433,16 @@ public class AptoideUtils {
       return screenWidthInDipCache.value;
     }
 
+    public static int getCurrentOrientation() {
+      return context.getResources().getConfiguration().orientation;
+    }
+
     public static int getPixels(int dipValue) {
       Resources r = context.getResources();
       int px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue,
           r.getDisplayMetrics());
       Logger.d("getPixels", "" + px);
       return px;
-    }
-
-    private static int getScreenSizeInt() {
-      return context.getResources().getConfiguration().screenLayout
-          & Configuration.SCREENLAYOUT_SIZE_MASK;
     }
 
     public static int getNumericScreenSize() {
@@ -458,6 +453,11 @@ public class AptoideUtils {
 
     public static String getScreenSize() {
       return Size.values()[getScreenSizeInt()].name().toLowerCase(Locale.ENGLISH);
+    }
+
+    private static int getScreenSizeInt() {
+      return context.getResources().getConfiguration().screenLayout
+          & Configuration.SCREENLAYOUT_SIZE_MASK;
     }
 
     public static int getDensityDpi() {
@@ -570,6 +570,24 @@ public class AptoideUtils {
   public static final class StringU {
 
     /**
+     * <p>Joins the elements of the provided {@code Iterable} into a single String containing the
+     * provided elements.</p> <p> <p>No delimiter is added
+     * before
+     * or after the list. A {@code null} separator is the same as an empty String ("").</p>
+     *
+     * @param iterable the {@code Iterable} providing the values to join together, may be null
+     * @param separator the separator character to use, null treated as ""
+     * @return the joined String, {@code null} if null iterator input
+     * @since 2.3
+     */
+    public static String join(final Iterable<?> iterable, final String separator) {
+      if (iterable == null) {
+        return null;
+      }
+      return join(iterable.iterator(), separator);
+    }
+
+    /**
      * <p>Joins the elements of the provided {@code Iterator} into a single String containing the
      * provided elements.</p> <p> <p>No delimiter is added
      * before
@@ -611,24 +629,6 @@ public class AptoideUtils {
         }
       }
       return buf.toString();
-    }
-
-    /**
-     * <p>Joins the elements of the provided {@code Iterable} into a single String containing the
-     * provided elements.</p> <p> <p>No delimiter is added
-     * before
-     * or after the list. A {@code null} separator is the same as an empty String ("").</p>
-     *
-     * @param iterable the {@code Iterable} providing the values to join together, may be null
-     * @param separator the separator character to use, null treated as ""
-     * @return the joined String, {@code null} if null iterator input
-     * @since 2.3
-     */
-    public static String join(final Iterable<?> iterable, final String separator) {
-      if (iterable == null) {
-        return null;
-      }
-      return join(iterable.iterator(), separator);
     }
 
     public static String toString(Object obj) {
@@ -743,10 +743,6 @@ public class AptoideUtils {
       return Build.VERSION.RELEASE.replaceAll(";", " ");
     }
 
-    public static int getSdkVer() {
-      return Build.VERSION.SDK_INT;
-    }
-
     public static String getGlEsVer() {
       return ((ActivityManager) context.getSystemService(
           Context.ACTIVITY_SERVICE)).getDeviceConfigurationInfo().getGlEsVersion();
@@ -764,6 +760,10 @@ public class AptoideUtils {
         }
       }
       return builder.toString();
+    }
+
+    public static int getSdkVer() {
+      return Build.VERSION.SDK_INT;
     }
 
     public static String getCountryCode() {
@@ -813,10 +813,6 @@ public class AptoideUtils {
       return found;
     }
 
-    public static List<PackageInfo> getAllInstalledApps() {
-      return context.getPackageManager().getInstalledPackages(PackageManager.GET_SIGNATURES);
-    }
-
     public static List<PackageInfo> getUserInstalledApps() {
       List<PackageInfo> tmp = new LinkedList<>();
 
@@ -827,6 +823,10 @@ public class AptoideUtils {
       }
 
       return tmp;
+    }
+
+    public static List<PackageInfo> getAllInstalledApps() {
+      return context.getPackageManager().getInstalledPackages(PackageManager.GET_SIGNATURES);
     }
 
     public static String getApkLabel(PackageInfo packageInfo) {
@@ -1058,16 +1058,16 @@ public class AptoideUtils {
       }
     }
 
+    public static boolean isUiThread() {
+      return Looper.getMainLooper().getThread() == Thread.currentThread();
+    }
+
     public static void sleep(long l) {
       try {
         Thread.sleep(l);
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
-    }
-
-    public static boolean isUiThread() {
-      return Looper.getMainLooper().getThread() == Thread.currentThread();
     }
   }
 
@@ -1162,6 +1162,38 @@ public class AptoideUtils {
       return instance;
     }
 
+    public String getTimeDiffAll(Context context, long time) {
+
+      long diffTime = new Date().getTime() - time;
+
+      if (isYesterday(time) || isToday(time)) {
+        getTimeDiffString(context, time);
+      } else {
+        if (diffTime < DateUtils.WEEK_IN_MILLIS) {
+          int diffDays = Double.valueOf(Math.ceil(diffTime / millisInADay)).intValue();
+          return diffDays == 1 ? mTimestampLabelYesterday
+              : AptoideUtils.StringU.getFormattedString(R.string.WidgetProvider_timestamp_days_ago,
+                  diffDays);
+        } else if (diffTime < DateUtils.WEEK_IN_MILLIS * 4) {
+          int diffDays = Double.valueOf(Math.ceil(diffTime / WEEK_IN_MILLIS)).intValue();
+          return diffDays == 1 ? mTimestampLabelWeekAgo
+              : AptoideUtils.StringU.getFormattedString(R.string.WidgetProvider_timestamp_weeks_ago,
+                  diffDays);
+        } else if (diffTime < DateUtils.WEEK_IN_MILLIS * 4 * 12) {
+          int diffDays = Double.valueOf(Math.ceil(diffTime / (WEEK_IN_MILLIS * 4))).intValue();
+          return diffDays == 1 ? mTimestampLabelMonthAgo : AptoideUtils.StringU.getFormattedString(
+              R.string.WidgetProvider_timestamp_months_ago, diffDays);
+        } else {
+          int diffDays = Double.valueOf(Math.ceil(diffTime / (WEEK_IN_MILLIS * 4 * 12))).intValue();
+          return diffDays == 1 ? mTimestampLabelYearAgo
+              : AptoideUtils.StringU.getFormattedString(R.string.WidgetProvider_timestamp_years_ago,
+                  diffDays);
+        }
+      }
+
+      return getTimeDiffString(context, time);
+    }
+
     /**
      * Checks if the given date is yesterday.
      *
@@ -1224,38 +1256,6 @@ public class AptoideUtils {
         return formatDateTime(context, timedate, DateUtils.FORMAT_NUMERIC_DATE);
       }
     }
-
-    public String getTimeDiffAll(Context context, long time) {
-
-      long diffTime = new Date().getTime() - time;
-
-      if (isYesterday(time) || isToday(time)) {
-        getTimeDiffString(context, time);
-      } else {
-        if (diffTime < DateUtils.WEEK_IN_MILLIS) {
-          int diffDays = Double.valueOf(Math.ceil(diffTime / millisInADay)).intValue();
-          return diffDays == 1 ? mTimestampLabelYesterday
-              : AptoideUtils.StringU.getFormattedString(R.string.WidgetProvider_timestamp_days_ago,
-                  diffDays);
-        } else if (diffTime < DateUtils.WEEK_IN_MILLIS * 4) {
-          int diffDays = Double.valueOf(Math.ceil(diffTime / WEEK_IN_MILLIS)).intValue();
-          return diffDays == 1 ? mTimestampLabelWeekAgo
-              : AptoideUtils.StringU.getFormattedString(R.string.WidgetProvider_timestamp_weeks_ago,
-                  diffDays);
-        } else if (diffTime < DateUtils.WEEK_IN_MILLIS * 4 * 12) {
-          int diffDays = Double.valueOf(Math.ceil(diffTime / (WEEK_IN_MILLIS * 4))).intValue();
-          return diffDays == 1 ? mTimestampLabelMonthAgo : AptoideUtils.StringU.getFormattedString(
-              R.string.WidgetProvider_timestamp_months_ago, diffDays);
-        } else {
-          int diffDays = Double.valueOf(Math.ceil(diffTime / (WEEK_IN_MILLIS * 4 * 12))).intValue();
-          return diffDays == 1 ? mTimestampLabelYearAgo
-              : AptoideUtils.StringU.getFormattedString(R.string.WidgetProvider_timestamp_years_ago,
-                  diffDays);
-        }
-      }
-
-      return getTimeDiffString(context, time);
-    }
   }
 
   /**
@@ -1264,13 +1264,12 @@ public class AptoideUtils {
    */
   public static class IconSizeU {
 
-    private static final String TAG = IconSizeU.class.getName();
-
     public static final int DEFAULT_SCREEN_DENSITY = -1;
     public static final HashMap<Integer, String> mStoreIconSizes;
     public static final int ICONS_SIZE_TYPE = 0;
     public static final HashMap<Integer, String> mIconSizes;
     public static final int STORE_ICONS_SIZE_TYPE = 1;
+    private static final String TAG = IconSizeU.class.getName();
     static final private int baseLine = 96;
     static final private int baseLineAvatar = 150;
     static final private int baseLineXNotification = 320;
@@ -1300,118 +1299,6 @@ public class AptoideUtils {
       mIconSizes.put(DisplayMetrics.DENSITY_LOW, "96x96");
     }
 
-    private static String[] splitUrlExtension(String url) {
-      return url.split(RegexU.SPLIT_URL_EXTENSION);
-    }
-
-    private static String getThumbnailSize(int density, boolean isPortrait) {
-      if (!isPortrait) {
-        if (density >= 640) {
-          return "1024x640";
-        } else if (density >= 480) {
-          return "768x480";
-        } else if (density >= 320) {
-          return "512x320";
-        } else if (density >= 240) {
-          return "384x240";
-        } else if (density >= 213) {
-          return "340x213";
-        } else if (density >= 160) {
-          return "256x160";
-        } else {
-          return "192x120";
-        }
-      } else {
-        if (density >= 640) {
-          return "384x640";
-        } else if (density >= 480) {
-          return "288x480";
-        } else if (density >= 320) {
-          return "192x320";
-        } else if (density >= 240) {
-          return "144x240";
-        } else if (density >= 213) {
-          return "127x213";
-        } else if (density >= 160) {
-          return "96x160";
-        } else {
-          return "72x120";
-        }
-      }
-    }
-
-    private static String getUserAvatarIconSize() {
-      if (ScreenU.getDensityDpi() <= DisplayMetrics.DENSITY_HIGH) {
-        return "50x50";
-      } else {
-        return "150x150";
-      }
-    }
-
-    private static Float densityMultiplier() {
-      if (context == null) {
-        return 0f;
-      }
-
-      float densityMultiplier = context.getResources().getDisplayMetrics().density;
-
-      if (densityMultiplier <= 0.75f) {
-        densityMultiplier = 0.75f;
-      } else if (densityMultiplier <= 1) {
-        densityMultiplier = 1f;
-      } else if (densityMultiplier <= 1.333f) {
-        densityMultiplier = 1.3312500f;
-      } else if (densityMultiplier <= 1.5f) {
-        densityMultiplier = 1.5f;
-      } else if (densityMultiplier <= 2f) {
-        densityMultiplier = 2f;
-      } else if (densityMultiplier <= 3f) {
-        densityMultiplier = 3f;
-      } else {
-        densityMultiplier = 4f;
-      }
-      return densityMultiplier;
-    }
-
-    private static String getDefaultSize(int varType) {
-
-      switch (varType) {
-        case STORE_ICONS_SIZE_TYPE:
-          if (ScreenU.getDensityDpi() < DisplayMetrics.DENSITY_HIGH) {
-            return mStoreIconSizes.get(DisplayMetrics.DENSITY_LOW);
-          } else {
-            return mStoreIconSizes.get(DisplayMetrics.DENSITY_XXHIGH);
-          }
-        case ICONS_SIZE_TYPE:
-          if (ScreenU.getDensityDpi() < DisplayMetrics.DENSITY_HIGH) {
-            return mIconSizes.get(DisplayMetrics.DENSITY_LOW);
-          } else {
-            return mIconSizes.get(DisplayMetrics.DENSITY_XXXHIGH);
-          }
-      }
-      return null;
-    }
-
-    private static String generateSizeStringScreenshotsdd(String orient) {
-      float densityMultiplier = densityMultiplier();
-
-      int size;
-      if (orient != null && orient.equals("portrait")) {
-        size = baseLineScreenshotPort * ((int) densityMultiplier);
-      } else {
-        size = baseLineScreenshotLand * ((int) densityMultiplier);
-      }
-
-      return size + "x" + ScreenU.getDensityDpi();
-    }
-
-    private static String parseScreenshotUrl(String screenshotUrl, String orientation) {
-      String sizeString = generateSizeStringScreenshotsdd(orientation);
-
-      String[] splitUrl = splitUrlExtension(screenshotUrl);
-      return splitUrl[0] + "_" + sizeString + "." + splitUrl[1];
-    }
-
     public static String screenshotToThumb(String imageUrl, String orientation) {
 
       String screen = null;
@@ -1439,6 +1326,55 @@ public class AptoideUtils {
       }
 
       return screen;
+    }
+
+    private static String parseScreenshotUrl(String screenshotUrl, String orientation) {
+      String sizeString = generateSizeStringScreenshotsdd(orientation);
+
+      String[] splitUrl = splitUrlExtension(screenshotUrl);
+      return splitUrl[0] + "_" + sizeString + "." + splitUrl[1];
+    }
+
+    private static String generateSizeStringScreenshotsdd(String orient) {
+      float densityMultiplier = densityMultiplier();
+
+      int size;
+      if (orient != null && orient.equals("portrait")) {
+        size = baseLineScreenshotPort * ((int) densityMultiplier);
+      } else {
+        size = baseLineScreenshotLand * ((int) densityMultiplier);
+      }
+
+      return size + "x" + ScreenU.getDensityDpi();
+    }
+
+    private static String[] splitUrlExtension(String url) {
+      return url.split(RegexU.SPLIT_URL_EXTENSION);
+    }
+
+    private static Float densityMultiplier() {
+      if (context == null) {
+        return 0f;
+      }
+
+      float densityMultiplier = context.getResources().getDisplayMetrics().density;
+
+      if (densityMultiplier <= 0.75f) {
+        densityMultiplier = 0.75f;
+      } else if (densityMultiplier <= 1) {
+        densityMultiplier = 1f;
+      } else if (densityMultiplier <= 1.333f) {
+        densityMultiplier = 1.3312500f;
+      } else if (densityMultiplier <= 1.5f) {
+        densityMultiplier = 1.5f;
+      } else if (densityMultiplier <= 2f) {
+        densityMultiplier = 2f;
+      } else if (densityMultiplier <= 3f) {
+        densityMultiplier = 3f;
+      } else {
+        densityMultiplier = 4f;
+      }
+      return densityMultiplier;
     }
 
     public static String generateStringNotification(String url) {
@@ -1476,9 +1412,23 @@ public class AptoideUtils {
       }
     }
 
-    private static String generateSizeString() {
-      String iconRes = mIconSizes.get(context.getResources().getDisplayMetrics().densityDpi);
-      return iconRes != null ? iconRes : getDefaultSize(ICONS_SIZE_TYPE);
+    private static String getDefaultSize(int varType) {
+
+      switch (varType) {
+        case STORE_ICONS_SIZE_TYPE:
+          if (ScreenU.getDensityDpi() < DisplayMetrics.DENSITY_HIGH) {
+            return mStoreIconSizes.get(DisplayMetrics.DENSITY_LOW);
+          } else {
+            return mStoreIconSizes.get(DisplayMetrics.DENSITY_XXHIGH);
+          }
+        case ICONS_SIZE_TYPE:
+          if (ScreenU.getDensityDpi() < DisplayMetrics.DENSITY_HIGH) {
+            return mIconSizes.get(DisplayMetrics.DENSITY_LOW);
+          } else {
+            return mIconSizes.get(DisplayMetrics.DENSITY_XXXHIGH);
+          }
+      }
+      return null;
     }
 
     public static String generateStringAvatar(String url) {
@@ -1495,6 +1445,26 @@ public class AptoideUtils {
 
       String[] splittedUrl = splitUrlExtension(url);
       return splittedUrl[0] + "_" + getUserAvatarIconSize() + "." + splittedUrl[1];
+    }
+
+    private static String getUserAvatarIconSize() {
+      if (ScreenU.getDensityDpi() <= DisplayMetrics.DENSITY_HIGH) {
+        return "50x50";
+      } else {
+        return "150x150";
+      }
+    }
+
+    public static String getNewImageUrl(String imageUrl) {
+
+      if (TextUtils.isEmpty(imageUrl)) {
+        return imageUrl;
+      } else if (imageUrl.contains("portrait")) {
+        return parseScreenshots(imageUrl);
+      } else if (imageUrl.contains("_icon")) {
+        return parseIcon(imageUrl);
+      }
+      return imageUrl;
     }
 
     private static String parseScreenshots(String orient) {
@@ -1535,16 +1505,45 @@ public class AptoideUtils {
       return iconUrl;
     }
 
-    public static String getNewImageUrl(String imageUrl) {
-
-      if (TextUtils.isEmpty(imageUrl)) {
-        return imageUrl;
-      } else if (imageUrl.contains("portrait")) {
-        return parseScreenshots(imageUrl);
-      } else if (imageUrl.contains("_icon")) {
-        return parseIcon(imageUrl);
+    private static String getThumbnailSize(int density, boolean isPortrait) {
+      if (!isPortrait) {
+        if (density >= 640) {
+          return "1024x640";
+        } else if (density >= 480) {
+          return "768x480";
+        } else if (density >= 320) {
+          return "512x320";
+        } else if (density >= 240) {
+          return "384x240";
+        } else if (density >= 213) {
+          return "340x213";
+        } else if (density >= 160) {
+          return "256x160";
+        } else {
+          return "192x120";
+        }
+      } else {
+        if (density >= 640) {
+          return "384x640";
+        } else if (density >= 480) {
+          return "288x480";
+        } else if (density >= 320) {
+          return "192x320";
+        } else if (density >= 240) {
+          return "144x240";
+        } else if (density >= 213) {
+          return "127x213";
+        } else if (density >= 160) {
+          return "96x160";
+        } else {
+          return "72x120";
+        }
       }
-      return imageUrl;
+    }
+
+    private static String generateSizeString() {
+      String iconRes = mIconSizes.get(context.getResources().getDisplayMetrics().densityDpi);
+      return iconRes != null ? iconRes : getDefaultSize(ICONS_SIZE_TYPE);
     }
 
     /**

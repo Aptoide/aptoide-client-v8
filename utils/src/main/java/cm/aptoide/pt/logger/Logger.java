@@ -27,14 +27,14 @@ public class Logger {
     }
   }
 
+  public static void d(Object object, String msg) {
+    d(object.getClass().getSimpleName(), msg);
+  }
+
   public static void d(String tag, String msg) {
     if (DBG && msg != null) {
       Log.d(tag, msg);
     }
-  }
-
-  public static void d(Object object, String msg) {
-    d(object.getClass().getSimpleName(), msg);
   }
 
   public static void d(String tag, String msg, Throwable tr) {
@@ -47,14 +47,14 @@ public class Logger {
     i(object.getClass().getSimpleName(), msg);
   }
 
-  public static void i(Class clz, String msg) {
-    i(clz.getSimpleName(), msg);
-  }
-
   public static void i(String tag, String msg) {
     if (DBG && msg != null) {
       Log.i(tag, msg);
     }
+  }
+
+  public static void i(Class clz, String msg) {
+    i(clz.getSimpleName(), msg);
   }
 
   public static void w(String TAG, String msg) {
@@ -72,6 +72,13 @@ public class Logger {
   /**
    * Instead of calling this method, consider using CrashReport.getInstance().log(Exception)
    */
+  public static void e(Object object, String msg) {
+    e(object.getClass().getName(), msg);
+  }
+
+  /**
+   * Instead of calling this method, consider using CrashReport.getInstance().log(Exception)
+   */
   public static void e(String TAG, String msg) {
     if (msg != null) {
       Log.e(TAG, msg);
@@ -81,8 +88,8 @@ public class Logger {
   /**
    * Instead of calling this method, consider using CrashReport.getInstance().log(Exception)
    */
-  public static void e(Object object, String msg) {
-    e(object.getClass().getName(), msg);
+  public static void e(Object object, Throwable tr) {
+    e(object.getClass().getName(), tr);
   }
 
   /**
@@ -90,13 +97,6 @@ public class Logger {
    */
   public static void e(String TAG, Throwable tr) {
     Log.e(TAG, "", tr);
-  }
-
-  /**
-   * Instead of calling this method, consider using CrashReport.getInstance().log(Exception)
-   */
-  public static void e(Object object, Throwable tr) {
-    e(object.getClass().getName(), tr);
   }
 
   /**

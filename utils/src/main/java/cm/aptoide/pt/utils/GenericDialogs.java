@@ -103,6 +103,24 @@ public class GenericDialogs {
     return createGenericContinueMessage(context, null, title, message, android.R.string.ok);
   }
 
+  public static Observable<EResponse> createGenericContinueMessage(Context context,
+      @Nullable View view, String title, String message, @StringRes int buttonText) {
+    return Observable.create((Subscriber<? super EResponse> subscriber) -> {
+      AlertDialog.Builder builder = new AlertDialog.Builder(context).setTitle(title)
+          .setMessage(message)
+          .setPositiveButton(buttonText, (dialogInterface, i) -> {
+            subscriber.onNext(EResponse.YES);
+            subscriber.onCompleted();
+          });
+      if (view != null) {
+        builder.setView(view);
+      }
+      AlertDialog alertDialog = builder.create();
+      subscriber.add(Subscriptions.create(() -> alertDialog.dismiss()));
+      alertDialog.show();
+    });
+  }
+
   public static Observable<EResponse> createGenericContinueCancelMessage(Context context,
       String title, String message) {
     return Observable.create((Subscriber<? super EResponse> subscriber) -> {
@@ -148,24 +166,6 @@ public class GenericDialogs {
       // cleaning up
       subscriber.add(Subscriptions.create(ad::dismiss));
       ad.show();
-    });
-  }
-
-  public static Observable<EResponse> createGenericContinueMessage(Context context,
-      @Nullable View view, String title, String message, @StringRes int buttonText) {
-    return Observable.create((Subscriber<? super EResponse> subscriber) -> {
-      AlertDialog.Builder builder = new AlertDialog.Builder(context).setTitle(title)
-          .setMessage(message)
-          .setPositiveButton(buttonText, (dialogInterface, i) -> {
-            subscriber.onNext(EResponse.YES);
-            subscriber.onCompleted();
-          });
-      if (view != null) {
-        builder.setView(view);
-      }
-      AlertDialog alertDialog = builder.create();
-      subscriber.add(Subscriptions.create(() -> alertDialog.dismiss()));
-      alertDialog.show();
     });
   }
 
