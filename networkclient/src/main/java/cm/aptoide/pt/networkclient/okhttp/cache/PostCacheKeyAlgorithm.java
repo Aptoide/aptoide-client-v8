@@ -24,7 +24,7 @@ public class PostCacheKeyAlgorithm implements KeyAlgorithm<Request, String> {
 
     // append headers if existing
     Headers headers = clonedRequest.headers();
-    if(headers.size()>0){
+    if (headers.size() > 0) {
       content.append("Headers:\n");
       for (String headerName : headers.names()) {
         content.append(String.format("\t%s: %s\n", headerName,
@@ -44,7 +44,6 @@ public class PostCacheKeyAlgorithm implements KeyAlgorithm<Request, String> {
 
       // return hash sum of the digest content
       return AptoideUtils.AlgorithmU.computeSha1(content.toString());
-
     } catch (IOException e) {
       CrashReport.getInstance().log(e);
     }
