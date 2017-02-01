@@ -83,13 +83,15 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
 
     // show updates
     updateRepository.getAll(false)
-        .buffer(750, TimeUnit.MILLISECONDS)
-        .flatMap(listOfUpdateList -> Observable.from(listOfUpdateList).takeLast(1))
+        //.buffer(750, TimeUnit.MILLISECONDS)
+        //.flatMap(listOfUpdateList -> Observable.from(listOfUpdateList).takeLast(1))
+        .sample(750, TimeUnit.MILLISECONDS)
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .flatMap(updateList -> {
           clearDisplayables();
           setUpdates(updateList);
+          showUpdateMessage(updateList);
           return fetchInstalled().doOnNext(apps -> setInstalled(apps));
         })
         .subscribe(__ -> {
@@ -136,7 +138,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
       int updateCount = updates != null ? updates.size() : 0;
       int currentUpdateListHash = updates != null ? updates.hashCode() : 0;
 
-      if ((updates != null && updates.isEmpty()) || currentUpdateListHash == oldUpdateListHash) {
+      if (updates != null && updates.isEmpty()) {
         ShowMessage.asSnack(getView(), R.string.no_updates_available_retoric);
       } else if (currentUpdateListHash != oldUpdateListHash) {
         ShowMessage.asSnack(getView(), String.format(getString(R.string.new_updates),

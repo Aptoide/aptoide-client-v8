@@ -391,6 +391,7 @@
   <string name="navigation_drawer_signup_login">Sign Up or Login</string>
   <string name="active">Active</string>
   <string name="completed">Completed</string>
+  <string name="stand_by">Stand by</string>
   <string name="_downloads"> downloads</string>
   <string name="no_description">No description</string>
   <string name="description">Description</string>

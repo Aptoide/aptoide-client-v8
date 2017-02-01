@@ -15,7 +15,6 @@ import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CompletedDownloadDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
@@ -30,8 +29,6 @@ import rx.schedulers.Schedulers;
  */
 @Displayables({ CompletedDownloadDisplayable.class }) public class CompletedDownloadWidget
     extends Widget<CompletedDownloadDisplayable> {
-
-  private static final String TAG = CompletedDownloadWidget.class.getSimpleName();
 
   private TextView appName;
   private ImageView appIcon;
@@ -53,10 +50,10 @@ import rx.schedulers.Schedulers;
   }
 
   @Override public void bindView(CompletedDownloadDisplayable displayable) {
-    Progress<Download> downloadProgress = displayable.getPojo();
-    appName.setText(downloadProgress.getRequest().getAppName());
-    if (!TextUtils.isEmpty(downloadProgress.getRequest().getIcon())) {
-      ImageLoader.load(downloadProgress.getRequest().getIcon(), appIcon);
+    Download download = displayable.getDownload();
+    appName.setText(download.getAppName());
+    if (!TextUtils.isEmpty(download.getIcon())) {
+      ImageLoader.load(download.getIcon(), appIcon);
     }
 
     //save original colors
@@ -64,7 +61,7 @@ import rx.schedulers.Schedulers;
       defaultTextViewColor = status.getTextColors();
     }
 
-    updateStatus(downloadProgress);
+    updateStatus(download);
 
     compositeSubscription.add(RxView.clicks(itemView)
         .flatMap(click -> displayable.downloadStatus()
@@ -100,8 +97,8 @@ import rx.schedulers.Schedulers;
         }, throwable -> CrashReport.getInstance().log(throwable)));
   }
 
-  private void updateStatus(Progress<Download> downloadProgress) {
-    if (downloadProgress.getRequest().getOverallDownloadStatus() == Download.ERROR) {
+  private void updateStatus(Download download) {
+    if (download.getOverallDownloadStatus() == Download.ERROR) {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         status.setTextColor(getContext().getColor(R.color.red_700));
       } else {
@@ -110,6 +107,6 @@ import rx.schedulers.Schedulers;
     } else {
       status.setTextColor(defaultTextViewColor);
     }
-    status.setText(downloadProgress.getRequest().getStatusName(itemView.getContext()));
+    status.setText(download.getStatusName(itemView.getContext()));
   }
 }

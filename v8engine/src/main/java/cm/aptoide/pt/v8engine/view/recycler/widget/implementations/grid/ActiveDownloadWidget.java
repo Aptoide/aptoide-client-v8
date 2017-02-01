@@ -22,7 +22,6 @@ import rx.schedulers.Schedulers;
  */
 @Displayables({ ActiveDownloadDisplayable.class }) public class ActiveDownloadWidget
     extends Widget<ActiveDownloadDisplayable> {
-  private static final String TAG = ActiveDownloadWidget.class.getSimpleName();
 
   private TextView appName;
   private ProgressBar progressBar;
@@ -30,7 +29,6 @@ import rx.schedulers.Schedulers;
   private TextView downloadProgressTv;
   private ImageView pauseCancelButton;
   private ImageView appIcon;
-  private ActiveDownloadDisplayable displayable;
 
   public ActiveDownloadWidget(View itemView) {
     super(itemView);
@@ -46,11 +44,10 @@ import rx.schedulers.Schedulers;
   }
 
   @Override public void bindView(ActiveDownloadDisplayable displayable) {
-    this.displayable = displayable;
-
     compositeSubscription.add(RxView.clicks(pauseCancelButton)
         .subscribe(click -> displayable.pauseInstall(getContext())));
-    compositeSubscription.add(displayable.getDownload()
+
+    compositeSubscription.add(displayable.getDownloadObservable()
         .observeOn(Schedulers.computation())
         .distinctUntilChanged()
         .map(download -> download)
@@ -70,7 +67,7 @@ import rx.schedulers.Schedulers;
       progressBar.setIndeterminate(false);
       progressBar.setProgress(download.getOverallProgress());
     }
-    downloadProgressTv.setText(download.getOverallProgress() + "%");
+    downloadProgressTv.setText(String.format("%d%%", download.getOverallProgress()));
     downloadSpeedTv.setText(String.valueOf(
         AptoideUtils.StringU.formatBytesToBits((long) download.getDownloadSpeed(), true)));
     return null;

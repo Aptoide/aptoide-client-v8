@@ -142,6 +142,7 @@
         android:layout_gravity="center"
         android:background="?attr/separatorColor"
         />
+
     <ImageView
         android:id="@+id/pause_cancel_button"
         android:layout_width="30dp"
