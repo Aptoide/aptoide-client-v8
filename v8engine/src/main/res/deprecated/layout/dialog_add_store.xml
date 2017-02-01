@@ -6,6 +6,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     >
 
@@ -44,7 +45,7 @@
           <!--android:maxLines="1"-->
           <!--android:singleLine="true"-->
           <!--/>-->
-      <!---->
+      <!--
 
       <cm.aptoide.pt.v8engine.view.custom.StoreAutoCompleteTextView
           android:id="@+id/edit_store_uri"
@@ -58,7 +59,20 @@
           android:imeOptions="flagNoExtractUi|actionSearch"
           android:maxLines="1"
           />
-
+-->
+      <android.support.v7.widget.SearchView
+          android:id="@+id/edit_store_uri"
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:layout_alignParentLeft="true"
+          android:layout_centerVertical="true"
+          android:layout_toLeftOf="@+id/button_dialog_add_store"
+          android:completionThreshold="2"
+          android:imeOptions="flagNoExtractUi|actionSearch"
+          android:maxLines="1"
+          android:queryHint="@string/store_name"
+          >
+      </android.support.v7.widget.SearchView>
 
       <Button
           android:id="@+id/button_dialog_add_store"

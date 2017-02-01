@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.websocket;
 import android.app.SearchManager;
 import android.database.Cursor;
 import android.database.MatrixCursor;
+import android.util.Log;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executors;
@@ -24,12 +25,19 @@ public class WebSocketManager extends WebSocketListener implements WebSocket {
 
   public static final String WEBSOCKETS_SCHEME = BuildConfig.APTOIDE_WEBSOCKETS_SCHEME;
   public static final String WEBSOCKETS_HOST = BuildConfig.APTOIDE_WEBSOCKETS_HOST;
+  protected static final String TAG = "Websockets";
   public static BlockingQueue<Cursor> blockingQueue;
   static WebSocket webSocket;
   static Request request;
   static OkHttpClient client;
   ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
   ScheduledFuture<?> future;
+
+  protected static String[] matrix_columns = new String[] {
+      SearchManager.SUGGEST_COLUMN_ICON_1, SearchManager.SUGGEST_COLUMN_TEXT_1,
+      SearchManager.SUGGEST_COLUMN_QUERY, "_id"
+  };
+
 
   public WebSocketManager() {
   }
@@ -72,19 +80,21 @@ public class WebSocketManager extends WebSocketListener implements WebSocket {
   }
 
   @Override public void onClosing(WebSocket webSocket, int code, String reason) {
+    Log.d(TAG, reason);
     webSocket.close(1000, null);
     this.webSocket = null;
   }
 
   @Override public void onClosed(WebSocket webSocket, int code, String reason) {
+    Log.d(TAG, reason);
     super.onClosed(webSocket, code, reason);
     //TODO: Log no messages passing because socket is closed
   }
 
   @Override public void onFailure(WebSocket webSocket, Throwable t, Response response) {
+    Log.d(TAG, "Error was:", t);
     super.onFailure(webSocket, t, response);
     this.webSocket = null;
-    //TODO: Log the failure messages.
   }
 
   @Override public Request request() {
@@ -123,4 +133,7 @@ public class WebSocketManager extends WebSocketListener implements WebSocket {
     webSocket.cancel();
   }
 
+  protected void addRow(MatrixCursor matrixCursor, String string, int i) {
+    matrixCursor.newRow().add(null).add(string).add(string).add(i);
+  }
 }

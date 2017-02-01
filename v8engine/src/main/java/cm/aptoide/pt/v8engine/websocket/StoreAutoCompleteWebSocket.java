@@ -1,5 +1,7 @@
 package cm.aptoide.pt.v8engine.websocket;
 
+import android.database.MatrixCursor;
+import android.util.Log;
 import cm.aptoide.pt.crashreports.CrashReports;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
@@ -34,14 +36,13 @@ public class StoreAutoCompleteWebSocket extends WebSocketManager {
     super.onMessage(webSocket, responseMessage);
     try {
       JSONArray jsonArray = new JSONArray(responseMessage);
-      results.clear();
+      MatrixCursor matrixCursor = new MatrixCursor(matrix_columns);
       for (int i = 0; i < jsonArray.length(); i++) {
-        results.add(jsonArray.get(i).toString());
+        String suggestion = jsonArray.get(i).toString();
+        addRow(matrixCursor, suggestion, i);
       }
-      if (storeAutoCompleteAdapter1 != null) {
-        storeAutoCompleteAdapter1.updateSuggestions(results);
-        storeAutoCompleteAdapter1.notifyDataSetChanged();
-      }
+
+      blockingQueue.add(matrixCursor);
     } catch (JSONException e) {
       Logger.printException(e);
       CrashReports.logException(e);
@@ -62,5 +63,12 @@ public class StoreAutoCompleteWebSocket extends WebSocketManager {
   public void sendAndReceive(String query, StoreAutoCompleteAdapter storeAutoCompleteAdapter) {
     send(query);
     storeAutoCompleteAdapter1 = storeAutoCompleteAdapter;
+  }
+
+  @Override public boolean send(String text) {
+    if (webSocket == null) {
+      connect("9002");
+    }
+    return super.send(text);
   }
 }

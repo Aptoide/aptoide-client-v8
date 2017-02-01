@@ -96,8 +96,8 @@
         />
 
     <provider
-        android:name="cm.aptoide.pt.v8engine.provider.StoreSuggestionProvider"
-        android:authorities="${suggestionProviderAuthority}"
+        android:name="cm.aptoide.pt.v8engine.provider.StoreSearchSuggestionProvider"
+        android:authorities="${storeSuggestionProviderAuthority}"
         android:exported="false"
         />
 

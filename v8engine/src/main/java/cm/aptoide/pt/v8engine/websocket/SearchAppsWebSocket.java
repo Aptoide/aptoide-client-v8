@@ -16,11 +16,6 @@ import org.json.JSONException;
 
 public class SearchAppsWebSocket extends WebSocketManager {
 
-  private static String[] matrix_columns = new String[] {
-      SearchManager.SUGGEST_COLUMN_ICON_1, SearchManager.SUGGEST_COLUMN_TEXT_1,
-      SearchManager.SUGGEST_COLUMN_QUERY, "_id"
-  };
-
   @Override public WebSocket connect(String port) {
     request = new Request.Builder().url(WEBSOCKETS_SCHEME + WEBSOCKETS_HOST + ":" + port).build();
     client = new OkHttpClient();
@@ -57,7 +52,10 @@ public class SearchAppsWebSocket extends WebSocketManager {
     }
   }
 
-  private void addRow(MatrixCursor matrixCursor, String string, int i) {
-    matrixCursor.newRow().add(null).add(string).add(string).add(i);
+  @Override public boolean send(String text) {
+    if (webSocket == null) {
+      connect("9000");
+    }
+    return super.send(text);
   }
 }

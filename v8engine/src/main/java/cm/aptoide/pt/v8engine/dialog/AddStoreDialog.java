@@ -7,16 +7,19 @@ package cm.aptoide.pt.v8engine.dialog;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.SearchManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
@@ -30,11 +33,12 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.MainActivityFragment;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.adapters.StoreAutoCompleteAdapter;
+import cm.aptoide.pt.v8engine.activity.StoreSearchActivity;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.websocket.StoreAutoCompleteWebSocket;
 import com.jakewharton.rxbinding.view.RxView;
+import java.lang.reflect.Field;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -50,10 +54,11 @@ public class AddStoreDialog extends DialogFragment {
   private String storeName;
   private Dialog loadingDialog;
   private CompositeSubscription mSubscriptions;
-  private AutoCompleteTextView mStoreName;
+  private SearchView searchView;
   private Button addStoreButton;
   private Button topStoresButton;
   private static StoreAutoCompleteWebSocket storeAutoCompleteWebSocket;
+  private String givenStoreName;;
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -76,19 +81,27 @@ public class AddStoreDialog extends DialogFragment {
   @Override public void onViewCreated(final View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     bindViews(view);
-    storeAutoCompleteWebSocket = (StoreAutoCompleteWebSocket) new StoreAutoCompleteWebSocket();
+    /*storeAutoCompleteWebSocket = (StoreAutoCompleteWebSocket) new StoreAutoCompleteWebSocket();
     storeAutoCompleteWebSocket.connect(STORE_WEBSOCKET_PORT);
-    mStoreName.setAdapter(new StoreAutoCompleteAdapter(getActivity(), storeAutoCompleteWebSocket));
-    mStoreName.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+    searchView.setAdapter(new StoreAutoCompleteAdapter(getActivity(), storeAutoCompleteWebSocket));
+    searchView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
       public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         String chosen = (String) adapterView.getItemAtPosition(position);
         storeName = chosen;
       }
-    });
+    });*/
+    searchView.setIconifiedByDefault(false);
+    try {
+      Field mDrawable = SearchView.class.getDeclaredField("mSearchHintIcon");
+      mDrawable.setAccessible(true);
+      Drawable drawable =  (Drawable)mDrawable.get(searchView);
+      drawable.setAlpha(0);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    setupStoreSearch(searchView);
     mSubscriptions.add(RxView.clicks(addStoreButton).subscribe(click -> {
-      String givenStoreName =
-          ((EditText) view.findViewById(R.id.edit_store_uri)).getText().toString();
       if (givenStoreName.length() > 0) {
         AddStoreDialog.this.storeName = givenStoreName;
         AptoideUtils.SystemU.hideKeyboard(getActivity());
@@ -131,7 +144,7 @@ public class AddStoreDialog extends DialogFragment {
   }
 
   private void bindViews(View view) {
-    mStoreName = (AutoCompleteTextView) view.findViewById(R.id.edit_store_uri);
+    searchView = (SearchView) view.findViewById(R.id.edit_store_uri);
     addStoreButton = (Button) view.findViewById(R.id.button_dialog_add_store);
     topStoresButton = (Button) view.findViewById(R.id.button_top_stores);
   }
@@ -187,6 +200,47 @@ public class AddStoreDialog extends DialogFragment {
 
   void dismissLoadingDialog() {
     loadingDialog.dismiss();
+  }
+
+  private void setupStoreSearch(SearchView searchView) {
+    final SearchManager searchManager =
+        (SearchManager) V8Engine.getContext().getSystemService(Context.SEARCH_SERVICE);
+    ComponentName cn = new ComponentName(V8Engine.getContext(), StoreSearchActivity.class);
+    searchView.setSearchableInfo(searchManager.getSearchableInfo(cn));
+
+    searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+      @Override public boolean onQueryTextSubmit(String query) {
+        //TODO: add store button action
+        return false;
+      }
+
+      @Override public boolean onQueryTextChange(String newText) {
+        return false;
+      }
+    });
+
+    searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+      @Override public boolean onSuggestionSelect(int position) {
+        return false;
+      }
+
+      @Override public boolean onSuggestionClick(int position) {
+        Cursor item = (Cursor) searchView.getSuggestionsAdapter().getItem(position);
+        givenStoreName = item.getString(1);
+        searchView.setQuery(givenStoreName, false);
+        return true;
+      }
+    });
+
+    searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+      @Override public void onFocusChange(View view, boolean hasFocus) {
+        if (!hasFocus) {
+          StoreAutoCompleteWebSocket.disconnect();
+        }
+      }
+    });
+
+    searchView.setOnSearchClickListener(v -> new StoreAutoCompleteWebSocket().connect(STORE_WEBSOCKET_PORT));
   }
 
   private enum BundleArgs {
