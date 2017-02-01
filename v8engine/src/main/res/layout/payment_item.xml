@@ -30,16 +30,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        tools:text="Usando o Cartão de Crédito"
         android:ellipsize="end"
         android:lines="1"
+        tools:text="Usando o Cartão de Crédito"
         style="@style/TextAppearance.Aptoide.Caption"
         />
 
   </LinearLayout>
 
   <Button
-      android:visibility="gone"
       android:id="@+id/item_payment_button_use"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
@@ -47,11 +46,11 @@
       android:layout_centerVertical="true"
       android:layout_marginEnd="16dp"
       android:text="@string/item_payment_button_use"
+      android:visibility="gone"
       style="@style/Widget.AppCompat.Button.Colored"
       />
 
   <Button
-      android:visibility="gone"
       android:id="@+id/item_payment_button_register"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
@@ -59,12 +58,11 @@
       android:layout_centerVertical="true"
       android:layout_marginEnd="16dp"
       android:text="@string/item_payment_button_register"
+      android:visibility="gone"
       style="@style/Widget.Aptoide.Button"
       />
 
   <TextView
-      tools:visibility="visible"
-      android:visibility="gone"
       android:id="@+id/item_payment_approving_text"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
@@ -72,6 +70,8 @@
       android:layout_centerVertical="true"
       android:layout_marginEnd="32dp"
       android:text="@string/item_payment_approving_text"
+      android:visibility="gone"
+      tools:visibility="visible"
       style="@style/TextAppearance.AppCompat.Caption"
       />
 

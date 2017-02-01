@@ -130,6 +130,10 @@ import rx.android.schedulers.AndroidSchedulers;
     notLatestAvailableText = itemView.findViewById(R.id.not_latest_available_text);
   }
 
+  @Override public void unbindView() {
+    super.unbindView();
+  }
+
   @Override public void bindView(AppViewInstallDisplayable displayable) {
     displayable.setInstallButton(actionButton);
 
@@ -219,10 +223,6 @@ import rx.android.schedulers.AndroidSchedulers;
             installOrUpgradeListener(currentApp, getApp.getNodes().getVersions(), displayable));
         break;
     }
-  }
-
-  @Override public void unbindView() {
-    super.unbindView();
   }
 
   private void setupActionButton(@StringRes int text, View.OnClickListener onClickListener) {

@@ -23,8 +23,8 @@
       <corners android:radius="5dp"/>
       <solid android:color="#f1f1f1"/>
       <stroke
-          android:width="1dip"
-          android:color="#ebebeb"/>
+          android:color="#ebebeb"
+          android:width="1dip"/>
     </shape>
 
   </item>

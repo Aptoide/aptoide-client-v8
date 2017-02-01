@@ -27,25 +27,6 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
   // FIXME: 24/1/2017 sithengineer this is an hack to keep state in the fragment. not safe.
   private ArrayList<Displayable> displayables = new ArrayList<>();
 
-  @CallSuper @Override
-  public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    if (create || refresh) {
-      clearDisplayables();
-    } else {
-      // FIXME: 24/1/2017 sithengineer used to clear and restore displayables. not a good solution
-      // create copy
-      List<Displayable> displayablesCopy = new LinkedList<>(displayables);
-      // clear displayables and adapter displayables
-      this.displayables.clear();
-      adapter.clearDisplayables();
-      // add copied displayables
-      this.displayables.addAll(displayablesCopy);
-      adapter.addDisplayables(displayablesCopy);
-      // trigger finish loading
-      finishLoading();
-    }
-  }
-
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
   }
@@ -59,11 +40,6 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
     recyclerView.setAdapter(adapter);
     layoutManager = createLayoutManager();
     recyclerView.setLayoutManager(layoutManager);
-  }
-
-  @CallSuper @Override public void bindViews(View view) {
-    super.bindViews(view);
-    recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
   }
 
   @CallSuper @Override public void onDestroyView() {
@@ -80,7 +56,10 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
     adapter = null;
   }
 
-  protected abstract T createAdapter();
+  @CallSuper @Override public void bindViews(View view) {
+    super.bindViews(view);
+    recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+  }
 
   protected abstract RecyclerView.LayoutManager createLayoutManager();
 
@@ -148,10 +127,6 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
     return this;
   }
 
-  //
-  // Fragment lifecycle events
-  //
-
   @CallSuper @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     if (adapter == null) {
       adapter = createAdapter();
@@ -162,9 +137,40 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
     this.onViewCreated();
   }
 
+  @CallSuper @Override
+  public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    if (create || refresh) {
+      clearDisplayables();
+    } else {
+      // FIXME: 24/1/2017 sithengineer used to clear and restore displayables. not a good solution
+      // create copy
+      List<Displayable> displayablesCopy = new LinkedList<>(displayables);
+      // clear displayables and adapter displayables
+      this.displayables.clear();
+      adapter.clearDisplayables();
+      // add copied displayables
+      this.displayables.addAll(displayablesCopy);
+      adapter.addDisplayables(displayablesCopy);
+      // trigger finish loading
+      finishLoading();
+    }
+  }
+
+  //
+  // Fragment lifecycle events
+  //
+
+  protected abstract T createAdapter();
+
   //
   // Lifecycle interface
   //
+
+  @CallSuper @Override public void onViewCreated() {
+    if (adapter != null) {
+      adapter.onViewCreated();
+    }
+  }
 
   /**
    * This method will not call "onResume" in the adapter elements because, despite
@@ -182,12 +188,6 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
     super.onPause();
     if (adapter != null) {
       adapter.onPause();
-    }
-  }
-
-  @CallSuper @Override public void onViewCreated() {
-    if (adapter != null) {
-      adapter.onViewCreated();
     }
   }
 

@@ -13,7 +13,6 @@ import cm.aptoide.pt.v8engine.payment.products.AptoideProduct;
 import cm.aptoide.pt.v8engine.repository.sync.SyncAdapterBackgroundSync;
 import rx.Completable;
 import rx.Observable;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by marcelobenites on 16/12/16.
@@ -47,12 +46,12 @@ public abstract class PaymentConfirmationRepository {
                     paymentConfirmation))));
   }
 
+  protected Completable syncPaymentConfirmation(AptoideProduct product) {
+    return backgroundSync.syncConfirmation(product);
+  }
+
   protected Completable createPaymentConfirmation(AptoideProduct product, int paymentId,
       String paymentConfirmationId) {
     return backgroundSync.syncConfirmation(product, paymentId, paymentConfirmationId);
-  }
-
-  protected Completable syncPaymentConfirmation(AptoideProduct product) {
-    return backgroundSync.syncConfirmation(product);
   }
 }

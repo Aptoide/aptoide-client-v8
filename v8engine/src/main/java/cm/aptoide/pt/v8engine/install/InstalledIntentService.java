@@ -85,6 +85,34 @@ public class InstalledIntentService extends IntentService {
     }
   }
 
+  private void confirmAction(String packageName, String action) {
+    repository.getNotConfirmedRollback(packageName)
+        .first()
+        .filter(rollback -> shouldConfirmRollback(rollback, action))
+        .subscribe(rollback -> {
+          repository.confirmRollback(rollback);
+        }, throwable -> throwable.printStackTrace());
+  }
+
+  protected void onPackageAdded(String packageName) {
+    Logger.d(TAG, "Package added: " + packageName);
+
+    PackageInfo packageInfo = databaseOnPackageAdded(packageName);
+    checkAndBroadcastReferrer(packageName);
+    sendInstallEvent(packageName, packageInfo);
+  }
+
+  protected void onPackageReplaced(String packageName) {
+    Logger.d(TAG, "Packaged replaced: " + packageName);
+    PackageInfo packageInfo = databaseOnPackageReplaced(packageName);
+    sendInstallEvent(packageName, packageInfo);
+  }
+
+  protected void onPackageRemoved(String packageName) {
+    Logger.d(TAG, "Packaged removed: " + packageName);
+    databaseOnPackageRemoved(packageName);
+  }
+
   private boolean shouldConfirmRollback(Rollback rollback, String action) {
     return rollback != null && ((rollback.getAction().equals(Rollback.Action.INSTALL.name())
         && action.equals(Intent.ACTION_PACKAGE_ADDED))
@@ -96,30 +124,14 @@ public class InstalledIntentService extends IntentService {
         Intent.ACTION_PACKAGE_ADDED)));
   }
 
-  protected void onPackageAdded(String packageName) {
-    Logger.d(TAG, "Package added: " + packageName);
+  private PackageInfo databaseOnPackageAdded(String packageName) {
+    PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName);
 
-    PackageInfo packageInfo = databaseOnPackageAdded(packageName);
-    checkAndBroadcastReferrer(packageName);
-    sendInstallEvent(packageName, packageInfo);
-  }
-
-  private void sendInstallEvent(String packageName, PackageInfo packageInfo) {
-    if (packageInfo != null) {
-      Logger.d(TAG, "sending event with the id = " + packageName + packageInfo.versionCode);
-      InstallEvent event =
-          (InstallEvent) analytics.get(packageName + packageInfo.versionCode, InstallEvent.class);
-      if (event != null) {
-        event.setResultStatus(DownloadInstallAnalyticsBaseBody.ResultStatus.SUCC);
-        analytics.sendEvent(event);
-        Logger.d(TAG, "Event sent");
-      } else {
-        CrashReport.getInstance()
-            .log(new NullPointerException("Event not sent, the event was null"));
-      }
-    } else {
-      CrashReport.getInstance().log(new NullPointerException("PackageInfo is null"));
+    if (checkAndLogNullPackageInfo(packageInfo, packageName)) {
+      return packageInfo;
     }
+    installedRepository.save(new Installed(packageInfo));
+    return packageInfo;
   }
 
   private void checkAndBroadcastReferrer(String packageName) {
@@ -147,25 +159,22 @@ public class InstalledIntentService extends IntentService {
     subscriptions.add(unManagedSubscription);
   }
 
-  protected void onPackageReplaced(String packageName) {
-    Logger.d(TAG, "Packaged replaced: " + packageName);
-    PackageInfo packageInfo = databaseOnPackageReplaced(packageName);
-    sendInstallEvent(packageName, packageInfo);
-  }
-
-  protected void onPackageRemoved(String packageName) {
-    Logger.d(TAG, "Packaged removed: " + packageName);
-    databaseOnPackageRemoved(packageName);
-  }
-
-  private PackageInfo databaseOnPackageAdded(String packageName) {
-    PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName);
-
-    if (checkAndLogNullPackageInfo(packageInfo, packageName)) {
-      return packageInfo;
+  private void sendInstallEvent(String packageName, PackageInfo packageInfo) {
+    if (packageInfo != null) {
+      Logger.d(TAG, "sending event with the id = " + packageName + packageInfo.versionCode);
+      InstallEvent event =
+          (InstallEvent) analytics.get(packageName + packageInfo.versionCode, InstallEvent.class);
+      if (event != null) {
+        event.setResultStatus(DownloadInstallAnalyticsBaseBody.ResultStatus.SUCC);
+        analytics.sendEvent(event);
+        Logger.d(TAG, "Event sent");
+      } else {
+        CrashReport.getInstance()
+            .log(new NullPointerException("Event not sent, the event was null"));
+      }
+    } else {
+      CrashReport.getInstance().log(new NullPointerException("PackageInfo is null"));
     }
-    installedRepository.save(new Installed(packageInfo));
-    return packageInfo;
   }
 
   private PackageInfo databaseOnPackageReplaced(String packageName) {
@@ -200,6 +209,11 @@ public class InstalledIntentService extends IntentService {
     return packageInfo;
   }
 
+  private void databaseOnPackageRemoved(String packageName) {
+    installedRepository.remove(packageName);
+    updatesRepository.remove(packageName);
+  }
+
   /**
    * @param packageInfo packageInfo.
    * @return true if packageInfo is null, false otherwise.
@@ -212,19 +226,5 @@ public class InstalledIntentService extends IntentService {
     } else {
       return false;
     }
-  }
-
-  private void databaseOnPackageRemoved(String packageName) {
-    installedRepository.remove(packageName);
-    updatesRepository.remove(packageName);
-  }
-
-  private void confirmAction(String packageName, String action) {
-    repository.getNotConfirmedRollback(packageName)
-        .first()
-        .filter(rollback -> shouldConfirmRollback(rollback, action))
-        .subscribe(rollback -> {
-          repository.confirmRollback(rollback);
-        }, throwable -> throwable.printStackTrace());
   }
 }

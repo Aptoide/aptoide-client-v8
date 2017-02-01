@@ -104,6 +104,16 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
     return super.onOptionsItemSelected(item);
   }
 
+  @Override public void onDestroyView() {
+    endlessRecyclerOnScrollListener.removeListeners();
+    super.onDestroyView();
+  }
+
+  @Override public void bindViews(View view) {
+    super.bindViews(view);
+    setHasOptionsMenu(true);
+  }
+
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
     if (create || refresh) {
@@ -161,14 +171,19 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
     }
   }
 
-  @Override public void onDestroyView() {
-    endlessRecyclerOnScrollListener.removeListeners();
-    super.onDestroyView();
-  }
-
-  @Override public void bindViews(View view) {
-    super.bindViews(view);
-    setHasOptionsMenu(true);
+  public String getHeaderMessage() {
+    String headerMessage;
+    switch (openMode) {
+      case FOLLOWERS:
+        headerMessage = getString(R.string.social_timeline_share_bar_followers);
+        break;
+      case FOLLOWING:
+        headerMessage = getString(R.string.social_timeline_share_bar_following);
+        break;
+      default:
+        headerMessage = "";
+    }
+    return headerMessage;
   }
 
   public String getFooterMessage(int hidden) {
@@ -187,21 +202,6 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
         footerMessage = "";
     }
     return footerMessage;
-  }
-
-  public String getHeaderMessage() {
-    String headerMessage;
-    switch (openMode) {
-      case FOLLOWERS:
-        headerMessage = getString(R.string.social_timeline_share_bar_followers);
-        break;
-      case FOLLOWING:
-        headerMessage = getString(R.string.social_timeline_share_bar_following);
-        break;
-      default:
-        headerMessage = "";
-    }
-    return headerMessage;
   }
 
   public enum FollowFragmentOpenMode {

@@ -27,7 +27,7 @@ public class CommentsAdapter<T extends Displayable> extends BaseAdapter {
    * @return next review's position or -1 if there are no more reviews
    */
   public int getItemPosition(int itemNumber) {
-    if(clazz==null) {
+    if (clazz == null) {
       return -1;
     }
 

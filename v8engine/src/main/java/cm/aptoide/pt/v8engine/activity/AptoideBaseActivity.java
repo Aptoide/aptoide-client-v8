@@ -78,15 +78,6 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
     setupViews();
   }
 
-  @Override protected void onStop() {
-    super.onStop();
-    Analytics.Lifecycle.Activity.onStop(this);
-  }
-
-  @Override protected void onDestroy() {
-    super.onDestroy();
-  }
-
   private void setUpAnalytics() {
     Analytics.Dimensions.setPartnerDimension(Analytics.Dimensions.PARTNER);
     Analytics.Dimensions.setVerticalDimension(Analytics.Dimensions.VERTICAL);
@@ -99,6 +90,20 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
    */
   @LayoutRes public abstract int getContentViewId();
 
+  @Override protected void onStart() {
+    super.onStart();
+    Analytics.Lifecycle.Activity.onStart(this);
+  }
+
+  @Override protected void onStop() {
+    super.onStop();
+    Analytics.Lifecycle.Activity.onStop(this);
+  }
+
+  @Override protected void onDestroy() {
+    super.onDestroy();
+  }
+
   @Override protected void onPause() {
     super.onPause();
     _resumed = false;
@@ -109,11 +114,6 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
     super.onResume();
     _resumed = true;
     Analytics.Lifecycle.Activity.onResume(this);
-  }
-
-  @Override protected void onStart() {
-    super.onStart();
-    Analytics.Lifecycle.Activity.onStart(this);
   }
 
   //

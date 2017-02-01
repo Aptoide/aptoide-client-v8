@@ -36,17 +36,18 @@ public class PaymentAuthorizationFactory {
         paymentAuthorization.getStatus().name(), paymentAuthorization.getPayerId());
   }
 
-  public cm.aptoide.pt.database.realm.PaymentAuthorization convertToDatabasePaymentAuthorization(int paymentId,
-      Authorization.Status status, String payerId) {
+  public cm.aptoide.pt.database.realm.PaymentAuthorization convertToDatabasePaymentAuthorization(
+      int paymentId, Authorization.Status status, String payerId) {
     return new cm.aptoide.pt.database.realm.PaymentAuthorization(paymentId, "", "", status.name(),
         payerId);
   }
 
   public Authorization convertToPaymentAuthorization(
       cm.aptoide.pt.database.realm.PaymentAuthorization paymentAuthorization) {
-    return new WebAuthorization(context, paymentAuthorization.getPaymentId(), paymentAuthorization.getUrl(),
-        paymentAuthorization.getRedirectUrl(),
-        WebAuthorization.Status.valueOf(paymentAuthorization.getStatus()), paymentAuthorization.getPayerId());
+    return new WebAuthorization(context, paymentAuthorization.getPaymentId(),
+        paymentAuthorization.getUrl(), paymentAuthorization.getRedirectUrl(),
+        WebAuthorization.Status.valueOf(paymentAuthorization.getStatus()),
+        paymentAuthorization.getPayerId());
   }
 
   public Authorization convertToPaymentAuthorization(

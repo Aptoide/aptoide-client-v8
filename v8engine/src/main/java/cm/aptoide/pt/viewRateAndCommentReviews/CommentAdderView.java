@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface CommentAdderView<Tadapter extends CommentsAdapter> {
   Tadapter getAdapter();
+
   void createDisplayableComments(List<Comment> comments, List<Displayable> displayables);
 }

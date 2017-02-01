@@ -47,6 +47,10 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
     permissionsLabel = (TextView) itemView.findViewById(R.id.permissions_label);
   }
 
+  @Override public void unbindView() {
+
+  }
+
   @Override public void bindView(AppViewDeveloperDisplayable displayable) {
     final GetAppMeta.App app = displayable.getPojo().getNodes().getMeta().getData();
     final Context ctx = getContext();
@@ -140,9 +144,5 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
       DialogPermissions dialogPermissions = DialogPermissions.newInstance(displayable.getPojo());
       dialogPermissions.show(getContext().getSupportFragmentManager(), "");
     });
-  }
-
-  @Override public void unbindView() {
-
   }
 }

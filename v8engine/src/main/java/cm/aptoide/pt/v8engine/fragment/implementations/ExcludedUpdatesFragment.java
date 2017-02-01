@@ -36,12 +36,6 @@ public class ExcludedUpdatesFragment extends AptoideBaseFragment<BaseAdapter> {
     return new ExcludedUpdatesFragment();
   }
 
-  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    super.load(create, refresh, savedInstanceState);
-    Logger.d(TAG, "refresh excluded updates? " + (create ? "yes" : "no"));
-    fetchExcludedUpdates();
-  }
-
   @Override public int getContentViewId() {
     return R.layout.fragment_with_toolbar;
   }
@@ -52,12 +46,46 @@ public class ExcludedUpdatesFragment extends AptoideBaseFragment<BaseAdapter> {
     setHasOptionsMenu(true);
   }
 
-  @Override public void setupToolbarDetails(Toolbar toolbar) {
-    toolbar.setTitle(R.string.excluded_updates);
+  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    super.load(create, refresh, savedInstanceState);
+    Logger.d(TAG, "refresh excluded updates? " + (create ? "yes" : "no"));
+    fetchExcludedUpdates();
+  }
+
+  private void fetchExcludedUpdates() {
+    UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
+    updateAccessor.getAll(true)
+        .observeOn(AndroidSchedulers.mainThread())
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(excludedUpdates -> {
+          if (excludedUpdates == null || excludedUpdates.isEmpty()) {
+            emptyData.setText(R.string.no_excluded_updates_msg);
+            emptyData.setVisibility(View.VISIBLE);
+            clearDisplayables();
+            finishLoading();
+          } else {
+            emptyData.setVisibility(View.GONE);
+            List<ExcludedUpdateDisplayable> displayables = new ArrayList<>();
+            for (Update excludedUpdate : excludedUpdates) {
+              displayables.add(new ExcludedUpdateDisplayable(excludedUpdate));
+            }
+            clearDisplayables().addDisplayables(displayables, true);
+          }
+        }, t -> {
+          CrashReport.getInstance().log(t);
+          emptyData.setText(R.string.no_excluded_updates_msg);
+          emptyData.setVisibility(View.VISIBLE);
+          clearDisplayables();
+          finishLoading();
+        });
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {
     return true;
+  }
+
+  @Override public void setupToolbarDetails(Toolbar toolbar) {
+    toolbar.setTitle(R.string.excluded_updates);
   }
 
   @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
@@ -129,33 +157,5 @@ public class ExcludedUpdatesFragment extends AptoideBaseFragment<BaseAdapter> {
     }
 
     return super.onOptionsItemSelected(item);
-  }
-
-  private void fetchExcludedUpdates() {
-    UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
-    updateAccessor.getAll(true)
-        .observeOn(AndroidSchedulers.mainThread())
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(excludedUpdates -> {
-          if (excludedUpdates == null || excludedUpdates.isEmpty()) {
-            emptyData.setText(R.string.no_excluded_updates_msg);
-            emptyData.setVisibility(View.VISIBLE);
-            clearDisplayables();
-            finishLoading();
-          } else {
-            emptyData.setVisibility(View.GONE);
-            List<ExcludedUpdateDisplayable> displayables = new ArrayList<>();
-            for (Update excludedUpdate : excludedUpdates) {
-              displayables.add(new ExcludedUpdateDisplayable(excludedUpdate));
-            }
-            clearDisplayables().addDisplayables(displayables, true);
-          }
-        }, t -> {
-          CrashReport.getInstance().log(t);
-          emptyData.setText(R.string.no_excluded_updates_msg);
-          emptyData.setVisibility(View.VISIBLE);
-          clearDisplayables();
-          finishLoading();
-        });
   }
 }

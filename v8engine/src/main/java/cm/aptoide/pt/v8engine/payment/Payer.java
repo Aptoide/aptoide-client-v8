@@ -31,5 +31,4 @@ public class Payer {
   public Observable<Void> login() {
     return AptoideAccountManager.login(context);
   }
-
 }

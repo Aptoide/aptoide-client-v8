@@ -27,9 +27,8 @@ public class LoaderLayoutHandler {
 
   final LoadInterface loadInterface;
   @IdRes private final int viewToShowAfterLoadingId;
-
-  private View viewToShowAfterLoading;
   protected ProgressBar progressBar;
+  private View viewToShowAfterLoading;
   private View genericErrorView;
   private View noNetworkConnectionView;
   private View retryErrorView;
@@ -78,6 +77,12 @@ public class LoaderLayoutHandler {
     }
   }
 
+  protected void restoreState() {
+    genericErrorView.setVisibility(View.GONE);
+    noNetworkConnectionView.setVisibility(View.GONE);
+    progressBar.setVisibility(View.VISIBLE);
+  }
+
   public void finishLoading() {
     Observable.fromCallable(() -> {
       onFinishLoading();
@@ -91,12 +96,6 @@ public class LoaderLayoutHandler {
   @UiThread protected void onFinishLoading() {
     progressBar.setVisibility(View.GONE);
     viewToShowAfterLoading.setVisibility(View.VISIBLE);
-  }
-
-  protected void restoreState() {
-    genericErrorView.setVisibility(View.GONE);
-    noNetworkConnectionView.setVisibility(View.GONE);
-    progressBar.setVisibility(View.VISIBLE);
   }
 
   @CallSuper public void unbindViews() {

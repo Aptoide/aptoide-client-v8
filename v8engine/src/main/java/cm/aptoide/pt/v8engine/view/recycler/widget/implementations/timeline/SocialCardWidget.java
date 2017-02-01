@@ -142,19 +142,30 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
             }));
   }
 
-  private void showLikesPreview(T displayable) {
-    marginOfTheNextLikePreview = 60;
-    for (int j = 0; j < displayable.getNumberOfLikes(); j++) {
+  private Observable<Void> showComments(T displayable) {
+    return Observable.fromCallable(() -> {
+      final String elementId = displayable.getTimelineCard().getCardId();
+      Fragment fragment = V8Engine.getFragmentProvider()
+          .newCommentGridRecyclerFragment(CommentType.TIMELINE, elementId);
+      ((FragmentShower) getContext()).pushFragmentV4(fragment);
+      return null;
+    });
+  }
 
-      UserTimeline user = null;
-      if (j < displayable.getUserLikes().size()) {
-        user = displayable.getUserLikes().get(j);
-      }
-      addUserToPreview(marginOfTheNextLikePreview, user);
-      if (marginOfTheNextLikePreview < 0) {
-        break;
-      }
+  @NonNull private Action1<Throwable> showError() {
+    return err -> CrashReport.getInstance().log(err);
+  }
+
+  private boolean likeCard(T displayable, int rating) {
+    if (!AptoideAccountManager.isLoggedIn()) {
+      ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
+          snackView -> {
+            AptoideAccountManager.openAccountManager(snackView.getContext());
+          });
+      return false;
     }
+    displayable.like(getContext(), getCardTypeName().toUpperCase(), rating);
+    return true;
   }
 
   private void addUserToPreview(int i, UserTimeline user) {
@@ -180,29 +191,18 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
     }
   }
 
-  @NonNull private Action1<Throwable> showError() {
-    return err -> CrashReport.getInstance().log(err);
-  }
+  private void showLikesPreview(T displayable) {
+    marginOfTheNextLikePreview = 60;
+    for (int j = 0; j < displayable.getNumberOfLikes(); j++) {
 
-  private boolean likeCard(T displayable, int rating) {
-    if (!AptoideAccountManager.isLoggedIn()) {
-      ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
-          snackView -> {
-            AptoideAccountManager.openAccountManager(snackView.getContext());
-          });
-      return false;
+      UserTimeline user = null;
+      if (j < displayable.getUserLikes().size()) {
+        user = displayable.getUserLikes().get(j);
+      }
+      addUserToPreview(marginOfTheNextLikePreview, user);
+      if (marginOfTheNextLikePreview < 0) {
+        break;
+      }
     }
-    displayable.like(getContext(), getCardTypeName().toUpperCase(), rating);
-    return true;
-  }
-
-  private Observable<Void> showComments(T displayable) {
-    return Observable.fromCallable(() -> {
-      final String elementId = displayable.getTimelineCard().getCardId();
-      Fragment fragment = V8Engine.getFragmentProvider()
-          .newCommentGridRecyclerFragment(CommentType.TIMELINE, elementId);
-      ((FragmentShower) getContext()).pushFragmentV4(fragment);
-      return null;
-    });
   }
 }

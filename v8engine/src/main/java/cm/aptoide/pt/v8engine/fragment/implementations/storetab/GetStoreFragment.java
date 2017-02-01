@@ -13,10 +13,11 @@ import rx.schedulers.Schedulers;
 
 public class GetStoreFragment extends StoreTabWidgetsGridRecyclerFragment {
 
-  @Override
-  protected Observable<List<Displayable>> buildDisplayables(boolean refresh, String url) {
+  @Override protected Observable<List<Displayable>> buildDisplayables(boolean refresh, String url) {
     return requestFactory.newStore(url)
-        .observe(refresh).observeOn(Schedulers.io()).flatMap(getStore -> loadGetStoreWidgets(getStore.getNodes().getWidgets(), refresh, url))
+        .observe(refresh)
+        .observeOn(Schedulers.io())
+        .flatMap(getStore -> loadGetStoreWidgets(getStore.getNodes().getWidgets(), refresh, url))
         .doOnNext(displayables -> {
           // We only want Adult Switch in Home Fragment.
           if (getParentFragment() != null && getParentFragment() instanceof HomeFragment) {

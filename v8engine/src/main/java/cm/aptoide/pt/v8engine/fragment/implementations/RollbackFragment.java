@@ -33,6 +33,8 @@ import rx.schedulers.Schedulers;
 
 public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
 
+  private static final SimpleDateFormat dateFormat =
+      new SimpleDateFormat("dd-MM-yyyy", AptoideUtils.LocaleU.DEFAULT);
   private TextView emptyData;
   private Installer installManager;
 
@@ -43,12 +45,12 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
     return new RollbackFragment();
   }
 
-  @Override protected void setupToolbarDetails(Toolbar toolbar) {
-    toolbar.setTitle(R.string.rollback);
-  }
-
   @Override protected boolean displayHomeUpAsEnabled() {
     return true;
+  }
+
+  @Override protected void setupToolbarDetails(Toolbar toolbar) {
+    toolbar.setTitle(R.string.rollback);
   }
 
   @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
@@ -73,11 +75,6 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
     return super.onOptionsItemSelected(item);
   }
 
-  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    super.load(create, refresh, savedInstanceState);
-    AptoideUtils.ThreadU.runOnUiThread(this::fetchRollbacks);
-  }
-
   @Override public int getContentViewId() {
     return R.layout.fragment_with_toolbar;
   }
@@ -88,6 +85,11 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
     setHasOptionsMenu(true);
 
     installManager = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
+  }
+
+  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    super.load(create, refresh, savedInstanceState);
+    AptoideUtils.ThreadU.runOnUiThread(this::fetchRollbacks);
   }
 
   @UiThread private void fetchRollbacks() {
@@ -109,9 +111,6 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
           finishLoading();
         });
   }
-
-  private static final SimpleDateFormat dateFormat =
-      new SimpleDateFormat("dd-MM-yyyy", AptoideUtils.LocaleU.DEFAULT);
 
   private List<Displayable> createDisplayables(List<Rollback> rollbacks) {
     List<Displayable> displayables = new LinkedList<>();

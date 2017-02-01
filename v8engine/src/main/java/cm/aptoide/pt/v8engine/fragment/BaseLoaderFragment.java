@@ -45,6 +45,14 @@ public abstract class BaseLoaderFragment extends SupportV4BaseFragment implement
     return super.onCreateView(inflater, container, savedInstanceState);
   }
 
+  @NonNull protected LoaderLayoutHandler createLoaderLayoutHandler() {
+    return new LoaderLayoutHandler(getViewToShowAfterLoadingId(), this);
+  }
+
+  @IdRes protected abstract int getViewToShowAfterLoadingId();
+
+  public abstract void load(boolean create, boolean refresh, Bundle savedInstanceState);
+
   protected void registerReceiverForAccountManager() {
     receiver = new BroadcastReceiver() {
       @Override public void onReceive(Context context, Intent intent) {
@@ -56,16 +64,18 @@ public abstract class BaseLoaderFragment extends SupportV4BaseFragment implement
     getContext().registerReceiver(receiver, intentFilter);
   }
 
-  private void unregisterReceiverForAccountManager() {
-    getContext().unregisterReceiver(receiver);
-  }
-
   @CallSuper @Override public void bindViews(View view) {
     if (loaderLayoutHandler != null) {
       loaderLayoutHandler.bindViews(view);
     }
     if (!create) {
       finishLoading();
+    }
+  }
+
+  @CallSuper protected void finishLoading() {
+    if (loaderLayoutHandler != null) {
+      loaderLayoutHandler.finishLoading();
     }
   }
 
@@ -83,16 +93,8 @@ public abstract class BaseLoaderFragment extends SupportV4BaseFragment implement
     unregisterReceiverForAccountManager();
   }
 
-  @NonNull protected LoaderLayoutHandler createLoaderLayoutHandler() {
-    return new LoaderLayoutHandler(getViewToShowAfterLoadingId(), this);
-  }
-
-  @IdRes protected abstract int getViewToShowAfterLoadingId();
-
-  @CallSuper protected void finishLoading() {
-    if (loaderLayoutHandler != null) {
-      loaderLayoutHandler.finishLoading();
-    }
+  private void unregisterReceiverForAccountManager() {
+    getContext().unregisterReceiver(receiver);
   }
 
   @CallSuper protected void finishLoading(Throwable throwable) {
@@ -100,6 +102,4 @@ public abstract class BaseLoaderFragment extends SupportV4BaseFragment implement
       loaderLayoutHandler.finishLoading(throwable);
     }
   }
-
-  public abstract void load(boolean create, boolean refresh, Bundle savedInstanceState);
 }

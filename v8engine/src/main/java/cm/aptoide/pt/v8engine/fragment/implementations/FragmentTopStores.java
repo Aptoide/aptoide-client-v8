@@ -47,11 +47,6 @@ public class FragmentTopStores extends AptoideBaseFragment<BaseAdapter> implemen
     return displayables;
   }
 
-  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    super.load(create, refresh, savedInstanceState);
-    fetchStores();
-  }
-
   @Override public int getContentViewId() {
     return R.layout.fragment_with_toolbar;
   }
@@ -60,6 +55,11 @@ public class FragmentTopStores extends AptoideBaseFragment<BaseAdapter> implemen
     super.setupViews();
     setupToolbar();
     setHasOptionsMenu(true);
+  }
+
+  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    super.load(create, refresh, savedInstanceState);
+    fetchStores();
   }
 
   private void fetchStores() {
@@ -72,13 +72,13 @@ public class FragmentTopStores extends AptoideBaseFragment<BaseAdapter> implemen
     endlessRecyclerOnScrollListener.onLoadMore(false);
   }
 
+  @Override protected boolean displayHomeUpAsEnabled() {
+    return true;
+  }
+
   @Override public void setupToolbarDetails(Toolbar toolbar) {
     toolbar.setTitle(R.string.top_stores_fragment_title);
     toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
-  }
-
-  @Override protected boolean displayHomeUpAsEnabled() {
-    return true;
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {

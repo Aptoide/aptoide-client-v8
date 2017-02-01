@@ -56,10 +56,6 @@ public class UpdateRepository implements Repository<Update, String> {
         });
   }
 
-  public @NonNull Observable<List<Update>> getAll(boolean isExcluded) {
-    return updateAccessor.getAllSorted(isExcluded);
-  }
-
   private Observable<List<App>> getNetworkUpdates(List<Long> storeIds, boolean bypassCache) {
     Logger.d(TAG, String.format("getNetworkUpdates() -> using %d stores", storeIds.size()));
     return ListAppsUpdatesRequest.of(storeIds, AptoideAccountManager.getAccessToken(),
@@ -69,6 +65,13 @@ public class UpdateRepository implements Repository<Update, String> {
       }
       return Collections.<App>emptyList();
     });
+  }
+
+  public Completable removeAllNonExcluded() {
+    return updateAccessor.getAll(false)
+        .first()
+        .toSingle()
+        .flatMapCompletable(updates -> removeAll(updates));
   }
 
   private Completable saveNewUpdates(List<App> updates) {
@@ -81,17 +84,6 @@ public class UpdateRepository implements Repository<Update, String> {
               updateList.size()));
           return saveNonExcludedUpdates(updateList);
         }));
-  }
-
-  @Override public void save(Update entity) {
-    updateAccessor.insert(entity);
-  }
-
-  public Completable removeAllNonExcluded() {
-    return updateAccessor.getAll(false)
-        .first()
-        .toSingle()
-        .flatMapCompletable(updates -> removeAll(updates));
   }
 
   public Completable removeAll(List<Update> updates) {
@@ -124,6 +116,18 @@ public class UpdateRepository implements Repository<Update, String> {
             updateAccessor.saveAll(updateListFiltered);
           }
         });
+  }
+
+  public @NonNull Observable<List<Update>> getAll(boolean isExcluded) {
+    return updateAccessor.getAllSorted(isExcluded);
+  }
+
+  @Override public void save(Update entity) {
+    updateAccessor.insert(entity);
+  }
+
+  public Observable<Update> get(String packageName) {
+    return updateAccessor.get(packageName);
   }
 
   public Completable remove(List<Update> updates) {
@@ -161,9 +165,5 @@ public class UpdateRepository implements Repository<Update, String> {
 
   public Observable<Boolean> contains(String packageName, boolean isExcluded) {
     return updateAccessor.contains(packageName, isExcluded);
-  }
-
-  public Observable<Update> get(String packageName) {
-    return updateAccessor.get(packageName);
   }
 }

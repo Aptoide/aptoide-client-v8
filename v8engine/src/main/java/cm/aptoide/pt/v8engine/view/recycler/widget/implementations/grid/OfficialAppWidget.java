@@ -144,13 +144,13 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
     }));
   }
 
-  private void hideOfficialAppMessage() {
-    installMessage.setVisibility(View.GONE);
-    verticalSeparator.setVisibility(View.GONE);
-  }
-
   private boolean isAppInstalled(GetApp app) {
     InstalledRepository installedRepo = RepositoryFactory.getInstalledRepository();
     return installedRepo.contains(app.getNodes().getMeta().getData().getPackageName());
+  }
+
+  private void hideOfficialAppMessage() {
+    installMessage.setVisibility(View.GONE);
+    verticalSeparator.setVisibility(View.GONE);
   }
 }

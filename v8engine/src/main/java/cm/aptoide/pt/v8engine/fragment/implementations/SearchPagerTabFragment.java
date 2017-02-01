@@ -13,7 +13,6 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -127,9 +126,8 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
     hasMultipleFragments = args.getBoolean(BundleCons.HAS_MULTIPLE_FRAGMENTS, false);
   }
 
-  private boolean isConvert(ABTest<SearchTabOptions> searchAbTest, boolean addSubscribedStores) {
-    return hasMultipleFragments && (addSubscribedStores == (searchAbTest.alternative()
-        == SearchTabOptions.FOLLOWED_STORES));
+  @Override public int getContentViewId() {
+    return R.layout.recycler_fragment;
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
@@ -165,16 +163,17 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
     }
   }
 
-  @Override public int getContentViewId() {
-    return R.layout.recycler_fragment;
-  }
-
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
 
     outState.putString(BundleCons.QUERY, query);
     outState.putString(BundleCons.STORE_NAME, storeName);
     outState.putBoolean(BundleCons.ADD_SUBSCRIBED_STORES, addSubscribedStores);
+  }
+
+  private boolean isConvert(ABTest<SearchTabOptions> searchAbTest, boolean addSubscribedStores) {
+    return hasMultipleFragments && (addSubscribedStores == (searchAbTest.alternative()
+        == SearchTabOptions.FOLLOWED_STORES));
   }
 
   protected static class BundleCons {

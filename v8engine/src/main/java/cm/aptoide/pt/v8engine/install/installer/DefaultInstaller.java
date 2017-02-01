@@ -112,6 +112,20 @@ public class DefaultInstaller implements Installer {
     }).flatMap(uninstallStarted -> waitPackageIntent(context, intentFilter, packageName));
   }
 
+  private void startUninstallIntent(Context context, String packageName, Uri uri)
+      throws InstallationException {
+    try {
+      // Check if package is installed first
+      packageManager.getPackageInfo(packageName, 0);
+      Intent intent = new Intent(Intent.ACTION_DELETE, uri);
+      intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+      context.startActivity(intent);
+    } catch (PackageManager.NameNotFoundException e) {
+      CrashReport.getInstance().log(e);
+      throw new InstallationException(e);
+    }
+  }
+
   private void moveInstallationFiles(RollbackInstallation installation) {
     List<FileToDownload> files = installation.getFiles();
     for (int i = 0; i < files.size(); i++) {
@@ -124,40 +138,6 @@ public class DefaultInstaller implements Installer {
       }
     }
     installation.save();
-  }
-
-  private Observable<Void> defaultInstall(Context context, File file, String packageName) {
-    final IntentFilter intentFilter = new IntentFilter();
-    intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
-    intentFilter.addAction(Intent.ACTION_PACKAGE_REPLACED);
-    intentFilter.addDataScheme("package");
-    return Observable.<Void>fromCallable(() -> {
-      startInstallIntent(context, file);
-      return null;
-    }).flatMap(installStarted -> waitPackageIntent(context, intentFilter, packageName));
-  }
-
-  private void startInstallIntent(Context context, File file) {
-    Intent intent = new Intent(Intent.ACTION_VIEW);
-
-    Uri photoURI = null;
-    //read: https://inthecheesefactory.com/blog/how-to-share-access-to-file-with-fileprovider-on-android-nougat/en
-    if (Build.VERSION.SDK_INT > 23) {
-      //content://....apk for nougat
-      photoURI =
-          FileProvider.getUriForFile(context, V8Engine.getConfiguration().getAppId() + ".provider",
-              file);
-    } else {
-      //file://....apk for < nougat
-      photoURI = Uri.fromFile(file);
-    }
-    Logger.v(TAG, photoURI.toString());
-
-    intent.setDataAndType(photoURI, "application/vnd.android.package-archive");
-    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-        | Intent.FLAG_GRANT_READ_URI_PERMISSION
-        | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-    context.startActivity(intent);
   }
 
   private Observable<Void> systemInstall(Context context, File file) {
@@ -223,6 +203,17 @@ public class DefaultInstaller implements Installer {
     }
   }
 
+  private Observable<Void> defaultInstall(Context context, File file, String packageName) {
+    final IntentFilter intentFilter = new IntentFilter();
+    intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
+    intentFilter.addAction(Intent.ACTION_PACKAGE_REPLACED);
+    intentFilter.addDataScheme("package");
+    return Observable.<Void>fromCallable(() -> {
+      startInstallIntent(context, file);
+      return null;
+    }).flatMap(installStarted -> waitPackageIntent(context, intentFilter, packageName));
+  }
+
   private void sendErrorEvent(String packageName, int versionCode, Exception e) {
     InstallEvent report =
         (InstallEvent) analytics.get(packageName + versionCode, InstallEvent.class);
@@ -233,18 +224,27 @@ public class DefaultInstaller implements Installer {
     }
   }
 
-  private void startUninstallIntent(Context context, String packageName, Uri uri)
-      throws InstallationException {
-    try {
-      // Check if package is installed first
-      packageManager.getPackageInfo(packageName, 0);
-      Intent intent = new Intent(Intent.ACTION_DELETE, uri);
-      intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-      context.startActivity(intent);
-    } catch (PackageManager.NameNotFoundException e) {
-      CrashReport.getInstance().log(e);
-      throw new InstallationException(e);
+  private void startInstallIntent(Context context, File file) {
+    Intent intent = new Intent(Intent.ACTION_VIEW);
+
+    Uri photoURI = null;
+    //read: https://inthecheesefactory.com/blog/how-to-share-access-to-file-with-fileprovider-on-android-nougat/en
+    if (Build.VERSION.SDK_INT > 23) {
+      //content://....apk for nougat
+      photoURI =
+          FileProvider.getUriForFile(context, V8Engine.getConfiguration().getAppId() + ".provider",
+              file);
+    } else {
+      //file://....apk for < nougat
+      photoURI = Uri.fromFile(file);
     }
+    Logger.v(TAG, photoURI.toString());
+
+    intent.setDataAndType(photoURI, "application/vnd.android.package-archive");
+    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+        | Intent.FLAG_GRANT_READ_URI_PERMISSION
+        | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+    context.startActivity(intent);
   }
 
   @NonNull private Observable<Void> waitPackageIntent(Context context, IntentFilter intentFilter,

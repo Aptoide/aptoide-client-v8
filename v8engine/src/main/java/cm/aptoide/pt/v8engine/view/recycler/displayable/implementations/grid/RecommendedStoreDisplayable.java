@@ -26,12 +26,12 @@ public class RecommendedStoreDisplayable extends DisplayablePojo<Store> {
     this.storeRepository = storeRepository;
   }
 
-  @Override public int getViewLayout() {
-    return R.layout.displayable_recommended_store;
-  }
-
   @Override protected Configs getConfig() {
     return new Configs(1, false);
+  }
+
+  @Override public int getViewLayout() {
+    return R.layout.displayable_recommended_store;
   }
 
   public Observable<Boolean> isFollowing() {

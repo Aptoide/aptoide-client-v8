@@ -24,14 +24,6 @@ public abstract class BaseTable {
 
   private static final String DROP_TABLE_SQL = "DROP TABLE IF EXISTS ";
 
-  public abstract String getTableName();
-
-  public abstract RealmObject convert(Cursor cursor);
-
-  public String getCustomQuery() {
-    return null;
-  }
-
   public void migrate(SQLiteDatabase db, Accessor<RealmObject> accessor) {
     Cursor cursor = null;
     try {
@@ -78,4 +70,12 @@ public abstract class BaseTable {
       }
     }
   }
+
+  public abstract String getTableName();
+
+  public String getCustomQuery() {
+    return null;
+  }
+
+  public abstract RealmObject convert(Cursor cursor);
 }

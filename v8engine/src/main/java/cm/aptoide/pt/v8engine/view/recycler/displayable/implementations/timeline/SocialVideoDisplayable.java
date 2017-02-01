@@ -130,6 +130,10 @@ public class SocialVideoDisplayable extends SocialCardDisplayable {
     return dateCalculator.getTimeSinceDate(context, date);
   }
 
+  @Override public void like(Context context, String cardType, int rating) {
+    socialRepository.like(getTimelineCard(), cardType, "", rating);
+  }
+
   public Spannable getAppText(Context context, String appName) {
     return spannableFactory.createStyleSpan(
         context.getString(R.string.displayable_social_timeline_article_get_app_button, appName),
@@ -152,9 +156,5 @@ public class SocialVideoDisplayable extends SocialCardDisplayable {
 
   @Override public void share(Context context, boolean privacyResult) {
     socialRepository.share(getTimelineCard(), context, privacyResult);
-  }
-
-  @Override public void like(Context context, String cardType, int rating) {
-    socialRepository.like(getTimelineCard(), cardType, "", rating);
   }
 }

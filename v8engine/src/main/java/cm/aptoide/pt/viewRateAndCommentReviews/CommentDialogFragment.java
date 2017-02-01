@@ -124,19 +124,6 @@ public class CommentDialogFragment extends RxDialogFragment {
     return fragment;
   }
 
-  private void loadArguments() {
-    Bundle args = getArguments();
-    this.appOrStoreName = args.getString(APP_OR_STORE_NAME, "");
-    this.commentType = CommentType.valueOf(args.getString(COMMENT_TYPE));
-    this.idAsString = args.getString(RESOURCE_ID_AS_STRING);
-    this.idAsLong = args.getLong(RESOURCE_ID_AS_LONG);
-
-    this.reply = args.containsKey(PREVIOUS_COMMENT_ID);
-    if (this.reply) {
-      this.previousCommentId = args.getLong(PREVIOUS_COMMENT_ID);
-    }
-  }
-
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
 
@@ -171,24 +158,22 @@ public class CommentDialogFragment extends RxDialogFragment {
     return view;
   }
 
+  private void loadArguments() {
+    Bundle args = getArguments();
+    this.appOrStoreName = args.getString(APP_OR_STORE_NAME, "");
+    this.commentType = CommentType.valueOf(args.getString(COMMENT_TYPE));
+    this.idAsString = args.getString(RESOURCE_ID_AS_STRING);
+    this.idAsLong = args.getLong(RESOURCE_ID_AS_LONG);
+
+    this.reply = args.containsKey(PREVIOUS_COMMENT_ID);
+    if (this.reply) {
+      this.previousCommentId = args.getLong(PREVIOUS_COMMENT_ID);
+    }
+  }
+
   //
   // logic
   //
-
-  private String getText() {
-    if (textInputLayout != null) {
-      return textInputLayout.getEditText().getEditableText().toString();
-    }
-    return null;
-  }
-
-  private void enableError(String error) {
-    textInputLayout.setError(error);
-  }
-
-  private void disableError() {
-    textInputLayout.setErrorEnabled(false);
-  }
 
   private void setupLogic() {
 
@@ -237,6 +222,21 @@ public class CommentDialogFragment extends RxDialogFragment {
         }, err -> {
           CrashReport.getInstance().log(err);
         });
+  }
+
+  private void disableError() {
+    textInputLayout.setErrorEnabled(false);
+  }
+
+  private String getText() {
+    if (textInputLayout != null) {
+      return textInputLayout.getEditText().getEditableText().toString();
+    }
+    return null;
+  }
+
+  private void enableError(String error) {
+    textInputLayout.setError(error);
   }
 
   private Observable<BaseV7Response> submitComment(String inputText) {

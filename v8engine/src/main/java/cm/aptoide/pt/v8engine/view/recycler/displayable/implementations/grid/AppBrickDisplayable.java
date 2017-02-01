@@ -33,11 +33,11 @@ public class AppBrickDisplayable extends DisplayablePojo<App> {
 	}
 	*/
 
-  @LayoutRes @Override public int getViewLayout() {
-    return R.layout.brick_app_item;
-  }
-
   @Override protected Configs getConfig() {
     return new Configs(2, true);
+  }
+
+  @LayoutRes @Override public int getViewLayout() {
+    return R.layout.brick_app_item;
   }
 }

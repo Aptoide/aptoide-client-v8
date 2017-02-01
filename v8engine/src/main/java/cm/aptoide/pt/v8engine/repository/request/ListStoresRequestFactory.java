@@ -31,9 +31,8 @@ class ListStoresRequestFactory {
   }
 
   public V7EndlessController<Store> listStores(int offset, int limit) {
-    return new V7EndlessController<>(
-        ListStoresRequest.ofTopStores(offset, limit, accessToken.get(),
-            aptoideClientUUID.getAptoideClientUUID()));
+    return new V7EndlessController<>(ListStoresRequest.ofTopStores(offset, limit, accessToken.get(),
+        aptoideClientUUID.getAptoideClientUUID()));
   }
 
   public ListStoresRequest newListStoresRequest(String url) {

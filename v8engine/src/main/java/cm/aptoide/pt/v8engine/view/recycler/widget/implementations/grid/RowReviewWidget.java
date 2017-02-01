@@ -1,4 +1,3 @@
-
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.view.View;
@@ -62,7 +61,7 @@ public class RowReviewWidget extends Widget<RowReviewDisplayable> {
     ImageLoader.loadWithCircleTransformAndPlaceHolderAvatarSize(review.getUser().getAvatar(),
         avatar, R.drawable.layer_1);
 
-    compositeSubscription.add(RxView.clicks(itemView).subscribe(aVoid-> {
+    compositeSubscription.add(RxView.clicks(itemView).subscribe(aVoid -> {
       ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
           .newRateAndReviewsFragment(app.getId(), app.getName(), app.getStore().getName(),
               app.getPackageName(), review.getId()));

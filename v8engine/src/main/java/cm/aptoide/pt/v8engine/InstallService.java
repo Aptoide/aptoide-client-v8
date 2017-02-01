@@ -105,15 +105,6 @@ public class InstallService extends Service {
     return START_STICKY;
   }
 
-  private Observable<Boolean> stopDownload(String md5) {
-    return hasNextDownload().doOnSubscribe(() -> downloadManager.pauseDownload(md5));
-  }
-
-  private void stopAllDownloads() {
-    downloadManager.pauseAllDownloads();
-    removeNotificationAndStop();
-  }
-
   @Override public void onDestroy() {
     subscriptions.unsubscribe();
     super.onDestroy();
@@ -121,6 +112,15 @@ public class InstallService extends Service {
 
   @Nullable @Override public IBinder onBind(Intent intent) {
     return null;
+  }
+
+  private Observable<Boolean> stopDownload(String md5) {
+    return hasNextDownload().doOnSubscribe(() -> downloadManager.pauseDownload(md5));
+  }
+
+  private void stopAllDownloads() {
+    downloadManager.pauseAllDownloads();
+    removeNotificationAndStop();
   }
 
   private void treatNext(boolean hasNext) {

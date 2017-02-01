@@ -62,12 +62,12 @@ public class SocialFragment extends BaseLoaderToolbarFragment {
     socialWebview.getSettings().setJavaScriptEnabled(true);
   }
 
-  @Override public void setupToolbarDetails(Toolbar toolbar) {
-    toolbar.setTitle(pageTitle);
-  }
-
   @Override protected boolean displayHomeUpAsEnabled() {
     return true;
+  }
+
+  @Override public void setupToolbarDetails(Toolbar toolbar) {
+    toolbar.setTitle(pageTitle);
   }
 
   @Override public void bindViews(View view) {

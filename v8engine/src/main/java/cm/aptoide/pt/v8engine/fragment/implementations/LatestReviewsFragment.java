@@ -69,6 +69,11 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
     this.storeId = args.getLong(STORE_ID, -1);
   }
 
+  @Override public void bindViews(View view) {
+    super.bindViews(view);
+    setHasOptionsMenu(true);
+  }
+
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
     if (create) {
@@ -94,10 +99,5 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
     } else {
       getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     }
-  }
-
-  @Override public void bindViews(View view) {
-    super.bindViews(view);
-    setHasOptionsMenu(true);
   }
 }

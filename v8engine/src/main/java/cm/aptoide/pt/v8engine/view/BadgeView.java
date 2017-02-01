@@ -71,35 +71,6 @@ public class BadgeView extends TextView {
     this(context, (AttributeSet) null, android.R.attr.textViewStyle);
   }
 
-  public BadgeView(Context context, AttributeSet attrs) {
-    this(context, attrs, android.R.attr.textViewStyle);
-  }
-
-  /**
-   * Constructor -
-   * <p>
-   * create a new BadgeView instance attached to a target {@link View}.
-   *
-   * @param context context for this view.
-   * @param target the View to attach the badge to.
-   */
-  public BadgeView(Context context, View target) {
-    this(context, null, android.R.attr.textViewStyle, target, 0);
-  }
-
-  /**
-   * Constructor -
-   * <p>
-   * create a new BadgeView instance attached to a target {@link TabWidget} tab at a given index.
-   *
-   * @param context context for this view.
-   * @param target the TabWidget to attach the badge to.
-   * @param index the position of the tab within the target.
-   */
-  public BadgeView(Context context, TabWidget target, int index) {
-    this(context, null, android.R.attr.textViewStyle, target, index);
-  }
-
   public BadgeView(Context context, AttributeSet attrs, int defStyle) {
     this(context, attrs, defStyle, null, 0);
   }
@@ -141,6 +112,12 @@ public class BadgeView extends TextView {
     } else {
       show();
     }
+  }
+
+  private int dipToPixels(int dip) {
+    Resources r = getResources();
+    float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip, r.getDisplayMetrics());
+    return (int) px;
   }
 
   private void applyTo(View target) {
@@ -185,75 +162,6 @@ public class BadgeView extends TextView {
     show(false, null);
   }
 
-  /**
-   * Make the badge visible in the UI.
-   *
-   * @param animate flag to apply the default fade-in animation.
-   */
-  public void show(boolean animate) {
-    show(animate, fadeIn);
-  }
-
-  /**
-   * Make the badge visible in the UI.
-   *
-   * @param anim Animation to apply to the view when made visible.
-   */
-  public void show(Animation anim) {
-    show(true, anim);
-  }
-
-  /**
-   * Make the badge non-visible in the UI.
-   */
-  public void hide() {
-    hide(false, null);
-  }
-
-  /**
-   * Make the badge non-visible in the UI.
-   *
-   * @param animate flag to apply the default fade-out animation.
-   */
-  public void hide(boolean animate) {
-    hide(animate, fadeOut);
-  }
-
-  /**
-   * Make the badge non-visible in the UI.
-   *
-   * @param anim Animation to apply to the view when made non-visible.
-   */
-  public void hide(Animation anim) {
-    hide(true, anim);
-  }
-
-  /**
-   * Toggle the badge visibility in the UI.
-   */
-  public void toggle() {
-    toggle(false, null, null);
-  }
-
-  /**
-   * Toggle the badge visibility in the UI.
-   *
-   * @param animate flag to apply the default fade-in/out animation.
-   */
-  public void toggle(boolean animate) {
-    toggle(animate, fadeIn, fadeOut);
-  }
-
-  /**
-   * Toggle the badge visibility in the UI.
-   *
-   * @param animIn Animation to apply to the view when made visible.
-   * @param animOut Animation to apply to the view when made non-visible.
-   */
-  public void toggle(Animation animIn, Animation animOut) {
-    toggle(true, animIn, animOut);
-  }
-
   private void show(boolean animate, Animation anim) {
     if (getBackground() == null) {
       if (badgeBg == null) {
@@ -268,59 +176,6 @@ public class BadgeView extends TextView {
     }
     this.setVisibility(View.VISIBLE);
     isShown = true;
-  }
-
-  private void hide(boolean animate, Animation anim) {
-    this.setVisibility(View.GONE);
-    if (animate) {
-      this.startAnimation(anim);
-    }
-    isShown = false;
-  }
-
-  private void toggle(boolean animate, Animation animIn, Animation animOut) {
-    if (isShown) {
-      hide(animate && (animOut != null), animOut);
-    } else {
-      show(animate && (animIn != null), animIn);
-    }
-  }
-
-  /**
-   * Increment the numeric badge label. If the current badge label cannot be converted to an
-   * integer
-   * value, its label
-   * will be set to "0".
-   *
-   * @param offset the increment offset.
-   */
-  public int increment(int offset) {
-    CharSequence txt = getText();
-    int i;
-    if (txt != null) {
-      try {
-        i = Integer.parseInt(txt.toString());
-      } catch (NumberFormatException e) {
-        i = 0;
-      }
-    } else {
-      i = 0;
-    }
-    i = i + offset;
-    setText(String.valueOf(i));
-    return i;
-  }
-
-  /**
-   * Decrement the numeric badge label. If the current badge label cannot be converted to an
-   * integer
-   * value, its label
-   * will be set to "0".
-   *
-   * @param offset the decrement offset.
-   */
-  public int decrement(int offset) {
-    return increment(-offset);
   }
 
   private ShapeDrawable getDefaultBackground() {
@@ -366,6 +221,157 @@ public class BadgeView extends TextView {
     }
 
     setLayoutParams(lp);
+  }
+
+  public BadgeView(Context context, AttributeSet attrs) {
+    this(context, attrs, android.R.attr.textViewStyle);
+  }
+
+  /**
+   * Constructor -
+   * <p>
+   * create a new BadgeView instance attached to a target {@link View}.
+   *
+   * @param context context for this view.
+   * @param target the View to attach the badge to.
+   */
+  public BadgeView(Context context, View target) {
+    this(context, null, android.R.attr.textViewStyle, target, 0);
+  }
+
+  /**
+   * Constructor -
+   * <p>
+   * create a new BadgeView instance attached to a target {@link TabWidget} tab at a given index.
+   *
+   * @param context context for this view.
+   * @param target the TabWidget to attach the badge to.
+   * @param index the position of the tab within the target.
+   */
+  public BadgeView(Context context, TabWidget target, int index) {
+    this(context, null, android.R.attr.textViewStyle, target, index);
+  }
+
+  /**
+   * Make the badge visible in the UI.
+   *
+   * @param animate flag to apply the default fade-in animation.
+   */
+  public void show(boolean animate) {
+    show(animate, fadeIn);
+  }
+
+  /**
+   * Make the badge visible in the UI.
+   *
+   * @param anim Animation to apply to the view when made visible.
+   */
+  public void show(Animation anim) {
+    show(true, anim);
+  }
+
+  /**
+   * Make the badge non-visible in the UI.
+   */
+  public void hide() {
+    hide(false, null);
+  }
+
+  private void hide(boolean animate, Animation anim) {
+    this.setVisibility(View.GONE);
+    if (animate) {
+      this.startAnimation(anim);
+    }
+    isShown = false;
+  }
+
+  /**
+   * Make the badge non-visible in the UI.
+   *
+   * @param animate flag to apply the default fade-out animation.
+   */
+  public void hide(boolean animate) {
+    hide(animate, fadeOut);
+  }
+
+  /**
+   * Make the badge non-visible in the UI.
+   *
+   * @param anim Animation to apply to the view when made non-visible.
+   */
+  public void hide(Animation anim) {
+    hide(true, anim);
+  }
+
+  /**
+   * Toggle the badge visibility in the UI.
+   */
+  public void toggle() {
+    toggle(false, null, null);
+  }
+
+  private void toggle(boolean animate, Animation animIn, Animation animOut) {
+    if (isShown) {
+      hide(animate && (animOut != null), animOut);
+    } else {
+      show(animate && (animIn != null), animIn);
+    }
+  }
+
+  /**
+   * Toggle the badge visibility in the UI.
+   *
+   * @param animate flag to apply the default fade-in/out animation.
+   */
+  public void toggle(boolean animate) {
+    toggle(animate, fadeIn, fadeOut);
+  }
+
+  /**
+   * Toggle the badge visibility in the UI.
+   *
+   * @param animIn Animation to apply to the view when made visible.
+   * @param animOut Animation to apply to the view when made non-visible.
+   */
+  public void toggle(Animation animIn, Animation animOut) {
+    toggle(true, animIn, animOut);
+  }
+
+  /**
+   * Decrement the numeric badge label. If the current badge label cannot be converted to an
+   * integer
+   * value, its label
+   * will be set to "0".
+   *
+   * @param offset the decrement offset.
+   */
+  public int decrement(int offset) {
+    return increment(-offset);
+  }
+
+  /**
+   * Increment the numeric badge label. If the current badge label cannot be converted to an
+   * integer
+   * value, its label
+   * will be set to "0".
+   *
+   * @param offset the increment offset.
+   */
+  public int increment(int offset) {
+    CharSequence txt = getText();
+    int i;
+    if (txt != null) {
+      try {
+        i = Integer.parseInt(txt.toString());
+      } catch (NumberFormatException e) {
+        i = 0;
+      }
+    } else {
+      i = 0;
+    }
+    i = i + offset;
+    setText(String.valueOf(i));
+    return i;
   }
 
   /**
@@ -453,11 +459,5 @@ public class BadgeView extends TextView {
   public void setBadgeBackgroundColor(int badgeColor) {
     this.badgeColor = badgeColor;
     badgeBg = getDefaultBackground();
-  }
-
-  private int dipToPixels(int dip) {
-    Resources r = getResources();
-    float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip, r.getDisplayMetrics());
-    return (int) px;
   }
 }

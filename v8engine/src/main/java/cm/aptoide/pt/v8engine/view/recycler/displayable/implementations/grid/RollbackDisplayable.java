@@ -39,16 +39,21 @@ public class RollbackDisplayable extends DisplayablePojo<Rollback> {
     return new DownloadFactory().create(getPojo());
   }
 
-  @Override public int getViewLayout() {
-    return R.layout.rollback_row;
-  }
-
   @Override protected Configs getConfig() {
     return new Configs(1, false);
   }
 
+  @Override public int getViewLayout() {
+    return R.layout.rollback_row;
+  }
+
   public void install(FragmentShower context) {
     openAppview(context);
+  }
+
+  public void openAppview(FragmentShower fragmentShower) {
+    fragmentShower.pushFragmentV4(
+        V8Engine.getFragmentProvider().newAppViewFragment(getPojo().getMd5()));
   }
 
   public Observable<Void> uninstall(Context context, Download appDownload) {
@@ -62,10 +67,5 @@ public class RollbackDisplayable extends DisplayablePojo<Rollback> {
 
   public void update(FragmentShower context) {
     openAppview(context);
-  }
-
-  public void openAppview(FragmentShower fragmentShower) {
-    fragmentShower.pushFragmentV4(
-        V8Engine.getFragmentProvider().newAppViewFragment(getPojo().getMd5()));
   }
 }

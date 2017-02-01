@@ -39,22 +39,6 @@ public class LikeButtonView extends FrameLayout implements View.OnClickListener 
     init();
   }
 
-  public LikeButtonView(Context context, AttributeSet attrs) {
-    super(context, attrs);
-    init();
-  }
-
-  public LikeButtonView(Context context, AttributeSet attrs, int defStyleAttr) {
-    super(context, attrs, defStyleAttr);
-    init();
-  }
-
-  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-  public LikeButtonView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-    super(context, attrs, defStyleAttr, defStyleRes);
-    init();
-  }
-
   private void init() {
     LayoutInflater.from(getContext()).inflate(R.layout.view_like_button, this, true);
     vHeart = (ImageView) findViewById(R.id.vHeart);
@@ -70,6 +54,56 @@ public class LikeButtonView extends FrameLayout implements View.OnClickListener 
     } else {
       super.setOnClickListener(null);
     }
+  }
+
+  @Override public boolean onTouchEvent(MotionEvent event) {
+    switch (event.getAction()) {
+      case MotionEvent.ACTION_DOWN:
+        vHeart.animate()
+            .scaleX(0.7f)
+            .scaleY(0.7f)
+            .setDuration(150)
+            .setInterpolator(DECCELERATE_INTERPOLATOR);
+        setPressed(true);
+        break;
+
+      case MotionEvent.ACTION_MOVE:
+        float x = event.getX();
+        float y = event.getY();
+        boolean isInside = (x > 0 && x < getWidth() && y > 0 && y < getHeight());
+        if (isPressed() != isInside) {
+          setPressed(isInside);
+        }
+        break;
+      case MotionEvent.ACTION_CANCEL:
+        vHeart.animate().scaleX(1).scaleY(1).setInterpolator(DECCELERATE_INTERPOLATOR);
+        setPressed(false);
+        break;
+      case MotionEvent.ACTION_UP:
+        vHeart.animate().scaleX(1).scaleY(1).setInterpolator(DECCELERATE_INTERPOLATOR);
+        if (isPressed()) {
+          performClick();
+          setPressed(false);
+        }
+        break;
+    }
+    return true;
+  }
+
+  public LikeButtonView(Context context, AttributeSet attrs) {
+    super(context, attrs);
+    init();
+  }
+
+  public LikeButtonView(Context context, AttributeSet attrs, int defStyleAttr) {
+    super(context, attrs, defStyleAttr);
+    init();
+  }
+
+  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+  public LikeButtonView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    super(context, attrs, defStyleAttr, defStyleRes);
+    init();
   }
 
   @Override public void onClick(View v) {
@@ -149,40 +183,6 @@ public class LikeButtonView extends FrameLayout implements View.OnClickListener 
       vHeart.invalidate();
       setChecked(false);
     }
-  }
-
-  @Override public boolean onTouchEvent(MotionEvent event) {
-    switch (event.getAction()) {
-      case MotionEvent.ACTION_DOWN:
-        vHeart.animate()
-            .scaleX(0.7f)
-            .scaleY(0.7f)
-            .setDuration(150)
-            .setInterpolator(DECCELERATE_INTERPOLATOR);
-        setPressed(true);
-        break;
-
-      case MotionEvent.ACTION_MOVE:
-        float x = event.getX();
-        float y = event.getY();
-        boolean isInside = (x > 0 && x < getWidth() && y > 0 && y < getHeight());
-        if (isPressed() != isInside) {
-          setPressed(isInside);
-        }
-        break;
-      case MotionEvent.ACTION_CANCEL:
-        vHeart.animate().scaleX(1).scaleY(1).setInterpolator(DECCELERATE_INTERPOLATOR);
-        setPressed(false);
-        break;
-      case MotionEvent.ACTION_UP:
-        vHeart.animate().scaleX(1).scaleY(1).setInterpolator(DECCELERATE_INTERPOLATOR);
-        if (isPressed()) {
-          performClick();
-          setPressed(false);
-        }
-        break;
-    }
-    return true;
   }
 
   private void setChecked(boolean checked) {

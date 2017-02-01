@@ -16,21 +16,20 @@ class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
     this.fragmentActivityV4 = fragmentActivityV4;
   }
 
-  @Override
-  public void navigateUsing(Event event, String storeTheme, String title, String tag) {
+  @Override public void navigateUsing(Event event, String storeTheme, String title, String tag) {
 
     Fragment fragment;
 
     // TODO: 22/12/2016 sithengineer refactor this using the rules present in "StoreTabGridRecyclerFragment.java"
-    if(event.getName() == Event.Name.listComments) {
+    if (event.getName() == Event.Name.listComments) {
       String action = event.getAction();
       String url = action != null ? action.replace(V7.BASE_HOST, "") : null;
 
-       fragment = V8Engine.getFragmentProvider()
-          .newCommentGridRecyclerFragmentUrl(CommentType.STORE, url);
+      fragment =
+          V8Engine.getFragmentProvider().newCommentGridRecyclerFragmentUrl(CommentType.STORE, url);
     } else {
-      fragment = V8Engine.getFragmentProvider().newStoreTabGridRecyclerFragment(event, title,
-              storeTheme, tag);
+      fragment = V8Engine.getFragmentProvider()
+          .newStoreTabGridRecyclerFragment(event, title, storeTheme, tag);
     }
 
     navigateTo(fragment);

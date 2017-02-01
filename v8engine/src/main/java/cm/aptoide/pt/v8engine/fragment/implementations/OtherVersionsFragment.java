@@ -88,15 +88,11 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
     return fragment;
   }
 
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-  }
-
-  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    Logger.d(TAG, "Other versions should refresh? " + create);
-
-    fetchOtherVersions(new ArrayList<>());
-    setHeader();
+  @Override public void loadExtras(Bundle args) {
+    super.loadExtras(args);
+    appName = args.getString(APP_NAME);
+    appImgUrl = args.getString(APP_IMG_URL);
+    appPackge = args.getString(APP_PACKAGE);
   }
 
   @Override public int getContentViewId() {
@@ -110,46 +106,19 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
     setHasOptionsMenu(true);
   }
 
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+  }
+
+  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    Logger.d(TAG, "Other versions should refresh? " + create);
+
+    fetchOtherVersions(new ArrayList<>());
+    setHeader();
+  }
+
   @Override public void onResume() {
     super.onResume();
-  }
-
-  protected void setHeader() {
-    if (header != null) {
-      header.setImage(appImgUrl);
-      setTitle(appName);
-    }
-  }
-
-  @Override public void loadExtras(Bundle args) {
-    super.loadExtras(args);
-    appName = args.getString(APP_NAME);
-    appImgUrl = args.getString(APP_IMG_URL);
-    appPackge = args.getString(APP_PACKAGE);
-  }
-
-  @Override protected boolean displayHomeUpAsEnabled() {
-    return true;
-  }
-
-  private void setTitle(String title) {
-    if (hasToolbar()) {
-      getToolbar().setTitle(title);
-    }
-  }
-
-  @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
-    super.onCreateOptionsMenu(menu, inflater);
-    inflater.inflate(R.menu.menu_empty, menu);
-  }
-
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    int itemId = item.getItemId();
-    if (itemId == android.R.id.home) {
-      getActivity().onBackPressed();
-      return true;
-    }
-    return super.onOptionsItemSelected(item);
   }
 
   protected void fetchOtherVersions(List<String> storeNames) {
@@ -166,12 +135,42 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
 
     endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(this.getAdapter(),
         ListAppVersionsRequest.of(appPackge, storeNames, AptoideAccountManager.getAccessToken(),
-            aptoideClientUUID.getAptoideClientUUID(),
-            StoreUtils.getSubscribedStoresAuthMap()), otherVersionsSuccessRequestListener,
-        Throwable::printStackTrace);
+            aptoideClientUUID.getAptoideClientUUID(), StoreUtils.getSubscribedStoresAuthMap()),
+        otherVersionsSuccessRequestListener, Throwable::printStackTrace);
 
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(false);
+  }
+
+  protected void setHeader() {
+    if (header != null) {
+      header.setImage(appImgUrl);
+      setTitle(appName);
+    }
+  }
+
+  private void setTitle(String title) {
+    if (hasToolbar()) {
+      getToolbar().setTitle(title);
+    }
+  }
+
+  @Override protected boolean displayHomeUpAsEnabled() {
+    return true;
+  }
+
+  @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+    inflater.inflate(R.menu.menu_empty, menu);
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    int itemId = item.getItemId();
+    if (itemId == android.R.id.home) {
+      getActivity().onBackPressed();
+      return true;
+    }
+    return super.onOptionsItemSelected(item);
   }
 
 	/*

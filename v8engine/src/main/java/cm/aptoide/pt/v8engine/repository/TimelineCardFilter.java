@@ -30,22 +30,6 @@ public class TimelineCardFilter {
         .flatMap(timelineCard -> filterAlreadyDoneUpdates(timelineCard));
   }
 
-  private Observable<? extends TimelineCard> filterAlreadyDoneUpdates(TimelineCard timelineCard) {
-    if (timelineCard instanceof AppUpdate) {
-      return installedAccessor.get(((AppUpdate) timelineCard).getPackageName())
-          .firstOrDefault(null)
-          .flatMap(installed -> {
-            if (installed != null
-                && installed.getVersionCode() == ((AppUpdate) timelineCard).getFile()
-                .getVercode()) {
-              return Observable.empty();
-            }
-            return Observable.just(timelineCard);
-          });
-    }
-    return Observable.just(timelineCard);
-  }
-
   private Observable<? extends TimelineCard> filterInstalledRecommendation(
       TimelineCard timelineItem) {
     if (timelineItem instanceof Recommendation) {
@@ -60,6 +44,22 @@ public class TimelineCardFilter {
           });
     }
     return Observable.just(timelineItem);
+  }
+
+  private Observable<? extends TimelineCard> filterAlreadyDoneUpdates(TimelineCard timelineCard) {
+    if (timelineCard instanceof AppUpdate) {
+      return installedAccessor.get(((AppUpdate) timelineCard).getPackageName())
+          .firstOrDefault(null)
+          .flatMap(installed -> {
+            if (installed != null
+                && installed.getVersionCode() == ((AppUpdate) timelineCard).getFile()
+                .getVercode()) {
+              return Observable.empty();
+            }
+            return Observable.just(timelineCard);
+          });
+    }
+    return Observable.just(timelineCard);
   }
 
   public static class TimelineCardDuplicateFilter implements Func1<TimelineCard, Boolean> {

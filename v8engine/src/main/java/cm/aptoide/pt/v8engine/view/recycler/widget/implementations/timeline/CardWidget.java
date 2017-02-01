@@ -69,46 +69,6 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
         }));
   }
 
-  abstract String getCardTypeName();
-
-  protected void knockWithSixpackCredentials(String url) {
-    if (url == null) {
-      return;
-    }
-
-    String credential = Credentials.basic(BuildConfig.SIXPACK_USER, BuildConfig.SIXPACK_PASSWORD);
-
-    OkHttpClient client = new OkHttpClient();
-
-    Request click = new Request.Builder().url(url).addHeader("authorization", credential).build();
-
-    client.newCall(click).enqueue(new Callback() {
-      @Override public void onFailure(Call call, IOException e) {
-        Logger.d(this.getClass().getSimpleName(), "sixpack request fail " + call.toString());
-      }
-
-      @Override public void onResponse(Call call, Response response) throws IOException {
-        Logger.d(this.getClass().getSimpleName(), "sixpack knock success");
-        response.body().close();
-      }
-    });
-  }
-
-  protected void setCardViewMargin(CardDisplayable displayable, CardView cardView) {
-    CardView.LayoutParams layoutParams =
-        new CardView.LayoutParams(CardView.LayoutParams.WRAP_CONTENT,
-            CardView.LayoutParams.WRAP_CONTENT);
-    layoutParams.setMargins(displayable.getMarginWidth(getContext(),
-        getContext().getResources().getConfiguration().orientation), 0,
-        displayable.getMarginWidth(getContext(),
-            getContext().getResources().getConfiguration().orientation), 30);
-    cardView.setLayoutParams(layoutParams);
-  }
-
-  //
-  // all cards are "shareable"
-  //
-
   void shareCard(T displayable) {
     if (!AptoideAccountManager.isLoggedIn()) {
       ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
@@ -156,7 +116,7 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
     }).subscribeOn(AndroidSchedulers.mainThread()).subscribe(eResponse -> {
       switch (eResponse) {
         case YES:
-          ShowMessage.asSnack(getContext(),R.string.social_timeline_share_dialog_title);
+          ShowMessage.asSnack(getContext(), R.string.social_timeline_share_dialog_title);
           break;
         case NO:
           break;
@@ -164,5 +124,45 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
           break;
       }
     });
+  }
+
+  abstract String getCardTypeName();
+
+  protected void knockWithSixpackCredentials(String url) {
+    if (url == null) {
+      return;
+    }
+
+    String credential = Credentials.basic(BuildConfig.SIXPACK_USER, BuildConfig.SIXPACK_PASSWORD);
+
+    OkHttpClient client = new OkHttpClient();
+
+    Request click = new Request.Builder().url(url).addHeader("authorization", credential).build();
+
+    client.newCall(click).enqueue(new Callback() {
+      @Override public void onFailure(Call call, IOException e) {
+        Logger.d(this.getClass().getSimpleName(), "sixpack request fail " + call.toString());
+      }
+
+      @Override public void onResponse(Call call, Response response) throws IOException {
+        Logger.d(this.getClass().getSimpleName(), "sixpack knock success");
+        response.body().close();
+      }
+    });
+  }
+
+  //
+  // all cards are "shareable"
+  //
+
+  protected void setCardViewMargin(CardDisplayable displayable, CardView cardView) {
+    CardView.LayoutParams layoutParams =
+        new CardView.LayoutParams(CardView.LayoutParams.WRAP_CONTENT,
+            CardView.LayoutParams.WRAP_CONTENT);
+    layoutParams.setMargins(displayable.getMarginWidth(getContext(),
+        getContext().getResources().getConfiguration().orientation), 0,
+        displayable.getMarginWidth(getContext(),
+            getContext().getResources().getConfiguration().orientation), 30);
+    cardView.setLayoutParams(layoutParams);
   }
 }

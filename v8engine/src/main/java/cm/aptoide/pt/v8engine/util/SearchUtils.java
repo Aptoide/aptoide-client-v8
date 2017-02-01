@@ -30,12 +30,6 @@ public class SearchUtils {
         s -> V8Engine.getFragmentProvider().newSearchFragment(s));
   }
 
-  public static void setupInsideStoreSearchView(Menu menu, FragmentActivity fragmentActivity,
-      String storeName) {
-    setupSearchView(menu.findItem(R.id.action_search), fragmentActivity,
-        s -> V8Engine.getFragmentProvider().newSearchFragment(s, storeName));
-  }
-
   public static void setupSearchView(MenuItem searchItem, FragmentActivity fragmentActivity,
       CreateQueryFragmentInterface createSearchFragmentInterface) {
 
@@ -92,5 +86,11 @@ public class SearchUtils {
     });
 
     searchView.setOnSearchClickListener(v -> WebSocketSingleton.getInstance().connect());
+  }
+
+  public static void setupInsideStoreSearchView(Menu menu, FragmentActivity fragmentActivity,
+      String storeName) {
+    setupSearchView(menu.findItem(R.id.action_search), fragmentActivity,
+        s -> V8Engine.getFragmentProvider().newSearchFragment(s, storeName));
   }
 }

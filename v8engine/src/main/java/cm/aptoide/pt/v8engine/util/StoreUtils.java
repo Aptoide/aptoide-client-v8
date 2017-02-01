@@ -48,14 +48,8 @@ public class StoreUtils {
     return storeCredentialsProvider.get(storeId);
   }
 
-  @Deprecated
-  public static BaseRequestWithStore.StoreCredentials getStoreCredentials(String storeName) {
-    return storeCredentialsProvider.get(storeName);
-  }
-
-  @Deprecated
-  public static @Nullable BaseRequestWithStore.StoreCredentials getStoreCredentialsFromUrl(
-      String url) {
+  @Deprecated public static @Nullable
+  BaseRequestWithStore.StoreCredentials getStoreCredentialsFromUrl(String url) {
     return storeCredentialsProvider.fromUrl(url);
   }
 
@@ -68,39 +62,7 @@ public class StoreUtils {
       @Nullable ErrorRequestListener errorRequestListener) {
     subscribeStore(GetStoreMetaRequest.of(getStoreCredentials(storeName),
         AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID()),
-        successRequestListener,
-        errorRequestListener);
-  }
-
-  public static Observable<Boolean> isSubscribedStore(String storeName) {
-    StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
-    return storeAccessor.get(storeName).map(store -> store != null);
-  }
-
-  public static String split(String repoUrl) {
-    Logger.d("Aptoide-RepoUtils", "Splitting " + repoUrl);
-    repoUrl = formatRepoUri(repoUrl);
-    return repoUrl.split("http://")[1].split("\\.store")[0].split("\\.bazaarandroid.com")[0];
-  }
-
-  public static String formatRepoUri(String repoUri) {
-
-    repoUri = repoUri.toLowerCase(Locale.ENGLISH);
-
-    if (repoUri.contains("http//")) {
-      repoUri = repoUri.replaceFirst("http//", "http://");
-    }
-
-    if (repoUri.length() != 0 && repoUri.charAt(repoUri.length() - 1) != '/') {
-      repoUri = repoUri + '/';
-      Logger.d("Aptoide-ManageRepo", "repo uri: " + repoUri);
-    }
-    if (!repoUri.startsWith("http://")) {
-      repoUri = "http://" + repoUri;
-      Logger.d("Aptoide-ManageRepo", "repo uri: " + repoUri);
-    }
-
-    return repoUri;
+        successRequestListener, errorRequestListener);
   }
 
   /**
@@ -150,9 +112,45 @@ public class StoreUtils {
     });
   }
 
+  @Deprecated
+  public static BaseRequestWithStore.StoreCredentials getStoreCredentials(String storeName) {
+    return storeCredentialsProvider.get(storeName);
+  }
+
   private static boolean isPrivateCredentialsSet(GetStoreMetaRequest getStoreMetaRequest) {
     return getStoreMetaRequest.getBody().getStoreUser() != null
         && getStoreMetaRequest.getBody().getStorePassSha1() != null;
+  }
+
+  public static Observable<Boolean> isSubscribedStore(String storeName) {
+    StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
+    return storeAccessor.get(storeName).map(store -> store != null);
+  }
+
+  public static String split(String repoUrl) {
+    Logger.d("Aptoide-RepoUtils", "Splitting " + repoUrl);
+    repoUrl = formatRepoUri(repoUrl);
+    return repoUrl.split("http://")[1].split("\\.store")[0].split("\\.bazaarandroid.com")[0];
+  }
+
+  public static String formatRepoUri(String repoUri) {
+
+    repoUri = repoUri.toLowerCase(Locale.ENGLISH);
+
+    if (repoUri.contains("http//")) {
+      repoUri = repoUri.replaceFirst("http//", "http://");
+    }
+
+    if (repoUri.length() != 0 && repoUri.charAt(repoUri.length() - 1) != '/') {
+      repoUri = repoUri + '/';
+      Logger.d("Aptoide-ManageRepo", "repo uri: " + repoUri);
+    }
+    if (!repoUri.startsWith("http://")) {
+      repoUri = "http://" + repoUri;
+      Logger.d("Aptoide-ManageRepo", "repo uri: " + repoUri);
+    }
+
+    return repoUri;
   }
 
   public static List<Long> getSubscribedStoresIds() {

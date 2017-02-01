@@ -50,9 +50,9 @@ public class SimilarDisplayable extends CardDisplayable {
   public SimilarDisplayable() {
   }
 
-  public SimilarDisplayable(Similar similar, int avatarResource,
-      int titleResource, long appId, String packageName, String appName, String appIcon,
-      String abUrl, List<String> similarAppsNames, List<String> similarAppsPackageNames, Date date,
+  public SimilarDisplayable(Similar similar, int avatarResource, int titleResource, long appId,
+      String packageName, String appName, String appIcon, String abUrl,
+      List<String> similarAppsNames, List<String> similarAppsPackageNames, Date date,
       Date timestamp, DateCalculator dateCalculator, SpannableFactory spannableFactory,
       TimelineMetricsManager timelineMetricsManager, SocialRepository socialRepository) {
     super(similar);
@@ -100,15 +100,15 @@ public class SimilarDisplayable extends CardDisplayable {
         socialRepository);
   }
 
-  public String getTitle() {
-    return AptoideUtils.StringU.getFormattedString(titleResource,
-        Application.getConfiguration().getMarketName());
-  }
-
   public Spannable getStyledTitle(Context context) {
     String aptoide = Application.getConfiguration().getMarketName();
     return spannableFactory.createColorSpan(getTitle(),
         ContextCompat.getColor(context, R.color.appstimeline_recommends_title), aptoide);
+  }
+
+  public String getTitle() {
+    return AptoideUtils.StringU.getFormattedString(titleResource,
+        Application.getConfiguration().getMarketName());
   }
 
   public Spannable getSimilarAppsText(Context context) {

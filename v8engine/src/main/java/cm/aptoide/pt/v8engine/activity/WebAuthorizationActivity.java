@@ -55,8 +55,7 @@ public class WebAuthorizationActivity extends ActivityView {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_web_authorization);
 
-    if (getIntent().hasExtra(EXTRA_PAYMENT_ID)
-        && getIntent().hasExtra(EXTRA_PRODUCT)) {
+    if (getIntent().hasExtra(EXTRA_PAYMENT_ID) && getIntent().hasExtra(EXTRA_PRODUCT)) {
       paymentId = getIntent().getIntExtra(EXTRA_PAYMENT_ID, 0);
       final AptoideProduct product = getIntent().getParcelableExtra(EXTRA_PRODUCT);
       final ProductRepository productRepository =
@@ -69,13 +68,11 @@ public class WebAuthorizationActivity extends ActivityView {
       webView.getSettings().setJavaScriptEnabled(true);
       webView.setWebChromeClient(new WebChromeClient());
       progressBarContainer = findViewById(R.id.activity_web_authorization_preogress_bar);
-      unknownErrorDialog =
-          new AlertDialog.Builder(this)
-              .setMessage(R.string.having_some_trouble)
-              .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                finish();
-              })
-              .create();
+      unknownErrorDialog = new AlertDialog.Builder(this).setMessage(R.string.having_some_trouble)
+          .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+            finish();
+          })
+          .create();
     } else {
       throw new IllegalStateException("Web payment urls must be provided");
     }
@@ -93,7 +90,7 @@ public class WebAuthorizationActivity extends ActivityView {
             unknownErrorDialog.show();
           } else if (authorization.isInitiated()) {
             showAuthorization((WebAuthorization) authorization);
-          } else if (authorization.isPending()){
+          } else if (authorization.isPending()) {
             finish();
           }
         });
@@ -133,5 +130,4 @@ public class WebAuthorizationActivity extends ActivityView {
     });
     webView.loadUrl(webAuthorization.getUrl());
   }
-
 }

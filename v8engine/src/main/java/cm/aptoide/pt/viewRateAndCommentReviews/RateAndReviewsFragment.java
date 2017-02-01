@@ -98,16 +98,6 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     return fragment;
   }
 
-  @Override public void loadExtras(Bundle args) {
-    super.loadExtras(args);
-    appId = args.getLong(APP_ID);
-    reviewId = args.getLong(REVIEW_ID);
-    packageName = args.getString(PACKAGE_NAME);
-    storeName = args.getString(STORE_NAME);
-    appName = args.getString(APP_NAME);
-    storeTheme = args.getString(STORE_THEME);
-  }
-
   @Override protected boolean displayHomeUpAsEnabled() {
     return true;
   }
@@ -142,55 +132,21 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     return super.onOptionsItemSelected(item);
   }
 
-  private void fetchRating(boolean refresh) {
-    GetAppRequest.of(appId, AptoideAccountManager.getAccessToken(),
-        aptoideClientUUID.getAptoideClientUUID(), packageName)
-        .observe(refresh)
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(getApp -> {
-          if (getApp.isOk()) {
-            GetAppMeta.App data = getApp.getNodes().getMeta().getData();
-            setupTitle(data.getName());
-            setupRating(data);
-          }
-          finishLoading();
-        }, err -> {
-          CrashReport.getInstance().log(err);
-        });
-  }
-
-  private void setupRating(GetAppMeta.App data) {
-    ratingTotalsLayout.setup(data);
-    ratingBarsLayout.setup(data);
-  }
-
-  private void fetchReviews() {
-    ListReviewsRequest reviewsRequest =
-        ListReviewsRequest.of(storeName, packageName, AptoideAccountManager.getAccessToken(),
-            aptoideClientUUID.getAptoideClientUUID());
-
-    endlessRecyclerOnScrollListener =
-        new EndlessRecyclerOnScrollListener(this.getAdapter(), reviewsRequest,
-            new ListFullReviewsSuccessRequestListener(this), Throwable::printStackTrace);
-    getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
-    endlessRecyclerOnScrollListener.onLoadMore(false);
-  }
-
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    if (storeTheme != null) {
-      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
-      ThemeUtils.setStoreTheme(getActivity(), storeTheme);
-    }
-  }
-
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
     Logger.d(TAG, "Other versions should refresh? " + create);
     fetchRating(refresh);
     fetchReviews();
+  }
+
+  @Override public void loadExtras(Bundle args) {
+    super.loadExtras(args);
+    appId = args.getLong(APP_ID);
+    reviewId = args.getLong(REVIEW_ID);
+    packageName = args.getString(PACKAGE_NAME);
+    storeName = args.getString(STORE_NAME);
+    appName = args.getString(APP_NAME);
+    storeTheme = args.getString(STORE_THEME);
   }
 
   @Override public int getContentViewId() {
@@ -212,12 +168,54 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     });
   }
 
-  @NonNull @Override
-  public CommentsReadMoreDisplayable createReadMoreDisplayable(final int itemPosition,
-      Review review) {
-    return new CommentsReadMoreDisplayable(review.getId(), true,
-        review.getCommentList().getDatalist().getNext(),
-        new SimpleReviewCommentAdder(itemPosition, this));
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    if (storeTheme != null) {
+      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
+      ThemeUtils.setStoreTheme(getActivity(), storeTheme);
+    }
+  }
+
+  private void fetchRating(boolean refresh) {
+    GetAppRequest.of(appId, AptoideAccountManager.getAccessToken(),
+        aptoideClientUUID.getAptoideClientUUID(), packageName)
+        .observe(refresh)
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(getApp -> {
+          if (getApp.isOk()) {
+            GetAppMeta.App data = getApp.getNodes().getMeta().getData();
+            setupTitle(data.getName());
+            setupRating(data);
+          }
+          finishLoading();
+        }, err -> {
+          CrashReport.getInstance().log(err);
+        });
+  }
+
+  private void fetchReviews() {
+    ListReviewsRequest reviewsRequest =
+        ListReviewsRequest.of(storeName, packageName, AptoideAccountManager.getAccessToken(),
+            aptoideClientUUID.getAptoideClientUUID());
+
+    endlessRecyclerOnScrollListener =
+        new EndlessRecyclerOnScrollListener(this.getAdapter(), reviewsRequest,
+            new ListFullReviewsSuccessRequestListener(this), Throwable::printStackTrace);
+    getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
+    endlessRecyclerOnScrollListener.onLoadMore(false);
+  }
+
+  public void setupTitle(String title) {
+    if (hasToolbar()) {
+      getToolbar().setTitle(title);
+    }
+  }
+
+  private void setupRating(GetAppMeta.App data) {
+    ratingTotalsLayout.setup(data);
+    ratingBarsLayout.setup(data);
   }
 
   /*
@@ -228,6 +226,14 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   }
   */
 
+  @NonNull @Override
+  public CommentsReadMoreDisplayable createReadMoreDisplayable(final int itemPosition,
+      Review review) {
+    return new CommentsReadMoreDisplayable(review.getId(), true,
+        review.getCommentList().getDatalist().getNext(),
+        new SimpleReviewCommentAdder(itemPosition, this));
+  }
+
   @Override protected CommentsAdapter createAdapter() {
     return new CommentsAdapter<>(RateAndReviewCommentDisplayable.class);
   }
@@ -236,12 +242,6 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   public void createDisplayableComments(List<Comment> comments, List<Displayable> displayables) {
     for (final Comment comment : comments) {
       displayables.add(new CommentDisplayable(comment));
-    }
-  }
-
-  public void setupTitle(String title) {
-    if (hasToolbar()) {
-      getToolbar().setTitle(title);
     }
   }
 

@@ -51,6 +51,10 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
     //storeUnsubscribe.setText(R.string.unfollow);
   }
 
+  @Override public void unbindView() {
+
+  }
+
   @Override public void bindView(SubscribedStoreDisplayable displayable) {
 
     final Context context = itemView.getContext();
@@ -101,9 +105,5 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
     //            CrashReport.getInstance().log(e);
     //          }));
     //});
-  }
-
-  @Override public void unbindView() {
-
   }
 }

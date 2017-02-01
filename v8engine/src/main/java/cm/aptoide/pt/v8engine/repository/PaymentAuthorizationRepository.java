@@ -39,7 +39,8 @@ public class PaymentAuthorizationRepository implements Repository<Authorization,
           }
           return Observable.<Void>error(
               new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
-        }).toCompletable();
+        })
+        .toCompletable();
   }
 
   @Override public void save(Authorization entity) {
@@ -66,12 +67,6 @@ public class PaymentAuthorizationRepository implements Repository<Authorization,
                 .toList()));
   }
 
-  public Completable saveAuthorization(Authorization authorization) {
-    return Completable.fromAction(() -> authotizationAccessor.save(
-        authorizationFactory.convertToDatabasePaymentAuthorization(authorization)))
-        .andThen(syncAuthorizations(Collections.singletonList(authorization.getPaymentId())));
-  }
-
   private Completable syncAuthorizations(List<Integer> paymentIds) {
     return Observable.from(paymentIds)
         .map(paymentId -> String.valueOf(paymentId))
@@ -80,4 +75,9 @@ public class PaymentAuthorizationRepository implements Repository<Authorization,
         .toCompletable();
   }
 
+  public Completable saveAuthorization(Authorization authorization) {
+    return Completable.fromAction(() -> authotizationAccessor.save(
+        authorizationFactory.convertToDatabasePaymentAuthorization(authorization)))
+        .andThen(syncAuthorizations(Collections.singletonList(authorization.getPaymentId())));
+  }
 }

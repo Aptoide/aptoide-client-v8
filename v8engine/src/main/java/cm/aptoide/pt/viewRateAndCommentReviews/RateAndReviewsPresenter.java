@@ -32,15 +32,15 @@ public class RateAndReviewsPresenter implements Presenter {
     this.view = view;
     this.schedulerProvider = schedulerProvider;
 
-    String aptoideClientUUID =
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID();
+    String aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext()).getAptoideClientUUID();
 
     request = ListReviewsRequest.of(storeName, packageName, AptoideAccountManager.getAccessToken(),
         aptoideClientUUID);
 
-    ratingRequest = GetAppRequest.of(appId, AptoideAccountManager.getAccessToken(),
-        aptoideClientUUID, packageName);
+    ratingRequest =
+        GetAppRequest.of(appId, AptoideAccountManager.getAccessToken(), aptoideClientUUID,
+            packageName);
 
     subscriptions = new CompositeSubscription();
   }
@@ -86,10 +86,10 @@ public class RateAndReviewsPresenter implements Presenter {
 
   }
 
-  @NonNull private Observable<Object> showRating() {
-    return ratingRequest.observe().observeOn(schedulerProvider.ui()).doOnNext(response -> {
+  @NonNull private Observable<Object> showReviews() {
+    return request.observe().observeOn(schedulerProvider.ui()).doOnNext(response -> {
       if (response.isOk()) {
-        view.showRating(response.getNodes().getMeta().getData().getStats().getRating());
+        view.showNextReviews(0, response.getDatalist().getList());
       } else {
         // TODO: 17/11/2016 sithengineer improve this exception
         IllegalStateException exception = new IllegalStateException("Unexpected response");
@@ -99,10 +99,10 @@ public class RateAndReviewsPresenter implements Presenter {
     }).map(response -> null);
   }
 
-  @NonNull private Observable<Object> showReviews() {
-    return request.observe().observeOn(schedulerProvider.ui()).doOnNext(response -> {
+  @NonNull private Observable<Object> showRating() {
+    return ratingRequest.observe().observeOn(schedulerProvider.ui()).doOnNext(response -> {
       if (response.isOk()) {
-        view.showNextReviews(0, response.getDatalist().getList());
+        view.showRating(response.getNodes().getMeta().getData().getStats().getRating());
       } else {
         // TODO: 17/11/2016 sithengineer improve this exception
         IllegalStateException exception = new IllegalStateException("Unexpected response");

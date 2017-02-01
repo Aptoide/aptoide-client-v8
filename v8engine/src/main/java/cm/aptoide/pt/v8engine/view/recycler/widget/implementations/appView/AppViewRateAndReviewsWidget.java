@@ -96,6 +96,9 @@ import java.util.List;
         (ContentLoadingProgressBar) itemView.findViewById(R.id.top_comments_progress);
   }
 
+  @Override public void unbindView() {
+  }
+
   @Override public void bindView(AppViewRateAndCommentsDisplayable displayable) {
     GetApp pojo = displayable.getPojo();
     GetAppMeta.App app = pojo.getNodes().getMeta().getData();
@@ -139,25 +142,8 @@ import java.util.List;
     loadReviews();
   }
 
-  @Override public void unbindView() {
-  }
-
   private void loadReviews() {
     loadTopReviews(storeName, packageName);
-  }
-
-  private void scheduleAnimations() {
-    final int topReviewsCount = topReviewsList.getLayoutManager().getItemCount();
-    if (topReviewsCount > 1) {
-      for (int i = 0; i < topReviewsCount - 1; ++i) {
-        final int count = i + 1;
-        topReviewsList.postDelayed(() -> {
-          topReviewsList.smoothScrollToPosition(count);
-        }, count * TIME_BETWEEN_SCROLL);
-      }
-    } else {
-      Logger.w(TAG, "Not enough top reviews to do paging animation.");
-    }
   }
 
   public void loadTopReviews(String storeName, String packageName) {
@@ -165,24 +151,24 @@ import java.util.List;
         AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
         .execute(listReviews -> {
 
-          List<Review> reviews = listReviews.getDatalist().getList();
-          if (reviews == null || reviews.isEmpty()) {
-            topReviewsList.setAdapter(new TopReviewsAdapter(getContext()));
-            loadedData(false);
-            return;
-          }
+              List<Review> reviews = listReviews.getDatalist().getList();
+              if (reviews == null || reviews.isEmpty()) {
+                topReviewsList.setAdapter(new TopReviewsAdapter(getContext()));
+                loadedData(false);
+                return;
+              }
 
-          loadedData(true);
-          final List<Review> list = listReviews.getDatalist().getList();
-          topReviewsList.setAdapter(
-              new TopReviewsAdapter(getContext(), list.toArray(new Review[list.size()])));
-          scheduleAnimations();
-        }, e -> {
-          loadedData(false);
-          topReviewsList.setAdapter(new TopReviewsAdapter(getContext()));
-          CrashReport.getInstance().log(e);
-        }, true // bypass cache flag
-    );
+              loadedData(true);
+              final List<Review> list = listReviews.getDatalist().getList();
+              topReviewsList.setAdapter(
+                  new TopReviewsAdapter(getContext(), list.toArray(new Review[list.size()])));
+              scheduleAnimations();
+            }, e -> {
+              loadedData(false);
+              topReviewsList.setAdapter(new TopReviewsAdapter(getContext()));
+              CrashReport.getInstance().log(e);
+            }, true // bypass cache flag
+        );
   }
 
   private void loadedData(boolean hasReviews) {
@@ -205,6 +191,20 @@ import java.util.List;
       if (usersToVote == 0) {
         emptyReviewTextView.setText(R.string.be_the_first_to_rate_this_app);
       }
+    }
+  }
+
+  private void scheduleAnimations() {
+    final int topReviewsCount = topReviewsList.getLayoutManager().getItemCount();
+    if (topReviewsCount > 1) {
+      for (int i = 0; i < topReviewsCount - 1; ++i) {
+        final int count = i + 1;
+        topReviewsList.postDelayed(() -> {
+          topReviewsList.smoothScrollToPosition(count);
+        }, count * TIME_BETWEEN_SCROLL);
+      }
+    } else {
+      Logger.w(TAG, "Not enough top reviews to do paging animation.");
     }
   }
 

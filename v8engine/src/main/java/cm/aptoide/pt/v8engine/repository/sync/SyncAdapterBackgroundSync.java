@@ -44,22 +44,6 @@ public class SyncAdapterBackgroundSync {
     return sync(bundle);
   }
 
-  public Completable syncConfirmation(AptoideProduct product) {
-    final Bundle bundle = syncDataConverter.toBundle(product);
-    bundle.putBoolean(AptoideSyncAdapter.EXTRA_PAYMENT_CONFIRMATIONS, true);
-    return sync(bundle);
-  }
-
-  public Completable syncConfirmation(AptoideProduct product, int paymentId,
-      String paymentConfirmationId) {
-    final Bundle bundle = syncDataConverter.toBundle(product);
-    bundle.putBoolean(AptoideSyncAdapter.EXTRA_PAYMENT_CONFIRMATIONS, true);
-    bundle.putString(AptoideSyncAdapter.EXTRA_PAYMENT_CONFIRMATION_ID, paymentConfirmationId);
-    bundle.putString(AptoideSyncAdapter.EXTRA_PAYMENT_IDS,
-        syncDataConverter.toString(Collections.singletonList(String.valueOf(paymentId))));
-    return sync(bundle);
-  }
-
   private Completable sync(Bundle bundle) {
     bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
     bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
@@ -69,6 +53,14 @@ public class SyncAdapterBackgroundSync {
     String authority = configuration.getContentAuthority();
     ContentResolver.setSyncAutomatically(account, authority, true);
     return sync(account, authority, bundle);
+  }
+
+  @NonNull private Account getAccount() {
+    Account[] accounts = accountManager.getAccountsByType(configuration.getAccountType());
+    if (accounts != null && accounts.length > 0) {
+      return accounts[0];
+    }
+    throw new IllegalStateException("User not logged in. Can't sync.");
   }
 
   private Completable sync(Account account, String authority, Bundle bundle) {
@@ -92,11 +84,19 @@ public class SyncAdapterBackgroundSync {
     }).toCompletable();
   }
 
-  @NonNull private Account getAccount() {
-    Account[] accounts = accountManager.getAccountsByType(configuration.getAccountType());
-    if (accounts != null && accounts.length > 0) {
-      return accounts[0];
-    }
-    throw new IllegalStateException("User not logged in. Can't sync.");
+  public Completable syncConfirmation(AptoideProduct product) {
+    final Bundle bundle = syncDataConverter.toBundle(product);
+    bundle.putBoolean(AptoideSyncAdapter.EXTRA_PAYMENT_CONFIRMATIONS, true);
+    return sync(bundle);
+  }
+
+  public Completable syncConfirmation(AptoideProduct product, int paymentId,
+      String paymentConfirmationId) {
+    final Bundle bundle = syncDataConverter.toBundle(product);
+    bundle.putBoolean(AptoideSyncAdapter.EXTRA_PAYMENT_CONFIRMATIONS, true);
+    bundle.putString(AptoideSyncAdapter.EXTRA_PAYMENT_CONFIRMATION_ID, paymentConfirmationId);
+    bundle.putString(AptoideSyncAdapter.EXTRA_PAYMENT_IDS,
+        syncDataConverter.toString(Collections.singletonList(String.valueOf(paymentId))));
+    return sync(bundle);
   }
 }

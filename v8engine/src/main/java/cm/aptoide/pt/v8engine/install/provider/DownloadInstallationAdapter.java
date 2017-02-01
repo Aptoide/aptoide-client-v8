@@ -33,12 +33,12 @@ public class DownloadInstallationAdapter implements RollbackInstallation {
     return download.getFilesToDownload().get(0).getPackageName();
   }
 
-  @Override public String getVersionName() {
-    return download.getVersionName();
-  }
-
   @Override public int getVersionCode() {
     return download.getFilesToDownload().get(0).getVersionCode();
+  }
+
+  @Override public String getVersionName() {
+    return download.getVersionName();
   }
 
   @Override public File getFile() {
@@ -70,6 +70,24 @@ public class DownloadInstallationAdapter implements RollbackInstallation {
     }
   }
 
+  @Override public String getPatchObbPath() {
+    if (download.getFilesToDownload().size() > 2
+        && download.getFilesToDownload().get(2).getFileType() == FileToDownload.OBB) {
+      return download.getFilesToDownload().get(2).getLink();
+    } else {
+      return null;
+    }
+  }
+
+  @Override public String getPatchObbName() {
+    if (download.getFilesToDownload().size() > 2
+        && download.getFilesToDownload().get(2).getFileType() == FileToDownload.OBB) {
+      return download.getFilesToDownload().get(2).getFileName();
+    } else {
+      return null;
+    }
+  }
+
   @Override public String getMainObbPath() {
     if (download.getFilesToDownload().size() > 1
         && download.getFilesToDownload().get(1).getFileType() == FileToDownload.OBB) {
@@ -89,23 +107,5 @@ public class DownloadInstallationAdapter implements RollbackInstallation {
 
   @Override public void save() {
     downloadAccessor.save(download);
-  }
-
-  @Override public String getPatchObbName() {
-    if (download.getFilesToDownload().size() > 2
-        && download.getFilesToDownload().get(2).getFileType() == FileToDownload.OBB) {
-      return download.getFilesToDownload().get(2).getFileName();
-    } else {
-      return null;
-    }
-  }
-
-  @Override public String getPatchObbPath() {
-    if (download.getFilesToDownload().size() > 2
-        && download.getFilesToDownload().get(2).getFileType() == FileToDownload.OBB) {
-      return download.getFilesToDownload().get(2).getLink();
-    } else {
-      return null;
-    }
   }
 }

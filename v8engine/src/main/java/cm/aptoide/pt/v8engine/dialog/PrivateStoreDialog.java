@@ -67,6 +67,10 @@ public class PrivateStoreDialog extends DialogFragment {
     return fragment;
   }
 
+  public void setIsInsideStore(boolean isInsideStore) {
+    this.isInsideStore = isInsideStore;
+  }
+
   @Override public void onCreate(final Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     final Bundle args = getArguments();
@@ -136,6 +140,12 @@ public class PrivateStoreDialog extends DialogFragment {
     super.onDestroyView();
   }
 
+  private GetStoreMetaRequest buildRequest() {
+    return GetStoreMetaRequest.of(
+        new BaseRequestWithStore.StoreCredentials(storeName, storeUser, storePassSha1),
+        AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID());
+  }
+
   private void dismissLoadingDialog() {
     loadingDialog.dismiss();
   }
@@ -145,16 +155,6 @@ public class PrivateStoreDialog extends DialogFragment {
       loadingDialog = GenericDialogs.createGenericPleaseWaitDialog(getActivity());
     }
     loadingDialog.show();
-  }
-
-  private GetStoreMetaRequest buildRequest() {
-    return GetStoreMetaRequest.of(
-        new BaseRequestWithStore.StoreCredentials(storeName, storeUser, storePassSha1),
-        AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID());
-  }
-
-  public void setIsInsideStore(boolean isInsideStore) {
-    this.isInsideStore = isInsideStore;
   }
 
   private enum BundleArgs {

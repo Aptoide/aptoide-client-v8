@@ -15,13 +15,13 @@ import cm.aptoide.pt.utils.AptoideUtils;
 public class CircleView extends View {
   public static final Property<CircleView, Float> INNER_CIRCLE_RADIUS_PROGRESS =
       new Property<CircleView, Float>(Float.class, "innerCircleRadiusProgress") {
-        @Override public Float get(CircleView object) {
+        @Override public void set(CircleView object, Float value) {
+          object.setInnerCircleRadiusProgress(value);
+        }        @Override public Float get(CircleView object) {
           return object.getInnerCircleRadiusProgress();
         }
 
-        @Override public void set(CircleView object, Float value) {
-          object.setInnerCircleRadiusProgress(value);
-        }
+
       };
   private static final int START_COLOR = 0xFFFF5722;
   private static final int END_COLOR = 0xFFFFC107;
@@ -49,6 +49,11 @@ public class CircleView extends View {
     init();
   }
 
+  private void init() {
+    circlePaint.setStyle(Paint.Style.FILL);
+    maskPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+  }
+
   public CircleView(Context context, AttributeSet attrs) {
     super(context, attrs);
     init();
@@ -57,11 +62,6 @@ public class CircleView extends View {
   public CircleView(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
     init();
-  }
-
-  private void init() {
-    circlePaint.setStyle(Paint.Style.FILL);
-    maskPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
   }
 
   @Override protected void onSizeChanged(int w, int h, int oldw, int oldh) {
@@ -90,13 +90,6 @@ public class CircleView extends View {
     postInvalidate();
   }
 
-  private void updateCircleColor() {
-    float colorProgress = (float) AptoideUtils.MathU.clamp(outerCircleRadiusProgress, 0.5, 1);
-    colorProgress = (float) AptoideUtils.MathU.mapValueFromRangeToRange(colorProgress, 0.5f, 1f, 0f, 1f);
-    this.circlePaint.setColor(
-        (Integer) argbEvaluator.evaluate(colorProgress, START_COLOR, END_COLOR));
-  }
-
   public float getOuterCircleRadiusProgress() {
     return outerCircleRadiusProgress;
   }
@@ -105,5 +98,13 @@ public class CircleView extends View {
     this.outerCircleRadiusProgress = outerCircleRadiusProgress;
     updateCircleColor();
     postInvalidate();
+  }
+
+  private void updateCircleColor() {
+    float colorProgress = (float) AptoideUtils.MathU.clamp(outerCircleRadiusProgress, 0.5, 1);
+    colorProgress =
+        (float) AptoideUtils.MathU.mapValueFromRangeToRange(colorProgress, 0.5f, 1f, 0f, 1f);
+    this.circlePaint.setColor(
+        (Integer) argbEvaluator.evaluate(colorProgress, START_COLOR, END_COLOR));
   }
 }

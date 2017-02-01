@@ -124,10 +124,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
     setupClickHandlers();
   }
 
-  private void settingsResult() {
-    getActivity().setResult(Activity.RESULT_OK);
-  }
-
   private void setupClickHandlers() {
     int pin = SecurePreferences.getAdultContentPin();
     final Preference mp = findPreference("Maturepin");
@@ -343,12 +339,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
     }
   }
 
-  private Dialog dialogSetAdultPin(final Preference mp) {
-    isSetingPIN = true;
-
-    return AdultDialog.setAdultPinDialog(getActivity(), mp, (v, which) -> isSetingPIN = false);
-  }
-
   private void maturePinSetRemoveClick() {
 
     int pin = SecurePreferences.getAdultContentPin();
@@ -368,5 +358,15 @@ public class SettingsFragment extends PreferenceFragmentCompat
     } else {
       dialogSetAdultPin(adultPinPreference).show();// Without Pin
     }
+  }
+
+  private Dialog dialogSetAdultPin(final Preference mp) {
+    isSetingPIN = true;
+
+    return AdultDialog.setAdultPinDialog(getActivity(), mp, (v, which) -> isSetingPIN = false);
+  }
+
+  private void settingsResult() {
+    getActivity().setResult(Activity.RESULT_OK);
   }
 }

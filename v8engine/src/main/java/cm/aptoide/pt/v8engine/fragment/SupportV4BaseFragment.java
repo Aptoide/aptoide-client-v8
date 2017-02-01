@@ -38,11 +38,6 @@ public abstract class SupportV4BaseFragment extends FragmentView
     ScreenTrackingUtils.getInstance().decrementNumberOfScreens();
   }
 
-  @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
-      Bundle savedInstanceState) {
-    return inflater.inflate(getContentViewId(), container, false);
-  }
-
   /**
    * Called after onCreate. This is where arguments should be loaded.
    *
@@ -124,5 +119,10 @@ public abstract class SupportV4BaseFragment extends FragmentView
     if (isVisibleToUser) {
       ScreenTrackingUtils.getInstance().addScreenToHistory(getClass().getSimpleName());
     }
+  }
+
+  @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
+      Bundle savedInstanceState) {
+    return inflater.inflate(getContentViewId(), container, false);
   }
 }

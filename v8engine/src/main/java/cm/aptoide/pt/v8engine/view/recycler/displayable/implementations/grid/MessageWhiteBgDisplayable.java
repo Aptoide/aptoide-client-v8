@@ -17,12 +17,12 @@ public class MessageWhiteBgDisplayable extends Displayable {
     this.message = message;
   }
 
-  @Override public int getViewLayout() {
-    return R.layout.white_message_displayable;
-  }
-
   @Override protected Configs getConfig() {
     return new Configs(1, true);
+  }
+
+  @Override public int getViewLayout() {
+    return R.layout.white_message_displayable;
   }
 
   public String getMessage() {

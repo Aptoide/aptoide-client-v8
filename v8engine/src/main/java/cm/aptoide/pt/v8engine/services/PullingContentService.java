@@ -48,20 +48,6 @@ public class PullingContentService extends Service {
   private static final String TAG = PullingContentService.class.getSimpleName();
   private CompositeSubscription subscriptions;
 
-  public static void setAlarm(AlarmManager am, Context context, String action, long time) {
-    Intent intent = new Intent(context, PullingContentService.class);
-    intent.setAction(action);
-    PendingIntent pendingIntent =
-        PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-    am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 5000, time, pendingIntent);
-  }
-
-  private boolean isAlarmUp(Context context, String action) {
-    Intent intent = new Intent(context, PullingContentService.class);
-    intent.setAction(action);
-    return (PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_NO_CREATE) != null);
-  }
-
   @Override public void onCreate() {
     super.onCreate();
     subscriptions = new CompositeSubscription();
@@ -72,6 +58,20 @@ public class PullingContentService extends Service {
     if (!isAlarmUp(this, UPDATES_ACTION)) {
       setAlarm(alarm, this, UPDATES_ACTION, UPDATES_INTERVAL);
     }
+  }
+
+  private boolean isAlarmUp(Context context, String action) {
+    Intent intent = new Intent(context, PullingContentService.class);
+    intent.setAction(action);
+    return (PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_NO_CREATE) != null);
+  }
+
+  public static void setAlarm(AlarmManager am, Context context, String action, long time) {
+    Intent intent = new Intent(context, PullingContentService.class);
+    intent.setAction(action);
+    PendingIntent pendingIntent =
+        PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 5000, time, pendingIntent);
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
@@ -101,13 +101,14 @@ public class PullingContentService extends Service {
    */
   private void setUpdatesAction(int startId) {
     UpdateRepository repository = RepositoryFactory.getUpdateRepository();
-    subscriptions.add(repository.sync(true).andThen(repository.getAll(false)).first().subscribe(updates -> {
-      Logger.d(TAG, "updates refreshed");
-      setUpdatesNotification(updates, startId);
-    }, throwable -> {
-      throwable.printStackTrace();
-      CrashReport.getInstance().log(throwable);
-    }));
+    subscriptions.add(
+        repository.sync(true).andThen(repository.getAll(false)).first().subscribe(updates -> {
+          Logger.d(TAG, "updates refreshed");
+          setUpdatesNotification(updates, startId);
+        }, throwable -> {
+          throwable.printStackTrace();
+          CrashReport.getInstance().log(throwable);
+        }));
   }
 
   /**
@@ -117,15 +118,6 @@ public class PullingContentService extends Service {
    */
   private void setPushNotificationsAction(int startId) {
     PushNotificationsRequest.of().execute(response -> setPushNotification(response, startId));
-  }
-
-  @Override public void onDestroy() {
-    subscriptions.clear();
-    super.onDestroy();
-  }
-
-  @Nullable @Override public IBinder onBind(Intent intent) {
-    return null;
   }
 
   private void setUpdatesNotification(List<Update> updates, int startId) {
@@ -225,5 +217,14 @@ public class PullingContentService extends Service {
       managerNotification.notify(PUSH_NOTIFICATION_ID, notification);
     }
     stopSelf(startId);
+  }
+
+  @Override public void onDestroy() {
+    subscriptions.clear();
+    super.onDestroy();
+  }
+
+  @Nullable @Override public IBinder onBind(Intent intent) {
+    return null;
   }
 }

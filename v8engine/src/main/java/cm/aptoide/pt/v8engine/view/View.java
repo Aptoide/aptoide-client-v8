@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.view;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
@@ -18,8 +17,8 @@ import rx.Observable;
  */
 public interface View {
 
-  @NonNull @CheckResult <T> LifecycleTransformer<T> bindUntilEvent(@NonNull
-      LifecycleEvent lifecycleEvent);
+  @NonNull @CheckResult <T> LifecycleTransformer<T> bindUntilEvent(
+      @NonNull LifecycleEvent lifecycleEvent);
 
   Observable<LifecycleEvent> getLifecycle();
 

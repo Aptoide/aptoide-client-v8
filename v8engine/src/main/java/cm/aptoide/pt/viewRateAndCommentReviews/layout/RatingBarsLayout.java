@@ -15,8 +15,7 @@ public class RatingBarsLayout {
     progressAndTextLayouts[1] =
         new ProgressAndTextLayout(R.id.two_rate_star_progress, R.id.two_rate_star_count, view);
     progressAndTextLayouts[2] =
-        new ProgressAndTextLayout(R.id.three_rate_star_progress, R.id.three_rate_star_count,
-            view);
+        new ProgressAndTextLayout(R.id.three_rate_star_progress, R.id.three_rate_star_count, view);
     progressAndTextLayouts[3] =
         new ProgressAndTextLayout(R.id.four_rate_star_progress, R.id.four_rate_star_count, view);
     progressAndTextLayouts[4] =

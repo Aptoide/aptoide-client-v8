@@ -74,11 +74,11 @@
 
       <Button
           android:id="@+id/btn_flag_this_app"
-          style="?attr/customButton"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:text="@string/flag_this_app_button_text"
           android:textAllCaps="false"
+          style="?attr/customButton"
           />
     </FrameLayout>
 

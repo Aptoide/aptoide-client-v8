@@ -1,13 +1,12 @@
 package cm.aptoide.pt.v8engine.fragment;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
-import com.trello.rxlifecycle.android.FragmentEvent;
 import com.trello.rxlifecycle.LifecycleTransformer;
 import com.trello.rxlifecycle.RxLifecycle;
+import com.trello.rxlifecycle.android.FragmentEvent;
 import com.trello.rxlifecycle.components.support.RxFragment;
 import rx.Observable;
 
@@ -15,8 +14,8 @@ public abstract class FragmentView extends RxFragment implements cm.aptoide.pt.v
 
   private Presenter presenter;
 
-  @NonNull @Override public final <T> LifecycleTransformer<T> bindUntilEvent(@NonNull
-      LifecycleEvent lifecycleEvent) {
+  @NonNull @Override
+  public final <T> LifecycleTransformer<T> bindUntilEvent(@NonNull LifecycleEvent lifecycleEvent) {
     return RxLifecycle.bindUntilEvent(getLifecycle(), lifecycleEvent);
   }
 
@@ -30,16 +29,6 @@ public abstract class FragmentView extends RxFragment implements cm.aptoide.pt.v
     }
     this.presenter = presenter;
     this.presenter.present();
-  }
-
-  @Override public void onSaveInstanceState(Bundle outState) {
-    if (presenter != null) {
-      presenter.saveState(outState);
-    } else {
-      Log.w(this.getClass().getName(), "No presenter was attached.");
-    }
-
-    super.onSaveInstanceState(outState);
   }
 
   @NonNull private LifecycleEvent convertToEvent(FragmentEvent event) {
@@ -63,5 +52,15 @@ public abstract class FragmentView extends RxFragment implements cm.aptoide.pt.v
       default:
         throw new IllegalStateException("Unrecognized event: " + event.name());
     }
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    if (presenter != null) {
+      presenter.saveState(outState);
+    } else {
+      Log.w(this.getClass().getName(), "No presenter was attached.");
+    }
+
+    super.onSaveInstanceState(outState);
   }
 }

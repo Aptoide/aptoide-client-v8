@@ -130,26 +130,18 @@ public class PaymentActivity extends ActivityView implements PaymentView {
     paymentClicks.clear();
   }
 
-  @Override public void dismiss(Purchase purchase) {
-    finish(RESULT_OK, intentFactory.create(purchase));
-  }
-
-  @Override public void dismiss(Throwable throwable) {
-    finish(RESULT_CANCELED, intentFactory.create(throwable));
-  }
-
-  @Override public void dismiss() {
-    finish(RESULT_CANCELED, intentFactory.createFromCancellation());
-  }
-
-  @Override public void showProduct(AptoideProduct product) {
-    ImageLoader.load(product.getIcon(), productIcon);
-    productName.setText(product.getTitle());
-    productDescription.setText(product.getDescription());
+  @Override public Observable<PaymentViewModel> usePaymentSelection() {
+    return usePaymentClick;
   }
 
   @Override public Observable<Void> cancellationSelection() {
     return Observable.merge(RxView.clicks(cancelButton), RxView.clicks(overlay))
+        .subscribeOn(AndroidSchedulers.mainThread())
+        .unsubscribeOn(AndroidSchedulers.mainThread());
+  }
+
+  @Override public Observable<Void> buySelection() {
+    return RxView.clicks(buyButton)
         .subscribeOn(AndroidSchedulers.mainThread())
         .unsubscribeOn(AndroidSchedulers.mainThread());
   }
@@ -160,9 +152,19 @@ public class PaymentActivity extends ActivityView implements PaymentView {
         .unsubscribeOn(AndroidSchedulers.mainThread());
   }
 
-  @Override public void hideOtherPayments() {
-    morePaymentsButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.arrow_down, 0);
-    morePaymentsContainer.setVisibility(View.GONE);
+  @Override public Observable<PaymentViewModel> registerPaymentSelection() {
+    return registerPaymentClick;
+  }
+
+  @Override public void showGlobalLoading() {
+    header.setVisibility(View.GONE);
+    body.setVisibility(View.GONE);
+    actionButtons.setVisibility(View.GONE);
+    globalProgressView.setVisibility(View.VISIBLE);
+  }
+
+  @Override public void showPaymentsLoading() {
+    paymentsProgressView.setVisibility(View.VISIBLE);
   }
 
   @Override public void showOtherPayments(List<PaymentViewModel> otherPayments) {
@@ -231,36 +233,22 @@ public class PaymentActivity extends ActivityView implements PaymentView {
     }
   }
 
+  @Override public void hideOtherPayments() {
+    morePaymentsButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.arrow_down, 0);
+    morePaymentsContainer.setVisibility(View.GONE);
+  }
+
+  @Override public void showProduct(AptoideProduct product) {
+    ImageLoader.load(product.getIcon(), productIcon);
+    productName.setText(product.getTitle());
+    productDescription.setText(product.getDescription());
+  }
+
   @Override public void showSelectedPayment(PaymentViewModel selectedPayment) {
     selectedPaymentName.setText(selectedPayment.getName());
     selectedPaymentPrice.setText(
         String.format(Locale.getDefault(), "%.2f %s", selectedPayment.getPrice(),
             selectedPayment.getCurrency()));
-  }
-
-  @Override public Observable<Void> buySelection() {
-    return RxView.clicks(buyButton)
-        .subscribeOn(AndroidSchedulers.mainThread())
-        .unsubscribeOn(AndroidSchedulers.mainThread());
-  }
-
-  @Override public void showPaymentsNotFoundMessage() {
-    noPaymentsText.setVisibility(View.VISIBLE);
-  }
-
-  @Override public void showPaymentsLoading() {
-    paymentsProgressView.setVisibility(View.VISIBLE);
-  }
-
-  @Override public void hidePaymentsLoading() {
-    paymentsProgressView.setVisibility(View.GONE);
-  }
-
-  @Override public void showGlobalLoading() {
-    header.setVisibility(View.GONE);
-    body.setVisibility(View.GONE);
-    actionButtons.setVisibility(View.GONE);
-    globalProgressView.setVisibility(View.VISIBLE);
   }
 
   @Override public void hideGlobalLoading() {
@@ -270,16 +258,28 @@ public class PaymentActivity extends ActivityView implements PaymentView {
     globalProgressView.setVisibility(View.GONE);
   }
 
-  @Override public Observable<PaymentViewModel> usePaymentSelection() {
-    return usePaymentClick;
+  @Override public void hidePaymentsLoading() {
+    paymentsProgressView.setVisibility(View.GONE);
   }
 
-  @Override public Observable<PaymentViewModel> registerPaymentSelection() {
-    return registerPaymentClick;
+  @Override public void dismiss(Purchase purchase) {
+    finish(RESULT_OK, intentFactory.create(purchase));
+  }
+
+  @Override public void dismiss(Throwable throwable) {
+    finish(RESULT_CANCELED, intentFactory.create(throwable));
+  }
+
+  @Override public void dismiss() {
+    finish(RESULT_CANCELED, intentFactory.createFromCancellation());
   }
 
   @Override public void navigateToAuthorizationView(int paymentId, AptoideProduct product) {
     startActivity(WebAuthorizationActivity.getIntent(this, paymentId, product));
+  }
+
+  @Override public void showPaymentsNotFoundMessage() {
+    noPaymentsText.setVisibility(View.VISIBLE);
   }
 
   @Override public void showNetworkError() {

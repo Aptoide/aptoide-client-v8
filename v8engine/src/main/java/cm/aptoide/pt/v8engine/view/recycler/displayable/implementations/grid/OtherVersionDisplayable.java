@@ -21,11 +21,11 @@ public class OtherVersionDisplayable extends DisplayablePojo<App> {
     super(pojo);
   }
 
-  @Override public int getViewLayout() {
-    return R.layout.other_version_row;
-  }
-
   @Override protected Configs getConfig() {
     return new Configs(1, true);
+  }
+
+  @Override public int getViewLayout() {
+    return R.layout.other_version_row;
   }
 }

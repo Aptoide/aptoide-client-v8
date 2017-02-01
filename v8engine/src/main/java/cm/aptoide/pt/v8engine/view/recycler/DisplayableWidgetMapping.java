@@ -158,16 +158,6 @@ public class DisplayableWidgetMapping {
     parseMappings(createMapping());
   }
 
-  private DisplayableWidgetMapping(Class<? extends Widget> widgetClass,
-      Class<? extends Displayable> displayableClass) {
-    this.displayableClass = displayableClass;
-    this.widgetClass = widgetClass;
-  }
-
-  public static DisplayableWidgetMapping getInstance() {
-    return instance;
-  }
-
   private void parseMappings(@NonNull List<DisplayableWidgetMapping> mapping) {
     for (DisplayableWidgetMapping displayableWidgetMapping : mapping) {
       viewTypeMapping.put(displayableWidgetMapping.newDisplayable().getViewLayout(),
@@ -363,6 +353,27 @@ public class DisplayableWidgetMapping {
     return displayableWidgetMappings;
   }
 
+  @Nullable private Displayable newDisplayable() {
+    try {
+      return displayableClass.newInstance();
+    } catch (Exception e) {
+      CrashReport.getInstance().log(e);
+      String errMsg =
+          String.format("Error instantiating displayable '%s'", displayableClass.getName());
+      throw new RuntimeException(errMsg);
+    }
+  }
+
+  private DisplayableWidgetMapping(Class<? extends Widget> widgetClass,
+      Class<? extends Displayable> displayableClass) {
+    this.displayableClass = displayableClass;
+    this.widgetClass = widgetClass;
+  }
+
+  public static DisplayableWidgetMapping getInstance() {
+    return instance;
+  }
+
   public Widget newWidget(View view, int viewType) {
     DisplayableWidgetMapping displayableWidgetMapping = viewTypeMapping.get(viewType);
     if (displayableWidgetMapping != null) {
@@ -371,18 +382,6 @@ public class DisplayableWidgetMapping {
 
     throw new IllegalStateException(String.format("There's no widget for '%s' viewType", viewType)
         + "\nDid you forget to add the mapping to DisplayableWidgetMapping enum??");
-  }
-
-  public List<Displayable> getCachedDisplayables() {
-    if (cachedDisplayables == null) {
-      List<Displayable> tmp = new LinkedList<>();
-
-      for (int i = 0; i < viewTypeMapping.size(); i++) {
-        tmp.add(viewTypeMapping.valueAt(i).newDisplayable());
-      }
-      cachedDisplayables = Collections.unmodifiableList(tmp);
-    }
-    return cachedDisplayables;
   }
 
   @Nullable private Widget newWidget(View view) {
@@ -397,14 +396,15 @@ public class DisplayableWidgetMapping {
     }
   }
 
-  @Nullable private Displayable newDisplayable() {
-    try {
-      return displayableClass.newInstance();
-    } catch (Exception e) {
-      CrashReport.getInstance().log(e);
-      String errMsg =
-          String.format("Error instantiating displayable '%s'", displayableClass.getName());
-      throw new RuntimeException(errMsg);
+  public List<Displayable> getCachedDisplayables() {
+    if (cachedDisplayables == null) {
+      List<Displayable> tmp = new LinkedList<>();
+
+      for (int i = 0; i < viewTypeMapping.size(); i++) {
+        tmp.add(viewTypeMapping.valueAt(i).newDisplayable());
+      }
+      cachedDisplayables = Collections.unmodifiableList(tmp);
     }
+    return cachedDisplayables;
   }
 }

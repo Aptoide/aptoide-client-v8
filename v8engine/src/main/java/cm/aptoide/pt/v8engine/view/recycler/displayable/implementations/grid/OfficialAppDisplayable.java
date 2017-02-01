@@ -21,11 +21,11 @@ public class OfficialAppDisplayable extends Displayable {
     return messageGetApp;
   }
 
-  @Override public int getViewLayout() {
-    return R.layout.official_app_displayable_layout;
-  }
-
   @Override protected Configs getConfig() {
     return new Configs(1, true);
+  }
+
+  @Override public int getViewLayout() {
+    return R.layout.official_app_displayable_layout;
   }
 }

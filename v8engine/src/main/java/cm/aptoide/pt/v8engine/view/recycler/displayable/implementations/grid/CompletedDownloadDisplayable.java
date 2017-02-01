@@ -51,6 +51,14 @@ public class CompletedDownloadDisplayable extends Displayable {
     this.installConverter = installConverter;
   }
 
+  @Override protected Configs getConfig() {
+    return new Configs(1, false);
+  }
+
+  @Override public int getViewLayout() {
+    return R.layout.completed_donwload_row_layout;
+  }
+
   @Override public void onResume() {
     super.onResume();
     if (onResumeAction != null) {
@@ -65,14 +73,6 @@ public class CompletedDownloadDisplayable extends Displayable {
     super.onPause();
   }
 
-  @Override protected Configs getConfig() {
-    return new Configs(1, false);
-  }
-
-  @Override public int getViewLayout() {
-    return R.layout.completed_donwload_row_layout;
-  }
-
   public void removeDownload(Context context) {
     installManager.removeInstallationFile(download.getMd5(), context);
   }
@@ -81,15 +81,6 @@ public class CompletedDownloadDisplayable extends Displayable {
     return installManager.getInstallation(download.getMd5())
         .map(installationProgress -> installationProgress.getRequest().getOverallDownloadStatus())
         .onErrorReturn(throwable -> Download.NOT_DOWNLOADED);
-  }
-
-  public Observable<Progress<Download>> resumeDownload(Context context,
-      PermissionRequest permissionRequest) {
-    PermissionManager permissionManager = new PermissionManager();
-    return permissionManager.requestExternalStoragePermission(permissionRequest)
-        .flatMap(success -> permissionManager.requestDownloadAccess(permissionRequest))
-        .flatMap(success -> installManager.install(context, download)
-            .doOnSubscribe(() -> setupEvents(download)));
   }
 
   public Observable<Progress<Download>> installOrOpenDownload(Context context,
@@ -101,6 +92,15 @@ public class CompletedDownloadDisplayable extends Displayable {
       }
       return resumeDownload(context, permissionRequest);
     });
+  }
+
+  public Observable<Progress<Download>> resumeDownload(Context context,
+      PermissionRequest permissionRequest) {
+    PermissionManager permissionManager = new PermissionManager();
+    return permissionManager.requestExternalStoragePermission(permissionRequest)
+        .flatMap(success -> permissionManager.requestDownloadAccess(permissionRequest))
+        .flatMap(success -> installManager.install(context, download)
+            .doOnSubscribe(() -> setupEvents(download)));
   }
 
   private void setupEvents(Download download) {

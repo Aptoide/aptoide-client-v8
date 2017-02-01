@@ -29,8 +29,7 @@ public abstract class Authorization {
   }
 
   public boolean isAuthorized() {
-    return Status.ACTIVE.equals(status)
-        || Status.NONE.equals(status);
+    return Status.ACTIVE.equals(status) || Status.NONE.equals(status);
   }
 
   public boolean isInitiated() {

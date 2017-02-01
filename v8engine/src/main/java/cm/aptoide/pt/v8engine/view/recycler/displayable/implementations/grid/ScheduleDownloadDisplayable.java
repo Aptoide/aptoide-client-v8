@@ -14,11 +14,11 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
  */
 public class ScheduleDownloadDisplayable extends DisplayablePojo<GetApp> {
 
-  @Override public int getViewLayout() {
-    return R.layout.displayable_grid_scheduled_download;
-  }
-
   @Override protected Configs getConfig() {
     return new Configs(1, false);
+  }
+
+  @Override public int getViewLayout() {
+    return R.layout.displayable_grid_scheduled_download;
   }
 }

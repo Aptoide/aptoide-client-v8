@@ -137,6 +137,33 @@ public class SearchFragment extends BasePagerToolbarFragment {
     }
   }
 
+  private void setButtonBackgrounds(int currentItem) {
+    if (currentItem == 0) {
+      subscribedButtonListener();
+    } else if (currentItem == 1) {
+      everywhereButtonListener(true);
+    }
+  }
+
+  protected void subscribedButtonListener() {
+    selectedButton = 0;
+    viewPager.setCurrentItem(0);
+    subscribedButton.setBackgroundResource(R.drawable.search_button_background);
+    subscribedButton.setTextColor(getResources().getColor(R.color.white));
+    everywhereButton.setTextColor(getResources().getColor(R.color.app_view_gray));
+    everywhereButton.setBackgroundResource(0);
+  }
+
+  protected Void everywhereButtonListener(boolean smoothScroll) {
+    selectedButton = 1;
+    viewPager.setCurrentItem(1, smoothScroll);
+    everywhereButton.setBackgroundResource(R.drawable.search_button_background);
+    everywhereButton.setTextColor(getResources().getColor(R.color.white));
+    subscribedButton.setTextColor(getResources().getColor(R.color.app_view_gray));
+    subscribedButton.setBackgroundResource(0);
+    return null;
+  }
+
   private void setupButtonVisibility() {
     if (storeName != null) {
       subscribedButton.setText(storeName);
@@ -214,31 +241,31 @@ public class SearchFragment extends BasePagerToolbarFragment {
       ListSearchAppsRequest.of(query, true, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(),
           AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
           .execute(listSearchApps -> {
-        List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
+            List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
 
-        if (list != null && list.size() > 0) {
-          hasSubscribedResults = true;
-          handleFinishLoading(create);
-        } else {
-          hasSubscribedResults = false;
-          handleFinishLoading(create);
-        }
-      }, e -> finishLoading());
+            if (list != null && list.size() > 0) {
+              hasSubscribedResults = true;
+              handleFinishLoading(create);
+            } else {
+              hasSubscribedResults = false;
+              handleFinishLoading(create);
+            }
+          }, e -> finishLoading());
 
       // Other stores
       ListSearchAppsRequest.of(query, false, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(),
           AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
           .execute(listSearchApps -> {
-        List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
+            List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
 
-        if (list != null && list.size() > 0) {
-          hasEverywhereResults = true;
-          handleFinishLoading(create);
-        } else {
-          hasEverywhereResults = false;
-          handleFinishLoading(create);
-        }
-      }, e -> finishLoading());
+            if (list != null && list.size() > 0) {
+              hasEverywhereResults = true;
+              handleFinishLoading(create);
+            } else {
+              hasEverywhereResults = false;
+              handleFinishLoading(create);
+            }
+          }, e -> finishLoading());
 
       // could this be a solution ?? despite the boolean flags
       //			Observable.concat(ListSearchAppsRequest.of(query, true).observe(),ListSearchAppsRequest.of(query, false).observe()).subscribe
@@ -256,20 +283,12 @@ public class SearchFragment extends BasePagerToolbarFragment {
     }
   }
 
-  @Override public void setupToolbarDetails(Toolbar toolbar) {
-    toolbar.setTitle(query);
-  }
-
   @Override protected boolean displayHomeUpAsEnabled() {
     return true;
   }
 
-  private void setButtonBackgrounds(int currentItem) {
-    if (currentItem == 0) {
-      subscribedButtonListener();
-    } else if (currentItem == 1) {
-      everywhereButtonListener(true);
-    }
+  @Override public void setupToolbarDetails(Toolbar toolbar) {
+    toolbar.setTitle(query);
   }
 
   private void setupButtonsListeners() {
@@ -280,25 +299,6 @@ public class SearchFragment extends BasePagerToolbarFragment {
     if (hasEverywhereResults) {
       everywhereButton.setOnClickListener(v -> everywhereButtonListener(true));
     }
-  }
-
-  protected void subscribedButtonListener() {
-    selectedButton = 0;
-    viewPager.setCurrentItem(0);
-    subscribedButton.setBackgroundResource(R.drawable.search_button_background);
-    subscribedButton.setTextColor(getResources().getColor(R.color.white));
-    everywhereButton.setTextColor(getResources().getColor(R.color.app_view_gray));
-    everywhereButton.setBackgroundResource(0);
-  }
-
-  protected Void everywhereButtonListener(boolean smoothScroll) {
-    selectedButton = 1;
-    viewPager.setCurrentItem(1, smoothScroll);
-    everywhereButton.setBackgroundResource(R.drawable.search_button_background);
-    everywhereButton.setTextColor(getResources().getColor(R.color.white));
-    subscribedButton.setTextColor(getResources().getColor(R.color.app_view_gray));
-    subscribedButton.setBackgroundResource(0);
-    return null;
   }
 
   @Override public int getContentViewId() {

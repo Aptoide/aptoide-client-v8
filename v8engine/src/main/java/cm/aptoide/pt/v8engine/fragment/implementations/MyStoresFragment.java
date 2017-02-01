@@ -27,7 +27,8 @@ public class MyStoresFragment extends GetStoreWidgetsFragment {
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     if (subscription == null || subscription.isUnsubscribed()) {
-      subscription = storeRepository.getAll().distinct()
+      subscription = storeRepository.getAll()
+          .distinct()
           .observeOn(AndroidSchedulers.mainThread())
           .skip(1)
           .compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW))

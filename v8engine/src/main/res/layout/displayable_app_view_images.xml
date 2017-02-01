@@ -5,13 +5,13 @@
   -->
 
 <android.support.v7.widget.RecyclerView
-    android:id="@+id/screenshots_list"
-    style="@style/AppViewWidget"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/screenshots_list"
     android:layout_width="match_parent"
     android:layout_height="240dp"
     android:paddingEnd="0dp"
     android:paddingLeft="0dp"
     android:paddingRight="0dp"
     android:paddingStart="0dp"
+    style="@style/AppViewWidget"
     />

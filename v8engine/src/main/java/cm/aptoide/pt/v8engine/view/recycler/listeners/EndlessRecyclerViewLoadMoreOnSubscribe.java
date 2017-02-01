@@ -5,6 +5,7 @@ import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.MainThreadSubscription;
+
 import static rx.android.MainThreadSubscription.verifyMainThread;
 
 /**
@@ -23,14 +24,13 @@ public class EndlessRecyclerViewLoadMoreOnSubscribe implements Observable.OnSubs
   @Override public void call(Subscriber<? super Integer> subscriber) {
     verifyMainThread();
 
-    final EndlessRecyclerOnScrollListener listener =
-        new EndlessRecyclerOnScrollListener(adapter) {
-          @Override public void onLoadMore(boolean bypassCache) {
-            if (!subscriber.isUnsubscribed()) {
-              subscriber.onNext(adapter.getItemCount());
-            }
-          }
-        };
+    final EndlessRecyclerOnScrollListener listener = new EndlessRecyclerOnScrollListener(adapter) {
+      @Override public void onLoadMore(boolean bypassCache) {
+        if (!subscriber.isUnsubscribed()) {
+          subscriber.onNext(adapter.getItemCount());
+        }
+      }
+    };
 
     recyclerView.addOnScrollListener(listener);
 

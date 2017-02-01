@@ -87,6 +87,18 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
     openMode = (OpenMode) args.getSerializable(OPEN_MODE);
   }
 
+  @Override public int getContentViewId() {
+    return R.layout.fragment_with_toolbar;
+  }
+
+  @Override public void bindViews(View view) {
+    super.bindViews(view);
+    emptyData = (TextView) view.findViewById(R.id.empty_data);
+    scheduledDownloadRepository = RepositoryFactory.getScheduledDownloadRepository();
+    //		compositeSubscription = new CompositeSubscription();
+    setHasOptionsMenu(true);
+  }
+
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
     if (create) {
@@ -117,23 +129,37 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
     fetchScheduledDownloads();
   }
 
-  @Override public int getContentViewId() {
-    return R.layout.fragment_with_toolbar;
-  }
+  private boolean downloadAndInstallScheduledList(List<Scheduled> installing,
+      boolean isStartedAutomatic) {
 
-  @Override public void bindViews(View view) {
-    super.bindViews(view);
-    emptyData = (TextView) view.findViewById(R.id.empty_data);
-    scheduledDownloadRepository = RepositoryFactory.getScheduledDownloadRepository();
-    //		compositeSubscription = new CompositeSubscription();
-    setHasOptionsMenu(true);
-  }
+    if (installing == null || installing.isEmpty()) return false;
 
-  @Override public void setupToolbarDetails(Toolbar toolbar) {
-    toolbar.setTitle(R.string.setting_schdwntitle);
-  }
+    Context context = getContext();
+    PermissionManager permissionManager = new PermissionManager();
+    PermissionRequest permissionRequest = ((PermissionRequest) context);
+    DownloadFactory downloadFactory = new DownloadFactory();
+    InstallerFactory installerFactory = new InstallerFactory();
 
-  @Override protected boolean displayHomeUpAsEnabled() {
+    InstallManager installManager = new InstallManager(AptoideDownloadManager.getInstance(),
+        installerFactory.create(context, InstallerFactory.ROLLBACK));
+
+    permissionManager.requestExternalStoragePermission(permissionRequest)
+        .flatMap(sucess -> scheduledDownloadRepository.setInstalling(installing))
+        .flatMapIterable(scheduleds -> scheduleds)
+        .map(scheduled -> downloadFactory.create(scheduled))
+        .flatMap(downloadItem -> installManager.install(context, downloadItem)
+            .doOnSubscribe(() -> setupEvents(downloadItem,
+                isStartedAutomatic ? DownloadEvent.Action.AUTO : DownloadEvent.Action.CLICK))
+            .filter(downloadProgress -> downloadProgress.getState() == Progress.DONE)
+            .doOnNext(success -> scheduledDownloadRepository.deleteScheduledDownload(
+                downloadItem.getMd5())))
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(aVoid -> {
+          Logger.i(TAG, "finished installing scheduled downloads");
+        }, throwable -> {
+          Logger.e(TAG, throwable.getMessage());
+        });
+
     return true;
   }
 
@@ -163,6 +189,17 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
     //compositeSubscription.add(subscription);
   }
 
+  public void setupEvents(Download download, DownloadEvent.Action action) {
+    DownloadEvent report =
+        downloadConverter.create(download, action, DownloadEvent.AppContext.SCHEDULED);
+    analytics.save(download.getPackageName() + download.getVersionCode(), report);
+
+    InstallEvent installEvent =
+        installConverter.create(download, DownloadInstallBaseEvent.Action.CLICK,
+            DownloadInstallBaseEvent.AppContext.SCHEDULED);
+    analytics.save(download.getPackageName() + download.getVersionCode(), installEvent);
+  }
+
   @UiThread private void updateUi(List<Scheduled> scheduledDownloadList) {
     if (scheduledDownloadList == null || scheduledDownloadList.isEmpty()) {
       emptyData.setText(R.string.no_sch_downloads);
@@ -178,6 +215,14 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
       }
       clearDisplayables().addDisplayables(displayables, true);
     }
+  }
+
+  @Override protected boolean displayHomeUpAsEnabled() {
+    return true;
+  }
+
+  @Override public void setupToolbarDetails(Toolbar toolbar) {
+    toolbar.setTitle(R.string.setting_schdwntitle);
   }
 
   @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
@@ -244,51 +289,6 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
     }
 
     return super.onOptionsItemSelected(item);
-  }
-
-  private boolean downloadAndInstallScheduledList(List<Scheduled> installing,
-      boolean isStartedAutomatic) {
-
-    if (installing == null || installing.isEmpty()) return false;
-
-    Context context = getContext();
-    PermissionManager permissionManager = new PermissionManager();
-    PermissionRequest permissionRequest = ((PermissionRequest) context);
-    DownloadFactory downloadFactory = new DownloadFactory();
-    InstallerFactory installerFactory = new InstallerFactory();
-
-    InstallManager installManager = new InstallManager(AptoideDownloadManager.getInstance(),
-        installerFactory.create(context, InstallerFactory.ROLLBACK));
-
-    permissionManager.requestExternalStoragePermission(permissionRequest)
-        .flatMap(sucess -> scheduledDownloadRepository.setInstalling(installing))
-        .flatMapIterable(scheduleds -> scheduleds)
-        .map(scheduled -> downloadFactory.create(scheduled))
-        .flatMap(downloadItem -> installManager.install(context, downloadItem)
-            .doOnSubscribe(() -> setupEvents(downloadItem,
-                isStartedAutomatic ? DownloadEvent.Action.AUTO : DownloadEvent.Action.CLICK))
-            .filter(downloadProgress -> downloadProgress.getState() == Progress.DONE)
-            .doOnNext(success -> scheduledDownloadRepository.deleteScheduledDownload(
-                downloadItem.getMd5())))
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(aVoid -> {
-          Logger.i(TAG, "finished installing scheduled downloads");
-        }, throwable -> {
-          Logger.e(TAG, throwable.getMessage());
-        });
-
-    return true;
-  }
-
-  public void setupEvents(Download download, DownloadEvent.Action action) {
-    DownloadEvent report =
-        downloadConverter.create(download, action, DownloadEvent.AppContext.SCHEDULED);
-    analytics.save(download.getPackageName() + download.getVersionCode(), report);
-
-    InstallEvent installEvent =
-        installConverter.create(download, DownloadInstallBaseEvent.Action.CLICK,
-            DownloadInstallBaseEvent.AppContext.SCHEDULED);
-    analytics.save(download.getPackageName() + download.getVersionCode(), installEvent);
   }
 
   public enum OpenMode {

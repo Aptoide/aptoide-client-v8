@@ -9,8 +9,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 import lombok.Getter;
 
-public class RateAndReviewCommentDisplayable
-    extends DisplayablePojo<ReviewWithAppName> {
+public class RateAndReviewCommentDisplayable extends DisplayablePojo<ReviewWithAppName> {
 
   @Getter private CommentAdder commentAdder;
   @Getter private int numberComments;
@@ -36,5 +35,4 @@ public class RateAndReviewCommentDisplayable
   @Override protected Configs getConfig() {
     return new Configs(1, true);
   }
-
 }

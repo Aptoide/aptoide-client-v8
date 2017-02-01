@@ -11,8 +11,7 @@ import rx.schedulers.Schedulers;
 
 public class GetStoreWidgetsFragment extends StoreTabWidgetsGridRecyclerFragment {
 
-  @Override
-  protected Observable<List<Displayable>> buildDisplayables(boolean refresh, String url) {
+  @Override protected Observable<List<Displayable>> buildDisplayables(boolean refresh, String url) {
     return requestFactory.newStoreWidgets(url)
         .observe(refresh)
         .observeOn(Schedulers.io())

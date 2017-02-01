@@ -51,6 +51,17 @@ public class TimelineRepository {
             .map(list -> getTimelineCardDatalist(itemDataList, list)));
   }
 
+  private List<TimelineItem<TimelineCard>> getTimelineList(
+      Datalist<TimelineItem<TimelineCard>> datalist) {
+    List<TimelineItem<TimelineCard>> items;
+    if (datalist == null) {
+      items = new ArrayList<>();
+    } else {
+      items = datalist.getList();
+    }
+    return items;
+  }
+
   @NonNull private Datalist<TimelineCard> getTimelineCardDatalist(
       Datalist<TimelineItem<TimelineCard>> itemDataList, List<TimelineCard> list) {
     Datalist<TimelineCard> cardDataList = new Datalist<>();
@@ -63,17 +74,6 @@ public class TimelineRepository {
     cardDataList.setNext(itemDataList.getNext());
     cardDataList.setList(list);
     return cardDataList;
-  }
-
-  private List<TimelineItem<TimelineCard>> getTimelineList(
-      Datalist<TimelineItem<TimelineCard>> datalist) {
-    List<TimelineItem<TimelineCard>> items;
-    if (datalist == null) {
-      items = new ArrayList<>();
-    } else {
-      items = datalist.getList();
-    }
-    return items;
   }
 
   public Observable<TimelineStats> getTimelineStats(boolean byPassCache) {

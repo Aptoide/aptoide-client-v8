@@ -78,6 +78,19 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     updateRepository = RepositoryFactory.getUpdateRepository();
   }
 
+  @Override public void onDestroyView() {
+    super.onDestroyView();
+
+    if (updateReloadSubscription != null && !updateReloadSubscription.isUnsubscribed()) {
+      updateReloadSubscription.unsubscribe();
+    }
+  }
+
+  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    //super.load(create, refresh, savedInstanceState);
+    // overridden to avoid calling super, since it removes the displayables automatically
+  }
+
   @Override public void onViewCreated() {
     super.onViewCreated();
 
@@ -104,40 +117,22 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
         });
   }
 
-  @Override public void onDestroyView() {
-    super.onDestroyView();
+  private void setUpdates(List<Update> updateList) {
+    updatesDisplayablesList.clear();
 
-    if (updateReloadSubscription != null && !updateReloadSubscription.isUnsubscribed()) {
-      updateReloadSubscription.unsubscribe();
-    }
-  }
+    if (updateList.size() > 0) {
+      updatesDisplayablesList.add(new UpdatesHeaderDisplayable(installManager,
+          AptoideUtils.StringU.getResString(R.string.updates), analytics,
+          downloadInstallEventConverter, installConverter));
 
-  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    //super.load(create, refresh, savedInstanceState);
-    // overridden to avoid calling super, since it removes the displayables automatically
-  }
-
-  /**
-   * This method is called when pull to refresh is done. An update repository call is made to fetch
-   * new updates and this call will hit the network. When new updates are found the listener in the
-   * load() method above will be notified of those changes and update the list. The response of
-   * this repository call will show a notification according: the number of new updates, no more
-   * new updates or no updates at all.
-   */
-  @Override public void reload() {
-    super.reload();
-
-    if (updateReloadSubscription != null && !updateReloadSubscription.isUnsubscribed()) {
-      updateReloadSubscription.unsubscribe();
-    }
-
-    updateReloadSubscription = updateRepository.sync(true).subscribe(() -> finishLoading(), e -> {
-      if (e instanceof RepositoryItemNotFoundException) {
-        ShowMessage.asSnack(getView(), R.string.add_store);
+      for (Update update : updateList) {
+        updatesDisplayablesList.add(
+            UpdateDisplayable.newInstance(update, installManager, new DownloadFactory(), analytics,
+                downloadInstallEventConverter, installConverter));
       }
-      CrashReport.getInstance().log(e);
-      finishLoading();
-    });
+    }
+    addDisplayables(updatesDisplayablesList, false);
+    Logger.v(TAG, "listed updates");
   }
 
   private Completable showUpdateMessage(List<Update> updates) {
@@ -160,22 +155,18 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     });
   }
 
-  private void setUpdates(List<Update> updateList) {
-    updatesDisplayablesList.clear();
-
-    if (updateList.size() > 0) {
-      updatesDisplayablesList.add(new UpdatesHeaderDisplayable(installManager,
-          AptoideUtils.StringU.getResString(R.string.updates), analytics,
-          downloadInstallEventConverter, installConverter));
-
-      for (Update update : updateList) {
-        updatesDisplayablesList.add(
-            UpdateDisplayable.newInstance(update, installManager, new DownloadFactory(), analytics,
-                downloadInstallEventConverter, installConverter));
-      }
-    }
-    addDisplayables(updatesDisplayablesList, false);
-    Logger.v(TAG, "listed updates");
+  /**
+   * Installed apps without any apps with updates pending or system apps.
+   *
+   * @return {@link Observable} to a {@link List} of {@link Installed} apps
+   */
+  private Observable<List<Installed>> fetchInstalled() {
+    return installedRepository.getAllSorted()
+        .first()
+        .flatMapIterable(list -> list)
+        .filter(item -> !item.isSystemApp())
+        .flatMap(item -> filterUpdates(item))
+        .toList();
   }
 
   private void setInstalled(List<Installed> installedApps) {
@@ -192,20 +183,6 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
   }
 
   /**
-   * Installed apps without any apps with updates pending or system apps.
-   *
-   * @return {@link Observable} to a {@link List} of {@link Installed} apps
-   */
-  private Observable<List<Installed>> fetchInstalled() {
-    return installedRepository.getAllSorted()
-        .first()
-        .flatMapIterable(list -> list)
-        .filter(item -> !item.isSystemApp())
-        .flatMap(item -> filterUpdates(item))
-        .toList();
-  }
-
-  /**
    * Filters updates returning the installed app or empty item.
    *
    * @param item App to filter.
@@ -218,6 +195,29 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
         return Observable.empty();
       }
       return Observable.just(item);
+    });
+  }
+
+  /**
+   * This method is called when pull to refresh is done. An update repository call is made to fetch
+   * new updates and this call will hit the network. When new updates are found the listener in the
+   * load() method above will be notified of those changes and update the list. The response of
+   * this repository call will show a notification according: the number of new updates, no more
+   * new updates or no updates at all.
+   */
+  @Override public void reload() {
+    super.reload();
+
+    if (updateReloadSubscription != null && !updateReloadSubscription.isUnsubscribed()) {
+      updateReloadSubscription.unsubscribe();
+    }
+
+    updateReloadSubscription = updateRepository.sync(true).subscribe(() -> finishLoading(), e -> {
+      if (e instanceof RepositoryItemNotFoundException) {
+        ShowMessage.asSnack(getView(), R.string.add_store);
+      }
+      CrashReport.getInstance().log(e);
+      finishLoading();
     });
   }
 }

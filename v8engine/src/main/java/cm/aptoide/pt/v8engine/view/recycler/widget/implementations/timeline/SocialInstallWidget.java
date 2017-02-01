@@ -49,8 +49,7 @@ public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayab
         (ImageView) itemView.findViewById(R.id.displayable_social_timeline_recommendation_icon);
     getApp = (TextView) itemView.findViewById(
         R.id.displayable_social_timeline_recommendation_get_app_button);
-    cardView =
-        (CardView) itemView.findViewById(R.id.card);
+    cardView = (CardView) itemView.findViewById(R.id.card);
     cardContent = (RelativeLayout) itemView.findViewById(
         R.id.displayable_social_timeline_recommendation_card_content);
     //likeButton = (LikeButton) itemView.findViewById(R.id.social_like_test);
@@ -111,14 +110,14 @@ public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayab
     });
   }
 
-  @Override String getCardTypeName() {
-    return CARD_TYPE_NAME;
-  }
-
   private void showFullSocialBar(SocialInstallDisplayable displayable) {
     numberLikes.setVisibility(View.VISIBLE);
     numberLikes.setText(String.valueOf(displayable.getNumberOfLikes()));
     numberComments.setVisibility(View.VISIBLE);
     numberComments.setText(String.valueOf(displayable.getNumberOfComments()));
+  }
+
+  @Override String getCardTypeName() {
+    return CARD_TYPE_NAME;
   }
 }

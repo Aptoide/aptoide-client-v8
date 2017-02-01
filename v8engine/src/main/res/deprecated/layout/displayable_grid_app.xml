@@ -12,12 +12,12 @@
     >
 
   <RelativeLayout
-      style="?attr/backgroundCard"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:orientation="vertical"
       android:paddingBottom="5dp"
       android:paddingTop="8dp"
+      style="?attr/backgroundCard"
       >
 
     <ImageView
@@ -34,10 +34,10 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/icon"
         android:orientation="vertical"
-        android:paddingLeft="3dp"
-        android:paddingStart="3dp"
-        android:paddingRight="3dp"
         android:paddingEnd="3dp"
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
+        android:paddingStart="3dp"
         android:paddingTop="3dp"
         >
 
@@ -47,10 +47,10 @@
           android:layout_height="wrap_content"
           android:ellipsize="end"
           android:lines="2"
-          android:paddingLeft="3dp"
-          android:paddingStart="3dp"
-          android:paddingRight="3dp"
           android:paddingEnd="3dp"
+          android:paddingLeft="3dp"
+          android:paddingRight="3dp"
+          android:paddingStart="3dp"
           android:textColor="?android:attr/textColorSecondary"
           android:textSize="14sp"
           />
@@ -60,10 +60,10 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:maxLines="1"
-          android:paddingLeft="3dp"
-          android:paddingStart="3dp"
-          android:paddingRight="3dp"
           android:paddingEnd="3dp"
+          android:paddingLeft="3dp"
+          android:paddingRight="3dp"
+          android:paddingStart="3dp"
           android:textColor="?android:attr/textColorSecondary"
           android:textSize="12sp"
           />
@@ -71,7 +71,6 @@
       <!--style="?android:attr/ratingBarStyleIndicator"-->
       <RatingBar
           android:id="@+id/ratingbar"
-          style="?attr/gridItemRatingBar"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginLeft="5dp"
@@ -80,6 +79,7 @@
           android:clickable="false"
           android:isIndicator="true"
           android:numStars="5"
+          style="?attr/gridItemRatingBar"
           />
 
       <TextView

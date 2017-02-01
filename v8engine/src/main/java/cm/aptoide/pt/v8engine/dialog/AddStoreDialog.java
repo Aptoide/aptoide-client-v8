@@ -98,6 +98,20 @@ public class AddStoreDialog extends DialogFragment {
     executeRequest(getStoreMetaRequest);
   }
 
+  private void showLoadingDialog() {
+
+    if (loadingDialog == null) {
+      loadingDialog = GenericDialogs.createGenericPleaseWaitDialog(getActivity());
+    }
+
+    loadingDialog.show();
+  }
+
+  private GetStoreMetaRequest buildRequest(String storeName) {
+    return GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName),
+        AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID());
+  }
+
   private void executeRequest(GetStoreMetaRequest getStoreMetaRequest) {
     StoreUtilsProxy.subscribeStore(getStoreMetaRequest, getStoreMeta1 -> {
       ShowMessage.asSnack(getView(),
@@ -123,20 +137,6 @@ public class AddStoreDialog extends DialogFragment {
         ShowMessage.asSnack(getActivity(), R.string.error_occured);
       }
     }, storeName);
-  }
-
-  private GetStoreMetaRequest buildRequest(String storeName) {
-    return GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName),
-        AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID());
-  }
-
-  private void showLoadingDialog() {
-
-    if (loadingDialog == null) {
-      loadingDialog = GenericDialogs.createGenericPleaseWaitDialog(getActivity());
-    }
-
-    loadingDialog.show();
   }
 
   void dismissLoadingDialog() {

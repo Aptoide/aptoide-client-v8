@@ -70,12 +70,12 @@ public @EqualsAndHashCode(callSuper = false) @Data @ToString class DownloadInsta
     }
   }
 
-  public void setError(Throwable error) {
-    this.error = error;
-  }
-
   @CallSuper public boolean isReadyToSend() {
     return resultStatus != null;
+  }
+
+  public void setError(Throwable error) {
+    this.error = error;
   }
 
   public enum Action {

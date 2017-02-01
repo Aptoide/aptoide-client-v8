@@ -40,6 +40,10 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
     isExcluded = (CheckBox) itemView.findViewById(R.id.is_excluded);
   }
 
+  @Override public void unbindView() {
+
+  }
+
   @Override public void bindView(final ExcludedUpdateDisplayable displayable) {
     final Update excludedUpdate = displayable.getPojo();
 
@@ -53,9 +57,5 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
     });
 
     isExcluded.setChecked(displayable.isSelected());
-  }
-
-  @Override public void unbindView() {
-
   }
 }

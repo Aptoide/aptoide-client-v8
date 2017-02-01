@@ -6,14 +6,14 @@
       />
   <gradient
       android:angle="45"
-      android:centerX="35%"
       android:centerColor="@color/white"
-      android:startColor="@color/white"
+      android:centerX="35%"
       android:endColor="@color/white"
+      android:startColor="@color/white"
       android:type="linear"
       />
   <size
-      android:width="200dp"
       android:height="50dp"
+      android:width="200dp"
       />
 </shape>

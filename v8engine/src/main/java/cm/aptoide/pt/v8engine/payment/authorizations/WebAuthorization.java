@@ -7,7 +7,6 @@ package cm.aptoide.pt.v8engine.payment.authorizations;
 
 import android.content.Context;
 import cm.aptoide.pt.v8engine.payment.Authorization;
-import cm.aptoide.pt.v8engine.activity.WebAuthorizationActivity;
 
 /**
  * Created by marcelobenites on 15/11/16.
@@ -33,5 +32,4 @@ public class WebAuthorization extends Authorization {
   public String getRedirectUrl() {
     return redirectUrl;
   }
-
 }

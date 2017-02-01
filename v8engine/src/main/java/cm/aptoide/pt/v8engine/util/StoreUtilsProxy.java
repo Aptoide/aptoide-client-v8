@@ -36,15 +36,6 @@ public class StoreUtilsProxy {
         null, storeName);
   }
 
-  public static void subscribeStore(String storeName,
-      @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
-      @Nullable ErrorRequestListener errorRequestListener) {
-    subscribeStore(GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName),
-        AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID()),
-        successRequestListener,
-        errorRequestListener, storeName);
-  }
-
   public static void subscribeStore(GetStoreMetaRequest getStoreMetaRequest,
       @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
       @Nullable ErrorRequestListener errorRequestListener, String storeName) {
@@ -52,5 +43,13 @@ public class StoreUtilsProxy {
         "LOCALYTICS TESTING - STORES: ACTION SUBSCRIBE " + storeName);
     Analytics.Stores.subscribe(storeName);
     StoreUtils.subscribeStore(getStoreMetaRequest, successRequestListener, errorRequestListener);
+  }
+
+  public static void subscribeStore(String storeName,
+      @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
+      @Nullable ErrorRequestListener errorRequestListener) {
+    subscribeStore(GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName),
+        AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID()),
+        successRequestListener, errorRequestListener, storeName);
   }
 }

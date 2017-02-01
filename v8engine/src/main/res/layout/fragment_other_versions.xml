@@ -5,10 +5,10 @@
   -->
 
 <android.support.design.widget.CoordinatorLayout
-    android:id="@+id/other_versions_coordinator_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/other_versions_coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
@@ -152,13 +152,13 @@
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginTop="118dp"
-            android:layout_toRightOf="@id/app_icon"
             android:layout_toEndOf="@id/app_icon"
+            android:layout_toRightOf="@id/app_icon"
             android:lines="1"
             android:text="@string/other_versions_on_different_stores"
+            android:textColor="@color/medium_gray"
             android:textSize="@dimen/text_size_medium"
             android:textStyle="italic"
-            android:textColor="@color/medium_gray"
             />
 
       </RelativeLayout>

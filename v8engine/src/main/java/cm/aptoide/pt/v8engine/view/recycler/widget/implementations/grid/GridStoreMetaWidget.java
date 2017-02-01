@@ -80,6 +80,69 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
     twitterButton = (ImageButton) itemView.findViewById(R.id.twitter_button);
   }
 
+  @Override public void unbindView() {
+
+  }
+
+  @Override public void bindView(GridStoreMetaDisplayable displayable) {
+
+    final GetStoreMeta getStoreMeta = displayable.getPojo();
+    final cm.aptoide.pt.model.v7.store.Store store = getStoreMeta.getData();
+    final StoreThemeEnum theme = StoreThemeEnum.get(store.getAppearance().getTheme());
+    final Context context = itemView.getContext();
+
+    StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
+    boolean isStoreSubscribed =
+        storeAccessor.get(store.getId()).toBlocking().firstOrDefault(null) != null;
+
+    showStoreImage(store, context);
+    showStoreData(store, theme, context);
+
+    updateSubscribeButtonText(isStoreSubscribed);
+    compositeSubscription.add(RxView.clicks(subscribeButton)
+        .subscribe(handleSubscriptionLogic(new StoreWrapper(store, isStoreSubscribed))));
+
+    List<cm.aptoide.pt.model.v7.store.Store.SocialChannel> socialChannels =
+        store.getSocialChannels();
+    setupSocialChannelButtons(socialChannels);
+
+    // if there is no channels nor description, hide that area
+    if (socialChannels == null || socialChannels.isEmpty()) {
+      if (TextUtils.isEmpty(store.getAppearance().getDescription())) {
+        descriptionContentLayout.setVisibility(View.GONE);
+      }
+      this.socialChannelsLayout.setVisibility(View.GONE);
+    }
+
+    if (!TextUtils.isEmpty(AccountManagerPreferences.getUserRepo())) {
+      if (AccountManagerPreferences.getUserRepo().equals(store.getName())) {
+        descriptionContentLayout.setVisibility(View.VISIBLE);
+        if (TextUtils.isEmpty(store.getAppearance().getDescription())) {
+          description.setText("Add a description to your store by editing it.");
+        }
+        editStoreButton.setVisibility(View.VISIBLE);
+        compositeSubscription.add(RxView.clicks(editStoreButton)
+            .subscribe(click -> editStore(store.getId(), store.getAppearance().getTheme(),
+                store.getAppearance().getDescription(), store.getAvatar())));
+      }
+    }
+  }
+
+  private void showStoreImage(cm.aptoide.pt.model.v7.store.Store store, Context context) {
+    if (TextUtils.isEmpty(store.getAvatar())) {
+      Glide.with(context)
+          .fromResource()
+          .load(R.drawable.ic_avatar_apps)
+          .transform(new CircleTransform(context))
+          .into(image);
+    } else {
+      Glide.with(context)
+          .load(store.getAvatar())
+          .transform(new CircleTransform(context))
+          .into(image);
+    }
+  }
+
   private void showStoreData(cm.aptoide.pt.model.v7.store.Store store, StoreThemeEnum theme,
       Context context) {
 
@@ -104,27 +167,35 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
     subscribersCount.setText(AptoideUtils.StringU.withSuffix(store.getStats().getSubscribers()));
   }
 
-  private int getColorOrDefault(StoreThemeEnum theme, Context context) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      return context.getResources().getColor(theme.getStoreHeader(), context.getTheme());
-    } else {
-      return context.getResources().getColor(theme.getStoreHeader());
-    }
+  private void updateSubscribeButtonText(boolean isStoreSubscribed) {
+    subscribeButton.setText(isStoreSubscribed ? itemView.getContext().getString(R.string.followed)
+        : itemView.getContext().getString(R.string.appview_follow_store_button_text));
   }
 
-  private void showStoreImage(cm.aptoide.pt.model.v7.store.Store store, Context context) {
-    if (TextUtils.isEmpty(store.getAvatar())) {
-      Glide.with(context)
-          .fromResource()
-          .load(R.drawable.ic_avatar_apps)
-          .transform(new CircleTransform(context))
-          .into(image);
-    } else {
-      Glide.with(context)
-          .load(store.getAvatar())
-          .transform(new CircleTransform(context))
-          .into(image);
-    }
+  private Action1<Void> handleSubscriptionLogic(final StoreWrapper storeWrapper) {
+    return aVoid -> {
+      if (storeWrapper.isStoreSubscribed()) {
+        storeWrapper.setStoreSubscribed(false);
+        if (AptoideAccountManager.isLoggedIn()) {
+          AptoideAccountManager.unsubscribeStore(storeWrapper.getStore().getName());
+        }
+        StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
+        storeAccessor.remove(storeWrapper.getStore().getId());
+        ShowMessage.asSnack(itemView,
+            AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message,
+                storeWrapper.getStore().getName()));
+      } else {
+        storeWrapper.setStoreSubscribed(true);
+        StoreUtilsProxy.subscribeStore(storeWrapper.getStore().getName(), subscribedStoreMeta -> {
+          ShowMessage.asSnack(itemView,
+              AptoideUtils.StringU.getFormattedString(R.string.store_followed,
+                  subscribedStoreMeta.getData().getName()));
+        }, err -> {
+          CrashReport.getInstance().log(err);
+        });
+      }
+      updateSubscribeButtonText(storeWrapper.isStoreSubscribed());
+    };
   }
 
   private void setupSocialChannelButtons(
@@ -167,6 +238,25 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
     }));
   }
 
+  private void editStore(long storeId, String storeTheme, String storeDescription,
+      String storeAvatar) {
+    Intent intent = new Intent(getContext(), CreateStoreActivity.class);
+    intent.putExtra("storeId", storeId);
+    intent.putExtra("storeTheme", storeTheme);
+    intent.putExtra("storeDescription", storeDescription);
+    intent.putExtra("storeAvatar", storeAvatar);
+    intent.putExtra("from", "store");
+    getContext().startActivity(intent);
+  }
+
+  private int getColorOrDefault(StoreThemeEnum theme, Context context) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      return context.getResources().getColor(theme.getStoreHeader(), context.getTheme());
+    } else {
+      return context.getResources().getColor(theme.getStoreHeader());
+    }
+  }
+
   private Action1<Void> handleEvent(
       cm.aptoide.pt.model.v7.store.Store.SocialChannel socialChannel) {
     final String action = socialChannel.getUrl();
@@ -178,86 +268,6 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
     return null;
   }
 
-  @Override public void bindView(GridStoreMetaDisplayable displayable) {
-
-    final GetStoreMeta getStoreMeta = displayable.getPojo();
-    final cm.aptoide.pt.model.v7.store.Store store = getStoreMeta.getData();
-    final StoreThemeEnum theme = StoreThemeEnum.get(store.getAppearance().getTheme());
-    final Context context = itemView.getContext();
-
-    StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
-    boolean isStoreSubscribed =
-        storeAccessor.get(store.getId()).toBlocking().firstOrDefault(null) != null;
-
-    showStoreImage(store, context);
-    showStoreData(store, theme, context);
-
-    updateSubscribeButtonText(isStoreSubscribed);
-    compositeSubscription.add(RxView.clicks(subscribeButton)
-        .subscribe(handleSubscriptionLogic(new StoreWrapper(store, isStoreSubscribed))));
-
-    List<cm.aptoide.pt.model.v7.store.Store.SocialChannel> socialChannels =
-        store.getSocialChannels();
-    setupSocialChannelButtons(socialChannels);
-
-    // if there is no channels nor description, hide that area
-    if (socialChannels == null || socialChannels.isEmpty()) {
-      if (TextUtils.isEmpty(store.getAppearance().getDescription())) {
-        descriptionContentLayout.setVisibility(View.GONE);
-      }
-      this.socialChannelsLayout.setVisibility(View.GONE);
-    }
-
-
-    if (!TextUtils.isEmpty(AccountManagerPreferences.getUserRepo())) {
-      if (AccountManagerPreferences.getUserRepo().equals(store.getName())) {
-        descriptionContentLayout.setVisibility(View.VISIBLE);
-        if (TextUtils.isEmpty(store.getAppearance().getDescription())) {
-          description.setText("Add a description to your store by editing it.");
-        }
-        editStoreButton.setVisibility(View.VISIBLE);
-        compositeSubscription.add(RxView.clicks(editStoreButton)
-            .subscribe(click -> editStore(store.getId(), store.getAppearance().getTheme(),
-                store.getAppearance().getDescription(), store.getAvatar())));
-      }
-    }
-  }
-
-  @Override public void unbindView() {
-
-  }
-
-  private void updateSubscribeButtonText(boolean isStoreSubscribed) {
-    subscribeButton.setText(isStoreSubscribed ? itemView.getContext().getString(R.string.followed)
-        : itemView.getContext().getString(R.string.appview_follow_store_button_text));
-  }
-
-  private Action1<Void> handleSubscriptionLogic(final StoreWrapper storeWrapper) {
-    return aVoid -> {
-      if (storeWrapper.isStoreSubscribed()) {
-        storeWrapper.setStoreSubscribed(false);
-        if (AptoideAccountManager.isLoggedIn()) {
-          AptoideAccountManager.unsubscribeStore(storeWrapper.getStore().getName());
-        }
-        StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
-        storeAccessor.remove(storeWrapper.getStore().getId());
-        ShowMessage.asSnack(itemView,
-            AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message,
-                storeWrapper.getStore().getName()));
-      } else {
-        storeWrapper.setStoreSubscribed(true);
-        StoreUtilsProxy.subscribeStore(storeWrapper.getStore().getName(), subscribedStoreMeta -> {
-          ShowMessage.asSnack(itemView,
-              AptoideUtils.StringU.getFormattedString(R.string.store_followed,
-                  subscribedStoreMeta.getData().getName()));
-        }, err -> {
-          CrashReport.getInstance().log(err);
-        });
-      }
-      updateSubscribeButtonText(storeWrapper.isStoreSubscribed());
-    };
-  }
-
   private static class StoreWrapper {
     @Getter private final cm.aptoide.pt.model.v7.store.Store store;
     @Getter @Setter private boolean storeSubscribed;
@@ -266,16 +276,5 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
       this.store = store;
       this.storeSubscribed = isStoreSubscribed;
     }
-  }
-
-  private void editStore(long storeId, String storeTheme, String storeDescription,
-      String storeAvatar) {
-    Intent intent = new Intent(getContext(), CreateStoreActivity.class);
-    intent.putExtra("storeId", storeId);
-    intent.putExtra("storeTheme", storeTheme);
-    intent.putExtra("storeDescription", storeDescription);
-    intent.putExtra("storeAvatar", storeAvatar);
-    intent.putExtra("from", "store");
-    getContext().startActivity(intent);
   }
 }

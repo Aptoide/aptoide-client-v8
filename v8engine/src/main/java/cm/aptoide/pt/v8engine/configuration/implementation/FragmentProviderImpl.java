@@ -258,7 +258,8 @@ public class FragmentProviderImpl implements FragmentProvider {
   }
 
   @Override public Fragment newTimeLineFollowStatsFragment(
-      TimeLineFollowFragment.FollowFragmentOpenMode openMode, String storeTheme, String cardUid, long numberOfLikes) {
+      TimeLineFollowFragment.FollowFragmentOpenMode openMode, String storeTheme, String cardUid,
+      long numberOfLikes) {
     return TimeLineFollowFragment.newInstance(openMode, storeTheme, cardUid, numberOfLikes);
   }
 

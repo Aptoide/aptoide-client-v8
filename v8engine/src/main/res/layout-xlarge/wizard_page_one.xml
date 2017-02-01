@@ -2,38 +2,38 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:gravity="center_horizontal"
     android:background="@color/aptoide_orange"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
     >
 
   <ImageView
       android:id="@+id/aptoide_logo"
-      android:src="@drawable/wizard_aptoide_logo"
       android:layout_width="200dp"
       android:layout_height="50dp"
       android:layout_margin="20dp"
+      android:src="@drawable/wizard_aptoide_logo"
       />
 
   <TextView
-      android:textColor="@color/white"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:text="@string/wizard_welcome_message"
-      android:textSize="40sp"
-      android:layout_marginTop="10dp"
       android:layout_marginBottom="7dp"
+      android:layout_marginTop="10dp"
+      android:text="@string/wizard_welcome_message"
+      android:textColor="@color/white"
+      android:textSize="40sp"
       />
 
   <TextView
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:textColor="@color/white"
-      android:layout_marginLeft="10dp"
-      android:layout_marginStart="10dp"
-      android:layout_marginRight="10dp"
       android:layout_marginEnd="10dp"
+      android:layout_marginLeft="10dp"
+      android:layout_marginRight="10dp"
+      android:layout_marginStart="10dp"
       android:text="@string/wizard_sub_title_viewpager_one"
+      android:textColor="@color/white"
       android:textSize="28sp"
       />
 
@@ -69,9 +69,9 @@
         android:layout_toLeftOf="@+id/centerHorizontalShim"
         android:layout_toStartOf="@+id/centerHorizontalShim"
         android:gravity="center"
+        android:padding="50dp"
         android:src="@drawable/wizard_magnify"
         android:textColor="@color/white"
-        android:padding="50dp"
         >
     </ImageView>
 
@@ -79,16 +79,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/centerVerticalShim"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/centerHorizontalShim"
         android:layout_toEndOf="@+id/centerHorizontalShim"
+        android:layout_toRightOf="@+id/centerHorizontalShim"
+        android:gravity="center_vertical"
+        android:padding="5dp"
         android:text="@string/wizard_description_part_one_viewpager_one"
         android:textColor="@color/white"
         android:textSize="24sp"
-        android:gravity="center_vertical"
-        android:padding="5dp"
         >
     </TextView>
 
@@ -102,9 +102,9 @@
         android:layout_toLeftOf="@+id/centerHorizontalShim"
         android:layout_toStartOf="@+id/centerHorizontalShim"
         android:gravity="center"
+        android:padding="50dp"
         android:src="@drawable/wizard_apps"
         android:textColor="@color/white"
-        android:padding="50dp"
         >
     </ImageView>
 
@@ -112,16 +112,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_below="@+id/centerVerticalShim"
-        android:layout_toRightOf="@+id/centerHorizontalShim"
         android:layout_toEndOf="@+id/centerHorizontalShim"
+        android:layout_toRightOf="@+id/centerHorizontalShim"
         android:gravity="center_vertical"
+        android:padding="5dp"
         android:text="@string/wizard_description_part_two_viewpager_one"
         android:textColor="@color/white"
         android:textSize="24sp"
-        android:padding="5dp"
         >
     </TextView>
   </RelativeLayout>

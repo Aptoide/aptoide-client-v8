@@ -27,11 +27,11 @@
         />
 
     <TextView
-        style="@style/TextAppearance.AppCompat.Medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:text="@string/trusted_app"
+        style="@style/TextAppearance.AppCompat.Medium"
         />
   </LinearLayout>
 
@@ -53,11 +53,11 @@
         />
 
     <TextView
-        style="@style/TextAppearance.AppCompat.Medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:text="@string/warning"
+        style="@style/TextAppearance.AppCompat.Medium"
         />
   </LinearLayout>
 
@@ -79,11 +79,11 @@
         />
 
     <TextView
-        style="@style/TextAppearance.AppCompat.Medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:text="@string/unknown"
+        style="@style/TextAppearance.AppCompat.Medium"
         />
   </LinearLayout>
 
@@ -109,10 +109,10 @@
 
       <TextView
           android:id="@+id/tv_reason_thirdparty_validated"
-          style="@style/badgeReasonStyle"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:text="@string/reason_third_party"
+          style="@style/badgeReasonStyle"
           />
     </TableRow>
 
@@ -134,9 +134,9 @@
 
       <TextView
           android:id="@+id/tv_reason_signature_validation"
-          style="@style/badgeReasonStyle"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
+          style="@style/badgeReasonStyle"
           />
     </TableRow>
 
@@ -158,10 +158,10 @@
 
       <TextView
           android:id="@+id/tv_reason_scanned_passed"
-          style="@style/badgeReasonStyle"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:text="@string/reason_scanned"
+          style="@style/badgeReasonStyle"
           />
     </TableRow>
 
@@ -183,10 +183,10 @@
 
       <TextView
           android:id="@+id/tv_reason_manual_qa"
-          style="@style/badgeReasonStyle"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:text="@string/reason_manual"
+          style="@style/badgeReasonStyle"
           />
     </TableRow>
 
@@ -201,10 +201,10 @@
 
       <TextView
           android:id="@+id/tv_reason_unknown"
-          style="@style/badgeReasonStyle"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:text="@string/reason_unknown"
+          style="@style/badgeReasonStyle"
           />
     </TableRow>
 

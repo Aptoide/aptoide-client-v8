@@ -32,12 +32,12 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
     this.storeTheme = storeTheme;
   }
 
-  @Override public int getViewLayout() {
-    return R.layout.timeline_follows_info;
-  }
-
   @Override protected Configs getConfig() {
     return new Configs(1, true);
+  }
+
+  @Override public int getViewLayout() {
+    return R.layout.timeline_follows_info;
   }
 
   CharSequence getFollowersText(Context context) {

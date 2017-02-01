@@ -44,6 +44,11 @@ public class RecommendedStoreWidget extends Widget<RecommendedStoreDisplayable> 
     followButton = (AppCompatButton) itemView.findViewById(R.id.recommended_store_action);
   }
 
+  @Override public void unbindView() {
+    subscriptions.clear();
+    super.unbindView();
+  }
+
   @Override public void bindView(RecommendedStoreDisplayable displayable) {
     Store store = displayable.getPojo();
     storeName.setText(store.getName());
@@ -55,24 +60,6 @@ public class RecommendedStoreWidget extends Widget<RecommendedStoreDisplayable> 
     setButtonText(displayable);
     RxView.clicks(itemView)
         .subscribe(click -> displayable.openStoreFragment((FragmentShower) getContext()));
-  }
-
-  private void setButtonText(RecommendedStoreDisplayable displayable) {
-    followButton.setVisibility(View.GONE);
-    displayable.isFollowing()
-        .first()
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(isSubscribed -> {
-          int message;
-          if (isSubscribed) {
-            message = R.string.followed;
-          } else {
-            message = R.string.appview_follow_store_button_text;
-          }
-          followButton.setText(
-              AptoideUtils.StringU.getFormattedString(message, displayable.getPojo().getName()));
-          followButton.setVisibility(View.VISIBLE);
-        });
   }
 
   private void setFollowButtonListener(RecommendedStoreDisplayable displayable) {
@@ -105,8 +92,21 @@ public class RecommendedStoreWidget extends Widget<RecommendedStoreDisplayable> 
     }));
   }
 
-  @Override public void unbindView() {
-    subscriptions.clear();
-    super.unbindView();
+  private void setButtonText(RecommendedStoreDisplayable displayable) {
+    followButton.setVisibility(View.GONE);
+    displayable.isFollowing()
+        .first()
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(isSubscribed -> {
+          int message;
+          if (isSubscribed) {
+            message = R.string.followed;
+          } else {
+            message = R.string.appview_follow_store_button_text;
+          }
+          followButton.setText(
+              AptoideUtils.StringU.getFormattedString(message, displayable.getPojo().getName()));
+          followButton.setVisibility(View.VISIBLE);
+        });
   }
 }

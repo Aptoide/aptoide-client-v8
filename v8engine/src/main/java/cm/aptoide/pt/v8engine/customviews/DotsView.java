@@ -19,12 +19,12 @@ public class DotsView extends View {
   private static final int COLOR_4 = 0xFFF44336;
   public static final Property<DotsView, Float> DOTS_PROGRESS =
       new Property<DotsView, Float>(Float.class, "dotsProgress") {
-        @Override public Float get(DotsView object) {
-          return object.getCurrentProgress();
-        }
-
         @Override public void set(DotsView object, Float value) {
           object.setCurrentProgress(value);
+        }
+
+        @Override public Float get(DotsView object) {
+          return object.getCurrentProgress();
         }
       };
   private final Paint[] circlePaints = new Paint[4];
@@ -45,6 +45,13 @@ public class DotsView extends View {
     init();
   }
 
+  private void init() {
+    for (int i = 0; i < circlePaints.length; i++) {
+      circlePaints[i] = new Paint();
+      circlePaints[i].setStyle(Paint.Style.FILL);
+    }
+  }
+
   public DotsView(Context context, AttributeSet attrs) {
     super(context, attrs);
     init();
@@ -53,13 +60,6 @@ public class DotsView extends View {
   public DotsView(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
     init();
-  }
-
-  private void init() {
-    for (int i = 0; i < circlePaints.length; i++) {
-      circlePaints[i] = new Paint();
-      circlePaints[i].setStyle(Paint.Style.FILL);
-    }
   }
 
   @Override protected void onSizeChanged(int w, int h, int oldw, int oldh) {
@@ -114,7 +114,8 @@ public class DotsView extends View {
   private void updateInnerDotsPosition() {
     if (currentProgress < 0.3f) {
       this.currentRadius2 =
-          (float) AptoideUtils.MathU.mapValueFromRangeToRange(currentProgress, 0, 0.3f, 0.f, maxInnerDotsRadius);
+          (float) AptoideUtils.MathU.mapValueFromRangeToRange(currentProgress, 0, 0.3f, 0.f,
+              maxInnerDotsRadius);
     } else {
       this.currentRadius2 = maxInnerDotsRadius;
     }
@@ -123,40 +124,46 @@ public class DotsView extends View {
       this.currentDotSize2 = maxDotSize;
     } else if (currentProgress < 0.5) {
       this.currentDotSize2 =
-          (float) AptoideUtils.MathU.mapValueFromRangeToRange(currentProgress, 0.2f, 0.5f, maxDotSize,
-              0.3 * maxDotSize);
+          (float) AptoideUtils.MathU.mapValueFromRangeToRange(currentProgress, 0.2f, 0.5f,
+              maxDotSize, 0.3 * maxDotSize);
     } else {
       this.currentDotSize2 =
-          (float) AptoideUtils.MathU.mapValueFromRangeToRange(currentProgress, 0.5f, 1f, maxDotSize * 0.3f, 0);
+          (float) AptoideUtils.MathU.mapValueFromRangeToRange(currentProgress, 0.5f, 1f,
+              maxDotSize * 0.3f, 0);
     }
   }
 
   private void updateOuterDotsPosition() {
     if (currentProgress < 0.3f) {
-      this.currentRadius1 = (float) AptoideUtils.MathU.mapValueFromRangeToRange(currentProgress, 0.0f, 0.3f, 0,
-          maxOuterDotsRadius * 0.8f);
+      this.currentRadius1 =
+          (float) AptoideUtils.MathU.mapValueFromRangeToRange(currentProgress, 0.0f, 0.3f, 0,
+              maxOuterDotsRadius * 0.8f);
     } else {
-      this.currentRadius1 = (float) AptoideUtils.MathU.mapValueFromRangeToRange(currentProgress, 0.3f, 1f,
-          0.8f * maxOuterDotsRadius, maxOuterDotsRadius);
+      this.currentRadius1 =
+          (float) AptoideUtils.MathU.mapValueFromRangeToRange(currentProgress, 0.3f, 1f,
+              0.8f * maxOuterDotsRadius, maxOuterDotsRadius);
     }
 
     if (currentProgress < 0.7) {
       this.currentDotSize1 = maxDotSize;
     } else {
       this.currentDotSize1 =
-          (float) AptoideUtils.MathU.mapValueFromRangeToRange(currentProgress, 0.7f, 1f, maxDotSize, 0);
+          (float) AptoideUtils.MathU.mapValueFromRangeToRange(currentProgress, 0.7f, 1f, maxDotSize,
+              0);
     }
   }
 
   private void updateDotsPaints() {
     if (currentProgress < 0.5f) {
-      float progress = (float) AptoideUtils.MathU.mapValueFromRangeToRange(currentProgress, 0f, 0.5f, 0, 1f);
+      float progress =
+          (float) AptoideUtils.MathU.mapValueFromRangeToRange(currentProgress, 0f, 0.5f, 0, 1f);
       circlePaints[0].setColor((Integer) argbEvaluator.evaluate(progress, COLOR_1, COLOR_2));
       circlePaints[1].setColor((Integer) argbEvaluator.evaluate(progress, COLOR_2, COLOR_3));
       circlePaints[2].setColor((Integer) argbEvaluator.evaluate(progress, COLOR_3, COLOR_4));
       circlePaints[3].setColor((Integer) argbEvaluator.evaluate(progress, COLOR_4, COLOR_1));
     } else {
-      float progress = (float) AptoideUtils.MathU.mapValueFromRangeToRange(currentProgress, 0.5f, 1f, 0, 1f);
+      float progress =
+          (float) AptoideUtils.MathU.mapValueFromRangeToRange(currentProgress, 0.5f, 1f, 0, 1f);
       circlePaints[0].setColor((Integer) argbEvaluator.evaluate(progress, COLOR_2, COLOR_3));
       circlePaints[1].setColor((Integer) argbEvaluator.evaluate(progress, COLOR_3, COLOR_4));
       circlePaints[2].setColor((Integer) argbEvaluator.evaluate(progress, COLOR_4, COLOR_1));

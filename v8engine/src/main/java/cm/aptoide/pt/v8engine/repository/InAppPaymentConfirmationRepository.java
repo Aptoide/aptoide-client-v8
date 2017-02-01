@@ -40,11 +40,13 @@ public class InAppPaymentConfirmationRepository extends PaymentConfirmationRepos
           }
           return Observable.error(
               new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
-        }).toCompletable().andThen(syncPaymentConfirmation(product));
+        })
+        .toCompletable()
+        .andThen(syncPaymentConfirmation(product));
   }
 
-  @Override public Completable createPaymentConfirmation(int paymentId,
-      String paymentConfirmationId) {
+  @Override
+  public Completable createPaymentConfirmation(int paymentId, String paymentConfirmationId) {
     return createPaymentConfirmation(product, paymentId, paymentConfirmationId);
   }
 }

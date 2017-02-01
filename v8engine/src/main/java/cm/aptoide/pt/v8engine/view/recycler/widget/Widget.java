@@ -35,22 +35,20 @@ public abstract class Widget<T extends Displayable> extends RecyclerView.ViewHol
     }
   }
 
-  protected NavigationManagerV4 getNavigationManager() {
-    return appNav;
+  public FragmentActivity getContext() {
+    return (FragmentActivity) itemView.getContext();
   }
 
   protected abstract void assignViews(View itemView);
 
-  public abstract void bindView(T displayable);
+  protected NavigationManagerV4 getNavigationManager() {
+    return appNav;
+  }
 
   public void unbindView() {
     if (compositeSubscription != null && !compositeSubscription.isUnsubscribed()) {
       compositeSubscription.clear();
     }
-  }
-
-  public FragmentActivity getContext() {
-    return (FragmentActivity) itemView.getContext();
   }
 
   public void internalBindView(T displayable) {
@@ -60,4 +58,6 @@ public abstract class Widget<T extends Displayable> extends RecyclerView.ViewHol
     displayable.setVisible(true);
     bindView(displayable);
   }
+
+  public abstract void bindView(T displayable);
 }

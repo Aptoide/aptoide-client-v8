@@ -152,24 +152,6 @@ import rx.android.schedulers.AndroidSchedulers;
                 throwable -> throwable.printStackTrace()));
   }
 
-  private boolean isDownloadingOrInstalling(Progress<Download> progress) {
-    return progress.getRequest().getOverallDownloadStatus() == Download.PROGRESS
-        || progress.getRequest().getOverallDownloadStatus() == Download.PENDING
-        || progress.getRequest().getOverallDownloadStatus() == Download.IN_QUEUE;
-  }
-
-  @UiThread private void showProgress(boolean showProgress) {
-    if (showProgress) {
-      textUpdateLayout.setVisibility(View.GONE);
-      imgUpdateLayout.setVisibility(View.GONE);
-      progressBar.setVisibility(View.VISIBLE);
-    } else {
-      textUpdateLayout.setVisibility(View.VISIBLE);
-      imgUpdateLayout.setVisibility(View.VISIBLE);
-      progressBar.setVisibility(View.GONE);
-    }
-  }
-
   /**
    * *  <dt><b>Scheduler:</b></dt>
    * <dd>{@code getUpdates} operates by default on the {@code io} {@link Scheduler}..</dd>
@@ -189,5 +171,23 @@ import rx.android.schedulers.AndroidSchedulers;
           }
           return Observable.empty();
         });
+  }
+
+  private boolean isDownloadingOrInstalling(Progress<Download> progress) {
+    return progress.getRequest().getOverallDownloadStatus() == Download.PROGRESS
+        || progress.getRequest().getOverallDownloadStatus() == Download.PENDING
+        || progress.getRequest().getOverallDownloadStatus() == Download.IN_QUEUE;
+  }
+
+  @UiThread private void showProgress(boolean showProgress) {
+    if (showProgress) {
+      textUpdateLayout.setVisibility(View.GONE);
+      imgUpdateLayout.setVisibility(View.GONE);
+      progressBar.setVisibility(View.VISIBLE);
+    } else {
+      textUpdateLayout.setVisibility(View.VISIBLE);
+      imgUpdateLayout.setVisibility(View.VISIBLE);
+      progressBar.setVisibility(View.GONE);
+    }
   }
 }

@@ -75,11 +75,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
     return newInstance(storeName, StoreContext.store, storeTheme);
   }
 
-  //Delete after completing themes implementation
-  public static StoreFragment newInstance(String storeName) {
-    return newInstance(storeName, StoreContext.store);
-  }
-
   public static StoreFragment newInstance(String storeName, StoreContext storeContext,
       String storeTheme) {
     Bundle args = new Bundle();
@@ -89,6 +84,11 @@ public class StoreFragment extends BasePagerToolbarFragment {
     StoreFragment fragment = new StoreFragment();
     fragment.setArguments(args);
     return fragment;
+  }
+
+  //Delete after completing themes implementation
+  public static StoreFragment newInstance(String storeName) {
+    return newInstance(storeName, StoreContext.store);
   }
 
   //Delete after completing themes implementation
@@ -291,13 +291,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
     setHasOptionsMenu(true);
   }
 
-  @CallSuper @Override public void setupToolbar() {
-    super.setupToolbar();
-    // FIXME: 17/1/2017 sithengineer is this the right place to have this event ?? why ??
-    Logger.d(TAG, "LOCALYTICS TESTING - STORES ACTION ENTER " + storeName);
-    Analytics.Stores.enter(storeName);
-  }
-
   protected boolean displayHomeUpAsEnabled() {
     return true;
   }
@@ -305,6 +298,13 @@ public class StoreFragment extends BasePagerToolbarFragment {
   @Override protected void setupToolbarDetails(Toolbar toolbar) {
     toolbar.setTitle(storeName);
     toolbar.setLogo(R.drawable.ic_store);
+  }
+
+  @CallSuper @Override public void setupToolbar() {
+    super.setupToolbar();
+    // FIXME: 17/1/2017 sithengineer is this the right place to have this event ?? why ??
+    Logger.d(TAG, "LOCALYTICS TESTING - STORES ACTION ENTER " + storeName);
+    Analytics.Stores.enter(storeName);
   }
 
   protected static class BundleCons {

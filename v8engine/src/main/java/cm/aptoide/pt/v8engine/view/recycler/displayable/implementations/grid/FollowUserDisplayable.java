@@ -28,12 +28,12 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
     this.openMode = openMode;
   }
 
-  @Override public int getViewLayout() {
-    return R.layout.timeline_follow_user;
-  }
-
   @Override protected Configs getConfig() {
     return new Configs(1, false);
+  }
+
+  @Override public int getViewLayout() {
+    return R.layout.timeline_follow_user;
   }
 
   public String getUserName() {

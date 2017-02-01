@@ -84,6 +84,10 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
     }
   }
 
+  @Override public void pushFragmentV4(android.support.v4.app.Fragment fragment) {
+    FragmentUtils.replaceFragmentV4(this, fragment);
+  }
+
   private void handleDeepLinks(Intent intent) {
     if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.APP_VIEW_FRAGMENT)) {
 
@@ -121,18 +125,8 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
     }
   }
 
-  private void scheduleDownloadsDeepLink(Uri uri) {
-    if (uri != null) {
-      String openMode = uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.OPEN_MODE);
-      if (!TextUtils.isEmpty(openMode)) {
-        pushFragmentV4(V8Engine.getFragmentProvider()
-            .newScheduledDownloadsFragment(ScheduledDownloadsFragment.OpenMode.valueOf(openMode)));
-      }
-    }
-  }
-
-  private void searchDeepLink(String query) {
-    pushFragmentV4(V8Engine.getFragmentProvider().newSearchFragment(query));
+  private void appViewDeepLink(String md5) {
+    pushFragmentV4(AppViewFragment.newInstance(md5));
   }
 
   private void appViewDeepLink(long appId, String packageName, boolean showPopup) {
@@ -141,15 +135,15 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
     pushFragmentV4(V8Engine.getFragmentProvider().newAppViewFragment(appId, packageName, openType));
   }
 
-  private void appViewDeepLink(String md5) {
-    pushFragmentV4(AppViewFragment.newInstance(md5));
-  }
-
   private void appViewDeepLink(String packageName, String storeName, boolean showPopup) {
     AppViewFragment.OpenType openType = showPopup ? AppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP
         : AppViewFragment.OpenType.OPEN_ONLY;
     pushFragmentV4(
         V8Engine.getFragmentProvider().newAppViewFragment(packageName, storeName, openType));
+  }
+
+  private void searchDeepLink(String query) {
+    pushFragmentV4(V8Engine.getFragmentProvider().newSearchFragment(query));
   }
 
   private void newrepoDeepLink(ArrayList<String> repos) {
@@ -210,7 +204,8 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
         GetStoreWidgets.WSWidget.Data data = new GetStoreWidgets.WSWidget.Data();
         data.setLayout(Layout.valueOf(queryLayout));
         event.setData(data);
-        pushFragmentV4(V8Engine.getFragmentProvider().newStoreTabGridRecyclerFragment(event,
+        pushFragmentV4(V8Engine.getFragmentProvider()
+            .newStoreTabGridRecyclerFragment(event,
                 uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.TITLE),
                 uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.STORE_THEME),
                 V8Engine.getConfiguration().getDefaultTheme()));
@@ -220,13 +215,14 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
     }
   }
 
-  private boolean validateDeepLinkRequiredArgs(String queryType, String queryLayout,
-      String queryName, String queryAction) {
-    return !TextUtils.isEmpty(queryType)
-        && !TextUtils.isEmpty(queryLayout)
-        && !TextUtils.isEmpty(queryName)
-        && !TextUtils.isEmpty(queryAction)
-        && StoreTabFragmentChooser.validateAcceptedName(Event.Name.valueOf(queryName));
+  private void scheduleDownloadsDeepLink(Uri uri) {
+    if (uri != null) {
+      String openMode = uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.OPEN_MODE);
+      if (!TextUtils.isEmpty(openMode)) {
+        pushFragmentV4(V8Engine.getFragmentProvider()
+            .newScheduledDownloadsFragment(ScheduledDownloadsFragment.OpenMode.valueOf(openMode)));
+      }
+    }
   }
 
   private void setMainPagerPosition(Event.Name name) {
@@ -241,8 +237,13 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
     });
   }
 
-  @Override public void pushFragmentV4(android.support.v4.app.Fragment fragment) {
-    FragmentUtils.replaceFragmentV4(this, fragment);
+  private boolean validateDeepLinkRequiredArgs(String queryType, String queryLayout,
+      String queryName, String queryAction) {
+    return !TextUtils.isEmpty(queryType)
+        && !TextUtils.isEmpty(queryLayout)
+        && !TextUtils.isEmpty(queryName)
+        && !TextUtils.isEmpty(queryAction)
+        && StoreTabFragmentChooser.validateAcceptedName(Event.Name.valueOf(queryName));
   }
 
   public android.support.v4.app.Fragment getCurrentV4() {

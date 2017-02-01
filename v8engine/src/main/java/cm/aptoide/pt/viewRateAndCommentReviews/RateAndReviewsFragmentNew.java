@@ -95,16 +95,6 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
   // base methods
   //
 
-  @Override public void loadExtras(Bundle args) {
-    super.loadExtras(args);
-    appId = args.getLong(APP_ID);
-    reviewId = args.getLong(REVIEW_ID);
-    packageName = args.getString(PACKAGE_NAME);
-    storeName = args.getString(STORE_NAME);
-    appName = args.getString(APP_NAME);
-    storeTheme = args.getString(STORE_THEME);
-  }
-
   @Override protected boolean displayHomeUpAsEnabled() {
     return true;
   }
@@ -134,12 +124,20 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
     attachPresenter(presenter, savedInstanceState);
   }
 
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    if (storeTheme != null) {
-      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
-      ThemeUtils.setStoreTheme(getActivity(), storeTheme);
-    }
+  @CallSuper @Override
+  public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    super.load(create, refresh, savedInstanceState);
+    // ??
+  }
+
+  @Override public void loadExtras(Bundle args) {
+    super.loadExtras(args);
+    appId = args.getLong(APP_ID);
+    reviewId = args.getLong(REVIEW_ID);
+    packageName = args.getString(PACKAGE_NAME);
+    storeName = args.getString(STORE_NAME);
+    appName = args.getString(APP_NAME);
+    storeTheme = args.getString(STORE_THEME);
   }
 
   //
@@ -150,12 +148,6 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
     return R.layout.fragment_rate_and_reviews;
   }
 
-  @CallSuper @Override
-  public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    super.load(create, refresh, savedInstanceState);
-    // ??
-  }
-
   @CallSuper @Override public void bindViews(View view) {
     super.bindViews(view);
     floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fab);
@@ -163,6 +155,14 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
 
     ratingTotalsLayout = new RatingTotalsLayout(view);
     ratingBarsLayout = new RatingBarsLayout(view);
+  }
+
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    if (storeTheme != null) {
+      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
+      ThemeUtils.setStoreTheme(getActivity(), storeTheme);
+    }
   }
 
   @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {

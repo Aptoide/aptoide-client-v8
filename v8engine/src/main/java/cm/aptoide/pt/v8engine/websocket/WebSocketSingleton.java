@@ -145,8 +145,8 @@ public class WebSocketSingleton {
   public void connect() {
 
     if (web_socket_client == null) {
-      web_socket_client =
-          new WebSocketClient(URI.create(WEBSOCKETS_SCHEME + WEBSOCKETS_HOST + ":" + WEBSOCKETS_PORT), listener, null);
+      web_socket_client = new WebSocketClient(
+          URI.create(WEBSOCKETS_SCHEME + WEBSOCKETS_HOST + ":" + WEBSOCKETS_PORT), listener, null);
       web_socket_client.connect();
     }
     Logger.d(TAG, "OnConnecting");

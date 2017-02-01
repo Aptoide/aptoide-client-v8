@@ -34,7 +34,17 @@ import rx.subscriptions.CompositeSubscription;
 
   //public abstract Type getType();
 
+  protected abstract Configs getConfig();
+
   @LayoutRes public abstract int getViewLayout();
+
+  public int getSpanSize() {
+    return WidgetFactory.getColumnSize() / getPerLineCount();
+  }
+
+  //
+  // LifecycleSchim interface
+  // optional methods
 
   /**
    * Same code as in {@link Type#getPerLineCount()} todo: terminar este doc
@@ -52,14 +62,6 @@ import rx.subscriptions.CompositeSubscription;
 
     return tmp != 0 ? tmp : 1;
   }
-
-  public int getSpanSize() {
-    return WidgetFactory.getColumnSize() / getPerLineCount();
-  }
-
-  //
-  // LifecycleSchim interface
-  // optional methods
 
   /**
    * Sets visibility of this component to visible. Schimmed component lifecycle from the using
@@ -110,8 +112,6 @@ import rx.subscriptions.CompositeSubscription;
     fixedPerLineCount = true;
     return this;
   }
-
-  protected abstract Configs getConfig();
 
   @Getter public class Configs {
     private final int defaultPerLineCount;

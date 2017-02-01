@@ -43,31 +43,26 @@ public class PaymentAuthorizationSync extends RepositorySync {
       final String payerId = AptoideAccountManager.getUserEmail();
       getServerAuthorizations(accessToken).doOnSuccess(
           response -> saveAndReschedulePendingAuthorization(response, syncResult, paymentIds,
-              payerId))
-          .onErrorReturn(throwable -> {
-            saveAndRescheduleOnNetworkError(syncResult, throwable, paymentIds, payerId);
-            return null;
-          })
-          .toBlocking()
-          .value();
+              payerId)).onErrorReturn(throwable -> {
+        saveAndRescheduleOnNetworkError(syncResult, throwable, paymentIds, payerId);
+        return null;
+      }).toBlocking().value();
     } catch (RuntimeException e) {
       rescheduleSync(syncResult);
     }
   }
 
-  private void saveAndRescheduleOnNetworkError(SyncResult syncResult, Throwable throwable,
-      List<String> paymentIds, String payerId) {
-    if (throwable instanceof IOException) {
-      rescheduleSync(syncResult);
-    } else {
-      final List<PaymentAuthorization> authorizations = new ArrayList<>();
-      for (String paymentId : paymentIds) {
-        authorizations.add(authorizationFactory.convertToDatabasePaymentAuthorization(
-            authorizationFactory.create(Integer.valueOf(paymentId),
-                Authorization.Status.UNKNOWN_ERROR, payerId)));
-      }
-      authorizationAccessor.updateAll(authorizations);
-    }
+  private Single<List<PaymentAuthorizationsResponse.PaymentAuthorizationResponse>> getServerAuthorizations(
+      String accessToken) {
+    return GetPaymentAuthorizationsRequest.of(accessToken)
+        .observe()
+        .toSingle()
+        .flatMap(response -> {
+          if (response != null && response.isOk()) {
+            return Single.just(response.getAuthorizations());
+          }
+          return Single.error(new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
+        });
   }
 
   private void saveAndReschedulePendingAuthorization(
@@ -89,16 +84,18 @@ public class PaymentAuthorizationSync extends RepositorySync {
     authorizationAccessor.updateAll(authorizations);
   }
 
-  private Single<List<PaymentAuthorizationsResponse.PaymentAuthorizationResponse>> getServerAuthorizations(
-      String accessToken) {
-    return GetPaymentAuthorizationsRequest.of(accessToken)
-        .observe()
-        .toSingle()
-        .flatMap(response -> {
-          if (response != null && response.isOk()) {
-            return Single.just(response.getAuthorizations());
-          }
-          return Single.error(new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
-        });
+  private void saveAndRescheduleOnNetworkError(SyncResult syncResult, Throwable throwable,
+      List<String> paymentIds, String payerId) {
+    if (throwable instanceof IOException) {
+      rescheduleSync(syncResult);
+    } else {
+      final List<PaymentAuthorization> authorizations = new ArrayList<>();
+      for (String paymentId : paymentIds) {
+        authorizations.add(authorizationFactory.convertToDatabasePaymentAuthorization(
+            authorizationFactory.create(Integer.valueOf(paymentId),
+                Authorization.Status.UNKNOWN_ERROR, payerId)));
+      }
+      authorizationAccessor.updateAll(authorizations);
+    }
   }
 }

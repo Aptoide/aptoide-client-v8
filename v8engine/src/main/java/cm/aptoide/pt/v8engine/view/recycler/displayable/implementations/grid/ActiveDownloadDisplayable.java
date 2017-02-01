@@ -28,6 +28,14 @@ public class ActiveDownloadDisplayable extends Displayable {
     this.installManager = installManager;
   }
 
+  @Override protected Configs getConfig() {
+    return new Configs(1, false);
+  }
+
+  @Override public int getViewLayout() {
+    return R.layout.active_donwload_row_layout;
+  }
+
   @Override public void onResume() {
     super.onResume();
     if (onResumeAction != null) {
@@ -40,14 +48,6 @@ public class ActiveDownloadDisplayable extends Displayable {
       onPauseAction.call();
     }
     super.onPause();
-  }
-
-  @Override protected Configs getConfig() {
-    return new Configs(1, false);
-  }
-
-  @Override public int getViewLayout() {
-    return R.layout.active_donwload_row_layout;
   }
 
   public void pauseInstall(Context context) {

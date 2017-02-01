@@ -190,9 +190,8 @@ public class PaymentPresenter implements Presenter {
   }
 
   private Observable<Void> buySelection() {
-    return view.buySelection()
-        .doOnNext(payment -> view.showGlobalLoading())
-        .<Void>flatMap(payment -> aptoidePay.process(selectedPayment).toObservable());
+    return view.buySelection().doOnNext(payment -> view.showGlobalLoading()).<Void>flatMap(
+        payment -> aptoidePay.process(selectedPayment).toObservable());
   }
 
   private Observable<Void> otherPaymentsSelection() {

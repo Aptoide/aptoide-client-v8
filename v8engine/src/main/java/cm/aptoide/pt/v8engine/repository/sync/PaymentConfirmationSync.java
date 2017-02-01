@@ -9,8 +9,8 @@ import android.content.SyncResult;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.PaymentConfirmationAccessor;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
-import cm.aptoide.pt.dataprovider.ws.v3.GetPaymentConfirmationRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.CreatePaymentConfirmationRequest;
+import cm.aptoide.pt.dataprovider.ws.v3.GetPaymentConfirmationRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.V3;
 import cm.aptoide.pt.model.v3.PaymentConfirmationResponse;
 import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
@@ -76,8 +76,7 @@ public class PaymentConfirmationSync extends RepositorySync {
                 () -> confirmationFactory.create(product.getId(), paymentConfirmationId,
                     PaymentConfirmation.Status.COMPLETED, payerId)));
       } else {
-        serverPaymentConfirmation =
-            getServerPaymentConfirmation(product, payerId, accessToken);
+        serverPaymentConfirmation = getServerPaymentConfirmation(product, payerId, accessToken);
       }
       serverPaymentConfirmation.doOnSuccess(
           paymentConfirmation -> saveAndReschedulePendingConfirmation(paymentConfirmation,
@@ -86,26 +85,6 @@ public class PaymentConfirmationSync extends RepositorySync {
         return null;
       }).toBlocking().value();
     } catch (RuntimeException e) {
-      rescheduleSync(syncResult);
-    }
-  }
-
-  private void saveAndRescheduleOnNetworkError(SyncResult syncResult, Throwable throwable,
-      String payerId) {
-    if (throwable instanceof IOException) {
-      rescheduleSync(syncResult);
-    } else {
-      confirmationAccessor.save(confirmationFactory.convertToDatabasePaymentConfirmation(
-          confirmationFactory.create(product.getId(), paymentConfirmationId,
-              PaymentConfirmation.Status.UNKNOWN_ERROR, payerId)));
-    }
-  }
-
-  private void saveAndReschedulePendingConfirmation(PaymentConfirmation paymentConfirmation,
-      SyncResult syncResult) {
-    confirmationAccessor.save(
-        confirmationFactory.convertToDatabasePaymentConfirmation(paymentConfirmation));
-    if (paymentConfirmation.isPending()) {
       rescheduleSync(syncResult);
     }
   }
@@ -151,5 +130,25 @@ public class PaymentConfirmationSync extends RepositorySync {
       }
       return Single.error(new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
     });
+  }
+
+  private void saveAndReschedulePendingConfirmation(PaymentConfirmation paymentConfirmation,
+      SyncResult syncResult) {
+    confirmationAccessor.save(
+        confirmationFactory.convertToDatabasePaymentConfirmation(paymentConfirmation));
+    if (paymentConfirmation.isPending()) {
+      rescheduleSync(syncResult);
+    }
+  }
+
+  private void saveAndRescheduleOnNetworkError(SyncResult syncResult, Throwable throwable,
+      String payerId) {
+    if (throwable instanceof IOException) {
+      rescheduleSync(syncResult);
+    } else {
+      confirmationAccessor.save(confirmationFactory.convertToDatabasePaymentConfirmation(
+          confirmationFactory.create(product.getId(), paymentConfirmationId,
+              PaymentConfirmation.Status.UNKNOWN_ERROR, payerId)));
+    }
   }
 }

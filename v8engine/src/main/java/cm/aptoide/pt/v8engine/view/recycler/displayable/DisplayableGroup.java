@@ -1,4 +1,3 @@
-
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
 import cm.aptoide.pt.annotation.Ignore;
@@ -14,13 +13,13 @@ import lombok.Getter;
 
   @Getter private final List<Displayable> children;
 
+  public DisplayableGroup(List<Displayable> children) {
+    this(children, true);
+  }
+
   DisplayableGroup(List<Displayable> children, boolean computeLeftSpaces) {
     this.children = children;
     if (computeLeftSpaces) computeLeftSpaces();
-  }
-
-  public DisplayableGroup(List<Displayable> children) {
-    this(children, true);
   }
 
   private void computeLeftSpaces() {
@@ -40,15 +39,15 @@ import lombok.Getter;
     }
   }
 
-  @Override public int getViewLayout() {
-    throw new IllegalStateException(
-        "getViewLayout() on DisplayableGroup should not be " + "called!");
-  }
-
   @Override protected Configs getConfig() {
     // Stub
     // Should not be used
     return new Configs(1, true);
+  }
+
+  @Override public int getViewLayout() {
+    throw new IllegalStateException(
+        "getViewLayout() on DisplayableGroup should not be " + "called!");
   }
 
   @Override public int getDefaultPerLineCount() {

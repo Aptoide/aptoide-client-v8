@@ -119,6 +119,12 @@ public abstract class V8Engine extends DataProvider {
     regenerateUserAgent();
   }
 
+  public static void clearUserData() {
+    AccessorFactory.getAccessorFor(Store.class).removeAll();
+    StoreUtils.subscribeStore(getConfiguration().getDefaultStore(), null, null);
+    regenerateUserAgent();
+  }
+
   private static void regenerateUserAgent() {
     SecurePreferences.setUserAgent(
         AptoideUtils.NetworkUtils.getDefaultUserAgent(aptoideClientUUID, new UserData() {
@@ -126,12 +132,6 @@ public abstract class V8Engine extends DataProvider {
             return AptoideAccountManager.getUserEmail();
           }
         }, AptoideUtils.Core.getDefaultVername(), getConfiguration().getPartnerId()));
-  }
-
-  public static void clearUserData() {
-    AccessorFactory.getAccessorFor(Store.class).removeAll();
-    StoreUtils.subscribeStore(getConfiguration().getDefaultStore(), null, null);
-    regenerateUserAgent();
   }
 
   private static void addDefaultStore() {

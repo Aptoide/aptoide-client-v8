@@ -45,6 +45,10 @@ import java.util.Locale;
     comunityRatingIndicator = new ComunityRatingIndicator(itemView);
   }
 
+  @Override public void unbindView() {
+
+  }
+
   @Override public void bindView(AppViewRateThisDisplayable displayable) {
     final GetApp pojo = displayable.getPojo();
 
@@ -80,10 +84,6 @@ import java.util.Locale;
     } catch (Exception ex) {
       CrashReport.getInstance().log(ex);
     }
-  }
-
-  @Override public void unbindView() {
-
   }
 
   private static final class FlagThisApp {

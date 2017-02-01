@@ -47,10 +47,6 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
     super(itemView);
   }
 
-  @Override String getCardTypeName() {
-    return CARD_TYPE_NAME;
-  }
-
   @Override protected void assignViews(View itemView) {
     super.assignViews(itemView);
     appName = (TextView) itemView.findViewById(R.id.displayable_social_timeline_app_update_name);
@@ -139,18 +135,12 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
     }, throwable -> showDownloadError(displayable)));
   }
 
-  private Void showDownloadError(AppUpdateDisplayable displayable) {
-    showDownloadError(displayable, displayable.getUpdateErrorText(getContext()));
-    return null;
+  @Override String getCardTypeName() {
+    return CARD_TYPE_NAME;
   }
 
-  private Void showDownloadError(AppUpdateDisplayable displayable, String message) {
-    errorText.setText(message);
-    errorText.setVisibility(View.VISIBLE);
-    updateButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.timeline_update_app_dark, 0, 0,
-        0);
-    updateButton.setText(displayable.getUpdateAppText(getContext()));
-    updateButton.setEnabled(true);
+  private Void showDownloadError(AppUpdateDisplayable displayable) {
+    showDownloadError(displayable, displayable.getUpdateErrorText(getContext()));
     return null;
   }
 
@@ -189,5 +179,15 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
         updateButton.setEnabled(true);
         break;
     }
+  }
+
+  private Void showDownloadError(AppUpdateDisplayable displayable, String message) {
+    errorText.setText(message);
+    errorText.setVisibility(View.VISIBLE);
+    updateButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.timeline_update_app_dark, 0, 0,
+        0);
+    updateButton.setText(displayable.getUpdateAppText(getContext()));
+    updateButton.setEnabled(true);
+    return null;
   }
 }

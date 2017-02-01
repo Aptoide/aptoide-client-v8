@@ -53,6 +53,10 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
     //infoLayout = (LinearLayout) itemView.findViewById(R.id.store_layout_subscribers);
   }
 
+  @Override public void unbindView() {
+
+  }
+
   @Override public void bindView(GridStoreDisplayable gridStoreDisplayable) {
 
     final Context context = itemView.getContext();
@@ -80,9 +84,5 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
       ImageLoader.loadWithShadowCircleTransform(store.getAvatar(), storeAvatar,
           StoreThemeEnum.get(store).getStoreHeaderInt());
     }
-  }
-
-  @Override public void unbindView() {
-
   }
 }

@@ -24,16 +24,16 @@ import cm.aptoide.pt.v8engine.adapters.ViewPagerAdapterWizard;
 public class BaseWizardViewerFragment extends Fragment {
   private ViewPager mViewPager;
 
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    setUpView(view);
-    setUpListeners(view);
-  }
-
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     return inflater.inflate(R.layout.wizard_layout, container, false);
+  }
+
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    setUpView(view);
+    setUpListeners(view);
   }
 
   private void setUpView(View view) {

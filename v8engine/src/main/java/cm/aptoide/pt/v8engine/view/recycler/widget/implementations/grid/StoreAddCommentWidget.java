@@ -36,14 +36,6 @@ public class StoreAddCommentWidget extends Widget<StoreAddCommentDisplayable> {
     commentStore = (Button) itemView.findViewById(R.id.comment_store_button);
   }
 
-  private int getColorOrDefault(StoreThemeEnum theme, Context context) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      return context.getResources().getColor(theme.getStoreHeader(), context.getTheme());
-    } else {
-      return context.getResources().getColor(theme.getStoreHeader());
-    }
-  }
-
   @Override public void bindView(StoreAddCommentDisplayable displayable) {
 
     final Context context = getContext();
@@ -67,6 +59,14 @@ public class StoreAddCommentWidget extends Widget<StoreAddCommentDisplayable> {
         }, err -> {
           CrashReport.getInstance().log(err);
         }));
+  }
+
+  private int getColorOrDefault(StoreThemeEnum theme, Context context) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      return context.getResources().getColor(theme.getStoreHeader(), context.getTheme());
+    } else {
+      return context.getResources().getColor(theme.getStoreHeader());
+    }
   }
 
   private Observable<Void> showStoreCommentFragment(final long storeId,

@@ -4,19 +4,19 @@
   ~ Modified by Neurophobic Animal on 11/05/2016.
   -->
 
-<LinearLayout style="?attr/backgroundCard"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
     android:orientation="vertical"
+    style="?attr/backgroundCard"
     >
   <Button
       android:id="@+id/add_more_stores"
-      style="?attr/customButton"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:text="Add more stores"
+      style="?attr/customButton"
       />
 
 </LinearLayout>

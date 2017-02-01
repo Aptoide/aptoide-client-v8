@@ -32,6 +32,10 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
     graphic = (ImageView) itemView.findViewById(R.id.featured_graphic);
   }
 
+  @Override public void unbindView() {
+
+  }
+
   @Override public void bindView(AppBrickDisplayable displayable) {
     ImageLoader.load(displayable.getPojo().getGraphic(), R.drawable.placeholder_705x345, graphic);
 
@@ -43,9 +47,5 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
       Analytics.HomePageEditorsChoice.clickOnEditorsChoiceItem(getAdapterPosition(),
           displayable.getPojo().getPackageName(), true);
     });
-  }
-
-  @Override public void unbindView() {
-
   }
 }

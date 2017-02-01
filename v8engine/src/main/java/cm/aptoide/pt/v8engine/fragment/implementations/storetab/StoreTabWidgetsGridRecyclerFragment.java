@@ -33,8 +33,7 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
   }
 
   protected Observable<List<Displayable>> loadGetStoreWidgets(GetStoreWidgets getStoreWidgets,
-      boolean refresh,
-      String url) {
+      boolean refresh, String url) {
     return Observable.from(getStoreWidgets.getDatalist().getList())
         .flatMap(wsWidget -> WSWidgetsUtils.loadWidgetNode(wsWidget,
             StoreUtils.getStoreCredentialsFromUrl(url), refresh,

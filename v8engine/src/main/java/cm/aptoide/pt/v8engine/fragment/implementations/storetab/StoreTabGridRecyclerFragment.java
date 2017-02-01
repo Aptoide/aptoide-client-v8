@@ -42,15 +42,15 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
   protected String tag;
   protected String storeTheme;
 
+  public static Fragment newInstance(Event event, String storeTheme, String tag) {
+    return newInstance(event, null, storeTheme, tag);
+  }
+
   public static Fragment newInstance(Event event, String title, String storeTheme, String tag) {
     Bundle args = buildBundle(event, title, storeTheme, tag);
     Fragment fragment = StoreTabFragmentChooser.choose(event.getName());
     fragment.setArguments(args);
     return fragment;
-  }
-
-  public static Fragment newInstance(Event event, String storeTheme, String tag) {
-    return newInstance(event, null, storeTheme, tag);
   }
 
   @NonNull
@@ -125,6 +125,9 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
     }
   }
 
+  @Nullable
+  protected abstract Observable<List<Displayable>> buildDisplayables(boolean refresh, String url);
+
   @Override public int getContentViewId() {
     // title flag whether toolbar should be shown or not
     if (title != null) {
@@ -134,13 +137,13 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
     }
   }
 
+  @Override protected boolean displayHomeUpAsEnabled() {
+    return true;
+  }
+
   @Override public void setupToolbarDetails(Toolbar toolbar) {
     toolbar.setTitle(Translator.translate(title));
     toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
-  }
-
-  @Override protected boolean displayHomeUpAsEnabled() {
-    return true;
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -161,9 +164,6 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
     setupToolbar();
     setHasOptionsMenu(true);
   }
-
-  @Nullable
-  protected abstract Observable<List<Displayable>> buildDisplayables(boolean refresh, String url);
 
   private static class BundleCons {
 

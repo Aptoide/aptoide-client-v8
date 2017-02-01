@@ -14,15 +14,15 @@
       android:layout_height="match_parent"
       />
   <LinearLayout
-      android:visibility="gone"
-      android:background="@color/white"
       android:id="@+id/activity_web_authorization_preogress_bar"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
+      android:background="@color/white"
       android:clickable="true"
       android:focusable="true"
       android:gravity="center"
       android:orientation="vertical"
+      android:visibility="gone"
       >
     <ProgressBar
         android:layout_width="wrap_content"

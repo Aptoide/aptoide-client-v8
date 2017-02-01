@@ -19,11 +19,11 @@ public class MyStoreDisplayable extends Displayable {
     this.meta = meta;
   }
 
-  @Override public int getViewLayout() {
-    return R.layout.my_store_displayable_layout;
-  }
-
   @Override protected Configs getConfig() {
     return new Configs(1, true);
+  }
+
+  @Override public int getViewLayout() {
+    return R.layout.my_store_displayable_layout;
   }
 }

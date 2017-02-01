@@ -13,12 +13,12 @@ public class ScheduledDownloadRepository implements Repository<Scheduled, String
     this.scheduledAccessor = scheduledAccessor;
   }
 
-  public Observable<Scheduled> get(String md5) {
-    return scheduledAccessor.get(md5);
-  }
-
   @Override public void save(Scheduled entity) {
     scheduledAccessor.insert(entity);
+  }
+
+  public Observable<Scheduled> get(String md5) {
+    return scheduledAccessor.get(md5);
   }
 
   public Observable<List<Scheduled>> getAllScheduledDownloads() {

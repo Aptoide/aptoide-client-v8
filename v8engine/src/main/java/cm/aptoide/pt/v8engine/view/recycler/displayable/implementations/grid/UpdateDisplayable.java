@@ -64,7 +64,8 @@ public class UpdateDisplayable extends Displayable {
       String updateVersionName, String mainObbName, String mainObbPath, String mainObbMd5,
       String patchObbName, String patchObbPath, String patchObbMd5, Download download,
       InstallManager installManager, Analytics analytics,
-      DownloadEventConverter downloadInstallEventConverter, InstallEventConverter installConverter) {
+      DownloadEventConverter downloadInstallEventConverter,
+      InstallEventConverter installConverter) {
     this.packageName = packageName;
     this.appId = appId;
     this.label = label;
@@ -129,11 +130,11 @@ public class UpdateDisplayable extends Displayable {
     analytics.save(download.getPackageName() + download.getVersionCode(), installEvent);
   }
 
-  @Override public int getViewLayout() {
-    return R.layout.update_row;
-  }
-
   @Override protected Configs getConfig() {
     return new Configs(1, false);
+  }
+
+  @Override public int getViewLayout() {
+    return R.layout.update_row;
   }
 }

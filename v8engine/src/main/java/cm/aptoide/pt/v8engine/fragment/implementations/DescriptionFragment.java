@@ -136,24 +136,17 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
     }
   }
 
-  @Override public void setupToolbarDetails(Toolbar toolbar) {
-    ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-    if (bar != null) {
-      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
-      bar.setBackgroundDrawable(new ColorDrawable(
-          getActivity().getResources().getColor(StoreThemeEnum.get(storeTheme).getStoreHeader())));
+  private void setupAppDescription(GetApp getApp) {
+    try {
+      GetAppMeta.Media media = getApp.getNodes().getMeta().getData().getMedia();
+      if (!TextUtils.isEmpty(media.getDescription())) {
+        descriptionContainer.setText(AptoideUtils.HtmlU.parse(media.getDescription()));
+        return;
+      }
+    } catch (NullPointerException e) {
+      CrashReport.getInstance().log(e);
     }
-  }
-
-  @Override protected boolean displayHomeUpAsEnabled() {
-    return true;
-  }
-
-  @Override public void bindViews(View view) {
-    super.bindViews(view);
-    emptyData = (TextView) view.findViewById(R.id.empty_data);
-    descriptionContainer = (TextView) view.findViewById(R.id.data_container);
-    setHasOptionsMenu(true);
+    setDataUnavailable();
   }
 
   private void setupTitle(GetApp getApp) {
@@ -172,22 +165,29 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
     setDataUnavailable();
   }
 
-  private void setupAppDescription(GetApp getApp) {
-    try {
-      GetAppMeta.Media media = getApp.getNodes().getMeta().getData().getMedia();
-      if (!TextUtils.isEmpty(media.getDescription())) {
-        descriptionContainer.setText(AptoideUtils.HtmlU.parse(media.getDescription()));
-        return;
-      }
-    } catch (NullPointerException e) {
-      CrashReport.getInstance().log(e);
-    }
-    setDataUnavailable();
-  }
-
   private void setDataUnavailable() {
     emptyData.setVisibility(View.VISIBLE);
     descriptionContainer.setVisibility(View.GONE);
+  }
+
+  @Override protected boolean displayHomeUpAsEnabled() {
+    return true;
+  }
+
+  @Override public void setupToolbarDetails(Toolbar toolbar) {
+    ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+    if (bar != null) {
+      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
+      bar.setBackgroundDrawable(new ColorDrawable(
+          getActivity().getResources().getColor(StoreThemeEnum.get(storeTheme).getStoreHeader())));
+    }
+  }
+
+  @Override public void bindViews(View view) {
+    super.bindViews(view);
+    emptyData = (TextView) view.findViewById(R.id.empty_data);
+    descriptionContainer = (TextView) view.findViewById(R.id.data_container);
+    setHasOptionsMenu(true);
   }
 
   @Override public int getContentViewId() {

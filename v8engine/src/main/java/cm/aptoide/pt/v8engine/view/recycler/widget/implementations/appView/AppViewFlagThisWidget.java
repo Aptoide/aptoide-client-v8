@@ -106,6 +106,38 @@ import rx.android.schedulers.AndroidSchedulers;
     virusLayout.setOnClickListener(buttonListener);
   }
 
+  private void applyCount(GetAppMeta.GetAppMetaFile.Flags.Vote.Type type, int count) {
+    String countAsString = Integer.toString(count);
+    switch (type) {
+      case GOOD:
+        workingWellText.setText(
+            NumberFormat.getIntegerInstance().format(Double.parseDouble(countAsString)));
+        break;
+
+      case VIRUS:
+        virusText.setText(
+            NumberFormat.getIntegerInstance().format(Double.parseDouble(countAsString)));
+        break;
+
+      case FAKE:
+        fakeAppText.setText(
+            NumberFormat.getIntegerInstance().format(Double.parseDouble(countAsString)));
+        break;
+
+      case LICENSE:
+        needsLicenceText.setText(
+            NumberFormat.getIntegerInstance().format(Double.parseDouble(countAsString)));
+        break;
+
+      case FREEZE:
+        // un-used type
+        break;
+
+      default:
+        throw new IllegalArgumentException("Unable to find Type " + type.name());
+    }
+  }
+
   private View.OnClickListener handleButtonClick(final String storeName, final String md5) {
     return v -> {
 
@@ -205,37 +237,5 @@ import rx.android.schedulers.AndroidSchedulers;
     virusLayout.setClickable(true);
     v.setSelected(false);
     v.setPressed(false);
-  }
-
-  private void applyCount(GetAppMeta.GetAppMetaFile.Flags.Vote.Type type, int count) {
-    String countAsString = Integer.toString(count);
-    switch (type) {
-      case GOOD:
-        workingWellText.setText(
-            NumberFormat.getIntegerInstance().format(Double.parseDouble(countAsString)));
-        break;
-
-      case VIRUS:
-        virusText.setText(
-            NumberFormat.getIntegerInstance().format(Double.parseDouble(countAsString)));
-        break;
-
-      case FAKE:
-        fakeAppText.setText(
-            NumberFormat.getIntegerInstance().format(Double.parseDouble(countAsString)));
-        break;
-
-      case LICENSE:
-        needsLicenceText.setText(
-            NumberFormat.getIntegerInstance().format(Double.parseDouble(countAsString)));
-        break;
-
-      case FREEZE:
-        // un-used type
-        break;
-
-      default:
-        throw new IllegalArgumentException("Unable to find Type " + type.name());
-    }
   }
 }

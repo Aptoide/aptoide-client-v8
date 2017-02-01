@@ -19,6 +19,18 @@ import static com.google.android.gms.internal.zzs.TAG;
 
 public class ApkFy {
 
+  public void run(Activity activity) {
+    if (SecurePreferences.shouldRunApkFy()) {
+      Long aLong = extractAppId(activity);
+      if (aLong != null) {
+        activity.getIntent()
+            .putExtra(DeepLinkIntentReceiver.DeepLinksTargets.APP_VIEW_FRAGMENT, true);
+        activity.getIntent().putExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_ID_KEY, aLong);
+      }
+      SecurePreferences.setApkFyRun();
+    }
+  }
+
   private Long extractAppId(Context context) {
 
     String appId = null;
@@ -43,17 +55,5 @@ public class ApkFy {
       CrashReport.getInstance().log(e);
     }
     return null;
-  }
-
-  public void run(Activity activity) {
-    if (SecurePreferences.shouldRunApkFy()) {
-      Long aLong = extractAppId(activity);
-      if (aLong != null) {
-        activity.getIntent()
-            .putExtra(DeepLinkIntentReceiver.DeepLinksTargets.APP_VIEW_FRAGMENT, true);
-        activity.getIntent().putExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_ID_KEY, aLong);
-      }
-      SecurePreferences.setApkFyRun();
-    }
   }
 }

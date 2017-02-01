@@ -45,6 +45,10 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
     imageView = (ImageView) itemView.findViewById(R.id.image_category);
   }
 
+  @Override public void unbindView() {
+
+  }
+
   @Override public void bindView(GridDisplayDisplayable displayable) {
     GetStoreDisplays.EventImage pojo = displayable.getPojo();
     ImageLoader.load(pojo.getGraphic(), imageView);
@@ -84,10 +88,6 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
         }
       }
     });
-  }
-
-  @Override public void unbindView() {
-
   }
 
   private void sendActionEvent(String eventActionUrl) {

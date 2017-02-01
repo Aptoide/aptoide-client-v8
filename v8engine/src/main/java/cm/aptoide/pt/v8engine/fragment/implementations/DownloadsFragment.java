@@ -55,32 +55,12 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
     return new DownloadsFragment();
   }
 
-  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    // not calling super on purpose to avoid cleaning displayables
-  }
-
   @Override public int getContentViewId() {
     return R.layout.recycler_fragment_downloads;
   }
 
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-
-    // variables initialization
-
-    downloadingDisplayables = new ArrayList<>();
-    standingByDisplayables = new ArrayList<>();
-    completedDisplayables = new ArrayList<>();
-
-    installManager = new InstallManager(AptoideDownloadManager.getInstance(),
-        new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK));
-
-    analytics = Analytics.getInstance();
-    installConverter = new InstallEventConverter();
-    downloadConverter = new DownloadEventConverter();
-
-    return super.onCreateView(inflater, container, savedInstanceState);
+  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    // not calling super on purpose to avoid cleaning displayables
   }
 
   @Override public void onViewCreated() {
@@ -176,5 +156,25 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
         || progress.getOverallDownloadStatus() == Download.PENDING
         || progress.getOverallDownloadStatus() == Download.PAUSED
         || progress.getOverallDownloadStatus() == Download.IN_QUEUE;
+  }
+
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+
+    // variables initialization
+
+    downloadingDisplayables = new ArrayList<>();
+    standingByDisplayables = new ArrayList<>();
+    completedDisplayables = new ArrayList<>();
+
+    installManager = new InstallManager(AptoideDownloadManager.getInstance(),
+        new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK));
+
+    analytics = Analytics.getInstance();
+    installConverter = new InstallEventConverter();
+    downloadConverter = new DownloadEventConverter();
+
+    return super.onCreateView(inflater, container, savedInstanceState);
   }
 }

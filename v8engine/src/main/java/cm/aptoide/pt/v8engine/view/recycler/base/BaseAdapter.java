@@ -18,13 +18,13 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> implements Lifecyc
 
   private final Displayables displayables;
 
-  public BaseAdapter() {
-    displayables = new Displayables();
-  }
-
   public BaseAdapter(List<Displayable> displayables) {
     this();
     this.displayables.add(displayables);
+  }
+
+  public BaseAdapter() {
+    displayables = new Displayables();
   }
 
   @Override public Widget onCreateViewHolder(ViewGroup parent, int viewType) {

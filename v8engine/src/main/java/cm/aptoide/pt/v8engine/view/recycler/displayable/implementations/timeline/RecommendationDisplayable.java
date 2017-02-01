@@ -50,10 +50,10 @@ public class RecommendationDisplayable extends CardDisplayable {
   public RecommendationDisplayable() {
   }
 
-  public RecommendationDisplayable(Recommendation recommendation,
-      int avatarResource, int titleResource, long appId, String packageName, String appName,
-      String appIcon, String abUrl, List<String> similarAppsNames, List<String> similarPackageNames,
-      Date date, Date timestamp, DateCalculator dateCalculator, SpannableFactory spannableFactory,
+  public RecommendationDisplayable(Recommendation recommendation, int avatarResource,
+      int titleResource, long appId, String packageName, String appName, String appIcon,
+      String abUrl, List<String> similarAppsNames, List<String> similarPackageNames, Date date,
+      Date timestamp, DateCalculator dateCalculator, SpannableFactory spannableFactory,
       TimelineMetricsManager timelineMetricsManager, SocialRepository socialRepository) {
     super(recommendation);
     this.avatarResource = avatarResource;
@@ -74,7 +74,8 @@ public class RecommendationDisplayable extends CardDisplayable {
   }
 
   public static Displayable from(Recommendation recommendation, DateCalculator dateCalculator,
-      SpannableFactory spannableFactory, TimelineMetricsManager timelineMetricsManager, SocialRepository socialRepository) {
+      SpannableFactory spannableFactory, TimelineMetricsManager timelineMetricsManager,
+      SocialRepository socialRepository) {
     final List<String> similarAppsNames = new ArrayList<>();
     final List<String> similarPackageNames = new ArrayList<>();
 
@@ -101,15 +102,15 @@ public class RecommendationDisplayable extends CardDisplayable {
         dateCalculator, spannableFactory, timelineMetricsManager, socialRepository);
   }
 
-  public String getTitle() {
-    return AptoideUtils.StringU.getFormattedString(titleResource,
-        Application.getConfiguration().getMarketName());
-  }
-
   public Spannable getStyledTitle(Context context) {
     String aptoide = Application.getConfiguration().getMarketName();
     return spannableFactory.createColorSpan(getTitle(),
         ContextCompat.getColor(context, R.color.appstimeline_recommends_title), aptoide);
+  }
+
+  public String getTitle() {
+    return AptoideUtils.StringU.getFormattedString(titleResource,
+        Application.getConfiguration().getMarketName());
   }
 
   public String getSimilarAppPackageName() {
@@ -163,5 +164,4 @@ public class RecommendationDisplayable extends CardDisplayable {
   @Override public void share(Context context, boolean privacyResult) {
     socialRepository.share(getTimelineCard(), context, privacyResult);
   }
-
 }

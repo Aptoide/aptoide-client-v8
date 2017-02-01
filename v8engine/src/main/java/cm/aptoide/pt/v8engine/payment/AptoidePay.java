@@ -41,36 +41,20 @@ public class AptoidePay {
         .flatMapObservable(payments -> getPaymentsWithAuthorizations(payments, payer.getId()));
   }
 
-  public Completable initiate(Authorization authorization) {
-    if (authorization.isInitiated()) {
-      return Completable.complete();
-    }
-    return authorizationRepository.createPaymentAuthorization(authorization.getPaymentId());
-  }
-
-  public Observable<Authorization> getAuthorization(int paymentId) {
-    return authorizationRepository.getPaymentAuthorization(paymentId, payer.getId());
-  }
-
-  public Completable authorize(int paymentId) {
-    return authorizationRepository.saveAuthorization(authorizationFactory.create(paymentId,
-        Authorization.Status.PENDING, payer.getId()));
-  }
-
-  public Observable<PaymentConfirmation> getConfirmation(AptoideProduct product) {
-    return confirmationRepository.getPaymentConfirmation(product, payer.getId());
-  }
-
-  public Completable process(Payment payment) {
-    return payment.process();
-  }
-
   private Observable<List<Payment>> getPaymentsWithAuthorizations(List<Payment> payments,
       String payerId) {
     return getAuthorizationRequiredPaymentIds(payments).flatMapObservable(
         paymentIds -> authorizationRepository.getPaymentAuthorizations(paymentIds, payerId))
         .flatMap(authorizations -> addAuthorizations(payments, authorizations, payerId))
         .map(success -> payments);
+  }
+
+  private Single<List<Integer>> getAuthorizationRequiredPaymentIds(List<Payment> payments) {
+    return Observable.from(payments)
+        .filter(payment -> payment.isAuthorizationRequired())
+        .map(payment -> payment.getId())
+        .toList()
+        .toSingle();
   }
 
   private Observable<Void> addAuthorizations(List<Payment> payments,
@@ -86,7 +70,7 @@ public class AptoidePay {
             }
           } else {
             payment.setAuthorization(
-              authorizationFactory.create(payment.getId(), Authorization.Status.NONE, payerId));
+                authorizationFactory.create(payment.getId(), Authorization.Status.NONE, payerId));
           }
         })
         .toList()
@@ -102,12 +86,27 @@ public class AptoidePay {
     }).toList().map(success -> null);
   }
 
-  private Single<List<Integer>> getAuthorizationRequiredPaymentIds(List<Payment> payments) {
-    return Observable.from(payments)
-        .filter(payment -> payment.isAuthorizationRequired())
-        .map(payment -> payment.getId())
-        .toList()
-        .toSingle();
+  public Completable initiate(Authorization authorization) {
+    if (authorization.isInitiated()) {
+      return Completable.complete();
+    }
+    return authorizationRepository.createPaymentAuthorization(authorization.getPaymentId());
   }
 
+  public Observable<Authorization> getAuthorization(int paymentId) {
+    return authorizationRepository.getPaymentAuthorization(paymentId, payer.getId());
+  }
+
+  public Completable authorize(int paymentId) {
+    return authorizationRepository.saveAuthorization(
+        authorizationFactory.create(paymentId, Authorization.Status.PENDING, payer.getId()));
+  }
+
+  public Observable<PaymentConfirmation> getConfirmation(AptoideProduct product) {
+    return confirmationRepository.getPaymentConfirmation(product, payer.getId());
+  }
+
+  public Completable process(Payment payment) {
+    return payment.process();
+  }
 }

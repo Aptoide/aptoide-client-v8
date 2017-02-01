@@ -70,6 +70,10 @@ import java.util.Locale;
     createReviewLayout = (ViewGroup) itemView.findViewById(R.id.reviewButtonLayout);
   }
 
+  @Override public void unbindView() {
+
+  }
+
   @Override public void bindView(InstalledAppDisplayable displayable) {
     Installed pojo = displayable.getPojo();
 
@@ -96,10 +100,6 @@ import java.util.Locale;
     } else {
       createReviewLayout.setVisibility(View.GONE);
     }
-  }
-
-  @Override public void unbindView() {
-
   }
 
   private void showRateDialog() {
@@ -142,17 +142,17 @@ import java.util.Locale;
       PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating,
           AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
           .execute(response -> {
-        if (response.isOk()) {
-          Logger.d(TAG, "review added");
-          ShowMessage.asSnack(labelTextView, R.string.review_success);
-          ManagerPreferences.setForceServerRefreshFlag(true);
-        } else {
-          ShowMessage.asSnack(labelTextView, R.string.error_occured);
-        }
-      }, e -> {
-        CrashReport.getInstance().log(e);
-        ShowMessage.asSnack(labelTextView, R.string.error_occured);
-      });
+            if (response.isOk()) {
+              Logger.d(TAG, "review added");
+              ShowMessage.asSnack(labelTextView, R.string.review_success);
+              ManagerPreferences.setForceServerRefreshFlag(true);
+            } else {
+              ShowMessage.asSnack(labelTextView, R.string.error_occured);
+            }
+          }, e -> {
+            CrashReport.getInstance().log(e);
+            ShowMessage.asSnack(labelTextView, R.string.error_occured);
+          });
     });
 
     // create and show rating dialog

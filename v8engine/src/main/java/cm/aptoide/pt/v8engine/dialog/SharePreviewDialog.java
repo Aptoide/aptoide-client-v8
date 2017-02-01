@@ -348,6 +348,43 @@ public class SharePreviewDialog {
     return alertadd;
   }
 
+  private void setCardHeader(TextView storeName, TextView userName, ImageView storeAvatar,
+      ImageView userAvatar) {
+    if (AptoideAccountManager.getUserData().getUserRepo() != null) {
+      if (BaseActivity.UserAccessState.PUBLIC.toString()
+          .equals(ManagerPreferences.getUserAccess())) {
+        storeAvatar.setVisibility(View.VISIBLE);
+        userAvatar.setVisibility(View.VISIBLE);
+        ImageLoader.loadWithShadowCircleTransform(
+            AptoideAccountManager.getUserData().getUserAvatarRepo(), storeAvatar);
+        ImageLoader.loadWithShadowCircleTransform(
+            AptoideAccountManager.getUserData().getUserAvatar(), userAvatar);
+        storeName.setText(AptoideAccountManager.getUserData().getUserRepo());
+        userName.setText(AptoideAccountManager.getUserData().getUserName());
+      } else {
+        storeAvatar.setVisibility(View.VISIBLE);
+        userAvatar.setVisibility(View.INVISIBLE);
+        ImageLoader.loadWithShadowCircleTransform(
+            AptoideAccountManager.getUserData().getUserAvatarRepo(), storeAvatar);
+        ImageLoader.loadWithShadowCircleTransform(
+            AptoideAccountManager.getUserData().getUserAvatar(), userAvatar);
+        storeName.setText(AptoideAccountManager.getUserData().getUserRepo());
+        userName.setText(AptoideAccountManager.getUserData().getUserName());
+        userName.setVisibility(View.GONE);
+      }
+    } else {
+      if ((BaseActivity.UserAccessState.PUBLIC.toString()).equals(
+          ManagerPreferences.getUserAccess())) {
+        storeAvatar.setVisibility(View.VISIBLE);
+        ImageLoader.loadWithShadowCircleTransform(
+            AptoideAccountManager.getUserData().getUserAvatar(), storeAvatar);
+        userAvatar.setVisibility(View.INVISIBLE);
+        storeName.setText(AptoideAccountManager.getUserData().getUserName());
+        userName.setVisibility(View.GONE);
+      }
+    }
+  }
+
   private void setSharedByText(Context context, TextView sharedBy) {
     sharedBy.setVisibility(View.VISIBLE);
 
@@ -406,43 +443,6 @@ public class SharePreviewDialog {
       } else {
         storeName.setVisibility(View.GONE);
         storeAvatar.setVisibility(View.GONE);
-      }
-    }
-  }
-
-  private void setCardHeader(TextView storeName, TextView userName, ImageView storeAvatar,
-      ImageView userAvatar) {
-    if (AptoideAccountManager.getUserData().getUserRepo() != null) {
-      if (BaseActivity.UserAccessState.PUBLIC.toString()
-          .equals(ManagerPreferences.getUserAccess())) {
-        storeAvatar.setVisibility(View.VISIBLE);
-        userAvatar.setVisibility(View.VISIBLE);
-        ImageLoader.loadWithShadowCircleTransform(
-            AptoideAccountManager.getUserData().getUserAvatarRepo(), storeAvatar);
-        ImageLoader.loadWithShadowCircleTransform(
-            AptoideAccountManager.getUserData().getUserAvatar(), userAvatar);
-        storeName.setText(AptoideAccountManager.getUserData().getUserRepo());
-        userName.setText(AptoideAccountManager.getUserData().getUserName());
-      } else {
-        storeAvatar.setVisibility(View.VISIBLE);
-        userAvatar.setVisibility(View.INVISIBLE);
-        ImageLoader.loadWithShadowCircleTransform(
-            AptoideAccountManager.getUserData().getUserAvatarRepo(), storeAvatar);
-        ImageLoader.loadWithShadowCircleTransform(
-            AptoideAccountManager.getUserData().getUserAvatar(), userAvatar);
-        storeName.setText(AptoideAccountManager.getUserData().getUserRepo());
-        userName.setText(AptoideAccountManager.getUserData().getUserName());
-        userName.setVisibility(View.GONE);
-      }
-    } else {
-      if ((BaseActivity.UserAccessState.PUBLIC.toString()).equals(
-          ManagerPreferences.getUserAccess())) {
-        storeAvatar.setVisibility(View.VISIBLE);
-        ImageLoader.loadWithShadowCircleTransform(
-            AptoideAccountManager.getUserData().getUserAvatar(), storeAvatar);
-        userAvatar.setVisibility(View.INVISIBLE);
-        storeName.setText(AptoideAccountManager.getUserData().getUserName());
-        userName.setVisibility(View.GONE);
       }
     }
   }

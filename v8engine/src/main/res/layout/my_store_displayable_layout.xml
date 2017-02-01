@@ -31,8 +31,8 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
         android:layout_marginStart="10dp"
-        android:layout_toRightOf="@+id/store_icon"
         android:layout_toEndOf="@id/store_icon"
+        android:layout_toRightOf="@+id/store_icon"
         android:orientation="vertical"
         >
       <TextView

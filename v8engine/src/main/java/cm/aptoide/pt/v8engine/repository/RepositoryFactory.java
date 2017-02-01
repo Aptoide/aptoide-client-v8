@@ -73,6 +73,11 @@ public final class RepositoryFactory {
     }
   }
 
+  private static NetworkOperatorManager getNetworkOperatorManager(Context context) {
+    return new NetworkOperatorManager(
+        (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE));
+  }
+
   public static PaymentConfirmationRepository getPaymentConfirmationRepository(Context context,
       Product product) {
     if (product instanceof InAppBillingProduct) {
@@ -86,6 +91,12 @@ public final class RepositoryFactory {
     }
   }
 
+  private static SyncAdapterBackgroundSync getBackgroundSync(Context context) {
+    return new SyncAdapterBackgroundSync(Application.getConfiguration(),
+        (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE),
+        new SyncDataConverter());
+  }
+
   public static PaymentAuthorizationRepository getPaymentAuthorizationRepository(Context context) {
     return new PaymentAuthorizationRepository(
         AccessorFactory.getAccessorFor(PaymentAuthorization.class), getBackgroundSync(context),
@@ -95,16 +106,5 @@ public final class RepositoryFactory {
   public static InAppBillingRepository getInAppBillingRepository(Context context) {
     return new InAppBillingRepository(getNetworkOperatorManager(context),
         AccessorFactory.getAccessorFor(PaymentConfirmation.class));
-  }
-
-  private static SyncAdapterBackgroundSync getBackgroundSync(Context context) {
-    return new SyncAdapterBackgroundSync(Application.getConfiguration(),
-        (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE),
-        new SyncDataConverter());
-  }
-
-  private static NetworkOperatorManager getNetworkOperatorManager(Context context) {
-    return new NetworkOperatorManager(
-        (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE));
   }
 }

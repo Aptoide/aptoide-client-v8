@@ -31,12 +31,12 @@ public class GridAppDisplayable extends DisplayablePojo<App> {
     this.totalDownloads = totalDownloads;
   }
 
-  @LayoutRes @Override public int getViewLayout() {
-    return R.layout.displayable_grid_app;
-  }
-
   @Override protected Configs getConfig() {
     return new Configs(Type.APPS_GROUP.getDefaultPerLineCount(),
         Type.APPS_GROUP.isFixedPerLineCount());
+  }
+
+  @LayoutRes @Override public int getViewLayout() {
+    return R.layout.displayable_grid_app;
   }
 }

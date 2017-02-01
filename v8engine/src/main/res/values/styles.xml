@@ -332,9 +332,9 @@
   </style>
 
 
-  <style name="MenuDrawer" />
+  <style name="MenuDrawer"/>
 
-  <style name="MenuDrawer.Widget" />
+  <style name="MenuDrawer.Widget"/>
 
   <style name="MenuDrawer.Widget.Title">
     <item name="android:textAppearance">?android:attr/textAppearance</item>
@@ -450,7 +450,7 @@
     <item name="android:windowTitleSize">@dimen/text_size_large</item>
   </style>
 
-  <style name="AppViewWidgetFirst"  parent="@style/AppViewWidget">
+  <style name="AppViewWidgetFirst" parent="@style/AppViewWidget">
     <item name="android:layout_marginTop">@dimen/appview_vertical_margin_first</item>
   </style>
 
@@ -791,7 +791,7 @@
     <item name="android:typeface">normal</item>
   </style>
 
-  <style name="TextAppearance.Aptoide.Title.Inverse" >
+  <style name="TextAppearance.Aptoide.Title.Inverse">
     <item name="android:textColor">@color/activity_payment_gray</item>
   </style>
 

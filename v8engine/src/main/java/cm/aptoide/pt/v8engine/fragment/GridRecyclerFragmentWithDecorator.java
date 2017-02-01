@@ -23,6 +23,18 @@ public abstract class GridRecyclerFragmentWithDecorator<T extends BaseAdapter>
   public GridRecyclerFragmentWithDecorator() {
   }
 
+  @CallSuper @Override public void setupViews() {
+    super.setupViews();
+    RecyclerView.ItemDecoration itemDecoration = getItemDecoration();
+    if (itemDecoration != null) {
+      getRecyclerView().addItemDecoration(itemDecoration);
+    }
+  }
+
+  //public GridRecyclerFragmentWithDecorator(Class<T> adapterClass) {
+  //  super(adapterClass);
+  //}
+
   protected RecyclerView.ItemDecoration getItemDecoration() {
     return new RecyclerView.ItemDecoration() {
       @Override public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
@@ -74,17 +86,5 @@ public abstract class GridRecyclerFragmentWithDecorator<T extends BaseAdapter>
         outRect.set(left, top, right, bottom);
       }
     };
-  }
-
-  //public GridRecyclerFragmentWithDecorator(Class<T> adapterClass) {
-  //  super(adapterClass);
-  //}
-
-  @CallSuper @Override public void setupViews() {
-    super.setupViews();
-    RecyclerView.ItemDecoration itemDecoration = getItemDecoration();
-    if(itemDecoration!=null) {
-      getRecyclerView().addItemDecoration(itemDecoration);
-    }
   }
 }

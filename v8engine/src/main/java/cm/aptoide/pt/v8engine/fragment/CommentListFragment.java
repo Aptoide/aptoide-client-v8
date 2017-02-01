@@ -101,31 +101,6 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
     return fragment;
   }
 
-  @Override public void loadExtras(Bundle args) {
-    super.loadExtras(args);
-    elementIdAsString = args.getString(ELEMENT_ID_AS_STRING);
-    elementIdAsLong = args.getLong(ELEMENT_ID_AS_LONG);
-    url = args.getString(URL_VAL);
-    commentType = CommentType.valueOf(args.getString(COMMENT_TYPE));
-
-    // extracting store data from the URL...
-    if (commentType == CommentType.STORE) {
-      BaseRequestWithStore.StoreCredentials storeCredentials =
-          StoreUtils.getStoreCredentialsFromUrl(url);
-      if (storeCredentials != null) {
-
-        Long id = storeCredentials.getId();
-        if (id != null) {
-          elementIdAsLong = id;
-        }
-
-        if (!TextUtils.isEmpty(storeCredentials.getName())) {
-          storeName = storeCredentials.getName();
-        }
-      }
-    }
-  }
-
   @Override protected boolean displayHomeUpAsEnabled() {
     return true;
   }
@@ -163,6 +138,31 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
     }
   }
 
+  @Override public void loadExtras(Bundle args) {
+    super.loadExtras(args);
+    elementIdAsString = args.getString(ELEMENT_ID_AS_STRING);
+    elementIdAsLong = args.getLong(ELEMENT_ID_AS_LONG);
+    url = args.getString(URL_VAL);
+    commentType = CommentType.valueOf(args.getString(COMMENT_TYPE));
+
+    // extracting store data from the URL...
+    if (commentType == CommentType.STORE) {
+      BaseRequestWithStore.StoreCredentials storeCredentials =
+          StoreUtils.getStoreCredentialsFromUrl(url);
+      if (storeCredentials != null) {
+
+        Long id = storeCredentials.getId();
+        if (id != null) {
+          elementIdAsLong = id;
+        }
+
+        if (!TextUtils.isEmpty(storeCredentials.getName())) {
+          storeName = storeCredentials.getName();
+        }
+      }
+    }
+  }
+
   @Override public void bindViews(View view) {
     super.bindViews(view);
     commentOperations = new CommentOperations();
@@ -179,96 +179,12 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
     }
   }
 
-  @Override protected RecyclerView.ItemDecoration getItemDecoration() {
-    return new HorizontalDividerItemDecoration(getContext(), 0);
-  }
-
-  @Override public void setupViews() {
-    super.setupViews();
-    setupToolbar();
-    setHasOptionsMenu(true);
-
-    RxView.clicks(floatingActionButton).flatMap(a -> {
-      if (commentType == CommentType.TIMELINE) {
-        return createNewCommentFragment(elementIdAsString);
-      }
-      return createNewCommentFragment(elementIdAsLong, storeName);
-    }).compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW)).subscribe(a -> {
-      // no-op
-    });
-  }
-
   void refreshData() {
     if (commentType == CommentType.TIMELINE) {
       caseListSocialTimelineComments(true);
     } else {
       caseListStoreComments(url, StoreUtils.getStoreCredentialsFromUrl(url), true);
     }
-  }
-
-  private Observable<Void> reloadComments() {
-    return Observable.fromCallable(() -> {
-      ManagerPreferences.setForceServerRefreshFlag(true);
-      super.reload();
-      return null;
-    });
-  }
-
-  private Observable<Void> showSignInMessage() {
-    return ShowMessage.asObservableSnack(this.getActivity(), R.string.you_need_to_be_logged_in,
-        R.string.login, snackView -> {
-          AptoideAccountManager.openAccountManager(CommentListFragment.this.getContext());
-        }).flatMap(a -> Observable.empty());
-  }
-
-  //
-  // Re-Do: 6/1/2017 sithengineer create new comment different fragment constructions
-  //
-
-  //
-  // Timeline Articles comments methods
-  //
-
-  public Observable<Void> createNewCommentFragment(String timelineArticleId) {
-
-    return Observable.just(AptoideAccountManager.isLoggedIn()).flatMap(isLoggedIn -> {
-
-      if (isLoggedIn) {
-        // show fragment CommentDialog
-        FragmentManager fm = CommentListFragment.this.getActivity().getFragmentManager();
-        CommentDialogFragment commentDialogFragment =
-            CommentDialogFragment.newInstanceTimelineArticleComment(timelineArticleId);
-
-        return commentDialogFragment.lifecycle()
-            .doOnSubscribe(() -> commentDialogFragment.show(fm, "fragment_comment_dialog"))
-            .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
-            .flatMap(event -> reloadComments());
-      }
-
-      return showSignInMessage();
-    });
-  }
-
-  public Observable<Void> createNewCommentFragment(final String timelineArticleId,
-      final long previousCommentId) {
-
-    return Observable.just(AptoideAccountManager.isLoggedIn()).flatMap(isLoggedIn -> {
-
-      if (isLoggedIn) {
-        // show fragment CommentDialog
-        FragmentManager fm = CommentListFragment.this.getActivity().getFragmentManager();
-        CommentDialogFragment commentDialogFragment =
-            CommentDialogFragment.newInstanceTimelineArticleComment(timelineArticleId,
-                previousCommentId);
-
-        return commentDialogFragment.lifecycle()
-            .doOnSubscribe(() -> commentDialogFragment.show(fm, "fragment_comment_dialog"))
-            .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
-            .flatMap(event -> reloadComments());
-      }
-
-      return showSignInMessage();
-    });
   }
 
   void caseListSocialTimelineComments(boolean refresh) {
@@ -305,52 +221,6 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
 
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(refresh);
-  }
-
-  //
-  // Store comments methods
-  //
-
-  public Observable<Void> createNewCommentFragment(long storeCommentId, String storeName) {
-
-    return Observable.just(AptoideAccountManager.isLoggedIn()).flatMap(isLoggedIn -> {
-
-      if (isLoggedIn) {
-        // show fragment CommentDialog
-        FragmentManager fm = CommentListFragment.this.getActivity().getFragmentManager();
-        CommentDialogFragment commentDialogFragment =
-            CommentDialogFragment.newInstanceStoreComment(storeCommentId, storeName);
-
-        return commentDialogFragment.lifecycle()
-            .doOnSubscribe(() -> commentDialogFragment.show(fm, "fragment_comment_dialog"))
-            .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
-            .flatMap(event -> reloadComments());
-      }
-
-      return showSignInMessage();
-    });
-  }
-
-  private Observable<Void> createNewCommentFragment(long storeId, long previousCommentId,
-      String storeName) {
-
-    return Observable.just(AptoideAccountManager.isLoggedIn()).flatMap(isLoggedIn -> {
-
-      if (isLoggedIn) {
-        // show fragment CommentDialog
-        FragmentManager fm = CommentListFragment.this.getActivity().getFragmentManager();
-        CommentDialogFragment commentDialogFragment =
-            CommentDialogFragment.newInstanceStoreCommentReply(storeId, previousCommentId,
-                storeName);
-
-        return commentDialogFragment.lifecycle()
-            .doOnSubscribe(() -> commentDialogFragment.show(fm, "fragment_comment_dialog"))
-            .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
-            .flatMap(event -> reloadComments());
-      }
-
-      return showSignInMessage();
-    });
   }
 
   void caseListStoreComments(String url, BaseRequestWithStore.StoreCredentials storeCredentials,
@@ -399,5 +269,135 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
 
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(refresh);
+  }
+
+  public Observable<Void> createNewCommentFragment(final String timelineArticleId,
+      final long previousCommentId) {
+
+    return Observable.just(AptoideAccountManager.isLoggedIn()).flatMap(isLoggedIn -> {
+
+      if (isLoggedIn) {
+        // show fragment CommentDialog
+        FragmentManager fm = CommentListFragment.this.getActivity().getFragmentManager();
+        CommentDialogFragment commentDialogFragment =
+            CommentDialogFragment.newInstanceTimelineArticleComment(timelineArticleId,
+                previousCommentId);
+
+        return commentDialogFragment.lifecycle()
+            .doOnSubscribe(() -> commentDialogFragment.show(fm, "fragment_comment_dialog"))
+            .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
+            .flatMap(event -> reloadComments());
+      }
+
+      return showSignInMessage();
+    });
+  }
+
+  private Observable<Void> createNewCommentFragment(long storeId, long previousCommentId,
+      String storeName) {
+
+    return Observable.just(AptoideAccountManager.isLoggedIn()).flatMap(isLoggedIn -> {
+
+      if (isLoggedIn) {
+        // show fragment CommentDialog
+        FragmentManager fm = CommentListFragment.this.getActivity().getFragmentManager();
+        CommentDialogFragment commentDialogFragment =
+            CommentDialogFragment.newInstanceStoreCommentReply(storeId, previousCommentId,
+                storeName);
+
+        return commentDialogFragment.lifecycle()
+            .doOnSubscribe(() -> commentDialogFragment.show(fm, "fragment_comment_dialog"))
+            .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
+            .flatMap(event -> reloadComments());
+      }
+
+      return showSignInMessage();
+    });
+  }
+
+  //
+  // Re-Do: 6/1/2017 sithengineer create new comment different fragment constructions
+  //
+
+  //
+  // Timeline Articles comments methods
+  //
+
+  private Observable<Void> reloadComments() {
+    return Observable.fromCallable(() -> {
+      ManagerPreferences.setForceServerRefreshFlag(true);
+      super.reload();
+      return null;
+    });
+  }
+
+  private Observable<Void> showSignInMessage() {
+    return ShowMessage.asObservableSnack(this.getActivity(), R.string.you_need_to_be_logged_in,
+        R.string.login, snackView -> {
+          AptoideAccountManager.openAccountManager(CommentListFragment.this.getContext());
+        }).flatMap(a -> Observable.empty());
+  }
+
+  @Override protected RecyclerView.ItemDecoration getItemDecoration() {
+    return new HorizontalDividerItemDecoration(getContext(), 0);
+  }
+
+  //
+  // Store comments methods
+  //
+
+  @Override public void setupViews() {
+    super.setupViews();
+    setupToolbar();
+    setHasOptionsMenu(true);
+
+    RxView.clicks(floatingActionButton).flatMap(a -> {
+      if (commentType == CommentType.TIMELINE) {
+        return createNewCommentFragment(elementIdAsString);
+      }
+      return createNewCommentFragment(elementIdAsLong, storeName);
+    }).compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW)).subscribe(a -> {
+      // no-op
+    });
+  }
+
+  public Observable<Void> createNewCommentFragment(String timelineArticleId) {
+
+    return Observable.just(AptoideAccountManager.isLoggedIn()).flatMap(isLoggedIn -> {
+
+      if (isLoggedIn) {
+        // show fragment CommentDialog
+        FragmentManager fm = CommentListFragment.this.getActivity().getFragmentManager();
+        CommentDialogFragment commentDialogFragment =
+            CommentDialogFragment.newInstanceTimelineArticleComment(timelineArticleId);
+
+        return commentDialogFragment.lifecycle()
+            .doOnSubscribe(() -> commentDialogFragment.show(fm, "fragment_comment_dialog"))
+            .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
+            .flatMap(event -> reloadComments());
+      }
+
+      return showSignInMessage();
+    });
+  }
+
+  public Observable<Void> createNewCommentFragment(long storeCommentId, String storeName) {
+
+    return Observable.just(AptoideAccountManager.isLoggedIn()).flatMap(isLoggedIn -> {
+
+      if (isLoggedIn) {
+        // show fragment CommentDialog
+        FragmentManager fm = CommentListFragment.this.getActivity().getFragmentManager();
+        CommentDialogFragment commentDialogFragment =
+            CommentDialogFragment.newInstanceStoreComment(storeCommentId, storeName);
+
+        return commentDialogFragment.lifecycle()
+            .doOnSubscribe(() -> commentDialogFragment.show(fm, "fragment_comment_dialog"))
+            .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
+            .flatMap(event -> reloadComments());
+      }
+
+      return showSignInMessage();
+    });
   }
 }

@@ -20,11 +20,11 @@ public class AppViewFlagThisDisplayable extends AppViewDisplayable {
     super(getApp);
   }
 
-  @Override public int getViewLayout() {
-    return R.layout.displayable_app_view_flag_this;
-  }
-
   @Override protected Configs getConfig() {
     return new Configs(1, true);
+  }
+
+  @Override public int getViewLayout() {
+    return R.layout.displayable_app_view_flag_this;
   }
 }
