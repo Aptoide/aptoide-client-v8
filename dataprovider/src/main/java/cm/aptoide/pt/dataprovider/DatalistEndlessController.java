@@ -52,7 +52,8 @@ public class DatalistEndlessController<T, U> implements EndlessControllerWithCac
             .doOnError(error -> {
               //remove spinner if webservice respond with error
               loading = false;
-            }).flatMap(response -> {
+            })
+            .flatMap(response -> {
 
               List<T> list;
 

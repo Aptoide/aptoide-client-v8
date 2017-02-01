@@ -35,8 +35,8 @@ public class ShareInstallCardRequest extends V7<BaseV7Response, ShareInstallCard
     return interfaces.shareInstallCard(body, packageName, access_token);
   }
 
-  @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true)
-  public static class Body extends BaseBody {
+  @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) public static class Body
+      extends BaseBody {
 
     private String packageName;
 

@@ -23,7 +23,8 @@ public class GetPaymentAuthorizationsRequest extends V3<PaymentAuthorizationsRes
     return new GetPaymentAuthorizationsRequest(BASE_HOST, args);
   }
 
-  @Override protected Observable<PaymentAuthorizationsResponse> loadDataFromNetwork(Interfaces interfaces,
+  @Override
+  protected Observable<PaymentAuthorizationsResponse> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
     return interfaces.getPaymentAuthorization(map);
   }

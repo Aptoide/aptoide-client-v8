@@ -51,14 +51,14 @@ public class PostCommentForTimelineArticle
     private String body;
     //private String commentType = CommentType.TIMELINE.name();
 
-    public Body(String timelineArticleId, String text) {
-      this.timelineArticleId = timelineArticleId;
-      this.body = text;
-    }
-
     public Body(String timelineArticleId, String text, long previousCommentId) {
       this(timelineArticleId, text);
       this.previousCommentId = previousCommentId;
+    }
+
+    public Body(String timelineArticleId, String text) {
+      this.timelineArticleId = timelineArticleId;
+      this.body = text;
     }
   }
 }

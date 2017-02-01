@@ -68,17 +68,19 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
       + "://"
       + BuildConfig.APTOIDE_WEB_SERVICES_V7_HOST
       + "/api/7/";
-
+  @Getter protected final B body;
   private final String INVALID_ACCESS_TOKEN_CODE = "AUTH-2";
   private final int MAX_RETRY_COUNT = 3;
   private boolean accessTokenRetry = false;
-
-  @Getter protected final B body;
 
   protected V7(B body, String baseHost) {
     super(Interfaces.class, getDefaultUserAgentGenerator(), WebService.getDefaultConverter(),
         baseHost);
     this.body = body;
+  }
+
+  @NonNull private static UserAgentGenerator getDefaultUserAgentGenerator() {
+    return () -> SecurePreferences.getUserAgent();
   }
 
   protected V7(B body, Converter.Factory converterFactory, String baseHost) {
@@ -95,10 +97,6 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
       String baseHost) {
     super(Interfaces.class, httpClient, converterFactory, baseHost);
     this.body = body;
-  }
-
-  @NonNull private static UserAgentGenerator getDefaultUserAgentGenerator() {
-    return () -> SecurePreferences.getUserAgent();
   }
 
   @Override public Observable<U> observe(boolean bypassCache) {

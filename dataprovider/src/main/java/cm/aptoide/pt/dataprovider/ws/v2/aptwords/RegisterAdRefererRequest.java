@@ -30,6 +30,14 @@ public class RegisterAdRefererRequest extends Aptwords<RegisterAdRefererRequest.
     extractAndSetTracker(clickUrl);
   }
 
+  private void extractAndSetTracker(String clickUrl) {
+    int i = clickUrl.indexOf("//");
+
+    int last = clickUrl.indexOf("/", i + 2);
+
+    tracker = clickUrl.substring(0, last);
+  }
+
   public static RegisterAdRefererRequest of(long adId, long appId, String clickUrl,
       boolean success) {
     return new RegisterAdRefererRequest(adId, appId, clickUrl, success);
@@ -41,14 +49,6 @@ public class RegisterAdRefererRequest extends Aptwords<RegisterAdRefererRequest.
     }, e -> {
       // As well :)
     });
-  }
-
-  private void extractAndSetTracker(String clickUrl) {
-    int i = clickUrl.indexOf("//");
-
-    int last = clickUrl.indexOf("/", i + 2);
-
-    tracker = clickUrl.substring(0, last);
   }
 
   @Override protected Observable<DefaultResponse> loadDataFromNetwork(Interfaces interfaces,

@@ -5,11 +5,9 @@
 
 package cm.aptoide.pt.dataprovider.ws.v3;
 
-import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.ws.Api;
 import cm.aptoide.pt.model.v3.PaidApp;
-import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import rx.Observable;
 
 /**

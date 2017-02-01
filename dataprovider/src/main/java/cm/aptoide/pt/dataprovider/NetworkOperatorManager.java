@@ -24,6 +24,10 @@ public class NetworkOperatorManager {
         : networkOperator.substring(0, codePortionLength(networkOperator));
   }
 
+  private int codePortionLength(String networkOperator) {
+    return Math.min(3, networkOperator.length());
+  }
+
   public boolean isSimStateReady() {
     return telephonyManager.getSimState() == TelephonyManager.SIM_STATE_READY;
   }
@@ -32,10 +36,6 @@ public class NetworkOperatorManager {
     final String networkOperator = telephonyManager.getNetworkOperator();
     return networkOperator == null ? ""
         : networkOperator.substring(codePortionLength(networkOperator));
-  }
-
-  private int codePortionLength(String networkOperator) {
-    return Math.min(3, networkOperator.length());
   }
 
   public String getSimCountryISO() {

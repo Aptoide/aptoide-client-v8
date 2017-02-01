@@ -51,14 +51,14 @@ public class PostCommentForStore extends V7<BaseV7Response, PostCommentForStore.
     private String body;
     private String commentType = CommentType.STORE.name();
 
-    public Body(long storeId, String text) {
-      this.storeId = storeId;
-      this.body = text;
-    }
-
     public Body(long storeId, String text, long previousCommentId) {
       this(storeId, text);
       this.previousCommentId = previousCommentId;
+    }
+
+    public Body(long storeId, String text) {
+      this.storeId = storeId;
+      this.body = text;
     }
   }
 }

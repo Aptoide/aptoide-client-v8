@@ -51,6 +51,15 @@ import rx.Observable;
         clientBuilder.build());
   }
 
+  @NonNull private static OkHttpClient.Builder getBuilder() {
+    OkHttpClient.Builder clientBuilder =
+        OkHttpClientFactory.newClient(() -> SecurePreferences.getUserAgent()).newBuilder();
+    clientBuilder.connectTimeout(2, TimeUnit.MINUTES);
+    clientBuilder.readTimeout(2, TimeUnit.MINUTES);
+    clientBuilder.writeTimeout(2, TimeUnit.MINUTES);
+    return clientBuilder;
+  }
+
   public static SetStoreRequest of(String aptoideClientUUID, String accessToken, String storeName,
       String storeTheme, String storeAvatarPath, String storeDescription, Boolean editStore,
       long storeId) {
@@ -67,15 +76,6 @@ import rx.Observable;
     return new SetStoreRequest(body, BASE_HOST,
         MultipartBody.Part.createFormData("store_avatar", file.getName(), requestFile),
         clientBuilder.build());
-  }
-
-  @NonNull private static OkHttpClient.Builder getBuilder() {
-    OkHttpClient.Builder clientBuilder =
-        OkHttpClientFactory.newClient(() -> SecurePreferences.getUserAgent()).newBuilder();
-    clientBuilder.connectTimeout(2, TimeUnit.MINUTES);
-    clientBuilder.readTimeout(2, TimeUnit.MINUTES);
-    clientBuilder.writeTimeout(2, TimeUnit.MINUTES);
-    return clientBuilder;
   }
 
   //private RequestBody createBodyPartFromString(String string) {

@@ -83,6 +83,32 @@ public class IdsRepositoryImpl implements IdsRepository, AptoideClientUUID {
     sharedPreferences.edit().putString(ANDROID_ID_CLIENT, android).apply();
   }
 
+  private String generateAdvertisingId() {
+    final String advertisingId;
+
+    if (getGoogleAdvertisingId() != null) {
+      setAdvertisingId(advertisingId = getGoogleAdvertisingId());
+    } else {
+      setAdvertisingId(advertisingId = generateRandomAdvertisingID());
+    }
+
+    return advertisingId;
+  }
+
+  private String generateRandomAdvertisingID() {
+    byte[] data = new byte[16];
+    String deviceId =
+        Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+    if (deviceId == null) {
+      deviceId = UUID.randomUUID().toString();
+    }
+
+    SecureRandom secureRandom = new SecureRandom();
+    secureRandom.setSeed(deviceId.hashCode());
+    secureRandom.nextBytes(data);
+    return UUID.nameUUIDFromBytes(data).toString();
+  }
+
   private void generateAptoideId(SharedPreferences sharedPreferences) {
     String aptoideId;
     if (getGoogleAdvertisingId() != null) {
@@ -111,31 +137,5 @@ public class IdsRepositoryImpl implements IdsRepository, AptoideClientUUID {
 
     sharedPreferences.edit().putString(GOOGLE_ADVERTISING_ID_CLIENT, gaid).apply();
     sharedPreferences.edit().putBoolean(GOOGLE_ADVERTISING_ID_CLIENT_SET, true).apply();
-  }
-
-  private String generateAdvertisingId() {
-    final String advertisingId;
-
-    if (getGoogleAdvertisingId() != null) {
-      setAdvertisingId(advertisingId = getGoogleAdvertisingId());
-    } else {
-      setAdvertisingId(advertisingId = generateRandomAdvertisingID());
-    }
-
-    return advertisingId;
-  }
-
-  private String generateRandomAdvertisingID() {
-    byte[] data = new byte[16];
-    String deviceId =
-        Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-    if (deviceId == null) {
-      deviceId = UUID.randomUUID().toString();
-    }
-
-    SecureRandom secureRandom = new SecureRandom();
-    secureRandom.setSeed(deviceId.hashCode());
-    secureRandom.nextBytes(data);
-    return UUID.nameUUIDFromBytes(data).toString();
   }
 }

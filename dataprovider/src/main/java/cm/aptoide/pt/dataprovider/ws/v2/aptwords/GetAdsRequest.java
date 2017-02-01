@@ -56,10 +56,11 @@ import rx.Observable;
     this.mature = mature;
   }
 
-  public static GetAdsRequest of(Location location, String keyword, Integer limit,
-      String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid, boolean mature) {
-    return new GetAdsRequest(aptoideClientUUID, googlePlayServicesAvailable, oemid,
-        mature).setLocation(location).setKeyword(keyword).setLimit(limit);
+  public static GetAdsRequest ofHomepage(String aptoideClientUUID,
+      boolean googlePlayServicesAvailable, String oemid, boolean mature) {
+    // TODO: 09-06-2016 neuro limit based on max colums
+    return of(Location.homepage, Type.ADS.getPerLineCount(), aptoideClientUUID,
+        googlePlayServicesAvailable, oemid, mature);
   }
 
   private static GetAdsRequest of(Location location, Integer limit, String aptoideClientUUID,
@@ -68,26 +69,10 @@ import rx.Observable;
         mature);
   }
 
-  private static GetAdsRequest ofPackageName(Location location, String packageName,
+  public static GetAdsRequest of(Location location, String keyword, Integer limit,
       String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid, boolean mature) {
-    GetAdsRequest getAdsRequest =
-        of(location, 1, aptoideClientUUID, googlePlayServicesAvailable, oemid,
-            mature).setPackageName(packageName);
-
-    // Add excluded networks
-    if (ReferrerUtils.excludedNetworks.containsKey(packageName)) {
-      getAdsRequest.excludedNetworks = AptoideUtils.StringU.commaSeparatedValues(
-          ReferrerUtils.excludedNetworks.get(packageName));
-    }
-
-    return getAdsRequest;
-  }
-
-  public static GetAdsRequest ofHomepage(String aptoideClientUUID,
-      boolean googlePlayServicesAvailable, String oemid, boolean mature) {
-    // TODO: 09-06-2016 neuro limit based on max colums
-    return of(Location.homepage, Type.ADS.getPerLineCount(), aptoideClientUUID,
-        googlePlayServicesAvailable, oemid, mature);
+    return new GetAdsRequest(aptoideClientUUID, googlePlayServicesAvailable, oemid,
+        mature).setLocation(location).setKeyword(keyword).setLimit(limit);
   }
 
   public static GetAdsRequest ofHomepageMore(String aptoideClientUUID,
@@ -104,6 +89,21 @@ import rx.Observable;
             oemid, mature);
 
     getAdsRequest.setRepo(storeName);
+
+    return getAdsRequest;
+  }
+
+  private static GetAdsRequest ofPackageName(Location location, String packageName,
+      String aptoideClientUUID, boolean googlePlayServicesAvailable, String oemid, boolean mature) {
+    GetAdsRequest getAdsRequest =
+        of(location, 1, aptoideClientUUID, googlePlayServicesAvailable, oemid,
+            mature).setPackageName(packageName);
+
+    // Add excluded networks
+    if (ReferrerUtils.excludedNetworks.containsKey(packageName)) {
+      getAdsRequest.excludedNetworks = AptoideUtils.StringU.commaSeparatedValues(
+          ReferrerUtils.excludedNetworks.get(packageName));
+    }
 
     return getAdsRequest;
   }

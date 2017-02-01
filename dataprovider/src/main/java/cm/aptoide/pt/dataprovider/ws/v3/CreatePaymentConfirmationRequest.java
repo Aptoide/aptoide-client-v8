@@ -25,6 +25,19 @@ public class CreatePaymentConfirmationRequest extends V3<BaseV3Response> {
     return new CreatePaymentConfirmationRequest(BASE_HOST, args);
   }
 
+  private static BaseBody getBaseBody(int productId, int paymentId,
+      NetworkOperatorManager operatorManager, String accessToken) {
+    BaseBody body = new BaseBody();
+    body.put("productid", String.valueOf(productId));
+    body.put("access_token", accessToken);
+    body.put("payType", String.valueOf(paymentId));
+    body.put("reqType", "rest");
+
+    addNetworkInformation(operatorManager, body);
+
+    return body;
+  }
+
   public static CreatePaymentConfirmationRequest ofInApp(int productId, int paymentId,
       NetworkOperatorManager operatorManager, String developerPayload, String accessToken,
       String paymentConfirmationId) {
@@ -42,28 +55,16 @@ public class CreatePaymentConfirmationRequest extends V3<BaseV3Response> {
   }
 
   public static CreatePaymentConfirmationRequest ofPaidApp(int productId, int paymentId,
-      NetworkOperatorManager operatorManager, String store, String accessToken, String paymentConfirmationId) {
+      NetworkOperatorManager operatorManager, String store, String accessToken,
+      String paymentConfirmationId) {
     final BaseBody args = getBaseBody(productId, paymentId, operatorManager, accessToken);
     args.put("paykey", paymentConfirmationId);
     args.put("repo", store);
     return new CreatePaymentConfirmationRequest(BASE_HOST, args);
   }
 
-  private static BaseBody getBaseBody(int productId, int paymentId,
-      NetworkOperatorManager operatorManager, String accessToken) {
-    BaseBody body = new BaseBody();
-    body.put("productid", String.valueOf(productId));
-    body.put("access_token", accessToken);
-    body.put("payType", String.valueOf(paymentId));
-    body.put("reqType", "rest");
-
-    addNetworkInformation(operatorManager, body);
-
-    return body;
-  }
-
-  @Override protected Observable<BaseV3Response> loadDataFromNetwork(
-      Interfaces interfaces, boolean bypassCache) {
+  @Override protected Observable<BaseV3Response> loadDataFromNetwork(Interfaces interfaces,
+      boolean bypassCache) {
     return interfaces.createPaymentConfirmation(map);
   }
 }

@@ -13,6 +13,10 @@ public class SimpleTimedFuture<T> {
   private T value;
   private int DELAY;
 
+  public T get() {
+    return this.get(5000);
+  }
+
   public T get(int timeOutMillis) {
     int counter = 0;
     try {
@@ -34,10 +38,6 @@ public class SimpleTimedFuture<T> {
 
   public boolean isDone() {
     return value != null;
-  }
-
-  public T get() {
-    return this.get(5000);
   }
 
   public void set(T value) {
