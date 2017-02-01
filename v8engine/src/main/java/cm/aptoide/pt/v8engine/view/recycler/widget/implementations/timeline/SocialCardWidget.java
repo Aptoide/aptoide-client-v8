@@ -91,7 +91,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
     if (like != null) {
       like.setOnClickListener(view -> likeButton.performClick());
 
-      if (displayable.checkAlreadyLiked()) {
+      if (displayable.isLiked()) {
         likeButton.setHeartState(true);
       } else {
         likeButton.setHeartState(false);
@@ -102,7 +102,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
           numberLikes.setText(String.valueOf(displayable.getNumberOfLikes() + 1));
           numberLikes.setVisibility(View.VISIBLE);
           if (likePreviewContainer.getChildCount() < 4) {
-            if (!displayable.checkAlreadyLiked()) {
+            if (!displayable.isLiked()) {
               UserTimeline user = new UserTimeline();
               Store store = new Store();
               store.setAvatar(AptoideAccountManager.getUserData().getUserAvatarRepo());

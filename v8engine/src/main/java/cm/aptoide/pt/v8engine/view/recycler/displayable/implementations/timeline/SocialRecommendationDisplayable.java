@@ -45,7 +45,8 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
       SpannableFactory spannableFactory, SocialRepository socialRepository,
       DateCalculator dateCalculator) {
     super(socialRecommendation, numberOfLikes, numberOfComments, store,
-        socialRecommendation.getUser(), socialRecommendation.getUserSharer(), socialRecommendation.getUserLikes(),
+        socialRecommendation.getUser(), socialRecommendation.getUserSharer(),
+        socialRecommendation.getMy().isLiked(), socialRecommendation.getLikes(),
         socialRecommendation.getDate(), spannableFactory, dateCalculator);
     this.avatarResource = avatarResource;
     this.titleResource = titleResource;
@@ -82,9 +83,9 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
         R.string.displayable_social_timeline_recommendation_atptoide_team_recommends,
         socialRecommendation.getUser(), socialRecommendation.getApp().getId(),
         socialRecommendation.getApp().getPackageName(), socialRecommendation.getApp().getName(),
-        socialRecommendation.getApp().getIcon(), abTestingURL, socialRecommendation.getLikes(),
-        socialRecommendation.getComments(), timelineMetricsManager, spannableFactory,
-        socialRepository, dateCalculator);
+        socialRecommendation.getApp().getIcon(), abTestingURL,
+        socialRecommendation.getStats().getLikes(), socialRecommendation.getStats().getComments(),
+        timelineMetricsManager, spannableFactory, socialRepository, dateCalculator);
   }
 
   public String getTitle() {

@@ -19,8 +19,6 @@ import lombok.Getter;
   @Getter private final String cardId;
   @Getter private final App app;
   @Getter private final Ab ab;
-  @Getter private final long likes;
-  @Getter private final long comments;
   @Getter private final SocialCardStats stats;
   @Getter private final Store store;
   @Getter private final Comment.User userSharer;
@@ -29,10 +27,11 @@ import lombok.Getter;
 
   @JsonCreator public SocialRecommendation(@JsonProperty("uid") String cardId,
       @JsonProperty("apps") List<App> apps, @JsonProperty("ab") Ab ab,
-      @JsonProperty("user_sharer") Comment.User userSharer, @JsonProperty("user") Comment.User user,
+      @JsonProperty("user_sharer") Comment.User userSharer, @JsonProperty("my") My my,
+      @JsonProperty("likes") List<UserTimeline> likes, @JsonProperty("user") Comment.User user,
       @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC") @JsonProperty("date") Date date,
       @JsonProperty("stats") SocialCardStats stats, @JsonProperty("store") Store store) {
-    super(stats);
+    super(likes, my);
     this.ab = ab;
     this.date = date;
     this.cardId = cardId;
@@ -40,8 +39,6 @@ import lombok.Getter;
     this.userSharer = userSharer;
     this.stats = stats;
     this.store = store;
-    this.likes = stats.getLikes();
-    this.comments = stats.getComments();
     if (!apps.isEmpty()) {
       this.app = apps.get(0);
     } else {

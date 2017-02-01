@@ -58,7 +58,8 @@ public class SocialVideoDisplayable extends SocialCardDisplayable {
       SpannableFactory spannableFactory, TimelineMetricsManager timelineMetricsManager,
       SocialRepository socialRepository) {
     super(socialVideo, numberOfLikes, numberOfComments, socialVideo.getStore(),
-        socialVideo.getUser(), socialVideo.getUserSharer(), socialVideo.getUserLikes(), date, spannableFactory, dateCalculator);
+        socialVideo.getUser(), socialVideo.getUserSharer(), socialVideo.getMy().isLiked(),
+        socialVideo.getLikes(), date, spannableFactory, dateCalculator);
     this.videoTitle = videoTitle;
     this.link = link;
     this.baseLink = baseLink;
@@ -95,9 +96,9 @@ public class SocialVideoDisplayable extends SocialCardDisplayable {
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
             socialVideo.getPublisher().getBaseUrl()), socialVideo.getPublisher().getName(),
         socialVideo.getThumbnailUrl(), socialVideo.getPublisher().getLogoUrl(), appId, abTestingURL,
-        socialVideo.getUser(), socialVideo.getLikes(), socialVideo.getComments(),
-        socialVideo.getApps(), socialVideo.getDate(), dateCalculator, spannableFactory,
-        timelineMetricsManager, socialRepository);
+        socialVideo.getUser(), socialVideo.getStats().getLikes(),
+        socialVideo.getStats().getComments(), socialVideo.getApps(), socialVideo.getDate(),
+        dateCalculator, spannableFactory, timelineMetricsManager, socialRepository);
   }
 
   public Observable<List<Installed>> getRelatedToApplication() {

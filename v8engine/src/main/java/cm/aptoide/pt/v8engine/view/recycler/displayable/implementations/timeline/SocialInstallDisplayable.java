@@ -45,7 +45,8 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
       TimelineMetricsManager timelineMetricsManager, SpannableFactory spannableFactory,
       SocialRepository socialRepository, DateCalculator dateCalculator) {
     super(socialInstall, likes, comments, store, socialInstall.getUser(),
-        socialInstall.getUserSharer(), socialInstall.getUserLikes(), date, spannableFactory, dateCalculator);
+        socialInstall.getUserSharer(), socialInstall.getMy().isLiked(), socialInstall.getLikes(),
+        date, spannableFactory, dateCalculator);
     this.avatarResource = icon;
     this.titleResource = titleResource;
     this.user = user;
@@ -81,8 +82,8 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
         R.string.displayable_social_timeline_recommendation_atptoide_team_recommends,
         socialInstall.getUser(), socialInstall.getApp().getId(),
         socialInstall.getApp().getPackageName(), socialInstall.getApp().getName(),
-        socialInstall.getApp().getIcon(), abTestingURL, socialInstall.getLikes(),
-        socialInstall.getComments(), socialInstall.getDate(), timelineMetricsManager,
+        socialInstall.getApp().getIcon(), abTestingURL, socialInstall.getStats().getLikes(),
+        socialInstall.getStats().getComments(), socialInstall.getDate(), timelineMetricsManager,
         spannableFactory, socialRepository, dateCalculator);
   }
 

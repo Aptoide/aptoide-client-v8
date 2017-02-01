@@ -10,10 +10,12 @@ import lombok.Getter;
 
 @EqualsAndHashCode public abstract class SocialCard implements TimelineCard {
 
-  @Getter private final List<UserTimeline> userLikes;
+  @Getter private final List<UserTimeline> likes;
+  @Getter private final My my;
 
-  public SocialCard(SocialCardStats stats) {
-    this.userLikes = stats.getUsersLikes();
+  public SocialCard(List<UserTimeline> likes, My my) {
+    this.likes = likes;
+    this.my = my;
   }
 }
 
