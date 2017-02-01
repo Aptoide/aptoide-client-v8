@@ -6,7 +6,6 @@
 package cm.aptoide.pt.model.v3;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.ArrayList;
 import lombok.Data;
 
 /**

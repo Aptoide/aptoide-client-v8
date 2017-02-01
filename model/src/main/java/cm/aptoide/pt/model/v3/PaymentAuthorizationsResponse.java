@@ -13,15 +13,12 @@ import lombok.EqualsAndHashCode;
 /**
  * Created by marcelobenites on 15/11/16.
  */
-@Data
-@EqualsAndHashCode(callSuper = true)
-public class PaymentAuthorizationsResponse extends BaseV3Response {
+@Data @EqualsAndHashCode(callSuper = true) public class PaymentAuthorizationsResponse
+    extends BaseV3Response {
 
-  @JsonProperty("authorizations")
-  private List<PaymentAuthorizationResponse> authorizations;
+  @JsonProperty("authorizations") private List<PaymentAuthorizationResponse> authorizations;
 
-  @Data
-  public static class PaymentAuthorizationResponse {
+  @Data public static class PaymentAuthorizationResponse {
 
     @JsonProperty("paymentTypeId") private int paymentId;
     @JsonProperty("url") private String url;

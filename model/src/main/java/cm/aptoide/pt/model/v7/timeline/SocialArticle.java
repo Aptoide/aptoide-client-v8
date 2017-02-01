@@ -33,8 +33,8 @@ import lombok.Getter;
       @JsonProperty("publisher") Publisher publisher,
       @JsonProperty("user_sharer") Comment.User userSharer, @JsonProperty("user") Comment.User user,
       @JsonProperty("stats") SocialCardStats stats, @JsonProperty("store") Store store,
-      @JsonProperty("my") My my,
-      @JsonProperty("url") String url, @JsonProperty("likes") List<UserTimeline> likes,
+      @JsonProperty("my") My my, @JsonProperty("url") String url,
+      @JsonProperty("likes") List<UserTimeline> likes,
       @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC") @JsonProperty("date") Date date,
       @JsonProperty("apps") List<App> apps, @JsonProperty("ab") Ab ab) {
     super(likes, my);
