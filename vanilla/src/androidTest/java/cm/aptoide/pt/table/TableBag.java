@@ -8,10 +8,6 @@ import java.util.HashMap;
 
 public class TableBag {
 
-  public enum TableName{
-    SCHEDULED, EXCLUDED
-  }
-
   private HashMap<TableName, Table> tables;
 
   public TableBag() {
@@ -30,5 +26,9 @@ public class TableBag {
 
   public Iterable<Table> getAll() {
     return tables.values();
+  }
+
+  public enum TableName {
+    SCHEDULED, EXCLUDED
   }
 }

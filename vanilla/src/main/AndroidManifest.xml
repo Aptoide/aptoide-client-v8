@@ -35,7 +35,9 @@
       tools:replace="theme"
       >
 
-    <activity android:name=".v8engine.OpenGLES20Activity" android:theme="@style/Theme.Transparent">
+    <activity
+        android:name=".v8engine.OpenGLES20Activity"
+        android:theme="@style/Theme.Transparent">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
         <category android:name="android.intent.category.LAUNCHER"/>
@@ -66,7 +68,7 @@
 
     <meta-data
         android:name="io.fabric.ApiKey"
-        android:value="${fabricApiKey}" />
+        android:value="${fabricApiKey}"/>
 
     <meta-data
         android:name="com.facebook.sdk.ApplicationId"
@@ -147,8 +149,9 @@
       <intent-filter>
         <action android:name="android.content.SyncAdapter"/>
       </intent-filter>
-      <meta-data android:name="android.content.SyncAdapter"
-          android:resource="@xml/sync" />
+      <meta-data
+          android:name="android.content.SyncAdapter"
+          android:resource="@xml/sync"/>
     </service>
   </application>
 
