@@ -36,6 +36,7 @@ android {
     testProguardFile 'proguard-rules-test.pro'
     manifestPlaceholders = [toolboxProviderAuthority   : "cm.aptoide.pt.StubProvider",
                             suggestionProviderAuthority: "cm.aptoide.pt.v8engine.provider.SearchSuggestionProvider",
+                            storeSuggestionProviderAuthority: "cm.aptoide.pt.v8engine.provider.StoreSearchSuggestionProvider",
                             currentApplicationId       : "cm.aptoide.pt",
                             fabricApiKey               : project.FABRIC_API_KEY]
 
@@ -73,6 +74,7 @@ android {
 
       manifestPlaceholders = [toolboxProviderAuthority   : "cm.aptoide.pt.StubProvider.internal",
                               suggestionProviderAuthority: "cm.aptoide.pt.v8engine.provider.SearchSuggestionProvider.internal",
+                              storeSuggestionProviderAuthority: "cm.aptoide.pt.v8engine.provider.StoreSearchSuggestionProvider.internal",
                               currentApplicationId       : "cm.aptoide.pt.internal"]
     }
 
@@ -90,6 +92,7 @@ android {
 
       manifestPlaceholders = [toolboxProviderAuthority   : "cm.aptoide.pt.StubProvider.dev",
                               suggestionProviderAuthority: "cm.aptoide.pt.v8engine.provider.SearchSuggestionProvider.dev",
+                              storeSuggestionProviderAuthority: "cm.aptoide.pt.v8engine.provider.StoreSearchSuggestionProvider.dev",
                               currentApplicationId       : "cm.aptoide.pt.dev"]
     }
 
