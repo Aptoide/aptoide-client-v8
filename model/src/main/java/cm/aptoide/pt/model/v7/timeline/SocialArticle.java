@@ -33,7 +33,7 @@ import lombok.Getter;
       @JsonProperty("thumbnail") String thumbnailUrl,
       @JsonProperty("publisher") Publisher publisher,
       @JsonProperty("user_sharer") Comment.User userSharer, @JsonProperty("user") Comment.User user,
-      @JsonProperty("stats") TimelineCardStats stats, @JsonProperty("store") Store store,
+      @JsonProperty("stats") SocialCardStats stats, @JsonProperty("store") Store store,
       @JsonProperty("url") String url,
       @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC") @JsonProperty("date") Date date,
       @JsonProperty("apps") List<App> apps, @JsonProperty("ab") Ab ab) {

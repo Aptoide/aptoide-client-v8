@@ -12,7 +12,7 @@ import lombok.Getter;
 
   @Getter private final List<UserTimeline> userLikes;
 
-  public SocialCard(TimelineCardStats stats) {
+  public SocialCard(SocialCardStats stats) {
     this.userLikes = stats.getUsersLikes();
   }
 }

@@ -22,7 +22,7 @@ import lombok.Getter;
   @Getter private final Ab ab;
   @Getter private final long likes;
   @Getter private final long comments;
-  @Getter private final TimelineCardStats stats;
+  @Getter private final SocialCardStats stats;
   @Getter private final Store store;
   @Getter private final Comment.User user;
   @Getter private final Comment.User userSharer;
@@ -31,7 +31,7 @@ import lombok.Getter;
   @JsonCreator
   public SocialInstall(@JsonProperty("uid") String cardId, @JsonProperty("apps") List<App> apps,
       @JsonProperty("ab") Ab ab, @JsonProperty("user_sharer") Comment.User userSharer,
-      @JsonProperty("user") Comment.User user, @JsonProperty("stats") TimelineCardStats stats,
+      @JsonProperty("user") Comment.User user, @JsonProperty("stats") SocialCardStats stats,
       @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC") @JsonProperty("date") Date date,
       @JsonProperty("store") Store store) {
     super(stats);
