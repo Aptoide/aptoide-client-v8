@@ -64,7 +64,7 @@ public class PaymentAuthorizationSync extends RepositorySync {
       for (String paymentId : paymentIds) {
         authorizations.add(authorizationFactory.convertToDatabasePaymentAuthorization(
             authorizationFactory.create(Integer.valueOf(paymentId),
-                Authorization.Status.SYNCING_ERROR, payerId)));
+                Authorization.Status.UNKNOWN_ERROR, payerId)));
       }
       authorizationAccessor.updateAll(authorizations);
     }

@@ -23,6 +23,8 @@ public interface PaymentView extends View {
 
   Observable<Void> otherPaymentsSelection();
 
+  Observable<PaymentViewModel> registerPaymentSelection();
+
   void showGlobalLoading();
 
   void showPaymentsLoading();
@@ -49,7 +51,9 @@ public interface PaymentView extends View {
 
   void showPaymentsNotFoundMessage();
 
-  Observable<PaymentViewModel> registerPaymentSelection();
+  void showNetworkError();
+
+  void showUnknownError();
 
   class PaymentViewModel {
 

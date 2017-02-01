@@ -10,6 +10,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -34,6 +36,7 @@ import com.jakewharton.rxrelay.PublishRelay;
 import java.util.List;
 import java.util.Locale;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
 public class PaymentActivity extends ActivityView implements PaymentView {
@@ -62,6 +65,8 @@ public class PaymentActivity extends ActivityView implements PaymentView {
   private PublishRelay<PaymentViewModel> registerPaymentClick;
   private CompositeSubscription paymentClicks;
   private PurchaseIntentFactory intentFactory;
+  private AlertDialog networkErrorDialog;
+  private AlertDialog unknownErrorDialog;
 
   public static Intent getIntent(Context context, AptoideProduct product) {
     final Intent intent = new Intent(context, PaymentActivity.class);
@@ -99,6 +104,15 @@ public class PaymentActivity extends ActivityView implements PaymentView {
     registerPaymentClick = PublishRelay.create();
     intentFactory = new PurchaseIntentFactory(new ErrorCodeFactory());
     paymentClicks = new CompositeSubscription();
+    final ContextThemeWrapper dialogTheme =
+        new ContextThemeWrapper(this, R.style.AptoideThemeDefault);
+    networkErrorDialog = new AlertDialog.Builder(dialogTheme).setMessage(R.string.connection_error)
+        .setPositiveButton(android.R.string.ok, null)
+        .create();
+    unknownErrorDialog =
+        new AlertDialog.Builder(dialogTheme).setMessage(R.string.having_some_trouble)
+            .setPositiveButton(android.R.string.ok, null)
+            .create();
 
     final AptoideProduct product = getIntent().getParcelableExtra(PRODUCT_EXTRA);
     final ProductRepository productRepository =
@@ -135,11 +149,15 @@ public class PaymentActivity extends ActivityView implements PaymentView {
   }
 
   @Override public Observable<Void> cancellationSelection() {
-    return Observable.merge(RxView.clicks(cancelButton), RxView.clicks(overlay));
+    return Observable.merge(RxView.clicks(cancelButton), RxView.clicks(overlay))
+        .subscribeOn(AndroidSchedulers.mainThread())
+        .unsubscribeOn(AndroidSchedulers.mainThread());
   }
 
   @Override public Observable<Void> otherPaymentsSelection() {
-    return RxView.clicks(morePaymentsButton);
+    return RxView.clicks(morePaymentsButton)
+        .subscribeOn(AndroidSchedulers.mainThread())
+        .unsubscribeOn(AndroidSchedulers.mainThread());
   }
 
   @Override public void hideOtherPayments() {
@@ -183,6 +201,8 @@ public class PaymentActivity extends ActivityView implements PaymentView {
       switch (otherPayment.getStatus()) {
         case USE:
           paymentClicks.add(RxView.clicks(useButton)
+              .subscribeOn(AndroidSchedulers.mainThread())
+              .unsubscribeOn(AndroidSchedulers.mainThread())
               .doOnNext(click -> usePaymentClick.call(otherPayment))
               .subscribe());
           useButton.setVisibility(View.VISIBLE);
@@ -191,6 +211,8 @@ public class PaymentActivity extends ActivityView implements PaymentView {
           break;
         case REGISTER:
           paymentClicks.add(RxView.clicks(registerButton)
+              .subscribeOn(AndroidSchedulers.mainThread())
+              .unsubscribeOn(AndroidSchedulers.mainThread())
               .doOnNext(click -> registerPaymentClick.call(otherPayment))
               .subscribe());
           registerButton.setVisibility(View.VISIBLE);
@@ -217,7 +239,9 @@ public class PaymentActivity extends ActivityView implements PaymentView {
   }
 
   @Override public Observable<Void> buySelection() {
-    return RxView.clicks(buyButton);
+    return RxView.clicks(buyButton)
+        .subscribeOn(AndroidSchedulers.mainThread())
+        .unsubscribeOn(AndroidSchedulers.mainThread());
   }
 
   @Override public void showPaymentsNotFoundMessage() {
@@ -256,6 +280,18 @@ public class PaymentActivity extends ActivityView implements PaymentView {
 
   @Override public void navigateToAuthorizationView(int paymentId, AptoideProduct product) {
     startActivity(WebAuthorizationActivity.getIntent(this, paymentId, product));
+  }
+
+  @Override public void showNetworkError() {
+    if (!networkErrorDialog.isShowing() && !unknownErrorDialog.isShowing()) {
+      networkErrorDialog.show();
+    }
+  }
+
+  @Override public void showUnknownError() {
+    if (!networkErrorDialog.isShowing() && !unknownErrorDialog.isShowing()) {
+      unknownErrorDialog.show();
+    }
   }
 
   private void finish(int code, Intent intent) {

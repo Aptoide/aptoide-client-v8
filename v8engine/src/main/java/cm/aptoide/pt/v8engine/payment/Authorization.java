@@ -46,7 +46,7 @@ public abstract class Authorization {
         || Status.INACTIVE.equals(status)
         || Status.EXPIRED.equals(status)
         || Status.SESSION_EXPIRED.equals(status)
-        || Status.SYNCING_ERROR.equals(status);
+        || Status.UNKNOWN_ERROR.equals(status);
   }
 
   public Status getStatus() {
@@ -54,7 +54,7 @@ public abstract class Authorization {
   }
 
   public enum Status {
-    SYNCING_ERROR,
+    UNKNOWN_ERROR,
     NONE,
     INACTIVE,
     ACTIVE,
