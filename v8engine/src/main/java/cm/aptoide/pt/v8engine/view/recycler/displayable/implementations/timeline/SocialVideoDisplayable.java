@@ -58,7 +58,7 @@ public class SocialVideoDisplayable extends SocialCardDisplayable {
       SpannableFactory spannableFactory, TimelineMetricsManager timelineMetricsManager,
       SocialRepository socialRepository) {
     super(socialVideo, numberOfLikes, numberOfComments, socialVideo.getStore(),
-        socialVideo.getUser(), socialVideo.getUserSharer(), date, spannableFactory, dateCalculator);
+        socialVideo.getUser(), socialVideo.getUserSharer(), socialVideo.getUserLikes(), date, spannableFactory, dateCalculator);
     this.videoTitle = videoTitle;
     this.link = link;
     this.baseLink = baseLink;

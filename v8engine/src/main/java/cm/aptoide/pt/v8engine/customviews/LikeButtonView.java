@@ -139,6 +139,18 @@ public class LikeButtonView extends FrameLayout implements View.OnClickListener 
     }
   }
 
+  public void setHeartState(boolean state) {
+    if (state) {
+      vHeart.setImageResource(R.drawable.heart_on);
+      vHeart.invalidate();
+      setChecked(true);
+    } else {
+      vHeart.setImageResource(R.drawable.heart_off);
+      vHeart.invalidate();
+      setChecked(false);
+    }
+  }
+
   @Override public boolean onTouchEvent(MotionEvent event) {
     switch (event.getAction()) {
       case MotionEvent.ACTION_DOWN:
@@ -171,5 +183,9 @@ public class LikeButtonView extends FrameLayout implements View.OnClickListener 
         break;
     }
     return true;
+  }
+
+  private void setChecked(boolean checked) {
+    this.isChecked = checked;
   }
 }

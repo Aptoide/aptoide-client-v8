@@ -1,10 +1,12 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
+import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import cm.aptoide.pt.model.v7.GetFollowers;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.fragment.implementations.TimeLineFollowFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
@@ -15,11 +17,15 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 
 public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.TimelineUser> {
 
+  private TimeLineFollowFragment.FollowFragmentOpenMode openMode;
+
   public FollowUserDisplayable() {
   }
 
-  public FollowUserDisplayable(GetFollowers.TimelineUser pojo) {
+  public FollowUserDisplayable(GetFollowers.TimelineUser pojo,
+      TimeLineFollowFragment.FollowFragmentOpenMode openMode) {
     super(pojo);
+    this.openMode = openMode;
   }
 
   @Override public int getViewLayout() {
@@ -58,6 +64,10 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
     return String.valueOf(number);
   }
 
+  public String getStoreName() {
+    return getPojo().getStore().getName();
+  }
+
   public String getStoreAvatar() {
     return getPojo().getStore().getAvatar();
   }
@@ -81,6 +91,17 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
     }
   }
 
+  public Drawable getButtonBackgroundStoreThemeColor() {
+    Store store = getPojo().getStore();
+    StoreThemeEnum storeThemeEnum;
+    if (store.getAppearance() != null) {
+      storeThemeEnum = StoreThemeEnum.get(store);
+    } else {
+      storeThemeEnum = StoreThemeEnum.APTOIDE_STORE_THEME_ORANGE;
+    }
+    return storeThemeEnum.getButtonLayoutDrawable();
+  }
+
   public boolean hasUser() {
     return !TextUtils.isEmpty(getPojo().getName());
   }
@@ -91,9 +112,18 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
 
   public void viewClicked(FragmentShower shower) {
     Store store = getPojo().getStore();
-    String theme =
-        store.getAppearance().getTheme() == null ? V8Engine.getConfiguration().getDefaultTheme()
-            : store.getAppearance().getTheme();
+    String theme;
+    if (store.getAppearance() != null) {
+      theme =
+          store.getAppearance().getTheme() == null ? V8Engine.getConfiguration().getDefaultTheme()
+              : store.getAppearance().getTheme();
+    } else {
+      theme = V8Engine.getConfiguration().getDefaultTheme();
+    }
     shower.pushFragmentV4(V8Engine.getFragmentProvider().newStoreFragment(store.getName(), theme));
+  }
+
+  public TimeLineFollowFragment.FollowFragmentOpenMode getOpenMode() {
+    return openMode;
   }
 }

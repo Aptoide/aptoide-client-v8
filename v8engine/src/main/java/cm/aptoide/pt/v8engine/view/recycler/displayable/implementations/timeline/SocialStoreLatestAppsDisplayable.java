@@ -31,7 +31,6 @@ public class SocialStoreLatestAppsDisplayable extends SocialCardDisplayable {
 
   private DateCalculator dateCalculator;
 
-  //private Date latestUpdate;
   private TimelineMetricsManager timelineMetricsManager;
   private SocialRepository socialRepository;
 
@@ -45,7 +44,7 @@ public class SocialStoreLatestAppsDisplayable extends SocialCardDisplayable {
       TimelineMetricsManager timelineMetricsManager, SocialRepository socialRepository,
       SpannableFactory spannableFactory) {
     super(socialStoreLatestApps, likes, comments, socialStoreLatestApps.getOwnerStore(),
-        socialStoreLatestApps.getUser(), socialStoreLatestApps.getUserSharer(),
+        socialStoreLatestApps.getUser(), socialStoreLatestApps.getUserSharer(), socialStoreLatestApps.getUserLikes(),
         socialStoreLatestApps.getDate(), spannableFactory, dateCalculator);
     this.storeName = storeName;
     socialStoreLatestApps.getSharedStore().getId();
@@ -53,7 +52,6 @@ public class SocialStoreLatestAppsDisplayable extends SocialCardDisplayable {
     this.latestApps = latestApps;
     this.abTestingUrl = abTestingUrl;
     this.dateCalculator = dateCalculator;
-    //this.latestUpdate = latestUpdate;
     this.timelineMetricsManager = timelineMetricsManager;
     this.socialRepository = socialRepository;
     this.sharedStore = socialStoreLatestApps.getSharedStore();

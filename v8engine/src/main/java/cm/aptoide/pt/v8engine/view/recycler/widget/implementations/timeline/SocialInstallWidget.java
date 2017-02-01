@@ -53,6 +53,7 @@ public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayab
         (CardView) itemView.findViewById(R.id.card);
     cardContent = (RelativeLayout) itemView.findViewById(
         R.id.displayable_social_timeline_recommendation_card_content);
+    //likeButton = (LikeButton) itemView.findViewById(R.id.social_like_test);
     numberLikes = (TextView) itemView.findViewById(R.id.social_number_of_likes);
     numberComments = (TextView) itemView.findViewById(R.id.social_number_of_comments);
   }

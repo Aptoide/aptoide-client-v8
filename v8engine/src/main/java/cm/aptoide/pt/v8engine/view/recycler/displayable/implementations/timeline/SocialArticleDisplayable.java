@@ -60,7 +60,7 @@ public class SocialArticleDisplayable extends SocialCardDisplayable {
       SpannableFactory spannableFactory, TimelineMetricsManager timelineMetricsManager,
       SocialRepository socialRepository) {
     super(socialArticle, numberOfLikes, numberOfComments, store, user,
-        socialArticle.getUserSharer(), date, spannableFactory, dateCalculator);
+        socialArticle.getUserSharer(), socialArticle.getUserLikes(), date, spannableFactory, dateCalculator);
     this.articleTitle = articleTitle;
     this.link = link;
     this.developerLink = developerLink;

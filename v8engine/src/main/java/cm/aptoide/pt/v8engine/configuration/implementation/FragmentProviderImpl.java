@@ -257,6 +257,11 @@ public class FragmentProviderImpl implements FragmentProvider {
     return TimeLineFollowFragment.newInstance(openMode, followNumber, storeTheme);
   }
 
+  @Override public Fragment newTimeLineFollowStatsFragment(
+      TimeLineFollowFragment.FollowFragmentOpenMode openMode, String storeTheme, String cardUid, long numberOfLikes) {
+    return TimeLineFollowFragment.newInstance(openMode, storeTheme, cardUid, numberOfLikes);
+  }
+
   @Override
   public Fragment newCommentGridRecyclerFragment(CommentType commentType, String elementId) {
     return CommentListFragment.newInstance(commentType, elementId);

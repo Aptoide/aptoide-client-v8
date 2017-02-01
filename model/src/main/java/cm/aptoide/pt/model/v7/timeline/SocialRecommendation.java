@@ -1,7 +1,6 @@
 package cm.aptoide.pt.model.v7.timeline;
 
 import cm.aptoide.pt.model.v7.Comment;
-import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.Store;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -15,14 +14,14 @@ import lombok.Getter;
 /**
  * Created by jdandrade on 20/12/2016.
  */
-@EqualsAndHashCode public class SocialRecommendation implements TimelineCard {
+@EqualsAndHashCode public class SocialRecommendation extends SocialCard implements TimelineCard {
 
   @Getter private final String cardId;
   @Getter private final App app;
   @Getter private final Ab ab;
   @Getter private final long likes;
   @Getter private final long comments;
-  @Getter private final Review.Stats stats;
+  @Getter private final TimelineCardStats stats;
   @Getter private final Store store;
   @Getter private final Comment.User userSharer;
   @Getter private final Date date;
@@ -32,7 +31,8 @@ import lombok.Getter;
       @JsonProperty("apps") List<App> apps, @JsonProperty("ab") Ab ab,
       @JsonProperty("user_sharer") Comment.User userSharer, @JsonProperty("user") Comment.User user,
       @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC") @JsonProperty("date") Date date,
-      @JsonProperty("stats") Review.Stats stats, @JsonProperty("store") Store store) {
+      @JsonProperty("stats") TimelineCardStats stats, @JsonProperty("store") Store store) {
+    super(stats);
     this.ab = ab;
     this.date = date;
     this.cardId = cardId;
