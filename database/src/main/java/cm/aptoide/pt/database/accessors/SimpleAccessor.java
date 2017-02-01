@@ -34,14 +34,14 @@ public abstract class SimpleAccessor<T extends RealmObject> implements Accessor<
     database.insertAll(objects);
   }
 
-  public void insert(T object) {
-    database.insert(object);
-  }
-
   @Override public void removeAll() {
     if (clazz != null) {
       database.deleteAll(clazz);
     }
+  }
+
+  public void insert(T object) {
+    database.insert(object);
   }
 
   public Observable<Long> count() {

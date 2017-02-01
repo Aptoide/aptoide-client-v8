@@ -40,16 +40,16 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
         .observeOn(Schedulers.io());
   }
 
-  public Observable<Installed> get(String packageName) {
-    return database.get(Installed.class, Installed.PACKAGE_NAME, packageName);
-  }
-
   public void remove(String packageName) {
     database.delete(Installed.class, Installed.PACKAGE_NAME, packageName);
   }
 
   public Observable<Boolean> isInstalled(String packageName) {
     return get(packageName).map(installed -> installed != null);
+  }
+
+  public Observable<Installed> get(String packageName) {
+    return database.get(Installed.class, Installed.PACKAGE_NAME, packageName);
   }
 
   public Observable<List<Installed>> getAsList(String packageName) {
@@ -74,12 +74,11 @@ public class InstalledAccessor extends SimpleAccessor<Installed> {
         .subscribeOn(RealmSchedulers.getScheduler());
   }
 
-  public void insert(Installed installed) {
-    database.insert(installed);
-  }
-
   public void insertAll(List<Installed> installedList) {
     database.insertAll(installedList);
   }
 
+  public void insert(Installed installed) {
+    database.insert(installed);
+  }
 }

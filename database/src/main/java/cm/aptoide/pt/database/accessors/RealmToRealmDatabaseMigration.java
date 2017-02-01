@@ -210,11 +210,9 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
       realm.delete(PaymentConfirmation.class.getSimpleName());
       realm.delete(PaymentAuthorization.class.getSimpleName());
 
-      schema.get("PaymentConfirmation")
-          .addField("payerId", String.class, FieldAttribute.REQUIRED);
+      schema.get("PaymentConfirmation").addField("payerId", String.class, FieldAttribute.REQUIRED);
 
-      schema.get("PaymentAuthorization")
-          .addField("payerId", String.class, FieldAttribute.REQUIRED);
+      schema.get("PaymentAuthorization").addField("payerId", String.class, FieldAttribute.REQUIRED);
 
       oldVersion++;
     }

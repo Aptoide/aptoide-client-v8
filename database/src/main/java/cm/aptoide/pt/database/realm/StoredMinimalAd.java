@@ -49,8 +49,7 @@ public class StoredMinimalAd extends RealmObject implements StoredMinimalAdInter
     this.referrer = referrer;
   }
 
-  @Override
-  public String getCpiUrl() {
+  @Override public String getCpiUrl() {
     return cpiUrl;
   }
 
