@@ -11,6 +11,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
+import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
@@ -38,6 +40,8 @@ public class WebAuthorizationActivity extends ActivityView {
   private WebView webView;
   private AptoidePay aptoidePay;
   private int paymentId;
+  private View progressBarContainer;
+  private AlertDialog unknownErrorDialog;
 
   public static Intent getIntent(Context context, int paymentId, AptoideProduct product) {
     final Intent intent = new Intent(context, WebAuthorizationActivity.class);
@@ -64,23 +68,48 @@ public class WebAuthorizationActivity extends ActivityView {
       webView = (WebView) findViewById(R.id.activity_boa_compra_authorization_web_view);
       webView.getSettings().setJavaScriptEnabled(true);
       webView.setWebChromeClient(new WebChromeClient());
+      progressBarContainer = findViewById(R.id.activity_web_authorization_preogress_bar);
+      unknownErrorDialog =
+          new AlertDialog.Builder(this)
+              .setMessage(R.string.having_some_trouble)
+              .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                finish();
+              })
+              .create();
     } else {
       throw new IllegalStateException("Web payment urls must be provided");
     }
 
+    progressBarContainer.setVisibility(View.VISIBLE);
     aptoidePay.getAuthorization(paymentId)
         .distinctUntilChanged(authorization -> authorization.getStatus())
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(ActivityEvent.DESTROY))
         .subscribe(authorization -> {
-          if (authorization.isAuthorized() || authorization.isInvalid()) {
+          if (authorization.isAuthorized()) {
+            hideLoadingAndDismiss();
+          } else if (authorization.isInvalid()) {
+            progressBarContainer.setVisibility(View.GONE);
+            unknownErrorDialog.show();
+          } else if (authorization.isInitiated()) {
+            showAuthorization((WebAuthorization) authorization);
+          } else if (authorization.isPending()){
             finish();
           }
-
-          if (authorization.isInitiated()) {
-            showAuthorization((WebAuthorization) authorization);
-          }
         });
+  }
+
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    ((ViewGroup) webView.getParent()).removeView(webView);
+    webView.setWebViewClient(null);
+    webView.destroy();
+    unknownErrorDialog.dismiss();
+  }
+
+  private void hideLoadingAndDismiss() {
+    progressBarContainer.setVisibility(View.GONE);
+    finish();
   }
 
   private void showAuthorization(WebAuthorization webAuthorization) {
@@ -89,19 +118,20 @@ public class WebAuthorizationActivity extends ActivityView {
       @Override public void onPageStarted(WebView view, String url, Bitmap favicon) {
         super.onPageStarted(view, url, favicon);
         if (url.equals(webAuthorization.getRedirectUrl())) {
+          progressBarContainer.setVisibility(View.VISIBLE);
           aptoidePay.authorize(webAuthorization.getPaymentId())
+              .observeOn(AndroidSchedulers.mainThread())
               .compose(bindUntilEvent(ActivityEvent.DESTROY).forCompletable())
-              .subscribe(() -> finish(), throwable -> finish());
+              .subscribe(() -> hideLoadingAndDismiss(), throwable -> hideLoadingAndDismiss());
         }
+      }
+
+      @Override public void onPageFinished(WebView view, String url) {
+        super.onPageFinished(view, url);
+        progressBarContainer.setVisibility(View.GONE);
       }
     });
     webView.loadUrl(webAuthorization.getUrl());
   }
 
-  @Override protected void onDestroy() {
-    super.onDestroy();
-    ((ViewGroup) webView.getParent()).removeView(webView);
-    webView.setWebViewClient(null);
-    webView.destroy();
-  }
 }

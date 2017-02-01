@@ -4,8 +4,30 @@
   ~ Modified by Marcelo Benites on 11/11/2016.
   -->
 
-<WebView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:id="@+id/activity_boa_compra_authorization_web_view"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"/>
+    android:layout_height="match_parent"
+    >
+  <WebView
+      android:id="@+id/activity_boa_compra_authorization_web_view"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      />
+  <LinearLayout
+      android:visibility="gone"
+      android:background="@color/white"
+      android:id="@+id/activity_web_authorization_preogress_bar"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:clickable="true"
+      android:focusable="true"
+      android:gravity="center"
+      android:orientation="vertical"
+      >
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+  </LinearLayout>
+
+</RelativeLayout>

@@ -294,6 +294,11 @@ public class PaymentActivity extends ActivityView implements PaymentView {
     }
   }
 
+  @Override public void hideAllErrors() {
+    networkErrorDialog.dismiss();
+    unknownErrorDialog.dismiss();
+  }
+
   private void finish(int code, Intent intent) {
     setResult(code, intent);
     finish();

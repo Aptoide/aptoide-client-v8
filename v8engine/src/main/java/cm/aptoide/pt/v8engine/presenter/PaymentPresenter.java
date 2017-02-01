@@ -74,6 +74,12 @@ public class PaymentPresenter implements Presenter {
         .subscribe();
 
     view.getLifecycle()
+        .filter(event -> View.LifecycleEvent.DESTROY.equals(event))
+        .doOnNext(destroyed -> view.hideAllErrors())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe();
+
+    view.getLifecycle()
         .filter(event -> View.LifecycleEvent.CREATE.equals(event))
         .flatMap(created -> login())
         .doOnNext(loggedIn -> showGlobalAndPaymentsLoading())
