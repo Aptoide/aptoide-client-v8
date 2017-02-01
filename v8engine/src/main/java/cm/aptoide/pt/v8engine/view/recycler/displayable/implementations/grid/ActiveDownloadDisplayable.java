@@ -3,28 +3,28 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 import android.content.Context;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.v8engine.InstallManager;
-import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
-import lombok.Setter;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import rx.Observable;
 import rx.functions.Action0;
 
 /**
  * Created by trinkes on 7/18/16.
  */
-public class ActiveDownloadDisplayable extends DisplayablePojo<Progress<Download>> {
+public class ActiveDownloadDisplayable extends Displayable {
 
-  private InstallManager installManager;
-  @Setter private Action0 onResumeAction;
-  @Setter private Action0 onPauseAction;
+  private final InstallManager installManager;
+  private final Download download;
+  private Action0 onResumeAction;
+  private Action0 onPauseAction;
 
   public ActiveDownloadDisplayable() {
-    super();
+    this.installManager = null;
+    this.download = null;
   }
 
-  public ActiveDownloadDisplayable(Progress<Download> pojo, InstallManager installManager) {
-    super(pojo);
+  public ActiveDownloadDisplayable(Download download, InstallManager installManager) {
+    this.download = download;
     this.installManager = installManager;
   }
 
@@ -51,11 +51,19 @@ public class ActiveDownloadDisplayable extends DisplayablePojo<Progress<Download
   }
 
   public void pauseInstall(Context context) {
-    installManager.stopInstallation(context, getPojo().getRequest().getMd5());
+    installManager.stopInstallation(context, download.getMd5());
   }
 
-  public Observable<Download> getDownload() {
-    return installManager.getInstallation(getPojo().getRequest().getMd5())
+  public Observable<Download> getDownloadObservable() {
+    return installManager.getInstallation(download.getMd5())
         .map(downloadProgress -> downloadProgress.getRequest());
+  }
+
+  public void setOnPauseAction(Action0 onPauseAction) {
+    this.onPauseAction = onPauseAction;
+  }
+
+  public void setOnResumeAction(Action0 onResumeAction) {
+    this.onResumeAction = onResumeAction;
   }
 }

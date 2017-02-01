@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.view.recycler;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.SparseArray;
 import android.view.View;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -139,29 +140,25 @@ import cm.aptoide.pt.viewRateAndCommentReviews.CommentsReadMoreWidget;
 import cm.aptoide.pt.viewRateAndCommentReviews.RateAndReviewCommentDisplayable;
 import cm.aptoide.pt.viewRateAndCommentReviews.RateAndReviewCommentWidget;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by neuro on 10-10-2016.
  */
-
 public class DisplayableWidgetMapping {
 
-  private static final String TAG = DisplayableWidgetMapping.class.getName();
   private static final DisplayableWidgetMapping instance = new DisplayableWidgetMapping();
   private List<Displayable> cachedDisplayables;
   private Class<? extends Displayable> displayableClass;
   private Class<? extends Widget> widgetClass;
-  private Map<Integer, DisplayableWidgetMapping> viewTypeMapping = new HashMap<>();
+  private SparseArray<DisplayableWidgetMapping> viewTypeMapping = new SparseArray<>();
 
-  protected DisplayableWidgetMapping() {
+  private DisplayableWidgetMapping() {
     parseMappings(createMapping());
   }
 
-  public DisplayableWidgetMapping(Class<? extends Widget> widgetClass,
+  private DisplayableWidgetMapping(Class<? extends Widget> widgetClass,
       Class<? extends Displayable> displayableClass) {
     this.displayableClass = displayableClass;
     this.widgetClass = widgetClass;
@@ -171,14 +168,14 @@ public class DisplayableWidgetMapping {
     return instance;
   }
 
-  protected void parseMappings(@NonNull List<DisplayableWidgetMapping> mapping) {
+  private void parseMappings(@NonNull List<DisplayableWidgetMapping> mapping) {
     for (DisplayableWidgetMapping displayableWidgetMapping : mapping) {
       viewTypeMapping.put(displayableWidgetMapping.newDisplayable().getViewLayout(),
           displayableWidgetMapping);
     }
   }
 
-  protected List<DisplayableWidgetMapping> createMapping() {
+  private List<DisplayableWidgetMapping> createMapping() {
 
     LinkedList<DisplayableWidgetMapping> displayableWidgetMappings = new LinkedList<>();
 
@@ -380,8 +377,8 @@ public class DisplayableWidgetMapping {
     if (cachedDisplayables == null) {
       List<Displayable> tmp = new LinkedList<>();
 
-      for (DisplayableWidgetMapping displayableWidgetMapping : viewTypeMapping.values()) {
-        tmp.add(displayableWidgetMapping.newDisplayable());
+      for (int i = 0; i < viewTypeMapping.size(); i++) {
+        tmp.add(viewTypeMapping.valueAt(i).newDisplayable());
       }
       cachedDisplayables = Collections.unmodifiableList(tmp);
     }
@@ -400,7 +397,7 @@ public class DisplayableWidgetMapping {
     }
   }
 
-  @Nullable public Displayable newDisplayable() {
+  @Nullable private Displayable newDisplayable() {
     try {
       return displayableClass.newInstance();
     } catch (Exception e) {
@@ -409,32 +406,5 @@ public class DisplayableWidgetMapping {
           String.format("Error instantiating displayable '%s'", displayableClass.getName());
       throw new RuntimeException(errMsg);
     }
-  }
-
-  /**
-   * needed in the partners to get the displayableClass
-   *
-   * @return displayableClass
-   */
-  public Class<? extends Displayable> getDisplayableClass() {
-    return displayableClass;
-  }
-
-  /**
-   * needed in the partners to get the widgetClass
-   *
-   * @return widgetClass
-   */
-  public Class<? extends Widget> getWidgetClass() {
-    return widgetClass;
-  }
-
-  /**
-   * needed in partners to add it's own displayables/widgets
-   *
-   * @return Map of widgets and displayables
-   */
-  public Map<Integer, DisplayableWidgetMapping> getViewTypeMapping() {
-    return viewTypeMapping;
   }
 }
