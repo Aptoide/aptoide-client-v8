@@ -97,7 +97,7 @@ public class PaymentConfirmationSync extends RepositorySync {
     } else {
       confirmationAccessor.save(confirmationFactory.convertToDatabasePaymentConfirmation(
           confirmationFactory.create(product.getId(), paymentConfirmationId,
-              PaymentConfirmation.Status.SYNCING_ERROR, payerId)));
+              PaymentConfirmation.Status.UNKNOWN_ERROR, payerId)));
     }
   }
 

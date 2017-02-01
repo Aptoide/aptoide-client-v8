@@ -65,7 +65,10 @@ public class SyncAdapterBackgroundSync {
     bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
     bundle.putBoolean(ContentResolver.SYNC_EXTRAS_IGNORE_BACKOFF, true);
 
-    return sync(getAccount(), configuration.getContentAuthority(), bundle);
+    final Account account = getAccount();
+    String authority = configuration.getContentAuthority();
+    ContentResolver.setSyncAutomatically(account, authority, true);
+    return sync(account, authority, bundle);
   }
 
   private Completable sync(Account account, String authority, Bundle bundle) {

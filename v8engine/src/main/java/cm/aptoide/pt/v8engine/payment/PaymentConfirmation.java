@@ -11,7 +11,7 @@ package cm.aptoide.pt.v8engine.payment;
 public class PaymentConfirmation {
 
   public enum Status {
-    SYNCING_ERROR,
+    UNKNOWN_ERROR,
     CREATED,
     PROCESSING,
     PENDING,
@@ -65,6 +65,6 @@ public class PaymentConfirmation {
   public boolean isFailed() {
     return Status.FAILED.equals(status)
         || Status.CANCELED.equals(status)
-        || Status.SYNCING_ERROR.equals(status);
+        || Status.UNKNOWN_ERROR.equals(status);
   }
 }
