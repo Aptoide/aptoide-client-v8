@@ -137,7 +137,6 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
     } else {
       toolbar.setTitle(R.string.comments);
     }
-    toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
