@@ -53,6 +53,14 @@ import rx.Observable;
         .toLowerCase(Locale.ENGLISH);
   }
 
+  public static CheckUserCredentialsRequest of(String accessToken, String repoName,
+      String createRepo) {
+    CheckUserCredentialsRequest request = of(accessToken);
+    request.setRepoName(repoName);
+    request.setCreateRepo(createRepo);
+    return request;
+  }
+
   /**
    * Create a checkUserInfo request
    *
@@ -60,20 +68,10 @@ import rx.Observable;
    * @return the built request
    */
   public static CheckUserCredentialsRequest of(String accessToken) {
-    CheckUserCredentialsRequest request = new CheckUserCredentialsRequest(
-        Application.getContext(),
+    CheckUserCredentialsRequest request = new CheckUserCredentialsRequest(Application.getContext(),
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), isDebug()),
-        WebService.getDefaultConverter()
-    );
+        WebService.getDefaultConverter());
     request.setToken(accessToken);
-    return request;
-  }
-
-
-  public static CheckUserCredentialsRequest of(String accessToken, String repoName, String createRepo) {
-    CheckUserCredentialsRequest request = of(accessToken);
-    request.setRepoName(repoName);
-    request.setCreateRepo(createRepo);
     return request;
   }
 
@@ -95,7 +93,7 @@ import rx.Observable;
       parameters.put("maxGles", openGl);
     }
 
-    if(createRepo.equals("1")) {
+    if (createRepo.equals("1")) {
       parameters.put("createRepo", createRepo);
       parameters.put("repo", repoName);
       parameters.put("authMode", "aptoide");

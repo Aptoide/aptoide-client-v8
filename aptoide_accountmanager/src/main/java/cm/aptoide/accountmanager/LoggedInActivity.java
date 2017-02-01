@@ -88,15 +88,6 @@ public class LoggedInActivity extends BaseActivity {
     }));
   }
 
-  private void updateUserInfo() {
-    AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
-      if (pleaseWaitDialog != null && pleaseWaitDialog.isShowing()) {
-        pleaseWaitDialog.dismiss();
-      }
-      finish();
-    }, throwable -> throwable.printStackTrace());
-  }
-
   private void goTo() {
 
     if (getIntent() != null && getIntent().getBooleanExtra(AptoideLoginUtils.IS_FACEBOOK_OR_GOOGLE,
@@ -109,6 +100,15 @@ public class LoggedInActivity extends BaseActivity {
       startActivity(getIntent().setClass(this, CreateStoreActivity.class));
       finish();
     }
+  }
+
+  private void updateUserInfo() {
+    AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
+      if (pleaseWaitDialog != null && pleaseWaitDialog.isShowing()) {
+        pleaseWaitDialog.dismiss();
+      }
+      finish();
+    }, throwable -> throwable.printStackTrace());
   }
 }
 

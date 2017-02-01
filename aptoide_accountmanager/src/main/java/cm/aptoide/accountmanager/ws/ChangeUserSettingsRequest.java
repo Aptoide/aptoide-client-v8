@@ -32,11 +32,6 @@ import rx.Observable;
     return request;
   }
 
-  private ArrayList<String> setupParameters() {
-    list.add("matureswitch=" + (matureSwitch ? ACTIVE : INACTIVE));
-    return list;
-  }
-
   @Override
   protected Observable<ChangeUserSettingsResponse> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
@@ -51,5 +46,10 @@ import rx.Observable;
     }
 
     return interfaces.changeUserSettings(parameters);
+  }
+
+  private ArrayList<String> setupParameters() {
+    list.add("matureswitch=" + (matureSwitch ? ACTIVE : INACTIVE));
+    return list;
   }
 }

@@ -100,15 +100,6 @@ public class CreateUserActivity extends PermissionsBaseActivity
     ImageLoader.loadWithCircleTransform(imagePath, mAvatar);
   }
 
-  private void setupToolbar() {
-    if (mToolbar != null) {
-      setSupportActionBar(mToolbar);
-      getSupportActionBar().setHomeButtonEnabled(true);
-      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-      getSupportActionBar().setTitle(getActivityTitle());
-    }
-  }
-
   private void bindViews() {
     mToolbar = (Toolbar) findViewById(R.id.toolbar);
     mUserAvatar = (RelativeLayout) findViewById(R.id.create_user_image_action);
@@ -116,6 +107,21 @@ public class CreateUserActivity extends PermissionsBaseActivity
     mCreateButton = (Button) findViewById(R.id.create_user_create_profile);
     mAvatar = (ImageView) findViewById(R.id.create_user_image);
     content = findViewById(android.R.id.content);
+  }
+
+  private void getUserData() {
+    userEmail = getIntent().getStringExtra(AptoideLoginUtils.APTOIDE_LOGIN_USER_NAME_KEY);
+    userPassword = getIntent().getStringExtra(AptoideLoginUtils.APTOIDE_LOGIN_PASSWORD_KEY);
+    accessToken = getIntent().getStringExtra(AptoideLoginUtils.APTOIDE_LOGIN_ACCESS_TOKEN_KEY);
+  }
+
+  private void setupToolbar() {
+    if (mToolbar != null) {
+      setSupportActionBar(mToolbar);
+      getSupportActionBar().setHomeButtonEnabled(true);
+      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+      getSupportActionBar().setTitle(getActivityTitle());
+    }
   }
 
   private void setupListeners() {
@@ -195,10 +201,48 @@ public class CreateUserActivity extends PermissionsBaseActivity
     }));
   }
 
-  private void getUserData() {
-    userEmail = getIntent().getStringExtra(AptoideLoginUtils.APTOIDE_LOGIN_USER_NAME_KEY);
-    userPassword = getIntent().getStringExtra(AptoideLoginUtils.APTOIDE_LOGIN_PASSWORD_KEY);
-    accessToken = getIntent().getStringExtra(AptoideLoginUtils.APTOIDE_LOGIN_ACCESS_TOKEN_KEY);
+  public int validateProfileData() {
+    if (getUserUsername().length() != 0) {
+      if (getUserAvatar().length() != 0) {
+        CREATE_USER_REQUEST_CODE = 1;
+      } else if (getUserAvatar().length() == 0) {
+        CREATE_USER_REQUEST_CODE = 2;
+      }
+    } else {
+      CREATE_USER_REQUEST_CODE = 0;
+      onRegisterFail(R.string.nothing_inserted_user);
+    }
+    return CREATE_USER_REQUEST_CODE;
+  }
+
+  private void saveUserDataOnPreferences() {
+    AccountManagerPreferences.setUserAvatar(avatarPath);
+    AccountManagerPreferences.setUserNickName(username);
+  }
+
+  @Override public void onRegisterSuccess(ProgressDialog progressDialog) {
+    ShowMessage.asSnack(content, R.string.user_created);
+    //data.putString(AptoideLoginUtils.APTOIDE_LOGIN_FROM, SIGNUP);
+    progressDialog.dismiss();
+    if (Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
+      startActivity(new Intent(this, LoggedInActivity.class));
+    } else {
+      Toast.makeText(this, R.string.create_profile_pub_pri_suc_login, Toast.LENGTH_LONG).show();
+      AptoideAccountManager.sendLoginCancelledBroadcast();
+    }
+    finish();
+  }
+
+  @Override public void onRegisterFail(@StringRes int reason) {
+    ShowMessage.asSnack(content, reason);
+  }
+
+  @Override public String getUserUsername() {
+    return mUsername == null ? "" : mUsername.getText().toString();
+  }
+
+  @Override public String getUserAvatar() {
+    return avatarPath == null ? "" : avatarPath;
   }
 
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -234,49 +278,5 @@ public class CreateUserActivity extends PermissionsBaseActivity
         }
         break;
     }
-  }
-
-  private void saveUserDataOnPreferences() {
-    AccountManagerPreferences.setUserAvatar(avatarPath);
-    AccountManagerPreferences.setUserNickName(username);
-  }
-
-  @Override public void onRegisterSuccess(ProgressDialog progressDialog) {
-    ShowMessage.asSnack(content, R.string.user_created);
-    //data.putString(AptoideLoginUtils.APTOIDE_LOGIN_FROM, SIGNUP);
-    progressDialog.dismiss();
-    if (Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
-      startActivity(new Intent(this, LoggedInActivity.class));
-    } else {
-      Toast.makeText(this, R.string.create_profile_pub_pri_suc_login, Toast.LENGTH_LONG).show();
-      AptoideAccountManager.sendLoginCancelledBroadcast();
-    }
-    finish();
-  }
-
-  @Override public void onRegisterFail(@StringRes int reason) {
-    ShowMessage.asSnack(content, reason);
-  }
-
-  @Override public String getUserUsername() {
-    return mUsername == null ? "" : mUsername.getText().toString();
-  }
-
-  @Override public String getUserAvatar() {
-    return avatarPath == null ? "" : avatarPath;
-  }
-
-  public int validateProfileData() {
-    if (getUserUsername().length() != 0) {
-      if (getUserAvatar().length() != 0) {
-        CREATE_USER_REQUEST_CODE = 1;
-      } else if (getUserAvatar().length() == 0) {
-        CREATE_USER_REQUEST_CODE = 2;
-      }
-    } else {
-      CREATE_USER_REQUEST_CODE = 0;
-      onRegisterFail(R.string.nothing_inserted_user);
-    }
-    return CREATE_USER_REQUEST_CODE;
   }
 }

@@ -50,16 +50,16 @@ public class LoggedInActivity2ndStep extends BaseActivity {
     return R.layout.logged_in_second_screen;
   }
 
-  private void setupToolbar() {
-    setSupportActionBar(mToolbar);
-    getSupportActionBar().setTitle(getActivityTitle());
-  }
-
   private void bindViews() {
     mToolbar = (Toolbar) findViewById(R.id.toolbar);
     mContinueButton = (Button) findViewById(R.id.logged_in_continue);
     mPrivateProfile = (Button) findViewById(R.id.logged_in_private_button);
     mToolbar = (Toolbar) findViewById(R.id.toolbar);
+  }
+
+  private void setupToolbar() {
+    setSupportActionBar(mToolbar);
+    getSupportActionBar().setTitle(getActivityTitle());
   }
 
   private void setupListeners() {
@@ -92,33 +92,24 @@ public class LoggedInActivity2ndStep extends BaseActivity {
       pleaseWaitDialog.show();
 
       SetUserRequest.of(aptoideClientUUID.getAptoideClientUUID(),
-          UserAccessState.UNLISTED.toString(),
-          AptoideAccountManager.getAccessToken()).execute(answer -> {
-        if (answer.isOk()) {
-          Logger.v(TAG, "user is private");
-          Toast.makeText(LoggedInActivity2ndStep.this, R.string.successful, Toast.LENGTH_SHORT)
-              .show();
-        } else {
-          Logger.v(TAG, "user is private: error: " + answer.getError().getDescription());
-          Toast.makeText(LoggedInActivity2ndStep.this, R.string.unknown_error, Toast.LENGTH_SHORT)
-              .show();
-        }
+          UserAccessState.UNLISTED.toString(), AptoideAccountManager.getAccessToken())
+          .execute(answer -> {
+            if (answer.isOk()) {
+              Logger.v(TAG, "user is private");
+              Toast.makeText(LoggedInActivity2ndStep.this, R.string.successful, Toast.LENGTH_SHORT)
+                  .show();
+            } else {
+              Logger.v(TAG, "user is private: error: " + answer.getError().getDescription());
+              Toast.makeText(LoggedInActivity2ndStep.this, R.string.unknown_error,
+                  Toast.LENGTH_SHORT).show();
+            }
 
-        goTo();
-      }, throwable -> {
+            goTo();
+          }, throwable -> {
 
-        goTo();
-      });
+            goTo();
+          });
     }));
-  }
-
-  private void updateUserInfo() {
-    AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
-      if (pleaseWaitDialog != null && pleaseWaitDialog.isShowing()) {
-        pleaseWaitDialog.dismiss();
-      }
-      finish();
-    }, throwable -> throwable.printStackTrace());
   }
 
   private void goTo() {
@@ -133,5 +124,14 @@ public class LoggedInActivity2ndStep extends BaseActivity {
       startActivity(getIntent().setClass(this, CreateStoreActivity.class));
       finish();
     }
+  }
+
+  private void updateUserInfo() {
+    AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
+      if (pleaseWaitDialog != null && pleaseWaitDialog.isShowing()) {
+        pleaseWaitDialog.dismiss();
+      }
+      finish();
+    }, throwable -> throwable.printStackTrace());
   }
 }

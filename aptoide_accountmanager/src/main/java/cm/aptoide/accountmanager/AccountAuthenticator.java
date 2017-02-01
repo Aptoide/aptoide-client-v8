@@ -25,6 +25,23 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
     super(context);
   }
 
+  @Override
+  public Bundle editProperties(AccountAuthenticatorResponse response, String accountType) {
+    return null;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override public Bundle addAccount(AccountAuthenticatorResponse response, String accountType,
+      String authTokenType, String[] requiredFeatures, Bundle options)
+      throws NetworkErrorException {
+    Logger.d(TAG, "Adding account: type=" + accountType);
+
+    return createAuthActivityIntentBundle(response, accountType, requiredFeatures, authTokenType,
+        null, options);
+  }
+
   protected Bundle createAuthActivityIntentBundle(AccountAuthenticatorResponse response,
       String accountType, String[] requiredFeatures, String authTokenType, String password,
       Bundle options) {
@@ -46,23 +63,6 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
     intent.putExtra(Constants.ARG_OPTIONS_BUNDLE, options);
     intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
     return intent;
-  }
-
-  @Override
-  public Bundle editProperties(AccountAuthenticatorResponse response, String accountType) {
-    return null;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override public Bundle addAccount(AccountAuthenticatorResponse response, String accountType,
-      String authTokenType, String[] requiredFeatures, Bundle options)
-      throws NetworkErrorException {
-    Logger.d(TAG, "Adding account: type=" + accountType);
-
-    return createAuthActivityIntentBundle(response, accountType, requiredFeatures, authTokenType,
-        null, options);
   }
 
   @Override public Bundle confirmCredentials(AccountAuthenticatorResponse response, Account account,

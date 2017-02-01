@@ -24,10 +24,14 @@ import lombok.Data;
   @JsonProperty("queueName") public String queueName;
   public List<ErrorResponse> errors;
   public Settings settings;
-  String repo;
   public String access;
   @JsonProperty("access_confirmed") public Boolean accessConfirmed;
   public RepoDescription repoDescription;
+  String repo;
+
+  public boolean hasErrors() {
+    return errors != null && errors.size() > 0;
+  }
 
   @Data public static class RepoDescription {
     public long id_store;
@@ -40,9 +44,5 @@ import lombok.Data;
 
     public String timeline;
     @JsonProperty("matureswitch") public String matureswitch;
-  }
-
-  public boolean hasErrors() {
-    return errors != null && errors.size() > 0;
   }
 }
