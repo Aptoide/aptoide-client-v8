@@ -7,7 +7,6 @@ package cm.aptoide.pt.preferences.managed;
 
 import android.preference.PreferenceManager;
 import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.preferences.secure.SecureKeys;
 
 /**
  * Created by neuro on 21-04-2016.

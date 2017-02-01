@@ -32,10 +32,10 @@ public abstract class Application extends android.app.Application {
     AptoideUtils.setContext(this);
   }
 
+  protected abstract AptoidePreferencesConfiguration createConfiguration();
+
   @Override public void onCreate() {
     super.onCreate();
     AptoideUtils.setContext(this);
   }
-
-  protected abstract AptoidePreferencesConfiguration createConfiguration();
 }
