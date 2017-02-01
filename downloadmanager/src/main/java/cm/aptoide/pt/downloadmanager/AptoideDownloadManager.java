@@ -65,13 +65,6 @@ public class AptoideDownloadManager {
     return context;
   }
 
-  public static AptoideDownloadManager getInstance() {
-    if (instance == null) {
-      instance = new AptoideDownloadManager();
-    }
-    return instance;
-  }
-
   public void initDownloadService(Context context) {
     AptoideDownloadManager.context = context;
     createDownloadDirs();
@@ -167,17 +160,39 @@ public class AptoideDownloadManager {
     }).distinctUntilChanged();
   }
 
+  @NonNull @Download.DownloadState private int getStateIfFileExists(Download downloadToCheck) {
+    @Download.DownloadState int downloadStatus = Download.COMPLETED;
+    if (downloadToCheck.getOverallDownloadStatus() == Download.PROGRESS) {
+      downloadStatus = Download.PROGRESS;
+    } else {
+      for (final FileToDownload fileToDownload : downloadToCheck.getFilesToDownload()) {
+        if (!FileUtils.fileExists(fileToDownload.getFilePath())) {
+          downloadStatus = Download.FILE_MISSING;
+          break;
+        }
+      }
+    }
+    return downloadStatus;
+  }
+
+  public static AptoideDownloadManager getInstance() {
+    if (instance == null) {
+      instance = new AptoideDownloadManager();
+    }
+    return instance;
+  }
+
   public Observable<Download> getCurrentDownload() {
     return getDownloads().flatMapIterable(downloads -> downloads)
         .filter(downloads -> downloads.getOverallDownloadStatus() == Download.PROGRESS);
   }
 
-  public Observable<List<Download>> getCurrentDownloads() {
-    return downloadAccessor.getRunningDownloads();
-  }
-
   public Observable<List<Download>> getDownloads() {
     return downloadAccessor.getAll();
+  }
+
+  public Observable<List<Download>> getCurrentDownloads() {
+    return downloadAccessor.getRunningDownloads();
   }
 
   /**
@@ -234,21 +249,6 @@ public class AptoideDownloadManager {
     this.downloadAccessor = downloadAccessor;
   }
 
-  @NonNull @Download.DownloadState private int getStateIfFileExists(Download downloadToCheck) {
-    @Download.DownloadState int downloadStatus = Download.COMPLETED;
-    if (downloadToCheck.getOverallDownloadStatus() == Download.PROGRESS) {
-      downloadStatus = Download.PROGRESS;
-    } else {
-      for (final FileToDownload fileToDownload : downloadToCheck.getFilesToDownload()) {
-        if (!FileUtils.fileExists(fileToDownload.getFilePath())) {
-          downloadStatus = Download.FILE_MISSING;
-          break;
-        }
-      }
-    }
-    return downloadStatus;
-  }
-
   void currentDownloadFinished() {
     startNextDownload();
   }
@@ -273,6 +273,16 @@ public class AptoideDownloadManager {
     }
   }
 
+  public Observable<Download> getNextDownload() {
+    return downloadAccessor.getInQueueSortedDownloads().map(downloads -> {
+      if (downloads == null || downloads.size() <= 0) {
+        return null;
+      } else {
+        return downloads.get(0);
+      }
+    });
+  }
+
   /**
    * check if there is any download in progress
    *
@@ -284,16 +294,6 @@ public class AptoideDownloadManager {
 
   public void setDownloading(boolean downloading) {
     isDownloading = downloading;
-  }
-
-  public Observable<Download> getNextDownload() {
-    return downloadAccessor.getInQueueSortedDownloads().map(downloads -> {
-      if (downloads == null || downloads.size() <= 0) {
-        return null;
-      } else {
-        return downloads.get(0);
-      }
-    });
   }
 
   public void removeDownload(String md5) {
@@ -323,10 +323,6 @@ public class AptoideDownloadManager {
     });
   }
 
-  private void deleteDownloadFromDb(String md5) {
-    downloadAccessor.delete(md5);
-  }
-
   private void deleteDownloadFiles(Download download) {
     for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
       if (download.getOverallDownloadStatus() == Download.COMPLETED) {
@@ -335,6 +331,10 @@ public class AptoideDownloadManager {
         FileUtils.removeFile(DOWNLOADS_STORAGE_PATH + fileToDownload.getFileName() + ".temp");
       }
     }
+  }
+
+  private void deleteDownloadFromDb(String md5) {
+    downloadAccessor.delete(md5);
   }
 
   public Observable<Void> invalidateDatabase() {

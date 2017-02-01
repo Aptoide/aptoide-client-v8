@@ -67,11 +67,6 @@ import rx.schedulers.Schedulers;
     return apksDatas;
   }
 
-  private Body getBody(List<ApksData> apksData, int n) {
-    return new Body(body).setApksData(apksData.subList(n,
-        n + SPLIT_SIZE > apksData.size() ? n + apksData.size() % SPLIT_SIZE : n + SPLIT_SIZE));
-  }
-
   @Override protected Observable<ListAppsUpdates> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
     return Observable.just(body.getApksData().size()).flatMap(bodySize -> {
@@ -126,6 +121,11 @@ import rx.schedulers.Schedulers;
     });
   }
 
+  private Body getBody(List<ApksData> apksData, int n) {
+    return new Body(body).setApksData(apksData.subList(n,
+        n + SPLIT_SIZE > apksData.size() ? n + apksData.size() % SPLIT_SIZE : n + SPLIT_SIZE));
+  }
+
   @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody {
 
     @Accessors(chain = true) @Getter @Setter private List<ApksData> apksData;
@@ -142,18 +142,6 @@ import rx.schedulers.Schedulers;
       setSystemAppsUpdates();
     }
 
-    public Body(Body body) {
-      this.apksData = body.getApksData();
-      this.storeIds = body.getStoreIds();
-      this.setQ(body.getQ());
-      this.setCountry(body.getCountry());
-      this.setAptoideVercode(body.getAptoideVercode());
-      this.aaid = body.getAaid();
-      this.setAptoideId(body.getAptoideId());
-      this.notApkTags = body.getNotApkTags();
-      this.notPackageTags = body.getNotPackageTags();
-    }
-
     private void setNotApkTags() {
       if (ManagerPreferences.getUpdatesFilterAlphaBetaKey()) {
         this.notApkTags = "alpha,beta";
@@ -164,6 +152,18 @@ import rx.schedulers.Schedulers;
       if (!ManagerPreferences.getUpdatesSystemAppsKey()) {
         this.notPackageTags = "system";
       }
+    }
+
+    public Body(Body body) {
+      this.apksData = body.getApksData();
+      this.storeIds = body.getStoreIds();
+      this.setQ(body.getQ());
+      this.setCountry(body.getCountry());
+      this.setAptoideVercode(body.getAptoideVercode());
+      this.aaid = body.getAaid();
+      this.setAptoideId(body.getAptoideId());
+      this.notApkTags = body.getNotApkTags();
+      this.notPackageTags = body.getNotPackageTags();
     }
   }
 

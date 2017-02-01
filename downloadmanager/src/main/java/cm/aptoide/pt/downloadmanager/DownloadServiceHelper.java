@@ -52,6 +52,27 @@ import rx.schedulers.Schedulers;
     startDownloadService(md5, AptoideDownloadManager.DOWNLOADMANAGER_ACTION_PAUSE);
   }
 
+  private void startDownloadService(String md5, String action) {
+    Observable.fromCallable(() -> {
+      Intent intent = new Intent(Application.getContext(), DownloadService.class);
+      intent.putExtra(AptoideDownloadManager.FILE_MD5_EXTRA, md5);
+      intent.setAction(action);
+      Application.getContext().startService(intent);
+      return null;
+    }).subscribeOn(Schedulers.computation()).subscribe(o -> {
+    }, e -> {
+      CrashReport.getInstance().log(e);
+    });
+  }
+
+  public Observable<Download> startDownload(PermissionRequest permissionRequest,
+      Download download) {
+    return startDownload(AccessorFactory.getAccessorFor(Download.class), permissionRequest,
+        download).doOnError(e -> {
+      CrashReport.getInstance().log(e);
+    });
+  }
+
   /**
    * Starts a download. If there is a download running it is added to queue
    *
@@ -80,25 +101,14 @@ import rx.schedulers.Schedulers;
         }).flatMap(aDownload -> getDownload(download.getMd5())));
   }
 
-  public Observable<Download> startDownload(PermissionRequest permissionRequest,
-      Download download) {
-    return startDownload(AccessorFactory.getAccessorFor(Download.class), permissionRequest,
-        download).doOnError(e -> {
-      CrashReport.getInstance().log(e);
-    });
-  }
-
-  private void startDownloadService(String md5, String action) {
-    Observable.fromCallable(() -> {
-      Intent intent = new Intent(Application.getContext(), DownloadService.class);
-      intent.putExtra(AptoideDownloadManager.FILE_MD5_EXTRA, md5);
-      intent.setAction(action);
-      Application.getContext().startService(intent);
-      return null;
-    }).subscribeOn(Schedulers.computation()).subscribe(o -> {
-    }, e -> {
-      CrashReport.getInstance().log(e);
-    });
+  /**
+   * This method finds the download with the appId
+   *
+   * @param md5 md5 sum of the app file
+   * @return an observable with the download
+   */
+  public Observable<Download> getDownload(String md5) {
+    return aptoideDownloadManager.getDownload(md5);
   }
 
   /**
@@ -117,16 +127,6 @@ import rx.schedulers.Schedulers;
    */
   public Observable<List<Download>> getAllDownloads() {
     return aptoideDownloadManager.getDownloads();
-  }
-
-  /**
-   * This method finds the download with the appId
-   *
-   * @param md5 md5 sum of the app file
-   * @return an observable with the download
-   */
-  public Observable<Download> getDownload(String md5) {
-    return aptoideDownloadManager.getDownload(md5);
   }
 
   public void removeDownload(String md5) {

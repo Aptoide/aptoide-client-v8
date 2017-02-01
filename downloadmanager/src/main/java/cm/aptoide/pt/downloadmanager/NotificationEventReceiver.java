@@ -17,6 +17,10 @@ import android.text.TextUtils;
 
   private static final String TAG = NotificationEventReceiver.class.getSimpleName();
 
+  @Override public void onReceive(Context context, Intent intent) {
+    onReceive(intent);
+  }
+
   public void onReceive(Intent intent) {
 
     String action = intent.getAction();
@@ -59,9 +63,5 @@ import android.text.TextUtils;
           }
       }
     }
-  }
-
-  @Override public void onReceive(Context context, Intent intent) {
-    onReceive(intent);
   }
 }
