@@ -9,6 +9,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.ListFullReviewsRequest;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.FullReview;
 import cm.aptoide.pt.model.v7.ListFullReviews;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -26,10 +27,16 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
   // on v6, 50 was the limit
   private static final int REVIEWS_LIMIT = 25;
   private static final String STORE_ID = "storeId";
+  private final AptoideClientUUID aptoideClientUUID;
 
   private long storeId;
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
   private List<Displayable> displayables;
+
+  public LatestReviewsFragment() {
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+  }
 
   public static LatestReviewsFragment newInstance(long storeId) {
     LatestReviewsFragment fragment = new LatestReviewsFragment();
@@ -68,8 +75,7 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
       ListFullReviewsRequest listFullReviewsRequest =
           ListFullReviewsRequest.of(storeId, REVIEWS_LIMIT, 0,
               StoreUtils.getStoreCredentials(storeId), AptoideAccountManager.getAccessToken(),
-              new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                  DataProvider.getContext()).getAptoideClientUUID());
+              aptoideClientUUID.getAptoideClientUUID());
       Action1<ListFullReviews> listFullReviewsAction = listTopFullReviews -> {
         List<FullReview> reviews = listTopFullReviews.getDatalist().getList();
         displayables = new LinkedList<>();
@@ -79,14 +85,14 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
         addDisplayables(displayables);
       };
 
-      recyclerView.clearOnScrollListeners();
+      getRecyclerView().clearOnScrollListeners();
       endlessRecyclerOnScrollListener =
           new EndlessRecyclerOnScrollListener(this.getAdapter(), listFullReviewsRequest,
               listFullReviewsAction, Throwable::printStackTrace, true);
-      recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+      getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
       endlessRecyclerOnScrollListener.onLoadMore(refresh);
     } else {
-      recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+      getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     }
   }
 

@@ -9,7 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
@@ -17,6 +17,7 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.GetAppMeta;
@@ -53,6 +54,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   @Getter private static final String APP_NAME = "app_name";
   @Getter private static final String REVIEW_ID = "review_id";
   @Getter private static final String STORE_THEME = "store_theme";
+  private final AptoideClientUUID aptoideClientUUID;
 
   private long appId;
   @Getter private long reviewId;
@@ -64,6 +66,11 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   private RatingTotalsLayout ratingTotalsLayout;
   private RatingBarsLayout ratingBarsLayout;
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
+
+  public RateAndReviewsFragment() {
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+  }
 
   public static RateAndReviewsFragment newInstance(long appId, String appName, String storeName,
       String packageName, String storeTheme) {
@@ -117,8 +124,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
         installMenuItem.setTitle(R.string.open);
       }
     }, err -> {
-      Logger.e(TAG, err);
-      CrashReports.logException(err);
+      CrashReport.getInstance().log(err);
     });
   }
 
@@ -138,8 +144,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
 
   private void fetchRating(boolean refresh) {
     GetAppRequest.of(appId, AptoideAccountManager.getAccessToken(),
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID(), packageName)
+        aptoideClientUUID.getAptoideClientUUID(), packageName)
         .observe(refresh)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
@@ -152,7 +157,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
           }
           finishLoading();
         }, err -> {
-          CrashReports.logException(err);
+          CrashReport.getInstance().log(err);
         });
   }
 
@@ -164,13 +169,12 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   private void fetchReviews() {
     ListReviewsRequest reviewsRequest =
         ListReviewsRequest.of(storeName, packageName, AptoideAccountManager.getAccessToken(),
-            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                DataProvider.getContext()).getAptoideClientUUID());
+            aptoideClientUUID.getAptoideClientUUID());
 
     endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(this.getAdapter(), reviewsRequest,
             new ListFullReviewsSuccessRequestListener(this), Throwable::printStackTrace);
-    recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+    getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(false);
   }
 
@@ -183,6 +187,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    super.load(create, refresh, savedInstanceState);
     Logger.d(TAG, "Other versions should refresh? " + create);
     fetchRating(refresh);
     fetchReviews();
@@ -241,11 +246,11 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   }
 
   void checkAndRemoveProgressBarDisplayable() {
-    for (int i = 0; i < adapter.getItemCount(); i++) {
-      Displayable displayable = adapter.getDisplayable(i);
+    for (int i = 0; i < getAdapter().getItemCount(); i++) {
+      Displayable displayable = getAdapter().getDisplayable(i);
       if (displayable instanceof ProgressBarDisplayable) {
-        adapter.removeDisplayable(i);
-        adapter.notifyItemRemoved(i);
+        getAdapter().removeDisplayable(i);
+        getAdapter().notifyItemRemoved(i);
       }
     }
   }

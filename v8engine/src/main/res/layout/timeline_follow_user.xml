@@ -20,7 +20,9 @@
       android:layout_height="26dp"
       android:layout_alignBottom="@+id/main_icon"
       android:layout_toLeftOf="@+id/names_layout"
-      tools:src="@drawable/icon_store" />
+      android:layout_toStartOf="@+id/names_layout"
+      tools:src="@drawable/icon_store"
+      />
 
 
   <LinearLayout

@@ -4,6 +4,7 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.AnalyticsBaseBody;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import lombok.Builder;
@@ -18,9 +19,15 @@ import rx.Observable;
 
 public class SendEventRequest extends V7<BaseV7Response, SendEventRequest.Body> {
 
+  private final static AptoideClientUUID aptoideClientUUID;
   private static String NAME;
   private static String ACTION = "CLICK";
   private static String CONTEXT = "TIMELINE";
+
+  static {
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+  }
 
   protected SendEventRequest(Body body, String baseHost) {
     super(body, baseHost);
@@ -28,9 +35,7 @@ public class SendEventRequest extends V7<BaseV7Response, SendEventRequest.Body> 
 
   public static SendEventRequest of(String accessToken, Body.Data data, String eventName) {
     NAME = eventName;
-    BaseBodyDecorator decorator = new BaseBodyDecorator(
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID());
+    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID.getAptoideClientUUID());
     SendEventRequest.Body body =
         new SendEventRequest.Body(data, DataProvider.getConfiguration().getAppId());
 

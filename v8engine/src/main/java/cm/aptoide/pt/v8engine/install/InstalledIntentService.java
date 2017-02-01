@@ -3,7 +3,7 @@ package cm.aptoide.pt.v8engine.install;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreMinimalAdAccessor;
 import cm.aptoide.pt.database.realm.Installed;
@@ -24,6 +24,7 @@ import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import cm.aptoide.pt.v8engine.util.referrer.ReferrerUtils;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
 import rx.subscriptions.CompositeSubscription;
 
 public class InstalledIntentService extends IntentService {
@@ -113,10 +114,11 @@ public class InstalledIntentService extends IntentService {
         analytics.sendEvent(event);
         Logger.d(TAG, "Event sent");
       } else {
-        Logger.e(TAG, new NullPointerException("Event not sent, the event was null"));
+        CrashReport.getInstance()
+            .log(new NullPointerException("Event not sent, the event was null"));
       }
     } else {
-      Logger.e(TAG, new NullPointerException("PackageInfo is null"));
+      CrashReport.getInstance().log(new NullPointerException("PackageInfo is null"));
     }
   }
 
@@ -134,12 +136,12 @@ public class InstalledIntentService extends IntentService {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(
                     minimalAd -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES,
-                        true)).onErrorReturn(throwable1 -> null)
+                        true))
+                .onErrorReturn(throwable1 -> null)
                 .subscribe();
           }
         }, err -> {
-          Logger.e(TAG, err);
-          CrashReports.logException(err);
+          CrashReport.getInstance().log(err);
         });
 
     subscriptions.add(unManagedSubscription);
@@ -162,14 +164,13 @@ public class InstalledIntentService extends IntentService {
     if (checkAndLogNullPackageInfo(packageInfo, packageName)) {
       return packageInfo;
     }
-    installedRepository.insert(new Installed(packageInfo));
+    installedRepository.save(new Installed(packageInfo));
     return packageInfo;
   }
 
   private PackageInfo databaseOnPackageReplaced(String packageName) {
     final Update update = updatesRepository.get(packageName).doOnError(throwable -> {
-      Logger.e(TAG, throwable);
-      CrashReports.logException(throwable);
+      CrashReport.getInstance().log(throwable);
     }).onErrorReturn(throwable -> null).toBlocking().first();
 
     if (update != null && update.getPackageName() != null && update.getTrustedBadge() != null) {
@@ -182,16 +183,20 @@ public class InstalledIntentService extends IntentService {
       return packageInfo;
     }
 
+    Action0 insertApp = () -> installedRepository.save(new Installed(packageInfo));
+
     if (update != null) {
       if (packageInfo.versionCode >= update.getVersionCode()) {
+        // remove old update and on complete insert new app.
         updatesRepository.remove(update).doOnError(throwable -> {
-          Logger.e(TAG, throwable);
-          CrashReports.logException(throwable);
-        }).toBlocking().first();
+          CrashReport.getInstance().log(throwable);
+        }).doOnCompleted(insertApp);
       }
+    } else {
+      // sync call to insert
+      insertApp.call();
     }
 
-    installedRepository.insert(new Installed(packageInfo));
     return packageInfo;
   }
 
@@ -201,8 +206,8 @@ public class InstalledIntentService extends IntentService {
    */
   private boolean checkAndLogNullPackageInfo(PackageInfo packageInfo, String packageName) {
     if (packageInfo == null) {
-      CrashReports.logException(
-          new IllegalArgumentException("PackageName null for package " + packageName));
+      CrashReport.getInstance()
+          .log(new IllegalArgumentException("PackageName null for package " + packageName));
       return true;
     } else {
       return false;

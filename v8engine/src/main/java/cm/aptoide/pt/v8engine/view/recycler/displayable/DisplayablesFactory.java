@@ -7,11 +7,10 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
 import android.text.TextUtils;
 import android.util.Pair;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.FullReview;
@@ -171,17 +170,7 @@ public class DisplayablesFactory {
     if (viewObject instanceof GetStoreMeta && ((GetStoreMeta) viewObject).getData() != null) {
       displayables.add(new MyStoreDisplayable(((GetStoreMeta) viewObject)));
     } else {
-      // TODO: 22/12/2016 trinkes remove this hammered!!!!
-      GetStoreMeta meta = AptoideAccountManager.refreshUserInfoData()
-          .map(userInfo -> convertUserInfoStore(userInfo))
-          .onErrorReturn(throwable -> null)
-          .toBlocking()
-          .first();
-      if (meta == null) {
-        displayables.add(new CreateStoreDisplayable());
-      } else {
-        displayables.add(new MyStoreDisplayable(meta));
-      }
+      displayables.add(new CreateStoreDisplayable());
     }
     return displayables;
   }
@@ -222,8 +211,7 @@ public class DisplayablesFactory {
     return new DisplayableGroup(displayables);
   }
 
-  private static Displayable createReviewsDisplayables(
-      ListFullReviews listFullReviews) {
+  private static Displayable createReviewsDisplayables(ListFullReviews listFullReviews) {
     List<FullReview> reviews = listFullReviews.getDatalist().getList();
     final List<Displayable> displayables = new ArrayList<>(reviews.size());
     for (int i = 0; i < reviews.size(); i++) {
@@ -235,7 +223,9 @@ public class DisplayablesFactory {
 
   private static Displayable getAds(GetStoreWidgets.WSWidget wsWidget) {
     GetAdsResponse getAdsResponse = (GetAdsResponse) wsWidget.getViewObject();
-    if (wsWidget.getViewObject() != null) {
+    if (getAdsResponse != null
+        && getAdsResponse.getAds() != null
+        && getAdsResponse.getAds().size() > 0) {
       List<GetAdsResponse.Ad> ads = getAdsResponse.getAds();
       List<Displayable> tmp = new ArrayList<>(ads.size());
       for (GetAdsResponse.Ad ad : ads) {
@@ -358,7 +348,7 @@ public class DisplayablesFactory {
       }
       return tmp;
     }).onErrorReturn(throwable -> {
-      Logger.e(TAG, throwable);
+      CrashReport.getInstance().log(throwable);
       return Collections.emptyList();
     }).toBlocking().first());
   }

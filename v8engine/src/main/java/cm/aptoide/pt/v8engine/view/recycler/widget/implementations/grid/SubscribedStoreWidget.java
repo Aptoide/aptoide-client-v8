@@ -98,7 +98,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
     //            }
     //          }, e -> {
     //            Logger.e(TAG, e);
-    //            CrashReports.logException(e);
+    //            CrashReport.getInstance().log(e);
     //          }));
     //});
   }

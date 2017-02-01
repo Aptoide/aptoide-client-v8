@@ -234,6 +234,11 @@ public class FragmentProviderImpl implements FragmentProvider {
     return DescriptionFragment.newInstance(appId, packageName, storeName, storeTheme);
   }
 
+  @Override
+  public Fragment newDescriptionFragment(String appName, String description, String storeTheme) {
+    return DescriptionFragment.newInstance(appName, description, storeTheme);
+  }
+
   @Override public Fragment newSocialFragment(String socialUrl, String pageTitle) {
     return SocialFragment.newInstance(socialUrl, pageTitle);
   }
@@ -253,8 +258,8 @@ public class FragmentProviderImpl implements FragmentProvider {
   }
 
   @Override public Fragment newTimeLineFollowStatsFragment(
-      TimeLineFollowFragment.FollowFragmentOpenMode openMode, String storeTheme, String cardUid) {
-    return TimeLineFollowFragment.newInstance(openMode, storeTheme, cardUid);
+      TimeLineFollowFragment.FollowFragmentOpenMode openMode, String storeTheme, String cardUid, long numberOfLikes) {
+    return TimeLineFollowFragment.newInstance(openMode, storeTheme, cardUid, numberOfLikes);
   }
 
   @Override

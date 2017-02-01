@@ -74,7 +74,6 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
       + BuildConfig.APTOIDE_WEB_SERVICES_V7_HOST
       + "/api/7/";
 
-  private static final int REFRESH_TOKEN_DELAY = 1000;
   @Getter protected final B body;
   private final String INVALID_ACCESS_TOKEN_CODE = "AUTH-2";
   private boolean accessTokenRetry = false;
@@ -152,8 +151,7 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
             accessTokenRetry = true;
             return DataProvider.invalidateAccessToken().flatMap(s -> {
               V7.this.body.setAccessToken(s);
-              return V7.this.observe(bypassCache)
-                  .delaySubscription(REFRESH_TOKEN_DELAY, TimeUnit.MILLISECONDS);
+              return V7.this.observe(bypassCache);
             });
           } else {
             return Observable.error(new NetworkErrorException());

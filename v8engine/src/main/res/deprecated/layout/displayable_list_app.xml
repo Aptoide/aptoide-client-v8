@@ -23,6 +23,7 @@
         android:layout_width="96dp"
         android:layout_height="96dp"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:padding="8dp"
         />
 
@@ -31,6 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_toRightOf="@+id/icon"
+        android:layout_toEndOf="@+id/icon"
         android:orientation="vertical"
         android:padding="8dp"
         >

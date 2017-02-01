@@ -28,12 +28,12 @@ import cm.aptoide.accountmanager.Constants;
 import cm.aptoide.accountmanager.util.UserCompleteData;
 import cm.aptoide.accountmanager.ws.LoginMode;
 import cm.aptoide.pt.actions.UserData;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagedKeys;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.services.PullingContentService;
 import java.util.Locale;
 import java.util.Map;
@@ -92,7 +92,6 @@ public class ToolboxContentProvider extends ContentProvider {
           }
           throw new IllegalStateException("User not logged in.");
         case REFRESH_TOKEN:
-
           final String refreshedToken = AptoideAccountManager.getRefreshToken();
 
           if (refreshedToken != null) {
@@ -227,8 +226,7 @@ public class ToolboxContentProvider extends ContentProvider {
       }
     } catch (NullPointerException e) {
       //it can happen if package manager or context is null
-      CrashReports.logException(e);
-      Logger.e(TAG, "update: " + e);
+      CrashReport.getInstance().log(e);
     }
     return changed;
   }

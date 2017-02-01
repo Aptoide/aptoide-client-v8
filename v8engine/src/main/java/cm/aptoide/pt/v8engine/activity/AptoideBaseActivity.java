@@ -17,7 +17,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import cm.aptoide.pt.actions.PermissionRequest;
-import cm.aptoide.pt.crashreports.AptoideCrashLogger;
+import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -57,11 +58,13 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
     // Fabric.with(this, new Crashlytics(), new CrashlyticsNdk());
 
     if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-      AptoideCrashLogger.getInstance()
-          .setLanguage(getResources().getConfiguration().locale.getLanguage());
+      ((CrashlyticsCrashLogger) CrashReport.getInstance()
+          .getLogger(CrashlyticsCrashLogger.class)).setLanguage(
+          getResources().getConfiguration().locale.getLanguage());
     } else {
-      AptoideCrashLogger.getInstance()
-          .setLanguage(getResources().getConfiguration().getLocales().get(0).getLanguage());
+      ((CrashlyticsCrashLogger) CrashReport.getInstance()
+          .getLogger(CrashlyticsCrashLogger.class)).setLanguage(
+          getResources().getConfiguration().getLocales().get(0).getLanguage());
     }
 
     setUpAnalytics();

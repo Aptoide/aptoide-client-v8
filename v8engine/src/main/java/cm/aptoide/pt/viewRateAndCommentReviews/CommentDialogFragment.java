@@ -11,13 +11,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.PostCommentForReview;
 import cm.aptoide.pt.dataprovider.ws.v7.PostCommentForTimelineArticle;
 import cm.aptoide.pt.dataprovider.ws.v7.store.PostCommentForStore;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -40,19 +41,22 @@ public class CommentDialogFragment extends RxDialogFragment {
   private static final String RESOURCE_ID_AS_STRING = "resource_id_as_string";
   private static final String COMMENT_TYPE = "comment_type";
   private static final String PREVIOUS_COMMENT_ID = "previous_comment_id";
-
+  private final AptoideClientUUID aptoideClientUUID;
+  private final String onEmptyTextError;
   private String appOrStoreName;
-
   private long idAsLong;
   private String idAsString;
-
   private CommentType commentType;
   private Long previousCommentId;
-
   private TextInputLayout textInputLayout;
   private Button commentButton;
-  private final String onEmptyTextError;
   private boolean reply;
+
+  public CommentDialogFragment() {
+    onEmptyTextError = AptoideUtils.StringU.getResString(R.string.error_MARG_107);
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+  }
 
   public static CommentDialogFragment newInstanceStoreCommentReply(long storeId,
       long previousCommentId, String storeName) {
@@ -61,7 +65,7 @@ public class CommentDialogFragment extends RxDialogFragment {
     args.putLong(RESOURCE_ID_AS_LONG, storeId);
     args.putLong(PREVIOUS_COMMENT_ID, previousCommentId);
 
-    if(!TextUtils.isEmpty(storeName)) {
+    if (!TextUtils.isEmpty(storeName)) {
       args.putString(APP_OR_STORE_NAME, storeName);
     }
 
@@ -75,7 +79,7 @@ public class CommentDialogFragment extends RxDialogFragment {
     args.putString(COMMENT_TYPE, CommentType.REVIEW.name());
     args.putLong(RESOURCE_ID_AS_LONG, id);
 
-    if(!TextUtils.isEmpty(appName)) {
+    if (!TextUtils.isEmpty(appName)) {
       args.putString(APP_OR_STORE_NAME, appName);
     }
 
@@ -89,7 +93,7 @@ public class CommentDialogFragment extends RxDialogFragment {
     args.putString(COMMENT_TYPE, CommentType.STORE.name());
     args.putLong(RESOURCE_ID_AS_LONG, storeId);
 
-    if(!TextUtils.isEmpty(storeName)) {
+    if (!TextUtils.isEmpty(storeName)) {
       args.putString(APP_OR_STORE_NAME, storeName);
     }
 
@@ -118,10 +122,6 @@ public class CommentDialogFragment extends RxDialogFragment {
     CommentDialogFragment fragment = new CommentDialogFragment();
     fragment.setArguments(args);
     return fragment;
-  }
-
-  public CommentDialogFragment() {
-    onEmptyTextError = AptoideUtils.StringU.getResString(R.string.error_MARG_107);
   }
 
   private void loadArguments() {
@@ -221,7 +221,7 @@ public class CommentDialogFragment extends RxDialogFragment {
         .flatMap(inputText -> submitComment(inputText).observeOn(AndroidSchedulers.mainThread()))
         .map(wsResponse -> wsResponse.isOk())
         .doOnError(e -> {
-          Logger.e(TAG, e);
+          CrashReport.getInstance().log(e);
           ShowMessage.asSnack(CommentDialogFragment.this, R.string.error_occured);
         })
         .retry()
@@ -235,8 +235,7 @@ public class CommentDialogFragment extends RxDialogFragment {
           }
           ShowMessage.asSnack(CommentDialogFragment.this, R.string.error_occured);
         }, err -> {
-          Logger.e(TAG, err);
-          CrashReports.logException(err);
+          CrashReport.getInstance().log(err);
         });
   }
 
@@ -246,35 +245,30 @@ public class CommentDialogFragment extends RxDialogFragment {
       case REVIEW:
         // new comment on a review
         return PostCommentForReview.of(idAsLong, inputText, AptoideAccountManager.getAccessToken(),
-            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                DataProvider.getContext()).getAptoideClientUUID()).observe();
+            aptoideClientUUID.getAptoideClientUUID()).observe();
 
       case STORE:
         // check if this is a new comment on a store or a reply to a previous one
         if (previousCommentId == null) {
           return PostCommentForStore.of(idAsLong, inputText, AptoideAccountManager.getAccessToken(),
-              new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                  DataProvider.getContext()).getAptoideClientUUID()).observe();
+              aptoideClientUUID.getAptoideClientUUID()).observe();
         }
 
         return PostCommentForStore.of(idAsLong, previousCommentId, inputText,
-            AptoideAccountManager.getAccessToken(),
-            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                DataProvider.getContext()).getAptoideClientUUID()).observe();
+            AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
+            .observe();
 
       case TIMELINE:
         // check if this is a new comment on a article or a reply to a previous one
         if (previousCommentId == null) {
           return PostCommentForTimelineArticle.of(idAsString, inputText,
-              AptoideAccountManager.getAccessToken(),
-              new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                  DataProvider.getContext()).getAptoideClientUUID()).observe();
+              AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
+              .observe();
         }
 
         return PostCommentForTimelineArticle.of(idAsString, previousCommentId, inputText,
-            AptoideAccountManager.getAccessToken(),
-            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                DataProvider.getContext()).getAptoideClientUUID()).observe();
+            AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
+            .observe();
     }
     // default case
     Logger.e(TAG, "Unable to create reply due to missing comment type");

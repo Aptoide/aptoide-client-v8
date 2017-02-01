@@ -107,6 +107,8 @@ public interface FragmentProvider {
   Fragment newDescriptionFragment(long appId, String packageName, String storeName,
       String storeTheme);
 
+  Fragment newDescriptionFragment(String appName, String description, String storeTheme);
+
   Fragment newSocialFragment(String socialUrl, String pageTitle);
 
   Fragment newSettingsFragment();
@@ -117,7 +119,7 @@ public interface FragmentProvider {
       long followNumber, String storeTheme);
 
   Fragment newTimeLineFollowStatsFragment(TimeLineFollowFragment.FollowFragmentOpenMode openMode,
-      String storeTheme, String cardUid);
+      String storeTheme, String cardUid, long numberOfLikes);
 
   Fragment newCommentGridRecyclerFragment(CommentType commentType, String elementId);
 

@@ -13,9 +13,8 @@ import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
@@ -30,7 +29,6 @@ import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEventCon
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadInstallBaseEvent;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEvent;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEventConverter;
-import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
 import cm.aptoide.pt.v8engine.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
@@ -46,9 +44,6 @@ import rx.android.schedulers.AndroidSchedulers;
 
 import static cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver.SCHEDULE_DOWNLOADS;
 
-/**
- * Created by sithengineer on 19/07/16.
- */
 public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter> {
 
   public static final String OPEN_SCHEDULE_DOWNLOADS_WITH_POPUP_URI =
@@ -62,8 +57,6 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
   private DownloadEventConverter downloadConverter;
   private Analytics analytics;
   private InstallEventConverter installConverter;
-
-  //	private CompositeSubscription compositeSubscription;
 
   public ScheduledDownloadsFragment() {
   }
@@ -83,9 +76,7 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     Installer installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
-    installManager = new InstallManager(AptoideDownloadManager.getInstance(), installer,
-        AccessorFactory.getAccessorFor(Download.class),
-        AccessorFactory.getAccessorFor(Installed.class));
+    installManager = new InstallManager(AptoideDownloadManager.getInstance(), installer);
     downloadConverter = new DownloadEventConverter();
     installConverter = new InstallEventConverter();
     analytics = Analytics.getInstance();
@@ -98,7 +89,6 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
-    Logger.d(TAG, "refresh excluded updates? " + (create ? "yes" : "no"));
     if (create) {
       switch (openMode) {
         case normal:
@@ -127,17 +117,6 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
     fetchScheduledDownloads();
   }
 
-  //	@Override
-  //	public void onDestroyView() {
-  //		super.onDestroyView();
-  //		Observable.empty().observeOn(RealmSchedulers.getScheduler()).concatWith(Observable.fromCallable(() -> {
-  //			if (compositeSubscription != null && compositeSubscription.hasSubscriptions()) {
-  //				compositeSubscription.unsubscribe();
-  //			}
-  //			return null;
-  //		})).subscribe();
-  //	}
-
   @Override public int getContentViewId() {
     return R.layout.fragment_with_toolbar;
   }
@@ -165,7 +144,7 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
         .subscribe(scheduledDownloads -> {
           updateUi(scheduledDownloads);
         }, t -> {
-          Logger.e(TAG, t);
+          CrashReport.getInstance().log(t);
           emptyData.setText(R.string.no_sch_downloads);
           emptyData.setVisibility(View.VISIBLE);
           clearDisplayables();
@@ -197,7 +176,7 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
       for (final Scheduled scheduledDownload : scheduledDownloadList) {
         displayables.add(new ScheduledDownloadDisplayable(scheduledDownload, installManager));
       }
-      setDisplayables(displayables);
+      clearDisplayables().addDisplayables(displayables, true);
     }
   }
 
@@ -279,9 +258,7 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
     InstallerFactory installerFactory = new InstallerFactory();
 
     InstallManager installManager = new InstallManager(AptoideDownloadManager.getInstance(),
-        installerFactory.create(context, InstallerFactory.ROLLBACK),
-        AccessorFactory.getAccessorFor(Download.class),
-        AccessorFactory.getAccessorFor(Installed.class));
+        installerFactory.create(context, InstallerFactory.ROLLBACK));
 
     permissionManager.requestExternalStoragePermission(permissionRequest)
         .flatMap(sucess -> scheduledDownloadRepository.setInstalling(installing))

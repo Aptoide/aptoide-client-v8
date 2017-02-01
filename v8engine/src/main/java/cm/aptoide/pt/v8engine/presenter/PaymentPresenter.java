@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.presenter;
 
 import android.os.Bundle;
 import cm.aptoide.pt.v8engine.payment.AptoidePay;
+import cm.aptoide.pt.v8engine.payment.Authorization;
 import cm.aptoide.pt.v8engine.payment.Payer;
 import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
@@ -168,10 +169,18 @@ public class PaymentPresenter implements Presenter {
         .doOnNext(selection -> view.showGlobalLoading())
         .flatMap(paymentViewModel -> getSelectedPayment(getAllPayments(),
             paymentViewModel))
-        .<Void>flatMap(payment -> aptoidePay.authorize(payment)
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnCompleted(() -> view.hideGlobalLoading())
-              .toObservable());
+        .map(payment -> payment.getAuthorization())
+        .<Void>flatMap(authorization -> {
+            return aptoidePay.initiate(authorization)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnCompleted(() -> hideGlobalLoadingAndNavigateToAuthorizationView(authorization))
+                .toObservable();
+        });
+  }
+
+  private void  hideGlobalLoadingAndNavigateToAuthorizationView(Authorization authorization) {
+    view.hideGlobalLoading();
+    view.navigateToAuthorizationView(authorization.getPaymentId(), product);
   }
 
   private Observable<Void> buySelection() {

@@ -10,14 +10,13 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
@@ -141,8 +140,7 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
         FragmentUtils.replaceFragmentV4(this.getContext(), appView);
       }
     }, err -> {
-      Log.e(TAG, "", err);
-      CrashReports.logException(err);
+      CrashReport.getInstance().log(err);
     }));
   }
 

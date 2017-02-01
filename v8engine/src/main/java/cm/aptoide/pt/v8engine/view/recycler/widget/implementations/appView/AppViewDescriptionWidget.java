@@ -51,7 +51,7 @@ import com.jakewharton.rxbinding.view.RxView;
       descriptionTextView.setText(AptoideUtils.HtmlU.parse(media.getDescription()));
       compositeSubscription.add(RxView.clicks(readMoreBtn).subscribe(click -> {
         ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
-            .newDescriptionFragment(app.getId(), app.getPackageName(), storeName, storeTheme));
+            .newDescriptionFragment(app.getName(), media.getDescription(), storeTheme));
       }));
     } else {
       // only show "default" description if the app doesn't have one
@@ -63,7 +63,7 @@ import com.jakewharton.rxbinding.view.RxView;
       descriptionTextView.setText(AptoideUtils.HtmlU.parse(media.getDescription()));
       compositeSubscription.add(RxView.clicks(readMoreBtn).subscribe(click -> {
         ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
-            .newDescriptionFragment(app.getId(), app.getPackageName(), storeName, storeTheme));
+            .newDescriptionFragment(app.getName(), media.getDescription(), storeTheme));
       }));
     } else {
       // only show "default" description if the app doesn't have one

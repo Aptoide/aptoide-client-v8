@@ -31,14 +31,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AppAction;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
-import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.database.realm.Rollback;
@@ -223,9 +222,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     super.onCreate(savedInstanceState);
     permissionManager = new PermissionManager();
     Installer installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
-    installManager = new InstallManager(AptoideDownloadManager.getInstance(), installer,
-        AccessorFactory.getAccessorFor(Download.class),
-        AccessorFactory.getAccessorFor(Installed.class));
+    installManager = new InstallManager(AptoideDownloadManager.getInstance(), installer);
 
     productFactory = new ProductFactory();
     appRepository = new AppRepository(new NetworkOperatorManager(
@@ -274,7 +271,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(store -> {
-          adapter.notifyDataSetChanged();
+          getAdapter().notifyDataSetChanged();
         });
 
     // ??
@@ -292,7 +289,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(rollbacks -> {
-          adapter.notifyDataSetChanged();
+          getAdapter().notifyDataSetChanged();
         });
 
     // TODO: 27-05-2016 neuro install actions, not present in v7
@@ -453,48 +450,48 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       subscription.unsubscribe();
     }
 
-    if (appId >= 0) {
-      Logger.d(TAG, "loading app info using app ID");
-      subscription = appRepository.getApp(appId, refresh, sponsored, storeName, packageName)
-          .map(getApp -> this.getApp = getApp)
-          .flatMap(getApp -> manageOrganicAds(getApp))
-          .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
-          .observeOn(AndroidSchedulers.mainThread())
-          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-          .subscribe(getApp -> {
-            setupAppView(getApp);
-          }, throwable -> finishLoading(throwable));
-    } else if (!TextUtils.isEmpty(md5)) {
-      subscription = appRepository.getAppFromMd5(md5, refresh, sponsored)
-          .map(getApp -> this.getApp = getApp)
-          .flatMap(getApp -> manageOrganicAds(getApp))
-          .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
-          .observeOn(AndroidSchedulers.mainThread())
-          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-          .subscribe(getApp -> {
-            setupAppView(getApp);
-          }, throwable -> {
-            finishLoading(throwable);
-            CrashReports.logString(key_appId, String.valueOf(appId));
-            CrashReports.logString(key_packageName, String.valueOf(packageName));
-            CrashReports.logString(key_md5sum, md5);
-          });
-    } else {
-      Logger.d(TAG, "loading app info using app package name");
-      subscription = appRepository.getApp(packageName, refresh, sponsored, storeName)
-          .map(getApp -> this.getApp = getApp)
-          .flatMap(getApp -> manageOrganicAds(getApp))
-          .observeOn(AndroidSchedulers.mainThread())
-          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-          .subscribe(getApp -> {
-            setupAppView(getApp);
-          }, throwable -> {
-            finishLoading(throwable);
-            CrashReports.logString(key_appId, String.valueOf(appId));
-            CrashReports.logString(key_packageName, String.valueOf(packageName));
-            CrashReports.logString(key_md5sum, md5);
-          });
-    }
+      if (appId >= 0) {
+        Logger.d(TAG, "loading app info using app ID");
+        subscription = appRepository.getApp(appId, refresh, sponsored, storeName, packageName)
+            .map(getApp -> this.getApp = getApp)
+            .flatMap(getApp -> manageOrganicAds(getApp))
+            .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
+            .observeOn(AndroidSchedulers.mainThread())
+            .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+            .subscribe(getApp -> {
+              setupAppView(getApp);
+            }, throwable -> finishLoading(throwable));
+      } else if (!TextUtils.isEmpty(md5)) {
+        subscription = appRepository.getAppFromMd5(md5, refresh, sponsored)
+            .map(getApp -> this.getApp = getApp)
+            .flatMap(getApp -> manageOrganicAds(getApp))
+            .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
+            .observeOn(AndroidSchedulers.mainThread())
+            .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+            .subscribe(getApp -> {
+              setupAppView(getApp);
+            }, throwable -> {
+              finishLoading(throwable);
+              CrashReport.getInstance().log(key_appId, String.valueOf(appId));
+              CrashReport.getInstance().log(key_packageName, String.valueOf(packageName));
+              CrashReport.getInstance().log(key_md5sum, md5);
+            });
+      } else {
+        Logger.d(TAG, "loading app info using app package name");
+        subscription = appRepository.getApp(packageName, refresh, sponsored, storeName)
+            .map(getApp -> this.getApp = getApp)
+            .flatMap(getApp -> manageOrganicAds(getApp))
+            .observeOn(AndroidSchedulers.mainThread())
+            .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+            .subscribe(getApp -> {
+              setupAppView(getApp);
+            }, throwable -> {
+              finishLoading(throwable);
+              CrashReport.getInstance().log(key_appId, String.valueOf(appId));
+              CrashReport.getInstance().log(key_packageName, String.valueOf(packageName));
+              CrashReport.getInstance().log(key_md5sum, md5);
+            });
+      }
   }
 
   @Override public int getContentViewId() {
@@ -565,10 +562,12 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
           } else {
             setUnInstallMenuOptionVisible(null);
           }
+        }, err -> {
+          CrashReport.getInstance().log(err);
         });
 
     header.setup(getApp);
-    setDisplayables(setupDisplayables(getApp));
+    clearDisplayables().addDisplayables(setupDisplayables(getApp), true);
     setupObservables(getApp);
     showHideOptionsMenu(true);
     setupShare(getApp);

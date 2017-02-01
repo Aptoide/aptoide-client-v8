@@ -24,6 +24,7 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppVersionsRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
@@ -52,6 +53,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
   @Getter private static final String APP_NAME = "app_name";
   @Getter private static final String APP_IMG_URL = "app_img_url";
   @Getter private static final String APP_PACKAGE = "app_package";
+  private final AptoideClientUUID aptoideClientUUID;
   // vars
   private String appName;
   private String appImgUrl;
@@ -62,6 +64,11 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
 
   // data
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
+
+  public OtherVersionsFragment() {
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+  }
 
   /**
    * @param appName
@@ -159,12 +166,11 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
 
     endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(this.getAdapter(),
         ListAppVersionsRequest.of(appPackge, storeNames, AptoideAccountManager.getAccessToken(),
-            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                DataProvider.getContext()).getAptoideClientUUID(),
+            aptoideClientUUID.getAptoideClientUUID(),
             StoreUtils.getSubscribedStoresAuthMap()), otherVersionsSuccessRequestListener,
         Throwable::printStackTrace);
 
-    recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+    getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(false);
   }
 

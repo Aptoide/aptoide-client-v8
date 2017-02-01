@@ -5,6 +5,7 @@ import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.model.v7.Comment;
+import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.model.v7.timeline.UserTimeline;
 import cm.aptoide.pt.v8engine.R;
@@ -21,6 +22,7 @@ public abstract class SocialCardDisplayable extends CardDisplayable {
 
   @Getter private final long numberOfLikes;
   @Getter private final long numberOfComments;
+  @Getter protected Store store;
   @Getter private Comment.User user;
   @Getter private Comment.User userSharer;
   @Getter private SpannableFactory spannableFactory;
@@ -34,7 +36,7 @@ public abstract class SocialCardDisplayable extends CardDisplayable {
   }
 
   SocialCardDisplayable(TimelineCard timelineCard, long numberOfLikes, long numberOfComments,
-      Comment.User user, Comment.User userSharer, List<UserTimeline> userLikes, Date date,
+      Store store, Comment.User user, Comment.User userSharer, List<UserTimeline> userLikes, Date date,
       SpannableFactory spannableFactory, DateCalculator dateCalculator) {
     super(timelineCard);
     this.date = date;
@@ -45,6 +47,7 @@ public abstract class SocialCardDisplayable extends CardDisplayable {
     this.user = user;
     this.userLikes = userLikes;
     this.spannableFactory = spannableFactory;
+    this.store = store;
   }
 
   public String getTimeSinceLastUpdate(Context context) {
@@ -62,7 +65,7 @@ public abstract class SocialCardDisplayable extends CardDisplayable {
   public void likesPreviewClick(FragmentShower fragmentShower) {
     fragmentShower.pushFragmentV4(V8Engine.getFragmentProvider()
         .newTimeLineFollowStatsFragment(TimeLineFollowFragment.FollowFragmentOpenMode.LIKE_PREVIEW,
-            "default", this.getTimelineCard().getCardId()));
+            "default", this.getTimelineCard().getCardId(), numberOfLikes));
   }
 
   public boolean checkAlreadyLiked() {

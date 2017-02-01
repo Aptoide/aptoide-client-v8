@@ -337,6 +337,7 @@
   <string name="private_profile_create_store">To have a private profile, you need to create a store</string>
   <string name="social_timeline_shared_by">shared by %1$s</string>
   <string name="social_timeline_who_liked">Who liked</string>
+  <string name="social_timeline_users_private">%d are private</string>
 
   <!-- Store Meta widget -->
   <string name="edit_store">Edit</string>
@@ -358,7 +359,8 @@
   <!-- Payments -->
   <string name="item_payment_button_use">use</string>
   <string name="item_payment_button_register">register</string>
-  <string name="item_payment_approving_text">Approving</string>
+  <string name="item_payment_approving_text">Approving...</string>
   <string name="activity_payment_more_payments_button">Use another payment method</string>
+  <string name="reviews_expand_button">%d Replies</string>
 
 </resources>

@@ -10,18 +10,17 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.support.v7.widget.AppCompatRatingBar;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SetReviewRatingRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.Comment;
@@ -47,10 +46,11 @@ import rx.Observable;
   private static final AptoideUtils.DateTimeU DATE_TIME_U = AptoideUtils.DateTimeU.getInstance();
   private static final Locale LOCALE = Locale.getDefault();
   private static final int DEFAULT_LIMIT = 3;
+  private final AptoideClientUUID aptoideClientUUID;
   private TextView reply;
   private TextView showHideReplies;
-  private Button flagHelfull;
-  private Button flagNotHelfull;
+  private TextView flagHelfull;
+  private TextView flagNotHelfull;
 
   private AppCompatRatingBar ratingBar;
   private TextView reviewTitle;
@@ -61,16 +61,21 @@ import rx.Observable;
   private TextView username;
 
   private boolean isCommentsCollapsed = false;
+  private View notHelpfullButtonLayout;
+  private View helpfullButtonLayout;
 
   public RateAndReviewCommentWidget(View itemView) {
     super(itemView);
+
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
   }
 
   @Override protected void assignViews(View itemView) {
     reply = (TextView) itemView.findViewById(R.id.write_reply_btn);
     showHideReplies = (TextView) itemView.findViewById(R.id.show_replies_btn);
-    flagHelfull = (Button) itemView.findViewById(R.id.helpful_btn);
-    flagNotHelfull = (Button) itemView.findViewById(R.id.not_helpful_btn);
+    flagHelfull = (TextView) itemView.findViewById(R.id.helpful_btn);
+    flagNotHelfull = (TextView) itemView.findViewById(R.id.not_helpful_btn);
 
     ratingBar = (AppCompatRatingBar) itemView.findViewById(R.id.rating_bar);
     reviewTitle = (TextView) itemView.findViewById(R.id.comment_title);
@@ -79,6 +84,9 @@ import rx.Observable;
 
     userImage = (ImageView) itemView.findViewById(R.id.user_icon);
     username = (TextView) itemView.findViewById(R.id.user_name);
+
+    helpfullButtonLayout = itemView.findViewById(R.id.helpful_layout);
+    notHelpfullButtonLayout = itemView.findViewById(R.id.not_helpful_layout);
   }
 
   @Override public void bindView(RateAndReviewCommentDisplayable displayable) {
@@ -123,15 +131,14 @@ import rx.Observable;
             });
       }
     }).subscribe(a -> { /* do nothing */ }, err -> {
-      Log.e(TAG, "Exception while showing comment dialog", err);
-      CrashReports.logException(err);
+      CrashReport.getInstance().log(err);
     }));
 
-    compositeSubscription.add(RxView.clicks(flagHelfull).subscribe(a -> {
+    compositeSubscription.add(RxView.clicks(helpfullButtonLayout).subscribe(a -> {
       setReviewRating(review.getId(), true);
     }));
 
-    compositeSubscription.add(RxView.clicks(flagNotHelfull).subscribe(a -> {
+    compositeSubscription.add(RxView.clicks(notHelpfullButtonLayout).subscribe(a -> {
       setReviewRating(review.getId(), false);
     }));
 
@@ -158,12 +165,19 @@ import rx.Observable;
     } else {
       itemView.setBackgroundColor(res.getColor(color));
     }
+    int numberComments = displayable.getNumberComments();
+    if (numberComments > 0) {
+      showHideReplies.setVisibility(View.VISIBLE);
+      showHideReplies.setText(
+          AptoideUtils.StringU.getFormattedString(R.string.reviews_expand_button, numberComments));
+    } else {
+      showHideReplies.setVisibility(View.GONE);
+    }
   }
 
   private void loadCommentsForThisReview(long reviewId, int limit, CommentAdder commentAdder) {
     ListCommentsRequest.of(reviewId, limit, AptoideAccountManager.getAccessToken(),
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID(), true).execute(listComments -> {
+        aptoideClientUUID.getAptoideClientUUID(), true).execute(listComments -> {
       if (listComments.isOk()) {
         List<Comment> comments = listComments.getDatalist().getList();
         commentAdder.addComment(comments);
@@ -178,16 +192,11 @@ import rx.Observable;
   }
 
   private void setReviewRating(long reviewId, boolean positive) {
-    flagHelfull.setClickable(false);
-    flagNotHelfull.setClickable(false);
-
-    flagHelfull.setVisibility(View.INVISIBLE);
-    flagNotHelfull.setVisibility(View.INVISIBLE);
+    setHelpButtonsClickable(false);
 
     if (AptoideAccountManager.isLoggedIn()) {
       SetReviewRatingRequest.of(reviewId, positive, AptoideAccountManager.getAccessToken(),
-          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-              DataProvider.getContext()).getAptoideClientUUID()).execute(response -> {
+          aptoideClientUUID.getAptoideClientUUID()).execute(response -> {
         if (response == null) {
           Logger.e(TAG, "empty response");
           return;
@@ -209,11 +218,26 @@ import rx.Observable;
         // success
         Logger.d(TAG, String.format("review %d was marked as %s", reviewId,
             positive ? "positive" : "negative"));
+        setHelpButtonsClickable(true);
+        ShowMessage.asSnack(flagHelfull, R.string.thank_you_for_your_opinion);
       }, err -> {
+        ShowMessage.asSnack(flagHelfull, R.string.unknown_error);
         Logger.e(TAG, err);
+        setHelpButtonsClickable(true);
       }, true);
+    } else {
+      ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
+          snackView -> {
+            AptoideAccountManager.openAccountManager(snackView.getContext());
+          });
+      setHelpButtonsClickable(true);
     }
+  }
 
-    ShowMessage.asSnack(flagHelfull, R.string.thank_you_for_your_opinion);
+  private void setHelpButtonsClickable(boolean clickable) {
+    flagHelfull.setClickable(clickable);
+    flagNotHelfull.setClickable(clickable);
+    notHelpfullButtonLayout.setClickable(clickable);
+    helpfullButtonLayout.setClickable(clickable);
   }
 }

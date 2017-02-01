@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.iab.ErrorCodeFactory;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.payment.AptoidePay;
 import cm.aptoide.pt.v8engine.payment.Payer;
@@ -81,8 +82,7 @@ public class PaymentActivity extends ActivityView implements PaymentView {
     header = findViewById(R.id.activity_payment_header);
     productIcon = (ImageView) findViewById(R.id.activity_payment_product_icon);
     productName = (TextView) findViewById(R.id.activity_payment_product_name);
-    productDescription =
-        (TextView) findViewById(R.id.activity_payment_product_description);
+    productDescription = (TextView) findViewById(R.id.activity_payment_product_description);
 
     body = findViewById(R.id.activity_payment_body);
     selectedPaymentName = (TextView) findViewById(R.id.activity_selected_payment_name);
@@ -103,10 +103,11 @@ public class PaymentActivity extends ActivityView implements PaymentView {
     final AptoideProduct product = getIntent().getParcelableExtra(PRODUCT_EXTRA);
     final ProductRepository productRepository =
         RepositoryFactory.getProductRepository(this, product);
+    final Payer payer = new Payer(this);
     attachPresenter(new PaymentPresenter(this,
             new AptoidePay(RepositoryFactory.getPaymentConfirmationRepository(this, product),
                 RepositoryFactory.getPaymentAuthorizationRepository(this), productRepository,
-                new PaymentAuthorizationFactory(this)), product, new Payer(this), productRepository),
+                new PaymentAuthorizationFactory(this), payer), product, payer, productRepository),
         savedInstanceState);
   }
 
@@ -158,6 +159,9 @@ public class PaymentActivity extends ActivityView implements PaymentView {
     } else {
       morePaymentsContainer.setVisibility(View.VISIBLE);
       morePaymentsButton.setVisibility(View.VISIBLE);
+      int height = otherPayments.size() * AptoideUtils.ScreenU.getPixels(72);
+      int maxHeight = AptoideUtils.ScreenU.getPixels(144);
+      morePaymentsContainer.getLayoutParams().height = Math.min(height, maxHeight);
     }
 
     View view;
@@ -248,6 +252,10 @@ public class PaymentActivity extends ActivityView implements PaymentView {
 
   @Override public Observable<PaymentViewModel> registerPaymentSelection() {
     return registerPaymentClick;
+  }
+
+  @Override public void navigateToAuthorizationView(int paymentId, AptoideProduct product) {
+    startActivity(WebAuthorizationActivity.getIntent(this, paymentId, product));
   }
 
   private void finish(int code, Intent intent) {

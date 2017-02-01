@@ -6,7 +6,7 @@ import lombok.Data;
 /**
  * Created by jdandrade on 31/01/2017.
  */
-@Data public class TimelineCardStats {
+@Data class TimelineCardStats {
   private long likes;
   private long comments;
   private List<UserTimeline> usersLikes;

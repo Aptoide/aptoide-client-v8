@@ -5,14 +5,16 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
+import android.content.res.ColorStateList;
+import android.os.Build;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionRequest;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CompletedDownloadDisplayable;
@@ -31,14 +33,12 @@ import rx.schedulers.Schedulers;
 
   private static final String TAG = CompletedDownloadWidget.class.getSimpleName();
 
-  private Progress<Download> downloadProgress;
-  private CompletedDownloadDisplayable displayable;
-
   private TextView appName;
   private ImageView appIcon;
   private TextView status;
   private ImageView resumeDownloadButton;
   private ImageView cancelDownloadButton;
+  private ColorStateList defaultTextViewColor;
 
   public CompletedDownloadWidget(View itemView) {
     super(itemView);
@@ -53,13 +53,18 @@ import rx.schedulers.Schedulers;
   }
 
   @Override public void bindView(CompletedDownloadDisplayable displayable) {
-    this.displayable = displayable;
-    downloadProgress = displayable.getPojo();
+    Progress<Download> downloadProgress = displayable.getPojo();
     appName.setText(downloadProgress.getRequest().getAppName());
     if (!TextUtils.isEmpty(downloadProgress.getRequest().getIcon())) {
       ImageLoader.load(downloadProgress.getRequest().getIcon(), appIcon);
     }
-    status.setText(downloadProgress.getRequest().getStatusName(itemView.getContext()));
+
+    //save original colors
+    if (defaultTextViewColor == null) {
+      defaultTextViewColor = status.getTextColors();
+    }
+
+    updateStatus(downloadProgress);
 
     compositeSubscription.add(RxView.clicks(itemView)
         .flatMap(click -> displayable.downloadStatus()
@@ -92,6 +97,19 @@ import rx.schedulers.Schedulers;
           } else {
             resumeDownloadButton.setVisibility(View.GONE);
           }
-        }, throwable -> Logger.e(TAG, throwable)));
+        }, throwable -> CrashReport.getInstance().log(throwable)));
+  }
+
+  private void updateStatus(Progress<Download> downloadProgress) {
+    if (downloadProgress.getRequest().getOverallDownloadStatus() == Download.ERROR) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        status.setTextColor(getContext().getColor(R.color.red_700));
+      } else {
+        status.setTextColor(getContext().getResources().getColor(R.color.red_700));
+      }
+    } else {
+      status.setTextColor(defaultTextViewColor);
+    }
+    status.setText(downloadProgress.getRequest().getStatusName(itemView.getContext()));
   }
 }

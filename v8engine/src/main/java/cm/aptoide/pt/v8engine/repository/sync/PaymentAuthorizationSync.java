@@ -39,10 +39,13 @@ public class PaymentAuthorizationSync extends RepositorySync {
 
   @Override public void sync(SyncResult syncResult) {
     try {
-      getServerAuthorizations().doOnSuccess(
-          response -> saveAndReschedulePendingAuthorization(response, syncResult, paymentIds))
+      final String accessToken = AptoideAccountManager.getAccessToken();
+      final String payerId = AptoideAccountManager.getUserEmail();
+      getServerAuthorizations(accessToken).doOnSuccess(
+          response -> saveAndReschedulePendingAuthorization(response, syncResult, paymentIds,
+              payerId))
           .onErrorReturn(throwable -> {
-            saveAndRescheduleOnNetworkError(syncResult, throwable, paymentIds);
+            saveAndRescheduleOnNetworkError(syncResult, throwable, paymentIds, payerId);
             return null;
           })
           .toBlocking()
@@ -53,7 +56,7 @@ public class PaymentAuthorizationSync extends RepositorySync {
   }
 
   private void saveAndRescheduleOnNetworkError(SyncResult syncResult, Throwable throwable,
-      List<String> paymentIds) {
+      List<String> paymentIds, String payerId) {
     if (throwable instanceof IOException) {
       rescheduleSync(syncResult);
     } else {
@@ -61,32 +64,34 @@ public class PaymentAuthorizationSync extends RepositorySync {
       for (String paymentId : paymentIds) {
         authorizations.add(authorizationFactory.convertToDatabasePaymentAuthorization(
             authorizationFactory.create(Integer.valueOf(paymentId),
-                Authorization.Status.SYNCING_ERROR)));
+                Authorization.Status.SYNCING_ERROR, payerId)));
       }
-      authorizationAccessor.saveAll(authorizations);
+      authorizationAccessor.updateAll(authorizations);
     }
   }
 
   private void saveAndReschedulePendingAuthorization(
       List<PaymentAuthorizationsResponse.PaymentAuthorizationResponse> responses,
-      SyncResult syncResult, List<String> paymentIds) {
+      SyncResult syncResult, List<String> paymentIds, String payerId) {
 
     final List<PaymentAuthorization> authorizations = new ArrayList<>();
 
     for (PaymentAuthorizationsResponse.PaymentAuthorizationResponse response : responses) {
       final cm.aptoide.pt.v8engine.payment.Authorization paymentAuthorization =
-          authorizationFactory.convertToPaymentAuthorization(response);
-      authorizations.add(authorizationFactory.convertToDatabasePaymentAuthorization(response));
+          authorizationFactory.convertToPaymentAuthorization(response, payerId);
+      authorizations.add(
+          authorizationFactory.convertToDatabasePaymentAuthorization(response, payerId));
       if (paymentAuthorization.isPending() || paymentAuthorization.isInitiated()) {
         rescheduleSync(syncResult);
       }
     }
 
-    authorizationAccessor.saveAll(authorizations);
+    authorizationAccessor.updateAll(authorizations);
   }
 
-  private Single<List<PaymentAuthorizationsResponse.PaymentAuthorizationResponse>> getServerAuthorizations() {
-    return GetPaymentAuthorizationsRequest.of(AptoideAccountManager.getAccessToken())
+  private Single<List<PaymentAuthorizationsResponse.PaymentAuthorizationResponse>> getServerAuthorizations(
+      String accessToken) {
+    return GetPaymentAuthorizationsRequest.of(accessToken)
         .observe()
         .toSingle()
         .flatMap(response -> {

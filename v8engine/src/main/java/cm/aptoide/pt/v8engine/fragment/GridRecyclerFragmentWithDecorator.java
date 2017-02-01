@@ -84,7 +84,7 @@ public abstract class GridRecyclerFragmentWithDecorator<T extends BaseAdapter>
     super.setupViews();
     RecyclerView.ItemDecoration itemDecoration = getItemDecoration();
     if(itemDecoration!=null) {
-      recyclerView.addItemDecoration(itemDecoration);
+      getRecyclerView().addItemDecoration(itemDecoration);
     }
   }
 }

@@ -12,6 +12,7 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 
 public class MyStoresFragment extends GetStoreWidgetsFragment {
+
   private static final String TAG = MyStoresFragment.class.getSimpleName();
   private Subscription subscription;
 

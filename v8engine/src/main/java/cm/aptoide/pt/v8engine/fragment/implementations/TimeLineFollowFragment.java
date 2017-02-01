@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -12,6 +13,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.GetFollowersRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetFollowingRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetUserLikesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.GetFollowers;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -31,10 +33,18 @@ import rx.functions.Action1;
 public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment {
 
   public static final String OPEN_MODE = "OPEN_MODE";
-  public static final String CARD_UID = "cardUid";
+  public static final String CARD_UID = "CARDUID";
+  public static final String NUMBER_LIKES = "NUMBER_LIKES";
+  private final AptoideClientUUID aptoideClientUUID;
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
   private TimeLineFollowFragment.FollowFragmentOpenMode openMode;
-  private String cardUid;
+  @Nullable private String cardUid;
+  @Nullable private Long numberOfLikes;
+
+  public TimeLineFollowFragment() {
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+  }
 
   public static TimeLineFollowFragment newInstance(FollowFragmentOpenMode openMode,
       long followNumber, String storeTheme) {
@@ -57,13 +67,14 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
   }
 
   public static TimeLineFollowFragment newInstance(FollowFragmentOpenMode openMode,
-      String storeTheme, String cardUid) {
+      String storeTheme, String cardUid, long numberOfLikes) {
     Bundle args = new Bundle();
     args.putString(TITLE_KEY,
         DataProvider.getContext().getString(R.string.social_timeline_who_liked));
     args.putSerializable(OPEN_MODE, openMode);
     args.putString(BundleCons.STORE_THEME, storeTheme);
     args.putString(CARD_UID, cardUid);
+    args.putLong(NUMBER_LIKES, numberOfLikes);
     TimeLineFollowFragment fragment = new TimeLineFollowFragment();
     fragment.setArguments(args);
     return fragment;
@@ -77,6 +88,7 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
     super.loadExtras(args);
     openMode = (FollowFragmentOpenMode) args.get(OPEN_MODE);
     cardUid = (String) args.get(CARD_UID);
+    numberOfLikes = (Long) args.get(NUMBER_LIKES);
   }
 
   @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
@@ -101,13 +113,11 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
       switch (openMode) {
         case FOLLOWERS:
           request = GetFollowersRequest.of(AptoideAccountManager.getAccessToken(),
-              new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                  DataProvider.getContext()).getAptoideClientUUID());
+              aptoideClientUUID.getAptoideClientUUID());
           break;
         case FOLLOWING:
           request = GetFollowingRequest.of(AptoideAccountManager.getAccessToken(),
-              new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                  DataProvider.getContext()).getAptoideClientUUID());
+              aptoideClientUUID.getAptoideClientUUID());
           break;
         case LIKE_PREVIEW:
           request = GetUserLikesRequest.of(AptoideAccountManager.getAccessToken(),
@@ -139,19 +149,16 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
         };
       }
 
-      recyclerView.clearOnScrollListeners();
+      getRecyclerView().clearOnScrollListeners();
       endlessRecyclerOnScrollListener =
           new EndlessRecyclerOnScrollListener(this.getAdapter(), request, action,
-              Throwable::printStackTrace, 6, true, firstRequest, null);
-      if (openMode == FollowFragmentOpenMode.FOLLOWERS
-          || openMode == FollowFragmentOpenMode.FOLLOWING) {
-        endlessRecyclerOnScrollListener.setOnEndOfListReachedListener(
-            () -> addDisplayable(new MessageWhiteBgDisplayable(getFooterMessage(hidden[0]))));
-      }
-      recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+              (throwable) -> throwable.printStackTrace(), 6, true, firstRequest, null);
+      endlessRecyclerOnScrollListener.setOnEndOfListReachedListener(
+          () -> addDisplayable(new MessageWhiteBgDisplayable(getFooterMessage(hidden[0]))));
+      getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
       endlessRecyclerOnScrollListener.onLoadMore(refresh);
     } else {
-      recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+      getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     }
   }
 
@@ -173,6 +180,9 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
         break;
       case FOLLOWING:
         footerMessage = getString(R.string.private_following_message, hidden);
+        break;
+      case LIKE_PREVIEW:
+        footerMessage = getString(R.string.social_timeline_users_private, hidden);
         break;
       default:
         footerMessage = "";

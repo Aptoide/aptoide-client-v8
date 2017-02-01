@@ -11,6 +11,7 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.GetTimelineStatsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetUserTimelineRequest;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.Datalist;
 import cm.aptoide.pt.model.v7.TimelineStats;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
@@ -27,18 +28,20 @@ public class TimelineRepository {
 
   private final String action;
   private final TimelineCardFilter filter;
+  private final AptoideClientUUID aptoideClientUUID;
 
   public TimelineRepository(String action, TimelineCardFilter filter) {
     this.action = action;
     this.filter = filter;
+
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
   }
 
   public Observable<Datalist<TimelineCard>> getTimelineCards(Integer limit, int offset,
       List<String> packageNames, boolean refresh) {
     return GetUserTimelineRequest.of(action, limit, offset, packageNames,
-        AptoideAccountManager.getAccessToken(),
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID())
+        AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
         .observe(refresh)
         .doOnNext(item -> filter.clear())
         .map(getUserTimeline -> getUserTimeline.getDatalist())
@@ -75,7 +78,6 @@ public class TimelineRepository {
 
   public Observable<TimelineStats> getTimelineStats(boolean byPassCache) {
     return GetTimelineStatsRequest.of(AptoideAccountManager.getAccessToken(),
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID()).observe(byPassCache);
+        aptoideClientUUID.getAptoideClientUUID()).observe(byPassCache);
   }
 }

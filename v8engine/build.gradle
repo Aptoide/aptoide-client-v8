@@ -168,7 +168,6 @@ dependencies {
   //Only used by localytics
   compile "com.google.android.gms:play-services-ads:${PLAY_SERVICES_VERSION}"
   compile "com.google.android.gms:play-services-gcm:${PLAY_SERVICES_VERSION}"
-  compile 'com.github.jd-alexander:LikeButton:0.2.0'
 
     // Flurry Android sdk
   compile "com.flurry.android:analytics:${FLURRY_VERSION}"
@@ -185,4 +184,8 @@ dependencies {
   compile("com.crashlytics.sdk.android:crashlytics:${CRASHLYTICS_VERSION}@aar") {
     transitive = true;
   }
+
+  // Parceler - https://github.com/johncarl81/parceler
+  //compile 'org.parceler:parceler-api:1.1.6'
+  //annotationProcessor 'org.parceler:parceler:1.1.6'
 }

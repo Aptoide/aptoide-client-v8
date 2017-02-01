@@ -37,16 +37,15 @@ public class PaidAppPaymentConfirmationRepository extends PaymentConfirmationRep
         .observe()
         .flatMap(response -> {
           if (response != null && response.isOk()) {
-            syncPaymentConfirmation(product);
             return Observable.just(null);
           }
           return Observable.error(
               new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
-        }).toCompletable();
+        }).toCompletable().andThen(syncPaymentConfirmation(product));
   }
 
   @Override public Completable createPaymentConfirmation(int paymentId,
       String paymentConfirmationId) {
-    return createPaymentConfirmation(paymentId, paymentConfirmationId, product);
+    return createPaymentConfirmation(product, paymentId, paymentConfirmationId);
   }
 }

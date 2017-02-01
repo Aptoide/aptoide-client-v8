@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
- */
-
 package cm.aptoide.pt.database.accessors;
 
 import android.support.annotation.NonNull;
@@ -17,8 +12,10 @@ import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.database.realm.Update;
 import io.realm.RealmObject;
 
+// TODO: 13/1/2017 this should not be public
+
 /**
- * Created by sithengineer on 02/09/16.
+ * Instead of getting an accessor from here, use a Repository
  */
 public final class AccessorFactory {
 

@@ -8,6 +8,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetMyStoreListRequest;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.Layout;
 import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.model.v7.store.Store;
@@ -29,12 +30,18 @@ import rx.functions.Action1;
 
 public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStores> {
 
+  private final AptoideClientUUID aptoideClientUUID;
+
+  public MyStoresSubscribedFragment() {
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+  }
+
   @Override protected V7<ListStores, ? extends Endless> buildRequest(boolean refresh, String url) {
 
     GetMyStoreListRequest request =
         GetMyStoreListRequest.of(url, AptoideAccountManager.getAccessToken(),
-            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                DataProvider.getContext()).getAptoideClientUUID(), true);
+            aptoideClientUUID.getAptoideClientUUID(), true);
 
     return request;
   }
@@ -45,7 +52,7 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
 
   @Override protected ErrorRequestListener getErrorRequestListener() {
     return (throwable) -> {
-      recyclerView.clearOnScrollListeners();
+      getRecyclerView().clearOnScrollListeners();
       LinkedList<String> errorsList = new LinkedList<>();
       errorsList.add(WSWidgetsUtils.USER_NOT_LOGGED_ERROR);
       if (WSWidgetsUtils.shouldAddObjectView(errorsList, throwable)) {

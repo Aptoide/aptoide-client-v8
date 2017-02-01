@@ -29,7 +29,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Update;
@@ -98,8 +98,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
       repository.getUpdates(true)
           .first()
           .subscribe(updates -> Logger.d(TAG, "updates refreshed"), throwable -> {
-            throwable.printStackTrace();
-            CrashReports.logException(throwable);
+            CrashReport.getInstance().log(throwable);
           });
     }
   }
@@ -151,10 +150,12 @@ public class SettingsFragment extends PreferenceFragmentCompat
     }
 
     //set AppStore name
-    findPreference(SettingsConstants.CHECK_AUTO_UPDATE).setTitle(AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate_title,
-        Application.getConfiguration().getMarketName()));
-    findPreference(SettingsConstants.CHECK_AUTO_UPDATE_CATEGORY).setTitle(AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate_title,
-        Application.getConfiguration().getMarketName()));
+    findPreference(SettingsConstants.CHECK_AUTO_UPDATE).setTitle(
+        AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate_title,
+            Application.getConfiguration().getMarketName()));
+    findPreference(SettingsConstants.CHECK_AUTO_UPDATE_CATEGORY).setTitle(
+        AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate_title,
+            Application.getConfiguration().getMarketName()));
 
     findPreference(SettingsConstants.ADULT_CHECK_BOX).setOnPreferenceClickListener(
         new Preference.OnPreferenceClickListener() {
@@ -308,15 +309,13 @@ public class SettingsFragment extends PreferenceFragmentCompat
           versionName = getActivity().getPackageManager()
               .getPackageInfo(getActivity().getPackageName(), 0).versionName;
         } catch (PackageManager.NameNotFoundException e) {
-          Logger.printException(e);
-          CrashReports.logException(e);
+          CrashReport.getInstance().log(e);
         }
         try {
           versionCode = getActivity().getPackageManager()
               .getPackageInfo(getActivity().getPackageName(), 0).versionCode;
         } catch (PackageManager.NameNotFoundException e) {
-          Logger.printException(e);
-          CrashReports.logException(e);
+          CrashReport.getInstance().log(e);
         }
 
         ((TextView) view.findViewById(R.id.aptoide_version)).setText(
