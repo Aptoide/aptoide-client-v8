@@ -47,9 +47,9 @@ public class MainPresenter implements Presenter {
   @Override public void present() {
     view.getLifecycle()
         .filter(event -> View.LifecycleEvent.CREATE.equals(event))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .doOnNext(created -> apkFy.run())
         .filter(created -> firstCreated)
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
           view.showHome();
           contentPuller.start();
