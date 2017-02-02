@@ -115,7 +115,11 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
                         .first()
                         .observeOn(AndroidSchedulers.mainThread())
                         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-                        .subscribe(scheduleds -> downloadAndInstallScheduledList(scheduleds, true));
+                        .subscribe(
+                            scheduledList -> downloadAndInstallScheduledList(scheduledList, true),
+                            err -> {
+                              CrashReport.getInstance().log(err);
+                            });
                     break;
                   case NO:
                     break;

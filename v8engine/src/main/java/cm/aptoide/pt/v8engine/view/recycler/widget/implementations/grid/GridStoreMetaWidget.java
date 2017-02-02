@@ -100,7 +100,9 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
 
     updateSubscribeButtonText(isStoreSubscribed);
     compositeSubscription.add(RxView.clicks(subscribeButton)
-        .subscribe(handleSubscriptionLogic(new StoreWrapper(store, isStoreSubscribed))));
+        .subscribe(handleSubscriptionLogic(new StoreWrapper(store, isStoreSubscribed)), err -> {
+          CrashReport.getInstance().log(err);
+        }));
 
     List<cm.aptoide.pt.model.v7.store.Store.SocialChannel> socialChannels =
         store.getSocialChannels();

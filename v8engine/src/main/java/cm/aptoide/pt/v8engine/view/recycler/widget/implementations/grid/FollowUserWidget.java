@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -129,7 +130,9 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
 
     if (displayable.hasStore()) {
       compositeSubscription.add(RxView.clicks(itemView)
-          .subscribe(click -> displayable.viewClicked(((FragmentShower) getContext()))));
+          .subscribe(click -> displayable.viewClicked(((FragmentShower) getContext())), err -> {
+            CrashReport.getInstance().log(err);
+          }));
     }
   }
 

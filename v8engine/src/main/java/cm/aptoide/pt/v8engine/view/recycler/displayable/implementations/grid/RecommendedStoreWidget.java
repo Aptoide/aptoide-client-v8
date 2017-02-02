@@ -59,7 +59,9 @@ public class RecommendedStoreWidget extends Widget<RecommendedStoreDisplayable> 
     setFollowButtonListener(displayable);
     setButtonText(displayable);
     RxView.clicks(itemView)
-        .subscribe(click -> displayable.openStoreFragment((FragmentShower) getContext()));
+        .subscribe(click -> displayable.openStoreFragment((FragmentShower) getContext()), err -> {
+          CrashReport.getInstance().log(err);
+        });
   }
 
   private void setFollowButtonListener(RecommendedStoreDisplayable displayable) {

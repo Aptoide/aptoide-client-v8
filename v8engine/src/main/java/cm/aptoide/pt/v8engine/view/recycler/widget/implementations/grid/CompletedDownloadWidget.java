@@ -82,7 +82,9 @@ import rx.schedulers.Schedulers;
         }, throwable -> throwable.printStackTrace()));
 
     compositeSubscription.add(RxView.clicks(cancelDownloadButton)
-        .subscribe(click -> displayable.removeDownload(getContext())));
+        .subscribe(click -> displayable.removeDownload(getContext()), err -> {
+          CrashReport.getInstance().log(err);
+        }));
 
     compositeSubscription.add(displayable.downloadStatus()
         .observeOn(Schedulers.computation())

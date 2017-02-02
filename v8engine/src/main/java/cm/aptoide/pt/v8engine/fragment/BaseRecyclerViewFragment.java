@@ -78,7 +78,7 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
   public BaseRecyclerViewFragment addDisplayable(int position, Displayable displayable,
       boolean finishedLoading) {
     adapter.addDisplayable(position, displayable);
-    displayables.add(position, displayable);
+    this.displayables.add(position, displayable);
 
     if (finishedLoading) {
       finishLoading();
@@ -89,7 +89,7 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
   @Override @CallSuper
   public BaseRecyclerViewFragment addDisplayable(Displayable displayable, boolean finishedLoading) {
     adapter.addDisplayable(displayable);
-    displayables.add(displayable);
+    this.displayables.add(displayable);
 
     if (finishedLoading) {
       finishLoading();
@@ -122,7 +122,7 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
 
   @Override @CallSuper public BaseRecyclerViewFragment clearDisplayables() {
     adapter.clearDisplayables();
-    displayables.clear();
+    this.displayables.clear();
 
     return this;
   }
