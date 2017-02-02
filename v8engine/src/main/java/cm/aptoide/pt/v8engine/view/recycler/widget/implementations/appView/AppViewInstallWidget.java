@@ -357,7 +357,7 @@ import rx.android.schedulers.AndroidSchedulers;
     int downloadAction = isUpdate ? Download.ACTION_UPDATE : Download.ACTION_INSTALL;
     PermissionManager permissionManager = new PermissionManager();
     final View.OnClickListener installHandler = v -> {
-
+      §
       if (installOrUpgradeMsg == R.string.installing_msg) {
         Analytics.ClickedOnInstallButton.clicked(app);
         Analytics.DownloadComplete.installClicked(app.getId());
@@ -385,8 +385,9 @@ import rx.android.schedulers.AndroidSchedulers;
                   sharePreviewDialog.getPreviewDialogBuilder(getContext());
               SocialRepository socialRepository = new SocialRepository();
 
-              sharePreviewDialog.showShareCardPreviewDialog(displayable, context,
-                  sharePreviewDialog, alertDialog, socialRepository);
+              sharePreviewDialog.showShareCardPreviewDialog(
+                  displayable.getPojo().getNodes().getMeta().getData().getPackageName(), "install",
+                  context, sharePreviewDialog, alertDialog, socialRepository);
             }
             ShowMessage.asSnack(v, installOrUpgradeMsg);
           }, err -> {
@@ -427,50 +428,6 @@ import rx.android.schedulers.AndroidSchedulers;
       }
     };
   }
-
-  //private void showShareCardPreviewDialog(AppViewInstallDisplayable displayable, Context context,
-  //    SharePreviewDialog sharePreviewDialog, AlertDialog.Builder alertDialog,
-  //    SocialRepository socialRepository) {
-  //  Observable.create((Subscriber<? super GenericDialogs.EResponse> subscriber) -> {
-  //    if (!ManagerPreferences.getUserAccessConfirmed()) {
-  //      alertDialog.setPositiveButton(R.string.share, (dialogInterface, i) -> {
-  //        socialRepository.share(displayable, context,
-  //            sharePreviewDialog.getPrivacyResult());
-  //        subscriber.onNext(GenericDialogs.EResponse.YES);
-  //        subscriber.onCompleted();
-  //      }).setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
-  //        subscriber.onNext(GenericDialogs.EResponse.NO);
-  //        subscriber.onCompleted();
-  //      });
-  //    } else {
-  //      alertDialog.setPositiveButton(R.string.continue_option, (dialogInterface, i) -> {
-  //        socialRepository.share(displayable, context,
-  //            sharePreviewDialog.getPrivacyResult());
-  //        subscriber.onNext(GenericDialogs.EResponse.YES);
-  //        subscriber.onCompleted();
-  //      }).setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
-  //        subscriber.onNext(GenericDialogs.EResponse.NO);
-  //        subscriber.onCompleted();
-  //      }).setNeutralButton(R.string.dont_show_again, (dialogInterface, i) -> {
-  //        subscriber.onNext(GenericDialogs.EResponse.CANCEL);
-  //        subscriber.onCompleted();
-  //        ManagerPreferences.setShowPreview(false);
-  //      });
-  //    }
-  //
-  //    alertDialog.show();
-  //  }).subscribeOn(AndroidSchedulers.mainThread()).subscribe(eResponse -> {
-  //    switch (eResponse) {
-  //      case YES:
-  //        ShowMessage.asSnack(getContext(), R.string.social_timeline_share_dialog_title);
-  //        break;
-  //      case NO:
-  //        break;
-  //      case CANCEL:
-  //        break;
-  //    }
-  //  });
-  //}
 
   private void downloadStatusUpdate(@NonNull Progress<Download> progress, GetAppMeta.App app,
       boolean shouldShowError) {

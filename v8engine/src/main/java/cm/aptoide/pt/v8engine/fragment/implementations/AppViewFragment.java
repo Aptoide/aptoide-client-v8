@@ -449,14 +449,13 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             if (AptoideAccountManager.isLoggedIn()
                 && ManagerPreferences.getShowPreview()
                 && Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
-              AppViewInstallDisplayable mockDisplayable =
-                  new AppViewInstallDisplayable(null, getApp, null, false, null);
-              SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(mockDisplayable);
+              SharePreviewDialog sharePreviewDialog = new SharePreviewDialog();
               AlertDialog.Builder alertDialog =
-                  sharePreviewDialog.getPreviewDialogBuilder(getContext());
+                  sharePreviewDialog.getCustomRecommendationPreviewDialogBuilder(getContext(),
+                      appName, app.getIcon());
               SocialRepository socialRepository = new SocialRepository();
 
-              sharePreviewDialog.showShareCardPreviewDialog(mockDisplayable, getContext(),
+              sharePreviewDialog.showShareCardPreviewDialog(packageName, "app", getContext(),
                   sharePreviewDialog, alertDialog, socialRepository);
             }
           }

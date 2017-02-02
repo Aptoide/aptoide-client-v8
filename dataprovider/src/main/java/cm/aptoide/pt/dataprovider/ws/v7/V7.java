@@ -263,10 +263,10 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
     Observable<BaseV7Response> shareCard(@Body ShareCardRequest.Body body,
         @Path(value = "cardUid") String card_id, @Path(value = "accessToken") String accessToken);
 
-    @POST("user/shareTimeline/package_id={packageName}/access_token={accessToken}")
+    @POST("user/shareTimeline/package_id={packageName}/access_token={accessToken}/type={type}")
     Observable<BaseV7Response> shareInstallCard(@Body ShareInstallCardRequest.Body body,
         @Path(value = "packageName") String packageName,
-        @Path(value = "accessToken") String access_token);
+        @Path(value = "accessToken") String access_token, @Path(value = "type") String type);
 
     @POST("review/set/access_token={accessToken}/card_uid={cardUid}/rating={rating}")
     Observable<BaseV7Response> setReview(@Body LikeCardRequest.Body body,
