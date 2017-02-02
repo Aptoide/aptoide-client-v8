@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
@@ -81,25 +82,7 @@ public class AddStoreDialog extends DialogFragment {
   @Override public void onViewCreated(final View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     bindViews(view);
-    /*storeAutoCompleteWebSocket = (StoreAutoCompleteWebSocket) new StoreAutoCompleteWebSocket();
-    storeAutoCompleteWebSocket.connect(STORE_WEBSOCKET_PORT);
-    searchView.setAdapter(new StoreAutoCompleteAdapter(getActivity(), storeAutoCompleteWebSocket));
-    searchView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-      @Override
-      public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-        String chosen = (String) adapterView.getItemAtPosition(position);
-        storeName = chosen;
-      }
-    });*/
-    searchView.setIconifiedByDefault(false);
-    try {
-      Field mDrawable = SearchView.class.getDeclaredField("mSearchHintIcon");
-      mDrawable.setAccessible(true);
-      Drawable drawable =  (Drawable)mDrawable.get(searchView);
-      drawable.setAlpha(0);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+    setupSearchView(view);
     setupStoreSearch(searchView);
     mSubscriptions.add(RxView.clicks(addStoreButton).subscribe(click -> {
       if (givenStoreName.length() > 0) {
@@ -116,6 +99,12 @@ public class AddStoreDialog extends DialogFragment {
         dismiss();
       }
     }));
+  }
+
+  private void setupSearchView(View view) {
+    searchView.setIconifiedByDefault(false);
+    ImageView image = ((ImageView) view.findViewById(R.id.search_mag_icon));
+    image.setImageDrawable(null);
   }
 
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
