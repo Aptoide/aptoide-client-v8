@@ -357,7 +357,6 @@ import rx.android.schedulers.AndroidSchedulers;
     int downloadAction = isUpdate ? Download.ACTION_UPDATE : Download.ACTION_INSTALL;
     PermissionManager permissionManager = new PermissionManager();
     final View.OnClickListener installHandler = v -> {
-      §
       if (installOrUpgradeMsg == R.string.installing_msg) {
         Analytics.ClickedOnInstallButton.clicked(app);
         Analytics.DownloadComplete.installClicked(app.getId());
