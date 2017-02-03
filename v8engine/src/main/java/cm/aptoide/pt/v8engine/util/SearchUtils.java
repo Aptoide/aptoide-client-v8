@@ -9,11 +9,11 @@ import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.database.Cursor;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
+import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -25,12 +25,12 @@ import cm.aptoide.pt.v8engine.websocket.WebSocketSingleton;
  */
 public class SearchUtils {
 
-  public static void setupGlobalSearchView(Menu menu, FragmentActivity fragmentActivity) {
-    setupSearchView(menu.findItem(R.id.action_search), fragmentActivity,
+  public static void setupGlobalSearchView(Menu menu, NavigationManagerV4 navigationManager) {
+    setupSearchView(menu.findItem(R.id.action_search), navigationManager,
         s -> V8Engine.getFragmentProvider().newSearchFragment(s));
   }
 
-  public static void setupSearchView(MenuItem searchItem, FragmentActivity fragmentActivity,
+  private static void setupSearchView(MenuItem searchItem, NavigationManagerV4 navigationManager,
       CreateQueryFragmentInterface createSearchFragmentInterface) {
 
     // Get the SearchView and set the searchable configuration
@@ -47,8 +47,7 @@ public class SearchUtils {
         boolean validQueryLenght = s.length() > 1;
 
         if (validQueryLenght) {
-          FragmentUtils.replaceFragmentV4(fragmentActivity,
-              createSearchFragmentInterface.create(s));
+          navigationManager.navigateTo(createSearchFragmentInterface.create(s));
         } else {
           ShowMessage.asToast(V8Engine.getContext(), R.string.search_minimum_chars);
         }
@@ -69,8 +68,7 @@ public class SearchUtils {
       @Override public boolean onSuggestionClick(int position) {
         Cursor item = (Cursor) searchView.getSuggestionsAdapter().getItem(position);
 
-        FragmentUtils.replaceFragmentV4(fragmentActivity,
-            createSearchFragmentInterface.create(item.getString(1)));
+        navigationManager.navigateTo(createSearchFragmentInterface.create(item.getString(1)));
 
         return true;
       }
@@ -88,9 +86,9 @@ public class SearchUtils {
     searchView.setOnSearchClickListener(v -> WebSocketSingleton.getInstance().connect());
   }
 
-  public static void setupInsideStoreSearchView(Menu menu, FragmentActivity fragmentActivity,
+  public static void setupInsideStoreSearchView(Menu menu, NavigationManagerV4 navigationManager,
       String storeName) {
-    setupSearchView(menu.findItem(R.id.action_search), fragmentActivity,
+    setupSearchView(menu.findItem(R.id.action_search), navigationManager,
         s -> V8Engine.getFragmentProvider().newSearchFragment(s, storeName));
   }
 }

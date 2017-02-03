@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.actions.PermissionRequest;
+import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.util.ScreenTrackingUtils;
 import cm.aptoide.pt.v8engine.interfaces.UiComponentBasics;
 import rx.functions.Action0;
@@ -17,6 +18,8 @@ import rx.functions.Action0;
  */
 public abstract class SupportV4BaseFragment extends FragmentView
     implements UiComponentBasics, PermissionRequest {
+
+  private NavigationManagerV4 appNav;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -123,6 +126,11 @@ public abstract class SupportV4BaseFragment extends FragmentView
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
+    appNav = NavigationManagerV4.Builder.buildWith(getActivity());
     return inflater.inflate(getContentViewId(), container, false);
+  }
+
+  protected NavigationManagerV4 getNavigationManager() {
+    return appNav;
   }
 }

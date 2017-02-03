@@ -20,9 +20,9 @@ public abstract class BasePagerToolbarFragment extends BaseLoaderToolbarFragment
   protected FloatingActionButton floatingActionButton;
 
   @Override public void onDestroyView() {
-    super.onDestroyView();
     viewPager.clearOnPageChangeListeners();
     viewPager = null;
+    super.onDestroyView();
   }
 
   @Override public void bindViews(View view) {

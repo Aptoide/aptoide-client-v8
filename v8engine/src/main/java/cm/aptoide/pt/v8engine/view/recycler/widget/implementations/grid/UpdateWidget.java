@@ -5,8 +5,10 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.support.annotation.UiThread;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +31,6 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.UpdateRepository;
-import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -37,6 +38,7 @@ import com.jakewharton.rxbinding.view.RxView;
 import rx.Observable;
 import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 
 /**
  * Created by neuro on 17-05-2016.
@@ -94,12 +96,15 @@ import rx.android.schedulers.AndroidSchedulers;
     updateVernameTextView.setText(updateDisplayable.getUpdateVersionName());
     ImageLoader.load(updateDisplayable.getIcon(), iconImageView);
 
-    updateRowRelativeLayout.setOnClickListener(v -> FragmentUtils.replaceFragmentV4(getContext(),
-        V8Engine.getFragmentProvider()
-            .newAppViewFragment(updateDisplayable.getAppId(), updateDisplayable.getPackageName())));
+    compositeSubscription.add(RxView.clicks(updateRowRelativeLayout).subscribe(v -> {
+      final Fragment fragment = V8Engine.getFragmentProvider()
+          .newAppViewFragment(updateDisplayable.getAppId(), updateDisplayable.getPackageName());
+      getNavigationManager().navigateTo(fragment);
+    }, throwable -> throwable.printStackTrace()));
 
-    final View.OnLongClickListener longClickListener = v -> {
-      AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+    final Context context = getContext();
+    final Action1<Void> longClickListener = __ -> {
+      AlertDialog.Builder builder = new AlertDialog.Builder(context);
       builder.setTitle(R.string.ignore_update)
           .setCancelable(true)
           .setNegativeButton(R.string.no, null)
@@ -117,12 +122,10 @@ import rx.android.schedulers.AndroidSchedulers;
           });
 
       builder.create().show();
-
-      return true;
     };
 
-    updateRowRelativeLayout.setOnLongClickListener(longClickListener);
-
+    compositeSubscription.add(RxView.longClicks(updateRowRelativeLayout)
+        .subscribe(longClickListener, throwable -> throwable.printStackTrace()));
     compositeSubscription.add(RxView.clicks(updateButtonLayout)
         .flatMap(
             click -> displayable.downloadAndInstall(getContext(), (PermissionRequest) getContext()))

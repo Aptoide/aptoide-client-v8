@@ -1,11 +1,7 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 23/08/2016.
- */
-
 package cm.aptoide.pt.v8engine;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -39,7 +35,6 @@ import cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver;
 import cm.aptoide.pt.v8engine.services.PullingContentService;
 import cm.aptoide.pt.v8engine.util.ApkFy;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
-import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 import java.io.UnsupportedEncodingException;
@@ -85,7 +80,7 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
   }
 
   @Override public void pushFragmentV4(android.support.v4.app.Fragment fragment) {
-    FragmentUtils.replaceFragmentV4(this, fragment);
+    getNavigationManager().navigateTo(fragment);
   }
 
   private void handleDeepLinks(Intent intent) {
@@ -246,24 +241,18 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
         && StoreTabFragmentChooser.validateAcceptedName(Event.Name.valueOf(queryName));
   }
 
-  public android.support.v4.app.Fragment getCurrentV4() {
-    return FragmentUtils.getFirstFragmentV4(this);
+  @Override public android.support.v4.app.Fragment getLastV4() {
+    android.support.v4.app.FragmentManager fragmentManager = this.getSupportFragmentManager();
+    android.support.v4.app.FragmentManager.BackStackEntry backStackEntry =
+        fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1);
+    return this.getSupportFragmentManager().findFragmentByTag(backStackEntry.getName());
   }
 
-  public android.support.v4.app.Fragment getLastV4() {
-    return FragmentUtils.getLastFragmentV4(this);
-  }
-
-  @Override public void pushFragment(Fragment fragment) {
-    FragmentUtils.replaceFragment(this, fragment);
-  }
-
-  public Fragment getCurrent() {
-    return FragmentUtils.getFirstFragment(this);
-  }
-
-  public Fragment getLast() {
-    return FragmentUtils.getLastFragment(this);
+  @Override public Fragment getCurrent() {
+    final FragmentManager fragmentManager = this.getFragmentManager();
+    android.app.FragmentManager.BackStackEntry backStackEntry =
+        fragmentManager.getBackStackEntryAt(0);
+    return fragmentManager.findFragmentByTag(backStackEntry.getName());
   }
 
   @Override public void onBackPressed() {

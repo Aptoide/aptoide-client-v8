@@ -152,10 +152,10 @@ public class StoreFragment extends BasePagerToolbarFragment {
   }
 
   @Override public void onDestroyView() {
-    super.onDestroyView();
     if (storeTheme != null && !storeContext.equals(StoreContext.store)) {
       ThemeUtils.setAptoideTheme(getActivity());
     }
+    super.onDestroyView();
   }
 
   @Override protected void setupViewPager() {
@@ -283,7 +283,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   }
 
   protected void setupSearch(Menu menu) {
-    SearchUtils.setupInsideStoreSearchView(menu, getActivity(), storeName);
+    SearchUtils.setupInsideStoreSearchView(menu, getNavigationManager(), storeName);
   }
 
   @Override public void setupViews() {
