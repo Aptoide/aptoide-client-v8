@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -40,7 +41,7 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
   @Getter private static final String STORE_THEME = "store_theme";
   @Getter private static final String DESCRIPTION = "description";
   @Getter private static final String APP_NAME = "APP_NAME";
-  private final AptoideClientUUID aptoideClientUUID;
+  private AptoideClientUUID aptoideClientUUID;
   private boolean hasAppId = false;
   private long appId;
   private String packageName;
@@ -50,10 +51,13 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
   private String storeTheme;
   private String description;
   private String appName;
+  private AptoideAccountManager accountManager;
 
-  public DescriptionFragment() {
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
+        getContext());
+    accountManager = AptoideAccountManager.getInstance();
   }
 
   public static DescriptionFragment newInstance(String appName, String description,
@@ -123,9 +127,8 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
       finishLoading();
     } else if (hasAppId) {
       GetAppRequest.of(appId, V8Engine.getConfiguration().getPartnerId() == null ? null : storeName,
-          StoreUtils.getStoreCredentials(storeName), AptoideAccountManager.getAccessToken(),
-          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-              DataProvider.getContext()).getAptoideClientUUID(), packageName).execute(getApp -> {
+          StoreUtils.getStoreCredentials(storeName), accountManager.getAccessToken(),
+          aptoideClientUUID.getAptoideClientUUID(), packageName).execute(getApp -> {
         setupAppDescription(getApp);
         setupTitle(getApp);
         finishLoading();

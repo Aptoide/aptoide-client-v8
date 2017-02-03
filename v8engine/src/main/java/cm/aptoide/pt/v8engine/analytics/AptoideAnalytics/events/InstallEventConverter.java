@@ -1,5 +1,7 @@
 package cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events;
 
+import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 
 /**
@@ -7,6 +9,15 @@ import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBa
  */
 
 public class InstallEventConverter extends DownloadInstallEventConverter<InstallEvent> {
+
+  private final IdsRepositoryImpl aptoideClientUUID;
+  private final AptoideAccountManager accountManager;
+
+  public InstallEventConverter(IdsRepositoryImpl aptoideClientUUID,
+      AptoideAccountManager accountManager) {
+    this.aptoideClientUUID = aptoideClientUUID;
+    this.accountManager = accountManager;
+  }
 
   @Override
   protected DownloadInstallAnalyticsBaseBody.Data convertSpecificFields(InstallEvent report,
@@ -18,6 +29,6 @@ public class InstallEventConverter extends DownloadInstallEventConverter<Install
       DownloadInstallBaseEvent.Origin origin, String packageName, String url, String obbUrl,
       String patchObbUrl, DownloadInstallBaseEvent.AppContext context, int versionCode) {
     return new InstallEvent(action, origin, packageName, url, obbUrl, patchObbUrl, context,
-        versionCode, this);
+        versionCode, this, aptoideClientUUID, accountManager);
   }
 }

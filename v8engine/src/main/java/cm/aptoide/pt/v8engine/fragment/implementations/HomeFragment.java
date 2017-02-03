@@ -69,6 +69,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
   @Getter @Setter private Event.Name desiredViewPagerItem = null;
   private ChangeTabReceiver receiver;
   private UpdateRepository updateRepository;
+  private AptoideAccountManager accountManager;
 
   public static HomeFragment newInstance(String storeName, StoreContext storeContext,
       String storeTheme) {
@@ -83,6 +84,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    accountManager = AptoideAccountManager.getInstance();
     updateRepository = RepositoryFactory.getUpdateRepository();
   }
 
@@ -107,12 +109,12 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
     TextView userUsername = (TextView) baseHeaderView.findViewById(R.id.profile_name_text);
     ImageView userAvatarImage = (ImageView) baseHeaderView.findViewById(R.id.profile_image);
 
-    if (AptoideAccountManager.isLoggedIn()) {
+    if (accountManager.isLoggedIn()) {
 
       userEmail.setVisibility(View.VISIBLE);
       userUsername.setVisibility(View.VISIBLE);
 
-      UserCompleteData userCompleteData = AptoideAccountManager.getUserData();
+      UserCompleteData userCompleteData = accountManager.getUserData();
       userEmail.setText(userCompleteData.getUserEmail());
       userUsername.setText(userCompleteData.getUserName());
 
@@ -232,7 +234,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
 
         int itemId = menuItem.getItemId();
         if (itemId == R.id.navigation_item_my_account) {
-          AptoideAccountManager.openAccountManager(getContext());
+          accountManager.openAccountManager(getContext());
         } else if (itemId == R.id.navigation_item_rollback) {
           ((FragmentShower) getActivity()).pushFragment(
               V8Engine.getFragmentProvider().newRollbackFragment());

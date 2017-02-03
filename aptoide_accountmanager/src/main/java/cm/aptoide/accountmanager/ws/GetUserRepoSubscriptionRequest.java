@@ -17,15 +17,15 @@ import rx.Observable;
  */
 public class GetUserRepoSubscriptionRequest extends v3accountManager<GetUserRepoSubscription> {
 
-  GetUserRepoSubscriptionRequest() {
-  }
+  private AptoideAccountManager accountManager;
 
-  GetUserRepoSubscriptionRequest(OkHttpClient httpClient, Converter.Factory converterFactory) {
-    super(httpClient, converterFactory);
+  GetUserRepoSubscriptionRequest(AptoideAccountManager accountManager) {
+    super(accountManager);
+    this.accountManager = accountManager;
   }
 
   public static GetUserRepoSubscriptionRequest of() {
-    return new GetUserRepoSubscriptionRequest();
+    return new GetUserRepoSubscriptionRequest(AptoideAccountManager.getInstance());
   }
 
   @Override protected Observable<GetUserRepoSubscription> loadDataFromNetwork(Interfaces interfaces,
@@ -33,7 +33,7 @@ public class GetUserRepoSubscriptionRequest extends v3accountManager<GetUserRepo
     HashMapNotNull<String, String> parameters = new HashMapNotNull<>();
 
     parameters.put("mode", "json");
-    parameters.put("access_token", AptoideAccountManager.getAccessToken());
+    parameters.put("access_token", accountManager.getAccessToken());
 
     return interfaces.getUserRepos(parameters);
   }

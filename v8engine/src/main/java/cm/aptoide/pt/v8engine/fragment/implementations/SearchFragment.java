@@ -46,7 +46,8 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class SearchFragment extends BasePagerToolbarFragment {
   private static final String TAG = SearchFragment.class.getSimpleName();
-  private final AptoideClientUUID aptoideClientUUID;
+  private AptoideClientUUID aptoideClientUUID;
+  private AptoideAccountManager accountManager;
   private String query;
 
   transient private boolean hasSubscribedResults;
@@ -62,11 +63,6 @@ public class SearchFragment extends BasePagerToolbarFragment {
   private String storeName;
   private boolean onlyTrustedApps;
   private int selectedButton = 0;
-
-  public SearchFragment() {
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
-  }
 
   public static SearchFragment newInstance(String query) {
     return newInstance(query, false);
@@ -92,6 +88,13 @@ public class SearchFragment extends BasePagerToolbarFragment {
     SearchFragment fragment = new SearchFragment();
     fragment.setArguments(args);
     return fragment;
+  }
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+    accountManager = AptoideAccountManager.getInstance();
   }
 
   @Override public void bindViews(View view) {
@@ -225,7 +228,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
       shouldFinishLoading = true;
       ListSearchAppsRequest of =
           ListSearchAppsRequest.of(query, storeName, StoreUtils.getSubscribedStoresAuthMap(),
-              AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID());
+              accountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID());
       of.execute(listSearchApps -> {
         List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
 
@@ -239,7 +242,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
       }, e -> finishLoading());
     } else {
       ListSearchAppsRequest.of(query, true, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(),
-          AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
+          accountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
           .execute(listSearchApps -> {
             List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
 
@@ -254,7 +257,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
       // Other stores
       ListSearchAppsRequest.of(query, false, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(),
-          AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
+          accountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
           .execute(listSearchApps -> {
             List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
 

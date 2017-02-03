@@ -7,14 +7,13 @@ package cm.aptoide.accountmanager.ws;
 
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.Application;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-import okhttp3.OkHttpClient;
-import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -31,19 +30,14 @@ public class OAuth2AuthenticationRequest extends v3accountManager<OAuth> {
   private String refreshToken;
   private String aptoideClientUUID;
 
-  public OAuth2AuthenticationRequest(String aptoideClientUUID) {
-    this.aptoideClientUUID = aptoideClientUUID;
-  }
-
-  public OAuth2AuthenticationRequest(OkHttpClient httpClient, Converter.Factory converterFactory,
-      String aptoideClientUUID) {
-    super(httpClient, converterFactory);
+  public OAuth2AuthenticationRequest(String aptoideClientUUID, AptoideAccountManager accountManager) {
+    super(accountManager);
     this.aptoideClientUUID = aptoideClientUUID;
   }
 
   public static OAuth2AuthenticationRequest of(String username, String password, LoginMode mode,
       @Nullable String nameForGoogle, String aptoideClientUUID) {
-    return new OAuth2AuthenticationRequest(aptoideClientUUID).setUsername(username)
+    return new OAuth2AuthenticationRequest(aptoideClientUUID, AptoideAccountManager.getInstance()).setUsername(username)
         .setPassword(password)
         .setMode(mode)
         .setGrantType("password")
@@ -52,7 +46,7 @@ public class OAuth2AuthenticationRequest extends v3accountManager<OAuth> {
 
   public static OAuth2AuthenticationRequest of(String refreshToken, String aptoideClientUUID) {
 
-    return new OAuth2AuthenticationRequest(aptoideClientUUID).setGrantType("refresh_token")
+    return new OAuth2AuthenticationRequest(aptoideClientUUID, AptoideAccountManager.getInstance()).setGrantType("refresh_token")
         .setRefreshToken(refreshToken);
   }
 

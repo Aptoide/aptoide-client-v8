@@ -62,6 +62,7 @@ public class CreateUserActivity extends PermissionsBaseActivity
   private CompositeSubscription mSubscriptions;
   private Boolean result = false;
   private String ERROR_TAG = "Error update user";
+  private AptoideAccountManager accountManager;
 
   public CreateUserActivity() {
     this.aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
@@ -71,6 +72,7 @@ public class CreateUserActivity extends PermissionsBaseActivity
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(getLayoutId());
+    accountManager = AptoideAccountManager.getInstance();
     mSubscriptions = new CompositeSubscription();
     bindViews();
     getUserData();
@@ -228,7 +230,7 @@ public class CreateUserActivity extends PermissionsBaseActivity
       startActivity(new Intent(this, LoggedInActivity.class));
     } else {
       Toast.makeText(this, R.string.create_profile_pub_pri_suc_login, Toast.LENGTH_LONG).show();
-      AptoideAccountManager.sendLoginCancelledBroadcast();
+      accountManager.sendLoginCancelledBroadcast();
     }
     finish();
   }

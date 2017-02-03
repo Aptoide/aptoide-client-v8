@@ -5,6 +5,8 @@
 
 package cm.aptoide.pt.v8engine.fragment.implementations.storetab;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
@@ -25,11 +27,14 @@ import rx.Observable;
  */
 public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRecyclerFragment {
 
-  private final AptoideClientUUID aptoideClientUUID;
+  private AptoideClientUUID aptoideClientUUID;
+  private AptoideAccountManager accountManager;
 
-  public StoreTabWidgetsGridRecyclerFragment() {
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
+    accountManager = AptoideAccountManager.getInstance();
   }
 
   protected Observable<List<Displayable>> loadGetStoreWidgets(GetStoreWidgets getStoreWidgets,
@@ -37,10 +42,10 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
     return Observable.from(getStoreWidgets.getDatalist().getList())
         .flatMap(wsWidget -> WSWidgetsUtils.loadWidgetNode(wsWidget,
             StoreUtils.getStoreCredentialsFromUrl(url), refresh,
-            AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID(),
+            accountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID(),
             DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(V8Engine.getContext()),
             DataProvider.getConfiguration().getPartnerId(),
-            AptoideAccountManager.isMatureSwitchOn()))
+            accountManager.isMatureSwitchOn()))
         .toList()
         .map(wsWidgets -> DisplayablesFactory.parse(getStoreWidgets, storeTheme, storeRepository))
         .first();

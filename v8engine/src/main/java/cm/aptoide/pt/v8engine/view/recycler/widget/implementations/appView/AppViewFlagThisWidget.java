@@ -47,6 +47,7 @@ import rx.android.schedulers.AndroidSchedulers;
   private TextView needsLicenceText;
   private TextView fakeAppText;
   private TextView virusText;
+  private AptoideAccountManager accountManager;
 
   public AppViewFlagThisWidget(View itemView) {
     super(itemView);
@@ -73,6 +74,7 @@ import rx.android.schedulers.AndroidSchedulers;
   }
 
   @Override public void bindView(AppViewFlagThisDisplayable displayable) {
+    accountManager = AptoideAccountManager.getInstance();
     GetApp pojo = displayable.getPojo();
     GetAppMeta.App app = pojo.getNodes().getMeta().getData();
 
@@ -140,10 +142,9 @@ import rx.android.schedulers.AndroidSchedulers;
 
   private View.OnClickListener handleButtonClick(final String storeName, final String md5) {
     return v -> {
-
-      if (!AptoideAccountManager.isLoggedIn()) {
+      if (!accountManager.isLoggedIn()) {
         ShowMessage.asSnack(v, R.string.you_need_to_be_logged_in, R.string.login, snackView -> {
-          AptoideAccountManager.openAccountManager(snackView.getContext());
+          accountManager.openAccountManager(snackView.getContext());
         });
         return;
       }
@@ -154,7 +155,7 @@ import rx.android.schedulers.AndroidSchedulers;
       final GetAppMeta.GetAppMetaFile.Flags.Vote.Type type = viewIdTypeMap.get(v.getId());
 
       compositeSubscription.add(AddApkFlagRequest.of(storeName, md5, type.name().toLowerCase(),
-          AptoideAccountManager.getAccessToken())
+          accountManager.getAccessToken())
           .observe(true)
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(response -> {

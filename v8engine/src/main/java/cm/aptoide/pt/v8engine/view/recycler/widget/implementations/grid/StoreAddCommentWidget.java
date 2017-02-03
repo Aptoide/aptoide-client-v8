@@ -27,6 +27,7 @@ public class StoreAddCommentWidget extends Widget<StoreAddCommentDisplayable> {
   private static final String TAG = StoreAddCommentWidget.class.getName();
 
   private Button commentStore;
+  private AptoideAccountManager accountManager;
 
   public StoreAddCommentWidget(View itemView) {
     super(itemView);
@@ -40,6 +41,7 @@ public class StoreAddCommentWidget extends Widget<StoreAddCommentDisplayable> {
 
     final Context context = getContext();
 
+    accountManager = AptoideAccountManager.getInstance();
     @ColorInt int color = getColorOrDefault(displayable.getStoreTheme(), context);
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
       Drawable d = context.getDrawable(R.drawable.dialog_bg_2);
@@ -73,7 +75,7 @@ public class StoreAddCommentWidget extends Widget<StoreAddCommentDisplayable> {
       @NonNull final String storeName, @NonNull final FragmentManager fragmentManager,
       @NonNull final View view) {
 
-    return Observable.just(AptoideAccountManager.isLoggedIn()).flatMap(isLoggedIn -> {
+    return Observable.just(accountManager.isLoggedIn()).flatMap(isLoggedIn -> {
 
       if (isLoggedIn) {
         // show fragment CommentDialog
@@ -100,7 +102,7 @@ public class StoreAddCommentWidget extends Widget<StoreAddCommentDisplayable> {
   private Observable<Void> showSignInMessage(@NonNull final View view) {
     return ShowMessage.asObservableSnack(view, R.string.you_need_to_be_logged_in, R.string.login,
         snackView -> {
-          AptoideAccountManager.openAccountManager(view.getContext());
+          accountManager.openAccountManager(view.getContext());
         }).flatMap(a -> Observable.empty());
   }
 }

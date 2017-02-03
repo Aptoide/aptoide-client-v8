@@ -21,13 +21,17 @@ import rx.Observable;
 
   private final ArrayList<String> list;
   private boolean matureSwitch;
+  private AptoideAccountManager accountManager;
 
-  private ChangeUserSettingsRequest() {
+  private ChangeUserSettingsRequest(AptoideAccountManager accountManager) {
+    super(accountManager);
+    this.accountManager = accountManager;
     list = new ArrayList<>();
   }
 
   public static ChangeUserSettingsRequest of(boolean matureSwitchStatus) {
-    ChangeUserSettingsRequest request = new ChangeUserSettingsRequest();
+    ChangeUserSettingsRequest request = new ChangeUserSettingsRequest(
+        AptoideAccountManager.getInstance());
     request.setMatureSwitch(matureSwitchStatus);
     return request;
   }
@@ -40,7 +44,7 @@ import rx.Observable;
     ArrayList<String> parametersList = setupParameters();
     parameters.put("settings", TextUtils.join(",", parametersList));
 
-    final String accessToken = AptoideAccountManager.getAccessToken();
+    final String accessToken = accountManager.getAccessToken();
     if (TextUtils.isEmpty(accessToken)) {
       parameters.put(ACCESS_TOKEN, accessToken);
     }

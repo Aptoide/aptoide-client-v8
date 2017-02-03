@@ -35,10 +35,11 @@ public class StoreUtils {
 
   private static StoreCredentialsProviderImpl storeCredentialsProvider;
   private static AptoideClientUUID aptoideClientUUID;
+  private static AptoideAccountManager accountManager;
 
   static {
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
-
+    accountManager = AptoideAccountManager.getInstance();
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
   }
@@ -61,7 +62,7 @@ public class StoreUtils {
       @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
       @Nullable ErrorRequestListener errorRequestListener) {
     subscribeStore(GetStoreMetaRequest.of(getStoreCredentials(storeName),
-        AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID()),
+        accountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID()),
         successRequestListener, errorRequestListener);
   }
 
@@ -94,8 +95,8 @@ public class StoreUtils {
         }
 
         // TODO: 18-05-2016 neuro private ainda na ta
-        if (AptoideAccountManager.isLoggedIn()) {
-          AptoideAccountManager.subscribeStore(storeData.getName());
+        if (accountManager.isLoggedIn()) {
+          accountManager.subscribeStore(storeData.getName());
         }
 
         storeAccessor.save(store);
@@ -179,8 +180,8 @@ public class StoreUtils {
   }
 
   public static void unsubscribeStore(String name) {
-    if (AptoideAccountManager.isLoggedIn()) {
-      AptoideAccountManager.unsubscribeStore(name);
+    if (accountManager.isLoggedIn()) {
+      accountManager.unsubscribeStore(name);
     }
     StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
     storeAccessor.remove(name);

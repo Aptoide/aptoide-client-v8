@@ -44,6 +44,7 @@ import rx.functions.Action1;
  */
 public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
 
+  private AptoideAccountManager accountManager;
   private View containerLayout;
   private View descriptionContentLayout;
   private View socialChannelsLayout;
@@ -86,6 +87,7 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
 
   @Override public void bindView(GridStoreMetaDisplayable displayable) {
 
+    accountManager = AptoideAccountManager.getInstance();
     final GetStoreMeta getStoreMeta = displayable.getPojo();
     final cm.aptoide.pt.model.v7.store.Store store = getStoreMeta.getData();
     final StoreThemeEnum theme = StoreThemeEnum.get(store.getAppearance().getTheme());
@@ -176,8 +178,8 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
     return aVoid -> {
       if (storeWrapper.isStoreSubscribed()) {
         storeWrapper.setStoreSubscribed(false);
-        if (AptoideAccountManager.isLoggedIn()) {
-          AptoideAccountManager.unsubscribeStore(storeWrapper.getStore().getName());
+        if (accountManager.isLoggedIn()) {
+          accountManager.unsubscribeStore(storeWrapper.getStore().getName());
         }
         StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
         storeAccessor.remove(storeWrapper.getStore().getId());

@@ -112,7 +112,7 @@ public class LikeButtonView extends FrameLayout implements View.OnClickListener 
     }
 
     if (!isChecked) {
-      if (AptoideAccountManager.isLoggedIn()) {
+      if (AptoideAccountManager.getInstance().isLoggedIn()) {
         vHeart.setImageResource(R.drawable.heart_on);
         vHeart.animate().cancel();
         vHeart.setScaleX(0);

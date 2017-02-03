@@ -39,7 +39,8 @@ import rx.functions.Action0;
  */
 public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 
-  private final AptoideClientUUID aptoideClientUUID;
+  private AptoideClientUUID aptoideClientUUID;
+  private AptoideAccountManager accountManager;
 
   private AdsRepository adsRepository;
 
@@ -82,10 +83,6 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
         addDisplayables(displayables);
       };
 
-  public SearchPagerTabFragment() {
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
-  }
 
   public static SearchPagerTabFragment newInstance(String query, boolean subscribedStores,
       boolean hasMultipleFragments) {
@@ -113,7 +110,9 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     adsRepository = new AdsRepository();
-
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+    accountManager = AptoideAccountManager.getInstance();
     super.onCreate(savedInstanceState);
   }
 
@@ -147,11 +146,11 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
       ListSearchAppsRequest of;
       if (storeName != null) {
         of = ListSearchAppsRequest.of(query, storeName, StoreUtils.getSubscribedStoresAuthMap(),
-            AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID());
+            accountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID());
       } else {
         of = ListSearchAppsRequest.of(query, addSubscribedStores,
             StoreUtils.getSubscribedStoresIds(), StoreUtils.getSubscribedStoresAuthMap(),
-            AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID());
+            accountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID());
       }
       endlessRecyclerOnScrollListener =
           new EndlessRecyclerOnScrollListener(this.getAdapter(), listSearchAppsRequest = of,

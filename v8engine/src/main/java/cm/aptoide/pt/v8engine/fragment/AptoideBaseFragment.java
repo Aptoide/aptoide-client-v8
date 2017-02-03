@@ -2,7 +2,12 @@ package cm.aptoide.pt.v8engine.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.repository.request.RequestFactory;
+import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 
 /**
@@ -14,7 +19,9 @@ public class AptoideBaseFragment<T extends BaseAdapter> extends GridRecyclerFrag
   protected RequestFactory requestFactory;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    requestFactory = new RequestFactory();
+    requestFactory = new RequestFactory(new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext()), AptoideAccountManager.getInstance(),
+        new StoreCredentialsProviderImpl());
 
     super.onCreate(savedInstanceState);
   }

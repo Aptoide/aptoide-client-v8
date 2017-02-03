@@ -54,7 +54,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   @Getter private static final String APP_NAME = "app_name";
   @Getter private static final String REVIEW_ID = "review_id";
   @Getter private static final String STORE_THEME = "store_theme";
-  private final AptoideClientUUID aptoideClientUUID;
+  private AptoideClientUUID aptoideClientUUID;
 
   private long appId;
   @Getter private long reviewId;
@@ -66,8 +66,11 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   private RatingTotalsLayout ratingTotalsLayout;
   private RatingBarsLayout ratingBarsLayout;
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
+  private AptoideAccountManager accountManager;
 
-  public RateAndReviewsFragment() {
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    accountManager = AptoideAccountManager.getInstance();
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
   }
@@ -164,7 +167,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
 
     floatingActionButton.setOnClickListener(v -> {
       DialogUtils.showRateDialog(getActivity(), appName, packageName, storeName,
-          () -> fetchReviews());
+          () -> fetchReviews(), accountManager);
     });
   }
 
@@ -177,7 +180,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   }
 
   private void fetchRating(boolean refresh) {
-    GetAppRequest.of(appId, AptoideAccountManager.getAccessToken(),
+    GetAppRequest.of(appId, accountManager.getAccessToken(),
         aptoideClientUUID.getAptoideClientUUID(), packageName)
         .observe(refresh)
         .subscribeOn(Schedulers.io())
@@ -197,12 +200,14 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
 
   private void fetchReviews() {
     ListReviewsRequest reviewsRequest =
-        ListReviewsRequest.of(storeName, packageName, AptoideAccountManager.getAccessToken(),
+        ListReviewsRequest.of(storeName, packageName, accountManager.getAccessToken(),
             aptoideClientUUID.getAptoideClientUUID());
 
     endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(this.getAdapter(), reviewsRequest,
-            new ListFullReviewsSuccessRequestListener(this), Throwable::printStackTrace);
+            new ListFullReviewsSuccessRequestListener(this, accountManager,
+                new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext())),
+            Throwable::printStackTrace);
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(false);
   }

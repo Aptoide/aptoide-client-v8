@@ -16,7 +16,9 @@ import rx.Observable;
  */
 
 public class RecommendedStoreDisplayable extends DisplayablePojo<Store> {
-  StoreRepository storeRepository;
+
+  private AptoideAccountManager accountManager;
+  private StoreRepository storeRepository;
 
   public RecommendedStoreDisplayable() {
   }
@@ -24,6 +26,7 @@ public class RecommendedStoreDisplayable extends DisplayablePojo<Store> {
   public RecommendedStoreDisplayable(Store pojo, StoreRepository storeRepository) {
     super(pojo);
     this.storeRepository = storeRepository;
+    this.accountManager = AptoideAccountManager.getInstance();
   }
 
   @Override protected Configs getConfig() {
@@ -43,8 +46,8 @@ public class RecommendedStoreDisplayable extends DisplayablePojo<Store> {
   }
 
   public void unsubscribeStore() {
-    if (AptoideAccountManager.isLoggedIn()) {
-      AptoideAccountManager.unsubscribeStore(getPojo().getName());
+    if (accountManager.isLoggedIn()) {
+      accountManager.unsubscribeStore(getPojo().getName());
     }
     StoreUtils.unsubscribeStore(getPojo().getName());
   }

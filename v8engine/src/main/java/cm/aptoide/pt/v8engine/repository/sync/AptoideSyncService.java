@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.telephony.TelephonyManager;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.PaymentAuthorization;
 import cm.aptoide.pt.database.realm.PaymentConfirmation;
@@ -34,7 +35,8 @@ public class AptoideSyncService extends Service {
             new SyncDataConverter(), new NetworkOperatorManager(
             (TelephonyManager) getApplicationContext().getSystemService(TELEPHONY_SERVICE)),
             AccessorFactory.getAccessorFor(PaymentConfirmation.class),
-            AccessorFactory.getAccessorFor(PaymentAuthorization.class));
+            AccessorFactory.getAccessorFor(PaymentAuthorization.class),
+            AptoideAccountManager.getInstance());
       }
     }
   }

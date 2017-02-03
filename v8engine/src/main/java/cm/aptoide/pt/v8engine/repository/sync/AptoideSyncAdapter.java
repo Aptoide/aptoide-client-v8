@@ -11,6 +11,7 @@ import android.content.ContentProviderClient;
 import android.content.Context;
 import android.content.SyncResult;
 import android.os.Bundle;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.PaymentAuthorizationAccessor;
 import cm.aptoide.pt.database.accessors.PaymentConfirmationAccessor;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
@@ -41,12 +42,13 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
   private final PaymentAuthorizationFactory authorizationConverter;
   private final PaymentConfirmationAccessor confirmationAccessor;
   private final PaymentAuthorizationAccessor authorizationAcessor;
+  private final AptoideAccountManager accountManager;
 
   public AptoideSyncAdapter(Context context, boolean autoInitialize, boolean allowParallelSyncs,
       PaymentConfirmationFactory confirmationConverter,
       PaymentAuthorizationFactory authorizationConverter, SyncDataConverter productConverter,
       NetworkOperatorManager operatorManager, PaymentConfirmationAccessor confirmationAccessor,
-      PaymentAuthorizationAccessor authorizationAcessor) {
+      PaymentAuthorizationAccessor authorizationAcessor, AptoideAccountManager accountManager) {
     super(context, autoInitialize, allowParallelSyncs);
     this.confirmationConverter = confirmationConverter;
     this.authorizationConverter = authorizationConverter;
@@ -54,6 +56,7 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
     this.operatorManager = operatorManager;
     this.confirmationAccessor = confirmationAccessor;
     this.authorizationAcessor = authorizationAcessor;
+    this.accountManager = accountManager;
   }
 
   @Override public void onPerformSync(Account account, Bundle extras, String authority,
@@ -70,16 +73,16 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
       if (paymentIds.isEmpty()) {
         new PaymentConfirmationSync(
             RepositoryFactory.getPaymentConfirmationRepository(getContext(), product), product,
-            operatorManager, confirmationAccessor, confirmationConverter).sync(syncResult);
+            operatorManager, confirmationAccessor, confirmationConverter, accountManager).sync(syncResult);
       } else {
         new PaymentConfirmationSync(
             RepositoryFactory.getPaymentConfirmationRepository(getContext(), product), product,
             operatorManager, confirmationAccessor, confirmationConverter, paymentConfirmationId,
-            Integer.valueOf(paymentIds.get(0))).sync(syncResult);
+            Integer.valueOf(paymentIds.get(0)), accountManager).sync(syncResult);
       }
     } else if (authorizations) {
-      new PaymentAuthorizationSync(paymentIds, authorizationAcessor, authorizationConverter).sync(
-          syncResult);
+      new PaymentAuthorizationSync(paymentIds, authorizationAcessor, authorizationConverter,
+          accountManager).sync(syncResult);
     }
   }
 }

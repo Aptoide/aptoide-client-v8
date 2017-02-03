@@ -41,17 +41,13 @@ import cm.aptoide.pt.v8engine.util.StoreUtils;
 public class PrivateStoreDialog extends DialogFragment {
 
   public static final String TAG = "PrivateStoreDialog";
-  private final AptoideClientUUID aptoideClientUUID;
+  private AptoideClientUUID aptoideClientUUID;
+  private AptoideAccountManager accountManager;
   private ProgressDialog loadingDialog;
   private String storeName;
   private String storeUser;
   private String storePassSha1;
   private boolean isInsideStore;
-
-  public PrivateStoreDialog() {
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
-  }
 
   public static PrivateStoreDialog newInstance(Fragment returnFragment, int requestCode,
       String storeName, boolean isInsideStore) {
@@ -73,6 +69,9 @@ public class PrivateStoreDialog extends DialogFragment {
 
   @Override public void onCreate(final Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+    accountManager = AptoideAccountManager.getInstance();
     final Bundle args = getArguments();
     if (args != null) {
       storeName = args.getString(BundleArgs.STORE_NAME.name());
@@ -143,7 +142,7 @@ public class PrivateStoreDialog extends DialogFragment {
   private GetStoreMetaRequest buildRequest() {
     return GetStoreMetaRequest.of(
         new BaseRequestWithStore.StoreCredentials(storeName, storeUser, storePassSha1),
-        AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID());
+        accountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID());
   }
 
   private void dismissLoadingDialog() {

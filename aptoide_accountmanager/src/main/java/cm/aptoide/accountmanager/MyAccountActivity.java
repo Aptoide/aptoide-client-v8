@@ -20,30 +20,32 @@ public class MyAccountActivity extends BaseActivity {
   private Button mLogout;
   private Toolbar mToolbar;
   private TextView mUsernameTextview;
+  private AptoideAccountManager accountManager;
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(getLayoutId());
     bindViews();
     setupToolbar();
-    AptoideAccountManager.setupLogout(this, mLogout);
-    mUsernameTextview.setText(AptoideAccountManager.getUserEmail());
+    accountManager = AptoideAccountManager.getInstance();
+    accountManager.setupLogout(this, mLogout);
+    mUsernameTextview.setText(accountManager.getUserEmail());
 
     findViewById(R.id.btn_user_name).setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
-        Snackbar.make(v, AptoideAccountManager.getUserEmail(), Snackbar.LENGTH_LONG).show();
+        Snackbar.make(v, accountManager.getUserEmail(), Snackbar.LENGTH_LONG).show();
       }
     });
 
     findViewById(R.id.btn_access_token).setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
-        Snackbar.make(v, AptoideAccountManager.getAccessToken(), Snackbar.LENGTH_LONG).show();
+        Snackbar.make(v, accountManager.getAccessToken(), Snackbar.LENGTH_LONG).show();
       }
     });
 
     findViewById(R.id.btn_invalidate_token).setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
-        AptoideAccountManager.invalidateAccessToken(MyAccountActivity.this)
+        accountManager.invalidateAccessToken(MyAccountActivity.this)
             .subscribe(new SimpleSubscriber<String>() {
               @Override public void onNext(String s) {
                 Snackbar.make(v, s, Snackbar.LENGTH_LONG).show();

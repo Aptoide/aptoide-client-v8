@@ -27,12 +27,13 @@ class AptoideLoginUtils {
   static final String APTOIDE_LOGIN_FROM = "aptoide_login_from";
   private static int REQ_SIGNUP = 8;
 
-  static void setupAptoideLogin(Activity activity, Button loginButton, Button registerButton) {
+  static void setupAptoideLogin(Activity activity, Button loginButton, Button registerButton,
+      final AptoideAccountManager accountManager) {
 
     loginButton.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
-        String username = AptoideAccountManager.getInstance().getIntroducedUserName();
-        String password = AptoideAccountManager.getInstance().getIntroducedPassword();
+        String username = accountManager.getIntroducedUserName();
+        String password = accountManager.getIntroducedPassword();
 
         if (username == null || password == null || (username.length() == 0
             || password.length() == 0)) {
@@ -40,7 +41,7 @@ class AptoideLoginUtils {
           return;
         }
 
-        AptoideAccountManager.loginUserCredentials(LoginMode.APTOIDE, username, password, null);
+        accountManager.loginUserCredentials(LoginMode.APTOIDE, username, password, null, activity);
       }
     });
 
@@ -57,7 +58,7 @@ class AptoideLoginUtils {
   }
 
   public static void onActivityResult(Activity activity, int requestCode, int resultCode,
-      Intent data) {
+      Intent data, AptoideAccountManager accountManager) {
     if (requestCode == REQ_SIGNUP && resultCode == Activity.RESULT_OK) {
       Bundle bundle = data.getExtras();
       String userName = (String) bundle.get(APTOIDE_LOGIN_USER_NAME_KEY);
@@ -66,11 +67,11 @@ class AptoideLoginUtils {
       String accessToken = (String) bundle.get(APTOIDE_LOGIN_ACCESS_TOKEN_KEY);
       String loginOrigin = (String) bundle.get(APTOIDE_LOGIN_FROM);
       AccountManagerPreferences.setAccessToken(accessToken);
-      AptoideAccountManager.getInstance()
+      accountManager
           .addLocalUserAccount(userName, password, null, refreshToken, accessToken);
-      AptoideAccountManager.setAccessTokenOnLocalAccount(accessToken, null,
+      accountManager.setAccessTokenOnLocalAccount(accessToken, null,
           SecureKeys.ACCESS_TOKEN);
-      AptoideAccountManager.getInstance()
+      accountManager
           .onLoginSuccess(LoginMode.APTOIDE, loginOrigin, userName, password);
       activity.finish();
     }

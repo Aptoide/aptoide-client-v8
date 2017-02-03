@@ -22,17 +22,20 @@ import rx.Observable;
 public class InAppPaymentConfirmationRepository extends PaymentConfirmationRepository {
 
   private final InAppBillingProduct product;
+  private final AptoideAccountManager accountManager;
 
   public InAppPaymentConfirmationRepository(NetworkOperatorManager operatorManager,
       PaymentConfirmationAccessor paymentDatabase, SyncAdapterBackgroundSync backgroundSync,
-      PaymentConfirmationFactory confirmationFactory, InAppBillingProduct product) {
+      PaymentConfirmationFactory confirmationFactory, InAppBillingProduct product,
+      AptoideAccountManager accountManager) {
     super(operatorManager, paymentDatabase, backgroundSync, confirmationFactory);
     this.product = product;
+    this.accountManager = accountManager;
   }
 
   @Override public Completable createPaymentConfirmation(int paymentId) {
     return CreatePaymentConfirmationRequest.ofInApp(product.getId(), paymentId, operatorManager,
-        product.getDeveloperPayload(), AptoideAccountManager.getAccessToken())
+        product.getDeveloperPayload(), accountManager.getAccessToken())
         .observe()
         .flatMap(response -> {
           if (response != null && response.isOk()) {

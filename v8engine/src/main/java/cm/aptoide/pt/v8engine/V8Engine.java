@@ -14,6 +14,7 @@ import android.content.pm.PackageInfo;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
 import cm.aptoide.pt.actions.UserData;
@@ -78,10 +79,11 @@ public abstract class V8Engine extends DataProvider {
   @Setter @Getter private static boolean autoUpdateWasCalled = false;
 
   private static AptoideClientUUID aptoideClientUUID;
+  private static AptoideAccountManager accountManager;
 
   public static void loadStores() {
 
-    AptoideAccountManager.getUserRepos().subscribe(subscriptions -> {
+    accountManager.getUserRepos().subscribe(subscriptions -> {
 
       if (subscriptions.size() > 0) {
         for (Subscription subscription : subscriptions) {
@@ -130,7 +132,7 @@ public abstract class V8Engine extends DataProvider {
     SecurePreferences.setUserAgent(
         AptoideUtils.NetworkUtils.getDefaultUserAgent(aptoideClientUUID, new UserData() {
           @Override public String getUserEmail() {
-            return AptoideAccountManager.getUserEmail();
+            return accountManager.getUserEmail();
           }
         }, AptoideUtils.Core.getDefaultVername(), getConfiguration().getPartnerId()));
   }
@@ -154,6 +156,7 @@ public abstract class V8Engine extends DataProvider {
       CrashReport.getInstance().log(e);
     }
     long l = System.currentTimeMillis();
+    accountManager = AptoideAccountManager.getInstance();
     fragmentProvider = createFragmentProvider();
     activityProvider = createActivityProvider();
     displayableWidgetMapping = createDisplayableWidgetMapping();
@@ -190,11 +193,11 @@ public abstract class V8Engine extends DataProvider {
     if (SecurePreferences.isFirstRun()) {
       createShortCut();
       PreferenceManager.setDefaultValues(this, R.xml.settings, false);
-      if (AptoideAccountManager.isLoggedIn() && ManagerPreferences.isFirstRunV7()) {
-        AptoideAccountManager.removeLocalAccount();
+      if (accountManager.isLoggedIn() && ManagerPreferences.isFirstRunV7()) {
+        accountManager.removeLocalAccount();
       }
       loadInstalledApps().doOnNext(o -> {
-        if (AptoideAccountManager.isLoggedIn()) {
+        if (accountManager.isLoggedIn()) {
 
           if (!SecurePreferences.isUserDataLoaded()) {
             loadUserData();
@@ -207,7 +210,7 @@ public abstract class V8Engine extends DataProvider {
       }).subscribe();
 
       // load picture, name and email
-      AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(userData -> {
+      accountManager.refreshAndSaveUserInfoData().subscribe(userData -> {
         Logger.v(TAG, "hello " + userData.getUsername());
       }, e -> {
         CrashReport.getInstance().log(e);
@@ -235,8 +238,8 @@ public abstract class V8Engine extends DataProvider {
         .init(this, new DownloadNotificationActionsActionsInterface(),
             new DownloadManagerSettingsI(), downloadAccessor, CacheHelper.build(),
             new FileUtils(action -> Analytics.File.moveFile(action)),
-            new TokenHttpClient(aptoideClientUUID, () -> AptoideAccountManager.getUserEmail(),
-                getConfiguration().getPartnerId()).customMake(),
+            new TokenHttpClient(aptoideClientUUID, () -> accountManager.getUserEmail(),
+                getConfiguration().getPartnerId(), accountManager).customMake(),
             new DownloadAnalytics(Analytics.getInstance()));
 
     fileManager.purgeCache()
@@ -262,12 +265,16 @@ public abstract class V8Engine extends DataProvider {
           CrashReport.getInstance().log(throwable);
         });
 
-    AptoideAccountManager.setAnalytics(new AccountAnalytcsImp());
+    accountManager.setAnalytics(new AccountAnalytcsImp());
     Logger.d(TAG, "onCreate took " + (System.currentTimeMillis() - l) + " millis.");
   }
 
   @Override protected TokenInvalidator getTokenInvalidator() {
-    return AptoideAccountManager::invalidateAccessToken;
+    return new TokenInvalidator() {
+      @Override public Observable<String> invalidateAccessToken(@NonNull Context context) {
+        return accountManager.invalidateAccessToken(context);
+      }
+    };
   }
 
   protected void setupCrashReports(boolean isDisabled) {

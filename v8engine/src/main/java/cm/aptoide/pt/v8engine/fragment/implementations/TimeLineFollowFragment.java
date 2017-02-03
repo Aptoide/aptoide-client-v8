@@ -35,13 +35,16 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
   public static final String OPEN_MODE = "OPEN_MODE";
   public static final String CARD_UID = "CARDUID";
   public static final String NUMBER_LIKES = "NUMBER_LIKES";
-  private final AptoideClientUUID aptoideClientUUID;
+  private AptoideClientUUID aptoideClientUUID;
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
   private TimeLineFollowFragment.FollowFragmentOpenMode openMode;
   @Nullable private String cardUid;
   @Nullable private Long numberOfLikes;
+  private AptoideAccountManager accountManager;
 
-  public TimeLineFollowFragment() {
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    accountManager = AptoideAccountManager.getInstance();
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
   }
@@ -121,15 +124,15 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
       V7 request;
       switch (openMode) {
         case FOLLOWERS:
-          request = GetFollowersRequest.of(AptoideAccountManager.getAccessToken(),
+          request = GetFollowersRequest.of(accountManager.getAccessToken(),
               aptoideClientUUID.getAptoideClientUUID());
           break;
         case FOLLOWING:
-          request = GetFollowingRequest.of(AptoideAccountManager.getAccessToken(),
+          request = GetFollowingRequest.of(accountManager.getAccessToken(),
               aptoideClientUUID.getAptoideClientUUID());
           break;
         case LIKE_PREVIEW:
-          request = GetUserLikesRequest.of(AptoideAccountManager.getAccessToken(),
+          request = GetUserLikesRequest.of(accountManager.getAccessToken(),
               new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                   DataProvider.getContext()).getAptoideClientUUID(), cardUid);
           break;

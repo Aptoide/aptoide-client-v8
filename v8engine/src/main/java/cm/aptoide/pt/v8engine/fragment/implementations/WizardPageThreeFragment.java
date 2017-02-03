@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,8 +17,15 @@ import cm.aptoide.pt.v8engine.R;
  */
 public class WizardPageThreeFragment extends Fragment {
 
+  private AptoideAccountManager accountManager;
+
   public static Fragment newInstance() {
     return new WizardPageThreeFragment();
+  }
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    accountManager = AptoideAccountManager.getInstance();
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -31,7 +39,8 @@ public class WizardPageThreeFragment extends Fragment {
     final Button registerButton = (Button) view.findViewById(R.id.registerButton);
     final TextView loginLink = (TextView) view.findViewById(R.id.login_link);
 
-    if (AptoideAccountManager.isLoggedIn()) {
+
+    if (accountManager.isLoggedIn()) {
       view.findViewById(R.id.login_register_layout).setVisibility(View.GONE);
       return;
     }
@@ -40,12 +49,12 @@ public class WizardPageThreeFragment extends Fragment {
     registerButton.setTransformationMethod(null);
 
     registerButton.setOnClickListener(view1 -> {
-      AptoideAccountManager.openAccountManager(getContext(), true, false);
+      accountManager.openAccountManager(getContext(), true, false);
       getActivity().onBackPressed();
     });
 
     loginLink.setOnClickListener(view1 -> {
-      AptoideAccountManager.openAccountManager(getContext(), true, false);
+      accountManager.openAccountManager(getContext(), true, false);
       getActivity().onBackPressed();
     });
   }

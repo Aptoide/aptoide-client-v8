@@ -63,6 +63,7 @@ import rx.Observable;
   private boolean isCommentsCollapsed = false;
   private View notHelpfullButtonLayout;
   private View helpfullButtonLayout;
+  private AptoideAccountManager accountManager;
 
   public RateAndReviewCommentWidget(View itemView) {
     super(itemView);
@@ -93,6 +94,7 @@ import rx.Observable;
     final Review review = displayable.getPojo().getReview();
     final String appName = displayable.getPojo().getAppName();
 
+    accountManager = AptoideAccountManager.getInstance();
     ImageLoader.loadWithCircleTransformAndPlaceHolderAvatarSize(review.getUser().getAvatar(),
         userImage, R.drawable.layer_1);
     username.setText(review.getUser().getName());
@@ -110,7 +112,7 @@ import rx.Observable;
     final long reviewId = review.getId();
 
     compositeSubscription.add(RxView.clicks(reply).flatMap(a -> {
-      if (AptoideAccountManager.isLoggedIn()) {
+      if (accountManager.isLoggedIn()) {
         FragmentManager fm = getContext().getFragmentManager();
         CommentDialogFragment commentDialogFragment =
             CommentDialogFragment.newInstanceReview(review.getId(), appName);
@@ -127,7 +129,7 @@ import rx.Observable;
       } else {
         return ShowMessage.asObservableSnack(ratingBar, R.string.you_need_to_be_logged_in,
             R.string.login, snackView -> {
-              AptoideAccountManager.openAccountManager(snackView.getContext());
+              accountManager.openAccountManager(snackView.getContext());
             });
       }
     }).subscribe(a -> { /* do nothing */ }, err -> {
@@ -176,7 +178,7 @@ import rx.Observable;
   }
 
   private void loadCommentsForThisReview(long reviewId, int limit, CommentAdder commentAdder) {
-    ListCommentsRequest.of(reviewId, limit, AptoideAccountManager.getAccessToken(),
+    ListCommentsRequest.of(reviewId, limit, accountManager.getAccessToken(),
         aptoideClientUUID.getAptoideClientUUID(), true).execute(listComments -> {
       if (listComments.isOk()) {
         List<Comment> comments = listComments.getDatalist().getList();
@@ -194,8 +196,8 @@ import rx.Observable;
   private void setReviewRating(long reviewId, boolean positive) {
     setHelpButtonsClickable(false);
 
-    if (AptoideAccountManager.isLoggedIn()) {
-      SetReviewRatingRequest.of(reviewId, positive, AptoideAccountManager.getAccessToken(),
+    if (accountManager.isLoggedIn()) {
+      SetReviewRatingRequest.of(reviewId, positive, accountManager.getAccessToken(),
           aptoideClientUUID.getAptoideClientUUID()).execute(response -> {
         if (response == null) {
           Logger.e(TAG, "empty response");
@@ -228,7 +230,7 @@ import rx.Observable;
     } else {
       ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> {
-            AptoideAccountManager.openAccountManager(snackView.getContext());
+            accountManager.openAccountManager(snackView.getContext());
           });
       setHelpButtonsClickable(true);
     }

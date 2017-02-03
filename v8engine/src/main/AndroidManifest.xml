@@ -41,6 +41,7 @@
 
     <activity android:name=".payment.providers.paypal.PayPalPaymentActivity"/>
     <activity android:name=".activity.WebAuthorizationActivity"/>
+    <activity android:name=".activity.LoginActivity"/>
 
     <activity
         android:name=".receivers.DeepLinkIntentReceiver"

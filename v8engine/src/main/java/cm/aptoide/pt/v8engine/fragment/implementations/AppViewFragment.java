@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
@@ -22,7 +21,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -45,7 +43,8 @@ import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
-import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
+import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.iab.BillingBinder;
@@ -56,6 +55,7 @@ import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Malware;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.SimpleSubscriber;
@@ -160,6 +160,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private AppAction appAction = AppAction.OPEN;
   private InstalledRepository installedRepository;
   private GetApp getApp;
+  private AptoideAccountManager accountManager;
 
   public static AppViewFragment newInstance(String md5) {
     Bundle bundle = new Bundle();
@@ -224,13 +225,13 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    accountManager = AptoideAccountManager.getInstance();
     permissionManager = new PermissionManager();
     Installer installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
     installManager = new InstallManager(AptoideDownloadManager.getInstance(), installer);
 
     productFactory = new ProductFactory();
-    appRepository = new AppRepository(new NetworkOperatorManager(
-        (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE)));
+    appRepository = RepositoryFactory.getAppRepository(getContext());
     adsRepository = new AdsRepository();
     installedRepository = RepositoryFactory.getInstalledRepository();
   }
@@ -446,14 +447,17 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
               startActivity(Intent.createChooser(sharingIntent, getString(R.string.share)));
             }
           } else if (GenericDialogs.EResponse.SHARE_TIMELINE == eResponse) {
-            if (AptoideAccountManager.isLoggedIn()
+            if (accountManager.isLoggedIn()
                 && ManagerPreferences.getShowPreview()
                 && Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
-              SharePreviewDialog sharePreviewDialog = new SharePreviewDialog();
+              SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(accountManager);
               AlertDialog.Builder alertDialog =
                   sharePreviewDialog.getCustomRecommendationPreviewDialogBuilder(getContext(),
                       appName, app.getIcon());
-              SocialRepository socialRepository = new SocialRepository();
+              SocialRepository socialRepository = new SocialRepository(
+                  accountManager, new IdsRepositoryImpl(
+                  SecurePreferencesImplementation.getInstance(),
+                      DataProvider.getContext()));
 
               sharePreviewDialog.showShareCardPreviewDialog(packageName, "app", getContext(),
                   sharePreviewDialog, alertDialog, socialRepository);

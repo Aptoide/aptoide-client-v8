@@ -44,34 +44,39 @@ abstract class v3accountManager<U> extends WebService<v3accountManager.Interface
 
   @Getter protected final BaseBody map;
   private final String INVALID_ACCESS_TOKEN_CODE = "invalid_token";
+  private final AptoideAccountManager accountManager;
   private boolean accessTokenRetry = false;
 
-  v3accountManager() {
+  v3accountManager(AptoideAccountManager accountManager) {
     super(Interfaces.class, OkHttpClientFactory.getSingletonClient(new UserAgentGenerator() {
       @Override public String generateUserAgent() {
-        return AptoideAccountManager.getUserEmail();
+        return accountManager.getUserEmail();
       }
     }, false), WebService.getDefaultConverter(), BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
         + "://"
         + BuildConfig.APTOIDE_WEB_SERVICES_HOST
         + "/webservices/");
+    this.accountManager = accountManager;
     this.map = new BaseBody();
   }
 
-  v3accountManager(OkHttpClient httpClient) {
+  v3accountManager(OkHttpClient httpClient, AptoideAccountManager accountManager) {
     super(Interfaces.class, httpClient, WebService.getDefaultConverter(),
         BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
             + "://"
             + BuildConfig.APTOIDE_WEB_SERVICES_HOST
             + "/webservices/");
+    this.accountManager = accountManager;
     this.map = new BaseBody();
   }
 
-  v3accountManager(OkHttpClient httpClient, Converter.Factory converterFactory) {
+  v3accountManager(OkHttpClient httpClient, Converter.Factory converterFactory,
+      AptoideAccountManager accountManager) {
     super(Interfaces.class, httpClient, converterFactory, BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
         + "://"
         + BuildConfig.APTOIDE_WEB_SERVICES_HOST
         + "/webservices/");
+    this.accountManager = accountManager;
     this.map = new BaseBody();
   }
 
@@ -92,7 +97,7 @@ abstract class v3accountManager<U> extends WebService<v3accountManager.Interface
 
                 if (!accessTokenRetry) {
                   accessTokenRetry = true;
-                  return AptoideAccountManager.invalidateAccessToken(Application.getContext())
+                  return accountManager.invalidateAccessToken(Application.getContext())
                       .flatMap(s -> {
                         this.map.setAccess_token(s);
                         return v3accountManager.this.observe(bypassCache)

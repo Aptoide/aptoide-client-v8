@@ -7,7 +7,6 @@ package cm.aptoide.pt.v8engine.repository;
 
 import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.GetTimelineStatsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetUserTimelineRequest;
@@ -16,7 +15,6 @@ import cm.aptoide.pt.model.v7.Datalist;
 import cm.aptoide.pt.model.v7.TimelineStats;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.model.v7.timeline.TimelineItem;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import java.util.ArrayList;
 import java.util.List;
 import rx.Observable;
@@ -29,19 +27,20 @@ public class TimelineRepository {
   private final String action;
   private final TimelineCardFilter filter;
   private final AptoideClientUUID aptoideClientUUID;
+  private final AptoideAccountManager accountManager;
 
-  public TimelineRepository(String action, TimelineCardFilter filter) {
+  public TimelineRepository(String action, TimelineCardFilter filter,
+      IdsRepositoryImpl idsRepository, AptoideAccountManager accountManager) {
     this.action = action;
     this.filter = filter;
-
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
+    this.aptoideClientUUID = idsRepository;
+    this.accountManager = accountManager;
   }
 
   public Observable<Datalist<TimelineCard>> getTimelineCards(Integer limit, int offset,
       List<String> packageNames, boolean refresh) {
     return GetUserTimelineRequest.of(action, limit, offset, packageNames,
-        AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
+        accountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
         .observe(refresh)
         .doOnNext(item -> filter.clear())
         .map(getUserTimeline -> getUserTimeline.getDatalist())
@@ -77,7 +76,7 @@ public class TimelineRepository {
   }
 
   public Observable<TimelineStats> getTimelineStats(boolean byPassCache) {
-    return GetTimelineStatsRequest.of(AptoideAccountManager.getAccessToken(),
+    return GetTimelineStatsRequest.of(accountManager.getAccessToken(),
         aptoideClientUUID.getAptoideClientUUID()).observe(byPassCache);
   }
 }

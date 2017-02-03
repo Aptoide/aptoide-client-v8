@@ -50,6 +50,7 @@ import java.util.List;
   private static final String TAG = AppViewRateAndReviewsWidget.class.getSimpleName();
   private static final int MAX_COMMENTS = 3;
   private final AptoideClientUUID aptoideClientUUID;
+  private AptoideAccountManager accountManager;
   private View emptyReviewsLayout;
   private View ratingLayout;
   private View commentsLayout;
@@ -104,6 +105,7 @@ import java.util.List;
     GetAppMeta.App app = pojo.getNodes().getMeta().getData();
     GetAppMeta.Stats stats = app.getStats();
 
+    accountManager = AptoideAccountManager.getInstance();
     appName = app.getName();
     packageName = app.getPackageName();
     storeName = app.getStore().getName();
@@ -116,7 +118,8 @@ import java.util.List;
     ratingBar.setRating(ratingAvg);
 
     View.OnClickListener rateOnClickListener = v -> {
-      DialogUtils.showRateDialog(getContext(), appName, packageName, storeName, this::loadReviews);
+      DialogUtils.showRateDialog(getContext(), appName, packageName, storeName, this::loadReviews,
+          accountManager);
     };
 
     rateThisButton.setOnClickListener(rateOnClickListener);
@@ -148,7 +151,7 @@ import java.util.List;
 
   public void loadTopReviews(String storeName, String packageName) {
     ListReviewsRequest.ofTopReviews(storeName, packageName, MAX_COMMENTS,
-        AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
+        accountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
         .execute(listReviews -> {
 
               List<Review> reviews = listReviews.getDatalist().getList();

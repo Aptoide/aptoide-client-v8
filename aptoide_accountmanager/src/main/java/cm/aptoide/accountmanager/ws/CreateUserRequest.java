@@ -33,13 +33,14 @@ public class CreateUserRequest extends v3accountManager<OAuth> {
   private String aptoideClientUUID;
 
   private CreateUserRequest(OkHttpClient client, String email, String password,
-      String aptoideClientUUID) {
-    this(client, email, password, "", "", "", aptoideClientUUID);
+      String aptoideClientUUID, AptoideAccountManager accountManager) {
+    this(client, email, password, "", "", "", aptoideClientUUID, accountManager);
   }
 
   private CreateUserRequest(OkHttpClient client, String email, String password, String name,
-      String update, String userAvatarPath, String aptoideClientUUID) {
-    super(client);
+      String update, String userAvatarPath, String aptoideClientUUID,
+      AptoideAccountManager accountManager) {
+    super(client, accountManager);
     this.email = email;
     this.password = password;
     this.name = name;
@@ -49,12 +50,13 @@ public class CreateUserRequest extends v3accountManager<OAuth> {
   }
 
   public static CreateUserRequest of(String email, String password, String aptoideClientUUID) {
-    return new CreateUserRequest(getHttpClient(), email, password, aptoideClientUUID);
+    return new CreateUserRequest(getHttpClient(AptoideAccountManager.getInstance()), email, password, aptoideClientUUID,
+        AptoideAccountManager.getInstance());
   }
 
-  private static OkHttpClient getHttpClient() {
+  private static OkHttpClient getHttpClient(AptoideAccountManager accountManager) {
     OkHttpClient.Builder clientBuilder =
-        OkHttpClientFactory.newClient(() -> AptoideAccountManager.getAccessToken()).newBuilder();
+        OkHttpClientFactory.newClient(() -> accountManager.getAccessToken()).newBuilder();
     clientBuilder.connectTimeout(2, TimeUnit.MINUTES);
     clientBuilder.readTimeout(2, TimeUnit.MINUTES);
     clientBuilder.writeTimeout(2, TimeUnit.MINUTES);
@@ -63,8 +65,8 @@ public class CreateUserRequest extends v3accountManager<OAuth> {
 
   public static CreateUserRequest of(String update, String email, String name, String password,
       String userAvatarPath, String aptoideClientUUID) {
-    return new CreateUserRequest(getHttpClient(), email, password, name, update, userAvatarPath,
-        aptoideClientUUID);
+    return new CreateUserRequest(getHttpClient(AptoideAccountManager.getInstance()), email, password, name, update, userAvatarPath,
+        aptoideClientUUID, AptoideAccountManager.getInstance());
   }
 
   public String getPassword() {

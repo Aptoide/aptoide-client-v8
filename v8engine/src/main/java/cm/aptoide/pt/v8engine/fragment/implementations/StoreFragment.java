@@ -59,16 +59,19 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private static final String TAG = StoreFragment.class.getSimpleName();
 
   private final int PRIVATE_STORE_REQUEST_CODE = 20;
-  private final AptoideClientUUID aptoideClientUUID;
+  private AptoideClientUUID aptoideClientUUID;
+  private AptoideAccountManager accountManager;
   protected PagerSlidingTabStrip pagerSlidingTabStrip;
   private String storeName;
   private StoreContext storeContext;
   private GetStore getStore;
   private String storeTheme;
 
-  public StoreFragment() {
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
+    accountManager = AptoideAccountManager.getInstance();
   }
 
   public static StoreFragment newInstance(String storeName, String storeTheme) {
@@ -119,7 +122,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     if (create || getStore == null) {
       GetStoreRequest.of(StoreUtils.getStoreCredentials(storeName), storeContext,
-          AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
+          accountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
           .observe(refresh)
           .observeOn(AndroidSchedulers.mainThread())
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))

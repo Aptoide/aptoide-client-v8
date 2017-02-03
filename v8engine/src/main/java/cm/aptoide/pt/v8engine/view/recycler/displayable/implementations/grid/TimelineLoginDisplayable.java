@@ -19,7 +19,7 @@ public class TimelineLoginDisplayable extends Displayable {
     return R.layout.timeline_login_header_layout;
   }
 
-  public void login(Context context) {
-    AptoideAccountManager.openAccountManager(context);
+  public void login(Context context, AptoideAccountManager accountManager) {
+    accountManager.openAccountManager(context);
   }
 }

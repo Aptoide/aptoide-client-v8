@@ -3,7 +3,6 @@ package cm.aptoide.pt.v8engine.repository;
 import android.content.Context;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.BaseActivity;
-import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.LikeCardRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SetUserRequest;
@@ -13,7 +12,6 @@ import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import rx.schedulers.Schedulers;
 
 /**
@@ -22,15 +20,15 @@ import rx.schedulers.Schedulers;
 public class SocialRepository {
 
   private final AptoideClientUUID aptoideClientUUID;
+  private final AptoideAccountManager accountManager;
 
-  public SocialRepository() {
-
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
+  public SocialRepository(AptoideAccountManager accountManager, IdsRepositoryImpl aptoideClientUUID) {
+    this.aptoideClientUUID = aptoideClientUUID;
+    this.accountManager = accountManager;
   }
 
   public void share(TimelineCard timelineCard, Context context, boolean privacy) {
-    String accessToken = AptoideAccountManager.getAccessToken();
+    String accessToken = accountManager.getAccessToken();
     String aptoideClientUUID = this.aptoideClientUUID.getAptoideClientUUID();
     ShareCardRequest.of(timelineCard, accessToken, aptoideClientUUID)
         .observe()
@@ -47,9 +45,9 @@ public class SocialRepository {
   }
 
   public void like(TimelineCard timelineCard, String cardType, String ownerHash, int rating) {
-    String accessToken = AptoideAccountManager.getAccessToken();
+    String accessToken = accountManager.getAccessToken();
     String aptoideClientUUID = this.aptoideClientUUID.getAptoideClientUUID();
-    String email = AptoideAccountManager.getUserEmail();
+    String email = accountManager.getUserEmail();
     LikeCardRequest.of(timelineCard, cardType, ownerHash, accessToken, aptoideClientUUID, rating)
         .observe()
         .observeOn(Schedulers.io())
@@ -59,7 +57,7 @@ public class SocialRepository {
   }
 
   public void share(String packageName, String shareType, boolean privacy) {
-    String accessToken = AptoideAccountManager.getAccessToken();
+    String accessToken = accountManager.getAccessToken();
     String aptoideClientUUID = this.aptoideClientUUID.getAptoideClientUUID();
     ShareInstallCardRequest.of(packageName, accessToken, shareType, aptoideClientUUID)
         .observe()

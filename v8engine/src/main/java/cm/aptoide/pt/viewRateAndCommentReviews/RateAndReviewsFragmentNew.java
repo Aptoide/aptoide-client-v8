@@ -9,13 +9,17 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Review;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.util.schedulers.ConcreteSchedulerProvider;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.R;
@@ -60,6 +64,7 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
   private RatingTotalsLayout ratingTotalsLayout;
   private RatingBarsLayout ratingBarsLayout;
   private FloatingActionButton floatingActionButton;
+  private AptoideAccountManager accountManager;
 
   //
   // static constructors
@@ -116,10 +121,12 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
+    accountManager = AptoideAccountManager.getInstance();
     final RateAndReviewsPresenter presenter =
         new RateAndReviewsPresenter(appId, storeName, packageName, this,
-            ConcreteSchedulerProvider.getInstance());
+            ConcreteSchedulerProvider.getInstance(), accountManager, new IdsRepositoryImpl(
+            SecurePreferencesImplementation.getInstance(),
+                DataProvider.getContext()).getAptoideClientUUID());
 
     attachPresenter(presenter, savedInstanceState);
   }
@@ -209,7 +216,7 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
   }
 
   @Override public Observable<GenericDialogs.EResponse> showRateView() {
-    return DialogUtils.showRateDialog(getActivity(), appName, packageName, storeName);
+    return DialogUtils.showRateDialog(getActivity(), appName, packageName, storeName, accountManager);
   }
 
   @Override public void showNextReviews(int offset, List<Review> reviews) {

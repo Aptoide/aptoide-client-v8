@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.payment.AptoidePay;
 import cm.aptoide.pt.v8engine.payment.Payer;
@@ -62,7 +63,8 @@ public class WebAuthorizationActivity extends ActivityView {
           RepositoryFactory.getProductRepository(this, product);
       aptoidePay = new AptoidePay(RepositoryFactory.getPaymentConfirmationRepository(this, product),
           RepositoryFactory.getPaymentAuthorizationRepository(this), productRepository,
-          new PaymentAuthorizationFactory(this), new Payer(this));
+          new PaymentAuthorizationFactory(this), new Payer(this,
+          AptoideAccountManager.getInstance()));
 
       webView = (WebView) findViewById(R.id.activity_boa_compra_authorization_web_view);
       webView.getSettings().setJavaScriptEnabled(true);

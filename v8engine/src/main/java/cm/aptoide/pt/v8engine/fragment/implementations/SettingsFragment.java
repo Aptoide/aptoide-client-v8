@@ -66,6 +66,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private Context context;
   private CompositeSubscription subscriptions;
   private FileManager fileManager;
+  private AptoideAccountManager accountManager;
 
   public static Fragment newInstance() {
     return new SettingsFragment();
@@ -75,6 +76,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     super.onCreate(savedInstanceState);
     fileManager = FileManager.build();
     subscriptions = new CompositeSubscription();
+    accountManager = AptoideAccountManager.getInstance();
   }
 
   @Override public void onCreatePreferences(Bundle bundle, String s) {
@@ -140,7 +142,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     });
 
     CheckBoxPreference matureChkBox = (CheckBoxPreference) findPreference("matureChkBox");
-    if (AptoideAccountManager.isMatureSwitchOn()) {
+    if (accountManager.isMatureSwitchOn()) {
       matureChkBox.setChecked(true);
     } else {
       matureChkBox.setChecked(false);
@@ -166,14 +168,14 @@ public class SettingsFragment extends PreferenceFragmentCompat
                     @Override public void onClick(DialogInterface dialog, int which) {
                       if (which == DialogInterface.BUTTON_POSITIVE) {
                         cb.setChecked(true);
-                        AptoideAccountManager.updateMatureSwitch(true);
+                        accountManager.updateMatureSwitch(true);
                       }
                     }
                   }).show();
             } else {
               Logger.d(AdultDialog.class.getName(), "FLURRY TESTING : LOCK ADULT CONTENT");
               Analytics.AdultContent.lock();
-              AptoideAccountManager.updateMatureSwitch(false);
+              accountManager.updateMatureSwitch(false);
             }
 
             return true;
