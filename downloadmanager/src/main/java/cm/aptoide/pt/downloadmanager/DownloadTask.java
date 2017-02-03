@@ -91,7 +91,8 @@ class DownloadTask extends FileDownloadLargeFileListener {
   private void stopDownloadQueue(Download download) {
     //this try catch sucks
     try {
-      for (FileToDownload fileToDownload : download.getFilesToDownload()) {
+      for (int i = download.getFilesToDownload().size() - 1; i >= 0; i--) {
+        FileToDownload fileToDownload = download.getFilesToDownload().get(i);
         FileDownloader.getImpl()
             .getStatus(fileToDownload.getDownloadId(), fileToDownload.getPath());
         int taskId = FileDownloader.getImpl().replaceListener(fileToDownload.getDownloadId(), null);

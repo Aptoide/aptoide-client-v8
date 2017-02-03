@@ -121,8 +121,8 @@ public class AptoideDownloadManager {
     downloadAccessor.get(md5).first().map(download -> {
       download.setOverallDownloadStatus(Download.PAUSED);
       downloadAccessor.save(download);
-      for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
-        FileDownloader.getImpl().pause(fileToDownload.getDownloadId());
+      for (int i = download.getFilesToDownload().size() - 1; i >= 0; i--) {
+        FileDownloader.getImpl().pause(download.getFilesToDownload().get(i).getDownloadId());
       }
       return download;
     }).subscribe(download -> {
