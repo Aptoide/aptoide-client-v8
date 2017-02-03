@@ -19,6 +19,7 @@ import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Review;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.util.schedulers.ConcreteSchedulerProvider;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -121,12 +122,14 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    dialogUtils = new DialogUtils();
-    accountManager = AptoideAccountManager.getInstance();
+    accountManager =
+        AptoideAccountManager.getInstance(getContext(), Application.getConfiguration());
+    dialogUtils = new DialogUtils(accountManager,
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext()));
     final RateAndReviewsPresenter presenter =
         new RateAndReviewsPresenter(appId, storeName, packageName, this,
-            ConcreteSchedulerProvider.getInstance(), accountManager, new IdsRepositoryImpl(
-            SecurePreferencesImplementation.getInstance(),
+            ConcreteSchedulerProvider.getInstance(), accountManager,
+            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                 DataProvider.getContext()).getUniqueIdentifier());
 
     attachPresenter(presenter, savedInstanceState);

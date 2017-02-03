@@ -78,7 +78,7 @@ import rx.functions.Action1;
     textUpdateLayout = (TextView) itemView.findViewById(R.id.text_update_layout);
     progressBar = (ProgressBar) itemView.findViewById(R.id.progress_bar);
 
-    updateRepository = RepositoryFactory.getUpdateRepository();
+    updateRepository = RepositoryFactory.getUpdateRepository(getContext());
   }
 
   @Override public void bindView(UpdateDisplayable updateDisplayable) {

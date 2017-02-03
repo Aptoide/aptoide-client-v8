@@ -14,6 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -26,6 +27,7 @@ import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.Layout;
 import cm.aptoide.pt.navigation.NavigationManagerV4;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -168,7 +170,8 @@ public class MainActivity extends BaseActivity implements MainView, FragmentShow
                   final IdsRepositoryImpl clientUuid =
                       new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this);
 
-                  new StoreUtilsProxy(clientUuid).subscribeStore(storeName);
+                  new StoreUtilsProxy(clientUuid, AptoideAccountManager.getInstance(this,
+                      Application.getConfiguration())).subscribeStore(storeName);
                   ShowMessage.asLongSnack(this,
                       AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
                 }

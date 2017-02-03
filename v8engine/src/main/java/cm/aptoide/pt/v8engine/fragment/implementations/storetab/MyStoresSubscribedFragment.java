@@ -16,7 +16,9 @@ import cm.aptoide.pt.model.v7.Layout;
 import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablesFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
@@ -38,16 +40,16 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    accountManager = AptoideAccountManager.getInstance();
+    accountManager =
+        AptoideAccountManager.getInstance(getContext(), Application.getConfiguration());
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
   }
 
   @Override protected V7<ListStores, ? extends Endless> buildRequest(boolean refresh, String url) {
 
-    GetMyStoreListRequest request =
-        GetMyStoreListRequest.of(url, accountManager.getAccessToken(),
-            aptoideClientUUID.getUniqueIdentifier(), true);
+    GetMyStoreListRequest request = GetMyStoreListRequest.of(url, accountManager.getAccessToken(),
+        aptoideClientUUID.getUniqueIdentifier(), true);
 
     return request;
   }
@@ -79,7 +81,11 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
     for (int i = 0; i < list.size(); i++) {
       if (i == 0 || list.get(i - 1).getId() != list.get(i).getId()) {
         if (layout == Layout.LIST) {
-          storesDisplayables.add(new RecommendedStoreDisplayable(list.get(i), storeRepository));
+          final IdsRepositoryImpl idsRepository =
+              new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
+          storesDisplayables.add(
+              new RecommendedStoreDisplayable(list.get(i), storeRepository, accountManager,
+                  new StoreUtilsProxy(idsRepository, accountManager)));
         } else {
           storesDisplayables.add(new GridStoreDisplayable(list.get(i)));
         }

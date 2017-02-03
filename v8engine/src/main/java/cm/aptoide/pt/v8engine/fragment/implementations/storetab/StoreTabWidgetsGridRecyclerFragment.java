@@ -14,6 +14,7 @@ import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
@@ -32,24 +33,24 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
-    accountManager = AptoideAccountManager.getInstance();
+    aptoideClientUUID =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
+    accountManager =
+        AptoideAccountManager.getInstance(getContext(), Application.getConfiguration());
   }
 
   protected Observable<List<Displayable>> loadGetStoreWidgets(GetStoreWidgets getStoreWidgets,
       boolean refresh, String url) {
     return Observable.from(getStoreWidgets.getDatalist().getList())
         .flatMap(wsWidget -> WSWidgetsUtils.loadWidgetNode(wsWidget,
-            StoreUtils.getStoreCredentialsFromUrl(url), refresh,
-            accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier(),
+            StoreUtils.getStoreCredentialsFromUrl(url), refresh, accountManager.getAccessToken(),
+            aptoideClientUUID.getUniqueIdentifier(),
             DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(V8Engine.getContext()),
-            DataProvider.getConfiguration().getPartnerId(),
-            accountManager.isMatureSwitchOn()))
+            DataProvider.getConfiguration().getPartnerId(), accountManager.isMatureSwitchOn()))
         .toList()
         .flatMapIterable(wsWidgets -> getStoreWidgets.getDatalist().getList())
         .concatMap(wsWidget -> DisplayablesFactory.parse(wsWidget, storeTheme, storeRepository,
-            storeContext))
+            storeContext, getContext()))
         .toList()
         .first();
   }

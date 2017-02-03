@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.utils.SimpleSubscriber;
 
@@ -27,7 +28,7 @@ public class MyAccountActivity extends BaseActivity {
     setContentView(getLayoutId());
     bindViews();
     setupToolbar();
-    accountManager = AptoideAccountManager.getInstance();
+    accountManager = AptoideAccountManager.getInstance(this, Application.getConfiguration());
     accountManager.setupLogout(this, mLogout);
     mUsernameTextview.setText(accountManager.getUserEmail());
 

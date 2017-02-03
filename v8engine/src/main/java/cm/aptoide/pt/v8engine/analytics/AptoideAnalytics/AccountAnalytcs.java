@@ -8,7 +8,7 @@ import static cm.aptoide.pt.v8engine.analytics.Analytics.AccountEvents;
  * Created by trinkes on 11/21/16.
  */
 
-public class AccountAnalytcsImp implements Analytics {
+public class AccountAnalytcs implements Analytics {
   @Override public void login(String action) {
     AccountEvents.login(action);
   }

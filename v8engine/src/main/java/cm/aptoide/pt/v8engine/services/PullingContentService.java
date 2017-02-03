@@ -111,7 +111,7 @@ public class PullingContentService extends Service {
    * @param startId service startid
    */
   private void setUpdatesAction(int startId) {
-    UpdateRepository repository = RepositoryFactory.getUpdateRepository();
+    UpdateRepository repository = RepositoryFactory.getUpdateRepository(this);
     subscriptions.add(repository.sync(true)
         .andThen(repository.getAll(false))
         .first()

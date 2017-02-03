@@ -5,8 +5,10 @@
 
 package cm.aptoide.accountmanager.ws;
 
+import android.content.Context;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.GenericResponseV3;
+import cm.aptoide.pt.preferences.Application;
 import rx.Observable;
 
 /**
@@ -23,10 +25,12 @@ public class ChangeUserRepoSubscriptionRequest extends v3accountManager<GenericR
     this.accountManager = accountManager;
   }
 
-  public static ChangeUserRepoSubscriptionRequest of(String storeName, boolean subscribe) {
+  public static ChangeUserRepoSubscriptionRequest of(String storeName, boolean subscribe,
+      Context context) {
 
     ChangeUserRepoSubscriptionRequest changeUserRepoSubscriptionRequest =
-        new ChangeUserRepoSubscriptionRequest(AptoideAccountManager.getInstance());
+        new ChangeUserRepoSubscriptionRequest(AptoideAccountManager.getInstance(context,
+            Application.getConfiguration()));
 
     changeUserRepoSubscriptionRequest.storeName = storeName;
     changeUserRepoSubscriptionRequest.subscribe = subscribe;

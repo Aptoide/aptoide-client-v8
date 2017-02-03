@@ -9,10 +9,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -55,6 +57,8 @@ public class SocialStoreLatestAppsWidget
   private CardView cardView;
   private Button followStore;
   private StoreRepository storeRepository;
+  private AptoideAccountManager accountManager;
+  private StoreUtilsProxy storeUtilsProxy;
   //private TextView sharedBy;
 
   public SocialStoreLatestAppsWidget(View itemView) {
@@ -85,6 +89,11 @@ public class SocialStoreLatestAppsWidget
 
   @Override public void bindView(SocialStoreLatestAppsDisplayable displayable) {
     super.bindView(displayable);
+    accountManager =
+        AptoideAccountManager.getInstance(getContext(), Application.getConfiguration());
+    storeUtilsProxy = new StoreUtilsProxy(
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext()),
+        accountManager);
     storeName.setText(displayable.getStoreName());
     userName.setText(displayable.getUser().getName());
     setCardViewMargin(displayable, cardView);
@@ -198,10 +207,6 @@ public class SocialStoreLatestAppsWidget
     final String storeName = displayable.getSharedStore().getName();
     final String storeTheme = displayable.getSharedStore().getName();
 
-    final IdsRepositoryImpl clientUuid =
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
-    final StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(clientUuid);
-
     compositeSubscription.add(storeRepository.isSubscribed(displayable.getSharedStore().getId())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(isSubscribed -> {
@@ -246,10 +251,6 @@ public class SocialStoreLatestAppsWidget
       followStore.setText(R.string.followed);
       compositeSubscription.add(RxView.clicks(followStore).subscribe(openStore));
     } else {
-
-      final IdsRepositoryImpl clientUuid =
-          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
-      final StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(clientUuid);
 
       // set follow store button text and subscribe store action
       Action1<Void> subscribeStore = __ -> {

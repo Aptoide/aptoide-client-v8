@@ -53,7 +53,7 @@ public class InstalledIntentService extends IntentService {
     adsRepository = new AdsRepository();
     repository = RepositoryFactory.getRollbackRepository();
     installedRepository = RepositoryFactory.getInstalledRepository();
-    updatesRepository = RepositoryFactory.getUpdateRepository();
+    updatesRepository = RepositoryFactory.getUpdateRepository(this);
 
     subscriptions = new CompositeSubscription();
     analytics = Analytics.getInstance();

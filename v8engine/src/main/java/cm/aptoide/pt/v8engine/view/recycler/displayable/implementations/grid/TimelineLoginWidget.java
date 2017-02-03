@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 import android.view.View;
 import android.widget.Button;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -26,7 +27,7 @@ public class TimelineLoginWidget extends Widget<TimelineLoginDisplayable> {
   }
 
   @Override public void bindView(TimelineLoginDisplayable displayable) {
-    accountManager = AptoideAccountManager.getInstance();
+    accountManager = AptoideAccountManager.getInstance(getContext(), Application.getConfiguration());
     compositeSubscription.add(
         RxView.clicks(button).subscribe(click -> displayable.login(getContext(), accountManager), err -> {
           CrashReport.getInstance().log(err);

@@ -25,7 +25,7 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
 
   public AccountAuthenticator(Context context) {
     super(context);
-    accountManager = AptoideAccountManager.getInstance();
+    accountManager = AptoideAccountManager.getInstance(getContext(), Application.getConfiguration());
   }
 
   @Override

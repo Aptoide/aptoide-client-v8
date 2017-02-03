@@ -23,9 +23,9 @@ public class StoreUtilsProxy {
   private final AptoideAccountManager accountManager;
   private final AptoideClientUUID aptoideClientUUID;
 
-  public StoreUtilsProxy(AptoideClientUUID aptoideClientUuid) {
+  public StoreUtilsProxy(AptoideClientUUID aptoideClientUuid, AptoideAccountManager accountManager) {
     this.aptoideClientUUID = aptoideClientUuid;
-    this.accountManager = AptoideAccountManager.getInstance();
+    this.accountManager = accountManager;
   }
 
   public void subscribeStore(String storeName) {

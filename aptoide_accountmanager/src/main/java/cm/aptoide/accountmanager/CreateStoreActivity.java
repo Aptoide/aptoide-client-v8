@@ -24,6 +24,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.SetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SimpleSetStoreRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
@@ -110,7 +111,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
     getData();
     super.onCreate(savedInstanceState);
     setContentView(getLayoutId());
-    accountManager = AptoideAccountManager.getInstance();
+    accountManager = AptoideAccountManager.getInstance(this, Application.getConfiguration());
     mSubscriptions = new CompositeSubscription();
     bindViews();
     editViews();
@@ -263,7 +264,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
             progressDialog.show();
             mSubscriptions.add(
                 CheckUserCredentialsRequest.of(accountManager.getAccessToken(), storeName,
-                    CREATE_STORE_CODE).observe().subscribe(answer -> {
+                    CREATE_STORE_CODE, this).observe().subscribe(answer -> {
                   if (answer.hasErrors()) {
                     if (answer.getErrors() != null && answer.getErrors().size() > 0) {
                       progressDialog.dismiss();

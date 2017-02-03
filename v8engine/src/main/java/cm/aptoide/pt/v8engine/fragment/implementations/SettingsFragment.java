@@ -80,7 +80,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     fileManager = FileManager.build();
     subscriptions = new CompositeSubscription();
     permissionManager = new PermissionManager();
-    accountManager = AptoideAccountManager.getInstance();
+    accountManager = AptoideAccountManager.getInstance(getContext(), Application.getConfiguration());
   }
 
   @Override public void onCreatePreferences(Bundle bundle, String s) {
@@ -99,7 +99,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     if (shouldRefreshUpdates(key)) {
       UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
       updateAccessor.removeAll();
-      UpdateRepository repository = RepositoryFactory.getUpdateRepository();
+      UpdateRepository repository = RepositoryFactory.getUpdateRepository(context);
       repository.sync(true)
           .andThen(repository.getAll(false))
           .first()

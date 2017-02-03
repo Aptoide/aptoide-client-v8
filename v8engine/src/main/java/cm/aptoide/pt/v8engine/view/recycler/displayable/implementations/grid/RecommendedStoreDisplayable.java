@@ -2,10 +2,9 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.content.Context;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.navigation.NavigationManagerV4;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
@@ -22,14 +21,17 @@ public class RecommendedStoreDisplayable extends DisplayablePojo<Store> {
 
   private AptoideAccountManager accountManager;
   private StoreRepository storeRepository;
+  private StoreUtilsProxy storeUtilsProxy;
 
   public RecommendedStoreDisplayable() {
   }
 
-  public RecommendedStoreDisplayable(Store pojo, StoreRepository storeRepository) {
+  public RecommendedStoreDisplayable(Store pojo, StoreRepository storeRepository,
+      AptoideAccountManager accountManager, StoreUtilsProxy storeUtilsProxy) {
     super(pojo);
     this.storeRepository = storeRepository;
-    this.accountManager = AptoideAccountManager.getInstance();
+    this.accountManager = accountManager;
+    this.storeUtilsProxy = storeUtilsProxy;
   }
 
   @Override protected Configs getConfig() {
@@ -45,10 +47,7 @@ public class RecommendedStoreDisplayable extends DisplayablePojo<Store> {
   }
 
   public void subscribeStore(Context context) {
-    final IdsRepositoryImpl clientUuid =
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), context);
-
-    new StoreUtilsProxy(clientUuid).subscribeStore(getPojo().getName());
+    storeUtilsProxy.subscribeStore(getPojo().getName());
   }
 
   void unsubscribeStore() {

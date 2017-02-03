@@ -13,6 +13,7 @@ import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.design.ShowMessage;
 
 /**
@@ -33,7 +34,7 @@ public class SignUpActivity extends BaseActivity implements AptoideAccountManage
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(getLayoutId());
-    accountManager = AptoideAccountManager.getInstance();
+    accountManager = AptoideAccountManager.getInstance(this, Application.getConfiguration());
     bindViews();
     setupToolbar();
     setupListeners();

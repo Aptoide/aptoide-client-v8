@@ -9,9 +9,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -87,7 +89,8 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
 
       final IdsRepositoryImpl clientUuid =
           new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
-      final StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(clientUuid);
+      final StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(clientUuid,
+          AptoideAccountManager.getInstance(getContext(), Application.getConfiguration()));
 
       Action1<Void> openStore = __ -> {
         getNavigationManager().navigateTo(

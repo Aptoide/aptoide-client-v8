@@ -69,7 +69,7 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
     openMyAccountOnLoginSuccess =
         getIntent().getBooleanExtra(OPEN_MY_ACCOUNT_ON_LOGIN_SUCCESS, true);
     setSkipButton = getIntent().getBooleanExtra(SKIP_BUTTON, false);
-    accountManager = AptoideAccountManager.getInstance();
+    accountManager = AptoideAccountManager.getInstance(this, Application.getConfiguration());
     accountManager.setupLogins(this, this, mFacebookLoginButton, mLoginButton, mRegisterButton);
     if (!isSocialLoginsAvailable()) {
       orMessage.setVisibility(View.GONE);

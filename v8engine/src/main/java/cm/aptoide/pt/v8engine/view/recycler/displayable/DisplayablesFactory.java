@@ -5,12 +5,14 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
+import android.content.Context;
 import android.text.TextUtils;
 import android.util.Pair;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
 import cm.aptoide.pt.database.realm.MinimalAd;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Event;
@@ -26,10 +28,13 @@ import cm.aptoide.pt.model.v7.store.GetStoreDisplays;
 import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.model.v7.store.Store;
+import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CreateStoreDisplayable;
@@ -61,7 +66,7 @@ public class DisplayablesFactory {
   private static final String TAG = DisplayablesFactory.class.getSimpleName();
 
   public static Observable<Displayable> parse(GetStoreWidgets.WSWidget widget, String storeTheme,
-      StoreRepository storeRepository, StoreContext storeContext) {
+      StoreRepository storeRepository, StoreContext storeContext, Context context) {
 
     LinkedList<Displayable> displayables = new LinkedList<>();
 
@@ -107,7 +112,8 @@ public class DisplayablesFactory {
           return Observable.from(createMyStoreDisplayables(widget.getViewObject()));
 
         case STORES_RECOMMENDED:
-          return Observable.just(createRecommendedStores(widget, storeTheme, storeRepository, storeContext));
+          return Observable.just(createRecommendedStores(widget, storeTheme, storeRepository, storeContext,
+              context));
 
         case COMMENTS_GROUP:
           return Observable.from(createCommentsGroup(widget));
@@ -305,7 +311,7 @@ public class DisplayablesFactory {
   }
 
   private static Displayable createRecommendedStores(GetStoreWidgets.WSWidget wsWidget,
-      String storeTheme, StoreRepository storeRepository, StoreContext storeContext) {
+      String storeTheme, StoreRepository storeRepository, StoreContext storeContext, Context context) {
     ListStores listStores = (ListStores) wsWidget.getViewObject();
     if (listStores == null) {
       return new EmptyDisplayable();
@@ -316,7 +322,13 @@ public class DisplayablesFactory {
         new StoreGridHeaderDisplayable(wsWidget, storeTheme, wsWidget.getTag(), storeContext));
     for (Store store : stores) {
       if (wsWidget.getData().getLayout() == Layout.LIST) {
-        displayables.add(new RecommendedStoreDisplayable(store, storeRepository));
+        final IdsRepositoryImpl idsRepository =
+            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), context);
+        final AptoideAccountManager accountManager =
+            AptoideAccountManager.getInstance(context, Application.getConfiguration());
+        displayables.add(new RecommendedStoreDisplayable(store, storeRepository,
+            accountManager,
+            new StoreUtilsProxy(idsRepository, accountManager)));
       } else {
         displayables.add(new GridStoreDisplayable(store));
       }

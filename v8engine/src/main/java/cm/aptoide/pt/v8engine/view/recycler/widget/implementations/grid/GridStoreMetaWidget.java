@@ -23,6 +23,7 @@ import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.store.GetStoreMeta;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -55,6 +56,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
   private TextView subscribersCount;
   private TextView appsCount;
   private TextView downloadsCount;
+  private StoreUtilsProxy storeUtilsProxy;
 
   public GridStoreMetaWidget(View itemView) {
     super(itemView);
@@ -80,7 +82,10 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
 
   @Override public void bindView(GridStoreMetaDisplayable displayable) {
 
-    accountManager = AptoideAccountManager.getInstance();
+    accountManager = AptoideAccountManager.getInstance(getContext(), Application.getConfiguration());
+    IdsRepositoryImpl idsRepository =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
+    storeUtilsProxy = new StoreUtilsProxy(idsRepository, accountManager);
     final GetStoreMeta getStoreMeta = displayable.getPojo();
     final cm.aptoide.pt.model.v7.store.Store store = getStoreMeta.getData();
     final StoreThemeEnum theme = StoreThemeEnum.get(store.getAppearance().getTheme());
@@ -182,11 +187,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
                 storeWrapper.getStore().getName()));
       } else {
         storeWrapper.setStoreSubscribed(true);
-
-        IdsRepositoryImpl idsRepository =
-            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
-
-        new StoreUtilsProxy(idsRepository).subscribeStore(storeWrapper.getStore().getName(),
+        storeUtilsProxy.subscribeStore(storeWrapper.getStore().getName(),
             subscribedStoreMeta -> {
               ShowMessage.asSnack(itemView,
                   AptoideUtils.StringU.getFormattedString(R.string.store_followed,

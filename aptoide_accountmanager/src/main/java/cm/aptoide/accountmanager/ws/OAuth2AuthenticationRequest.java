@@ -5,6 +5,7 @@
 
 package cm.aptoide.accountmanager.ws;
 
+import android.content.Context;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -36,17 +37,20 @@ public class OAuth2AuthenticationRequest extends v3accountManager<OAuth> {
   }
 
   public static OAuth2AuthenticationRequest of(String username, String password, LoginMode mode,
-      @Nullable String nameForGoogle, String aptoideClientUUID) {
-    return new OAuth2AuthenticationRequest(aptoideClientUUID, AptoideAccountManager.getInstance()).setUsername(username)
+      @Nullable String nameForGoogle, String aptoideClientUUID, Context context) {
+    return new OAuth2AuthenticationRequest(aptoideClientUUID, AptoideAccountManager.getInstance(
+        context, Application.getConfiguration())).setUsername(username)
         .setPassword(password)
         .setMode(mode)
         .setGrantType("password")
         .setNameForGoogle(nameForGoogle);
   }
 
-  public static OAuth2AuthenticationRequest of(String refreshToken, String aptoideClientUUID) {
+  public static OAuth2AuthenticationRequest of(String refreshToken, String aptoideClientUUID,
+      Context context) {
 
-    return new OAuth2AuthenticationRequest(aptoideClientUUID, AptoideAccountManager.getInstance()).setGrantType("refresh_token")
+    return new OAuth2AuthenticationRequest(aptoideClientUUID, AptoideAccountManager.getInstance(
+        context, Application.getConfiguration())).setGrantType("refresh_token")
         .setRefreshToken(refreshToken);
   }
 

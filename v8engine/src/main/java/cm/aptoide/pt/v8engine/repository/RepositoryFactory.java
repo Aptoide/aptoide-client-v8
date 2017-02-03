@@ -46,10 +46,10 @@ public final class RepositoryFactory {
     return new RollbackRepository(AccessorFactory.getAccessorFor(Rollback.class));
   }
 
-  public static UpdateRepository getUpdateRepository() {
+  public static UpdateRepository getUpdateRepository(Context context) {
     return new UpdateRepository(AccessorFactory.getAccessorFor(Update.class),
-        AccessorFactory.getAccessorFor(Store.class), getAccountManager(), new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()));
+        AccessorFactory.getAccessorFor(Store.class), getAccountManager(context),
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), context));
   }
 
   public static InstalledRepository getInstalledRepository() {
@@ -70,8 +70,8 @@ public final class RepositoryFactory {
     final NetworkOperatorManager operatorManager = getNetworkOperatorManager(context);
     if (product instanceof InAppBillingProduct) {
       return new InAppBillingProductRepository(new InAppBillingRepository(operatorManager,
-          AccessorFactory.getAccessorFor(PaymentConfirmation.class), getAccountManager()), purchaseFactory,
-          paymentFactory);
+          AccessorFactory.getAccessorFor(PaymentConfirmation.class), getAccountManager(context)),
+          purchaseFactory, paymentFactory);
     } else {
       return new PaidAppProductRepository(getAppRepository(context), purchaseFactory,
           paymentFactory);
@@ -79,8 +79,9 @@ public final class RepositoryFactory {
   }
 
   public static AppRepository getAppRepository(Context context) {
-    return new AppRepository(getNetworkOperatorManager(context), getAccountManager(),
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), DataProvider.getContext()));
+    return new AppRepository(getNetworkOperatorManager(context), getAccountManager(context),
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext()));
   }
 
   private static NetworkOperatorManager getNetworkOperatorManager(Context context) {
@@ -94,12 +95,11 @@ public final class RepositoryFactory {
       return new InAppPaymentConfirmationRepository(getNetworkOperatorManager(context),
           AccessorFactory.getAccessorFor(PaymentConfirmation.class), getBackgroundSync(context),
           new PaymentConfirmationFactory(), (InAppBillingProduct) product,
-          getAccountManager());
+          getAccountManager(context));
     } else {
       return new PaidAppPaymentConfirmationRepository(getNetworkOperatorManager(context),
           AccessorFactory.getAccessorFor(PaymentConfirmation.class), getBackgroundSync(context),
-          new PaymentConfirmationFactory(), (PaidAppProduct) product,
-          getAccountManager());
+          new PaymentConfirmationFactory(), (PaidAppProduct) product, getAccountManager(context));
     }
   }
 
@@ -112,15 +112,15 @@ public final class RepositoryFactory {
   public static PaymentAuthorizationRepository getPaymentAuthorizationRepository(Context context) {
     return new PaymentAuthorizationRepository(
         AccessorFactory.getAccessorFor(PaymentAuthorization.class), getBackgroundSync(context),
-        new PaymentAuthorizationFactory(context), getAccountManager());
+        new PaymentAuthorizationFactory(context), getAccountManager(context));
   }
 
   public static InAppBillingRepository getInAppBillingRepository(Context context) {
     return new InAppBillingRepository(getNetworkOperatorManager(context),
-        AccessorFactory.getAccessorFor(PaymentConfirmation.class), getAccountManager());
+        AccessorFactory.getAccessorFor(PaymentConfirmation.class), getAccountManager(context));
   }
 
-  private static AptoideAccountManager getAccountManager() {
-    return AptoideAccountManager.getInstance();
+  private static AptoideAccountManager getAccountManager(Context context) {
+    return AptoideAccountManager.getInstance(context, Application.getConfiguration());
   }
 }
