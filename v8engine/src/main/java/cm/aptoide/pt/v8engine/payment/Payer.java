@@ -15,20 +15,22 @@ import rx.Observable;
 public class Payer {
 
   public final Context context;
+  private AptoideAccountManager accountManager;
 
-  public Payer(Context context) {
+  public Payer(Context context, AptoideAccountManager accountManager) {
     this.context = context;
+    this.accountManager = accountManager;
   }
 
   public String getId() {
-    return AptoideAccountManager.getUserEmail();
+    return accountManager.getUserEmail();
   }
 
   public boolean isLoggedIn() {
-    return AptoideAccountManager.isLoggedIn();
+    return accountManager.isLoggedIn();
   }
 
   public Observable<Void> login() {
-    return AptoideAccountManager.login(context);
+    return accountManager.login(context);
   }
 }

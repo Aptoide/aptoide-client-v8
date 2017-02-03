@@ -1,6 +1,8 @@
 package cm.aptoide.pt.v8engine.fragment.implementations.storetab;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
@@ -31,9 +33,12 @@ import rx.functions.Action1;
 
 public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStores> {
 
-  private final AptoideClientUUID aptoideClientUUID;
+  private AptoideClientUUID aptoideClientUUID;
+  private AptoideAccountManager accountManager;
 
-  public MyStoresSubscribedFragment() {
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    accountManager = AptoideAccountManager.getInstance();
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
   }
@@ -41,7 +46,7 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
   @Override protected V7<ListStores, ? extends Endless> buildRequest(boolean refresh, String url) {
 
     GetMyStoreListRequest request =
-        GetMyStoreListRequest.of(url, AptoideAccountManager.getAccessToken(),
+        GetMyStoreListRequest.of(url, accountManager.getAccessToken(),
             aptoideClientUUID.getUniqueIdentifier(), true);
 
     return request;

@@ -23,9 +23,8 @@ public class LoggedInActivity extends BaseActivity {
 
   private static final String TAG = LoggedInActivity.class.getSimpleName();
 
-  private final AptoideClientUUID aptoideClientUUID =
-      new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-          DataProvider.getContext());
+  private AptoideClientUUID aptoideClientUUID;
+  private AptoideAccountManager accountManager;
 
   private Toolbar mToolbar;
   private Button mContinueButton;
@@ -36,6 +35,10 @@ public class LoggedInActivity extends BaseActivity {
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(getLayoutId());
+    aptoideClientUUID =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext());
+    accountManager = AptoideAccountManager.getInstance();
     mSubscriptions = new CompositeSubscription();
     bindViews();
     setupToolbar();
@@ -69,7 +72,7 @@ public class LoggedInActivity extends BaseActivity {
       pleaseWaitDialog.show();
 
       SetUserRequest.of(aptoideClientUUID.getUniqueIdentifier(), UserAccessState.PUBLIC.toString(),
-          AptoideAccountManager.getAccessToken()).execute(answer -> {
+          accountManager.getAccessToken()).execute(answer -> {
         if (answer.isOk()) {
           Logger.v(TAG, "user is public");
           ShowMessage.asSnack(this, R.string.successful);
@@ -103,7 +106,7 @@ public class LoggedInActivity extends BaseActivity {
   }
 
   private void updateUserInfo() {
-    AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
+    accountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
       if (pleaseWaitDialog != null && pleaseWaitDialog.isShowing()) {
         pleaseWaitDialog.dismiss();
       }

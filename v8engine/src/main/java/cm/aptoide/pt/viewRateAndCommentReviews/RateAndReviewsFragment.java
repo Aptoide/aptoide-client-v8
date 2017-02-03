@@ -48,8 +48,8 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     implements ItemCommentAdderView<Review, CommentsAdapter> {
 
   private static final String TAG = RateAndReviewsFragment.class.getSimpleName();
-  private final AptoideClientUUID aptoideClientUUID;
-  private final DialogUtils dialogUtils;
+  private AptoideClientUUID aptoideClientUUID;
+  private DialogUtils dialogUtils;
 
   private long appId;
   @Getter private long reviewId;
@@ -61,8 +61,11 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   private RatingTotalsLayout ratingTotalsLayout;
   private RatingBarsLayout ratingBarsLayout;
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
+  private AptoideAccountManager accountManager;
 
-  public RateAndReviewsFragment() {
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    accountManager = AptoideAccountManager.getInstance();
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
     dialogUtils = new DialogUtils();
@@ -164,13 +167,13 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
 
   private void fetchReviews() {
     ListReviewsRequest reviewsRequest =
-        ListReviewsRequest.of(storeName, packageName, AptoideAccountManager.getAccessToken(),
+        ListReviewsRequest.of(storeName, packageName, accountManager.getAccessToken(),
             aptoideClientUUID.getUniqueIdentifier());
 
     getRecyclerView().removeOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(this.getAdapter(), reviewsRequest,
-            new ListFullReviewsSuccessRequestListener(this), Throwable::printStackTrace);
+            new ListFullReviewsSuccessRequestListener(this, accountManager, aptoideClientUUID), Throwable::printStackTrace);
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(false);
   }
@@ -191,7 +194,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   }
 
   private void fetchRating(boolean refresh) {
-    GetAppRequest.of(appId, AptoideAccountManager.getAccessToken(),
+    GetAppRequest.of(appId, accountManager.getAccessToken(),
         aptoideClientUUID.getUniqueIdentifier(), packageName)
         .observe(refresh)
         .subscribeOn(Schedulers.io())

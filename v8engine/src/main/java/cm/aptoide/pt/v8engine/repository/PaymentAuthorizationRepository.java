@@ -22,16 +22,19 @@ public class PaymentAuthorizationRepository implements Repository<Authorization,
   private final PaymentAuthorizationAccessor authotizationAccessor;
   private final SyncAdapterBackgroundSync backgroundSync;
   private final PaymentAuthorizationFactory authorizationFactory;
+  private final AptoideAccountManager accountManager;
 
   PaymentAuthorizationRepository(PaymentAuthorizationAccessor authorizationAccessor,
-      SyncAdapterBackgroundSync backgroundSync, PaymentAuthorizationFactory authorizationFactory) {
+      SyncAdapterBackgroundSync backgroundSync, PaymentAuthorizationFactory authorizationFactory,
+      AptoideAccountManager accountManager) {
     this.authotizationAccessor = authorizationAccessor;
     this.backgroundSync = backgroundSync;
     this.authorizationFactory = authorizationFactory;
+    this.accountManager = accountManager;
   }
 
   public Completable createPaymentAuthorization(int paymentId) {
-    return CreatePaymentAuthorizationRequest.of(AptoideAccountManager.getAccessToken(), paymentId)
+    return CreatePaymentAuthorizationRequest.of(accountManager.getAccessToken(), paymentId)
         .observe()
         .flatMap(response -> {
           if (response != null && response.isOk()) {

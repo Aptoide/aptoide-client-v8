@@ -4,11 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.util.schedulers.SchedulerProvider;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.view.View;
@@ -28,21 +25,16 @@ public class RateAndReviewsPresenter implements Presenter {
 
   public RateAndReviewsPresenter(@NonNull long appId, @NonNull String storeName,
       @NonNull String packageName, @NonNull RateAndReviewsView view,
-      @NonNull SchedulerProvider schedulerProvider) {
+      @NonNull SchedulerProvider schedulerProvider, AptoideAccountManager accountManager,
+      String aptoideClientUUID) {
     this.view = view;
     this.schedulerProvider = schedulerProvider;
-
-    String aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext()).getUniqueIdentifier();
-
-    request = ListReviewsRequest.of(storeName, packageName, AptoideAccountManager.getAccessToken(),
+    this.request = ListReviewsRequest.of(storeName, packageName, accountManager.getAccessToken(),
         aptoideClientUUID);
-
-    ratingRequest =
-        GetAppRequest.of(appId, AptoideAccountManager.getAccessToken(), aptoideClientUUID,
+    this.ratingRequest =
+        GetAppRequest.of(appId, accountManager.getAccessToken(), aptoideClientUUID,
             packageName);
-
-    subscriptions = new CompositeSubscription();
+    this.subscriptions = new CompositeSubscription();
   }
 
   @Override public void present() {

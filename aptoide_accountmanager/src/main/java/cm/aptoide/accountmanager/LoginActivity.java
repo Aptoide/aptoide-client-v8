@@ -48,6 +48,7 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
 
   private CompositeSubscription subscriptions;
   private TextView orMessage;
+  private AptoideAccountManager accountManager;
 
   @Override public boolean onCreateOptionsMenu(Menu menu) {
     if (setSkipButton) {
@@ -68,8 +69,8 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
     openMyAccountOnLoginSuccess =
         getIntent().getBooleanExtra(OPEN_MY_ACCOUNT_ON_LOGIN_SUCCESS, true);
     setSkipButton = getIntent().getBooleanExtra(SKIP_BUTTON, false);
-    AptoideAccountManager.getInstance()
-        .setupLogins(this, this, mFacebookLoginButton, mLoginButton, mRegisterButton);
+    accountManager = AptoideAccountManager.getInstance();
+    accountManager.setupLogins(this, this, mFacebookLoginButton, mLoginButton, mRegisterButton);
     if (!isSocialLoginsAvailable()) {
       orMessage.setVisibility(View.GONE);
     }
@@ -89,7 +90,7 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     int i = item.getItemId();
     if (i == android.R.id.home || i == R.id.home || i == 0) {
-      AptoideAccountManager.sendLoginCancelledBroadcast();
+      accountManager.sendLoginCancelledBroadcast();
       finish();
       return true;
     }
@@ -169,11 +170,11 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
 
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    AptoideAccountManager.onActivityResult(this, requestCode, resultCode, data);
+    accountManager.onActivityResult(this, requestCode, resultCode, data);
   }
 
   @Override public void onBackPressed() {
-    AptoideAccountManager.sendLoginCancelledBroadcast();
+    accountManager.sendLoginCancelledBroadcast();
     super.onBackPressed();
   }
 

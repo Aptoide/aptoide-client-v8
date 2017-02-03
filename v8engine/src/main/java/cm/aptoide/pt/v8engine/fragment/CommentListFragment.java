@@ -4,6 +4,7 @@ import android.app.FragmentManager;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -61,7 +62,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   private static final String ELEMENT_ID_AS_STRING = "element_id_as_string";
   private static final String ELEMENT_ID_AS_LONG = "element_id_as_long";
   private static final String URL_VAL = "url_val";
-  private final AptoideClientUUID aptoideClientUUID;
+  private AptoideClientUUID aptoideClientUUID;
   // control setComment retry
   protected long lastTotal;
   //
@@ -81,8 +82,11 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   // views
   //
   private FloatingActionButton floatingActionButton;
+  private AptoideAccountManager accountManager;
 
-  public CommentListFragment() {
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    accountManager = AptoideAccountManager.getInstance();
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
   }
@@ -198,7 +202,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
 
     ListCommentsRequest listCommentsRequest =
         ListCommentsRequest.ofTimeline(url, refresh, elementIdAsString,
-            AptoideAccountManager.getAccessToken(), aptoideClientUuid);
+            accountManager.getAccessToken(), aptoideClientUuid);
 
     Action1<ListComments> listCommentsAction = (listComments -> {
       if (listComments != null
@@ -235,7 +239,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
 
     ListCommentsRequest listCommentsRequest =
         ListCommentsRequest.ofStoreAction(url, refresh, storeCredentials,
-            AptoideAccountManager.getAccessToken(), aptoideClientUuid);
+            accountManager.getAccessToken(), aptoideClientUuid);
 
     if (storeCredentials == null || storeCredentials.getId() == null) {
       IllegalStateException illegalStateException =
@@ -279,7 +283,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   public Observable<Void> createNewCommentFragment(final String timelineArticleId,
       final long previousCommentId) {
 
-    return Observable.just(AptoideAccountManager.isLoggedIn()).flatMap(isLoggedIn -> {
+    return Observable.just(accountManager.isLoggedIn()).flatMap(isLoggedIn -> {
 
       if (isLoggedIn) {
         // show fragment CommentDialog
@@ -302,7 +306,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   private Observable<Void> createNewCommentFragment(long storeId, long previousCommentId,
       String storeName) {
 
-    return Observable.just(AptoideAccountManager.isLoggedIn()).flatMap(isLoggedIn -> {
+    return Observable.just(accountManager.isLoggedIn()).flatMap(isLoggedIn -> {
 
       if (isLoggedIn) {
         // show fragment CommentDialog
@@ -333,7 +337,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   private Observable<Void> showSignInMessage() {
     return ShowMessage.asObservableSnack(this.getActivity(), R.string.you_need_to_be_logged_in,
         R.string.login, snackView -> {
-          AptoideAccountManager.openAccountManager(CommentListFragment.this.getContext());
+          accountManager.openAccountManager(CommentListFragment.this.getContext());
         }).flatMap(a -> Observable.empty());
   }
 
@@ -370,7 +374,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
 
   public Observable<Void> createNewCommentFragment(String timelineArticleId) {
 
-    return Observable.just(AptoideAccountManager.isLoggedIn()).flatMap(isLoggedIn -> {
+    return Observable.just(accountManager.isLoggedIn()).flatMap(isLoggedIn -> {
 
       if (isLoggedIn) {
         // show fragment CommentDialog
@@ -392,7 +396,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
 
   public Observable<Void> createNewCommentFragment(long storeCommentId, String storeName) {
 
-    return Observable.just(AptoideAccountManager.isLoggedIn()).flatMap(isLoggedIn -> {
+
+    return Observable.just(accountManager.isLoggedIn()).flatMap(isLoggedIn -> {
 
       if (isLoggedIn) {
         // show fragment CommentDialog
@@ -454,14 +459,14 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   private ComplexComment getComplexComment(String inputText, Long previousCommentId, long id) {
     Comment comment = new Comment();
     Comment.User user = new Comment.User();
-    if (!TextUtils.isEmpty(AptoideAccountManager.getUserData().getUserAvatar())) {
-      user.setAvatar(AptoideAccountManager.getUserData().getUserAvatar());
+    if (!TextUtils.isEmpty(accountManager.getUserData().getUserAvatar())) {
+      user.setAvatar(accountManager.getUserData().getUserAvatar());
     } else {
-      if (!TextUtils.isEmpty(AptoideAccountManager.getUserData().getUserAvatarRepo())) {
-        user.setAvatar(AptoideAccountManager.getUserData().getUserAvatarRepo());
+      if (!TextUtils.isEmpty(accountManager.getUserData().getUserAvatarRepo())) {
+        user.setAvatar(accountManager.getUserData().getUserAvatarRepo());
       }
     }
-    user.setName(AptoideAccountManager.getUserData().getUserName());
+    user.setName(accountManager.getUserData().getUserName());
     comment.setUser(user);
     comment.setBody(inputText);
     comment.setAdded(new Date());

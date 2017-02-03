@@ -408,4 +408,11 @@
   <string name="password">Password</string>
   <string name="create_password">Create Password</string>
 
+  <!-- Login -->
+  <string name="activity_login_title">Login</string>
+  <string name="activity_login_forgot_password_button">Forgot password?</string>
+  <string name="activity_login_button">Login</string>
+  <string name="activity_login_sign_up_button">Sign Up</string>
+  <string name="view_credentials_username_hint">Email</string>
+  <string name="view_credentials_password_hint">Password</string>
 </resources>

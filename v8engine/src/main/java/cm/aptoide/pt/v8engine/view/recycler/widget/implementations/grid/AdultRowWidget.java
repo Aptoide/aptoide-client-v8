@@ -20,6 +20,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
  */
 public class AdultRowWidget extends Widget<AdultRowDisplayable> {
 
+  private AptoideAccountManager accountManager;
   private SwitchCompat adultSwitch;
   private boolean shouldITrackNextChange = true;
 
@@ -32,6 +33,7 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
   }
 
   @Override public void bindView(AdultRowDisplayable displayable) {
+    accountManager = AptoideAccountManager.getInstance();
     adultSwitch.setOnCheckedChangeListener(null);
     adultSwitch.setChecked(SecurePreferences.isAdultSwitchActive());
     adultSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -40,7 +42,7 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
         AdultDialog.buildAreYouAdultDialog(getContext(), (dialog, which) -> {
           if (which == DialogInterface.BUTTON_POSITIVE) {
             //						adultSwitch.setChecked(true);
-            AptoideAccountManager.updateMatureSwitch(true);
+            accountManager.updateMatureSwitch(true);
 
             FragmentManager supportFragmentManager = getContext().getSupportFragmentManager();
             ((BaseLoaderFragment) supportFragmentManager.getFragments()
@@ -60,7 +62,7 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
         FragmentManager supportFragmentManager = getContext().getSupportFragmentManager();
         ((BaseLoaderFragment) supportFragmentManager.getFragments()
             .get(supportFragmentManager.getBackStackEntryCount())).load(true, true, null);
-        AptoideAccountManager.updateMatureSwitch(false);
+        accountManager.updateMatureSwitch(false);
       }
     });
   }

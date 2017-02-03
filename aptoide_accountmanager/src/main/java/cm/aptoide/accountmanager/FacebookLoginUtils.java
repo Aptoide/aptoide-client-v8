@@ -49,13 +49,14 @@ class FacebookLoginUtils {
   private static final String TAG = FacebookLoginUtils.class.getSimpleName();
   static CallbackManager callbackManager;
 
-  static protected void setupFacebook(Activity activity, LoginButton mFacebookLoginButton) {
+  static protected void setupFacebook(Activity activity, LoginButton mFacebookLoginButton,
+      AptoideAccountManager accountManager) {
     FacebookSdk.sdkInitialize(mFacebookLoginButton.getContext().getApplicationContext());
     callbackManager = CallbackManager.Factory.create();
     mFacebookLoginButton.setReadPermissions(Arrays.asList(EMAIL, USER_FRIENDS));
     LoginManager.getInstance()
         .registerCallback(callbackManager,
-            new FacebookLoginCallback(new WeakReference<Activity>(activity)));
+            new FacebookLoginCallback(new WeakReference<Activity>(activity), accountManager));
   }
 
   public static void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -97,10 +98,13 @@ class FacebookLoginUtils {
 
   static class FacebookLoginCallback implements FacebookCallback<LoginResult> {
 
-    WeakReference<Activity> mActivityWeakReference;
+    WeakReference<Activity> weakContext;
+    private final AptoideAccountManager accountManager;
 
-    public FacebookLoginCallback(WeakReference<Activity> activityWeakReference) {
-      mActivityWeakReference = activityWeakReference;
+    public FacebookLoginCallback(WeakReference<Activity> activityWeakReference,
+        AptoideAccountManager accountManager) {
+      this.weakContext = activityWeakReference;
+      this.accountManager = accountManager;
     }
 
     /**
@@ -127,7 +131,8 @@ class FacebookLoginUtils {
               Bundle bFacebookData = FacebookLoginUtils.getFacebookData(object);
               String userName = bFacebookData.containsKey(EMAIL) ? bFacebookData.getString(EMAIL)
                   : bFacebookData.getString(FACEBOOK_ID);
-              AptoideAccountManager.loginUserCredentials(LoginMode.FACEBOOK, userName, token, null);
+              accountManager.loginUserCredentials(LoginMode.FACEBOOK, userName, token, null,
+                  weakContext.get());
             }
           });
 
@@ -141,7 +146,7 @@ class FacebookLoginUtils {
      * Facebook onCancel
      */
     @Override public void onCancel() {
-      AptoideAccountManager.getInstance()
+      accountManager
           .onLoginFail(Application.getContext().getString(R.string.user_cancelled));
     }
 
@@ -152,7 +157,7 @@ class FacebookLoginUtils {
      */
     @Override public void onError(FacebookException error) {
       Logger.e(TAG, "onError: " + error.toString());
-      AptoideAccountManager.getInstance()
+      accountManager
           .onLoginFail(Application.getContext().getString(R.string.error_occured));
     }
 
@@ -182,7 +187,7 @@ class FacebookLoginUtils {
     }
 
     private void askForMailAgain() {
-      final Activity activity = mActivityWeakReference.get();
+      final Activity activity = weakContext.get();
       if (activity != null) {
         GenericDialogs.createGenericOkCancelMessage(activity, null,
             R.string.facebook_email_permission_regected_message,

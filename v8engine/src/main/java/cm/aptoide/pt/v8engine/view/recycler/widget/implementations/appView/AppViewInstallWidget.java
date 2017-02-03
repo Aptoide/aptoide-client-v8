@@ -26,6 +26,8 @@ import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.MinimalAd;
+import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
@@ -36,6 +38,7 @@ import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.SimpleSubscriber;
@@ -104,6 +107,8 @@ import rx.android.schedulers.AndroidSchedulers;
   private DownloadEventConverter downloadInstallEventConverter;
   private Analytics analytics;
   private InstallEventConverter installConverter;
+  private AptoideAccountManager accountManager;
+  private IdsRepositoryImpl idsRepository;
 
   //private Subscription subscribe;
   //private long appID;
@@ -134,11 +139,14 @@ import rx.android.schedulers.AndroidSchedulers;
     displayable.setInstallButton(actionButton);
 
     AptoideDownloadManager downloadManager = AptoideDownloadManager.getInstance();
+    accountManager = AptoideAccountManager.getInstance();
     downloadManager.initDownloadService(getContext());
     Installer installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
     installManager = new InstallManager(downloadManager, installer);
-    downloadInstallEventConverter = new DownloadEventConverter();
-    installConverter = new InstallEventConverter();
+    idsRepository = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+    downloadInstallEventConverter = new DownloadEventConverter(idsRepository, accountManager);
+    installConverter = new InstallEventConverter(idsRepository, accountManager);
     analytics = Analytics.getInstance();
 
     minimalAd = displayable.getMinimalAd();
@@ -372,13 +380,15 @@ import rx.android.schedulers.AndroidSchedulers;
           .first()
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(progress -> {
-            if (AptoideAccountManager.isLoggedIn()
+            if (accountManager.isLoggedIn()
                 && ManagerPreferences.getShowPreview()
                 && Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
-              SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(displayable);
+              SharePreviewDialog sharePreviewDialog =
+                  new SharePreviewDialog(displayable, accountManager);
               AlertDialog.Builder alertDialog =
                   sharePreviewDialog.getPreviewDialogBuilder(getContext());
-              SocialRepository socialRepository = new SocialRepository();
+              SocialRepository socialRepository =
+                  new SocialRepository(accountManager, idsRepository);
 
               sharePreviewDialog.showShareCardPreviewDialog(
                   displayable.getPojo().getNodes().getMeta().getData().getPackageName(), "install",

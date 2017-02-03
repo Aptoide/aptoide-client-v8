@@ -32,10 +32,12 @@ public class LoggedInActivity2ndStep extends BaseActivity {
   private CompositeSubscription mSubscriptions;
   private Toolbar mToolbar;
   private ProgressDialog pleaseWaitDialog;
+  private AptoideAccountManager accountManager;
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(getLayoutId());
+    accountManager = AptoideAccountManager.getInstance();
     mSubscriptions = new CompositeSubscription();
     bindViews();
     setupToolbar();
@@ -70,7 +72,7 @@ public class LoggedInActivity2ndStep extends BaseActivity {
       pleaseWaitDialog.show();
 
       SetUserRequest.of(aptoideClientUUID.getUniqueIdentifier(), UserAccessState.PUBLIC.toString(),
-          AptoideAccountManager.getAccessToken()).execute(answer -> {
+          accountManager.getAccessToken()).execute(answer -> {
         if (answer.isOk()) {
           Logger.v(TAG, "user is public");
           Toast.makeText(LoggedInActivity2ndStep.this, R.string.successful, Toast.LENGTH_SHORT)
@@ -92,7 +94,7 @@ public class LoggedInActivity2ndStep extends BaseActivity {
       pleaseWaitDialog.show();
 
       SetUserRequest.of(aptoideClientUUID.getUniqueIdentifier(),
-          UserAccessState.UNLISTED.toString(), AptoideAccountManager.getAccessToken())
+          UserAccessState.UNLISTED.toString(), accountManager.getAccessToken())
           .execute(answer -> {
             if (answer.isOk()) {
               Logger.v(TAG, "user is private");
@@ -127,7 +129,7 @@ public class LoggedInActivity2ndStep extends BaseActivity {
   }
 
   private void updateUserInfo() {
-    AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
+    accountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
       if (pleaseWaitDialog != null && pleaseWaitDialog.isShowing()) {
         pleaseWaitDialog.dismiss();
       }

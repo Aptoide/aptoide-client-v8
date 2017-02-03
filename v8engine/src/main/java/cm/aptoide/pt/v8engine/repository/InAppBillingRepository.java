@@ -31,11 +31,13 @@ public class InAppBillingRepository {
 
   private final NetworkOperatorManager operatorManager;
   private final PaymentConfirmationAccessor confirmationAccessor;
+  private final AptoideAccountManager accountManager;
 
   public InAppBillingRepository(NetworkOperatorManager operatorManager,
-      PaymentConfirmationAccessor confirmationAccessor) {
+      PaymentConfirmationAccessor confirmationAccessor, AptoideAccountManager accountManager) {
     this.operatorManager = operatorManager;
     this.confirmationAccessor = confirmationAccessor;
+    this.accountManager = accountManager;
   }
 
   public Observable<Void> getInAppBilling(int apiVersion, String packageName, String type) {
@@ -69,7 +71,7 @@ public class InAppBillingRepository {
   private Observable<InAppBillingSkuDetailsResponse> getSKUListDetails(int apiVersion,
       String packageName, List<String> skuList, String type) {
     return InAppBillingSkuDetailsRequest.of(apiVersion, packageName, skuList, operatorManager, type,
-        AptoideAccountManager.getAccessToken()).observe().flatMap(response -> {
+        accountManager.getAccessToken()).observe().flatMap(response -> {
       if (response != null && response.isOk()) {
         return Observable.just(response);
       } else {
@@ -88,7 +90,7 @@ public class InAppBillingRepository {
   public Observable<InAppBillingPurchasesResponse.PurchaseInformation> getInAppPurchaseInformation(
       int apiVersion, String packageName, String type) {
     return InAppBillingPurchasesRequest.of(apiVersion, packageName, type,
-        AptoideAccountManager.getAccessToken()).observe().flatMap(response -> {
+        accountManager.getAccessToken()).observe().flatMap(response -> {
       if (response != null && response.isOk()) {
         return Observable.just(response.getPurchaseInformation());
       }
@@ -99,7 +101,7 @@ public class InAppBillingRepository {
   public Observable<Void> deleteInAppPurchase(int apiVersion, String packageName,
       String purchaseToken) {
     return InAppBillingConsumeRequest.of(apiVersion, packageName, purchaseToken,
-        AptoideAccountManager.getAccessToken()).observe().flatMap(response -> {
+        accountManager.getAccessToken()).observe().flatMap(response -> {
       if (response != null && response.isOk()) {
         // TODO sync all payment confirmations instead. For now there is no web service for that.
         confirmationAccessor.removeAll();

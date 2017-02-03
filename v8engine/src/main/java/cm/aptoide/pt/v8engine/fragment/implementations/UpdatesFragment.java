@@ -2,12 +2,16 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.InstallManager;
@@ -42,6 +46,7 @@ import rx.android.schedulers.AndroidSchedulers;
 public class UpdatesFragment extends GridRecyclerSwipeFragment {
 
   private static final String TAG = UpdatesFragment.class.getName();
+  private AptoideAccountManager accountManager;
 
   private List<Displayable> updatesDisplayablesList;
   private List<Displayable> installedDisplayablesList;
@@ -57,6 +62,7 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
   private Subscription updateReloadSubscription;
 
   private int oldUpdateListHash = 0;
+  private IdsRepositoryImpl idsRepository;
 
   @NonNull public static UpdatesFragment newInstance() {
     return new UpdatesFragment();
@@ -65,11 +71,13 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
   @Override public void setupViews() {
     super.setupViews();
 
+    accountManager = AptoideAccountManager.getInstance();
+    idsRepository = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
     installManager = new InstallManager(AptoideDownloadManager.getInstance(),
         new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK));
     analytics = Analytics.getInstance();
-    downloadInstallEventConverter = new DownloadEventConverter();
-    installConverter = new InstallEventConverter();
+    downloadInstallEventConverter = new DownloadEventConverter(idsRepository, accountManager);
+    installConverter = new InstallEventConverter(idsRepository, accountManager);
 
     updatesDisplayablesList = new LinkedList<>();
     installedDisplayablesList = new LinkedList<>();

@@ -17,6 +17,7 @@ import com.jakewharton.rxbinding.view.RxView;
 public class CreateStoreWidget extends Widget<CreateStoreDisplayable> {
 
   private Button button;
+  private AptoideAccountManager accountManager;
 
   public CreateStoreWidget(View itemView) {
     super(itemView);
@@ -27,19 +28,20 @@ public class CreateStoreWidget extends Widget<CreateStoreDisplayable> {
   }
 
   @Override public void bindView(CreateStoreDisplayable displayable) {
-    if (AptoideAccountManager.isLoggedIn()) {
+    accountManager = AptoideAccountManager.getInstance();
+    if (accountManager.isLoggedIn()) {
       button.setText(R.string.create_store_displayable_button);
     } else {
       button.setText(R.string.login);
     }
     RxView.clicks(button).subscribe(aVoid -> {
-      if (AptoideAccountManager.isLoggedIn()) {
+      if (accountManager.isLoggedIn()) {
         button.setText(R.string.create_store_displayable_button);
         Intent intent = new Intent(getContext(), CreateStoreActivity.class);
         getContext().startActivity(intent);
       } else {
         button.setText(R.string.login);
-        AptoideAccountManager.openAccountManager(getContext());
+        accountManager.openAccountManager(getContext());
       }
     });
   }

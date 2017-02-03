@@ -2,6 +2,7 @@ package cm.aptoide.accountmanager;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -30,7 +31,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 /**
  * Created by trinkes on 4/19/16.
  */
-class GoogleLoginUtils implements GoogleApiClient.OnConnectionFailedListener {
+public class GoogleLoginUtils implements GoogleApiClient.OnConnectionFailedListener {
 
   private static final String TAG = GoogleLoginUtils.class.getSimpleName();
   private static final int REQ_SIGN_IN_GOOGLE = 2;
@@ -38,7 +39,7 @@ class GoogleLoginUtils implements GoogleApiClient.OnConnectionFailedListener {
   private static final int REQUEST_RESOLVE_ERROR = 1001;
   // Unique tag for the error dialog fragment
   private static final String DIALOG_ERROR = "dialog_error";
-  private static WeakReference activityReference;
+  private static WeakReference<? extends Context> weakContext;
   // Bool to track whether the app is already resolving an error
   private static boolean mResolvingError = false;
 
@@ -48,7 +49,7 @@ class GoogleLoginUtils implements GoogleApiClient.OnConnectionFailedListener {
    * @param activity Where the login button is
    */
   protected static void setUpGoogle(FragmentActivity activity, View googleSignInButton) {
-    activityReference = new WeakReference(activity);
+    weakContext = new WeakReference(activity);
     if (!isGoogleEnabledOnCurrentDevice(activity)) {
       return;
     }
@@ -98,30 +99,31 @@ class GoogleLoginUtils implements GoogleApiClient.OnConnectionFailedListener {
    *
    * @param requestCode Given on onActivityResult method
    * @param data Given on onActivityResult method
+   * @param accountManager
    */
-  protected static void onActivityResult(int requestCode, Intent data) {
+  protected static void onActivityResult(int requestCode, Intent data,
+      AptoideAccountManager accountManager) {
     if (requestCode == REQ_SIGN_IN_GOOGLE) {
       final GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
       GoogleSignInAccount account = result.getSignInAccount();
       if (!result.isSuccess()) {
-        handleErrors(result);
+        handleErrors(result, accountManager);
       } else if (account != null) {
         Logger.d(TAG, "onActivityResult: Email: " + account.getEmail() + "Disp name" +
             account);
-        AptoideAccountManager.loginUserCredentials(LoginMode.GOOGLE, account.getEmail(),
-            account.getServerAuthCode(), account.getDisplayName());
+        accountManager.loginUserCredentials(LoginMode.GOOGLE, account.getEmail(),
+            account.getServerAuthCode(), account.getDisplayName(),
+            weakContext.get());
       }
     }
   }
 
-  private static void handleErrors(GoogleSignInResult account) {
+  private static void handleErrors(GoogleSignInResult account, AptoideAccountManager accountManager) {
     if (account.getStatus().getStatusCode() == 12501) {
       Logger.e(TAG, "probably this apk is in debug mode");
-      AptoideAccountManager.getInstance()
-          .onLoginFail(Application.getContext().getString(R.string.unknown_error));
+      accountManager.onLoginFail(Application.getContext().getString(R.string.unknown_error));
     } else {
-      AptoideAccountManager.getInstance()
-          .onLoginFail(Application.getContext().getString(R.string.unknown_error));
+      accountManager.onLoginFail(Application.getContext().getString(R.string.unknown_error));
       Logger.e(TAG, "handleErrors: " + account.toString());
     }
   }
@@ -146,14 +148,14 @@ class GoogleLoginUtils implements GoogleApiClient.OnConnectionFailedListener {
     } else if (result.hasResolution()) {
       try {
         mResolvingError = true;
-        Activity activity = (Activity) activityReference.get();
+        Activity activity = (Activity) weakContext.get();
         if (activity != null) {
           result.startResolutionForResult(activity, REQUEST_RESOLVE_ERROR);
         }
       } catch (IntentSender.SendIntentException e) {
         CrashReport.getInstance().log(e);
         // There was an error with the resolution intent. Try again.
-        FragmentActivity activity = (FragmentActivity) activityReference.get();
+        FragmentActivity activity = (FragmentActivity) weakContext.get();
         if (activity != null) {
           setupGoogleApiClient(activity).connect();
         }
@@ -173,7 +175,7 @@ class GoogleLoginUtils implements GoogleApiClient.OnConnectionFailedListener {
     Bundle args = new Bundle();
     args.putInt(DIALOG_ERROR, errorCode);
     dialogFragment.setArguments(args);
-    AppCompatActivity activity = (AppCompatActivity) activityReference.get();
+    AppCompatActivity activity = (AppCompatActivity) weakContext.get();
     if (activity != null) {
       dialogFragment.show(activity.getSupportFragmentManager(), "errordialog");
     }

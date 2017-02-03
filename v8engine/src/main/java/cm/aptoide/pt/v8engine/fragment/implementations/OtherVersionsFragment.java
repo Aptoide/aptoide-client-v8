@@ -42,7 +42,8 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
 
   private static final String TAG = OtherVersionsFragment.class.getSimpleName();
 
-  private final AptoideClientUUID aptoideClientUUID;
+  private AptoideClientUUID aptoideClientUUID;
+  private AptoideAccountManager accountManager;
   // vars
   private String appName;
   private String appImgUrl;
@@ -51,7 +52,9 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
   private ViewHeader header;
   //private TextView emptyData;
 
-  public OtherVersionsFragment() {
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    accountManager = AptoideAccountManager.getInstance();
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
   }
@@ -123,7 +126,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
 
     EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(this.getAdapter(),
-            ListAppVersionsRequest.of(appPackge, storeNames, AptoideAccountManager.getAccessToken(),
+            ListAppVersionsRequest.of(appPackge, storeNames, accountManager.getAccessToken(),
                 aptoideClientUUID.getUniqueIdentifier(), StoreUtils.getSubscribedStoresAuthMap()),
             otherVersionsSuccessRequestListener, Throwable::printStackTrace);
 

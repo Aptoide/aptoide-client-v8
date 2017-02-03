@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -51,8 +52,9 @@ import rx.functions.Action1;
   public static final long TIME_BETWEEN_SCROLL = 2 * DateUtils.SECOND_IN_MILLIS;
   private static final String TAG = AppViewRateAndReviewsWidget.class.getSimpleName();
   private static final int MAX_COMMENTS = 3;
-  private final AptoideClientUUID aptoideClientUUID;
-  private final DialogUtils dialogUtils;
+  private AptoideClientUUID aptoideClientUUID;
+  private DialogUtils dialogUtils;
+  private AptoideAccountManager accountManager;
   private View emptyReviewsLayout;
   private View ratingLayout;
   private View commentsLayout;
@@ -74,12 +76,8 @@ import rx.functions.Action1;
   private int usersToVote;
   private TextView emptyReviewTextView;
 
-  public AppViewRateAndReviewsWidget(View itemView) {
+  public AppViewRateAndReviewsWidget(@NonNull View itemView) {
     super(itemView);
-
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
-    dialogUtils = new DialogUtils();
   }
 
   @Override protected void assignViews(View itemView) {
@@ -105,6 +103,10 @@ import rx.functions.Action1;
     GetAppMeta.App app = pojo.getNodes().getMeta().getData();
     GetAppMeta.Stats stats = app.getStats();
 
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+    dialogUtils = new DialogUtils();
+    accountManager = AptoideAccountManager.getInstance();
     appName = app.getName();
     packageName = app.getPackageName();
     storeName = app.getStore().getName();
@@ -120,8 +122,7 @@ import rx.functions.Action1;
 
     final FragmentActivity context = getContext();
     Action1<Void> rateOnClickHandler =
-        __ -> dialogUtils.showRateDialog(context, appName, packageName, storeName,
-            () -> loadReviews());
+        __ -> dialogUtils.showRateDialog(context, appName, packageName, storeName);
     compositeSubscription.add(
         RxView.clicks(rateThisButton).subscribe(rateOnClickHandler, handleError));
     compositeSubscription.add(
@@ -155,7 +156,7 @@ import rx.functions.Action1;
   private void loadTopReviews(String storeName, String packageName) {
     final FragmentActivity context = getContext();
     ListReviewsRequest.ofTopReviews(storeName, packageName, MAX_COMMENTS,
-        AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
+        accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
         .execute(listReviews -> {
 
               List<Review> reviews = listReviews.getDatalist().getList();

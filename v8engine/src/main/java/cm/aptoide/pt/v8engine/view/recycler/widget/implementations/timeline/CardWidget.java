@@ -41,6 +41,7 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
   private static final String TAG = CardWidget.class.getName();
 
   TextView shareButton;
+  private AptoideAccountManager accountManager;
 
   CardWidget(View itemView) {
     super(itemView);
@@ -51,6 +52,7 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
   }
 
   @CallSuper @Override public void bindView(T displayable) {
+    accountManager = AptoideAccountManager.getInstance();
     compositeSubscription.add(RxView.clicks(shareButton)
         //.flatMap(a -> {
         //// FIXME: 20/12/2016 sithengineer remove this flatMap
@@ -70,15 +72,15 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
   }
 
   void shareCard(T displayable) {
-    if (!AptoideAccountManager.isLoggedIn()) {
+    if (!accountManager.isLoggedIn()) {
       ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> {
-            AptoideAccountManager.openAccountManager(snackView.getContext());
+            accountManager.openAccountManager(snackView.getContext());
           });
       return;
     }
 
-    if (TextUtils.isEmpty(AptoideAccountManager.getUserData().getUserRepo())
+    if (TextUtils.isEmpty(accountManager.getUserData().getUserRepo())
         && !BaseActivity.UserAccessState.PUBLIC.toString()
         .equals(ManagerPreferences.getUserAccess())) {
       ShowMessage.asSnack(getContext(), R.string.private_profile_create_store,
@@ -89,7 +91,8 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
       return;
     }
 
-    SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(displayable);
+
+    SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(displayable, accountManager);
     AlertDialog.Builder alertDialog = sharePreviewDialog.getPreviewDialogBuilder(getContext());
 
     Observable.create((Subscriber<? super GenericDialogs.EResponse> subscriber) -> {

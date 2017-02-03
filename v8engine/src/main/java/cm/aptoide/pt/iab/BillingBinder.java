@@ -60,16 +60,19 @@ public class BillingBinder extends AptoideInAppBillingService.Stub {
   private final ErrorCodeFactory errorCodeFactory;
   private final PurchaseErrorCodeFactory purchaseErrorCodeFactory;
   private final ProductFactory productFactory;
+  private final AptoideAccountManager accountManager;
 
   public BillingBinder(Context context, InAppBillingRepository repository,
       InAppBillingSerializer serializer, ErrorCodeFactory errorCodeFactory,
-      PurchaseErrorCodeFactory purchaseErrorCodeFactory, ProductFactory productFactory) {
+      PurchaseErrorCodeFactory purchaseErrorCodeFactory, ProductFactory productFactory,
+      AptoideAccountManager accountManager) {
     this.context = context;
     this.repository = repository;
     this.serializer = serializer;
     this.errorCodeFactory = errorCodeFactory;
     this.purchaseErrorCodeFactory = purchaseErrorCodeFactory;
     this.productFactory = productFactory;
+    this.accountManager = accountManager;
   }
 
   @Override public int isBillingSupported(int apiVersion, String packageName, String type)
@@ -167,7 +170,7 @@ public class BillingBinder extends AptoideInAppBillingService.Stub {
       return result;
     }
 
-    if (!AptoideAccountManager.isLoggedIn()) {
+    if (!accountManager.isLoggedIn()) {
       result.putStringArrayList(INAPP_PURCHASE_ITEM_LIST, new ArrayList<>());
       result.putStringArrayList(INAPP_PURCHASE_DATA_LIST, new ArrayList<>());
       result.putStringArrayList(INAPP_DATA_SIGNATURE_LIST, new ArrayList<>());

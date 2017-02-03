@@ -20,15 +20,17 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
  */
 public class StoreUtilsProxy {
 
-  private final AptoideClientUUID aptoideClientUuid;
+  private final AptoideAccountManager accountManager;
+  private final AptoideClientUUID aptoideClientUUID;
 
   public StoreUtilsProxy(AptoideClientUUID aptoideClientUuid) {
-    this.aptoideClientUuid = aptoideClientUuid;
+    this.aptoideClientUUID = aptoideClientUuid;
+    this.accountManager = AptoideAccountManager.getInstance();
   }
 
   public void subscribeStore(String storeName) {
     subscribeStore(GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName),
-        AptoideAccountManager.getAccessToken(), aptoideClientUuid.getUniqueIdentifier()), null,
+        accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier()), null,
         null, storeName);
   }
 
@@ -45,7 +47,7 @@ public class StoreUtilsProxy {
       @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
       @Nullable ErrorRequestListener errorRequestListener) {
     subscribeStore(GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName),
-        AptoideAccountManager.getAccessToken(), aptoideClientUuid.getUniqueIdentifier()),
+        accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier()),
         successRequestListener, errorRequestListener, storeName);
   }
 

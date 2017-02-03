@@ -7,6 +7,7 @@ package cm.aptoide.accountmanager.ws;
 
 import android.content.Context;
 import android.os.Build;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.util.AccountManagerUtils;
 import cm.aptoide.accountmanager.util.Filters;
 import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
@@ -41,8 +42,8 @@ import rx.Observable;
   private String createRepo = ""; // 1 if repo is to be created
 
   public CheckUserCredentialsRequest(Context context, OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
-    super(httpClient, converterFactory);
+      Converter.Factory converterFactory, AptoideAccountManager accountManager) {
+    super(httpClient, converterFactory, accountManager);
     deviceId = AccountManagerUtils.getDeviceId(context);
     sdk = String.valueOf(AccountManagerUtils.getSdkVer());
     cpu = AccountManagerUtils.getAbis();
@@ -70,7 +71,7 @@ import rx.Observable;
   public static CheckUserCredentialsRequest of(String accessToken) {
     CheckUserCredentialsRequest request = new CheckUserCredentialsRequest(Application.getContext(),
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), isDebug()),
-        WebService.getDefaultConverter());
+        WebService.getDefaultConverter(), AptoideAccountManager.getInstance());
     request.setToken(accessToken);
     return request;
   }

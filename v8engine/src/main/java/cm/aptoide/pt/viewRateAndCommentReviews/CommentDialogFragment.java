@@ -41,8 +41,8 @@ public class CommentDialogFragment extends RxDialogFragment {
   private static final String RESOURCE_ID_AS_STRING = "resource_id_as_string";
   private static final String COMMENT_TYPE = "comment_type";
   private static final String PREVIOUS_COMMENT_ID = "previous_comment_id";
-  private final AptoideClientUUID aptoideClientUUID;
-  private final String onEmptyTextError;
+  private AptoideClientUUID aptoideClientUUID;
+  private String onEmptyTextError;
   private String appOrStoreName;
   private long idAsLong;
   private String idAsString;
@@ -52,8 +52,11 @@ public class CommentDialogFragment extends RxDialogFragment {
   private Button commentButton;
   private boolean reply;
   private CommentListFragment commentDialogCallbackContract;
+  private AptoideAccountManager accountManager;
 
-  public CommentDialogFragment() {
+  @Override public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    accountManager = AptoideAccountManager.getInstance();
     onEmptyTextError = AptoideUtils.StringU.getResString(R.string.error_MARG_107);
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
@@ -239,30 +242,31 @@ public class CommentDialogFragment extends RxDialogFragment {
     switch (commentType) {
       case REVIEW:
         // new comment on a review
-        return PostCommentForReview.of(idAsLong, inputText, AptoideAccountManager.getAccessToken(),
+        return PostCommentForReview.of(idAsLong, inputText, accountManager.getAccessToken(),
             aptoideClientUUID.getUniqueIdentifier()).observe();
 
       case STORE:
         // check if this is a new comment on a store or a reply to a previous one
         if (previousCommentId == null) {
-          return PostCommentForStore.of(idAsLong, inputText, AptoideAccountManager.getAccessToken(),
+          return PostCommentForStore.of(idAsLong, inputText, accountManager.getAccessToken(),
               aptoideClientUUID.getUniqueIdentifier()).observe();
         }
 
         return PostCommentForStore.of(idAsLong, previousCommentId, inputText,
-            AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
+            accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
             .observe();
 
       case TIMELINE:
         // check if this is a new comment on a article or a reply to a previous one
         if (previousCommentId == null) {
           return PostCommentForTimelineArticle.of(idAsString, inputText,
-              AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
+              accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
               .observe();
         }
 
+
         return PostCommentForTimelineArticle.of(idAsString, previousCommentId, inputText,
-            AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
+            accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
             .observe();
     }
     // default case

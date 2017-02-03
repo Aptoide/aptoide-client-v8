@@ -41,8 +41,9 @@ import java.util.Locale;
 
   private static final Locale LOCALE = Locale.getDefault();
   private static final String TAG = InstalledAppWidget.class.getSimpleName();
-  private final AptoideClientUUID aptoideClientUUID;
-  private final DialogUtils dialogUtils;
+  private AptoideClientUUID aptoideClientUUID;
+  private AptoideAccountManager accountManager;
+  private DialogUtils dialogUtils;
 
   private TextView labelTextView;
   private TextView verNameTextView;
@@ -55,9 +56,6 @@ import java.util.Locale;
 
   public InstalledAppWidget(View itemView) {
     super(itemView);
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
-    dialogUtils = new DialogUtils();
   }
 
   @Override protected void assignViews(View itemView) {
@@ -71,6 +69,10 @@ import java.util.Locale;
   @Override public void bindView(InstalledAppDisplayable displayable) {
     Installed pojo = displayable.getPojo();
 
+    dialogUtils = new DialogUtils();
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+    accountManager = AptoideAccountManager.getInstance();
     appName = pojo.getName();
     packageName = pojo.getPackageName();
 
@@ -135,7 +137,7 @@ import java.util.Locale;
 
       dialog.dismiss();
       PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating,
-          AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
+          accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
           .execute(response -> {
             if (response.isOk()) {
               Logger.d(TAG, "review added");

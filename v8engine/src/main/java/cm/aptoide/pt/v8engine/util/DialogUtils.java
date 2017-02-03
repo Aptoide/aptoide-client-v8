@@ -43,10 +43,12 @@ public class DialogUtils {
   private static final String TAG = DialogUtils.class.getSimpleName();
   private final Locale LOCALE = Locale.getDefault();
   private final AptoideClientUUID aptoideClientUUID;
+  private final AptoideAccountManager accountManager;
 
   public DialogUtils() {
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
+    accountManager = AptoideAccountManager.getInstance();
   }
 
   public Observable<GenericDialogs.EResponse> showRateDialog(@NonNull Activity activity,
@@ -54,10 +56,10 @@ public class DialogUtils {
 
     return Observable.create((Subscriber<? super GenericDialogs.EResponse> subscriber) -> {
 
-      if (!AptoideAccountManager.isLoggedIn()) {
+      if (!accountManager.isLoggedIn()) {
         ShowMessage.asSnack(activity, R.string.you_need_to_be_logged_in, R.string.login,
             snackView -> {
-              AptoideAccountManager.openAccountManager(activity, false);
+              accountManager.openAccountManager(activity, false);
             });
         subscriber.onNext(GenericDialogs.EResponse.CANCEL);
         subscriber.onCompleted();
@@ -136,11 +138,11 @@ public class DialogUtils {
         // WS call
         if (storeName != null) {
           PostReviewRequest.of(storeName, packageName, reviewTitle, reviewText, reviewRating,
-              AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
+              accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
               .execute(successRequestListener, errorRequestListener);
         } else {
           PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating,
-              AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
+              accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
               .execute(successRequestListener, errorRequestListener);
         }
       });
@@ -154,10 +156,10 @@ public class DialogUtils {
       @NonNull String packageName, @Nullable String storeName,
       @Nullable Action0 onPositiveCallback) {
 
-    if (!AptoideAccountManager.isLoggedIn()) {
+    if (!accountManager.isLoggedIn()) {
       ShowMessage.asSnack(activity, R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> {
-            AptoideAccountManager.openAccountManager(activity, false);
+            accountManager.openAccountManager(activity, false);
           });
 
       return;
@@ -217,11 +219,11 @@ public class DialogUtils {
 
       if (storeName != null) {
         PostReviewRequest.of(storeName, packageName, reviewTitle, reviewText, reviewRating,
-            AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
+            accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
             .execute(successRequestListener, errorRequestListener);
       } else {
         PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating,
-            AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
+            accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
             .execute(successRequestListener, errorRequestListener);
       }
     });

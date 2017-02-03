@@ -57,6 +57,7 @@ public class ToolboxContentProvider extends ContentProvider {
 
   private UriMatcher uriMatcher;
   private ToolboxSecurityManager securityManager;
+  private AptoideAccountManager aptoideAccountManager;
 
   @Override public boolean onCreate() {
     securityManager = new ToolboxSecurityManager(getContext().getPackageManager());
@@ -69,6 +70,7 @@ public class ToolboxContentProvider extends ContentProvider {
     uriMatcher.addURI(authority, "passHash", PASSHASH);
     uriMatcher.addURI(authority, "loginName", LOGIN_NAME);
     uriMatcher.addURI(authority, "changePreference", CHANGE_PREFERENCE);
+    aptoideAccountManager = AptoideAccountManager.getInstance();
     return true;
   }
 
@@ -80,7 +82,7 @@ public class ToolboxContentProvider extends ContentProvider {
         BuildConfig.UPLOADER_SIGNATURE, UPLOADER_PACKAGE)) {
       switch (uriMatcher.match(uri)) {
         case TOKEN:
-          final String accessToken = AptoideAccountManager.getAccessToken();
+          final String accessToken = aptoideAccountManager.getAccessToken();
           if (accessToken != null) {
             final MatrixCursor tokenCursor = new MatrixCursor(new String[] { "userToken" }, 1);
             tokenCursor.addRow(new Object[] { accessToken });
@@ -88,7 +90,7 @@ public class ToolboxContentProvider extends ContentProvider {
           }
           throw new IllegalStateException("User not logged in.");
         case REFRESH_TOKEN:
-          final String refreshedToken = AptoideAccountManager.getRefreshToken();
+          final String refreshedToken = aptoideAccountManager.getRefreshToken();
 
           if (refreshedToken != null) {
             final MatrixCursor tokenCursor =
@@ -98,8 +100,7 @@ public class ToolboxContentProvider extends ContentProvider {
           }
           throw new IllegalStateException("User not logged in.");
         case REPO:
-
-          final UserCompleteData userCompleteData = AptoideAccountManager.getUserData();
+          final UserCompleteData userCompleteData = aptoideAccountManager.getUserData();
           if (userCompleteData != null) {
             final MatrixCursor userRepoCursor = new MatrixCursor(new String[] { "userRepo" }, 1);
             userRepoCursor.addRow(new Object[] { userCompleteData.getUserRepo() });
@@ -110,7 +111,7 @@ public class ToolboxContentProvider extends ContentProvider {
 
           final AccountManager accountManager = AccountManager.get(getContext());
           final Account[] accounts = accountManager.getAccountsByType(Constants.ACCOUNT_TYPE);
-          final LoginMode loginMode = AptoideAccountManager.getLoginMode();
+          final LoginMode loginMode = aptoideAccountManager.getLoginMode();
           if (accounts.length > 0 && loginMode != null) {
             final MatrixCursor passwordCursor = new MatrixCursor(new String[] { "userPass" }, 1);
             if (LoginMode.APTOIDE.equals(loginMode)) {
@@ -126,7 +127,7 @@ public class ToolboxContentProvider extends ContentProvider {
           throw new IllegalStateException("User not logged in.");
         case LOGIN_TYPE:
 
-          final LoginMode loginType = AptoideAccountManager.getLoginMode();
+          final LoginMode loginType = aptoideAccountManager.getLoginMode();
           if (loginType != null) {
             final MatrixCursor loginTypeCursor = new MatrixCursor(new String[] { "loginType" }, 1);
             loginTypeCursor.addRow(new String[] { loginType.name().toLowerCase(Locale.US) });
@@ -135,7 +136,7 @@ public class ToolboxContentProvider extends ContentProvider {
           throw new IllegalStateException("User not logged in.");
         case LOGIN_NAME:
 
-          final UserData userName = AptoideAccountManager.getUserData();
+          final UserData userName = aptoideAccountManager.getUserData();
           if (userName != null) {
             final MatrixCursor userRepoCursor = new MatrixCursor(new String[] { "loginName" }, 1);
             userRepoCursor.addRow(new Object[] { userName.getUserEmail() });

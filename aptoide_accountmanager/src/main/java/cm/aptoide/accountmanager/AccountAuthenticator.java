@@ -12,6 +12,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 
 import static android.accounts.AccountManager.KEY_BOOLEAN_RESULT;
+import static cm.aptoide.pt.preferences.Application.getContext;
 
 /**
  * Created by brutus on 09-12-2013.
@@ -20,9 +21,11 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
 
   public static final String INVALID_AUTH_TOKEN_TYPE = "invalid authTokenType";
   private static final String TAG = AccountAuthenticator.class.getSimpleName();
+  private final AptoideAccountManager accountManager;
 
   public AccountAuthenticator(Context context) {
     super(context);
+    accountManager = AptoideAccountManager.getInstance();
   }
 
   @Override
@@ -137,8 +140,8 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
         && result.containsKey(AccountManager.KEY_BOOLEAN_RESULT)
         && !result.containsKey(AccountManager.KEY_INTENT)) {
       if (result.getBoolean(AccountManager.KEY_BOOLEAN_RESULT)) {
-        AptoideAccountManager.logout(null);
-        AptoideAccountManager.getInstance().sendRemoveLocalAccountBroadcaster();
+        accountManager.logout(null);
+        accountManager.sendRemoveLocalAccountBroadcaster(getContext());
       }
     }
     return result;

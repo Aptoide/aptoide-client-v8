@@ -62,6 +62,7 @@ public class Analytics {
       "apps-group-editors-choice"
   };
   private static final AptoideClientUUID aptoideClientUuid;
+  private static final AptoideAccountManager accountManager;
   static @Getter Analytics instance = new Analytics(new AnalyticsDataSaver());
   private static boolean ACTIVATE_LOCALYTICS = true;
   private static boolean isFirstSession;
@@ -69,6 +70,7 @@ public class Analytics {
   static {
     aptoideClientUuid = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
+    accountManager = AptoideAccountManager.getInstance();
   }
 
   private AnalyticsDataSaver saver;
@@ -317,7 +319,7 @@ public class Analytics {
         Localytics.onActivityResume(activity);
 
         if (isFirstSession) {
-          if (!AptoideAccountManager.isLoggedIn()) {
+          if (!accountManager.isLoggedIn()) {
             Localytics.setCustomDimension(0, "Not Logged In");
           } else {
             Localytics.setCustomDimension(0, "Logged In");

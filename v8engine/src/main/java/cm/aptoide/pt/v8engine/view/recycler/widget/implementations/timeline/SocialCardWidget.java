@@ -40,6 +40,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
   private TextView time;
   private RelativeLayout likePreviewContainer;
   private int marginOfTheNextLikePreview;
+  private AptoideAccountManager accountManager;
 
   SocialCardWidget(View itemView) {
     super(itemView);
@@ -62,6 +63,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
   @Override @CallSuper public void bindView(T displayable) {
     super.bindView(displayable);
 
+    accountManager = AptoideAccountManager.getInstance();
     if (displayable.getUserSharer() != null) {
       if (displayable.getUserSharer().getName() != null && !displayable.getUser()
           .getName()
@@ -105,8 +107,8 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
             if (!displayable.isLiked()) {
               UserTimeline user = new UserTimeline();
               Store store = new Store();
-              store.setAvatar(AptoideAccountManager.getUserData().getUserAvatarRepo());
-              user.setAvatar(AptoideAccountManager.getUserData().getUserAvatar());
+              store.setAvatar(accountManager.getUserData().getUserAvatarRepo());
+              user.setAvatar(accountManager.getUserData().getUserAvatar());
               user.setStore(store);
               addUserToPreview(marginOfTheNextLikePreview, user);
               likePreviewContainer.invalidate();
@@ -160,10 +162,10 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
   }
 
   private boolean likeCard(T displayable, int rating) {
-    if (!AptoideAccountManager.isLoggedIn()) {
+    if (!accountManager.isLoggedIn()) {
       ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> {
-            AptoideAccountManager.openAccountManager(snackView.getContext());
+            accountManager.openAccountManager(snackView.getContext());
           });
       return false;
     }

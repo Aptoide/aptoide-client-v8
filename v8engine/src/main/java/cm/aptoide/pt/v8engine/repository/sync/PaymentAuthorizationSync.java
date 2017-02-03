@@ -28,19 +28,21 @@ public class PaymentAuthorizationSync extends RepositorySync {
   private final List<String> paymentIds;
   private final PaymentAuthorizationAccessor authorizationAccessor;
   private final PaymentAuthorizationFactory authorizationFactory;
+  private final AptoideAccountManager accountManager;
 
   public PaymentAuthorizationSync(List<String> paymentIds,
       PaymentAuthorizationAccessor authorizationAccessor,
-      PaymentAuthorizationFactory authorizationFactory) {
+      PaymentAuthorizationFactory authorizationFactory, AptoideAccountManager accountManager) {
     this.paymentIds = paymentIds;
     this.authorizationAccessor = authorizationAccessor;
     this.authorizationFactory = authorizationFactory;
+    this.accountManager = accountManager;
   }
 
   @Override public void sync(SyncResult syncResult) {
     try {
-      final String accessToken = AptoideAccountManager.getAccessToken();
-      final String payerId = AptoideAccountManager.getUserEmail();
+      final String accessToken = accountManager.getAccessToken();
+      final String payerId = accountManager.getUserEmail();
       getServerAuthorizations(accessToken).doOnSuccess(
           response -> saveAndReschedulePendingAuthorization(response, syncResult, paymentIds,
               payerId)).onErrorReturn(throwable -> {

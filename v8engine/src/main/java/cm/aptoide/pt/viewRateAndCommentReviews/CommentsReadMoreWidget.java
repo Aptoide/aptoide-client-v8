@@ -22,14 +22,12 @@ import com.jakewharton.rxbinding.view.RxView;
  */
 public class CommentsReadMoreWidget extends Widget<CommentsReadMoreDisplayable> {
 
-  private final AptoideClientUUID aptoideClientUUID;
+  private AptoideClientUUID aptoideClientUUID;
+  private AptoideAccountManager accountManager;
   private TextView readMoreButton;
 
   public CommentsReadMoreWidget(View itemView) {
     super(itemView);
-
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
   }
 
   @Override protected void assignViews(View itemView) {
@@ -37,9 +35,12 @@ public class CommentsReadMoreWidget extends Widget<CommentsReadMoreDisplayable> 
   }
 
   @Override public void bindView(CommentsReadMoreDisplayable displayable) {
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+    accountManager = AptoideAccountManager.getInstance();
     compositeSubscription.add(RxView.clicks(readMoreButton).subscribe(aVoid -> {
       ListCommentsRequest.of(displayable.getResourceId(), displayable.getNext(), 100,
-          AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier(),
+          accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier(),
           displayable.isReview())
           .execute(listComments -> displayable.getCommentAdder()
               .addComment(listComments.getDatalist().getList()));

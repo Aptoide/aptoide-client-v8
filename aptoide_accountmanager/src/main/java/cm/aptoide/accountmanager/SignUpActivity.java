@@ -28,10 +28,12 @@ public class SignUpActivity extends BaseActivity implements AptoideAccountManage
   private View content;
 
   private String SIGNUP = "signup";
+  private AptoideAccountManager accountManager;
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(getLayoutId());
+    accountManager = AptoideAccountManager.getInstance();
     bindViews();
     setupToolbar();
     setupListeners();
@@ -66,7 +68,7 @@ public class SignUpActivity extends BaseActivity implements AptoideAccountManage
 
   private void setupListeners() {
     setupShowHidePassButton();
-    AptoideAccountManager.setupRegisterUser(this, signUpButton);
+    accountManager.setupRegisterUser(this, signUpButton, this);
   }
 
   private void setupShowHidePassButton() {
@@ -85,11 +87,11 @@ public class SignUpActivity extends BaseActivity implements AptoideAccountManage
     ShowMessage.asSnack(content, R.string.user_created);
     data.putString(AptoideLoginUtils.APTOIDE_LOGIN_FROM, SIGNUP);
     setResult(RESULT_OK, new Intent().putExtras(data));
-    Analytics analytics = AptoideAccountManager.getAnalytics();
+    Analytics analytics = accountManager.getAnalytics();
     if (analytics != null) {
       analytics.signUp();
     }
-    AptoideAccountManager.sendLoginBroadcast();
+    accountManager.sendLoginBroadcast();
     finish();
   }
 

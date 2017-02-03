@@ -104,11 +104,13 @@ public class CreateStoreActivity extends PermissionsBaseActivity
           DataProvider.getContext());
 
   private int CREATE_STORE_REQUEST_CODE = 0; //1: all (Multipart)  2: user and theme 3:user 4/5:edit
+  private AptoideAccountManager accountManager;
 
   @Override public void onCreate(Bundle savedInstanceState) {
     getData();
     super.onCreate(savedInstanceState);
     setContentView(getLayoutId());
+    accountManager = AptoideAccountManager.getInstance();
     mSubscriptions = new CompositeSubscription();
     bindViews();
     editViews();
@@ -260,7 +262,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
               || CREATE_STORE_REQUEST_CODE == 3) {
             progressDialog.show();
             mSubscriptions.add(
-                CheckUserCredentialsRequest.of(AptoideAccountManager.getAccessToken(), storeName,
+                CheckUserCredentialsRequest.of(accountManager.getAccessToken(), storeName,
                     CREATE_STORE_CODE).observe().subscribe(answer -> {
                   if (answer.hasErrors()) {
                     if (answer.getErrors() != null && answer.getErrors().size() > 0) {
@@ -290,9 +292,9 @@ public class CreateStoreActivity extends PermissionsBaseActivity
                     progressDialog.dismiss();
                     ShowMessage.asLongObservableSnack(this, R.string.create_store_store_created)
                         .subscribe(visibility -> {
-                          mSubscriptions.add(AptoideAccountManager.refreshAndSaveUserInfoData()
+                          mSubscriptions.add(accountManager.refreshAndSaveUserInfoData()
                               .subscribe(refreshed -> {
-                                AptoideAccountManager.sendLoginBroadcast();
+                                accountManager.sendLoginBroadcast();
                               }, Throwable::printStackTrace));
                           if (visibility == ShowMessage.DISMISSED) {
                             finish();
@@ -307,9 +309,9 @@ public class CreateStoreActivity extends PermissionsBaseActivity
             setStoreData();
             progressDialog.show();
             mSubscriptions.add(SetStoreRequest.of(aptoideClientUUID.getUniqueIdentifier(),
-                AptoideAccountManager.getAccessToken(), storeName, storeTheme, storeAvatarPath,
+                accountManager.getAccessToken(), storeName, storeTheme, storeAvatarPath,
                 storeDescription, true, storeId).observe().subscribe(answer -> {
-              AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
+              accountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
                 progressDialog.dismiss();
                 finish();
               }, Throwable::printStackTrace);
@@ -336,13 +338,13 @@ public class CreateStoreActivity extends PermissionsBaseActivity
              */
             setStoreData();
             progressDialog.show();
-            mSubscriptions.add(SimpleSetStoreRequest.of(AptoideAccountManager.getAccessToken(),
+            mSubscriptions.add(SimpleSetStoreRequest.of(accountManager.getAccessToken(),
                 aptoideClientUUID.getUniqueIdentifier(), storeId, storeTheme, storeDescription)
                 .observe()
                 .subscribe(answer -> {
-                  AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
+                  accountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
                     progressDialog.dismiss();
-                    AptoideAccountManager.sendLoginBroadcast();
+                    accountManager.sendLoginBroadcast();
                     finish();
                   }, Throwable::printStackTrace);
                 }, throwable -> {
@@ -354,7 +356,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
 
     ));
     mSubscriptions.add(RxView.clicks(mSkip)
-        .flatMap(click -> AptoideAccountManager.refreshAndSaveUserInfoData())
+        .flatMap(click -> accountManager.refreshAndSaveUserInfoData())
         .subscribe(refreshed -> {
           finish();
         }, throwable -> {
@@ -545,13 +547,13 @@ public class CreateStoreActivity extends PermissionsBaseActivity
        */
       setStoreData();
       mSubscriptions.add(SetStoreRequest.of(aptoideClientUUID.getUniqueIdentifier(),
-          AptoideAccountManager.getAccessToken(), storeName, storeTheme, storeAvatarPath)
+          accountManager.getAccessToken(), storeName, storeTheme, storeAvatarPath)
           .observe()
           .timeout(90, TimeUnit.SECONDS)
           .subscribe(answer -> {
-            AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
+            accountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
               progressDialog.dismiss();
-              AptoideAccountManager.sendLoginBroadcast();
+              accountManager.sendLoginBroadcast();
               finish();
             }, throwable -> throwable.printStackTrace());
           }, throwable -> {
@@ -593,9 +595,9 @@ public class CreateStoreActivity extends PermissionsBaseActivity
                     }
                   });
             }
-            AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
+            accountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
               progressDialog.dismiss();
-              AptoideAccountManager.sendLoginBroadcast();
+              accountManager.sendLoginBroadcast();
               finish();
             }, throwable1 -> throwable1.printStackTrace());
           }));
@@ -604,16 +606,16 @@ public class CreateStoreActivity extends PermissionsBaseActivity
        * not multipart
        */
       setStoreData();
-      SimpleSetStoreRequest.of(AptoideAccountManager.getAccessToken(),
+      SimpleSetStoreRequest.of(accountManager.getAccessToken(),
           aptoideClientUUID.getUniqueIdentifier(), storeName, storeTheme).execute(answer -> {
-        AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
+        accountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
           progressDialog.dismiss();
-          AptoideAccountManager.sendLoginBroadcast();
+          accountManager.sendLoginBroadcast();
           finish();
         }, Throwable::printStackTrace);
       }, throwable -> {
         onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
-        AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
+        accountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
           progressDialog.dismiss();
         }, Throwable::printStackTrace);
       });

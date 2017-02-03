@@ -9,6 +9,8 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,15 +41,11 @@ import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 public class AddStoreDialog extends DialogFragment {
 
   private final int PRIVATE_STORE_REQUEST_CODE = 20;
-  private final AptoideClientUUID aptoideClientUUID;
+  private AptoideClientUUID aptoideClientUUID;
+  private AptoideAccountManager accountManager;
   private NavigationManagerV4 navigationManager;
   private String storeName;
   private Dialog loadingDialog;
-
-  public AddStoreDialog() {
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
-  }
 
   public void attachFragmentManager(NavigationManagerV4 navigationManager) {
     this.navigationManager = navigationManager;
@@ -113,7 +111,7 @@ public class AddStoreDialog extends DialogFragment {
 
   private GetStoreMetaRequest buildRequest(String storeName) {
     return GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName),
-        AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier());
+        accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier());
   }
 
   private void executeRequest(GetStoreMetaRequest getStoreMetaRequest) {
@@ -152,7 +150,9 @@ public class AddStoreDialog extends DialogFragment {
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
+    accountManager = AptoideAccountManager.getInstance();
+    aptoideClientUUID =  new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
     if (savedInstanceState != null) {
       storeName = savedInstanceState.getString(BundleArgs.STORE_NAME.name());
     }

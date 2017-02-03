@@ -36,6 +36,7 @@ public class PaymentConfirmationSync extends RepositorySync {
   private final NetworkOperatorManager operatorManager;
   private final PaymentConfirmationAccessor confirmationAccessor;
   private final PaymentConfirmationFactory confirmationFactory;
+  private final AptoideAccountManager accountManager;
 
   private String paymentConfirmationId;
   private int paymentId;
@@ -43,7 +44,8 @@ public class PaymentConfirmationSync extends RepositorySync {
   public PaymentConfirmationSync(PaymentConfirmationRepository paymentConfirmationRepository,
       Product product, NetworkOperatorManager operatorManager,
       PaymentConfirmationAccessor confirmationAccessor,
-      PaymentConfirmationFactory confirmationFactory, String paymentConfirmationId, int paymentId) {
+      PaymentConfirmationFactory confirmationFactory, String paymentConfirmationId, int paymentId,
+      AptoideAccountManager accountManager) {
     this.paymentConfirmationRepository = paymentConfirmationRepository;
     this.product = product;
     this.operatorManager = operatorManager;
@@ -51,23 +53,25 @@ public class PaymentConfirmationSync extends RepositorySync {
     this.confirmationFactory = confirmationFactory;
     this.paymentConfirmationId = paymentConfirmationId;
     this.paymentId = paymentId;
+    this.accountManager = accountManager;
   }
 
   public PaymentConfirmationSync(PaymentConfirmationRepository paymentConfirmationRepository,
       Product product, NetworkOperatorManager operatorManager,
       PaymentConfirmationAccessor confirmationAccessor,
-      PaymentConfirmationFactory confirmationFactory) {
+      PaymentConfirmationFactory confirmationFactory, AptoideAccountManager accountManager) {
     this.paymentConfirmationRepository = paymentConfirmationRepository;
     this.product = product;
     this.operatorManager = operatorManager;
     this.confirmationAccessor = confirmationAccessor;
     this.confirmationFactory = confirmationFactory;
+    this.accountManager = accountManager;
   }
 
   @Override public void sync(SyncResult syncResult) {
     try {
-      final String accessToken = AptoideAccountManager.getAccessToken();
-      final String payerId = AptoideAccountManager.getUserEmail();
+      final String accessToken = accountManager.getAccessToken();
+      final String payerId = accountManager.getUserEmail();
       final Single<PaymentConfirmation> serverPaymentConfirmation;
       if (paymentConfirmationId != null) {
         serverPaymentConfirmation =
