@@ -40,6 +40,7 @@ public class PullingContentService extends Service {
 
   public static final String PUSH_NOTIFICATIONS_ACTION = "PUSH_NOTIFICATIONS_ACTION";
   public static final String UPDATES_ACTION = "UPDATES_ACTION";
+  public static final String BOOT_COMPLETED_ACTION = "BOOT_COMPLETED_ACTION";
   public static final long UPDATES_INTERVAL = AlarmManager.INTERVAL_HALF_DAY;
   public static final long PUSH_NOTIFICATION_INTERVAL = AlarmManager.INTERVAL_DAY;
   public static final int PUSH_NOTIFICATION_ID = 86456;
@@ -79,22 +80,42 @@ public class PullingContentService extends Service {
     if (action != null) {
       switch (action) {
         case UPDATES_ACTION:
-          UpdateRepository repository = RepositoryFactory.getUpdateRepository();
-          subscriptions.add(repository.getUpdates(true).first().subscribe(updates -> {
-            Logger.d(TAG, "updates refreshed");
-            setUpdatesNotification(updates, startId);
-          }, throwable -> {
-            throwable.printStackTrace();
-            CrashReports.logException(throwable);
-          }));
+          setUpdatesAction(startId);
           break;
         case PUSH_NOTIFICATIONS_ACTION:
-          PushNotificationsRequest.of()
-              .execute(response -> setPushNotification(response, startId));
+          setPushNotificationsAction(startId);
+          break;
+        case BOOT_COMPLETED_ACTION:
+          setUpdatesAction(startId);
+          setPushNotificationsAction(startId);
           break;
       }
     }
     return START_NOT_STICKY;
+  }
+
+  /**
+   * Setup on updates action received
+   * @param startId service startid
+   */
+  private void setUpdatesAction(int startId){
+    UpdateRepository repository = RepositoryFactory.getUpdateRepository();
+    subscriptions.add(repository.getUpdates(true).first().subscribe(updates -> {
+      Logger.d(TAG, "updates refreshed");
+      setUpdatesNotification(updates, startId);
+    }, throwable -> {
+      throwable.printStackTrace();
+      CrashReports.logException(throwable);
+    }));
+  }
+
+  /**
+   * setup on push notifications action received
+   * @param startId service startid
+   */
+  private void setPushNotificationsAction(int startId){
+    PushNotificationsRequest.of()
+        .execute(response -> setPushNotification(response, startId));
   }
 
   @Override public void onDestroy() {

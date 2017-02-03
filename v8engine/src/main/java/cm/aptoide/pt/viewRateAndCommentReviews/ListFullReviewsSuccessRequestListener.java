@@ -62,7 +62,7 @@ class ListFullReviewsSuccessRequestListener implements SuccessRequestListener<Li
   }
 
   private void addRateAndReviewDisplayables(List<Review> reviews, List<Displayable> displayables) {
-    int index = 0;
+    int index = -1;
     int count = 0;
     for (final Review review : reviews) {
       displayables.add(
@@ -83,6 +83,12 @@ class ListFullReviewsSuccessRequestListener implements SuccessRequestListener<Li
       }
       count++;
     }
+
+    // Hammered to fix layout not visible on first call.
+    if (fragment.getAdapter().getItemCount() == 0) {
+      index = 0;
+    }
+
     fragment.checkAndRemoveProgressBarDisplayable();
     fragment.addDisplayables(displayables);
     if (index >= 0) {

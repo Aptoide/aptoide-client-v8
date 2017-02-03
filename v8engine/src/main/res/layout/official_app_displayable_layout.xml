@@ -7,7 +7,9 @@
     android:padding="5dp"
     tools:layout_marginBottom="2dp"
     tools:layout_marginLeft="5dp"
+    tools:layout_marginStart="5dp"
     tools:layout_marginRight="5dp"
+    tools:layout_marginEnd="5dp"
     tools:layout_marginTop="2dp"
     style="?attr/backgroundCard"
     >
@@ -58,8 +60,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
         android:layout_toRightOf="@+id/app_image"
-        >
+        android:layout_toEndOf="@+id/app_image"
+    >
       <TextView
           android:id="@+id/app_name"
           android:layout_width="wrap_content"
