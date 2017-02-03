@@ -72,7 +72,7 @@ public class CreateUserActivity extends PermissionsBaseActivity
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(getLayoutId());
-    accountManager = AptoideAccountManager.getInstance();
+    accountManager = AptoideAccountManager.getInstance(this, Application.getConfiguration());
     mSubscriptions = new CompositeSubscription();
     bindViews();
     getUserData();
@@ -138,7 +138,7 @@ public class CreateUserActivity extends PermissionsBaseActivity
         pleaseWaitDialog.show();
         mSubscriptions.add(
             CreateUserRequest.of("true", userEmail, username, userPassword, avatarPath,
-                aptoideClientUUID.getAptoideClientUUID()).observe().filter(answer -> {
+                aptoideClientUUID.getAptoideClientUUID(), this).observe().filter(answer -> {
               if (answer.hasErrors()) {
                 if (answer.getErrors() != null && answer.getErrors().size() > 0) {
                   onRegisterFail(ErrorsMapper.getWebServiceErrorMessageFromCode(
@@ -182,7 +182,7 @@ public class CreateUserActivity extends PermissionsBaseActivity
         pleaseWaitDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         pleaseWaitDialog.show();
         CreateUserRequest.of("true", userEmail, username, userPassword, avatarPath,
-            aptoideClientUUID.getAptoideClientUUID()).execute(answer -> {
+            aptoideClientUUID.getAptoideClientUUID(), this).execute(answer -> {
           if (answer.hasErrors()) {
             if (answer.getErrors() != null && answer.getErrors().size() > 0) {
               onRegisterFail(

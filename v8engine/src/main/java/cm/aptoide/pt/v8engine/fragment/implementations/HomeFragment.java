@@ -84,8 +84,8 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    accountManager = AptoideAccountManager.getInstance();
-    updateRepository = RepositoryFactory.getUpdateRepository();
+    accountManager = AptoideAccountManager.getInstance(getContext(), Application.getConfiguration());
+    updateRepository = RepositoryFactory.getUpdateRepository(getContext());
   }
 
   @Override public void bindViews(View view) {

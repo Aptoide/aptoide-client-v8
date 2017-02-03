@@ -10,6 +10,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 
@@ -27,7 +28,8 @@ public class StoreUtilsProxy {
   private static final AptoideClientUUID aptoideClientUUID;
 
   static {
-    accountManager = AptoideAccountManager.getInstance();
+    accountManager = AptoideAccountManager.getInstance(DataProvider.getContext(),
+        Application.getConfiguration());
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
   }

@@ -15,6 +15,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.abtesting.ABTest;
@@ -112,7 +113,7 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
     adsRepository = new AdsRepository();
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
-    accountManager = AptoideAccountManager.getInstance();
+    accountManager = AptoideAccountManager.getInstance(getContext(), Application.getConfiguration());
     super.onCreate(savedInstanceState);
   }
 

@@ -41,7 +41,6 @@ import cm.aptoide.accountmanager.ws.responses.GenericResponseV3;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
@@ -65,9 +64,6 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
-import static cm.aptoide.pt.preferences.Application.getConfiguration;
-import static cm.aptoide.pt.preferences.Application.getContext;
-
 /**
  * Created by trinkes on 4/18/16. <li>{@link #openAccountManager(Context)}</li> <li>{@link
  * #openAccountManager(Context, boolean)}</li> <li>{@link #openAccountManager(Context,
@@ -79,12 +75,6 @@ import static cm.aptoide.pt.preferences.Application.getContext;
  */
 public class AptoideAccountManager implements Application.ActivityLifecycleCallbacks {
 
-  public static final String LOGIN =
-      getConfiguration().getAppId() + ".accountmanager.broadcast.login";
-  public static final String LOGIN_CANCELLED =
-      getConfiguration().getAppId() + ".accountmanager.broadcast.LOGIN_CANCELLED";
-  public static final String LOGOUT =
-      getConfiguration().getAppId() + ".accountmanager.broadcast.logout";
 
   /**
    * This constant is used to send the broadcast when an account is removed
@@ -92,23 +82,30 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
   public static final String ACCOUNT_REMOVED_BROADCAST_KEY = "cm.aptoide.accountmanager" + "" +
       ".removedaccount.broadcast";
 
-  private static String TAG = AptoideAccountManager.class.getSimpleName();
+  private final static String TAG = AptoideAccountManager.class.getSimpleName();
 
+  public static String LOGIN;
+  public static String LOGIN_CANCELLED;
+  public static String LOGOUT;
   private static AptoideAccountManager instance;
 
   private final AptoideClientUUID aptoideClientUuid;
-
+  private final Context applicationContext;
+  private AptoidePreferencesConfiguration configuration;
   private boolean userIsLoggedIn;
-
-
   private Analytics analytics;
 
-  private ILoginInterface mCallback;
-  private WeakReference<Context> mContextWeakReference;
+  private ILoginInterface callback;
 
-  public AptoideAccountManager(AptoideClientUUID aptoideClientUuid) {
+  public AptoideAccountManager(AptoideClientUUID aptoideClientUuid, Context applicationContext,
+      AptoidePreferencesConfiguration configuration) {
     this.aptoideClientUuid = aptoideClientUuid;
+    this.applicationContext = applicationContext;
+    this.configuration = configuration;
     this.userIsLoggedIn = isLoggedIn();
+    LOGIN = configuration.getAppId() + ".accountmanager.broadcast.login";
+    LOGIN_CANCELLED = configuration.getAppId() + ".accountmanager.broadcast.LOGIN_CANCELLED";
+    LOGOUT = configuration.getAppId() + ".accountmanager.broadcast.logout";
   }
 
   public Analytics getAnalytics() {
@@ -148,7 +145,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
   }
 
   public boolean isLoggedIn() {
-    AccountManager manager = AccountManager.get(getContext());
+    AccountManager manager = AccountManager.get(applicationContext);
     return manager.getAccountsByType(Constants.ACCOUNT_TYPE).length != 0;
   }
 
@@ -176,7 +173,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
       if (extras != null) {
         intent.putExtras(extras);
       }
-      //Intent intent = new Intent(getContext(), CreateStoreActivity.class);
+      //Intent intent = new Intent(applicationContext, CreateStoreActivity.class);
       context.startActivity(intent);
     }
   }
@@ -194,19 +191,20 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     openAccountManager(context, extras);
   }
 
-  public static AptoideAccountManager getInstance() {
+  public static AptoideAccountManager getInstance(Context context,
+      AptoidePreferencesConfiguration configuration) {
     if (instance == null) {
       instance = new AptoideAccountManager(
           new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-              DataProvider.getContext()));
+              context.getApplicationContext()), context.getApplicationContext(), configuration);
     }
     return instance;
   }
 
   public void setupLogout(FragmentActivity activity, Button logoutButton) {
     final WeakReference<FragmentActivity> activityRef = new WeakReference(activity);
-    if (getConfiguration().isLoginAvailable(AptoidePreferencesConfiguration.SocialLogin.FACEBOOK)) {
-      FacebookSdk.sdkInitialize(getContext());
+    if (configuration.isLoginAvailable(AptoidePreferencesConfiguration.SocialLogin.FACEBOOK)) {
+      FacebookSdk.sdkInitialize(applicationContext);
     }
     logoutButton.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
@@ -216,7 +214,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
   }
 
   public void logout(WeakReference<FragmentActivity> activityRef) {
-    if (getConfiguration().isLoginAvailable(AptoidePreferencesConfiguration.SocialLogin.FACEBOOK)) {
+    if (configuration.isLoginAvailable(AptoidePreferencesConfiguration.SocialLogin.FACEBOOK)) {
       FacebookLoginUtils.logout();
     }
     removeLocalAccount();
@@ -229,11 +227,11 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
         activity.finish();
       }
     }
-    getContext().sendBroadcast(new Intent().setAction(LOGOUT));
+    applicationContext.sendBroadcast(new Intent().setAction(LOGOUT));
   }
 
   public void removeLocalAccount() {
-    AccountManager manager = AccountManager.get(getContext());
+    AccountManager manager = AccountManager.get(applicationContext);
     Account[] accounts = manager.getAccountsByType(Constants.ACCOUNT_TYPE);
     userIsLoggedIn = false;
     for (Account account : accounts) {
@@ -273,10 +271,10 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
    * @param data Given on onActivityResult method
    */
   public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
-    if (getConfiguration().isLoginAvailable(AptoidePreferencesConfiguration.SocialLogin.GOOGLE)) {
+    if (configuration.isLoginAvailable(AptoidePreferencesConfiguration.SocialLogin.GOOGLE)) {
       GoogleLoginUtils.onActivityResult(requestCode, data, this);
     }
-    if (getConfiguration().isLoginAvailable(AptoidePreferencesConfiguration.SocialLogin.FACEBOOK)) {
+    if (configuration.isLoginAvailable(AptoidePreferencesConfiguration.SocialLogin.FACEBOOK)) {
       FacebookLoginUtils.onActivityResult(requestCode, resultCode, data);
     }
     AptoideLoginUtils.onActivityResult(activity, requestCode, resultCode, data, this);
@@ -302,7 +300,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     }
     OAuth2AuthenticationRequest oAuth2AuthenticationRequest =
         OAuth2AuthenticationRequest.of(userName, passwordOrToken, mode, nameForGoogle,
-            aptoideClientUuid.getAptoideClientUUID());
+            aptoideClientUuid.getAptoideClientUUID(), applicationContext);
     final ProgressDialog finalGenericPleaseWaitDialog = genericPleaseWaitDialog;
     oAuth2AuthenticationRequest.execute(oAuth -> {
       Logger.d(TAG, "onSuccess() called with: " + "oAuth = [" + oAuth + "]");
@@ -311,7 +309,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
         AccountManagerPreferences.setAccessToken(oAuth.getAccessToken());
 
         addLocalUserAccount(userName, passwordOrToken, null, oAuth.getRefresh_token(),
-            oAuth.getAccessToken(), context).subscribe(isSuccess -> {
+            oAuth.getAccessToken()).subscribe(isSuccess -> {
           if (isSuccess) {
             setAccessTokenOnLocalAccount(oAuth.getAccessToken(), null, SecureKeys.ACCESS_TOKEN);
             AccountManagerPreferences.setLoginMode(mode);
@@ -328,7 +326,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
           finalGenericPleaseWaitDialog.dismiss();
         }
 
-        onLoginFail(getContext().getString(R.string.unknown_error));
+        onLoginFail(applicationContext.getString(R.string.unknown_error));
       }
       Logger.e(TAG, "Error while adding the local account. Probably context was null");
     }, new ErrorRequestListener() {
@@ -336,10 +334,10 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
         try {
           if (e instanceof AptoideWsV3Exception) {
             GenericResponseV3 oAuth = ((AptoideWsV3Exception) e).getBaseResponse();
-            onLoginFail(getContext().getString(
+            onLoginFail(applicationContext.getString(
                 ErrorsMapper.getWebServiceErrorMessageFromCode(oAuth.getError())));
           } else {
-            onLoginFail(getContext().getString(R.string.unknown_error));
+            onLoginFail(applicationContext.getString(R.string.unknown_error));
           }
         } finally {
           if (finalGenericPleaseWaitDialog != null) {
@@ -444,7 +442,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
   public void updateMatureSwitch(boolean matureSwitch) {
     AccountManagerPreferences.setMatureSwitch(matureSwitch);
     if (userIsLoggedIn) {
-      ChangeUserSettingsRequest.of(matureSwitch)
+      ChangeUserSettingsRequest.of(matureSwitch, applicationContext)
           .observe(true) // bypass cache since we are "writing" a value
           .subscribeOn(Schedulers.io())
           .observeOn(AndroidSchedulers.mainThread())
@@ -496,7 +494,8 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 
   private Observable<String> getNewAccessTokenFromRefreshToken(String refreshToken,
       Action1<Throwable> action1) {
-    return OAuth2AuthenticationRequest.of(refreshToken, aptoideClientUuid.getAptoideClientUUID())
+    return OAuth2AuthenticationRequest.of(refreshToken, aptoideClientUuid.getAptoideClientUUID(),
+        applicationContext)
         .observe()
         .observeOn(AndroidSchedulers.mainThread())
         .map(OAuth::getAccessToken)
@@ -519,7 +518,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
   }
 
   private String getUserStringFromAndroidAccountManager(String key) {
-    AccountManager manager = AccountManager.get(getContext());
+    AccountManager manager = AccountManager.get(applicationContext);
     Account[] accountsByType = manager.getAccountsByType(Constants.ACCOUNT_TYPE);
 
     return accountsByType.length > 0 ? manager.getUserData(accountsByType[0], key) : null;
@@ -527,7 +526,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 
   private @Nullable String getRefreshTokenFromAccountManager()
       throws AuthenticatorException, OperationCanceledException, IOException {
-    AccountManager manager = AccountManager.get(getContext());
+    AccountManager manager = AccountManager.get(applicationContext);
     Account[] accountsByType = manager.getAccountsByType(Constants.ACCOUNT_TYPE);
     String refreshToken =
         manager.blockingGetAuthToken(accountsByType[0], Constants.AUTHTOKEN_TYPE_FULL_ACCESS,
@@ -537,7 +536,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 
   public void setAccessTokenOnLocalAccount(String accessToken, @Nullable Account userAccount,
       @NonNull String dataKey) {
-    AccountManager accountManager = AccountManager.get(getContext());
+    AccountManager accountManager = AccountManager.get(applicationContext);
 
     if (userAccount == null) {
       Account[] accounts = accountManager.getAccounts();
@@ -561,7 +560,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
   public String getUserEmail() {
     String userName = AccountManagerPreferences.getUserEmail();
     if (userName == null || TextUtils.isEmpty(userName)) {
-      AccountManager accountManager = AccountManager.get(getContext());
+      AccountManager accountManager = AccountManager.get(applicationContext);
       Account[] accounts = accountManager.getAccountsByType(Constants.ACCOUNT_TYPE);
       if (accounts.length > 0) {
         userName = accounts[0].name;
@@ -598,7 +597,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
       IRegisterUser callback1 = (IRegisterUser) callBackWeakReference.get();
       if (callback1 != null) {
         ProgressDialog genericPleaseWaitDialog =
-            GenericDialogs.createGenericPleaseWaitDialog(v.getContext());
+            GenericDialogs.createGenericPleaseWaitDialog(context);
         genericPleaseWaitDialog.show();
         registerUserUsingWebServices(callback1, genericPleaseWaitDialog, context);
       }
@@ -610,7 +609,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     String email = callback.getUserEmail();
     String password = callback.getUserPassword();
     if (validateUserCredentials(callback, email, password)) {
-      CreateUserRequest.of(email, password, aptoideClientUuid.getAptoideClientUUID())
+      CreateUserRequest.of(email, password, aptoideClientUuid.getAptoideClientUUID(), applicationContext)
           .execute(oAuth -> {
             if (oAuth.hasErrors()) {
               if (oAuth.getErrors() != null && oAuth.getErrors().size() > 0) {
@@ -637,8 +636,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
               callback.onRegisterFail(R.string.unknown_error);
             }
             if (e instanceof SocketTimeoutException) {
-              AptoideAccountManager.getInstance()
-                  .loginUserCredentials(LoginMode.APTOIDE, email, password, null, context);
+              loginUserCredentials(LoginMode.APTOIDE, email, password, null, context);
             }
             genericPleaseWaitDialog.dismiss();
             e.printStackTrace();
@@ -704,26 +702,26 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
   }
 
   public void unsubscribeStore(String storeName) {
-    ChangeUserRepoSubscriptionRequest.of(storeName, false)
+    ChangeUserRepoSubscriptionRequest.of(storeName, false, applicationContext)
         .execute(genericResponseV3 -> Logger.d(TAG, "Successfully unsubscribed " + storeName),
             true);
   }
 
   public void subscribeStore(String storeName) {
-    ChangeUserRepoSubscriptionRequest.of(storeName, true)
+    ChangeUserRepoSubscriptionRequest.of(storeName, true, applicationContext)
         .execute(genericResponseV3 -> Logger.d(TAG, "Successfully subscribed " + storeName), true);
   }
 
   void sendLoginBroadcast() {
-    getContext().sendBroadcast(new Intent().setAction(LOGIN));
+    applicationContext.sendBroadcast(new Intent().setAction(LOGIN));
   }
 
   public void sendLoginCancelledBroadcast() {
-    getContext().sendBroadcast(new Intent().setAction(LOGIN_CANCELLED));
+    applicationContext.sendBroadcast(new Intent().setAction(LOGIN_CANCELLED));
   }
 
   public Observable<List<Subscription>> getUserRepos() {
-    return GetUserRepoSubscriptionRequest.of()
+    return GetUserRepoSubscriptionRequest.of(applicationContext)
         .observe()
         .observeOn(AndroidSchedulers.mainThread())
         .map(getUserRepoSubscription -> getUserRepoSubscription.getSubscription());
@@ -742,16 +740,15 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
    */
   public void setupLogins(ILoginInterface callback, FragmentActivity activity,
       LoginButton facebookLoginButton, Button loginButton, Button registerButton) {
-    mCallback = callback;
-    this.mContextWeakReference = new WeakReference<>(activity);
+    this.callback = callback;
     View googleSignInButton = activity.findViewById(R.id.g_sign_in_button);
-    if (getConfiguration().isLoginAvailable(AptoidePreferencesConfiguration.SocialLogin.GOOGLE)
+    if (configuration.isLoginAvailable(AptoidePreferencesConfiguration.SocialLogin.GOOGLE)
         && GoogleLoginUtils.isGoogleEnabledOnCurrentDevice(activity)) {
       GoogleLoginUtils.setUpGoogle(activity, googleSignInButton);
     } else {
       googleSignInButton.setVisibility(View.GONE);
     }
-    if (getConfiguration().isLoginAvailable(AptoidePreferencesConfiguration.SocialLogin.FACEBOOK)) {
+    if (configuration.isLoginAvailable(AptoidePreferencesConfiguration.SocialLogin.FACEBOOK)) {
       FacebookLoginUtils.setupFacebook(activity, facebookLoginButton, this);
     } else {
       facebookLoginButton.setVisibility(View.GONE);
@@ -772,25 +769,8 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
    */
   Observable<Boolean> addLocalUserAccount(String userName, String userPassword,
       @Nullable String accountType, String refreshToken, String accessToken) {
-    return addLocalUserAccount(userName, userPassword, accountType, refreshToken, accessToken,
-        mContextWeakReference.get());
-  }
-
-  /**
-   * This method adds an new local account
-   *
-   * @param userName This will be used to identify the account
-   * @param userPassword password to access the account
-   * @param accountType account type
-   * @param refreshToken Refresh token to be saved
-   * @param accessToken AccessToken to be used on CheckUserCredentialsRequest
-   * @param context given context
-   * @return true if the account was added successfully, false otherwise
-   */
-  Observable<Boolean> addLocalUserAccount(String userName, String userPassword,
-      @Nullable String accountType, String refreshToken, String accessToken, Context context) {
-    if (context != null) {
-      AccountManager accountManager = AccountManager.get(context);
+    if (applicationContext != null) {
+      AccountManager accountManager = AccountManager.get(applicationContext);
       accountType = accountType != null ? accountType
           // TODO: 4/21/16 trinkes if needed, account type has to match with partners
           // version
@@ -801,7 +781,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
       // Creating the account on the device and setting the auth token we got
       // (Not setting the auth token will cause another call to the server to authenticate
       // the user)
-      SecureCoderDecoder secureCoderDecoder = new SecureCoderDecoder.Builder(context).create();
+      SecureCoderDecoder secureCoderDecoder = new SecureCoderDecoder.Builder(applicationContext).create();
       String encryptPassword = secureCoderDecoder.encrypt(userPassword);
       try {
         accountManager.addAccountExplicitly(account, encryptPassword, null);
@@ -823,7 +803,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
   }
 
   public Observable<CheckUserCredentialsJson> refreshUserInfoData() {
-    return CheckUserCredentialsRequest.of(getAccessToken())
+    return CheckUserCredentialsRequest.of(getAccessToken(), applicationContext)
         .observe()
         .observeOn(AndroidSchedulers.mainThread())
         .subscribeOn(Schedulers.io())
@@ -847,40 +827,40 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
   }
 
   void onLoginFail(String reason) {
-    if (mCallback != null) mCallback.onLoginFail(reason);
+    if (callback != null) callback.onLoginFail(reason);
   }
 
   void onLoginSuccess(LoginMode loginType, String loginOrigin, String username, String password) {
 
     userIsLoggedIn = true;
 
-    if (mCallback != null) {
-      mCallback.onLoginSuccess();
+    if (callback != null) {
+      callback.onLoginSuccess();
     }
     if (analytics != null) {
       analytics.login(loginType.name());
     }
     if (loginOrigin.equals("signup")) {
-      Intent intent = new Intent(getContext(), CreateUserActivity.class);
+      Intent intent = new Intent(applicationContext, CreateUserActivity.class);
       intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
       intent.putExtra(AptoideLoginUtils.APTOIDE_LOGIN_USER_NAME_KEY, username);
       intent.putExtra(AptoideLoginUtils.APTOIDE_LOGIN_PASSWORD_KEY, password);
       intent.putExtra(AptoideLoginUtils.APTOIDE_LOGIN_ACCESS_TOKEN_KEY, getAccessToken());
-      getContext().startActivity(intent);
+      applicationContext.startActivity(intent);
     }
 
     if ((loginType.equals(LoginMode.FACEBOOK) || loginType.equals(LoginMode.GOOGLE))
         && !ManagerPreferences.getUserAccessConfirmed()) {
-      Intent socialIntent = new Intent(getContext(), LoggedInActivity.class);
+      Intent socialIntent = new Intent(applicationContext, LoggedInActivity.class);
       socialIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
       socialIntent.putExtra(AptoideLoginUtils.IS_FACEBOOK_OR_GOOGLE, true);
-      getContext().startActivity(socialIntent);
+      applicationContext.startActivity(socialIntent);
     }
   }
 
   void onLoginSuccess() {
     userIsLoggedIn = true;
-    mCallback.onLoginSuccess();
+    callback.onLoginSuccess();
   }
 
   void sendRemoveLocalAccountBroadcaster(Context context) {
@@ -919,7 +899,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 
   @Override public void onActivityDestroyed(Activity activity) {
     if (activity instanceof LoginActivity) {
-      mCallback = null;
+      callback = null;
     }
   }
 
@@ -929,7 +909,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
    * @return The user name introduced by user
    */
   String getIntroducedUserName() {
-    return mCallback == null ? null : mCallback.getIntroducedUserName();
+    return callback == null ? null : callback.getIntroducedUserName();
   }
 
   /**
@@ -938,7 +918,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
    * @return The password introduced by user
    */
   String getIntroducedPassword() {
-    return mCallback == null ? null : mCallback.getIntroducedPassword();
+    return callback == null ? null : callback.getIntroducedPassword();
   }
 
   /*******************************************************/

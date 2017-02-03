@@ -17,6 +17,7 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.R;
 
 public class LikeButtonView extends FrameLayout implements View.OnClickListener {
@@ -112,7 +113,7 @@ public class LikeButtonView extends FrameLayout implements View.OnClickListener 
     }
 
     if (!isChecked) {
-      if (AptoideAccountManager.getInstance().isLoggedIn()) {
+      if (AptoideAccountManager.getInstance(getContext(), Application.getConfiguration()).isLoggedIn()) {
         vHeart.setImageResource(R.drawable.heart_on);
         vHeart.animate().cancel();
         vHeart.setScaleX(0);

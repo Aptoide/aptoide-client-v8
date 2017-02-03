@@ -74,7 +74,8 @@ public class ToolboxContentProvider extends ContentProvider {
     uriMatcher.addURI(authority, "passHash", PASSHASH);
     uriMatcher.addURI(authority, "loginName", LOGIN_NAME);
     uriMatcher.addURI(authority, "changePreference", CHANGE_PREFERENCE);
-    aptoideAccountManager = AptoideAccountManager.getInstance();
+    aptoideAccountManager = AptoideAccountManager.getInstance(getContext(),
+        Application.getConfiguration());
     return true;
   }
 

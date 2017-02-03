@@ -1,7 +1,9 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
+import android.content.Context;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.model.v7.store.Store;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
@@ -23,10 +25,10 @@ public class RecommendedStoreDisplayable extends DisplayablePojo<Store> {
   public RecommendedStoreDisplayable() {
   }
 
-  public RecommendedStoreDisplayable(Store pojo, StoreRepository storeRepository) {
+  public RecommendedStoreDisplayable(Store pojo, StoreRepository storeRepository, Context context) {
     super(pojo);
     this.storeRepository = storeRepository;
-    this.accountManager = AptoideAccountManager.getInstance();
+    this.accountManager = AptoideAccountManager.getInstance(context, Application.getConfiguration());
   }
 
   @Override protected Configs getConfig() {

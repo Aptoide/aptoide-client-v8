@@ -55,8 +55,8 @@ import rx.Observable;
   }
 
   public static CheckUserCredentialsRequest of(String accessToken, String repoName,
-      String createRepo) {
-    CheckUserCredentialsRequest request = of(accessToken);
+      String createRepo, Context context) {
+    CheckUserCredentialsRequest request = of(accessToken, context);
     request.setRepoName(repoName);
     request.setCreateRepo(createRepo);
     return request;
@@ -66,12 +66,14 @@ import rx.Observable;
    * Create a checkUserInfo request
    *
    * @param accessToken access token to identify user
+   * @param context
    * @return the built request
    */
-  public static CheckUserCredentialsRequest of(String accessToken) {
+  public static CheckUserCredentialsRequest of(String accessToken, Context context) {
     CheckUserCredentialsRequest request = new CheckUserCredentialsRequest(Application.getContext(),
         OkHttpClientFactory.getSingletonClient(() -> SecurePreferences.getUserAgent(), isDebug()),
-        WebService.getDefaultConverter(), AptoideAccountManager.getInstance());
+        WebService.getDefaultConverter(), AptoideAccountManager.getInstance(context,
+        Application.getConfiguration()));
     request.setToken(accessToken);
     return request;
   }

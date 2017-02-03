@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
+import android.content.Context;
 import android.text.TextUtils;
 import android.util.Pair;
 import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
@@ -60,7 +61,7 @@ public class DisplayablesFactory {
   private static final String TAG = DisplayablesFactory.class.getSimpleName();
 
   public static List<Displayable> parse(GetStoreWidgets getStoreWidgets, String storeTheme,
-      StoreRepository storeRepository) {
+      StoreRepository storeRepository, Context context) {
 
     LinkedList<Displayable> displayables = new LinkedList<>();
 
@@ -111,7 +112,7 @@ public class DisplayablesFactory {
             displayables.addAll(createMyStoreDisplayables(wsWidget.getViewObject()));
             break;
           case STORES_RECOMMENDED:
-            displayables.add(createRecommendedStores(wsWidget, storeTheme, storeRepository));
+            displayables.add(createRecommendedStores(wsWidget, storeTheme, storeRepository, context));
             break;
           case COMMENTS_GROUP:
             displayables.addAll(createCommentsGroup(wsWidget));
@@ -310,7 +311,7 @@ public class DisplayablesFactory {
   }
 
   private static Displayable createRecommendedStores(GetStoreWidgets.WSWidget wsWidget,
-      String storeTheme, StoreRepository storeRepository) {
+      String storeTheme, StoreRepository storeRepository, Context context) {
     ListStores listStores = (ListStores) wsWidget.getViewObject();
     if (listStores == null) {
       return new EmptyDisplayable();
@@ -320,7 +321,7 @@ public class DisplayablesFactory {
     displayables.add(new StoreGridHeaderDisplayable(wsWidget, storeTheme, wsWidget.getTag()));
     for (Store store : stores) {
       if (wsWidget.getData().getLayout() == Layout.LIST) {
-        displayables.add(new RecommendedStoreDisplayable(store, storeRepository));
+        displayables.add(new RecommendedStoreDisplayable(store, storeRepository, context));
       } else {
         displayables.add(new GridStoreDisplayable(store));
       }

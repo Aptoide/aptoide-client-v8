@@ -76,7 +76,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     super.onCreate(savedInstanceState);
     fileManager = FileManager.build();
     subscriptions = new CompositeSubscription();
-    accountManager = AptoideAccountManager.getInstance();
+    accountManager = AptoideAccountManager.getInstance(getContext(), Application.getConfiguration());
   }
 
   @Override public void onCreatePreferences(Bundle bundle, String s) {
@@ -96,7 +96,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     if (key.equals(ManagedKeys.UPDATES_FILTER_ALPHA_BETA_KEY)) {
       UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
       updateAccessor.removeAll();
-      UpdateRepository repository = RepositoryFactory.getUpdateRepository();
+      UpdateRepository repository = RepositoryFactory.getUpdateRepository(context);
       repository.sync(true)
           .andThen(repository.getAll(false))
           .first()

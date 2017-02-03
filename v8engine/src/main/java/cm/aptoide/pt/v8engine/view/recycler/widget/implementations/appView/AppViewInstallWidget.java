@@ -143,7 +143,7 @@ import rx.android.schedulers.AndroidSchedulers;
     displayable.setInstallButton(actionButton);
 
     AptoideDownloadManager downloadManager = AptoideDownloadManager.getInstance();
-    accountManager = AptoideAccountManager.getInstance();
+    accountManager = AptoideAccountManager.getInstance(getContext(), Application.getConfiguration());
     downloadManager.initDownloadService(getContext());
     Installer installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
     installManager = new InstallManager(downloadManager, installer);

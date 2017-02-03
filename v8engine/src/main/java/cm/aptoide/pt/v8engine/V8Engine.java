@@ -34,6 +34,7 @@ import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.PRNGFixes;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
@@ -42,7 +43,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AccountAnalytcsImp;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AccountAnalytcs;
 import cm.aptoide.pt.v8engine.analytics.abtesting.ABTestManager;
 import cm.aptoide.pt.v8engine.configuration.ActivityProvider;
 import cm.aptoide.pt.v8engine.configuration.FragmentProvider;
@@ -108,7 +109,7 @@ public abstract class V8Engine extends DataProvider {
   }
 
   private static void checkUpdates() {
-    UpdateRepository repository = RepositoryFactory.getUpdateRepository();
+    UpdateRepository repository = RepositoryFactory.getUpdateRepository(DataProvider.getContext());
     repository.sync(true)
         .andThen(repository.getAll(false))
         .first()
@@ -156,7 +157,7 @@ public abstract class V8Engine extends DataProvider {
       CrashReport.getInstance().log(e);
     }
     long l = System.currentTimeMillis();
-    accountManager = AptoideAccountManager.getInstance();
+    accountManager = AptoideAccountManager.getInstance(getContext(), Application.getConfiguration());
     fragmentProvider = createFragmentProvider();
     activityProvider = createActivityProvider();
     displayableWidgetMapping = createDisplayableWidgetMapping();
@@ -265,7 +266,7 @@ public abstract class V8Engine extends DataProvider {
           CrashReport.getInstance().log(throwable);
         });
 
-    accountManager.setAnalytics(new AccountAnalytcsImp());
+    accountManager.setAnalytics(new AccountAnalytcs());
     Logger.d(TAG, "onCreate took " + (System.currentTimeMillis() - l) + " millis.");
   }
 

@@ -1,9 +1,11 @@
 package cm.aptoide.accountmanager.ws;
 
+import android.content.Context;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.ChangeUserSettingsResponse;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
+import cm.aptoide.pt.preferences.Application;
 import java.util.ArrayList;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -29,9 +31,9 @@ import rx.Observable;
     list = new ArrayList<>();
   }
 
-  public static ChangeUserSettingsRequest of(boolean matureSwitchStatus) {
+  public static ChangeUserSettingsRequest of(boolean matureSwitchStatus, Context context) {
     ChangeUserSettingsRequest request = new ChangeUserSettingsRequest(
-        AptoideAccountManager.getInstance());
+        AptoideAccountManager.getInstance(context, Application.getConfiguration()));
     request.setMatureSwitch(matureSwitchStatus);
     return request;
   }

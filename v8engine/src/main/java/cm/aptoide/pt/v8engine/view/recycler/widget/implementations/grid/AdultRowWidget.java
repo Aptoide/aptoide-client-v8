@@ -6,6 +6,7 @@ import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -36,7 +37,7 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
   }
 
   @Override public void bindView(AdultRowDisplayable displayable) {
-    accountManager = AptoideAccountManager.getInstance();
+    accountManager = AptoideAccountManager.getInstance(getContext(), Application.getConfiguration());
     adultSwitch.setOnCheckedChangeListener(null);
     adultSwitch.setChecked(SecurePreferences.isAdultSwitchActive());
     adultSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
