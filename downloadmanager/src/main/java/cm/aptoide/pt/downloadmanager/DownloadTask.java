@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.downloadmanager;
 
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -82,6 +81,44 @@ class DownloadTask extends FileDownloadLargeFileListener {
           }
         })
         .publish();
+  }
+
+  /**
+   * this method will pause all downloads listed on {@link Download#filesToDownload} without change
+   * download state, the listener is removed in order to keep the download state, this means that
+   * the "virtual" pause will not affect the download state
+   */
+  private void stopDownloadQueue(Download download) {
+    //this try catch sucks
+    try {
+      for (FileToDownload fileToDownload : download.getFilesToDownload()) {
+        FileDownloader.getImpl()
+            .getStatus(fileToDownload.getDownloadId(), fileToDownload.getPath());
+        int taskId = FileDownloader.getImpl().replaceListener(fileToDownload.getDownloadId(), null);
+        if (taskId != 0) {
+          FileDownloader.getImpl().pause(taskId);
+        }
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  @NonNull private String getFilePathFromFileType(FileToDownload fileToDownload) {
+    String path;
+    switch (fileToDownload.getFileType()) {
+      case FileToDownload.APK:
+        path = AptoideDownloadManager.APK_PATH;
+        break;
+      case FileToDownload.OBB:
+        path = AptoideDownloadManager.OBB_PATH + fileToDownload.getPackageName() + "/";
+        break;
+      case FileToDownload.GENERIC:
+      default:
+        path = AptoideDownloadManager.DOWNLOADS_STORAGE_PATH;
+        break;
+    }
+    return path;
   }
 
   /**
@@ -267,6 +304,7 @@ class DownloadTask extends FileDownloadLargeFileListener {
   }
 
   @Override protected void error(BaseDownloadTask task, Throwable e) {
+    stopDownloadQueue(download);
     if (e instanceof FileDownloadHttpException
         && ((FileDownloadHttpException) e).getCode() == FILE_NOTFOUND_HTTP_ERROR) {
       Logger.d(TAG, "File not found on link: " + task.getUrl());
@@ -276,11 +314,7 @@ class DownloadTask extends FileDownloadLargeFileListener {
           fileToDownload.setLink(fileToDownload.getAltLink());
           fileToDownload.setAltLink(null);
           downloadAccessor.save(download);
-          Intent intent =
-              new Intent(AptoideDownloadManager.getContext(), NotificationEventReceiver.class);
-          intent.setAction(AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
-          intent.putExtra(AptoideDownloadManager.FILE_MD5_EXTRA, download.getMd5());
-          AptoideDownloadManager.getContext().sendBroadcast(intent);
+          startDownload();
           return;
         }
       }
@@ -325,22 +359,5 @@ class DownloadTask extends FileDownloadLargeFileListener {
       }
       return true;
     });
-  }
-
-  @NonNull private static String getFilePathFromFileType(FileToDownload fileToDownload) {
-    String path;
-    switch (fileToDownload.getFileType()) {
-      case FileToDownload.APK:
-        path = AptoideDownloadManager.APK_PATH;
-        break;
-      case FileToDownload.OBB:
-        path = AptoideDownloadManager.OBB_PATH + fileToDownload.getPackageName() + "/";
-        break;
-      case FileToDownload.GENERIC:
-      default:
-        path = AptoideDownloadManager.DOWNLOADS_STORAGE_PATH;
-        break;
-    }
-    return path;
   }
 }
