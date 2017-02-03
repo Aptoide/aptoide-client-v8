@@ -293,6 +293,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
             CommentDialogFragment.newInstanceTimelineArticleComment(timelineArticleId,
                 previousCommentId);
 
+        commentDialogFragment.setCommentDialogCallbackContract(this);
+
         return commentDialogFragment.lifecycle()
             .doOnSubscribe(() -> commentDialogFragment.show(fm, "fragment_comment_dialog"))
             .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
@@ -380,11 +382,10 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
         FragmentManager fm = CommentListFragment.this.getActivity().getFragmentManager();
         CommentDialogFragment commentDialogFragment =
             CommentDialogFragment.newInstanceTimelineArticleComment(timelineArticleId);
-
+        commentDialogFragment.setCommentDialogCallbackContract(this);
         return commentDialogFragment.lifecycle()
             .doOnSubscribe(() -> {
               commentDialogFragment.show(fm, "fragment_comment_dialog");
-              commentDialogFragment.setCommentDialogCallbackContract(this);
             })
             .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
             .flatMap(event -> reloadComments());
