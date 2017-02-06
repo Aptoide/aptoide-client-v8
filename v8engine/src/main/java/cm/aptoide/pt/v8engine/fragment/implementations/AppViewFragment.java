@@ -256,6 +256,12 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     return VIEW_ID;
   }
 
+  @Override public void bindViews(View view) {
+    super.bindViews(view);
+    header = new AppViewHeader(view);
+    setHasOptionsMenu(true);
+  }
+
   @Override public void onDestroyView() {
     super.onDestroyView();
 
@@ -263,12 +269,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       ThemeUtils.setStatusBarThemeColor(getActivity(),
           StoreThemeEnum.get(V8Engine.getConfiguration().getDefaultTheme()));
     }
-  }
-
-  @Override public void bindViews(View view) {
-    super.bindViews(view);
-    header = new AppViewHeader(view);
-    setHasOptionsMenu(true);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

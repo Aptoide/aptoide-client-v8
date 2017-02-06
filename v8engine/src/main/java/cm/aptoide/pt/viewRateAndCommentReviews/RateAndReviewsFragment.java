@@ -132,13 +132,6 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     return super.onOptionsItemSelected(item);
   }
 
-  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    super.load(create, refresh, savedInstanceState);
-    Logger.d(TAG, "Other versions should refresh? " + create);
-    fetchRating(refresh);
-    fetchReviews();
-  }
-
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
     appId = args.getLong(APP_ID);
@@ -174,6 +167,13 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
       ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
       ThemeUtils.setStoreTheme(getActivity(), storeTheme);
     }
+  }
+
+  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    super.load(create, refresh, savedInstanceState);
+    Logger.d(TAG, "Other versions should refresh? " + create);
+    fetchRating(refresh);
+    fetchReviews();
   }
 
   private void fetchRating(boolean refresh) {

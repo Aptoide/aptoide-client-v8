@@ -124,12 +124,6 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
     attachPresenter(presenter, savedInstanceState);
   }
 
-  @CallSuper @Override
-  public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    super.load(create, refresh, savedInstanceState);
-    // ??
-  }
-
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
     appId = args.getLong(APP_ID);
@@ -140,13 +134,13 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
     storeTheme = args.getString(STORE_THEME);
   }
 
-  //
-  // MVP methods
-  //
-
   @Override public int getContentViewId() {
     return R.layout.fragment_rate_and_reviews;
   }
+
+  //
+  // MVP methods
+  //
 
   @CallSuper @Override public void bindViews(View view) {
     super.bindViews(view);
@@ -163,6 +157,12 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
       ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
       ThemeUtils.setStoreTheme(getActivity(), storeTheme);
     }
+  }
+
+  @CallSuper @Override
+  public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    super.load(create, refresh, savedInstanceState);
+    // ??
   }
 
   @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
