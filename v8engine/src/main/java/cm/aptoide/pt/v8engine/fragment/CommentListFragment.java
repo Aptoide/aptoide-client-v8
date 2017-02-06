@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.fragment;
 
-import android.app.FragmentManager;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -8,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -288,7 +288,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
 
       if (isLoggedIn) {
         // show fragment CommentDialog
-        FragmentManager fm = CommentListFragment.this.getActivity().getFragmentManager();
+        FragmentManager fm = CommentListFragment.this.getActivity().getSupportFragmentManager();
         CommentDialogFragment commentDialogFragment =
             CommentDialogFragment.newInstanceTimelineArticleComment(timelineArticleId,
                 previousCommentId);
@@ -311,7 +311,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
 
       if (isLoggedIn) {
         // show fragment CommentDialog
-        FragmentManager fm = CommentListFragment.this.getActivity().getFragmentManager();
+        FragmentManager fm = CommentListFragment.this.getActivity().getSupportFragmentManager();
         CommentDialogFragment commentDialogFragment =
             CommentDialogFragment.newInstanceStoreCommentReply(storeId, previousCommentId,
                 storeName);
@@ -379,7 +379,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
 
       if (isLoggedIn) {
         // show fragment CommentDialog
-        FragmentManager fm = CommentListFragment.this.getActivity().getFragmentManager();
+        FragmentManager fm = CommentListFragment.this.getActivity().getSupportFragmentManager();
         CommentDialogFragment commentDialogFragment =
             CommentDialogFragment.newInstanceTimelineArticleComment(timelineArticleId);
         commentDialogFragment.setCommentDialogCallbackContract(this);
@@ -402,7 +402,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
 
       if (isLoggedIn) {
         // show fragment CommentDialog
-        FragmentManager fm = CommentListFragment.this.getActivity().getFragmentManager();
+        FragmentManager fm = CommentListFragment.this.getActivity().getSupportFragmentManager();
         CommentDialogFragment commentDialogFragment =
             CommentDialogFragment.newInstanceStoreComment(storeCommentId, storeName);
         commentDialogFragment.setCommentDialogCallbackContract(this);

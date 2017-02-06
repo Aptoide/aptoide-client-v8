@@ -1,12 +1,12 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
-import android.app.FragmentManager;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.widget.Button;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -56,7 +56,7 @@ public class StoreAddCommentWidget extends Widget<StoreAddCommentDisplayable> {
 
     compositeSubscription.add(RxView.clicks(commentStore)
         .flatMap(a -> showStoreCommentFragment(displayable.getStoreId(), displayable.getStoreName(),
-            getContext().getFragmentManager(), commentStore))
+            getContext().getSupportFragmentManager(), commentStore))
         .subscribe(a -> {
           // all done when we get here.
         }, err -> {

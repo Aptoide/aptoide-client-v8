@@ -34,7 +34,8 @@ import com.trello.rxlifecycle.components.RxDialogFragment;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
-public class CommentDialogFragment extends RxDialogFragment {
+public class CommentDialogFragment extends
+    com.trello.rxlifecycle.components.support.RxDialogFragment {
 
   private static final String TAG = CommentDialogFragment.class.getName();
 
