@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.downloadmanager;
 
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -136,60 +135,6 @@ class DownloadTask extends FileDownloadLargeFileListener {
     }
   }
 
-  /**
-   * @throws IllegalArgumentException
-   */
-  public void startDownload() throws IllegalArgumentException {
-    observable.connect();
-    if (download.getFilesToDownload() != null) {
-
-      RealmList<FileToDownload> filesToDownload = download.getFilesToDownload();
-      FileToDownload fileToDownload = null;
-      for (int i = 0; i < filesToDownload.size(); i++) {
-
-        fileToDownload = filesToDownload.get(i);
-
-        if (TextUtils.isEmpty(fileToDownload.getLink())) {
-          throw new IllegalArgumentException("A link to download must be provided");
-        }
-        BaseDownloadTask baseDownloadTask =
-            FileDownloader.getImpl().create(fileToDownload.getLink());
-        /*
-         * Aptoide - events 2 : download
-         * Get X-Mirror and add to the event
-         */
-        baseDownloadTask.addHeader(Constants.VERSION_CODE,
-            String.valueOf(download.getVersionCode()));
-        baseDownloadTask.addHeader(Constants.PACKAGE, download.getPackageName());
-        baseDownloadTask.addHeader(Constants.FILE_TYPE, String.valueOf(i));
-        /*
-         * end
-         */
-
-        baseDownloadTask.setTag(APTOIDE_DOWNLOAD_TASK_TAG_KEY, this);
-        if (fileToDownload.getFileName().endsWith(".temp")) {
-          fileToDownload.setFileName(fileToDownload.getFileName().replace(".temp", ""));
-        }
-        fileToDownload.setDownloadId(baseDownloadTask.setListener(this)
-            .setCallbackProgressTimes(AptoideDownloadManager.PROGRESS_MAX_VALUE)
-            .setPath(AptoideDownloadManager.DOWNLOADS_STORAGE_PATH + fileToDownload.getFileName())
-            .asInQueueTask()
-            .enqueue());
-        fileToDownload.setPath(AptoideDownloadManager.DOWNLOADS_STORAGE_PATH);
-        fileToDownload.setFileName(fileToDownload.getFileName() + ".temp");
-      }
-
-      if (isSerial) {
-        // To form a queue with the same queueTarget and execute them linearly
-        FileDownloader.getImpl().start(this, true);
-      } else {
-        // To form a queue with the same queueTarget and execute them in parallel
-        FileDownloader.getImpl().start(this, false);
-      }
-    }
-    saveDownloadInDb(download);
-  }
-
   public Observable<Download> getObservable() {
     return observable;
   }
@@ -267,6 +212,7 @@ class DownloadTask extends FileDownloadLargeFileListener {
   }
 
   @Override protected void error(BaseDownloadTask task, Throwable e) {
+    stopDownloadQueue(download);
     if (e instanceof FileDownloadHttpException
         && ((FileDownloadHttpException) e).getCode() == FILE_NOTFOUND_HTTP_ERROR) {
       Logger.d(TAG, "File not found on link: " + task.getUrl());
@@ -276,11 +222,7 @@ class DownloadTask extends FileDownloadLargeFileListener {
           fileToDownload.setLink(fileToDownload.getAltLink());
           fileToDownload.setAltLink(null);
           downloadAccessor.save(download);
-          Intent intent =
-              new Intent(AptoideDownloadManager.getContext(), NotificationEventReceiver.class);
-          intent.setAction(AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
-          intent.putExtra(AptoideDownloadManager.FILE_MD5_EXTRA, download.getMd5());
-          AptoideDownloadManager.getContext().sendBroadcast(intent);
+          startDownload();
           return;
         }
       }
@@ -301,6 +243,82 @@ class DownloadTask extends FileDownloadLargeFileListener {
     }
     setDownloadStatus(Download.ERROR, download, task);
     AptoideDownloadManager.getInstance().currentDownloadFinished();
+  }
+
+  /**
+   * this method will pause all downloads listed on {@link Download#filesToDownload} without change
+   * download state, the listener is removed in order to keep the download state, this means that
+   * the "virtual" pause will not affect the download state
+   */
+  private void stopDownloadQueue(Download download) {
+    //this try catch sucks
+    try {
+      for (int i = download.getFilesToDownload().size() - 1; i >= 0; i--) {
+        FileToDownload fileToDownload = download.getFilesToDownload().get(i);
+        FileDownloader.getImpl()
+            .getStatus(fileToDownload.getDownloadId(), fileToDownload.getPath());
+        int taskId = FileDownloader.getImpl().replaceListener(fileToDownload.getDownloadId(), null);
+        if (taskId != 0) {
+          FileDownloader.getImpl().pause(taskId);
+        }
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * @throws IllegalArgumentException
+   */
+  public void startDownload() throws IllegalArgumentException {
+    observable.connect();
+    if (download.getFilesToDownload() != null) {
+
+      RealmList<FileToDownload> filesToDownload = download.getFilesToDownload();
+      FileToDownload fileToDownload = null;
+      for (int i = 0; i < filesToDownload.size(); i++) {
+
+        fileToDownload = filesToDownload.get(i);
+
+        if (TextUtils.isEmpty(fileToDownload.getLink())) {
+          throw new IllegalArgumentException("A link to download must be provided");
+        }
+        BaseDownloadTask baseDownloadTask =
+            FileDownloader.getImpl().create(fileToDownload.getLink());
+        /*
+         * Aptoide - events 2 : download
+         * Get X-Mirror and add to the event
+         */
+        baseDownloadTask.addHeader(Constants.VERSION_CODE,
+            String.valueOf(download.getVersionCode()));
+        baseDownloadTask.addHeader(Constants.PACKAGE, download.getPackageName());
+        baseDownloadTask.addHeader(Constants.FILE_TYPE, String.valueOf(i));
+        /*
+         * end
+         */
+
+        baseDownloadTask.setTag(APTOIDE_DOWNLOAD_TASK_TAG_KEY, this);
+        if (fileToDownload.getFileName().endsWith(".temp")) {
+          fileToDownload.setFileName(fileToDownload.getFileName().replace(".temp", ""));
+        }
+        fileToDownload.setDownloadId(baseDownloadTask.setListener(this)
+            .setCallbackProgressTimes(AptoideDownloadManager.PROGRESS_MAX_VALUE)
+            .setPath(AptoideDownloadManager.DOWNLOADS_STORAGE_PATH + fileToDownload.getFileName())
+            .asInQueueTask()
+            .enqueue());
+        fileToDownload.setPath(AptoideDownloadManager.DOWNLOADS_STORAGE_PATH);
+        fileToDownload.setFileName(fileToDownload.getFileName() + ".temp");
+      }
+
+      if (isSerial) {
+        // To form a queue with the same queueTarget and execute them linearly
+        FileDownloader.getImpl().start(this, true);
+      } else {
+        // To form a queue with the same queueTarget and execute them in parallel
+        FileDownloader.getImpl().start(this, false);
+      }
+    }
+    saveDownloadInDb(download);
   }
 
   @Override protected void warn(BaseDownloadTask task) {
@@ -327,7 +345,7 @@ class DownloadTask extends FileDownloadLargeFileListener {
     });
   }
 
-  @NonNull private static String getFilePathFromFileType(FileToDownload fileToDownload) {
+  @NonNull private String getFilePathFromFileType(FileToDownload fileToDownload) {
     String path;
     switch (fileToDownload.getFileType()) {
       case FileToDownload.APK:

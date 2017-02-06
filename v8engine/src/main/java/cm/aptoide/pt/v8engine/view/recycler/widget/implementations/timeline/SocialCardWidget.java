@@ -123,11 +123,15 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
     if (displayable.getNumberOfLikes() > 0) {
       numberLikes.setVisibility(View.VISIBLE);
       numberLikes.setText(String.valueOf(displayable.getNumberOfLikes()));
+    } else {
+      numberLikes.setVisibility(View.INVISIBLE);
     }
 
     if (displayable.getNumberOfComments() > 0) {
       numberComments.setVisibility(View.VISIBLE);
       numberComments.setText(String.valueOf(displayable.getNumberOfComments()));
+    } else {
+      numberComments.setVisibility(View.INVISIBLE);
     }
 
     shareButton.setVisibility(View.VISIBLE);

@@ -28,11 +28,11 @@ public class RateAndReviewCommentDisplayable extends DisplayablePojo<ReviewWithA
     this.numberComments = numberComments;
   }
 
-  @Override public int getViewLayout() {
-    return R.layout.displayable_rate_and_review;
-  }
-
   @Override protected Configs getConfig() {
     return new Configs(1, true);
+  }
+
+  @Override public int getViewLayout() {
+    return R.layout.displayable_rate_and_review;
   }
 }

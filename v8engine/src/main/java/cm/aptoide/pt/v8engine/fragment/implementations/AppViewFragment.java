@@ -256,6 +256,12 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     return VIEW_ID;
   }
 
+  @Override public void bindViews(View view) {
+    super.bindViews(view);
+    header = new AppViewHeader(view);
+    setHasOptionsMenu(true);
+  }
+
   @Override public void onDestroyView() {
     super.onDestroyView();
 
@@ -263,12 +269,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       ThemeUtils.setStatusBarThemeColor(getActivity(),
           StoreThemeEnum.get(V8Engine.getConfiguration().getDefaultTheme()));
     }
-  }
-
-  @Override public void bindViews(View view) {
-    super.bindViews(view);
-    header = new AppViewHeader(view);
-    setHasOptionsMenu(true);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -449,14 +449,13 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             if (AptoideAccountManager.isLoggedIn()
                 && ManagerPreferences.getShowPreview()
                 && Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
-              AppViewInstallDisplayable mockDisplayable =
-                  new AppViewInstallDisplayable(null, getApp, null, false, null);
-              SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(mockDisplayable);
+              SharePreviewDialog sharePreviewDialog = new SharePreviewDialog();
               AlertDialog.Builder alertDialog =
-                  sharePreviewDialog.getPreviewDialogBuilder(getContext());
+                  sharePreviewDialog.getCustomRecommendationPreviewDialogBuilder(getContext(),
+                      appName, app.getIcon());
               SocialRepository socialRepository = new SocialRepository();
 
-              sharePreviewDialog.showShareCardPreviewDialog(mockDisplayable, getContext(),
+              sharePreviewDialog.showShareCardPreviewDialog(packageName, "app", getContext(),
                   sharePreviewDialog, alertDialog, socialRepository);
             }
           }

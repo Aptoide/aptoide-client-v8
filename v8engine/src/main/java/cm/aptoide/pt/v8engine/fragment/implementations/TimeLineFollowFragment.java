@@ -104,14 +104,14 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
     return super.onOptionsItemSelected(item);
   }
 
-  @Override public void onDestroyView() {
-    endlessRecyclerOnScrollListener.removeListeners();
-    super.onDestroyView();
-  }
-
   @Override public void bindViews(View view) {
     super.bindViews(view);
     setHasOptionsMenu(true);
+  }
+
+  @Override public void onDestroyView() {
+    endlessRecyclerOnScrollListener.removeListeners();
+    super.onDestroyView();
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {

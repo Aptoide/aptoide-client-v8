@@ -49,12 +49,6 @@ import rx.android.schedulers.AndroidSchedulers;
 public class MainActivityFragment extends AptoideSimpleFragmentActivity implements FragmentShower {
   private static final String TAG = MainActivityFragment.class.getSimpleName();
 
-  @Override protected android.support.v4.app.Fragment createFragment() {
-    return V8Engine.getFragmentProvider()
-        .newHomeFragment(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home,
-            V8Engine.getConfiguration().getDefaultTheme());
-  }
-
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     Analytics.Lifecycle.Activity.onCreate(this);
@@ -77,6 +71,12 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 
       handleDeepLinks(getIntent());
     }
+  }
+
+  @Override protected android.support.v4.app.Fragment createFragment() {
+    return V8Engine.getFragmentProvider()
+        .newHomeFragment(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home,
+            V8Engine.getConfiguration().getDefaultTheme());
   }
 
   @Override public void pushFragmentV4(android.support.v4.app.Fragment fragment) {

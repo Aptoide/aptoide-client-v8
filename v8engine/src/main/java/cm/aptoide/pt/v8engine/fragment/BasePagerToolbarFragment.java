@@ -19,17 +19,17 @@ public abstract class BasePagerToolbarFragment extends BaseLoaderToolbarFragment
   protected AptoideViewPager viewPager;
   protected FloatingActionButton floatingActionButton;
 
-  @Override public void onDestroyView() {
-    viewPager.clearOnPageChangeListeners();
-    viewPager = null;
-    super.onDestroyView();
-  }
-
   @Override public void bindViews(View view) {
     super.bindViews(view);
 
     viewPager = (AptoideViewPager) view.findViewById(R.id.pager);
     floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fabAddStore);
+  }
+
+  @Override public void onDestroyView() {
+    super.onDestroyView();
+    viewPager.clearOnPageChangeListeners();
+    viewPager = null;
   }
 
   protected void setupViewPager() {

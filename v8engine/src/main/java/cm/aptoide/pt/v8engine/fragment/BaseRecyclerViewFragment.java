@@ -42,6 +42,11 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
     recyclerView.setLayoutManager(layoutManager);
   }
 
+  @CallSuper @Override public void bindViews(View view) {
+    super.bindViews(view);
+    recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+  }
+
   @CallSuper @Override public void onDestroyView() {
     super.onDestroyView();
 
@@ -54,11 +59,6 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
     recyclerView.setAdapter(null);
     recyclerView = null;
     adapter = null;
-  }
-
-  @CallSuper @Override public void bindViews(View view) {
-    super.bindViews(view);
-    recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
   }
 
   protected abstract RecyclerView.LayoutManager createLayoutManager();

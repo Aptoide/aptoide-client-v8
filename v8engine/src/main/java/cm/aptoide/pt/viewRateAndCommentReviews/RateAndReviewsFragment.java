@@ -132,13 +132,6 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     return super.onOptionsItemSelected(item);
   }
 
-  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    super.load(create, refresh, savedInstanceState);
-    Logger.d(TAG, "Other versions should refresh? " + create);
-    fetchRating(refresh);
-    fetchReviews();
-  }
-
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
     appId = args.getLong(APP_ID);
@@ -176,6 +169,13 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     }
   }
 
+  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    super.load(create, refresh, savedInstanceState);
+    Logger.d(TAG, "Other versions should refresh? " + create);
+    fetchRating(refresh);
+    fetchReviews();
+  }
+
   private void fetchRating(boolean refresh) {
     GetAppRequest.of(appId, AptoideAccountManager.getAccessToken(),
         aptoideClientUUID.getAptoideClientUUID(), packageName)
@@ -195,6 +195,17 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
         });
   }
 
+  public void setupTitle(String title) {
+    if (hasToolbar()) {
+      getToolbar().setTitle(title);
+    }
+  }
+
+  private void setupRating(GetAppMeta.App data) {
+    ratingTotalsLayout.setup(data);
+    ratingBarsLayout.setup(data);
+  }
+
   private void fetchReviews() {
     ListReviewsRequest reviewsRequest =
         ListReviewsRequest.of(storeName, packageName, AptoideAccountManager.getAccessToken(),
@@ -205,17 +216,6 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
             new ListFullReviewsSuccessRequestListener(this), Throwable::printStackTrace);
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(false);
-  }
-
-  public void setupTitle(String title) {
-    if (hasToolbar()) {
-      getToolbar().setTitle(title);
-    }
-  }
-
-  private void setupRating(GetAppMeta.App data) {
-    ratingTotalsLayout.setup(data);
-    ratingBarsLayout.setup(data);
   }
 
   /*

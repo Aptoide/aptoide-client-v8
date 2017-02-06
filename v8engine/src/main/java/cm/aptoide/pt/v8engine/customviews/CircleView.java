@@ -17,11 +17,11 @@ public class CircleView extends View {
       new Property<CircleView, Float>(Float.class, "innerCircleRadiusProgress") {
         @Override public void set(CircleView object, Float value) {
           object.setInnerCircleRadiusProgress(value);
-        }        @Override public Float get(CircleView object) {
-          return object.getInnerCircleRadiusProgress();
         }
 
-
+        @Override public Float get(CircleView object) {
+          return object.getInnerCircleRadiusProgress();
+        }
       };
   private static final int START_COLOR = 0xFFFF5722;
   private static final int END_COLOR = 0xFFFFC107;
