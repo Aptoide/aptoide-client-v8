@@ -62,4 +62,9 @@ public abstract class ActivityView extends RxAppCompatActivity implements View {
     presenter.saveState(outState);
     super.onSaveInstanceState(outState);
   }
+
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    presenter = null;
+  }
 }
