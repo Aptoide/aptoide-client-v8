@@ -4,7 +4,6 @@ import android.app.FragmentManager;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
@@ -27,13 +26,11 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.PostCommentForStore;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
-import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.ListComments;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.interfaces.CommentDialogCallbackContract;
 import cm.aptoide.pt.v8engine.util.CommentOperations;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.view.custom.HorizontalDividerItemDecoration;
@@ -47,16 +44,13 @@ import cm.aptoide.pt.viewRateAndCommentReviews.ComplexComment;
 import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
 // TODO: 21/12/2016 sithengineer refactor and split in multiple classes to list comments
 // for each type: store and timeline card
-public class CommentListFragment extends GridRecyclerSwipeFragment
-    implements CommentDialogCallbackContract {
+public class CommentListFragment extends GridRecyclerSwipeFragment {
 
   //private static final String TAG = StoreGridRecyclerFragment.class.getName();
 
@@ -293,8 +287,6 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
             CommentDialogFragment.newInstanceTimelineArticleComment(timelineArticleId,
                 previousCommentId);
 
-        commentDialogFragment.setCommentDialogCallbackContract(this);
-
         return commentDialogFragment.lifecycle()
             .doOnSubscribe(() -> commentDialogFragment.show(fm, "fragment_comment_dialog"))
             .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
@@ -382,7 +374,6 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
         FragmentManager fm = CommentListFragment.this.getActivity().getFragmentManager();
         CommentDialogFragment commentDialogFragment =
             CommentDialogFragment.newInstanceTimelineArticleComment(timelineArticleId);
-        commentDialogFragment.setCommentDialogCallbackContract(this);
         return commentDialogFragment.lifecycle()
             .doOnSubscribe(() -> {
               commentDialogFragment.show(fm, "fragment_comment_dialog");
@@ -408,35 +399,12 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
         return commentDialogFragment.lifecycle()
             .doOnSubscribe(() -> {
               commentDialogFragment.show(fm, "fragment_comment_dialog");
-              commentDialogFragment.setCommentDialogCallbackContract(this);
             })
             .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
             .flatMap(event -> reloadComments());
       }
 
       return showSignInMessage();
-    });
-  }
-
-  @Override public void okSelected(String inputText, long longAsId, Long previousCommentId,
-      String idAsString) {
-    submitComment(inputText, longAsId, previousCommentId, idAsString).observeOn(
-        AndroidSchedulers.mainThread()).map(wsResponse -> wsResponse.isOk()).doOnError(e -> {
-      CrashReport.getInstance().log(e);
-      ShowMessage.asSnack(this, R.string.error_occured);
-    }).retry().compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW)).subscribe(isOk -> {
-      if (isOk) {
-        ComplexComment complexComment = getComplexComment(inputText);
-
-        CommentDisplayable commentDisplayable = new CommentDisplayable(complexComment);
-        addDisplayable(0, commentDisplayable, true);
-        ManagerPreferences.setForceServerRefreshFlag(true);
-        ShowMessage.asSnack(this.getActivity(), R.string.comment_submitted);
-        return;
-      }
-      ShowMessage.asSnack(this, R.string.error_occured);
-    }, err -> {
-      CrashReport.getInstance().log(err);
     });
   }
 
@@ -474,23 +442,5 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     // default case
     Logger.e(this.getTag(), "Unable to create reply due to missing comment type");
     return Observable.empty();
-  }
-
-  @NonNull private ComplexComment getComplexComment(String inputText) {
-    Comment comment = new Comment();
-    Comment.User user = new Comment.User();
-    if (!TextUtils.isEmpty(AptoideAccountManager.getUserData().getUserAvatar())) {
-      user.setAvatar(AptoideAccountManager.getUserData().getUserAvatar());
-    } else {
-      if (!TextUtils.isEmpty(AptoideAccountManager.getUserData().getUserAvatarRepo())) {
-        user.setAvatar(AptoideAccountManager.getUserData().getUserAvatarRepo());
-      }
-    }
-    user.setName(AptoideAccountManager.getUserData().getUserName());
-    comment.setUser(user);
-    comment.setBody(inputText);
-    comment.setAdded(new Date());
-    CommentNode commentNode = new CommentNode(comment);
-    return new ComplexComment(commentNode, null);
   }
 }
