@@ -407,40 +407,4 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
       return showSignInMessage();
     });
   }
-
-  private Observable<BaseV7Response> submitComment(String inputText, long idAsLong,
-      Long previousCommentId, String idAsString) {
-    switch (commentType) {
-      case REVIEW:
-        // new comment on a review
-        return PostCommentForReview.of(idAsLong, inputText, AptoideAccountManager.getAccessToken(),
-            aptoideClientUUID.getAptoideClientUUID()).observe();
-
-      case STORE:
-        // check if this is a new comment on a store or a reply to a previous one
-        if (previousCommentId == null) {
-          return PostCommentForStore.of(idAsLong, inputText, AptoideAccountManager.getAccessToken(),
-              aptoideClientUUID.getAptoideClientUUID()).observe();
-        }
-
-        return PostCommentForStore.of(idAsLong, previousCommentId, inputText,
-            AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
-            .observe();
-
-      case TIMELINE:
-        // check if this is a new comment on a article or a reply to a previous one
-        if (previousCommentId == null) {
-          return PostCommentForTimelineArticle.of(idAsString, inputText,
-              AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
-              .observe();
-        }
-
-        return PostCommentForTimelineArticle.of(idAsString, previousCommentId, inputText,
-            AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
-            .observe();
-    }
-    // default case
-    Logger.e(this.getTag(), "Unable to create reply due to missing comment type");
-    return Observable.empty();
-  }
 }
