@@ -155,10 +155,10 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
               .observeOn(AndroidSchedulers.mainThread())
               .doOnNext(isFollowed -> {
                 if (isFollowed) {
-                  ShowMessage.asSnack(this, getString(R.string.store_already_added));
+                  ShowMessage.asLongSnack(this, getString(R.string.store_already_added));
                 } else {
                   StoreUtilsProxy.subscribeStore(storeName);
-                  ShowMessage.asSnack(this,
+                  ShowMessage.asLongSnack(this,
                       AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
                 }
               }))
