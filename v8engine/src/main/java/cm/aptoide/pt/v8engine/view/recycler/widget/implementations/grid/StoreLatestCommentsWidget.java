@@ -1,7 +1,7 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
-import android.app.FragmentManager;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -72,7 +72,7 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
 
   private void setAdapter(List<Comment> comments) {
     recyclerView.setAdapter(
-        new CommentListAdapter(storeId, storeName, comments, getContext().getFragmentManager(),
+        new CommentListAdapter(storeId, storeName, comments, getContext().getSupportFragmentManager(),
             recyclerView, Observable.fromCallable(() -> reloadComments()), accountManager));
   }
 

@@ -5,9 +5,9 @@
 
 package cm.aptoide.pt.viewRateAndCommentReviews;
 
-import android.app.FragmentManager;
 import android.content.res.Resources;
 import android.os.Build;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.AppCompatRatingBar;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -114,7 +114,7 @@ import rx.Observable;
 
     compositeSubscription.add(RxView.clicks(reply).flatMap(a -> {
       if (accountManager.isLoggedIn()) {
-        FragmentManager fm = getContext().getFragmentManager();
+        FragmentManager fm = getContext().getSupportFragmentManager();
         CommentDialogFragment commentDialogFragment =
             CommentDialogFragment.newInstanceReview(review.getId(), appName);
         commentDialogFragment.show(fm, "fragment_comment_dialog");
