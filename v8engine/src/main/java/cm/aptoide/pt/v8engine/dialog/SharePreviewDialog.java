@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.dialog;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
@@ -47,11 +48,15 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 
 public class SharePreviewDialog {
-  private Displayable displayable;
+  @Nullable private Displayable displayable;
   private boolean privacyResult;
 
   public SharePreviewDialog(Displayable cardDisplayable) {
     this.displayable = cardDisplayable;
+  }
+
+  public SharePreviewDialog() {
+
   }
 
   public AlertDialog.Builder getPreviewDialogBuilder(Context context) {
@@ -465,13 +470,78 @@ public class SharePreviewDialog {
     socialTerms.setVisibility(View.VISIBLE);
   }
 
-  public void showShareCardPreviewDialog(AppViewInstallDisplayable displayable, Context context,
+  public AlertDialog.Builder getCustomRecommendationPreviewDialogBuilder(Context context,
+      String appName, String appIconUrl) {
+    AlertDialog.Builder alertadd = new AlertDialog.Builder(context);
+    LayoutInflater factory = LayoutInflater.from(context);
+    View view =
+        factory.inflate(R.layout.displayable_social_timeline_social_recommendation_preview, null);
+    CardView cardView = (CardView) view.findViewById(R.id.card);
+    LinearLayout like = (LinearLayout) view.findViewById(R.id.social_like);
+    LikeButtonView likeButtonView = (LikeButtonView) view.findViewById(R.id.social_like_button);
+    TextView comments = (TextView) view.findViewById(R.id.social_comment);
+
+    ImageView appIconV =
+        (ImageView) view.findViewById(R.id.displayable_social_timeline_recommendation_icon);
+    TextView appNameV =
+        (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_similar_apps);
+    TextView appSubTitle =
+        (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_name);
+    TextView getApp = (TextView) view.findViewById(
+        R.id.displayable_social_timeline_recommendation_get_app_button);
+    ImageLoader.load(appIconUrl, appIconV);
+    appNameV.setText(appName);
+    appSubTitle.setText(AptoideUtils.StringU.getFormattedString(
+        R.string.displayable_social_timeline_recommendation_atptoide_team_recommends, ""));
+
+    SpannableFactory spannableFactory = new SpannableFactory();
+
+    getApp.setText(spannableFactory.createColorSpan(
+        context.getString(R.string.displayable_social_timeline_article_get_app_button, ""),
+        ContextCompat.getColor(context, R.color.appstimeline_grey), ""));
+
+    TextView storeName = (TextView) view.findViewById(R.id.card_title);
+    TextView userName = (TextView) view.findViewById(R.id.card_subtitle);
+    ImageView storeAvatar = (ImageView) view.findViewById(R.id.card_image);
+    ImageView userAvatar = (ImageView) view.findViewById(R.id.card_user_avatar);
+    CheckBox checkBox = (CheckBox) view.findViewById(R.id.social_preview_checkbox);
+    LinearLayout socialTerms = (LinearLayout) view.findViewById(R.id.social_privacy_terms);
+    TextView privacyText = (TextView) view.findViewById(R.id.social_text_privacy);
+
+    cardView.setRadius(8);
+    cardView.setCardElevation(10);
+    like.setOnClickListener(null);
+    like.setOnTouchListener(null);
+    like.setVisibility(View.VISIBLE);
+    likeButtonView.setOnClickListener(null);
+    likeButtonView.setOnTouchListener(null);
+    likeButtonView.setVisibility(View.VISIBLE);
+    comments.setVisibility(View.VISIBLE);
+
+    alertadd.setView(view).setCancelable(false);
+    alertadd.setTitle(R.string.social_timeline_you_will_share);
+
+    storeName.setText(AptoideAccountManager.getUserData().getUserRepo());
+    setCardHeader(storeName, userName, storeAvatar, userAvatar);
+
+    if (!ManagerPreferences.getUserAccessConfirmed()) {
+      privacyText.setOnClickListener(click -> checkBox.toggle());
+      checkBox.setClickable(true);
+      storeAvatar.setVisibility(View.VISIBLE);
+      storeName.setVisibility(View.VISIBLE);
+      handlePrivacyCheckBoxChanges(userName, userAvatar, checkBox, socialTerms);
+    }
+
+    return alertadd;
+  }
+
+  public void showShareCardPreviewDialog(String packageName, String shareType, Context context,
       SharePreviewDialog sharePreviewDialog, AlertDialog.Builder alertDialog,
       SocialRepository socialRepository) {
     Observable.create((Subscriber<? super GenericDialogs.EResponse> subscriber) -> {
       if (!ManagerPreferences.getUserAccessConfirmed()) {
         alertDialog.setPositiveButton(R.string.share, (dialogInterface, i) -> {
-          socialRepository.share(displayable, context, sharePreviewDialog.getPrivacyResult());
+          socialRepository.share(packageName, shareType, sharePreviewDialog.getPrivacyResult());
           subscriber.onNext(GenericDialogs.EResponse.YES);
           subscriber.onCompleted();
         }).setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
@@ -480,7 +550,7 @@ public class SharePreviewDialog {
         });
       } else {
         alertDialog.setPositiveButton(R.string.continue_option, (dialogInterface, i) -> {
-          socialRepository.share(displayable, context, sharePreviewDialog.getPrivacyResult());
+          socialRepository.share(packageName, shareType, sharePreviewDialog.getPrivacyResult());
           subscriber.onNext(GenericDialogs.EResponse.YES);
           subscriber.onCompleted();
         }).setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {

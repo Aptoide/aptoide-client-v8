@@ -73,7 +73,7 @@ public class CommentWidget extends Widget<CommentDisplayable> {
     final ComplexComment complexComment = comment;
 
     // switch background color according to level
-    @ColorRes int bgColor = (complexComment.getLevel() == 1) ? R.color.comment_gray : R.color.white;
+    @ColorRes int bgColor = (complexComment.getLevel() == 1) ? R.color.white : R.color.comment_gray;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       outerLayout.setBackgroundColor(getContext().getColor(bgColor));
     } else {

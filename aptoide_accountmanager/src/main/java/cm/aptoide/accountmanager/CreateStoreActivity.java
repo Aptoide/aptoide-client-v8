@@ -117,16 +117,6 @@ public class CreateStoreActivity extends PermissionsBaseActivity
     setupThemeListeners();
   }
 
-  @Override protected void onDestroy() {
-    super.onDestroy();
-    mSubscriptions.clear();
-    if (progressDialog != null) {
-      if (progressDialog.isShowing()) {
-        progressDialog.dismiss();
-      }
-    }
-  }
-
   @Override protected String getActivityTitle() {
     if (!from.equals("store")) {
       return getString(R.string.create_store_title);
@@ -139,16 +129,26 @@ public class CreateStoreActivity extends PermissionsBaseActivity
     return R.layout.activity_create_store;
   }
 
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    mSubscriptions.clear();
+    if (progressDialog != null) {
+      if (progressDialog.isShowing()) {
+        progressDialog.dismiss();
+      }
+    }
+  }
+
+  @Override void loadImage(Uri imagePath) {
+    ImageLoader.loadWithCircleTransform(imagePath, mStoreAvatar);
+  }
+
   @Override void showIconPropertiesError(String errors) {
     mSubscriptions.add(GenericDialogs.createGenericOkMessage(this,
         getString(R.string.image_requirements_error_popup_title), errors)
         .subscribe(__ -> {/* does nothing */}, err -> {
           CrashReport.getInstance().log(err);
         }));
-  }
-
-  @Override void loadImage(Uri imagePath) {
-    ImageLoader.loadWithCircleTransform(imagePath, mStoreAvatar);
   }
 
   private void getData() {

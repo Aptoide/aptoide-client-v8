@@ -14,7 +14,6 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewInstallDisplayable;
 import rx.schedulers.Schedulers;
 
 /**
@@ -59,22 +58,22 @@ public class SocialRepository {
             throwable -> throwable.printStackTrace());
   }
 
-  public void share(AppViewInstallDisplayable displayable, Context context, boolean privacy) {
+  public void share(String packageName, String shareType, boolean privacy) {
     String accessToken = AptoideAccountManager.getAccessToken();
     String aptoideClientUUID = this.aptoideClientUUID.getAptoideClientUUID();
-    ShareInstallCardRequest.of(
-        displayable.getPojo().getNodes().getMeta().getData().getPackageName(), accessToken,
-        aptoideClientUUID).observe().subscribe(baseV7Response -> {
-      final String userAccess = privacy ? BaseActivity.UserAccessState.UNLISTED.toString()
-          : BaseActivity.UserAccessState.PUBLIC.toString();
-      SetUserRequest.of(aptoideClientUUID, userAccess, accessToken)
-          .observe()
-          .subscribe(baseV7Response1 -> Logger.d(this.getClass().getSimpleName(),
-              baseV7Response.toString()), throwable -> throwable.printStackTrace());
-      ManagerPreferences.setUserAccess(userAccess);
-      ManagerPreferences.setUserAccessConfirmed(true);
-      Logger.d(this.getClass().getSimpleName(), baseV7Response.toString());
-    }, throwable -> throwable.printStackTrace());
+    ShareInstallCardRequest.of(packageName, accessToken, shareType, aptoideClientUUID)
+        .observe()
+        .subscribe(baseV7Response -> {
+          final String userAccess = privacy ? BaseActivity.UserAccessState.UNLISTED.toString()
+              : BaseActivity.UserAccessState.PUBLIC.toString();
+          SetUserRequest.of(aptoideClientUUID, userAccess, accessToken)
+              .observe()
+              .subscribe(baseV7Response1 -> Logger.d(this.getClass().getSimpleName(),
+                  baseV7Response.toString()), throwable -> throwable.printStackTrace());
+          ManagerPreferences.setUserAccess(userAccess);
+          ManagerPreferences.setUserAccessConfirmed(true);
+          Logger.d(this.getClass().getSimpleName(), baseV7Response.toString());
+        }, throwable -> throwable.printStackTrace());
   }
 }
 

@@ -127,6 +127,10 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
       @NonNull int[] grantResults) {
 
+    // got this error on fabric => added this check
+    if (grantResults.length == 0) {
+      super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
     switch (requestCode) {
 
       case ACCESS_TO_EXTERNAL_FS_REQUEST_ID:
