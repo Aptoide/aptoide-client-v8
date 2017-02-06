@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
+import android.accounts.AccountManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -11,6 +12,7 @@ import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -71,7 +73,10 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
   @Override public void setupViews() {
     super.setupViews();
 
-    accountManager = AptoideAccountManager.getInstance(getContext(), Application.getConfiguration());
+    accountManager = AptoideAccountManager.getInstance(getContext(), Application.getConfiguration(),
+        new SecureCoderDecoder.Builder(getContext().getApplicationContext()).create(),
+        AccountManager.get(getContext().getApplicationContext()), new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            getContext().getApplicationContext()));
     idsRepository = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
     installManager = new InstallManager(AptoideDownloadManager.getInstance(),
         new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK));

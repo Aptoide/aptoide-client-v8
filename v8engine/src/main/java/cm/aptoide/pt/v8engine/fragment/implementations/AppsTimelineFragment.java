@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
+import android.accounts.AccountManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -34,6 +35,7 @@ import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.model.v7.timeline.Video;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
@@ -115,7 +117,10 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    accountManager = AptoideAccountManager.getInstance(getContext(), Application.getConfiguration());
+    accountManager = AptoideAccountManager.getInstance(getContext(), Application.getConfiguration(),
+        new SecureCoderDecoder.Builder(getContext().getApplicationContext()).create(),
+        AccountManager.get(getContext().getApplicationContext()), new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            getContext().getApplicationContext()));
     dateCalculator = new DateCalculator();
     spannableFactory = new SpannableFactory();
     downloadFactory = new DownloadFactory();

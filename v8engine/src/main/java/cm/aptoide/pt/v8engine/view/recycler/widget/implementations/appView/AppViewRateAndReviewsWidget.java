@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
+import android.accounts.AccountManager;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
@@ -31,6 +32,7 @@ import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
@@ -104,9 +106,11 @@ import rx.functions.Action1;
     GetAppMeta.App app = pojo.getNodes().getMeta().getData();
     GetAppMeta.Stats stats = app.getStats();
 
-    accountManager = AptoideAccountManager.getInstance(getContext(), Application.getConfiguration());
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
+    accountManager = AptoideAccountManager.getInstance(getContext(), Application.getConfiguration(),
+        new SecureCoderDecoder.Builder(getContext().getApplicationContext()).create(),
+        AccountManager.get(getContext().getApplicationContext()), aptoideClientUUID);
     dialogUtils = new DialogUtils(accountManager, aptoideClientUUID);
     appName = app.getName();
     packageName = app.getPackageName();

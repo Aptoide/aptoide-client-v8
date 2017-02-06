@@ -1,5 +1,6 @@
 package cm.aptoide.pt.viewRateAndCommentReviews;
 
+import android.accounts.AccountManager;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
@@ -20,6 +21,7 @@ import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.util.schedulers.ConcreteSchedulerProvider;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -122,8 +124,10 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    accountManager =
-        AptoideAccountManager.getInstance(getContext(), Application.getConfiguration());
+    accountManager = AptoideAccountManager.getInstance(getContext(), Application.getConfiguration(),
+        new SecureCoderDecoder.Builder(getContext().getApplicationContext()).create(),
+        AccountManager.get(getContext().getApplicationContext()), new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            getContext().getApplicationContext()));
     dialogUtils = new DialogUtils(accountManager,
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext()));
     final RateAndReviewsPresenter presenter =

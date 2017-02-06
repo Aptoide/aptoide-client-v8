@@ -1,5 +1,6 @@
 package cm.aptoide.pt.viewRateAndCommentReviews;
 
+import android.accounts.AccountManager;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
@@ -23,6 +24,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -30,7 +32,6 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.CommentListFragment;
 import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
-import com.trello.rxlifecycle.components.RxDialogFragment;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -59,7 +60,10 @@ public class CommentDialogFragment extends
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    accountManager = AptoideAccountManager.getInstance(getContext(), Application.getConfiguration());
+    accountManager = AptoideAccountManager.getInstance(getContext(), Application.getConfiguration(),
+        new SecureCoderDecoder.Builder(getContext().getApplicationContext()).create(),
+        AccountManager.get(getContext().getApplicationContext()), new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            getContext().getApplicationContext()));
     onEmptyTextError = AptoideUtils.StringU.getResString(R.string.error_MARG_107);
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());

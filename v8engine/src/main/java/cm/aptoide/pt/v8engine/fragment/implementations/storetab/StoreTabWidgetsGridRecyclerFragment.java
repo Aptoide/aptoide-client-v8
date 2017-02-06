@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.fragment.implementations.storetab;
 
+import android.accounts.AccountManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -15,9 +16,11 @@ import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
+import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablesFactory;
 import java.util.List;
@@ -30,13 +33,17 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
 
   private AptoideClientUUID aptoideClientUUID;
   private AptoideAccountManager accountManager;
+  private StoreUtilsProxy storeUtilsProxy;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     aptoideClientUUID =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
-    accountManager =
-        AptoideAccountManager.getInstance(getContext(), Application.getConfiguration());
+    accountManager =AptoideAccountManager.getInstance(getContext(), Application.getConfiguration(),
+        new SecureCoderDecoder.Builder(getContext().getApplicationContext()).create(),
+        AccountManager.get(getContext().getApplicationContext()), new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            getContext().getApplicationContext()));
+    storeUtilsProxy = new StoreUtilsProxy(aptoideClientUUID, accountManager);
   }
 
   protected Observable<List<Displayable>> loadGetStoreWidgets(GetStoreWidgets getStoreWidgets,
@@ -49,8 +56,10 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
             DataProvider.getConfiguration().getPartnerId(), accountManager.isMatureSwitchOn()))
         .toList()
         .flatMapIterable(wsWidgets -> getStoreWidgets.getDatalist().getList())
-        .concatMap(wsWidget -> DisplayablesFactory.parse(wsWidget, storeTheme, storeRepository,
-            storeContext, getContext()))
+        .concatMap(wsWidget -> {
+          return DisplayablesFactory.parse(wsWidget, storeTheme, storeRepository, storeContext,
+              getContext(), accountManager, storeUtilsProxy);
+        })
         .toList()
         .first();
   }

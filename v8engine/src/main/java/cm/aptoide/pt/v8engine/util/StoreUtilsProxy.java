@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.util;
 
+import android.accounts.AccountManager;
 import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;

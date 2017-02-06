@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
+import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
@@ -24,6 +25,7 @@ import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -82,9 +84,12 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
 
   @Override public void bindView(GridStoreMetaDisplayable displayable) {
 
-    accountManager = AptoideAccountManager.getInstance(getContext(), Application.getConfiguration());
+
     IdsRepositoryImpl idsRepository =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
+    accountManager = AptoideAccountManager.getInstance(getContext(), Application.getConfiguration(),
+        new SecureCoderDecoder.Builder(getContext().getApplicationContext()).create(),
+        AccountManager.get(getContext().getApplicationContext()), idsRepository);
     storeUtilsProxy = new StoreUtilsProxy(idsRepository, accountManager);
     final GetStoreMeta getStoreMeta = displayable.getPojo();
     final cm.aptoide.pt.model.v7.store.Store store = getStoreMeta.getData();

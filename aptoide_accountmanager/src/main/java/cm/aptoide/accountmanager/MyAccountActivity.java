@@ -1,14 +1,18 @@
 package cm.aptoide.accountmanager;
 
+import android.accounts.AccountManager;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.SimpleSubscriber;
 
 /**
@@ -28,7 +32,10 @@ public class MyAccountActivity extends BaseActivity {
     setContentView(getLayoutId());
     bindViews();
     setupToolbar();
-    accountManager = AptoideAccountManager.getInstance(this, Application.getConfiguration());
+    accountManager = AptoideAccountManager.getInstance(this, Application.getConfiguration(), new SecureCoderDecoder.Builder(this.getApplicationContext()).create(),
+        AccountManager.get(this.getApplicationContext()), new IdsRepositoryImpl(
+            SecurePreferencesImplementation.getInstance(),
+            this.getApplicationContext()));
     accountManager.setupLogout(this, mLogout);
     mUsernameTextview.setText(accountManager.getUserEmail());
 

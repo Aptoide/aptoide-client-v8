@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.view;
 
+import android.accounts.AccountManager;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -28,6 +29,7 @@ import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.Layout;
 import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -63,11 +65,18 @@ import rx.android.schedulers.AndroidSchedulers;
 public class MainActivity extends BaseActivity implements MainView, FragmentShower {
 
   private static final String TAG = MainActivity.class.getSimpleName();
+  private StoreUtilsProxy storeUtilsProxy;
 
   @Partners @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.frame_layout);
 
+    final IdsRepositoryImpl clientUuid =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this);
+    final AptoideAccountManager accountManager = AptoideAccountManager.getInstance(this, Application.getConfiguration(),
+        new SecureCoderDecoder.Builder(this.getApplicationContext()).create(),
+        AccountManager.get(getApplicationContext()), clientUuid);
+    storeUtilsProxy = new StoreUtilsProxy(clientUuid, accountManager);
     final AutoUpdate autoUpdate =
         new AutoUpdate(this, new InstallerFactory().create(this, InstallerFactory.DEFAULT),
             new DownloadFactory(), AptoideDownloadManager.getInstance(), new PermissionManager());
@@ -166,12 +175,7 @@ public class MainActivity extends BaseActivity implements MainView, FragmentShow
                 if (isFollowed) {
                   ShowMessage.asLongSnack(this, getString(R.string.store_already_added));
                 } else {
-
-                  final IdsRepositoryImpl clientUuid =
-                      new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this);
-
-                  new StoreUtilsProxy(clientUuid, AptoideAccountManager.getInstance(this,
-                      Application.getConfiguration())).subscribeStore(storeName);
+                  storeUtilsProxy.subscribeStore(storeName);
                   ShowMessage.asLongSnack(this,
                       AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
                 }

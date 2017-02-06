@@ -1,5 +1,6 @@
 package cm.aptoide.accountmanager;
 
+import android.accounts.AccountManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -25,6 +26,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.SimpleSetStoreRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
@@ -111,7 +113,9 @@ public class CreateStoreActivity extends PermissionsBaseActivity
     setContentView(getLayoutId());
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         getApplicationContext());
-    accountManager = AptoideAccountManager.getInstance(this, Application.getConfiguration());
+    accountManager = AptoideAccountManager.getInstance(this, Application.getConfiguration(), new SecureCoderDecoder.Builder(this.getApplicationContext()).create(),
+        AccountManager.get(this.getApplicationContext()), new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            this.getApplicationContext()));
     mSubscriptions = new CompositeSubscription();
     bindViews();
     editViews();

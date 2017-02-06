@@ -5,6 +5,7 @@
 
 package cm.aptoide.accountmanager;
 
+import android.accounts.AccountManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,8 +20,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.AptoidePreferencesConfiguration;
+import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import com.facebook.FacebookSdk;
 import com.facebook.login.widget.LoginButton;
@@ -69,7 +73,10 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
     openMyAccountOnLoginSuccess =
         getIntent().getBooleanExtra(OPEN_MY_ACCOUNT_ON_LOGIN_SUCCESS, true);
     setSkipButton = getIntent().getBooleanExtra(SKIP_BUTTON, false);
-    accountManager = AptoideAccountManager.getInstance(this, Application.getConfiguration());
+    accountManager = AptoideAccountManager.getInstance(this, Application.getConfiguration(), new SecureCoderDecoder.Builder(this.getApplicationContext()).create(),
+        AccountManager.get(this.getApplicationContext()), new IdsRepositoryImpl(
+            SecurePreferencesImplementation.getInstance(),
+            this.getApplicationContext()));
     accountManager.setupLogins(this, this, mFacebookLoginButton, mLoginButton, mRegisterButton);
     if (!isSocialLoginsAvailable()) {
       orMessage.setVisibility(View.GONE);
