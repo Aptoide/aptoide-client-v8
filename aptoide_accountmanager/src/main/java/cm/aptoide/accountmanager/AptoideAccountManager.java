@@ -40,14 +40,12 @@ import cm.aptoide.accountmanager.ws.responses.GenericResponseV3;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.preferences.AptoidePreferencesConfiguration;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -90,17 +88,23 @@ public class AptoideAccountManager {
   private final AptoideClientUUID aptoideClientUuid;
   private final Context applicationContext;
   private AptoidePreferencesConfiguration configuration;
-  private boolean userIsLoggedIn;
   private Analytics analytics;
+  private boolean userIsLoggedIn;
 
   private ILoginInterface callback;
+  private AccountManager androidAccountManager;
+  private SecureCoderDecoder secureCoderDecoder;
 
   public AptoideAccountManager(AptoideClientUUID aptoideClientUuid, Context applicationContext,
-      AptoidePreferencesConfiguration configuration) {
+      AptoidePreferencesConfiguration configuration, AccountManager androidAccountManager,
+      SecureCoderDecoder secureCoderDecoder) {
     this.aptoideClientUuid = aptoideClientUuid;
     this.applicationContext = applicationContext;
     this.configuration = configuration;
+    this.analytics = analytics;
     this.userIsLoggedIn = isLoggedIn();
+    this.secureCoderDecoder = secureCoderDecoder;
+    this.androidAccountManager = androidAccountManager;
     LOGIN = configuration.getAppId() + ".accountmanager.broadcast.login";
     LOGIN_CANCELLED = configuration.getAppId() + ".accountmanager.broadcast.LOGIN_CANCELLED";
     LOGOUT = configuration.getAppId() + ".accountmanager.broadcast.logout";
@@ -143,8 +147,7 @@ public class AptoideAccountManager {
   }
 
   public boolean isLoggedIn() {
-    AccountManager manager = AccountManager.get(applicationContext);
-    return manager.getAccountsByType(Constants.ACCOUNT_TYPE).length != 0;
+    return androidAccountManager.getAccountsByType(Constants.ACCOUNT_TYPE).length != 0;
   }
 
   /**
@@ -164,7 +167,7 @@ public class AptoideAccountManager {
    * @param extras Extras to add on created intent (to login or register activity)
    */
   public void openAccountManager(Context context, @Nullable Bundle extras) {
-    if (userIsLoggedIn) {
+    if (isLoggedIn()) {
       context.startActivity(new Intent(context, MyAccountActivity.class));
     } else {
       final Intent intent = new Intent(context, LoginActivity.class);
@@ -190,11 +193,12 @@ public class AptoideAccountManager {
   }
 
   public static AptoideAccountManager getInstance(Context context,
-      AptoidePreferencesConfiguration configuration) {
+      AptoidePreferencesConfiguration configuration, SecureCoderDecoder secureCoderDecoder,
+      AccountManager androidAccountManager, AptoideClientUUID aptoideClientUUID) {
     if (instance == null) {
-      instance = new AptoideAccountManager(
-          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-              context.getApplicationContext()), context.getApplicationContext(), configuration);
+      instance =
+          new AptoideAccountManager(aptoideClientUUID, context.getApplicationContext(), configuration,
+              androidAccountManager, secureCoderDecoder);
     }
     return instance;
   }
@@ -229,14 +233,13 @@ public class AptoideAccountManager {
   }
 
   public void removeLocalAccount() {
-    AccountManager manager = AccountManager.get(applicationContext);
-    Account[] accounts = manager.getAccountsByType(Constants.ACCOUNT_TYPE);
+    Account[] accounts = androidAccountManager.getAccountsByType(Constants.ACCOUNT_TYPE);
     userIsLoggedIn = false;
     for (Account account : accounts) {
       if (Build.VERSION.SDK_INT >= 22) {
-        manager.removeAccountExplicitly(account);
+        androidAccountManager.removeAccountExplicitly(account);
       } else {
-        manager.removeAccount(account, null, null);
+        androidAccountManager.removeAccount(account, null, null);
       }
     }
     AccountManagerPreferences.removeUserEmail();
@@ -516,28 +519,24 @@ public class AptoideAccountManager {
   }
 
   private String getUserStringFromAndroidAccountManager(String key) {
-    AccountManager manager = AccountManager.get(applicationContext);
-    Account[] accountsByType = manager.getAccountsByType(Constants.ACCOUNT_TYPE);
+    Account[] accountsByType = androidAccountManager.getAccountsByType(Constants.ACCOUNT_TYPE);
 
-    return accountsByType.length > 0 ? manager.getUserData(accountsByType[0], key) : null;
+    return accountsByType.length > 0 ? androidAccountManager.getUserData(accountsByType[0], key)
+        : null;
   }
 
   private @Nullable String getRefreshTokenFromAccountManager()
       throws AuthenticatorException, OperationCanceledException, IOException {
-    AccountManager manager = AccountManager.get(applicationContext);
-    Account[] accountsByType = manager.getAccountsByType(Constants.ACCOUNT_TYPE);
-    String refreshToken =
-        manager.blockingGetAuthToken(accountsByType[0], Constants.AUTHTOKEN_TYPE_FULL_ACCESS,
-            false);
+    Account[] accountsByType = androidAccountManager.getAccountsByType(Constants.ACCOUNT_TYPE);
+    String refreshToken = androidAccountManager.blockingGetAuthToken(accountsByType[0],
+        Constants.AUTHTOKEN_TYPE_FULL_ACCESS, false);
     return refreshToken;
   }
 
   public void setAccessTokenOnLocalAccount(String accessToken, @Nullable Account userAccount,
       @NonNull String dataKey) {
-    AccountManager accountManager = AccountManager.get(applicationContext);
-
     if (userAccount == null) {
-      Account[] accounts = accountManager.getAccounts();
+      Account[] accounts = androidAccountManager.getAccounts();
       for (final Account account : accounts) {
         if (TextUtils.equals(account.name, getUserEmail()) && TextUtils.equals(account.type,
             Constants.ACCOUNT_TYPE)) {
@@ -546,7 +545,7 @@ public class AptoideAccountManager {
         }
       }
     } else {
-      accountManager.setUserData(userAccount, dataKey, accessToken);
+      androidAccountManager.setUserData(userAccount, dataKey, accessToken);
     }
   }
 
@@ -558,8 +557,7 @@ public class AptoideAccountManager {
   public String getUserEmail() {
     String userName = AccountManagerPreferences.getUserEmail();
     if (userName == null || TextUtils.isEmpty(userName)) {
-      AccountManager accountManager = AccountManager.get(applicationContext);
-      Account[] accounts = accountManager.getAccountsByType(Constants.ACCOUNT_TYPE);
+      Account[] accounts = androidAccountManager.getAccountsByType(Constants.ACCOUNT_TYPE);
       if (accounts.length > 0) {
         userName = accounts[0].name;
         AccountManagerPreferences.setUserEmail(userName);
@@ -771,7 +769,6 @@ public class AptoideAccountManager {
   Observable<Boolean> addLocalUserAccount(String userName, String userPassword,
       @Nullable String accountType, String refreshToken, String accessToken) {
     if (applicationContext != null) {
-      AccountManager accountManager = AccountManager.get(applicationContext);
       accountType = accountType != null ? accountType
           // TODO: 4/21/16 trinkes if needed, account type has to match with partners
           // version
@@ -782,15 +779,13 @@ public class AptoideAccountManager {
       // Creating the account on the device and setting the auth token we got
       // (Not setting the auth token will cause another call to the server to authenticate
       // the user)
-      SecureCoderDecoder secureCoderDecoder =
-          new SecureCoderDecoder.Builder(applicationContext).create();
       String encryptPassword = secureCoderDecoder.encrypt(userPassword);
       try {
-        accountManager.addAccountExplicitly(account, encryptPassword, null);
+        androidAccountManager.addAccountExplicitly(account, encryptPassword, null);
       } catch (SecurityException e) {
         CrashReport.getInstance().log(e);
       }
-      accountManager.setUserData(account, SecureKeys.REFRESH_TOKEN, refreshToken);
+      androidAccountManager.setUserData(account, SecureKeys.REFRESH_TOKEN, refreshToken);
       AccountManagerPreferences.setRefreshToken(refreshToken);
 
       return refreshAndSaveUserInfoData().doOnError(e -> {

@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.activity;
 
+import android.accounts.AccountManager;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -18,9 +19,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.iab.ErrorCodeFactory;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.payment.AptoidePay;
@@ -120,7 +124,10 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
     final ProductRepository productRepository =
         RepositoryFactory.getProductRepository(this, product);
     final Payer payer = new Payer(this, AptoideAccountManager.getInstance(this,
-        Application.getConfiguration()));
+        Application.getConfiguration(), new SecureCoderDecoder.Builder(this.getApplicationContext()).create(),
+        AccountManager.get(this.getApplicationContext()), new IdsRepositoryImpl(
+            SecurePreferencesImplementation.getInstance(),
+            this.getApplicationContext())));
     attachPresenter(new PaymentPresenter(this,
             new AptoidePay(RepositoryFactory.getPaymentConfirmationRepository(this, product),
                 RepositoryFactory.getPaymentAuthorizationRepository(this), productRepository,

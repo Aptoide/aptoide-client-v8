@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.util;
 
+import android.accounts.AccountManager;
 import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
@@ -11,6 +12,7 @@ import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 
@@ -29,7 +31,9 @@ public class StoreUtilsProxy {
 
   static {
     accountManager = AptoideAccountManager.getInstance(DataProvider.getContext(),
-        Application.getConfiguration());
+        Application.getConfiguration(), new SecureCoderDecoder.Builder(DataProvider.getContext().getApplicationContext()).create(),
+        AccountManager.get(DataProvider.getContext().getApplicationContext()), new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext().getApplicationContext()));
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
   }

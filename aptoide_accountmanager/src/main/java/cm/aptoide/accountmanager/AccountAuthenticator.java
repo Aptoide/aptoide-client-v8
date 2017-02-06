@@ -8,8 +8,11 @@ import android.accounts.NetworkErrorException;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 
 import static android.accounts.AccountManager.KEY_BOOLEAN_RESULT;
 import static cm.aptoide.pt.preferences.Application.getContext;
@@ -25,7 +28,11 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
 
   public AccountAuthenticator(Context context) {
     super(context);
-    accountManager = AptoideAccountManager.getInstance(getContext(), Application.getConfiguration());
+    accountManager = AptoideAccountManager.getInstance(getContext(), Application.getConfiguration(),
+        new SecureCoderDecoder.Builder(getContext().getApplicationContext()).create(),
+        AccountManager.get(getContext().getApplicationContext()), new IdsRepositoryImpl(
+            SecurePreferencesImplementation.getInstance(),
+            getContext().getApplicationContext()));
   }
 
   @Override
