@@ -11,7 +11,6 @@ import android.accounts.AuthenticatorException;
 import android.accounts.NetworkErrorException;
 import android.accounts.OperationCanceledException;
 import android.app.Activity;
-import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -73,7 +72,7 @@ import rx.schedulers.Schedulers;
  * #invalidateAccessToken(Context)}</li> <li>{@link #invalidateAccessTokenSync(Context)}</li>
  * <li>{@link #ACCOUNT_REMOVED_BROADCAST_KEY}</li>
  */
-public class AptoideAccountManager implements Application.ActivityLifecycleCallbacks {
+public class AptoideAccountManager {
 
   /**
    * This constant is used to send the broadcast when an account is removed
@@ -753,7 +752,10 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
       facebookLoginButton.setVisibility(View.GONE);
     }
     AptoideLoginUtils.setupAptoideLogin(activity, loginButton, registerButton, this);
-    activity.getApplication().registerActivityLifecycleCallbacks(this);
+  }
+
+  public void removeLogins() {
+    this.callback = null;
   }
 
   /**
@@ -867,40 +869,6 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     Intent intent = new Intent();
     intent.setAction(ACCOUNT_REMOVED_BROADCAST_KEY);
     context.sendBroadcast(intent);
-  }
-
-  /********************************************************
-   * activity lifecycle
-   */
-
-  @Override public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-
-  }
-
-  @Override public void onActivityStarted(Activity activity) {
-
-  }
-
-  @Override public void onActivityResumed(Activity activity) {
-
-  }
-
-  @Override public void onActivityPaused(Activity activity) {
-
-  }
-
-  @Override public void onActivityStopped(Activity activity) {
-
-  }
-
-  @Override public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-
-  }
-
-  @Override public void onActivityDestroyed(Activity activity) {
-    if (activity instanceof LoginActivity) {
-      callback = null;
-    }
   }
 
   /**
