@@ -51,10 +51,9 @@ public class CreateUserRequest extends v3accountManager<OAuth> {
   }
 
   public static CreateUserRequest of(String email, String password, String aptoideClientUUID,
-      Context context) {
-    return new CreateUserRequest(getHttpClient(AptoideAccountManager.getInstance(context,
-        Application.getConfiguration())), email, password, aptoideClientUUID,
-        AptoideAccountManager.getInstance(context, Application.getConfiguration()));
+      Context context, AptoideAccountManager accountManager) {
+    return new CreateUserRequest(getHttpClient(accountManager), email, password, aptoideClientUUID,
+        accountManager);
   }
 
   private static OkHttpClient getHttpClient(AptoideAccountManager accountManager) {
@@ -67,11 +66,10 @@ public class CreateUserRequest extends v3accountManager<OAuth> {
   }
 
   public static CreateUserRequest of(String update, String email, String name, String password,
-      String userAvatarPath, String aptoideClientUUID, Context context) {
-    return new CreateUserRequest(getHttpClient(AptoideAccountManager.getInstance(context,
-        Application.getConfiguration())), email, password, name, update, userAvatarPath,
-        aptoideClientUUID, AptoideAccountManager.getInstance(context,
-        Application.getConfiguration()));
+      String userAvatarPath, String aptoideClientUUID, Context context,
+      AptoideAccountManager accountManager) {
+    return new CreateUserRequest(getHttpClient(accountManager), email, password, name, update,
+        userAvatarPath, aptoideClientUUID, accountManager);
   }
 
   public String getPassword() {

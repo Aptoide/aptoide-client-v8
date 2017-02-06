@@ -99,9 +99,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
   private String from;
   private String storeRemoteUrl;
 
-  private AptoideClientUUID aptoideClientUUID =
-      new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-          DataProvider.getContext());
+  private AptoideClientUUID aptoideClientUUID;
 
   private int CREATE_STORE_REQUEST_CODE = 0; //1: all (Multipart)  2: user and theme 3:user 4/5:edit
   private AptoideAccountManager accountManager;
@@ -110,6 +108,8 @@ public class CreateStoreActivity extends PermissionsBaseActivity
     getData();
     super.onCreate(savedInstanceState);
     setContentView(getLayoutId());
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        getApplicationContext());
     accountManager = AptoideAccountManager.getInstance(this, Application.getConfiguration());
     mSubscriptions = new CompositeSubscription();
     bindViews();
@@ -256,47 +256,49 @@ public class CreateStoreActivity extends PermissionsBaseActivity
               || CREATE_STORE_REQUEST_CODE == 3) {
             progressDialog.show();
             mSubscriptions.add(
-                CheckUserCredentialsRequest.of(accountManager.getAccessToken(), storeName,
-                    CREATE_STORE_CODE, this).observe().subscribe(answer -> {
-                  if (answer.hasErrors()) {
-                    if (answer.getErrors() != null && answer.getErrors().size() > 0) {
-                      progressDialog.dismiss();
-                      if (answer.getErrors().get(0).code.equals("WOP-2")) {
-                        mSubscriptions.add(GenericDialogs.createGenericContinueMessage(this, "",
-                            getApplicationContext().getResources().getString(R.string.ws_error_WOP_2))
-                            .subscribe());
-                      } else if (answer.getErrors().get(0).code.equals("WOP-3")) {
-                        ShowMessage.asSnack(this, ErrorsMapper.getWebServiceErrorMessageFromCode(
-                            answer.getErrors().get(0).code));
+                CheckUserCredentialsRequest.of(storeName, CREATE_STORE_CODE, accountManager)
+                    .observe()
+                    .subscribe(answer -> {
+                      if (answer.hasErrors()) {
+                        if (answer.getErrors() != null && answer.getErrors().size() > 0) {
+                          progressDialog.dismiss();
+                          if (answer.getErrors().get(0).code.equals("WOP-2")) {
+                            mSubscriptions.add(GenericDialogs.createGenericContinueMessage(this, "",
+                                getApplicationContext().getResources()
+                                    .getString(R.string.ws_error_WOP_2)).subscribe());
+                          } else if (answer.getErrors().get(0).code.equals("WOP-3")) {
+                            ShowMessage.asSnack(this, ErrorsMapper.getWebServiceErrorMessageFromCode(
+                                answer.getErrors().get(0).code));
+                          } else {
+                            ShowMessage.asObservableSnack(this,
+                                ErrorsMapper.getWebServiceErrorMessageFromCode(
+                                    answer.getErrors().get(0).code)).subscribe(visibility -> {
+                              if (visibility == ShowMessage.DISMISSED) {
+                                finish();
+                              }
+                            });
+                          }
+                        }
+                      } else if (!(CREATE_STORE_REQUEST_CODE == 3)) {
+                        onCreateSuccess(progressDialog);
                       } else {
-                        ShowMessage.asObservableSnack(this,
-                            ErrorsMapper.getWebServiceErrorMessageFromCode(
-                                answer.getErrors().get(0).code)).subscribe(visibility -> {
-                          if (visibility == ShowMessage.DISMISSED) {
-                            finish();
-                          }
-                        });
+                        progressDialog.dismiss();
+                        ShowMessage.asLongObservableSnack(this, R.string.create_store_store_created)
+                            .subscribe(visibility -> {
+                              mSubscriptions.add(
+                                  accountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
+                                    accountManager.sendLoginBroadcast();
+                                  }, Throwable::printStackTrace));
+                              if (visibility == ShowMessage.DISMISSED) {
+                                finish();
+                              }
+                            });
                       }
-                    }
-                  } else if (!(CREATE_STORE_REQUEST_CODE == 3)) {
-                    onCreateSuccess(progressDialog);
-                  } else {
-                    progressDialog.dismiss();
-                    ShowMessage.asLongObservableSnack(this, R.string.create_store_store_created)
-                        .subscribe(visibility -> {
-                          mSubscriptions.add(accountManager.refreshAndSaveUserInfoData()
-                              .subscribe(refreshed -> {
-                                accountManager.sendLoginBroadcast();
-                              }, Throwable::printStackTrace));
-                          if (visibility == ShowMessage.DISMISSED) {
-                            finish();
-                          }
-                        });
-                  }
-                }, throwable -> {
-                  onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
-                  progressDialog.dismiss();
-                }));
+                    }, throwable -> {
+                      onCreateFail(
+                          ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
+                      progressDialog.dismiss();
+                    }));
           } else if (CREATE_STORE_REQUEST_CODE == 4) {
             setStoreData();
             progressDialog.show();

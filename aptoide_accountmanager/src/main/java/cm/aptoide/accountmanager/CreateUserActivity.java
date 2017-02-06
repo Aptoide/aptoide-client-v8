@@ -138,43 +138,47 @@ public class CreateUserActivity extends PermissionsBaseActivity
         pleaseWaitDialog.show();
         mSubscriptions.add(
             CreateUserRequest.of("true", userEmail, username, userPassword, avatarPath,
-                aptoideClientUUID.getAptoideClientUUID(), this).observe().filter(answer -> {
-              if (answer.hasErrors()) {
-                if (answer.getErrors() != null && answer.getErrors().size() > 0) {
-                  onRegisterFail(ErrorsMapper.getWebServiceErrorMessageFromCode(
-                      answer.getErrors().get(0).code));
+                aptoideClientUUID.getAptoideClientUUID(), this, accountManager)
+                .observe()
+                .filter(answer -> {
+                  if (answer.hasErrors()) {
+                    if (answer.getErrors() != null && answer.getErrors().size() > 0) {
+                      onRegisterFail(ErrorsMapper.getWebServiceErrorMessageFromCode(
+                          answer.getErrors().get(0).code));
+                      pleaseWaitDialog.dismiss();
+                    } else {
+                      onRegisterFail(R.string.unknown_error);
+                      pleaseWaitDialog.dismiss();
+                    }
+                    return false;
+                  }
+                  return true;
+                })
+                .timeout(90, TimeUnit.SECONDS)
+                .subscribe(answer -> {
+                  //Successfull update
+                  saveUserDataOnPreferences();
+                  onRegisterSuccess(pleaseWaitDialog);
                   pleaseWaitDialog.dismiss();
-                } else {
-                  onRegisterFail(R.string.unknown_error);
-                  pleaseWaitDialog.dismiss();
-                }
-                return false;
-              }
-              return true;
-            }).timeout(90, TimeUnit.SECONDS).subscribe(answer -> {
-              //Successfull update
-              saveUserDataOnPreferences();
-              onRegisterSuccess(pleaseWaitDialog);
-              pleaseWaitDialog.dismiss();
-            }, err -> {
-              if (err.getClass().equals(SocketTimeoutException.class)) {
-                pleaseWaitDialog.dismiss();
-                ShowMessage.asObservableSnack(this, R.string.user_upload_photo_failed)
-                    .subscribe(visibility -> {
-                      if (visibility == ShowMessage.DISMISSED) {
-                        finish();
-                      }
-                    });
-              } else if (err.getClass().equals(TimeoutException.class)) {
-                pleaseWaitDialog.dismiss();
-                ShowMessage.asObservableSnack(this, R.string.user_upload_photo_failed)
-                    .subscribe(visibility -> {
-                      if (visibility == ShowMessage.DISMISSED) {
-                        finish();
-                      }
-                    });
-              }
-            }));
+                }, err -> {
+                  if (err.getClass().equals(SocketTimeoutException.class)) {
+                    pleaseWaitDialog.dismiss();
+                    ShowMessage.asObservableSnack(this, R.string.user_upload_photo_failed)
+                        .subscribe(visibility -> {
+                          if (visibility == ShowMessage.DISMISSED) {
+                            finish();
+                          }
+                        });
+                  } else if (err.getClass().equals(TimeoutException.class)) {
+                    pleaseWaitDialog.dismiss();
+                    ShowMessage.asObservableSnack(this, R.string.user_upload_photo_failed)
+                        .subscribe(visibility -> {
+                          if (visibility == ShowMessage.DISMISSED) {
+                            finish();
+                          }
+                        });
+                  }
+                }));
       } else if (CREATE_USER_REQUEST_CODE == 2) {
         avatarPath = "";
         ProgressDialog pleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
@@ -182,7 +186,7 @@ public class CreateUserActivity extends PermissionsBaseActivity
         pleaseWaitDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         pleaseWaitDialog.show();
         CreateUserRequest.of("true", userEmail, username, userPassword, avatarPath,
-            aptoideClientUUID.getAptoideClientUUID(), this).execute(answer -> {
+            aptoideClientUUID.getAptoideClientUUID(), this, accountManager).execute(answer -> {
           if (answer.hasErrors()) {
             if (answer.getErrors() != null && answer.getErrors().size() > 0) {
               onRegisterFail(
