@@ -1718,7 +1718,7 @@ public class AptoideUtils {
           new StringBuilder(vername + ";" + SystemU.TERMINAL_INFO + ";" + myscr + ";id:");
 
       if (aptoideClientUUID != null) {
-        sb.append(aptoideClientUUID.getAptoideClientUUID());
+        sb.append(aptoideClientUUID.getUniqueIdentifier());
       }
       sb.append(";");
 

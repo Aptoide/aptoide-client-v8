@@ -20,23 +20,23 @@ class ListStoresRequestFactory {
 
   public ListStoresRequestFactory() {
     aptoideClientUUID = () -> new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext()).getAptoideClientUUID();
+        DataProvider.getContext()).getUniqueIdentifier();
 
     accessToken = AptoideAccountManager::getAccessToken;
   }
 
   public ListStoresRequest newListStoresRequest(int offset, int limit) {
     return ListStoresRequest.ofTopStores(offset, limit, accessToken.get(),
-        aptoideClientUUID.getAptoideClientUUID());
+        aptoideClientUUID.getUniqueIdentifier());
   }
 
   public V7EndlessController<Store> listStores(int offset, int limit) {
     return new V7EndlessController<>(ListStoresRequest.ofTopStores(offset, limit, accessToken.get(),
-        aptoideClientUUID.getAptoideClientUUID()));
+        aptoideClientUUID.getUniqueIdentifier()));
   }
 
   public ListStoresRequest newListStoresRequest(String url) {
     return ListStoresRequest.ofAction(url, accessToken.get(),
-        aptoideClientUUID.getAptoideClientUUID());
+        aptoideClientUUID.getUniqueIdentifier());
   }
 }

@@ -21,7 +21,7 @@ class ListAppsRequestFactory {
 
   public ListAppsRequestFactory() {
     aptoideClientUUID = () -> new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext()).getAptoideClientUUID();
+        DataProvider.getContext()).getUniqueIdentifier();
 
     accessToken = AptoideAccountManager::getAccessToken;
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
@@ -29,6 +29,6 @@ class ListAppsRequestFactory {
 
   public ListAppsRequest newListAppsRequest(String url) {
     return ListAppsRequest.ofAction(url, storeCredentialsProvider.fromUrl(url), accessToken.get(),
-        aptoideClientUUID.getAptoideClientUUID());
+        aptoideClientUUID.getUniqueIdentifier());
   }
 }

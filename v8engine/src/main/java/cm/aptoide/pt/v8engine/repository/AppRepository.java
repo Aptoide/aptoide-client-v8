@@ -45,7 +45,7 @@ public class AppRepository {
         V8Engine.getConfiguration().getPartnerId() == null ? null : storeName,
         StoreUtils.getStoreCredentials(storeName), AptoideAccountManager.getAccessToken(),
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID(), packageName)
+            DataProvider.getContext()).getUniqueIdentifier(), packageName)
         .observe(refresh)
         .flatMap(response -> {
           if (response != null && response.isOk()) {
@@ -103,7 +103,7 @@ public class AppRepository {
   public Observable<GetApp> getApp(String packageName, boolean refresh, boolean sponsored,
       String storeName) {
     return GetAppRequest.of(packageName, storeName, AptoideAccountManager.getAccessToken(),
-        aptoideClientUUID.getAptoideClientUUID()).observe(refresh).flatMap(response -> {
+        aptoideClientUUID.getUniqueIdentifier()).observe(refresh).flatMap(response -> {
       if (response != null && response.isOk()) {
         if (response.getNodes().getMeta().getData().isPaid()) {
           return addPayment(sponsored, response, refresh);
@@ -119,7 +119,7 @@ public class AppRepository {
 
   public Observable<GetApp> getAppFromMd5(String md5, boolean refresh, boolean sponsored) {
     return GetAppRequest.ofMd5(md5, AptoideAccountManager.getAccessToken(),
-        aptoideClientUUID.getAptoideClientUUID()).observe(refresh).flatMap(response -> {
+        aptoideClientUUID.getUniqueIdentifier()).observe(refresh).flatMap(response -> {
       if (response != null && response.isOk()) {
         if (response.getNodes().getMeta().getData().isPaid()) {
           return addPayment(sponsored, response, refresh);

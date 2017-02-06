@@ -140,7 +140,7 @@ import java.util.Locale;
 
       dialog.dismiss();
       PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating,
-          AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
+          AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
           .execute(response -> {
             if (response.isOk()) {
               Logger.d(TAG, "review added");

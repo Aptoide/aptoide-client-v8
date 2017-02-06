@@ -122,16 +122,16 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
       switch (openMode) {
         case FOLLOWERS:
           request = GetFollowersRequest.of(AptoideAccountManager.getAccessToken(),
-              aptoideClientUUID.getAptoideClientUUID());
+              aptoideClientUUID.getUniqueIdentifier());
           break;
         case FOLLOWING:
           request = GetFollowingRequest.of(AptoideAccountManager.getAccessToken(),
-              aptoideClientUUID.getAptoideClientUUID());
+              aptoideClientUUID.getUniqueIdentifier());
           break;
         case LIKE_PREVIEW:
           request = GetUserLikesRequest.of(AptoideAccountManager.getAccessToken(),
               new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                  DataProvider.getContext()).getAptoideClientUUID(), cardUid);
+                  DataProvider.getContext()).getUniqueIdentifier(), cardUid);
           break;
         default:
           throw new IllegalStateException(

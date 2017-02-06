@@ -22,7 +22,7 @@ public class GetStoreMetaRequestFactory {
 
   public GetStoreMetaRequestFactory() {
     aptoideClientUUID = () -> new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext()).getAptoideClientUUID();
+        DataProvider.getContext()).getUniqueIdentifier();
 
     accessToken = AptoideAccountManager::getAccessToken;
     storeCredentialsFromStoreName = new StoreCredentialsProviderImpl();
@@ -30,6 +30,6 @@ public class GetStoreMetaRequestFactory {
 
   private GetStoreMetaRequest newGetStoreMetaRequest(String storeName) {
     return GetStoreMetaRequest.of(storeCredentialsFromStoreName.get(storeName), accessToken.get(),
-        aptoideClientUUID.getAptoideClientUUID());
+        aptoideClientUUID.getUniqueIdentifier());
   }
 }

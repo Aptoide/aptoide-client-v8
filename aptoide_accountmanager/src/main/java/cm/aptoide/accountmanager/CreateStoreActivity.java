@@ -297,7 +297,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
           } else if (CREATE_STORE_REQUEST_CODE == 4) {
             setStoreData();
             progressDialog.show();
-            mSubscriptions.add(SetStoreRequest.of(aptoideClientUUID.getAptoideClientUUID(),
+            mSubscriptions.add(SetStoreRequest.of(aptoideClientUUID.getUniqueIdentifier(),
                 AptoideAccountManager.getAccessToken(), storeName, storeTheme, storeAvatarPath,
                 storeDescription, true, storeId).observe().subscribe(answer -> {
               AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
@@ -328,7 +328,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
             setStoreData();
             progressDialog.show();
             mSubscriptions.add(SimpleSetStoreRequest.of(AptoideAccountManager.getAccessToken(),
-                aptoideClientUUID.getAptoideClientUUID(), storeId, storeTheme, storeDescription)
+                aptoideClientUUID.getUniqueIdentifier(), storeId, storeTheme, storeDescription)
                 .observe()
                 .subscribe(answer -> {
                   AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
@@ -535,7 +535,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
        * Multipart
        */
       setStoreData();
-      mSubscriptions.add(SetStoreRequest.of(aptoideClientUUID.getAptoideClientUUID(),
+      mSubscriptions.add(SetStoreRequest.of(aptoideClientUUID.getUniqueIdentifier(),
           AptoideAccountManager.getAccessToken(), storeName, storeTheme, storeAvatarPath)
           .observe()
           .timeout(90, TimeUnit.SECONDS)
@@ -596,7 +596,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
        */
       setStoreData();
       SimpleSetStoreRequest.of(AptoideAccountManager.getAccessToken(),
-          aptoideClientUUID.getAptoideClientUUID(), storeName, storeTheme).execute(answer -> {
+          aptoideClientUUID.getUniqueIdentifier(), storeName, storeTheme).execute(answer -> {
         AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
           progressDialog.dismiss();
           AptoideAccountManager.sendLoginBroadcast();

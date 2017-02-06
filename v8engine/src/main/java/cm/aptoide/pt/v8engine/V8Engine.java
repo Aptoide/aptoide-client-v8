@@ -255,7 +255,7 @@ public abstract class V8Engine extends DataProvider {
     db.close();
 
     ABTestManager.getInstance()
-        .initialize(aptoideClientUUID.getAptoideClientUUID())
+        .initialize(aptoideClientUUID.getUniqueIdentifier())
         .subscribe(success -> {
         }, throwable -> {
           CrashReport.getInstance().log(throwable);
@@ -288,7 +288,7 @@ public abstract class V8Engine extends DataProvider {
   }
 
   Observable<String> generateAptoideUUID() {
-    return Observable.fromCallable(() -> aptoideClientUUID.getAptoideClientUUID())
+    return Observable.fromCallable(() -> aptoideClientUUID.getUniqueIdentifier())
         .subscribeOn(Schedulers.computation());
   }
 

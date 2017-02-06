@@ -225,7 +225,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
       shouldFinishLoading = true;
       ListSearchAppsRequest of =
           ListSearchAppsRequest.of(query, storeName, StoreUtils.getSubscribedStoresAuthMap(),
-              AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID());
+              AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier());
       of.execute(listSearchApps -> {
         List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
 
@@ -239,7 +239,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
       }, e -> finishLoading());
     } else {
       ListSearchAppsRequest.of(query, true, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(),
-          AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
+          AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
           .execute(listSearchApps -> {
             List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
 
@@ -254,7 +254,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
       // Other stores
       ListSearchAppsRequest.of(query, false, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(),
-          AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
+          AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
           .execute(listSearchApps -> {
             List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
 

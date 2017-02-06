@@ -41,7 +41,7 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
 
     GetMyStoreListRequest request =
         GetMyStoreListRequest.of(url, AptoideAccountManager.getAccessToken(),
-            aptoideClientUUID.getAptoideClientUUID(), true);
+            aptoideClientUUID.getUniqueIdentifier(), true);
 
     return request;
   }

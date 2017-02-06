@@ -35,7 +35,7 @@ class ListFullReviewsSuccessRequestListener implements SuccessRequestListener<Li
 
     List<Review> reviews = listFullReviews.getDatalist().getList();
     List<Displayable> displayables = new LinkedList<>();
-    final String aptoideClientUuid = aptoideClientUUID.getAptoideClientUUID();
+    final String aptoideClientUuid = aptoideClientUUID.getUniqueIdentifier();
 
     Observable.from(reviews)
         .flatMap(review -> ListCommentsRequest.of( // fetch the list of comments for each review

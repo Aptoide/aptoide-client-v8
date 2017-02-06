@@ -136,11 +136,11 @@ public class DialogUtils {
         // WS call
         if (storeName != null) {
           PostReviewRequest.of(storeName, packageName, reviewTitle, reviewText, reviewRating,
-              AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
+              AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
               .execute(successRequestListener, errorRequestListener);
         } else {
           PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating,
-              AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
+              AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
               .execute(successRequestListener, errorRequestListener);
         }
       });
@@ -217,11 +217,11 @@ public class DialogUtils {
 
       if (storeName != null) {
         PostReviewRequest.of(storeName, packageName, reviewTitle, reviewText, reviewRating,
-            AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
+            AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
             .execute(successRequestListener, errorRequestListener);
       } else {
         PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating,
-            AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
+            AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
             .execute(successRequestListener, errorRequestListener);
       }
     });
