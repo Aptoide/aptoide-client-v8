@@ -76,7 +76,6 @@ import rx.schedulers.Schedulers;
  */
 public class AptoideAccountManager implements Application.ActivityLifecycleCallbacks {
 
-
   /**
    * This constant is used to send the broadcast when an account is removed
    */
@@ -116,6 +115,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
   public void setAnalytics(Analytics analytics) {
     this.analytics = analytics;
   }
+
   public Observable<Void> login(Context context) {
     return Observable.fromCallable(() -> {
       if (isLoggedIn()) {
@@ -130,8 +130,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
         return Observable.just(null);
       }
       return Observable.create(new BroadcastRegisterOnSubscribe(context, intentFilter, null, null))
-          .doOnSubscribe(
-              () -> openAccountManager(context, false))
+          .doOnSubscribe(() -> openAccountManager(context, false))
           .flatMap(intent -> {
             if (AptoideAccountManager.LOGIN.equals(intent.getAction())) {
               return Observable.just(null);
@@ -301,7 +300,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     }
     OAuth2AuthenticationRequest oAuth2AuthenticationRequest =
         OAuth2AuthenticationRequest.of(userName, passwordOrToken, mode, nameForGoogle,
-            aptoideClientUuid.getUniqueIdentifier(), applicationContext);
+            aptoideClientUuid.getUniqueIdentifier(), this);
     final ProgressDialog finalGenericPleaseWaitDialog = genericPleaseWaitDialog;
     oAuth2AuthenticationRequest.execute(oAuth -> {
       Logger.d(TAG, "onSuccess() called with: " + "oAuth = [" + oAuth + "]");
@@ -443,7 +442,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
   @Partners public void updateMatureSwitch(boolean matureSwitch) {
     AccountManagerPreferences.setMatureSwitch(matureSwitch);
     if (userIsLoggedIn) {
-      ChangeUserSettingsRequest.of(matureSwitch, applicationContext)
+      ChangeUserSettingsRequest.of(matureSwitch, this)
           .observe(true) // bypass cache since we are "writing" a value
           .subscribeOn(Schedulers.io())
           .observeOn(AndroidSchedulers.mainThread())
@@ -495,7 +494,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 
   private Observable<String> getNewAccessTokenFromRefreshToken(String refreshToken,
       Action1<Throwable> action1) {
-    return OAuth2AuthenticationRequest.of(refreshToken, aptoideClientUuid.getUniqueIdentifier(), applicationContext)
+    return OAuth2AuthenticationRequest.of(refreshToken, aptoideClientUuid.getUniqueIdentifier(), this)
         .observe()
         .observeOn(AndroidSchedulers.mainThread())
         .map(OAuth::getAccessToken)
@@ -541,8 +540,8 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     if (userAccount == null) {
       Account[] accounts = accountManager.getAccounts();
       for (final Account account : accounts) {
-        if (TextUtils.equals(account.name, getUserEmail())
-            && TextUtils.equals(account.type, Constants.ACCOUNT_TYPE)) {
+        if (TextUtils.equals(account.name, getUserEmail()) && TextUtils.equals(account.type,
+            Constants.ACCOUNT_TYPE)) {
           userAccount = account;
           break;
         }
@@ -609,38 +608,38 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     String email = callback.getUserEmail();
     String password = callback.getUserPassword();
     if (validateUserCredentials(callback, email, password)) {
-      CreateUserRequest.of(email, password, aptoideClientUuid.getUniqueIdentifier(), applicationContext)
-          .execute(oAuth -> {
-            if (oAuth.hasErrors()) {
-              if (oAuth.getErrors() != null && oAuth.getErrors().size() > 0) {
-                callback.onRegisterFail(
-                    ErrorsMapper.getWebServiceErrorMessageFromCode(oAuth.getErrors().get(0).code));
-                genericPleaseWaitDialog.dismiss();
-              } else {
-                callback.onRegisterFail(R.string.unknown_error);
-                genericPleaseWaitDialog.dismiss();
-              }
-            } else {
-              Bundle bundle = new Bundle();
-              bundle.putString(AptoideLoginUtils.APTOIDE_LOGIN_USER_NAME_KEY, email);
-              bundle.putString(AptoideLoginUtils.APTOIDE_LOGIN_PASSWORD_KEY, password);
-              bundle.putString(AptoideLoginUtils.APTOIDE_LOGIN_REFRESH_TOKEN_KEY,
-                  oAuth.getRefresh_token());
-              bundle.putString(AptoideLoginUtils.APTOIDE_LOGIN_ACCESS_TOKEN_KEY,
-                  oAuth.getAccessToken());
-              callback.onRegisterSuccess(bundle);
-              genericPleaseWaitDialog.dismiss();
-            }
-          }, e -> {
-            if (e instanceof NetworkErrorException) {
-              callback.onRegisterFail(R.string.unknown_error);
-            }
-            if (e instanceof SocketTimeoutException) {
-              loginUserCredentials(LoginMode.APTOIDE, email, password, null, context);
-            }
+      CreateUserRequest.of(email, password, aptoideClientUuid.getUniqueIdentifier(),
+          applicationContext, this).execute(oAuth -> {
+        if (oAuth.hasErrors()) {
+          if (oAuth.getErrors() != null && oAuth.getErrors().size() > 0) {
+            callback.onRegisterFail(
+                ErrorsMapper.getWebServiceErrorMessageFromCode(oAuth.getErrors().get(0).code));
             genericPleaseWaitDialog.dismiss();
-            e.printStackTrace();
-          }, true);
+          } else {
+            callback.onRegisterFail(R.string.unknown_error);
+            genericPleaseWaitDialog.dismiss();
+          }
+        } else {
+          Bundle bundle = new Bundle();
+          bundle.putString(AptoideLoginUtils.APTOIDE_LOGIN_USER_NAME_KEY, email);
+          bundle.putString(AptoideLoginUtils.APTOIDE_LOGIN_PASSWORD_KEY, password);
+          bundle.putString(AptoideLoginUtils.APTOIDE_LOGIN_REFRESH_TOKEN_KEY,
+              oAuth.getRefresh_token());
+          bundle.putString(AptoideLoginUtils.APTOIDE_LOGIN_ACCESS_TOKEN_KEY,
+              oAuth.getAccessToken());
+          callback.onRegisterSuccess(bundle);
+          genericPleaseWaitDialog.dismiss();
+        }
+      }, e -> {
+        if (e instanceof NetworkErrorException) {
+          callback.onRegisterFail(R.string.unknown_error);
+        }
+        if (e instanceof SocketTimeoutException) {
+          loginUserCredentials(LoginMode.APTOIDE, email, password, null, context);
+        }
+        genericPleaseWaitDialog.dismiss();
+        e.printStackTrace();
+      }, true);
     } else {
       genericPleaseWaitDialog.dismiss();
     }
@@ -702,13 +701,13 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
   }
 
   public void unsubscribeStore(String storeName) {
-    ChangeUserRepoSubscriptionRequest.of(storeName, false, applicationContext)
+    ChangeUserRepoSubscriptionRequest.of(storeName, false, this)
         .execute(genericResponseV3 -> Logger.d(TAG, "Successfully unsubscribed " + storeName),
             true);
   }
 
   public void subscribeStore(String storeName) {
-    ChangeUserRepoSubscriptionRequest.of(storeName, true, applicationContext)
+    ChangeUserRepoSubscriptionRequest.of(storeName, true, this)
         .execute(genericResponseV3 -> Logger.d(TAG, "Successfully subscribed " + storeName), true);
   }
 
@@ -721,7 +720,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
   }
 
   public Observable<List<Subscription>> getUserRepos() {
-    return GetUserRepoSubscriptionRequest.of(applicationContext)
+    return GetUserRepoSubscriptionRequest.of(this)
         .observe()
         .observeOn(AndroidSchedulers.mainThread())
         .map(getUserRepoSubscription -> getUserRepoSubscription.getSubscription());
@@ -781,7 +780,8 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
       // Creating the account on the device and setting the auth token we got
       // (Not setting the auth token will cause another call to the server to authenticate
       // the user)
-      SecureCoderDecoder secureCoderDecoder = new SecureCoderDecoder.Builder(applicationContext).create();
+      SecureCoderDecoder secureCoderDecoder =
+          new SecureCoderDecoder.Builder(applicationContext).create();
       String encryptPassword = secureCoderDecoder.encrypt(userPassword);
       try {
         accountManager.addAccountExplicitly(account, encryptPassword, null);
@@ -803,7 +803,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
   }
 
   public Observable<CheckUserCredentialsJson> refreshUserInfoData() {
-    return CheckUserCredentialsRequest.of(getAccessToken(), applicationContext)
+    return CheckUserCredentialsRequest.of(this)
         .observe()
         .observeOn(AndroidSchedulers.mainThread())
         .subscribeOn(Schedulers.io())

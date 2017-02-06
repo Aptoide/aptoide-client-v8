@@ -143,7 +143,7 @@ public class CreateUserActivity extends PermissionsBaseActivity
           getApplicationContext().getString(R.string.please_wait_upload));
       pleaseWaitDialog.show();
       subscriptions.add(CreateUserRequest.of("true", userEmail, username, userPassword, avatarPath,
-          aptoideClientUUID.getUniqueIdentifier(), this).observe().filter(answer -> {
+          aptoideClientUUID.getUniqueIdentifier(), accountManager).observe().filter(answer -> {
         if (answer.hasErrors()) {
           if (answer.getErrors() != null && answer.getErrors().size() > 0) {
             onRegisterFail(
@@ -187,7 +187,7 @@ public class CreateUserActivity extends PermissionsBaseActivity
       pleaseWaitDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
       pleaseWaitDialog.show();
       CreateUserRequest.of("true", userEmail, username, userPassword, avatarPath,
-          aptoideClientUUID.getUniqueIdentifier(), this).execute(answer -> {
+          aptoideClientUUID.getUniqueIdentifier(), accountManager).execute(answer -> {
         if (answer.hasErrors()) {
           if (answer.getErrors() != null && answer.getErrors().size() > 0) {
             onRegisterFail(

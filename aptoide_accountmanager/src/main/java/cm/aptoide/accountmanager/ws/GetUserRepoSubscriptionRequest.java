@@ -5,11 +5,9 @@
 
 package cm.aptoide.accountmanager.ws;
 
-import android.content.Context;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.GetUserRepoSubscription;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
-import cm.aptoide.pt.preferences.Application;
 import rx.Observable;
 
 /**
@@ -24,9 +22,8 @@ public class GetUserRepoSubscriptionRequest extends v3accountManager<GetUserRepo
     this.accountManager = accountManager;
   }
 
-  public static GetUserRepoSubscriptionRequest of(Context context) {
-    return new GetUserRepoSubscriptionRequest(AptoideAccountManager.getInstance(context,
-        Application.getConfiguration()));
+  public static GetUserRepoSubscriptionRequest of(AptoideAccountManager accountManager) {
+    return new GetUserRepoSubscriptionRequest(accountManager);
   }
 
   @Override protected Observable<GetUserRepoSubscription> loadDataFromNetwork(Interfaces interfaces,

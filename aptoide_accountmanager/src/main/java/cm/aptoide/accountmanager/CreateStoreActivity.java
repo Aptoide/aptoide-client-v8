@@ -100,9 +100,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
   private String from;
   private String storeRemoteUrl;
 
-  private AptoideClientUUID aptoideClientUUID =
-      new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-          DataProvider.getContext());
+  private AptoideClientUUID aptoideClientUUID;
 
   private int CREATE_STORE_REQUEST_CODE = 0; //1: all (Multipart)  2: user and theme 3:user 4/5:edit
   private AptoideAccountManager accountManager;
@@ -111,6 +109,8 @@ public class CreateStoreActivity extends PermissionsBaseActivity
     getData();
     super.onCreate(savedInstanceState);
     setContentView(getLayoutId());
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        getApplicationContext());
     accountManager = AptoideAccountManager.getInstance(this, Application.getConfiguration());
     mSubscriptions = new CompositeSubscription();
     bindViews();
@@ -264,7 +264,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
             progressDialog.show();
             mSubscriptions.add(
                 CheckUserCredentialsRequest.of(accountManager.getAccessToken(), storeName,
-                    CREATE_STORE_CODE, this).observe().subscribe(answer -> {
+                    accountManager).observe().subscribe(answer -> {
                   if (answer.hasErrors()) {
                     if (answer.getErrors() != null && answer.getErrors().size() > 0) {
                       progressDialog.dismiss();
@@ -293,8 +293,8 @@ public class CreateStoreActivity extends PermissionsBaseActivity
                     progressDialog.dismiss();
                     ShowMessage.asLongObservableSnack(this, R.string.create_store_store_created)
                         .subscribe(visibility -> {
-                          mSubscriptions.add(accountManager.refreshAndSaveUserInfoData()
-                              .subscribe(refreshed -> {
+                          mSubscriptions.add(
+                              accountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
                                 accountManager.sendLoginBroadcast();
                               }, Throwable::printStackTrace));
                           if (visibility == ShowMessage.DISMISSED) {
