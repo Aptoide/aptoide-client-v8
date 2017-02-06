@@ -88,11 +88,11 @@ public class AccessTokenRequestBodyAdapter implements AccessTokenBody {
       string = "";
     }
     return RequestBody.create(MediaType.parse("multipart/form-data"), string);
-  }  @Override public String getAccessToken() {
-    return accessToken;
   }
 
-
+  @Override public String getAccessToken() {
+    return accessToken;
+  }
 
   @Override public void setAccessToken(String accessToken) {
     getAccessToken();
