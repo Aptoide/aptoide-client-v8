@@ -195,6 +195,17 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
         });
   }
 
+  public void setupTitle(String title) {
+    if (hasToolbar()) {
+      getToolbar().setTitle(title);
+    }
+  }
+
+  private void setupRating(GetAppMeta.App data) {
+    ratingTotalsLayout.setup(data);
+    ratingBarsLayout.setup(data);
+  }
+
   private void fetchReviews() {
     ListReviewsRequest reviewsRequest =
         ListReviewsRequest.of(storeName, packageName, AptoideAccountManager.getAccessToken(),
@@ -205,17 +216,6 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
             new ListFullReviewsSuccessRequestListener(this), Throwable::printStackTrace);
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(false);
-  }
-
-  public void setupTitle(String title) {
-    if (hasToolbar()) {
-      getToolbar().setTitle(title);
-    }
-  }
-
-  private void setupRating(GetAppMeta.App data) {
-    ratingTotalsLayout.setup(data);
-    ratingBarsLayout.setup(data);
   }
 
   /*

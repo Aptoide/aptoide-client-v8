@@ -65,13 +65,6 @@ public class AptoideDownloadManager {
     return context;
   }
 
-  public static AptoideDownloadManager getInstance() {
-    if (instance == null) {
-      instance = new AptoideDownloadManager();
-    }
-    return instance;
-  }
-
   public void initDownloadService(Context context) {
     AptoideDownloadManager.context = context;
     createDownloadDirs();
@@ -115,26 +108,6 @@ public class AptoideDownloadManager {
     downloadAccessor.save(download);
 
     startNextDownload();
-  }
-
-  public Void pauseDownload(String md5) {
-    downloadAccessor.get(md5).first().map(download -> {
-      download.setOverallDownloadStatus(Download.PAUSED);
-      downloadAccessor.save(download);
-      for (int i = download.getFilesToDownload().size() - 1; i >= 0; i--) {
-        FileDownloader.getImpl().pause(download.getFilesToDownload().get(i).getDownloadId());
-      }
-      return download;
-    }).subscribe(download -> {
-      Logger.d(TAG, "Download with " + md5 + " paused");
-    }, throwable -> {
-      if (throwable instanceof DownloadNotFoundException) {
-        Logger.d(TAG, "there are no download to pause with the md5: " + md5);
-      } else {
-        throwable.printStackTrace();
-      }
-    });
-    return null;
   }
 
   /**
@@ -181,6 +154,13 @@ public class AptoideDownloadManager {
       }
     }
     return downloadStatus;
+  }
+
+  public static AptoideDownloadManager getInstance() {
+    if (instance == null) {
+      instance = new AptoideDownloadManager();
+    }
+    return instance;
   }
 
   public Observable<Download> getCurrentDownload() {
@@ -318,6 +298,26 @@ public class AptoideDownloadManager {
             throwable.printStackTrace();
           }
         });
+  }
+
+  public Void pauseDownload(String md5) {
+    downloadAccessor.get(md5).first().map(download -> {
+      download.setOverallDownloadStatus(Download.PAUSED);
+      downloadAccessor.save(download);
+      for (int i = download.getFilesToDownload().size() - 1; i >= 0; i--) {
+        FileDownloader.getImpl().pause(download.getFilesToDownload().get(i).getDownloadId());
+      }
+      return download;
+    }).subscribe(download -> {
+      Logger.d(TAG, "Download with " + md5 + " paused");
+    }, throwable -> {
+      if (throwable instanceof DownloadNotFoundException) {
+        Logger.d(TAG, "there are no download to pause with the md5: " + md5);
+      } else {
+        throwable.printStackTrace();
+      }
+    });
+    return null;
   }
 
   private void deleteDownloadFiles(Download download) {

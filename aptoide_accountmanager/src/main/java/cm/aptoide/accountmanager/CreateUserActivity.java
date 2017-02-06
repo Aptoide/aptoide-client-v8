@@ -78,11 +78,6 @@ public class CreateUserActivity extends PermissionsBaseActivity
     setupListeners();
   }
 
-  @Override protected void onDestroy() {
-    super.onDestroy();
-    mSubscriptions.clear();
-  }
-
   @Override protected String getActivityTitle() {
     return getString(R.string.create_user_title);
   }
@@ -91,13 +86,18 @@ public class CreateUserActivity extends PermissionsBaseActivity
     return R.layout.activity_create_user;
   }
 
-  @Override void showIconPropertiesError(String errors) {
-    mSubscriptions.add(GenericDialogs.createGenericOkMessage(this,
-        getString(R.string.image_requirements_error_popup_title), errors).subscribe());
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    mSubscriptions.clear();
   }
 
   @Override void loadImage(Uri imagePath) {
     ImageLoader.loadWithCircleTransform(imagePath, mAvatar);
+  }
+
+  @Override void showIconPropertiesError(String errors) {
+    mSubscriptions.add(GenericDialogs.createGenericOkMessage(this,
+        getString(R.string.image_requirements_error_popup_title), errors).subscribe());
   }
 
   private void bindViews() {

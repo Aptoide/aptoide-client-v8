@@ -74,8 +74,6 @@ public class AccessTokenRequestBodyAdapter implements AccessTokenBody {
     body.put("access_token", createBodyPartFromString(accessToken));
 
     return body;
-  }  @Override public String getAccessToken() {
-    return accessToken;
   }
 
   private RequestBody createBodyPartFromLong(Long longValue) {
@@ -83,8 +81,6 @@ public class AccessTokenRequestBodyAdapter implements AccessTokenBody {
       longValue = Long.valueOf(0);
     }
     return RequestBody.create(MediaType.parse("multipart/form-data"), String.valueOf(longValue));
-  }  @Override public void setAccessToken(String accessToken) {
-    getAccessToken();
   }
 
   private RequestBody createBodyPartFromString(String string) {
@@ -92,9 +88,13 @@ public class AccessTokenRequestBodyAdapter implements AccessTokenBody {
       string = "";
     }
     return RequestBody.create(MediaType.parse("multipart/form-data"), string);
+  }  @Override public String getAccessToken() {
+    return accessToken;
   }
 
 
 
-
+  @Override public void setAccessToken(String accessToken) {
+    getAccessToken();
+  }
 }
