@@ -19,14 +19,14 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
+import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.PostCommentForReview;
-import cm.aptoide.pt.dataprovider.ws.v7.PostCommentForTimelineArticle;
-import cm.aptoide.pt.dataprovider.ws.v7.store.PostCommentForStore;
+import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.BaseV7Response;
+import cm.aptoide.pt.model.v7.BaseV7EndlessResponse;
 import cm.aptoide.pt.model.v7.ListComments;
+import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -34,8 +34,10 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.util.CommentOperations;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.view.custom.HorizontalDividerItemDecoration;
+import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayableGroup;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.ProgressBarDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
 import cm.aptoide.pt.viewRateAndCommentReviews.CommentDialogFragment;
@@ -46,6 +48,7 @@ import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.ArrayList;
 import java.util.List;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
 // TODO: 21/12/2016 sithengineer refactor and split in multiple classes to list comments
@@ -62,7 +65,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
   private static final String ELEMENT_ID_AS_LONG = "element_id_as_long";
   private static final String URL_VAL = "url_val";
   private final AptoideClientUUID aptoideClientUUID;
-
+  // control setComment retry
+  protected long lastTotal;
   //
   // vars
   //
@@ -75,7 +79,6 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
   // store comments vars
   private long elementIdAsLong;
   private String storeName;
-
   //
   // views
   //
@@ -219,9 +222,9 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
       }
     });
     getRecyclerView().clearOnScrollListeners();
-    EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener =
-        new EndlessRecyclerOnScrollListener(getAdapter(), listCommentsRequest, listCommentsAction,
-            Throwable::printStackTrace, true);
+    EndlessRecyclerOnScrollListenerExtended endlessRecyclerOnScrollListener =
+        new EndlessRecyclerOnScrollListenerExtended(getAdapter(), listCommentsRequest,
+            listCommentsAction, Throwable::printStackTrace, true, this);
 
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(refresh);
@@ -406,5 +409,84 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
 
       return showSignInMessage();
     });
+  }
+}
+
+class EndlessRecyclerOnScrollListenerExtended extends EndlessRecyclerOnScrollListener {
+
+  private final CommentListFragment commentListFragment;
+  private boolean isFirstLoad;
+
+  public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListenerExtended(
+      BaseAdapter baseAdapter, V7<T, ? extends Endless> v7request,
+      Action1<T> successRequestListener, ErrorRequestListener errorRequestListener, boolean b,
+      CommentListFragment commentListFragment) {
+    super(baseAdapter, v7request, successRequestListener, errorRequestListener, b);
+    this.commentListFragment = commentListFragment;
+    this.isFirstLoad = true;
+  }
+
+  public void onLoadMore(boolean bypassCache) {
+    if (!loading) {
+      loading = true;
+      adapter.addDisplayable(new ProgressBarDisplayable());
+      v7request.observe(bypassCache).observeOn(AndroidSchedulers.mainThread()).flatMap(resp -> {
+        commentListFragment.lastTotal = resp.getTotal();
+        if (isFirstLoad && commentListFragment.lastTotal == 0) {
+          this.isFirstLoad = false;
+        } else if (isFirstLoad && commentListFragment.lastTotal == resp.getTotal()) {
+          this.isFirstLoad = false;
+          return Observable.error(new IllegalStateException());
+        }
+
+        return Observable.just(resp);
+      }).retryWhen(observable -> observable.<Throwable>flatMap(throwable -> {
+        if (throwable instanceof IllegalStateException) {
+          return Observable.just(throwable);
+        } else {
+          return Observable.error(throwable);
+        }
+      })).subscribe(response -> {
+        if (adapter.getItemCount() > 0) {
+          adapter.popDisplayable();
+        }
+        if (response.hasData()) {
+
+          stableData = response.hasStableTotal();
+          if (stableData) {
+            total = response.getTotal();
+            offset = response.getNextSize();
+          } else {
+            total += response.getTotal();
+            offset += response.getNextSize();
+          }
+          v7request.getBody().setOffset(offset);
+        }
+
+        if (onFirstLoadListener != null && !firstCallbackCalled) {
+          if (!onFirstLoadListener.call(response)) {
+            successRequestListener.call(response);
+          }
+          firstCallbackCalled = true;
+        } else {
+          // FIXME: 17/08/16 sithengineer use response.getList() instead
+          successRequestListener.call(response);
+        }
+
+        if (!hasMoreElements() && onEndOfListReachedListener != null && !endCallbackCalled) {
+          onEndOfListReachedListener.call();
+          endCallbackCalled = true;
+        }
+
+        loading = false;
+      }, error -> {
+        //remove spinner if webservice respond with error
+        if (adapter.getItemCount() > 0) {
+          adapter.popDisplayable();
+        }
+        errorRequestListener.onError(error);
+        loading = false;
+      });
+    }
   }
 }
