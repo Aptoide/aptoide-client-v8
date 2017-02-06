@@ -164,6 +164,7 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
   }
 
   @Override protected void onDestroy() {
+    accountManager.removeLogins();
     subscriptions.clear();
     super.onDestroy();
   }
