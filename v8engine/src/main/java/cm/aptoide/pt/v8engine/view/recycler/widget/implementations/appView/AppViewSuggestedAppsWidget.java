@@ -28,9 +28,6 @@ import java.util.List;
     recyclerView = (RecyclerView) itemView.findViewById(R.id.appview_suggested_recycler_view);
   }
 
-  @Override public void unbindView() {
-  }
-
   @Override public void bindView(AppViewSuggestedAppsDisplayable displayable) {
     final List<MinimalAd> ads = displayable.getPojo();
 

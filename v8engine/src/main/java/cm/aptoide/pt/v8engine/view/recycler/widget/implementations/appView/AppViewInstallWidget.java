@@ -130,10 +130,6 @@ import rx.android.schedulers.AndroidSchedulers;
     notLatestAvailableText = itemView.findViewById(R.id.not_latest_available_text);
   }
 
-  @Override public void unbindView() {
-    super.unbindView();
-  }
-
   @Override public void bindView(AppViewInstallDisplayable displayable) {
     displayable.setInstallButton(actionButton);
 

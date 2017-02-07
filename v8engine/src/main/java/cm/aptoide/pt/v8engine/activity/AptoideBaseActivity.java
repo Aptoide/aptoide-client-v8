@@ -120,21 +120,6 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
     Analytics.Lifecycle.Activity.onResume(this);
   }
 
-  public boolean is_resumed() {
-    return _resumed;
-  }
-
-  public NavigationManagerV4 getNavigationManager() {
-    return navManager;
-  }
-
-  //
-  // code to support android M permission system
-  //
-  // android 6 permission system
-  // consider using https://github.com/hotchemi/PermissionsDispatcher
-  //
-
   @TargetApi(Build.VERSION_CODES.M) @Override
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
       @NonNull int[] grantResults) {
@@ -183,6 +168,21 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         break;
     }
+  }
+
+  public boolean is_resumed() {
+    return _resumed;
+  }
+
+  //
+  // code to support android M permission system
+  //
+  // android 6 permission system
+  // consider using https://github.com/hotchemi/PermissionsDispatcher
+  //
+
+  public NavigationManagerV4 getNavigationManager() {
+    return navManager;
   }
 
   /**

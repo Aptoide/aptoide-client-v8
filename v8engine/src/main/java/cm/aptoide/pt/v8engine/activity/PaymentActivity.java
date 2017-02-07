@@ -244,7 +244,7 @@ public class PaymentActivity extends ActivityView implements PaymentView {
   }
 
   @Override public void showProduct(AptoideProduct product) {
-    ImageLoader.load(product.getIcon(), productIcon);
+    ImageLoader.with(this).load(product.getIcon(), productIcon);
     productName.setText(product.getTitle());
     productDescription.setText(product.getDescription());
   }

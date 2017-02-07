@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -50,12 +51,15 @@ import com.jakewharton.rxbinding.view.RxView;
       getNavigationManager().navigateTo(fragment);
     }));
 
+    final Context context = getContext();
     if (store.getStoreId() == -1 || TextUtils.isEmpty(store.getIconPath())) {
-      ImageLoader.loadWithShadowCircleTransform(R.drawable.ic_avatar_apps, storeAvatar,
-          StoreThemeEnum.get(store.getTheme()).getStoreHeaderInt());
+      ImageLoader.with(context)
+          .loadWithShadowCircleTransform(R.drawable.ic_avatar_apps, storeAvatar,
+              StoreThemeEnum.get(store.getTheme()).getStoreHeaderInt());
     } else {
-      ImageLoader.loadWithShadowCircleTransform(store.getIconPath(), storeAvatar,
-          StoreThemeEnum.get(store.getTheme()).getStoreHeaderInt());
+      ImageLoader.with(context)
+          .loadWithShadowCircleTransform(store.getIconPath(), storeAvatar,
+              StoreThemeEnum.get(store.getTheme()).getStoreHeaderInt());
     }
   }
 }

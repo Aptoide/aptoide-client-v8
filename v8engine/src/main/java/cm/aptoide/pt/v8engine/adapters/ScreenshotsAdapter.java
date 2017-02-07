@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 08/07/2016.
- */
-
 package cm.aptoide.pt.v8engine.adapters;
 
 import android.content.Context;
@@ -76,13 +71,13 @@ public class ScreenshotsAdapter
     return (videos != null ? videos.size() : 0) + (screenshots != null ? screenshots.size() : 0);
   }
 
-  public static class ScreenshotsViewHolder extends RecyclerView.ViewHolder {
+  static class ScreenshotsViewHolder extends RecyclerView.ViewHolder {
 
     private ImageView screenshot;
     private ImageView play_button;
     private FrameLayout media_layout;
 
-    public ScreenshotsViewHolder(View itemView) {
+    ScreenshotsViewHolder(View itemView) {
       super(itemView);
       assignViews(itemView);
     }
@@ -95,15 +90,16 @@ public class ScreenshotsAdapter
 
     public void bindViews(GetAppMeta.Media.Video item) {
 
-      Context mainContext = V8Engine.getContext();
+      final Context context = itemView.getContext();
 
-      ImageLoader.load(item.getThumbnail(), R.drawable.placeholder_300x300, screenshot);
+      ImageLoader.with(context)
+          .load(item.getThumbnail(), R.drawable.placeholder_300x300, screenshot);
 
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
         media_layout.setForeground(
-            mainContext.getResources().getDrawable(R.color.overlay_black, mainContext.getTheme()));
+            context.getResources().getDrawable(R.color.overlay_black, context.getTheme()));
       } else {
-        media_layout.setForeground(mainContext.getResources().getDrawable(R.color.overlay_black));
+        media_layout.setForeground(context.getResources().getDrawable(R.color.overlay_black));
       }
 
       play_button.setVisibility(View.VISIBLE);
@@ -111,18 +107,21 @@ public class ScreenshotsAdapter
       itemView.setOnClickListener(v -> {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(item.getUrl()));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        mainContext.startActivity(intent);
+        context.startActivity(intent);
       });
     }
 
     public void bindViews(GetAppMeta.Media.Screenshot item, final int position,
         final ArrayList<String> imagesUris) {
 
+      final Context context = itemView.getContext();
+
       media_layout.setForeground(null);
       play_button.setVisibility(View.GONE);
 
-      ImageLoader.loadScreenshotToThumb(item.getUrl(), item.getOrientation(),
-          getPlaceholder(item.getOrientation()), screenshot);
+      ImageLoader.with(context)
+          .loadScreenshotToThumb(item.getUrl(), item.getOrientation(),
+              getPlaceholder(item.getOrientation()), screenshot);
 
       itemView.setOnClickListener(v -> {
         // TODO improve this call

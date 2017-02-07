@@ -110,7 +110,7 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
     this.appSize.setText(String.format(context.getString(R.string.app_size),
         AptoideUtils.StringU.formatBytes(appData.getFile().getFilesize(), false)));
 
-    ImageLoader.load(appData.getIcon(), this.appImage);
+    ImageLoader.with(context).load(appData.getIcon(), this.appImage);
 
     // check if app is installed. if it is, show open button
 
@@ -125,8 +125,7 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
       installButton.setBackgroundDrawable(d);
     }
 
-    installButton.setText(
-        getContext().getString(isAppInstalled ? R.string.open : R.string.install));
+    installButton.setText(context.getString(isAppInstalled ? R.string.open : R.string.install));
 
     compositeSubscription.add(RxView.clicks(installButton).subscribe(a -> {
       if (isAppInstalled) {

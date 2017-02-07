@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ImageView;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -47,7 +48,8 @@ import rx.functions.Action1;
 
   @Override public void bindView(GridDisplayDisplayable displayable) {
     GetStoreDisplays.EventImage pojo = displayable.getPojo();
-    ImageLoader.load(pojo.getGraphic(), imageView);
+    final FragmentActivity context = getContext();
+    ImageLoader.with(context).load(pojo.getGraphic(), imageView);
 
     final Action1<Void> imageClickHandler = v -> {
       Event event = pojo.getEvent();
@@ -59,12 +61,6 @@ import rx.functions.Action1;
       } else {
         switch (name) {
           case facebook:
-            //@Cleanup Realm realm = DeprecatedDatabase.get();
-            //Installed installedFacebook =
-            //    DeprecatedDatabase.InstalledQ.get(HomeFragment.FACEBOOK_PACKAGE_NAME, realm);
-            //sendActionEvent(AptoideUtils.SocialLinksU.getFacebookPageURL(
-            //    installedFacebook == null ? 0 : installedFacebook.getVersionCode(),
-            //    event.getAction()));
             InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
             compositeSubscription.add(installedAccessor.get(HomeFragment.FACEBOOK_PACKAGE_NAME)
                 .subscribe(installedFacebook -> {
@@ -83,7 +79,8 @@ import rx.functions.Action1;
         }
       }
     };
-    compositeSubscription.add(RxView.clicks(imageView).subscribe(imageClickHandler));
+    compositeSubscription.add(RxView.clicks(imageView)
+        .subscribe(imageClickHandler, throwable -> CrashReport.getInstance().log(throwable)));
   }
 
   private void sendActionEvent(String eventActionUrl) {

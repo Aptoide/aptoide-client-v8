@@ -80,7 +80,8 @@ public class SharePreviewDialog {
 
       articleTitle.setText(((ArticleDisplayable) displayable).getArticleTitle());
       relatedTo.setVisibility(View.GONE);
-      ImageLoader.load(((ArticleDisplayable) displayable).getThumbnailUrl(), thumbnail);
+      ImageLoader.with(context)
+          .load(((ArticleDisplayable) displayable).getThumbnailUrl(), thumbnail);
     } else if (displayable instanceof VideoDisplayable) {
       view = factory.inflate(R.layout.displayable_social_timeline_social_video_preview, null);
       TextView articleTitle =
@@ -92,7 +93,7 @@ public class SharePreviewDialog {
       articleTitle.setText(((VideoDisplayable) displayable).getVideoTitle());
 
       relatedTo.setVisibility(View.GONE);
-      ImageLoader.load(((VideoDisplayable) displayable).getThumbnailUrl(), thumbnail);
+      ImageLoader.with(context).load(((VideoDisplayable) displayable).getThumbnailUrl(), thumbnail);
     } else if (displayable instanceof StoreLatestAppsDisplayable) {
       view = factory.inflate(R.layout.displayable_social_timeline_social_store_latest_apps_preview,
           null);
@@ -106,8 +107,9 @@ public class SharePreviewDialog {
       Map<Long, String> appsPackages = new HashMap<>();
 
       sharedStoreName.setText(((StoreLatestAppsDisplayable) displayable).getStoreName());
-      ImageLoader.loadWithShadowCircleTransform(
-          ((StoreLatestAppsDisplayable) displayable).getAvatarUrl(), sharedStoreAvatar);
+      ImageLoader.with(context)
+          .loadWithShadowCircleTransform(((StoreLatestAppsDisplayable) displayable).getAvatarUrl(),
+              sharedStoreAvatar);
       View latestAppView;
       ImageView latestAppIcon;
       for (StoreLatestAppsDisplayable.LatestApp latestApp : ((StoreLatestAppsDisplayable) displayable)
@@ -115,7 +117,7 @@ public class SharePreviewDialog {
         latestAppView =
             factory.inflate(R.layout.social_timeline_latest_app, latestAppsContainer, false);
         latestAppIcon = (ImageView) latestAppView.findViewById(R.id.social_timeline_latest_app);
-        ImageLoader.load(latestApp.getIconUrl(), latestAppIcon);
+        ImageLoader.with(context).load(latestApp.getIconUrl(), latestAppIcon);
         latestAppsContainer.addView(latestAppView);
         apps.put(latestAppView, latestApp.getAppId());
         appsPackages.put(latestApp.getAppId(), latestApp.getPackageName());
@@ -131,7 +133,8 @@ public class SharePreviewDialog {
           (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_name);
       TextView getApp = (TextView) view.findViewById(
           R.id.displayable_social_timeline_recommendation_get_app_button);
-      ImageLoader.load(((RecommendationDisplayable) displayable).getAppIcon(), appIcon);
+      ImageLoader.with(context)
+          .load(((RecommendationDisplayable) displayable).getAppIcon(), appIcon);
       appName.setText(((RecommendationDisplayable) displayable).getAppName());
       appSubTitle.setText(AptoideUtils.StringU.getFormattedString(
           R.string.displayable_social_timeline_recommendation_atptoide_team_recommends, ""));
@@ -152,7 +155,7 @@ public class SharePreviewDialog {
           (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_name);
       TextView getApp = (TextView) view.findViewById(
           R.id.displayable_social_timeline_recommendation_get_app_button);
-      ImageLoader.load(((AppUpdateDisplayable) displayable).getAppIconUrl(), appIcon);
+      ImageLoader.with(context).load(((AppUpdateDisplayable) displayable).getAppIconUrl(), appIcon);
       appName.setText(((AppUpdateDisplayable) displayable).getAppName());
       appSubTitle.setText(AptoideUtils.StringU.getFormattedString(
           R.string.displayable_social_timeline_recommendation_atptoide_team_recommends, ""));
@@ -173,7 +176,7 @@ public class SharePreviewDialog {
           (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_name);
       TextView getApp = (TextView) view.findViewById(
           R.id.displayable_social_timeline_recommendation_get_app_button);
-      ImageLoader.load(((SimilarDisplayable) displayable).getAppIcon(), appIcon);
+      ImageLoader.with(context).load(((SimilarDisplayable) displayable).getAppIcon(), appIcon);
       appName.setText(((SimilarDisplayable) displayable).getAppName());
       appSubTitle.setText(AptoideUtils.StringU.getFormattedString(
           R.string.displayable_social_timeline_recommendation_atptoide_team_recommends, ""));
@@ -193,11 +196,12 @@ public class SharePreviewDialog {
           (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_name);
       TextView getApp = (TextView) view.findViewById(
           R.id.displayable_social_timeline_recommendation_get_app_button);
-      ImageLoader.load(((AppViewInstallDisplayable) displayable).getPojo()
-          .getNodes()
-          .getMeta()
-          .getData()
-          .getIcon(), appIcon);
+      ImageLoader.with(context)
+          .load(((AppViewInstallDisplayable) displayable).getPojo()
+              .getNodes()
+              .getMeta()
+              .getData()
+              .getIcon(), appIcon);
       appName.setText(((AppViewInstallDisplayable) displayable).getPojo()
           .getNodes()
           .getMeta()
@@ -221,7 +225,8 @@ public class SharePreviewDialog {
       articleTitle.setText(((SocialArticleDisplayable) displayable).getArticleTitle());
       relatedTo.setVisibility(View.GONE);
 
-      ImageLoader.load(((SocialArticleDisplayable) displayable).getThumbnailUrl(), thumbnail);
+      ImageLoader.with(context)
+          .load(((SocialArticleDisplayable) displayable).getThumbnailUrl(), thumbnail);
     } else if (displayable instanceof SocialVideoDisplayable) {
       view = factory.inflate(R.layout.displayable_social_timeline_social_video_preview, null);
       TextView articleTitle =
@@ -234,7 +239,8 @@ public class SharePreviewDialog {
 
       relatedTo.setVisibility(View.GONE);
 
-      ImageLoader.load(((SocialVideoDisplayable) displayable).getThumbnailUrl(), thumbnail);
+      ImageLoader.with(context)
+          .load(((SocialVideoDisplayable) displayable).getThumbnailUrl(), thumbnail);
     } else if (displayable instanceof SocialRecommendationDisplayable) {
       view =
           factory.inflate(R.layout.displayable_social_timeline_social_recommendation_preview, null);
@@ -247,7 +253,8 @@ public class SharePreviewDialog {
 
       TextView getApp = (TextView) view.findViewById(
           R.id.displayable_social_timeline_recommendation_get_app_button);
-      ImageLoader.load(((SocialRecommendationDisplayable) displayable).getAppIcon(), appIcon);
+      ImageLoader.with(context)
+          .load(((SocialRecommendationDisplayable) displayable).getAppIcon(), appIcon);
       appName.setText(((SocialRecommendationDisplayable) displayable).getAppName());
       appSubTitle.setText(AptoideUtils.StringU.getFormattedString(
           R.string.displayable_social_timeline_recommendation_atptoide_team_recommends, ""));
@@ -270,9 +277,10 @@ public class SharePreviewDialog {
 
       sharedStoreName.setText(
           ((SocialStoreLatestAppsDisplayable) displayable).getSharedStore().getName());
-      ImageLoader.loadWithShadowCircleTransform(
-          ((SocialStoreLatestAppsDisplayable) displayable).getSharedStore().getAvatar(),
-          sharedStoreAvatar);
+      ImageLoader.with(context)
+          .loadWithShadowCircleTransform(
+              ((SocialStoreLatestAppsDisplayable) displayable).getSharedStore().getAvatar(),
+              sharedStoreAvatar);
       View latestAppView;
       ImageView latestAppIcon;
       for (SocialStoreLatestAppsDisplayable.LatestApp latestApp : ((SocialStoreLatestAppsDisplayable) displayable)
@@ -280,7 +288,7 @@ public class SharePreviewDialog {
         latestAppView =
             factory.inflate(R.layout.social_timeline_latest_app, latestAppsContainer, false);
         latestAppIcon = (ImageView) latestAppView.findViewById(R.id.social_timeline_latest_app);
-        ImageLoader.load(latestApp.getIconUrl(), latestAppIcon);
+        ImageLoader.with(context).load(latestApp.getIconUrl(), latestAppIcon);
         latestAppsContainer.addView(latestAppView);
         apps.put(latestAppView, latestApp.getAppId());
         appsPackages.put(latestApp.getAppId(), latestApp.getPackageName());
@@ -296,7 +304,8 @@ public class SharePreviewDialog {
           (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_name);
       TextView getApp = (TextView) view.findViewById(
           R.id.displayable_social_timeline_recommendation_get_app_button);
-      ImageLoader.load(((SocialInstallDisplayable) displayable).getAppIcon(), appIcon);
+      ImageLoader.with(context)
+          .load(((SocialInstallDisplayable) displayable).getAppIcon(), appIcon);
       appName.setText(((SocialInstallDisplayable) displayable).getAppName());
       appSubTitle.setText(AptoideUtils.StringU.getFormattedString(
           R.string.displayable_social_timeline_recommendation_atptoide_team_recommends, ""));
@@ -336,11 +345,11 @@ public class SharePreviewDialog {
 
       if (!(displayable instanceof SocialCardDisplayable)) {
         storeName.setText(AptoideAccountManager.getUserData().getUserRepo());
-        setCardHeader(storeName, userName, storeAvatar, userAvatar);
+        setCardHeader(context, storeName, userName, storeAvatar, userAvatar);
       } else {
         sharedBy = (TextView) view.findViewById(R.id.social_shared_by);
         setSharedByText(context, sharedBy);
-        setSocialCardHeader(storeName, userName, storeAvatar, userAvatar);
+        setSocialCardHeader(context, storeName, userName, storeAvatar, userAvatar);
       }
       if (!ManagerPreferences.getUserAccessConfirmed()) {
         privacyText.setOnClickListener(click -> checkBox.toggle());
@@ -353,26 +362,30 @@ public class SharePreviewDialog {
     return alertadd;
   }
 
-  private void setCardHeader(TextView storeName, TextView userName, ImageView storeAvatar,
-      ImageView userAvatar) {
+  private void setCardHeader(Context context, TextView storeName, TextView userName,
+      ImageView storeAvatar, ImageView userAvatar) {
     if (AptoideAccountManager.getUserData().getUserRepo() != null) {
       if (BaseActivity.UserAccessState.PUBLIC.toString()
           .equals(ManagerPreferences.getUserAccess())) {
         storeAvatar.setVisibility(View.VISIBLE);
         userAvatar.setVisibility(View.VISIBLE);
-        ImageLoader.loadWithShadowCircleTransform(
-            AptoideAccountManager.getUserData().getUserAvatarRepo(), storeAvatar);
-        ImageLoader.loadWithShadowCircleTransform(
-            AptoideAccountManager.getUserData().getUserAvatar(), userAvatar);
+        ImageLoader.with(context)
+            .loadWithShadowCircleTransform(AptoideAccountManager.getUserData().getUserAvatarRepo(),
+                storeAvatar);
+        ImageLoader.with(context)
+            .loadWithShadowCircleTransform(AptoideAccountManager.getUserData().getUserAvatar(),
+                userAvatar);
         storeName.setText(AptoideAccountManager.getUserData().getUserRepo());
         userName.setText(AptoideAccountManager.getUserData().getUserName());
       } else {
         storeAvatar.setVisibility(View.VISIBLE);
         userAvatar.setVisibility(View.INVISIBLE);
-        ImageLoader.loadWithShadowCircleTransform(
-            AptoideAccountManager.getUserData().getUserAvatarRepo(), storeAvatar);
-        ImageLoader.loadWithShadowCircleTransform(
-            AptoideAccountManager.getUserData().getUserAvatar(), userAvatar);
+        ImageLoader.with(context)
+            .loadWithShadowCircleTransform(AptoideAccountManager.getUserData().getUserAvatarRepo(),
+                storeAvatar);
+        ImageLoader.with(context)
+            .loadWithShadowCircleTransform(AptoideAccountManager.getUserData().getUserAvatar(),
+                userAvatar);
         storeName.setText(AptoideAccountManager.getUserData().getUserRepo());
         userName.setText(AptoideAccountManager.getUserData().getUserName());
         userName.setVisibility(View.GONE);
@@ -381,8 +394,9 @@ public class SharePreviewDialog {
       if ((BaseActivity.UserAccessState.PUBLIC.toString()).equals(
           ManagerPreferences.getUserAccess())) {
         storeAvatar.setVisibility(View.VISIBLE);
-        ImageLoader.loadWithShadowCircleTransform(
-            AptoideAccountManager.getUserData().getUserAvatar(), storeAvatar);
+        ImageLoader.with(context)
+            .loadWithShadowCircleTransform(AptoideAccountManager.getUserData().getUserAvatar(),
+                storeAvatar);
         userAvatar.setVisibility(View.INVISIBLE);
         storeName.setText(AptoideAccountManager.getUserData().getUserName());
         userName.setVisibility(View.GONE);
@@ -402,8 +416,8 @@ public class SharePreviewDialog {
     }
   }
 
-  private void setSocialCardHeader(TextView storeName, TextView userName, ImageView storeAvatar,
-      ImageView userAvatar) {
+  private void setSocialCardHeader(Context context, TextView storeName, TextView userName,
+      ImageView storeAvatar, ImageView userAvatar) {
     if (((SocialCardDisplayable) displayable).getStore() != null) {
       storeName.setVisibility(View.VISIBLE);
       storeAvatar.setVisibility(View.VISIBLE);
@@ -411,8 +425,9 @@ public class SharePreviewDialog {
         storeName.setText(((SocialCardDisplayable) displayable).getStore().getName());
       }
       if (((SocialCardDisplayable) displayable).getStore().getAvatar() != null) {
-        ImageLoader.loadWithShadowCircleTransform(
-            ((SocialCardDisplayable) displayable).getStore().getAvatar(), storeAvatar);
+        ImageLoader.with(context)
+            .loadWithShadowCircleTransform(
+                ((SocialCardDisplayable) displayable).getStore().getAvatar(), storeAvatar);
       }
 
       if (((SocialCardDisplayable) displayable).getUser() != null) {
@@ -423,8 +438,9 @@ public class SharePreviewDialog {
         }
 
         if (((SocialCardDisplayable) displayable).getUser().getAvatar() != null) {
-          ImageLoader.loadWithShadowCircleTransform(
-              ((SocialCardDisplayable) displayable).getUser().getAvatar(), userAvatar);
+          ImageLoader.with(context)
+              .loadWithShadowCircleTransform(
+                  ((SocialCardDisplayable) displayable).getUser().getAvatar(), userAvatar);
         }
       } else {
         userName.setVisibility(View.GONE);
@@ -442,8 +458,9 @@ public class SharePreviewDialog {
         }
 
         if (((SocialCardDisplayable) displayable).getUser().getAvatar() != null) {
-          ImageLoader.loadWithShadowCircleTransform(
-              ((SocialCardDisplayable) displayable).getUser().getAvatar(), storeAvatar);
+          ImageLoader.with(context)
+              .loadWithShadowCircleTransform(
+                  ((SocialCardDisplayable) displayable).getUser().getAvatar(), storeAvatar);
         }
       } else {
         storeName.setVisibility(View.GONE);
@@ -489,7 +506,7 @@ public class SharePreviewDialog {
         (TextView) view.findViewById(R.id.displayable_social_timeline_recommendation_name);
     TextView getApp = (TextView) view.findViewById(
         R.id.displayable_social_timeline_recommendation_get_app_button);
-    ImageLoader.load(appIconUrl, appIconV);
+    ImageLoader.with(context).load(appIconUrl, appIconV);
     appNameV.setText(appName);
     appSubTitle.setText(AptoideUtils.StringU.getFormattedString(
         R.string.displayable_social_timeline_recommendation_atptoide_team_recommends, ""));
@@ -522,7 +539,7 @@ public class SharePreviewDialog {
     alertadd.setTitle(R.string.social_timeline_you_will_share);
 
     storeName.setText(AptoideAccountManager.getUserData().getUserRepo());
-    setCardHeader(storeName, userName, storeAvatar, userAvatar);
+    setCardHeader(context, storeName, userName, storeAvatar, userAvatar);
 
     if (!ManagerPreferences.getUserAccessConfirmed()) {
       privacyText.setOnClickListener(click -> checkBox.toggle());

@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.graphics.Color;
+import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -24,6 +25,7 @@ import rx.functions.Action1;
 
 @Displayables({ GridStoreDisplayable.class }) public class GridStoreWidget
     extends Widget<GridStoreDisplayable> {
+
   private ImageView storeAvatar;
   private TextView storeName;
   private LinearLayout storeLayout;
@@ -35,11 +37,7 @@ import rx.functions.Action1;
   @Override protected void assignViews(View itemView) {
     storeAvatar = (ImageView) itemView.findViewById(R.id.store_avatar_row);
     storeName = (TextView) itemView.findViewById(R.id.store_name_row);
-    //storeUnsubscribe = (TextView) itemView.findViewById(R.id.store_unsubscribe_row);
     storeLayout = (LinearLayout) itemView.findViewById(R.id.store_main_layout_row);
-    //storeSubscribers = (TextView) itemView.findViewById(R.id.store_subscribers);
-    //storeDownloads = (TextView) itemView.findViewById(R.id.store_downloads);
-    //infoLayout = (LinearLayout) itemView.findViewById(R.id.store_layout_subscribers);
   }
 
   @Override public void bindView(GridStoreDisplayable gridStoreDisplayable) {
@@ -47,6 +45,7 @@ import rx.functions.Action1;
     final Store store = gridStoreDisplayable.getPojo();
 
     storeName.setText(store.getName());
+
     storeLayout.setBackgroundColor(Color.WHITE);
 
     final Action1<Void> handleStoreClick = v -> getNavigationManager().navigateTo(
@@ -55,12 +54,15 @@ import rx.functions.Action1;
                 store.getAppearance().getTheme()));
     compositeSubscription.add(RxView.clicks(storeLayout).subscribe(handleStoreClick));
 
+    final FragmentActivity context = getContext();
     if (store.getId() == -1 || TextUtils.isEmpty(store.getAvatar())) {
-      ImageLoader.loadWithShadowCircleTransform(R.drawable.ic_avatar_apps, storeAvatar,
-          StoreThemeEnum.get(store).getStoreHeaderInt());
+      ImageLoader.with(context)
+          .loadWithShadowCircleTransform(R.drawable.ic_avatar_apps, storeAvatar,
+              StoreThemeEnum.get(store).getStoreHeaderInt());
     } else {
-      ImageLoader.loadWithShadowCircleTransform(store.getAvatar(), storeAvatar,
-          StoreThemeEnum.get(store).getStoreHeaderInt());
+      ImageLoader.with(context)
+          .loadWithShadowCircleTransform(store.getAvatar(), storeAvatar,
+              StoreThemeEnum.get(store).getStoreHeaderInt());
     }
   }
 }

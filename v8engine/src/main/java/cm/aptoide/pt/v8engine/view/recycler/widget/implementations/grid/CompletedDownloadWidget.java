@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.content.res.ColorStateList;
 import android.os.Build;
+import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -50,10 +51,11 @@ import rx.schedulers.Schedulers;
   }
 
   @Override public void bindView(CompletedDownloadDisplayable displayable) {
+    final FragmentActivity context = getContext();
     Download download = displayable.getDownload();
     appName.setText(download.getAppName());
     if (!TextUtils.isEmpty(download.getIcon())) {
-      ImageLoader.load(download.getIcon(), appIcon);
+      ImageLoader.with(context).load(download.getIcon(), appIcon);
     }
 
     //save original colors
@@ -66,8 +68,8 @@ import rx.schedulers.Schedulers;
     compositeSubscription.add(RxView.clicks(itemView)
         .flatMap(click -> displayable.downloadStatus()
             .filter(status -> status == Download.COMPLETED)
-            .flatMap(status -> displayable.installOrOpenDownload(getContext(),
-                (PermissionRequest) getContext())))
+            .flatMap(
+                status -> displayable.installOrOpenDownload(context, (PermissionRequest) context)))
         .retry()
         .subscribe(success -> {
         }, throwable -> throwable.printStackTrace()));
@@ -75,14 +77,13 @@ import rx.schedulers.Schedulers;
     compositeSubscription.add(RxView.clicks(resumeDownloadButton)
         .flatMap(click -> displayable.downloadStatus()
             .filter(status -> status == Download.PAUSED || status == Download.ERROR)
-            .flatMap(status -> displayable.resumeDownload(getContext(),
-                (PermissionRequest) getContext())))
+            .flatMap(status -> displayable.resumeDownload(context, (PermissionRequest) context)))
         .retry()
         .subscribe(success -> {
         }, throwable -> throwable.printStackTrace()));
 
     compositeSubscription.add(RxView.clicks(cancelDownloadButton)
-        .subscribe(click -> displayable.removeDownload(getContext()), err -> {
+        .subscribe(click -> displayable.removeDownload(context), err -> {
           CrashReport.getInstance().log(err);
         }));
 
@@ -100,15 +101,18 @@ import rx.schedulers.Schedulers;
   }
 
   private void updateStatus(Download download) {
+    final FragmentActivity context = getContext();
     if (download.getOverallDownloadStatus() == Download.ERROR) {
+      int statusTextColor;
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        status.setTextColor(getContext().getColor(R.color.red_700));
+        statusTextColor = context.getColor(R.color.red_700);
       } else {
-        status.setTextColor(getContext().getResources().getColor(R.color.red_700));
+        statusTextColor = context.getResources().getColor(R.color.red_700);
       }
+      status.setTextColor(statusTextColor);
     } else {
       status.setTextColor(defaultTextViewColor);
     }
-    status.setText(download.getStatusName(itemView.getContext()));
+    status.setText(download.getStatusName(context));
   }
 }

@@ -23,6 +23,14 @@ public abstract class AptoideSimpleFragmentActivity extends AptoideBaseActivity
 
   protected abstract Fragment createFragment();
 
+  @Override public int getContentViewId() {
+    return R.layout.frame_layout;
+  }
+
+  @Override protected String getAnalyticsScreenName() {
+    return null;
+  }
+
   protected Fragment getCurrentFragment() {
     if (getSupportFragmentManager().getFragments() != null
         && getSupportFragmentManager().getFragments().size() > 0) {
@@ -47,13 +55,5 @@ public abstract class AptoideSimpleFragmentActivity extends AptoideBaseActivity
 
   @Override public void setupToolbar() {
     // does nothing
-  }
-
-  @Override public int getContentViewId() {
-    return R.layout.frame_layout;
-  }
-
-  @Override protected String getAnalyticsScreenName() {
-    return null;
   }
 }

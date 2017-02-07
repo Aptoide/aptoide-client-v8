@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.timeline;
 
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.ImageView;
@@ -59,16 +60,19 @@ public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayab
 
   @Override public void bindView(SocialInstallDisplayable displayable) {
     super.bindView(displayable);
+    final FragmentActivity context = getContext();
     if (displayable.getStore() != null) {
       storeName.setVisibility(View.VISIBLE);
       storeName.setText(displayable.getStore().getName());
       storeAvatar.setVisibility(View.VISIBLE);
-      ImageLoader.loadWithShadowCircleTransform(displayable.getStore().getAvatar(), storeAvatar);
+      ImageLoader.with(context)
+          .loadWithShadowCircleTransform(displayable.getStore().getAvatar(), storeAvatar);
       if (displayable.getUser() != null) {
         userName.setVisibility(View.VISIBLE);
         userName.setText(displayable.getUser().getName());
         userAvatar.setVisibility(View.VISIBLE);
-        ImageLoader.loadWithShadowCircleTransform(displayable.getUser().getAvatar(), userAvatar);
+        ImageLoader.with(context)
+            .loadWithShadowCircleTransform(displayable.getUser().getAvatar(), userAvatar);
       } else {
         userName.setVisibility(View.GONE);
         userAvatar.setVisibility(View.GONE);
@@ -80,19 +84,20 @@ public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayab
         storeName.setVisibility(View.VISIBLE);
         storeName.setText(displayable.getUser().getName());
         storeAvatar.setVisibility(View.VISIBLE);
-        ImageLoader.loadWithShadowCircleTransform(displayable.getUser().getAvatar(), storeAvatar);
+        ImageLoader.with(context)
+            .loadWithShadowCircleTransform(displayable.getUser().getAvatar(), storeAvatar);
       }
     }
     setCardViewMargin(displayable, cardView);
 
-    ImageLoader.load(displayable.getAppIcon(), appIcon);
+    ImageLoader.with(context).load(displayable.getAppIcon(), appIcon);
 
     showFullSocialBar(displayable);
 
     appName.setText(displayable.getAppName());
 
     getApp.setVisibility(View.VISIBLE);
-    getApp.setText(displayable.getAppText(getContext()));
+    getApp.setText(displayable.getAppText(context));
     cardContent.setOnClickListener(view -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
 
@@ -105,7 +110,7 @@ public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayab
           .specific(
               SendEventRequest.Body.Specific.builder().app(displayable.getPackageName()).build())
           .build(), TimelineClickEvent.OPEN_APP);
-      ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
+      ((FragmentShower) context).pushFragmentV4(V8Engine.getFragmentProvider()
           .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
     });
   }

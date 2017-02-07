@@ -1,11 +1,7 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
- */
-
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
 import android.os.Build;
+import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -32,9 +28,6 @@ import java.util.Locale;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
-/**
- * Created by sithengineer on 10/05/16.
- */
 @Displayables({ AppViewStoreDisplayable.class }) public class AppViewStoreWidget
     extends Widget<AppViewStoreDisplayable> {
 
@@ -44,8 +37,6 @@ import rx.functions.Action1;
   private Button followButton;
   private View storeLayout;
   private StoreRepository storeRepository;
-
-  private AppViewStoreDisplayable displayable;
 
   public AppViewStoreWidget(View itemView) {
     super(itemView);
@@ -62,7 +53,6 @@ import rx.functions.Action1;
 
   @Override public void bindView(AppViewStoreDisplayable displayable) {
     setupStoreInfo(displayable.getPojo());
-    this.displayable = displayable;
   }
 
   private void setupStoreInfo(GetApp getApp) {
@@ -70,10 +60,12 @@ import rx.functions.Action1;
     GetAppMeta.App app = getApp.getNodes().getMeta().getData();
     Store store = app.getStore();
 
+    final FragmentActivity context = getContext();
     if (TextUtils.isEmpty(store.getAvatar())) {
-      ImageLoader.loadWithCircleTransform(R.drawable.ic_avatar_apps, storeAvatarView);
+      ImageLoader.with(context)
+          .loadUsingCircleTransform(R.drawable.ic_avatar_apps, storeAvatarView);
     } else {
-      ImageLoader.loadWithCircleTransform(store.getAvatar(), storeAvatarView);
+      ImageLoader.with(context).loadUsingCircleTransform(store.getAvatar(), storeAvatarView);
     }
 
     StoreThemeEnum storeThemeEnum = StoreThemeEnum.get(store);
@@ -124,6 +116,6 @@ import rx.functions.Action1;
             followButton.setText(R.string.appview_follow_store_button_text);
             compositeSubscription.add(RxView.clicks(followButton).subscribe(subscribeStore));
           }
-        }));
+        }, throwable -> CrashReport.getInstance().log(throwable)));
   }
 }

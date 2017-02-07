@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.timeline;
 
 import android.os.Build;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -86,16 +87,19 @@ public class SocialStoreLatestAppsWidget
     storeName.setText(displayable.getStoreName());
     userName.setText(displayable.getUser().getName());
     setCardViewMargin(displayable, cardView);
+    final FragmentActivity context = getContext();
     if (displayable.getStore() != null) {
       storeName.setVisibility(View.VISIBLE);
       storeName.setText(displayable.getStore().getName());
       storeAvatar.setVisibility(View.VISIBLE);
-      ImageLoader.loadWithShadowCircleTransform(displayable.getStore().getAvatar(), storeAvatar);
+      ImageLoader.with(context)
+          .loadWithShadowCircleTransform(displayable.getStore().getAvatar(), storeAvatar);
       if (displayable.getUser() != null) {
         userName.setVisibility(View.VISIBLE);
         userName.setText(displayable.getUser().getName());
         userAvatar.setVisibility(View.VISIBLE);
-        ImageLoader.loadWithShadowCircleTransform(displayable.getUser().getAvatar(), userAvatar);
+        ImageLoader.with(context)
+            .loadWithShadowCircleTransform(displayable.getUser().getAvatar(), userAvatar);
       } else {
         userName.setVisibility(View.GONE);
         userAvatar.setVisibility(View.GONE);
@@ -107,12 +111,13 @@ public class SocialStoreLatestAppsWidget
         storeName.setVisibility(View.VISIBLE);
         storeName.setText(displayable.getUser().getName());
         storeAvatar.setVisibility(View.VISIBLE);
-        ImageLoader.loadWithShadowCircleTransform(displayable.getUser().getAvatar(), storeAvatar);
+        ImageLoader.with(context)
+            .loadWithShadowCircleTransform(displayable.getUser().getAvatar(), storeAvatar);
       }
     }
 
-    ImageLoader.loadWithShadowCircleTransform(displayable.getSharedStore().getAvatar(),
-        sharedStoreAvatar);
+    ImageLoader.with(getContext())
+        .loadWithShadowCircleTransform(displayable.getSharedStore().getAvatar(), sharedStoreAvatar);
     sharedStoreName.setText(displayable.getSharedStore().getName());
 
     appsContaner.removeAllViews();
@@ -122,7 +127,7 @@ public class SocialStoreLatestAppsWidget
     for (SocialStoreLatestAppsDisplayable.LatestApp latestApp : displayable.getLatestApps()) {
       latestAppView = inflater.inflate(R.layout.social_timeline_latest_app, appsContaner, false);
       latestAppIcon = (ImageView) latestAppView.findViewById(R.id.social_timeline_latest_app);
-      ImageLoader.load(latestApp.getIconUrl(), latestAppIcon);
+      ImageLoader.with(context).load(latestApp.getIconUrl(), latestAppIcon);
       appsContaner.addView(latestAppView);
       apps.put(latestAppView, latestApp.getAppId());
       appsPackages.put(latestApp.getAppId(), latestApp.getPackageName());
@@ -143,7 +148,7 @@ public class SocialStoreLatestAppsWidget
                 .store(displayable.getStoreName())
                 .build())
             .build(), TimelineClickEvent.OPEN_APP);
-        ((FragmentShower) getContext()).pushFragmentV4(
+        ((FragmentShower) context).pushFragmentV4(
             V8Engine.getFragmentProvider().newAppViewFragment(apps.get(app), packageName));
       }));
     }
@@ -159,7 +164,7 @@ public class SocialStoreLatestAppsWidget
           .specific(
               SendEventRequest.Body.Specific.builder().store(displayable.getStoreName()).build())
           .build(), TimelineClickEvent.OPEN_STORE);
-      ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
+      ((FragmentShower) context).pushFragmentV4(V8Engine.getFragmentProvider()
           .newStoreFragment(displayable.getStoreName(),
               displayable.getSharedStore().getAppearance().getTheme()));
     }));
@@ -176,7 +181,7 @@ public class SocialStoreLatestAppsWidget
               .store(displayable.getSharedStore().getName())
               .build())
           .build(), TimelineClickEvent.OPEN_STORE);
-      ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
+      ((FragmentShower) context).pushFragmentV4(V8Engine.getFragmentProvider()
           .newStoreFragment(displayable.getSharedStore().getName(),
               displayable.getSharedStore().getAppearance().getTheme()));
     }));
@@ -197,6 +202,10 @@ public class SocialStoreLatestAppsWidget
             (throwable) -> {
               throwable.printStackTrace();
             }));
+  }
+
+  @Override String getCardTypeName() {
+    return CARD_TYPE_NAME;
   }
 
   private void handleIsSubscribed(boolean isSubscribed, String storeName, String storeTheme) {
@@ -221,9 +230,5 @@ public class SocialStoreLatestAppsWidget
       followStore.setText(R.string.appview_follow_store_button_text);
       compositeSubscription.add(RxView.clicks(followStore).subscribe(subscribeStore));
     }
-  }
-
-  @Override String getCardTypeName() {
-    return CARD_TYPE_NAME;
   }
 }

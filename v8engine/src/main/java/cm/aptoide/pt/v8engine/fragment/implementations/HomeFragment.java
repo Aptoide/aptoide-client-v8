@@ -116,8 +116,9 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
       userEmail.setText(userCompleteData.getUserEmail());
       userUsername.setText(userCompleteData.getUserName());
 
-      ImageLoader.loadWithCircleTransformAndPlaceHolder(userCompleteData.getUserAvatar(),
-          userAvatarImage, R.drawable.user_account_white);
+      ImageLoader.with(getContext())
+          .loadWithCircleTransformAndPlaceHolder(userCompleteData.getUserAvatar(), userAvatarImage,
+              R.drawable.user_account_white);
 
       return;
     }
@@ -128,7 +129,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
     userEmail.setVisibility(View.GONE);
     userUsername.setVisibility(View.GONE);
 
-    ImageLoader.load(R.drawable.user_account_white, userAvatarImage);
+    ImageLoader.with(getContext()).load(R.drawable.user_account_white, userAvatarImage);
   }
 
   @Nullable @Override

@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -112,16 +113,18 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
           }));
     }
 
+    final FragmentActivity context = getContext();
     if (displayable.hasStoreAndUser()) {
-      ImageLoader.loadWithCircleTransform(displayable.getStoreAvatar(), mainIcon);
-      ImageLoader.loadWithCircleTransform(displayable.getUserAvatar(), secondaryIcon);
+      ImageLoader.with(context).loadUsingCircleTransform(displayable.getStoreAvatar(), mainIcon);
+      ImageLoader.with(context)
+          .loadUsingCircleTransform(displayable.getUserAvatar(), secondaryIcon);
       mainIcon.setVisibility(View.VISIBLE);
       secondaryIcon.setVisibility(View.VISIBLE);
     } else if (displayable.hasUser()) {
-      ImageLoader.loadWithCircleTransform(displayable.getUserAvatar(), mainIcon);
+      ImageLoader.with(context).loadUsingCircleTransform(displayable.getUserAvatar(), mainIcon);
       secondaryIcon.setVisibility(View.GONE);
     } else if (displayable.hasStore()) {
-      ImageLoader.loadWithCircleTransform(displayable.getStoreAvatar(), mainIcon);
+      ImageLoader.with(context).loadUsingCircleTransform(displayable.getStoreAvatar(), mainIcon);
       secondaryIcon.setVisibility(View.GONE);
     } else {
       mainIcon.setVisibility(View.GONE);
@@ -143,9 +146,10 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
     followedTv.setTextColor(displayable.getStoreColor());
     followingTv.setTextColor(displayable.getStoreColor());
 
+    final FragmentShower fragmentShower = (FragmentShower) getContext();
     if (displayable.hasStore()) {
       compositeSubscription.add(RxView.clicks(itemView)
-          .subscribe(click -> displayable.viewClicked(((FragmentShower) getContext())), err -> {
+          .subscribe(click -> displayable.viewClicked(fragmentShower), err -> {
             CrashReport.getInstance().log(err);
           }));
     }

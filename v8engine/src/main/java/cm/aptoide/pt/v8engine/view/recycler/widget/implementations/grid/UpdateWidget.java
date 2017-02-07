@@ -5,10 +5,10 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,7 +94,8 @@ import rx.functions.Action1;
 
     labelTextView.setText(updateDisplayable.getLabel());
     updateVernameTextView.setText(updateDisplayable.getUpdateVersionName());
-    ImageLoader.load(updateDisplayable.getIcon(), iconImageView);
+    final FragmentActivity context = getContext();
+    ImageLoader.with(context).load(updateDisplayable.getIcon(), iconImageView);
 
     compositeSubscription.add(RxView.clicks(updateRowRelativeLayout).subscribe(v -> {
       final Fragment fragment = V8Engine.getFragmentProvider()
@@ -102,7 +103,6 @@ import rx.functions.Action1;
       getNavigationManager().navigateTo(fragment);
     }, throwable -> throwable.printStackTrace()));
 
-    final Context context = getContext();
     final Action1<Void> longClickListener = __ -> {
       AlertDialog.Builder builder = new AlertDialog.Builder(context);
       builder.setTitle(R.string.ignore_update)
@@ -114,7 +114,7 @@ import rx.functions.Action1;
                   .subscribe(success -> Logger.d(TAG,
                       String.format("Update with package name %s was excluded", packageName)),
                       throwable -> {
-                        ShowMessage.asSnack(getContext(), R.string.unknown_error);
+                        ShowMessage.asSnack(context, R.string.unknown_error);
                         CrashReport.getInstance().log(throwable);
                       }));
             }
@@ -127,8 +127,7 @@ import rx.functions.Action1;
     compositeSubscription.add(RxView.longClicks(updateRowRelativeLayout)
         .subscribe(longClickListener, throwable -> throwable.printStackTrace()));
     compositeSubscription.add(RxView.clicks(updateButtonLayout)
-        .flatMap(
-            click -> displayable.downloadAndInstall(getContext(), (PermissionRequest) getContext()))
+        .flatMap(click -> displayable.downloadAndInstall(context, (PermissionRequest) context))
         .retry()
         .subscribe(o -> {
         }, throwable -> throwable.printStackTrace()));

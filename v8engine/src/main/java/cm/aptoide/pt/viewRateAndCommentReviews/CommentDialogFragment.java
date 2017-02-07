@@ -245,29 +245,29 @@ public class CommentDialogFragment extends RxDialogFragment {
       case REVIEW:
         // new comment on a review
         return PostCommentForReview.of(idAsLong, inputText, AptoideAccountManager.getAccessToken(),
-            aptoideClientUUID.getAptoideClientUUID()).observe();
+            aptoideClientUUID.getUniqueIdentifier()).observe();
 
       case STORE:
         // check if this is a new comment on a store or a reply to a previous one
         if (previousCommentId == null) {
           return PostCommentForStore.of(idAsLong, inputText, AptoideAccountManager.getAccessToken(),
-              aptoideClientUUID.getAptoideClientUUID()).observe();
+              aptoideClientUUID.getUniqueIdentifier()).observe();
         }
 
         return PostCommentForStore.of(idAsLong, previousCommentId, inputText,
-            AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
+            AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
             .observe();
 
       case TIMELINE:
         // check if this is a new comment on a article or a reply to a previous one
         if (previousCommentId == null) {
           return PostCommentForTimelineArticle.of(idAsString, inputText,
-              AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
+              AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
               .observe();
         }
 
         return PostCommentForTimelineArticle.of(idAsString, previousCommentId, inputText,
-            AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
+            AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
             .observe();
     }
     // default case

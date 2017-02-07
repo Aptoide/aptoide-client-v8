@@ -112,7 +112,7 @@ import rx.functions.Action1;
     }
 
     storeTextView.setText(searchAppsApp.getStore().getName());
-    ImageLoader.load(searchAppsApp.getIcon(), iconImageView);
+    ImageLoader.with(getContext()).load(searchAppsApp.getIcon(), iconImageView);
 
     if (Malware.Rank.TRUSTED.equals(searchAppsApp.getFile().getMalware().getRank())) {
       icTrustedImageView.setVisibility(View.VISIBLE);
@@ -125,17 +125,6 @@ import rx.functions.Action1;
     compositeSubscription.add(RxView.clicks(overflowImageView).subscribe(clickToOpenAppView));
   }
 
-  private void handleClickToOpenAppView(Action0 clickCallback,
-      ListSearchApps.SearchAppsApp searchAppsApp) {
-    if (clickCallback != null) {
-      clickCallback.call();
-    }
-    getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
-        .newAppViewFragment(searchAppsApp.getId(), searchAppsApp.getPackageName(),
-            searchAppsApp.getStore().getAppearance().getTheme(),
-            searchAppsApp.getStore().getName()));
-  }
-
   private void handleClickToOpenStore(Action0 clickCallback, View view,
       ListSearchApps.SearchAppsApp searchAppsApp) {
 
@@ -144,7 +133,7 @@ import rx.functions.Action1;
     inflater.inflate(R.menu.menu_search_item, popup.getMenu());
 
     MenuItem menuItemVersions = popup.getMenu().findItem(R.id.versions);
-    if(searchAppsApp.isHasVersions()) {
+    if (searchAppsApp.isHasVersions()) {
       menuItemVersions.setVisible(true);
       compositeSubscription.add(RxMenuItem.clicks(menuItemVersions).subscribe(aVoid -> {
         if (clickCallback != null) {
@@ -171,5 +160,16 @@ import rx.functions.Action1;
     }));
 
     popup.show();
+  }
+
+  private void handleClickToOpenAppView(Action0 clickCallback,
+      ListSearchApps.SearchAppsApp searchAppsApp) {
+    if (clickCallback != null) {
+      clickCallback.call();
+    }
+    getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
+        .newAppViewFragment(searchAppsApp.getId(), searchAppsApp.getPackageName(),
+            searchAppsApp.getStore().getAppearance().getTheme(),
+            searchAppsApp.getStore().getName()));
   }
 }

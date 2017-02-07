@@ -20,8 +20,6 @@ import rx.subscriptions.CompositeSubscription;
  */
 public abstract class Widget<T extends Displayable> extends RecyclerView.ViewHolder {
 
-  private static final String TAG = Widget.class.getName();
-
   private final NavigationManagerV4 appNav;
   protected CompositeSubscription compositeSubscription;
 

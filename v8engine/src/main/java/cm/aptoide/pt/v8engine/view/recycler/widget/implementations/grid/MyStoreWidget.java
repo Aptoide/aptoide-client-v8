@@ -45,7 +45,7 @@ public class MyStoreWidget extends Widget<MyStoreDisplayable> {
 
   @Override public void bindView(MyStoreDisplayable displayable) {
 
-    FragmentActivity context = getContext();
+    final FragmentActivity context = getContext();
     Store store = displayable.getMeta().getData();
     String storeTheme = store.getAppearance().getTheme();
     @ColorInt int color = getColorOrDefault(StoreThemeEnum.get(storeTheme), context);
@@ -60,7 +60,7 @@ public class MyStoreWidget extends Widget<MyStoreDisplayable> {
     }
     exploreButton.setTextColor(color);
 
-    ImageLoader.loadWithShadowCircleTransform(store.getAvatar(), storeIcon);
+    ImageLoader.with(context).loadWithShadowCircleTransform(store.getAvatar(), storeIcon);
 
     storeName.setText(store.getName());
     compositeSubscription.add(RxView.clicks(exploreButton)
