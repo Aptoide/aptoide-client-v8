@@ -51,7 +51,7 @@ public class CreateUserRequest extends v3accountManager<OAuth> {
   }
 
   public static CreateUserRequest of(String email, String password, String aptoideClientUUID,
-      Context context, AptoideAccountManager accountManager) {
+      AptoideAccountManager accountManager) {
     return new CreateUserRequest(getHttpClient(accountManager), email, password, aptoideClientUUID,
         accountManager);
   }

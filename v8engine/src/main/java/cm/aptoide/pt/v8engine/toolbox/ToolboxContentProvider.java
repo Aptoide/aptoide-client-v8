@@ -78,10 +78,8 @@ public class ToolboxContentProvider extends ContentProvider {
     uriMatcher.addURI(authority, "loginName", LOGIN_NAME);
     uriMatcher.addURI(authority, "changePreference", CHANGE_PREFERENCE);
     aptoideAccountManager = AptoideAccountManager.getInstance(getContext(),
-        Application.getConfiguration(), new SecureCoderDecoder.Builder(getContext().getApplicationContext()).create(),
-        AccountManager.get(getContext().getApplicationContext()), new IdsRepositoryImpl(
-            SecurePreferencesImplementation.getInstance(),
-            getContext().getApplicationContext()));
+        Application.getConfiguration(), new SecureCoderDecoder.Builder(getContext()).create(),
+        AccountManager.get(getContext()), new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext()));
     return true;
   }
 
