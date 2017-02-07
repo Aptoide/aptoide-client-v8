@@ -73,10 +73,10 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
                     displayable.getPojo().getTheme())));
 
     if (store.getStoreId() == -1 || TextUtils.isEmpty(store.getIconPath())) {
-      ImageLoader.loadWithShadowCircleTransform(R.drawable.ic_avatar_apps, storeAvatar,
+      ImageLoader.with(context).loadWithShadowCircleTransform(R.drawable.ic_avatar_apps, storeAvatar,
           StoreThemeEnum.get(store.getTheme()).getStoreHeaderInt());
     } else {
-      ImageLoader.loadWithShadowCircleTransform(store.getIconPath(), storeAvatar,
+      ImageLoader.with(context).loadWithShadowCircleTransform(store.getIconPath(), storeAvatar,
           StoreThemeEnum.get(store.getTheme()).getStoreHeaderInt());
     }
 

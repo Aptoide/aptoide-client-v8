@@ -139,7 +139,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
   }
 
   @Override void loadImage(Uri imagePath) {
-    ImageLoader.loadWithCircleTransform(imagePath, mStoreAvatar);
+    ImageLoader.with(this).loadWithCircleTransform(imagePath, mStoreAvatar, false);
   }
 
   @Override void showIconPropertiesError(String errors) {
@@ -222,7 +222,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
       mStoreDescription.setVisibility(View.VISIBLE);
       mStoreDescription.setText(storeDescription);
       if (storeRemoteUrl != null) {
-        ImageLoader.loadWithCircleTransform(storeRemoteUrl, mStoreAvatar);
+        ImageLoader.with(this).loadUsingCircleTransform(storeRemoteUrl, mStoreAvatar);
       }
       handleThemeTick(storeTheme, "visible");
       mCreateStore.setText(R.string.save_edit_store);

@@ -40,8 +40,6 @@ import rx.subscriptions.CompositeSubscription;
 public class CreateUserActivity extends PermissionsBaseActivity
     implements AptoideAccountManager.ICreateProfile {
 
-  private static final String TYPE_STORAGE = "storage";
-  private static final String TYPE_CAMERA = "camera";
   private static int CREATE_USER_REQUEST_CODE = 0; //1:Username and Avatar 2: Username
 
   private final AptoideClientUUID aptoideClientUUID;
@@ -50,18 +48,13 @@ public class CreateUserActivity extends PermissionsBaseActivity
   private String userPassword;
   private String username;
   private String avatarPath;
-  private String accessToken;
-  private Boolean UPDATE = true;
-  private String SIGNUP = "signup";
-  private Toolbar mToolbar;
-  private RelativeLayout mUserAvatar;
-  private EditText mUsername;
-  private Button mCreateButton;
-  private ImageView mAvatar;
+  private Toolbar toolbar;
+  private RelativeLayout userAvatar;
+  private EditText usernameEditText;
+  private Button createButton;
+  private ImageView avatarImage;
   private View content;
-  private CompositeSubscription mSubscriptions;
-  private Boolean result = false;
-  private String ERROR_TAG = "Error update user";
+  private CompositeSubscription subscriptions;
 
   public CreateUserActivity() {
     this.aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
@@ -71,7 +64,7 @@ public class CreateUserActivity extends PermissionsBaseActivity
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(getLayoutId());
-    mSubscriptions = new CompositeSubscription();
+    subscriptions = new CompositeSubscription();
     bindViews();
     getUserData();
     setupToolbar();
@@ -88,36 +81,36 @@ public class CreateUserActivity extends PermissionsBaseActivity
 
   @Override protected void onDestroy() {
     super.onDestroy();
-    mSubscriptions.clear();
+    subscriptions.clear();
   }
 
   @Override void loadImage(Uri imagePath) {
-    ImageLoader.loadWithCircleTransform(imagePath, mAvatar);
+    ImageLoader.with(this).loadWithCircleTransform(imagePath, avatarImage, false);
   }
 
   @Override void showIconPropertiesError(String errors) {
-    mSubscriptions.add(GenericDialogs.createGenericOkMessage(this,
+    subscriptions.add(GenericDialogs.createGenericOkMessage(this,
         getString(R.string.image_requirements_error_popup_title), errors).subscribe());
   }
 
   private void bindViews() {
-    mToolbar = (Toolbar) findViewById(R.id.toolbar);
-    mUserAvatar = (RelativeLayout) findViewById(R.id.create_user_image_action);
-    mUsername = (EditText) findViewById(R.id.create_user_username_inserted);
-    mCreateButton = (Button) findViewById(R.id.create_user_create_profile);
-    mAvatar = (ImageView) findViewById(R.id.create_user_image);
+    toolbar = (Toolbar) findViewById(R.id.toolbar);
+    userAvatar = (RelativeLayout) findViewById(R.id.create_user_image_action);
+    usernameEditText = (EditText) findViewById(R.id.create_user_username_inserted);
+    createButton = (Button) findViewById(R.id.create_user_create_profile);
+    avatarImage = (ImageView) findViewById(R.id.create_user_image);
     content = findViewById(android.R.id.content);
   }
 
   private void getUserData() {
     userEmail = getIntent().getStringExtra(AptoideLoginUtils.APTOIDE_LOGIN_USER_NAME_KEY);
     userPassword = getIntent().getStringExtra(AptoideLoginUtils.APTOIDE_LOGIN_PASSWORD_KEY);
-    accessToken = getIntent().getStringExtra(AptoideLoginUtils.APTOIDE_LOGIN_ACCESS_TOKEN_KEY);
+    //accessToken = getIntent().getStringExtra(AptoideLoginUtils.APTOIDE_LOGIN_ACCESS_TOKEN_KEY);
   }
 
   private void setupToolbar() {
-    if (mToolbar != null) {
-      setSupportActionBar(mToolbar);
+    if (toolbar != null) {
+      setSupportActionBar(toolbar);
       getSupportActionBar().setHomeButtonEnabled(true);
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
       getSupportActionBar().setTitle(getActivityTitle());
@@ -125,16 +118,16 @@ public class CreateUserActivity extends PermissionsBaseActivity
   }
 
   private void setupListeners() {
-    mSubscriptions.add(RxView.clicks(mUserAvatar).subscribe(click -> chooseAvatarSource()));
-    mSubscriptions.add(RxView.clicks(mCreateButton).subscribe(click -> {
+    subscriptions.add(RxView.clicks(userAvatar).subscribe(click -> chooseAvatarSource()));
+    subscriptions.add(RxView.clicks(createButton).subscribe(click -> {
       AptoideUtils.SystemU.hideKeyboard(this);
-      username = mUsername.getText().toString().trim();
+      username = usernameEditText.getText().toString().trim();
       validateProfileData();
       if (CREATE_USER_REQUEST_CODE == 1) {
         ProgressDialog pleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
             getApplicationContext().getString(R.string.please_wait_upload));
         pleaseWaitDialog.show();
-        mSubscriptions.add(
+        subscriptions.add(
             CreateUserRequest.of("true", userEmail, username, userPassword, avatarPath,
                 aptoideClientUUID.getAptoideClientUUID()).observe().filter(answer -> {
               if (answer.hasErrors()) {
@@ -238,7 +231,7 @@ public class CreateUserActivity extends PermissionsBaseActivity
   }
 
   @Override public String getUserUsername() {
-    return mUsername == null ? "" : mUsername.getText().toString();
+    return usernameEditText == null ? "" : usernameEditText.getText().toString();
   }
 
   @Override public String getUserAvatar() {

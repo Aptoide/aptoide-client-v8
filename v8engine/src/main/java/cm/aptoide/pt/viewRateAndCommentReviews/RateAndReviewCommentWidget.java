@@ -8,6 +8,7 @@ package cm.aptoide.pt.viewRateAndCommentReviews;
 import android.app.FragmentManager;
 import android.content.res.Resources;
 import android.os.Build;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.AppCompatRatingBar;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -93,15 +94,17 @@ import rx.Observable;
     final Review review = displayable.getPojo().getReview();
     final String appName = displayable.getPojo().getAppName();
 
-    ImageLoader.loadWithCircleTransformAndPlaceHolderAvatarSize(review.getUser().getAvatar(),
-        userImage, R.drawable.layer_1);
+    final FragmentActivity context = getContext();
+    ImageLoader.with(context)
+        .loadWithCircleTransformAndPlaceHolderAvatarSize(review.getUser().getAvatar(), userImage,
+            R.drawable.layer_1);
     username.setText(review.getUser().getName());
     ratingBar.setRating(review.getStats().getRating());
     reviewTitle.setText(review.getTitle());
     reviewText.setText(review.getBody());
-    reviewDate.setText(DATE_TIME_U.getTimeDiffString(getContext(), review.getAdded().getTime()));
+    reviewDate.setText(DATE_TIME_U.getTimeDiffString(context, review.getAdded().getTime()));
 
-    if (DisplayMetrics.DENSITY_300 > getContext().getResources().getDisplayMetrics().densityDpi) {
+    if (DisplayMetrics.DENSITY_300 > context.getResources().getDisplayMetrics().densityDpi) {
       flagHelfull.setText("");
       flagNotHelfull.setText("");
     }
@@ -111,7 +114,7 @@ import rx.Observable;
 
     compositeSubscription.add(RxView.clicks(reply).flatMap(a -> {
       if (AptoideAccountManager.isLoggedIn()) {
-        FragmentManager fm = getContext().getFragmentManager();
+        FragmentManager fm = context.getFragmentManager();
         CommentDialogFragment commentDialogFragment =
             CommentDialogFragment.newInstanceReview(review.getId(), appName);
         commentDialogFragment.show(fm, "fragment_comment_dialog");
@@ -155,8 +158,8 @@ import rx.Observable;
       }
     }));
 
-    final Resources.Theme theme = getContext().getTheme();
-    final Resources res = getContext().getResources();
+    final Resources.Theme theme = context.getTheme();
+    final Resources res = context.getResources();
     int color =
         getItemId() % 2 == 0 ? R.color.white : R.color.displayable_rate_and_review_background;
 

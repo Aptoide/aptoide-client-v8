@@ -1,13 +1,9 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 25/08/2016.
- */
-
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.AppCompatRatingBar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -70,10 +66,6 @@ import java.util.Locale;
     createReviewLayout = (ViewGroup) itemView.findViewById(R.id.reviewButtonLayout);
   }
 
-  @Override public void unbindView() {
-
-  }
-
   @Override public void bindView(InstalledAppDisplayable displayable) {
     Installed pojo = displayable.getPojo();
 
@@ -82,7 +74,8 @@ import java.util.Locale;
 
     labelTextView.setText(pojo.getName());
     verNameTextView.setText(pojo.getVersionName());
-    ImageLoader.load(pojo.getIcon(), iconImageView);
+    final FragmentActivity context = getContext();
+    ImageLoader.with(context).load(pojo.getIcon(), iconImageView);
 
     installedItemFrame.setOnClickListener(v -> {
       // TODO: 25-05-2016 neuro apagar em principio
@@ -95,7 +88,7 @@ import java.util.Locale;
       createReviewLayout.setVisibility(View.VISIBLE);
       createReviewLayout.setOnClickListener(v -> {
         Analytics.Updates.createReview();
-        DialogUtils.showRateDialog(getContext(), appName, packageName, storeName, null);
+        DialogUtils.showRateDialog(context, appName, packageName, storeName, null);
       });
     } else {
       createReviewLayout.setVisibility(View.GONE);

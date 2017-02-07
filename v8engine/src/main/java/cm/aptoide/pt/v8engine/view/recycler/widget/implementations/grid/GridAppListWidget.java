@@ -6,9 +6,11 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.graphics.Typeface;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -17,6 +19,7 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAppListDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import com.jakewharton.rxbinding.view.RxView;
 import java.util.Date;
 
 /**
@@ -26,8 +29,8 @@ public class GridAppListWidget extends Widget<GridAppListDisplayable> {
 
   public TextView name;
   public ImageView icon;
-  public TextView tvTimeSinceModified;
-  public TextView tvStoreName;
+  private TextView tvTimeSinceModified;
+  private TextView tvStoreName;
 
   public GridAppListWidget(View itemView) {
     super(itemView);
@@ -40,12 +43,7 @@ public class GridAppListWidget extends Widget<GridAppListDisplayable> {
     tvStoreName = (TextView) itemView.findViewById(R.id.storeName);
   }
 
-  @Override public void unbindView() {
-
-  }
-
   @Override public void bindView(GridAppListDisplayable displayable) {
-
     App app = displayable.getPojo();
     name.setText(app.getName());
 
@@ -60,11 +58,14 @@ public class GridAppListWidget extends Widget<GridAppListDisplayable> {
 
     tvStoreName.setText(app.getStore().getName());
     tvStoreName.setTypeface(null, Typeface.BOLD);
-    itemView.setOnClickListener(v -> {
+    final FragmentActivity context = getContext();
+    final FragmentShower fragmentShower = (FragmentShower) context;
+    compositeSubscription.add(RxView.clicks(itemView).subscribe(v -> {
       // FIXME
-      ((FragmentShower) v.getContext()).pushFragmentV4(
+      fragmentShower.pushFragmentV4(
           V8Engine.getFragmentProvider().newAppViewFragment(app.getId(), app.getPackageName()));
-    });
-    ImageLoader.load(app.getIcon(), icon);
+    }, throwable -> CrashReport.getInstance().log(throwable)));
+
+    ImageLoader.with(context).load(app.getIcon(), icon);
   }
 }

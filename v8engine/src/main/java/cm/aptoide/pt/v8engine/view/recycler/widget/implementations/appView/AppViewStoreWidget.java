@@ -67,10 +67,12 @@ import rx.android.schedulers.AndroidSchedulers;
     GetAppMeta.App app = getApp.getNodes().getMeta().getData();
     Store store = app.getStore();
 
+    final FragmentActivity context = getContext();
     if (TextUtils.isEmpty(store.getAvatar())) {
-      ImageLoader.loadWithCircleTransform(R.drawable.ic_avatar_apps, storeAvatarView);
+      ImageLoader.with(context)
+          .loadUsingCircleTransform(R.drawable.ic_avatar_apps, storeAvatarView);
     } else {
-      ImageLoader.loadWithCircleTransform(store.getAvatar(), storeAvatarView);
+      ImageLoader.with(context).loadUsingCircleTransform(store.getAvatar(), storeAvatarView);
     }
 
     StoreThemeEnum storeThemeEnum = StoreThemeEnum.get(store);

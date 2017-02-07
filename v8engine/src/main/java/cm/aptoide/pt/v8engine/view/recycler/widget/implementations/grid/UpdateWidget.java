@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.content.DialogInterface;
 import android.support.annotation.UiThread;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.ViewGroup;
@@ -92,9 +93,10 @@ import rx.android.schedulers.AndroidSchedulers;
 
     labelTextView.setText(updateDisplayable.getLabel());
     updateVernameTextView.setText(updateDisplayable.getUpdateVersionName());
-    ImageLoader.load(updateDisplayable.getIcon(), iconImageView);
+    final FragmentActivity context = getContext();
+    ImageLoader.with(context).load(updateDisplayable.getIcon(), iconImageView);
 
-    updateRowRelativeLayout.setOnClickListener(v -> FragmentUtils.replaceFragmentV4(getContext(),
+    updateRowRelativeLayout.setOnClickListener(v -> FragmentUtils.replaceFragmentV4(context,
         V8Engine.getFragmentProvider()
             .newAppViewFragment(updateDisplayable.getAppId(), updateDisplayable.getPackageName())));
 
@@ -109,7 +111,7 @@ import rx.android.schedulers.AndroidSchedulers;
                   .subscribe(success -> Logger.d(TAG,
                       String.format("Update with package name %s was excluded", packageName)),
                       throwable -> {
-                        ShowMessage.asSnack(getContext(), R.string.unknown_error);
+                        ShowMessage.asSnack(context, R.string.unknown_error);
                         CrashReport.getInstance().log(throwable);
                       }));
             }
@@ -125,7 +127,7 @@ import rx.android.schedulers.AndroidSchedulers;
 
     compositeSubscription.add(RxView.clicks(updateButtonLayout)
         .flatMap(
-            click -> displayable.downloadAndInstall(getContext(), (PermissionRequest) getContext()))
+            click -> displayable.downloadAndInstall(context, (PermissionRequest) context))
         .retry()
         .subscribe(o -> {
         }, throwable -> throwable.printStackTrace()));

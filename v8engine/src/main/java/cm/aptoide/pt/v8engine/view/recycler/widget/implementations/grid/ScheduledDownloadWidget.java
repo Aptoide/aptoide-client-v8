@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -51,7 +52,8 @@ import rx.android.schedulers.AndroidSchedulers;
 
   @Override public void bindView(ScheduledDownloadDisplayable displayable) {
     Scheduled scheduled = displayable.getPojo();
-    ImageLoader.load(scheduled.getIcon(), appIcon);
+    final FragmentActivity context = getContext();
+    ImageLoader.with(context).load(scheduled.getIcon(), appIcon);
     appName.setText(scheduled.getName());
     appVersion.setText(scheduled.getVersionName());
 

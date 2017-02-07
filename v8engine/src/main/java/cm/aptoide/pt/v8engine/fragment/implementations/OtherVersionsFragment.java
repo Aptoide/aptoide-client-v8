@@ -1,16 +1,11 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 17/08/2016.
- */
-
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
+import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
 import android.view.Menu;
@@ -43,9 +38,6 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 
-/**
- * Created by sithengineer on 05/07/16.
- */
 public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
 
   private static final String TAG = OtherVersionsFragment.class.getSimpleName();
@@ -61,9 +53,6 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
   // views
   private ViewHeader header;
   //private TextView emptyData;
-
-  // data
-  private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
 
   public OtherVersionsFragment() {
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
@@ -101,7 +90,8 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
 
   @Override public void bindViews(View view) {
     super.bindViews(view);
-    header = new ViewHeader(view);
+    final Context context = getContext();
+    header = new ViewHeader(context, view);
     //emptyData = (TextView) view.findViewById(R.id.empty_data);
     setHasOptionsMenu(true);
   }
@@ -111,6 +101,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    //super.load(create, refresh, savedInstanceState);
     Logger.d(TAG, "Other versions should refresh? " + create);
 
     fetchOtherVersions(new ArrayList<>());
@@ -133,10 +124,11 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
           addDisplayables(displayables);
         };
 
-    endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(this.getAdapter(),
-        ListAppVersionsRequest.of(appPackge, storeNames, AptoideAccountManager.getAccessToken(),
-            aptoideClientUUID.getAptoideClientUUID(), StoreUtils.getSubscribedStoresAuthMap()),
-        otherVersionsSuccessRequestListener, Throwable::printStackTrace);
+    EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener =
+        new EndlessRecyclerOnScrollListener(this.getAdapter(),
+            ListAppVersionsRequest.of(appPackge, storeNames, AptoideAccountManager.getAccessToken(),
+                aptoideClientUUID.getAptoideClientUUID(), StoreUtils.getSubscribedStoresAuthMap()),
+            otherVersionsSuccessRequestListener, Throwable::printStackTrace);
 
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(false);
@@ -173,18 +165,6 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
     return super.onOptionsItemSelected(item);
   }
 
-	/*
-  private void otherVersionsSuccessRequestListener(ListAppVersions listAppVersions) {
-		List<App> apps = listAppVersions.getList();
-		displayables = new ArrayList<>(apps.size());
-		for (final App app : apps) {
-			displayables.add(new OtherVersionDisplayable(app));
-		}
-		setDisplayables(displayables);
-		//finishLoading();
-	}
-	*/
-
   //
   // micro widget for header
   //
@@ -193,18 +173,19 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
 
     private final boolean animationsEnabled;
 
+    private final Context context;
+
     // views
     private final TextView otherVersionsTitle;
     private final AppBarLayout appBarLayout;
-    private final CollapsingToolbarLayout collapsingToolbar;
     private final ImageView appIcon;
 
     private final SpannableString composedTitle1;
     private final SpannableString composedTitle2;
 
     // ctor
-    public ViewHeader(@NonNull View view) {
-
+    ViewHeader(@NonNull Context context, @NonNull View view) {
+      this.context = context;
       composedTitle1 = new SpannableString(
           view.getResources().getString(R.string.other_versions_partial_title_1));
       composedTitle1.setSpan(new StyleSpan(Typeface.ITALIC), 0, composedTitle1.length(), 0);
@@ -217,7 +198,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
 
       otherVersionsTitle = (TextView) view.findViewById(R.id.other_versions_title);
       appBarLayout = (AppBarLayout) view.findViewById(R.id.app_bar);
-      collapsingToolbar = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);
+      //collapsingToolbar = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);
       appIcon = (ImageView) view.findViewById(R.id.app_icon);
 
       appBarLayout.addOnOffsetChangedListener(new AppBarStateChangeListener() {
@@ -250,7 +231,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
     }
 
     private void setImage(String imgUrl) {
-      ImageLoader.load(imgUrl, appIcon);
+      ImageLoader.with(context).load(imgUrl, appIcon);
     }
   }
 }

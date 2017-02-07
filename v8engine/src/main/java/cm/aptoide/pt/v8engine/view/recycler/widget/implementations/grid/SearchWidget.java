@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.ShapeDrawable;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.PopupMenu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -73,6 +74,7 @@ import rx.functions.Action0;
     Action0 clickCallback = displayable.getClickCallback();
     ListSearchApps.SearchAppsApp pojo = displayable.getPojo();
 
+    final FragmentActivity context = getContext();
     overflowImageView.setOnClickListener(view -> {
       final PopupMenu popup = new PopupMenu(view.getContext(), view);
       MenuInflater inflater = popup.getMenuInflater();
@@ -88,7 +90,7 @@ import rx.functions.Action0;
         String icon = searchAppsApp.getIcon();
         String packageName = searchAppsApp.getPackageName();
 
-        FragmentUtils.replaceFragmentV4(getContext(),
+        FragmentUtils.replaceFragmentV4(context,
             V8Engine.getFragmentProvider().newOtherVersionsFragment(name, icon, packageName));
         return true;
       });
@@ -97,7 +99,7 @@ import rx.functions.Action0;
         if (clickCallback != null) {
           clickCallback.call();
         }
-        FragmentUtils.replaceFragmentV4(getContext(), V8Engine.getFragmentProvider()
+        FragmentUtils.replaceFragmentV4(context, V8Engine.getFragmentProvider()
             .newStoreFragment(pojo.getStore().getName(),
                 pojo.getStore().getAppearance().getTheme()));
         return true;
@@ -150,7 +152,7 @@ import rx.functions.Action0;
     }
 
     storeTextView.setText(pojo.getStore().getName());
-    ImageLoader.load(pojo.getIcon(), iconImageView);
+    ImageLoader.with(context).load(pojo.getIcon(), iconImageView);
 
     if (Malware.Rank.TRUSTED.equals(pojo.getFile().getMalware().getRank())) {
       icTrustedImageView.setVisibility(View.VISIBLE);
@@ -162,7 +164,7 @@ import rx.functions.Action0;
       if (clickCallback != null) {
         clickCallback.call();
       }
-      FragmentUtils.replaceFragmentV4(getContext(), V8Engine.getFragmentProvider()
+      FragmentUtils.replaceFragmentV4(context, V8Engine.getFragmentProvider()
           .newAppViewFragment(pojo.getId(), pojo.getPackageName(),
               pojo.getStore().getAppearance().getTheme(), pojo.getStore().getName()));
     });

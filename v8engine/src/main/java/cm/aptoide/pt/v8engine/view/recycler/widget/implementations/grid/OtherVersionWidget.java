@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 11/07/2016.
- */
-
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.content.res.Resources;
@@ -26,9 +21,6 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import java.util.Locale;
 
-/**
- * Created by sithengineer on 07/07/16.
- */
 @Displayables({ OtherVersionDisplayable.class }) public class OtherVersionWidget
     extends Widget<OtherVersionDisplayable> implements View.OnClickListener {
 
@@ -70,10 +62,6 @@ import java.util.Locale;
     itemView.setOnClickListener(this);
   }
 
-  @Override public void unbindView() {
-
-  }
-
   @Override public void bindView(OtherVersionDisplayable displayable) {
     setItemBackgroundColor(itemView);
     try {
@@ -89,7 +77,7 @@ import java.util.Locale;
           getContext().getString(R.string.other_versions_downloads_count_text),
           AptoideUtils.StringU.withSuffix(app.getStats().getDownloads())));
 
-      ImageLoader.load(app.getStore().getAvatar(), storeIcon);
+      ImageLoader.with(getContext()).load(app.getStore().getAvatar(), storeIcon);
       storeNameView.setText(app.getStore().getName());
       followers.setText(String.format(DEFAULT_LOCALE,
           getContext().getString(R.string.appview_followers_count_text),
@@ -145,7 +133,7 @@ import java.util.Locale;
         break;
     }
     // keep the remaining compound drawables in TextView and set the one on the right
-    Drawable[] drawables = version.getCompoundDrawables();
+    // Drawable[] drawables = version.getCompoundDrawables();
     //version.setCompoundDrawables(drawables[0], drawables[1], ImageLoader.load(badgeResId), drawables[3]);
     // does not work properly because "The Drawables must already have had setBounds(Rect) called". info from:
     // https://developer.android.com/reference/android/widget/TextView.html#setCompoundDrawables
