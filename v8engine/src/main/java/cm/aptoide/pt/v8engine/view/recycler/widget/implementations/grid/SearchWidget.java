@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 24/06/2016.
- */
-
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.graphics.drawable.Drawable;
@@ -21,15 +16,15 @@ import cm.aptoide.pt.model.v7.Malware;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.SearchDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
-import java.text.SimpleDateFormat;
+import com.jakewharton.rxbinding.view.RxMenuItem;
+import com.jakewharton.rxbinding.view.RxView;
 import java.util.Date;
-import java.util.Locale;
 import rx.functions.Action0;
+import rx.functions.Action1;
 
 /**
  * Created by neuro on 01-06-2016.
@@ -37,8 +32,6 @@ import rx.functions.Action0;
 @Displayables({ SearchDisplayable.class }) public class SearchWidget
     extends Widget<SearchDisplayable> {
 
-  private final SimpleDateFormat dateFormatter =
-      new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
   private TextView nameTextView;
   private ImageView iconImageView;
   private TextView downloadsTextView;
@@ -65,54 +58,22 @@ import rx.functions.Action0;
     bottomView = itemView.findViewById(R.id.bottom_view);
   }
 
-  @Override public void unbindView() {
-
-  }
-
   @Override public void bindView(SearchDisplayable displayable) {
-    Action0 clickCallback = displayable.getClickCallback();
-    ListSearchApps.SearchAppsApp pojo = displayable.getPojo();
+    ListSearchApps.SearchAppsApp searchAppsApp = displayable.getPojo();
 
-    overflowImageView.setOnClickListener(view -> {
-      final PopupMenu popup = new PopupMenu(view.getContext(), view);
-      MenuInflater inflater = popup.getMenuInflater();
-      inflater.inflate(R.menu.menu_search_item, popup.getMenu());
-      MenuItem menuItem = popup.getMenu().findItem(R.id.versions);
-      menuItem.setVisible(pojo.isHasVersions());
-      menuItem.setOnMenuItemClickListener(menuItem1 -> {
-        if (clickCallback != null) {
-          clickCallback.call();
-        }
-        ListSearchApps.SearchAppsApp searchAppsApp = displayable.getPojo();
-        String name = searchAppsApp.getName();
-        String icon = searchAppsApp.getIcon();
-        String packageName = searchAppsApp.getPackageName();
+    final Action0 clickCallback = displayable.getClickCallback();
+    final Action1<Void> clickToOpenStore =
+        __ -> handleClickToOpenStore(clickCallback, itemView, searchAppsApp);
+    compositeSubscription.add(RxView.clicks(overflowImageView).subscribe(clickToOpenStore));
 
-        FragmentUtils.replaceFragmentV4(getContext(),
-            V8Engine.getFragmentProvider().newOtherVersionsFragment(name, icon, packageName));
-        return true;
-      });
-      menuItem = popup.getMenu().findItem(R.id.go_to_store);
-      menuItem.setOnMenuItemClickListener(menuItem12 -> {
-        if (clickCallback != null) {
-          clickCallback.call();
-        }
-        FragmentUtils.replaceFragmentV4(getContext(), V8Engine.getFragmentProvider()
-            .newStoreFragment(pojo.getStore().getName(),
-                pojo.getStore().getAppearance().getTheme()));
-        return true;
-      });
-
-      popup.show();
-    });
-
-    nameTextView.setText(pojo.getName());
-    String downloadNumber = AptoideUtils.StringU.withSuffix(pojo.getStats().getPdownloads())
-        + " "
-        + bottomView.getContext().getString(R.string.downloads);
+    nameTextView.setText(searchAppsApp.getName());
+    String downloadNumber =
+        AptoideUtils.StringU.withSuffix(searchAppsApp.getStats().getPdownloads()) + " " + bottomView
+            .getContext()
+            .getString(R.string.downloads);
     downloadsTextView.setText(downloadNumber);
 
-    float avg = pojo.getStats().getRating().getAvg();
+    float avg = searchAppsApp.getStats().getRating().getAvg();
     if (avg <= 0) {
       ratingBar.setVisibility(View.GONE);
     } else {
@@ -120,7 +81,7 @@ import rx.functions.Action0;
       ratingBar.setRating(avg);
     }
 
-    Date modified = pojo.getModified();
+    Date modified = searchAppsApp.getModified();
     if (modified != null) {
       String timeSinceUpdate = AptoideUtils.DateTimeU.getInstance(itemView.getContext())
           .getTimeDiffAll(itemView.getContext(), modified.getTime());
@@ -129,7 +90,8 @@ import rx.functions.Action0;
       }
     }
 
-    final StoreThemeEnum theme = StoreThemeEnum.get(pojo.getStore().getAppearance().getTheme());
+    final StoreThemeEnum theme =
+        StoreThemeEnum.get(searchAppsApp.getStore().getAppearance().getTheme());
 
     Drawable background = bottomView.getBackground();
     if (background instanceof ShapeDrawable) {
@@ -149,22 +111,65 @@ import rx.functions.Action0;
           itemView.getContext().getResources().getColor(theme.getStoreHeader()));
     }
 
-    storeTextView.setText(pojo.getStore().getName());
-    ImageLoader.load(pojo.getIcon(), iconImageView);
+    storeTextView.setText(searchAppsApp.getStore().getName());
+    ImageLoader.load(searchAppsApp.getIcon(), iconImageView);
 
-    if (Malware.Rank.TRUSTED.equals(pojo.getFile().getMalware().getRank())) {
+    if (Malware.Rank.TRUSTED.equals(searchAppsApp.getFile().getMalware().getRank())) {
       icTrustedImageView.setVisibility(View.VISIBLE);
     } else {
       icTrustedImageView.setVisibility(View.GONE);
     }
 
-    itemView.setOnClickListener(v -> {
+    final Action1<Void> clickToOpenAppView =
+        v -> handleClickToOpenAppView(clickCallback, searchAppsApp);
+    compositeSubscription.add(RxView.clicks(overflowImageView).subscribe(clickToOpenAppView));
+  }
+
+  private void handleClickToOpenAppView(Action0 clickCallback,
+      ListSearchApps.SearchAppsApp searchAppsApp) {
+    if (clickCallback != null) {
+      clickCallback.call();
+    }
+    getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
+        .newAppViewFragment(searchAppsApp.getId(), searchAppsApp.getPackageName(),
+            searchAppsApp.getStore().getAppearance().getTheme(),
+            searchAppsApp.getStore().getName()));
+  }
+
+  private void handleClickToOpenStore(Action0 clickCallback, View view,
+      ListSearchApps.SearchAppsApp searchAppsApp) {
+
+    final PopupMenu popup = new PopupMenu(view.getContext(), view);
+    MenuInflater inflater = popup.getMenuInflater();
+    inflater.inflate(R.menu.menu_search_item, popup.getMenu());
+
+    MenuItem menuItemVersions = popup.getMenu().findItem(R.id.versions);
+    if(searchAppsApp.isHasVersions()) {
+      menuItemVersions.setVisible(true);
+      compositeSubscription.add(RxMenuItem.clicks(menuItemVersions).subscribe(aVoid -> {
+        if (clickCallback != null) {
+          clickCallback.call();
+        }
+
+        String name = searchAppsApp.getName();
+        String icon = searchAppsApp.getIcon();
+        String packageName = searchAppsApp.getPackageName();
+
+        getNavigationManager().navigateTo(
+            V8Engine.getFragmentProvider().newOtherVersionsFragment(name, icon, packageName));
+      }));
+    }
+
+    MenuItem menuItemGoToStore = popup.getMenu().findItem(R.id.go_to_store);
+    compositeSubscription.add(RxMenuItem.clicks(menuItemGoToStore).subscribe(__ -> {
       if (clickCallback != null) {
         clickCallback.call();
       }
-      FragmentUtils.replaceFragmentV4(getContext(), V8Engine.getFragmentProvider()
-          .newAppViewFragment(pojo.getId(), pojo.getPackageName(),
-              pojo.getStore().getAppearance().getTheme(), pojo.getStore().getName()));
-    });
+      getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
+          .newStoreFragment(searchAppsApp.getStore().getName(),
+              searchAppsApp.getStore().getAppearance().getTheme()));
+    }));
+
+    popup.show();
   }
 }

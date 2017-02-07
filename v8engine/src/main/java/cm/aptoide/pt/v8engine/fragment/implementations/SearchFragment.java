@@ -7,7 +7,6 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -34,7 +33,6 @@ import cm.aptoide.pt.v8engine.analytics.abtesting.ABTest;
 import cm.aptoide.pt.v8engine.analytics.abtesting.ABTestManager;
 import cm.aptoide.pt.v8engine.analytics.abtesting.SearchTabOptions;
 import cm.aptoide.pt.v8engine.fragment.BasePagerToolbarFragment;
-import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import java.util.List;
@@ -121,7 +119,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
         String s = noSearchLayoutSearchQuery.getText().toString();
 
         if (s.length() > 1) {
-          FragmentUtils.replaceFragmentV4(((FragmentActivity) getContext()),
+          getNavigationManager().navigateTo(
               V8Engine.getFragmentProvider().newSearchFragment(s, storeName));
         }
       });
@@ -326,9 +324,9 @@ public class SearchFragment extends BasePagerToolbarFragment {
     inflater.inflate(R.menu.menu_search, menu);
 
     if (storeName != null) {
-      SearchUtils.setupInsideStoreSearchView(menu, getActivity(), storeName);
+      SearchUtils.setupInsideStoreSearchView(menu, getNavigationManager(), storeName);
     } else {
-      SearchUtils.setupGlobalSearchView(menu, getActivity());
+      SearchUtils.setupGlobalSearchView(menu, getNavigationManager());
     }
   }
 

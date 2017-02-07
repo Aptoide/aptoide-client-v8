@@ -7,7 +7,6 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ImageView;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -22,10 +21,11 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.implementations.HomeFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.storetab.StoreTabFragmentChooser;
-import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridDisplayDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import com.jakewharton.rxbinding.view.RxView;
+import rx.functions.Action1;
 
 /**
  * Created by sithengineer on 02/05/16.
@@ -45,22 +45,17 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
     imageView = (ImageView) itemView.findViewById(R.id.image_category);
   }
 
-  @Override public void unbindView() {
-
-  }
-
   @Override public void bindView(GridDisplayDisplayable displayable) {
     GetStoreDisplays.EventImage pojo = displayable.getPojo();
     ImageLoader.load(pojo.getGraphic(), imageView);
 
-    imageView.setOnClickListener(v -> {
+    final Action1<Void> imageClickHandler = v -> {
       Event event = pojo.getEvent();
       Event.Name name = event.getName();
       if (StoreTabFragmentChooser.validateAcceptedName(name)) {
-        FragmentUtils.replaceFragmentV4((FragmentActivity) itemView.getContext(),
-            V8Engine.getFragmentProvider()
-                .newStoreTabGridRecyclerFragment(event, pojo.getLabel(),
-                    displayable.getStoreTheme(), displayable.getTag()));
+        getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
+            .newStoreTabGridRecyclerFragment(event, pojo.getLabel(), displayable.getStoreTheme(),
+                displayable.getTag()));
       } else {
         switch (name) {
           case facebook:
@@ -87,7 +82,8 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
             break;
         }
       }
-    });
+    };
+    compositeSubscription.add(RxView.clicks(imageView).subscribe(imageClickHandler));
   }
 
   private void sendActionEvent(String eventActionUrl) {

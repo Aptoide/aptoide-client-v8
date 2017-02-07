@@ -8,8 +8,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -18,12 +21,13 @@ import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
+import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.SocialStoreLatestAppsDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView.AppViewStoreWidget;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.HashMap;
 import java.util.Map;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 
 /**
  * Created by jdandrade on 29/11/2016.
@@ -107,18 +111,9 @@ public class SocialStoreLatestAppsWidget
       }
     }
 
-    //if ((displayable.getUserSharer() != null || displayable.getUserSharer().getName() != null)) {
-    //  if (!displayable.getUser().getName().equals(displayable.getUserSharer().getName())) {
-    //    sharedBy.setVisibility(View.VISIBLE);
-    //    sharedBy.setText(displayable.getSharedBy(getContext()));
-    //  }
-    //}
-
     ImageLoader.loadWithShadowCircleTransform(displayable.getSharedStore().getAvatar(),
         sharedStoreAvatar);
     sharedStoreName.setText(displayable.getSharedStore().getName());
-    //sharedStoreSubscribersNumber.setText("" + displayable.getSharedStore().getStats().getSubscribers());
-    //sharedStoreAppsNumber.setText("" + displayable.getSharedStore().getStats().getApps());
 
     appsContaner.removeAllViews();
     apps.clear();
@@ -194,28 +189,38 @@ public class SocialStoreLatestAppsWidget
     }
     followStore.setTextColor(storeThemeEnum.getStoreHeaderInt());
 
+    final String storeName = displayable.getSharedStore().getName();
+    final String storeTheme = displayable.getSharedStore().getName();
     compositeSubscription.add(storeRepository.isSubscribed(displayable.getSharedStore().getId())
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(isSubscribed -> {
-          if (isSubscribed) {
-            //int checkmarkDrawable = storeThemeEnum.getCheckmarkDrawable();
-            //followButton.setCompoundDrawablesWithIntrinsicBounds(checkmarkDrawable, 0, 0, 0);
-            followStore.setText(R.string.followed);
-            followStore.setOnClickListener(
-                new AppViewStoreWidget.Listeners().newOpenStoreListener(itemView,
-                    displayable.getSharedStore().getName(),
-                    displayable.getSharedStore().getAppearance().getTheme()));
-          } else {
-            //int plusMarkDrawable = storeThemeEnum.getPlusmarkDrawable();
-            //followButton.setCompoundDrawablesWithIntrinsicBounds(plusMarkDrawable, 0, 0, 0);
-            followStore.setText(R.string.appview_follow_store_button_text);
-            followStore.setOnClickListener(
-                new AppViewStoreWidget.Listeners().newSubscribeStoreListener(itemView,
-                    displayable.getSharedStore().getName()));
-          }
-        }, (throwable) -> {
-          throwable.printStackTrace();
-        }));
+        .subscribe(isSubscribed -> handleIsSubscribed(isSubscribed, storeName, storeTheme),
+            (throwable) -> {
+              throwable.printStackTrace();
+            }));
+  }
+
+  private void handleIsSubscribed(boolean isSubscribed, String storeName, String storeTheme) {
+    if (isSubscribed) {
+      // set store already followed button text and open store action
+      Action1<Void> openStore = __ -> {
+        getNavigationManager().navigateTo(
+            V8Engine.getFragmentProvider().newStoreFragment(storeName, storeTheme));
+      };
+      followStore.setText(R.string.followed);
+      compositeSubscription.add(RxView.clicks(followStore).subscribe(openStore));
+    } else {
+      // set follow store button text and subscribe store action
+      Action1<Void> subscribeStore = __ -> {
+        StoreUtilsProxy.subscribeStore(storeName, getStoreMeta -> {
+          ShowMessage.asSnack(itemView,
+              AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
+        }, err -> {
+          CrashReport.getInstance().log(err);
+        });
+      };
+      followStore.setText(R.string.appview_follow_store_button_text);
+      compositeSubscription.add(RxView.clicks(followStore).subscribe(subscribeStore));
+    }
   }
 
   @Override String getCardTypeName() {

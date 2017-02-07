@@ -26,7 +26,6 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
-import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.Translator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.OfficialAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -137,7 +136,7 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
         Fragment appView = V8Engine.getFragmentProvider()
             .newAppViewFragment(appData.getPackageName(),
                 AppViewFragment.OpenType.OPEN_AND_INSTALL);
-        FragmentUtils.replaceFragmentV4(this.getContext(), appView);
+        getNavigationManager().navigateTo(appView);
       }
     }, err -> {
       CrashReport.getInstance().log(err);

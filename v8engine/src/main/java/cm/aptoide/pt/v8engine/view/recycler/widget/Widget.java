@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.widget;
 
+import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
@@ -45,7 +46,7 @@ public abstract class Widget<T extends Displayable> extends RecyclerView.ViewHol
     return appNav;
   }
 
-  public void unbindView() {
+  @CallSuper public void unbindView() {
     if (compositeSubscription != null && !compositeSubscription.isUnsubscribed()) {
       compositeSubscription.clear();
     }

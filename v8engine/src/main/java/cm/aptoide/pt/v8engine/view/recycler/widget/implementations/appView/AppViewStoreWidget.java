@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
 import android.os.Build;
-import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -23,14 +22,15 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
-import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import com.jakewharton.rxbinding.view.RxView;
 import java.util.Locale;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 
 /**
  * Created by sithengineer on 10/05/16.
@@ -44,6 +44,8 @@ import rx.android.schedulers.AndroidSchedulers;
   private Button followButton;
   private View storeLayout;
   private StoreRepository storeRepository;
+
+  private AppViewStoreDisplayable displayable;
 
   public AppViewStoreWidget(View itemView) {
     super(itemView);
@@ -60,6 +62,7 @@ import rx.android.schedulers.AndroidSchedulers;
 
   @Override public void bindView(AppViewStoreDisplayable displayable) {
     setupStoreInfo(displayable.getPojo());
+    this.displayable = displayable;
   }
 
   private void setupStoreInfo(GetApp getApp) {
@@ -86,9 +89,26 @@ import rx.android.schedulers.AndroidSchedulers;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       followButton.setElevation(0);
     }
+
+    final String storeName = store.getName();
+    final String storeTheme = store.getAppearance().getTheme();
+
+    Action1<Void> openStore = __ -> {
+      getNavigationManager().navigateTo(
+          V8Engine.getFragmentProvider().newStoreFragment(storeName, storeTheme));
+    };
+
+    Action1<Void> subscribeStore = __ -> {
+      StoreUtilsProxy.subscribeStore(storeName, getStoreMeta -> {
+        ShowMessage.asSnack(itemView,
+            AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
+      }, err -> {
+        CrashReport.getInstance().log(err);
+      });
+    };
+
     followButton.setTextColor(storeThemeEnum.getStoreHeaderInt());
-    storeLayout.setOnClickListener(new Listeners().newOpenStoreListener(itemView, store.getName(),
-        store.getAppearance().getTheme()));
+    compositeSubscription.add(RxView.clicks(storeLayout).subscribe(openStore));
 
     compositeSubscription.add(storeRepository.isSubscribed(store.getId())
         .observeOn(AndroidSchedulers.mainThread())
@@ -97,38 +117,13 @@ import rx.android.schedulers.AndroidSchedulers;
             //int checkmarkDrawable = storeThemeEnum.getCheckmarkDrawable();
             //followButton.setCompoundDrawablesWithIntrinsicBounds(checkmarkDrawable, 0, 0, 0);
             followButton.setText(R.string.followed);
-            followButton.setOnClickListener(
-                new Listeners().newOpenStoreListener(itemView, store.getName(),
-                    store.getAppearance().getTheme()));
+            compositeSubscription.add(RxView.clicks(followButton).subscribe(openStore));
           } else {
             //int plusMarkDrawable = storeThemeEnum.getPlusmarkDrawable();
             //followButton.setCompoundDrawablesWithIntrinsicBounds(plusMarkDrawable, 0, 0, 0);
             followButton.setText(R.string.appview_follow_store_button_text);
-            followButton.setOnClickListener(
-                new Listeners().newSubscribeStoreListener(itemView, store.getName()));
+            compositeSubscription.add(RxView.clicks(followButton).subscribe(subscribeStore));
           }
         }));
-  }
-
-  public static class Listeners {
-
-    public View.OnClickListener newOpenStoreListener(View itemView, String storeName,
-        String storeTheme) {
-      return v -> {
-        FragmentUtils.replaceFragmentV4((FragmentActivity) itemView.getContext(),
-            V8Engine.getFragmentProvider().newStoreFragment(storeName, storeTheme));
-      };
-    }
-
-    public View.OnClickListener newSubscribeStoreListener(View itemView, String storeName) {
-      return v -> {
-        StoreUtilsProxy.subscribeStore(storeName, getStoreMeta -> {
-          ShowMessage.asSnack(itemView,
-              AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
-        }, err -> {
-          CrashReport.getInstance().log(err);
-        });
-      };
-    }
   }
 }
