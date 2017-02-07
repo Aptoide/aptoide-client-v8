@@ -365,4 +365,8 @@
   <string name="out_of_space_dialog_title">Out of space</string>
   <string name="out_of_space_dialog_message">Please, free space in order to proceed.</string>
 
+  <!-- Address book -->
+  <string name="addressbook_increase_network_message">Increase your network.</string>
+  <string name="addressbook_connect_with_friends_message">Connect with friends.</string>
+
 </resources>
