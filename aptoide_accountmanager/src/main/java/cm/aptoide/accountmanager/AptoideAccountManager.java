@@ -103,9 +103,9 @@ public class AptoideAccountManager {
     this.applicationContext = applicationContext;
     this.configuration = configuration;
     this.analytics = analytics;
+    this.androidAccountManager = androidAccountManager;
     this.userIsLoggedIn = isLoggedIn();
     this.secureCoderDecoder = secureCoderDecoder;
-    this.androidAccountManager = androidAccountManager;
     LOGIN = configuration.getAppId() + ".accountmanager.broadcast.login";
     LOGIN_CANCELLED = configuration.getAppId() + ".accountmanager.broadcast.LOGIN_CANCELLED";
     LOGOUT = configuration.getAppId() + ".accountmanager.broadcast.logout";
@@ -605,8 +605,7 @@ public class AptoideAccountManager {
     String email = callback.getUserEmail();
     String password = callback.getUserPassword();
     if (validateUserCredentials(callback, email, password)) {
-      CreateUserRequest.of(email, password, aptoideClientUuid.getUniqueIdentifier(),
-          applicationContext, this).execute(oAuth -> {
+      CreateUserRequest.of(email, password, aptoideClientUuid.getUniqueIdentifier(), this).execute(oAuth -> {
         if (oAuth.hasErrors()) {
           if (oAuth.getErrors() != null && oAuth.getErrors().size() > 0) {
             callback.onRegisterFail(
