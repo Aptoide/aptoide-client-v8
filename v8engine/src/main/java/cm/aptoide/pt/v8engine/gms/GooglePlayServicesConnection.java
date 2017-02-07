@@ -12,7 +12,6 @@ import android.support.annotation.Nullable;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
-import rx.Completable;
 import rx.Observable;
 import rx.Single;
 import rx.Subscriber;
@@ -42,19 +41,21 @@ public class GooglePlayServicesConnection {
     });
   }
 
-  public Completable connect() {
-    return Observable.create(new Observable.OnSubscribe<Void>() {
-      @Override public void call(Subscriber<? super Void> subscriber) {
+  public Observable<Status> connect() {
+    return Observable.create(new Observable.OnSubscribe<Status>() {
+      @Override public void call(Subscriber<? super Status> subscriber) {
         final GoogleApiClient.ConnectionCallbacks connectionCallbacks =
             new GoogleApiClient.ConnectionCallbacks() {
               @Override public void onConnected(@Nullable Bundle bundle) {
                 if (!subscriber.isUnsubscribed()) {
-                  subscriber.onCompleted();
+                  subscriber.onNext(Status.CONNECTED);
                 }
               }
 
               @Override public void onConnectionSuspended(int i) {
-
+                if (!subscriber.isUnsubscribed()) {
+                  subscriber.onNext(Status.SUSPENDED);
+                }
               }
             };
 
@@ -78,6 +79,11 @@ public class GooglePlayServicesConnection {
         client.registerConnectionFailedListener(connectionFailedListener);
         client.connect();
       }
-    }).toCompletable();
+    });
+  }
+
+  public enum Status {
+    CONNECTED,
+    SUSPENDED
   }
 }
