@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
@@ -58,6 +59,8 @@ public class AddStoreDialog extends DialogFragment {
   private SearchView searchView;
   private Button addStoreButton;
   private LinearLayout topStoresButton;
+  private TextView topStoreText1;
+  private TextView topStoreText2;
   private static StoreAutoCompleteWebSocket storeAutoCompleteWebSocket;
   private String givenStoreName;;
 
@@ -92,13 +95,17 @@ public class AddStoreDialog extends DialogFragment {
         showLoadingDialog();
       }
     }));
-    mSubscriptions.add(RxView.clicks(topStoresButton).subscribe(click -> {
-      ((MainActivityFragment) getActivity()).pushFragmentV4(
-          V8Engine.getFragmentProvider().newFragmentTopStores());
-      if (isAdded()) {
-        dismiss();
-      }
-    }));
+    mSubscriptions.add(RxView.clicks(topStoresButton).subscribe(click -> topStoresAction()));
+    mSubscriptions.add(RxView.clicks(topStoreText1).subscribe(click -> topStoresAction()));
+    mSubscriptions.add(RxView.clicks(topStoreText2).subscribe(click -> topStoresAction()));
+  }
+
+  private void topStoresAction() {
+    ((MainActivityFragment) getActivity()).pushFragmentV4(
+        V8Engine.getFragmentProvider().newFragmentTopStores());
+    if (isAdded()) {
+      dismiss();
+    }
   }
 
   private void setupSearchView(View view) {
@@ -136,6 +143,8 @@ public class AddStoreDialog extends DialogFragment {
     searchView = (SearchView) view.findViewById(R.id.edit_store_uri);
     addStoreButton = (Button) view.findViewById(R.id.button_dialog_add_store);
     topStoresButton = (LinearLayout) view.findViewById(R.id.button_top_stores);
+    topStoreText1 = (TextView) view.findViewById(R.id.top_stores_text_1);
+    topStoreText2 = (TextView) view.findViewById(R.id.top_stores_text_2);
   }
 
   private void getStore(String storeName) {
