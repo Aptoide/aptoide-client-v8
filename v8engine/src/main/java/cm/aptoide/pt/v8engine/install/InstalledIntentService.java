@@ -197,9 +197,8 @@ public class InstalledIntentService extends IntentService {
     if (update != null) {
       if (packageInfo.versionCode >= update.getVersionCode()) {
         // remove old update and on complete insert new app.
-        updatesRepository.remove(update).doOnError(throwable -> {
-          CrashReport.getInstance().log(throwable);
-        }).doOnCompleted(insertApp);
+        updatesRepository.remove(update)
+            .subscribe(insertApp, throwable -> CrashReport.getInstance().log(throwable));
       }
     } else {
       // sync call to insert
