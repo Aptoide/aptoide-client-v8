@@ -200,7 +200,9 @@ public abstract class V8Engine extends DataProvider {
             SecurePreferences.setUserDataLoaded();
           }
         } else {
-          generateAptoideUUID().subscribe(success -> addDefaultStore());
+          generateAptoideUUID().subscribe(success -> addDefaultStore(), err -> {
+            CrashReport.getInstance().log(err);
+          });
         }
         SecurePreferences.setFirstRun(false);
       }).subscribe();

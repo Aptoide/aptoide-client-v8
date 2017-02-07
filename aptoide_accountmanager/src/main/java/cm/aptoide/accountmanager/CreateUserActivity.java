@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 import cm.aptoide.accountmanager.ws.CreateUserRequest;
 import cm.aptoide.accountmanager.ws.ErrorsMapper;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.imageloader.ImageLoader;
@@ -97,7 +98,10 @@ public class CreateUserActivity extends PermissionsBaseActivity
 
   @Override void showIconPropertiesError(String errors) {
     mSubscriptions.add(GenericDialogs.createGenericOkMessage(this,
-        getString(R.string.image_requirements_error_popup_title), errors).subscribe());
+        getString(R.string.image_requirements_error_popup_title), errors)
+        .subscribe(__ -> {/* does nothing */}, err -> {
+          CrashReport.getInstance().log(err);
+        }));
   }
 
   private void bindViews() {
@@ -125,80 +129,87 @@ public class CreateUserActivity extends PermissionsBaseActivity
   }
 
   private void setupListeners() {
-    mSubscriptions.add(RxView.clicks(mUserAvatar).subscribe(click -> chooseAvatarSource()));
+    mSubscriptions.add(RxView.clicks(mUserAvatar).subscribe(click -> chooseAvatarSource(), err -> {
+      CrashReport.getInstance().log(err);
+    }));
     mSubscriptions.add(RxView.clicks(mCreateButton).subscribe(click -> {
-      AptoideUtils.SystemU.hideKeyboard(this);
-      username = mUsername.getText().toString().trim();
-      validateProfileData();
-      if (CREATE_USER_REQUEST_CODE == 1) {
-        ProgressDialog pleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
-            getApplicationContext().getString(R.string.please_wait_upload));
-        pleaseWaitDialog.show();
-        mSubscriptions.add(
-            CreateUserRequest.of("true", userEmail, username, userPassword, avatarPath,
-                aptoideClientUUID.getUniqueIdentifier()).observe().filter(answer -> {
-              if (answer.hasErrors()) {
-                if (answer.getErrors() != null && answer.getErrors().size() > 0) {
-                  onRegisterFail(ErrorsMapper.getWebServiceErrorMessageFromCode(
-                      answer.getErrors().get(0).code));
-                  pleaseWaitDialog.dismiss();
-                } else {
-                  onRegisterFail(R.string.unknown_error);
-                  pleaseWaitDialog.dismiss();
-                }
-                return false;
-              }
-              return true;
-            }).timeout(90, TimeUnit.SECONDS).subscribe(answer -> {
-              //Successfull update
-              saveUserDataOnPreferences();
-              onRegisterSuccess(pleaseWaitDialog);
-              pleaseWaitDialog.dismiss();
-            }, err -> {
-              if (err.getClass().equals(SocketTimeoutException.class)) {
-                pleaseWaitDialog.dismiss();
-                ShowMessage.asObservableSnack(this, R.string.user_upload_photo_failed)
-                    .subscribe(visibility -> {
-                      if (visibility == ShowMessage.DISMISSED) {
-                        finish();
-                      }
-                    });
-              } else if (err.getClass().equals(TimeoutException.class)) {
-                pleaseWaitDialog.dismiss();
-                ShowMessage.asObservableSnack(this, R.string.user_upload_photo_failed)
-                    .subscribe(visibility -> {
-                      if (visibility == ShowMessage.DISMISSED) {
-                        finish();
-                      }
-                    });
-              }
-            }));
-      } else if (CREATE_USER_REQUEST_CODE == 2) {
-        avatarPath = "";
-        ProgressDialog pleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
-            getApplicationContext().getString(R.string.please_wait));
-        pleaseWaitDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        pleaseWaitDialog.show();
-        CreateUserRequest.of("true", userEmail, username, userPassword, avatarPath,
-            aptoideClientUUID.getUniqueIdentifier()).execute(answer -> {
-          if (answer.hasErrors()) {
-            if (answer.getErrors() != null && answer.getErrors().size() > 0) {
-              onRegisterFail(
-                  ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors().get(0).code));
-              pleaseWaitDialog.dismiss();
-            } else {
-              onRegisterFail(R.string.unknown_error);
-              pleaseWaitDialog.dismiss();
-            }
+      handleCreateButtonClick();
+    }, err -> {
+      CrashReport.getInstance().log(err);
+    }));
+  }
+
+  private void handleCreateButtonClick() {
+    AptoideUtils.SystemU.hideKeyboard(this);
+    username = mUsername.getText().toString().trim();
+    validateProfileData();
+    if (CREATE_USER_REQUEST_CODE == 1) {
+      ProgressDialog pleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
+          getApplicationContext().getString(R.string.please_wait_upload));
+      pleaseWaitDialog.show();
+      mSubscriptions.add(CreateUserRequest.of("true", userEmail, username, userPassword, avatarPath,
+          aptoideClientUUID.getUniqueIdentifier()).observe().filter(answer -> {
+        if (answer.hasErrors()) {
+          if (answer.getErrors() != null && answer.getErrors().size() > 0) {
+            onRegisterFail(
+                ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors().get(0).code));
+            pleaseWaitDialog.dismiss();
           } else {
-            //Successfull update
-            saveUserDataOnPreferences();
-            onRegisterSuccess(pleaseWaitDialog);
+            onRegisterFail(R.string.unknown_error);
             pleaseWaitDialog.dismiss();
           }
-        });
-      }
-    }));
+          return false;
+        }
+        return true;
+      }).timeout(90, TimeUnit.SECONDS).subscribe(answer -> {
+        //Successfull update
+        saveUserDataOnPreferences();
+        onRegisterSuccess(pleaseWaitDialog);
+        pleaseWaitDialog.dismiss();
+      }, err -> {
+        if (err.getClass().equals(SocketTimeoutException.class)) {
+          pleaseWaitDialog.dismiss();
+          ShowMessage.asObservableSnack(this, R.string.user_upload_photo_failed)
+              .subscribe(visibility -> {
+                if (visibility == ShowMessage.DISMISSED) {
+                  finish();
+                }
+              });
+        } else if (err.getClass().equals(TimeoutException.class)) {
+          pleaseWaitDialog.dismiss();
+          ShowMessage.asObservableSnack(this, R.string.user_upload_photo_failed)
+              .subscribe(visibility -> {
+                if (visibility == ShowMessage.DISMISSED) {
+                  finish();
+                }
+              });
+        }
+      }));
+    } else if (CREATE_USER_REQUEST_CODE == 2) {
+      avatarPath = "";
+      ProgressDialog pleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
+          getApplicationContext().getString(R.string.please_wait));
+      pleaseWaitDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+      pleaseWaitDialog.show();
+      CreateUserRequest.of("true", userEmail, username, userPassword, avatarPath,
+          aptoideClientUUID.getUniqueIdentifier()).execute(answer -> {
+        if (answer.hasErrors()) {
+          if (answer.getErrors() != null && answer.getErrors().size() > 0) {
+            onRegisterFail(
+                ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors().get(0).code));
+            pleaseWaitDialog.dismiss();
+          } else {
+            onRegisterFail(R.string.unknown_error);
+            pleaseWaitDialog.dismiss();
+          }
+        } else {
+          //Successfull update
+          saveUserDataOnPreferences();
+          onRegisterSuccess(pleaseWaitDialog);
+          pleaseWaitDialog.dismiss();
+        }
+      });
+    }
   }
 
   public int validateProfileData() {

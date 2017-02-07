@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.interfaces.LoadInterface;
 import cm.aptoide.pt.v8engine.layouthandler.LoaderLayoutHandler;
 import lombok.Getter;
@@ -101,5 +102,6 @@ public abstract class BaseLoaderFragment extends SupportV4BaseFragment implement
     if (loaderLayoutHandler != null) {
       loaderLayoutHandler.finishLoading(throwable);
     }
+    CrashReport.getInstance().log(throwable);
   }
 }

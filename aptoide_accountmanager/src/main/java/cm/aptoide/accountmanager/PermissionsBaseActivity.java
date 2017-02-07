@@ -15,6 +15,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -46,55 +47,6 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
   private String TAG = "STORAGE";
   private File avatar;
   private CompositeSubscription mSubscriptions;
-
-  @Override public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    mSubscriptions = new CompositeSubscription();
-  }
-
-  @Override protected String getActivityTitle() {
-    return null;
-  }
-
-  @Override int getLayoutId() {
-    return 0;
-  }
-
-  @Override protected void onDestroy() {
-    super.onDestroy();
-    mSubscriptions.clear();
-  }
-
-  public void chooseAvatarSource() {
-    final Dialog dialog = new Dialog(this);
-    dialog.setContentView(R.layout.dialog_choose_avatar_layout);
-    mSubscriptions.add(RxView.clicks(dialog.findViewById(R.id.button_camera)).subscribe(click -> {
-      callPermissionAndAction(TYPE_CAMERA);
-      dialog.dismiss();
-    }));
-    mSubscriptions.add(RxView.clicks(dialog.findViewById(R.id.button_gallery)).subscribe(click -> {
-      callPermissionAndAction(TYPE_STORAGE);
-      dialog.dismiss();
-    }));
-    mSubscriptions.add(
-        RxView.clicks(dialog.findViewById(R.id.cancel)).subscribe(click -> dialog.dismiss()));
-    dialog.show();
-  }
-
-  public void callPermissionAndAction(String type) {
-    String result =
-        PermissionsBaseActivity.checkAndAskPermission(PermissionsBaseActivity.this, type);
-    switch (result) {
-      case PermissionsBaseActivity.CAMERA_PERMISSION_GIVEN:
-        changePermissionValue(true);
-        dispatchTakePictureIntent(getApplicationContext());
-        break;
-      case PermissionsBaseActivity.STORAGE_PERMISSION_GIVEN:
-        changePermissionValue(true);
-        callGallery();
-        break;
-    }
-  }
 
   public static String checkAndAskPermission(final AppCompatActivity activity, String type) {
 
@@ -145,6 +97,63 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
     return "";
   }
 
+  protected static String createAvatarPhotoName(String avatar) {
+    //SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-mm-yyyy");
+    String output = avatar /*+ simpleDateFormat.toString()*/;
+    return output;
+  }
+
+  @Override public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    mSubscriptions = new CompositeSubscription();
+  }
+
+  @Override protected String getActivityTitle() {
+    return null;
+  }
+
+  @Override int getLayoutId() {
+    return 0;
+  }
+
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    mSubscriptions.clear();
+  }
+
+  public void chooseAvatarSource() {
+    final Dialog dialog = new Dialog(this);
+    dialog.setContentView(R.layout.dialog_choose_avatar_layout);
+    mSubscriptions.add(RxView.clicks(dialog.findViewById(R.id.button_camera)).subscribe(click -> {
+      callPermissionAndAction(TYPE_CAMERA);
+      dialog.dismiss();
+    }));
+    mSubscriptions.add(RxView.clicks(dialog.findViewById(R.id.button_gallery)).subscribe(click -> {
+      callPermissionAndAction(TYPE_STORAGE);
+      dialog.dismiss();
+    }));
+    mSubscriptions.add(RxView.clicks(dialog.findViewById(R.id.cancel))
+        .subscribe(click -> dialog.dismiss(), err -> {
+          CrashReport.getInstance().log(err);
+        }));
+    dialog.show();
+  }
+
+  public void callPermissionAndAction(String type) {
+    String result =
+        PermissionsBaseActivity.checkAndAskPermission(PermissionsBaseActivity.this, type);
+    switch (result) {
+      case PermissionsBaseActivity.CAMERA_PERMISSION_GIVEN:
+        changePermissionValue(true);
+        dispatchTakePictureIntent(getApplicationContext());
+        break;
+      case PermissionsBaseActivity.STORAGE_PERMISSION_GIVEN:
+        changePermissionValue(true);
+        callGallery();
+        break;
+    }
+  }
+
   public void changePermissionValue(boolean b) {
     result = b;
   }
@@ -193,12 +202,6 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
     }
     avatar = storageDir;
     return Uri.fromFile(new File(storageDir.getPath() + File.separator + fileName));
-  }
-
-  protected static String createAvatarPhotoName(String avatar) {
-    //SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-mm-yyyy");
-    String output = avatar /*+ simpleDateFormat.toString()*/;
-    return output;
   }
 
   protected void checkAvatarRequirements(String avatarPath, Uri avatarUrl) {

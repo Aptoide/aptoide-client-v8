@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.fragment.implementations.storetab;
 
 import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
@@ -58,7 +59,9 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
       if (WSWidgetsUtils.shouldAddObjectView(errorsList, throwable)) {
         DisplayablesFactory.loadLocalSubscribedStores(storeRepository)
             .compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW))
-            .subscribe(stores -> addDisplayables(getStoresDisplayable(stores)));
+            .subscribe(stores -> addDisplayables(getStoresDisplayable(stores)), err -> {
+              CrashReport.getInstance().log(err);
+            });
       } else {
         finishLoading(throwable);
       }
