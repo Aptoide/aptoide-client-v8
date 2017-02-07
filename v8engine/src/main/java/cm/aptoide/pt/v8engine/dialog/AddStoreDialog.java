@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
@@ -51,13 +52,12 @@ public class AddStoreDialog extends DialogFragment {
 
   private final int PRIVATE_STORE_REQUEST_CODE = 20;
   private static String STORE_WEBSOCKET_PORT = "9002";
-  private static final int MAX_RESULTS = 5;
   private String storeName;
   private Dialog loadingDialog;
   private CompositeSubscription mSubscriptions;
   private SearchView searchView;
   private Button addStoreButton;
-  private Button topStoresButton;
+  private LinearLayout topStoresButton;
   private static StoreAutoCompleteWebSocket storeAutoCompleteWebSocket;
   private String givenStoreName;;
 
@@ -135,7 +135,7 @@ public class AddStoreDialog extends DialogFragment {
   private void bindViews(View view) {
     searchView = (SearchView) view.findViewById(R.id.edit_store_uri);
     addStoreButton = (Button) view.findViewById(R.id.button_dialog_add_store);
-    topStoresButton = (Button) view.findViewById(R.id.button_top_stores);
+    topStoresButton = (LinearLayout) view.findViewById(R.id.button_top_stores);
   }
 
   private void getStore(String storeName) {
