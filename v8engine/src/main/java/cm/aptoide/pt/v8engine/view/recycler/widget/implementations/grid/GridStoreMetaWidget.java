@@ -4,14 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.ColorInt;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AccountManagerPreferences;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -28,7 +28,6 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreMetaDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.bumptech.glide.Glide;
 import com.jakewharton.rxbinding.view.RxView;
 import java.text.NumberFormat;
@@ -36,17 +35,16 @@ import java.util.List;
 import java.util.Locale;
 import lombok.Getter;
 import lombok.Setter;
-import rx.Observable;
 import rx.functions.Action1;
 
 /**
  * Created by neuro on 04-08-2016.
  */
-public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
+public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDisplayable> {
 
   private View containerLayout;
   private View descriptionContentLayout;
-  private View socialChannelsLayout;
+  private LinearLayout socialChannelsLayout;
   private ImageView image;
   private TextView name;
   private TextView description;
@@ -55,18 +53,19 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
   private TextView subscribersCount;
   private TextView appsCount;
   private TextView downloadsCount;
-  private ImageButton youtubeOrFacebookButton;
-  private ImageButton twitchButton;
-  private ImageButton twitterButton;
 
   public GridStoreMetaWidget(View itemView) {
     super(itemView);
   }
 
+  @NonNull @Override LinearLayout getSocialLayout() {
+    return socialChannelsLayout;
+  }
+
   @Override protected void assignViews(View itemView) {
     containerLayout = itemView.findViewById(R.id.outter_layout);
     descriptionContentLayout = itemView.findViewById(R.id.descriptionContent);
-    socialChannelsLayout = itemView.findViewById(R.id.social_channels);
+    socialChannelsLayout = (LinearLayout) itemView.findViewById(R.id.social_channels);
     image = (ImageView) itemView.findViewById(R.id.image);
     name = (TextView) itemView.findViewById(R.id.name);
     description = (TextView) itemView.findViewById(R.id.description);
@@ -75,9 +74,6 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
     subscribersCount = (TextView) itemView.findViewById(R.id.subscribers);
     appsCount = (TextView) itemView.findViewById(R.id.apps);
     downloadsCount = (TextView) itemView.findViewById(R.id.downloads);
-    youtubeOrFacebookButton = (ImageButton) itemView.findViewById(R.id.youtube_or_facebook_button);
-    twitchButton = (ImageButton) itemView.findViewById(R.id.twitch_button);
-    twitterButton = (ImageButton) itemView.findViewById(R.id.twitter_button);
   }
 
   @Override public void unbindView() {
@@ -104,7 +100,7 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
 
     List<cm.aptoide.pt.model.v7.store.Store.SocialChannel> socialChannels =
         store.getSocialChannels();
-    setupSocialChannelButtons(socialChannels);
+    setupSocialLinks(displayable.getSocialLinks());
 
     // if there is no channels nor description, hide that area
     if (socialChannels == null || socialChannels.isEmpty()) {
@@ -198,46 +194,6 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
     };
   }
 
-  private void setupSocialChannelButtons(
-      List<cm.aptoide.pt.model.v7.store.Store.SocialChannel> socialChannels) {
-    if (socialChannels == null || socialChannels.isEmpty()) {
-      return;
-    }
-
-    compositeSubscription.add(Observable.from(socialChannels).flatMap(socialChannel -> {
-      cm.aptoide.pt.model.v7.store.Store.SocialChannelType eventType = socialChannel.getType();
-
-      switch (eventType) {
-        // uncomment for further development
-        case FACEBOOK:
-          youtubeOrFacebookButton.setImageResource(R.drawable.facebook_logo);
-          youtubeOrFacebookButton.setClickable(true);
-          youtubeOrFacebookButton.setVisibility(View.VISIBLE);
-          return RxView.clicks(youtubeOrFacebookButton).map(aVoid -> socialChannel);
-
-        case YOUTUBE:
-          youtubeOrFacebookButton.setClickable(true);
-          youtubeOrFacebookButton.setVisibility(View.VISIBLE);
-          return RxView.clicks(youtubeOrFacebookButton).map(aVoid -> socialChannel);
-
-        case TWITCH:
-          twitchButton.setClickable(true);
-          twitchButton.setVisibility(View.VISIBLE);
-          return RxView.clicks(twitchButton).map(aVoid -> socialChannel);
-
-        case TWITTER:
-          twitterButton.setClickable(true);
-          twitterButton.setVisibility(View.VISIBLE);
-          return RxView.clicks(twitterButton).map(aVoid -> socialChannel);
-
-        default:
-          return Observable.empty();
-      }
-    }).subscribe(socialChannel -> {
-      handleEvent(socialChannel);
-    }));
-  }
-
   private void editStore(long storeId, String storeTheme, String storeDescription,
       String storeAvatar) {
     Intent intent = new Intent(getContext(), CreateStoreActivity.class);
@@ -255,17 +211,6 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
     } else {
       return context.getResources().getColor(theme.getStoreHeader());
     }
-  }
-
-  private Action1<Void> handleEvent(
-      cm.aptoide.pt.model.v7.store.Store.SocialChannel socialChannel) {
-    final String action = socialChannel.getUrl();
-    if (!TextUtils.isEmpty(action)) {
-      Intent i = new Intent(Intent.ACTION_VIEW);
-      i.setData(Uri.parse(action));
-      itemView.getContext().startActivity(i);
-    }
-    return null;
   }
 
   private static class StoreWrapper {

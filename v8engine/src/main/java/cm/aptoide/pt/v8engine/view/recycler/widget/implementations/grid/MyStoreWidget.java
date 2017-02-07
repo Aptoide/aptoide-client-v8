@@ -1,19 +1,14 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.ColorInt;
-import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -24,15 +19,13 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.MyStoreDisplayable;
-import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
-import java.util.List;
 
 /**
  * Created by trinkes on 05/12/2016.
  */
 
-public class MyStoreWidget extends Widget<MyStoreDisplayable> {
+public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
 
   private LinearLayout widgetLayout;
   private LinearLayout socialChannelsLayout;
@@ -95,45 +88,7 @@ public class MyStoreWidget extends Widget<MyStoreDisplayable> {
     }
   }
 
-  private void setupSocialLinks(List<Store.SocialChannel> socialChannels) {
-    socialChannelsLayout.removeAllViews();
-    LayoutInflater layoutInflater = getContext().getLayoutInflater();
-    ImageButton imageButton;
-    for (int i = 0; i < 1; i++) {
-      Store.SocialChannel socialChannel = socialChannels.get(i);
-      layoutInflater.inflate(R.layout.social_button_layout, socialChannelsLayout);
-      imageButton = ((ImageButton) socialChannelsLayout.getChildAt(i));
-      switch (socialChannel.getType()) {
-        case FACEBOOK:
-          imageButton.setImageDrawable(getDrawable(R.drawable.facebook_logo));
-          break;
-        case TWITTER:
-          imageButton.setImageDrawable(getDrawable(R.drawable.twitter_logo));
-          break;
-        case YOUTUBE:
-          imageButton.setImageDrawable(getDrawable(R.drawable.youtube_logo));
-          break;
-        case TWITCH:
-          imageButton.setImageDrawable(getDrawable(R.drawable.twitch_logo));
-          break;
-      }
-      imageButton.setOnClickListener(view -> sendEvent(socialChannel.getUrl()));
-    }
-  }
-
-  private Drawable getDrawable(@DrawableRes int drawable) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      return getContext().getDrawable(drawable);
-    } else {
-      return getContext().getResources().getDrawable(drawable);
-    }
-  }
-
-  public void sendEvent(String url) {
-    if (!TextUtils.isEmpty(url)) {
-      Intent intent = new Intent(Intent.ACTION_VIEW);
-      intent.setData(Uri.parse(url));
-      getContext().startActivity(intent);
-    }
+  @NonNull @Override LinearLayout getSocialLayout() {
+    return socialChannelsLayout;
   }
 }
