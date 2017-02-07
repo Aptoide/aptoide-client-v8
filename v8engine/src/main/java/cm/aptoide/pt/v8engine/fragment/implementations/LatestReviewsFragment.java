@@ -80,7 +80,7 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
       ListFullReviewsRequest listFullReviewsRequest =
           ListFullReviewsRequest.of(storeId, REVIEWS_LIMIT, 0,
               StoreUtils.getStoreCredentials(storeId), AptoideAccountManager.getAccessToken(),
-              aptoideClientUUID.getAptoideClientUUID());
+              aptoideClientUUID.getUniqueIdentifier());
       Action1<ListFullReviews> listFullReviewsAction = listTopFullReviews -> {
         List<FullReview> reviews = listTopFullReviews.getDatalist().getList();
         displayables = new LinkedList<>();

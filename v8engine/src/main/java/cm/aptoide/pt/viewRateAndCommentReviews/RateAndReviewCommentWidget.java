@@ -177,7 +177,7 @@ import rx.Observable;
 
   private void loadCommentsForThisReview(long reviewId, int limit, CommentAdder commentAdder) {
     ListCommentsRequest.of(reviewId, limit, AptoideAccountManager.getAccessToken(),
-        aptoideClientUUID.getAptoideClientUUID(), true).execute(listComments -> {
+        aptoideClientUUID.getUniqueIdentifier(), true).execute(listComments -> {
       if (listComments.isOk()) {
         List<Comment> comments = listComments.getDatalist().getList();
         commentAdder.addComment(comments);
@@ -196,7 +196,7 @@ import rx.Observable;
 
     if (AptoideAccountManager.isLoggedIn()) {
       SetReviewRatingRequest.of(reviewId, positive, AptoideAccountManager.getAccessToken(),
-          aptoideClientUUID.getAptoideClientUUID()).execute(response -> {
+          aptoideClientUUID.getUniqueIdentifier()).execute(response -> {
         if (response == null) {
           Logger.e(TAG, "empty response");
           return;

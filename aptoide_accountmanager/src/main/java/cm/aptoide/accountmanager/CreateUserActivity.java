@@ -136,7 +136,7 @@ public class CreateUserActivity extends PermissionsBaseActivity
         pleaseWaitDialog.show();
         mSubscriptions.add(
             CreateUserRequest.of("true", userEmail, username, userPassword, avatarPath,
-                aptoideClientUUID.getAptoideClientUUID()).observe().filter(answer -> {
+                aptoideClientUUID.getUniqueIdentifier()).observe().filter(answer -> {
               if (answer.hasErrors()) {
                 if (answer.getErrors() != null && answer.getErrors().size() > 0) {
                   onRegisterFail(ErrorsMapper.getWebServiceErrorMessageFromCode(
@@ -180,7 +180,7 @@ public class CreateUserActivity extends PermissionsBaseActivity
         pleaseWaitDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         pleaseWaitDialog.show();
         CreateUserRequest.of("true", userEmail, username, userPassword, avatarPath,
-            aptoideClientUUID.getAptoideClientUUID()).execute(answer -> {
+            aptoideClientUUID.getUniqueIdentifier()).execute(answer -> {
           if (answer.hasErrors()) {
             if (answer.getErrors() != null && answer.getErrors().size() > 0) {
               onRegisterFail(

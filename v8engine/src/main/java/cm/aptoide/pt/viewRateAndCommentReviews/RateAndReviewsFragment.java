@@ -178,7 +178,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
 
   private void fetchRating(boolean refresh) {
     GetAppRequest.of(appId, AptoideAccountManager.getAccessToken(),
-        aptoideClientUUID.getAptoideClientUUID(), packageName)
+        aptoideClientUUID.getUniqueIdentifier(), packageName)
         .observe(refresh)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
@@ -209,7 +209,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   private void fetchReviews() {
     ListReviewsRequest reviewsRequest =
         ListReviewsRequest.of(storeName, packageName, AptoideAccountManager.getAccessToken(),
-            aptoideClientUUID.getAptoideClientUUID());
+            aptoideClientUUID.getUniqueIdentifier());
 
     endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(this.getAdapter(), reviewsRequest,

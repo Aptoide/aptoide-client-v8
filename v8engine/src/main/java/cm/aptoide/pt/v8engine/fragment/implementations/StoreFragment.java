@@ -119,7 +119,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     if (create || getStore == null) {
       GetStoreRequest.of(StoreUtils.getStoreCredentials(storeName), storeContext,
-          AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
+          AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
           .observe(refresh)
           .observeOn(AndroidSchedulers.mainThread())
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))

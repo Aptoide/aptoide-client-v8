@@ -32,7 +32,7 @@ public class StoreUtilsProxy {
 
   public static void subscribeStore(String storeName) {
     subscribeStore(GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName),
-        AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID()), null,
+        AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier()), null,
         null, storeName);
   }
 
@@ -49,7 +49,7 @@ public class StoreUtilsProxy {
       @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
       @Nullable ErrorRequestListener errorRequestListener) {
     subscribeStore(GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName),
-        AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID()),
+        AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier()),
         successRequestListener, errorRequestListener, storeName);
   }
 }

@@ -143,7 +143,7 @@ public class PrivateStoreDialog extends DialogFragment {
   private GetStoreMetaRequest buildRequest() {
     return GetStoreMetaRequest.of(
         new BaseRequestWithStore.StoreCredentials(storeName, storeUser, storePassSha1),
-        AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID());
+        AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier());
   }
 
   private void dismissLoadingDialog() {

@@ -337,7 +337,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     }
     OAuth2AuthenticationRequest oAuth2AuthenticationRequest =
         OAuth2AuthenticationRequest.of(userName, passwordOrToken, mode, nameForGoogle,
-            aptoideClientUuid.getAptoideClientUUID());
+            aptoideClientUuid.getUniqueIdentifier());
     final ProgressDialog finalGenericPleaseWaitDialog = genericPleaseWaitDialog;
     oAuth2AuthenticationRequest.execute(oAuth -> {
       Logger.d(TAG, "onSuccess() called with: " + "oAuth = [" + oAuth + "]");
@@ -531,7 +531,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 
   private static Observable<String> getNewAccessTokenFromRefreshToken(String refreshToken,
       Action1<Throwable> action1) {
-    return OAuth2AuthenticationRequest.of(refreshToken, aptoideClientUuid.getAptoideClientUUID())
+    return OAuth2AuthenticationRequest.of(refreshToken, aptoideClientUuid.getUniqueIdentifier())
         .observe()
         .observeOn(AndroidSchedulers.mainThread())
         .map(OAuth::getAccessToken)
@@ -645,7 +645,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     String email = callback.getUserEmail();
     String password = callback.getUserPassword();
     if (validateUserCredentials(callback, email, password)) {
-      CreateUserRequest.of(email, password, aptoideClientUuid.getAptoideClientUUID())
+      CreateUserRequest.of(email, password, aptoideClientUuid.getUniqueIdentifier())
           .execute(oAuth -> {
             if (oAuth.hasErrors()) {
               if (oAuth.getErrors() != null && oAuth.getErrors().size() > 0) {

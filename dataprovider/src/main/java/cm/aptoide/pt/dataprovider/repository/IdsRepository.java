@@ -5,12 +5,12 @@
 
 package cm.aptoide.pt.dataprovider.repository;
 
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
+
 /**
  * Created by neuro on 11-07-2016.
  */
-public interface IdsRepository {
-
-  String getAptoideClientUUID();
+public interface IdsRepository extends AptoideClientUUID {
 
   String getGoogleAdvertisingId();
 

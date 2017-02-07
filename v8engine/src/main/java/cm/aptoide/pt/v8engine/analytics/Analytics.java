@@ -324,7 +324,7 @@ public class Analytics {
           }
         }
 
-        String cpuid = aptoideClientUuid.getAptoideClientUUID();
+        String cpuid = aptoideClientUuid.getUniqueIdentifier();
 
         Localytics.setCustomerId(cpuid);
 
