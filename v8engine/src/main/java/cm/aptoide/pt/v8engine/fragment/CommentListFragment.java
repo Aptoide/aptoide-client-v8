@@ -23,7 +23,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7EndlessResponse;
 import cm.aptoide.pt.model.v7.ListComments;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
@@ -54,8 +53,6 @@ import rx.functions.Action1;
 // TODO: 21/12/2016 sithengineer refactor and split in multiple classes to list comments
 // for each type: store and timeline card
 public class CommentListFragment extends GridRecyclerSwipeFragment {
-
-  //private static final String TAG = StoreGridRecyclerFragment.class.getName();
 
   //
   // consts
@@ -196,7 +193,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
   }
 
   void caseListSocialTimelineComments(boolean refresh) {
-    String aptoideClientUuid = aptoideClientUUID.getAptoideClientUUID();
+    String aptoideClientUuid = aptoideClientUUID.getUniqueIdentifier();
 
     ListCommentsRequest listCommentsRequest =
         ListCommentsRequest.ofTimeline(url, refresh, elementIdAsString,
@@ -233,7 +230,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
   void caseListStoreComments(String url, BaseRequestWithStore.StoreCredentials storeCredentials,
       boolean refresh) {
 
-    String aptoideClientUuid = aptoideClientUUID.getAptoideClientUUID();
+    String aptoideClientUuid = aptoideClientUUID.getUniqueIdentifier();
 
     ListCommentsRequest listCommentsRequest =
         ListCommentsRequest.ofStoreAction(url, refresh, storeCredentials,
