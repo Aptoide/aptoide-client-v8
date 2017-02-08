@@ -27,7 +27,8 @@ public class GetAdsProxy {
   public Observable<GetAdsResponse> getAds(int limit, boolean mature, String aptoideClientUUID) {
     return GetAdsRequest.of(ADS_LOCATION, DEFAULT_KEYWORD, limit, aptoideClientUUID,
         isGooglePlayServicesAvailable(), RxAptoide.getOemid(), mature)
-        .observe().doOnNext(this::sync)
+        .observe()
+        .doOnNext(this::sync)
         .doOnError(RemoteLogger.getInstance()::log);
   }
 
@@ -46,7 +47,8 @@ public class GetAdsProxy {
     return GetAdsRequest.of(ADS_LOCATION,
         AptoideUtils.StringU.join(keywords, ",") + "," + "__null__", limit, aptoideClientUUID,
         isGooglePlayServicesAvailable(), RxAptoide.getOemid(), DEFAULT_MATURE)
-        .observe().doOnNext(this::sync)
+        .observe()
+        .doOnNext(this::sync)
         .doOnError(RemoteLogger.getInstance()::log);
   }
 
@@ -55,14 +57,16 @@ public class GetAdsProxy {
     return GetAdsRequest.of(ADS_LOCATION,
         AptoideUtils.StringU.join(keywords, ",") + "," + "__null__", limit, aptoideClientUUID,
         isGooglePlayServicesAvailable(), RxAptoide.getOemid(), mature)
-        .observe().doOnNext(this::sync)
+        .observe()
+        .doOnNext(this::sync)
         .doOnError(RemoteLogger.getInstance()::log);
   }
 
   public Observable<GetAdsResponse> getAds(int limit, String aptoideClientUUID) {
     return GetAdsRequest.of(ADS_LOCATION, DEFAULT_KEYWORD, limit, aptoideClientUUID,
         isGooglePlayServicesAvailable(), RxAptoide.getOemid(), DEFAULT_MATURE)
-        .observe().doOnNext(this::sync)
+        .observe()
+        .doOnNext(this::sync)
         .doOnError(RemoteLogger.getInstance()::log);
   }
 
