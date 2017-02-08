@@ -50,6 +50,7 @@ import java.util.List;
   private static final String TAG = AppViewRateAndReviewsWidget.class.getSimpleName();
   private static final int MAX_COMMENTS = 3;
   private final AptoideClientUUID aptoideClientUUID;
+  private final DialogUtils dialogUtils;
   private View emptyReviewsLayout;
   private View ratingLayout;
   private View commentsLayout;
@@ -76,6 +77,7 @@ import java.util.List;
 
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
+    dialogUtils = new DialogUtils();
   }
 
   @Override protected void assignViews(View itemView) {
@@ -116,7 +118,7 @@ import java.util.List;
     ratingBar.setRating(ratingAvg);
 
     View.OnClickListener rateOnClickListener = v -> {
-      DialogUtils.showRateDialog(getContext(), appName, packageName, storeName, this::loadReviews);
+      dialogUtils.showRateDialog(getContext(), appName, packageName, storeName, this::loadReviews);
     };
 
     rateThisButton.setOnClickListener(rateOnClickListener);
