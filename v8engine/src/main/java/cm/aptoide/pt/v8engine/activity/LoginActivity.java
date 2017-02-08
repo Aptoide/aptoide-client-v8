@@ -27,7 +27,7 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.gms.GooglePlayServicesConnection;
 import cm.aptoide.pt.v8engine.presenter.GoogleLoginPresenter;
-import cm.aptoide.pt.v8engine.view.GoogleLoginView;
+import cm.aptoide.pt.v8engine.view.LoginView;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -46,12 +46,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 /**
  * Created by marcelobenites on 06/02/17.
  */
-public class GoogleLoginActivity extends BaseActivity implements GoogleLoginView {
+public class LoginActivity extends GooglePlayServicesActivity implements LoginView {
 
-  private static final int RESOLVE_CONNECTION_ERROR_REQUEST_CODE = 1;
   private static final int RESOLVE_GOOGLE_CREDENTIALS_REQUEST_CODE = 2;
   private GoogleApiAvailability apiAvailability;
-  private Dialog errorDialog;
   private GoogleApiClient client;
   private SignInButton googleLoginButton;
 
@@ -88,13 +86,6 @@ public class GoogleLoginActivity extends BaseActivity implements GoogleLoginView
     attachPresenter(
         new GoogleLoginPresenter(this, connection, Application.getConfiguration(), accountManager),
         savedInstanceState);
-  }
-
-  @Override protected void onDestroy() {
-    super.onDestroy();
-    if (errorDialog != null) {
-      errorDialog.dismiss();
-    }
   }
 
   @Override public Observable<Void> googleCredentialsSelection() {
@@ -148,27 +139,5 @@ public class GoogleLoginActivity extends BaseActivity implements GoogleLoginView
 
   @Override public Observable<CredentialsViewModel> googleLoginSelection() {
     return googleLoginSubject;
-  }
-
-  @Override public void showResolution(int errorCode) {
-    final PendingIntent errorResolutionPendingIntent =
-        apiAvailability.getErrorResolutionPendingIntent(this, errorCode,
-            RESOLVE_CONNECTION_ERROR_REQUEST_CODE);
-    try {
-      errorResolutionPendingIntent.send(this, RESOLVE_CONNECTION_ERROR_REQUEST_CODE, null);
-    } catch (PendingIntent.CanceledException e) {
-      CrashReport.getInstance().log(e);
-    }
-  }
-
-  @Override public void showConnectionErrorMessage(int errorCode) {
-    if (errorDialog != null && errorDialog.isShowing()) {
-      return;
-    }
-
-    errorDialog =
-        apiAvailability.getErrorDialog(this, errorCode, RESOLVE_CONNECTION_ERROR_REQUEST_CODE);
-
-    errorDialog.show();
   }
 }

@@ -11,7 +11,7 @@ import rx.Observable;
  * Created by marcelobenites on 07/02/17.
  */
 
-public interface GoogleLoginView extends GooglePlayServicesView {
+public interface LoginView extends GooglePlayServicesView {
 
   void showLoading();
 
