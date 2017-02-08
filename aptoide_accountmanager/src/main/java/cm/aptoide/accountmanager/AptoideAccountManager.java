@@ -56,6 +56,7 @@ import java.lang.ref.WeakReference;
 import java.net.SocketTimeoutException;
 import java.util.List;
 import javax.security.auth.login.LoginException;
+import rx.Completable;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -196,9 +197,8 @@ public class AptoideAccountManager {
       AptoidePreferencesConfiguration configuration, SecureCoderDecoder secureCoderDecoder,
       AccountManager androidAccountManager, AptoideClientUUID aptoideClientUUID) {
     if (instance == null) {
-      instance =
-          new AptoideAccountManager(aptoideClientUUID, context.getApplicationContext(), configuration,
-              androidAccountManager, secureCoderDecoder);
+      instance = new AptoideAccountManager(aptoideClientUUID, context.getApplicationContext(),
+          configuration, androidAccountManager, secureCoderDecoder);
     }
     return instance;
   }
@@ -290,8 +290,8 @@ public class AptoideAccountManager {
    * @param nameForGoogle name given by google
    * @param context given context
    */
-  void loginUserCredentials(LoginMode mode, final String userName, final String passwordOrToken,
-      final String nameForGoogle, Context context) {
+  public void login(LoginMode mode, final String userName,
+      final String passwordOrToken, final String nameForGoogle, Context context) {
     ProgressDialog genericPleaseWaitDialog = null;
     if (context != null) {
       genericPleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(context);
@@ -309,9 +309,8 @@ public class AptoideAccountManager {
       if (!oAuth.hasErrors()) {
         AccountManagerPreferences.setAccessToken(oAuth.getAccessToken());
 
-        addLocalUserAccount(userName, passwordOrToken, null, oAuth.getRefresh_token(),
-            oAuth.getAccessToken()).subscribe(isSuccess -> {
-          if (isSuccess) {
+        createAccount(userName, passwordOrToken, null, oAuth.getRefresh_token(),
+            oAuth.getAccessToken()).doOnCompleted(() -> {
             setAccessTokenOnLocalAccount(oAuth.getAccessToken(), null, SecureKeys.ACCESS_TOKEN);
             AccountManagerPreferences.setLoginMode(mode);
             onLoginSuccess(mode, "", "", "");
@@ -319,8 +318,7 @@ public class AptoideAccountManager {
               finalGenericPleaseWaitDialog.dismiss();
             }
             sendLoginBroadcast();
-          }
-        });
+        }).subscribe();
       } else { // oAuth.hasErrors() = true
 
         if (finalGenericPleaseWaitDialog != null) {
@@ -349,63 +347,69 @@ public class AptoideAccountManager {
     }, true);
   }
 
+  public Completable login(LoginMode mode, final String username,
+      final String password, final String name) {
+    return OAuth2AuthenticationRequest.of(username, password, mode, name,
+        aptoideClientUuid.getAptoideClientUUID(), this).observe().flatMap(oAuth -> {
+      if (!oAuth.hasErrors()) {
+        AccountManagerPreferences.setAccessToken(oAuth.getAccessToken());
+        return createAccount(username, password, null, oAuth.getRefresh_token(),
+            oAuth.getAccessToken()).toObservable();
+      } else {
+        return Observable.error(new LoginException(oAuth.getError()));
+      }
+    }).toCompletable();
+  }
+
   /**
    * Save user info on secured shared preferences
    *
-   * @param checkUserCredentialsJson Object returned by webservice(CheckUserCredentialsRequest)
+   * @param user Object returned by webservice(CheckUserCredentialsRequest)
    * with the user info
    */
-  private void saveUserInfo(CheckUserCredentialsJson checkUserCredentialsJson) {
-    Logger.d(TAG, "saveUserInfo() called with: " + "checkUserCredentialsJson = [" +
-        checkUserCredentialsJson + "]");
+  private void saveUser(CheckUserCredentialsJson user) {
 
-    if (checkUserCredentialsJson.getStatus().equals("OK")) {
+      AccountManagerPreferences.setUserId(user.getId());
 
-      // TODO are these validations really needed?
-      // why not just store the values, null or not?
-
-      AccountManagerPreferences.setUserId(checkUserCredentialsJson.getId());
-
-      if (!TextUtils.isEmpty(checkUserCredentialsJson.getQueueName())) {
+      if (!TextUtils.isEmpty(user.getQueueName())) {
         //hasQueue = true;
-        AccountManagerPreferences.setQueueName(checkUserCredentialsJson.getQueueName());
+        AccountManagerPreferences.setQueueName(user.getQueueName());
       }
 
-      if (!TextUtils.isEmpty(checkUserCredentialsJson.getAvatar())) {
-        AccountManagerPreferences.setUserAvatar(checkUserCredentialsJson.getAvatar());
+      if (!TextUtils.isEmpty(user.getAvatar())) {
+        AccountManagerPreferences.setUserAvatar(user.getAvatar());
       }
 
-      if (!TextUtils.isEmpty(checkUserCredentialsJson.getRavatarHd())) {
-        AccountManagerPreferences.setRepoAvatar(checkUserCredentialsJson.getRavatarHd());
+      if (!TextUtils.isEmpty(user.getRavatarHd())) {
+        AccountManagerPreferences.setRepoAvatar(user.getRavatarHd());
       }
 
-      if (!TextUtils.isEmpty(checkUserCredentialsJson.getRepo())) {
-        AccountManagerPreferences.setUserRepo(checkUserCredentialsJson.getRepo());
+      if (!TextUtils.isEmpty(user.getRepo())) {
+        AccountManagerPreferences.setUserRepo(user.getRepo());
       }
 
-      if (!TextUtils.isEmpty(checkUserCredentialsJson.getUsername())) {
-        AccountManagerPreferences.setUserNickName(checkUserCredentialsJson.getUsername());
+      if (!TextUtils.isEmpty(user.getUsername())) {
+        AccountManagerPreferences.setUserNickName(user.getUsername());
       }
 
-      if (checkUserCredentialsJson.getRepoDescription() != null && !TextUtils.isEmpty(
-          checkUserCredentialsJson.getRepoDescription().getTheme())) {
+      if (user.getRepoDescription() != null && !TextUtils.isEmpty(
+          user.getRepoDescription().getTheme())) {
         AccountManagerPreferences.setRepoTheme(
-            checkUserCredentialsJson.getRepoDescription().getTheme());
+            user.getRepoDescription().getTheme());
       }
 
-      if (!TextUtils.isEmpty(checkUserCredentialsJson.getAccess())) {
-        ManagerPreferences.setUserAccess(checkUserCredentialsJson.getAccess());
+      if (!TextUtils.isEmpty(user.getAccess())) {
+        ManagerPreferences.setUserAccess(user.getAccess());
       }
 
-      if (!checkUserCredentialsJson.getAccessConfirmed().toString().isEmpty()) {
-        ManagerPreferences.setUserAccessConfirmed(checkUserCredentialsJson.getAccessConfirmed());
+      if (!user.getAccessConfirmed().toString().isEmpty()) {
+        ManagerPreferences.setUserAccessConfirmed(user.getAccessConfirmed());
       }
 
-      if (checkUserCredentialsJson.getSettings() != null) {
+      if (user.getSettings() != null) {
         AccountManagerPreferences.setMatureSwitch(
-            checkUserCredentialsJson.getSettings().getMatureswitch().equals("active"));
+            user.getSettings().getMatureswitch().equals("active"));
       }
-    }
   }
 
   /**
@@ -605,37 +609,38 @@ public class AptoideAccountManager {
     String email = callback.getUserEmail();
     String password = callback.getUserPassword();
     if (validateUserCredentials(callback, email, password)) {
-      CreateUserRequest.of(email, password, aptoideClientUuid.getAptoideClientUUID(), this).execute(oAuth -> {
-        if (oAuth.hasErrors()) {
-          if (oAuth.getErrors() != null && oAuth.getErrors().size() > 0) {
-            callback.onRegisterFail(
-                ErrorsMapper.getWebServiceErrorMessageFromCode(oAuth.getErrors().get(0).code));
+      CreateUserRequest.of(email, password, aptoideClientUuid.getAptoideClientUUID(), this)
+          .execute(oAuth -> {
+            if (oAuth.hasErrors()) {
+              if (oAuth.getErrors() != null && oAuth.getErrors().size() > 0) {
+                callback.onRegisterFail(
+                    ErrorsMapper.getWebServiceErrorMessageFromCode(oAuth.getErrors().get(0).code));
+                genericPleaseWaitDialog.dismiss();
+              } else {
+                callback.onRegisterFail(R.string.unknown_error);
+                genericPleaseWaitDialog.dismiss();
+              }
+            } else {
+              Bundle bundle = new Bundle();
+              bundle.putString(AptoideLoginUtils.APTOIDE_LOGIN_USER_NAME_KEY, email);
+              bundle.putString(AptoideLoginUtils.APTOIDE_LOGIN_PASSWORD_KEY, password);
+              bundle.putString(AptoideLoginUtils.APTOIDE_LOGIN_REFRESH_TOKEN_KEY,
+                  oAuth.getRefresh_token());
+              bundle.putString(AptoideLoginUtils.APTOIDE_LOGIN_ACCESS_TOKEN_KEY,
+                  oAuth.getAccessToken());
+              callback.onRegisterSuccess(bundle);
+              genericPleaseWaitDialog.dismiss();
+            }
+          }, e -> {
+            if (e instanceof NetworkErrorException) {
+              callback.onRegisterFail(R.string.unknown_error);
+            }
+            if (e instanceof SocketTimeoutException) {
+              login(LoginMode.APTOIDE, email, password, null, context);
+            }
             genericPleaseWaitDialog.dismiss();
-          } else {
-            callback.onRegisterFail(R.string.unknown_error);
-            genericPleaseWaitDialog.dismiss();
-          }
-        } else {
-          Bundle bundle = new Bundle();
-          bundle.putString(AptoideLoginUtils.APTOIDE_LOGIN_USER_NAME_KEY, email);
-          bundle.putString(AptoideLoginUtils.APTOIDE_LOGIN_PASSWORD_KEY, password);
-          bundle.putString(AptoideLoginUtils.APTOIDE_LOGIN_REFRESH_TOKEN_KEY,
-              oAuth.getRefresh_token());
-          bundle.putString(AptoideLoginUtils.APTOIDE_LOGIN_ACCESS_TOKEN_KEY,
-              oAuth.getAccessToken());
-          callback.onRegisterSuccess(bundle);
-          genericPleaseWaitDialog.dismiss();
-        }
-      }, e -> {
-        if (e instanceof NetworkErrorException) {
-          callback.onRegisterFail(R.string.unknown_error);
-        }
-        if (e instanceof SocketTimeoutException) {
-          loginUserCredentials(LoginMode.APTOIDE, email, password, null, context);
-        }
-        genericPleaseWaitDialog.dismiss();
-        e.printStackTrace();
-      }, true);
+            e.printStackTrace();
+          }, true);
     } else {
       genericPleaseWaitDialog.dismiss();
     }
@@ -755,57 +760,32 @@ public class AptoideAccountManager {
     this.callback = null;
   }
 
-  /**
-   * This method adds an new local account
-   *
-   * @param userName This will be used to identify the account
-   * @param userPassword password to access the account
-   * @param accountType account type
-   * @param refreshToken Refresh token to be saved
-   * @param accessToken AccessToken to be used on CheckUserCredentialsRequest
-   * @return true if the account was added successfully, false otherwise
-   */
-  Observable<Boolean> addLocalUserAccount(String userName, String userPassword,
+  public Completable createAccount(String userName, String userPassword,
       @Nullable String accountType, String refreshToken, String accessToken) {
-    if (applicationContext != null) {
-      accountType = accountType != null ? accountType
-          // TODO: 4/21/16 trinkes if needed, account type has to match with partners
-          // version
-          : Constants.ACCOUNT_TYPE;
-
-      final Account account = new Account(userName, accountType);
-
-      // Creating the account on the device and setting the auth token we got
-      // (Not setting the auth token will cause another call to the server to authenticate
-      // the user)
-      String encryptPassword = secureCoderDecoder.encrypt(userPassword);
+    return Completable.defer(() -> {
+      final Account account = new Account(userName, accountType != null ? accountType: Constants.ACCOUNT_TYPE);
+      final String encryptPassword = secureCoderDecoder.encrypt(userPassword);
       try {
         androidAccountManager.addAccountExplicitly(account, encryptPassword, null);
       } catch (SecurityException e) {
-        CrashReport.getInstance().log(e);
+        return Completable.error(e);
       }
       androidAccountManager.setUserData(account, SecureKeys.REFRESH_TOKEN, refreshToken);
       AccountManagerPreferences.setRefreshToken(refreshToken);
-
-      return refreshAndSaveUserInfoData().doOnError(e -> {
-        CrashReport.getInstance().log(e);
-      }).map(userData -> true);
-    }
-    return Observable.just(false);
+      return refreshAccount();
+    });
   }
 
-  public Observable<CheckUserCredentialsJson> refreshAndSaveUserInfoData() {
-    return refreshUserInfoData().doOnNext(userInfo -> saveUserInfo(userInfo));
-  }
-
-  public Observable<CheckUserCredentialsJson> refreshUserInfoData() {
-    return CheckUserCredentialsRequest.of(this)
-        .observe()
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribeOn(Schedulers.io())
-        .doOnError(e -> {
-          CrashReport.getInstance().log(e);
-        });
+  public Completable refreshAccount() {
+    return CheckUserCredentialsRequest.of(this).observe()
+        .flatMap(response -> {
+          if (response.getStatus().equals("OK")) {
+            return Observable.just(response);
+          }
+          return Observable.error(new LoginException("Failed to refresh account"));
+        })
+        .doOnNext(user -> saveUser(user))
+        .toCompletable();
   }
 
   /**

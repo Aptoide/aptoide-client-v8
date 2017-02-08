@@ -6,11 +6,14 @@
 package cm.aptoide.pt.v8engine.presenter;
 
 import android.os.Bundle;
-import cm.aptoide.pt.v8engine.gms.GooglePlayServicesException;
+import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.accountmanager.ws.LoginMode;
+import cm.aptoide.pt.preferences.AptoidePreferencesConfiguration;
 import cm.aptoide.pt.v8engine.gms.GooglePlayServicesConnection;
-import cm.aptoide.pt.v8engine.view.GooglePlayServicesView;
+import cm.aptoide.pt.v8engine.view.GoogleLoginView;
 import cm.aptoide.pt.v8engine.view.View;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by marcelobenites on 06/02/17.
@@ -18,54 +21,82 @@ import rx.Observable;
 
 public class GoogleLoginPresenter implements Presenter {
 
-  private final GooglePlayServicesView view;
+  private final GoogleLoginView view;
   private final GooglePlayServicesConnection playServicesConnection;
+  private final AptoidePreferencesConfiguration configuration;
+  private final AptoideAccountManager accountManager;
 
-  public GoogleLoginPresenter(GooglePlayServicesView view,
-      GooglePlayServicesConnection playServicesConnection) {
+  public GoogleLoginPresenter(GoogleLoginView view,
+      GooglePlayServicesConnection playServicesConnection,
+      AptoidePreferencesConfiguration configuration, AptoideAccountManager accountManager) {
     this.view = view;
     this.playServicesConnection = playServicesConnection;
+    this.configuration = configuration;
+    this.accountManager = accountManager;
   }
 
   @Override public void present() {
 
     view.getLifecycle()
-        .filter(event -> event.equals(View.LifecycleEvent.RESUME))
-        .flatMap(created -> playServicesConnection.isAvailable().toObservable())
-        .doOnNext(available -> {
-          if (available) {
-            view.showGoogleLogin();
-          } else {
-            view.hideGoogleLogin();
-          }
-        })
-        .filter(available -> available)
-        .flatMap(available -> googleLoginSelection())
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .doOnNext(created -> playServicesConnection.connect())
+        .doOnNext(created -> showOrHideGoogleCredentialsSelector())
+        .flatMap(resumed -> Observable.merge(googleLoginSelection(), googleCredentialsSelection()))
+        .doOnUnsubscribe(() -> playServicesConnection.disconnect())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
   }
 
-  private Observable<GooglePlayServicesConnection.Status> googleLoginSelection() {
-    return view.onGoogleLoginSelection()
-        .flatMap(selected -> connectOrShowError())
-        .retry()
-        .compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE));
+  private Observable<Void> googleLoginSelection() {
+    return view.googleLoginSelection()
+        .doOnNext(selected -> view.showLoading())
+        .<Void>flatMap(
+        credentialsViewModel -> accountManager.login(LoginMode.GOOGLE,
+            credentialsViewModel.getEmail(), credentialsViewModel.getToken(),
+            credentialsViewModel.getName())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnTerminate(() -> view.hideLoading())
+            .doOnError(throwable -> view.showError(throwable))
+            .toObservable())
+        .retry();
   }
 
-  private Observable<GooglePlayServicesConnection.Status> connectOrShowError() {
-    return playServicesConnection.connect()
-        .filter(status -> status.equals(GooglePlayServicesConnection.Status.CONNECTED))
-        .doOnNext(status -> view.showSuccess())
-        .doOnError(throwable -> showErrorOrResolution(throwable));
+  private void showOrHideGoogleCredentialsSelector() {
+    if (playServicesConnection.isAvailable() && configuration.isLoginAvailable(
+        AptoidePreferencesConfiguration.SocialLogin.GOOGLE)) {
+      view.showGoogleCredentialsSelector();
+    } else {
+      view.hideGoogleCredentialsSelector();
+    }
   }
 
-  private void showErrorOrResolution(Throwable throwable) {
-    if (throwable instanceof GooglePlayServicesException) {
-      if (((GooglePlayServicesException) throwable).isResolvable()) {
-        view.showResolution(((GooglePlayServicesException) throwable).getErrorCode());
-      } else {
-        view.showConnectionErrorMessage(((GooglePlayServicesException) throwable).getErrorCode());
-      }
+  private Observable<GooglePlayServicesConnection.Status> googleCredentialsSelection() {
+    return view.googleCredentialsSelection()
+        .doOnNext(selected -> playServicesConnection.connect())
+        .flatMap(selected -> navigateToCredentialsViewOrShowError())
+        .retry();
+  }
+
+  private Observable<GooglePlayServicesConnection.Status> navigateToCredentialsViewOrShowError() {
+    return playServicesConnection.getStatus()
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(status -> {
+          if (status.getCode() == GooglePlayServicesConnection.Status.ERROR) {
+            showErrorOrResolution(status);
+          }
+          if (status.getCode() == GooglePlayServicesConnection.Status.CONNECTED) {
+            view.navigateToGoogleCredentialsView();
+          }
+        })
+        .takeUntil(status -> status.getCode() == GooglePlayServicesConnection.Status.ERROR
+            || status.getCode() == GooglePlayServicesConnection.Status.CONNECTED);
+  }
+
+  private void showErrorOrResolution(GooglePlayServicesConnection.Status status) {
+    if (status.isResolvable()) {
+      view.showResolution(status.getErrorCode());
+    } else {
+      view.showConnectionErrorMessage(status.getErrorCode());
     }
   }
 

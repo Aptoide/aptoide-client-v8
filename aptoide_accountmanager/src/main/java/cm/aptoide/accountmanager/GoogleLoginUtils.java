@@ -111,7 +111,7 @@ public class GoogleLoginUtils implements GoogleApiClient.OnConnectionFailedListe
       } else if (account != null) {
         Logger.d(TAG, "onActivityResult: Email: " + account.getEmail() + "Disp name" +
             account);
-        accountManager.loginUserCredentials(LoginMode.GOOGLE, account.getEmail(),
+        accountManager.login(LoginMode.GOOGLE, account.getEmail(),
             account.getServerAuthCode(), account.getDisplayName(),
             weakContext.get());
       }

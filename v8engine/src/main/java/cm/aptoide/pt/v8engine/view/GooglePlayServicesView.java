@@ -12,15 +12,8 @@ import rx.Observable;
  */
 public interface GooglePlayServicesView extends View {
 
-  Observable<Void> onGoogleLoginSelection();
-
-  void showGoogleLogin();
-
-  void hideGoogleLogin();
-
   void showResolution(int errorCode);
 
   void showConnectionErrorMessage(int errorCode);
 
-  void showSuccess();
 }
