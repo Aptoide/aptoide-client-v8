@@ -219,8 +219,7 @@ public abstract class V8Engine extends DataProvider {
       }).subscribe();
 
       // load picture, name and email
-      accountManager.refreshAndSaveUserInfoData().subscribe(userData -> {
-        Logger.v(TAG, "hello " + userData.getUsername());
+      accountManager.refreshAccount().subscribe(() -> {
       }, e -> {
         CrashReport.getInstance().log(e);
       });

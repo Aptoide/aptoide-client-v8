@@ -111,7 +111,7 @@ public class LoggedInActivity extends BaseActivity {
   }
 
   private void updateUserInfo() {
-    accountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
+    accountManager.refreshAccount().subscribe(() -> {
       if (pleaseWaitDialog != null && pleaseWaitDialog.isShowing()) {
         pleaseWaitDialog.dismiss();
       }

@@ -131,7 +131,7 @@ class FacebookLoginUtils {
               Bundle bFacebookData = FacebookLoginUtils.getFacebookData(object);
               String userName = bFacebookData.containsKey(EMAIL) ? bFacebookData.getString(EMAIL)
                   : bFacebookData.getString(FACEBOOK_ID);
-              accountManager.loginUserCredentials(LoginMode.FACEBOOK, userName, token, null,
+              accountManager.login(LoginMode.FACEBOOK, userName, token, null,
                   weakContext.get());
             }
           });

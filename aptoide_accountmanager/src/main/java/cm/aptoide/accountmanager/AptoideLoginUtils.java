@@ -41,7 +41,7 @@ class AptoideLoginUtils {
           return;
         }
 
-        accountManager.loginUserCredentials(LoginMode.APTOIDE, username, password, null, activity);
+        accountManager.login(LoginMode.APTOIDE, username, password, null, activity);
       }
     });
 
@@ -68,7 +68,7 @@ class AptoideLoginUtils {
       String loginOrigin = (String) bundle.get(APTOIDE_LOGIN_FROM);
       AccountManagerPreferences.setAccessToken(accessToken);
       accountManager
-          .addLocalUserAccount(userName, password, null, refreshToken, accessToken);
+          .createAccount(userName, password, null, refreshToken, accessToken);
       accountManager.setAccessTokenOnLocalAccount(accessToken, null,
           SecureKeys.ACCESS_TOKEN);
       accountManager
