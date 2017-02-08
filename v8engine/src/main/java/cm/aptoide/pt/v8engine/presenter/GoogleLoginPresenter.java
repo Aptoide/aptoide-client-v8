@@ -10,7 +10,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.LoginMode;
 import cm.aptoide.pt.preferences.AptoidePreferencesConfiguration;
 import cm.aptoide.pt.v8engine.gms.GooglePlayServicesConnection;
-import cm.aptoide.pt.v8engine.view.GoogleLoginView;
+import cm.aptoide.pt.v8engine.view.LoginView;
 import cm.aptoide.pt.v8engine.view.View;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -21,12 +21,12 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class GoogleLoginPresenter implements Presenter {
 
-  private final GoogleLoginView view;
+  private final LoginView view;
   private final GooglePlayServicesConnection playServicesConnection;
   private final AptoidePreferencesConfiguration configuration;
   private final AptoideAccountManager accountManager;
 
-  public GoogleLoginPresenter(GoogleLoginView view,
+  public GoogleLoginPresenter(LoginView view,
       GooglePlayServicesConnection playServicesConnection,
       AptoidePreferencesConfiguration configuration, AptoideAccountManager accountManager) {
     this.view = view;
