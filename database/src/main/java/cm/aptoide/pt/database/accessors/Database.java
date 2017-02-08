@@ -249,8 +249,9 @@ public final class Database {
         realm.commitTransaction();
       }
     } catch (Exception ex) {
-      realm.cancelTransaction();
       CrashReport.getInstance().log(ex);
+    } finally {
+      realm.cancelTransaction();
     }
   }
 
