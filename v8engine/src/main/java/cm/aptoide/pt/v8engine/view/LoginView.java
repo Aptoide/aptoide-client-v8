@@ -25,9 +25,32 @@ public interface LoginView extends GoogleLoginView {
 
   void showPermissionsRequiredMessage();
 
+  void showCheckAptoideCredentialsMessage();
+
   void hideFacebookLogin();
 
   Observable<FacebookAccountViewModel> facebookLoginSelection();
+
+  Observable<AptoideAccountViewModel> aptoideLoginSelection();
+
+  class AptoideAccountViewModel {
+
+    private final String username;
+    private final String password;
+
+    public AptoideAccountViewModel(String username, String password) {
+      this.username = username;
+      this.password = password;
+    }
+
+    public String getUsername() {
+      return username;
+    }
+
+    public String getPassword() {
+      return password;
+    }
+  }
 
   class GoogleAccountViewModel {
 
@@ -58,12 +81,10 @@ public interface LoginView extends GoogleLoginView {
 
     private final AccessToken token;
     private final Set<String> deniedPermissions;
-    private final Set<String> grantedPermissions;
 
-    public FacebookAccountViewModel(AccessToken token, Set<String> deniedPermissions, Set<String> grantedPermissions) {
+    public FacebookAccountViewModel(AccessToken token, Set<String> deniedPermissions) {
       this.token = token;
       this.deniedPermissions = deniedPermissions;
-      this.grantedPermissions = grantedPermissions;
     }
 
     public AccessToken getToken() {
@@ -72,10 +93,6 @@ public interface LoginView extends GoogleLoginView {
 
     public Set<String> getDeniedPermissions() {
       return deniedPermissions;
-    }
-
-    public Set<String> getGrantedPermissions() {
-      return grantedPermissions;
     }
   }
 
