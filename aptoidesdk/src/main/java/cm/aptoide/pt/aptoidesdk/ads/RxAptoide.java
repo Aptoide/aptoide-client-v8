@@ -23,6 +23,7 @@ import cm.aptoide.pt.networkclient.WebService;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import lombok.Getter;
@@ -30,6 +31,8 @@ import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 
 /**
  * Created by neuro on 10-11-2016.
@@ -49,14 +52,6 @@ public class RxAptoide {
       "Aptoide not integrated, did you forget to call Aptoide.integrate()?";
 
   private RxAptoide() {
-  }
-
-  public static void setDebug(boolean debug) {
-    RxAptoide.debug = debug;
-
-    Logger.setDBG(debug);
-    RemoteLogger.setDebug(debug);
-    WebService.setDebug(debug);
   }
 
   public static void integrate(Context context, String oemid) {
@@ -108,6 +103,14 @@ public class RxAptoide {
         () -> null, "aptoidesdk-" + BuildConfig.VERSION_NAME, oemid));
   }
 
+  public static void setDebug(boolean debug) {
+    RxAptoide.debug = debug;
+
+    Logger.setDBG(debug);
+    RemoteLogger.setDebug(debug);
+    WebService.setDebug(debug);
+  }
+
   public static Context getContext() {
     if (AptoideUtils.getContext() == null) {
       throw new RuntimeException(MISSED_INTEGRATION_MESSAGE);
@@ -132,6 +135,38 @@ public class RxAptoide {
           RemoteLogger.getInstance().log(throwable);
           return null;
         });
+  }
+
+  private static Subscription handleOrganicAds(String packageName) {
+    return getAdsProxy.getAds(packageName, aptoideClientUUID)
+        .filter(ReferrerUtils::hasAds)
+        .map(ReferrerUtils::parse)
+        .flatMap(ads -> handleAds(ads.get(0)))
+        .onErrorReturn(throwable -> {
+          RemoteLogger.getInstance().log(throwable);
+          return new LinkedList<>();
+        })
+        .subscribe();
+  }
+
+  @NonNull private static Observable<Object> handleAds(Ad ad) {
+    return Observable.fromCallable(() -> {
+      ReferrerUtils.knockCpc(ad);
+      return new Object();
+    })
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(o -> ReferrerUtils.extractReferrer(ad, ReferrerUtils.RETRIES, false));
+  }
+
+  public static Observable<List<App>> getApps(ArrayList<String> packageNames, String storeName) {
+    return Observable.from(packageNames)
+        .flatMap(packageName -> getAppProxy.getApp(packageName, storeName, aptoideClientUUID)
+            .map(EntitiesFactory::createApp)
+            .doOnError(throwable -> {
+              RemoteLogger.getInstance().log(throwable);
+            }))
+        .toList();
   }
 
   public static Observable<App> getApp(Ad ad) {
@@ -208,26 +243,5 @@ public class RxAptoide {
   public static EndlessController<App> listApps(Group group) {
     return new DatalistEndlessController<>(ListAppsRequest.of(group.getId()),
         EntitiesFactory::createApp);
-  }
-
-  private static Subscription handleOrganicAds(String packageName) {
-    return getAdsProxy.getAds(packageName, aptoideClientUUID)
-        .filter(ReferrerUtils::hasAds)
-        .map(ReferrerUtils::parse).flatMap(ads -> handleAds(ads.get(0)))
-        .onErrorReturn(throwable -> {
-          RemoteLogger.getInstance().log(throwable);
-          return new LinkedList<>();
-        })
-        .subscribe();
-  }
-
-  @NonNull private static Observable<Object> handleAds(Ad ad) {
-    return Observable.fromCallable(() -> {
-      ReferrerUtils.knockCpc(ad);
-      return new Object();
-    })
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(o -> ReferrerUtils.extractReferrer(ad, ReferrerUtils.RETRIES, false));
   }
 }

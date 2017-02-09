@@ -7,6 +7,7 @@ import cm.aptoide.pt.aptoidesdk.entities.SearchResult;
 import cm.aptoide.pt.aptoidesdk.entities.util.SyncEndlessController;
 import cm.aptoide.pt.aptoidesdk.entities.misc.Group;
 import cm.aptoide.pt.aptoidesdk.entities.util.SyncEndlessControllerImpl;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,6 +47,13 @@ public class Aptoide {
    */
   public static App getApp(String packageName, String storeName) {
     return RxAptoide.getApp(packageName, storeName).toBlocking().first();
+  }
+
+  /**
+   * Get apps info for apps present in a list
+   */
+  public static List<App> getApps(ArrayList<String> packageNames, String storeName) {
+    return RxAptoide.getApps(packageNames, storeName).toBlocking().first();
   }
 
   /**
