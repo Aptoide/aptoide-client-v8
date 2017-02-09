@@ -33,6 +33,14 @@ public interface LoginView extends GoogleLoginView {
 
   Observable<Void> forgotPasswordSelection();
 
+  Observable<Void> skipSelection();
+
+  void navigateToMainView();
+
+  Observable<Void> successMessageShown();
+
+  void showSuccessMessage();
+
   Observable<FacebookAccountViewModel> facebookLoginSelection();
 
   Observable<AptoideAccountViewModel> aptoideLoginSelection();

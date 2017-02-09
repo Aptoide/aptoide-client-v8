@@ -53,11 +53,27 @@ public class LoginPresenter implements Presenter {
 
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.RESUME))
-        .flatMap(resumed -> view.forgotPasswordSelection().compose(view.bindUntilEvent(
-            View.LifecycleEvent.PAUSE)))
-        .doOnNext(selection -> view.navigateToForgotPasswordView())
+        .flatMap(resumed -> Observable.merge(forgotPasswordSelection(), skipSelection(), successMessageShown()).compose(
+            view.bindUntilEvent(View.LifecycleEvent.PAUSE)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
+  }
+
+  private Observable<Void> successMessageShown() {
+    return view.successMessageShown()
+        .doOnNext(selection -> view.navigateToMainView());
+  }
+
+  private Observable<Void> forgotPasswordSelection() {
+    return view.forgotPasswordSelection()
+        .doOnNext(selection -> view.navigateToForgotPasswordView());
+  }
+
+  private Observable<Void> skipSelection() {
+    return view.skipSelection().doOnNext(selection -> {
+      accountManager.sendLoginCancelledBroadcast();
+      view.navigateToMainView();
+    });
   }
 
   private void showOrHideLogins() {
@@ -78,6 +94,7 @@ public class LoginPresenter implements Presenter {
         credentials -> accountManager.login(LoginMode.GOOGLE, credentials.getEmail(),
             credentials.getToken(), credentials.getDisplayName())
             .observeOn(AndroidSchedulers.mainThread())
+            .doOnCompleted(() -> view.showSuccessMessage())
             .doOnTerminate(() -> view.hideLoading())
             .doOnError(throwable -> view.showError(throwable))
             .toObservable()).retry();
@@ -96,6 +113,7 @@ public class LoginPresenter implements Presenter {
               username -> accountManager.login(LoginMode.FACEBOOK, username,
                   credentials.getToken().getToken(), null)
                   .observeOn(AndroidSchedulers.mainThread())
+                  .doOnCompleted(() -> view.showSuccessMessage())
                   .doOnTerminate(() -> view.hideLoading())
                   .doOnError(throwable -> view.showError(throwable))).toObservable();
         }).retry();
@@ -152,6 +170,7 @@ public class LoginPresenter implements Presenter {
           return accountManager.login(LoginMode.APTOIDE, credentials.getUsername(),
               credentials.getPassword(), null)
               .observeOn(AndroidSchedulers.mainThread())
+              .doOnCompleted(() -> view.showSuccessMessage())
               .doOnTerminate(() -> view.hideLoading())
               .doOnError(throwable -> view.showError(throwable))
               .toObservable();
