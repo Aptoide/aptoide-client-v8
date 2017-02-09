@@ -53,6 +53,7 @@ import rx.functions.Action1;
   private static final String TAG = AppViewRateAndReviewsWidget.class.getSimpleName();
   private static final int MAX_COMMENTS = 3;
   private final AptoideClientUUID aptoideClientUUID;
+  private final DialogUtils dialogUtils;
   private View emptyReviewsLayout;
   private View ratingLayout;
   private View commentsLayout;
@@ -79,6 +80,7 @@ import rx.functions.Action1;
 
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
+    dialogUtils = new DialogUtils();
   }
 
   @Override protected void assignViews(View itemView) {
@@ -119,7 +121,7 @@ import rx.functions.Action1;
 
     final FragmentActivity context = getContext();
     Action1<Void> rateOnClickHandler =
-        __ -> DialogUtils.showRateDialog(context, appName, packageName, storeName,
+        __ -> dialogUtils.showRateDialog(context, appName, packageName, storeName,
             () -> loadReviews());
     compositeSubscription.add(
         RxView.clicks(rateThisButton).subscribe(rateOnClickHandler, handleError));

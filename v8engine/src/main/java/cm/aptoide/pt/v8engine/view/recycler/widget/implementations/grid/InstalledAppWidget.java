@@ -42,6 +42,7 @@ import java.util.Locale;
   private static final Locale LOCALE = Locale.getDefault();
   private static final String TAG = InstalledAppWidget.class.getSimpleName();
   private final AptoideClientUUID aptoideClientUUID;
+  private final DialogUtils dialogUtils;
 
   private TextView labelTextView;
   private TextView verNameTextView;
@@ -56,6 +57,7 @@ import java.util.Locale;
     super(itemView);
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
+    dialogUtils = new DialogUtils();
   }
 
   @Override protected void assignViews(View itemView) {
@@ -88,7 +90,7 @@ import java.util.Locale;
       createReviewLayout.setVisibility(View.VISIBLE);
       createReviewLayout.setOnClickListener(v -> {
         Analytics.Updates.createReview();
-        DialogUtils.showRateDialog(context, appName, packageName, storeName, null);
+        dialogUtils.showRateDialog(getContext(), appName, packageName, storeName, null);
       });
     } else {
       createReviewLayout.setVisibility(View.GONE);

@@ -55,6 +55,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   @Getter private static final String REVIEW_ID = "review_id";
   @Getter private static final String STORE_THEME = "store_theme";
   private final AptoideClientUUID aptoideClientUUID;
+  private final DialogUtils dialogUtils;
 
   private long appId;
   @Getter private long reviewId;
@@ -70,6 +71,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   public RateAndReviewsFragment() {
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
+    dialogUtils = new DialogUtils();
   }
 
   public static RateAndReviewsFragment newInstance(long appId, String appName, String storeName,
@@ -156,7 +158,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     ratingBarsLayout = new RatingBarsLayout(view);
 
     floatingActionButton.setOnClickListener(v -> {
-      DialogUtils.showRateDialog(getActivity(), appName, packageName, storeName,
+      dialogUtils.showRateDialog(getActivity(), appName, packageName, storeName,
           () -> fetchReviews());
     });
   }

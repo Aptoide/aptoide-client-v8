@@ -4,6 +4,7 @@ import android.app.FragmentManager;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
@@ -19,24 +20,26 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
-import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.V7;
+import cm.aptoide.pt.dataprovider.ws.v7.PostCommentForReview;
+import cm.aptoide.pt.dataprovider.ws.v7.PostCommentForTimelineArticle;
+import cm.aptoide.pt.dataprovider.ws.v7.store.PostCommentForStore;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
-import cm.aptoide.pt.model.v7.BaseV7EndlessResponse;
+import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.model.v7.BaseV7Response;
+import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.ListComments;
-import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
+import cm.aptoide.pt.model.v7.SetComment;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.interfaces.CommentDialogCallbackContract;
 import cm.aptoide.pt.v8engine.util.CommentOperations;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.view.custom.HorizontalDividerItemDecoration;
-import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayableGroup;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.ProgressBarDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CommentDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
 import cm.aptoide.pt.viewRateAndCommentReviews.CommentDialogFragment;
@@ -45,6 +48,7 @@ import cm.aptoide.pt.viewRateAndCommentReviews.ComplexComment;
 import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -52,7 +56,8 @@ import rx.functions.Action1;
 
 // TODO: 21/12/2016 sithengineer refactor and split in multiple classes to list comments
 // for each type: store and timeline card
-public class CommentListFragment extends GridRecyclerSwipeFragment {
+public class CommentListFragment extends GridRecyclerSwipeFragment
+    implements CommentDialogCallbackContract {
 
   //
   // consts
@@ -73,6 +78,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
   private String url;
   // timeline card comments vars
   private String elementIdAsString;
+  private List<CommentNode> comments;
   // store comments vars
   private long elementIdAsLong;
   private String storeName;
@@ -203,7 +209,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
       if (listComments != null
           && listComments.getDatalist() != null
           && listComments.getDatalist().getList() != null) {
-        List<CommentNode> comments = commentOperations.flattenByDepth(
+        comments = commentOperations.flattenByDepth(
             commentOperations.transform(listComments.getDatalist().getList()));
 
         ArrayList<Displayable> displayables = new ArrayList<>(comments.size());
@@ -219,9 +225,9 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
       }
     });
     getRecyclerView().clearOnScrollListeners();
-    EndlessRecyclerOnScrollListenerExtended endlessRecyclerOnScrollListener =
-        new EndlessRecyclerOnScrollListenerExtended(getAdapter(), listCommentsRequest,
-            listCommentsAction, Throwable::printStackTrace, true, this);
+    EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener =
+        new EndlessRecyclerOnScrollListener(getAdapter(), listCommentsRequest, listCommentsAction,
+            Throwable::printStackTrace, true);
 
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(refresh);
@@ -250,7 +256,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
       if (listComments != null
           && listComments.getDatalist() != null
           && listComments.getDatalist().getList() != null) {
-        List<CommentNode> comments = commentOperations.flattenByDepth(
+        comments = commentOperations.flattenByDepth(
             commentOperations.transform(listComments.getDatalist().getList()));
 
         ArrayList<Displayable> displayables = new ArrayList<>(comments.size());
@@ -286,6 +292,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
         CommentDialogFragment commentDialogFragment =
             CommentDialogFragment.newInstanceTimelineArticleComment(timelineArticleId,
                 previousCommentId);
+        commentDialogFragment.setCommentDialogCallbackContract(this);
 
         return commentDialogFragment.lifecycle()
             .doOnSubscribe(() -> commentDialogFragment.show(fm, "fragment_comment_dialog"))
@@ -308,6 +315,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
         CommentDialogFragment commentDialogFragment =
             CommentDialogFragment.newInstanceStoreCommentReply(storeId, previousCommentId,
                 storeName);
+        commentDialogFragment.setCommentDialogCallbackContract(this);
 
         return commentDialogFragment.lifecycle()
             .doOnSubscribe(() -> commentDialogFragment.show(fm, "fragment_comment_dialog"))
@@ -374,6 +382,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
         FragmentManager fm = CommentListFragment.this.getActivity().getFragmentManager();
         CommentDialogFragment commentDialogFragment =
             CommentDialogFragment.newInstanceTimelineArticleComment(timelineArticleId);
+        commentDialogFragment.setCommentDialogCallbackContract(this);
         return commentDialogFragment.lifecycle()
             .doOnSubscribe(() -> {
               commentDialogFragment.show(fm, "fragment_comment_dialog");
@@ -395,6 +404,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
         FragmentManager fm = CommentListFragment.this.getActivity().getFragmentManager();
         CommentDialogFragment commentDialogFragment =
             CommentDialogFragment.newInstanceStoreComment(storeCommentId, storeName);
+        commentDialogFragment.setCommentDialogCallbackContract(this);
 
         return commentDialogFragment.lifecycle()
             .doOnSubscribe(() -> {
@@ -407,83 +417,122 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
       return showSignInMessage();
     });
   }
-}
 
-class EndlessRecyclerOnScrollListenerExtended extends EndlessRecyclerOnScrollListener {
+  @Override public void okSelected(String inputText, long longAsId, Long previousCommentId,
+      String idAsString) {
+    submitComment(inputText, longAsId, previousCommentId, idAsString).observeOn(
+        //AndroidSchedulers.mainThread()).map(wsResponse -> wsResponse.isOk()).doOnError(e -> {
+        AndroidSchedulers.mainThread()).doOnError(e -> {
+      CrashReport.getInstance().log(e);
+      ShowMessage.asSnack(this, R.string.error_occured);
+    }).retry().compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW)).subscribe(response -> {
+      if (response.isOk()) {
+        if (response instanceof SetComment) {
+          ComplexComment complexComment = getComplexComment(inputText, previousCommentId,
+              ((SetComment) response).getData().getId());
 
-  private final CommentListFragment commentListFragment;
-  private boolean isFirstLoad;
+          CommentDisplayable commentDisplayable = new CommentDisplayable(complexComment);
 
-  public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListenerExtended(
-      BaseAdapter baseAdapter, V7<T, ? extends Endless> v7request,
-      Action1<T> successRequestListener, ErrorRequestListener errorRequestListener, boolean b,
-      CommentListFragment commentListFragment) {
-    super(baseAdapter, v7request, successRequestListener, errorRequestListener, b);
-    this.commentListFragment = commentListFragment;
-    this.isFirstLoad = true;
+          if (complexComment.getParent() != null) {
+            insertChildCommentInsideParent(complexComment);
+          } else {
+            addDisplayable(0, commentDisplayable, true);
+          }
+
+          ManagerPreferences.setForceServerRefreshFlag(true);
+          ShowMessage.asSnack(this.getActivity(), R.string.comment_submitted);
+        }
+        return;
+      }
+      ShowMessage.asSnack(this, R.string.error_occured);
+    }, err -> {
+      CrashReport.getInstance().log(err);
+    });
   }
 
-  public void onLoadMore(boolean bypassCache) {
-    if (!loading) {
-      loading = true;
-      adapter.addDisplayable(new ProgressBarDisplayable());
-      v7request.observe(bypassCache).observeOn(AndroidSchedulers.mainThread()).flatMap(resp -> {
-        commentListFragment.lastTotal = resp.getTotal();
-        if (isFirstLoad && commentListFragment.lastTotal == 0) {
-          this.isFirstLoad = false;
-        } else if (isFirstLoad && commentListFragment.lastTotal == resp.getTotal()) {
-          this.isFirstLoad = false;
-          return Observable.error(new IllegalStateException());
+  private void insertChildCommentInsideParent(ComplexComment complexComment) {
+    displayables.clear();
+    boolean added = false;
+    ArrayList<Displayable> displayables = new ArrayList<>(comments.size() + 1);
+    for (CommentNode commentNode : comments) {
+      displayables.add(new CommentDisplayable(new ComplexComment(commentNode,
+          createNewCommentFragment(elementIdAsString, commentNode.getComment().getId()))));
+      if (commentNode.getComment().getId() == complexComment.getParent().getId() && !added) {
+        displayables.add(new CommentDisplayable(complexComment));
+        added = true;
+      }
+    }
+    this.displayables = new ArrayList<>(displayables.size());
+    this.displayables.add(new DisplayableGroup(displayables));
+    clearDisplayables();
+    addDisplayables(this.displayables);
+  }
+
+  private Observable<? extends BaseV7Response> submitComment(String inputText, long idAsLong,
+      Long previousCommentId, String idAsString) {
+    switch (commentType) {
+      case REVIEW:
+        // new comment on a review
+        return PostCommentForReview.of(idAsLong, inputText, AptoideAccountManager.getAccessToken(),
+            aptoideClientUUID.getUniqueIdentifier()).observe();
+
+      case STORE:
+        // check if this is a new comment on a store or a reply to a previous one
+        if (previousCommentId == null) {
+          return PostCommentForStore.of(idAsLong, inputText, AptoideAccountManager.getAccessToken(),
+              aptoideClientUUID.getUniqueIdentifier()).observe();
         }
 
-        return Observable.just(resp);
-      }).retryWhen(observable -> observable.<Throwable>flatMap(throwable -> {
-        if (throwable instanceof IllegalStateException) {
-          return Observable.just(throwable);
-        } else {
-          return Observable.error(throwable);
-        }
-      })).subscribe(response -> {
-        if (adapter.getItemCount() > 0) {
-          adapter.popDisplayable();
-        }
-        if (response.hasData()) {
+        return PostCommentForStore.of(idAsLong, previousCommentId, inputText,
+            AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
+            .observe();
 
-          stableData = response.hasStableTotal();
-          if (stableData) {
-            total = response.getTotal();
-            offset = response.getNextSize();
-          } else {
-            total += response.getTotal();
-            offset += response.getNextSize();
-          }
-          v7request.getBody().setOffset(offset);
+      case TIMELINE:
+        // check if this is a new comment on a article or a reply to a previous one
+        if (previousCommentId == null) {
+          return PostCommentForTimelineArticle.of(idAsString, inputText,
+              AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
+              .observe();
         }
 
-        if (onFirstLoadListener != null && !firstCallbackCalled) {
-          if (!onFirstLoadListener.call(response)) {
-            successRequestListener.call(response);
-          }
-          firstCallbackCalled = true;
-        } else {
-          // FIXME: 17/08/16 sithengineer use response.getList() instead
-          successRequestListener.call(response);
-        }
+        return PostCommentForTimelineArticle.of(idAsString, previousCommentId, inputText,
+            AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
+            .observe();
+    }
+    // default case
+    Logger.e(this.getTag(), "Unable to create reply due to missing comment type");
+    return Observable.empty();
+  }
 
-        if (!hasMoreElements() && onEndOfListReachedListener != null && !endCallbackCalled) {
-          onEndOfListReachedListener.call();
-          endCallbackCalled = true;
-        }
-
-        loading = false;
-      }, error -> {
-        //remove spinner if webservice respond with error
-        if (adapter.getItemCount() > 0) {
-          adapter.popDisplayable();
-        }
-        errorRequestListener.onError(error);
-        loading = false;
-      });
+  @NonNull
+  private ComplexComment getComplexComment(String inputText, Long previousCommentId, long id) {
+    Comment comment = new Comment();
+    Comment.User user = new Comment.User();
+    if (!TextUtils.isEmpty(AptoideAccountManager.getUserData().getUserAvatar())) {
+      user.setAvatar(AptoideAccountManager.getUserData().getUserAvatar());
+    } else {
+      if (!TextUtils.isEmpty(AptoideAccountManager.getUserData().getUserAvatarRepo())) {
+        user.setAvatar(AptoideAccountManager.getUserData().getUserAvatarRepo());
+      }
+    }
+    user.setName(AptoideAccountManager.getUserData().getUserName());
+    comment.setUser(user);
+    comment.setBody(inputText);
+    comment.setAdded(new Date());
+    comment.setId(id);
+    CommentNode commentNode = new CommentNode(comment);
+    if (previousCommentId != null) {
+      Comment.Parent parent = new Comment.Parent();
+      parent.setId(previousCommentId);
+      comment.setParent(parent);
+      commentNode.setLevel(2);
+    }
+    if (elementIdAsLong != 0) {
+      return new ComplexComment(commentNode,
+          createNewCommentFragment(elementIdAsLong, commentNode.getComment().getId(), storeName));
+    } else {
+      return new ComplexComment(commentNode,
+          createNewCommentFragment(elementIdAsString, commentNode.getComment().getId()));
     }
   }
 }

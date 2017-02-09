@@ -60,6 +60,7 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
   private RatingTotalsLayout ratingTotalsLayout;
   private RatingBarsLayout ratingBarsLayout;
   private FloatingActionButton floatingActionButton;
+  private DialogUtils dialogUtils;
 
   //
   // static constructors
@@ -116,7 +117,7 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
+    dialogUtils = new DialogUtils();
     final RateAndReviewsPresenter presenter =
         new RateAndReviewsPresenter(appId, storeName, packageName, this,
             ConcreteSchedulerProvider.getInstance());
@@ -209,7 +210,7 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
   }
 
   @Override public Observable<GenericDialogs.EResponse> showRateView() {
-    return DialogUtils.showRateDialog(getActivity(), appName, packageName, storeName);
+    return dialogUtils.showRateDialog(getActivity(), appName, packageName, storeName);
   }
 
   @Override public void showNextReviews(int offset, List<Review> reviews) {
