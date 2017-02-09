@@ -42,7 +42,9 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
             DataProvider.getConfiguration().getPartnerId(),
             AptoideAccountManager.isMatureSwitchOn()))
         .toList()
-        .map(wsWidgets -> DisplayablesFactory.parse(getStoreWidgets, storeTheme, storeRepository))
+        .flatMapIterable(wsWidgets -> getStoreWidgets.getDatalist().getList())
+        .concatMap(wsWidget -> DisplayablesFactory.parse(wsWidget, storeTheme, storeRepository))
+        .toList()
         .first();
   }
 }
