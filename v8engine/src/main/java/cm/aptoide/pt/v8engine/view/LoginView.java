@@ -11,46 +11,44 @@ import rx.Observable;
  * Created by marcelobenites on 07/02/17.
  */
 
-public interface LoginView extends GooglePlayServicesView {
+public interface LoginView extends GoogleLoginView {
 
   void showLoading();
 
   void hideLoading();
 
-  void showGoogleCredentialsSelector();
-
-  void hideGoogleCredentialsSelector();
-
-  void navigateToGoogleCredentialsView();
-
-  Observable<Void> googleCredentialsSelection();
-
-  Observable<CredentialsViewModel> googleLoginSelection();
-
   void showError(Throwable throwable);
 
-  class CredentialsViewModel {
+  class AccountViewModel {
 
-    private final String name;
-    private final String token;
-    private final String email;
+    private final String username;
+    private final String password;
 
-    public CredentialsViewModel(String name, String token, String email) {
-      this.name = name;
-      this.token = token;
-      this.email = email;
+    public AccountViewModel(String password, String username) {
+      this.password = password;
+      this.username = username;
     }
 
-    public String getName() {
-      return name;
+    public String getPassword() {
+      return password;
     }
 
-    public String getToken() {
-      return token;
+    public String getUsername() {
+      return username;
+    }
+  }
+
+  class GoogleAccountViewModel extends AccountViewModel {
+
+    private final String displayName;
+
+    public GoogleAccountViewModel(String displayName, String password, String username) {
+      super(password, username);
+      this.displayName = displayName;
     }
 
-    public String getEmail() {
-      return email;
+    public String getDisplayName() {
+      return displayName;
     }
   }
 
