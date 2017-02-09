@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.activity;
 import android.accounts.AccountManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
@@ -15,6 +16,7 @@ import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.AptoideWsV3Exception;
 import cm.aptoide.accountmanager.ws.ErrorsMapper;
@@ -62,6 +64,7 @@ public class LoginActivity extends GoogleLoginActivity implements LoginView {
   private EditText aptoideEmailEditText;
   private EditText aptoidePasswordEditText;
   private Button hideShowAptoidePasswordButton;
+  private TextView forgotPasswordButton;
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -70,6 +73,8 @@ public class LoginActivity extends GoogleLoginActivity implements LoginView {
     facebookRequestedPermissions = Arrays.asList("email", "user_friends");
     content = findViewById(android.R.id.content);
     progressDialog = GenericDialogs.createGenericPleaseWaitDialog(this);
+
+    forgotPasswordButton = (TextView) findViewById(cm.aptoide.accountmanager.R.id.forgot_password);
 
     googleLoginButton =
         (SignInButton) findViewById(cm.aptoide.accountmanager.R.id.g_sign_in_button);
@@ -177,6 +182,15 @@ public class LoginActivity extends GoogleLoginActivity implements LoginView {
 
   @Override public void showCheckAptoideCredentialsMessage() {
     ShowMessage.asSnack(content, cm.aptoide.accountmanager.R.string.fields_cannot_empty);
+  }
+
+  @Override public void navigateToForgotPasswordView() {
+    startActivity(new Intent(Intent.ACTION_VIEW,
+        Uri.parse("http://m.aptoide.com/account/password-recovery")));
+  }
+
+  @Override public Observable<Void> forgotPasswordSelection() {
+    return RxView.clicks(forgotPasswordButton);
   }
 
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {

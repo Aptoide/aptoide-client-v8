@@ -50,6 +50,14 @@ public class LoginPresenter implements Presenter {
             aptoideLoginSelection()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
+
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.RESUME))
+        .flatMap(resumed -> view.forgotPasswordSelection().compose(view.bindUntilEvent(
+            View.LifecycleEvent.PAUSE)))
+        .doOnNext(selection -> view.navigateToForgotPasswordView())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe();
   }
 
   private void showOrHideLogins() {

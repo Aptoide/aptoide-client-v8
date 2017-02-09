@@ -29,6 +29,10 @@ public interface LoginView extends GoogleLoginView {
 
   void hideFacebookLogin();
 
+  void navigateToForgotPasswordView();
+
+  Observable<Void> forgotPasswordSelection();
+
   Observable<FacebookAccountViewModel> facebookLoginSelection();
 
   Observable<AptoideAccountViewModel> aptoideLoginSelection();
