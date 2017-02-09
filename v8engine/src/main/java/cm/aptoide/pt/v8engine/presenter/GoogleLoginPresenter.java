@@ -8,8 +8,6 @@ package cm.aptoide.pt.v8engine.presenter;
 import android.os.Bundle;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.LoginMode;
-import cm.aptoide.pt.preferences.AptoidePreferencesConfiguration;
-import cm.aptoide.pt.v8engine.gms.GooglePlayServicesConnection;
 import cm.aptoide.pt.v8engine.view.LoginView;
 import cm.aptoide.pt.v8engine.view.View;
 import rx.Observable;
@@ -22,16 +20,10 @@ import rx.android.schedulers.AndroidSchedulers;
 public class GoogleLoginPresenter implements Presenter {
 
   private final LoginView view;
-  private final GooglePlayServicesConnection playServicesConnection;
-  private final AptoidePreferencesConfiguration configuration;
   private final AptoideAccountManager accountManager;
 
-  public GoogleLoginPresenter(LoginView view,
-      GooglePlayServicesConnection playServicesConnection,
-      AptoidePreferencesConfiguration configuration, AptoideAccountManager accountManager) {
+  public GoogleLoginPresenter(LoginView view, AptoideAccountManager accountManager) {
     this.view = view;
-    this.playServicesConnection = playServicesConnection;
-    this.configuration = configuration;
     this.accountManager = accountManager;
   }
 
@@ -39,64 +31,27 @@ public class GoogleLoginPresenter implements Presenter {
 
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .doOnNext(created -> playServicesConnection.connect())
-        .doOnNext(created -> showOrHideGoogleCredentialsSelector())
-        .flatMap(resumed -> Observable.merge(googleLoginSelection(), googleCredentialsSelection()))
-        .doOnUnsubscribe(() -> playServicesConnection.disconnect())
+        .doOnNext(created -> showOrHideGoogleLogin())
+        .flatMap(resumed -> googleLoginSelection())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
   }
 
   private Observable<Void> googleLoginSelection() {
-    return view.googleLoginSelection()
-        .doOnNext(selected -> view.showLoading())
-        .<Void>flatMap(
-        credentialsViewModel -> accountManager.login(LoginMode.GOOGLE,
-            credentialsViewModel.getEmail(), credentialsViewModel.getToken(),
-            credentialsViewModel.getName())
+    return view.googleLoginSelection().doOnNext(selected -> view.showLoading()).<Void>flatMap(
+        credentials -> accountManager.login(LoginMode.GOOGLE, credentials.getUsername(),
+            credentials.getPassword(), credentials.getDisplayName())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnTerminate(() -> view.hideLoading())
             .doOnError(throwable -> view.showError(throwable))
-            .toObservable())
-        .retry();
+            .toObservable()).retry();
   }
 
-  private void showOrHideGoogleCredentialsSelector() {
-    if (playServicesConnection.isAvailable() && configuration.isLoginAvailable(
-        AptoidePreferencesConfiguration.SocialLogin.GOOGLE)) {
-      view.showGoogleCredentialsSelector();
+  private void showOrHideGoogleLogin() {
+    if (accountManager.isGoogleLoginEnabled()) {
+      view.showGoogleLogin();
     } else {
-      view.hideGoogleCredentialsSelector();
-    }
-  }
-
-  private Observable<GooglePlayServicesConnection.Status> googleCredentialsSelection() {
-    return view.googleCredentialsSelection()
-        .doOnNext(selected -> playServicesConnection.connect())
-        .flatMap(selected -> navigateToCredentialsViewOrShowError())
-        .retry();
-  }
-
-  private Observable<GooglePlayServicesConnection.Status> navigateToCredentialsViewOrShowError() {
-    return playServicesConnection.getStatus()
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(status -> {
-          if (status.getCode() == GooglePlayServicesConnection.Status.ERROR) {
-            showErrorOrResolution(status);
-          }
-          if (status.getCode() == GooglePlayServicesConnection.Status.CONNECTED) {
-            view.navigateToGoogleCredentialsView();
-          }
-        })
-        .takeUntil(status -> status.getCode() == GooglePlayServicesConnection.Status.ERROR
-            || status.getCode() == GooglePlayServicesConnection.Status.CONNECTED);
-  }
-
-  private void showErrorOrResolution(GooglePlayServicesConnection.Status status) {
-    if (status.isResolvable()) {
-      view.showResolution(status.getErrorCode());
-    } else {
-      view.showConnectionErrorMessage(status.getErrorCode());
+      view.hideGoogleLogin();
     }
   }
 

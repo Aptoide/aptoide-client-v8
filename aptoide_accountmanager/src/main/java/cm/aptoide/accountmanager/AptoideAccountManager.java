@@ -51,6 +51,8 @@ import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.utils.GenericDialogs;
 import com.facebook.FacebookSdk;
 import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.net.SocketTimeoutException;
@@ -88,20 +90,22 @@ public class AptoideAccountManager {
 
   private final AptoideClientUUID aptoideClientUuid;
   private final Context applicationContext;
-  private AptoidePreferencesConfiguration configuration;
-  private Analytics analytics;
-  private boolean userIsLoggedIn;
+  private final AptoidePreferencesConfiguration configuration;
+  private final AccountManager androidAccountManager;
+  private final SecureCoderDecoder secureCoderDecoder;
+  private final GoogleLoginAvailability googleLoginAvailability;
 
+  private boolean userIsLoggedIn;
+  private Analytics analytics;
   private ILoginInterface callback;
-  private AccountManager androidAccountManager;
-  private SecureCoderDecoder secureCoderDecoder;
 
   public AptoideAccountManager(AptoideClientUUID aptoideClientUuid, Context applicationContext,
       AptoidePreferencesConfiguration configuration, AccountManager androidAccountManager,
-      SecureCoderDecoder secureCoderDecoder) {
+      SecureCoderDecoder secureCoderDecoder, GoogleLoginAvailability googleLoginAvailability) {
     this.aptoideClientUuid = aptoideClientUuid;
     this.applicationContext = applicationContext;
     this.configuration = configuration;
+    this.googleLoginAvailability = googleLoginAvailability;
     this.analytics = analytics;
     this.androidAccountManager = androidAccountManager;
     this.userIsLoggedIn = isLoggedIn();
@@ -198,7 +202,12 @@ public class AptoideAccountManager {
       AccountManager androidAccountManager, AptoideClientUUID aptoideClientUUID) {
     if (instance == null) {
       instance = new AptoideAccountManager(aptoideClientUUID, context.getApplicationContext(),
-          configuration, androidAccountManager, secureCoderDecoder);
+          configuration, androidAccountManager, secureCoderDecoder, new GoogleLoginAvailability() {
+        @Override public boolean isAvailable() {
+          return GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS
+              && configuration.isLoginAvailable(AptoidePreferencesConfiguration.SocialLogin.GOOGLE);
+        }
+      });
     }
     return instance;
   }
@@ -861,6 +870,10 @@ public class AptoideAccountManager {
    */
   String getIntroducedPassword() {
     return callback == null ? null : callback.getIntroducedPassword();
+  }
+
+  public boolean isGoogleLoginEnabled() {
+    return googleLoginAvailability.isAvailable();
   }
 
   /*******************************************************/
