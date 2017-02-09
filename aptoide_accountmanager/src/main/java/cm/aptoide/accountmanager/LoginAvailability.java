@@ -8,8 +8,9 @@ package cm.aptoide.accountmanager;
 /**
  * Created by marcelobenites on 08/02/17.
  */
-public interface GoogleLoginAvailability {
+public interface LoginAvailability {
 
-  boolean isAvailable();
+  boolean isGoogleLoginAvailable();
 
+  boolean isFacebookLoginAvailable();
 }

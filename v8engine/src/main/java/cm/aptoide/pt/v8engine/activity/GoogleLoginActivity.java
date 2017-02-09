@@ -51,6 +51,8 @@ public abstract class GoogleLoginActivity extends GooglePlayServicesActivity imp
 
   protected abstract SignInButton getGoogleButton();
 
+  protected abstract void showGoogleLoginError();
+
   @Override protected void onResume() {
     super.onResume();
     getGoogleButton().setOnClickListener(new View.OnClickListener() {
@@ -88,6 +90,8 @@ public abstract class GoogleLoginActivity extends GooglePlayServicesActivity imp
         googleLoginSubject.call(
             new LoginView.GoogleAccountViewModel(account.getDisplayName(), account.getServerAuthCode(),
                 account.getEmail()));
+      } else {
+        showGoogleLoginError();
       }
     }
   }

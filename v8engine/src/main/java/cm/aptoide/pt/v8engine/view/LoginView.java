@@ -5,6 +5,8 @@
 
 package cm.aptoide.pt.v8engine.view;
 
+import com.facebook.AccessToken;
+import java.util.Set;
 import rx.Observable;
 
 /**
@@ -19,36 +21,61 @@ public interface LoginView extends GoogleLoginView {
 
   void showError(Throwable throwable);
 
-  class AccountViewModel {
+  void showFacebookLogin();
 
-    private final String username;
-    private final String password;
+  void showPermissionsRequiredMessage();
 
-    public AccountViewModel(String password, String username) {
-      this.password = password;
-      this.username = username;
-    }
+  void hideFacebookLogin();
 
-    public String getPassword() {
-      return password;
-    }
+  Observable<FacebookAccountViewModel> facebookLoginSelection();
 
-    public String getUsername() {
-      return username;
-    }
-  }
-
-  class GoogleAccountViewModel extends AccountViewModel {
+  class GoogleAccountViewModel {
 
     private final String displayName;
+    private final String token;
+    private final String email;
 
-    public GoogleAccountViewModel(String displayName, String password, String username) {
-      super(password, username);
+    public GoogleAccountViewModel(String displayName, String token, String email) {
       this.displayName = displayName;
+      this.token = token;
+      this.email = email;
     }
 
     public String getDisplayName() {
       return displayName;
+    }
+
+    public String getToken() {
+      return token;
+    }
+
+    public String getEmail() {
+      return email;
+    }
+  }
+
+  class FacebookAccountViewModel {
+
+    private final AccessToken token;
+    private final Set<String> deniedPermissions;
+    private final Set<String> grantedPermissions;
+
+    public FacebookAccountViewModel(AccessToken token, Set<String> deniedPermissions, Set<String> grantedPermissions) {
+      this.token = token;
+      this.deniedPermissions = deniedPermissions;
+      this.grantedPermissions = grantedPermissions;
+    }
+
+    public AccessToken getToken() {
+      return token;
+    }
+
+    public Set<String> getDeniedPermissions() {
+      return deniedPermissions;
+    }
+
+    public Set<String> getGrantedPermissions() {
+      return grantedPermissions;
     }
   }
 

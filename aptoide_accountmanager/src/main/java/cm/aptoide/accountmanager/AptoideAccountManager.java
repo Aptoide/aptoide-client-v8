@@ -94,7 +94,7 @@ public class AptoideAccountManager {
   private final AptoidePreferencesConfiguration configuration;
   private final AccountManager androidAccountManager;
   private final SecureCoderDecoder secureCoderDecoder;
-  private final GoogleLoginAvailability googleLoginAvailability;
+  private final LoginAvailability loginAvailability;
 
   private boolean userIsLoggedIn;
   private Analytics analytics;
@@ -102,11 +102,11 @@ public class AptoideAccountManager {
 
   public AptoideAccountManager(AptoideClientUUID aptoideClientUuid, Context applicationContext,
       AptoidePreferencesConfiguration configuration, AccountManager androidAccountManager,
-      SecureCoderDecoder secureCoderDecoder, GoogleLoginAvailability googleLoginAvailability) {
+      SecureCoderDecoder secureCoderDecoder, LoginAvailability loginAvailability) {
     this.aptoideClientUuid = aptoideClientUuid;
     this.applicationContext = applicationContext;
     this.configuration = configuration;
-    this.googleLoginAvailability = googleLoginAvailability;
+    this.loginAvailability = loginAvailability;
     this.analytics = analytics;
     this.androidAccountManager = androidAccountManager;
     this.userIsLoggedIn = isLoggedIn();
@@ -203,10 +203,13 @@ public class AptoideAccountManager {
       AccountManager androidAccountManager, AptoideClientUUID aptoideClientUUID) {
     if (instance == null) {
       instance = new AptoideAccountManager(aptoideClientUUID, context.getApplicationContext(),
-          configuration, androidAccountManager, secureCoderDecoder, new GoogleLoginAvailability() {
-        @Override public boolean isAvailable() {
+          configuration, androidAccountManager, secureCoderDecoder, new LoginAvailability() {
+        @Override public boolean isGoogleLoginAvailable() {
           return GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS
               && configuration.isLoginAvailable(AptoidePreferencesConfiguration.SocialLogin.GOOGLE);
+        }
+        @Override public boolean isFacebookLoginAvailable() {
+          return configuration.isLoginAvailable(AptoidePreferencesConfiguration.SocialLogin.FACEBOOK);
         }
       });
     }
@@ -873,7 +876,11 @@ public class AptoideAccountManager {
   }
 
   public boolean isGoogleLoginEnabled() {
-    return googleLoginAvailability.isAvailable();
+    return loginAvailability.isGoogleLoginAvailable();
+  }
+
+  public boolean isFacebookLoginEnabled() {
+    return loginAvailability.isFacebookLoginAvailable();
   }
 
   /*******************************************************/
