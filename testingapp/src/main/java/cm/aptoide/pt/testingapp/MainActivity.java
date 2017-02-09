@@ -24,6 +24,7 @@ import cm.aptoide.pt.aptoidesdk.entities.misc.Group;
 import cm.aptoide.pt.aptoidesdk.entities.util.SyncEndlessController;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -117,6 +118,40 @@ public class MainActivity extends AppCompatActivity {
     app.setVisibility(View.VISIBLE);
   }
 
+  private long downloadData(String filePath) {
+
+    Uri uri = Uri.parse(filePath);
+
+    long downloadReference;
+
+    // Create request for android download manager
+    downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+    DownloadManager.Request request = new DownloadManager.Request(uri);
+
+    //Setting title of request
+    request.setTitle("Data Download");
+
+    //Setting description of request
+    request.setDescription("Android Data download using DownloadManager.");
+
+    //Set the local destination for the downloaded file to a path within the application's external files directory
+    //if(v.getId() == R.id.DownloadMusic)
+    request.setDestinationInExternalFilesDir(MainActivity.this, Environment.DIRECTORY_DOWNLOADS,
+        "AndroidTutorialPoint.mp3");
+    //else if(v.getId() == R.id.DownloadImage)
+    //  request.setDestinationInExternalFilesDir(MainActivity.this, Environment.DIRECTORY_DOWNLOADS,"AndroidTutorialPoint.jpg");
+
+    //Enqueue download and save into referenceId
+    downloadReference = downloadManager.enqueue(request);
+
+    //Button DownloadStatus = (Button) findViewById(R.id.DownloadStatus);
+    //DownloadStatus.setEnabled(true);
+    //Button CancelDownload = (Button) findViewById(R.id.CancelDownload);
+    //CancelDownload.setEnabled(true);
+
+    return downloadReference;
+  }
+
   public void searchClick(View view) {
 
     List<SearchResult> l = Aptoide.searchApps("facebook", "apps");
@@ -139,6 +174,10 @@ public class MainActivity extends AppCompatActivity {
     } else {
       tv.setText("app name: " + l.getName());
     }
+    ArrayList<String> packages = new ArrayList<>();
+    packages.add("com.facebook.katana");
+    packages.add("org.mozilla.firefox");
+    List<App> apps = Aptoide.getApps(packages, "apps");
   }
 
   public void listAppsClick(View view) {
@@ -265,39 +304,5 @@ public class MainActivity extends AppCompatActivity {
     intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     context.startActivity(intent);
-  }
-
-  private long downloadData(String filePath) {
-
-    Uri uri = Uri.parse(filePath);
-
-    long downloadReference;
-
-    // Create request for android download manager
-    downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-    DownloadManager.Request request = new DownloadManager.Request(uri);
-
-    //Setting title of request
-    request.setTitle("Data Download");
-
-    //Setting description of request
-    request.setDescription("Android Data download using DownloadManager.");
-
-    //Set the local destination for the downloaded file to a path within the application's external files directory
-    //if(v.getId() == R.id.DownloadMusic)
-    request.setDestinationInExternalFilesDir(MainActivity.this, Environment.DIRECTORY_DOWNLOADS,
-        "AndroidTutorialPoint.mp3");
-    //else if(v.getId() == R.id.DownloadImage)
-    //  request.setDestinationInExternalFilesDir(MainActivity.this, Environment.DIRECTORY_DOWNLOADS,"AndroidTutorialPoint.jpg");
-
-    //Enqueue download and save into referenceId
-    downloadReference = downloadManager.enqueue(request);
-
-    //Button DownloadStatus = (Button) findViewById(R.id.DownloadStatus);
-    //DownloadStatus.setEnabled(true);
-    //Button CancelDownload = (Button) findViewById(R.id.CancelDownload);
-    //CancelDownload.setEnabled(true);
-
-    return downloadReference;
   }
 }
