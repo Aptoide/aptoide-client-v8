@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.presenter;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.LoginMode;
 import cm.aptoide.pt.v8engine.view.LoginView;
@@ -45,7 +46,8 @@ public class LoginPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(created -> showOrHideLogins())
-        .flatMap(resumed -> Observable.merge(googleLoginSelection(), facebookLoginSelection()))
+        .flatMap(resumed -> Observable.merge(googleLoginSelection(), facebookLoginSelection(),
+            aptoideLoginSelection()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
   }
@@ -129,6 +131,23 @@ public class LoginPresenter implements Presenter {
     } else {
       view.hideGoogleLogin();
     }
+  }
+
+  private Observable<Void> aptoideLoginSelection() {
+    return view.aptoideLoginSelection().doOnNext(selected -> view.showLoading()).<Void>flatMap(
+        credentials -> {
+          if (TextUtils.isEmpty(credentials.getPassword()) || TextUtils.isEmpty(
+              credentials.getUsername())) {
+            view.showCheckAptoideCredentialsMessage();
+            return Observable.empty();
+          }
+          return accountManager.login(LoginMode.APTOIDE, credentials.getUsername(),
+              credentials.getPassword(), null)
+              .observeOn(AndroidSchedulers.mainThread())
+              .doOnTerminate(() -> view.hideLoading())
+              .doOnError(throwable -> view.showError(throwable))
+              .toObservable();
+        }).retry();
   }
 
   @Override public void saveState(Bundle state) {

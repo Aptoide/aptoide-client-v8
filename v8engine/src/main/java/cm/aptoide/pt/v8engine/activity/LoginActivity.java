@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.AptoideWsV3Exception;
 import cm.aptoide.accountmanager.ws.ErrorsMapper;
@@ -33,6 +35,7 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.common.SignInButton;
+import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.Arrays;
 import java.util.List;
@@ -54,6 +57,9 @@ public class LoginActivity extends GoogleLoginActivity implements LoginView {
   private PublishRelay<FacebookAccountViewModel> facebookLoginSubject;
   private AlertDialog facebookEmailRequiredDialog;
   private List<String> facebookRequiredPermissions;
+  private Button aptoideLoginButton;
+  private EditText aptoideEmailEditText;
+  private EditText aptoidePasswordEditText;
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -66,47 +72,32 @@ public class LoginActivity extends GoogleLoginActivity implements LoginView {
     googleLoginButton =
         (SignInButton) findViewById(cm.aptoide.accountmanager.R.id.g_sign_in_button);
 
-    facebookLoginButton = (LoginButton) findViewById(cm.aptoide.accountmanager.R.id.fb_login_button);
+    aptoideLoginButton = (Button) findViewById(cm.aptoide.accountmanager.R.id.button_login);
+    aptoideEmailEditText = (EditText) findViewById(cm.aptoide.accountmanager.R.id.username);
+    aptoidePasswordEditText = (EditText) findViewById(cm.aptoide.accountmanager.R.id.password);
+
+    facebookLoginButton =
+        (LoginButton) findViewById(cm.aptoide.accountmanager.R.id.fb_login_button);
     callbackManager = CallbackManager.Factory.create();
     facebookLoginManager = LoginManager.getInstance();
     facebookLoginSubject = PublishRelay.create();
-    facebookEmailRequiredDialog = new AlertDialog.Builder(this)
-        .setMessage(cm.aptoide.accountmanager.R.string.facebook_email_permission_regected_message)
-        .setPositiveButton(cm.aptoide.accountmanager.R.string.facebook_grant_permission_button, (dialog, which) -> {
-          facebookLoginManager.logInWithReadPermissions(LoginActivity.this,
-              facebookRequiredPermissions);
-        })
+    facebookEmailRequiredDialog = new AlertDialog.Builder(this).setMessage(
+        cm.aptoide.accountmanager.R.string.facebook_email_permission_regected_message)
+        .setPositiveButton(cm.aptoide.accountmanager.R.string.facebook_grant_permission_button,
+            (dialog, which) -> {
+              facebookLoginManager.logInWithReadPermissions(LoginActivity.this,
+                  facebookRequiredPermissions);
+            })
         .setNegativeButton(android.R.string.cancel, null)
         .create();
 
-    final AptoideAccountManager accountManager = AptoideAccountManager.getInstance(
-        this,
-        Application.getConfiguration(),
-        new SecureCoderDecoder.Builder(this).create(),
-        AccountManager.get(this),
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this));
+    final AptoideAccountManager accountManager =
+        AptoideAccountManager.getInstance(this, Application.getConfiguration(),
+            new SecureCoderDecoder.Builder(this).create(), AccountManager.get(this),
+            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this));
 
-    attachPresenter(
-        new LoginPresenter(this, accountManager, facebookRequiredPermissions),
+    attachPresenter(new LoginPresenter(this, accountManager, facebookRequiredPermissions),
         savedInstanceState);
-  }
-
-  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    super.onActivityResult(requestCode, resultCode, data);
-    callbackManager.onActivityResult(requestCode, resultCode, data);
-  }
-
-  @Override protected void onDestroy() {
-    super.onDestroy();
-
-  }
-
-  @Override protected SignInButton getGoogleButton() {
-    return googleLoginButton;
-  }
-
-  @Override protected void showGoogleLoginError() {
-    ShowMessage.asSnack(content, cm.aptoide.accountmanager.R.string.unknown_error);
   }
 
   @Override public void showLoading() {
@@ -132,20 +123,20 @@ public class LoginActivity extends GoogleLoginActivity implements LoginView {
     FacebookSdk.sdkInitialize(getApplicationContext());
     facebookLoginButton.setReadPermissions(facebookRequiredPermissions);
     facebookLoginButton.setVisibility(View.VISIBLE);
-    facebookLoginManager
-        .registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-          @Override public void onSuccess(LoginResult loginResult) {
-            facebookLoginSubject.call(new FacebookAccountViewModel(loginResult.getAccessToken(), loginResult.getRecentlyDeniedPermissions(), loginResult.getRecentlyGrantedPermissions()));
-          }
+    facebookLoginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+      @Override public void onSuccess(LoginResult loginResult) {
+        facebookLoginSubject.call(new FacebookAccountViewModel(loginResult.getAccessToken(),
+            loginResult.getRecentlyDeniedPermissions()));
+      }
 
-          @Override public void onCancel() {
-            showFacebookLoginError(cm.aptoide.accountmanager.R.string.unknown_error);
-          }
+      @Override public void onCancel() {
+        showFacebookLoginError(cm.aptoide.accountmanager.R.string.unknown_error);
+      }
 
-          @Override public void onError(FacebookException error) {
-            showFacebookLoginError(cm.aptoide.accountmanager.R.string.error_occured);
-          }
-        });
+      @Override public void onError(FacebookException error) {
+        showFacebookLoginError(cm.aptoide.accountmanager.R.string.error_occured);
+      }
+    });
   }
 
   @Override public void hideFacebookLogin() {
@@ -158,6 +149,33 @@ public class LoginActivity extends GoogleLoginActivity implements LoginView {
 
   @Override public void showPermissionsRequiredMessage() {
     facebookEmailRequiredDialog.show();
+  }
+
+  @Override public Observable<AptoideAccountViewModel> aptoideLoginSelection() {
+    return RxView.clicks(aptoideLoginButton)
+        .map(click -> new AptoideAccountViewModel(aptoideEmailEditText.getText().toString(),
+            aptoidePasswordEditText.getText().toString()));
+  }
+
+  @Override public void showCheckAptoideCredentialsMessage() {
+    ShowMessage.asSnack(content, cm.aptoide.accountmanager.R.string.fields_cannot_empty);
+  }
+
+  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    callbackManager.onActivityResult(requestCode, resultCode, data);
+  }
+
+  @Override protected void onDestroy() {
+    super.onDestroy();
+  }
+
+  @Override protected SignInButton getGoogleButton() {
+    return googleLoginButton;
+  }
+
+  @Override protected void showGoogleLoginError() {
+    ShowMessage.asSnack(content, cm.aptoide.accountmanager.R.string.unknown_error);
   }
 
   private void showFacebookLoginError(@StringRes int errorRes) {
