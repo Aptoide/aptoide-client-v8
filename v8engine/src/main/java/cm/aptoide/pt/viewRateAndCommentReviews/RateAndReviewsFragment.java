@@ -159,8 +159,26 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
 
     floatingActionButton.setOnClickListener(v -> {
       dialogUtils.showRateDialog(getActivity(), appName, packageName, storeName,
-          () -> fetchReviews());
+          () -> invalidateReviews());
     });
+  }
+
+  private void invalidateReviews() {
+    clearDisplayables();
+    fetchReviews();
+  }
+
+  private void fetchReviews() {
+    ListReviewsRequest reviewsRequest =
+        ListReviewsRequest.of(storeName, packageName, AptoideAccountManager.getAccessToken(),
+            aptoideClientUUID.getAptoideClientUUID());
+
+    getRecyclerView().removeOnScrollListener(endlessRecyclerOnScrollListener);
+    endlessRecyclerOnScrollListener =
+        new EndlessRecyclerOnScrollListener(this.getAdapter(), reviewsRequest,
+            new ListFullReviewsSuccessRequestListener(this), Throwable::printStackTrace);
+    getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
+    endlessRecyclerOnScrollListener.onLoadMore(false);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -206,18 +224,6 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   private void setupRating(GetAppMeta.App data) {
     ratingTotalsLayout.setup(data);
     ratingBarsLayout.setup(data);
-  }
-
-  private void fetchReviews() {
-    ListReviewsRequest reviewsRequest =
-        ListReviewsRequest.of(storeName, packageName, AptoideAccountManager.getAccessToken(),
-            aptoideClientUUID.getAptoideClientUUID());
-
-    endlessRecyclerOnScrollListener =
-        new EndlessRecyclerOnScrollListener(this.getAdapter(), reviewsRequest,
-            new ListFullReviewsSuccessRequestListener(this), Throwable::printStackTrace);
-    getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
-    endlessRecyclerOnScrollListener.onLoadMore(false);
   }
 
   /*
