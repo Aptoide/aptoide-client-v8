@@ -1,4 +1,9 @@
-package cm.aptoide.accountmanager.ws;
+/*
+ * Copyright (c) 2017.
+ * Modified by Marcelo Benites on 10/02/2017.
+ */
+
+package cm.aptoide.pt.v8engine.account;
 
 import android.support.annotation.StringRes;
 import cm.aptoide.accountmanager.R;

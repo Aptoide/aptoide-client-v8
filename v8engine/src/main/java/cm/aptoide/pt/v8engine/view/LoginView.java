@@ -35,7 +35,11 @@ public interface LoginView extends GoogleLoginView {
 
   Observable<Void> skipSelection();
 
+  Observable<Void> registerSelection();
+
   void navigateToMainView();
+
+  void navigateToRegisterView();
 
   Observable<Void> successMessageShown();
 

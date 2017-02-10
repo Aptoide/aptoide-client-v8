@@ -5,7 +5,6 @@
 
 package cm.aptoide.accountmanager.ws;
 
-import android.content.Context;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.OAuth;

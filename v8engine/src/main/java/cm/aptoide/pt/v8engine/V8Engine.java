@@ -136,7 +136,7 @@ public abstract class V8Engine extends DataProvider {
   private static void regenerateUserAgent(final AptoideAccountManager accountManager) {
     SecurePreferences.setUserAgent(
         AptoideUtils.NetworkUtils.getDefaultUserAgent(aptoideClientUUID, new UserData() {
-          @Override public String getUserEmail() {
+          public String getUsername() {
             return accountManager.getUserEmail();
           }
         }, AptoideUtils.Core.getDefaultVername(), getConfiguration().getPartnerId()));
@@ -228,7 +228,7 @@ public abstract class V8Engine extends DataProvider {
       }).subscribe();
 
       // load picture, name and email
-      accountManager.refreshAccount().subscribe(() -> {
+      accountManager.syncUser().subscribe(() -> {
       }, e -> {
         CrashReport.getInstance().log(e);
       });

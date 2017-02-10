@@ -464,14 +464,14 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   private ComplexComment getComplexComment(String inputText, Long previousCommentId, long id) {
     Comment comment = new Comment();
     Comment.User user = new Comment.User();
-    if (!TextUtils.isEmpty(accountManager.getUserData().getUserAvatar())) {
-      user.setAvatar(accountManager.getUserData().getUserAvatar());
+    if (!TextUtils.isEmpty(accountManager.getUser().getAvatar())) {
+      user.setAvatar(accountManager.getUser().getAvatar());
     } else {
-      if (!TextUtils.isEmpty(accountManager.getUserData().getUserAvatarRepo())) {
-        user.setAvatar(accountManager.getUserData().getUserAvatarRepo());
+      if (!TextUtils.isEmpty(accountManager.getUser().getStoreAvatar())) {
+        user.setAvatar(accountManager.getUser().getStoreAvatar());
       }
     }
-    user.setName(accountManager.getUserData().getUserName());
+    user.setName(accountManager.getUser().getStoreAvatar());
     comment.setUser(user);
     comment.setBody(inputText);
     comment.setAdded(new Date());

@@ -21,9 +21,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.ws.AptoideWsV3Exception;
-import cm.aptoide.accountmanager.ws.ErrorsMapper;
-import cm.aptoide.accountmanager.ws.responses.GenericResponseV3;
+import cm.aptoide.accountmanager.OAuthException;
+import cm.aptoide.pt.v8engine.account.ErrorsMapper;
+import cm.aptoide.accountmanager.ws.responses.OAuth;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -71,6 +71,7 @@ public class LoginActivity extends GoogleLoginActivity implements LoginView {
   private TextView orMessage;
   private boolean skipButton;
   private Snackbar successSnackbar;
+  private Button registerButton;
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -99,6 +100,7 @@ public class LoginActivity extends GoogleLoginActivity implements LoginView {
         (SignInButton) findViewById(cm.aptoide.accountmanager.R.id.g_sign_in_button);
 
     aptoideLoginButton = (Button) findViewById(cm.aptoide.accountmanager.R.id.button_login);
+    registerButton = (Button) findViewById(cm.aptoide.accountmanager.R.id.button_register);
     aptoideEmailEditText = (EditText) findViewById(cm.aptoide.accountmanager.R.id.username);
     aptoidePasswordEditText = (EditText) findViewById(cm.aptoide.accountmanager.R.id.password);
     hideShowAptoidePasswordButton =
@@ -169,9 +171,9 @@ public class LoginActivity extends GoogleLoginActivity implements LoginView {
 
   @Override public void showError(Throwable throwable) {
     final String message;
-    if (throwable instanceof AptoideWsV3Exception) {
-      final GenericResponseV3 oAuth = ((AptoideWsV3Exception) throwable).getBaseResponse();
-      message = getString(ErrorsMapper.getWebServiceErrorMessageFromCode(oAuth.getError()));
+    if (throwable instanceof OAuthException) {
+      final OAuth oAuth = ((OAuthException) throwable).getoAuth();
+      message = getString(ErrorsMapper.getWebServiceErrorMessageFromCode(oAuth.getErrors().get(0).getCode()));
     } else {
       message = getString(cm.aptoide.accountmanager.R.string.unknown_error);
     }
@@ -233,6 +235,14 @@ public class LoginActivity extends GoogleLoginActivity implements LoginView {
   @Override public void navigateToForgotPasswordView() {
     startActivity(new Intent(Intent.ACTION_VIEW,
         Uri.parse("http://m.aptoide.com/account/password-recovery")));
+  }
+
+  @Override public void navigateToRegisterView() {
+    startActivity(new Intent(this, SignUpActivity.class));
+  }
+
+  @Override public Observable<Void> registerSelection() {
+    return RxView.clicks(registerButton);
   }
 
   @Override public Observable<Void> forgotPasswordSelection() {

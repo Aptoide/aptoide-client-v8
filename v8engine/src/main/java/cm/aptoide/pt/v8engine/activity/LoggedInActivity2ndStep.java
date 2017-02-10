@@ -11,7 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.widget.Button;
 import android.widget.Toast;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.AptoideLoginUtils;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.SetUserRequest;
@@ -126,7 +125,7 @@ public class LoggedInActivity2ndStep extends AccountBaseActivity {
 
   private void goTo() {
 
-    if (getIntent() != null && getIntent().getBooleanExtra(AptoideLoginUtils.IS_FACEBOOK_OR_GOOGLE,
+    if (getIntent() != null && getIntent().getBooleanExtra(AptoideAccountManager.IS_FACEBOOK_OR_GOOGLE,
         false)) {
       updateUserInfo();
     } else {
@@ -139,7 +138,7 @@ public class LoggedInActivity2ndStep extends AccountBaseActivity {
   }
 
   private void updateUserInfo() {
-    accountManager.refreshAccount().subscribe(() -> {
+    accountManager.syncUser().subscribe(() -> {
       if (pleaseWaitDialog != null && pleaseWaitDialog.isShowing()) {
         pleaseWaitDialog.dismiss();
       }
