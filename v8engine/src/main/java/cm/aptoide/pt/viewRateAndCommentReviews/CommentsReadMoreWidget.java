@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.viewRateAndCommentReviews;
 
-import android.accounts.AccountManager;
 import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -13,10 +12,9 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
-import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 
@@ -40,10 +38,7 @@ public class CommentsReadMoreWidget extends Widget<CommentsReadMoreDisplayable> 
   @Override public void bindView(CommentsReadMoreDisplayable displayable) {
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
-    accountManager = AptoideAccountManager.getInstance(getContext(), Application.getConfiguration(),
-        new SecureCoderDecoder.Builder(getContext().getApplicationContext()).create(),
-        AccountManager.get(getContext().getApplicationContext()), new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            getContext().getApplicationContext()));
+    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
     compositeSubscription.add(RxView.clicks(readMoreButton).subscribe(aVoid -> {
       ListCommentsRequest.of(displayable.getResourceId(), displayable.getNext(), 100,
           accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier(),

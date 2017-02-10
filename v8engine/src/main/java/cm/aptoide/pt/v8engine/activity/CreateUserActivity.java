@@ -1,6 +1,10 @@
-package cm.aptoide.accountmanager;
+/*
+ * Copyright (c) 2017.
+ * Modified by Marcelo Benites on 09/02/2017.
+ */
 
-import android.accounts.AccountManager;
+package cm.aptoide.pt.v8engine.activity;
+
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -16,6 +20,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+import cm.aptoide.accountmanager.AccountManagerPreferences;
+import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.accountmanager.AptoideLoginUtils;
 import cm.aptoide.accountmanager.ws.CreateUserRequest;
 import cm.aptoide.accountmanager.ws.ErrorsMapper;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -24,12 +31,13 @@ import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import com.jakewharton.rxbinding.view.RxView;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.TimeUnit;
@@ -40,7 +48,7 @@ import rx.subscriptions.CompositeSubscription;
  * Created by pedroribeiro on 24/11/16.
  */
 
-public class CreateUserActivity extends PermissionsBaseActivity
+public class CreateUserActivity extends AccountPermissionsBaseActivity
     implements AptoideAccountManager.ICreateProfile {
 
   private static int CREATE_USER_REQUEST_CODE = 0; //1:Username and Avatar 2: Username
@@ -69,21 +77,19 @@ public class CreateUserActivity extends PermissionsBaseActivity
     super.onCreate(savedInstanceState);
     setContentView(getLayoutId());
     subscriptions = new CompositeSubscription();
-    accountManager = AptoideAccountManager.getInstance(this, Application.getConfiguration(), new SecureCoderDecoder.Builder(this.getApplicationContext()).create(),
-        AccountManager.get(this.getApplicationContext()), new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            this.getApplicationContext()));
+    accountManager = ((V8Engine)getApplicationContext()).getAccountManager();
     bindViews();
     getUserData();
     setupToolbar();
     setupListeners();
   }
 
-  @Override protected String getActivityTitle() {
+  @Override public String getActivityTitle() {
     return getString(R.string.create_user_title);
   }
 
-  @Override int getLayoutId() {
-    return R.layout.activity_create_user;
+  @Override public int getLayoutId() {
+    return cm.aptoide.accountmanager.R.layout.activity_create_user;
   }
 
   @Override protected void onDestroy() {
@@ -91,11 +97,11 @@ public class CreateUserActivity extends PermissionsBaseActivity
     subscriptions.clear();
   }
 
-  @Override void loadImage(Uri imagePath) {
+  @Override public void loadImage(Uri imagePath) {
     ImageLoader.with(this).loadWithCircleTransform(imagePath, avatarImage, false);
   }
 
-  @Override void showIconPropertiesError(String errors) {
+  @Override public void showIconPropertiesError(String errors) {
     subscriptions.add(GenericDialogs.createGenericOkMessage(this,
         getString(R.string.image_requirements_error_popup_title), errors)
         .subscribe(__ -> {/* does nothing */}, err -> {
@@ -220,7 +226,7 @@ public class CreateUserActivity extends PermissionsBaseActivity
       }
     } else {
       CREATE_USER_REQUEST_CODE = 0;
-      onRegisterFail(R.string.nothing_inserted_user);
+      onRegisterFail(cm.aptoide.accountmanager.R.string.nothing_inserted_user);
     }
     return CREATE_USER_REQUEST_CODE;
   }
@@ -231,13 +237,13 @@ public class CreateUserActivity extends PermissionsBaseActivity
   }
 
   @Override public void onRegisterSuccess(ProgressDialog progressDialog) {
-    ShowMessage.asSnack(content, R.string.user_created);
+    ShowMessage.asSnack(content, cm.aptoide.accountmanager.R.string.user_created);
     //data.putString(AptoideLoginUtils.APTOIDE_LOGIN_FROM, SIGNUP);
     progressDialog.dismiss();
     if (Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
       startActivity(new Intent(this, LoggedInActivity.class));
     } else {
-      Toast.makeText(this, R.string.create_profile_pub_pri_suc_login, Toast.LENGTH_LONG).show();
+      Toast.makeText(this, cm.aptoide.accountmanager.R.string.create_profile_pub_pri_suc_login, Toast.LENGTH_LONG).show();
       accountManager.sendLoginCancelledBroadcast();
     }
     finish();
@@ -259,7 +265,7 @@ public class CreateUserActivity extends PermissionsBaseActivity
     FileUtils fileUtils = new FileUtils();
     Uri avatarUrl = null;
     if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-      avatarUrl = getPhotoFileUri(PermissionsBaseActivity.createAvatarPhotoName(photoAvatar));
+      avatarUrl = getPhotoFileUri(AccountPermissionsBaseActivity.createAvatarPhotoName(photoAvatar));
       avatarPath = fileUtils.getPathAlt(avatarUrl, getApplicationContext());
     } else if (requestCode == GALLERY_CODE && resultCode == RESULT_OK) {
       avatarUrl = data.getData();

@@ -1,9 +1,13 @@
-package cm.aptoide.accountmanager.services;
+/*
+ * Copyright (c) 2017.
+ * Modified by Marcelo Benites on 09/02/2017.
+ */
+
+package cm.aptoide.pt.v8engine.account;
 
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import cm.aptoide.accountmanager.AccountAuthenticator;
 
 /**
  * Created by brutus on 11-12-2013.

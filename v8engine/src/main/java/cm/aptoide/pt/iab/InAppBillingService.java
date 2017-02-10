@@ -5,15 +5,10 @@
 
 package cm.aptoide.pt.iab;
 
-import android.accounts.AccountManager;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.payment.ProductFactory;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 
@@ -25,11 +20,7 @@ public class InAppBillingService extends Service {
     super.onCreate();
     billingBinder = new BillingBinder(this, RepositoryFactory.getInAppBillingRepository(this),
         new InAppBillingSerializer(), new ErrorCodeFactory(), new PurchaseErrorCodeFactory(),
-        new ProductFactory(), AptoideAccountManager.getInstance(this,
-        Application.getConfiguration(), new SecureCoderDecoder.Builder(this.getApplicationContext()).create(),
-        AccountManager.get(this.getApplicationContext()), new IdsRepositoryImpl(
-            SecurePreferencesImplementation.getInstance(),
-            this.getApplicationContext())));
+        new ProductFactory(), ((V8Engine)getApplicationContext()).getAccountManager());
   }
 
   @Override public IBinder onBind(Intent intent) {

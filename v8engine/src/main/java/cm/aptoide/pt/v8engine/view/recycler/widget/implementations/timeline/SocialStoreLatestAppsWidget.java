@@ -93,9 +93,7 @@ public class SocialStoreLatestAppsWidget
     super.bindView(displayable);
     final IdsRepositoryImpl aptoideClientUuid =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
-    accountManager = AptoideAccountManager.getInstance(getContext(), Application.getConfiguration(),
-        new SecureCoderDecoder.Builder(getContext().getApplicationContext()).create(),
-        AccountManager.get(getContext().getApplicationContext()), aptoideClientUuid);
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     storeUtilsProxy = new StoreUtilsProxy(aptoideClientUuid, accountManager);
     storeName.setText(displayable.getStoreName());
     userName.setText(displayable.getUser().getName());
@@ -262,7 +260,7 @@ public class SocialStoreLatestAppsWidget
               AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
         }, err -> {
           CrashReport.getInstance().log(err);
-        });
+        }, accountManager);
       };
       followStore.setText(R.string.appview_follow_store_button_text);
       compositeSubscription.add(RxView.clicks(followStore).subscribe(subscribeStore));

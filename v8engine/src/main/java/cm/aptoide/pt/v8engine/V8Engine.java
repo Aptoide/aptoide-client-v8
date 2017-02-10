@@ -17,6 +17,7 @@ import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.accountmanager.LoginAvailability;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
 import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.annotation.Partners;
@@ -36,7 +37,7 @@ import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.preferences.AptoidePreferencesConfiguration;
 import cm.aptoide.pt.preferences.PRNGFixes;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
@@ -62,6 +63,8 @@ import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.view.MainActivity;
 import cm.aptoide.pt.v8engine.view.recycler.DisplayableWidgetMapping;
 import com.flurry.android.FlurryAgent;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import java.util.Collections;
 import java.util.List;
 import lombok.Getter;
@@ -83,9 +86,9 @@ public abstract class V8Engine extends DataProvider {
   @Setter @Getter private static boolean autoUpdateWasCalled = false;
 
   private static AptoideClientUUID aptoideClientUUID;
-  private static AptoideAccountManager accountManager;
+  private AptoideAccountManager accountManager;
 
-  public static void loadStores() {
+  public static void loadStores(AptoideAccountManager accountManager) {
 
     accountManager.getUserRepos().subscribe(subscriptions -> {
 
@@ -102,7 +105,7 @@ public abstract class V8Engine extends DataProvider {
           ((StoreAccessor) AccessorFactory.getAccessorFor(Store.class)).insert(store);
         }
       } else {
-        addDefaultStore();
+        addDefaultStore(accountManager);
       }
 
       checkUpdates();
@@ -121,18 +124,18 @@ public abstract class V8Engine extends DataProvider {
         });
   }
 
-  public static void loadUserData() {
-    loadStores();
-    regenerateUserAgent();
+  public static void loadUserData(AptoideAccountManager accountManager) {
+    loadStores(accountManager);
+    regenerateUserAgent(accountManager);
   }
 
-  public static void clearUserData() {
+  public static void clearUserData(AptoideAccountManager accountManager) {
     AccessorFactory.getAccessorFor(Store.class).removeAll();
-    StoreUtils.subscribeStore(getConfiguration().getDefaultStore(), null, null);
-    regenerateUserAgent();
+    StoreUtils.subscribeStore(getConfiguration().getDefaultStore(), null, null, accountManager);
+    regenerateUserAgent(accountManager);
   }
 
-  private static void regenerateUserAgent() {
+  private static void regenerateUserAgent(final AptoideAccountManager accountManager) {
     SecurePreferences.setUserAgent(
         AptoideUtils.NetworkUtils.getDefaultUserAgent(aptoideClientUUID, new UserData() {
           @Override public String getUserEmail() {
@@ -141,9 +144,29 @@ public abstract class V8Engine extends DataProvider {
         }, AptoideUtils.Core.getDefaultVername(), getConfiguration().getPartnerId()));
   }
 
-  private static void addDefaultStore() {
+  private static void addDefaultStore(AptoideAccountManager accountManager) {
     StoreUtils.subscribeStore(getConfiguration().getDefaultStore(), getStoreMeta -> checkUpdates(),
-        null);
+        null, accountManager);
+  }
+
+  public AptoideAccountManager getAccountManager() {
+    if (accountManager == null) {
+      accountManager = new AptoideAccountManager(this, getConfiguration(), new SecureCoderDecoder.Builder(this).create(),
+          AccountManager.get(this),
+          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this),
+          new LoginAvailability() {
+            @Override public boolean isGoogleLoginAvailable() {
+              return GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(V8Engine.this)
+                  == ConnectionResult.SUCCESS && getConfiguration().isLoginAvailable(
+                  AptoidePreferencesConfiguration.SocialLogin.GOOGLE);
+            }
+
+            @Override public boolean isFacebookLoginAvailable() {
+              return getConfiguration().isLoginAvailable(AptoidePreferencesConfiguration.SocialLogin.FACEBOOK);
+            }
+          });
+    }
+    return accountManager;
   }
 
   /**
@@ -160,10 +183,7 @@ public abstract class V8Engine extends DataProvider {
       CrashReport.getInstance().log(e);
     }
     long l = System.currentTimeMillis();
-    accountManager = AptoideAccountManager.getInstance(getContext(), Application.getConfiguration(),
-        new SecureCoderDecoder.Builder(getContext().getApplicationContext()).create(),
-        AccountManager.get(getContext().getApplicationContext()), new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            getContext().getApplicationContext()));
+    final AptoideAccountManager accountManager = getAccountManager();
     fragmentProvider = createFragmentProvider();
     activityProvider = createActivityProvider();
     displayableWidgetMapping = createDisplayableWidgetMapping();
@@ -182,7 +202,7 @@ public abstract class V8Engine extends DataProvider {
 
     generateAptoideUUID().subscribe();
 
-    regenerateUserAgent();
+    regenerateUserAgent(getAccountManager());
 
     IntentFilter intentFilter = new IntentFilter(AptoideAccountManager.LOGIN);
     intentFilter.addAction(AptoideAccountManager.LOGOUT);
@@ -207,11 +227,11 @@ public abstract class V8Engine extends DataProvider {
         if (accountManager.isLoggedIn()) {
 
           if (!SecurePreferences.isUserDataLoaded()) {
-            loadUserData();
+            loadUserData(accountManager);
             SecurePreferences.setUserDataLoaded();
           }
         } else {
-          generateAptoideUUID().subscribe(success -> addDefaultStore(), err -> {
+          generateAptoideUUID().subscribe(success -> addDefaultStore(accountManager), err -> {
             CrashReport.getInstance().log(err);
           });
         }
@@ -280,7 +300,7 @@ public abstract class V8Engine extends DataProvider {
   @Override protected TokenInvalidator getTokenInvalidator() {
     return new TokenInvalidator() {
       @Override public Observable<String> invalidateAccessToken(@NonNull Context context) {
-        return accountManager.invalidateAccessToken(context);
+        return accountManager.invalidateAccessToken();
       }
     };
   }

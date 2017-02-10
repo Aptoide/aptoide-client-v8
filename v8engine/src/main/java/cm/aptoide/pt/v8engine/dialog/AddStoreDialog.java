@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.dialog;
 
-import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
@@ -142,7 +141,7 @@ public class AddStoreDialog extends DialogFragment {
         dismissLoadingDialog();
         ShowMessage.asSnack(getActivity(), R.string.error_occured);
       }
-    }, storeName);
+    }, storeName, accountManager);
   }
 
   void dismissLoadingDialog() {
@@ -151,10 +150,7 @@ public class AddStoreDialog extends DialogFragment {
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    accountManager = AptoideAccountManager.getInstance(getContext(), Application.getConfiguration(),
-        new SecureCoderDecoder.Builder(getContext().getApplicationContext()).create(),
-        AccountManager.get(getContext().getApplicationContext()), new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            getContext().getApplicationContext()));
+    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
     aptoideClientUUID =  new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
     if (savedInstanceState != null) {

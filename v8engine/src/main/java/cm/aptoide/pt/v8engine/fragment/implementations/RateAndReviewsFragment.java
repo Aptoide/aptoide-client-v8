@@ -47,7 +47,7 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
           Observable.from(reviews)
               .forEach(fullReview -> ListCommentsRequest.of(fullReview.getComments().getView(),
                   fullReview.getId(), 3, storeName, StoreUtils.getStoreCredentials(storeName),
-                  AptoideAccountManager.getInstance().getAccessToken(), AptoideAccountManager.getInstance().getUserEmail(),
+                  new AptoideAccountManager().getAccessToken(), new AptoideAccountManager().getUserEmail(),
                   new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                       DataProvider.getContext()).getAptoideClientUUID()).execute(listComments -> {
                 fullReview.setCommentList(listComments);
@@ -224,7 +224,7 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
   }
 
   private void fetchRating(boolean refresh) {
-    GetAppRequest.of(appId, AptoideAccountManager.getInstance().getAccessToken(),
+    GetAppRequest.of(appId, new AptoideAccountManager().getAccessToken(),
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext()).getAptoideClientUUID()).execute(getApp -> {
       GetAppMeta.App data = getApp.getNodes().getMeta().getData();
@@ -241,8 +241,8 @@ public class RateAndReviewsFragment extends GridRecyclerFragment {
 
   private void fetchReviews() {
     ListReviewsRequest of =
-        ListReviewsRequest.of(storeName, packageName, AptoideAccountManager.getInstance().getAccessToken(),
-            AptoideAccountManager.getInstance().getUserEmail(),
+        ListReviewsRequest.of(storeName, packageName, new AptoideAccountManager().getAccessToken(),
+            new AptoideAccountManager().getUserEmail(),
             new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
                 DataProvider.getContext()).getAptoideClientUUID());
 

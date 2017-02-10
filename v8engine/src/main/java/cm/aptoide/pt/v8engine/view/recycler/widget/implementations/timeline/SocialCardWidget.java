@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.timeline;
 
-import android.accounts.AccountManager;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -14,18 +13,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.model.v7.timeline.UserTimeline;
-import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.activity.AccountNavigator;
 import cm.aptoide.pt.v8engine.customviews.LikeButtonView;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.SocialCardDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
@@ -46,6 +42,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
   private RelativeLayout likePreviewContainer;
   private int marginOfTheNextLikePreview;
   private AptoideAccountManager accountManager;
+  private AccountNavigator accountNavigator;
 
   SocialCardWidget(View itemView) {
     super(itemView);
@@ -67,12 +64,9 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
 
   @Override @CallSuper public void bindView(T displayable) {
     super.bindView(displayable);
+    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
+    accountNavigator = new AccountNavigator(getContext(), accountManager);
 
-    accountManager = AptoideAccountManager.getInstance(getContext(), Application.getConfiguration(),
-        new SecureCoderDecoder.Builder(getContext().getApplicationContext()).create(),
-        AccountManager.get(getContext().getApplicationContext()), new IdsRepositoryImpl(
-            SecurePreferencesImplementation.getInstance(),
-            getContext().getApplicationContext()));
     if (displayable.getUserSharer() != null) {
       if (displayable.getUserSharer().getName() != null && !displayable.getUser()
           .getName()
@@ -174,7 +168,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
     if (!accountManager.isLoggedIn()) {
       ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> {
-            accountManager.openAccountManager(snackView.getContext());
+            accountNavigator.navigateToAccountView();
           });
       return false;
     }

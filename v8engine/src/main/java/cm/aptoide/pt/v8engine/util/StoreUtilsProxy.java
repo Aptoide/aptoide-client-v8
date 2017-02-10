@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.util;
 
-import android.accounts.AccountManager;
 import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
@@ -32,28 +31,31 @@ public class StoreUtilsProxy {
   public void subscribeStore(String storeName) {
     subscribeStore(GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName),
         accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier()), null,
-        null, storeName);
+        null, storeName, accountManager);
   }
 
   public void subscribeStore(GetStoreMetaRequest getStoreMetaRequest,
       @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
-      @Nullable ErrorRequestListener errorRequestListener, String storeName) {
+      @Nullable ErrorRequestListener errorRequestListener, String storeName,
+      AptoideAccountManager accountManager) {
     Logger.d(StoreUtilsProxy.class.getName(),
         "LOCALYTICS TESTING - STORES: ACTION SUBSCRIBE " + storeName);
     Analytics.Stores.subscribe(storeName);
-    StoreUtils.subscribeStore(getStoreMetaRequest, successRequestListener, errorRequestListener);
+    StoreUtils.subscribeStore(getStoreMetaRequest, successRequestListener, errorRequestListener,
+        accountManager);
   }
 
   public void subscribeStore(String storeName,
       @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
-      @Nullable ErrorRequestListener errorRequestListener) {
+      @Nullable ErrorRequestListener errorRequestListener,
+      AptoideAccountManager accountManager) {
     subscribeStore(GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName),
         accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier()),
-        successRequestListener, errorRequestListener, storeName);
+        successRequestListener, errorRequestListener, storeName, accountManager);
   }
 
   public void unSubscribeStore(String storeName){
     Analytics.Stores.unSubscribe(storeName);
-    StoreUtils.unsubscribeStore(storeName);
+    StoreUtils.unsubscribeStore(storeName, accountManager);
   }
 }

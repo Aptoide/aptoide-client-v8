@@ -68,7 +68,7 @@ public class AccountManagerPreferences {
     return SecurePreferences.getString(SecureKeys.USER_AVATAR);
   }
 
-  static void setUserAvatar(String userAvatar) {
+  public static void setUserAvatar(String userAvatar) {
     SecurePreferences.putString(SecureKeys.USER_AVATAR, userAvatar);
   }
 
@@ -92,7 +92,7 @@ public class AccountManagerPreferences {
     return SecurePreferences.getString(SecureKeys.USER_NICK_NAME);
   }
 
-  static void setUserNickName(String userNickName) {
+  public static void setUserNickName(String userNickName) {
     SecurePreferences.putString(SecureKeys.USER_NICK_NAME, userNickName);
   }
 

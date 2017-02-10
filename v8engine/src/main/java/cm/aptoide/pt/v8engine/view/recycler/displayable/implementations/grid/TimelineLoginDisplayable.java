@@ -1,8 +1,7 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
-import android.content.Context;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.activity.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 
 /**
@@ -10,6 +9,15 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
  */
 
 public class TimelineLoginDisplayable extends Displayable {
+
+  private AccountNavigator accountNavigator;
+
+  public TimelineLoginDisplayable() {
+  }
+
+  public TimelineLoginDisplayable(AccountNavigator accountNavigator) {
+    this.accountNavigator = accountNavigator;
+  }
 
   @Override protected Configs getConfig() {
     return new Configs(1, true);
@@ -19,7 +27,7 @@ public class TimelineLoginDisplayable extends Displayable {
     return R.layout.timeline_login_header_layout;
   }
 
-  public void login(Context context, AptoideAccountManager accountManager) {
-    accountManager.openAccountManager(context);
+  public void login() {
+    accountNavigator.navigateToAccountView();
   }
 }

@@ -54,7 +54,7 @@ public class RecommendedStoreDisplayable extends DisplayablePojo<Store> {
     if (accountManager.isLoggedIn()) {
       accountManager.unsubscribeStore(getPojo().getName());
     }
-    StoreUtils.unsubscribeStore(getPojo().getName());
+    StoreUtils.unsubscribeStore(getPojo().getName(), accountManager);
   }
 
   void openStoreFragment(NavigationManagerV4 navigationManager) {

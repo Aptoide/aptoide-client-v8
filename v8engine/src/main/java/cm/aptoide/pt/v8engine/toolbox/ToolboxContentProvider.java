@@ -30,14 +30,12 @@ import cm.aptoide.accountmanager.util.UserCompleteData;
 import cm.aptoide.accountmanager.ws.LoginMode;
 import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagedKeys;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.services.PullingContentService;
 import java.util.Locale;
 import java.util.Map;
@@ -73,9 +71,7 @@ public class ToolboxContentProvider extends ContentProvider {
     uriMatcher.addURI(authority, "passHash", PASSHASH);
     uriMatcher.addURI(authority, "loginName", LOGIN_NAME);
     uriMatcher.addURI(authority, "changePreference", CHANGE_PREFERENCE);
-    aptoideAccountManager = AptoideAccountManager.getInstance(getContext(),
-        Application.getConfiguration(), new SecureCoderDecoder.Builder(getContext()).create(),
-        AccountManager.get(getContext()), new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext()));
+    aptoideAccountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
     return true;
   }
 

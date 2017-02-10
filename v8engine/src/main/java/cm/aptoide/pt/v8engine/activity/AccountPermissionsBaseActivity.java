@@ -1,4 +1,9 @@
-package cm.aptoide.accountmanager;
+/*
+ * Copyright (c) 2017.
+ * Modified by Marcelo Benites on 09/02/2017.
+ */
+
+package cm.aptoide.pt.v8engine.activity;
 
 import android.Manifest;
 import android.app.Dialog;
@@ -19,6 +24,7 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.v8engine.R;
 import com.jakewharton.rxbinding.view.RxView;
 import java.io.File;
 import java.util.List;
@@ -28,14 +34,14 @@ import rx.subscriptions.CompositeSubscription;
  * Created by pedroribeiro on 02/12/16.
  */
 
-public abstract class PermissionsBaseActivity extends BaseActivity {
+public abstract class AccountPermissionsBaseActivity extends AccountBaseActivity {
 
   protected static final int CREATE_STORE_REQUEST_CODE = 1;
   protected static final int STORAGE_REQUEST_CODE = 123;
   protected static final int CAMERA_REQUEST_CODE = 124;
   protected static final int USER_PROFILE_CODE = 125;
-  static final int GALLERY_CODE = 1046;
-  static final int REQUEST_IMAGE_CAPTURE = 1;
+  public static final int GALLERY_CODE = 1046;
+  public static final int REQUEST_IMAGE_CAPTURE = 1;
   static final String STORAGE_PERMISSION_GIVEN = "storage_permission_given";
   static final String CAMERA_PERMISSION_GIVEN = "camera_permission_given";
   static final String STORAGE_PERMISSION_REQUESTED = "storage_permission_requested";
@@ -53,11 +59,11 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
     mSubscriptions = new CompositeSubscription();
   }
 
-  @Override protected String getActivityTitle() {
+  @Override public String getActivityTitle() {
     return null;
   }
 
-  @Override int getLayoutId() {
+  @Override public int getLayoutId() {
     return 0;
   }
 
@@ -68,12 +74,12 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
 
   public void chooseAvatarSource() {
     final Dialog dialog = new Dialog(this);
-    dialog.setContentView(R.layout.dialog_choose_avatar_layout);
-    mSubscriptions.add(RxView.clicks(dialog.findViewById(R.id.button_camera)).subscribe(click -> {
+    dialog.setContentView(cm.aptoide.accountmanager.R.layout.dialog_choose_avatar_layout);
+    mSubscriptions.add(RxView.clicks(dialog.findViewById(cm.aptoide.accountmanager.R.id.button_camera)).subscribe(click -> {
       callPermissionAndAction(TYPE_CAMERA);
       dialog.dismiss();
     }));
-    mSubscriptions.add(RxView.clicks(dialog.findViewById(R.id.button_gallery)).subscribe(click -> {
+    mSubscriptions.add(RxView.clicks(dialog.findViewById(cm.aptoide.accountmanager.R.id.button_gallery)).subscribe(click -> {
       callPermissionAndAction(TYPE_STORAGE);
       dialog.dismiss();
     }));
@@ -86,13 +92,13 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
 
   public void callPermissionAndAction(String type) {
     String result =
-        PermissionsBaseActivity.checkAndAskPermission(PermissionsBaseActivity.this, type);
+        AccountPermissionsBaseActivity.checkAndAskPermission(AccountPermissionsBaseActivity.this, type);
     switch (result) {
-      case PermissionsBaseActivity.CAMERA_PERMISSION_GIVEN:
+      case AccountPermissionsBaseActivity.CAMERA_PERMISSION_GIVEN:
         changePermissionValue(true);
         dispatchTakePictureIntent(getApplicationContext());
         break;
-      case PermissionsBaseActivity.STORAGE_PERMISSION_GIVEN:
+      case AccountPermissionsBaseActivity.STORAGE_PERMISSION_GIVEN:
         changePermissionValue(true);
         callGallery();
         break;
@@ -160,11 +166,11 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
           Uri uriForFile = FileProvider.getUriForFile(context,
               Application.getConfiguration().getAppId() + ".provider", new File(getPhotoFileUri(
-                  PermissionsBaseActivity.createAvatarPhotoName(photoAvatar)).getPath()));
+                  AccountPermissionsBaseActivity.createAvatarPhotoName(photoAvatar)).getPath()));
           takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uriForFile);
         } else {
           takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-              getPhotoFileUri(PermissionsBaseActivity.createAvatarPhotoName(photoAvatar)));
+              getPhotoFileUri(AccountPermissionsBaseActivity.createAvatarPhotoName(photoAvatar)));
         }
         startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
       }
@@ -208,11 +214,11 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
     if (!TextUtils.isEmpty(avatarPath)) {
       List<AptoideUtils.IconSizeU.ImageSizeErrors> imageSizeErrors =
           AptoideUtils.IconSizeU.checkIconSizeProperties(avatarPath,
-              getResources().getInteger(R.integer.min_avatar_height),
-              getResources().getInteger(R.integer.max_avatar_height),
-              getResources().getInteger(R.integer.min_avatar_width),
-              getResources().getInteger(R.integer.max_avatar_width),
-              getResources().getInteger(R.integer.max_avatar_Size));
+              getResources().getInteger(cm.aptoide.accountmanager.R.integer.min_avatar_height),
+              getResources().getInteger(cm.aptoide.accountmanager.R.integer.max_avatar_height),
+              getResources().getInteger(cm.aptoide.accountmanager.R.integer.min_avatar_width),
+              getResources().getInteger(cm.aptoide.accountmanager.R.integer.max_avatar_width),
+              getResources().getInteger(cm.aptoide.accountmanager.R.integer.max_avatar_Size));
       if (imageSizeErrors.isEmpty()) {
         loadImage(avatarUrl);
       } else {
@@ -221,29 +227,29 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
     }
   }
 
-  abstract void loadImage(Uri imagePath);
+  public abstract void loadImage(Uri imagePath);
 
-  abstract void showIconPropertiesError(String errors);
+  public abstract void showIconPropertiesError(String errors);
 
   private String getErrorsMessage(List<AptoideUtils.IconSizeU.ImageSizeErrors> imageSizeErrors) {
     StringBuilder message = new StringBuilder();
-    message.append(getString(R.string.image_requirements_popup_message));
+    message.append(getString(cm.aptoide.accountmanager.R.string.image_requirements_popup_message));
     for (AptoideUtils.IconSizeU.ImageSizeErrors imageSizeError : imageSizeErrors) {
       switch (imageSizeError) {
         case MIN_HEIGHT:
-          message.append(getString(R.string.image_requirements_error_min_height));
+          message.append(getString(cm.aptoide.accountmanager.R.string.image_requirements_error_min_height));
           break;
         case MAX_HEIGHT:
-          message.append(getString(R.string.image_requirements_error_max_height));
+          message.append(getString(cm.aptoide.accountmanager.R.string.image_requirements_error_max_height));
           break;
         case MIN_WIDTH:
-          message.append(getString(R.string.image_requirements_error_min_width));
+          message.append(getString(cm.aptoide.accountmanager.R.string.image_requirements_error_min_width));
           break;
         case MAX_WIDTH:
-          message.append(getString(R.string.image_requirements_error_max_width));
+          message.append(getString(cm.aptoide.accountmanager.R.string.image_requirements_error_max_width));
           break;
         case MAX_IMAGE_SIZE:
-          message.append(getString(R.string.image_requirements_error_max_file_size));
+          message.append(getString(cm.aptoide.accountmanager.R.string.image_requirements_error_max_file_size));
           break;
       }
     }

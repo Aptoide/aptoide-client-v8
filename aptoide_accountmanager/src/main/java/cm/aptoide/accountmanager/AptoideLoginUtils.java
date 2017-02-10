@@ -17,45 +17,15 @@ import java.lang.ref.WeakReference;
 /**
  * Created by trinkes on 4/26/16.
  */
-class AptoideLoginUtils {
+public class AptoideLoginUtils {
 
   public static final String IS_FACEBOOK_OR_GOOGLE = "facebook_google";
-  static final String APTOIDE_LOGIN_USER_NAME_KEY = "aptoide_login_user_name";
-  static final String APTOIDE_LOGIN_PASSWORD_KEY = "aptoide_login_password";
+  public static final String APTOIDE_LOGIN_USER_NAME_KEY = "aptoide_login_user_name";
+  public static final String APTOIDE_LOGIN_PASSWORD_KEY = "aptoide_login_password";
   static final String APTOIDE_LOGIN_REFRESH_TOKEN_KEY = "aptoide_login_refresh_token";
-  static final String APTOIDE_LOGIN_ACCESS_TOKEN_KEY = "aptoide_login_access_token";
-  static final String APTOIDE_LOGIN_FROM = "aptoide_login_from";
+  public static final String APTOIDE_LOGIN_ACCESS_TOKEN_KEY = "aptoide_login_access_token";
+  public static final String APTOIDE_LOGIN_FROM = "aptoide_login_from";
   private static int REQ_SIGNUP = 8;
-
-  static void setupAptoideLogin(Activity activity, Button loginButton, Button registerButton,
-      final AptoideAccountManager accountManager) {
-
-    loginButton.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        String username = accountManager.getIntroducedUserName();
-        String password = accountManager.getIntroducedPassword();
-
-        if (username == null || password == null || (username.length() == 0
-            || password.length() == 0)) {
-          ShowMessage.asSnack(v, R.string.fields_cannot_empty);
-          return;
-        }
-
-        accountManager.login(LoginMode.APTOIDE, username, password, null, activity);
-      }
-    });
-
-    final WeakReference<Activity> activityWeakReference = new WeakReference<>(activity);
-    registerButton.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        Intent signup = new Intent(v.getContext(), SignUpActivity.class);
-        Activity activity = activityWeakReference.get();
-        if (activity != null) {
-          activity.startActivityForResult(signup, REQ_SIGNUP);
-        }
-      }
-    });
-  }
 
   public static void onActivityResult(Activity activity, int requestCode, int resultCode,
       Intent data, AptoideAccountManager accountManager) {

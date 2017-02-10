@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.analytics;
 
-import android.accounts.AccountManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -16,8 +15,6 @@ import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetAppMeta;
-import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -65,7 +62,6 @@ public class Analytics {
       "apps-group-editors-choice"
   };
   private static final AptoideClientUUID aptoideClientUuid;
-  private static final AptoideAccountManager accountManager;
   static @Getter Analytics instance = new Analytics(new AnalyticsDataSaver());
   private static boolean ACTIVATE_LOCALYTICS = true;
   private static boolean isFirstSession;
@@ -73,10 +69,6 @@ public class Analytics {
   static {
     aptoideClientUuid = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
-    accountManager = AptoideAccountManager.getInstance(DataProvider.getContext(),
-        Application.getConfiguration(), new SecureCoderDecoder.Builder(DataProvider.getContext().getApplicationContext()).create(),
-        AccountManager.get(DataProvider.getContext().getApplicationContext()), new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext().getApplicationContext()));
   }
 
   private AnalyticsDataSaver saver;
@@ -325,6 +317,8 @@ public class Analytics {
         Localytics.onActivityResume(activity);
 
         if (isFirstSession) {
+          final AptoideAccountManager accountManager =
+              ((V8Engine) activity.getApplicationContext()).getAccountManager();
           if (!accountManager.isLoggedIn()) {
             Localytics.setCustomDimension(0, "Not Logged In");
           } else {

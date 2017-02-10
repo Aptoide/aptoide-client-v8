@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.activity;
 
-import android.accounts.AccountManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -25,13 +24,10 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.AptoideWsV3Exception;
 import cm.aptoide.accountmanager.ws.ErrorsMapper;
 import cm.aptoide.accountmanager.ws.responses.GenericResponseV3;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.presenter.LoginPresenter;
 import cm.aptoide.pt.v8engine.view.LoginView;
 import com.facebook.CallbackManager;
@@ -124,9 +120,7 @@ public class LoginActivity extends GoogleLoginActivity implements LoginView {
         .create();
 
     final AptoideAccountManager accountManager =
-        AptoideAccountManager.getInstance(this, Application.getConfiguration(),
-            new SecureCoderDecoder.Builder(this).create(), AccountManager.get(this),
-            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this));
+        ((V8Engine)getApplicationContext()).getAccountManager();
 
     attachPresenter(new LoginPresenter(this, accountManager, facebookRequestedPermissions),
         savedInstanceState);

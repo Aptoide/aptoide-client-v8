@@ -1,11 +1,10 @@
 /*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 17/06/2016.
+ * Copyright (c) 2017.
+ * Modified by Marcelo Benites on 09/02/2017.
  */
 
-package cm.aptoide.accountmanager;
+package cm.aptoide.pt.v8engine.activity;
 
-import android.accounts.AccountManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
@@ -14,16 +13,14 @@ import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.accountmanager.*;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.v8engine.V8Engine;
 
 /**
  * Created by trinkes on 4/29/16.
  */
-public class SignUpActivity extends BaseActivity implements AptoideAccountManager.IRegisterUser {
+public class SignUpActivity extends AccountBaseActivity implements AptoideAccountManager.IRegisterUser {
 
   private Button signUpButton;
   private Toolbar mToolbar;
@@ -38,20 +35,17 @@ public class SignUpActivity extends BaseActivity implements AptoideAccountManage
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(getLayoutId());
-    accountManager = AptoideAccountManager.getInstance(this, Application.getConfiguration(), new SecureCoderDecoder.Builder(this.getApplicationContext()).create(),
-        AccountManager.get(this.getApplicationContext()), new IdsRepositoryImpl(
-            SecurePreferencesImplementation.getInstance(),
-            this.getApplicationContext()));
+    accountManager = ((V8Engine)getApplicationContext()).getAccountManager();
     bindViews();
     setupToolbar();
     setupListeners();
   }
 
-  @Override protected String getActivityTitle() {
+  @Override public String getActivityTitle() {
     return getString(R.string.register);
   }
 
-  @Override int getLayoutId() {
+  @Override public int getLayoutId() {
     return R.layout.sign_up_activity_layout;
   }
 

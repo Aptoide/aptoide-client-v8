@@ -61,40 +61,6 @@
         android:text="@string/sign_out"
         style="?attr/customButton"
         />
-
-    <Button
-        android:id="@+id/btn_user_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="User Name"
-        android:visibility="gone"
-        />
-
-    <Button
-        android:id="@+id/btn_access_token"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Access Token"
-        android:visibility="gone"
-        />
-
-    <Button
-        android:id="@+id/btn_refresh_token"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Refresh Token"
-        android:visibility="gone"
-        />
-
-    <Button
-        android:id="@+id/btn_invalidate_token"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Invalidate Token"
-        android:visibility="gone"
-        />
-
-
   </LinearLayout>
 </LinearLayout>
 

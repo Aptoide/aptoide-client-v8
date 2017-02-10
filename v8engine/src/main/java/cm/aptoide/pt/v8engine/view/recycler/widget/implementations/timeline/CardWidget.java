@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.timeline;
 
-import android.accounts.AccountManager;
 import android.content.Intent;
 import android.support.annotation.CallSuper;
 import android.support.v7.app.AlertDialog;
@@ -9,19 +8,17 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.BaseActivity;
-import cm.aptoide.accountmanager.CreateStoreActivity;
+import cm.aptoide.pt.v8engine.activity.AccountBaseActivity;
+import cm.aptoide.pt.v8engine.activity.AccountNavigator;
+import cm.aptoide.pt.v8engine.activity.CreateStoreActivity;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.dialog.SharePreviewDialog;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.CardDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -47,6 +44,7 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
 
   TextView shareButton;
   private AptoideAccountManager accountManager;
+  private AccountNavigator accountNavigator;
 
   CardWidget(View itemView) {
     super(itemView);
@@ -57,11 +55,8 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
   }
 
   @CallSuper @Override public void bindView(T displayable) {
-    accountManager = AptoideAccountManager.getInstance(getContext(), Application.getConfiguration(),
-        new SecureCoderDecoder.Builder(getContext().getApplicationContext()).create(),
-        AccountManager.get(getContext().getApplicationContext()), new IdsRepositoryImpl(
-            SecurePreferencesImplementation.getInstance(),
-            getContext().getApplicationContext()));
+    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
+    accountNavigator = new AccountNavigator(getContext(), accountManager);
     compositeSubscription.add(RxView.clicks(shareButton)
         //.flatMap(a -> {
         //// FIXME: 20/12/2016 sithengineer remove this flatMap
@@ -84,13 +79,13 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
     if (!accountManager.isLoggedIn()) {
       ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> {
-            accountManager.openAccountManager(snackView.getContext());
+            accountNavigator.navigateToAccountView();
           });
       return;
     }
 
     if (TextUtils.isEmpty(accountManager.getUserData().getUserRepo())
-        && !BaseActivity.UserAccessState.PUBLIC.toString()
+        && !AccountBaseActivity.UserAccessState.PUBLIC.toString()
         .equals(ManagerPreferences.getUserAccess())) {
       ShowMessage.asSnack(getContext(), R.string.private_profile_create_store,
           R.string.create_store_create, snackView -> {

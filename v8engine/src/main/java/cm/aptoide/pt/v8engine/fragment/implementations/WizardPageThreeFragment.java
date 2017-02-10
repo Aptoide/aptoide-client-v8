@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
-import android.accounts.AccountManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,11 +9,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.activity.AccountNavigator;
 
 /**
  * Created by jdandrade on 18-07-2016.
@@ -23,6 +20,7 @@ import cm.aptoide.pt.v8engine.R;
 public class WizardPageThreeFragment extends Fragment {
 
   private AptoideAccountManager accountManager;
+  private AccountNavigator accountNavigator;
 
   public static Fragment newInstance() {
     return new WizardPageThreeFragment();
@@ -30,11 +28,8 @@ public class WizardPageThreeFragment extends Fragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    accountManager = AptoideAccountManager.getInstance(getContext(), Application.getConfiguration(),
-        new SecureCoderDecoder.Builder(getContext().getApplicationContext()).create(),
-        AccountManager.get(getContext().getApplicationContext()), new IdsRepositoryImpl(
-            SecurePreferencesImplementation.getInstance(),
-            getContext().getApplicationContext()));
+    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
+    accountNavigator = new AccountNavigator(getContext(), accountManager);
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,12 +53,12 @@ public class WizardPageThreeFragment extends Fragment {
     registerButton.setTransformationMethod(null);
 
     registerButton.setOnClickListener(view1 -> {
-      accountManager.openAccountManager(getContext(), true, false);
+      accountNavigator.navigateToAccountView(true);
       getActivity().onBackPressed();
     });
 
     loginLink.setOnClickListener(view1 -> {
-      accountManager.openAccountManager(getContext(), true, false);
+      accountNavigator.navigateToAccountView(true);
       getActivity().onBackPressed();
     });
   }

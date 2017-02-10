@@ -43,6 +43,7 @@ import rx.functions.Action1;
   private Button followButton;
   private View storeLayout;
   private StoreRepository storeRepository;
+  private AptoideAccountManager accountManager;
 
   public AppViewStoreWidget(View itemView) {
     super(itemView);
@@ -58,6 +59,7 @@ import rx.functions.Action1;
   }
 
   @Override public void bindView(AppViewStoreDisplayable displayable) {
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     GetApp getApp = displayable.getPojo();
 
     GetAppMeta.App app = getApp.getNodes().getMeta().getData();
@@ -90,9 +92,6 @@ import rx.functions.Action1;
 
     final IdsRepositoryImpl clientUuid =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
-    final AptoideAccountManager accountManager = AptoideAccountManager.getInstance(getContext(), Application.getConfiguration(),
-        new SecureCoderDecoder.Builder(getContext().getApplicationContext()).create(),
-        AccountManager.get(getContext().getApplicationContext()), clientUuid);
     final StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(clientUuid, accountManager);
 
     Action1<Void> openStore = __ -> {
@@ -106,7 +105,7 @@ import rx.functions.Action1;
             AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
       }, err -> {
         CrashReport.getInstance().log(err);
-      });
+      }, accountManager);
     };
 
     followButton.setTextColor(storeThemeEnum.getStoreHeaderInt());

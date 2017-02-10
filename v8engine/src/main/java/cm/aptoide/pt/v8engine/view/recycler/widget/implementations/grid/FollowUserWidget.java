@@ -50,6 +50,7 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
   private LinearLayout followNumbers;
   private LinearLayout followLayout;
   private View separatorView;
+  private AptoideAccountManager accountManager;
 
   public FollowUserWidget(View itemView) {
     super(itemView);
@@ -71,6 +72,8 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
   }
 
   @Override public void bindView(FollowUserDisplayable displayable) {
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+
     if (!displayable.getOpenMode()
         .equals(TimeLineFollowFragment.FollowFragmentOpenMode.LIKE_PREVIEW)) {
       followLayout.setVisibility(View.GONE);
@@ -89,14 +92,9 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
       final String storeName = displayable.getStoreName();
       final String storeTheme = V8Engine.getConfiguration().getDefaultTheme();
 
-      final IdsRepositoryImpl clientUuid =
-          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
-      final StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(clientUuid,
-          AptoideAccountManager.getInstance(getContext(), Application.getConfiguration(),
-              new SecureCoderDecoder.Builder(getContext().getApplicationContext()).create(),
-              AccountManager.get(getContext().getApplicationContext()), new IdsRepositoryImpl(
-                  SecurePreferencesImplementation.getInstance(),
-                  getContext().getApplicationContext())));
+      final StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(
+          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext()),
+          accountManager);
 
       Action1<Void> openStore = __ -> {
         getNavigationManager().navigateTo(
@@ -109,7 +107,7 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
               AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
         }, err -> {
           CrashReport.getInstance().log(err);
-        });
+        }, accountManager);
       };
 
       StoreRepository storeRepository = RepositoryFactory.getStoreRepository();

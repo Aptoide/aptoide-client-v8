@@ -18,7 +18,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.PostReviewRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
@@ -30,6 +29,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.activity.AccountNavigator;
 import java.util.Locale;
 import rx.Observable;
 import rx.Subscriber;
@@ -42,10 +42,13 @@ public class DialogUtils {
   private final Locale LOCALE = Locale.getDefault();
   private final AptoideClientUUID aptoideClientUUID;
   private final AptoideAccountManager accountManager;
+  private final AccountNavigator accountNavigator;
 
-  public DialogUtils(AptoideAccountManager accountManager, AptoideClientUUID aptoideClientUUID) {
+  public DialogUtils(AptoideAccountManager accountManager, AptoideClientUUID aptoideClientUUID,
+      AccountNavigator accountNavigator) {
     this.aptoideClientUUID = aptoideClientUUID;
     this.accountManager = accountManager;
+    this.accountNavigator = accountNavigator;
   }
 
   public Observable<GenericDialogs.EResponse> showRateDialog(@NonNull Activity activity,
@@ -56,7 +59,7 @@ public class DialogUtils {
       if (!accountManager.isLoggedIn()) {
         ShowMessage.asSnack(activity, R.string.you_need_to_be_logged_in, R.string.login,
             snackView -> {
-              accountManager.openAccountManager(activity, false);
+              accountNavigator.navigateToAccountView(false);
             });
         subscriber.onNext(GenericDialogs.EResponse.CANCEL);
         subscriber.onCompleted();
@@ -156,7 +159,7 @@ public class DialogUtils {
     if (!accountManager.isLoggedIn()) {
       ShowMessage.asSnack(activity, R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> {
-            accountManager.openAccountManager(activity, false);
+            accountNavigator.navigateToAccountView(false);
           });
 
       return;

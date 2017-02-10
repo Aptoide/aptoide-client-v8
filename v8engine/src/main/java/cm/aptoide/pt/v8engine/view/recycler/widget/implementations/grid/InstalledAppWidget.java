@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
-import android.accounts.AccountManager;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.support.design.widget.TextInputLayout;
@@ -22,13 +21,13 @@ import cm.aptoide.pt.dataprovider.ws.v7.PostReviewRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.activity.AccountNavigator;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.util.DialogUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.InstalledAppDisplayable;
@@ -56,6 +55,7 @@ import java.util.Locale;
 
   private String appName;
   private String packageName;
+  private AccountNavigator accountNavigator;
 
   public InstalledAppWidget(View itemView) {
     super(itemView);
@@ -75,10 +75,10 @@ import java.util.Locale;
 
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
-    accountManager = AptoideAccountManager.getInstance(getContext(), Application.getConfiguration(),
-        new SecureCoderDecoder.Builder(getContext().getApplicationContext()).create(),
-        AccountManager.get(getContext().getApplicationContext()), aptoideClientUUID);
-    dialogUtils = new DialogUtils(accountManager, aptoideClientUUID);
+    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
+    accountNavigator = new AccountNavigator(getContext(), accountManager);
+    dialogUtils = new DialogUtils(accountManager, aptoideClientUUID,
+        new AccountNavigator(getContext(), accountManager));
     appName = pojo.getName();
     packageName = pojo.getPackageName();
 
@@ -98,7 +98,7 @@ import java.util.Locale;
       createReviewLayout.setVisibility(View.VISIBLE);
       createReviewLayout.setOnClickListener(v -> {
         Analytics.Updates.createReview();
-        dialogUtils.showRateDialog(getContext(), appName, packageName, storeName, null);
+        dialogUtils.showRateDialog(getContext(), appName, packageName, storeName);
       });
     } else {
       createReviewLayout.setVisibility(View.GONE);

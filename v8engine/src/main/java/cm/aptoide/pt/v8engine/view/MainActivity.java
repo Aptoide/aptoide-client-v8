@@ -66,16 +66,15 @@ public class MainActivity extends BaseActivity implements MainView, FragmentShow
 
   private static final String TAG = MainActivity.class.getSimpleName();
   private StoreUtilsProxy storeUtilsProxy;
+  private AptoideAccountManager accountManager;
 
   @Partners @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.frame_layout);
 
+    accountManager = ((V8Engine) getApplicationContext()).getAccountManager();
     final IdsRepositoryImpl clientUuid =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this);
-    final AptoideAccountManager accountManager = AptoideAccountManager.getInstance(this, Application.getConfiguration(),
-        new SecureCoderDecoder.Builder(this.getApplicationContext()).create(),
-        AccountManager.get(getApplicationContext()), clientUuid);
     storeUtilsProxy = new StoreUtilsProxy(clientUuid, accountManager);
     final AutoUpdate autoUpdate =
         new AutoUpdate(this, new InstallerFactory().create(this, InstallerFactory.DEFAULT),

@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.activity;
 
-import android.accounts.AccountManager;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -25,6 +24,7 @@ import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.payment.AptoidePay;
 import cm.aptoide.pt.v8engine.payment.Payer;
 import cm.aptoide.pt.v8engine.payment.authorizations.WebAuthorization;
@@ -67,13 +67,12 @@ public class WebAuthorizationActivity extends ActivityView {
       final AptoideProduct product = getIntent().getParcelableExtra(EXTRA_PRODUCT);
       final ProductRepository productRepository =
           RepositoryFactory.getProductRepository(this, product);
+      final AptoideAccountManager instance =
+          ((V8Engine)getApplicationContext()).getAccountManager();
       aptoidePay = new AptoidePay(RepositoryFactory.getPaymentConfirmationRepository(this, product),
           RepositoryFactory.getPaymentAuthorizationRepository(this), productRepository,
-          new PaymentAuthorizationFactory(this), new Payer(this,
-          AptoideAccountManager.getInstance(this, Application.getConfiguration(), new SecureCoderDecoder.Builder(this.getApplicationContext()).create(),
-              AccountManager.get(this.getApplicationContext()), new IdsRepositoryImpl(
-                  SecurePreferencesImplementation.getInstance(),
-                  this.getApplicationContext()))));
+          new PaymentAuthorizationFactory(this), new Payer(this, instance,
+          new AccountNavigator(this, instance)));
 
       webView = (WebView) findViewById(R.id.activity_boa_compra_authorization_web_view);
       webView.getSettings().setJavaScriptEnabled(true);
