@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by SithEngineer on 25/07/2016.
+  -->
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+  <item
+      android:id="@android:id/background"
+      android:width="8dp"
+      android:height="8dp"
+      android:drawable="@drawable/grid_item_star_empty_small"
+      />
+  <item
+      android:id="@android:id/secondaryProgress"
+      android:width="8dp"
+      android:height="8dp"
+      android:drawable="@drawable/grid_item_star_half_small"
+      />
+  <item
+      android:id="@android:id/progress"
+      android:width="8dp"
+      android:height="8dp"
+      android:drawable="@drawable/grid_item_star_full_small"
+      />
+</layer-list>

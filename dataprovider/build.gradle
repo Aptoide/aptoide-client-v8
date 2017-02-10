@@ -1,0 +1,96 @@
+/*
+ * Copyright (c) 2016.
+ * Modified by SithEngineer on 08/07/2016.
+ */
+
+apply plugin: 'com.android.library'
+apply plugin: 'me.tatarka.retrolambda'
+retrolambda {
+  jvmArgs '-noverify'
+  //defaultMethods true
+}
+
+android {
+  compileSdkVersion COMPILE_SDK_VERSION
+  buildToolsVersion BUILD_TOOLS_VERSION
+
+  defaultConfig {
+    minSdkVersion 15
+  }
+
+  lintOptions {
+    abortOnError false
+  }
+
+  publishNonDefault true
+
+  productFlavors {
+    internal {
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_SCHEME", "\"" + project.APTOIDE_WEB_SERVICES_DEVELOPMENT_SCHEME + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_HOST", "\"" + project.APTOIDE_WEB_SERVICES_DEVELOPMENT_HOST + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_V7_HOST", "\"" + project.APTOIDE_WEB_SERVICES_DEVELOPMENT_V7_HOST + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_APTWORDS_HOST", "\"" + project.APTOIDE_WEB_SERVICES_DEVELOPMENT_APTWORDS_HOST + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_APTWORDS_SCHEME", "\"" + project.APTOIDE_WEB_SERVICES_DEVELOPMENT_APTWORDS_SCHEME + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_WRITE_V7_HOST", "\"" + project.APTOIDE_WEB_SERVICES_DEVELOPMENT_WRITE_V7_HOST + "\""
+    }
+    prod {
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_SCHEME", "\"" + project.APTOIDE_WEB_SERVICES_PRODUCTION_SCHEME + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_HOST", "\"" + project.APTOIDE_WEB_SERVICES_PRODUCTION_HOST + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_V7_HOST", "\"" + project.APTOIDE_WEB_SERVICES_PRODUCTION_V7_HOST + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_APTWORDS_HOST", "\"" + project.APTOIDE_WEB_SERVICES_PRODUCTION_APTWORDS_HOST + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_APTWORDS_SCHEME", "\"" + project.APTOIDE_WEB_SERVICES_PRODUCTION_APTWORDS_SCHEME + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_WRITE_V7_HOST", "\"" + project.APTOIDE_WEB_SERVICES_PRODUCTION_WRITE_V7_HOST + "\""
+    }
+  }
+
+  buildTypes {
+    release {
+      minifyEnabled false
+      shrinkResources false
+    }
+  }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+
+  // Websockets
+  useLibrary 'org.apache.http.legacy'
+
+}
+
+dependencies {
+
+  //
+  // inter-projects dependencies
+  //
+
+  compile project(path: ':model', configuration: 'release')
+  compile project(path: ':aptoidepreferences', configuration: 'release')
+  compile project(path: ':networkclient', configuration: 'release')
+  compile project(path: ':utils', configuration: 'release')
+
+  //
+  // custom libs in folders
+  //
+
+  compile fileTree(dir: 'libs', include: ['*.jar'])
+
+  //
+  // from remote repos
+  //
+
+  testCompile "com.squareup.okhttp3:mockwebserver:${MOCK_WEB_SERVER_VERSION}"
+  testCompile "junit:junit:${JUNIT_VERSION}"
+  testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
+
+  //noinspection GradleDependency
+  compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+  //noinspection GradleDependency
+  compile "com.google.android.gms:play-services-base:${PLAY_SERVICES_VERSION}"
+
+  provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
+  // Just for lombok not to complain
+  provided "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
+}

@@ -1,0 +1,60 @@
+apply plugin: 'com.android.library'
+apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'com.getkeepsafe.dexcount'
+
+retrolambda {
+  jvmArgs '-noverify'
+  //defaultMethods true
+}
+
+android {
+  compileSdkVersion COMPILE_SDK_VERSION
+  buildToolsVersion BUILD_TOOLS_VERSION
+
+  defaultConfig {
+    minSdkVersion 15
+
+    versionName "0.0.13"
+    versionCode 13
+
+    consumerProguardFiles "proguard-rules.txt"
+    proguardFiles "proguard-rules.txt"
+    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+  }
+  buildTypes {
+    release {
+      minifyEnabled true
+    }
+  }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+
+  packagingOptions {
+    pickFirst 'META-INF/services/javax.annotation.processing.Processor'
+    pickFirst 'META-INF/DEPENDENCIES.txt'
+    pickFirst 'META-INF/DEPENDENCIES'
+    pickFirst 'META-INF/LICENSE.txt'
+    pickFirst 'META-INF/LICENSE'
+    pickFirst 'META-INF/NOTICE.txt'
+    pickFirst 'META-INF/NOTICE'
+    pickFirst 'META-INF/MANIFEST.MF'
+    pickFirst 'META-INF/LGPL2.1'
+  }
+}
+
+dependencies {
+  compile fileTree(dir: 'libs', include: ['*.jar'])
+  androidTestCompile("com.android.support.test.espresso:espresso-core:${EXPRESSO_VERSION}", {
+    exclude group: 'com.android.support', module: 'support-annotations'
+  })
+  compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+  testCompile "junit:junit:${JUNIT_VERSION}"
+
+  provided "org.projectlombok:lombok:${LOMBOK_VERSION}"
+
+  debugCompile project(path: ':dataprovider', configuration: 'internalDebug')
+  releaseCompile project(path: ':dataprovider', configuration: 'prodRelease')
+}

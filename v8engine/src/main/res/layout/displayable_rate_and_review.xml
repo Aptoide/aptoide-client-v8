@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016.
+  ~ Modified by SithEngineer on 02/08/2016.
+  -->
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:paddingLeft="16dp"
+      android:paddingRight="16dp"
+      android:paddingTop="16dp"
+      >
+    <ImageView
+        android:id="@+id/user_icon"
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        android:src="@drawable/layer_1"
+        />
+
+    <android.support.v7.widget.AppCompatRatingBar
+        android:id="@+id/rating_bar"
+        style="@style/Widget.AppCompat.RatingBar.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/user_icon"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="9.7dp"
+        android:layout_marginStart="9.7dp"
+        android:layout_toRightOf="@id/user_icon"
+        android:numStars="5"
+        android:progressDrawable="@drawable/rating_bar_small"
+        android:stepSize="1.0"
+        tools:rating="5.0"
+        />
+
+    <TextView
+        android:id="@+id/write_reply_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@id/user_icon"
+        android:layout_marginRight="15.7dp"
+        android:drawableLeft="@drawable/ic_reply"
+        android:drawablePadding="5.7dp"
+        android:drawableTint="#757575"
+        android:gravity="center"
+        android:text="@string/reply"
+        android:textAllCaps="true"
+        android:textSize="9sp"
+        />
+
+    <TextView
+        android:id="@+id/comment_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/rating_bar"
+        android:layout_marginLeft="8.7dp"
+        android:layout_marginStart="8.7dp"
+        android:layout_toEndOf="@id/rating_bar"
+        android:layout_toLeftOf="@id/write_reply_btn"
+        android:layout_toRightOf="@id/rating_bar"
+        android:layout_toStartOf="@id/write_reply_btn"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size_small"
+        android:textStyle="bold"
+        tools:text="Super Gameplay !!"
+        />
+
+    <TextView
+        android:id="@+id/user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/rating_bar"
+        android:layout_below="@id/comment_title"
+        android:layout_marginTop="8dp"
+        android:layout_toRightOf="@id/user_icon"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textSize="8.7sp"
+        android:textStyle="bold"
+        tools:text="Mary Pollaki"
+        />
+
+    <TextView
+        android:id="@+id/added_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/user_name"
+        android:layout_marginLeft="8.7dp"
+        android:layout_marginStart="8.7dp"
+        android:layout_toRightOf="@id/user_name"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textSize="8.7sp"
+        tools:text="03/06/1992"
+        />
+
+    <!--
+        android:layout_above="@id/helpful_btn"
+    -->
+    <TextView
+        android:id="@+id/comment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/user_icon"
+        android:layout_marginTop="9.3dp"
+        android:textSize="11.3sp"
+        tools:text="Run, jump, smash, and slide into new levels and adventures with Bugs Bunny, Road Runner, Tweety Bird, and other Looney Tunes favorites! Run, jump, smash, and slide into new levels and adventures with Bugs Bunny, Road Runner, Tweety Bird, and other Looney Tunes favorites!"
+        />
+
+    <Button
+        android:id="@+id/helpful_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="26.7dp"
+        android:layout_below="@id/comment"
+        android:layout_marginTop="14dp"
+        android:background="@drawable/displayable_review_button"
+        android:drawablePadding="0dp"
+        android:drawableRight="@drawable/ic_action_good"
+        android:drawableTint="@color/app_view_gray"
+        android:gravity="center"
+        android:text="@string/helpful"
+        android:textAllCaps="true"
+        android:textColor="@color/app_view_gray"
+        android:textSize="9sp"
+        />
+
+    <Button
+        android:id="@+id/not_helpful_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="26.7dp"
+        android:layout_below="@id/comment"
+        android:layout_marginLeft="9.7dp"
+        android:layout_marginStart="9.7dp"
+        android:layout_marginTop="14dp"
+        android:layout_toRightOf="@id/helpful_btn"
+        android:background="@drawable/displayable_review_button"
+        android:drawablePadding="0dp"
+        android:drawableRight="@drawable/ic_action_bad"
+        android:drawableTint="@color/app_view_gray"
+        android:gravity="center"
+        android:text="@string/not_helpful"
+        android:textAllCaps="true"
+        android:textColor="@color/app_view_gray"
+        android:textSize="9sp"
+        />
+
+    <TextView
+        android:id="@+id/show_replies_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/comment"
+        android:layout_marginTop="23.7dp"
+        android:drawablePadding="10dp"
+        android:drawableRight="@drawable/ic_up_arrow"
+        android:gravity="center"
+        android:text="@string/comments"
+        android:textAllCaps="true"
+        android:textSize="8sp"
+        />
+  </RelativeLayout>
+
+  <View
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:layout_marginTop="5dp"
+      android:background="@color/white"
+      />
+</LinearLayout>
