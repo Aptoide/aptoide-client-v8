@@ -37,6 +37,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by trinkes on 7/15/16.
  */
+@Deprecated
 public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
 
   private static final String TAG = DownloadsFragment.class.getName();
