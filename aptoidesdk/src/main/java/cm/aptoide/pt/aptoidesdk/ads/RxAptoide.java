@@ -162,10 +162,8 @@ public class RxAptoide {
   public static Observable<List<App>> getApps(ArrayList<String> packageNames, String storeName) {
     return Observable.from(packageNames)
         .flatMap(packageName -> getAppProxy.getApp(packageName, storeName, aptoideClientUUID)
-            .map(EntitiesFactory::createApp)
-            .doOnError(throwable -> {
-              RemoteLogger.getInstance().log(throwable);
-            }))
+            .doOnError(throwable -> RemoteLogger.getInstance().log(throwable))
+            .onErrorResumeNext(Observable.empty())).map(EntitiesFactory::createApp)
         .toList();
   }
 
