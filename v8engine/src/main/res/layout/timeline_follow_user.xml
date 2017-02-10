@@ -145,7 +145,7 @@
         android:layout_width="100dp"
         android:layout_height="30dp"
         android:background="@drawable/button_border_orange3"
-        android:text="@string/appview_follow_store_button_text"
+        android:text="@string/follow"
         android:textAllCaps="true"
         android:textAppearance="?android:attr/textAppearanceSmallInverse"
         android:textColor="@color/app_view_follow_orange"

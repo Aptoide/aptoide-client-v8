@@ -16,6 +16,7 @@ import android.text.TextUtils;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
@@ -23,6 +24,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.Layout;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.AutoUpdate;
@@ -158,7 +160,11 @@ public class MainActivity extends BaseActivity implements MainView, FragmentShow
                 if (isFollowed) {
                   ShowMessage.asLongSnack(this, getString(R.string.store_already_added));
                 } else {
-                  StoreUtilsProxy.subscribeStore(storeName);
+
+                  final IdsRepositoryImpl clientUuid =
+                      new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this);
+
+                  new StoreUtilsProxy(clientUuid).subscribeStore(storeName);
                   ShowMessage.asLongSnack(this,
                       AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
                 }

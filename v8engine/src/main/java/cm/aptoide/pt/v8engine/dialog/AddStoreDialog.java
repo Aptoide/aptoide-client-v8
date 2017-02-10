@@ -113,7 +113,10 @@ public class AddStoreDialog extends DialogFragment {
   }
 
   private void executeRequest(GetStoreMetaRequest getStoreMetaRequest) {
-    StoreUtilsProxy.subscribeStore(getStoreMetaRequest, getStoreMeta1 -> {
+    final IdsRepositoryImpl clientUuid =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
+
+    new StoreUtilsProxy(clientUuid).subscribeStore(getStoreMetaRequest, getStoreMeta1 -> {
       ShowMessage.asSnack(getView(),
           AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
 

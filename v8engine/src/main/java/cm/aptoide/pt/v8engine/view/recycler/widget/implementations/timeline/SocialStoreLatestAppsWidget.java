@@ -10,8 +10,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -196,12 +198,40 @@ public class SocialStoreLatestAppsWidget
 
     final String storeName = displayable.getSharedStore().getName();
     final String storeTheme = displayable.getSharedStore().getName();
+
+    final IdsRepositoryImpl clientUuid =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
+    final StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(clientUuid);
+
     compositeSubscription.add(storeRepository.isSubscribed(displayable.getSharedStore().getId())
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(isSubscribed -> handleIsSubscribed(isSubscribed, storeName, storeTheme),
-            (throwable) -> {
-              throwable.printStackTrace();
+        .subscribe(isSubscribed -> {
+          if (isSubscribed) {
+            followStore.setText(R.string.followed);
+            compositeSubscription.add(RxView.clicks(followStore).subscribe(__ -> {
+              storeUtilsProxy.unSubscribeStore(storeName);
+              ShowMessage.asSnack(itemView,
+                  AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message,
+                      storeName));
+            }, err -> {
+              CrashReport.getInstance().log(err);
             }));
+          } else {
+            //int plusMarkDrawable = storeThemeEnum.getPlusmarkDrawable();
+            //followButton.setCompoundDrawablesWithIntrinsicBounds(plusMarkDrawable, 0, 0, 0);
+            followStore.setText(R.string.follow);
+            compositeSubscription.add(RxView.clicks(followStore)
+                .subscribe(__ -> {
+                  storeUtilsProxy.subscribeStore(storeName);
+                  ShowMessage.asSnack(itemView,
+                      AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
+                }, err -> {
+                  CrashReport.getInstance().log(err);
+                }));
+          }
+        }, (throwable) -> {
+          throwable.printStackTrace();
+        }));
   }
 
   @Override String getCardTypeName() {
@@ -218,9 +248,14 @@ public class SocialStoreLatestAppsWidget
       followStore.setText(R.string.followed);
       compositeSubscription.add(RxView.clicks(followStore).subscribe(openStore));
     } else {
+
+      final IdsRepositoryImpl clientUuid =
+          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
+      final StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(clientUuid);
+
       // set follow store button text and subscribe store action
       Action1<Void> subscribeStore = __ -> {
-        StoreUtilsProxy.subscribeStore(storeName, getStoreMeta -> {
+        storeUtilsProxy.subscribeStore(storeName, getStoreMeta -> {
           ShowMessage.asSnack(itemView,
               AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
         }, err -> {
