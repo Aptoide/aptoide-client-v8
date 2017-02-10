@@ -194,4 +194,31 @@ public class ManagerPreferences {
     return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
         .getBoolean(ManagedKeys.FIRST_RUN_V7, true);
   }
+
+  public static boolean getAddressBookSyncState() {
+    return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
+        .getBoolean(ManagedKeys.ADDRESS_BOOK_SYNC, false);
+  }
+
+  public static void setAddressBookAsSynced() {
+    Preferences.get().edit().putBoolean(ManagedKeys.ADDRESS_BOOK_SYNC, true).apply();
+  }
+
+  public static boolean getTwitterSyncState() {
+    return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
+        .getBoolean(ManagedKeys.TWITTER_SYNC, false);
+  }
+
+  public static void setTwitterAsSynced() {
+    Preferences.get().edit().putBoolean(ManagedKeys.TWITTER_SYNC, true).apply();
+  }
+
+  public static boolean getFacebookSyncState() {
+    return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
+        .getBoolean(ManagedKeys.FACEBOOK_SYNC, false);
+  }
+
+  public static void setFacebookAsSynced() {
+    Preferences.get().edit().putBoolean(ManagedKeys.FACEBOOK_SYNC, true).apply();
+  }
 }

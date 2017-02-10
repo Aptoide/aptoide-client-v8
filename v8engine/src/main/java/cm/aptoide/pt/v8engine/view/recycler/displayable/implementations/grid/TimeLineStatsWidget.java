@@ -15,6 +15,7 @@ public class TimeLineStatsWidget extends Widget<TimeLineStatsDisplayable> {
 
   private TextView followers;
   private TextView following;
+  private TextView followFriends;
 
   public TimeLineStatsWidget(View itemView) {
     super(itemView);
@@ -23,6 +24,7 @@ public class TimeLineStatsWidget extends Widget<TimeLineStatsDisplayable> {
   @Override protected void assignViews(View itemView) {
     followers = (TextView) itemView.findViewById(R.id.followers);
     following = (TextView) itemView.findViewById(R.id.following);
+    followFriends = (TextView) itemView.findViewById(R.id.follow_friends_button);
   }
 
   @Override public void bindView(TimeLineStatsDisplayable displayable) {
@@ -32,5 +34,7 @@ public class TimeLineStatsWidget extends Widget<TimeLineStatsDisplayable> {
         .subscribe(click -> displayable.followersClick(((FragmentShower) getContext()))));
     compositeSubscription.add(RxView.clicks(following)
         .subscribe(click -> displayable.followingClick(((FragmentShower) getContext()))));
+    compositeSubscription.add(RxView.clicks(followFriends)
+        .subscribe(click -> displayable.followFriendsClick(((FragmentShower) getContext()))));
   }
 }

@@ -368,5 +368,8 @@
   <!-- Address book -->
   <string name="addressbook_increase_network_message">Increase your network.</string>
   <string name="addressbook_connect_with_friends_message">Connect with friends.</string>
+  <string name="addressbook_sync">Sync Address Book</string>
+  <string name="not_now">Not now</string>
+  <string name="follow_friends">Follow Friends</string>
 
 </resources>

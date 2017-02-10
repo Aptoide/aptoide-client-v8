@@ -8,6 +8,7 @@ import android.text.style.UnderlineSpan;
 import cm.aptoide.pt.model.v7.TimelineStats;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.addressbook.AddressBookFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.TimeLineFollowFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
@@ -70,5 +71,9 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
         .newTimeLineFollowStatsFragment(TimeLineFollowFragment.FollowFragmentOpenMode.FOLLOWING,
             getPojo().getData().getFollowing(), storeTheme));
     return null;
+  }
+
+  public void followFriendsClick(FragmentShower fragmentShower) {
+    fragmentShower.pushFragmentV4(V8Engine.getFragmentProvider().newAddressBookFragment());
   }
 }
