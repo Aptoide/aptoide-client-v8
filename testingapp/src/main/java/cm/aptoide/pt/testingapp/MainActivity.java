@@ -33,6 +33,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
   SyncEndlessController<App> appEndlessController;
+  List<App> apps = new ArrayList<App>();
   private TextView tv;
   private DownloadManager downloadManager;
   private View app1;
@@ -175,9 +176,10 @@ public class MainActivity extends AppCompatActivity {
       tv.setText("app name: " + l.getName());
     }
     ArrayList<String> packages = new ArrayList<>();
+    packages.add("com.cenas.coves");
     packages.add("com.facebook.katana");
     packages.add("org.mozilla.firefox");
-    List<App> apps = Aptoide.getApps(packages, "apps");
+    apps = Aptoide.getApps(packages, "apps");
   }
 
   public void listAppsClick(View view) {
