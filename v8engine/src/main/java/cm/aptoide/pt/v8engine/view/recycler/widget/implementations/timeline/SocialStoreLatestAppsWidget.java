@@ -197,21 +197,21 @@ public class SocialStoreLatestAppsWidget
     compositeSubscription.add(storeRepository.isSubscribed(displayable.getSharedStore().getId())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(isSubscribed -> {
+          final AppViewStoreWidget.Listeners listeners =
+              new AppViewStoreWidget.Listeners(getContext());
+
           if (isSubscribed) {
             //int checkmarkDrawable = storeThemeEnum.getCheckmarkDrawable();
             //followButton.setCompoundDrawablesWithIntrinsicBounds(checkmarkDrawable, 0, 0, 0);
             followStore.setText(R.string.followed);
-            followStore.setOnClickListener(
-                new AppViewStoreWidget.Listeners().newOpenStoreListener(itemView,
-                    displayable.getSharedStore().getName(),
-                    displayable.getSharedStore().getAppearance().getTheme()));
+            followStore.setOnClickListener(listeners.newUnSubscribeStoreListener(itemView,
+                displayable.getSharedStore().getName()));
           } else {
             //int plusMarkDrawable = storeThemeEnum.getPlusmarkDrawable();
             //followButton.setCompoundDrawablesWithIntrinsicBounds(plusMarkDrawable, 0, 0, 0);
-            followStore.setText(R.string.appview_follow_store_button_text);
-            followStore.setOnClickListener(
-                new AppViewStoreWidget.Listeners().newSubscribeStoreListener(itemView,
-                    displayable.getSharedStore().getName()));
+            followStore.setText(R.string.follow);
+            followStore.setOnClickListener(listeners.newSubscribeStoreListener(itemView,
+                displayable.getSharedStore().getName()));
           }
         }, (throwable) -> {
           throwable.printStackTrace();

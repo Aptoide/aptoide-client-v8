@@ -612,6 +612,24 @@ public class Analytics {
         e.printStackTrace();
       }
     }
+
+    /**
+     * this method still does nothing...
+     *
+     * @param storeName
+     */
+    public static void unSubscribe(String storeName) {
+      try {
+        HashMap<String, String> map = new HashMap<>();
+
+        map.put(ACTION, "Unsubscribe");
+        map.put(STORE_NAME, storeName);
+
+        //track(EVENT_NAME, map, LOCALYTICS);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
   }
 
   public static class Updates {

@@ -72,7 +72,7 @@ public class RecommendedStoreWidget extends Widget<RecommendedStoreDisplayable> 
             if (isSubscribed) {
               displayable.unsubscribeStore();
             } else {
-              displayable.subscribeStore();
+              displayable.subscribeStore(getContext());
             }
             return !isSubscribed;
           });
@@ -102,7 +102,7 @@ public class RecommendedStoreWidget extends Widget<RecommendedStoreDisplayable> 
           if (isSubscribed) {
             message = R.string.followed;
           } else {
-            message = R.string.appview_follow_store_button_text;
+            message = R.string.follow;
           }
           followButton.setText(
               AptoideUtils.StringU.getFormattedString(message, displayable.getPojo().getName()));

@@ -1,7 +1,10 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
+import android.content.Context;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.model.v7.store.Store;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
@@ -16,7 +19,8 @@ import rx.Observable;
  */
 
 public class RecommendedStoreDisplayable extends DisplayablePojo<Store> {
-  StoreRepository storeRepository;
+
+  private StoreRepository storeRepository;
 
   public RecommendedStoreDisplayable() {
   }
@@ -34,22 +38,25 @@ public class RecommendedStoreDisplayable extends DisplayablePojo<Store> {
     return R.layout.displayable_recommended_store;
   }
 
-  public Observable<Boolean> isFollowing() {
+  Observable<Boolean> isFollowing() {
     return storeRepository.isSubscribed(getPojo().getId());
   }
 
-  public void subscribeStore() {
-    StoreUtilsProxy.subscribeStore(getPojo().getName());
+  public void subscribeStore(Context context) {
+    final IdsRepositoryImpl clientUuid =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), context);
+
+    new StoreUtilsProxy(clientUuid).subscribeStore(getPojo().getName());
   }
 
-  public void unsubscribeStore() {
+  void unsubscribeStore() {
     if (AptoideAccountManager.isLoggedIn()) {
       AptoideAccountManager.unsubscribeStore(getPojo().getName());
     }
     StoreUtils.unsubscribeStore(getPojo().getName());
   }
 
-  public void openStoreFragment(FragmentShower fragmentShower) {
+  void openStoreFragment(FragmentShower fragmentShower) {
     fragmentShower.pushFragmentV4(V8Engine.getFragmentProvider()
         .newStoreFragment(getPojo().getName(), getPojo().getAppearance().getTheme()));
   }

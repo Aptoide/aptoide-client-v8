@@ -10,7 +10,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.implementations.TimeLineFollowFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
@@ -80,15 +79,17 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
       compositeSubscription.add(storeRepository.isSubscribed(displayable.getStoreName())
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(isSubscribed -> {
+            final AppViewStoreWidget.Listeners listeners =
+                new AppViewStoreWidget.Listeners(getContext());
             if (isSubscribed) {
               follow.setText(R.string.followed);
               follow.setOnClickListener(
-                  new AppViewStoreWidget.Listeners().newOpenStoreListener(itemView,
-                      displayable.getStoreName(), V8Engine.getConfiguration().getDefaultTheme()));
+                  listeners.newUnSubscribeStoreListener(itemView,
+                      displayable.getStoreName()));
             } else {
-              follow.setText(R.string.appview_follow_store_button_text);
+              follow.setText(R.string.follow);
               follow.setOnClickListener(
-                  new AppViewStoreWidget.Listeners().newSubscribeStoreListener(itemView,
+                  listeners.newSubscribeStoreListener(itemView,
                       displayable.getStoreName()));
             }
           }, (throwable) -> {

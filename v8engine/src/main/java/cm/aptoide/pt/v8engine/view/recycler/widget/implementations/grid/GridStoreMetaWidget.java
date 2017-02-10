@@ -20,8 +20,10 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.imageloader.CircleTransform;
 import cm.aptoide.pt.model.v7.store.GetStoreMeta;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -169,7 +171,7 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
 
   private void updateSubscribeButtonText(boolean isStoreSubscribed) {
     subscribeButton.setText(isStoreSubscribed ? itemView.getContext().getString(R.string.followed)
-        : itemView.getContext().getString(R.string.appview_follow_store_button_text));
+        : itemView.getContext().getString(R.string.follow));
   }
 
   private Action1<Void> handleSubscriptionLogic(final StoreWrapper storeWrapper) {
@@ -186,13 +188,18 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
                 storeWrapper.getStore().getName()));
       } else {
         storeWrapper.setStoreSubscribed(true);
-        StoreUtilsProxy.subscribeStore(storeWrapper.getStore().getName(), subscribedStoreMeta -> {
-          ShowMessage.asSnack(itemView,
-              AptoideUtils.StringU.getFormattedString(R.string.store_followed,
-                  subscribedStoreMeta.getData().getName()));
-        }, err -> {
-          CrashReport.getInstance().log(err);
-        });
+
+        IdsRepositoryImpl idsRepository =
+            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
+
+        new StoreUtilsProxy(idsRepository).subscribeStore(storeWrapper.getStore().getName(),
+            subscribedStoreMeta -> {
+              ShowMessage.asSnack(itemView,
+                  AptoideUtils.StringU.getFormattedString(R.string.store_followed,
+                      subscribedStoreMeta.getData().getName()));
+            }, err -> {
+              CrashReport.getInstance().log(err);
+            });
       }
       updateSubscribeButtonText(storeWrapper.isStoreSubscribed());
     };

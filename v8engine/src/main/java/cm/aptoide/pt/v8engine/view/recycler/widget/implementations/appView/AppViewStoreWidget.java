@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
+import android.content.Context;
 import android.os.Build;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
@@ -13,10 +14,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.store.Store;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -86,9 +89,11 @@ import rx.android.schedulers.AndroidSchedulers;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       followButton.setElevation(0);
     }
+    final FragmentActivity context = getContext();
     followButton.setTextColor(storeThemeEnum.getStoreHeaderInt());
-    storeLayout.setOnClickListener(new Listeners().newOpenStoreListener(itemView, store.getName(),
-        store.getAppearance().getTheme()));
+    storeLayout.setOnClickListener(
+        new Listeners(context).newOpenStoreListener(itemView, store.getName(),
+            store.getAppearance().getTheme()));
 
     compositeSubscription.add(storeRepository.isSubscribed(store.getId())
         .observeOn(AndroidSchedulers.mainThread())
@@ -98,19 +103,25 @@ import rx.android.schedulers.AndroidSchedulers;
             //followButton.setCompoundDrawablesWithIntrinsicBounds(checkmarkDrawable, 0, 0, 0);
             followButton.setText(R.string.followed);
             followButton.setOnClickListener(
-                new Listeners().newOpenStoreListener(itemView, store.getName(),
-                    store.getAppearance().getTheme()));
+                new Listeners(context).newUnSubscribeStoreListener(itemView, store.getName()));
           } else {
             //int plusMarkDrawable = storeThemeEnum.getPlusmarkDrawable();
             //followButton.setCompoundDrawablesWithIntrinsicBounds(plusMarkDrawable, 0, 0, 0);
-            followButton.setText(R.string.appview_follow_store_button_text);
+            followButton.setText(R.string.follow);
             followButton.setOnClickListener(
-                new Listeners().newSubscribeStoreListener(itemView, store.getName()));
+                new Listeners(context).newSubscribeStoreListener(itemView, store.getName()));
           }
         }));
   }
 
   public static class Listeners {
+
+    private final StoreUtilsProxy storeUtilsProxy;
+
+    public Listeners(Context context) {
+      storeUtilsProxy = new StoreUtilsProxy(
+          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), context));
+    }
 
     public View.OnClickListener newOpenStoreListener(View itemView, String storeName,
         String storeTheme) {
@@ -122,12 +133,21 @@ import rx.android.schedulers.AndroidSchedulers;
 
     public View.OnClickListener newSubscribeStoreListener(View itemView, String storeName) {
       return v -> {
-        StoreUtilsProxy.subscribeStore(storeName, getStoreMeta -> {
+        storeUtilsProxy.subscribeStore(storeName, getStoreMeta -> {
           ShowMessage.asSnack(itemView,
               AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
         }, err -> {
           CrashReport.getInstance().log(err);
         });
+      };
+    }
+
+    public View.OnClickListener newUnSubscribeStoreListener(View itemView, String storeName) {
+      return v -> {
+        storeUtilsProxy.unSubscribeStore(storeName);
+        ShowMessage.asSnack(itemView,
+            AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message,
+                storeName));
       };
     }
   }
