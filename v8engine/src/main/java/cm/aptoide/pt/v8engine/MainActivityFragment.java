@@ -208,7 +208,7 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
             .newStoreTabGridRecyclerFragment(event,
                 uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.TITLE),
                 uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.STORE_THEME),
-                V8Engine.getConfiguration().getDefaultTheme()));
+                V8Engine.getConfiguration().getDefaultTheme(), StoreContext.home));
       } catch (UnsupportedEncodingException | IllegalArgumentException e) {
         e.printStackTrace();
       }

@@ -60,7 +60,8 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
         FragmentUtils.replaceFragmentV4((FragmentActivity) itemView.getContext(),
             V8Engine.getFragmentProvider()
                 .newStoreTabGridRecyclerFragment(event, pojo.getLabel(),
-                    displayable.getStoreTheme(), displayable.getTag()));
+                    displayable.getStoreTheme(), displayable.getTag(),
+                    displayable.getStoreContext()));
       } else {
         switch (name) {
           case facebook:

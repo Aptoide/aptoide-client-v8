@@ -231,7 +231,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   }
 
   @Override protected PagerAdapter createPagerAdapter() {
-    return new StorePagerAdapter(getChildFragmentManager(), getStore);
+    return new StorePagerAdapter(getChildFragmentManager(), getStore, storeContext);
   }
 
   @Override public void onDestroy() {

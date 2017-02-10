@@ -50,7 +50,7 @@ import java.util.List;
           V8Engine.getFragmentProvider()
               .newStoreTabGridRecyclerFragment(event,
                   Translator.translate(displayable.getPojo().getTitle()), null,
-                  displayable.getTag()));
+                  displayable.getTag(), displayable.getStoreContext()));
     });
   }
 }
