@@ -17,7 +17,6 @@ import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.LoginAvailability;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
 import cm.aptoide.pt.actions.UserData;
 import cm.aptoide.pt.crashreports.ConsoleLogger;
@@ -36,7 +35,6 @@ import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.preferences.AptoidePreferencesConfiguration;
 import cm.aptoide.pt.preferences.PRNGFixes;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
@@ -45,6 +43,7 @@ import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
+import cm.aptoide.pt.v8engine.account.ExternalServicesLoginAvailability;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AccountAnalytcs;
 import cm.aptoide.pt.v8engine.analytics.abtesting.ABTestManager;
@@ -62,7 +61,6 @@ import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.view.MainActivity;
 import cm.aptoide.pt.v8engine.view.recycler.DisplayableWidgetMapping;
 import com.flurry.android.FlurryAgent;
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import java.util.Collections;
 import java.util.List;
@@ -150,20 +148,11 @@ public abstract class V8Engine extends DataProvider {
 
   public AptoideAccountManager getAccountManager() {
     if (accountManager == null) {
-      accountManager = new AptoideAccountManager(this, getConfiguration(), new SecureCoderDecoder.Builder(this).create(),
-          AccountManager.get(this),
+      accountManager = new AptoideAccountManager(this, getConfiguration(),
+          new SecureCoderDecoder.Builder(this).create(), AccountManager.get(this),
           new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this),
-          new LoginAvailability() {
-            @Override public boolean isGoogleLoginAvailable() {
-              return GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(V8Engine.this)
-                  == ConnectionResult.SUCCESS && getConfiguration().isLoginAvailable(
-                  AptoidePreferencesConfiguration.SocialLogin.GOOGLE);
-            }
-
-            @Override public boolean isFacebookLoginAvailable() {
-              return getConfiguration().isLoginAvailable(AptoidePreferencesConfiguration.SocialLogin.FACEBOOK);
-            }
-          });
+          new ExternalServicesLoginAvailability(this, getConfiguration(),
+              GoogleApiAvailability.getInstance()));
     }
     return accountManager;
   }
