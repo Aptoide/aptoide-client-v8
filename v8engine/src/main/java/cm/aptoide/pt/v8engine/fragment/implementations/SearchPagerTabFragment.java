@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
-import android.accounts.AccountManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -16,10 +15,9 @@ import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
-import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.abtesting.ABTest;
 import cm.aptoide.pt.v8engine.analytics.abtesting.ABTestManager;
 import cm.aptoide.pt.v8engine.analytics.abtesting.SearchTabOptions;
@@ -115,10 +113,7 @@ public class SearchPagerTabFragment extends GridRecyclerFragmentWithDecorator {
     adsRepository = new AdsRepository();
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
-    accountManager = AptoideAccountManager.getInstance(getContext(), Application.getConfiguration(),
-        new SecureCoderDecoder.Builder(getContext().getApplicationContext()).create(),
-        AccountManager.get(getContext().getApplicationContext()), new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            getContext().getApplicationContext()));
+    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
     super.onCreate(savedInstanceState);
   }
 

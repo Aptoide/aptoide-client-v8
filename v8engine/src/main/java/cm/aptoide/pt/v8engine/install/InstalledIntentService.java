@@ -31,25 +31,19 @@ public class InstalledIntentService extends IntentService {
 
   private static final String TAG = InstalledIntentService.class.getName();
 
-  private final AdsRepository adsRepository;
-  private final RollbackRepository repository;
-  private final InstalledRepository installedRepository;
-  private final UpdateRepository updatesRepository;
-  private final CompositeSubscription subscriptions;
+  private AdsRepository adsRepository;
+  private RollbackRepository repository;
+  private InstalledRepository installedRepository;
+  private UpdateRepository updatesRepository;
+  private CompositeSubscription subscriptions;
   private Analytics analytics;
 
   public InstalledIntentService() {
-    this("InstalledIntentService");
+    super("InstalledIntentService");
   }
 
-  /**
-   * Creates an IntentService.  Invoked by your subclass's constructor.
-   *
-   * @param name Used to name the worker thread, important only for debugging.
-   */
-  public InstalledIntentService(String name) {
-    super(name);
-
+  @Override public void onCreate() {
+    super.onCreate();
     adsRepository = new AdsRepository();
     repository = RepositoryFactory.getRollbackRepository();
     installedRepository = RepositoryFactory.getInstalledRepository();

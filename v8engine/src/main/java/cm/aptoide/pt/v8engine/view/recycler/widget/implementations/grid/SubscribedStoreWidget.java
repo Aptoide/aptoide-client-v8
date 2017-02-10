@@ -89,8 +89,8 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
     //            switch (eResponse) {
     //              case YES:
     //
-    //                if (AptoideAccountManager.getInstance().isLoggedIn()) {
-    //                  AptoideAccountManager.getInstance().unsubscribeStore(store.getStoreName());
+    //                if (new AptoideAccountManager().isLoggedIn()) {
+    //                  new AptoideAccountManager().unsubscribeStore(store.getStoreName());
     //                }
     //
     //                //@Cleanup Realm realm = DeprecatedDatabase.get();

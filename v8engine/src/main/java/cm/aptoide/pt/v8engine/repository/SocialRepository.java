@@ -2,7 +2,7 @@ package cm.aptoide.pt.v8engine.repository;
 
 import android.content.Context;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.BaseActivity;
+import cm.aptoide.pt.v8engine.activity.AccountBaseActivity;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.LikeCardRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SetUserRequest;
@@ -33,8 +33,8 @@ public class SocialRepository {
     ShareCardRequest.of(timelineCard, accessToken, aptoideClientUUID)
         .observe()
         .subscribe(baseV7Response -> {
-          final String userAccess = privacy ? BaseActivity.UserAccessState.UNLISTED.toString()
-              : BaseActivity.UserAccessState.PUBLIC.toString();
+          final String userAccess = privacy ? AccountBaseActivity.UserAccessState.UNLISTED.toString()
+              : AccountBaseActivity.UserAccessState.PUBLIC.toString();
           SetUserRequest.of(aptoideClientUUID, userAccess, accessToken)
               .observe()
               .subscribe(baseV7Response1 -> Logger.d(this.getClass().getSimpleName(),
@@ -62,8 +62,8 @@ public class SocialRepository {
     ShareInstallCardRequest.of(packageName, accessToken, shareType, aptoideClientUUID)
         .observe()
         .subscribe(baseV7Response -> {
-          final String userAccess = privacy ? BaseActivity.UserAccessState.UNLISTED.toString()
-              : BaseActivity.UserAccessState.PUBLIC.toString();
+          final String userAccess = privacy ? AccountBaseActivity.UserAccessState.UNLISTED.toString()
+              : AccountBaseActivity.UserAccessState.PUBLIC.toString();
           SetUserRequest.of(aptoideClientUUID, userAccess, accessToken)
               .observe()
               .subscribe(baseV7Response1 -> Logger.d(this.getClass().getSimpleName(),

@@ -321,7 +321,8 @@ public class DisplayablesFactory {
     displayables.add(new StoreGridHeaderDisplayable(wsWidget, storeTheme, wsWidget.getTag()));
     for (Store store : stores) {
       if (wsWidget.getData().getLayout() == Layout.LIST) {
-        displayables.add(new RecommendedStoreDisplayable(store, storeRepository, context));
+        displayables.add(new RecommendedStoreDisplayable(store, storeRepository, context,
+            ((V8Engine) context.getApplicationContext()).getAccountManager()));
       } else {
         displayables.add(new GridStoreDisplayable(store));
       }

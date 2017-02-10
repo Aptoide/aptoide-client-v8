@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.GetApp;
@@ -44,6 +45,7 @@ import rx.android.schedulers.AndroidSchedulers;
   private Button followButton;
   private View storeLayout;
   private StoreRepository storeRepository;
+  private AptoideAccountManager accountManager;
 
   public AppViewStoreWidget(View itemView) {
     super(itemView);
@@ -59,6 +61,7 @@ import rx.android.schedulers.AndroidSchedulers;
   }
 
   @Override public void bindView(AppViewStoreDisplayable displayable) {
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     setupStoreInfo(displayable.getPojo());
   }
 
@@ -105,7 +108,7 @@ import rx.android.schedulers.AndroidSchedulers;
             //followButton.setCompoundDrawablesWithIntrinsicBounds(plusMarkDrawable, 0, 0, 0);
             followButton.setText(R.string.appview_follow_store_button_text);
             followButton.setOnClickListener(
-                new Listeners().newSubscribeStoreListener(itemView, store.getName()));
+                new Listeners().newSubscribeStoreListener(itemView, store.getName(), accountManager));
           }
         }));
   }
@@ -120,14 +123,15 @@ import rx.android.schedulers.AndroidSchedulers;
       };
     }
 
-    public View.OnClickListener newSubscribeStoreListener(View itemView, String storeName) {
+    public View.OnClickListener newSubscribeStoreListener(View itemView, String storeName,
+        AptoideAccountManager accountManager) {
       return v -> {
         StoreUtilsProxy.subscribeStore(storeName, getStoreMeta -> {
           ShowMessage.asSnack(itemView,
               AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
         }, err -> {
           CrashReport.getInstance().log(err);
-        });
+        }, accountManager);
       };
     }
   }

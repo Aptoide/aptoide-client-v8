@@ -32,6 +32,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.activity.AccountNavigator;
 import java.util.Locale;
 import rx.Observable;
 import rx.Subscriber;
@@ -51,14 +52,13 @@ public class DialogUtils {
 
   public static Observable<GenericDialogs.EResponse> showRateDialog(@NonNull Activity activity,
       @NonNull String appName, @NonNull String packageName, @Nullable String storeName,
-      AptoideAccountManager accountManager) {
-
+      AptoideAccountManager accountManager, AccountNavigator accountNavigator) {
     return Observable.create((Subscriber<? super GenericDialogs.EResponse> subscriber) -> {
 
       if (!accountManager.isLoggedIn()) {
         ShowMessage.asSnack(activity, R.string.you_need_to_be_logged_in, R.string.login,
             snackView -> {
-              accountManager.openAccountManager(activity, false);
+              accountNavigator.navigateToAccountView(false);
             });
         subscriber.onNext(GenericDialogs.EResponse.CANCEL);
         subscriber.onCompleted();
@@ -153,12 +153,12 @@ public class DialogUtils {
 
   public static void showRateDialog(@NonNull Activity activity, @NonNull String appName,
       @NonNull String packageName, @Nullable String storeName, @Nullable Action0 onPositiveCallback,
-      AptoideAccountManager accountManager) {
+      AptoideAccountManager accountManager, AccountNavigator accountNavigator) {
 
     if (!accountManager.isLoggedIn()) {
       ShowMessage.asSnack(activity, R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> {
-            accountManager.openAccountManager(activity, false);
+            accountNavigator.navigateToAccountView(false);
           });
 
       return;

@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
-import android.accounts.AccountManager;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -12,13 +11,11 @@ import android.view.View;
 import android.widget.Button;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.activity.AccountNavigator;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreAddCommentDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -33,6 +30,7 @@ public class StoreAddCommentWidget extends Widget<StoreAddCommentDisplayable> {
 
   private Button commentStore;
   private AptoideAccountManager accountManager;
+  private AccountNavigator accountNavigator;
 
   public StoreAddCommentWidget(View itemView) {
     super(itemView);
@@ -46,11 +44,8 @@ public class StoreAddCommentWidget extends Widget<StoreAddCommentDisplayable> {
 
     final Context context = getContext();
 
-    accountManager = AptoideAccountManager.getInstance(getContext(), Application.getConfiguration(),
-        new SecureCoderDecoder.Builder(getContext().getApplicationContext()).create(),
-        AccountManager.get(getContext().getApplicationContext()), new IdsRepositoryImpl(
-            SecurePreferencesImplementation.getInstance(),
-            getContext().getApplicationContext()));
+    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
+    accountNavigator = new AccountNavigator(getContext(), accountManager);
     @ColorInt int color = getColorOrDefault(displayable.getStoreTheme(), context);
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
       Drawable d = context.getDrawable(R.drawable.dialog_bg_2);
@@ -111,7 +106,7 @@ public class StoreAddCommentWidget extends Widget<StoreAddCommentDisplayable> {
   private Observable<Void> showSignInMessage(@NonNull final View view) {
     return ShowMessage.asObservableSnack(view, R.string.you_need_to_be_logged_in, R.string.login,
         snackView -> {
-          accountManager.openAccountManager(view.getContext());
+          accountNavigator.navigateToAccountView();
         }).flatMap(a -> Observable.empty());
   }
 }

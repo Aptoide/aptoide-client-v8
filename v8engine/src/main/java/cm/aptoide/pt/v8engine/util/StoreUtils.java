@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.util;
 
-import android.accounts.AccountManager;
 import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -18,8 +17,6 @@ import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
-import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -38,14 +35,10 @@ public class StoreUtils {
 
   private static StoreCredentialsProviderImpl storeCredentialsProvider;
   private static AptoideClientUUID aptoideClientUUID;
-  private static AptoideAccountManager accountManager;
 
   static {
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
-    accountManager = AptoideAccountManager.getInstance(DataProvider.getContext(),
-        Application.getConfiguration(), new SecureCoderDecoder.Builder(DataProvider.getContext().getApplicationContext()).create(),
-        AccountManager.get(DataProvider.getContext().getApplicationContext()), new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext().getApplicationContext()));
+
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
   }
@@ -66,10 +59,11 @@ public class StoreUtils {
    */
   @Deprecated public static void subscribeStore(String storeName,
       @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
-      @Nullable ErrorRequestListener errorRequestListener) {
+      @Nullable ErrorRequestListener errorRequestListener, AptoideAccountManager accountManager) {
     subscribeStore(GetStoreMetaRequest.of(getStoreCredentials(storeName),
         accountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID()),
-        successRequestListener, errorRequestListener);
+        successRequestListener, errorRequestListener,
+        accountManager);
   }
 
   /**
@@ -78,7 +72,7 @@ public class StoreUtils {
    */
   @Deprecated public static void subscribeStore(GetStoreMetaRequest getStoreMetaRequest,
       @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
-      @Nullable ErrorRequestListener errorRequestListener) {
+      @Nullable ErrorRequestListener errorRequestListener, AptoideAccountManager accountManager) {
     getStoreMetaRequest.execute(getStoreMeta -> {
 
       if (BaseV7Response.Info.Status.OK.equals(getStoreMeta.getInfo().getStatus())) {
@@ -185,7 +179,7 @@ public class StoreUtils {
     return storesAuthMap.size() > 0 ? storesAuthMap : null;
   }
 
-  public static void unsubscribeStore(String name) {
+  public static void unsubscribeStore(String name, AptoideAccountManager accountManager) {
     if (accountManager.isLoggedIn()) {
       accountManager.unsubscribeStore(name);
     }

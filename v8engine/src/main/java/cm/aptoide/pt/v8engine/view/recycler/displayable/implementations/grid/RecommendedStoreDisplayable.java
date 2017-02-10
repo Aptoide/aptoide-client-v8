@@ -1,13 +1,8 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
-import android.accounts.AccountManager;
 import android.content.Context;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.model.v7.store.Store;
-import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
@@ -29,14 +24,11 @@ public class RecommendedStoreDisplayable extends DisplayablePojo<Store> {
   public RecommendedStoreDisplayable() {
   }
 
-  public RecommendedStoreDisplayable(Store pojo, StoreRepository storeRepository, Context context) {
+  public RecommendedStoreDisplayable(Store pojo, StoreRepository storeRepository, Context context,
+      AptoideAccountManager accountManager) {
     super(pojo);
     this.storeRepository = storeRepository;
-    this.accountManager = AptoideAccountManager.getInstance(context, Application.getConfiguration(),
-        new SecureCoderDecoder.Builder(context.getApplicationContext()).create(),
-        AccountManager.get(context.getApplicationContext()), new IdsRepositoryImpl(
-            SecurePreferencesImplementation.getInstance(),
-            context.getApplicationContext()));
+    this.accountManager = accountManager;
   }
 
   @Override protected Configs getConfig() {
@@ -52,14 +44,14 @@ public class RecommendedStoreDisplayable extends DisplayablePojo<Store> {
   }
 
   public void subscribeStore() {
-    StoreUtilsProxy.subscribeStore(getPojo().getName());
+    StoreUtilsProxy.subscribeStore(getPojo().getName(), accountManager);
   }
 
   public void unsubscribeStore() {
     if (accountManager.isLoggedIn()) {
       accountManager.unsubscribeStore(getPojo().getName());
     }
-    StoreUtils.unsubscribeStore(getPojo().getName());
+    StoreUtils.unsubscribeStore(getPojo().getName(), accountManager);
   }
 
   public void openStoreFragment(FragmentShower fragmentShower) {

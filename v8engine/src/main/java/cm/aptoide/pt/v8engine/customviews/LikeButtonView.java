@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.customviews;
 
-import android.accounts.AccountManager;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
@@ -17,12 +16,8 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 
 public class LikeButtonView extends FrameLayout implements View.OnClickListener {
   private static final DecelerateInterpolator DECCELERATE_INTERPOLATOR =
@@ -117,10 +112,7 @@ public class LikeButtonView extends FrameLayout implements View.OnClickListener 
     }
 
     if (!isChecked) {
-      if (AptoideAccountManager.getInstance(getContext(), Application.getConfiguration(), new SecureCoderDecoder.Builder(getContext().getApplicationContext()).create(),
-          AccountManager.get(getContext().getApplicationContext()), new IdsRepositoryImpl(
-              SecurePreferencesImplementation.getInstance(),
-              getContext().getApplicationContext())).isLoggedIn()) {
+      if (((V8Engine)getContext().getApplicationContext()).getAccountManager().isLoggedIn()) {
         vHeart.setImageResource(R.drawable.heart_on);
         vHeart.animate().cancel();
         vHeart.setScaleX(0);

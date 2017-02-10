@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.util;
 
-import android.accounts.AccountManager;
 import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
@@ -11,9 +10,8 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
-import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 
 /**
@@ -26,38 +24,37 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
  */
 public class StoreUtilsProxy {
 
-  private static final AptoideAccountManager accountManager;
   private static final AptoideClientUUID aptoideClientUUID;
 
   static {
-    accountManager = AptoideAccountManager.getInstance(DataProvider.getContext(),
-        Application.getConfiguration(), new SecureCoderDecoder.Builder(DataProvider.getContext().getApplicationContext()).create(),
-        AccountManager.get(DataProvider.getContext().getApplicationContext()), new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext().getApplicationContext()));
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
   }
 
-  public static void subscribeStore(String storeName) {
+  public static void subscribeStore(String storeName, AptoideAccountManager accountManager) {
     subscribeStore(GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName),
         accountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID()), null,
-        null, storeName);
+        null, storeName, accountManager);
   }
 
   public static void subscribeStore(GetStoreMetaRequest getStoreMetaRequest,
       @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
-      @Nullable ErrorRequestListener errorRequestListener, String storeName) {
+      @Nullable ErrorRequestListener errorRequestListener, String storeName,
+      AptoideAccountManager accountManager) {
     Logger.d(StoreUtilsProxy.class.getName(),
         "LOCALYTICS TESTING - STORES: ACTION SUBSCRIBE " + storeName);
     Analytics.Stores.subscribe(storeName);
-    StoreUtils.subscribeStore(getStoreMetaRequest, successRequestListener, errorRequestListener);
+    StoreUtils.subscribeStore(getStoreMetaRequest, successRequestListener, errorRequestListener,
+        accountManager);
   }
 
   public static void subscribeStore(String storeName,
       @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
-      @Nullable ErrorRequestListener errorRequestListener) {
+      @Nullable ErrorRequestListener errorRequestListener,
+      AptoideAccountManager accountManager) {
     subscribeStore(GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName),
         accountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID()),
-        successRequestListener, errorRequestListener, storeName);
+        successRequestListener, errorRequestListener, storeName,
+        accountManager);
   }
 }

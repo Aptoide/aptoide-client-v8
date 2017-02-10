@@ -1,4 +1,9 @@
-package cm.aptoide.accountmanager;
+/*
+ * Copyright (c) 2017.
+ * Modified by Marcelo Benites on 09/02/2017.
+ */
+
+package cm.aptoide.pt.v8engine.activity;
 
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
@@ -9,10 +14,10 @@ import cm.aptoide.pt.preferences.Application;
 /**
  * Created by trinkes on 4/18/16.
  */
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class AccountBaseActivity extends AppCompatActivity {
 
   protected static final int LOGGED_IN_SECOND_STEP_CODE = 126;
-  private static final String TAG = BaseActivity.class.getSimpleName();
+  private static final String TAG = AccountBaseActivity.class.getSimpleName();
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -20,13 +25,13 @@ public abstract class BaseActivity extends AppCompatActivity {
     getTheme().applyStyle(Application.getConfiguration().getDefaultThemeRes(), true);
   }
 
-  protected abstract String getActivityTitle();
+  public abstract String getActivityTitle();
 
-  @LayoutRes abstract int getLayoutId();
+  @LayoutRes public abstract int getLayoutId();
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     int i = item.getItemId();
-    if (i == android.R.id.home || i == R.id.home || i == 0) {
+    if (i == android.R.id.home || i == cm.aptoide.accountmanager.R.id.home || i == 0) {
       finish();
     }
     return super.onOptionsItemSelected(item);

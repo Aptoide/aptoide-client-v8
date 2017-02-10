@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
-import android.accounts.AccountManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,12 +12,12 @@ import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.Comment;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.activity.AccountNavigator;
 import cm.aptoide.pt.v8engine.util.CommentOperations;
 import cm.aptoide.pt.v8engine.view.custom.HorizontalDividerItemDecoration;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
@@ -45,6 +44,7 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
   private long storeId;
   private String storeName;
   private AptoideAccountManager accountManager;
+  private AccountNavigator accountNavigator;
 
   public StoreLatestCommentsWidget(View itemView) {
     super(itemView);
@@ -56,10 +56,8 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
   }
 
   @Override public void bindView(StoreLatestCommentsDisplayable displayable) {
-    accountManager = AptoideAccountManager.getInstance(getContext(), Application.getConfiguration(),
-        new SecureCoderDecoder.Builder(getContext().getApplicationContext()).create(),
-        AccountManager.get(getContext().getApplicationContext()), new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            getContext().getApplicationContext()));
+    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
+    accountNavigator = new AccountNavigator(getContext(), accountManager);
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
     LinearLayoutManager layoutManager = new LinearLayoutManager(recyclerView.getContext());
@@ -78,7 +76,8 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
   private void setAdapter(List<Comment> comments) {
     recyclerView.setAdapter(
         new CommentListAdapter(storeId, storeName, comments, getContext().getSupportFragmentManager(),
-            recyclerView, Observable.fromCallable(() -> reloadComments()), accountManager));
+            recyclerView, Observable.fromCallable(() -> reloadComments()), accountManager,
+            accountNavigator));
   }
 
   private Void reloadComments() {
@@ -100,11 +99,14 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
   private static class CommentListAdapter extends BaseAdapter {
 
     private final AptoideAccountManager accountManager;
+    private AccountNavigator accountNavigator;
 
     CommentListAdapter(long storeId, @NonNull String storeName, @NonNull List<Comment> comments,
         @NonNull FragmentManager fragmentManager, @NonNull View view,
-        Observable<Void> reloadComments, AptoideAccountManager accountManager) {
+        Observable<Void> reloadComments, AptoideAccountManager accountManager,
+        AccountNavigator accountNavigator) {
       this.accountManager = accountManager;
+      this.accountNavigator = accountNavigator;
 
       final CommentOperations commentOperations = new CommentOperations();
       List<CommentNode> sortedComments =
@@ -146,7 +148,7 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
     private Observable<Void> showSignInMessage(@NonNull final View view) {
       return ShowMessage.asObservableSnack(view, R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> {
-            accountManager.openAccountManager(view.getContext());
+            accountNavigator.navigateToAccountView();
           }).flatMap(a -> Observable.empty());
     }
   }

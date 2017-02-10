@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -39,6 +40,7 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
   private LinearLayout followNumbers;
   private LinearLayout followLayout;
   private View separatorView;
+  private AptoideAccountManager accountManager;
 
   public FollowUserWidget(View itemView) {
     super(itemView);
@@ -60,6 +62,9 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
   }
 
   @Override public void bindView(FollowUserDisplayable displayable) {
+    accountManager =
+        ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+
     if (!displayable.getOpenMode()
         .equals(TimeLineFollowFragment.FollowFragmentOpenMode.LIKE_PREVIEW)) {
       followLayout.setVisibility(View.GONE);
@@ -89,7 +94,7 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
               follow.setText(R.string.appview_follow_store_button_text);
               follow.setOnClickListener(
                   new AppViewStoreWidget.Listeners().newSubscribeStoreListener(itemView,
-                      displayable.getStoreName()));
+                      displayable.getStoreName(), accountManager));
             }
           }, (throwable) -> {
             throwable.printStackTrace();

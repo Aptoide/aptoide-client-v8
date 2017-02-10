@@ -1,4 +1,9 @@
-package cm.aptoide.accountmanager;
+/*
+ * Copyright (c) 2017.
+ * Modified by Marcelo Benites on 09/02/2017.
+ */
+
+package cm.aptoide.pt.v8engine.account;
 
 import android.accounts.AbstractAccountAuthenticator;
 import android.accounts.Account;
@@ -8,11 +13,12 @@ import android.accounts.NetworkErrorException;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.accountmanager.Constants;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.activity.LoginActivity;
 
 import static android.accounts.AccountManager.KEY_BOOLEAN_RESULT;
 import static cm.aptoide.pt.preferences.Application.getContext;
@@ -28,11 +34,7 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
 
   public AccountAuthenticator(Context context) {
     super(context);
-    accountManager = AptoideAccountManager.getInstance(getContext(), Application.getConfiguration(),
-        new SecureCoderDecoder.Builder(getContext().getApplicationContext()).create(),
-        AccountManager.get(getContext().getApplicationContext()), new IdsRepositoryImpl(
-            SecurePreferencesImplementation.getInstance(),
-            getContext().getApplicationContext()));
+    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
   }
 
   @Override

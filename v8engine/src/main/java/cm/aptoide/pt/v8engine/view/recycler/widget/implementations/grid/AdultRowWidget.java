@@ -1,18 +1,14 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
-import android.accounts.AccountManager;
 import android.content.DialogInterface;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.dialog.AdultDialog;
 import cm.aptoide.pt.v8engine.fragment.BaseLoaderFragment;
@@ -41,11 +37,7 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
   }
 
   @Override public void bindView(AdultRowDisplayable displayable) {
-    accountManager = AptoideAccountManager.getInstance(getContext(), Application.getConfiguration(),
-        new SecureCoderDecoder.Builder(getContext().getApplicationContext()).create(),
-        AccountManager.get(getContext().getApplicationContext()), new IdsRepositoryImpl(
-            SecurePreferencesImplementation.getInstance(),
-            getContext().getApplicationContext()));
+    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
     adultSwitch.setOnCheckedChangeListener(null);
     adultSwitch.setChecked(SecurePreferences.isAdultSwitchActive());
     adultSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {

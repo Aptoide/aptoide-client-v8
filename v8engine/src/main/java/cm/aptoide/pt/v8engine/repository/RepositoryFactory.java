@@ -23,8 +23,8 @@ import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.iab.InAppBillingSerializer;
 import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.payment.PaymentFactory;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.PurchaseFactory;
@@ -122,8 +122,6 @@ public final class RepositoryFactory {
   }
 
   private static AptoideAccountManager getAccountManager(Context context) {
-    return AptoideAccountManager.getInstance(context, Application.getConfiguration(), new SecureCoderDecoder.Builder(context.getApplicationContext()).create(),
-        AccountManager.get(context.getApplicationContext()), new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            context.getApplicationContext()));
+    return ((V8Engine)context.getApplicationContext()).getAccountManager();
   }
 }

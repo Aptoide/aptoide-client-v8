@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
@@ -49,6 +50,7 @@ public class SocialStoreLatestAppsWidget
   private CardView cardView;
   private Button followStore;
   private StoreRepository storeRepository;
+  private AptoideAccountManager accountManager;
   //private TextView sharedBy;
 
   public SocialStoreLatestAppsWidget(View itemView) {
@@ -79,6 +81,7 @@ public class SocialStoreLatestAppsWidget
 
   @Override public void bindView(SocialStoreLatestAppsDisplayable displayable) {
     super.bindView(displayable);
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     storeName.setText(displayable.getStoreName());
     userName.setText(displayable.getUser().getName());
     setCardViewMargin(displayable, cardView);
@@ -211,7 +214,7 @@ public class SocialStoreLatestAppsWidget
             followStore.setText(R.string.appview_follow_store_button_text);
             followStore.setOnClickListener(
                 new AppViewStoreWidget.Listeners().newSubscribeStoreListener(itemView,
-                    displayable.getSharedStore().getName()));
+                    displayable.getSharedStore().getName(), accountManager));
           }
         }, (throwable) -> {
           throwable.printStackTrace();

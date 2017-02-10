@@ -18,7 +18,6 @@ import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.okhttp.UserAgentGenerator;
 import cm.aptoide.pt.networkclient.okhttp.cache.PostCacheInterceptor;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
-import cm.aptoide.pt.preferences.Application;
 import java.io.IOException;
 import lombok.Getter;
 import okhttp3.MultipartBody;
@@ -97,7 +96,7 @@ abstract class v3accountManager<U> extends WebService<v3accountManager.Interface
 
                 if (!accessTokenRetry) {
                   accessTokenRetry = true;
-                  return accountManager.invalidateAccessToken(Application.getContext())
+                  return accountManager.invalidateAccessToken()
                       .flatMap(s -> {
                         this.map.setAccess_token(s);
                         return v3accountManager.this.observe(bypassCache)

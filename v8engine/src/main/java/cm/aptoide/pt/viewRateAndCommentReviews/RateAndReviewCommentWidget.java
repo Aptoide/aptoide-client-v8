@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.viewRateAndCommentReviews;
 
-import android.accounts.AccountManager;
 import android.content.res.Resources;
 import android.os.Build;
 import android.support.v4.app.FragmentManager;
@@ -26,13 +25,13 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.Review;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.activity.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
@@ -67,6 +66,7 @@ import rx.Observable;
   private View notHelpfullButtonLayout;
   private View helpfullButtonLayout;
   private AptoideAccountManager accountManager;
+  private AccountNavigator accountNavigator;
 
   public RateAndReviewCommentWidget(View itemView) {
     super(itemView);
@@ -97,10 +97,8 @@ import rx.Observable;
     final Review review = displayable.getPojo().getReview();
     final String appName = displayable.getPojo().getAppName();
 
-    accountManager = AptoideAccountManager.getInstance(getContext(), Application.getConfiguration(),
-        new SecureCoderDecoder.Builder(getContext().getApplicationContext()).create(),
-        AccountManager.get(getContext().getApplicationContext()), new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            getContext().getApplicationContext()));
+    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
+    accountNavigator = new AccountNavigator(getContext(), accountManager);
     ImageLoader.loadWithCircleTransformAndPlaceHolderAvatarSize(review.getUser().getAvatar(),
         userImage, R.drawable.layer_1);
     username.setText(review.getUser().getName());
@@ -135,7 +133,7 @@ import rx.Observable;
       } else {
         return ShowMessage.asObservableSnack(ratingBar, R.string.you_need_to_be_logged_in,
             R.string.login, snackView -> {
-              accountManager.openAccountManager(snackView.getContext());
+              accountNavigator.navigateToAccountView();
             });
       }
     }).subscribe(a -> { /* do nothing */ }, err -> {
@@ -236,7 +234,7 @@ import rx.Observable;
     } else {
       ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> {
-            accountManager.openAccountManager(snackView.getContext());
+            accountNavigator.navigateToAccountView();
           });
       setHelpButtonsClickable(true);
     }

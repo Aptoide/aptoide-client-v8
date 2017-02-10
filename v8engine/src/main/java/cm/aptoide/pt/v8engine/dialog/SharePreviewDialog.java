@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.BaseActivity;
+import cm.aptoide.pt.v8engine.activity.AccountBaseActivity;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -360,7 +360,7 @@ public class SharePreviewDialog {
   private void setCardHeader(TextView storeName, TextView userName, ImageView storeAvatar,
       ImageView userAvatar) {
     if (accountManager.getUserData().getUserRepo() != null) {
-      if (BaseActivity.UserAccessState.PUBLIC.toString()
+      if (AccountBaseActivity.UserAccessState.PUBLIC.toString()
           .equals(ManagerPreferences.getUserAccess())) {
         storeAvatar.setVisibility(View.VISIBLE);
         userAvatar.setVisibility(View.VISIBLE);
@@ -382,7 +382,7 @@ public class SharePreviewDialog {
         userName.setVisibility(View.GONE);
       }
     } else {
-      if ((BaseActivity.UserAccessState.PUBLIC.toString()).equals(
+      if ((AccountBaseActivity.UserAccessState.PUBLIC.toString()).equals(
           ManagerPreferences.getUserAccess())) {
         storeAvatar.setVisibility(View.VISIBLE);
         ImageLoader.loadWithShadowCircleTransform(
@@ -397,7 +397,7 @@ public class SharePreviewDialog {
   private void setSharedByText(Context context, TextView sharedBy) {
     sharedBy.setVisibility(View.VISIBLE);
 
-    if (BaseActivity.UserAccessState.PUBLIC.toString().equals(ManagerPreferences.getUserAccess())) {
+    if (AccountBaseActivity.UserAccessState.PUBLIC.toString().equals(ManagerPreferences.getUserAccess())) {
       sharedBy.setText(String.format(context.getString(R.string.social_timeline_shared_by),
           accountManager.getUserData().getUserName()));
     } else {

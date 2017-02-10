@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
@@ -57,11 +58,12 @@ import rx.android.schedulers.AndroidSchedulers;
 public class MainActivity extends BaseActivity implements MainView, FragmentShower {
 
   private static final String TAG = MainActivity.class.getSimpleName();
+  private AptoideAccountManager accountManager;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.frame_layout);
-
+    accountManager = ((V8Engine) getApplicationContext()).getAccountManager();
     final AutoUpdate autoUpdate =
         new AutoUpdate(this, new InstallerFactory().create(this, InstallerFactory.DEFAULT),
             new DownloadFactory(), AptoideDownloadManager.getInstance(), new PermissionManager());
@@ -158,7 +160,7 @@ public class MainActivity extends BaseActivity implements MainView, FragmentShow
                 if (isFollowed) {
                   ShowMessage.asSnack(this, getString(R.string.store_already_added));
                 } else {
-                  StoreUtilsProxy.subscribeStore(storeName);
+                  StoreUtilsProxy.subscribeStore(storeName, accountManager);
                   ShowMessage.asSnack(this,
                       AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
                 }

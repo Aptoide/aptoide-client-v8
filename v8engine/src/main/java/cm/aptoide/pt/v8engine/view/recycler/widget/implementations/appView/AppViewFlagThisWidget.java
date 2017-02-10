@@ -5,23 +5,20 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
-import android.accounts.AccountManager;
 import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v2.ErrorResponse;
 import cm.aptoide.pt.dataprovider.ws.v3.AddApkFlagRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
-import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.activity.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewFlagThisDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -53,6 +50,7 @@ import rx.android.schedulers.AndroidSchedulers;
   private TextView fakeAppText;
   private TextView virusText;
   private AptoideAccountManager accountManager;
+  private AccountNavigator accountNavigator;
 
   public AppViewFlagThisWidget(View itemView) {
     super(itemView);
@@ -79,11 +77,8 @@ import rx.android.schedulers.AndroidSchedulers;
   }
 
   @Override public void bindView(AppViewFlagThisDisplayable displayable) {
-    accountManager = AptoideAccountManager.getInstance(getContext(), Application.getConfiguration(),
-        new SecureCoderDecoder.Builder(getContext().getApplicationContext()).create(),
-        AccountManager.get(getContext().getApplicationContext()), new IdsRepositoryImpl(
-            SecurePreferencesImplementation.getInstance(),
-            getContext().getApplicationContext()));
+    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
+    accountNavigator = new AccountNavigator(getContext(), accountManager);
     GetApp pojo = displayable.getPojo();
     GetAppMeta.App app = pojo.getNodes().getMeta().getData();
 
@@ -153,7 +148,7 @@ import rx.android.schedulers.AndroidSchedulers;
     return v -> {
       if (!accountManager.isLoggedIn()) {
         ShowMessage.asSnack(v, R.string.you_need_to_be_logged_in, R.string.login, snackView -> {
-          accountManager.openAccountManager(snackView.getContext());
+          accountNavigator.navigateToAccountView();
         });
         return;
       }

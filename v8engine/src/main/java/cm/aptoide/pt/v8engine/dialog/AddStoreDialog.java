@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.dialog;
 
-import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
@@ -22,8 +21,6 @@ import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.BaseV7Response;
-import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -135,7 +132,7 @@ public class AddStoreDialog extends DialogFragment {
         dismissLoadingDialog();
         ShowMessage.asSnack(getActivity(), R.string.error_occured);
       }
-    }, storeName);
+    }, storeName, accountManager);
   }
 
   void dismissLoadingDialog() {
@@ -144,10 +141,7 @@ public class AddStoreDialog extends DialogFragment {
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    accountManager = AptoideAccountManager.getInstance(getContext(), Application.getConfiguration(),
-        new SecureCoderDecoder.Builder(getContext().getApplicationContext()).create(),
-        AccountManager.get(getContext().getApplicationContext()), new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            getContext().getApplicationContext()));
+    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
     aptoideClientUUID =  new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
     if (savedInstanceState != null) {

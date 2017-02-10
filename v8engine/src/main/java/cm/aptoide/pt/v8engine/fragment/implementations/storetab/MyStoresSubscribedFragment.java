@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.fragment.implementations.storetab;
 
-import android.accounts.AccountManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,9 +15,8 @@ import cm.aptoide.pt.model.v7.Layout;
 import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
-import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablesFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
@@ -40,10 +38,7 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    accountManager = AptoideAccountManager.getInstance(getContext(), Application.getConfiguration(),
-        new SecureCoderDecoder.Builder(getContext().getApplicationContext()).create(),
-        AccountManager.get(getContext().getApplicationContext()), new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            getContext().getApplicationContext()));
+    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
   }
@@ -83,7 +78,7 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
       if (i == 0 || list.get(i - 1).getId() != list.get(i).getId()) {
         if (layout == Layout.LIST) {
           storesDisplayables.add(new RecommendedStoreDisplayable(list.get(i), storeRepository,
-              getContext()));
+              getContext(),  accountManager));
         } else {
           storesDisplayables.add(new GridStoreDisplayable(list.get(i)));
         }
