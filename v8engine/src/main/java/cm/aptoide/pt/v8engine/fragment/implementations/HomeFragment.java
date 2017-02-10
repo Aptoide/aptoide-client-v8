@@ -25,7 +25,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.util.UserCompleteData;
+import cm.aptoide.accountmanager.User;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
@@ -117,11 +117,11 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
       userEmail.setVisibility(View.VISIBLE);
       userUsername.setVisibility(View.VISIBLE);
 
-      UserCompleteData userCompleteData = accountManager.getUserData();
-      userEmail.setText(userCompleteData.getUserEmail());
-      userUsername.setText(userCompleteData.getUserName());
+      User user = accountManager.getUser();
+      userEmail.setText(user.getUsername());
+      userUsername.setText(user.getName());
 
-      ImageLoader.loadWithCircleTransformAndPlaceHolder(userCompleteData.getUserAvatar(),
+      ImageLoader.loadWithCircleTransformAndPlaceHolder(user.getAvatar(),
           userAvatarImage, R.drawable.user_account_white);
 
       //String userAvatarUri = userInfo.getUserAvatar();

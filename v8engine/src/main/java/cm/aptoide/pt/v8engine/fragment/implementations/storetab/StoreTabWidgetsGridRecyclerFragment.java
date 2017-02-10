@@ -45,7 +45,7 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
             accountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID(),
             DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(V8Engine.getContext()),
             DataProvider.getConfiguration().getPartnerId(),
-            accountManager.isMatureSwitchOn()))
+            accountManager.getUser().isMature()))
         .toList()
         .map(wsWidgets -> DisplayablesFactory.parse(getStoreWidgets, storeTheme, storeRepository,
             getContext()))

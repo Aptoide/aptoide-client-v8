@@ -5,107 +5,139 @@
 
 package cm.aptoide.pt.v8engine.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.StringRes;
 import android.support.v7.widget.Toolbar;
 import android.text.method.PasswordTransformationMethod;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import cm.aptoide.accountmanager.*;
+import cm.aptoide.accountmanager.ws.responses.OAuth;
+import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.account.ErrorsMapper;
+import com.jakewharton.rxbinding.view.RxView;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by trinkes on 4/29/16.
  */
-public class SignUpActivity extends AccountBaseActivity implements AptoideAccountManager.IRegisterUser {
+public class SignUpActivity extends BaseActivity {
 
   private Button signUpButton;
-  private Toolbar mToolbar;
-  private EditText password_box;
-  private EditText emailBox;
-  private Button hidePasswordButton;
+  private Toolbar toolbar;
+  private EditText passwordEditText;
+  private EditText emailEditText;
+  private Button hideShowPasswordButton;
   private View content;
+  private ProgressDialog progressDialog;
 
-  private String SIGNUP = "signup";
   private AptoideAccountManager accountManager;
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(getLayoutId());
-    accountManager = ((V8Engine)getApplicationContext()).getAccountManager();
+    setContentView(R.layout.sign_up_activity_layout);
+    progressDialog = GenericDialogs.createGenericPleaseWaitDialog(this);
+    accountManager = ((V8Engine) getApplicationContext()).getAccountManager();
     bindViews();
     setupToolbar();
     setupListeners();
+    RxView.clicks(signUpButton)
+        .doOnNext(click -> progressDialog.show())
+        .flatMap(click -> accountManager.createAccount(getUsername(), getPassword())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnCompleted(() -> showAccountCreatedMesssageAndNavigateToCreateUser())
+            .doOnError(throwable -> showError(throwable))
+            .doOnUnsubscribe(() -> progressDialog.dismiss())
+            .toObservable())
+        .retry()
+        .compose(bindUntilEvent(LifecycleEvent.DESTROY))
+        .subscribe();
   }
 
-  @Override public String getActivityTitle() {
-    return getString(R.string.register);
-  }
-
-  @Override public int getLayoutId() {
-    return R.layout.sign_up_activity_layout;
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    int i = item.getItemId();
+    if (i == android.R.id.home) {
+      finish();
+      return true;
+    }
+    return super.onOptionsItemSelected(item);
   }
 
   private void bindViews() {
     content = findViewById(android.R.id.content);
     signUpButton = (Button) findViewById(R.id.submitCreateUser);
-    mToolbar = (Toolbar) findViewById(R.id.toolbar);
-    emailBox = (EditText) findViewById(R.id.username);
-    password_box = (EditText) findViewById(R.id.password);
-    hidePasswordButton = (Button) findViewById(R.id.btn_show_hide_pass);
+    toolbar = (Toolbar) findViewById(R.id.toolbar);
+    emailEditText = (EditText) findViewById(R.id.username);
+    passwordEditText = (EditText) findViewById(R.id.password);
+    hideShowPasswordButton = (Button) findViewById(R.id.btn_show_hide_pass);
   }
 
   private void setupToolbar() {
-    if (mToolbar != null) {
-      setSupportActionBar(mToolbar);
+    if (toolbar != null) {
+      setSupportActionBar(toolbar);
       getSupportActionBar().setHomeButtonEnabled(true);
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
       getSupportActionBar().setDisplayShowTitleEnabled(true);
-      getSupportActionBar().setTitle(getActivityTitle());
+      getSupportActionBar().setTitle(R.string.register);
     }
   }
 
   private void setupListeners() {
     setupShowHidePassButton();
-    accountManager.setupRegisterUser(this, signUpButton, this);
   }
 
   private void setupShowHidePassButton() {
-    hidePasswordButton.setOnClickListener(v -> {
-      final int cursorPosition = password_box.getSelectionStart();
-      final boolean passwordShown = password_box.getTransformationMethod() == null;
+    hideShowPasswordButton.setOnClickListener(v -> {
+      final int cursorPosition = passwordEditText.getSelectionStart();
+      final boolean passwordShown = passwordEditText.getTransformationMethod() == null;
       v.setBackgroundResource(
           passwordShown ? R.drawable.icon_closed_eye : R.drawable.icon_open_eye);
-      password_box.setTransformationMethod(
+      passwordEditText.setTransformationMethod(
           passwordShown ? new PasswordTransformationMethod() : null);
-      password_box.setSelection(cursorPosition);
+      passwordEditText.setSelection(cursorPosition);
     });
   }
 
-  @Override public void onRegisterSuccess(Bundle data) {
+  private void showAccountCreatedMesssageAndNavigateToCreateUser() {
     ShowMessage.asSnack(content, R.string.user_created);
-    data.putString(AptoideLoginUtils.APTOIDE_LOGIN_FROM, SIGNUP);
-    setResult(RESULT_OK, new Intent().putExtras(data));
-    Analytics analytics = accountManager.getAnalytics();
-    if (analytics != null) {
-      analytics.signUp();
-    }
-    accountManager.sendLoginBroadcast();
+    startActivity(new Intent(this, CreateUserActivity.class));
     finish();
   }
 
-  @Override public void onRegisterFail(@StringRes int reason) {
-    ShowMessage.asSnack(content, reason);
+  private void showError(Throwable throwable) {
+    int errorString = R.string.unknown_error;
+    if (throwable instanceof AccountValidationException) {
+      switch (((AccountValidationException) throwable).getCode()) {
+        case AccountValidationException.EMPTY_EMAIL:
+          errorString = R.string.no_email_error_message;
+          break;
+        case AccountValidationException.EMPTY_EMAIL_AND_PASSWORD:
+          errorString = R.string.no_email_and_pass_error_message;
+          break;
+        case AccountValidationException.EMPTY_PASSWORD:
+          errorString = R.string.no_pass_error_message;
+          break;
+        case AccountValidationException.INVALID_PASSWORD:
+          errorString = R.string.password_validation_text;
+          break;
+      }
+    } else if (throwable instanceof OAuthException) {
+      final OAuth oAuth = ((OAuthException) throwable).getoAuth();
+      errorString =
+          ErrorsMapper.getWebServiceErrorMessageFromCode(oAuth.getErrors().get(0).getCode());
+    } ShowMessage.asSnack(content, errorString);
   }
 
-  @Override public String getUserPassword() {
-    return password_box == null ? "" : password_box.getText().toString();
+  private String getPassword() {
+    return passwordEditText.getText().toString();
   }
 
-  @Override public String getUserEmail() {
-    return emailBox == null ? "" : emailBox.getText().toString().toLowerCase();
+  private String getUsername() {
+    return emailEditText.getText().toString();
   }
 }

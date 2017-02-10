@@ -150,7 +150,6 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
         && !result.containsKey(AccountManager.KEY_INTENT)) {
       if (result.getBoolean(AccountManager.KEY_BOOLEAN_RESULT)) {
         accountManager.logout(null);
-        accountManager.sendRemoveLocalAccountBroadcaster(getContext());
       }
     }
     return result;

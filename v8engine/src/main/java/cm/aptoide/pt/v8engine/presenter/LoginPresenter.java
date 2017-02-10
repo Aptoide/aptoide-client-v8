@@ -53,10 +53,14 @@ public class LoginPresenter implements Presenter {
 
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.RESUME))
-        .flatMap(resumed -> Observable.merge(forgotPasswordSelection(), skipSelection(), successMessageShown()).compose(
+        .flatMap(resumed -> Observable.merge(forgotPasswordSelection(), skipSelection(), successMessageShown(), registerSelection()).compose(
             view.bindUntilEvent(View.LifecycleEvent.PAUSE)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
+  }
+
+  private Observable<Void> registerSelection() {
+    return view.registerSelection().doOnNext(selected -> view.navigateToRegisterView());
   }
 
   private Observable<Void> successMessageShown() {

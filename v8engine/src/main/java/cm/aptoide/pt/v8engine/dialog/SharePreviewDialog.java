@@ -339,7 +339,7 @@ public class SharePreviewDialog {
       alertadd.setTitle(R.string.social_timeline_you_will_share);
 
       if (!(displayable instanceof SocialCardDisplayable)) {
-        storeName.setText(accountManager.getUserData().getUserRepo());
+        storeName.setText(accountManager.getUser().getStore());
         setCardHeader(storeName, userName, storeAvatar, userAvatar);
       } else {
         sharedBy = (TextView) view.findViewById(R.id.social_shared_by);
@@ -359,26 +359,26 @@ public class SharePreviewDialog {
 
   private void setCardHeader(TextView storeName, TextView userName, ImageView storeAvatar,
       ImageView userAvatar) {
-    if (accountManager.getUserData().getUserRepo() != null) {
+    if (accountManager.getUser().getStore() != null) {
       if (AccountBaseActivity.UserAccessState.PUBLIC.toString()
           .equals(ManagerPreferences.getUserAccess())) {
         storeAvatar.setVisibility(View.VISIBLE);
         userAvatar.setVisibility(View.VISIBLE);
         ImageLoader.loadWithShadowCircleTransform(
-            accountManager.getUserData().getUserAvatarRepo(), storeAvatar);
+            accountManager.getUser().getStoreAvatar(), storeAvatar);
         ImageLoader.loadWithShadowCircleTransform(
-            accountManager.getUserData().getUserAvatar(), userAvatar);
-        storeName.setText(accountManager.getUserData().getUserRepo());
-        userName.setText(accountManager.getUserData().getUserName());
+            accountManager.getUser().getAvatar(), userAvatar);
+        storeName.setText(accountManager.getUser().getStore());
+        userName.setText(accountManager.getUser().getName());
       } else {
         storeAvatar.setVisibility(View.VISIBLE);
         userAvatar.setVisibility(View.INVISIBLE);
         ImageLoader.loadWithShadowCircleTransform(
-            accountManager.getUserData().getUserAvatarRepo(), storeAvatar);
+            accountManager.getUser().getStoreAvatar(), storeAvatar);
         ImageLoader.loadWithShadowCircleTransform(
-            accountManager.getUserData().getUserAvatar(), userAvatar);
-        storeName.setText(accountManager.getUserData().getUserRepo());
-        userName.setText(accountManager.getUserData().getUserName());
+            accountManager.getUser().getAvatar(), userAvatar);
+        storeName.setText(accountManager.getUser().getStore());
+        userName.setText(accountManager.getUser().getName());
         userName.setVisibility(View.GONE);
       }
     } else {
@@ -386,9 +386,9 @@ public class SharePreviewDialog {
           ManagerPreferences.getUserAccess())) {
         storeAvatar.setVisibility(View.VISIBLE);
         ImageLoader.loadWithShadowCircleTransform(
-            accountManager.getUserData().getUserAvatar(), storeAvatar);
+            accountManager.getUser().getAvatar(), storeAvatar);
         userAvatar.setVisibility(View.INVISIBLE);
-        storeName.setText(accountManager.getUserData().getUserName());
+        storeName.setText(accountManager.getUser().getName());
         userName.setVisibility(View.GONE);
       }
     }
@@ -399,10 +399,10 @@ public class SharePreviewDialog {
 
     if (AccountBaseActivity.UserAccessState.PUBLIC.toString().equals(ManagerPreferences.getUserAccess())) {
       sharedBy.setText(String.format(context.getString(R.string.social_timeline_shared_by),
-          accountManager.getUserData().getUserName()));
+          accountManager.getUser().getName()));
     } else {
       sharedBy.setText(String.format(context.getString(R.string.social_timeline_shared_by),
-          accountManager.getUserData().getUserRepo()));
+          accountManager.getUser().getStore()));
     }
   }
 
@@ -525,7 +525,7 @@ public class SharePreviewDialog {
     alertadd.setView(view).setCancelable(false);
     alertadd.setTitle(R.string.social_timeline_you_will_share);
 
-    storeName.setText(accountManager.getUserData().getUserRepo());
+    storeName.setText(accountManager.getUser().getStore());
     setCardHeader(storeName, userName, storeAvatar, userAvatar);
 
     if (!ManagerPreferences.getUserAccessConfirmed()) {

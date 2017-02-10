@@ -21,7 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.CheckUserCredentialsRequest;
-import cm.aptoide.accountmanager.ws.ErrorsMapper;
+import cm.aptoide.pt.v8engine.account.ErrorsMapper;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.SetStoreRequest;
@@ -291,7 +291,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity
                         progressDialog.dismiss();
                         ShowMessage.asLongObservableSnack(this, cm.aptoide.accountmanager.R.string.create_store_store_created)
                             .subscribe(visibility -> {
-                              mSubscriptions.add(accountManager.refreshAccount()
+                              mSubscriptions.add(accountManager.syncUser()
                                   .subscribe(() -> accountManager.sendLoginBroadcast(),
                                       Throwable::printStackTrace));
                               if (visibility == ShowMessage.DISMISSED) {
@@ -310,7 +310,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity
             mSubscriptions.add(SetStoreRequest.of(aptoideClientUUID.getAptoideClientUUID(),
                 accountManager.getAccessToken(), storeName, storeTheme, storeAvatarPath,
                 storeDescription, true, storeId).observe().subscribe(answer -> {
-              accountManager.refreshAccount().subscribe(() -> {
+              accountManager.syncUser().subscribe(() -> {
                 progressDialog.dismiss();
                 finish();
               }, Throwable::printStackTrace);
@@ -341,7 +341,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity
                 aptoideClientUUID.getAptoideClientUUID(), storeId, storeTheme, storeDescription)
                 .observe()
                 .subscribe(answer -> {
-                  accountManager.refreshAccount().subscribe(() -> {
+                  accountManager.syncUser().subscribe(() -> {
                     progressDialog.dismiss();
                     accountManager.sendLoginBroadcast();
                     finish();
@@ -355,7 +355,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity
 
     ));
     mSubscriptions.add(RxView.clicks(mSkip)
-        .flatMap(click -> accountManager.refreshAccount().andThen(Observable.just(true)))
+        .flatMap(click -> accountManager.syncUser().andThen(Observable.just(true)))
         .subscribe(refreshed -> {
           finish();
         }, throwable -> {
@@ -550,7 +550,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity
           .observe()
           .timeout(90, TimeUnit.SECONDS)
           .subscribe(answer -> {
-            accountManager.refreshAccount().subscribe(() -> {
+            accountManager.syncUser().subscribe(() -> {
               progressDialog.dismiss();
               accountManager.sendLoginBroadcast();
               finish();
@@ -594,7 +594,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity
                     }
                   });
             }
-            accountManager.refreshAccount().subscribe(() -> {
+            accountManager.syncUser().subscribe(() -> {
               progressDialog.dismiss();
               accountManager.sendLoginBroadcast();
               finish();
@@ -607,14 +607,14 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity
       setStoreData();
       SimpleSetStoreRequest.of(accountManager.getAccessToken(),
           aptoideClientUUID.getAptoideClientUUID(), storeName, storeTheme).execute(answer -> {
-        accountManager.refreshAccount().subscribe(() -> {
+        accountManager.syncUser().subscribe(() -> {
           progressDialog.dismiss();
           accountManager.sendLoginBroadcast();
           finish();
         }, Throwable::printStackTrace);
       }, throwable -> {
         onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
-        accountManager.refreshAccount().subscribe(() -> {
+        accountManager.syncUser().subscribe(() -> {
           progressDialog.dismiss();
         }, Throwable::printStackTrace);
       });

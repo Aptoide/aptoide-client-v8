@@ -5,7 +5,6 @@
 
 package cm.aptoide.accountmanager.ws;
 
-import android.content.Context;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
@@ -66,8 +65,7 @@ public class CreateUserRequest extends v3accountManager<OAuth> {
   }
 
   public static CreateUserRequest of(String update, String email, String name, String password,
-      String userAvatarPath, String aptoideClientUUID, Context context,
-      AptoideAccountManager accountManager) {
+      String userAvatarPath, String aptoideClientUUID, AptoideAccountManager accountManager) {
     return new CreateUserRequest(getHttpClient(accountManager), email, password, name, update,
         userAvatarPath, aptoideClientUUID, accountManager);
   }

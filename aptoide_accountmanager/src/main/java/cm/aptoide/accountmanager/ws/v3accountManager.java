@@ -114,8 +114,7 @@ abstract class v3accountManager<U> extends WebService<v3accountManager.Interface
             }
           }
           return Observable.error(throwable);
-        })
-        .observeOn(AndroidSchedulers.mainThread());
+        });
   }
 
   interface Interfaces {
