@@ -9,6 +9,7 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import static com.google.android.gms.internal.zzs.TAG;
@@ -45,15 +46,18 @@ public class ApkFy {
       final String sourceDir = context.getPackageManager()
           .getPackageInfo(V8Engine.getConfiguration().getAppId(), 0).applicationInfo.sourceDir;
       final ZipFile myZipFile = new ZipFile(sourceDir);
-      final InputStream is = myZipFile.getInputStream(myZipFile.getEntry("META-INF/aob"));
+      final ZipEntry entry = myZipFile.getEntry("META-INF/aob");
+      if (entry != null) {
+        final InputStream is = myZipFile.getInputStream(entry);
 
-      Properties properties = new Properties();
-      properties.load(is);
-      if (properties.containsKey("downloadId")) {
-        appId = properties.getProperty("downloadId");
+        Properties properties = new Properties();
+        properties.load(is);
+        if (properties.containsKey("downloadId")) {
+          appId = properties.getProperty("downloadId");
+        }
+
+        return appId != null ? Long.parseLong(appId) : null;
       }
-
-      return appId != null ? Long.parseLong(appId) : null;
     } catch (Exception e) {
       if (appId != null) {
         CrashReport.getInstance().log("APKFY_APP_ID", appId);
