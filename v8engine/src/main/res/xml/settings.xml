@@ -70,10 +70,6 @@
         android:summary="@string/setting_updates_notification_sum"
         android:title="@string/setting_updates_notification_title"/>
     <CheckBoxPreference
-        android:key="auto_update"
-        android:summary="@string/setting_auto_update_sum"
-        android:title="@string/setting_auto_update_title"/>
-    <CheckBoxPreference
         android:defaultValue="true"
         android:key="updatesFilterAlphaBetaKey"
         android:summary="@string/updates_filter_summary"
@@ -123,6 +119,10 @@
     <CheckBoxPreference
         android:key="allowRoot"
         android:title="@string/allow_root"/>
+    <CheckBoxPreference
+        android:key="auto_update"
+        android:summary="@string/setting_auto_update_sum"
+        android:title="@string/setting_auto_update_title"/>
   </PreferenceCategory>
 
   <PreferenceCategory
