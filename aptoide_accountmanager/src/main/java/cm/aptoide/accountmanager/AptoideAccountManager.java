@@ -40,6 +40,7 @@ import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
 import cm.aptoide.accountmanager.ws.responses.GenericResponseV3;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
+import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
@@ -476,7 +477,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
    *
    * @param matureSwitch Switch state
    */
-  public static void updateMatureSwitch(boolean matureSwitch) {
+  @Partners public static void updateMatureSwitch(boolean matureSwitch) {
     AccountManagerPreferences.setMatureSwitch(matureSwitch);
     if (userIsLoggedIn) {
       ChangeUserSettingsRequest.of(matureSwitch)
@@ -887,7 +888,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
    *
    * @return A string with the token
    */
-  @Nullable public static String getAccessToken() {
+  @Partners @Nullable public static String getAccessToken() {
     String accessToken = AccountManagerPreferences.getAccessToken();
     if (accessToken == null || TextUtils.isEmpty(accessToken)) {
       accessToken = getUserStringFromAndroidAccountManager(SecureKeys.ACCESS_TOKEN);

@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
@@ -48,12 +49,6 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     implements ItemCommentAdderView<Review, CommentsAdapter> {
 
   private static final String TAG = RateAndReviewsFragment.class.getSimpleName();
-  @Getter private static final String APP_ID = "app_id";
-  @Getter private static final String PACKAGE_NAME = "package_name";
-  @Getter private static final String STORE_NAME = "store_name";
-  @Getter private static final String APP_NAME = "app_name";
-  @Getter private static final String REVIEW_ID = "review_id";
-  @Getter private static final String STORE_THEME = "store_theme";
   private final AptoideClientUUID aptoideClientUUID;
   private final DialogUtils dialogUtils;
 
@@ -78,11 +73,11 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
       String packageName, String storeTheme) {
     RateAndReviewsFragment fragment = new RateAndReviewsFragment();
     Bundle args = new Bundle();
-    args.putLong(APP_ID, appId);
-    args.putString(APP_NAME, appName);
-    args.putString(STORE_NAME, storeName);
-    args.putString(PACKAGE_NAME, packageName);
-    args.putString(STORE_THEME, storeTheme);
+    args.putLong(BundleCons.APP_ID, appId);
+    args.putString(BundleCons.APP_NAME, appName);
+    args.putString(BundleCons.STORE_NAME, storeName);
+    args.putString(BundleCons.PACKAGE_NAME, packageName);
+    args.putString(BundleCons.STORE_THEME, storeTheme);
     fragment.setArguments(args);
     return fragment;
   }
@@ -91,11 +86,11 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
       String packageName, long reviewId) {
     RateAndReviewsFragment fragment = new RateAndReviewsFragment();
     Bundle args = new Bundle();
-    args.putLong(APP_ID, appId);
-    args.putString(APP_NAME, appName);
-    args.putString(STORE_NAME, storeName);
-    args.putString(PACKAGE_NAME, packageName);
-    args.putLong(REVIEW_ID, reviewId);
+    args.putLong(BundleCons.APP_ID, appId);
+    args.putString(BundleCons.APP_NAME, appName);
+    args.putString(BundleCons.STORE_NAME, storeName);
+    args.putString(BundleCons.PACKAGE_NAME, packageName);
+    args.putLong(BundleCons.REVIEW_ID, reviewId);
     fragment.setArguments(args);
     return fragment;
   }
@@ -136,12 +131,12 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
 
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
-    appId = args.getLong(APP_ID);
-    reviewId = args.getLong(REVIEW_ID);
-    packageName = args.getString(PACKAGE_NAME);
-    storeName = args.getString(STORE_NAME);
-    appName = args.getString(APP_NAME);
-    storeTheme = args.getString(STORE_THEME);
+    appId = args.getLong(BundleCons.APP_ID);
+    reviewId = args.getLong(BundleCons.REVIEW_ID);
+    packageName = args.getString(BundleCons.PACKAGE_NAME);
+    storeName = args.getString(BundleCons.STORE_NAME);
+    appName = args.getString(BundleCons.APP_NAME);
+    storeTheme = args.getString(BundleCons.STORE_THEME);
   }
 
   @Override public int getContentViewId() {
@@ -261,5 +256,17 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
         getAdapter().notifyItemRemoved(i);
       }
     }
+  }
+
+  /**
+   * Bundle of constants
+   */
+  @Partners protected static class BundleCons {
+    protected static final String APP_ID = "app_id";
+    protected static final String PACKAGE_NAME = "package_name";
+    protected static final String STORE_NAME = "store_name";
+    protected static final String APP_NAME = "app_name";
+    protected static final String REVIEW_ID = "review_id";
+    protected static final String STORE_THEME = "store_theme";
   }
 }

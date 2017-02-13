@@ -15,6 +15,7 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 import android.widget.ImageView;
+import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import com.bumptech.glide.Glide;
@@ -47,7 +48,7 @@ public class ImageLoader {
     Glide.with(Application.getContext()).load(url).placeholder(loadingPlaceHolder).into(imageView);
   }
 
-  public static void load(String url, ImageView imageView) {
+  @Partners public static void load(String url, ImageView imageView) {
     Glide.with(Application.getContext())
         .load(AptoideUtils.IconSizeU.getNewImageUrl(url))
         .into(imageView);

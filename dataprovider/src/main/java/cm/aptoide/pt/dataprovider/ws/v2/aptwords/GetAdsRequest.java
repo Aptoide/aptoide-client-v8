@@ -6,6 +6,7 @@
 package cm.aptoide.pt.dataprovider.ws.v2.aptwords;
 
 import android.text.TextUtils;
+import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.util.referrer.ReferrerUtils;
 import cm.aptoide.pt.dataprovider.ws.Api;
@@ -139,7 +140,7 @@ import rx.Observable;
         googlePlayServicesAvailable, oemid, mature);
   }
 
-  public static GetAdsRequest ofFirstInstall(String aptoideClientUUID,
+  @Partners public static GetAdsRequest ofFirstInstall(String aptoideClientUUID,
       boolean googlePlayServicesAvailable, String oemid, int numberOfAds, boolean mature) {
     return of(Location.firstinstall, numberOfAds, aptoideClientUUID, googlePlayServicesAvailable,
         oemid, mature);

@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
@@ -145,7 +146,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
     }
   }
 
-  protected void subscribedButtonListener() {
+  @Partners protected void subscribedButtonListener() {
     selectedButton = 0;
     viewPager.setCurrentItem(0);
     subscribedButton.setBackgroundResource(R.drawable.search_button_background);
@@ -154,7 +155,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
     everywhereButton.setBackgroundResource(0);
   }
 
-  protected Void everywhereButtonListener(boolean smoothScroll) {
+  @Partners protected Void everywhereButtonListener(boolean smoothScroll) {
     selectedButton = 1;
     viewPager.setCurrentItem(1, smoothScroll);
     everywhereButton.setBackgroundResource(R.drawable.search_button_background);
@@ -218,7 +219,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
     return null;
   }
 
-  protected void executeSearchRequests(String storeName, boolean create) {
+  @Partners protected void executeSearchRequests(String storeName, boolean create) {
     Analytics.Search.searchTerm(query);
 
     if (storeName != null) {
@@ -355,7 +356,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
     return R.id.search_results_layout;
   }
 
-  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+  @Partners @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     if (create) {
       executeSearchRequests(storeName, create);
     } else {
@@ -363,7 +364,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
     }
   }
 
-  protected static class BundleCons {
+  @Partners protected static class BundleCons {
 
     public static final String QUERY = "query";
     public static final String STORE_NAME = "storeName";

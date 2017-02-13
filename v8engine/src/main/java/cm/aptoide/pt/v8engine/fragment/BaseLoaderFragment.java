@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.v8engine.interfaces.LoadInterface;
 import cm.aptoide.pt.v8engine.layouthandler.LoaderLayoutHandler;
 import lombok.Getter;
@@ -38,7 +39,7 @@ public abstract class BaseLoaderFragment extends SupportV4BaseFragment implement
     registerReceiverForAccountManager();
   }
 
-  @CallSuper @Nullable @Override
+  @Partners @CallSuper @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     loaderLayoutHandler = createLoaderLayoutHandler();
@@ -73,7 +74,7 @@ public abstract class BaseLoaderFragment extends SupportV4BaseFragment implement
     }
   }
 
-  @CallSuper protected void finishLoading() {
+  @Partners @CallSuper protected void finishLoading() {
     if (loaderLayoutHandler != null) {
       loaderLayoutHandler.finishLoading();
     }
@@ -97,7 +98,7 @@ public abstract class BaseLoaderFragment extends SupportV4BaseFragment implement
     getContext().unregisterReceiver(receiver);
   }
 
-  @CallSuper protected void finishLoading(Throwable throwable) {
+  @Partners @CallSuper protected void finishLoading(Throwable throwable) {
     if (loaderLayoutHandler != null) {
       loaderLayoutHandler.finishLoading(throwable);
     }

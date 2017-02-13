@@ -26,6 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.util.UserCompleteData;
+import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
@@ -86,7 +87,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
     updateRepository = RepositoryFactory.getUpdateRepository();
   }
 
-  @Override public void bindViews(View view) {
+  @Partners @Override public void bindViews(View view) {
     super.bindViews(view);
     mNavigationView = (NavigationView) view.findViewById(R.id.nav_view);
     mDrawerLayout = (DrawerLayout) view.findViewById(R.id.drawer_layout);

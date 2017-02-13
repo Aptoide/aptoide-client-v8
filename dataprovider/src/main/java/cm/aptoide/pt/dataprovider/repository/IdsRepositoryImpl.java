@@ -8,6 +8,7 @@ package cm.aptoide.pt.dataprovider.repository;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.provider.Settings;
+import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
@@ -34,7 +35,7 @@ public class IdsRepositoryImpl implements IdsRepository, AptoideClientUUID {
     this.context = context;
   }
 
-  @Override public String getAptoideClientUUID() {
+  @Partners @Override public String getAptoideClientUUID() {
     if (!sharedPreferences.contains(APTOIDE_CLIENT_UUID)) {
       generateAptoideId(sharedPreferences);
     }

@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppVersionsRequest;
@@ -41,7 +42,6 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Oth
 import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Getter;
 
 /**
  * Created by sithengineer on 05/07/16.
@@ -50,9 +50,6 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
 
   private static final String TAG = OtherVersionsFragment.class.getSimpleName();
 
-  @Getter private static final String APP_NAME = "app_name";
-  @Getter private static final String APP_IMG_URL = "app_img_url";
-  @Getter private static final String APP_PACKAGE = "app_package";
   private final AptoideClientUUID aptoideClientUUID;
   // vars
   private String appName;
@@ -81,18 +78,18 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
       String appPackage) {
     OtherVersionsFragment fragment = new OtherVersionsFragment();
     Bundle args = new Bundle();
-    args.putString(APP_NAME, appName);
-    args.putString(APP_IMG_URL, appImgUrl);
-    args.putString(APP_PACKAGE, appPackage);
+    args.putString(BundleCons.APP_NAME, appName);
+    args.putString(BundleCons.APP_IMG_URL, appImgUrl);
+    args.putString(BundleCons.APP_PACKAGE, appPackage);
     fragment.setArguments(args);
     return fragment;
   }
 
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
-    appName = args.getString(APP_NAME);
-    appImgUrl = args.getString(APP_IMG_URL);
-    appPackge = args.getString(APP_PACKAGE);
+    appName = args.getString(BundleCons.APP_NAME);
+    appImgUrl = args.getString(BundleCons.APP_IMG_URL);
+    appPackge = args.getString(BundleCons.APP_PACKAGE);
   }
 
   @Override public int getContentViewId() {
@@ -110,7 +107,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
     super.onViewCreated(view, savedInstanceState);
   }
 
-  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+  @Partners @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     Logger.d(TAG, "Other versions should refresh? " + create);
 
     fetchOtherVersions(new ArrayList<>());
@@ -121,7 +118,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
     super.onResume();
   }
 
-  protected void fetchOtherVersions(List<String> storeNames) {
+  @Partners protected void fetchOtherVersions(List<String> storeNames) {
 
     final SuccessRequestListener<ListAppVersions> otherVersionsSuccessRequestListener =
         listAppVersions -> {
@@ -142,7 +139,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
     endlessRecyclerOnScrollListener.onLoadMore(false);
   }
 
-  protected void setHeader() {
+  @Partners protected void setHeader() {
     if (header != null) {
       header.setImage(appImgUrl);
       setTitle(appName);
@@ -252,5 +249,14 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
     private void setImage(String imgUrl) {
       ImageLoader.load(imgUrl, appIcon);
     }
+  }
+
+  /**
+   * Bundle of Constants
+   */
+  @Partners public class BundleCons {
+    public static final String APP_NAME = "app_name";
+    public static final String APP_IMG_URL = "app_img_url";
+    public static final String APP_PACKAGE = "app_package";
   }
 }
