@@ -1,0 +1,13 @@
+apply plugin: 'java'
+
+dependencies {
+  compile fileTree(dir: 'libs', include: ['*.jar'])
+
+  compile "io.reactivex:rxjava:${RXJAVA_VERSION}"
+  compile "org.projectlombok:lombok:${LOMBOK_VERSION}"
+  // Just for lombok not to complain
+  compile "org.glassfish:javax.annotation:${JAVAX_ANNOTATIONS_VERSION}"
+}
+
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
