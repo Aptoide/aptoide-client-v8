@@ -112,7 +112,7 @@ public class CreateUserActivity extends AccountPermissionsBaseActivity {
             .observeOn(AndroidSchedulers.mainThread())
             .doOnError(throwable -> showError(throwable))
             .doOnTerminate(() -> dismissProgressDialog())
-            .doOnCompleted(() -> showSuccessMessageAndNavigate()))
+            .doOnCompleted(() -> showSuccessMessageAndNavigateToLoggedInView()))
         .retry()
         .subscribe());
   }
@@ -151,7 +151,7 @@ public class CreateUserActivity extends AccountPermissionsBaseActivity {
     }
   }
 
-  private void showSuccessMessageAndNavigate() {
+  private void showSuccessMessageAndNavigateToLoggedInView() {
     ShowMessage.asSnack(content, cm.aptoide.accountmanager.R.string.user_created);
     if (Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
       startActivity(new Intent(this, LoggedInActivity.class));
@@ -175,7 +175,7 @@ public class CreateUserActivity extends AccountPermissionsBaseActivity {
     Uri avatarUrl = null;
     if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
       avatarUrl =
-          getPhotoFileUri(AccountPermissionsBaseActivity.createAvatarPhotoName(photoAvatar));
+          getPhotoFileUri(photoAvatar);
       avatarPath = fileUtils.getPathAlt(avatarUrl, getApplicationContext());
     } else if (requestCode == GALLERY_CODE && resultCode == RESULT_OK) {
       avatarUrl = data.getData();

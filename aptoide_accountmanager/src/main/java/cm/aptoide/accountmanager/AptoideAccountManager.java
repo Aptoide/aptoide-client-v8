@@ -62,7 +62,6 @@ public class AptoideAccountManager {
   private final LoginAvailability loginAvailability;
 
   private Analytics analytics;
-  private ILoginInterface callback;
 
   public AptoideAccountManager(Context applicationContext,
       AptoidePreferencesConfiguration configuration, SecureCoderDecoder secureCoderDecoder,
@@ -502,36 +501,5 @@ public class AptoideAccountManager {
     String getRepoAvatar();
 
     String getRepoDescription();
-  }
-
-  /**
-   * This interface is used to interact with Account Manager. It informs outsiders if login was
-   * made successfully or not and gives manager the user credentials
-   */
-  public interface ILoginInterface {
-
-    /**
-     * Called when logis is made successfully
-     */
-    void onLoginSuccess();
-
-    /**
-     * Called when the login fails
-     */
-    void onLoginFail(String reason);
-
-    /**
-     * Used to get user name inserted by user
-     *
-     * @return user name
-     */
-    String getIntroducedUserName();
-
-    /**
-     * Used to get password inserted by user
-     *
-     * @return password
-     */
-    String getIntroducedPassword();
   }
 }
