@@ -1,0 +1,62 @@
+package cm.aptoide.pt.shareapps.socket.example;
+
+import cm.aptoide.pt.shareapps.socket.entities.AndroidAppInfo;
+import cm.aptoide.pt.shareapps.socket.entities.Host;
+import cm.aptoide.pt.shareapps.socket.message.client.AptoideMessageClientSocket;
+import cm.aptoide.pt.shareapps.socket.message.messages.RequestPermissionToSend;
+import cm.aptoide.pt.shareapps.socket.message.server.AptoideMessageServerSocket;
+import java.io.File;
+import java.io.IOException;
+import java.net.Socket;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+/**
+ * Created by neuro on 29-01-2017.
+ */
+
+public class ExampleUsageMultiThread {
+
+  static final AtomicBoolean shouldRequestToSend = new AtomicBoolean(true);
+  private final static String LOCAL_FILE_NAME = "/tmp/a.mp4";
+  public static int MESSAGE_SERVER_PORT = 53531;
+
+  public static void main(String[] args) throws InterruptedException {
+
+    new AptoideMessageServerSocket(MESSAGE_SERVER_PORT).startAsync();
+
+    for (int i = 0; i < 20; i++) {
+      newAptoideMessageClientSocket().startAsync();
+    }
+  }
+
+  private static AptoideMessageClientSocket newAptoideMessageClientSocket() {
+    return new AptoideMessageClientSocket("localhost", MESSAGE_SERVER_PORT,
+        new ExampleMessageController()) {
+
+      @Override protected void onConnected(Socket socket) throws IOException {
+
+        if (shouldRequestToSend.getAndSet(false)) {
+          ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
+          service.schedule(() -> {
+            System.out.println("Sending first message: RequestPermissionToSend");
+            aptoideMessageController.send(new RequestPermissionToSend(
+                new Host(socket.getInetAddress().getHostAddress(), socket.getLocalPort()),
+                buildAppInfo()));
+            System.out.println("first message sent!");
+          }, 1, TimeUnit.SECONDS);
+        }
+
+        super.onConnected(socket);
+      }
+
+      private AndroidAppInfo buildAppInfo() {
+        File apk = new File(LOCAL_FILE_NAME);
+
+        return new AndroidAppInfo(apk);
+      }
+    };
+  }
+}
