@@ -166,11 +166,11 @@ public abstract class AccountPermissionsBaseActivity extends AccountBaseActivity
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
           Uri uriForFile = FileProvider.getUriForFile(context,
               Application.getConfiguration().getAppId() + ".provider", new File(getPhotoFileUri(
-                  AccountPermissionsBaseActivity.createAvatarPhotoName(photoAvatar)).getPath()));
+                  photoAvatar).getPath()));
           takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uriForFile);
         } else {
           takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-              getPhotoFileUri(AccountPermissionsBaseActivity.createAvatarPhotoName(photoAvatar)));
+              getPhotoFileUri(photoAvatar));
         }
         startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
       }
@@ -202,12 +202,6 @@ public abstract class AccountPermissionsBaseActivity extends AccountBaseActivity
     }
     avatar = storageDir;
     return Uri.fromFile(new File(storageDir.getPath() + File.separator + fileName));
-  }
-
-  protected static String createAvatarPhotoName(String avatar) {
-    //SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-mm-yyyy");
-    String output = avatar /*+ simpleDateFormat.toString()*/;
-    return output;
   }
 
   protected void checkAvatarRequirements(String avatarPath, Uri avatarUrl) {

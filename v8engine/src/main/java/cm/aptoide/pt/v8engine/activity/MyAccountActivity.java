@@ -83,9 +83,4 @@ public class MyAccountActivity extends GooglePlayServicesActivity {
       getSupportActionBar().setTitle("My Account");
     }
   }
-
-  @Override protected void onResume() {
-    super.onResume();
-    Logger.d(TAG, "onResume: ");
-  }
 }
