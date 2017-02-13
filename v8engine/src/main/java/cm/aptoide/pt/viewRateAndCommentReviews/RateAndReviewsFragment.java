@@ -261,12 +261,12 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   /**
    * Bundle of constants
    */
-  @Partners protected static class BundleCons {
-    protected static final String APP_ID = "app_id";
-    protected static final String PACKAGE_NAME = "package_name";
-    protected static final String STORE_NAME = "store_name";
-    protected static final String APP_NAME = "app_name";
-    protected static final String REVIEW_ID = "review_id";
-    protected static final String STORE_THEME = "store_theme";
+  @Partners public static class BundleCons {
+    public static final String APP_ID = "app_id";
+    public static final String PACKAGE_NAME = "package_name";
+    public static final String STORE_NAME = "store_name";
+    public static final String APP_NAME = "app_name";
+    public static final String REVIEW_ID = "review_id";
+    public static final String STORE_THEME = "store_theme";
   }
 }

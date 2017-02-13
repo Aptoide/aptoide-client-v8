@@ -403,7 +403,7 @@ public class DisplayableWidgetMapping {
     }
   }
 
-  @Partners @Nullable protected Displayable newDisplayable() {
+  @Partners @Nullable public Displayable newDisplayable() {
     try {
       return displayableClass.newInstance();
     } catch (Exception e) {
@@ -420,7 +420,7 @@ public class DisplayableWidgetMapping {
    *
    * @return displayableClass
    */
-  @Partners protected Class<? extends Displayable> getDisplayableClass() {
+  @Partners public Class<? extends Displayable> getDisplayableClass() {
     return displayableClass;
   }
 
@@ -429,7 +429,7 @@ public class DisplayableWidgetMapping {
    *
    * @return widgetClass
    */
-  @Partners protected Class<? extends Widget> getWidgetClass() {
+  @Partners public Class<? extends Widget> getWidgetClass() {
     return widgetClass;
   }
 
