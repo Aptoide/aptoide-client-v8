@@ -7,7 +7,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.SupportV4BaseFragment;
+import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import com.jakewharton.rxbinding.view.RxView;
 
 /**
@@ -21,6 +23,7 @@ public class AddressBookFragment extends SupportV4BaseFragment implements Addres
   private Button facebookSyncButton;
   private Button twitterSyncButton;
   private TextView dismissV;
+  private TextView about;
 
   public AddressBookFragment() {
 
@@ -41,10 +44,12 @@ public class AddressBookFragment extends SupportV4BaseFragment implements Addres
   @Override public void setupViews() {
     mActionsListener.getButtonsState();
     dismissV.setPaintFlags(dismissV.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+    about.setPaintFlags(about.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
     RxView.clicks(addressBookSyncButton).subscribe(click -> mActionsListener.syncAddressBook());
     RxView.clicks(facebookSyncButton).subscribe(click -> mActionsListener.syncFacebook());
     RxView.clicks(twitterSyncButton).subscribe(click -> mActionsListener.syncTwitter());
     RxView.clicks(dismissV).subscribe(click -> mActionsListener.finishViewClick());
+    RxView.clicks(about).subscribe(click -> mActionsListener.aboutClick());
   }
 
   @Override public void finishView() {
@@ -61,6 +66,17 @@ public class AddressBookFragment extends SupportV4BaseFragment implements Addres
 
   @Override public void changeFacebookState(boolean checked) {
     changeSyncState(checked, facebookSyncButton);
+  }
+
+  @Override public void showAboutFragment() {
+    ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
+        .newDescriptionFragment("About Address Book", getString(R.string.addressbook_data_about),
+            "default"));
+  }
+
+  @Override public void showSuccessFragment() {
+    ((FragmentShower) getContext()).pushFragmentV4(
+        V8Engine.getFragmentProvider().newSyncSuccessFragment());
   }
 
   private void changeSyncState(boolean checked, Button button) {
@@ -80,5 +96,6 @@ public class AddressBookFragment extends SupportV4BaseFragment implements Addres
     facebookSyncButton = (Button) view.findViewById(R.id.facebook_sync_button);
     twitterSyncButton = (Button) view.findViewById(R.id.twitter_sync_button);
     dismissV = (TextView) view.findViewById(R.id.addressbook_not_now);
+    about = (TextView) view.findViewById(R.id.addressbook_about);
   }
 }

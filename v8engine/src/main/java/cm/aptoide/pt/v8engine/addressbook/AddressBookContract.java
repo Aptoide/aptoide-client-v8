@@ -5,6 +5,7 @@ package cm.aptoide.pt.v8engine.addressbook;
  */
 public interface AddressBookContract {
   interface View {
+
     void finishView();
 
     void changeAddressBookState(boolean checked);
@@ -12,9 +13,14 @@ public interface AddressBookContract {
     void changeTwitterState(boolean checked);
 
     void changeFacebookState(boolean checked);
+
+    void showAboutFragment();
+
+    void showSuccessFragment();
   }
 
   interface UserActionsListener {
+
     void syncAddressBook();
 
     void syncTwitter();
@@ -24,5 +30,7 @@ public interface AddressBookContract {
     void getButtonsState();
 
     void finishViewClick();
+
+    void aboutClick();
   }
 }

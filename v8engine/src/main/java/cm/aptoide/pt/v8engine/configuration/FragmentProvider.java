@@ -126,4 +126,6 @@ public interface FragmentProvider {
   Fragment newCommentGridRecyclerFragmentUrl(CommentType commentType, String url);
 
   Fragment newAddressBookFragment();
+
+  Fragment newSyncSuccessFragment();
 }

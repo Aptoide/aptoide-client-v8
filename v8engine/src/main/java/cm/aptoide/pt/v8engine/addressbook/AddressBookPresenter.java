@@ -16,6 +16,7 @@ public class AddressBookPresenter implements AddressBookContract.UserActionsList
   @Override public void syncAddressBook() {
     ManagerPreferences.setAddressBookAsSynced();
     mAddressBookView.changeAddressBookState(true);
+    mAddressBookView.showSuccessFragment();
   }
 
   @Override public void syncTwitter() {
@@ -36,5 +37,9 @@ public class AddressBookPresenter implements AddressBookContract.UserActionsList
 
   @Override public void finishViewClick() {
     mAddressBookView.finishView();
+  }
+
+  @Override public void aboutClick() {
+    mAddressBookView.showAboutFragment();
   }
 }
