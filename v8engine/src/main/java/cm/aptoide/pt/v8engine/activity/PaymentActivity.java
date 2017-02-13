@@ -207,39 +207,16 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
 
       name.setText(otherPayment.getName());
       description.setText(otherPayment.getDescription());
-      switch (otherPayment.getStatus()) {
-        case USE:
-          paymentClicks.add(RxView.clicks(useButton)
-              .subscribeOn(AndroidSchedulers.mainThread())
-              .unsubscribeOn(AndroidSchedulers.mainThread())
-              .doOnNext(click -> usePaymentClick.call(otherPayment))
-              .subscribe(__ -> { /* does nothing */}, err -> {
-                CrashReport.getInstance().log(err);
-              }));
-          useButton.setVisibility(View.VISIBLE);
-          approving.setVisibility(View.GONE);
-          registerButton.setVisibility(View.GONE);
-          break;
-        case REGISTER:
-          paymentClicks.add(RxView.clicks(registerButton)
-              .subscribeOn(AndroidSchedulers.mainThread())
-              .unsubscribeOn(AndroidSchedulers.mainThread())
-              .doOnNext(click -> registerPaymentClick.call(otherPayment))
-              .subscribe(__ -> { /* does nothing */}, err -> {
-                CrashReport.getInstance().log(err);
-              }));
-          registerButton.setVisibility(View.VISIBLE);
-          approving.setVisibility(View.GONE);
-          useButton.setVisibility(View.GONE);
-          break;
-        case APPROVING:
-          approving.setVisibility(View.VISIBLE);
-          registerButton.setVisibility(View.GONE);
-          useButton.setVisibility(View.GONE);
-          break;
-        default:
-          throw new IllegalStateException("Invalid payment view model state");
-      }
+
+      paymentClicks.add(RxView.clicks(useButton)
+          .subscribeOn(AndroidSchedulers.mainThread())
+          .unsubscribeOn(AndroidSchedulers.mainThread())
+          .doOnNext(click -> usePaymentClick.call(otherPayment))
+          .subscribe());
+      useButton.setVisibility(View.VISIBLE);
+      approving.setVisibility(View.GONE);
+      registerButton.setVisibility(View.GONE);
+
       morePaymentsList.addView(view);
     }
   }

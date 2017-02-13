@@ -235,24 +235,7 @@ public class PaymentPresenter implements Presenter {
   private PaymentView.PaymentViewModel convertToPaymentViewModel(Payment payment) {
     return new PaymentView.PaymentViewModel(payment.getId(), payment.getName(),
         payment.getDescription(), payment.getPrice().getAmount(),
-        payment.getPrice().getCurrencySymbol(), getPaymentViewStatus(payment));
-  }
-
-  private PaymentView.PaymentViewModel.Status getPaymentViewStatus(Payment payment) {
-
-    if (!payment.isAuthorizationRequired()) {
-      return PaymentView.PaymentViewModel.Status.USE;
-    }
-
-    if (payment.getAuthorization() != null) {
-      if (payment.getAuthorization().isAuthorized()) {
-        return PaymentView.PaymentViewModel.Status.USE;
-      } else if (payment.getAuthorization().isPending()) {
-        return PaymentView.PaymentViewModel.Status.APPROVING;
-      }
-    }
-
-    return PaymentView.PaymentViewModel.Status.REGISTER;
+        payment.getPrice().getCurrencySymbol());
   }
 
   private void showSelectedPayment(Payment selectedPayment) {

@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.payment;
 
+import cm.aptoide.pt.v8engine.payment.exception.PaymentFailureException;
 import cm.aptoide.pt.v8engine.payment.products.AptoideProduct;
 import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationFactory;
 import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationRepository;
@@ -39,6 +40,35 @@ public class AptoidePay {
   public Observable<List<Payment>> availablePayments(AptoideProduct product) {
     return productRepository.getPayments(product)
         .flatMapObservable(payments -> getPaymentsWithAuthorizations(payments, payer.getId()));
+  }
+
+  public Completable initiate(Authorization authorization) {
+    if (authorization.isInitiated()) {
+      return Completable.complete();
+    }
+    return authorizationRepository.createPaymentAuthorization(authorization.getPaymentId());
+  }
+
+  public Observable<Authorization> getAuthorization(int paymentId) {
+    return authorizationRepository.getPaymentAuthorization(paymentId, payer.getId());
+  }
+
+  public Completable authorize(int paymentId) {
+    return authorizationRepository.saveAuthorization(
+        authorizationFactory.create(paymentId, Authorization.Status.PENDING, payer.getId()));
+  }
+
+  public Observable<PaymentConfirmation> getConfirmation(AptoideProduct product) {
+    return confirmationRepository.getPaymentConfirmation(product, payer.getId());
+  }
+
+  public Completable process(Payment payment) {
+    return Completable.defer(() -> {
+      if (isAuthorized(payment)) {
+        return payment.process();
+      }
+      return Completable.error(new PaymentFailureException("Payment not authorized."));
+    });
   }
 
   private Observable<List<Payment>> getPaymentsWithAuthorizations(List<Payment> payments,
@@ -86,27 +116,10 @@ public class AptoidePay {
     }).toList().map(success -> null);
   }
 
-  public Completable initiate(Authorization authorization) {
-    if (authorization.isInitiated()) {
-      return Completable.complete();
+  private boolean isAuthorized(Payment payment) {
+    if (payment.isAuthorizationRequired()) {
+      return payment.getAuthorization().isAuthorized();
     }
-    return authorizationRepository.createPaymentAuthorization(authorization.getPaymentId());
-  }
-
-  public Observable<Authorization> getAuthorization(int paymentId) {
-    return authorizationRepository.getPaymentAuthorization(paymentId, payer.getId());
-  }
-
-  public Completable authorize(int paymentId) {
-    return authorizationRepository.saveAuthorization(
-        authorizationFactory.create(paymentId, Authorization.Status.PENDING, payer.getId()));
-  }
-
-  public Observable<PaymentConfirmation> getConfirmation(AptoideProduct product) {
-    return confirmationRepository.getPaymentConfirmation(product, payer.getId());
-  }
-
-  public Completable process(Payment payment) {
-    return payment.process();
+    return true;
   }
 }

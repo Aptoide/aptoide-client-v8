@@ -64,16 +64,13 @@ public interface PaymentView extends View {
     private final String description;
     private final double price;
     private final String currency;
-    private final Status status;
 
-    public PaymentViewModel(int id, String name, String description, double price, String currency,
-        Status status) {
+    public PaymentViewModel(int id, String name, String description, double price, String currency) {
       this.id = id;
       this.name = name;
       this.description = description;
       this.price = price;
       this.currency = currency;
-      this.status = status;
     }
 
     public int getId() {
@@ -94,16 +91,6 @@ public interface PaymentView extends View {
 
     public String getCurrency() {
       return currency;
-    }
-
-    public Status getStatus() {
-      return status;
-    }
-
-    public enum Status {
-      REGISTER,
-      APPROVING,
-      USE
     }
   }
 }
