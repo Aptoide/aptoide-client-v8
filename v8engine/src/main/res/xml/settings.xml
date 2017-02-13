@@ -115,7 +115,9 @@
     <!--android:key="theme"-->
     <!--android:title="@string/theme"/>-->
   </PreferenceCategory>
-  <PreferenceCategory android:title="@string/root">
+  <PreferenceCategory
+      android:key="rootCategory"
+      android:title="@string/root">
     <CheckBoxPreference
         android:key="allowRoot"
         android:title="@string/allow_root"/>
