@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.v8engine.payment.AptoidePayment;
+import cm.aptoide.pt.v8engine.payment.Authorization;
+import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.payment.Price;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentCancellationException;
@@ -42,9 +44,9 @@ public class PayPalPayment extends AptoidePayment {
 
   public PayPalPayment(Context context, int id, String type, String name, String sign, Price price,
       PayPalConfiguration configuration, Product product, String description,
-      PaymentConfirmationRepository confirmationRepository, boolean requiresAuthorization) {
-    super(id, type, name, description, product, price, requiresAuthorization,
-        confirmationRepository);
+      PaymentConfirmationRepository confirmationRepository, Authorization authorization,
+      PaymentConfirmation confirmation) {
+    super(id, type, name, description, product, price, confirmationRepository, authorization, confirmation);
     this.context = context;
     this.configuration = configuration;
     this.confirmationRepository = confirmationRepository;

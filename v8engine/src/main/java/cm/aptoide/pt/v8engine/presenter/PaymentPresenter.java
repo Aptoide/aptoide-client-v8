@@ -90,7 +90,7 @@ public class PaymentPresenter implements Presenter {
                 case NEW:
                   view.hideLoading();
                   return Observable.empty();
-                case PENDING:
+                case PROCESSING:
                   view.showLoading();
                   return Observable.empty();
                 case COMPLETED:
@@ -172,10 +172,10 @@ public class PaymentPresenter implements Presenter {
     return view.registerPaymentSelection()
         .doOnNext(selection -> view.showLoading())
         .flatMap(paymentViewModel -> getSelectedPayment(getAllPayments(), paymentViewModel))
-        .map(payment -> payment.getAuthorization()).<Void>flatMap(authorization -> {
-          return aptoidePay.initiate(authorization)
+        .<Void>flatMap(payment -> {
+          return aptoidePay.initiate(payment)
               .observeOn(AndroidSchedulers.mainThread())
-              .doOnCompleted(() -> hideGlobalLoadingAndNavigateToAuthorizationView(authorization))
+              .doOnCompleted(() -> hideGlobalLoadingAndNavigateToAuthorizationView(payment.getAuthorization()))
               .toObservable();
         });
   }
@@ -233,23 +233,6 @@ public class PaymentPresenter implements Presenter {
         payment.getDescription(), payment.getPrice().getAmount(),
         payment.getPrice().getCurrencySymbol());
   }
-
-  //private PaymentView.PaymentViewModel.Status getPaymentViewStatus(Payment payment) {
-  //
-  //  if (!payment.isAuthorizationRequired()) {
-  //    return PaymentView.PaymentViewModel.Status.USE;
-  //  }
-  //
-  //  if (payment.getAuthorization() != null) {
-  //    if (payment.getAuthorization().isAuthorized()) {
-  //      return PaymentView.PaymentViewModel.Status.USE;
-  //    } else if (payment.getAuthorization().isPending()) {
-  //      return PaymentView.PaymentViewModel.Status.APPROVING;
-  //    }
-  //  }
-  //
-  //  return PaymentView.PaymentViewModel.Status.REGISTER;
-  //}
 
   private void showSelectedPayment(Payment selectedPayment) {
     this.selectedPayment = selectedPayment;

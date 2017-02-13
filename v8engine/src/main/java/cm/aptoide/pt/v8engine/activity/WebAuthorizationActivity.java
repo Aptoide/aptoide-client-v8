@@ -62,14 +62,12 @@ public class WebAuthorizationActivity extends ActivityView {
     if (getIntent().hasExtra(EXTRA_PAYMENT_ID) && getIntent().hasExtra(EXTRA_PRODUCT)) {
       paymentId = getIntent().getIntExtra(EXTRA_PAYMENT_ID, 0);
       final AptoideProduct product = getIntent().getParcelableExtra(EXTRA_PRODUCT);
-      final ProductRepository productRepository =
-          RepositoryFactory.getProductRepository(this, product);
-      final AptoideAccountManager instance =
-          ((V8Engine)getApplicationContext()).getAccountManager();
+      final AptoideAccountManager accountManager = ((V8Engine) getApplicationContext()).getAccountManager();
       aptoidePay = new AptoidePay(RepositoryFactory.getPaymentConfirmationRepository(this, product),
-          RepositoryFactory.getPaymentAuthorizationRepository(this), productRepository,
-          new PaymentAuthorizationFactory(this), new Payer(this, instance,
-          new AccountNavigator(this, instance)));
+          RepositoryFactory.getPaymentAuthorizationRepository(this),
+          new PaymentAuthorizationFactory(this),
+          new Payer(this, accountManager, new AccountNavigator(this, accountManager)),
+          RepositoryFactory.getPaymentRepository(this, product));
 
       webView = (WebView) findViewById(R.id.activity_boa_compra_authorization_web_view);
       webView.getSettings().setJavaScriptEnabled(true);

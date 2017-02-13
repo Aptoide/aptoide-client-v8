@@ -45,13 +45,9 @@ public class PaidAppProductRepository implements ProductRepository {
     });
   }
 
-  @Override public Single<List<Payment>> getPayments(AptoideProduct product) {
+  @Override public Single<List<PaymentServiceResponse>> getPayments(AptoideProduct product) {
     return getServerPaidAppPaymentServices(((PaidAppProduct) product).getAppId(), false,
-        ((PaidAppProduct) product).getStoreName(), true).toObservable()
-        .flatMapIterable(paymentServices -> paymentServices)
-        .map(paymentService -> paymentFactory.create(paymentService, product))
-        .toList()
-        .toSingle();
+        ((PaidAppProduct) product).getStoreName(), true);
   }
 
   private Single<List<PaymentServiceResponse>> getServerPaidAppPaymentServices(long appId,

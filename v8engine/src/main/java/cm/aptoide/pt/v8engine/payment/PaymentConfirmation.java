@@ -45,27 +45,10 @@ public class PaymentConfirmation {
     return status;
   }
 
-  public void setStatus(Status status) {
-    this.status = status;
-  }
-
-  public boolean isCompleted() {
-    return Status.COMPLETED.equals(status);
-  }
-
   public boolean isPending() {
     return Status.CREATED.equals(status)
         || Status.PROCESSING.equals(status)
         || Status.PENDING.equals(status);
-  }
-
-  public boolean isFailed() {
-    return Status.FAILED.equals(status)
-        || Status.CANCELED.equals(status);
-  }
-
-  public boolean isNew() {
-    return Status.NEW.equals(status);
   }
 
   public enum Status {

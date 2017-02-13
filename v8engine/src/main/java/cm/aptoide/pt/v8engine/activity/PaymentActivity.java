@@ -119,15 +119,14 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
     final AptoideProduct product = getIntent().getParcelableExtra(PRODUCT_EXTRA);
     final ProductRepository productRepository =
         RepositoryFactory.getProductRepository(this, product);
-    final AptoideAccountManager instance =
-        ((V8Engine)getApplicationContext()).getAccountManager();
-    final Payer payer = new Payer(this, instance,
-        new AccountNavigator(this, instance));
+    final AptoideAccountManager instance = ((V8Engine) getApplicationContext()).getAccountManager();
+    final Payer payer = new Payer(this, instance, new AccountNavigator(this, instance));
     attachPresenter(new PaymentPresenter(this,
-            new AptoidePay(RepositoryFactory.getPaymentConfirmationRepository(this, product),
-                RepositoryFactory.getPaymentAuthorizationRepository(this), productRepository,
-                new PaymentAuthorizationFactory(this), payer), product, payer, productRepository),
-        savedInstanceState);
+        new AptoidePay(RepositoryFactory.getPaymentConfirmationRepository(this, product),
+            RepositoryFactory.getPaymentAuthorizationRepository(this),
+            new PaymentAuthorizationFactory(this), payer,
+            RepositoryFactory.getPaymentRepository(this, product)), product, payer,
+        productRepository), savedInstanceState);
   }
 
   @Override protected void onDestroy() {

@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.repository;
 
+import cm.aptoide.pt.model.v3.PaymentServiceResponse;
 import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.Purchase;
 import cm.aptoide.pt.v8engine.payment.products.AptoideProduct;
@@ -18,5 +19,5 @@ public interface ProductRepository {
 
   Single<Purchase> getPurchase(AptoideProduct product);
 
-  Single<List<Payment>> getPayments(AptoideProduct product);
+  Single<List<PaymentServiceResponse>> getPayments(AptoideProduct product);
 }

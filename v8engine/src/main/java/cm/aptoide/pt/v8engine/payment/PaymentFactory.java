@@ -29,7 +29,8 @@ public class PaymentFactory {
     this.context = context;
   }
 
-  public Payment create(PaymentServiceResponse paymentService, Product product) {
+  public Payment create(PaymentServiceResponse paymentService, Product product,
+      Authorization authorization, PaymentConfirmation confirmation) {
     switch (paymentService.getShortName()) {
       case PAYPAL:
         return new PayPalPayment(context, paymentService.getId(), paymentService.getShortName(),
@@ -37,8 +38,8 @@ public class PaymentFactory {
             getPrice(paymentService.getPrice(), paymentService.getCurrency(),
                 paymentService.getTaxRate(), paymentService.getSign()), getPayPalConfiguration(),
             product, paymentService.getDescription(),
-            RepositoryFactory.getPaymentConfirmationRepository(context, product),
-            paymentService.isAuthorizationRequired());
+            RepositoryFactory.getPaymentConfirmationRepository(context, product), authorization,
+            confirmation);
       case BOACOMPRA:
       case BOACOMPRAGOLD:
       case DUMMY:
@@ -46,8 +47,8 @@ public class PaymentFactory {
             paymentService.getName(), paymentService.getDescription(), product,
             getPrice(paymentService.getPrice(), paymentService.getCurrency(),
                 paymentService.getTaxRate(), paymentService.getSign()),
-            paymentService.isAuthorizationRequired(),
-            RepositoryFactory.getPaymentConfirmationRepository(context, product));
+            RepositoryFactory.getPaymentConfirmationRepository(context, product), authorization,
+            confirmation);
       default:
         throw new IllegalArgumentException(
             "Payment not supported: " + paymentService.getShortName());

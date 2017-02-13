@@ -30,17 +30,13 @@ public interface Payment {
 
   PaymentConfirmation getConfirmation();
 
-  void setAuthorization(Authorization authorization);
-
-  void setConfirmation(PaymentConfirmation confirmation);
-
-  boolean isAuthorizationRequired();
-
   Completable process();
 
   enum Status {
     NEW,
+    PROCESSING,
     COMPLETED,
-    PENDING
+    FAILED,
+    CANCELLED
   }
 }

@@ -42,15 +42,10 @@ public class InAppBillingProductRepository implements ProductRepository {
         .subscribeOn(Schedulers.io());
   }
 
-  @Override public Single<List<Payment>> getPayments(AptoideProduct product) {
+  @Override public Single<List<PaymentServiceResponse>> getPayments(AptoideProduct product) {
     return getServerInAppBillingPaymentServices(((InAppBillingProduct) product).getApiVersion(),
         ((InAppBillingProduct) product).getPackageName(), ((InAppBillingProduct) product).getSku(),
-        ((InAppBillingProduct) product).getType()).flatMapIterable(
-        paymentServices -> paymentServices)
-        .map(paymentService -> paymentFactory.create(paymentService, product))
-        .toList()
-        .toSingle()
-        .subscribeOn(Schedulers.io());
+        ((InAppBillingProduct) product).getType()).toSingle();
   }
 
   private Observable<List<PaymentServiceResponse>> getServerInAppBillingPaymentServices(

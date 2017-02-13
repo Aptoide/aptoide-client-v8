@@ -25,6 +25,8 @@ import cm.aptoide.pt.iab.InAppBillingSerializer;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.activity.AccountNavigator;
+import cm.aptoide.pt.v8engine.payment.Payer;
 import cm.aptoide.pt.v8engine.payment.PaymentFactory;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.PurchaseFactory;
@@ -79,6 +81,14 @@ public final class RepositoryFactory {
     }
   }
 
+  public static PaymentRepository getPaymentRepository(Context context, AptoideProduct product) {
+    return new PaymentRepository(getProductRepository(context, product),
+        getPaymentConfirmationRepository(context, product),
+        getPaymentAuthorizationRepository(context), new PaymentAuthorizationFactory(context),
+        new PaymentFactory(context), new Payer(context, getAccountManager(context),
+        new AccountNavigator(context, getAccountManager(context))));
+  }
+
   public static AppRepository getAppRepository(Context context) {
     return new AppRepository(getNetworkOperatorManager(context), getAccountManager(context),
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
@@ -122,6 +132,6 @@ public final class RepositoryFactory {
   }
 
   private static AptoideAccountManager getAccountManager(Context context) {
-    return ((V8Engine)context.getApplicationContext()).getAccountManager();
+    return ((V8Engine) context.getApplicationContext()).getAccountManager();
   }
 }

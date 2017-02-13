@@ -21,22 +21,21 @@ public class AptoidePayment implements Payment {
   private final Product product;
   private final Price price;
   private final String description;
-  private final boolean requiresAuthorization;
-
-  private Authorization authorization;
-  private PaymentConfirmation confirmation;
+  private final Authorization authorization;
+  private final PaymentConfirmation confirmation;
 
   public AptoidePayment(int id, String type, String name, String description, Product product,
-      Price price, boolean requiresAuthorization,
-      PaymentConfirmationRepository confirmationRepository) {
+      Price price, PaymentConfirmationRepository confirmationRepository, Authorization authorization,
+      PaymentConfirmation confirmation) {
     this.id = id;
     this.type = type;
     this.name = name;
     this.product = product;
     this.price = price;
     this.description = description;
-    this.requiresAuthorization = requiresAuthorization;
     this.confirmationRepository = confirmationRepository;
+    this.authorization = authorization;
+    this.confirmation = confirmation;
   }
 
   @Override public int getId() {
@@ -69,31 +68,25 @@ public class AptoidePayment implements Payment {
 
   @Override public Status getStatus() {
 
-    if (confirmation.isCompleted()) {
-      return Status.COMPLETED;
+    switch (confirmation.getStatus()) {
+      case COMPLETED:
+        return Status.COMPLETED;
+      case CREATED:
+      case PENDING:
+      case PROCESSING:
+        return Status.PROCESSING;
+      case CANCELED:
+        return Status.CANCELLED;
+      case FAILED:
+        return Status.FAILED;
+      case NEW:
+      default:
+        return Status.NEW;
     }
-
-    if (confirmation.isPending() || authorization.isPending()) {
-      return Status.PENDING;
-    }
-
-    return Status.NEW;
-  }
-
-  @Override public void setAuthorization(Authorization authorization) {
-    this.authorization = authorization;
   }
 
   @Override public PaymentConfirmation getConfirmation() {
     return confirmation;
-  }
-
-  @Override public void setConfirmation(PaymentConfirmation confirmation) {
-    this.confirmation = confirmation;
-  }
-
-  @Override public boolean isAuthorizationRequired() {
-    return requiresAuthorization;
   }
 
   @Override public Completable process() {
