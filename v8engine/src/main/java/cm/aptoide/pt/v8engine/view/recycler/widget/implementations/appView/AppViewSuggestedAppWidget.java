@@ -1,10 +1,6 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 04/08/2016.
- */
-
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,6 +12,7 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewSuggestedAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import com.jakewharton.rxbinding.view.RxView;
 
 /**
  * Created by neuro on 04-08-2016.
@@ -38,19 +35,17 @@ public class AppViewSuggestedAppWidget extends Widget<AppViewSuggestedAppDisplay
     descriptionTextView = (TextView) itemView.findViewById(R.id.description);
   }
 
-  @Override public void unbindView() {
-
-  }
-
   @Override public void bindView(AppViewSuggestedAppDisplayable displayable) {
     MinimalAd pojo = displayable.getPojo();
-    ImageLoader.load(pojo.getIconPath(), iconImageView);
+
+    final FragmentActivity context = getContext();
+    ImageLoader.with(context).load(pojo.getIconPath(), iconImageView);
     appNameTextView.setText(pojo.getName());
     descriptionTextView.setText(AptoideUtils.HtmlU.parse(pojo.getDescription()));
 
-    layout.setOnClickListener(v -> {
-      ((FragmentShower) v.getContext()).pushFragmentV4(
-          V8Engine.getFragmentProvider().newAppViewFragment(pojo));
-    });
+    final FragmentShower fragmentShower = (FragmentShower) context;
+    compositeSubscription.add(RxView.clicks(layout)
+        .subscribe(__ -> fragmentShower.pushFragmentV4(
+            V8Engine.getFragmentProvider().newAppViewFragment(pojo))));
   }
 }

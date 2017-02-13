@@ -33,7 +33,7 @@ public class RateAndReviewsPresenter implements Presenter {
     this.schedulerProvider = schedulerProvider;
 
     String aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext()).getAptoideClientUUID();
+        DataProvider.getContext()).getUniqueIdentifier();
 
     request = ListReviewsRequest.of(storeName, packageName, AptoideAccountManager.getAccessToken(),
         aptoideClientUUID);

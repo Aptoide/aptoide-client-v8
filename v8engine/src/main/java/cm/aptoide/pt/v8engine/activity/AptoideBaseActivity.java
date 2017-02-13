@@ -21,6 +21,7 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -31,7 +32,6 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.interfaces.UiComponentBasics;
-import lombok.Getter;
 import rx.functions.Action0;
 
 /**
@@ -43,7 +43,7 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
   private static final String TAG = AptoideBaseActivity.class.getName();
   private static final int ACCESS_TO_EXTERNAL_FS_REQUEST_ID = 61;
   private static final int ACCESS_TO_ACCOUNTS_REQUEST_ID = 62;
-  @Getter private boolean _resumed = false;
+  private boolean _resumed = false;
   @Nullable private Action0 toRunWhenAccessToFileSystemIsGranted;
   @Nullable private Action0 toRunWhenAccessToFileSystemIsDenied;
   @Nullable private Action0 toRunWhenAccessToAccountsIsGranted;
@@ -51,7 +51,11 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
   @Nullable private Action0 toRunWhenDownloadAccessIsGranted;
   @Nullable private Action0 toRunWhenDownloadAccessIsDenied;
 
+  private NavigationManagerV4 navManager;
+
   @Override protected void onCreate(Bundle savedInstanceState) {
+
+    navManager = NavigationManagerV4.Builder.buildWith(this);
 
     super.onCreate(savedInstanceState);
     // https://fabric.io/downloads/gradle/ndk
@@ -116,13 +120,6 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
     Analytics.Lifecycle.Activity.onResume(this);
   }
 
-  //
-  // code to support android M permission system
-  //
-  // android 6 permission system
-  // consider using https://github.com/hotchemi/PermissionsDispatcher
-  //
-
   @TargetApi(Build.VERSION_CODES.M) @Override
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
       @NonNull int[] grantResults) {
@@ -171,6 +168,21 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         break;
     }
+  }
+
+  public boolean is_resumed() {
+    return _resumed;
+  }
+
+  //
+  // code to support android M permission system
+  //
+  // android 6 permission system
+  // consider using https://github.com/hotchemi/PermissionsDispatcher
+  //
+
+  public NavigationManagerV4 getNavigationManager() {
+    return navManager;
   }
 
   /**

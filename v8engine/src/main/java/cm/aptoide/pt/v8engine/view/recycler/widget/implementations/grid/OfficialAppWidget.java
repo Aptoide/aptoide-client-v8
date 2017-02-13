@@ -26,7 +26,6 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
-import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.Translator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.OfficialAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -111,7 +110,7 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
     this.appSize.setText(String.format(context.getString(R.string.app_size),
         AptoideUtils.StringU.formatBytes(appData.getFile().getFilesize(), false)));
 
-    ImageLoader.load(appData.getIcon(), this.appImage);
+    ImageLoader.with(context).load(appData.getIcon(), this.appImage);
 
     // check if app is installed. if it is, show open button
 
@@ -126,8 +125,7 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
       installButton.setBackgroundDrawable(d);
     }
 
-    installButton.setText(
-        getContext().getString(isAppInstalled ? R.string.open : R.string.install));
+    installButton.setText(context.getString(isAppInstalled ? R.string.open : R.string.install));
 
     compositeSubscription.add(RxView.clicks(installButton).subscribe(a -> {
       if (isAppInstalled) {
@@ -137,7 +135,7 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
         Fragment appView = V8Engine.getFragmentProvider()
             .newAppViewFragment(appData.getPackageName(),
                 AppViewFragment.OpenType.OPEN_AND_INSTALL);
-        FragmentUtils.replaceFragmentV4(this.getContext(), appView);
+        getNavigationManager().navigateTo(appView);
       }
     }, err -> {
       CrashReport.getInstance().log(err);

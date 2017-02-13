@@ -119,7 +119,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     if (create || getStore == null) {
       GetStoreRequest.of(StoreUtils.getStoreCredentials(storeName), storeContext,
-          AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
+          AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
           .observe(refresh)
           .observeOn(AndroidSchedulers.mainThread())
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
@@ -152,10 +152,10 @@ public class StoreFragment extends BasePagerToolbarFragment {
   }
 
   @Override public void onDestroyView() {
-    super.onDestroyView();
     if (storeTheme != null && !storeContext.equals(StoreContext.store)) {
       ThemeUtils.setAptoideTheme(getActivity());
     }
+    super.onDestroyView();
   }
 
   @Override protected void setupViewPager() {
@@ -283,7 +283,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   }
 
   protected void setupSearch(Menu menu) {
-    SearchUtils.setupInsideStoreSearchView(menu, getActivity(), storeName);
+    SearchUtils.setupInsideStoreSearchView(menu, getNavigationManager(), storeName);
   }
 
   @Override public void setupViews() {

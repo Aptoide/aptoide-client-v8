@@ -27,10 +27,6 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
     title = (TextView) itemView.findViewById(R.id.title);
   }
 
-  @Override public void unbindView() {
-
-  }
-
   @Override public void bindView(FooterRowDisplayable displayable) {
     String pojo = displayable.getPojo();
     title.setText(pojo);

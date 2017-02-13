@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.timeline;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -185,10 +186,13 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
     likeUserPreviewView.requestLayout();
 
     if (user != null) {
+      final FragmentActivity context = getContext();
       if (user.getAvatar() != null) {
-        ImageLoader.loadWithShadowCircleTransform(user.getAvatar(), likeUserPreviewIcon);
+        ImageLoader.with(context)
+            .loadWithShadowCircleTransform(user.getAvatar(), likeUserPreviewIcon);
       } else if (user.getStore().getAvatar() != null) {
-        ImageLoader.loadWithShadowCircleTransform(user.getStore().getAvatar(), likeUserPreviewIcon);
+        ImageLoader.with(context)
+            .loadWithShadowCircleTransform(user.getStore().getAvatar(), likeUserPreviewIcon);
       }
       likePreviewContainer.addView(likeUserPreviewView);
       marginOfTheNextLikePreview -= 20;

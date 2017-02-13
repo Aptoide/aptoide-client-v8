@@ -54,8 +54,6 @@ import rx.functions.Action1;
 public class CommentListFragment extends GridRecyclerSwipeFragment
     implements CommentDialogCallbackContract {
 
-  //private static final String TAG = StoreGridRecyclerFragment.class.getName();
-
   //
   // consts
   //
@@ -196,7 +194,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   }
 
   void caseListSocialTimelineComments(boolean refresh) {
-    String aptoideClientUuid = aptoideClientUUID.getAptoideClientUUID();
+    String aptoideClientUuid = aptoideClientUUID.getUniqueIdentifier();
 
     ListCommentsRequest listCommentsRequest =
         ListCommentsRequest.ofTimeline(url, refresh, elementIdAsString,
@@ -233,7 +231,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   void caseListStoreComments(String url, BaseRequestWithStore.StoreCredentials storeCredentials,
       boolean refresh) {
 
-    String aptoideClientUuid = aptoideClientUUID.getAptoideClientUUID();
+    String aptoideClientUuid = aptoideClientUUID.getUniqueIdentifier();
 
     ListCommentsRequest listCommentsRequest =
         ListCommentsRequest.ofStoreAction(url, refresh, storeCredentials,

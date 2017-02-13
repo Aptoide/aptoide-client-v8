@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.timeline;
 
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.ImageView;
@@ -62,21 +63,22 @@ public class SimilarWidget extends CardWidget<SimilarDisplayable> {
 
   @Override public void bindView(SimilarDisplayable displayable) {
     super.bindView(displayable);
-    title.setText(displayable.getStyledTitle(getContext()));
-    subtitle.setText(displayable.getTimeSinceRecommendation(getContext()));
+    final FragmentActivity context = getContext();
+    title.setText(displayable.getStyledTitle(context));
+    subtitle.setText(displayable.getTimeSinceRecommendation(context));
 
     setCardViewMargin(displayable, cardView);
 
-    ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarResource(), image);
+    ImageLoader.with(context).loadWithShadowCircleTransform(displayable.getAvatarResource(), image);
 
-    ImageLoader.load(displayable.getAppIcon(), appIcon);
+    ImageLoader.with(context).load(displayable.getAppIcon(), appIcon);
 
     appName.setText(displayable.getAppName());
 
-    similarApps.setText(displayable.getSimilarAppsText(getContext()));
+    similarApps.setText(displayable.getSimilarAppsText(context));
 
     getApp.setVisibility(View.VISIBLE);
-    getApp.setText(displayable.getAppText(getContext()));
+    getApp.setText(displayable.getAppText(context));
     cardContent.setOnClickListener(view -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
 
@@ -91,7 +93,7 @@ public class SimilarWidget extends CardWidget<SimilarDisplayable> {
               .similar_to(displayable.getSimilarToAppPackageName())
               .build())
           .build(), TimelineClickEvent.OPEN_APP);
-      ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
+      ((FragmentShower) context).pushFragmentV4(V8Engine.getFragmentProvider()
           .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
     });
   }

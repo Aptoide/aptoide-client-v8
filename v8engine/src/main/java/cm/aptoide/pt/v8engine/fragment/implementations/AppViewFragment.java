@@ -386,7 +386,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     super.onCreateOptionsMenu(menu, inflater);
     this.menu = menu;
     inflater.inflate(R.menu.menu_appview_fragment, menu);
-    SearchUtils.setupGlobalSearchView(menu, getActivity());
+    SearchUtils.setupGlobalSearchView(menu, getNavigationManager());
     uninstallMenuItem = menu.findItem(R.id.menu_uninstall);
   }
 
@@ -807,24 +807,19 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       String headerImageUrl = app.getGraphic();
       List<GetAppMeta.Media.Screenshot> screenshots = app.getMedia().getScreenshots();
 
-      //			final Drawable colorDrawable = new ColorDrawable(Color.argb(255, 0, 0, 0));
-
+      final Context context = getContext();
       if (!TextUtils.isEmpty(headerImageUrl)) {
-        ImageLoader.load(app.getGraphic(), R.drawable.app_view_header_gradient, featuredGraphic);
-        //				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        //					((FrameLayout)featuredGraphic.getParent()).setForeground(colorDrawable);
-        //				}
+        ImageLoader.with(context)
+            .load(app.getGraphic(), R.drawable.app_view_header_gradient, featuredGraphic);
       } else if (screenshots != null && screenshots.size() > 0 && !TextUtils.isEmpty(
           screenshots.get(0).getUrl())) {
-        ImageLoader.load(screenshots.get(0).getUrl(), R.drawable.app_view_header_gradient,
-            featuredGraphic);
-        //				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        //					((FrameLayout) featuredGraphic.getParent()).setForeground(colorDrawable);
-        //				}
+        ImageLoader.with(context)
+            .load(screenshots.get(0).getUrl(), R.drawable.app_view_header_gradient,
+                featuredGraphic);
       }
 
       if (app.getIcon() != null) {
-        ImageLoader.load(getApp.getNodes().getMeta().getData().getIcon(), appIcon);
+        ImageLoader.with(context).load(getApp.getNodes().getMeta().getData().getIcon(), appIcon);
       }
 
       collapsingToolbar.setTitle(app.getName());
@@ -896,7 +891,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
           break;
       }
 
-      ImageLoader.load(badgeResId, badge);
+      ImageLoader.with(context).load(badgeResId, badge);
       badgeText.setText(badgeMessageId);
 
       Analytics.ViewedApplication.view(app.getPackageName(),

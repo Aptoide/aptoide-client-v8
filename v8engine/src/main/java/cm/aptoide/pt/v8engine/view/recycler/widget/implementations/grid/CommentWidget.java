@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 import android.os.Build;
 import android.support.annotation.ColorRes;
 import android.support.annotation.Dimension;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -50,12 +51,14 @@ public class CommentWidget extends Widget<CommentDisplayable> {
   @Override public void bindView(CommentDisplayable displayable) {
     Comment comment = displayable.getComment();
 
-    ImageLoader.loadWithCircleTransformAndPlaceHolderAvatarSize(comment.getUser().getAvatar(),
-        userAvatar, R.drawable.layer_1);
+    final FragmentActivity context = getContext();
+    ImageLoader.with(context)
+        .loadWithCircleTransformAndPlaceHolderAvatarSize(comment.getUser().getAvatar(), userAvatar,
+            R.drawable.layer_1);
     userName.setText(comment.getUser().getName());
 
     String date = AptoideUtils.DateTimeU.getInstance()
-        .getTimeDiffString(getContext(), comment.getAdded().getTime());
+        .getTimeDiffString(context, comment.getAdded().getTime());
     datePos1.setText(date);
     datePos2.setText(date);
 
@@ -74,11 +77,14 @@ public class CommentWidget extends Widget<CommentDisplayable> {
 
     // switch background color according to level
     @ColorRes int bgColor = (complexComment.getLevel() == 1) ? R.color.white : R.color.comment_gray;
+    final FragmentActivity context = getContext();
+    int color;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      outerLayout.setBackgroundColor(getContext().getColor(bgColor));
+      color = context.getColor(bgColor);
     } else {
-      outerLayout.setBackgroundColor(getContext().getResources().getColor(bgColor));
+      color = context.getResources().getColor(bgColor);
     }
+    outerLayout.setBackgroundColor(color);
 
     // set left/start margin width in default comment
     setLayoutLeftPadding(complexComment);

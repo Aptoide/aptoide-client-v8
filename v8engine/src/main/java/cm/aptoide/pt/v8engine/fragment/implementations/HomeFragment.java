@@ -43,7 +43,6 @@ import cm.aptoide.pt.v8engine.interfaces.DrawerFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.UpdateRepository;
-import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.view.BadgeView;
 import com.trello.rxlifecycle.android.FragmentEvent;
@@ -88,6 +87,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
 
   @Override public void bindViews(View view) {
     super.bindViews(view);
+
     mNavigationView = (NavigationView) view.findViewById(R.id.nav_view);
     mDrawerLayout = (DrawerLayout) view.findViewById(R.id.drawer_layout);
 
@@ -116,19 +116,9 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
       userEmail.setText(userCompleteData.getUserEmail());
       userUsername.setText(userCompleteData.getUserName());
 
-      ImageLoader.loadWithCircleTransformAndPlaceHolder(userCompleteData.getUserAvatar(),
-          userAvatarImage, R.drawable.user_account_white);
-
-      //String userAvatarUri = userInfo.getUserAvatar();
-      //if (URLUtil.isValidUrl(userAvatarUri)) {
-      //  ImageLoader.loadWithCircleTransformAndPlaceHolderAvatarSize(
-      //      userAvatarUri,
-      //      userAvatarImage,
-      //      R.drawable.ic_user_icon
-      //  );
-      //} else {
-      //  userAvatarImage.setImageResource(R.drawable.ic_user_icon);
-      //}
+      ImageLoader.with(getContext())
+          .loadWithCircleTransformAndPlaceHolder(userCompleteData.getUserAvatar(), userAvatarImage,
+              R.drawable.user_account_white);
 
       return;
     }
@@ -139,7 +129,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
     userEmail.setVisibility(View.GONE);
     userUsername.setVisibility(View.GONE);
 
-    ImageLoader.load(R.drawable.user_account_white, userAvatarImage);
+    ImageLoader.with(getContext()).load(R.drawable.user_account_white, userAvatarImage);
   }
 
   @Nullable @Override
@@ -169,13 +159,6 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
         break;
       }
     }
-
-    //DeprecatedDatabase.UpdatesQ.getAll(realm, false)
-    //    .asObservable()
-    //    .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-    //    .subscribe(updates -> {
-    //      refreshUpdatesBadge(updates.size());
-    //    });
 
     updateRepository.getNonExcludedUpdates()
         .map(updates -> updates.size())
@@ -217,7 +200,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
   }
 
   @Override protected void setupSearch(Menu menu) {
-    SearchUtils.setupGlobalSearchView(menu, getActivity());
+    SearchUtils.setupGlobalSearchView(menu, getNavigationManager());
   }
 
   @Override public void setupViews() {
@@ -291,25 +274,13 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
   }
 
   private void openBackupApps() {
-    //Installed installedBackupApps =
-    //    DeprecatedDatabase.InstalledQ.get(BACKUP_APPS_PACKAGE_NAME, realm);
-    //if (installedBackupApps == null) {
-    //  FragmentUtils.replaceFragmentV4(this.getActivity(),
-    //      V8Engine.getFragmentProvider().newAppViewFragment(BACKUP_APPS_PACKAGE_NAME,
-    //          AppViewFragment.OpenType.OPEN_ONLY));
-    //} else {
-    //  Intent i =
-    //      getContext().getPackageManager().getLaunchIntentForPackage(BACKUP_APPS_PACKAGE_NAME);
-    //  startActivity(i);
-    //}
-
     InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
     installedAccessor.get(BACKUP_APPS_PACKAGE_NAME)
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .subscribe(installed -> {
           if (installed == null) {
-            FragmentUtils.replaceFragmentV4(this.getActivity(), V8Engine.getFragmentProvider()
+            getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
                 .newAppViewFragment(BACKUP_APPS_PACKAGE_NAME, AppViewFragment.OpenType.OPEN_ONLY));
           } else {
             Intent i = getContext().getPackageManager()
@@ -331,15 +302,6 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
 
   private void openSocialLink(String packageName, String socialUrl, String pageTitle,
       Uri uriToOpenApp) {
-    //Installed installedFacebook = DeprecatedDatabase.InstalledQ.get(packageName, realm);
-    //if (installedFacebook == null) {
-    //  ((FragmentShower) getActivity()).pushFragmentV4(
-    //      V8Engine.getFragmentProvider().newSocialFragment(socialUrl, pageTitle));
-    //} else {
-    //  Intent sharingIntent = new Intent(Intent.ACTION_VIEW, uriToOpenApp);
-    //  getContext().startActivity(sharingIntent);
-    //}
-
     InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
     installedAccessor.get(packageName)
         .observeOn(AndroidSchedulers.mainThread())

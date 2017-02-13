@@ -60,7 +60,7 @@ public abstract class BaseLoaderToolbarFragment extends BaseLoaderFragment {
   }
 
   @CallSuper @Override public void onDestroyView() {
-    super.onDestroyView();
     toolbar = null;
+    super.onDestroyView();
   }
 }

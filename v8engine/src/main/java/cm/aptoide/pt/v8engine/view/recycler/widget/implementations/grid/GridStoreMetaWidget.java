@@ -20,7 +20,7 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
-import cm.aptoide.pt.imageloader.CircleTransform;
+import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -29,7 +29,6 @@ import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreMetaDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
-import com.bumptech.glide.Glide;
 import com.jakewharton.rxbinding.view.RxView;
 import java.text.NumberFormat;
 import java.util.List;
@@ -80,10 +79,6 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
     twitterButton = (ImageButton) itemView.findViewById(R.id.twitter_button);
   }
 
-  @Override public void unbindView() {
-
-  }
-
   @Override public void bindView(GridStoreMetaDisplayable displayable) {
 
     final GetStoreMeta getStoreMeta = displayable.getPojo();
@@ -100,7 +95,9 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
 
     updateSubscribeButtonText(isStoreSubscribed);
     compositeSubscription.add(RxView.clicks(subscribeButton)
-        .subscribe(handleSubscriptionLogic(new StoreWrapper(store, isStoreSubscribed))));
+        .subscribe(handleSubscriptionLogic(new StoreWrapper(store, isStoreSubscribed)), err -> {
+          CrashReport.getInstance().log(err);
+        }));
 
     List<cm.aptoide.pt.model.v7.store.Store.SocialChannel> socialChannels =
         store.getSocialChannels();
@@ -130,16 +127,9 @@ public class GridStoreMetaWidget extends Widget<GridStoreMetaDisplayable> {
 
   private void showStoreImage(cm.aptoide.pt.model.v7.store.Store store, Context context) {
     if (TextUtils.isEmpty(store.getAvatar())) {
-      Glide.with(context)
-          .fromResource()
-          .load(R.drawable.ic_avatar_apps)
-          .transform(new CircleTransform(context))
-          .into(image);
+      ImageLoader.with(context).loadUsingCircleTransform(R.drawable.ic_avatar_apps, image);
     } else {
-      Glide.with(context)
-          .load(store.getAvatar())
-          .transform(new CircleTransform(context))
-          .into(image);
+      ImageLoader.with(context).loadUsingCircleTransform(store.getAvatar(), image);
     }
   }
 

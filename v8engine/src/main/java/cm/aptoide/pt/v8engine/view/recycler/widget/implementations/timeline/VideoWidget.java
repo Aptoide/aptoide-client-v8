@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.timeline;
 
 import android.graphics.Typeface;
 import android.os.Build;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.Button;
@@ -66,29 +67,30 @@ public class VideoWidget extends CardWidget<VideoDisplayable> {
 
   @Override public void bindView(VideoDisplayable displayable) {
     super.bindView(displayable);
+    final FragmentActivity context = getContext();
     Typeface typeFace =
-        Typeface.createFromAsset(getContext().getAssets(), "fonts/DroidSerif-Regular.ttf");
+        Typeface.createFromAsset(context.getAssets(), "fonts/DroidSerif-Regular.ttf");
     title.setText(displayable.getTitle());
-    subtitle.setText(displayable.getTimeSinceLastUpdate(getContext()));
+    subtitle.setText(displayable.getTimeSinceLastUpdate(context));
     videoTitle.setTypeface(typeFace);
     videoTitle.setText(displayable.getVideoTitle());
     setCardViewMargin(displayable, cardView);
-    ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
-    ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
+    ImageLoader.with(context).loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
+    ImageLoader.with(context).load(displayable.getThumbnailUrl(), thumbnail);
     play_button.setVisibility(View.VISIBLE);
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       media_layout.setForeground(
-          getContext().getResources().getDrawable(R.color.overlay_black, getContext().getTheme()));
+          context.getResources().getDrawable(R.color.overlay_black, context.getTheme()));
     } else {
-      media_layout.setForeground(getContext().getResources().getDrawable(R.color.overlay_black));
+      media_layout.setForeground(context.getResources().getDrawable(R.color.overlay_black));
     }
 
     media_layout.setOnClickListener(v -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
       Analytics.AppsTimeline.clickOnCard(CARD_TYPE_NAME, Analytics.AppsTimeline.BLANK,
           displayable.getVideoTitle(), displayable.getTitle(), Analytics.AppsTimeline.OPEN_VIDEO);
-      displayable.getLink().launch(getContext());
+      displayable.getLink().launch(context);
       displayable.sendOpenVideoEvent(SendEventRequest.Body.Data.builder()
           .cardType(CARD_TYPE_NAME)
           .source(displayable.getTitle())
@@ -109,19 +111,19 @@ public class VideoWidget extends CardWidget<VideoDisplayable> {
             setAppNameToFirstLinkedApp(displayable);
           }
           if (appName != null) {
-            relatedTo.setText(displayable.getAppRelatedText(getContext(), appName));
+            relatedTo.setText(displayable.getAppRelatedText(context, appName));
           }
         }, throwable -> {
           setAppNameToFirstLinkedApp(displayable);
           if (appName != null) {
-            relatedTo.setText(displayable.getAppRelatedText(getContext(), appName));
+            relatedTo.setText(displayable.getAppRelatedText(context, appName));
           }
           throwable.printStackTrace();
         }));
 
     compositeSubscription.add(RxView.clicks(videoHeader).subscribe(click -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
-      displayable.getBaseLink().launch(getContext());
+      displayable.getBaseLink().launch(context);
       Analytics.AppsTimeline.clickOnCard(CARD_TYPE_NAME, Analytics.AppsTimeline.BLANK,
           displayable.getVideoTitle(), displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_VIDEO_HEADER);

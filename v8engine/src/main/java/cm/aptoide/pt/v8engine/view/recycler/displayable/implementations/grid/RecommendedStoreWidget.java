@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.view.View;
 import android.widget.ImageView;
@@ -16,7 +17,6 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by trinkes on 06/12/2016.
@@ -24,7 +24,6 @@ import rx.subscriptions.CompositeSubscription;
 
 public class RecommendedStoreWidget extends Widget<RecommendedStoreDisplayable> {
 
-  private final CompositeSubscription subscriptions;
   private TextView storeName;
   private TextView followingUsers;
   private TextView numberStoreApps;
@@ -33,7 +32,6 @@ public class RecommendedStoreWidget extends Widget<RecommendedStoreDisplayable> 
 
   public RecommendedStoreWidget(View itemView) {
     super(itemView);
-    subscriptions = new CompositeSubscription();
   }
 
   @Override protected void assignViews(View itemView) {
@@ -44,26 +42,24 @@ public class RecommendedStoreWidget extends Widget<RecommendedStoreDisplayable> 
     followButton = (AppCompatButton) itemView.findViewById(R.id.recommended_store_action);
   }
 
-  @Override public void unbindView() {
-    subscriptions.clear();
-    super.unbindView();
-  }
-
   @Override public void bindView(RecommendedStoreDisplayable displayable) {
     Store store = displayable.getPojo();
     storeName.setText(store.getName());
     followingUsers.setText(String.valueOf(store.getStats().getSubscribers()));
     numberStoreApps.setText(String.valueOf(store.getStats().getApps()));
-    ImageLoader.loadWithShadowCircleTransform(store.getAvatar(), storeIcon,
-        StoreThemeEnum.get(store).getStoreHeaderInt());
+    final FragmentActivity context = getContext();
+    ImageLoader.with(context)
+        .loadWithShadowCircleTransform(store.getAvatar(), storeIcon,
+            StoreThemeEnum.get(store).getStoreHeaderInt());
     setFollowButtonListener(displayable);
     setButtonText(displayable);
-    RxView.clicks(itemView)
-        .subscribe(click -> displayable.openStoreFragment((FragmentShower) getContext()));
+    compositeSubscription.add(RxView.clicks(itemView)
+        .subscribe(click -> displayable.openStoreFragment((FragmentShower) context),
+            throwable -> CrashReport.getInstance().log(throwable)));
   }
 
   private void setFollowButtonListener(RecommendedStoreDisplayable displayable) {
-    subscriptions.add(RxView.clicks(followButton).flatMap(click -> {
+    compositeSubscription.add(RxView.clicks(followButton).flatMap(click -> {
       followButton.setEnabled(false);
       return displayable.isFollowing()
           .first()
