@@ -10,17 +10,23 @@ package cm.aptoide.pt.v8engine.payment;
  */
 public class PaymentConfirmation {
 
+  private final int paymentId;
   private final int productId;
   private final String payerId;
   private final String paymentConfirmationId;
   private Status status;
 
-  public PaymentConfirmation(int productId, String payerId, String paymentConfirmationId,
+  public PaymentConfirmation(int paymentId, int productId, String payerId, String paymentConfirmationId,
       Status status) {
+    this.paymentId = paymentId;
     this.productId = productId;
     this.payerId = payerId;
     this.paymentConfirmationId = paymentConfirmationId;
     this.status = status;
+  }
+
+  public int getPaymentId() {
+    return paymentId;
   }
 
   public String getPayerId() {
@@ -55,12 +61,15 @@ public class PaymentConfirmation {
 
   public boolean isFailed() {
     return Status.FAILED.equals(status)
-        || Status.CANCELED.equals(status)
-        || Status.UNKNOWN_ERROR.equals(status);
+        || Status.CANCELED.equals(status);
+  }
+
+  public boolean isNew() {
+    return Status.NEW.equals(status);
   }
 
   public enum Status {
-    UNKNOWN_ERROR,
+    NEW,
     CREATED,
     PROCESSING,
     PENDING,

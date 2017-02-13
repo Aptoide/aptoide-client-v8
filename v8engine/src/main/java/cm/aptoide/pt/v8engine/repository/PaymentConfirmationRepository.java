@@ -11,6 +11,8 @@ import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.products.AptoideProduct;
 import cm.aptoide.pt.v8engine.repository.sync.SyncAdapterBackgroundSync;
+import java.util.Collections;
+import java.util.List;
 import rx.Completable;
 import rx.Observable;
 
@@ -38,16 +40,28 @@ public abstract class PaymentConfirmationRepository {
   public abstract Completable createPaymentConfirmation(int paymentId,
       String paymentConfirmationId);
 
-  public Observable<PaymentConfirmation> getPaymentConfirmation(Product product, String payerId) {
-    return syncPaymentConfirmation((AptoideProduct) product).andThen(
+  public Observable<List<PaymentConfirmation>> getPaymentConfirmations(Product product, String payerId,
+      List<Integer> paymentIds) {
+    return syncPaymentConfirmations((AptoideProduct) product, paymentIds).andThen(
         confirmationAccessor.getPaymentConfirmations(product.getId(), payerId)
             .flatMap(paymentConfirmations -> Observable.from(paymentConfirmations)
                 .map(paymentConfirmation -> confirmationFactory.convertToPaymentConfirmation(
-                    paymentConfirmation))));
+                    paymentConfirmation))
+                .toList()));
   }
 
-  protected Completable syncPaymentConfirmation(AptoideProduct product) {
-    return backgroundSync.syncConfirmation(product);
+  protected Completable syncPaymentConfirmations(AptoideProduct product, List<Integer> paymentIds) {
+    return Observable.from(paymentIds)
+        .map(paymentId -> String.valueOf(paymentId))
+        .toList()
+        .toSingle()
+        .flatMapCompletable(
+            stringPaymentIds -> backgroundSync.syncConfirmation(product, stringPaymentIds));
+  }
+
+  protected Completable syncPaymentConfirmations(AptoideProduct product, int paymentId) {
+    return backgroundSync.syncConfirmation(product,
+        Collections.singletonList(String.valueOf(paymentId)));
   }
 
   protected Completable createPaymentConfirmation(AptoideProduct product, int paymentId,

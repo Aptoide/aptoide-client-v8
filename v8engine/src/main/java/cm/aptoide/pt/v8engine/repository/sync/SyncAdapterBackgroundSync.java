@@ -84,9 +84,10 @@ public class SyncAdapterBackgroundSync {
     }).toCompletable();
   }
 
-  public Completable syncConfirmation(AptoideProduct product) {
+  public Completable syncConfirmation(AptoideProduct product, List<String> paymentIds) {
     final Bundle bundle = syncDataConverter.toBundle(product);
     bundle.putBoolean(AptoideSyncAdapter.EXTRA_PAYMENT_CONFIRMATIONS, true);
+    bundle.putString(AptoideSyncAdapter.EXTRA_PAYMENT_IDS, syncDataConverter.toString(paymentIds));
     return sync(bundle);
   }
 

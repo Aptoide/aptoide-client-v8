@@ -52,7 +52,6 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
   private View body;
   private View actionButtons;
   private View globalProgressView;
-  private View paymentsProgressView;
   private ViewGroup morePaymentsList;
   private View morePaymentsContainer;
   private ImageView productIcon;
@@ -85,7 +84,6 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
 
     overlay = findViewById(R.id.payment_activity_overlay);
     globalProgressView = findViewById(R.id.activity_payment_global_progress_bar);
-    paymentsProgressView = findViewById(R.id.activity_payment_list_progress_bar);
     noPaymentsText = (TextView) findViewById(R.id.activity_payment_no_payments_text);
 
     header = findViewById(R.id.activity_payment_header);
@@ -163,15 +161,11 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
     return registerPaymentClick;
   }
 
-  @Override public void showGlobalLoading() {
+  @Override public void showLoading() {
     header.setVisibility(View.GONE);
     body.setVisibility(View.GONE);
     actionButtons.setVisibility(View.GONE);
     globalProgressView.setVisibility(View.VISIBLE);
-  }
-
-  @Override public void showPaymentsLoading() {
-    paymentsProgressView.setVisibility(View.VISIBLE);
   }
 
   @Override public void showOtherPayments(List<PaymentViewModel> otherPayments) {
@@ -239,15 +233,11 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
             selectedPayment.getCurrency()));
   }
 
-  @Override public void hideGlobalLoading() {
+  @Override public void hideLoading() {
     header.setVisibility(View.VISIBLE);
     body.setVisibility(View.VISIBLE);
     actionButtons.setVisibility(View.VISIBLE);
     globalProgressView.setVisibility(View.GONE);
-  }
-
-  @Override public void hidePaymentsLoading() {
-    paymentsProgressView.setVisibility(View.GONE);
   }
 
   @Override public void dismiss(Purchase purchase) {

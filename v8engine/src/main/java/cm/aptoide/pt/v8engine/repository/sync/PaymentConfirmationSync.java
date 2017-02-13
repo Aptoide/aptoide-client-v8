@@ -22,6 +22,8 @@ import cm.aptoide.pt.v8engine.repository.PaymentConfirmationRepository;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryIllegalArgumentException;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import rx.Completable;
 import rx.Single;
 
@@ -39,12 +41,12 @@ public class PaymentConfirmationSync extends RepositorySync {
   private final AptoideAccountManager accountManager;
 
   private String paymentConfirmationId;
-  private int paymentId;
+  private List<String> paymentIds;
 
   public PaymentConfirmationSync(PaymentConfirmationRepository paymentConfirmationRepository,
       Product product, NetworkOperatorManager operatorManager,
       PaymentConfirmationAccessor confirmationAccessor,
-      PaymentConfirmationFactory confirmationFactory, String paymentConfirmationId, int paymentId,
+      PaymentConfirmationFactory confirmationFactory, String paymentConfirmationId, List<String> paymentIds,
       AptoideAccountManager accountManager) {
     this.paymentConfirmationRepository = paymentConfirmationRepository;
     this.product = product;
@@ -52,20 +54,22 @@ public class PaymentConfirmationSync extends RepositorySync {
     this.confirmationAccessor = confirmationAccessor;
     this.confirmationFactory = confirmationFactory;
     this.paymentConfirmationId = paymentConfirmationId;
-    this.paymentId = paymentId;
+    this.paymentIds = paymentIds;
     this.accountManager = accountManager;
   }
 
   public PaymentConfirmationSync(PaymentConfirmationRepository paymentConfirmationRepository,
       Product product, NetworkOperatorManager operatorManager,
       PaymentConfirmationAccessor confirmationAccessor,
-      PaymentConfirmationFactory confirmationFactory, AptoideAccountManager accountManager) {
+      PaymentConfirmationFactory confirmationFactory, AptoideAccountManager accountManager,
+      List<String> paymentIds) {
     this.paymentConfirmationRepository = paymentConfirmationRepository;
     this.product = product;
     this.operatorManager = operatorManager;
     this.confirmationAccessor = confirmationAccessor;
     this.confirmationFactory = confirmationFactory;
     this.accountManager = accountManager;
+    this.paymentIds = paymentIds;
   }
 
   @Override public void sync(SyncResult syncResult) {
@@ -74,17 +78,18 @@ public class PaymentConfirmationSync extends RepositorySync {
       final String payerId = accountManager.getUserEmail();
       final Single<PaymentConfirmation> serverPaymentConfirmation;
       if (paymentConfirmationId != null) {
+        final int paymentId = Integer.valueOf(paymentIds.get(0));
         serverPaymentConfirmation =
             createServerPaymentConfirmation(product, paymentConfirmationId, paymentId,
                 accessToken).andThen(Single.fromCallable(
                 () -> confirmationFactory.create(product.getId(), paymentConfirmationId,
-                    PaymentConfirmation.Status.COMPLETED, payerId)));
+                    PaymentConfirmation.Status.COMPLETED, payerId, paymentId)));
       } else {
         serverPaymentConfirmation = getServerPaymentConfirmation(product, payerId, accessToken);
       }
       serverPaymentConfirmation.doOnSuccess(
           paymentConfirmation -> saveAndReschedulePendingConfirmation(paymentConfirmation,
-              syncResult)).onErrorReturn(throwable -> {
+              syncResult, payerId)).onErrorReturn(throwable -> {
         saveAndRescheduleOnNetworkError(syncResult, throwable, payerId);
         return null;
       }).toBlocking().value();
@@ -137,9 +142,20 @@ public class PaymentConfirmationSync extends RepositorySync {
   }
 
   private void saveAndReschedulePendingConfirmation(PaymentConfirmation paymentConfirmation,
-      SyncResult syncResult) {
-    confirmationAccessor.save(
-        confirmationFactory.convertToDatabasePaymentConfirmation(paymentConfirmation));
+      SyncResult syncResult, String payerId) {
+
+    final List<cm.aptoide.pt.database.realm.PaymentConfirmation> confirmations = new ArrayList<>();
+    for (String paymentId : paymentIds) {
+      if (Integer.valueOf(paymentId) == paymentConfirmation.getPaymentId()) {
+        confirmations.add(confirmationFactory.convertToDatabasePaymentConfirmation(paymentConfirmation));
+      } else {
+        confirmations.add(confirmationFactory.convertToDatabasePaymentConfirmation(
+            confirmationFactory.create(product.getId(), "",
+                PaymentConfirmation.Status.NEW, payerId, Integer.valueOf(paymentId))));
+      }
+    }
+    confirmationAccessor.updateAll(confirmations);
+
     if (paymentConfirmation.isPending()) {
       rescheduleSync(syncResult);
     }
@@ -150,9 +166,14 @@ public class PaymentConfirmationSync extends RepositorySync {
     if (throwable instanceof IOException) {
       rescheduleSync(syncResult);
     } else {
-      confirmationAccessor.save(confirmationFactory.convertToDatabasePaymentConfirmation(
-          confirmationFactory.create(product.getId(), paymentConfirmationId,
-              PaymentConfirmation.Status.UNKNOWN_ERROR, payerId)));
+
+      final List<cm.aptoide.pt.database.realm.PaymentConfirmation> confirmations = new ArrayList<>();
+      for (String paymentId : paymentIds) {
+        confirmations.add(confirmationFactory.convertToDatabasePaymentConfirmation(
+            confirmationFactory.create(product.getId(), "",
+                PaymentConfirmation.Status.NEW, payerId, Integer.valueOf(paymentId))));
+      }
+      confirmationAccessor.updateAll(confirmations);
     }
   }
 }

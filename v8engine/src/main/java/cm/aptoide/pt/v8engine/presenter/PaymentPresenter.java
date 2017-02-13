@@ -10,7 +10,6 @@ import cm.aptoide.pt.v8engine.payment.AptoidePay;
 import cm.aptoide.pt.v8engine.payment.Authorization;
 import cm.aptoide.pt.v8engine.payment.Payer;
 import cm.aptoide.pt.v8engine.payment.Payment;
-import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.payment.Purchase;
 import cm.aptoide.pt.v8engine.payment.products.AptoideProduct;
 import cm.aptoide.pt.v8engine.repository.ProductRepository;
@@ -68,7 +67,7 @@ public class PaymentPresenter implements Presenter {
         .filter(event -> View.LifecycleEvent.CREATE.equals(event))
         .flatMap(created -> Observable.merge(buySelection(), paymentRegisterSelection())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnError(throwable -> hideGlobalAndPaymentsLoadingAndShowError(throwable))
+            .doOnError(throwable -> hideLoadingAndShowError(throwable))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
@@ -82,29 +81,29 @@ public class PaymentPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> View.LifecycleEvent.CREATE.equals(event))
         .flatMap(created -> login())
-        .doOnNext(loggedIn -> showGlobalAndPaymentsLoading())
-        .flatMap(loggedIn -> Observable.merge(aptoidePay.getConfirmation(product),
-            loadPayments().cast(PaymentConfirmation.class)))
-        .observeOn(AndroidSchedulers.mainThread())
-        .flatMap(paymentConfirmation -> {
-
-          if (paymentConfirmation.isPending()) {
-            view.showGlobalLoading();
-          } else {
-            showProduct(product);
-            view.hideGlobalLoading();
-          }
-
-          if (paymentConfirmation.isCompleted()) {
-            return productRepository.getPurchase(product)
-                .toObservable()
-                .observeOn(AndroidSchedulers.mainThread());
-          }
-          return Observable.empty();
-        })
+        .doOnNext(loggedIn -> view.showLoading())
+        .flatMap(loggedIn -> aptoidePay.availablePayments(product)
+            .observeOn(AndroidSchedulers.mainThread())
+            .flatMap(payments -> showProductAndPayments(payments).andThen(aptoidePay.getStatus(payments)))
+            .flatMap(status -> {
+              switch (status) {
+                case NEW:
+                  view.hideLoading();
+                  return Observable.empty();
+                case PENDING:
+                  view.showLoading();
+                  return Observable.empty();
+                case COMPLETED:
+                  return productRepository.getPurchase(product)
+                      .toObservable()
+                      .observeOn(AndroidSchedulers.mainThread());
+                default:
+                  return Observable.empty();
+              }
+            }))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(purchase -> hideGlobalAndPaymentsLoadingAndDismiss(purchase),
-            throwable -> hideGlobalAndPaymentsLoadingAndDismiss(throwable));
+        .subscribe(purchase -> hideLoadingAndDismiss(purchase),
+            throwable -> hideLoadingAndDismiss(throwable));
   }
 
   @Override public void saveState(Bundle state) {
@@ -129,20 +128,17 @@ public class PaymentPresenter implements Presenter {
         .subscribeOn(Schedulers.computation());
   }
 
-  private Observable<Void> loadPayments() {
-    return aptoidePay.availablePayments(product)
-        .observeOn(AndroidSchedulers.mainThread())
-        .flatMap(payments -> {
-          if (payments.isEmpty()) {
-            view.hidePaymentsLoading();
-            view.showPaymentsNotFoundMessage();
-            return Observable.empty();
-          } else {
-            view.hidePaymentsLoading();
-            return getDefaultPayment(payments).flatMapCompletable(
-                defaultPayment -> showPayments(payments, defaultPayment)).<Void>toObservable();
-          }
-        });
+  private Completable showProductAndPayments(List<Payment> payments) {
+    return Completable.defer(() -> {
+      showProduct(product);
+      if (payments.isEmpty()) {
+        view.showPaymentsNotFoundMessage();
+        return Completable.complete();
+      } else {
+        return getDefaultPayment(payments).flatMapCompletable(
+            defaultPayment -> showPayments(payments, defaultPayment));
+      }
+    });
   }
 
   private Completable showPayments(List<Payment> allPayments, Payment selectedPayment) {
@@ -174,7 +170,7 @@ public class PaymentPresenter implements Presenter {
 
   private Observable<Void> paymentRegisterSelection() {
     return view.registerPaymentSelection()
-        .doOnNext(selection -> view.showGlobalLoading())
+        .doOnNext(selection -> view.showLoading())
         .flatMap(paymentViewModel -> getSelectedPayment(getAllPayments(), paymentViewModel))
         .map(payment -> payment.getAuthorization()).<Void>flatMap(authorization -> {
           return aptoidePay.initiate(authorization)
@@ -185,12 +181,12 @@ public class PaymentPresenter implements Presenter {
   }
 
   private void hideGlobalLoadingAndNavigateToAuthorizationView(Authorization authorization) {
-    view.hideGlobalLoading();
+    view.hideLoading();
     view.navigateToAuthorizationView(authorization.getPaymentId(), product);
   }
 
   private Observable<Void> buySelection() {
-    return view.buySelection().doOnNext(payment -> view.showGlobalLoading()).<Void>flatMap(
+    return view.buySelection().doOnNext(payment -> view.showLoading()).<Void>flatMap(
         payment -> aptoidePay.process(selectedPayment).toObservable());
   }
 
@@ -238,6 +234,23 @@ public class PaymentPresenter implements Presenter {
         payment.getPrice().getCurrencySymbol());
   }
 
+  //private PaymentView.PaymentViewModel.Status getPaymentViewStatus(Payment payment) {
+  //
+  //  if (!payment.isAuthorizationRequired()) {
+  //    return PaymentView.PaymentViewModel.Status.USE;
+  //  }
+  //
+  //  if (payment.getAuthorization() != null) {
+  //    if (payment.getAuthorization().isAuthorized()) {
+  //      return PaymentView.PaymentViewModel.Status.USE;
+  //    } else if (payment.getAuthorization().isPending()) {
+  //      return PaymentView.PaymentViewModel.Status.APPROVING;
+  //    }
+  //  }
+  //
+  //  return PaymentView.PaymentViewModel.Status.REGISTER;
+  //}
+
   private void showSelectedPayment(Payment selectedPayment) {
     this.selectedPayment = selectedPayment;
     view.showSelectedPayment(convertToPaymentViewModel(selectedPayment));
@@ -260,20 +273,13 @@ public class PaymentPresenter implements Presenter {
     return selectedPayment == null && payment.getId() == 1;
   }
 
-  private void showGlobalAndPaymentsLoading() {
-    view.showGlobalLoading();
-    view.showPaymentsLoading();
-  }
-
-  private void hideGlobalAndPaymentsLoadingAndDismiss(Throwable throwable) {
-    view.hideGlobalLoading();
-    view.hidePaymentsLoading();
+  private void hideLoadingAndDismiss(Throwable throwable) {
+    view.hideLoading();
     view.dismiss(throwable);
   }
 
-  private void hideGlobalAndPaymentsLoadingAndShowError(Throwable throwable) {
-    view.hideGlobalLoading();
-    view.hidePaymentsLoading();
+  private void hideLoadingAndShowError(Throwable throwable) {
+    view.hideLoading();
 
     if (throwable instanceof IOException) {
       view.showNetworkError();
@@ -282,9 +288,8 @@ public class PaymentPresenter implements Presenter {
     }
   }
 
-  private void hideGlobalAndPaymentsLoadingAndDismiss(Purchase purchase) {
-    view.hideGlobalLoading();
-    view.hidePaymentsLoading();
+  private void hideLoadingAndDismiss(Purchase purchase) {
+    view.hideLoading();
     view.dismiss(purchase);
   }
 

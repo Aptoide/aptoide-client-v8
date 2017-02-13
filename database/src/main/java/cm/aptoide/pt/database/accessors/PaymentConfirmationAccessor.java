@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.database.accessors;
 
+import cm.aptoide.pt.database.realm.PaymentAuthorization;
 import cm.aptoide.pt.database.realm.PaymentConfirmation;
 import java.util.List;
 import rx.Observable;
@@ -24,10 +25,10 @@ public class PaymentConfirmationAccessor extends SimpleAccessor<PaymentConfirmat
         .map(realm -> realm.where(PaymentConfirmation.class)
             .equalTo(PaymentConfirmation.PRODUCT_ID, productId)
             .equalTo(PaymentConfirmation.PAYER_ID, payerId))
-        .flatMap(query -> database.findAsList(query));
+        .flatMap(query -> database.findAsSortedList(query, PaymentConfirmation.PAYMENT_ID));
   }
 
-  public void save(PaymentConfirmation paymentConfirmation) {
-    database.insert(paymentConfirmation);
+  public void updateAll(List<PaymentConfirmation> confirmations) {
+    database.updateAll(PaymentConfirmation.class, confirmations);
   }
 }

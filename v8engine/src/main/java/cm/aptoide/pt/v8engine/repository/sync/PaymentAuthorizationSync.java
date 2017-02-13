@@ -81,6 +81,13 @@ public class PaymentAuthorizationSync extends RepositorySync {
       if (paymentAuthorization.isPending() || paymentAuthorization.isInitiated()) {
         rescheduleSync(syncResult);
       }
+      paymentIds.remove(String.valueOf(response.getPaymentId()));
+    }
+
+    for (String paymentId : paymentIds) {
+      authorizations.add(authorizationFactory.convertToDatabasePaymentAuthorization(
+          authorizationFactory.create(Integer.valueOf(paymentId), Authorization.Status.INACTIVE,
+              payerId)));
     }
 
     authorizationAccessor.updateAll(authorizations);
@@ -95,7 +102,7 @@ public class PaymentAuthorizationSync extends RepositorySync {
       for (String paymentId : paymentIds) {
         authorizations.add(authorizationFactory.convertToDatabasePaymentAuthorization(
             authorizationFactory.create(Integer.valueOf(paymentId),
-                Authorization.Status.UNKNOWN_ERROR, payerId)));
+                Authorization.Status.INACTIVE, payerId)));
       }
       authorizationAccessor.updateAll(authorizations);
     }

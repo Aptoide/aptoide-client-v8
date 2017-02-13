@@ -24,6 +24,7 @@ public class AptoidePayment implements Payment {
   private final boolean requiresAuthorization;
 
   private Authorization authorization;
+  private PaymentConfirmation confirmation;
 
   public AptoidePayment(int id, String type, String name, String description, Product product,
       Price price, boolean requiresAuthorization,
@@ -66,8 +67,29 @@ public class AptoidePayment implements Payment {
     return authorization;
   }
 
+  @Override public Status getStatus() {
+
+    if (confirmation.isCompleted()) {
+      return Status.COMPLETED;
+    }
+
+    if (confirmation.isPending() || authorization.isPending()) {
+      return Status.PENDING;
+    }
+
+    return Status.NEW;
+  }
+
   @Override public void setAuthorization(Authorization authorization) {
     this.authorization = authorization;
+  }
+
+  @Override public PaymentConfirmation getConfirmation() {
+    return confirmation;
+  }
+
+  @Override public void setConfirmation(PaymentConfirmation confirmation) {
+    this.confirmation = confirmation;
   }
 
   @Override public boolean isAuthorizationRequired() {

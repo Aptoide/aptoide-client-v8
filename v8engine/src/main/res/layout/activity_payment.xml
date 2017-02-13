@@ -212,18 +212,8 @@
     </RelativeLayout>
   </LinearLayout>
 
-  <ProgressBar
-      android:id="@+id/activity_payment_global_progress_bar"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_centerInParent="true"
-      android:theme="@style/AptoideThemeDefault"
-      android:visibility="gone"
-      tools:visibility="visible"
-      />
-
   <LinearLayout
-      android:id="@+id/activity_payment_list_progress_bar"
+      android:id="@+id/activity_payment_global_progress_bar"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:layout_alignParentLeft="true"
