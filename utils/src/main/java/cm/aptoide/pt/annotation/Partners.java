@@ -1,9 +1,7 @@
 package cm.aptoide.pt.annotation;
 
-import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 
 /**
  * Created by diogoloureiro on 13/02/2017.
@@ -14,7 +12,6 @@ import java.lang.annotation.Target;
  * Please inform the Mobile Vertical Team if you plan to do heavy modifications in this methods.
  */
 
-@Retention(RetentionPolicy.SOURCE)
-public @interface Partners {
+@Retention(RetentionPolicy.SOURCE) public @interface Partners {
   // other necessary annotation properties go here
 }

@@ -332,19 +332,19 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   // Timeline Articles comments methods
   //
 
+  private Observable<Void> showSignInMessage() {
+    return ShowMessage.asObservableSnack(this.getActivity(), R.string.you_need_to_be_logged_in,
+        R.string.login, snackView -> {
+          AptoideAccountManager.openAccountManager(CommentListFragment.this.getContext());
+        }).flatMap(a -> Observable.empty());
+  }
+
   private Observable<Void> reloadComments() {
     return Observable.fromCallable(() -> {
       ManagerPreferences.setForceServerRefreshFlag(true);
       super.reload();
       return null;
     });
-  }
-
-  private Observable<Void> showSignInMessage() {
-    return ShowMessage.asObservableSnack(this.getActivity(), R.string.you_need_to_be_logged_in,
-        R.string.login, snackView -> {
-          AptoideAccountManager.openAccountManager(CommentListFragment.this.getContext());
-        }).flatMap(a -> Observable.empty());
   }
 
   @Override public void setupViews() {

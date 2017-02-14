@@ -71,7 +71,8 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
     addDisplayable(displayable, true);
   }
 
-  @Partners @CallSuper @Deprecated public void addDisplayables(List<? extends Displayable> displayables) {
+  @Partners @CallSuper @Deprecated
+  public void addDisplayables(List<? extends Displayable> displayables) {
     addDisplayables(displayables, true);
   }
 
