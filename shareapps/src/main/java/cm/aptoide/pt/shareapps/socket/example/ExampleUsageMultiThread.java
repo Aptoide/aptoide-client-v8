@@ -50,7 +50,7 @@ public class ExampleUsageMultiThread {
 
             service.schedule(() -> {
               aptoideMessageController.send(new ExitMessage(Host.from(socket)));
-            }, 2, TimeUnit.SECONDS);
+            }, 3, TimeUnit.SECONDS);
           }, 1, TimeUnit.SECONDS);
         }
 

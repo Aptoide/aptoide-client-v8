@@ -3,6 +3,7 @@ package cm.aptoide.pt.shareapps.socket;
 import cm.aptoide.pt.shareapps.socket.entities.Host;
 import cm.aptoide.pt.shareapps.socket.interfaces.serveraction.ServerAction;
 import cm.aptoide.pt.shareapps.socket.interfaces.serveraction.ServerActionDispatcher;
+import cm.aptoide.pt.shareapps.socket.util.ServerSocketTimeoutManager;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -17,7 +18,10 @@ import lombok.Getter;
 // TODO: 01-02-2017 neuro messagereceiver nao é! lol
 public abstract class AptoideServerSocket extends AptoideSocket implements ServerActionDispatcher {
 
+  private static final int TIMEOUT = 5000;
+
   private final int port;
+  ServerSocketTimeoutManager serverSocketTimeoutManager;
   private List<Socket> connectedSockets = new LinkedList<>();
   private ServerSocket ss;
   private boolean serving = false;
@@ -46,6 +50,8 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
 
     try {
       ss = new ServerSocket(port);
+      serverSocketTimeoutManager = new ServerSocketTimeoutManager(ss, TIMEOUT);
+      serverSocketTimeoutManager.reserTimeout();
       host = Host.from(ss);
       System.out.println(
           Thread.currentThread().getId() + ": Starting server in port " + port + ": " + this);
@@ -63,8 +69,10 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
                 + ":"
                 + socket.getPort());
             onNewClient(socket);
+            serverSocketTimeoutManager.reserTimeout();
           } finally {
             try {
+              serverSocketTimeoutManager.reserTimeout();
               connectedSockets.remove(socket);
               System.out.println("Closing server client socket.");
               socket.close();
@@ -76,6 +84,7 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
       }
     } catch (IOException e) {
       // Ignore, when socket is closed during accept() it lands here.
+      System.out.println("Server explicitly closed.");
     }
     return this;
   }

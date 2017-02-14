@@ -1,9 +1,11 @@
 package cm.aptoide.pt.shareapps.socket.message;
 
+import cm.aptoide.pt.shareapps.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.shareapps.socket.entities.FileInfo;
 import cm.aptoide.pt.shareapps.socket.entities.Host;
 import cm.aptoide.pt.shareapps.socket.file.AptoideFileClientSocket;
-import cm.aptoide.pt.shareapps.socket.file.AptoideFileServerSocket;
+import cm.aptoide.pt.shareapps.socket.file.ShareAppsServerSocket;
+import cm.aptoide.pt.shareapps.socket.interfaces.FileServerLifecycle;
 import cm.aptoide.pt.shareapps.socket.message.interfaces.Sender;
 import cm.aptoide.pt.shareapps.socket.message.interfaces.StorageCapacity;
 import cm.aptoide.pt.shareapps.socket.message.messages.AckMessage;
@@ -44,10 +46,10 @@ public class HandlersFactory {
   }
 
   public static List<MessageHandler<? extends Message>> newDefaultClientHandlersList(String rootDir,
-      StorageCapacity storageCapacity) {
+      StorageCapacity storageCapacity, FileServerLifecycle<AndroidAppInfo> serverLifecycle) {
     List<MessageHandler<? extends Message>> messageHandlers = new LinkedList<>();
 
-    messageHandlers.add(new SendApkHandler());
+    messageHandlers.add(new SendApkHandler(serverLifecycle));
     messageHandlers.add(new ReceiveApkHandler(rootDir, storageCapacity));
 
     return messageHandlers;
@@ -71,13 +73,16 @@ public class HandlersFactory {
 
   private static class SendApkHandler extends MessageHandler<SendApk> {
 
-    public SendApkHandler() {
+    private final FileServerLifecycle<AndroidAppInfo> serverLifecycle;
+
+    public SendApkHandler(FileServerLifecycle<AndroidAppInfo> serverLifecycle) {
       super(SendApk.class);
+      this.serverLifecycle = serverLifecycle;
     }
 
     @Override public void handleMessage(SendApk sendApkMessage, Sender<Message> messageSender) {
-      List<String> filesList = sendApkMessage.getAndroidAppInfo().getFilesPathsList();
-      new AptoideFileServerSocket(sendApkMessage.getServerPort(), filesList).startAsync();
+      new ShareAppsServerSocket(sendApkMessage.getServerPort(), sendApkMessage.getAndroidAppInfo(),
+          serverLifecycle).startAsync();
       messageSender.send(new AckMessage(messageSender.getHost()));
       // TODO: 03-02-2017 neuro maybe a good ideia to stop the server somewhat :)
     }

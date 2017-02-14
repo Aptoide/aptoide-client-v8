@@ -14,7 +14,6 @@ import lombok.Getter;
 public class AptoideMessageServerController extends AptoideMessageController
     implements Sender<Message> {
 
-  public static final long ACK_TIMEOUT = 5000;
   @Getter private final Host host;
 
   public AptoideMessageServerController(AptoideMessageServerSocket aptoideMessageServerSocket,

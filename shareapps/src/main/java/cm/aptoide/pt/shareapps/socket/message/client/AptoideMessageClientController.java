@@ -1,5 +1,7 @@
 package cm.aptoide.pt.shareapps.socket.message.client;
 
+import cm.aptoide.pt.shareapps.socket.entities.AndroidAppInfo;
+import cm.aptoide.pt.shareapps.socket.interfaces.FileServerLifecycle;
 import cm.aptoide.pt.shareapps.socket.message.AptoideMessageController;
 import cm.aptoide.pt.shareapps.socket.message.HandlersFactory;
 import cm.aptoide.pt.shareapps.socket.message.Message;
@@ -12,7 +14,8 @@ import cm.aptoide.pt.shareapps.socket.message.interfaces.StorageCapacity;
 public class AptoideMessageClientController extends AptoideMessageController
     implements Sender<Message> {
 
-  public AptoideMessageClientController(String rootDir, StorageCapacity storageCapacity) {
-    super(HandlersFactory.newDefaultClientHandlersList(rootDir, storageCapacity));
+  public AptoideMessageClientController(String rootDir, StorageCapacity storageCapacity,
+      FileServerLifecycle<AndroidAppInfo> serverLifecycle) {
+    super(HandlersFactory.newDefaultClientHandlersList(rootDir, storageCapacity, serverLifecycle));
   }
 }
