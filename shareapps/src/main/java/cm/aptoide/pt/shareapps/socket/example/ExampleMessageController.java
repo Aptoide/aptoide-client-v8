@@ -3,6 +3,7 @@ package cm.aptoide.pt.shareapps.socket.example;
 import cm.aptoide.pt.shareapps.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.shareapps.socket.interfaces.FileServerLifecycle;
 import cm.aptoide.pt.shareapps.socket.message.client.AptoideMessageClientController;
+import java.util.Random;
 
 /**
  * Created by neuro on 29-01-2017.
@@ -11,7 +12,7 @@ import cm.aptoide.pt.shareapps.socket.message.client.AptoideMessageClientControl
 public class ExampleMessageController extends AptoideMessageClientController {
 
   public ExampleMessageController() {
-    super("/tmp/a", bytes -> true, newFileServerLifecycle());
+    super("/tmp/a", bytes -> new Random().nextBoolean(), newFileServerLifecycle());
   }
 
   private static FileServerLifecycle<AndroidAppInfo> newFileServerLifecycle() {
