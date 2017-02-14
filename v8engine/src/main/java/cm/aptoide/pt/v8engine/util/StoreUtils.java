@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.util;
 
 import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
@@ -48,7 +49,7 @@ public class StoreUtils {
     return storeCredentialsProvider.get(storeId);
   }
 
-  @Deprecated public static @Nullable
+  @Partners @Deprecated public static @Nullable
   BaseRequestWithStore.StoreCredentials getStoreCredentialsFromUrl(String url) {
     return storeCredentialsProvider.fromUrl(url);
   }

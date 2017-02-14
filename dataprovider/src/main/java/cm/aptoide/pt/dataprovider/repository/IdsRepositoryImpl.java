@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.provider.Settings;
 import android.text.TextUtils;
+import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
@@ -37,7 +38,7 @@ public class IdsRepositoryImpl implements IdsRepository, AptoideClientUUID {
     this.deviceId = deviceId;
   }
 
-  @Deprecated
+  @Deprecated @Partners
   /**
    * Use the constructor were all the needed dependencies for this entity are injected.
    */ public IdsRepositoryImpl(SharedPreferences sharedPreferences, Context context) {

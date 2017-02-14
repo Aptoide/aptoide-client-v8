@@ -24,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
@@ -300,14 +301,14 @@ public class StoreFragment extends BasePagerToolbarFragment {
     toolbar.setLogo(R.drawable.ic_store);
   }
 
-  @CallSuper @Override public void setupToolbar() {
+  @Partners @CallSuper @Override public void setupToolbar() {
     super.setupToolbar();
     // FIXME: 17/1/2017 sithengineer is this the right place to have this event ?? why ??
     Logger.d(TAG, "LOCALYTICS TESTING - STORES ACTION ENTER " + storeName);
     Analytics.Stores.enter(storeName);
   }
 
-  protected static class BundleCons {
+  @Partners public static class BundleCons {
 
     public static final String STORE_NAME = "storeName";
     public static final String STORE_CONTEXT = "storeContext";

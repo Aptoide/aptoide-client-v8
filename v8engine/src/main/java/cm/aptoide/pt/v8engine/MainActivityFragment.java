@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
@@ -49,7 +50,7 @@ import rx.android.schedulers.AndroidSchedulers;
 public class MainActivityFragment extends AptoideSimpleFragmentActivity implements FragmentShower {
   private static final String TAG = MainActivityFragment.class.getSimpleName();
 
-  @Override public void onCreate(Bundle savedInstanceState) {
+  @Partners @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     Analytics.Lifecycle.Activity.onCreate(this);
     new ApkFy().run(this);

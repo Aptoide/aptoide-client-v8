@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.actions.PermissionRequest;
+import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.util.ScreenTrackingUtils;
 import cm.aptoide.pt.v8engine.interfaces.UiComponentBasics;
@@ -21,7 +22,7 @@ public abstract class SupportV4BaseFragment extends FragmentView
 
   private NavigationManagerV4 appNav;
 
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+  @Partners @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     if (getArguments() != null) {
