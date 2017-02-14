@@ -3,7 +3,6 @@ package cm.aptoide.pt.shareapps.socket.example;
 import cm.aptoide.pt.shareapps.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.shareapps.socket.interfaces.FileServerLifecycle;
 import cm.aptoide.pt.shareapps.socket.message.client.AptoideMessageClientController;
-import java.util.Random;
 
 /**
  * Created by neuro on 29-01-2017.
