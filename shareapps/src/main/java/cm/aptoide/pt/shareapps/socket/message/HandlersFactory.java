@@ -8,6 +8,7 @@ import cm.aptoide.pt.shareapps.socket.message.interfaces.Sender;
 import cm.aptoide.pt.shareapps.socket.message.interfaces.StorageCapacity;
 import cm.aptoide.pt.shareapps.socket.message.messages.AckMessage;
 import cm.aptoide.pt.shareapps.socket.message.messages.AndroidAppInfoMessage;
+import cm.aptoide.pt.shareapps.socket.message.messages.ExitMessage;
 import cm.aptoide.pt.shareapps.socket.message.messages.ReceiveApk;
 import cm.aptoide.pt.shareapps.socket.message.messages.RequestPermissionToSend;
 import cm.aptoide.pt.shareapps.socket.message.messages.SendApk;
@@ -37,6 +38,7 @@ public class HandlersFactory {
 
     messageHandlers.add(messageHandler);
     messageHandlers.add(new RequestPermissionToSendHandler(aptoideMessageServerSocket));
+    messageHandlers.add(new ExitMessageHandler(aptoideMessageServerSocket));
 
     return messageHandlers;
   }
@@ -127,6 +129,20 @@ public class HandlersFactory {
       for (FileInfo fileInfo : fileInfos) {
         fileInfo.setParentDirectory(root);
       }
+    }
+  }
+
+  private static class ExitMessageHandler extends MessageHandler<ExitMessage> {
+
+    private final AptoideMessageServerSocket aptoideMessageServerSocket;
+
+    public ExitMessageHandler(AptoideMessageServerSocket aptoideMessageServerSocket) {
+      super(ExitMessage.class);
+      this.aptoideMessageServerSocket = aptoideMessageServerSocket;
+    }
+
+    @Override public void handleMessage(ExitMessage message, Sender<Message> messageSender) {
+      aptoideMessageServerSocket.removeHost(message.getHost());
     }
   }
 }

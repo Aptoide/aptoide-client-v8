@@ -3,11 +3,13 @@ package cm.aptoide.pt.shareapps.socket.message.server;
 import cm.aptoide.pt.shareapps.socket.AptoideServerSocket;
 import cm.aptoide.pt.shareapps.socket.entities.Host;
 import cm.aptoide.pt.shareapps.socket.message.Message;
+import cm.aptoide.pt.shareapps.socket.message.messages.HostLeftMessage;
 import cm.aptoide.pt.shareapps.socket.message.messages.ReceiveApk;
 import cm.aptoide.pt.shareapps.socket.message.messages.RequestPermissionToSend;
 import cm.aptoide.pt.shareapps.socket.message.messages.SendApk;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -103,5 +105,17 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
         }
       }
     });
+  }
+
+  public void removeHost(Host host) {
+    Iterator<AptoideMessageServerController> iterator = aptoideMessageControllers.iterator();
+    while (iterator.hasNext()) {
+      AptoideMessageServerController aptoideMessageServerController = iterator.next();
+      if (aptoideMessageServerController.getHost().getIp().equals(host.getIp())) {
+        iterator.remove();
+        System.out.println("Host " + host + " removed from the server.");
+        sendToOthers(host, new HostLeftMessage(getHost(), host));
+      }
+    }
   }
 }

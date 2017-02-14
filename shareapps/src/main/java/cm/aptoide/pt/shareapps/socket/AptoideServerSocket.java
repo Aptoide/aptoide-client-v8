@@ -9,6 +9,7 @@ import java.net.Socket;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
+import lombok.Getter;
 
 /**
  * Created by neuro on 27-01-2017.
@@ -22,6 +23,7 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
   private boolean serving = false;
   private boolean shutdown = false;
   private LinkedBlockingQueue<ServerAction> queuedServerActions = new LinkedBlockingQueue<>();
+  @Getter private Host host;
 
   public AptoideServerSocket(int port) {
     this.port = port;
@@ -44,6 +46,7 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
 
     try {
       ss = new ServerSocket(port);
+      host = Host.from(ss);
       System.out.println(
           Thread.currentThread().getId() + ": Starting server in port " + port + ": " + this);
       while (true) {

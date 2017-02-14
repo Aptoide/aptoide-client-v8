@@ -3,6 +3,7 @@ package cm.aptoide.pt.shareapps.socket.example;
 import cm.aptoide.pt.shareapps.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.shareapps.socket.entities.Host;
 import cm.aptoide.pt.shareapps.socket.message.client.AptoideMessageClientSocket;
+import cm.aptoide.pt.shareapps.socket.message.messages.ExitMessage;
 import cm.aptoide.pt.shareapps.socket.message.messages.RequestPermissionToSend;
 import cm.aptoide.pt.shareapps.socket.message.server.AptoideMessageServerSocket;
 import java.io.File;
@@ -27,7 +28,7 @@ public class ExampleUsageMultiThread {
 
     new AptoideMessageServerSocket(MESSAGE_SERVER_PORT).startAsync();
 
-    for (int i = 0; i < 20; i++) {
+    for (int i = 0; i < 2; i++) {
       newAptoideMessageClientSocket().startAsync();
     }
   }
@@ -46,6 +47,10 @@ public class ExampleUsageMultiThread {
                 new Host(socket.getInetAddress().getHostAddress(), socket.getLocalPort()),
                 buildAppInfo()));
             System.out.println("first message sent!");
+
+            service.schedule(() -> {
+              aptoideMessageController.send(new ExitMessage(Host.from(socket)));
+            }, 2, TimeUnit.SECONDS);
           }, 1, TimeUnit.SECONDS);
         }
 

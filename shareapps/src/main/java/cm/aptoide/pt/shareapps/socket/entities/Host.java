@@ -1,6 +1,7 @@
 package cm.aptoide.pt.shareapps.socket.entities;
 
 import java.io.Serializable;
+import java.net.ServerSocket;
 import java.net.Socket;
 import lombok.Data;
 
@@ -18,6 +19,10 @@ import lombok.Data;
 
   public static Host from(Socket socket) {
     return new Host(socket.getInetAddress().getHostAddress(), socket.getPort());
+  }
+
+  public static Host from(ServerSocket serverSocket) {
+    return new Host(serverSocket.getInetAddress().getHostAddress(), serverSocket.getLocalPort());
   }
 
   @Override public int hashCode() {
