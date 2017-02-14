@@ -128,4 +128,6 @@ public interface FragmentProvider {
   Fragment newAddressBookFragment();
 
   Fragment newSyncSuccessFragment();
+
+  Fragment newPhoneInputFragment();
 }

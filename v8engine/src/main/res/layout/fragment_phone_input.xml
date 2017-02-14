@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+  <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:layout_marginEnd="60dp"
+      android:layout_marginLeft="60dp"
+      android:layout_marginRight="60dp"
+      android:layout_marginStart="60dp"
+      android:layout_marginTop="50dp"
+      android:gravity="center"
+      android:text="Share your phone number so your friends can easily find you on Aptoide"
+      android:textSize="16.9sp" />
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="50dp"
+      android:gravity="center"
+      android:orientation="horizontal">
+
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/circle" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
+        android:hint="+351"
+        android:inputType="number"
+        android:maxEms="5"
+        android:maxLength="5" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="000 111 000"
+        android:inputType="number"
+        android:maxEms="15"
+        android:maxLength="15" />
+
+  </LinearLayout>
+
+  <TextView
+      android:id="@+id/addressbook_not_now"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:layout_marginBottom="20dp"
+      android:layout_marginTop="40dp"
+      android:clickable="true"
+      android:text="@string/not_now"
+      android:textAllCaps="true" />
+</LinearLayout>

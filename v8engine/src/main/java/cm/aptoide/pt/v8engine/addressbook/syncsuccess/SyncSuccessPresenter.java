@@ -15,7 +15,9 @@ public class SyncSuccessPresenter implements SyncSuccessContract.UserActionsList
   }
 
   @Override public void loadFriends() {
+    //todo manipulate loading widget this.mSyncSuccessView.setProgressIndicator(true);
 
+    //todo loadfriends callback and hide loading widget this.mSyncSuccessView.setProgressIndicator(false);
   }
 
   @Override public void openFriend(Contact clickedContact) {
@@ -23,10 +25,10 @@ public class SyncSuccessPresenter implements SyncSuccessContract.UserActionsList
   }
 
   @Override public void allowFindClicked() {
-
+    this.mSyncSuccessView.showPhoneInputFragment();
   }
 
   @Override public void doneClicked() {
-    mSyncSuccessView.finishView();
+    this.mSyncSuccessView.finishView();
   }
 }

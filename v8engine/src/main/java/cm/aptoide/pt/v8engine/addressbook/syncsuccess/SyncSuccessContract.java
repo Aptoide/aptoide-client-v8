@@ -14,6 +14,8 @@ public interface SyncSuccessContract {
     void showStore();
 
     void showPhoneInputFragment();
+
+    void setProgressIndicator(boolean active);
   }
 
   interface UserActionsListener {

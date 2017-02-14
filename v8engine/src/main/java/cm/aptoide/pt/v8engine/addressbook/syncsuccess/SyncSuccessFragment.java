@@ -8,8 +8,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.addressbook.data.Contact;
 import cm.aptoide.pt.v8engine.fragment.SupportV4BaseFragment;
+import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.ArrayList;
 
@@ -48,6 +50,11 @@ public class SyncSuccessFragment extends SupportV4BaseFragment implements SyncSu
     done = (Button) view.findViewById(R.id.addressbook_done);
   }
 
+  @Override public void onResume() {
+    super.onResume();
+    this.mActionsListener.loadFriends();
+  }
+
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     mActionsListener = new SyncSuccessPresenter(this);
@@ -71,7 +78,15 @@ public class SyncSuccessFragment extends SupportV4BaseFragment implements SyncSu
   }
 
   @Override public void showPhoneInputFragment() {
+    ((FragmentShower) getContext()).pushFragmentV4(
+        V8Engine.getFragmentProvider().newPhoneInputFragment());
+  }
 
+  @Override public void setProgressIndicator(boolean active) {
+    if (getView() == null) {
+      return;
+    }
+    // TODO: 14/02/2017 manipulate loader
   }
 
   public interface ContactItemListener {

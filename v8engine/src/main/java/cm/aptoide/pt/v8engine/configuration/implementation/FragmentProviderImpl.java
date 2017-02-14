@@ -6,6 +6,7 @@ import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.v8engine.addressbook.AddressBookFragment;
+import cm.aptoide.pt.v8engine.addressbook.phoneinput.PhoneInputFragment;
 import cm.aptoide.pt.v8engine.addressbook.syncsuccess.SyncSuccessFragment;
 import cm.aptoide.pt.v8engine.configuration.FragmentProvider;
 import cm.aptoide.pt.v8engine.fragment.CommentListFragment;
@@ -280,5 +281,9 @@ public class FragmentProviderImpl implements FragmentProvider {
 
   @Override public Fragment newSyncSuccessFragment() {
     return SyncSuccessFragment.newInstance();
+  }
+
+  @Override public Fragment newPhoneInputFragment() {
+    return PhoneInputFragment.newInstance();
   }
 }
