@@ -112,7 +112,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     super.onViewCreated(view, savedInstanceState);
     context = getContext();
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-    findPreference("rootCategory").setEnabled(AptoideUtils.SystemU.isRooted());
+
     final AppCompatActivity parentActivity = (AppCompatActivity) getActivity();
     if (toolbar != null) {
       parentActivity.setSupportActionBar(toolbar);
