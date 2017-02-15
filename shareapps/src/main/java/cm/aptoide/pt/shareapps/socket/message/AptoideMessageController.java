@@ -89,7 +89,7 @@ public abstract class AptoideMessageController implements Sender<Message> {
   }
 
   @Override public synchronized void send(Message message) {
-    System.out.println("Sending message: " + message);
+    System.out.println(Thread.currentThread().getId() + ": Sending message: " + message);
     try {
       objectOutputStream.writeObject(message);
     } catch (IOException e) {
@@ -100,6 +100,7 @@ public abstract class AptoideMessageController implements Sender<Message> {
   public synchronized boolean sendWithAck(Message message) throws InterruptedException {
     // TODO: 02-02-2017 neuro no ack waiting lol
     AckMessage ackMessage = null;
+    System.out.println(Thread.currentThread().getId() + ": Sending message with ack: " + message);
     try {
       objectOutputStream.writeObject(message);
       ackMessage = ackMessages.poll(ACK_TIMEOUT, TimeUnit.MILLISECONDS);
@@ -107,7 +108,7 @@ public abstract class AptoideMessageController implements Sender<Message> {
       e.printStackTrace();
     }
 
-    System.out.println("sendWithAck received ack: " + ackMessage);
+    System.out.println(Thread.currentThread().getId() + ": Received ack: " + ackMessage);
 
     return ackMessage != null && ackMessage.isSuccess();
   }
