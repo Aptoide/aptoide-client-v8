@@ -65,7 +65,6 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
   private TextView selectedPaymentPrice;
 
   private PublishRelay<PaymentViewModel> usePaymentClick;
-  private PublishRelay<PaymentViewModel> registerPaymentClick;
   private CompositeSubscription paymentClicks;
   private PurchaseIntentFactory intentFactory;
   private AlertDialog networkErrorDialog;
@@ -103,7 +102,6 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
     buyButton = (Button) findViewById(R.id.activity_payment_buy_button);
 
     usePaymentClick = PublishRelay.create();
-    registerPaymentClick = PublishRelay.create();
     intentFactory = new PurchaseIntentFactory(new ErrorCodeFactory());
     paymentClicks = new CompositeSubscription();
     final ContextThemeWrapper dialogTheme =
@@ -154,10 +152,6 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
     return RxView.clicks(morePaymentsButton)
         .subscribeOn(AndroidSchedulers.mainThread())
         .unsubscribeOn(AndroidSchedulers.mainThread());
-  }
-
-  @Override public Observable<PaymentViewModel> registerPaymentSelection() {
-    return registerPaymentClick;
   }
 
   @Override public void showLoading() {

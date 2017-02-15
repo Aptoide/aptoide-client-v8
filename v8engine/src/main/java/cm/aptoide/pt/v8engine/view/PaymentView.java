@@ -23,8 +23,6 @@ public interface PaymentView extends View {
 
   Observable<Void> otherPaymentsSelection();
 
-  Observable<PaymentViewModel> registerPaymentSelection();
-
   void showLoading();
 
   void showOtherPayments(List<PaymentViewModel> paymentList);

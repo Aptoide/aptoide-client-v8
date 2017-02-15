@@ -62,7 +62,7 @@ public class AptoidePay {
     });
   }
 
-  private boolean isAuthorized(Payment payment) {
+  public boolean isAuthorized(Payment payment) {
     return payment.getAuthorization().getStatus().equals(Authorization.Status.ACTIVE);
   }
 

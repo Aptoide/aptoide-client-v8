@@ -65,7 +65,7 @@ public class PaymentPresenter implements Presenter {
 
     view.getLifecycle()
         .filter(event -> View.LifecycleEvent.CREATE.equals(event))
-        .flatMap(created -> Observable.merge(buySelection(), paymentRegisterSelection())
+        .flatMap(created -> buySelection()
             .observeOn(AndroidSchedulers.mainThread())
             .doOnError(throwable -> hideLoadingAndShowError(throwable))
             .retry())
@@ -172,26 +172,23 @@ public class PaymentPresenter implements Presenter {
     return allPayments;
   }
 
-  private Observable<Void> paymentRegisterSelection() {
-    return view.registerPaymentSelection()
-        .doOnNext(selection -> view.showLoading())
-        .flatMap(paymentViewModel -> getSelectedPayment(getAllPayments(), paymentViewModel))
-        .<Void>flatMap(payment -> {
-          return aptoidePay.initiate(payment)
-              .observeOn(AndroidSchedulers.mainThread())
-              .doOnCompleted(() -> hideGlobalLoadingAndNavigateToAuthorizationView(payment.getAuthorization()))
-              .toObservable();
-        });
-  }
-
-  private void hideGlobalLoadingAndNavigateToAuthorizationView(Authorization authorization) {
+  private void hideLoadingAndNavigateToAuthorizationView(Payment payment) {
     view.hideLoading();
-    view.navigateToAuthorizationView(authorization.getPaymentId(), product);
+    view.navigateToAuthorizationView(payment.getId(), product);
   }
 
   private Observable<Void> buySelection() {
-    return view.buySelection().doOnNext(payment -> view.showLoading()).<Void>flatMap(
-        payment -> aptoidePay.process(selectedPayment).toObservable());
+    return view.buySelection()
+        .doOnNext(selected -> view.showLoading())
+        .<Void>flatMap(selected -> {
+          if (aptoidePay.isAuthorized(selectedPayment)) {
+            return aptoidePay.process(selectedPayment).toObservable();
+          }
+          return aptoidePay.initiate(selectedPayment)
+              .observeOn(AndroidSchedulers.mainThread())
+              .doOnCompleted(() -> hideLoadingAndNavigateToAuthorizationView(selectedPayment))
+              .toObservable();
+        });
   }
 
   private Observable<Void> otherPaymentsSelection() {
