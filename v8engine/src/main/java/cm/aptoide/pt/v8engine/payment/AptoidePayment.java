@@ -62,8 +62,35 @@ public class AptoidePayment implements Payment {
     return description;
   }
 
+  @Override public boolean isPendingAuthorization() {
+    return authorization.isInitiated()
+        || authorization.isPendingInitiation()
+        || authorization.isFailed();
+  }
+
+  @Override public boolean isCompleted() {
+    return confirmation.isCompleted();
+  }
+
   @Override public Authorization getAuthorization() {
     return authorization;
+  }
+
+  @Override public boolean isPending() {
+    return confirmation.isPending()
+        || authorization.isPending();
+  }
+
+  @Override public boolean isFailed() {
+    return confirmation.isFailed();
+  }
+
+  @Override public boolean isNew() {
+    return confirmation.isNew();
+  }
+
+  @Override public boolean isAuthorized() {
+    return authorization.isAuthorized();
   }
 
   @Override public PaymentConfirmation getConfirmation() {

@@ -65,8 +65,7 @@ public class PaymentPresenter implements Presenter {
 
     view.getLifecycle()
         .filter(event -> View.LifecycleEvent.CREATE.equals(event))
-        .flatMap(created -> buySelection()
-            .observeOn(AndroidSchedulers.mainThread())
+        .flatMap(created -> buySelection().observeOn(AndroidSchedulers.mainThread())
             .doOnError(throwable -> hideLoadingAndShowError(throwable))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -84,26 +83,20 @@ public class PaymentPresenter implements Presenter {
         .doOnNext(loggedIn -> view.showLoading())
         .flatMap(loggedIn -> aptoidePay.availablePayments(product)
             .observeOn(AndroidSchedulers.mainThread())
-            .flatMap(payments -> showProductAndPayments(payments).andThen(aptoidePay.getConfirmation(payments)))
+            .flatMap(payments -> showProductAndPayments(payments).andThen(
+                aptoidePay.getConfirmation(payments)))
             .flatMap(confirmation -> {
-              switch (confirmation.getStatus()) {
-                case NEW:
-                case CANCELED:
-                case FAILED:
-                  view.hideLoading();
-                  return Observable.empty();
-                case CREATED:
-                case PROCESSING:
-                case PENDING:
-                  view.showLoading();
-                  return Observable.empty();
-                case COMPLETED:
-                  return productRepository.getPurchase(product)
-                      .toObservable()
-                      .observeOn(AndroidSchedulers.mainThread());
-                default:
-                  return Observable.empty();
+              if (confirmation.isFailed() || confirmation.isNew()) {
+                view.hideLoading();
+              } else if (confirmation.isPending()) {
+                view.showLoading();
+              } else if (confirmation.isCompleted()) {
+                view.showLoading();
+                return productRepository.getPurchase(product)
+                    .toObservable()
+                    .observeOn(AndroidSchedulers.mainThread());
               }
+              return Observable.empty();
             }))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(purchase -> hideLoadingAndDismiss(purchase),
@@ -178,17 +171,15 @@ public class PaymentPresenter implements Presenter {
   }
 
   private Observable<Void> buySelection() {
-    return view.buySelection()
-        .doOnNext(selected -> view.showLoading())
-        .<Void>flatMap(selected -> {
-          if (aptoidePay.isAuthorized(selectedPayment)) {
-            return aptoidePay.process(selectedPayment).toObservable();
-          }
-          return aptoidePay.initiate(selectedPayment)
-              .observeOn(AndroidSchedulers.mainThread())
-              .doOnCompleted(() -> hideLoadingAndNavigateToAuthorizationView(selectedPayment))
-              .toObservable();
-        });
+    return view.buySelection().doOnNext(selected -> view.showLoading()).<Void>flatMap(selected -> {
+      if (selectedPayment.isAuthorized()) {
+        return aptoidePay.process(selectedPayment).toObservable();
+      }
+      return aptoidePay.initiate(selectedPayment)
+          .observeOn(AndroidSchedulers.mainThread())
+          .doOnCompleted(() -> hideLoadingAndNavigateToAuthorizationView(selectedPayment))
+          .toObservable();
+    });
   }
 
   private Observable<Void> otherPaymentsSelection() {

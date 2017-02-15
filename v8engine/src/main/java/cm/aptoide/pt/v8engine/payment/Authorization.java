@@ -32,6 +32,10 @@ public abstract class Authorization {
     return Status.ACTIVE.equals(status) || Status.NONE.equals(status);
   }
 
+  public boolean isPendingInitiation() {
+    return Status.INACTIVE.equals(status);
+  }
+
   public boolean isInitiated() {
     return Status.INITIATED.equals(status);
   }
@@ -40,9 +44,8 @@ public abstract class Authorization {
     return Status.PENDING.equals(status);
   }
 
-  public boolean isInvalid() {
+  public boolean isFailed() {
     return Status.CANCELLED.equals(status)
-        || Status.INACTIVE.equals(status)
         || Status.EXPIRED.equals(status)
         || Status.SESSION_EXPIRED.equals(status);
   }

@@ -26,16 +26,20 @@ import cm.aptoide.pt.v8engine.payment.AptoidePay;
 import cm.aptoide.pt.v8engine.payment.Payer;
 import cm.aptoide.pt.v8engine.payment.authorizations.WebAuthorization;
 import cm.aptoide.pt.v8engine.payment.products.AptoideProduct;
+import cm.aptoide.pt.v8engine.presenter.WebAuthorizationPresenter;
 import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationFactory;
 import cm.aptoide.pt.v8engine.repository.ProductRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
+import cm.aptoide.pt.v8engine.view.WebAuthorizationView;
+import com.jakewharton.rxrelay.PublishRelay;
 import com.trello.rxlifecycle.android.ActivityEvent;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by marcelobenites on 11/11/16.
  */
-public class WebAuthorizationActivity extends ActivityView {
+public class WebAuthorizationActivity extends ActivityView implements WebAuthorizationView {
 
   private static final String EXTRA_PAYMENT_ID =
       "cm.aptoide.pt.v8engine.payment.providers.boacompra.intent.extra.PAYMENT_ID";
@@ -46,6 +50,8 @@ public class WebAuthorizationActivity extends ActivityView {
   private int paymentId;
   private View progressBarContainer;
   private AlertDialog unknownErrorDialog;
+  private PublishRelay<Void> mainUrlSubject;
+  private PublishRelay<Void> redirectUrlSubject;
 
   public static Intent getIntent(Context context, int paymentId, AptoideProduct product) {
     final Intent intent = new Intent(context, WebAuthorizationActivity.class);
@@ -62,7 +68,8 @@ public class WebAuthorizationActivity extends ActivityView {
     if (getIntent().hasExtra(EXTRA_PAYMENT_ID) && getIntent().hasExtra(EXTRA_PRODUCT)) {
       paymentId = getIntent().getIntExtra(EXTRA_PAYMENT_ID, 0);
       final AptoideProduct product = getIntent().getParcelableExtra(EXTRA_PRODUCT);
-      final AptoideAccountManager accountManager = ((V8Engine) getApplicationContext()).getAccountManager();
+      final AptoideAccountManager accountManager =
+          ((V8Engine) getApplicationContext()).getAccountManager();
       aptoidePay = new AptoidePay(RepositoryFactory.getPaymentConfirmationRepository(this, product),
           RepositoryFactory.getPaymentAuthorizationRepository(this),
           new PaymentAuthorizationFactory(this),
@@ -78,27 +85,13 @@ public class WebAuthorizationActivity extends ActivityView {
             finish();
           })
           .create();
+      mainUrlSubject = PublishRelay.create();
+      redirectUrlSubject = PublishRelay.create();
+      attachPresenter(new WebAuthorizationPresenter(this, aptoidePay, product, paymentId),
+          savedInstanceState);
     } else {
       throw new IllegalStateException("Web payment urls must be provided");
     }
-
-    progressBarContainer.setVisibility(View.VISIBLE);
-    aptoidePay.getAuthorization(paymentId)
-        .distinctUntilChanged(authorization -> authorization.getStatus())
-        .observeOn(AndroidSchedulers.mainThread())
-        .compose(bindUntilEvent(ActivityEvent.DESTROY))
-        .subscribe(authorization -> {
-          if (authorization.isAuthorized()) {
-            hideLoadingAndDismiss();
-          } else if (authorization.isInvalid()) {
-            progressBarContainer.setVisibility(View.GONE);
-            unknownErrorDialog.show();
-          } else if (authorization.isInitiated()) {
-            showAuthorization((WebAuthorization) authorization);
-          } else if (authorization.isPending()) {
-            finish();
-          }
-        });
   }
 
   @Override protected void onDestroy() {
@@ -109,33 +102,47 @@ public class WebAuthorizationActivity extends ActivityView {
     unknownErrorDialog.dismiss();
   }
 
-  private void hideLoadingAndDismiss() {
-    progressBarContainer.setVisibility(View.GONE);
-    finish();
+  @Override public void showLoading() {
+    progressBarContainer.setVisibility(View.VISIBLE);
   }
 
-  private void showAuthorization(WebAuthorization webAuthorization) {
+  @Override public void hideLoading() {
+    progressBarContainer.setVisibility(View.GONE);
+  }
+
+  @Override public void showUrl(String mainUrl, String redirectUrl) {
     webView.setWebViewClient(new WebViewClient() {
 
       @Override public void onPageStarted(WebView view, String url, Bitmap favicon) {
         super.onPageStarted(view, url, favicon);
-        if (url.equals(webAuthorization.getRedirectUrl())) {
-          progressBarContainer.setVisibility(View.VISIBLE);
-          aptoidePay.authorize(webAuthorization.getPaymentId())
-              .observeOn(AndroidSchedulers.mainThread())
-              .compose(bindUntilEvent(ActivityEvent.DESTROY).forCompletable())
-              .subscribe(() -> hideLoadingAndDismiss(), throwable -> {
-                hideLoadingAndDismiss();
-                CrashReport.getInstance().log(throwable);
-              });
+        if (url.equals(redirectUrl)) {
+          redirectUrlSubject.call(null);
         }
       }
 
       @Override public void onPageFinished(WebView view, String url) {
         super.onPageFinished(view, url);
-        progressBarContainer.setVisibility(View.GONE);
+        if (url.equals(mainUrl)) {
+          mainUrlSubject.call(null);
+        }
       }
     });
-    webView.loadUrl(webAuthorization.getUrl());
+    webView.loadUrl(mainUrl);
+  }
+
+  @Override public Observable<Void> redirect() {
+    return redirectUrlSubject;
+  }
+
+  @Override public Observable<Void> urlLoad() {
+    return mainUrlSubject;
+  }
+
+  @Override public void dismiss() {
+    finish();
+  }
+
+  @Override public void showErrorAndDismiss() {
+    unknownErrorDialog.show();
   }
 }

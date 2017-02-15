@@ -37,15 +37,15 @@ public class AptoidePay {
     return paymentRepository.getPayments(product);
   }
 
+  public Observable<Payment> getPayment(int paymentId, AptoideProduct product) {
+    return paymentRepository.getPayment(paymentId, product);
+  }
+
   public Completable initiate(Payment payment) {
-    if (isAuthorized(payment)) {
+    if (payment.isAuthorized()) {
       return Completable.complete();
     }
     return authorizationRepository.createPaymentAuthorization(payment.getId());
-  }
-
-  public Observable<Authorization> getAuthorization(int paymentId) {
-    return authorizationRepository.getPaymentAuthorization(paymentId, payer.getId());
   }
 
   public Completable authorize(int paymentId) {
@@ -54,16 +54,7 @@ public class AptoidePay {
   }
 
   public Completable process(Payment payment) {
-    return Completable.defer(() -> {
-      if (isAuthorized(payment)) {
-        return payment.process();
-      }
-      return Completable.error(new PaymentFailureException("Payment not authorized."));
-    });
-  }
-
-  public boolean isAuthorized(Payment payment) {
-    return payment.getAuthorization().getStatus().equals(Authorization.Status.ACTIVE);
+    return payment.process();
   }
 
   public Observable<PaymentConfirmation> getConfirmation(List<Payment> payments) {

@@ -38,10 +38,23 @@ public class PaymentConfirmation {
     return status;
   }
 
+  public boolean isNew() {
+    return Status.NEW.equals(status);
+  }
+
+  public boolean isCompleted() {
+    return Status.COMPLETED.equals(status);
+  }
+
   public boolean isPending() {
     return Status.CREATED.equals(status)
         || Status.PROCESSING.equals(status)
         || Status.PENDING.equals(status);
+  }
+
+  public boolean isFailed() {
+    return Status.CANCELED.equals(status)
+        || Status.FAILED.equals(status);
   }
 
   public enum Status {

@@ -24,6 +24,18 @@ public interface Payment {
 
   String getDescription();
 
+  boolean isNew();
+
+  boolean isAuthorized();
+
+  boolean isPendingAuthorization();
+
+  boolean isCompleted();
+
+  boolean isPending();
+
+  boolean isFailed();
+
   Authorization getAuthorization();
 
   PaymentConfirmation getConfirmation();
