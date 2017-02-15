@@ -25,8 +25,8 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
   @Getter private final ConcurrentLinkedQueue<AptoideMessageServerController>
       aptoideMessageControllers = new ConcurrentLinkedQueue<>();
 
-  public AptoideMessageServerSocket(int port) {
-    super(port);
+  public AptoideMessageServerSocket(int port, int timeout) {
+    super(port, timeout);
   }
 
   @Override protected void onNewClient(Socket socket) {

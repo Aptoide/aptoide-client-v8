@@ -29,11 +29,11 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
   private LinkedBlockingQueue<ServerAction> queuedServerActions = new LinkedBlockingQueue<>();
   @Getter private Host host;
 
-  public AptoideServerSocket(int port) {
+  public AptoideServerSocket(int port, int timeout) {
     this.port = port;
   }
 
-  public AptoideServerSocket(int bufferSize, int port) {
+  public AptoideServerSocket(int bufferSize, int port, int timeout) {
     super(bufferSize);
     this.port = port;
   }
@@ -84,7 +84,7 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
       }
     } catch (IOException e) {
       // Ignore, when socket is closed during accept() it lands here.
-      System.out.println("Server explicitly closed.");
+      System.out.println("Server explicitly closed " + this.getClass().getSimpleName());
     }
     return this;
   }

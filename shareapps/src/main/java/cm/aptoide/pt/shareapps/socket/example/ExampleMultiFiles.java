@@ -36,7 +36,7 @@ public class ExampleMultiFiles {
   }
 
   private static void startServer() {
-    aptoideServerSocket = new AptoideFileServerSocket(PORT, FILE_PATHS);
+    aptoideServerSocket = new AptoideFileServerSocket(PORT, FILE_PATHS, 5000);
     aptoideServerSocket.startAsync();
   }
 

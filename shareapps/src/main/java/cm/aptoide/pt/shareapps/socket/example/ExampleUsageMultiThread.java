@@ -26,7 +26,7 @@ public class ExampleUsageMultiThread {
 
   public static void main(String[] args) throws InterruptedException {
 
-    new AptoideMessageServerSocket(MESSAGE_SERVER_PORT).startAsync();
+    new AptoideMessageServerSocket(MESSAGE_SERVER_PORT, 5000).startAsync();
 
     Thread.sleep(1000);
 

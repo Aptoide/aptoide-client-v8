@@ -15,15 +15,15 @@ public class ShareAppsServerSocket extends AptoideFileServerSocket {
   private boolean startedSending = false;
 
   public ShareAppsServerSocket(int port, AndroidAppInfo androidAppInfo,
-      FileServerLifecycle<AndroidAppInfo> fileServerLifecycle) {
-    super(port, androidAppInfo.getFilesPathsList());
+      FileServerLifecycle<AndroidAppInfo> fileServerLifecycle, int timeout) {
+    super(port, androidAppInfo.getFilesPathsList(), timeout);
     this.androidAppInfo = androidAppInfo;
     this.fileServerLifecycle = fileServerLifecycle;
   }
 
   public ShareAppsServerSocket(int bufferSize, int port, AndroidAppInfo androidAppInfo,
-      FileServerLifecycle<AndroidAppInfo> fileServerLifecycle) {
-    super(bufferSize, port, androidAppInfo.getFilesPathsList());
+      FileServerLifecycle<AndroidAppInfo> fileServerLifecycle, int timeout) {
+    super(bufferSize, port, androidAppInfo.getFilesPathsList(), timeout);
     this.androidAppInfo = androidAppInfo;
     this.fileServerLifecycle = fileServerLifecycle;
   }

@@ -82,7 +82,7 @@ public class HandlersFactory {
 
     @Override public void handleMessage(SendApk sendApkMessage, Sender<Message> messageSender) {
       new ShareAppsServerSocket(sendApkMessage.getServerPort(), sendApkMessage.getAndroidAppInfo(),
-          serverLifecycle).startAsync();
+          serverLifecycle, 5000).startAsync();
       messageSender.send(new AckMessage(messageSender.getHost()));
       // TODO: 03-02-2017 neuro maybe a good ideia to stop the server somewhat :)
     }

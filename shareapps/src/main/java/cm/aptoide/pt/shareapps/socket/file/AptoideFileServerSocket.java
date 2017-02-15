@@ -15,13 +15,13 @@ public class AptoideFileServerSocket extends AptoideServerSocket {
 
   private final List<String> filePaths;
 
-  public AptoideFileServerSocket(int port, List<String> filePaths) {
-    super(port);
+  public AptoideFileServerSocket(int port, List<String> filePaths, int timeout) {
+    super(port, timeout);
     this.filePaths = filePaths;
   }
 
-  public AptoideFileServerSocket(int bufferSize, int port, List<String> filePaths) {
-    super(bufferSize, port);
+  public AptoideFileServerSocket(int bufferSize, int port, List<String> filePaths, int timeout) {
+    super(bufferSize, port, timeout);
     this.filePaths = filePaths;
   }
 
