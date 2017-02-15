@@ -28,7 +28,9 @@ public class ExampleUsageMultiThread {
 
     new AptoideMessageServerSocket(MESSAGE_SERVER_PORT).startAsync();
 
-    for (int i = 0; i < 10; i++) {
+    Thread.sleep(1000);
+
+    for (int i = 0; i < 2; i++) {
       newAptoideMessageClientSocket().startAsync();
     }
   }
