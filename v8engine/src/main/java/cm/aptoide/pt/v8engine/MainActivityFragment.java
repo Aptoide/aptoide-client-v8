@@ -56,7 +56,7 @@ public class MainActivityFragment extends AptoideSimpleFragmentActivity implemen
 
     if (savedInstanceState == null) {
       startService(new Intent(this, PullingContentService.class));
-      if (ManagerPreferences.isAutoUpdateEnable() && !V8Engine.isAutoUpdateWasCalled()) {
+      if (ManagerPreferences.isCheckAutoUpdateEnable() && !V8Engine.isAutoUpdateWasCalled()) {
 
         // only call auto update when the app was not on the background
         new AutoUpdate(this, new InstallerFactory().create(this, InstallerFactory.DEFAULT),

@@ -29,6 +29,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
@@ -66,6 +68,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private Context context;
   private CompositeSubscription subscriptions;
   private FileManager fileManager;
+  private PermissionManager permissionManager;
 
   public static Fragment newInstance() {
     return new SettingsFragment();
@@ -75,6 +78,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     super.onCreate(savedInstanceState);
     fileManager = FileManager.build();
     subscriptions = new CompositeSubscription();
+    permissionManager = new PermissionManager();
   }
 
   @Override public void onCreatePreferences(Bundle bundle, String s) {
@@ -337,6 +341,34 @@ public class SettingsFragment extends PreferenceFragmentCompat
     if (isSetingPIN) {
       dialogSetAdultPin(mp).show();
     }
+
+    CheckBoxPreference autoUpdatePreference =
+        (CheckBoxPreference) findPreference(SettingsConstants.AUTO_UPDATE_ENABLE);
+    findPreference(SettingsConstants.ALLOW_ROOT_INSTALLATION).setOnPreferenceChangeListener(
+        (preference, o) -> {
+          final CheckBoxPreference checkBoxPreference = (CheckBoxPreference) preference;
+          if (checkBoxPreference.isChecked()) {
+            ManagerPreferences.setAutoUpdateEnable(false);
+            autoUpdatePreference.setChecked(false);
+          }
+          return true;
+        });
+
+    PermissionRequest permissionRequest = (PermissionRequest) getContext();
+    autoUpdatePreference.setDependency(SettingsConstants.ALLOW_ROOT_INSTALLATION);
+    autoUpdatePreference.setOnPreferenceClickListener(preference -> {
+      final CheckBoxPreference checkBoxPreference = (CheckBoxPreference) preference;
+      if (checkBoxPreference.isChecked()) {
+        checkBoxPreference.setChecked(false);
+        subscriptions.add(permissionManager.requestExternalStoragePermission(permissionRequest)
+            .flatMap(success -> permissionManager.requestDownloadAccess(permissionRequest))
+            .subscribe(success -> {
+              checkBoxPreference.setChecked(true);
+              ManagerPreferences.setAutoUpdateEnable(true);
+            }, throwable -> CrashReport.getInstance().log(throwable)));
+      }
+      return true;
+    });
   }
 
   private void maturePinSetRemoveClick() {

@@ -60,9 +60,18 @@ public class ManagerPreferences {
         .getBoolean(ManagedKeys.ANIMATIONS_ENABLED, true);
   }
 
-  public static boolean isAutoUpdateEnable() {
+  public static boolean isCheckAutoUpdateEnable() {
     return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
         .getBoolean(ManagedKeys.CHECK_AUTO_UPDATE, true);
+  }
+
+  public static boolean isAutoUpdateEnable() {
+    return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
+        .getBoolean(ManagedKeys.AUTO_UPDATE_ENABLE, true);
+  }
+
+  public static void setAutoUpdateEnable(boolean state) {
+    Preferences.get().edit().putBoolean(ManagedKeys.AUTO_UPDATE_ENABLE, state).apply();
   }
 
   public static boolean isAllwaysUpdate() {
