@@ -19,6 +19,8 @@
       android:layout_centerVertical="true"
       android:layout_toLeftOf="@+id/create_store_action"
       android:layout_toStartOf="@+id/create_store_action"
+      android:layout_alignParentLeft="true"
+      android:gravity="left"
       android:text="@string/create_store_displayable_message"
       android:textColor="?attr/inverseTextColor"
       />

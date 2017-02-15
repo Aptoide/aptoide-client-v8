@@ -325,7 +325,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
   }
 
   @Override public void setupToolbarDetails(Toolbar toolbar) {
-    toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
+    //toolbar.setLogo(R.drawable.logo_aptoide);
     toolbar.setNavigationIcon(R.drawable.ic_drawer);
     toolbar.setNavigationOnClickListener(v -> mDrawerLayout.openDrawer(GravityCompat.START));
   }
