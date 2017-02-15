@@ -75,9 +75,9 @@ public class ToolboxContentProvider extends ContentProvider {
   @Nullable @Override
   public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
       String sortOrder) {
-    if (securityManager.checkSignature(Binder.getCallingUid(), BuildConfig.BACKUP_SIGNATURE, BACKUP_PACKAGE)
-        || securityManager.checkSignature(Binder.getCallingUid(), BuildConfig.UPLOADER_SIGNATURE,
-        UPLOADER_PACKAGE)) {
+    if (securityManager.checkSignature(Binder.getCallingUid(), BuildConfig.BACKUP_SIGNATURE,
+        BACKUP_PACKAGE) || securityManager.checkSignature(Binder.getCallingUid(),
+        BuildConfig.UPLOADER_SIGNATURE, UPLOADER_PACKAGE)) {
       switch (uriMatcher.match(uri)) {
         case TOKEN:
           final String accessToken = AptoideAccountManager.getAccessToken();

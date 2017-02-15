@@ -45,10 +45,6 @@ import java.util.Locale;
     comunityRatingIndicator = new ComunityRatingIndicator(itemView);
   }
 
-  @Override public void unbindView() {
-
-  }
-
   @Override public void bindView(AppViewRateThisDisplayable displayable) {
     final GetApp pojo = displayable.getPojo();
 

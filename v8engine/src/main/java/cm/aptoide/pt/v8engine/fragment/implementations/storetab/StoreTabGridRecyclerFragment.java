@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
@@ -57,9 +58,8 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
     return fragment;
   }
 
-  @NonNull
-  protected static Bundle buildBundle(Event event, String title, String storeTheme, String tag,
-      StoreContext storeContext) {
+  @Partners @NonNull
+  protected static Bundle buildBundle(Event event, String title, String storeTheme, String tag,StoreContext storeContext) {
     Bundle args = new Bundle();
 
     if (event.getType() != null) {
@@ -91,7 +91,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
     super.onCreate(savedInstanceState);
   }
 
-  @Override public void loadExtras(Bundle args) {
+  @Partners @Override public void loadExtras(Bundle args) {
     if (args.containsKey(BundleCons.TYPE)) {
       type = Event.Type.valueOf(args.getString(BundleCons.TYPE));
     }

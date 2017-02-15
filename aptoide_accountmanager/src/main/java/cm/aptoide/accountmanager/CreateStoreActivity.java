@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.ws.CheckUserCredentialsRequest;
 import cm.aptoide.accountmanager.ws.ErrorsMapper;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
@@ -139,12 +140,15 @@ public class CreateStoreActivity extends PermissionsBaseActivity
   }
 
   @Override void loadImage(Uri imagePath) {
-    ImageLoader.loadWithCircleTransform(imagePath, mStoreAvatar);
+    ImageLoader.with(this).loadWithCircleTransform(imagePath, mStoreAvatar, false);
   }
 
   @Override void showIconPropertiesError(String errors) {
     mSubscriptions.add(GenericDialogs.createGenericOkMessage(this,
-        getString(R.string.image_requirements_error_popup_title), errors).subscribe());
+        getString(R.string.image_requirements_error_popup_title), errors)
+        .subscribe(__ -> {/* does nothing */}, err -> {
+          CrashReport.getInstance().log(err);
+        }));
   }
 
   private void getData() {
@@ -222,7 +226,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
       mStoreDescription.setVisibility(View.VISIBLE);
       mStoreDescription.setText(storeDescription);
       if (storeRemoteUrl != null) {
-        ImageLoader.loadWithCircleTransform(storeRemoteUrl, mStoreAvatar);
+        ImageLoader.with(this).loadUsingCircleTransform(storeRemoteUrl, mStoreAvatar);
       }
       handleThemeTick(storeTheme, "visible");
       mCreateStore.setText(R.string.save_edit_store);
@@ -240,7 +244,10 @@ public class CreateStoreActivity extends PermissionsBaseActivity
   }
 
   private void setupListeners() {
-    mSubscriptions.add(RxView.clicks(mStoreAvatarLayout).subscribe(click -> chooseAvatarSource()));
+    mSubscriptions.add(
+        RxView.clicks(mStoreAvatarLayout).subscribe(click -> chooseAvatarSource(), err -> {
+          CrashReport.getInstance().log(err);
+        }));
     mSubscriptions.add(RxView.clicks(mCreateStore).subscribe(click -> {
           AptoideUtils.SystemU.hideKeyboard(this);
           storeName = mStoreName.getText().toString().trim().toLowerCase();
@@ -261,7 +268,9 @@ public class CreateStoreActivity extends PermissionsBaseActivity
                       if (answer.getErrors().get(0).code.equals("WOP-2")) {
                         mSubscriptions.add(GenericDialogs.createGenericContinueMessage(this, "",
                             getApplicationContext().getResources().getString(R.string.ws_error_WOP_2))
-                            .subscribe());
+                            .subscribe(__ -> {/*does nothing*/}, err -> {
+                              CrashReport.getInstance().log(err);
+                            }));
                       } else if (answer.getErrors().get(0).code.equals("WOP-3")) {
                         ShowMessage.asSnack(this, ErrorsMapper.getWebServiceErrorMessageFromCode(
                             answer.getErrors().get(0).code));
@@ -297,7 +306,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
           } else if (CREATE_STORE_REQUEST_CODE == 4) {
             setStoreData();
             progressDialog.show();
-            mSubscriptions.add(SetStoreRequest.of(aptoideClientUUID.getAptoideClientUUID(),
+            mSubscriptions.add(SetStoreRequest.of(aptoideClientUUID.getUniqueIdentifier(),
                 AptoideAccountManager.getAccessToken(), storeName, storeTheme, storeAvatarPath,
                 storeDescription, true, storeId).observe().subscribe(answer -> {
               AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
@@ -328,7 +337,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
             setStoreData();
             progressDialog.show();
             mSubscriptions.add(SimpleSetStoreRequest.of(AptoideAccountManager.getAccessToken(),
-                aptoideClientUUID.getAptoideClientUUID(), storeId, storeTheme, storeDescription)
+                aptoideClientUUID.getUniqueIdentifier(), storeId, storeTheme, storeDescription)
                 .observe()
                 .subscribe(answer -> {
                   AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
@@ -535,7 +544,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
        * Multipart
        */
       setStoreData();
-      mSubscriptions.add(SetStoreRequest.of(aptoideClientUUID.getAptoideClientUUID(),
+      mSubscriptions.add(SetStoreRequest.of(aptoideClientUUID.getUniqueIdentifier(),
           AptoideAccountManager.getAccessToken(), storeName, storeTheme, storeAvatarPath)
           .observe()
           .timeout(90, TimeUnit.SECONDS)
@@ -596,7 +605,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
        */
       setStoreData();
       SimpleSetStoreRequest.of(AptoideAccountManager.getAccessToken(),
-          aptoideClientUUID.getAptoideClientUUID(), storeName, storeTheme).execute(answer -> {
+          aptoideClientUUID.getUniqueIdentifier(), storeName, storeTheme).execute(answer -> {
         AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
           progressDialog.dismiss();
           AptoideAccountManager.sendLoginBroadcast();

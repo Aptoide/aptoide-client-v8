@@ -7,7 +7,7 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.content.Context;
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.actions.PermissionRequest;
+import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -102,7 +102,7 @@ public class UpdateDisplayable extends Displayable {
   }
 
   public Observable<Progress<Download>> downloadAndInstall(Context context,
-      PermissionRequest permissionRequest) {
+      PermissionService permissionRequest) {
     Analytics.Updates.update();
     PermissionManager permissionManager = new PermissionManager();
     return permissionManager.requestExternalStoragePermission(permissionRequest)

@@ -15,7 +15,6 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.MyStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -45,7 +44,7 @@ public class MyStoreWidget extends Widget<MyStoreDisplayable> {
 
   @Override public void bindView(MyStoreDisplayable displayable) {
 
-    FragmentActivity context = getContext();
+    final FragmentActivity context = getContext();
     Store store = displayable.getMeta().getData();
     String storeTheme = store.getAppearance().getTheme();
     @ColorInt int color = getColorOrDefault(StoreThemeEnum.get(storeTheme), context);
@@ -60,11 +59,11 @@ public class MyStoreWidget extends Widget<MyStoreDisplayable> {
     }
     exploreButton.setTextColor(color);
 
-    ImageLoader.loadWithShadowCircleTransform(store.getAvatar(), storeIcon);
+    ImageLoader.with(context).loadWithShadowCircleTransform(store.getAvatar(), storeIcon);
 
     storeName.setText(store.getName());
     compositeSubscription.add(RxView.clicks(exploreButton)
-        .subscribe(click -> ((FragmentShower) context).pushFragmentV4(
+        .subscribe(click -> getNavigationManager().navigateTo(
             V8Engine.getFragmentProvider().newStoreFragment(store.getName(), storeTheme))));
   }
 

@@ -1,7 +1,6 @@
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
 import cm.aptoide.pt.dataprovider.BuildConfig;
-import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
@@ -49,7 +48,7 @@ public class PostCommentForStore extends V7<SetComment, PostCommentForStore.Body
     private long storeId;
     @JsonProperty("comment_id") private Long previousCommentId;
     private String body;
-    private String commentType = CommentType.STORE.name();
+    //private String commentType = CommentType.STORE.name();
 
     public Body(long storeId, String text, long previousCommentId) {
       this(storeId, text);

@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.timeline;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,6 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.customviews.LikeButtonView;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.SocialCardDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Observable;
@@ -140,10 +140,9 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
     showLikesPreview(displayable);
 
     compositeSubscription.add(RxView.clicks(likePreviewContainer)
-        .subscribe(click -> displayable.likesPreviewClick(((FragmentShower) getContext())),
-            (throwable) -> {
-              throwable.printStackTrace();
-            }));
+        .subscribe(click -> displayable.likesPreviewClick(getNavigationManager()), (throwable) -> {
+          throwable.printStackTrace();
+        }));
   }
 
   private Observable<Void> showComments(T displayable) {
@@ -151,7 +150,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
       final String elementId = displayable.getTimelineCard().getCardId();
       Fragment fragment = V8Engine.getFragmentProvider()
           .newCommentGridRecyclerFragment(CommentType.TIMELINE, elementId);
-      ((FragmentShower) getContext()).pushFragmentV4(fragment);
+      getNavigationManager().navigateTo(fragment);
       return null;
     });
   }
@@ -185,10 +184,13 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
     likeUserPreviewView.requestLayout();
 
     if (user != null) {
+      final FragmentActivity context = getContext();
       if (user.getAvatar() != null) {
-        ImageLoader.loadWithShadowCircleTransform(user.getAvatar(), likeUserPreviewIcon);
+        ImageLoader.with(context)
+            .loadWithShadowCircleTransform(user.getAvatar(), likeUserPreviewIcon);
       } else if (user.getStore().getAvatar() != null) {
-        ImageLoader.loadWithShadowCircleTransform(user.getStore().getAvatar(), likeUserPreviewIcon);
+        ImageLoader.with(context)
+            .loadWithShadowCircleTransform(user.getStore().getAvatar(), likeUserPreviewIcon);
       }
       likePreviewContainer.addView(likeUserPreviewView);
       marginOfTheNextLikePreview -= 20;

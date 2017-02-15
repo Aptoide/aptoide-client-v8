@@ -30,10 +30,6 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
     addMoreStores = (Button) itemView.findViewById(R.id.add_more_stores);
   }
 
-  @Override public void unbindView() {
-
-  }
-
   @Override public void bindView(AddMoreStoresDisplayable displayable) {
     addMoreStores.setOnClickListener(v -> {
       if (itemView.getContext() instanceof FragmentActivity) {

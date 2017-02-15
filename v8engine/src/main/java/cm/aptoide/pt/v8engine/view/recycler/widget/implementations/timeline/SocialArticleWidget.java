@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.timeline;
 
 import android.graphics.Typeface;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.Button;
@@ -66,16 +67,19 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
   @Override public void bindView(SocialArticleDisplayable displayable) {
     super.bindView(displayable);
 
+    final FragmentActivity context = getContext();
     if (displayable.getStore() != null) {
       title.setVisibility(View.VISIBLE);
       title.setText(displayable.getStore().getName());
       storeAvatar.setVisibility(View.VISIBLE);
-      ImageLoader.loadWithShadowCircleTransform(displayable.getStore().getAvatar(), storeAvatar);
+      ImageLoader.with(context)
+          .loadWithShadowCircleTransform(displayable.getStore().getAvatar(), storeAvatar);
       if (displayable.getUser() != null) {
         subtitle.setVisibility(View.VISIBLE);
         subtitle.setText(displayable.getUser().getName());
         userAvatar.setVisibility(View.VISIBLE);
-        ImageLoader.loadWithShadowCircleTransform(displayable.getUser().getAvatar(), userAvatar);
+        ImageLoader.with(context)
+            .loadWithShadowCircleTransform(displayable.getUser().getAvatar(), userAvatar);
       } else {
         subtitle.setVisibility(View.GONE);
         userAvatar.setVisibility(View.GONE);
@@ -87,23 +91,24 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
         title.setVisibility(View.VISIBLE);
         title.setText(displayable.getUser().getName());
         storeAvatar.setVisibility(View.VISIBLE);
-        ImageLoader.loadWithShadowCircleTransform(displayable.getUser().getAvatar(), storeAvatar);
+        ImageLoader.with(context)
+            .loadWithShadowCircleTransform(displayable.getUser().getAvatar(), storeAvatar);
       }
     }
 
     Typeface typeFace =
-        Typeface.createFromAsset(getContext().getAssets(), "fonts/DroidSerif-Regular.ttf");
+        Typeface.createFromAsset(context.getAssets(), "fonts/DroidSerif-Regular.ttf");
     articleTitle.setTypeface(typeFace);
     articleTitle.setText(displayable.getArticleTitle());
     setCardViewMargin(displayable, cardView);
 
     //time.setText(displayable.getTimeSinceLastUpdate(getContext()));
 
-    ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
+    ImageLoader.with(context).load(displayable.getThumbnailUrl(), thumbnail);
 
     url.setOnClickListener(v -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
-      displayable.getLink().launch(getContext());
+      displayable.getLink().launch(context);
       Analytics.AppsTimeline.clickOnCard(CARD_TYPE_NAME, Analytics.AppsTimeline.BLANK,
           displayable.getArticleTitle(), displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_ARTICLE);
@@ -127,19 +132,19 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
             setAppNameToFirstLinkedApp(displayable);
           }
           if (appName != null) {
-            relatedTo.setText(displayable.getAppRelatedToText(getContext(), appName));
+            relatedTo.setText(displayable.getAppRelatedToText(context, appName));
           }
         }, throwable -> {
           setAppNameToFirstLinkedApp(displayable);
           if (appName != null) {
-            relatedTo.setText(displayable.getAppRelatedToText(getContext(), appName));
+            relatedTo.setText(displayable.getAppRelatedToText(context, appName));
           }
           throwable.printStackTrace();
         }));
 
     compositeSubscription.add(RxView.clicks(articleHeader).subscribe(click -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
-      displayable.getDeveloperLink().launch(getContext());
+      displayable.getDeveloperLink().launch(context);
       Analytics.AppsTimeline.clickOnCard(CARD_TYPE_NAME, Analytics.AppsTimeline.BLANK,
           displayable.getArticleTitle(), displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_ARTICLE_HEADER);

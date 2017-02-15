@@ -14,7 +14,7 @@ import lombok.Getter;
  * Created by trinkes on 5/16/16.
  */
 
-public @EqualsAndHashCode class FileToDownload extends RealmObject {
+@EqualsAndHashCode(callSuper = false) public class FileToDownload extends RealmObject {
 
   public static final int APK = 0;
   public static final int OBB = 1;
@@ -120,6 +120,10 @@ public @EqualsAndHashCode class FileToDownload extends RealmObject {
     return path;
   }
 
+  public void setPath(String path) {
+    this.path = path;
+  }
+
   public String getFileName() {
     if (TextUtils.isEmpty(fileName)) {
       return TextUtils.isEmpty(getMd5()) ? IdUtils.randomString() : getMd5();
@@ -137,10 +141,6 @@ public @EqualsAndHashCode class FileToDownload extends RealmObject {
 
   public void setMd5(String md5) {
     this.md5 = md5;
-  }
-
-  public void setPath(String path) {
-    this.path = path;
   }
 
   //@Override protected FileToDownload clone() {

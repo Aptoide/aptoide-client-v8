@@ -22,10 +22,11 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.implementations.HomeFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.storetab.StoreTabFragmentChooser;
-import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridDisplayDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import com.jakewharton.rxbinding.view.RxView;
+import rx.functions.Action1;
 
 /**
  * Created by sithengineer on 02/05/16.
@@ -45,32 +46,21 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
     imageView = (ImageView) itemView.findViewById(R.id.image_category);
   }
 
-  @Override public void unbindView() {
-
-  }
-
   @Override public void bindView(GridDisplayDisplayable displayable) {
     GetStoreDisplays.EventImage pojo = displayable.getPojo();
-    ImageLoader.load(pojo.getGraphic(), imageView);
+    final FragmentActivity context = getContext();
+    ImageLoader.with(context).load(pojo.getGraphic(), imageView);
 
-    imageView.setOnClickListener(v -> {
+    final Action1<Void> imageClickHandler = v -> {
       Event event = pojo.getEvent();
       Event.Name name = event.getName();
       if (StoreTabFragmentChooser.validateAcceptedName(name)) {
-        FragmentUtils.replaceFragmentV4((FragmentActivity) itemView.getContext(),
-            V8Engine.getFragmentProvider()
-                .newStoreTabGridRecyclerFragment(event, pojo.getLabel(),
-                    displayable.getStoreTheme(), displayable.getTag(),
-                    displayable.getStoreContext()));
+        getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
+            .newStoreTabGridRecyclerFragment(event, pojo.getLabel(), displayable.getStoreTheme(),
+                displayable.getTag(),displayable.getStoreContext()));
       } else {
         switch (name) {
           case facebook:
-            //@Cleanup Realm realm = DeprecatedDatabase.get();
-            //Installed installedFacebook =
-            //    DeprecatedDatabase.InstalledQ.get(HomeFragment.FACEBOOK_PACKAGE_NAME, realm);
-            //sendActionEvent(AptoideUtils.SocialLinksU.getFacebookPageURL(
-            //    installedFacebook == null ? 0 : installedFacebook.getVersionCode(),
-            //    event.getAction()));
             InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
             compositeSubscription.add(installedAccessor.get(HomeFragment.FACEBOOK_PACKAGE_NAME)
                 .subscribe(installedFacebook -> {
@@ -88,7 +78,9 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
             break;
         }
       }
-    });
+    };
+    compositeSubscription.add(RxView.clicks(imageView)
+        .subscribe(imageClickHandler, throwable -> CrashReport.getInstance().log(throwable)));
   }
 
   private void sendActionEvent(String eventActionUrl) {

@@ -31,7 +31,7 @@ public class SocialRepository {
 
   public void share(TimelineCard timelineCard, Context context, boolean privacy) {
     String accessToken = AptoideAccountManager.getAccessToken();
-    String aptoideClientUUID = this.aptoideClientUUID.getAptoideClientUUID();
+    String aptoideClientUUID = this.aptoideClientUUID.getUniqueIdentifier();
     ShareCardRequest.of(timelineCard, accessToken, aptoideClientUUID)
         .observe()
         .subscribe(baseV7Response -> {
@@ -48,7 +48,7 @@ public class SocialRepository {
 
   public void like(TimelineCard timelineCard, String cardType, String ownerHash, int rating) {
     String accessToken = AptoideAccountManager.getAccessToken();
-    String aptoideClientUUID = this.aptoideClientUUID.getAptoideClientUUID();
+    String aptoideClientUUID = this.aptoideClientUUID.getUniqueIdentifier();
     String email = AptoideAccountManager.getUserEmail();
     LikeCardRequest.of(timelineCard, cardType, ownerHash, accessToken, aptoideClientUUID, rating)
         .observe()
@@ -60,7 +60,7 @@ public class SocialRepository {
 
   public void share(String packageName, String shareType, boolean privacy) {
     String accessToken = AptoideAccountManager.getAccessToken();
-    String aptoideClientUUID = this.aptoideClientUUID.getAptoideClientUUID();
+    String aptoideClientUUID = this.aptoideClientUUID.getUniqueIdentifier();
     ShareInstallCardRequest.of(packageName, accessToken, shareType, aptoideClientUUID)
         .observe()
         .subscribe(baseV7Response -> {
