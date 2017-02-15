@@ -60,7 +60,7 @@ public class VanillaConfiguration implements AptoidePreferencesConfiguration {
   }
 
   @Override public int getIcon() {
-    return R.drawable.icon_brand_aptoide;
+    return R.mipmap.ic_launcher;
   }
 
   @Override public String getDefaultStore() {

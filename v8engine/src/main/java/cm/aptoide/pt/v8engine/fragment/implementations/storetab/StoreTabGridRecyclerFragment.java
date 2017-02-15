@@ -165,7 +165,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
 
   @Override public void setupToolbarDetails(Toolbar toolbar) {
     toolbar.setTitle(Translator.translate(title));
-    toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
+    toolbar.setLogo(R.drawable.logo_toolbar);
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
