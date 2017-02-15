@@ -9,7 +9,7 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import cm.aptoide.pt.actions.PermissionRequest;
+import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Download;
@@ -76,7 +76,7 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
     });
     */
     more.setOnClickListener((view) -> {
-      ((PermissionRequest) getContext()).requestAccessToExternalFileSystem(() -> {
+      ((PermissionService) getContext()).requestAccessToExternalFileSystem(() -> {
         UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
         compositeSubscription.add(
             updateAccessor.getAll(false)

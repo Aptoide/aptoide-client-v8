@@ -148,7 +148,7 @@ public class SocialStoreLatestAppsWidget
                 .store(displayable.getStoreName())
                 .build())
             .build(), TimelineClickEvent.OPEN_APP);
-        ((FragmentShower) context).pushFragmentV4(
+        ((FragmentShower) context).pushFragment(
             V8Engine.getFragmentProvider().newAppViewFragment(apps.get(app), packageName));
       }));
     }
@@ -164,7 +164,7 @@ public class SocialStoreLatestAppsWidget
           .specific(
               SendEventRequest.Body.Specific.builder().store(displayable.getStoreName()).build())
           .build(), TimelineClickEvent.OPEN_STORE);
-      ((FragmentShower) context).pushFragmentV4(V8Engine.getFragmentProvider()
+      ((FragmentShower) context).pushFragment(V8Engine.getFragmentProvider()
           .newStoreFragment(displayable.getStoreName(),
               displayable.getSharedStore().getAppearance().getTheme()));
     }));
@@ -181,7 +181,7 @@ public class SocialStoreLatestAppsWidget
               .store(displayable.getSharedStore().getName())
               .build())
           .build(), TimelineClickEvent.OPEN_STORE);
-      ((FragmentShower) context).pushFragmentV4(V8Engine.getFragmentProvider()
+      ((FragmentShower) context).pushFragment(V8Engine.getFragmentProvider()
           .newStoreFragment(displayable.getSharedStore().getName(),
               displayable.getSharedStore().getAppearance().getTheme()));
     }));

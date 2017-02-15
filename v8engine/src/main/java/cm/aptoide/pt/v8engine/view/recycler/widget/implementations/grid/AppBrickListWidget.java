@@ -48,7 +48,7 @@ public class AppBrickListWidget extends Widget<AppBrickListDisplayable> {
     final FragmentShower fragmentShower = (FragmentShower) getContext();
     compositeSubscription.add(RxView.clicks(itemView).subscribe(v -> {
       Analytics.AppViewViewedFrom.addStepToList(displayable.getTag());
-      fragmentShower.pushFragmentV4(
+      fragmentShower.pushFragment(
           V8Engine.getFragmentProvider().newAppViewFragment(app.getId(), app.getPackageName()));
       Analytics.HomePageEditorsChoice.clickOnEditorsChoiceItem(getAdapterPosition(),
           app.getPackageName(), false);

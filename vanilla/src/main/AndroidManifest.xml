@@ -44,7 +44,7 @@
       </intent-filter>
     </activity>
 
-    <activity android:name=".v8engine.MainActivityFragment">
+    <activity android:name=".v8engine.view.MainActivity">
       <intent-filter>
         <data android:scheme="amp${LOCALYTICS_APP_KEY}"/>
         <action android:name="android.intent.action.VIEW"/>

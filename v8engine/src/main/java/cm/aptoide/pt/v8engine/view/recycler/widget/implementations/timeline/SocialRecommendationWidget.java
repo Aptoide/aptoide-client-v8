@@ -102,7 +102,7 @@ public class SocialRecommendationWidget extends SocialCardWidget<SocialRecommend
       //        .based_on(displayable.getSimilarAppPackageName())
       //        .build())
       //    .build(), AptoideAnalytics.OPEN_APP);
-      ((FragmentShower) context).pushFragmentV4(V8Engine.getFragmentProvider()
+      ((FragmentShower) context).pushFragment(V8Engine.getFragmentProvider()
           .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
     });
   }

@@ -62,7 +62,7 @@ public class GridAppListWidget extends Widget<GridAppListDisplayable> {
     final FragmentShower fragmentShower = (FragmentShower) context;
     compositeSubscription.add(RxView.clicks(itemView).subscribe(v -> {
       // FIXME
-      fragmentShower.pushFragmentV4(
+      fragmentShower.pushFragment(
           V8Engine.getFragmentProvider().newAppViewFragment(app.getId(), app.getPackageName()));
     }, throwable -> CrashReport.getInstance().log(throwable)));
 

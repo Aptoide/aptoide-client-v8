@@ -52,7 +52,7 @@ public class SearchAdWidget extends Widget<SearchAdDisplayable> {
 
     itemView.setOnClickListener(view -> {
       //	        AptoideUtils.FlurryAppviewOrigin.addAppviewOrigin("Suggested_Search Result");
-      ((FragmentShower) view.getContext()).pushFragmentV4(
+      ((FragmentShower) view.getContext()).pushFragment(
           V8Engine.getFragmentProvider().newAppViewFragment(minimalAd));
     });
   }

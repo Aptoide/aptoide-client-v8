@@ -218,16 +218,16 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
         if (itemId == R.id.navigation_item_my_account) {
           AptoideAccountManager.openAccountManager(getContext());
         } else if (itemId == R.id.navigation_item_rollback) {
-          ((FragmentShower) getActivity()).pushFragmentV4(
+          ((FragmentShower) getActivity()).pushFragment(
               V8Engine.getFragmentProvider().newRollbackFragment());
         } else if (itemId == R.id.navigation_item_setting_scheduled_downloads) {
-          ((FragmentShower) getActivity()).pushFragmentV4(
+          ((FragmentShower) getActivity()).pushFragment(
               V8Engine.getFragmentProvider().newScheduledDownloadsFragment());
         } else if (itemId == R.id.navigation_item_excluded_updates) {
-          ((FragmentShower) getActivity()).pushFragmentV4(
+          ((FragmentShower) getActivity()).pushFragment(
               V8Engine.getFragmentProvider().newExcludedUpdatesFragment());
         } else if (itemId == R.id.navigation_item_settings) {
-          ((FragmentShower) getActivity()).pushFragmentV4(
+          ((FragmentShower) getActivity()).pushFragment(
               V8Engine.getFragmentProvider().newSettingsFragment());
         } else if (itemId == R.id.navigation_item_facebook) {
           openFacebook();
@@ -297,7 +297,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
     String downloadFolderPath = Application.getConfiguration().getCachePath();
     String screenshotFileName = getActivity().getClass().getSimpleName() + ".jpg";
     AptoideUtils.ScreenU.takeScreenshot(getActivity(), downloadFolderPath, screenshotFileName);
-    ((FragmentShower) getActivity()).pushFragmentV4(V8Engine.getFragmentProvider()
+    ((FragmentShower) getActivity()).pushFragment(V8Engine.getFragmentProvider()
         .newSendFeedbackFragment(downloadFolderPath + screenshotFileName));
   }
 
@@ -309,7 +309,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(installedFacebook -> {
           if (installedFacebook == null) {
-            ((FragmentShower) getActivity()).pushFragmentV4(
+            ((FragmentShower) getActivity()).pushFragment(
                 V8Engine.getFragmentProvider().newSocialFragment(socialUrl, pageTitle));
           } else {
             Intent sharingIntent = new Intent(Intent.ACTION_VIEW, uriToOpenApp);

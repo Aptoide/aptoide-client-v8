@@ -69,7 +69,7 @@ import com.jakewharton.rxbinding.view.RxView;
     compositeSubscription.add(RxView.clicks(itemView).subscribe(v -> {
       // FIXME
       Analytics.AppViewViewedFrom.addStepToList(displayable.getTag());
-      fragmentShower.pushFragmentV4(V8Engine.getFragmentProvider()
+      fragmentShower.pushFragment(V8Engine.getFragmentProvider()
           .newAppViewFragment(appId, pojo.getPackageName(),
               pojo.getStore().getAppearance().getTheme(), tvStoreName.getText().toString()));
     }, throwable -> CrashReport.getInstance().log(throwable)));

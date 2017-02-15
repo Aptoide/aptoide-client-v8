@@ -4,7 +4,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import cm.aptoide.pt.actions.PermissionRequest;
+import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.imageloader.ImageLoader;
@@ -76,7 +76,7 @@ public class RollbackWidget extends Widget<RollbackDisplayable> {
 
     compositeSubscription.add(RxView.clicks(rollbackAction).subscribe(view -> {
 
-      final PermissionRequest permissionRequest = ((PermissionRequest) context);
+      final PermissionService permissionRequest = ((PermissionService) getContext());
 
       permissionRequest.requestAccessToExternalFileSystem(() -> {
         Rollback.Action action = Rollback.Action.valueOf(pojo.getAction());

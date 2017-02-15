@@ -125,7 +125,7 @@ public class ScreenshotsAdapter
 
       itemView.setOnClickListener(v -> {
         // TODO improve this call
-        ((FragmentShower) v.getContext()).pushFragmentV4(
+        ((FragmentShower) v.getContext()).pushFragment(
             V8Engine.getFragmentProvider().newScreenshotsViewerFragment(imagesUris, position));
       });
     }

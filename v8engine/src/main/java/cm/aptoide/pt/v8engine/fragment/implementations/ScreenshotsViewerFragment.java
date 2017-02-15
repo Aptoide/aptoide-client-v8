@@ -10,7 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.adapters.ViewPagerAdapterScreenshots;
-import cm.aptoide.pt.v8engine.fragment.SupportV4BaseFragment;
+import cm.aptoide.pt.v8engine.fragment.UIComponentFragment;
 import java.util.ArrayList;
 
 /**
@@ -18,7 +18,7 @@ import java.util.ArrayList;
  * <p>
  * code migrated from v7
  */
-public class ScreenshotsViewerFragment extends SupportV4BaseFragment {
+public class ScreenshotsViewerFragment extends UIComponentFragment {
 
   // vars
   private ArrayList<String> uris;
