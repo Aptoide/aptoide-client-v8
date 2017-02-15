@@ -10,9 +10,8 @@ import cm.aptoide.pt.shareapps.socket.message.messages.SendApk;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -23,8 +22,8 @@ import lombok.Getter;
  */
 public class AptoideMessageServerSocket extends AptoideServerSocket {
 
-  @Getter private final List<AptoideMessageServerController> aptoideMessageControllers =
-      new LinkedList<>();
+  @Getter private final ConcurrentLinkedQueue<AptoideMessageServerController>
+      aptoideMessageControllers = new ConcurrentLinkedQueue<>();
 
   public AptoideMessageServerSocket(int port) {
     super(port);

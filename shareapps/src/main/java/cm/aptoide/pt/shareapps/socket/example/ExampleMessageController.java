@@ -11,7 +11,7 @@ import cm.aptoide.pt.shareapps.socket.message.client.AptoideMessageClientControl
 public class ExampleMessageController extends AptoideMessageClientController {
 
   public ExampleMessageController() {
-    super("/tmp/a", bytes -> new Random().nextBoolean(), newFileServerLifecycle());
+    super("/tmp/a", bytes -> true, newFileServerLifecycle());
   }
 
   private static FileServerLifecycle<AndroidAppInfo> newFileServerLifecycle() {
