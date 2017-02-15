@@ -13,19 +13,15 @@ import java.util.Set;
  */
 public class ExcludedTable implements Table {
 
-  public static final ColumnDefinition package_name =
-      new ColumnDefinition<String>("package_name");
+  public static final ColumnDefinition package_name = new ColumnDefinition<String>("package_name");
 
   public static final ColumnDefinition name = new ColumnDefinition<String>("name");
 
-  public static final ColumnDefinition iconpath =
-      new ColumnDefinition<String>("iconpath");
+  public static final ColumnDefinition iconpath = new ColumnDefinition<String>("iconpath");
 
-  public static final ColumnDefinition vercode =
-      new ColumnDefinition<Integer>("vercode");
+  public static final ColumnDefinition vercode = new ColumnDefinition<Integer>("vercode");
 
-  public static final ColumnDefinition version_name =
-      new ColumnDefinition<String>("version_name");
+  public static final ColumnDefinition version_name = new ColumnDefinition<String>("version_name");
 
   @Override public String getName() {
     return "excluded";

@@ -5,6 +5,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
@@ -22,21 +23,17 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
  */
 public class StoreUtilsProxy {
 
-  public static void subscribeStore(String storeName) {
-    subscribeStore(GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName),
-        AptoideAccountManager.getAccessToken(),
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID()), null, null, storeName);
+  private static AptoideClientUUID aptoideClientUUID;
+
+  static {
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
   }
 
-  public static void subscribeStore(String storeName,
-      @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
-      @Nullable ErrorRequestListener errorRequestListener) {
+  public static void subscribeStore(String storeName) {
     subscribeStore(GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName),
-        AptoideAccountManager.getAccessToken(),
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID()), successRequestListener,
-        errorRequestListener, storeName);
+        AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID()), null,
+        null, storeName);
   }
 
   public static void subscribeStore(GetStoreMetaRequest getStoreMetaRequest,
@@ -46,5 +43,13 @@ public class StoreUtilsProxy {
         "LOCALYTICS TESTING - STORES: ACTION SUBSCRIBE " + storeName);
     Analytics.Stores.subscribe(storeName);
     StoreUtils.subscribeStore(getStoreMetaRequest, successRequestListener, errorRequestListener);
+  }
+
+  public static void subscribeStore(String storeName,
+      @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
+      @Nullable ErrorRequestListener errorRequestListener) {
+    subscribeStore(GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName),
+        AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID()),
+        successRequestListener, errorRequestListener, storeName);
   }
 }

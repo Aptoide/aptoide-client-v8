@@ -264,6 +264,140 @@ public class GetUserTimelineRequestIntegrationTest {
     server.shutdown();
   }
 
+  @NonNull private GetUserTimelineRequest getGetUserTimelineRequest(String url, String baseHost,
+      String aptoideId, String accessToken, int aptoideVercode, String cdn, String language,
+      String q, Integer limit, boolean mature, int offset, List<String> packages, String email) {
+    return new GetUserTimelineRequest(url, new GetUserTimelineRequest.Body(limit, offset, packages),
+        baseHost);
+  }
+
+  @NonNull
+  private AppUpdate getAppUpdate(String cardId, int id, String name, String packageName, int size,
+      String icon, String added, String modified, String updated, String uptype, File file,
+      App.Stats stats, Store store) throws ParseException {
+    AppUpdate app =
+        (AppUpdate) getApp(new AppUpdate(cardId, new Ab(new Conversion(""))), id, name, packageName,
+            size, icon, null, added, modified, updated, uptype, file, stats);
+    app.setStore(store);
+    return app;
+  }
+
+  @NonNull
+  private File getFile(String vername, int vercode, String md5sum, String path, String pathAlt,
+      int filesize) {
+    File file = new File();
+    file.setVername(vername);
+    file.setVercode(vercode);
+    file.setMd5sum(md5sum);
+    file.setPath(path);
+    file.setPathAlt(pathAlt);
+    file.setFilesize(filesize);
+    return file;
+  }
+
+  @NonNull private App.Stats getStats(int downloads, App.Stats.Rating rating) {
+    App.Stats stats = new App.Stats();
+    stats.setDownloads(downloads);
+    stats.setRating(rating);
+    return stats;
+  }
+
+  @NonNull private App.Stats.Rating getRating(int avg, int total) {
+    App.Stats.Rating rating = new App.Stats.Rating();
+    rating.setAvg(avg);
+    rating.setTotal(total);
+    return rating;
+  }
+
+  @NonNull
+  private Store getStore(int id, String name, String avatar, Date dateAdded, Date dateModified,
+      Store.Appearance appearance, Store.Stats stats) throws ParseException {
+    final Store store = new Store();
+    store.setId(id);
+    store.setName(name);
+    store.setAvatar(avatar);
+    store.setAdded(dateAdded);
+    store.setModified(dateModified);
+    store.setAppearance(appearance);
+    store.setStats(stats);
+    return store;
+  }
+
+  @NonNull private Store.Appearance getAppearance(String description, String theme) {
+    Store.Appearance appearance = new Store.Appearance();
+    appearance.setDescription(description);
+    appearance.setTheme(theme);
+    return appearance;
+  }
+
+  @NonNull private Store.Stats getStats(int apps, int subscribers, int downloads) {
+    Store.Stats stats = new Store.Stats();
+    stats.setApps(apps);
+    stats.setSubscribers(subscribers);
+    stats.setDownloads(downloads);
+    return stats;
+  }
+
+  @NonNull
+  private GetUserTimeline getUserTimeline(BaseV7Response.Info.Status status, double seconds,
+      String humanTime, Datalist<TimelineItem<TimelineCard>> dataList) {
+    final GetUserTimeline getUserTimeline = new GetUserTimeline();
+
+    getUserTimeline.setDatalist(dataList);
+
+    final BaseV7Response.Info info = new BaseV7Response.Info();
+    info.setStatus(status);
+
+    final BaseV7Response.Info.Time time = new BaseV7Response.Info.Time();
+
+    time.setSeconds(seconds);
+    time.setHuman(humanTime);
+
+    info.setTime(time);
+    getUserTimeline.setInfo(info);
+    return getUserTimeline;
+  }
+
+  @NonNull
+  private Datalist<TimelineItem<TimelineCard>> getDataList(List<TimelineItem<TimelineCard>> list,
+      boolean loaded, int hidden, int next, Integer limit, int offset, int count, int total) {
+    Datalist<TimelineItem<TimelineCard>> datalist = new Datalist<>();
+    datalist.setTotal(total);
+    datalist.setCount(count);
+    datalist.setOffset(offset);
+    datalist.setLimit(limit);
+    datalist.setNext(next);
+    datalist.setHidden(hidden);
+    datalist.setLoaded(loaded);
+    datalist.setList(list);
+    return datalist;
+  }
+
+  @NonNull
+  private App getApp(App app, int id, String name, String packageName, int size, String icon,
+      String graphic, String added, String modified, String updated, String uptype, File file,
+      App.Stats stats) throws ParseException {
+    app.setId(id);
+    app.setName(name);
+    app.setPackageName(packageName);
+    app.setSize(size);
+    app.setIcon(icon);
+    app.setGraphic(graphic);
+    app.setAdded(getDate("UTC", added, "yyyy-MM-dd HH:mm:ss"));
+    app.setModified(getDate("UTC", modified, "yyyy-MM-dd HH:mm:ss"));
+    app.setUpdated(getDate("UTC", updated, "yyyy-MM-dd HH:mm:ss"));
+    app.setUptype(uptype);
+    app.setFile(file);
+    app.setStats(stats);
+    return app;
+  }
+
+  private Date getDate(String timezone, String date, String dateFormat) throws ParseException {
+    SimpleDateFormat df = new SimpleDateFormat(dateFormat);
+    df.setTimeZone(TimeZone.getTimeZone(timezone));
+    return df.parse(date);
+  }
+
   @Test public void shouldReturnLatestApps() throws Exception {
 
     final MockWebServer server = new MockWebServer();
@@ -578,6 +712,10 @@ public class GetUserTimelineRequestIntegrationTest {
     server.shutdown();
   }
 
+  private Publisher getPublisher(String publisher, String avatarUrl) {
+    return new Publisher(publisher, avatarUrl, "");
+  }
+
   @Test public void shouldReturnEmptyList() throws Exception {
 
     final MockWebServer server = new MockWebServer();
@@ -619,143 +757,5 @@ public class GetUserTimelineRequestIntegrationTest {
     testSubscriber.assertCompleted();
 
     server.shutdown();
-  }
-
-  @NonNull
-  private AppUpdate getAppUpdate(String cardId, int id, String name, String packageName, int size,
-      String icon, String added, String modified, String updated, String uptype, File file,
-      App.Stats stats, Store store) throws ParseException {
-    AppUpdate app =
-        (AppUpdate) getApp(new AppUpdate(cardId, new Ab(new Conversion(""))), id, name, packageName, size, icon, null, added,
-            modified, updated, uptype, file, stats);
-    app.setStore(store);
-    return app;
-  }
-
-  @NonNull
-  private App getApp(App app, int id, String name, String packageName, int size, String icon,
-      String graphic, String added, String modified, String updated, String uptype, File file,
-      App.Stats stats) throws ParseException {
-    app.setId(id);
-    app.setName(name);
-    app.setPackageName(packageName);
-    app.setSize(size);
-    app.setIcon(icon);
-    app.setGraphic(graphic);
-    app.setAdded(getDate("UTC", added, "yyyy-MM-dd HH:mm:ss"));
-    app.setModified(getDate("UTC", modified, "yyyy-MM-dd HH:mm:ss"));
-    app.setUpdated(getDate("UTC", updated, "yyyy-MM-dd HH:mm:ss"));
-    app.setUptype(uptype);
-    app.setFile(file);
-    app.setStats(stats);
-    return app;
-  }
-
-  @NonNull private App.Stats getStats(int downloads, App.Stats.Rating rating) {
-    App.Stats stats = new App.Stats();
-    stats.setDownloads(downloads);
-    stats.setRating(rating);
-    return stats;
-  }
-
-  @NonNull private App.Stats.Rating getRating(int avg, int total) {
-    App.Stats.Rating rating = new App.Stats.Rating();
-    rating.setAvg(avg);
-    rating.setTotal(total);
-    return rating;
-  }
-
-  @NonNull
-  private File getFile(String vername, int vercode, String md5sum, String path, String pathAlt,
-      int filesize) {
-    File file = new File();
-    file.setVername(vername);
-    file.setVercode(vercode);
-    file.setMd5sum(md5sum);
-    file.setPath(path);
-    file.setPathAlt(pathAlt);
-    file.setFilesize(filesize);
-    return file;
-  }
-
-  @NonNull
-  private Store getStore(int id, String name, String avatar, Date dateAdded, Date dateModified,
-      Store.Appearance appearance, Store.Stats stats) throws ParseException {
-    final Store store = new Store();
-    store.setId(id);
-    store.setName(name);
-    store.setAvatar(avatar);
-    store.setAdded(dateAdded);
-    store.setModified(dateModified);
-    store.setAppearance(appearance);
-    store.setStats(stats);
-    return store;
-  }
-
-  @NonNull private Store.Stats getStats(int apps, int subscribers, int downloads) {
-    Store.Stats stats = new Store.Stats();
-    stats.setApps(apps);
-    stats.setSubscribers(subscribers);
-    stats.setDownloads(downloads);
-    return stats;
-  }
-
-  @NonNull private Store.Appearance getAppearance(String description, String theme) {
-    Store.Appearance appearance = new Store.Appearance();
-    appearance.setDescription(description);
-    appearance.setTheme(theme);
-    return appearance;
-  }
-
-  @NonNull private GetUserTimelineRequest getGetUserTimelineRequest(String url, String baseHost,
-      String aptoideId, String accessToken, int aptoideVercode, String cdn, String language,
-      String q, Integer limit, boolean mature, int offset, List<String> packages, String email) {
-    return new GetUserTimelineRequest(url, new GetUserTimelineRequest.Body(limit, offset, packages),
-        baseHost);
-  }
-
-  @NonNull
-  private GetUserTimeline getUserTimeline(BaseV7Response.Info.Status status, double seconds,
-      String humanTime, Datalist<TimelineItem<TimelineCard>> dataList) {
-    final GetUserTimeline getUserTimeline = new GetUserTimeline();
-
-    getUserTimeline.setDatalist(dataList);
-
-    final BaseV7Response.Info info = new BaseV7Response.Info();
-    info.setStatus(status);
-
-    final BaseV7Response.Info.Time time = new BaseV7Response.Info.Time();
-
-    time.setSeconds(seconds);
-    time.setHuman(humanTime);
-
-    info.setTime(time);
-    getUserTimeline.setInfo(info);
-    return getUserTimeline;
-  }
-
-  @NonNull
-  private Datalist<TimelineItem<TimelineCard>> getDataList(List<TimelineItem<TimelineCard>> list,
-      boolean loaded, int hidden, int next, Integer limit, int offset, int count, int total) {
-    Datalist<TimelineItem<TimelineCard>> datalist = new Datalist<>();
-    datalist.setTotal(total);
-    datalist.setCount(count);
-    datalist.setOffset(offset);
-    datalist.setLimit(limit);
-    datalist.setNext(next);
-    datalist.setHidden(hidden);
-    datalist.setLoaded(loaded);
-    datalist.setList(list);
-    return datalist;
-  }
-
-  private Date getDate(String timezone, String date, String dateFormat) throws ParseException {
-    SimpleDateFormat df = new SimpleDateFormat(dateFormat);
-    df.setTimeZone(TimeZone.getTimeZone(timezone));
-    return df.parse(date);
-  }
-
-  private Publisher getPublisher(String publisher, String avatarUrl) {
-    return new Publisher(publisher, avatarUrl, "");
   }
 }

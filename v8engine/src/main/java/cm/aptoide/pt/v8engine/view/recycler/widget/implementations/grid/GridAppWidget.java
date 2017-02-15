@@ -50,6 +50,10 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
     tvAddedTime = (TextView) itemView.findViewById(R.id.added_time);
   }
 
+  @Override public void unbindView() {
+
+  }
+
   @Override public void bindView(GridAppDisplayable displayable) {
     final App pojo = displayable.getPojo();
     final long appId = pojo.getId();
@@ -61,12 +65,12 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 
     name.setText(pojo.getName());
     this.downloads.setText(AptoideUtils.StringU.withSuffix(downloads) + V8Engine.getContext()
-            .getString(R.string._downloads));
+        .getString(R.string._downloads));
     ratingBar.setRating(pojo.getStats().getRating().getAvg());
     tvStoreName.setText(pojo.getStore().getName());
     tvAddedTime.setText(DATE_TIME_U.getTimeDiffString(getContext(), pojo.getAdded().getTime()));
     /*try {
-      storeTheme = pojo.getStore().getAppearance().getTheme();
+      storeTheme = pojo.newStore().getAppearance().getTheme();
 		} catch (NullPointerException e) {
 			storeTheme = "none";
 		}*/
@@ -76,12 +80,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
       Analytics.AppViewViewedFrom.addStepToList(displayable.getTag());
       ((FragmentShower) v.getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
           .newAppViewFragment(appId, pojo.getPackageName(),
-              pojo.getStore().getAppearance().getTheme(),
-              tvStoreName.getText().toString()));
+              pojo.getStore().getAppearance().getTheme(), tvStoreName.getText().toString()));
     });
-  }
-
-  @Override public void unbindView() {
-
   }
 }

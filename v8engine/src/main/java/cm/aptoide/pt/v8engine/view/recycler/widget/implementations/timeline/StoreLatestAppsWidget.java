@@ -42,10 +42,6 @@ public class StoreLatestAppsWidget extends CardWidget<StoreLatestAppsDisplayable
     appsPackages = new LongSparseArray<>();
   }
 
-  @Override String getCardTypeName() {
-    return CARD_TYPE_NAME;
-  }
-
   @Override protected void assignViews(View itemView) {
     super.assignViews(itemView);
     store = itemView.findViewById(R.id.displayable_social_timeline_store_latest_apps_header);
@@ -57,8 +53,7 @@ public class StoreLatestAppsWidget extends CardWidget<StoreLatestAppsDisplayable
         R.id.displayable_social_timeline_store_latest_apps_card_subtitle);
     appsContaner = (LinearLayout) itemView.findViewById(
         R.id.displayable_social_timeline_store_latest_apps_container);
-    cardView =
-        (CardView) itemView.findViewById(R.id.displayable_social_timeline_store_latest_apps_card);
+    cardView = (CardView) itemView.findViewById(R.id.card);
   }
 
   @Override public void bindView(StoreLatestAppsDisplayable displayable) {
@@ -116,5 +111,9 @@ public class StoreLatestAppsWidget extends CardWidget<StoreLatestAppsDisplayable
       ((FragmentShower) getContext()).pushFragmentV4(
           V8Engine.getFragmentProvider().newStoreFragment(displayable.getStoreName()));
     }));
+  }
+
+  @Override String getCardTypeName() {
+    return CARD_TYPE_NAME;
   }
 }

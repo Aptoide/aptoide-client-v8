@@ -17,9 +17,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.PostReviewRequest;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
@@ -39,9 +41,15 @@ import rx.subscriptions.Subscriptions;
 public class DialogUtils {
 
   private static final String TAG = DialogUtils.class.getSimpleName();
-  private static final Locale LOCALE = Locale.getDefault();
+  private final Locale LOCALE = Locale.getDefault();
+  private final AptoideClientUUID aptoideClientUUID;
 
-  public static Observable<GenericDialogs.EResponse> showRateDialog(@NonNull Activity activity,
+  public DialogUtils() {
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+  }
+
+  public Observable<GenericDialogs.EResponse> showRateDialog(@NonNull Activity activity,
       @NonNull String appName, @NonNull String packageName, @Nullable String storeName) {
 
     return Observable.create((Subscriber<? super GenericDialogs.EResponse> subscriber) -> {
@@ -119,7 +127,7 @@ public class DialogUtils {
 
         // WS error listener
         final ErrorRequestListener errorRequestListener = e -> {
-          Logger.e(TAG, e);
+          CrashReport.getInstance().log(e);
           ShowMessage.asSnack(activity, R.string.error_occured);
           subscriber.onNext(GenericDialogs.EResponse.CANCEL);
           subscriber.onCompleted();
@@ -128,15 +136,11 @@ public class DialogUtils {
         // WS call
         if (storeName != null) {
           PostReviewRequest.of(storeName, packageName, reviewTitle, reviewText, reviewRating,
-              AptoideAccountManager.getAccessToken(),
-              new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                  DataProvider.getContext()).getAptoideClientUUID())
+              AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
               .execute(successRequestListener, errorRequestListener);
         } else {
           PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating,
-              AptoideAccountManager.getAccessToken(),
-              new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                  DataProvider.getContext()).getAptoideClientUUID())
+              AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
               .execute(successRequestListener, errorRequestListener);
         }
       });
@@ -146,7 +150,7 @@ public class DialogUtils {
     });
   }
 
-  public static void showRateDialog(@NonNull Activity activity, @NonNull String appName,
+  public void showRateDialog(@NonNull Activity activity, @NonNull String appName,
       @NonNull String packageName, @Nullable String storeName,
       @Nullable Action0 onPositiveCallback) {
 
@@ -207,21 +211,17 @@ public class DialogUtils {
       };
 
       final ErrorRequestListener errorRequestListener = e -> {
-        Logger.e(TAG, e);
+        CrashReport.getInstance().log(e);
         ShowMessage.asSnack(activity, R.string.error_occured);
       };
 
       if (storeName != null) {
         PostReviewRequest.of(storeName, packageName, reviewTitle, reviewText, reviewRating,
-            AptoideAccountManager.getAccessToken(),
-            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                DataProvider.getContext()).getAptoideClientUUID())
+            AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
             .execute(successRequestListener, errorRequestListener);
       } else {
         PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating,
-            AptoideAccountManager.getAccessToken(),
-            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                DataProvider.getContext()).getAptoideClientUUID())
+            AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
             .execute(successRequestListener, errorRequestListener);
       }
     });

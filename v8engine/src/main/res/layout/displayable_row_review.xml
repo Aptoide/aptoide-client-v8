@@ -5,11 +5,11 @@
   -->
 
 <RelativeLayout
-    style="?attr/backgroundCard"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="120dp"
+    style="?attr/backgroundCard"
     >
 
   <ImageView
@@ -27,9 +27,11 @@
       android:id="@+id/score"
       android:layout_width="37dp"
       android:layout_height="37dp"
+      android:layout_alignParentEnd="true"
       android:layout_alignParentRight="true"
       android:layout_alignParentEnd="true"
       android:layout_alignTop="@id/app_icon"
+      android:layout_marginEnd="5dp"
       android:layout_marginRight="5dp"
       android:layout_marginEnd="5dp"
       android:background="@drawable/rating_shape"
@@ -52,17 +54,17 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_alignTop="@id/app_icon"
+      android:layout_toEndOf="@id/app_icon"
       android:layout_toLeftOf="@id/score"
       android:layout_toStartOf="@id/score"
       android:layout_toRightOf="@id/app_icon"
-      android:layout_toEndOf="@id/app_icon"
+      android:layout_toStartOf="@id/score"
       android:gravity="center_vertical"
       >
 
 
     <TextView
         android:id="@+id/app_name"
-        style="?android:attr/textAppearanceMedium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="2dp"
@@ -70,6 +72,7 @@
         android:gravity="center_vertical"
         android:maxLines="1"
         tools:text="Pokemon Go"
+        style="?android:attr/textAppearanceMedium"
         />
 
     <LinearLayout
@@ -109,6 +112,7 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:layout_below="@id/content"
+      android:layout_toEndOf="@id/app_icon"
       android:layout_toRightOf="@id/app_icon"
       android:layout_toEndOf="@id/app_icon"
       android:ellipsize="end"

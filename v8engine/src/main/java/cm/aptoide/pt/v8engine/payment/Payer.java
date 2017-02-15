@@ -20,6 +20,10 @@ public class Payer {
     this.context = context;
   }
 
+  public String getId() {
+    return AptoideAccountManager.getUserEmail();
+  }
+
   public boolean isLoggedIn() {
     return AptoideAccountManager.isLoggedIn();
   }
@@ -27,5 +31,4 @@ public class Payer {
   public Observable<Void> login() {
     return AptoideAccountManager.login(context);
   }
-
 }

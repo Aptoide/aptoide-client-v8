@@ -44,10 +44,6 @@ public class ArticleWidget extends CardWidget<ArticleDisplayable> {
     super(itemView);
   }
 
-  @Override String getCardTypeName() {
-    return CARD_TYPE_NAME;
-  }
-
   @Override protected void assignViews(View itemView) {
     super.assignViews(itemView);
 
@@ -127,6 +123,10 @@ public class ArticleWidget extends CardWidget<ArticleDisplayable> {
               .build())
           .build(), TimelineClickEvent.OPEN_BLOG);
     }));
+  }
+
+  @Override String getCardTypeName() {
+    return CARD_TYPE_NAME;
   }
 
   private void setAppNameToFirstLinkedApp(ArticleDisplayable displayable) {

@@ -31,6 +31,10 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
     mediaList = (RecyclerView) itemView.findViewById(R.id.screenshots_list);
   }
 
+  @Override public void unbindView() {
+
+  }
+
   @Override public void bindView(AppViewScreenshotsDisplayable displayable) {
     final GetAppMeta.Media media = displayable.getPojo().getMedia();
     //		mediaList.addItemDecoration(new DividerItemDecoration(AptoideUtils.ScreenU.getPixels(6), (DividerItemDecoration.RIGHT | DividerItemDecoration
@@ -40,9 +44,5 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
         new LinearLayoutManager(itemView.getContext(), LinearLayoutManager.HORIZONTAL, false));
     mediaList.setNestedScrollingEnabled(false); // because otherwise the AppBar won't be collapsed
     mediaList.setAdapter(new ScreenshotsAdapter(media));
-  }
-
-  @Override public void unbindView() {
-
   }
 }

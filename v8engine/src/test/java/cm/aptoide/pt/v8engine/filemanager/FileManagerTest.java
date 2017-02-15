@@ -46,6 +46,14 @@ public class FileManagerTest {
     verify(downloadManager, times(1)).invalidateDatabase();
   }
 
+  private void assertSubscriber(TestSubscriber<Long> subscriber, long value) {
+    subscriber.awaitTerminalEvent();
+    subscriber.assertCompleted();
+    subscriber.assertNoErrors();
+    subscriber.assertValueCount(1);
+    subscriber.assertValue(value);
+  }
+
   @Test public void deleteCacheSizeGreaterZero() throws IOException {
     FileUtils fileUtils = mock(FileUtils.class);
     when(fileUtils.deleteFolder(folders[0])).thenReturn(Observable.just(10L));
@@ -66,13 +74,5 @@ public class FileManagerTest {
     fileManager.deleteCache().subscribe(subscriber);
     assertSubscriber(subscriber, 0L);
     verify(downloadManager, times(0)).invalidateDatabase();
-  }
-
-  private void assertSubscriber(TestSubscriber<Long> subscriber, long value) {
-    subscriber.awaitTerminalEvent();
-    subscriber.assertCompleted();
-    subscriber.assertNoErrors();
-    subscriber.assertValueCount(1);
-    subscriber.assertValue(value);
   }
 }

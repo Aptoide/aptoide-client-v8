@@ -35,6 +35,10 @@ import java.util.List;
     button = (Button) itemView.findViewById(R.id.button);
   }
 
+  @Override public void unbindView() {
+
+  }
+
   @Override public void bindView(FooterDisplayable displayable) {
     final GetStoreWidgets.WSWidget pojo = displayable.getPojo();
     final List<GetStoreWidgets.WSWidget.Action> actions = pojo.getActions();
@@ -43,13 +47,10 @@ import java.util.List;
     button.setOnClickListener((view) -> {
       Event event = displayable.getPojo().getActions().get(0).getEvent();
       FragmentUtils.replaceFragmentV4((FragmentActivity) itemView.getContext(),
-          V8Engine.getFragmentProvider().newStoreTabGridRecyclerFragment(event,
+          V8Engine.getFragmentProvider()
+              .newStoreTabGridRecyclerFragment(event,
                   Translator.translate(displayable.getPojo().getTitle()), null,
                   displayable.getTag()));
     });
-  }
-
-  @Override public void unbindView() {
-
   }
 }

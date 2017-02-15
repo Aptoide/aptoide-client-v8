@@ -159,7 +159,7 @@
       <ScrollView
           android:id="@+id/activity_payment_list_container"
           android:layout_width="match_parent"
-          android:layout_height="144dp"
+          android:layout_height="72dp"
           android:visibility="gone"
           >
         <LinearLayout
@@ -217,6 +217,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_centerInParent="true"
+      android:theme="@style/AptoideThemeDefault"
       android:visibility="gone"
       tools:visibility="visible"
       />
@@ -236,6 +237,7 @@
     <ProgressBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:theme="@style/AptoideThemeDefault"
         />
   </LinearLayout>
 </RelativeLayout>

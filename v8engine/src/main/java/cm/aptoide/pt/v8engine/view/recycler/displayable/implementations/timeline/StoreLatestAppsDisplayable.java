@@ -31,10 +31,9 @@ public class StoreLatestAppsDisplayable extends CardDisplayable {
   public StoreLatestAppsDisplayable() {
   }
 
-  public StoreLatestAppsDisplayable(StoreLatestApps storeLatestApps,
-      String storeName, String avatarUrl, List<LatestApp> latestApps, String abUrl,
-      DateCalculator dateCalculator, Date date, TimelineMetricsManager timelineMetricsManager,
-      SocialRepository socialRepository) {
+  public StoreLatestAppsDisplayable(StoreLatestApps storeLatestApps, String storeName,
+      String avatarUrl, List<LatestApp> latestApps, String abUrl, DateCalculator dateCalculator,
+      Date date, TimelineMetricsManager timelineMetricsManager, SocialRepository socialRepository) {
     super(storeLatestApps);
     this.storeName = storeName;
     this.avatarUrl = avatarUrl;

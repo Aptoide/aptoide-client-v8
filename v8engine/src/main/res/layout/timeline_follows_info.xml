@@ -35,6 +35,7 @@
       android:id="@+id/following"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
+      android:layout_toEndOf="@+id/leftSeparator"
       android:layout_toRightOf="@+id/leftSeparator"
       android:layout_toEndOf="@+id/leftSeparator"
       android:gravity="center"

@@ -70,11 +70,6 @@ public interface AptoidePreferencesConfiguration {
 
   boolean isLoginAvailable(SocialLogin login);
 
-  enum SocialLogin {
-    FACEBOOK,
-    GOOGLE
-  }
-
   String getPartnerDimension();
 
   String getVerticalDimension();
@@ -83,4 +78,9 @@ public interface AptoidePreferencesConfiguration {
    * @return true to show create store and user timeline privacy configurations
    */
   boolean isCreateStoreAndSetUserPrivacyAvailable();
+
+  enum SocialLogin {
+    FACEBOOK,
+    GOOGLE
+  }
 }

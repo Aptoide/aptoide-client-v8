@@ -6,7 +6,6 @@ import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.TimelineClickEve
 
 /**
  * Created by jdandrade on 27/10/2016.
- *
  */
 public class TimelineMetricsManager {
   private Analytics analytics;

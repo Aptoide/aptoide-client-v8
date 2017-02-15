@@ -25,11 +25,11 @@ public class GridAdDisplayable extends DisplayablePojo<MinimalAd> {
     this.tag = tag;
   }
 
-  @Override public int getViewLayout() {
-    return R.layout.displayable_grid_sponsored;
-  }
-
   @Override protected Configs getConfig() {
     return new Configs(3, false);
+  }
+
+  @Override public int getViewLayout() {
+    return R.layout.displayable_grid_sponsored;
   }
 }

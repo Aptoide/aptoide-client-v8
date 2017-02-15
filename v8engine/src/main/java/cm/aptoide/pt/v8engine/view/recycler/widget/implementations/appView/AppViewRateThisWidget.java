@@ -11,8 +11,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import cm.aptoide.pt.crashreports.CrashReports;
-import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -46,6 +45,10 @@ import java.util.Locale;
     comunityRatingIndicator = new ComunityRatingIndicator(itemView);
   }
 
+  @Override public void unbindView() {
+
+  }
+
   @Override public void bindView(AppViewRateThisDisplayable displayable) {
     final GetApp pojo = displayable.getPojo();
 
@@ -67,27 +70,20 @@ import java.util.Locale;
         flagThisApp.setVisibility(View.GONE);
       }
     } catch (Exception ex) {
-      Logger.e(TAG, ex);
-      CrashReports.logException(ex);
+      CrashReport.getInstance().log(ex);
     }
 
     try {
       comunityRatingIndicator.bindView(pojo);
     } catch (Exception ex) {
-      Logger.e(TAG, ex);
-      CrashReports.logException(ex);
+      CrashReport.getInstance().log(ex);
     }
 
     try {
       flagThisApp.bindView(pojo);
     } catch (Exception ex) {
-      Logger.e(TAG, ex);
-      CrashReports.logException(ex);
+      CrashReport.getInstance().log(ex);
     }
-  }
-
-  @Override public void unbindView() {
-
   }
 
   private static final class FlagThisApp {
@@ -124,8 +120,7 @@ import java.util.Locale;
           bindVoteView(vote);
         }
       } catch (Exception e) {
-        Logger.e(TAG, e);
-        CrashReports.logException(e);
+        CrashReport.getInstance().log(e);
       }
     }
 
@@ -266,8 +261,7 @@ import java.util.Locale;
           bindViewForBar(vote.getValue(), 0, vote.getCount());
         }
       } catch (Exception e) {
-        Logger.e(TAG, e);
-        CrashReports.logException(e);
+        CrashReport.getInstance().log(e);
       }
     }
 

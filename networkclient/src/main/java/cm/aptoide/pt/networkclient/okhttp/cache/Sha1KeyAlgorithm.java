@@ -5,7 +5,7 @@
 
 package cm.aptoide.pt.networkclient.okhttp.cache;
 
-import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.io.IOException;
 import okhttp3.Request;
@@ -52,7 +52,7 @@ public class Sha1KeyAlgorithm implements KeyAlgorithm<Request, String> {
       //			return buffer.toString();
       return AptoideUtils.AlgorithmU.computeSha1(requestIdentifier);
     } catch (IOException e) {
-      Logger.e(TAG, "getKeyFrom(Request)", e);
+      CrashReport.getInstance().log(e);
     }
 
     return null;

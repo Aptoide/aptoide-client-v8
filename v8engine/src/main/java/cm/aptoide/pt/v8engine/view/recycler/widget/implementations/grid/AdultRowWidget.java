@@ -30,6 +30,10 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
     adultSwitch = (SwitchCompat) itemView.findViewById(R.id.adult_content);
   }
 
+  @Override public void unbindView() {
+
+  }
+
   @Override public void bindView(AdultRowDisplayable displayable) {
     adultSwitch.setOnCheckedChangeListener(null);
     adultSwitch.setChecked(SecurePreferences.isAdultSwitchActive());
@@ -62,9 +66,5 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
         AptoideAccountManager.updateMatureSwitch(false);
       }
     });
-  }
-
-  @Override public void unbindView() {
-
   }
 }

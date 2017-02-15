@@ -1,19 +1,12 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
-
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
-import cm.aptoide.pt.model.v7.store.Store;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import org.json.JSONException;
-import org.json.JSONObject;
 import rx.Observable;
 
 /**
@@ -35,8 +28,8 @@ public class SimpleSetStoreRequest extends V7<BaseV7Response, SimpleSetStoreRequ
     return new SimpleSetStoreRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
-  public static SimpleSetStoreRequest of(String accessToken, String aptoideClientUUID,
-      long storeId, String storeTheme, String storeDescription) {
+  public static SimpleSetStoreRequest of(String accessToken, String aptoideClientUUID, long storeId,
+      String storeTheme, String storeDescription) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
     Body body = new Body(accessToken, storeId, storeTheme, storeDescription);
     return new SimpleSetStoreRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
@@ -68,18 +61,14 @@ public class SimpleSetStoreRequest extends V7<BaseV7Response, SimpleSetStoreRequ
     }
   }
 
-  @Data
-  public static class StoreProperties {
+  @Data public static class StoreProperties {
 
-    @JsonProperty("theme")
-    private String theme;
-    @JsonProperty("description")
-    private String description;
+    @JsonProperty("theme") private String theme;
+    @JsonProperty("description") private String description;
 
     public StoreProperties(String theme, String description) {
       this.theme = theme;
       this.description = description;
     }
-
   }
 }

@@ -8,8 +8,9 @@ package cm.aptoide.pt.v8engine.websocket;
 import android.app.SearchManager;
 import android.database.Cursor;
 import android.database.MatrixCursor;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.v8engine.BuildConfig;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import java.io.IOException;
@@ -33,6 +34,9 @@ import org.json.JSONException;
 public class WebSocketSingleton {
 
   public static final String TAG = "WebSocketSingleton";
+  public static final String WEBSOCKETS_SCHEME = BuildConfig.APTOIDE_WEBSOCKETS_SCHEME;
+  public static final String WEBSOCKETS_HOST = BuildConfig.APTOIDE_WEBSOCKETS_HOST;
+  public static final String WEBSOCKETS_PORT = "9000";
 
   private static WebSocketClient web_socket_client;
   String[] matrix_columns = new String[] {
@@ -66,8 +70,7 @@ public class WebSocketSingleton {
 
         blockingQueue.add(mCursor);
       } catch (JSONException e) {
-        Logger.printException(e);
-        CrashReports.logException(e);
+        CrashReport.getInstance().log(e);
       }
     }
 
@@ -80,8 +83,7 @@ public class WebSocketSingleton {
     }
 
     @Override public void onError(Exception error) {
-      Logger.printException(error);
-      CrashReports.logException(error);
+      CrashReport.getInstance().log(error);
     }
   };
 
@@ -110,8 +112,7 @@ public class WebSocketSingleton {
           g.writeEndObject();
           g.close();
         } catch (IOException e) {
-          Logger.printException(e);
-          CrashReports.logException(e);
+          CrashReport.getInstance().log(e);
         }
         //"{\"query\":\"" + query + "\"}"
 
@@ -144,8 +145,8 @@ public class WebSocketSingleton {
   public void connect() {
 
     if (web_socket_client == null) {
-      web_socket_client =
-          new WebSocketClient(URI.create("ws://buzz.webservices.aptoide.com:9000"), listener, null);
+      web_socket_client = new WebSocketClient(
+          URI.create(WEBSOCKETS_SCHEME + WEBSOCKETS_HOST + ":" + WEBSOCKETS_PORT), listener, null);
       web_socket_client.connect();
     }
     Logger.d(TAG, "OnConnecting");

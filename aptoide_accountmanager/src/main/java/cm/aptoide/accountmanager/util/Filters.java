@@ -5,7 +5,7 @@
 
 package cm.aptoide.accountmanager.util;
 
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 
 public class Filters {
 
@@ -19,7 +19,7 @@ public class Filters {
       try {
         return valueOf(screen);
       } catch (Exception e) {
-        CrashReports.logException(e);
+        CrashReport.getInstance().log(e);
         return notfound;
       }
     }

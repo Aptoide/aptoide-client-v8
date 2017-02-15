@@ -12,8 +12,8 @@
       >
 
     <include
-        android:id="@+id/toolbar"
         layout="@layout/toolbar"
+        android:id="@+id/toolbar"
         />
 
   </android.support.design.widget.AppBarLayout>

@@ -8,9 +8,9 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable;
 import android.text.TextUtils;
 import android.util.Pair;
 import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.FullReview;
@@ -129,114 +129,6 @@ public class DisplayablesFactory {
     return displayables;
   }
 
-  private static List<Displayable> createCommentsGroup(GetStoreWidgets.WSWidget wsWidget) {
-    List<Displayable> displayables = new LinkedList<>();
-
-    Pair<ListComments, BaseRequestWithStore.StoreCredentials> data =
-        (Pair<ListComments, BaseRequestWithStore.StoreCredentials>) wsWidget.getViewObject();
-    ListComments comments = data.first;
-    displayables.add(new StoreGridHeaderDisplayable(wsWidget));
-    if (comments != null
-        && comments.getDatalist() != null
-        && comments.getDatalist().getList().size() > 0) {
-      displayables.add(
-          new StoreLatestCommentsDisplayable(data.second.getId(), data.second.getName(),
-              comments.getDatalist().getList()));
-    } else {
-      displayables.add(new StoreAddCommentDisplayable(data.second.getId(), data.second.getName(),
-          StoreThemeEnum.APTOIDE_STORE_THEME_DEFAULT));
-    }
-
-    return displayables;
-  }
-
-  private static List<Displayable> createReviewsGroupDisplayables(
-      GetStoreWidgets.WSWidget wsWidget) {
-    List<Displayable> displayables = new LinkedList<>();
-
-    ListFullReviews reviewsList = (ListFullReviews) wsWidget.getViewObject();
-    if (reviewsList != null
-        && reviewsList.getDatalist() != null
-        && reviewsList.getDatalist().getList().size() > 0) {
-      displayables.add(new StoreGridHeaderDisplayable(wsWidget));
-      displayables.add(createReviewsDisplayables(reviewsList));
-    }
-
-    return displayables;
-  }
-
-  private static List<Displayable> createMyStoreDisplayables(Object viewObject) {
-    LinkedList<Displayable> displayables = new LinkedList<>();
-    if (viewObject instanceof GetStoreMeta && ((GetStoreMeta) viewObject).getData() != null) {
-      displayables.add(new MyStoreDisplayable(((GetStoreMeta) viewObject)));
-    } else {
-      displayables.add(new CreateStoreDisplayable());
-    }
-    return displayables;
-  }
-
-  private static GetStoreMeta convertUserInfoStore(CheckUserCredentialsJson userInfo) {
-    if (!TextUtils.isEmpty(userInfo.getRepo())) {
-      GetStoreMeta getStoreMeta = new GetStoreMeta();
-      Store store = new Store();
-      Store.Appearance appearance = new Store.Appearance();
-      appearance.setTheme(userInfo.getRepoDescription().getTheme());
-      store.setAppearance(appearance);
-      store.setName(userInfo.getRepo());
-      store.setAvatar(userInfo.getRavatarHd());
-      getStoreMeta.setData(store);
-      return getStoreMeta;
-    } else {
-      return null;
-    }
-  }
-
-  private static Displayable createRecommendedStores(GetStoreWidgets.WSWidget wsWidget,
-      String storeTheme, StoreRepository storeRepository) {
-    ListStores listStores = (ListStores) wsWidget.getViewObject();
-    if (listStores == null) {
-      return new EmptyDisplayable();
-    }
-    List<Store> stores = listStores.getDatalist().getList();
-    List<Displayable> displayables = new LinkedList<>();
-    displayables.add(new StoreGridHeaderDisplayable(wsWidget, storeTheme, wsWidget.getTag()));
-    for (Store store : stores) {
-      if (wsWidget.getData().getLayout() == Layout.LIST) {
-        displayables.add(new RecommendedStoreDisplayable(store, storeRepository));
-      } else {
-        displayables.add(new GridStoreDisplayable(store));
-      }
-    }
-
-    return new DisplayableGroup(displayables);
-  }
-
-  private static Displayable createReviewsDisplayables(ListFullReviews listFullReviews) {
-    List<FullReview> reviews = listFullReviews.getDatalist().getList();
-    final List<Displayable> displayables = new ArrayList<>(reviews.size());
-    for (int i = 0; i < reviews.size(); i++) {
-      displayables.add(new RowReviewDisplayable(reviews.get(i)));
-    }
-
-    return new DisplayableGroup(displayables);
-  }
-
-  private static Displayable getAds(GetStoreWidgets.WSWidget wsWidget) {
-    GetAdsResponse getAdsResponse = (GetAdsResponse) wsWidget.getViewObject();
-    if (wsWidget.getViewObject() != null) {
-      List<GetAdsResponse.Ad> ads = getAdsResponse.getAds();
-      List<Displayable> tmp = new ArrayList<>(ads.size());
-      for (GetAdsResponse.Ad ad : ads) {
-
-        GridAdDisplayable diplayable = new GridAdDisplayable(MinimalAd.from(ad), wsWidget.getTag());
-        tmp.add(diplayable);
-      }
-      return new DisplayableGroup(tmp);
-    }
-
-    return null;
-  }
-
   private static Displayable getApps(GetStoreWidgets.WSWidget wsWidget, String storeTheme) {
     ListApps listApps = (ListApps) wsWidget.getViewObject();
     if (listApps == null) {
@@ -301,23 +193,6 @@ public class DisplayablesFactory {
     return new DisplayableGroup(displayables);
   }
 
-  private static Displayable getStores(GetStoreWidgets.WSWidget wsWidget, String storeTheme) {
-    Object viewObject = wsWidget.getViewObject();
-    ListStores listStores = (ListStores) viewObject;
-    if (listStores == null) {
-      return new EmptyDisplayable();
-    }
-    List<Store> stores = listStores.getDatalist().getList();
-    List<Displayable> tmp = new ArrayList<>(stores.size());
-    tmp.add(new StoreGridHeaderDisplayable(wsWidget, storeTheme, wsWidget.getTag()));
-    for (Store store : stores) {
-
-      GridStoreDisplayable diplayable = new GridStoreDisplayable(store);
-      tmp.add(diplayable);
-    }
-    return new DisplayableGroup(tmp);
-  }
-
   private static Displayable getMyStores(GetStoreWidgets.WSWidget wsWidget,
       StoreRepository storeRepository, String storeTheme) {
     return new DisplayableGroup(loadLocalSubscribedStores(storeRepository).map(stores -> {
@@ -346,22 +221,26 @@ public class DisplayablesFactory {
       }
       return tmp;
     }).onErrorReturn(throwable -> {
-      Logger.e(TAG, throwable);
+      CrashReport.getInstance().log(throwable);
       return Collections.emptyList();
     }).toBlocking().first());
   }
 
-  public static Observable<List<Store>> loadLocalSubscribedStores(StoreRepository storeRepository) {
-    return storeRepository.getAll()
-        .observeOn(Schedulers.computation())
-        .flatMap(stores -> Observable.from(stores).map(store -> {
-          Store nwStore = new Store();
-          nwStore.setName(store.getStoreName());
-          nwStore.setId(store.getStoreId());
-          nwStore.setAvatar(store.getIconPath());
-          nwStore.setAppearance(new Store.Appearance().setTheme(store.getTheme()));
-          return nwStore;
-        }).toList());
+  private static Displayable getStores(GetStoreWidgets.WSWidget wsWidget, String storeTheme) {
+    Object viewObject = wsWidget.getViewObject();
+    ListStores listStores = (ListStores) viewObject;
+    if (listStores == null) {
+      return new EmptyDisplayable();
+    }
+    List<Store> stores = listStores.getDatalist().getList();
+    List<Displayable> tmp = new ArrayList<>(stores.size());
+    tmp.add(new StoreGridHeaderDisplayable(wsWidget, storeTheme, wsWidget.getTag()));
+    for (Store store : stores) {
+
+      GridStoreDisplayable diplayable = new GridStoreDisplayable(store);
+      tmp.add(diplayable);
+    }
+    return new DisplayableGroup(tmp);
   }
 
   private static Displayable getDisplays(GetStoreWidgets.WSWidget wsWidget, String storeTheme) {
@@ -385,5 +264,128 @@ public class DisplayablesFactory {
       tmp.add(displayablePojo);
     }
     return new DisplayableGroup(tmp);
+  }
+
+  private static Displayable getAds(GetStoreWidgets.WSWidget wsWidget) {
+    GetAdsResponse getAdsResponse = (GetAdsResponse) wsWidget.getViewObject();
+    if (getAdsResponse != null
+        && getAdsResponse.getAds() != null
+        && getAdsResponse.getAds().size() > 0) {
+      List<GetAdsResponse.Ad> ads = getAdsResponse.getAds();
+      List<Displayable> tmp = new ArrayList<>(ads.size());
+      for (GetAdsResponse.Ad ad : ads) {
+
+        GridAdDisplayable diplayable = new GridAdDisplayable(MinimalAd.from(ad), wsWidget.getTag());
+        tmp.add(diplayable);
+      }
+      return new DisplayableGroup(tmp);
+    }
+
+    return null;
+  }
+
+  private static List<Displayable> createReviewsGroupDisplayables(
+      GetStoreWidgets.WSWidget wsWidget) {
+    List<Displayable> displayables = new LinkedList<>();
+
+    ListFullReviews reviewsList = (ListFullReviews) wsWidget.getViewObject();
+    if (reviewsList != null
+        && reviewsList.getDatalist() != null
+        && reviewsList.getDatalist().getList().size() > 0) {
+      displayables.add(new StoreGridHeaderDisplayable(wsWidget));
+      displayables.add(createReviewsDisplayables(reviewsList));
+    }
+
+    return displayables;
+  }
+
+  private static List<Displayable> createMyStoreDisplayables(Object viewObject) {
+    LinkedList<Displayable> displayables = new LinkedList<>();
+    if (viewObject instanceof GetStoreMeta && ((GetStoreMeta) viewObject).getData() != null) {
+      displayables.add(new MyStoreDisplayable(((GetStoreMeta) viewObject)));
+    } else {
+      displayables.add(new CreateStoreDisplayable());
+    }
+    return displayables;
+  }
+
+  private static Displayable createRecommendedStores(GetStoreWidgets.WSWidget wsWidget,
+      String storeTheme, StoreRepository storeRepository) {
+    ListStores listStores = (ListStores) wsWidget.getViewObject();
+    if (listStores == null) {
+      return new EmptyDisplayable();
+    }
+    List<Store> stores = listStores.getDatalist().getList();
+    List<Displayable> displayables = new LinkedList<>();
+    displayables.add(new StoreGridHeaderDisplayable(wsWidget, storeTheme, wsWidget.getTag()));
+    for (Store store : stores) {
+      if (wsWidget.getData().getLayout() == Layout.LIST) {
+        displayables.add(new RecommendedStoreDisplayable(store, storeRepository));
+      } else {
+        displayables.add(new GridStoreDisplayable(store));
+      }
+    }
+
+    return new DisplayableGroup(displayables);
+  }
+
+  private static List<Displayable> createCommentsGroup(GetStoreWidgets.WSWidget wsWidget) {
+    List<Displayable> displayables = new LinkedList<>();
+
+    Pair<ListComments, BaseRequestWithStore.StoreCredentials> data =
+        (Pair<ListComments, BaseRequestWithStore.StoreCredentials>) wsWidget.getViewObject();
+    ListComments comments = data.first;
+    displayables.add(new StoreGridHeaderDisplayable(wsWidget));
+    if (comments != null
+        && comments.getDatalist() != null
+        && comments.getDatalist().getList().size() > 0) {
+      displayables.add(
+          new StoreLatestCommentsDisplayable(data.second.getId(), data.second.getName(),
+              comments.getDatalist().getList()));
+    } else {
+      displayables.add(new StoreAddCommentDisplayable(data.second.getId(), data.second.getName(),
+          StoreThemeEnum.APTOIDE_STORE_THEME_DEFAULT));
+    }
+
+    return displayables;
+  }
+
+  public static Observable<List<Store>> loadLocalSubscribedStores(StoreRepository storeRepository) {
+    return storeRepository.getAll()
+        .observeOn(Schedulers.computation())
+        .flatMap(stores -> Observable.from(stores).map(store -> {
+          Store nwStore = new Store();
+          nwStore.setName(store.getStoreName());
+          nwStore.setId(store.getStoreId());
+          nwStore.setAvatar(store.getIconPath());
+          nwStore.setAppearance(new Store.Appearance().setTheme(store.getTheme()));
+          return nwStore;
+        }).toList());
+  }
+
+  private static Displayable createReviewsDisplayables(ListFullReviews listFullReviews) {
+    List<FullReview> reviews = listFullReviews.getDatalist().getList();
+    final List<Displayable> displayables = new ArrayList<>(reviews.size());
+    for (int i = 0; i < reviews.size(); i++) {
+      displayables.add(new RowReviewDisplayable(reviews.get(i)));
+    }
+
+    return new DisplayableGroup(displayables);
+  }
+
+  private static GetStoreMeta convertUserInfoStore(CheckUserCredentialsJson userInfo) {
+    if (!TextUtils.isEmpty(userInfo.getRepo())) {
+      GetStoreMeta getStoreMeta = new GetStoreMeta();
+      Store store = new Store();
+      Store.Appearance appearance = new Store.Appearance();
+      appearance.setTheme(userInfo.getRepoDescription().getTheme());
+      store.setAppearance(appearance);
+      store.setName(userInfo.getRepo());
+      store.setAvatar(userInfo.getRavatarHd());
+      getStoreMeta.setData(store);
+      return getStoreMeta;
+    } else {
+      return null;
+    }
   }
 }

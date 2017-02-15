@@ -25,16 +25,17 @@
 
   <RatingBar
       android:id="@+id/rating_bar"
-      style="@style/RatingBarSmall"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginLeft="10dp"
       android:layout_marginStart="10dp"
+      android:layout_toEndOf="@id/user_icon"
       android:layout_toRightOf="@id/user_icon"
       android:layout_toEndOf="@id/user_icon"
       android:numStars="5"
       android:stepSize="1.0"
       tools:rating="3.0"
+      style="@style/RatingBarSmall"
       />
 
   <TextView
@@ -44,6 +45,7 @@
       android:layout_below="@id/rating_bar"
       android:layout_marginLeft="10dp"
       android:layout_marginStart="10dp"
+      android:layout_toEndOf="@id/user_icon"
       android:layout_toRightOf="@id/user_icon"
       android:layout_toEndOf="@id/user_icon"
       android:ellipsize="end"
@@ -60,6 +62,7 @@
       android:layout_below="@id/comment_title"
       android:layout_marginLeft="10dp"
       android:layout_marginStart="10dp"
+      android:layout_toEndOf="@id/user_icon"
       android:layout_toRightOf="@id/user_icon"
       android:layout_toEndOf="@id/user_icon"
       android:ellipsize="end"
@@ -76,6 +79,7 @@
       android:layout_alignBottom="@id/user_name"
       android:layout_marginLeft="10dp"
       android:layout_marginStart="10dp"
+      android:layout_toEndOf="@id/user_name"
       android:layout_toRightOf="@id/user_name"
       android:layout_toEndOf="@id/user_name"
       android:ellipsize="end"
@@ -88,6 +92,7 @@
       android:id="@+id/comment"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
+      android:layout_alignParentEnd="true"
       android:layout_alignParentLeft="true"
       android:layout_alignParentEnd="true"
       android:layout_below="@id/user_name"

@@ -61,6 +61,95 @@ public class DownloadFactory {
     return download;
   }
 
+  private void validateApp(String md5, Obb appObb, String packageName, String appName,
+      String filePath, String filePathAlt) throws IllegalArgumentException {
+    if (TextUtils.isEmpty(md5)) {
+      throw new IllegalArgumentException("Invalid App MD5");
+    }
+    if (TextUtils.isEmpty(filePath) && TextUtils.isEmpty(filePathAlt)) {
+      throw new IllegalArgumentException("No download link provided");
+    } else if (appObb != null && TextUtils.isEmpty(packageName)) {
+      throw new IllegalArgumentException(
+          "This app has an OBB and doesn't have the package name specified");
+    } else if (TextUtils.isEmpty(appName)) {
+      throw new IllegalArgumentException(
+          "This app has an OBB and doesn't have the App name specified");
+    }
+  }
+
+  ApkPaths getDownloadPaths(int downloadAction, String path, String altPath) {
+    switch (downloadAction) {
+      case Download.ACTION_INSTALL:
+        path += INSTALL_ACTION;
+        altPath += INSTALL_ACTION;
+        break;
+      case Download.ACTION_DOWNGRADE:
+        path += DOWNGRADE_ACTION;
+        altPath += DOWNGRADE_ACTION;
+        break;
+      case Download.ACTION_UPDATE:
+        path += UPDATE_ACTION;
+        altPath += UPDATE_ACTION;
+        break;
+    }
+    return new ApkPaths(path, altPath);
+  }
+
+  private RealmList<FileToDownload> createFileList(String md5, String packageName, String filePath,
+      String fileMd5, Obb appObb, @Nullable String altPathToApk, int versionCode,
+      String versionName) {
+
+    String mainObbPath = null;
+    String mainObbMd5 = null;
+    String patchObbPath = null;
+    String patchObbMd5 = null;
+    String mainObbName = null;
+    String patchObbName = null;
+
+    if (appObb != null) {
+      Obb.ObbItem main = appObb.getMain();
+      if (main != null) {
+        mainObbPath = main.getPath();
+        mainObbMd5 = main.getMd5sum();
+        mainObbName = main.getFilename();
+      }
+
+      Obb.ObbItem patch = appObb.getPatch();
+      if (patch != null) {
+        patchObbPath = patch.getPath();
+        patchObbMd5 = patch.getMd5sum();
+        patchObbName = patch.getFilename();
+      }
+    }
+
+    return createFileList(md5, packageName, filePath, altPathToApk, fileMd5, mainObbPath,
+        mainObbMd5, patchObbPath, patchObbMd5, versionCode, versionName, mainObbName, patchObbName);
+  }
+
+  private RealmList<FileToDownload> createFileList(String md5, String packageName, String filePath,
+      @Nullable String altPathToApk, String fileMd5, String mainObbPath, String mainObbMd5,
+      String patchObbPath, String patchObbMd5, int versionCode, String versionName,
+      String mainObbName, String patchObbName) {
+
+    final RealmList<FileToDownload> downloads = new RealmList<>();
+
+    downloads.add(FileToDownload.createFileToDownload(filePath, altPathToApk, md5, fileMd5,
+        FileToDownload.APK, packageName, versionCode, versionName));
+
+    if (mainObbPath != null) {
+      downloads.add(FileToDownload.createFileToDownload(mainObbPath, null, mainObbMd5, mainObbName,
+          FileToDownload.OBB, packageName, versionCode, versionName));
+    }
+
+    if (patchObbPath != null) {
+      downloads.add(
+          FileToDownload.createFileToDownload(patchObbPath, null, patchObbMd5, patchObbName,
+              FileToDownload.OBB, packageName, versionCode, versionName));
+    }
+
+    return downloads;
+  }
+
   public Download create(UpdateDisplayable updateDisplayable) {
     validateApp(updateDisplayable.getMd5(), null, updateDisplayable.getPackageName(),
         updateDisplayable.getLabel(), updateDisplayable.getApkPath(),
@@ -170,77 +259,6 @@ public class DownloadFactory {
     return download;
   }
 
-  private void validateApp(String md5, Obb appObb, String packageName, String appName,
-      String filePath, String filePathAlt) throws IllegalArgumentException {
-    if (TextUtils.isEmpty(md5)) {
-      throw new IllegalArgumentException("Invalid App MD5");
-    }
-    if (TextUtils.isEmpty(filePath) && TextUtils.isEmpty(filePathAlt)) {
-      throw new IllegalArgumentException("No download link provided");
-    } else if (appObb != null && TextUtils.isEmpty(packageName)) {
-      throw new IllegalArgumentException(
-          "This app has an OBB and doesn't have the package name specified");
-    } else if (TextUtils.isEmpty(appName)) {
-      throw new IllegalArgumentException(
-          "This app has an OBB and doesn't have the App name specified");
-    }
-  }
-
-  private RealmList<FileToDownload> createFileList(String md5, String packageName, String filePath,
-      String fileMd5, Obb appObb, @Nullable String altPathToApk, int versionCode,
-      String versionName) {
-
-    String mainObbPath = null;
-    String mainObbMd5 = null;
-    String patchObbPath = null;
-    String patchObbMd5 = null;
-    String mainObbName = null;
-    String patchObbName = null;
-
-    if (appObb != null) {
-      Obb.ObbItem main = appObb.getMain();
-      if (main != null) {
-        mainObbPath = main.getPath();
-        mainObbMd5 = main.getMd5sum();
-        mainObbName = main.getFilename();
-      }
-
-      Obb.ObbItem patch = appObb.getPatch();
-      if (patch != null) {
-        patchObbPath = patch.getPath();
-        patchObbMd5 = patch.getMd5sum();
-        patchObbName = patch.getFilename();
-      }
-    }
-
-    return createFileList(md5, packageName, filePath, altPathToApk, fileMd5, mainObbPath,
-        mainObbMd5, patchObbPath, patchObbMd5, versionCode, versionName, mainObbName, patchObbName);
-  }
-
-  private RealmList<FileToDownload> createFileList(String md5, String packageName, String filePath,
-      @Nullable String altPathToApk, String fileMd5, String mainObbPath, String mainObbMd5,
-      String patchObbPath, String patchObbMd5, int versionCode, String versionName,
-      String mainObbName, String patchObbName) {
-
-    final RealmList<FileToDownload> downloads = new RealmList<>();
-
-    downloads.add(FileToDownload.createFileToDownload(filePath, altPathToApk, md5, fileMd5,
-        FileToDownload.APK, packageName, versionCode, versionName));
-
-    if (mainObbPath != null) {
-      downloads.add(FileToDownload.createFileToDownload(mainObbPath, null, mainObbMd5, mainObbName,
-          FileToDownload.OBB, packageName, versionCode, versionName));
-    }
-
-    if (patchObbPath != null) {
-      downloads.add(
-          FileToDownload.createFileToDownload(patchObbPath, null, patchObbMd5, patchObbName,
-              FileToDownload.OBB, packageName, versionCode, versionName));
-    }
-
-    return downloads;
-  }
-
   public Download create(AutoUpdate.AutoUpdateInfo autoUpdateInfo) {
     Download download = new Download();
     download.setAppName(Application.getConfiguration().getMarketName());
@@ -289,24 +307,6 @@ public class DownloadFactory {
             scheduled.getObb(), alternativePath, scheduled.getVerCode(),
             scheduled.getVersionName()));
     return download;
-  }
-
-  ApkPaths getDownloadPaths(int downloadAction, String path, String altPath) {
-    switch (downloadAction) {
-      case Download.ACTION_INSTALL:
-        path += INSTALL_ACTION;
-        altPath += INSTALL_ACTION;
-        break;
-      case Download.ACTION_DOWNGRADE:
-        path += DOWNGRADE_ACTION;
-        altPath += DOWNGRADE_ACTION;
-        break;
-      case Download.ACTION_UPDATE:
-        path += UPDATE_ACTION;
-        altPath += UPDATE_ACTION;
-        break;
-    }
-    return new ApkPaths(path, altPath);
   }
 
   private class ApkPaths {

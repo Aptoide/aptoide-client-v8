@@ -15,7 +15,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 import cm.aptoide.pt.logger.Logger;
@@ -84,8 +84,7 @@ public class DefaultInstaller implements Installer {
           }
         })
         .doOnError((throwable) -> {
-          Logger.e(TAG, throwable);
-          CrashReports.logException(throwable);
+          CrashReport.getInstance().log(throwable);
         });
   }
 
@@ -113,6 +112,20 @@ public class DefaultInstaller implements Installer {
     }).flatMap(uninstallStarted -> waitPackageIntent(context, intentFilter, packageName));
   }
 
+  private void startUninstallIntent(Context context, String packageName, Uri uri)
+      throws InstallationException {
+    try {
+      // Check if package is installed first
+      packageManager.getPackageInfo(packageName, 0);
+      Intent intent = new Intent(Intent.ACTION_DELETE, uri);
+      intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+      context.startActivity(intent);
+    } catch (PackageManager.NameNotFoundException e) {
+      CrashReport.getInstance().log(e);
+      throw new InstallationException(e);
+    }
+  }
+
   private void moveInstallationFiles(RollbackInstallation installation) {
     List<FileToDownload> files = installation.getFiles();
     for (int i = 0; i < files.size(); i++) {
@@ -125,40 +138,6 @@ public class DefaultInstaller implements Installer {
       }
     }
     installation.save();
-  }
-
-  private Observable<Void> defaultInstall(Context context, File file, String packageName) {
-    final IntentFilter intentFilter = new IntentFilter();
-    intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
-    intentFilter.addAction(Intent.ACTION_PACKAGE_REPLACED);
-    intentFilter.addDataScheme("package");
-    return Observable.<Void>fromCallable(() -> {
-      startInstallIntent(context, file);
-      return null;
-    }).flatMap(installStarted -> waitPackageIntent(context, intentFilter, packageName));
-  }
-
-  private void startInstallIntent(Context context, File file) {
-    Intent intent = new Intent(Intent.ACTION_VIEW);
-
-    Uri photoURI = null;
-    //read: https://inthecheesefactory.com/blog/how-to-share-access-to-file-with-fileprovider-on-android-nougat/en
-    if (Build.VERSION.SDK_INT > 23) {
-      //content://....apk for nougat
-      photoURI =
-          FileProvider.getUriForFile(context, V8Engine.getConfiguration().getAppId() + ".provider",
-              file);
-    } else {
-      //file://....apk for < nougat
-      photoURI = Uri.fromFile(file);
-    }
-    Logger.v(TAG, photoURI.toString());
-
-    intent.setDataAndType(photoURI, "application/vnd.android.package-archive");
-    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-        | Intent.FLAG_GRANT_READ_URI_PERMISSION
-        | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-    context.startActivity(intent);
   }
 
   private Observable<Void> systemInstall(Context context, File file) {
@@ -181,7 +160,7 @@ public class DefaultInstaller implements Installer {
       Shell.Interactive interactiveShell = shellBuilder.useSU().setWatchdogTimeout(10) // seconds
           .addCommand("pm install -r " + file.getAbsolutePath(), 0,
               (commandCode, exitCode, output) -> {
-                CrashReports.logException(new Exception("install -r exitCode: " + exitCode));
+                CrashReport.getInstance().log(new Exception("install -r exitCode: " + exitCode));
                 Observable.fromCallable(() -> exitCode)
                     .observeOn(Schedulers.computation())
                     .delay(20, TimeUnit.SECONDS)
@@ -215,13 +194,24 @@ public class DefaultInstaller implements Installer {
       //  throw new RuntimeException("Device not rooted.");
       //}
     } catch (Exception e) {
-      CrashReports.logException(e);
+      CrashReport.getInstance().log(e);
       sendErrorEvent(packageName, versionCode, e);
       throw new InstallationException("Installation with root failed for "
           + packageName
           + ". Error message: "
           + e.getMessage());
     }
+  }
+
+  private Observable<Void> defaultInstall(Context context, File file, String packageName) {
+    final IntentFilter intentFilter = new IntentFilter();
+    intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
+    intentFilter.addAction(Intent.ACTION_PACKAGE_REPLACED);
+    intentFilter.addDataScheme("package");
+    return Observable.<Void>fromCallable(() -> {
+      startInstallIntent(context, file);
+      return null;
+    }).flatMap(installStarted -> waitPackageIntent(context, intentFilter, packageName));
   }
 
   private void sendErrorEvent(String packageName, int versionCode, Exception e) {
@@ -234,18 +224,27 @@ public class DefaultInstaller implements Installer {
     }
   }
 
-  private void startUninstallIntent(Context context, String packageName, Uri uri)
-      throws InstallationException {
-    try {
-      // Check if package is installed first
-      packageManager.getPackageInfo(packageName, 0);
-      Intent intent = new Intent(Intent.ACTION_DELETE, uri);
-      intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-      context.startActivity(intent);
-    } catch (PackageManager.NameNotFoundException e) {
-      CrashReports.logException(e);
-      throw new InstallationException(e);
+  private void startInstallIntent(Context context, File file) {
+    Intent intent = new Intent(Intent.ACTION_VIEW);
+
+    Uri photoURI = null;
+    //read: https://inthecheesefactory.com/blog/how-to-share-access-to-file-with-fileprovider-on-android-nougat/en
+    if (Build.VERSION.SDK_INT > 23) {
+      //content://....apk for nougat
+      photoURI =
+          FileProvider.getUriForFile(context, V8Engine.getConfiguration().getAppId() + ".provider",
+              file);
+    } else {
+      //file://....apk for < nougat
+      photoURI = Uri.fromFile(file);
     }
+    Logger.v(TAG, photoURI.toString());
+
+    intent.setDataAndType(photoURI, "application/vnd.android.package-archive");
+    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+        | Intent.FLAG_GRANT_READ_URI_PERMISSION
+        | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+    context.startActivity(intent);
   }
 
   @NonNull private Observable<Void> waitPackageIntent(Context context, IntentFilter intentFilter,
@@ -261,7 +260,7 @@ public class DefaultInstaller implements Installer {
       info = packageManager.getPackageInfo(packageName, 0);
       return (info != null && info.versionCode == versionCode);
     } catch (PackageManager.NameNotFoundException e) {
-      CrashReports.logException(e);
+      CrashReport.getInstance().log(e);
       return false;
     }
   }

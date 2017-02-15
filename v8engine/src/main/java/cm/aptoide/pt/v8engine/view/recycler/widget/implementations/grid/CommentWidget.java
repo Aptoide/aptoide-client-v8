@@ -6,9 +6,8 @@ import android.support.annotation.Dimension;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -74,7 +73,7 @@ public class CommentWidget extends Widget<CommentDisplayable> {
     final ComplexComment complexComment = comment;
 
     // switch background color according to level
-    @ColorRes int bgColor = (complexComment.getLevel() == 1) ? R.color.comment_gray : R.color.white;
+    @ColorRes int bgColor = (complexComment.getLevel() == 1) ? R.color.white : R.color.comment_gray;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       outerLayout.setBackgroundColor(getContext().getColor(bgColor));
     } else {
@@ -93,8 +92,7 @@ public class CommentWidget extends Widget<CommentDisplayable> {
           }))
           .retry()
           .subscribe(aVoid -> { /* nothing else to do */ }, err -> {
-            Logger.e(TAG, err);
-            CrashReports.logException(err);
+            CrashReport.getInstance().log(err);
           }));
     } else {
       // other levels

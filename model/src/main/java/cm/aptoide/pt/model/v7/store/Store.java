@@ -57,5 +57,4 @@ import lombok.experimental.Accessors;
     private String graphic;
     private String url;
   }
-
 }

@@ -20,11 +20,11 @@ import cm.aptoide.pt.v8engine.R;
     super(getApp);
   }
 
-  @Override public int getViewLayout() {
-    return R.layout.displayable_app_view_other_versions;
-  }
-
   @Override protected Configs getConfig() {
     return new Configs(1, true);
+  }
+
+  @Override public int getViewLayout() {
+    return R.layout.displayable_app_view_other_versions;
   }
 }

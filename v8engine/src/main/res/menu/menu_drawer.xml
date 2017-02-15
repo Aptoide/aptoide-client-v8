@@ -6,36 +6,45 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-
   <item
       android:id="@+id/navigation_item_my_account"
       android:icon="?attr/icMyAccountDrawable"
+      android:orderInCategory="1"
       android:title="@string/my_account"/>
 
   <item
       android:id="@+id/navigation_item_rollback"
       android:icon="?attr/icRollbackDrawable"
+      android:orderInCategory="2"
       android:title="@string/rollback"/>
   <item
       android:id="@+id/navigation_item_setting_scheduled_downloads"
+
       android:icon="?attr/icScheduledDrawable"
+      android:orderInCategory="3"
       android:title="@string/setting_schdwntitle"/>
   <item
       android:id="@+id/navigation_item_excluded_updates"
+
       android:icon="?attr/icExcludedUpdatesDrawable"
+      android:orderInCategory="4"
       android:title="@string/excluded_updates"/>
   <item
       android:id="@+id/navigation_item_settings"
+
       android:icon="?attr/icSettingsDrawable"
+      android:orderInCategory="5"
       android:title="@string/settings"/>
 
   <item
       android:id="@+id/navigation_item_backup_apps"
       android:icon="@drawable/ic_action_backup_custom"
+      android:orderInCategory="6"
       android:title="@string/backup_apps"/>
 
 
-  <group>
+  <group android:orderInCategory="7">
+
     <item android:title="@string/drawer_social_media_title">
       <menu>
         <item
@@ -53,6 +62,7 @@
   <item
       android:id="@+id/send_feedback"
       android:icon="?attr/icSendFeedbackDrawable"
+      android:orderInCategory="8"
       android:title="@string/feedback_send_button"/>
 
 

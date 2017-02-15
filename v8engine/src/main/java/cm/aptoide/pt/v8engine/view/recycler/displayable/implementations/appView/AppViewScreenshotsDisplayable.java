@@ -21,11 +21,11 @@ public class AppViewScreenshotsDisplayable extends DisplayablePojo<GetAppMeta.Ap
     super(pojo);
   }
 
-  @Override public int getViewLayout() {
-    return R.layout.displayable_app_view_images;
-  }
-
   @Override protected Configs getConfig() {
     return new Configs(1, true);
+  }
+
+  @Override public int getViewLayout() {
+    return R.layout.displayable_app_view_images;
   }
 }

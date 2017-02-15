@@ -18,6 +18,15 @@ public abstract class BaseToolbarFragment extends SupportV4BaseFragment {
     return toolbar;
   }
 
+  @Override public void onDestroyView() {
+    super.onDestroyView();
+    toolbar = null;
+  }
+
+  @Override public void setupViews() {
+    setupToolbar();
+  }
+
   protected boolean hasToolbar() {
     return toolbar != null;
   }
@@ -43,15 +52,6 @@ public abstract class BaseToolbarFragment extends SupportV4BaseFragment {
 
       setupToolbarDetails(toolbar);
     }
-  }
-
-  @Override public void onDestroyView() {
-    super.onDestroyView();
-    toolbar = null;
-  }
-
-  @Override public void setupViews() {
-    setupToolbar();
   }
 
   @Override public void bindViews(View view) {

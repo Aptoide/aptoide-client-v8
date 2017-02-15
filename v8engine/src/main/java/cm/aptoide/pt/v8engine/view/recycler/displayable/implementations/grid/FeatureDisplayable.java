@@ -87,11 +87,11 @@ public class FeatureDisplayable extends Displayable {
         Typeface.BOLD, appName);
   }
 
-  @Override public int getViewLayout() {
-    return R.layout.displayable_social_timeline_feature;
-  }
-
   @Override protected Configs getConfig() {
     return new Configs(1, true);
+  }
+
+  @Override public int getViewLayout() {
+    return R.layout.displayable_social_timeline_feature;
   }
 }

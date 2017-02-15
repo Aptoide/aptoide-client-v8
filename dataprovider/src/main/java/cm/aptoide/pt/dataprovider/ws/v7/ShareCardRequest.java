@@ -38,8 +38,8 @@ public class ShareCardRequest extends V7<BaseV7Response, ShareCardRequest.Body> 
     return interfaces.shareCard(body, cardId, access_token);
   }
 
-  @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true)
-  public static class Body extends BaseBody {
+  @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) public static class Body
+      extends BaseBody {
 
     private String cardId;
 

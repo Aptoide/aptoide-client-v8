@@ -19,10 +19,10 @@ public class ChangeUserRepoSubscriptionRequest extends v3accountManager<GenericR
   private String storeName;
   private boolean subscribe;
 
-  ChangeUserRepoSubscriptionRequest(){ }
+  ChangeUserRepoSubscriptionRequest() {
+  }
 
-  ChangeUserRepoSubscriptionRequest(OkHttpClient client,
-      Converter.Factory converterFactory) {
+  ChangeUserRepoSubscriptionRequest(OkHttpClient client, Converter.Factory converterFactory) {
     super(client, converterFactory);
   }
 

@@ -18,11 +18,11 @@ import cm.aptoide.accountmanager.ws.CheckUserCredentialsRequest;
 import cm.aptoide.accountmanager.ws.ErrorsMapper;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
-import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.SetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SimpleSetStoreRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
@@ -56,6 +56,18 @@ public class CreateStoreActivity extends PermissionsBaseActivity
   private View content;
   private CompositeSubscription mSubscriptions;
   //Theme related views
+  private ImageView mDefaultShape;
+  private ImageView mDefaultTick;
+  private ImageView mBlackShape;
+  private ImageView mBlackTick;
+  private ImageView mBlueGreyShape;
+  private ImageView mBlueGreyTick;
+  private ImageView mDeepPurpleShape;
+  private ImageView mDeepPurpleTick;
+  private ImageView mLightGreenShape;
+  private ImageView mLightGreenTick;
+  private ImageView mGreyShape;
+  private ImageView mGreyTick;
   private ImageView mOrangeShape;
   private ImageView mOrangeTick;
   private ImageView mGreenShape;
@@ -86,7 +98,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
   private String from;
   private String storeRemoteUrl;
 
-  private IdsRepository idsRepository =
+  private AptoideClientUUID aptoideClientUUID =
       new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
           DataProvider.getContext());
 
@@ -104,25 +116,6 @@ public class CreateStoreActivity extends PermissionsBaseActivity
     setupThemeListeners();
   }
 
-  private void getData() {
-    from = getIntent().getStringExtra("from") == null ? "" : getIntent().getStringExtra("from");
-    storeId = getIntent().getLongExtra("storeId", -1);
-    storeRemoteUrl = getIntent().getStringExtra("storeAvatar");
-    storeTheme = getIntent().getStringExtra("storeTheme") == null ? ""
-        : getIntent().getStringExtra("storeTheme");
-    storeDescription = getIntent().getStringExtra("storeDescription");
-  }
-
-  @Override protected void onDestroy() {
-    super.onDestroy();
-    mSubscriptions.clear();
-    if (progressDialog != null) {
-      if (progressDialog.isShowing()) {
-        progressDialog.dismiss();
-      }
-    }
-  }
-
   @Override protected String getActivityTitle() {
     if (!from.equals("store")) {
       return getString(R.string.create_store_title);
@@ -135,22 +128,32 @@ public class CreateStoreActivity extends PermissionsBaseActivity
     return R.layout.activity_create_store;
   }
 
-  @Override void showIconPropertiesError(String errors) {
-    mSubscriptions.add(GenericDialogs.createGenericOkMessage(this,
-        getString(R.string.image_requirements_error_popup_title), errors).subscribe());
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    mSubscriptions.clear();
+    if (progressDialog != null) {
+      if (progressDialog.isShowing()) {
+        progressDialog.dismiss();
+      }
+    }
   }
 
   @Override void loadImage(Uri imagePath) {
     ImageLoader.loadWithCircleTransform(imagePath, mStoreAvatar);
   }
 
-  private void setupToolbar() {
-    if (mToolbar != null) {
-      setSupportActionBar(mToolbar);
-      getSupportActionBar().setHomeButtonEnabled(true);
-      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-      getSupportActionBar().setTitle(getActivityTitle());
-    }
+  @Override void showIconPropertiesError(String errors) {
+    mSubscriptions.add(GenericDialogs.createGenericOkMessage(this,
+        getString(R.string.image_requirements_error_popup_title), errors).subscribe());
+  }
+
+  private void getData() {
+    from = getIntent().getStringExtra("from") == null ? "" : getIntent().getStringExtra("from");
+    storeId = getIntent().getLongExtra("storeId", -1);
+    storeRemoteUrl = getIntent().getStringExtra("storeAvatar");
+    storeTheme = getIntent().getStringExtra("storeTheme") == null ? ""
+        : getIntent().getStringExtra("storeTheme");
+    storeDescription = getIntent().getStringExtra("storeDescription");
   }
 
   private void bindViews() {
@@ -187,6 +190,18 @@ public class CreateStoreActivity extends PermissionsBaseActivity
     mBrownTick = (ImageView) findViewById(R.id.create_store_theme_check_brown);
     mLightblueShape = (ImageView) findViewById(R.id.create_store_theme_lightblue);
     mLightblueTick = (ImageView) findViewById(R.id.create_store_theme_check_lightblue);
+    mDefaultShape = (ImageView) findViewById(R.id.create_store_theme_default);
+    mDefaultTick = (ImageView) findViewById(R.id.create_store_theme_check_default);
+    mBlackShape = (ImageView) findViewById(R.id.create_store_theme_black);
+    mBlackTick = (ImageView) findViewById(R.id.create_store_theme_check_black);
+    mBlueGreyShape = (ImageView) findViewById(R.id.create_store_theme_blue_grey);
+    mBlueGreyTick = (ImageView) findViewById(R.id.create_store_theme_check_blue_grey);
+    mDeepPurpleShape = (ImageView) findViewById(R.id.create_store_theme_deep_purple);
+    mDeepPurpleTick = (ImageView) findViewById(R.id.create_store_theme_check_deep_purple);
+    mLightGreenShape = (ImageView) findViewById(R.id.create_store_theme_light_green);
+    mLightGreenTick = (ImageView) findViewById(R.id.create_store_theme_check_light_green);
+    mGreyShape = (ImageView) findViewById(R.id.create_store_theme_grey);
+    mGreyTick = (ImageView) findViewById(R.id.create_store_theme_check_grey);
   }
 
   /**
@@ -212,6 +227,15 @@ public class CreateStoreActivity extends PermissionsBaseActivity
       handleThemeTick(storeTheme, "visible");
       mCreateStore.setText(R.string.save_edit_store);
       mSkip.setText(R.string.cancel);
+    }
+  }
+
+  private void setupToolbar() {
+    if (mToolbar != null) {
+      setSupportActionBar(mToolbar);
+      getSupportActionBar().setHomeButtonEnabled(true);
+      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+      getSupportActionBar().setTitle(getActivityTitle());
     }
   }
 
@@ -273,9 +297,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
           } else if (CREATE_STORE_REQUEST_CODE == 4) {
             setStoreData();
             progressDialog.show();
-            mSubscriptions.add(SetStoreRequest.of(
-                new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                    DataProvider.getContext()).getAptoideClientUUID(),
+            mSubscriptions.add(SetStoreRequest.of(aptoideClientUUID.getAptoideClientUUID(),
                 AptoideAccountManager.getAccessToken(), storeName, storeTheme, storeAvatarPath,
                 storeDescription, true, storeId).observe().subscribe(answer -> {
               AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
@@ -306,7 +328,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
             setStoreData();
             progressDialog.show();
             mSubscriptions.add(SimpleSetStoreRequest.of(AptoideAccountManager.getAccessToken(),
-                idsRepository.getAptoideClientUUID(), storeId, storeTheme, storeDescription)
+                aptoideClientUUID.getAptoideClientUUID(), storeId, storeTheme, storeDescription)
                 .observe()
                 .subscribe(answer -> {
                   AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
@@ -331,38 +353,179 @@ public class CreateStoreActivity extends PermissionsBaseActivity
         }));
   }
 
-  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    FileUtils fileUtils = new FileUtils();
-    Uri avatarUrl = null;
-    if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-      avatarUrl = getPhotoFileUri(PermissionsBaseActivity.createAvatarPhotoName(photoAvatar));
-      storeAvatarPath = fileUtils.getPathAlt(avatarUrl, getApplicationContext());
-    } else if (requestCode == GALLERY_CODE && resultCode == RESULT_OK) {
-      avatarUrl = data.getData();
-      storeAvatarPath = fileUtils.getPath(avatarUrl, getApplicationContext());
-    }
-    checkAvatarRequirements(storeAvatarPath, avatarUrl);
+  private void setupThemeListeners() {
+    mSubscriptions.add(RxView.clicks(mOrangeShape).subscribe(click -> {
+      handleThemeTick(storeTheme, "gone");
+      mOrangeTick.setVisibility(View.VISIBLE);
+      storeTheme = "orange";
+    }));
+    mSubscriptions.add(RxView.clicks(mGreenShape).subscribe(click -> {
+      handleThemeTick(storeTheme, "gone");
+      mGreenTick.setVisibility(View.VISIBLE);
+      storeTheme = "green";
+    }));
+    mSubscriptions.add(RxView.clicks(mRedShape).subscribe(click -> {
+      handleThemeTick(storeTheme, "gone");
+      mRedTick.setVisibility(View.VISIBLE);
+      storeTheme = "red";
+    }));
+    mSubscriptions.add(RxView.clicks(mIndigoShape).subscribe(click -> {
+      handleThemeTick(storeTheme, "gone");
+      mIndigoTick.setVisibility(View.VISIBLE);
+      storeTheme = "indigo";
+    }));
+    mSubscriptions.add(RxView.clicks(mTealShape).subscribe(click -> {
+      handleThemeTick(storeTheme, "gone");
+      mTealTick.setVisibility(View.VISIBLE);
+      storeTheme = "teal";
+    }));
+    mSubscriptions.add(RxView.clicks(mPinkShape).subscribe(click -> {
+      handleThemeTick(storeTheme, "gone");
+      mPinkTick.setVisibility(View.VISIBLE);
+      storeTheme = "pink";
+    }));
+    mSubscriptions.add(RxView.clicks(mLimeShape).subscribe(click -> {
+      handleThemeTick(storeTheme, "gone");
+      mLimeTick.setVisibility(View.VISIBLE);
+      storeTheme = "lime";
+    }));
+    mSubscriptions.add(RxView.clicks(mAmberShape).subscribe(click -> {
+      handleThemeTick(storeTheme, "gone");
+      mAmberTick.setVisibility(View.VISIBLE);
+      storeTheme = "amber";
+    }));
+    mSubscriptions.add(RxView.clicks(mBrownShape).subscribe(click -> {
+      handleThemeTick(storeTheme, "gone");
+      mBrownTick.setVisibility(View.VISIBLE);
+      storeTheme = "brown";
+    }));
+    mSubscriptions.add(RxView.clicks(mLightblueShape).subscribe(click -> {
+      handleThemeTick(storeTheme, "gone");
+      mLightblueTick.setVisibility(View.VISIBLE);
+      storeTheme = "light-blue";
+    }));
+    mSubscriptions.add(RxView.clicks(mDefaultShape).subscribe(click -> {
+      handleThemeTick(storeTheme, "gone");
+      mDefaultTick.setVisibility(View.VISIBLE);
+      storeTheme = "default";
+    }));
+    mSubscriptions.add(RxView.clicks(mBlackShape).subscribe(click -> {
+      handleThemeTick(storeTheme, "gone");
+      mBlackTick.setVisibility(View.VISIBLE);
+      storeTheme = "black";
+    }));
+    mSubscriptions.add(RxView.clicks(mBlueGreyShape).subscribe(click -> {
+      handleThemeTick(storeTheme, "gone");
+      mBlueGreyTick.setVisibility(View.VISIBLE);
+      storeTheme = "blue-grey";
+    }));
+    mSubscriptions.add(RxView.clicks(mDeepPurpleShape).subscribe(click -> {
+      handleThemeTick(storeTheme, "gone");
+      mDeepPurpleTick.setVisibility(View.VISIBLE);
+      storeTheme = "deep-purple";
+    }));
+    mSubscriptions.add(RxView.clicks(mLightGreenShape).subscribe(click -> {
+      handleThemeTick(storeTheme, "gone");
+      mLightGreenTick.setVisibility(View.VISIBLE);
+      storeTheme = "light-green";
+    }));
+    mSubscriptions.add(RxView.clicks(mGreyShape).subscribe(click -> {
+      handleThemeTick(storeTheme, "gone");
+      mGreyTick.setVisibility(View.VISIBLE);
+      storeTheme = "grey";
+    }));
   }
 
-  @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-      @NonNull int[] grantResults) {
-    switch (requestCode) {
-      case STORAGE_REQUEST_CODE:
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-          changePermissionValue(true);
-          callGallery();
-        } else {
-          //TODO: Deal with permissions not being given by user
-        }
-        return;
-      case CAMERA_REQUEST_CODE:
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-          changePermissionValue(true);
-          dispatchTakePictureIntent(getApplicationContext());
-        } else {
-          //TODO: Deal with permissions not being given by user
-        }
+  /**
+   * This method resets previously ticked theme tick
+   */
+  private void handleThemeTick(String storeTheme, String visibility) {
+    int visible = View.GONE;
+    if (visibility.equals("visible")) {
+      visible = View.VISIBLE;
     }
+    switch (storeTheme) {
+      case "orange":
+        mOrangeTick.setVisibility(visible);
+        break;
+      case "green":
+        mGreenTick.setVisibility(visible);
+        break;
+      case "red":
+        mRedTick.setVisibility(visible);
+        break;
+      case "indigo":
+        mIndigoTick.setVisibility(visible);
+        break;
+      case "teal":
+        mTealTick.setVisibility(visible);
+        break;
+      case "pink":
+        mPinkTick.setVisibility(visible);
+        break;
+      case "lime":
+        mLimeTick.setVisibility(visible);
+        break;
+      case "amber":
+        mAmberTick.setVisibility(visible);
+        break;
+      case "brown":
+        mBrownTick.setVisibility(visible);
+        break;
+      case "light-blue":
+        mLightblueTick.setVisibility(visible);
+        break;
+      case "default":
+        mDefaultTick.setVisibility(visible);
+        break;
+      case "black":
+        mBlackTick.setVisibility(visible);
+        break;
+      case "blue-grey":
+        mBlueGreyTick.setVisibility(visible);
+        break;
+      case "deep-purple":
+        mDeepPurpleTick.setVisibility(visible);
+        break;
+      case "grey":
+        mGreyTick.setVisibility(visible);
+        break;
+      case "light-green":
+        mLightGreenTick.setVisibility(visible);
+        break;
+      default:
+        break;
+    }
+  }
+
+  /**
+   * This method validates the data inserted (or not) when the create store button was pressed and
+   * return a code for the corresponding request.
+   */
+  private int validateData() {
+    if (from.equals("store")) {
+      if (getRepoDescription().length() != 0 || getRepoTheme().length() > 0) {
+        if (getRepoAvatar().length() != 0) {
+          return CREATE_STORE_REQUEST_CODE = 4;
+        } else {
+          return CREATE_STORE_REQUEST_CODE = 5;
+        }
+      }
+    } else {
+      if (getRepoName().length() != 0) {
+        if (getRepoAvatar().length() != 0) {
+          CREATE_STORE_REQUEST_CODE = 1;
+        } else if (getRepoTheme().length() != 0) {
+          CREATE_STORE_REQUEST_CODE = 2;
+        } else {
+          CREATE_STORE_REQUEST_CODE = 3;
+        }
+      } else {
+        CREATE_STORE_REQUEST_CODE = 0;
+        onCreateFail(R.string.nothing_inserted_store);
+      }
+    }
+    return CREATE_STORE_REQUEST_CODE;
   }
 
   @Override public void onCreateSuccess(ProgressDialog progressDialog) {
@@ -372,9 +535,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
        * Multipart
        */
       setStoreData();
-      mSubscriptions.add(SetStoreRequest.of(
-          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-              DataProvider.getContext()).getAptoideClientUUID(),
+      mSubscriptions.add(SetStoreRequest.of(aptoideClientUUID.getAptoideClientUUID(),
           AptoideAccountManager.getAccessToken(), storeName, storeTheme, storeAvatarPath)
           .observe()
           .timeout(90, TimeUnit.SECONDS)
@@ -435,7 +596,7 @@ public class CreateStoreActivity extends PermissionsBaseActivity
        */
       setStoreData();
       SimpleSetStoreRequest.of(AptoideAccountManager.getAccessToken(),
-          idsRepository.getAptoideClientUUID(), storeName, storeTheme).execute(answer -> {
+          aptoideClientUUID.getAptoideClientUUID(), storeName, storeTheme).execute(answer -> {
         AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
           progressDialog.dismiss();
           AptoideAccountManager.sendLoginBroadcast();
@@ -487,130 +648,37 @@ public class CreateStoreActivity extends PermissionsBaseActivity
     }
   }
 
-  private void setupThemeListeners() {
-    mSubscriptions.add(RxView.clicks(mOrangeShape).subscribe(click -> {
-      handleThemeTick(storeTheme, "gone");
-      mOrangeTick.setVisibility(View.VISIBLE);
-      storeTheme = "orange";
-    }));
-    mSubscriptions.add(RxView.clicks(mGreenShape).subscribe(click -> {
-      handleThemeTick(storeTheme, "gone");
-      mGreenTick.setVisibility(View.VISIBLE);
-      storeTheme = "green";
-    }));
-    mSubscriptions.add(RxView.clicks(mRedShape).subscribe(click -> {
-      handleThemeTick(storeTheme, "gone");
-      mRedTick.setVisibility(View.VISIBLE);
-      storeTheme = "red";
-    }));
-    mSubscriptions.add(RxView.clicks(mIndigoShape).subscribe(click -> {
-      handleThemeTick(storeTheme, "gone");
-      mIndigoTick.setVisibility(View.VISIBLE);
-      storeTheme = "indigo";
-    }));
-    mSubscriptions.add(RxView.clicks(mTealShape).subscribe(click -> {
-      handleThemeTick(storeTheme, "gone");
-      mTealTick.setVisibility(View.VISIBLE);
-      storeTheme = "teal";
-    }));
-    mSubscriptions.add(RxView.clicks(mPinkShape).subscribe(click -> {
-      handleThemeTick(storeTheme, "gone");
-      mPinkTick.setVisibility(View.VISIBLE);
-      storeTheme = "pink";
-    }));
-    mSubscriptions.add(RxView.clicks(mLimeShape).subscribe(click -> {
-      handleThemeTick(storeTheme, "gone");
-      mLimeTick.setVisibility(View.VISIBLE);
-      storeTheme = "lime";
-    }));
-    mSubscriptions.add(RxView.clicks(mAmberShape).subscribe(click -> {
-      handleThemeTick(storeTheme, "gone");
-      mAmberTick.setVisibility(View.VISIBLE);
-      storeTheme = "amber";
-    }));
-    mSubscriptions.add(RxView.clicks(mBrownShape).subscribe(click -> {
-      handleThemeTick(storeTheme, "gone");
-      mBrownTick.setVisibility(View.VISIBLE);
-      storeTheme = "brown";
-    }));
-    mSubscriptions.add(RxView.clicks(mLightblueShape).subscribe(click -> {
-      handleThemeTick(storeTheme, "gone");
-      mLightblueTick.setVisibility(View.VISIBLE);
-      storeTheme = "light-blue";
-    }));
+  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    FileUtils fileUtils = new FileUtils();
+    Uri avatarUrl = null;
+    if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+      avatarUrl = getPhotoFileUri(PermissionsBaseActivity.createAvatarPhotoName(photoAvatar));
+      storeAvatarPath = fileUtils.getPathAlt(avatarUrl, getApplicationContext());
+    } else if (requestCode == GALLERY_CODE && resultCode == RESULT_OK) {
+      avatarUrl = data.getData();
+      storeAvatarPath = fileUtils.getPath(avatarUrl, getApplicationContext());
+    }
+    checkAvatarRequirements(storeAvatarPath, avatarUrl);
   }
 
-  /**
-   * This method validates the data inserted (or not) when the create store button was pressed and
-   * return a code for the corresponding request.
-   */
-  private int validateData() {
-    if (from.equals("store")) {
-      if (getRepoDescription().length() != 0 || getRepoTheme().length() > 0) {
-        if (getRepoAvatar().length() != 0) {
-          return CREATE_STORE_REQUEST_CODE = 4;
+  @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+      @NonNull int[] grantResults) {
+    switch (requestCode) {
+      case STORAGE_REQUEST_CODE:
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+          changePermissionValue(true);
+          callGallery();
         } else {
-          return CREATE_STORE_REQUEST_CODE = 5;
+          //TODO: Deal with permissions not being given by user
         }
-      }
-    } else {
-      if (getRepoName().length() != 0) {
-        if (getRepoAvatar().length() != 0) {
-          CREATE_STORE_REQUEST_CODE = 1;
-        } else if (getRepoTheme().length() != 0) {
-          CREATE_STORE_REQUEST_CODE = 2;
+        return;
+      case CAMERA_REQUEST_CODE:
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+          changePermissionValue(true);
+          dispatchTakePictureIntent(getApplicationContext());
         } else {
-          CREATE_STORE_REQUEST_CODE = 3;
+          //TODO: Deal with permissions not being given by user
         }
-      } else {
-        CREATE_STORE_REQUEST_CODE = 0;
-        onCreateFail(R.string.nothing_inserted_store);
-      }
-    }
-    return CREATE_STORE_REQUEST_CODE;
-  }
-
-  /**
-   * This method resets previously ticked theme tick
-   */
-  private void handleThemeTick(String storeTheme, String visibility) {
-    int visible = View.GONE;
-    if (visibility.equals("visible")) {
-      visible = View.VISIBLE;
-    }
-    switch (storeTheme) {
-      case "orange":
-        mOrangeTick.setVisibility(visible);
-        break;
-      case "green":
-        mGreenTick.setVisibility(visible);
-        break;
-      case "red":
-        mRedTick.setVisibility(visible);
-        break;
-      case "indigo":
-        mIndigoTick.setVisibility(visible);
-        break;
-      case "teal":
-        mTealTick.setVisibility(visible);
-        break;
-      case "pink":
-        mPinkTick.setVisibility(visible);
-        break;
-      case "lime":
-        mLimeTick.setVisibility(visible);
-        break;
-      case "amber":
-        mAmberTick.setVisibility(visible);
-        break;
-      case "brown":
-        mBrownTick.setVisibility(visible);
-        break;
-      case "light-blue":
-        mLightblueTick.setVisibility(visible);
-        break;
-      default:
-        break;
     }
   }
 }

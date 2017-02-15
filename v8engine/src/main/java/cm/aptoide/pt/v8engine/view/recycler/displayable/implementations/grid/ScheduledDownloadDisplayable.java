@@ -29,12 +29,12 @@ public class ScheduledDownloadDisplayable extends SelectableDisplayablePojo<Sche
     this.installManager = installManager;
   }
 
-  @Override public int getViewLayout() {
-    return R.layout.displayable_scheduled_download_row;
-  }
-
   @Override protected Configs getConfig() {
     return new Configs(1, false);
+  }
+
+  @Override public int getViewLayout() {
+    return R.layout.displayable_scheduled_download_row;
   }
 
   public void removeFromDatabase() {

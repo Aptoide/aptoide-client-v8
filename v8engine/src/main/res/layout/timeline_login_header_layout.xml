@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/timeline_login_layout"
     android:layout_width="match_parent"
     android:layout_height="60dp"
     android:background="?attr/backgroundMain"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:id="@+id/timeline_login_layout"
     >
   <TextView
       android:layout_width="match_parent"
@@ -21,6 +21,7 @@
       android:id="@+id/login_button"
       android:layout_width="90dp"
       android:layout_height="40dp"
+      android:layout_alignParentEnd="true"
       android:layout_alignParentRight="true"
       android:layout_alignParentEnd="true"
       android:layout_centerVertical="true"

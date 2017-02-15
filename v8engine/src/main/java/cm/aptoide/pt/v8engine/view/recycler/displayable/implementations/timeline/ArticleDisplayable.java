@@ -50,11 +50,11 @@ public class ArticleDisplayable extends CardDisplayable {
   public ArticleDisplayable() {
   }
 
-  public ArticleDisplayable(Article article, String cardId,
-      String articleTitle, Link link, Link developerLink, String title, String thumbnailUrl,
-      String avatarUrl, long appId, String abUrl, List<App> relatedToAppsList, Date date,
-      DateCalculator dateCalculator, SpannableFactory spannableFactory,
-      TimelineMetricsManager timelineMetricsManager, SocialRepository socialRepository) {
+  public ArticleDisplayable(Article article, String cardId, String articleTitle, Link link,
+      Link developerLink, String title, String thumbnailUrl, String avatarUrl, long appId,
+      String abUrl, List<App> relatedToAppsList, Date date, DateCalculator dateCalculator,
+      SpannableFactory spannableFactory, TimelineMetricsManager timelineMetricsManager,
+      SocialRepository socialRepository) {
     super(article);
     this.cardId = cardId;
     this.articleTitle = articleTitle;
@@ -145,5 +145,4 @@ public class ArticleDisplayable extends CardDisplayable {
   @Override public void share(Context context, boolean privacyResult) {
     socialRepository.share(getTimelineCard(), context, privacyResult);
   }
-
 }

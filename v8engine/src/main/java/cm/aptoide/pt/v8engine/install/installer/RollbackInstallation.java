@@ -17,6 +17,7 @@ public interface RollbackInstallation extends Installation {
   String getAppName();
 
   String getIcon();
+
   String downloadLink();
 
   @Nullable String getAltDownloadLink();

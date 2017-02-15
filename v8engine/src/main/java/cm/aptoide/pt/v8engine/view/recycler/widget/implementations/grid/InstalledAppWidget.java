@@ -17,11 +17,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.PostReviewRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -43,6 +45,8 @@ import java.util.Locale;
 
   private static final Locale LOCALE = Locale.getDefault();
   private static final String TAG = InstalledAppWidget.class.getSimpleName();
+  private final AptoideClientUUID aptoideClientUUID;
+  private final DialogUtils dialogUtils;
 
   private TextView labelTextView;
   private TextView verNameTextView;
@@ -55,6 +59,9 @@ import java.util.Locale;
 
   public InstalledAppWidget(View itemView) {
     super(itemView);
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+    dialogUtils = new DialogUtils();
   }
 
   @Override protected void assignViews(View itemView) {
@@ -63,6 +70,10 @@ import java.util.Locale;
     verNameTextView = (TextView) itemView.findViewById(R.id.app_version);
     installedItemFrame = itemView.findViewById(R.id.installedItemFrame);
     createReviewLayout = (ViewGroup) itemView.findViewById(R.id.reviewButtonLayout);
+  }
+
+  @Override public void unbindView() {
+
   }
 
   @Override public void bindView(InstalledAppDisplayable displayable) {
@@ -86,15 +97,11 @@ import java.util.Locale;
       createReviewLayout.setVisibility(View.VISIBLE);
       createReviewLayout.setOnClickListener(v -> {
         Analytics.Updates.createReview();
-        DialogUtils.showRateDialog(getContext(), appName, packageName, storeName, null);
+        dialogUtils.showRateDialog(getContext(), appName, packageName, storeName, null);
       });
     } else {
       createReviewLayout.setVisibility(View.GONE);
     }
-  }
-
-  @Override public void unbindView() {
-
   }
 
   private void showRateDialog() {
@@ -135,20 +142,19 @@ import java.util.Locale;
 
       dialog.dismiss();
       PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating,
-          AptoideAccountManager.getAccessToken(),
-          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-              DataProvider.getContext()).getAptoideClientUUID()).execute(response -> {
-        if (response.isOk()) {
-          Logger.d(TAG, "review added");
-          ShowMessage.asSnack(labelTextView, R.string.review_success);
-          ManagerPreferences.setForceServerRefreshFlag(true);
-        } else {
-          ShowMessage.asSnack(labelTextView, R.string.error_occured);
-        }
-      }, e -> {
-        Logger.e(TAG, e);
-        ShowMessage.asSnack(labelTextView, R.string.error_occured);
-      });
+          AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
+          .execute(response -> {
+            if (response.isOk()) {
+              Logger.d(TAG, "review added");
+              ShowMessage.asSnack(labelTextView, R.string.review_success);
+              ManagerPreferences.setForceServerRefreshFlag(true);
+            } else {
+              ShowMessage.asSnack(labelTextView, R.string.error_occured);
+            }
+          }, e -> {
+            CrashReport.getInstance().log(e);
+            ShowMessage.asSnack(labelTextView, R.string.error_occured);
+          });
     });
 
     // create and show rating dialog

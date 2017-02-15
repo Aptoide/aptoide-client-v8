@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 23/08/2016.
- */
-
 package cm.aptoide.pt.v8engine.view.recycler.base;
 
 import android.os.Bundle;
@@ -15,20 +10,21 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.WidgetFactory;
 import java.util.List;
-import rx.Single;
 
 /**
  * Created by neuro on 16-04-2016.
  */
 public class BaseAdapter extends RecyclerView.Adapter<Widget> implements LifecycleSchim {
 
-  private final Displayables displayables = new Displayables();
-
-  public BaseAdapter() {
-  }
+  private final Displayables displayables;
 
   public BaseAdapter(List<Displayable> displayables) {
+    this();
     this.displayables.add(displayables);
+  }
+
+  public BaseAdapter() {
+    displayables = new Displayables();
   }
 
   @Override public Widget onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -58,11 +54,15 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> implements Lifecyc
   }
 
   public Displayable popDisplayable() {
-    return Single.fromCallable(() -> {
-      Displayable pop = displayables.pop();
-      notifyItemRemoved(displayables.size());
-      return pop;
-    }).toBlocking().value();
+    //return Single.fromCallable(() -> {
+    //  Displayable pop = displayables.pop();
+    //  notifyItemRemoved(displayables.size());
+    //  return pop;
+    //}).toBlocking().value();
+
+    Displayable pop = displayables.pop();
+    notifyItemRemoved(displayables.size());
+    return pop;
   }
 
   public Displayable getDisplayable(int position) {

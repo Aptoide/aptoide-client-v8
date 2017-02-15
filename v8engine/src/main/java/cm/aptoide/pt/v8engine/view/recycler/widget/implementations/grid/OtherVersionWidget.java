@@ -12,6 +12,7 @@ import android.support.annotation.DrawableRes;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Malware;
@@ -69,6 +70,10 @@ import java.util.Locale;
     itemView.setOnClickListener(this);
   }
 
+  @Override public void unbindView() {
+
+  }
+
   @Override public void bindView(OtherVersionDisplayable displayable) {
     setItemBackgroundColor(itemView);
     try {
@@ -90,12 +95,30 @@ import java.util.Locale;
           getContext().getString(R.string.appview_followers_count_text),
           app.getStore().getStats().getSubscribers()));
     } catch (NullPointerException e) {
-      Logger.e(TAG, e);
+      CrashReport.getInstance().log(e);
     }
   }
 
-  @Override public void unbindView() {
+  private void setItemBackgroundColor(View itemView) {
+    final Resources.Theme theme = itemView.getContext().getTheme();
+    final Resources res = itemView.getResources();
 
+    int color;
+    if (getLayoutPosition() % 2 == 0) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        color = res.getColor(R.color.light_custom_gray, theme);
+      } else {
+        color = res.getColor(R.color.light_custom_gray);
+      }
+    } else {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        color = res.getColor(R.color.white, theme);
+      } else {
+        color = res.getColor(R.color.white);
+      }
+    }
+
+    itemView.setBackgroundColor(color);
   }
 
   private void setBadge(App app) {
@@ -127,28 +150,6 @@ import java.util.Locale;
     // does not work properly because "The Drawables must already have had setBounds(Rect) called". info from:
     // https://developer.android.com/reference/android/widget/TextView.html#setCompoundDrawables
     trustedBadge.setImageResource(badgeResId);
-  }
-
-  private void setItemBackgroundColor(View itemView) {
-    final Resources.Theme theme = itemView.getContext().getTheme();
-    final Resources res = itemView.getResources();
-
-    int color;
-    if (getLayoutPosition() % 2 == 0) {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        color = res.getColor(R.color.light_custom_gray, theme);
-      } else {
-        color = res.getColor(R.color.light_custom_gray);
-      }
-    } else {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        color = res.getColor(R.color.white, theme);
-      } else {
-        color = res.getColor(R.color.white);
-      }
-    }
-
-    itemView.setBackgroundColor(color);
   }
 
   @Override public void onClick(View v) {

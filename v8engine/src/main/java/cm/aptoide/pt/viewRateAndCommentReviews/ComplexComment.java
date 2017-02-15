@@ -13,6 +13,9 @@ public class ComplexComment extends Comment {
     this.setAdded(comment.getAdded());
     this.setBody(comment.getBody());
     this.setId(comment.getId());
+    if (comment.getParent() != null) {
+      this.setParent(comment.getParent());
+    }
     this.setParentReview(comment.getParentReview());
     this.setUser(comment.getUser());
     this.onClickReplyAction = onClickReplyAction;

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2016.
   ~ Modified by SithEngineer on 19/07/2016.
   -->
@@ -18,9 +17,10 @@
 
   <item
       android:id="@+id/menu_share"
+      android:icon="@drawable/ic_action_share"
+      android:orderInCategory="2"
       android:title="@string/share"
-      android:visible="false"
-      app:showAsAction="never"/>
+      app:showAsAction="ifRoom"/>
 
   <item
       android:id="@+id/menu_schedule"
@@ -34,8 +34,8 @@
       android:visible="false"
       app:showAsAction="never"/>
 
-    <item
-        android:id="@+id/menu_remote_install"
-        android:title="@string/remote_install_menu_title"
-        app:showAsAction="never"/>
+  <item
+      android:id="@+id/menu_remote_install"
+      android:title="@string/remote_install_menu_title"
+      app:showAsAction="never"/>
 </menu>

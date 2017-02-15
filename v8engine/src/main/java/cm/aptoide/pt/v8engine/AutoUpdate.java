@@ -9,10 +9,8 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.view.ContextThemeWrapper;
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.crashreports.CrashReports;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
@@ -87,22 +85,22 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
             return autoUpdateInfo;
           }
         } catch (PackageManager.NameNotFoundException e) {
-          CrashReports.logException(e);
+          CrashReport.getInstance().log(e);
           e.printStackTrace();
         }
       }
     } catch (ParserConfigurationException e) {
       e.printStackTrace();
-      CrashReports.logException(e);
+      CrashReport.getInstance().log(e);
     } catch (SAXException e) {
       e.printStackTrace();
-      CrashReports.logException(e);
+      CrashReport.getInstance().log(e);
     } catch (MalformedURLException e) {
       e.printStackTrace();
-      CrashReports.logException(e);
+      CrashReport.getInstance().log(e);
     } catch (IOException e) {
       e.printStackTrace();
-      CrashReports.logException(e);
+      CrashReport.getInstance().log(e);
     } finally {
       if (connection != null) {
         connection.disconnect();
@@ -139,9 +137,7 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
           dialog.show();
 
           InstallManager installManager =
-              new InstallManager(AptoideDownloadManager.getInstance(), installer,
-                  AccessorFactory.getAccessorFor(Download.class),
-                  AccessorFactory.getAccessorFor(Installed.class));
+              new InstallManager(AptoideDownloadManager.getInstance(), installer);
 
           permissionManager.requestDownloadAccess(activity)
               .flatMap(
@@ -156,8 +152,7 @@ public class AutoUpdate extends AsyncTask<Void, Void, AutoUpdate.AutoUpdateInfo>
                 }
                 dismissDialog();
               }, throwable -> {
-                throwable.printStackTrace();
-                CrashReports.logException(throwable);
+                CrashReport.getInstance().log(throwable);
                 dismissDialog();
               });
 

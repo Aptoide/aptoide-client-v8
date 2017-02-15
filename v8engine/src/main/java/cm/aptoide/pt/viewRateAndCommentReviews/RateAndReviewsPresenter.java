@@ -3,7 +3,7 @@ package cm.aptoide.pt.viewRateAndCommentReviews;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
@@ -32,13 +32,15 @@ public class RateAndReviewsPresenter implements Presenter {
     this.view = view;
     this.schedulerProvider = schedulerProvider;
 
-    request = ListReviewsRequest.of(storeName, packageName, AptoideAccountManager.getAccessToken(),
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID());
+    String aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext()).getAptoideClientUUID();
 
-    ratingRequest = GetAppRequest.of(appId, AptoideAccountManager.getAccessToken(),
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID(), packageName);
+    request = ListReviewsRequest.of(storeName, packageName, AptoideAccountManager.getAccessToken(),
+        aptoideClientUUID);
+
+    ratingRequest =
+        GetAppRequest.of(appId, AptoideAccountManager.getAccessToken(), aptoideClientUUID,
+            packageName);
 
     subscriptions = new CompositeSubscription();
   }
@@ -53,7 +55,7 @@ public class RateAndReviewsPresenter implements Presenter {
         .subscribe(aVoid -> {
         }, err -> {
           view.showError(err);
-          CrashReports.logException(err);
+          CrashReport.getInstance().log(err);
         });
 
     view.nextReviews().flatMap(offset -> {
@@ -66,13 +68,13 @@ public class RateAndReviewsPresenter implements Presenter {
           // TODO: 17/11/2016 sithengineer improve this exception
           IllegalStateException exception = new IllegalStateException("Unexpected response");
           view.showError(exception);
-          CrashReports.logException(exception);
+          CrashReport.getInstance().log(exception);
         }
       });
     }).compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY_VIEW)).subscribe(aVoid -> {
     }, err -> {
       view.showError(err);
-      CrashReports.logException(err);
+      CrashReport.getInstance().log(err);
     });
   }
 
@@ -84,6 +86,19 @@ public class RateAndReviewsPresenter implements Presenter {
 
   }
 
+  @NonNull private Observable<Object> showReviews() {
+    return request.observe().observeOn(schedulerProvider.ui()).doOnNext(response -> {
+      if (response.isOk()) {
+        view.showNextReviews(0, response.getDatalist().getList());
+      } else {
+        // TODO: 17/11/2016 sithengineer improve this exception
+        IllegalStateException exception = new IllegalStateException("Unexpected response");
+        view.showError(exception);
+        CrashReport.getInstance().log(exception);
+      }
+    }).map(response -> null);
+  }
+
   @NonNull private Observable<Object> showRating() {
     return ratingRequest.observe().observeOn(schedulerProvider.ui()).doOnNext(response -> {
       if (response.isOk()) {
@@ -92,21 +107,8 @@ public class RateAndReviewsPresenter implements Presenter {
         // TODO: 17/11/2016 sithengineer improve this exception
         IllegalStateException exception = new IllegalStateException("Unexpected response");
         view.showError(exception);
-        CrashReports.logException(exception);
+        CrashReport.getInstance().log(exception);
       }
     }).map(response -> null);
-  }
-
-  @NonNull private Observable<Object> showReviews() {
-    return request.observe().observeOn(schedulerProvider.ui()).doOnNext(response -> {
-          if (response.isOk()) {
-            view.showNextReviews(0, response.getDatalist().getList());
-          } else {
-            // TODO: 17/11/2016 sithengineer improve this exception
-            IllegalStateException exception = new IllegalStateException("Unexpected response");
-            view.showError(exception);
-            CrashReports.logException(exception);
-          }
-        }).map(response -> null);
   }
 }

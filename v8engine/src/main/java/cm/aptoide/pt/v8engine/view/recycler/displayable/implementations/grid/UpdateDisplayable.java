@@ -25,7 +25,6 @@ import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import lombok.Getter;
 import rx.Observable;
-import rx.Scheduler;
 
 import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 
@@ -60,7 +59,7 @@ public class UpdateDisplayable extends Displayable {
   public UpdateDisplayable() {
   }
 
-  public UpdateDisplayable(String packageName, long appId, String label, String icon,
+  private UpdateDisplayable(String packageName, long appId, String label, String icon,
       int versionCode, String md5, String apkPath, String alternativeApkPath,
       String updateVersionName, String mainObbName, String mainObbPath, String mainObbMd5,
       String patchObbName, String patchObbPath, String patchObbMd5, Download download,
@@ -89,7 +88,7 @@ public class UpdateDisplayable extends Displayable {
     this.installConverter = installConverter;
   }
 
-  public static UpdateDisplayable create(Update update, InstallManager installManager,
+  public static UpdateDisplayable newInstance(Update update, InstallManager installManager,
       DownloadFactory downloadFactory, Analytics analytics,
       DownloadEventConverter downloadInstallEventConverter,
       InstallEventConverter installConverter) {
@@ -121,7 +120,7 @@ public class UpdateDisplayable extends Displayable {
             .doOnSubscribe(() -> setupEvents(download)));
   }
 
-  public void setupEvents(Download download) {
+  private void setupEvents(Download download) {
     DownloadEvent report =
         converter.create(download, DownloadEvent.Action.CLICK, DownloadEvent.AppContext.UPDATE_TAB);
     analytics.save(download.getPackageName() + download.getVersionCode(), report);
@@ -131,26 +130,11 @@ public class UpdateDisplayable extends Displayable {
     analytics.save(download.getPackageName() + download.getVersionCode(), installEvent);
   }
 
-  @Override public int getViewLayout() {
-    return R.layout.update_row;
-  }
-
   @Override protected Configs getConfig() {
     return new Configs(1, false);
   }
 
-  /**
-   * *  <dt><b>Scheduler:</b></dt>
-   * <dd>{@code getUpdates} operates by default on the {@code io} {@link Scheduler}..</dd>
-   * </dl>
-   */
-  public Observable<Progress<Download>> getUpdates() {
-    return installManager.getInstallations();
-  }
-
-  public boolean isDownloadingOrInstalling(Progress<Download> progress) {
-    return progress.getRequest().getOverallDownloadStatus() == Download.PROGRESS
-        || progress.getRequest().getOverallDownloadStatus() == Download.PENDING
-        || progress.getRequest().getOverallDownloadStatus() == Download.IN_QUEUE;
+  @Override public int getViewLayout() {
+    return R.layout.update_row;
   }
 }

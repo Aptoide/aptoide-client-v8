@@ -17,7 +17,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import cm.aptoide.pt.actions.PermissionRequest;
-import cm.aptoide.pt.crashreports.AptoideCrashLogger;
+import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -57,11 +58,13 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
     // Fabric.with(this, new Crashlytics(), new CrashlyticsNdk());
 
     if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-      AptoideCrashLogger.getInstance()
-          .setLanguage(getResources().getConfiguration().locale.getLanguage());
+      ((CrashlyticsCrashLogger) CrashReport.getInstance()
+          .getLogger(CrashlyticsCrashLogger.class)).setLanguage(
+          getResources().getConfiguration().locale.getLanguage());
     } else {
-      AptoideCrashLogger.getInstance()
-          .setLanguage(getResources().getConfiguration().getLocales().get(0).getLanguage());
+      ((CrashlyticsCrashLogger) CrashReport.getInstance()
+          .getLogger(CrashlyticsCrashLogger.class)).setLanguage(
+          getResources().getConfiguration().getLocales().get(0).getLanguage());
     }
 
     setUpAnalytics();
@@ -73,15 +76,6 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
     bindViews(getWindow().getDecorView().getRootView());
     setupToolbar();
     setupViews();
-  }
-
-  @Override protected void onStop() {
-    super.onStop();
-    Analytics.Lifecycle.Activity.onStop(this);
-  }
-
-  @Override protected void onDestroy() {
-    super.onDestroy();
   }
 
   private void setUpAnalytics() {
@@ -96,6 +90,20 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
    */
   @LayoutRes public abstract int getContentViewId();
 
+  @Override protected void onStart() {
+    super.onStart();
+    Analytics.Lifecycle.Activity.onStart(this);
+  }
+
+  @Override protected void onStop() {
+    super.onStop();
+    Analytics.Lifecycle.Activity.onStop(this);
+  }
+
+  @Override protected void onDestroy() {
+    super.onDestroy();
+  }
+
   @Override protected void onPause() {
     super.onPause();
     _resumed = false;
@@ -106,11 +114,6 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
     super.onResume();
     _resumed = true;
     Analytics.Lifecycle.Activity.onResume(this);
-  }
-
-  @Override protected void onStart() {
-    super.onStart();
-    Analytics.Lifecycle.Activity.onStart(this);
   }
 
   //
@@ -124,6 +127,10 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
       @NonNull int[] grantResults) {
 
+    // got this error on fabric => added this check
+    if (grantResults.length == 0) {
+      super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
     switch (requestCode) {
 
       case ACCESS_TO_EXTERNAL_FS_REQUEST_ID:

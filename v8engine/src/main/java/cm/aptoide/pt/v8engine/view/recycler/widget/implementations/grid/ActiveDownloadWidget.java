@@ -5,9 +5,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ActiveDownloadDisplayable;
@@ -22,7 +22,6 @@ import rx.schedulers.Schedulers;
  */
 @Displayables({ ActiveDownloadDisplayable.class }) public class ActiveDownloadWidget
     extends Widget<ActiveDownloadDisplayable> {
-  private static final String TAG = ActiveDownloadWidget.class.getSimpleName();
 
   private TextView appName;
   private ProgressBar progressBar;
@@ -30,7 +29,6 @@ import rx.schedulers.Schedulers;
   private TextView downloadProgressTv;
   private ImageView pauseCancelButton;
   private ImageView appIcon;
-  private ActiveDownloadDisplayable displayable;
 
   public ActiveDownloadWidget(View itemView) {
     super(itemView);
@@ -46,16 +44,16 @@ import rx.schedulers.Schedulers;
   }
 
   @Override public void bindView(ActiveDownloadDisplayable displayable) {
-    this.displayable = displayable;
-
     compositeSubscription.add(RxView.clicks(pauseCancelButton)
         .subscribe(click -> displayable.pauseInstall(getContext())));
-    compositeSubscription.add(displayable.getDownload()
+
+    compositeSubscription.add(displayable.getDownloadObservable()
         .observeOn(Schedulers.computation())
         .distinctUntilChanged()
         .map(download -> download)
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe((download) -> updateUi(download), throwable -> Logger.e(TAG, throwable)));
+        .subscribe((download) -> updateUi(download),
+            throwable -> CrashReport.getInstance().log(throwable)));
   }
 
   private Void updateUi(Download download) {
@@ -69,7 +67,7 @@ import rx.schedulers.Schedulers;
       progressBar.setIndeterminate(false);
       progressBar.setProgress(download.getOverallProgress());
     }
-    downloadProgressTv.setText(download.getOverallProgress() + "%");
+    downloadProgressTv.setText(String.format("%d%%", download.getOverallProgress()));
     downloadSpeedTv.setText(String.valueOf(
         AptoideUtils.StringU.formatBytesToBits((long) download.getDownloadSpeed(), true)));
     return null;

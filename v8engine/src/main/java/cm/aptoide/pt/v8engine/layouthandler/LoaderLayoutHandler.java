@@ -10,9 +10,8 @@ import android.support.annotation.IdRes;
 import android.support.annotation.UiThread;
 import android.view.View;
 import android.widget.ProgressBar;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.util.ErrorUtils;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.interfaces.LoadInterface;
@@ -28,9 +27,8 @@ public class LoaderLayoutHandler {
 
   final LoadInterface loadInterface;
   @IdRes private final int viewToShowAfterLoadingId;
-
-  private View viewToShowAfterLoading;
   protected ProgressBar progressBar;
+  private View viewToShowAfterLoading;
   private View genericErrorView;
   private View noNetworkConnectionView;
   private View retryErrorView;
@@ -53,8 +51,7 @@ public class LoaderLayoutHandler {
   }
 
   public void finishLoading(Throwable throwable) {
-    Logger.printException(throwable);
-    CrashReports.logException(throwable);
+    CrashReport.getInstance().log(throwable);
 
     AptoideUtils.ThreadU.runOnUiThread(() -> onFinishLoading(throwable));
   }
@@ -80,26 +77,25 @@ public class LoaderLayoutHandler {
     }
   }
 
+  protected void restoreState() {
+    genericErrorView.setVisibility(View.GONE);
+    noNetworkConnectionView.setVisibility(View.GONE);
+    progressBar.setVisibility(View.VISIBLE);
+  }
+
   public void finishLoading() {
     Observable.fromCallable(() -> {
       onFinishLoading();
       return null;
     }).subscribeOn(AndroidSchedulers.mainThread()).subscribe(o -> {
     }, e -> {
-      Logger.printException(e);
-      CrashReports.logException(e);
+      CrashReport.getInstance().log(e);
     });
   }
 
   @UiThread protected void onFinishLoading() {
     progressBar.setVisibility(View.GONE);
     viewToShowAfterLoading.setVisibility(View.VISIBLE);
-  }
-
-  protected void restoreState() {
-    genericErrorView.setVisibility(View.GONE);
-    noNetworkConnectionView.setVisibility(View.GONE);
-    progressBar.setVisibility(View.VISIBLE);
   }
 
   @CallSuper public void unbindViews() {

@@ -11,6 +11,6 @@ import lombok.EqualsAndHashCode;
 /**
  * Created by sithengineer on 20/07/16.
  */
-@EqualsAndHashCode(callSuper = true)
-@Data public class ListComments extends BaseV7EndlessDatalistResponse<Comment> {
+@EqualsAndHashCode(callSuper = true) @Data public class ListComments
+    extends BaseV7EndlessDatalistResponse<Comment> {
 }

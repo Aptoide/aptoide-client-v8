@@ -39,10 +39,6 @@ public class SimilarWidget extends CardWidget<SimilarDisplayable> {
     super(itemView);
   }
 
-  @Override String getCardTypeName() {
-    return CARD_TYPE_NAME;
-  }
-
   @Override protected void assignViews(View itemView) {
     super.assignViews(itemView);
     title = (TextView) itemView.findViewById(
@@ -59,14 +55,13 @@ public class SimilarWidget extends CardWidget<SimilarDisplayable> {
         R.id.displayable_social_timeline_recommendation_similar_apps);
     getApp = (TextView) itemView.findViewById(
         R.id.displayable_social_timeline_recommendation_get_app_button);
-    cardView =
-        (CardView) itemView.findViewById(R.id.displayable_social_timeline_recommendation_card);
+    cardView = (CardView) itemView.findViewById(R.id.card);
     cardContent = (RelativeLayout) itemView.findViewById(
         R.id.displayable_social_timeline_recommendation_card_content);
   }
 
   @Override public void bindView(SimilarDisplayable displayable) {
-super.bindView(displayable);
+    super.bindView(displayable);
     title.setText(displayable.getStyledTitle(getContext()));
     subtitle.setText(displayable.getTimeSinceRecommendation(getContext()));
 
@@ -99,5 +94,9 @@ super.bindView(displayable);
       ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
           .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
     });
+  }
+
+  @Override String getCardTypeName() {
+    return CARD_TYPE_NAME;
   }
 }

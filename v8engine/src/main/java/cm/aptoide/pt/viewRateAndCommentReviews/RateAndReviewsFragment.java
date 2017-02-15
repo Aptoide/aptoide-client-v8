@@ -9,7 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
@@ -17,6 +17,7 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.GetAppMeta;
@@ -25,7 +26,7 @@ import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.adapters.CommentsAdapter;
-import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
+import cm.aptoide.pt.v8engine.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.util.DialogUtils;
@@ -43,7 +44,7 @@ import lombok.Getter;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class RateAndReviewsFragment extends GridRecyclerFragment<CommentsAdapter>
+public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     implements ItemCommentAdderView<Review, CommentsAdapter> {
 
   private static final String TAG = RateAndReviewsFragment.class.getSimpleName();
@@ -53,6 +54,8 @@ public class RateAndReviewsFragment extends GridRecyclerFragment<CommentsAdapter
   @Getter private static final String APP_NAME = "app_name";
   @Getter private static final String REVIEW_ID = "review_id";
   @Getter private static final String STORE_THEME = "store_theme";
+  private final AptoideClientUUID aptoideClientUUID;
+  private final DialogUtils dialogUtils;
 
   private long appId;
   @Getter private long reviewId;
@@ -66,7 +69,9 @@ public class RateAndReviewsFragment extends GridRecyclerFragment<CommentsAdapter
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
 
   public RateAndReviewsFragment() {
-    super(CommentsAdapter.class);
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+    dialogUtils = new DialogUtils();
   }
 
   public static RateAndReviewsFragment newInstance(long appId, String appName, String storeName,
@@ -95,16 +100,6 @@ public class RateAndReviewsFragment extends GridRecyclerFragment<CommentsAdapter
     return fragment;
   }
 
-  @Override public void loadExtras(Bundle args) {
-    super.loadExtras(args);
-    appId = args.getLong(APP_ID);
-    reviewId = args.getLong(REVIEW_ID);
-    packageName = args.getString(PACKAGE_NAME);
-    storeName = args.getString(STORE_NAME);
-    appName = args.getString(APP_NAME);
-    storeTheme = args.getString(STORE_THEME);
-  }
-
   @Override protected boolean displayHomeUpAsEnabled() {
     return true;
   }
@@ -121,8 +116,7 @@ public class RateAndReviewsFragment extends GridRecyclerFragment<CommentsAdapter
         installMenuItem.setTitle(R.string.open);
       }
     }, err -> {
-      Logger.e(TAG, err);
-      CrashReports.logException(err);
+      CrashReport.getInstance().log(err);
     });
   }
 
@@ -140,56 +134,14 @@ public class RateAndReviewsFragment extends GridRecyclerFragment<CommentsAdapter
     return super.onOptionsItemSelected(item);
   }
 
-  private void fetchRating(boolean refresh) {
-    GetAppRequest.of(appId, AptoideAccountManager.getAccessToken(),
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID(), packageName)
-        .observe(refresh)
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(getApp -> {
-          if (getApp.isOk()) {
-            GetAppMeta.App data = getApp.getNodes().getMeta().getData();
-            setupTitle(data.getName());
-            setupRating(data);
-          }
-          finishLoading();
-        }, err -> {
-          CrashReports.logException(err);
-        });
-  }
-
-  private void setupRating(GetAppMeta.App data) {
-    ratingTotalsLayout.setup(data);
-    ratingBarsLayout.setup(data);
-  }
-
-  private void fetchReviews() {
-    ListReviewsRequest reviewsRequest =
-        ListReviewsRequest.of(storeName, packageName, AptoideAccountManager.getAccessToken(),
-            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                DataProvider.getContext()).getAptoideClientUUID());
-
-    endlessRecyclerOnScrollListener =
-        new EndlessRecyclerOnScrollListener(this.getAdapter(), reviewsRequest,
-            new ListFullReviewsSuccessRequestListener(this), Throwable::printStackTrace);
-    recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
-    endlessRecyclerOnScrollListener.onLoadMore(false);
-  }
-
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    if (storeTheme != null) {
-      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
-      ThemeUtils.setStoreTheme(getActivity(), storeTheme);
-    }
-  }
-
-  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    Logger.d(TAG, "Other versions should refresh? " + create);
-    fetchRating(refresh);
-    fetchReviews();
+  @Override public void loadExtras(Bundle args) {
+    super.loadExtras(args);
+    appId = args.getLong(APP_ID);
+    reviewId = args.getLong(REVIEW_ID);
+    packageName = args.getString(PACKAGE_NAME);
+    storeName = args.getString(STORE_NAME);
+    appName = args.getString(APP_NAME);
+    storeTheme = args.getString(STORE_THEME);
   }
 
   @Override public int getContentViewId() {
@@ -206,17 +158,72 @@ public class RateAndReviewsFragment extends GridRecyclerFragment<CommentsAdapter
     ratingBarsLayout = new RatingBarsLayout(view);
 
     floatingActionButton.setOnClickListener(v -> {
-      DialogUtils.showRateDialog(getActivity(), appName, packageName, storeName,
-          () -> fetchReviews());
+      dialogUtils.showRateDialog(getActivity(), appName, packageName, storeName,
+          () -> invalidateReviews());
     });
   }
 
-  @NonNull @Override
-  public CommentsReadMoreDisplayable createReadMoreDisplayable(final int itemPosition,
-      Review review) {
-    return new CommentsReadMoreDisplayable(review.getId(), true,
-        review.getCommentList().getDatalist().getNext(),
-        new SimpleReviewCommentAdder(itemPosition, this));
+  private void invalidateReviews() {
+    clearDisplayables();
+    fetchReviews();
+  }
+
+  private void fetchReviews() {
+    ListReviewsRequest reviewsRequest =
+        ListReviewsRequest.of(storeName, packageName, AptoideAccountManager.getAccessToken(),
+            aptoideClientUUID.getAptoideClientUUID());
+
+    getRecyclerView().removeOnScrollListener(endlessRecyclerOnScrollListener);
+    endlessRecyclerOnScrollListener =
+        new EndlessRecyclerOnScrollListener(this.getAdapter(), reviewsRequest,
+            new ListFullReviewsSuccessRequestListener(this), Throwable::printStackTrace);
+    getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
+    endlessRecyclerOnScrollListener.onLoadMore(false);
+  }
+
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    if (storeTheme != null) {
+      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
+      ThemeUtils.setStoreTheme(getActivity(), storeTheme);
+    }
+  }
+
+  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    super.load(create, refresh, savedInstanceState);
+    Logger.d(TAG, "Other versions should refresh? " + create);
+    fetchRating(refresh);
+    fetchReviews();
+  }
+
+  private void fetchRating(boolean refresh) {
+    GetAppRequest.of(appId, AptoideAccountManager.getAccessToken(),
+        aptoideClientUUID.getAptoideClientUUID(), packageName)
+        .observe(refresh)
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(getApp -> {
+          if (getApp.isOk()) {
+            GetAppMeta.App data = getApp.getNodes().getMeta().getData();
+            setupTitle(data.getName());
+            setupRating(data);
+          }
+          finishLoading();
+        }, err -> {
+          CrashReport.getInstance().log(err);
+        });
+  }
+
+  public void setupTitle(String title) {
+    if (hasToolbar()) {
+      getToolbar().setTitle(title);
+    }
+  }
+
+  private void setupRating(GetAppMeta.App data) {
+    ratingTotalsLayout.setup(data);
+    ratingBarsLayout.setup(data);
   }
 
   /*
@@ -226,6 +233,14 @@ public class RateAndReviewsFragment extends GridRecyclerFragment<CommentsAdapter
     }
   }
   */
+
+  @NonNull @Override
+  public CommentsReadMoreDisplayable createReadMoreDisplayable(final int itemPosition,
+      Review review) {
+    return new CommentsReadMoreDisplayable(review.getId(), true,
+        review.getCommentList().getDatalist().getNext(),
+        new SimpleReviewCommentAdder(itemPosition, this));
+  }
 
   @Override protected CommentsAdapter createAdapter() {
     return new CommentsAdapter<>(RateAndReviewCommentDisplayable.class);
@@ -238,18 +253,12 @@ public class RateAndReviewsFragment extends GridRecyclerFragment<CommentsAdapter
     }
   }
 
-  public void setupTitle(String title) {
-    if (hasToolbar()) {
-      getToolbar().setTitle(title);
-    }
-  }
-
   void checkAndRemoveProgressBarDisplayable() {
-    for (int i = 0; i < adapter.getItemCount(); i++) {
-      Displayable displayable = adapter.getDisplayable(i);
+    for (int i = 0; i < getAdapter().getItemCount(); i++) {
+      Displayable displayable = getAdapter().getDisplayable(i);
       if (displayable instanceof ProgressBarDisplayable) {
-        adapter.removeDisplayable(i);
-        adapter.notifyItemRemoved(i);
+        getAdapter().removeDisplayable(i);
+        getAdapter().notifyItemRemoved(i);
       }
     }
   }

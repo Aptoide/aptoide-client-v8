@@ -26,13 +26,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.util.UserCompleteData;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -48,9 +47,9 @@ import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.view.BadgeView;
 import com.trello.rxlifecycle.android.FragmentEvent;
+import java.text.NumberFormat;
 import lombok.Getter;
 import lombok.Setter;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -87,140 +86,6 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
     updateRepository = RepositoryFactory.getUpdateRepository();
   }
 
-  private void setupNavigationView() {
-    if (mNavigationView != null) {
-      mNavigationView.setItemIconTintList(null);
-      mNavigationView.setNavigationItemSelectedListener(menuItem -> {
-
-        int itemId = menuItem.getItemId();
-        if (itemId == R.id.navigation_item_my_account) {
-          AptoideAccountManager.openAccountManager(getContext());
-        } else if (itemId == R.id.navigation_item_rollback) {
-          ((FragmentShower) getActivity()).pushFragmentV4(
-              V8Engine.getFragmentProvider().newRollbackFragment());
-        } else if (itemId == R.id.navigation_item_setting_scheduled_downloads) {
-          ((FragmentShower) getActivity()).pushFragmentV4(
-              V8Engine.getFragmentProvider().newScheduledDownloadsFragment());
-        } else if (itemId == R.id.navigation_item_excluded_updates) {
-          ((FragmentShower) getActivity()).pushFragmentV4(
-              V8Engine.getFragmentProvider().newExcludedUpdatesFragment());
-        } else if (itemId == R.id.navigation_item_settings) {
-          ((FragmentShower) getActivity()).pushFragmentV4(
-              V8Engine.getFragmentProvider().newSettingsFragment());
-        } else if (itemId == R.id.navigation_item_facebook) {
-          openFacebook();
-        } else if (itemId == R.id.navigation_item_twitter) {
-          openTwitter();
-        } else if (itemId == R.id.navigation_item_backup_apps) {
-          openBackupApps();
-        } else if (itemId == R.id.send_feedback) {
-          startFeedbackFragment();
-        }
-
-        mDrawerLayout.closeDrawer(mNavigationView);
-
-        return false;
-      });
-    }
-  }
-
-  private void openBackupApps() {
-    //Installed installedBackupApps =
-    //    DeprecatedDatabase.InstalledQ.get(BACKUP_APPS_PACKAGE_NAME, realm);
-    //if (installedBackupApps == null) {
-    //  FragmentUtils.replaceFragmentV4(this.getActivity(),
-    //      V8Engine.getFragmentProvider().newAppViewFragment(BACKUP_APPS_PACKAGE_NAME,
-    //          AppViewFragment.OpenType.OPEN_ONLY));
-    //} else {
-    //  Intent i =
-    //      getContext().getPackageManager().getLaunchIntentForPackage(BACKUP_APPS_PACKAGE_NAME);
-    //  startActivity(i);
-    //}
-
-    InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
-    installedAccessor.get(BACKUP_APPS_PACKAGE_NAME)
-        .observeOn(AndroidSchedulers.mainThread())
-        .compose(bindUntilEvent(LifecycleEvent.DESTROY))
-        .subscribe(installed -> {
-          if (installed == null) {
-            FragmentUtils.replaceFragmentV4(this.getActivity(), V8Engine.getFragmentProvider()
-                .newAppViewFragment(BACKUP_APPS_PACKAGE_NAME, AppViewFragment.OpenType.OPEN_ONLY));
-          } else {
-            Intent i = getContext().getPackageManager()
-                .getLaunchIntentForPackage(BACKUP_APPS_PACKAGE_NAME);
-            startActivity(i);
-          }
-        }, err -> {
-          Logger.e(TAG, err);
-          CrashReports.logException(err);
-        });
-  }
-
-  private void startFeedbackFragment() {
-    String downloadFolderPath = Application.getConfiguration().getCachePath();
-    String screenshotFileName = getActivity().getClass().getSimpleName() + ".jpg";
-    AptoideUtils.ScreenU.takeScreenshot(getActivity(), downloadFolderPath, screenshotFileName);
-    ((FragmentShower) getActivity()).pushFragmentV4(V8Engine.getFragmentProvider()
-        .newSendFeedbackFragment(downloadFolderPath + screenshotFileName));
-  }
-
-  private void openTwitter() {
-    openSocialLink(TWITTER_PACKAGE_NAME, APTOIDE_TWITTER_URL,
-        getContext().getString(R.string.social_twitter_screen_title),
-        Uri.parse(APTOIDE_TWITTER_URL));
-  }
-
-  private void openFacebook() {
-    //Installed installedFacebook = DeprecatedDatabase.InstalledQ.get(FACEBOOK_PACKAGE_NAME, realm);
-    //openSocialLink(FACEBOOK_PACKAGE_NAME, APTOIDE_FACEBOOK_LINK,
-    //    getContext().getString(R.string.social_facebook_screen_title), Uri.parse(
-    //        AptoideUtils.SocialLinksU.getFacebookPageURL(
-    //            installedFacebook == null ? 0 : installedFacebook.getVersionCode(),
-    //            APTOIDE_FACEBOOK_LINK)));
-    InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
-    Subscription unManagedSubscription = installedAccessor.get(FACEBOOK_PACKAGE_NAME)
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(installedFacebook -> {
-          openSocialLink(FACEBOOK_PACKAGE_NAME, APTOIDE_FACEBOOK_LINK,
-              getContext().getString(R.string.social_facebook_screen_title), Uri.parse(
-                  AptoideUtils.SocialLinksU.getFacebookPageURL(
-                      installedFacebook == null ? 0 : installedFacebook.getVersionCode(),
-                      APTOIDE_FACEBOOK_LINK)));
-        }, err -> {
-          Logger.e(TAG, err);
-          CrashReports.logException(err);
-        });
-  }
-
-  private void openSocialLink(String packageName, String socialUrl, String pageTitle,
-      Uri uriToOpenApp) {
-    //Installed installedFacebook = DeprecatedDatabase.InstalledQ.get(packageName, realm);
-    //if (installedFacebook == null) {
-    //  ((FragmentShower) getActivity()).pushFragmentV4(
-    //      V8Engine.getFragmentProvider().newSocialFragment(socialUrl, pageTitle));
-    //} else {
-    //  Intent sharingIntent = new Intent(Intent.ACTION_VIEW, uriToOpenApp);
-    //  getContext().startActivity(sharingIntent);
-    //}
-
-    InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
-    installedAccessor.get(packageName)
-        .observeOn(AndroidSchedulers.mainThread())
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(installedFacebook -> {
-          if (installedFacebook == null) {
-            ((FragmentShower) getActivity()).pushFragmentV4(
-                V8Engine.getFragmentProvider().newSocialFragment(socialUrl, pageTitle));
-          } else {
-            Intent sharingIntent = new Intent(Intent.ACTION_VIEW, uriToOpenApp);
-            getContext().startActivity(sharingIntent);
-          }
-        }, err -> {
-          Logger.e(TAG, err);
-          CrashReports.logException(err);
-        });
-  }
-
   @Override public void bindViews(View view) {
     super.bindViews(view);
     mNavigationView = (NavigationView) view.findViewById(R.id.nav_view);
@@ -229,6 +94,11 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
     Analytics.AppViewViewedFrom.addStepToList("HOME");
 
     setHasOptionsMenu(true);
+  }
+
+  @Override public void onResume() {
+    super.onResume();
+    setUserDataOnHeader();
   }
 
   private void setUserDataOnHeader() {
@@ -272,31 +142,6 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
     ImageLoader.load(R.drawable.user_account_white, userAvatarImage);
   }
 
-  @Override public void onResume() {
-    super.onResume();
-    setUserDataOnHeader();
-  }
-
-  public void refreshUpdatesBadge(int num) {
-    // No updates present
-    if (updatesBadge == null) {
-      return;
-    }
-
-    updatesBadge.setTextSize(11);
-
-    if (num > 0) {
-      updatesBadge.setText(String.valueOf(num));
-      if (!updatesBadge.isShown()) {
-        updatesBadge.show(true);
-      }
-    } else {
-      if (updatesBadge.isShown()) {
-        updatesBadge.hide(true);
-      }
-    }
-  }
-
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
@@ -310,10 +155,6 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
     getContext().unregisterReceiver(receiver);
     receiver = null;
     super.onDestroyView();
-  }
-
-  @Override public int getContentViewId() {
-    return R.layout.activity_main;
   }
 
   @Override protected void setupViewPager() {
@@ -341,8 +182,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(size -> refreshUpdatesBadge(size), throwable -> {
-          Logger.e(TAG, throwable);
-          CrashReports.logException(throwable);
+          CrashReport.getInstance().log(throwable);
         });
 
     if (desiredViewPagerItem != null) {
@@ -350,6 +190,30 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
         viewPager.setCurrentItem(adapter.getEventNamePosition(desiredViewPagerItem));
       }
     }
+  }
+
+  public void refreshUpdatesBadge(int num) {
+    // No updates present
+    if (updatesBadge == null) {
+      return;
+    }
+
+    updatesBadge.setTextSize(11);
+
+    if (num > 0) {
+      updatesBadge.setText(NumberFormat.getIntegerInstance().format(num));
+      if (!updatesBadge.isShown()) {
+        updatesBadge.show(true);
+      }
+    } else {
+      if (updatesBadge.isShown()) {
+        updatesBadge.hide(true);
+      }
+    }
+  }
+
+  @Override public int getContentViewId() {
+    return R.layout.activity_main;
   }
 
   @Override protected void setupSearch(Menu menu) {
@@ -361,14 +225,146 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
     setupNavigationView();
   }
 
-  @Override public void setupToolbarDetails(Toolbar toolbar) {
-    toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
-    toolbar.setNavigationIcon(R.drawable.ic_drawer);
-    toolbar.setNavigationOnClickListener(v -> mDrawerLayout.openDrawer(GravityCompat.START));
+  private void setupNavigationView() {
+    if (mNavigationView != null) {
+      mNavigationView.setItemIconTintList(null);
+      mNavigationView.setNavigationItemSelectedListener(menuItem -> {
+
+        int itemId = menuItem.getItemId();
+        if (itemId == R.id.navigation_item_my_account) {
+          AptoideAccountManager.openAccountManager(getContext());
+        } else if (itemId == R.id.navigation_item_rollback) {
+          ((FragmentShower) getActivity()).pushFragmentV4(
+              V8Engine.getFragmentProvider().newRollbackFragment());
+        } else if (itemId == R.id.navigation_item_setting_scheduled_downloads) {
+          ((FragmentShower) getActivity()).pushFragmentV4(
+              V8Engine.getFragmentProvider().newScheduledDownloadsFragment());
+        } else if (itemId == R.id.navigation_item_excluded_updates) {
+          ((FragmentShower) getActivity()).pushFragmentV4(
+              V8Engine.getFragmentProvider().newExcludedUpdatesFragment());
+        } else if (itemId == R.id.navigation_item_settings) {
+          ((FragmentShower) getActivity()).pushFragmentV4(
+              V8Engine.getFragmentProvider().newSettingsFragment());
+        } else if (itemId == R.id.navigation_item_facebook) {
+          openFacebook();
+        } else if (itemId == R.id.navigation_item_twitter) {
+          openTwitter();
+        } else if (itemId == R.id.navigation_item_backup_apps) {
+          openBackupApps();
+        } else if (itemId == R.id.send_feedback) {
+          startFeedbackFragment();
+        }
+
+        mDrawerLayout.closeDrawer(mNavigationView);
+
+        return false;
+      });
+    }
+  }
+
+  private void openFacebook() {
+    //Installed installedFacebook = DeprecatedDatabase.InstalledQ.get(FACEBOOK_PACKAGE_NAME, realm);
+    //openSocialLink(FACEBOOK_PACKAGE_NAME, APTOIDE_FACEBOOK_LINK,
+    //    getContext().getString(R.string.social_facebook_screen_title), Uri.parse(
+    //        AptoideUtils.SocialLinksU.getFacebookPageURL(
+    //            installedFacebook == null ? 0 : installedFacebook.getVersionCode(),
+    //            APTOIDE_FACEBOOK_LINK)));
+    InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
+    installedAccessor.get(FACEBOOK_PACKAGE_NAME)
+        .compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW))
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(installedFacebook -> {
+          openSocialLink(FACEBOOK_PACKAGE_NAME, APTOIDE_FACEBOOK_LINK,
+              getContext().getString(R.string.social_facebook_screen_title), Uri.parse(
+                  AptoideUtils.SocialLinksU.getFacebookPageURL(
+                      installedFacebook == null ? 0 : installedFacebook.getVersionCode(),
+                      APTOIDE_FACEBOOK_LINK)));
+        }, err -> {
+          CrashReport.getInstance().log(err);
+        });
+  }
+
+  private void openTwitter() {
+    openSocialLink(TWITTER_PACKAGE_NAME, APTOIDE_TWITTER_URL,
+        getContext().getString(R.string.social_twitter_screen_title),
+        Uri.parse(APTOIDE_TWITTER_URL));
+  }
+
+  private void openBackupApps() {
+    //Installed installedBackupApps =
+    //    DeprecatedDatabase.InstalledQ.get(BACKUP_APPS_PACKAGE_NAME, realm);
+    //if (installedBackupApps == null) {
+    //  FragmentUtils.replaceFragmentV4(this.getActivity(),
+    //      V8Engine.getFragmentProvider().newAppViewFragment(BACKUP_APPS_PACKAGE_NAME,
+    //          AppViewFragment.OpenType.OPEN_ONLY));
+    //} else {
+    //  Intent i =
+    //      getContext().getPackageManager().getLaunchIntentForPackage(BACKUP_APPS_PACKAGE_NAME);
+    //  startActivity(i);
+    //}
+
+    InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
+    installedAccessor.get(BACKUP_APPS_PACKAGE_NAME)
+        .observeOn(AndroidSchedulers.mainThread())
+        .compose(bindUntilEvent(LifecycleEvent.DESTROY))
+        .subscribe(installed -> {
+          if (installed == null) {
+            FragmentUtils.replaceFragmentV4(this.getActivity(), V8Engine.getFragmentProvider()
+                .newAppViewFragment(BACKUP_APPS_PACKAGE_NAME, AppViewFragment.OpenType.OPEN_ONLY));
+          } else {
+            Intent i = getContext().getPackageManager()
+                .getLaunchIntentForPackage(BACKUP_APPS_PACKAGE_NAME);
+            startActivity(i);
+          }
+        }, err -> {
+          CrashReport.getInstance().log(err);
+        });
+  }
+
+  private void startFeedbackFragment() {
+    String downloadFolderPath = Application.getConfiguration().getCachePath();
+    String screenshotFileName = getActivity().getClass().getSimpleName() + ".jpg";
+    AptoideUtils.ScreenU.takeScreenshot(getActivity(), downloadFolderPath, screenshotFileName);
+    ((FragmentShower) getActivity()).pushFragmentV4(V8Engine.getFragmentProvider()
+        .newSendFeedbackFragment(downloadFolderPath + screenshotFileName));
+  }
+
+  private void openSocialLink(String packageName, String socialUrl, String pageTitle,
+      Uri uriToOpenApp) {
+    //Installed installedFacebook = DeprecatedDatabase.InstalledQ.get(packageName, realm);
+    //if (installedFacebook == null) {
+    //  ((FragmentShower) getActivity()).pushFragmentV4(
+    //      V8Engine.getFragmentProvider().newSocialFragment(socialUrl, pageTitle));
+    //} else {
+    //  Intent sharingIntent = new Intent(Intent.ACTION_VIEW, uriToOpenApp);
+    //  getContext().startActivity(sharingIntent);
+    //}
+
+    InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
+    installedAccessor.get(packageName)
+        .observeOn(AndroidSchedulers.mainThread())
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(installedFacebook -> {
+          if (installedFacebook == null) {
+            ((FragmentShower) getActivity()).pushFragmentV4(
+                V8Engine.getFragmentProvider().newSocialFragment(socialUrl, pageTitle));
+          } else {
+            Intent sharingIntent = new Intent(Intent.ACTION_VIEW, uriToOpenApp);
+            getContext().startActivity(sharingIntent);
+          }
+        }, err -> {
+          CrashReport.getInstance().log(err);
+        });
   }
 
   protected boolean displayHomeUpAsEnabled() {
     return false;
+  }
+
+  @Override public void setupToolbarDetails(Toolbar toolbar) {
+    toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
+    toolbar.setNavigationIcon(R.drawable.ic_drawer);
+    toolbar.setNavigationOnClickListener(v -> mDrawerLayout.openDrawer(GravityCompat.START));
   }
 
   @Override public boolean isDrawerOpened() {

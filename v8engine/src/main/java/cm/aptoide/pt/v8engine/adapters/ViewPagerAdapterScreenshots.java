@@ -30,16 +30,6 @@ public class ViewPagerAdapterScreenshots extends PagerAdapter {
     this.uris = uris;
   }
 
-  private int getPlaceholder(Context ctx) {
-    int id;
-    if (ctx.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-      id = R.drawable.placeholder_144x240;
-    } else {
-      id = R.drawable.placeholder_256x160;
-    }
-    return id;
-  }
-
   @Override public int getCount() {
     return uris.size();
   }
@@ -57,6 +47,16 @@ public class ViewPagerAdapterScreenshots extends PagerAdapter {
     container.addView(rootView);
 
     return rootView;
+  }
+
+  private int getPlaceholder(Context ctx) {
+    int id;
+    if (ctx.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+      id = R.drawable.placeholder_144x240;
+    } else {
+      id = R.drawable.placeholder_256x160;
+    }
+    return id;
   }
 
   @Override public void destroyItem(ViewGroup container, int position, Object object) {

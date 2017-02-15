@@ -4,10 +4,10 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.widget.Button;
-import android.widget.Toast;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.SetUserRequest;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -22,6 +22,10 @@ import rx.subscriptions.CompositeSubscription;
 public class LoggedInActivity extends BaseActivity {
 
   private static final String TAG = LoggedInActivity.class.getSimpleName();
+
+  private final AptoideClientUUID aptoideClientUUID =
+      new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+          DataProvider.getContext());
 
   private Toolbar mToolbar;
   private Button mContinueButton;
@@ -38,6 +42,14 @@ public class LoggedInActivity extends BaseActivity {
     setupListeners();
   }
 
+  @Override protected String getActivityTitle() {
+    return getString(R.string.create_profile_logged_in_activity_title);
+  }
+
+  @Override int getLayoutId() {
+    return R.layout.logged_in_first_screen;
+  }
+
   private void bindViews() {
     mContinueButton = (Button) findViewById(R.id.logged_in_continue);
     mMoreInfoButton = (Button) findViewById(R.id.logged_in_more_info_button);
@@ -49,14 +61,6 @@ public class LoggedInActivity extends BaseActivity {
     getSupportActionBar().setTitle(getActivityTitle());
   }
 
-  @Override protected String getActivityTitle() {
-    return getString(R.string.create_profile_logged_in_activity_title);
-  }
-
-  @Override int getLayoutId() {
-    return R.layout.logged_in_first_screen;
-  }
-
   private void setupListeners() {
     mSubscriptions.add(RxView.clicks(mContinueButton).subscribe(clicks -> {
 
@@ -64,8 +68,7 @@ public class LoggedInActivity extends BaseActivity {
           getApplicationContext().getString(R.string.please_wait));
       pleaseWaitDialog.show();
 
-      SetUserRequest.of(new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-              DataProvider.getContext()).getAptoideClientUUID(), UserAccessState.PUBLIC.toString(),
+      SetUserRequest.of(aptoideClientUUID.getAptoideClientUUID(), UserAccessState.PUBLIC.toString(),
           AptoideAccountManager.getAccessToken()).execute(answer -> {
         if (answer.isOk()) {
           Logger.v(TAG, "user is public");
@@ -85,15 +88,6 @@ public class LoggedInActivity extends BaseActivity {
     }));
   }
 
-  private void updateUserInfo() {
-    AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
-      if (pleaseWaitDialog != null && pleaseWaitDialog.isShowing()) {
-        pleaseWaitDialog.dismiss();
-      }
-      finish();
-    }, throwable -> throwable.printStackTrace());
-  }
-
   private void goTo() {
 
     if (getIntent() != null && getIntent().getBooleanExtra(AptoideLoginUtils.IS_FACEBOOK_OR_GOOGLE,
@@ -106,6 +100,15 @@ public class LoggedInActivity extends BaseActivity {
       startActivity(getIntent().setClass(this, CreateStoreActivity.class));
       finish();
     }
+  }
+
+  private void updateUserInfo() {
+    AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
+      if (pleaseWaitDialog != null && pleaseWaitDialog.isShowing()) {
+        pleaseWaitDialog.dismiss();
+      }
+      finish();
+    }, throwable -> throwable.printStackTrace());
   }
 }
 

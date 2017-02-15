@@ -1,5 +1,6 @@
 package cm.aptoide.pt.networkclient.okhttp.cache;
 
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -40,9 +41,9 @@ public class L2Cache extends StringBaseCache<Request, Response> {
   private static final String CACHE_CONTROL_HEADER = "Cache-Control";
 
   private static final int MAX_COUNT = 15;
+  private final Pattern pattern = Pattern.compile("\\d+"); // 1 or more digits
   private volatile boolean isPersisting = false;
   private AtomicInteger persistenceCounter = new AtomicInteger(0);
-
   // can't be final due to de-serialization
   private ConcurrentHashMap<String, ResponseCacheEntry> cache;
 
@@ -51,7 +52,7 @@ public class L2Cache extends StringBaseCache<Request, Response> {
     cache = new ConcurrentHashMap<>(60);
     // 60 is a nice value since the cold boot of the app it does ~30 different requests
 
-    try{
+    try {
       load();
     } catch (IOException e) {
       //Logger.e(TAG, e);
@@ -62,62 +63,22 @@ public class L2Cache extends StringBaseCache<Request, Response> {
     }
   }
 
+  /**
+   * loads data from file to memory
+   */
+  private void load() throws IOException {
+    File cacheFile = new File(AptoideUtils.getContext().getCacheDir(), CACHE_FILE_NAME);
+    //if(!cacheFile.exists() || !cacheFile.canRead()) return;
+
+    cache = new ObjectMapper().readValue(cacheFile,
+        new TypeReference<ConcurrentHashMap<String, ResponseCacheEntry>>() {
+        });
+    Logger.d(TAG, "Loaded cache file");
+  }
+
   @Override public void destroy() {
     persist();
     cache.clear();
-  }
-
-  @Override public void put(String key, Response response) {
-    int seconds = shouldCacheUntil(response);
-    if(seconds>=1){
-      cache.put(key, new ResponseCacheEntry(response, seconds));
-    }
-  }
-
-  private int shouldCacheUntil(Response response) {
-    try{
-      Headers headers = response.headers();
-      if(headers.size()<=0) {
-        Logger.d(TAG, "not caching the response due to empty headers");
-        return 0;
-      }
-
-      List<String> cacheControlHeaders = headers.values(CACHE_CONTROL_HEADER);
-      if(cacheControlHeaders.size()<=0) {
-        Logger.d(TAG, "not caching the response due to empty Cache-Control header");
-        return 0;
-      }
-
-      for(String headerValue : cacheControlHeaders) {
-        if(headerValue.startsWith("max-age") || headerValue.startsWith("s-maxage")) {
-          int seconds = extractNumber(headerValue);
-          return seconds;
-        }
-      }
-    } catch (Exception e) {
-      Logger.e(TAG, e);
-    }
-
-    return 0;
-  }
-
-  private final Pattern pattern = Pattern.compile("\\d+"); // 1 or more digits
-  private int extractNumber(String value) {
-    Matcher matcher = pattern.matcher(value);
-    if(matcher.find()) {
-      String group = matcher.group(matcher.groupCount());
-      return Integer.parseInt(group);
-    }
-    return 0;
-  }
-
-  @Override public Response get(String key, Request request) {
-    ResponseCacheEntry response = cache.get(key);
-
-    if(persistenceCounter.incrementAndGet()>=MAX_COUNT && response!=null && !isPersisting){
-      persist();
-    }
-    return response.getResponse(request);
   }
 
   private void persist() {
@@ -127,10 +88,10 @@ public class L2Cache extends StringBaseCache<Request, Response> {
     removeInvalid();
 
     // store in disk
-    try{
+    try {
       store();
     } catch (IOException e) {
-      Logger.e(TAG, e);
+      CrashReport.getInstance().log(e);
     }
 
     int value;
@@ -141,30 +102,12 @@ public class L2Cache extends StringBaseCache<Request, Response> {
     isPersisting = false;
   }
 
-  @Override public boolean contains(String key) {
-    return cache.containsKey(key);
-  }
-
-  @Override public boolean isValid(String key) {
-    ResponseCacheEntry cachedResponse = contains(key) ? cache.get(key) : null;
-    if(cachedResponse!=null) {
-      return cachedResponse.isValid();
-    }
-    return false;
-  }
-
-  @Override void remove(String key) {
-    if(contains(key)) {
-      cache.remove(key);
-    }
-  }
-
   /**
    * clean invalid cache entries
    */
   private void removeInvalid() {
-    for(Map.Entry<String, ResponseCacheEntry> cacheEntry : cache.entrySet()){
-      if(!cacheEntry.getValue().isValid()) {
+    for (Map.Entry<String, ResponseCacheEntry> cacheEntry : cache.entrySet()) {
+      if (!cacheEntry.getValue().isValid()) {
         cache.remove(cacheEntry.getKey());
       }
     }
@@ -179,19 +122,78 @@ public class L2Cache extends StringBaseCache<Request, Response> {
     Logger.d(TAG, "Stored cache file");
   }
 
-  /**
-   * loads data from file to memory
-   */
-  private void load() throws IOException {
-    File cacheFile = new File(AptoideUtils.getContext().getCacheDir(), CACHE_FILE_NAME);
-    //if(!cacheFile.exists() || !cacheFile.canRead()) return;
+  @Override public void put(String key, Response response) {
+    int seconds = shouldCacheUntil(response);
+    if (seconds >= 1) {
+      cache.put(key, new ResponseCacheEntry(response, seconds));
+    }
+  }
 
-    cache = new ObjectMapper().readValue(cacheFile,  new TypeReference<ConcurrentHashMap<String, ResponseCacheEntry>>(){});
-    Logger.d(TAG, "Loaded cache file");
+  private int shouldCacheUntil(Response response) {
+    try {
+      Headers headers = response.headers();
+      if (headers.size() <= 0) {
+        Logger.d(TAG, "not caching the response due to empty headers");
+        return 0;
+      }
+
+      List<String> cacheControlHeaders = headers.values(CACHE_CONTROL_HEADER);
+      if (cacheControlHeaders.size() <= 0) {
+        Logger.d(TAG, "not caching the response due to empty Cache-Control header");
+        return 0;
+      }
+
+      for (String headerValue : cacheControlHeaders) {
+        if (headerValue.startsWith("max-age") || headerValue.startsWith("s-maxage")) {
+          int seconds = extractNumber(headerValue);
+          return seconds;
+        }
+      }
+    } catch (Exception e) {
+      CrashReport.getInstance().log(e);
+    }
+
+    return 0;
+  }
+
+  private int extractNumber(String value) {
+    Matcher matcher = pattern.matcher(value);
+    if (matcher.find()) {
+      String group = matcher.group(matcher.groupCount());
+      return Integer.parseInt(group);
+    }
+    return 0;
+  }
+
+  @Override public Response get(String key, Request request) {
+    ResponseCacheEntry response = cache.get(key);
+
+    if (persistenceCounter.incrementAndGet() >= MAX_COUNT && response != null && !isPersisting) {
+      persist();
+    }
+    return response.getResponse(request);
+  }
+
+  @Override public boolean contains(String key) {
+    return cache.containsKey(key);
+  }
+
+  @Override public boolean isValid(String key) {
+    ResponseCacheEntry cachedResponse = contains(key) ? cache.get(key) : null;
+    if (cachedResponse != null) {
+      return cachedResponse.isValid();
+    }
+    return false;
+  }
+
+  @Override void remove(String key) {
+    if (contains(key)) {
+      cache.remove(key);
+    }
   }
 
   public void clean() {
-    if(cache!=null && cache.size()>0) {
+    if (cache != null && cache.size() > 0) {
       cache.clear();
     }
   }

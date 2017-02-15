@@ -152,6 +152,52 @@ public class WebSocketClient {
     mThread.start();
   }
 
+  private SSLSocketFactory getSSLSocketFactory()
+      throws NoSuchAlgorithmException, KeyManagementException {
+    SSLContext context = SSLContext.getInstance("TLS");
+    context.init(null, sTrustManagers, null);
+    return context.getSocketFactory();
+  }
+
+  private String createSecret() {
+    byte[] nonce = new byte[16];
+    for (int i = 0; i < 16; i++) {
+      nonce[i] = (byte) (Math.random() * 256);
+    }
+    return Base64.encodeToString(nonce, Base64.DEFAULT).trim();
+  }
+
+  private StatusLine parseStatusLine(String line) {
+    if (TextUtils.isEmpty(line)) {
+      return null;
+    }
+    return BasicLineParser.parseStatusLine(line, new BasicLineParser());
+  }
+
+  // Can't use BufferedReader because it buffers past the HTTP data.
+  private String readLine(HybiParser.HappyDataInputStream reader) throws IOException {
+    int readChar = reader.read();
+    if (readChar == -1) {
+      return null;
+    }
+    StringBuilder string = new StringBuilder("");
+    while (readChar != '\n') {
+      if (readChar != '\r') {
+        string.append((char) readChar);
+      }
+
+      readChar = reader.read();
+      if (readChar == -1) {
+        return null;
+      }
+    }
+    return string.toString();
+  }
+
+  private Header parseHeader(String line) {
+    return BasicLineParser.parseHeader(line, new BasicLineParser());
+  }
+
   public void disconnect() {
     if (mSocket != null) {
       mHandler.post(new Runnable() {
@@ -175,53 +221,6 @@ public class WebSocketClient {
     sendFrame(mParser.frame(data));
   }
 
-  public void send(byte[] data) {
-    sendFrame(mParser.frame(data));
-  }
-
-  public boolean isConnected() {
-    return mConnected;
-  }
-
-  private StatusLine parseStatusLine(String line) {
-    if (TextUtils.isEmpty(line)) {
-      return null;
-    }
-    return BasicLineParser.parseStatusLine(line, new BasicLineParser());
-  }
-
-  private Header parseHeader(String line) {
-    return BasicLineParser.parseHeader(line, new BasicLineParser());
-  }
-
-  // Can't use BufferedReader because it buffers past the HTTP data.
-  private String readLine(HybiParser.HappyDataInputStream reader) throws IOException {
-    int readChar = reader.read();
-    if (readChar == -1) {
-      return null;
-    }
-    StringBuilder string = new StringBuilder("");
-    while (readChar != '\n') {
-      if (readChar != '\r') {
-        string.append((char) readChar);
-      }
-
-      readChar = reader.read();
-      if (readChar == -1) {
-        return null;
-      }
-    }
-    return string.toString();
-  }
-
-  private String createSecret() {
-    byte[] nonce = new byte[16];
-    for (int i = 0; i < 16; i++) {
-      nonce[i] = (byte) (Math.random() * 256);
-    }
-    return Base64.encodeToString(nonce, Base64.DEFAULT).trim();
-  }
-
   void sendFrame(final byte[] frame) {
     mHandler.post(new Runnable() {
       @Override public void run() {
@@ -240,11 +239,12 @@ public class WebSocketClient {
     });
   }
 
-  private SSLSocketFactory getSSLSocketFactory()
-      throws NoSuchAlgorithmException, KeyManagementException {
-    SSLContext context = SSLContext.getInstance("TLS");
-    context.init(null, sTrustManagers, null);
-    return context.getSocketFactory();
+  public void send(byte[] data) {
+    sendFrame(mParser.frame(data));
+  }
+
+  public boolean isConnected() {
+    return mConnected;
   }
 
   public interface Listener {

@@ -9,6 +9,7 @@ import android.accounts.AccountManager;
 import android.content.Context;
 import android.telephony.TelephonyManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.PaymentAuthorization;
 import cm.aptoide.pt.database.realm.PaymentConfirmation;
@@ -25,8 +26,8 @@ import cm.aptoide.pt.v8engine.payment.PurchaseFactory;
 import cm.aptoide.pt.v8engine.payment.products.AptoideProduct;
 import cm.aptoide.pt.v8engine.payment.products.InAppBillingProduct;
 import cm.aptoide.pt.v8engine.payment.products.PaidAppProduct;
-import cm.aptoide.pt.v8engine.repository.sync.SyncDataConverter;
 import cm.aptoide.pt.v8engine.repository.sync.SyncAdapterBackgroundSync;
+import cm.aptoide.pt.v8engine.repository.sync.SyncDataConverter;
 
 /**
  * Created by sithengineer on 02/09/16.
@@ -54,8 +55,8 @@ public final class RepositoryFactory {
     return new StoreRepository(AccessorFactory.getAccessorFor(Store.class));
   }
 
-  public static RequestRepository getRequestRepository() {
-    return new RequestRepository();
+  public static DownloadRepository getDownloadRepository() {
+    return new DownloadRepository(AccessorFactory.getAccessorFor(Download.class));
   }
 
   public static ProductRepository getProductRepository(Context context, AptoideProduct product) {
@@ -72,6 +73,11 @@ public final class RepositoryFactory {
     }
   }
 
+  private static NetworkOperatorManager getNetworkOperatorManager(Context context) {
+    return new NetworkOperatorManager(
+        (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE));
+  }
+
   public static PaymentConfirmationRepository getPaymentConfirmationRepository(Context context,
       Product product) {
     if (product instanceof InAppBillingProduct) {
@@ -85,6 +91,12 @@ public final class RepositoryFactory {
     }
   }
 
+  private static SyncAdapterBackgroundSync getBackgroundSync(Context context) {
+    return new SyncAdapterBackgroundSync(Application.getConfiguration(),
+        (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE),
+        new SyncDataConverter());
+  }
+
   public static PaymentAuthorizationRepository getPaymentAuthorizationRepository(Context context) {
     return new PaymentAuthorizationRepository(
         AccessorFactory.getAccessorFor(PaymentAuthorization.class), getBackgroundSync(context),
@@ -94,16 +106,5 @@ public final class RepositoryFactory {
   public static InAppBillingRepository getInAppBillingRepository(Context context) {
     return new InAppBillingRepository(getNetworkOperatorManager(context),
         AccessorFactory.getAccessorFor(PaymentConfirmation.class));
-  }
-
-  private static SyncAdapterBackgroundSync getBackgroundSync(Context context) {
-    return new SyncAdapterBackgroundSync(Application.getConfiguration(),
-        (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE),
-        new SyncDataConverter());
-  }
-
-  private static NetworkOperatorManager getNetworkOperatorManager(Context context) {
-    return new NetworkOperatorManager(
-        (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE));
   }
 }

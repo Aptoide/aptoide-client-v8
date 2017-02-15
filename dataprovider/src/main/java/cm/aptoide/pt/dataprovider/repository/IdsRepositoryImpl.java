@@ -8,7 +8,7 @@ package cm.aptoide.pt.dataprovider.repository;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.provider.Settings;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
@@ -67,8 +67,8 @@ public class IdsRepositoryImpl implements IdsRepository, AptoideClientUUID {
     String androidId = sharedPreferences.getString(ANDROID_ID_CLIENT, null);
 
     if (androidId == null) {
-      androidId = Settings.Secure.getString(context.getContentResolver(),
-          Settings.Secure.ANDROID_ID);
+      androidId =
+          Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
       setAndroidId(androidId);
     }
 
@@ -81,37 +81,6 @@ public class IdsRepositoryImpl implements IdsRepository, AptoideClientUUID {
     }
 
     sharedPreferences.edit().putString(ANDROID_ID_CLIENT, android).apply();
-  }
-
-  private void generateAptoideId(SharedPreferences sharedPreferences) {
-    String aptoideId;
-    if (getGoogleAdvertisingId() != null) {
-      aptoideId = getGoogleAdvertisingId();
-    } else if (getAndroidId() != null) {
-      aptoideId = getAndroidId();
-    } else {
-      aptoideId = UUID.randomUUID().toString();
-    }
-
-    sharedPreferences.edit().putString(APTOIDE_CLIENT_UUID, aptoideId).apply();
-  }
-
-  // FIXME: 16/1/2017 sithengineer don't call this in the UI thread.
-  private void generateGAID() {
-
-    String gaid = null;
-
-    if (DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(context)) {
-      try {
-        gaid = AdvertisingIdClient.getAdvertisingIdInfo(context).getId();
-      } catch (Exception e) {
-        CrashReports.logException(e);
-        e.printStackTrace();
-      }
-    }
-
-    sharedPreferences.edit().putString(GOOGLE_ADVERTISING_ID_CLIENT, gaid).apply();
-    sharedPreferences.edit().putBoolean(GOOGLE_ADVERTISING_ID_CLIENT_SET, true).apply();
   }
 
   private String generateAdvertisingId() {
@@ -138,5 +107,35 @@ public class IdsRepositoryImpl implements IdsRepository, AptoideClientUUID {
     secureRandom.setSeed(deviceId.hashCode());
     secureRandom.nextBytes(data);
     return UUID.nameUUIDFromBytes(data).toString();
+  }
+
+  private void generateAptoideId(SharedPreferences sharedPreferences) {
+    String aptoideId;
+    if (getGoogleAdvertisingId() != null) {
+      aptoideId = getGoogleAdvertisingId();
+    } else if (getAndroidId() != null) {
+      aptoideId = getAndroidId();
+    } else {
+      aptoideId = UUID.randomUUID().toString();
+    }
+
+    sharedPreferences.edit().putString(APTOIDE_CLIENT_UUID, aptoideId).apply();
+  }
+
+  // FIXME: 16/1/2017 sithengineer don't call this in the UI thread.
+  private void generateGAID() {
+
+    String gaid = null;
+
+    if (DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(context)) {
+      try {
+        gaid = AdvertisingIdClient.getAdvertisingIdInfo(context).getId();
+      } catch (Exception e) {
+        CrashReport.getInstance().log(e);
+      }
+    }
+
+    sharedPreferences.edit().putString(GOOGLE_ADVERTISING_ID_CLIENT, gaid).apply();
+    sharedPreferences.edit().putBoolean(GOOGLE_ADVERTISING_ID_CLIENT_SET, true).apply();
   }
 }

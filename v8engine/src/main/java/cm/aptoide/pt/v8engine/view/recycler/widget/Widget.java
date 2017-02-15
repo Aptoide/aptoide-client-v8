@@ -9,7 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import rx.subscriptions.CompositeSubscription;
@@ -31,26 +31,24 @@ public abstract class Widget<T extends Displayable> extends RecyclerView.ViewHol
     try {
       assignViews(itemView);
     } catch (Exception e) {
-      Logger.e(TAG, "assignViews(View)", e);
-    }
-  }
-
-  protected NavigationManagerV4 getNavigationManager() {
-    return appNav;
-  }
-
-  protected abstract void assignViews(View itemView);
-
-  public abstract void bindView(T displayable);
-
-  public void unbindView() {
-    if (compositeSubscription != null && !compositeSubscription.isUnsubscribed()) {
-      compositeSubscription.clear();
+      CrashReport.getInstance().log(e);
     }
   }
 
   public FragmentActivity getContext() {
     return (FragmentActivity) itemView.getContext();
+  }
+
+  protected abstract void assignViews(View itemView);
+
+  protected NavigationManagerV4 getNavigationManager() {
+    return appNav;
+  }
+
+  public void unbindView() {
+    if (compositeSubscription != null && !compositeSubscription.isUnsubscribed()) {
+      compositeSubscription.clear();
+    }
   }
 
   public void internalBindView(T displayable) {
@@ -60,4 +58,6 @@ public abstract class Widget<T extends Displayable> extends RecyclerView.ViewHol
     displayable.setVisible(true);
     bindView(displayable);
   }
+
+  public abstract void bindView(T displayable);
 }

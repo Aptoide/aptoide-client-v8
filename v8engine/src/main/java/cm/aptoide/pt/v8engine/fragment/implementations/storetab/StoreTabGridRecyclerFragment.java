@@ -10,21 +10,18 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.Layout;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
+import cm.aptoide.pt.v8engine.interfaces.DisplayableManager;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
-import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
-import cm.aptoide.pt.v8engine.util.ThemeUtils;
 import cm.aptoide.pt.v8engine.util.Translator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import java.util.List;
@@ -45,15 +42,15 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
   protected String tag;
   protected String storeTheme;
 
+  public static Fragment newInstance(Event event, String storeTheme, String tag) {
+    return newInstance(event, null, storeTheme, tag);
+  }
+
   public static Fragment newInstance(Event event, String title, String storeTheme, String tag) {
     Bundle args = buildBundle(event, title, storeTheme, tag);
     Fragment fragment = StoreTabFragmentChooser.choose(event.getName());
     fragment.setArguments(args);
     return fragment;
-  }
-
-  public static Fragment newInstance(Event event, String storeTheme, String tag) {
-    return newInstance(event, null, storeTheme, tag);
   }
 
   @NonNull
@@ -116,11 +113,20 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
       // TODO: 28-12-2016 neuro martelo martelo martelo
       Observable<List<Displayable>> displayablesObservable = buildDisplayables(refresh, url);
       if (displayablesObservable != null) {
+        DisplayableManager displayableManager = this;
         displayablesObservable.compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW))
-            .subscribe(this::setDisplayables, this::finishLoading);
+            .subscribe(displayables -> {
+              displayableManager.clearDisplayables().addDisplayables(displayables, true);
+            }, err -> {
+              CrashReport.getInstance().log(err);
+              StoreTabGridRecyclerFragment.this.finishLoading(err);
+            });
       }
     }
   }
+
+  @Nullable
+  protected abstract Observable<List<Displayable>> buildDisplayables(boolean refresh, String url);
 
   @Override public int getContentViewId() {
     // title flag whether toolbar should be shown or not
@@ -131,13 +137,13 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
     }
   }
 
+  @Override protected boolean displayHomeUpAsEnabled() {
+    return true;
+  }
+
   @Override public void setupToolbarDetails(Toolbar toolbar) {
     toolbar.setTitle(Translator.translate(title));
     toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
-  }
-
-  @Override protected boolean displayHomeUpAsEnabled() {
-    return true;
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -158,19 +164,6 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
     setupToolbar();
     setHasOptionsMenu(true);
   }
-
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    if (storeTheme != null) {
-      ThemeUtils.setStoreTheme(getActivity(), storeTheme);
-      ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
-    }
-    return super.onCreateView(inflater, container, savedInstanceState);
-  }
-
-  @Nullable
-  protected abstract Observable<List<Displayable>> buildDisplayables(boolean refresh, String url);
 
   private static class BundleCons {
 

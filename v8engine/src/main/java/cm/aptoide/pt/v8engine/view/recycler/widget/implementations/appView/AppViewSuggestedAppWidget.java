@@ -38,6 +38,10 @@ public class AppViewSuggestedAppWidget extends Widget<AppViewSuggestedAppDisplay
     descriptionTextView = (TextView) itemView.findViewById(R.id.description);
   }
 
+  @Override public void unbindView() {
+
+  }
+
   @Override public void bindView(AppViewSuggestedAppDisplayable displayable) {
     MinimalAd pojo = displayable.getPojo();
     ImageLoader.load(pojo.getIconPath(), iconImageView);
@@ -48,9 +52,5 @@ public class AppViewSuggestedAppWidget extends Widget<AppViewSuggestedAppDisplay
       ((FragmentShower) v.getContext()).pushFragmentV4(
           V8Engine.getFragmentProvider().newAppViewFragment(pojo));
     });
-  }
-
-  @Override public void unbindView() {
-
   }
 }

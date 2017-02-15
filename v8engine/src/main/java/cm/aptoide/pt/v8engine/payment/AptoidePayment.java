@@ -25,8 +25,9 @@ public class AptoidePayment implements Payment {
 
   private Authorization authorization;
 
-  public AptoidePayment(int id, String type, String name, String description, Product product, Price price,
-      boolean requiresAuthorization, PaymentConfirmationRepository confirmationRepository) {
+  public AptoidePayment(int id, String type, String name, String description, Product product,
+      Price price, boolean requiresAuthorization,
+      PaymentConfirmationRepository confirmationRepository) {
     this.id = id;
     this.type = type;
     this.name = name;

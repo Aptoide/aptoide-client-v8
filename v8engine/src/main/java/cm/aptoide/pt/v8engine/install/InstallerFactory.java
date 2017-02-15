@@ -38,19 +38,19 @@ public class InstallerFactory {
     }
   }
 
+  @NonNull private DefaultInstaller getDefaultInstaller(Context context) {
+    return new DefaultInstaller(context.getPackageManager(), getInstallationProvider(),
+        new FileUtils(), Analytics.getInstance());
+  }
+
   @NonNull private RollbackInstaller getRollbackInstaller(Context context) {
     return new RollbackInstaller(getDefaultInstaller(context),
-        RepositoryFactory.getRollbackRepository(),
-        new RollbackFactory(), getInstallationProvider());
+        RepositoryFactory.getRollbackRepository(), new RollbackFactory(),
+        getInstallationProvider());
   }
 
   @NonNull private DownloadInstallationProvider getInstallationProvider() {
     return new DownloadInstallationProvider(AptoideDownloadManager.getInstance(),
         AccessorFactory.getAccessorFor(Download.class));
-  }
-
-  @NonNull private DefaultInstaller getDefaultInstaller(Context context) {
-    return new DefaultInstaller(context.getPackageManager(), getInstallationProvider(),
-        new FileUtils(), Analytics.getInstance());
   }
 }

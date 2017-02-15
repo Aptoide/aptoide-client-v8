@@ -6,7 +6,6 @@
 package cm.aptoide.pt.v8engine.repository.sync;
 
 import android.content.SyncResult;
-import java.io.IOException;
 
 /**
  * Created by marcelobenites on 22/11/16.

@@ -10,7 +10,6 @@ import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.listapp.App;
-import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.model.v7.timeline.SocialVideo;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.link.Link;
@@ -39,7 +38,6 @@ public class SocialVideoDisplayable extends SocialCardDisplayable {
   @Getter private String avatarUrl;
   @Getter private long appId;
   @Getter private String abUrl;
-  @Getter private Store store;
   @Getter private Comment.User user;
   @Getter private Comment.User userSharer;
 
@@ -59,8 +57,9 @@ public class SocialVideoDisplayable extends SocialCardDisplayable {
       List<App> relatedToAppsList, Date date, DateCalculator dateCalculator,
       SpannableFactory spannableFactory, TimelineMetricsManager timelineMetricsManager,
       SocialRepository socialRepository) {
-    super(socialVideo, numberOfLikes, numberOfComments, socialVideo.getUser(),
-        socialVideo.getUserSharer(), date, spannableFactory, dateCalculator);
+    super(socialVideo, numberOfLikes, numberOfComments, socialVideo.getStore(),
+        socialVideo.getUser(), socialVideo.getUserSharer(), socialVideo.getMy().isLiked(),
+        socialVideo.getLikes(), date, spannableFactory, dateCalculator);
     this.videoTitle = videoTitle;
     this.link = link;
     this.baseLink = baseLink;
@@ -69,7 +68,6 @@ public class SocialVideoDisplayable extends SocialCardDisplayable {
     this.avatarUrl = publisherAvatarUrl;
     this.appId = appId;
     this.abUrl = abUrl;
-    this.store = socialVideo.getStore();
     this.user = user;
     this.userSharer = socialVideo.getUserSharer();
     this.relatedToAppsList = relatedToAppsList;
@@ -98,9 +96,9 @@ public class SocialVideoDisplayable extends SocialCardDisplayable {
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
             socialVideo.getPublisher().getBaseUrl()), socialVideo.getPublisher().getName(),
         socialVideo.getThumbnailUrl(), socialVideo.getPublisher().getLogoUrl(), appId, abTestingURL,
-        socialVideo.getUser(), socialVideo.getLikes(), socialVideo.getComments(),
-        socialVideo.getApps(), socialVideo.getDate(), dateCalculator, spannableFactory,
-        timelineMetricsManager, socialRepository);
+        socialVideo.getUser(), socialVideo.getStats().getLikes(),
+        socialVideo.getStats().getComments(), socialVideo.getApps(), socialVideo.getDate(),
+        dateCalculator, spannableFactory, timelineMetricsManager, socialRepository);
   }
 
   public Observable<List<Installed>> getRelatedToApplication() {
@@ -132,6 +130,10 @@ public class SocialVideoDisplayable extends SocialCardDisplayable {
     return dateCalculator.getTimeSinceDate(context, date);
   }
 
+  @Override public void like(Context context, String cardType, int rating) {
+    socialRepository.like(getTimelineCard(), cardType, "", rating);
+  }
+
   public Spannable getAppText(Context context, String appName) {
     return spannableFactory.createStyleSpan(
         context.getString(R.string.displayable_social_timeline_article_get_app_button, appName),
@@ -154,9 +156,5 @@ public class SocialVideoDisplayable extends SocialCardDisplayable {
 
   @Override public void share(Context context, boolean privacyResult) {
     socialRepository.share(getTimelineCard(), context, privacyResult);
-  }
-
-  @Override public void like(Context context, String cardType, int rating) {
-    socialRepository.like(getTimelineCard(), cardType, "", rating);
   }
 }

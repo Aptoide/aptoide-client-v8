@@ -1,25 +1,18 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
- */
-
 package cm.aptoide.pt.viewRateAndCommentReviews;
 
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Review;
@@ -28,7 +21,7 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.adapters.CommentsAdapter;
-import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
+import cm.aptoide.pt.v8engine.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.util.DialogUtils;
@@ -44,7 +37,7 @@ import java.util.List;
 import lombok.Getter;
 import rx.Observable;
 
-public class RateAndReviewsFragmentNew extends GridRecyclerFragment<CommentsAdapter>
+public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapter>
     implements ItemCommentAdderView<Review, CommentsAdapter>, RateAndReviewsView {
 
   private static final String TAG = RateAndReviewsFragmentNew.class.getSimpleName();
@@ -67,6 +60,7 @@ public class RateAndReviewsFragmentNew extends GridRecyclerFragment<CommentsAdap
   private RatingTotalsLayout ratingTotalsLayout;
   private RatingBarsLayout ratingBarsLayout;
   private FloatingActionButton floatingActionButton;
+  private DialogUtils dialogUtils;
 
   //
   // static constructors
@@ -102,36 +96,9 @@ public class RateAndReviewsFragmentNew extends GridRecyclerFragment<CommentsAdap
   // base methods
   //
 
-  @Override public void loadExtras(Bundle args) {
-    super.loadExtras(args);
-    appId = args.getLong(APP_ID);
-    reviewId = args.getLong(REVIEW_ID);
-    packageName = args.getString(PACKAGE_NAME);
-    storeName = args.getString(STORE_NAME);
-    appName = args.getString(APP_NAME);
-    storeTheme = args.getString(STORE_THEME);
+  @Override protected boolean displayHomeUpAsEnabled() {
+    return true;
   }
-
-  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    // ??
-  }
-
-  @Override public int getContentViewId() {
-    return R.layout.fragment_rate_and_reviews;
-  }
-
-  @Override public void bindViews(View view) {
-    super.bindViews(view);
-    floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fab);
-    setHasOptionsMenu(true);
-
-    ratingTotalsLayout = new RatingTotalsLayout(view);
-    ratingBarsLayout = new RatingBarsLayout(view);
-  }
-
-  //
-  // from CommentAdderView
-  //
 
   @Override @NonNull
   public CommentsReadMoreDisplayable createReadMoreDisplayable(final int itemPosition,
@@ -148,13 +115,9 @@ public class RateAndReviewsFragmentNew extends GridRecyclerFragment<CommentsAdap
     }
   }
 
-  //
-  // MVP methods
-  //
-
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
+    dialogUtils = new DialogUtils();
     final RateAndReviewsPresenter presenter =
         new RateAndReviewsPresenter(appId, storeName, packageName, this,
             ConcreteSchedulerProvider.getInstance());
@@ -162,8 +125,31 @@ public class RateAndReviewsFragmentNew extends GridRecyclerFragment<CommentsAdap
     attachPresenter(presenter, savedInstanceState);
   }
 
-  @Override protected boolean displayHomeUpAsEnabled() {
-    return true;
+  @Override public void loadExtras(Bundle args) {
+    super.loadExtras(args);
+    appId = args.getLong(APP_ID);
+    reviewId = args.getLong(REVIEW_ID);
+    packageName = args.getString(PACKAGE_NAME);
+    storeName = args.getString(STORE_NAME);
+    appName = args.getString(APP_NAME);
+    storeTheme = args.getString(STORE_THEME);
+  }
+
+  @Override public int getContentViewId() {
+    return R.layout.fragment_rate_and_reviews;
+  }
+
+  //
+  // MVP methods
+  //
+
+  @CallSuper @Override public void bindViews(View view) {
+    super.bindViews(view);
+    floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fab);
+    setHasOptionsMenu(true);
+
+    ratingTotalsLayout = new RatingTotalsLayout(view);
+    ratingBarsLayout = new RatingBarsLayout(view);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -174,12 +160,10 @@ public class RateAndReviewsFragmentNew extends GridRecyclerFragment<CommentsAdap
     }
   }
 
-  @Override public Observable<Void> rateApp() {
-    return RxView.clicks(floatingActionButton);
-  }
-
-  @Override public Observable<GenericDialogs.EResponse> showRateView() {
-    return DialogUtils.showRateDialog(getActivity(), appName, packageName, storeName);
+  @CallSuper @Override
+  public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    super.load(create, refresh, savedInstanceState);
+    // ??
   }
 
   @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
@@ -194,8 +178,7 @@ public class RateAndReviewsFragmentNew extends GridRecyclerFragment<CommentsAdap
         installMenuItem.setTitle(R.string.open);
       }
     }, err -> {
-      Logger.e(TAG, err);
-      CrashReports.logException(err);
+      CrashReport.getInstance().log(err);
     });
   }
 
@@ -219,7 +202,15 @@ public class RateAndReviewsFragmentNew extends GridRecyclerFragment<CommentsAdap
   }
 
   @Override public Observable<Integer> nextReviews() {
-    return RxEndlessRecyclerView.loadMore(recyclerView, getAdapter());
+    return RxEndlessRecyclerView.loadMore(getRecyclerView(), getAdapter());
+  }
+
+  @Override public Observable<Void> rateApp() {
+    return RxView.clicks(floatingActionButton);
+  }
+
+  @Override public Observable<GenericDialogs.EResponse> showRateView() {
+    return dialogUtils.showRateDialog(getActivity(), appName, packageName, storeName);
   }
 
   @Override public void showNextReviews(int offset, List<Review> reviews) {

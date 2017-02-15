@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 02/08/2016.
- */
-
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.accounts.NetworkErrorException;
@@ -32,6 +27,7 @@ import cm.aptoide.pt.model.v7.ListFullComments;
 import cm.aptoide.pt.model.v7.ListFullReviews;
 import cm.aptoide.pt.model.v7.ListReviews;
 import cm.aptoide.pt.model.v7.ListSearchApps;
+import cm.aptoide.pt.model.v7.SetComment;
 import cm.aptoide.pt.model.v7.TimelineStats;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
@@ -73,15 +69,19 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
       + "://"
       + BuildConfig.APTOIDE_WEB_SERVICES_V7_HOST
       + "/api/7/";
-
   @Getter protected final B body;
   private final String INVALID_ACCESS_TOKEN_CODE = "AUTH-2";
+  private final int MAX_RETRY_COUNT = 3;
   private boolean accessTokenRetry = false;
 
   protected V7(B body, String baseHost) {
     super(Interfaces.class, getDefaultUserAgentGenerator(), WebService.getDefaultConverter(),
         baseHost);
     this.body = body;
+  }
+
+  @NonNull private static UserAgentGenerator getDefaultUserAgentGenerator() {
+    return () -> SecurePreferences.getUserAgent();
   }
 
   protected V7(B body, Converter.Factory converterFactory, String baseHost) {
@@ -100,45 +100,45 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
     this.body = body;
   }
 
-  @NonNull private static UserAgentGenerator getDefaultUserAgentGenerator() {
-    return () -> SecurePreferences.getUserAgent();
-  }
-
   @Override public Observable<U> observe(boolean bypassCache) {
     return handleToken(retryOnTicket(super.observe(bypassCache)), bypassCache);
   }
 
   private Observable<U> retryOnTicket(Observable<U> observable) {
-    return observable.subscribeOn(Schedulers.io()).flatMap(t -> {
-      // FIXME: 01-08-2016 damn jackson parsing black magic error :/
-      if (((BaseV7Response) t).getInfo() != null && BaseV7Response.Info.Status.QUEUED.equals(
-          ((BaseV7Response) t).getInfo().getStatus())) {
-        return Observable.error(new ToRetryThrowable());
-      } else {
-        return Observable.just(t);
-      }
-    }).retryWhen(observable1 -> observable1.zipWith(Observable.range(1, 3), (throwable, i) -> {
-      // Return anything will resubscribe to source observable. Throw an exception will call onError in child subscription.
-      // Retry three times if request is queued by server.
-      if ((throwable instanceof ToRetryThrowable) && i < 3) {
-        return null;
-      } else {
-        if (isNoNetworkException(throwable)) {
-          throw new NoNetworkConnectionException(throwable);
-        } else {
-          if (throwable instanceof HttpException) {
-            try {
-              throw new AptoideWsV7Exception(throwable).setBaseResponse(
-                  (BaseV7Response) converterFactory.responseBodyConverter(BaseV7Response.class,
-                      null, null).convert(((HttpException) throwable).response().errorBody()));
-            } catch (IOException exception) {
-              throw new RuntimeException(exception);
-            }
+    return observable.subscribeOn(Schedulers.io())
+        .flatMap(t -> {
+          // FIXME: 01-08-2016 damn jackson parsing black magic error :/
+          if (((BaseV7Response) t).getInfo() != null && BaseV7Response.Info.Status.QUEUED.equals(
+              ((BaseV7Response) t).getInfo().getStatus())) {
+            return Observable.error(new ToRetryThrowable());
+          } else {
+            return Observable.just(t);
           }
-          throw new RuntimeException(throwable);
-        }
-      }
-    }).delay(500, TimeUnit.MILLISECONDS));
+        })
+        .retryWhen(errObservable -> errObservable.zipWith(Observable.range(1, MAX_RETRY_COUNT),
+            (throwable, i) -> {
+              // Return anything will resubscribe to source observable. Throw an exception will call onError in child subscription.
+              // Retry three times if request is queued by server.
+              if ((throwable instanceof ToRetryThrowable) && i < MAX_RETRY_COUNT) {
+                return null;
+              } else {
+                if (isNoNetworkException(throwable)) {
+                  throw new NoNetworkConnectionException(throwable);
+                } else {
+                  if (throwable instanceof HttpException) {
+                    try {
+                      throw new AptoideWsV7Exception(throwable).setBaseResponse(
+                          (BaseV7Response) converterFactory.responseBodyConverter(
+                              BaseV7Response.class, null, null)
+                              .convert(((HttpException) throwable).response().errorBody()));
+                    } catch (IOException exception) {
+                      throw new RuntimeException(exception);
+                    }
+                  }
+                  throw new RuntimeException(throwable);
+                }
+              }
+            }).delay(500, TimeUnit.MILLISECONDS));
   }
 
   private Observable<U> handleToken(Observable<U> observable, boolean bypassCache) {
@@ -243,11 +243,11 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
         @Body PostCommentForReview.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("setComment") Observable<BaseV7Response> postStoreComment(
+    @POST("setComment") Observable<SetComment> postStoreComment(
         @Body PostCommentForStore.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("setComment") Observable<BaseV7Response> postTimelineComment(
+    @POST("setComment") Observable<SetComment> postTimelineComment(
         @Body PostCommentForTimelineArticle.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
@@ -264,10 +264,10 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
     Observable<BaseV7Response> shareCard(@Body ShareCardRequest.Body body,
         @Path(value = "cardUid") String card_id, @Path(value = "accessToken") String accessToken);
 
-    @POST("user/shareTimeline/package_id={packageName}/access_token={accessToken}")
+    @POST("user/shareTimeline/package_id={packageName}/access_token={accessToken}/type={type}")
     Observable<BaseV7Response> shareInstallCard(@Body ShareInstallCardRequest.Body body,
         @Path(value = "packageName") String packageName,
-        @Path(value = "accessToken") String access_token);
+        @Path(value = "accessToken") String access_token, @Path(value = "type") String type);
 
     @POST("review/set/access_token={accessToken}/card_uid={cardUid}/rating={rating}")
     Observable<BaseV7Response> setReview(@Body LikeCardRequest.Body body,
@@ -299,6 +299,10 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
 
     @POST("user/getFollowing") Observable<GetFollowers> getTimelineGetFollowing(
         @Body GetFollowersRequest.Body body,
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("user/timeline/card/getLikes") Observable<GetFollowers> getCardUserLikes(
+        @Body GetUserLikesRequest.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("store/set") Observable<BaseV7Response> editStore(@Body SimpleSetStoreRequest.Body body);

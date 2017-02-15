@@ -23,12 +23,20 @@ public abstract class BaseLoaderToolbarFragment extends BaseLoaderFragment {
     return toolbar;
   }
 
+  @CallSuper @Override public void setupViews() {
+    setupToolbar();
+  }
+
   protected boolean hasToolbar() {
     return toolbar != null;
   }
 
-  @CallSuper @Override public void setupViews() {
-    setupToolbar();
+  protected boolean displayHomeUpAsEnabled() {
+    return false;
+  }
+
+  protected void setupToolbarDetails(Toolbar toolbar) {
+    // does nothing. placeholder method.
   }
 
   /**
@@ -46,21 +54,13 @@ public abstract class BaseLoaderToolbarFragment extends BaseLoaderFragment {
     }
   }
 
-  protected boolean displayHomeUpAsEnabled() {
-    return false;
-  }
-
-  protected void setupToolbarDetails(Toolbar toolbar) {
-    // does nothing. placeholder method.
+  @CallSuper @Override public void bindViews(View view) {
+    super.bindViews(view);
+    toolbar = (Toolbar) view.findViewById(R.id.toolbar);
   }
 
   @CallSuper @Override public void onDestroyView() {
     super.onDestroyView();
     toolbar = null;
-  }
-
-  @CallSuper @Override public void bindViews(View view) {
-    super.bindViews(view);
-    toolbar = (Toolbar) view.findViewById(R.id.toolbar);
   }
 }

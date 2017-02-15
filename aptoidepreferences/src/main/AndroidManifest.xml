@@ -3,8 +3,8 @@
   ~ Modified by Neurophobic Animal on 22/04/2016.
   -->
 
-<manifest package="cm.aptoide.pt.preferences"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="cm.aptoide.pt.preferences">
 
   <application
       android:allowBackup="true"

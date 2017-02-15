@@ -5,14 +5,13 @@
 
 package cm.aptoide.pt.v8engine.activity;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.view.View;
-import com.trello.rxlifecycle.android.ActivityEvent;
 import com.trello.rxlifecycle.LifecycleTransformer;
 import com.trello.rxlifecycle.RxLifecycle;
+import com.trello.rxlifecycle.android.ActivityEvent;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import rx.Observable;
 
@@ -23,8 +22,8 @@ public abstract class ActivityView extends RxAppCompatActivity implements View {
 
   private Presenter presenter;
 
-  @NonNull @Override public final <T> LifecycleTransformer<T> bindUntilEvent(@NonNull
-      LifecycleEvent lifecycleEvent) {
+  @NonNull @Override
+  public final <T> LifecycleTransformer<T> bindUntilEvent(@NonNull LifecycleEvent lifecycleEvent) {
     return RxLifecycle.bindUntilEvent(getLifecycle(), lifecycleEvent);
   }
 
@@ -38,11 +37,6 @@ public abstract class ActivityView extends RxAppCompatActivity implements View {
     }
     this.presenter = presenter;
     this.presenter.present();
-  }
-
-  @Override protected void onSaveInstanceState(Bundle outState) {
-    presenter.saveState(outState);
-    super.onSaveInstanceState(outState);
   }
 
   @NonNull private LifecycleEvent convertToEvent(ActivityEvent event) {
@@ -62,5 +56,10 @@ public abstract class ActivityView extends RxAppCompatActivity implements View {
       default:
         throw new IllegalStateException("Unrecognized event: " + event.name());
     }
+  }
+
+  @Override protected void onSaveInstanceState(Bundle outState) {
+    presenter.saveState(outState);
+    super.onSaveInstanceState(outState);
   }
 }

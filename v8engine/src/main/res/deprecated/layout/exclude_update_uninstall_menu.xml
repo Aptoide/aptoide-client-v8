@@ -4,15 +4,15 @@
   ~ Modified by Neurophobic Animal on 08/06/2016.
   -->
 
-<LinearLayout android:id="@+id/confirmIgnoreUpdateUninstall"
-    style="@style/focusableRowBackground"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/confirmIgnoreUpdateUninstall"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clickable="true"
     android:orientation="vertical"
     android:paddingBottom="@dimen/excludeUpdatePadding"
     android:paddingTop="10dp"
+    style="@style/focusableRowBackground"
     >
 
   <TextView

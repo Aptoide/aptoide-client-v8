@@ -28,9 +28,12 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
 
   public static final String EXTRA_PAYMENT_CONFIRMATION_ID =
       "cm.aptoide.pt.v8engine.repository.sync.PAYMENT_CONFIRMATION_ID";
-  public static final String EXTRA_PAYMENT_IDS = "cm.aptoide.pt.v8engine.repository.sync.PAYMENT_IDS";
-  public static final String EXTRA_PAYMENT_AUTHORIZATIONS = "cm.aptoide.pt.v8engine.repository.sync.EXTRA_PAYMENT_AUTHORIZATIONS";
-  public static final String EXTRA_PAYMENT_CONFIRMATIONS = "cm.aptoide.pt.v8engine.repository.sync.EXTRA_PAYMENT_CONFIRMATIONS";
+  public static final String EXTRA_PAYMENT_IDS =
+      "cm.aptoide.pt.v8engine.repository.sync.PAYMENT_IDS";
+  public static final String EXTRA_PAYMENT_AUTHORIZATIONS =
+      "cm.aptoide.pt.v8engine.repository.sync.EXTRA_PAYMENT_AUTHORIZATIONS";
+  public static final String EXTRA_PAYMENT_CONFIRMATIONS =
+      "cm.aptoide.pt.v8engine.repository.sync.EXTRA_PAYMENT_CONFIRMATIONS";
 
   private final SyncDataConverter productConverter;
   private final NetworkOperatorManager operatorManager;
@@ -74,9 +77,9 @@ public class AptoideSyncAdapter extends AbstractThreadedSyncAdapter {
             operatorManager, confirmationAccessor, confirmationConverter, paymentConfirmationId,
             Integer.valueOf(paymentIds.get(0))).sync(syncResult);
       }
-    } else if (authorizations){
-        new PaymentAuthorizationSync(paymentIds, authorizationAcessor,
-            authorizationConverter).sync(syncResult);
+    } else if (authorizations) {
+      new PaymentAuthorizationSync(paymentIds, authorizationAcessor, authorizationConverter).sync(
+          syncResult);
     }
   }
 }

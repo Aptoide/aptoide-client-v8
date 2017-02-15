@@ -37,6 +37,10 @@ public class AppBrickListWidget extends Widget<AppBrickListDisplayable> {
     ratingBar = (RatingBar) itemView.findViewById(R.id.ratingbar);
   }
 
+  @Override public void unbindView() {
+
+  }
+
   @Override public void bindView(AppBrickListDisplayable displayable) {
     App app = displayable.getPojo();
 
@@ -50,9 +54,5 @@ public class AppBrickListWidget extends Widget<AppBrickListDisplayable> {
       Analytics.HomePageEditorsChoice.clickOnEditorsChoiceItem(getAdapterPosition(),
           app.getPackageName(), false);
     });
-  }
-
-  @Override public void unbindView() {
-
   }
 }

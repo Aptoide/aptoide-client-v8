@@ -2,7 +2,7 @@ package cm.aptoide.pt.v8engine.util;
 
 import android.app.Activity;
 import android.content.Context;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -18,6 +18,18 @@ import static com.google.android.gms.internal.zzs.TAG;
  */
 
 public class ApkFy {
+
+  public void run(Activity activity) {
+    if (SecurePreferences.shouldRunApkFy()) {
+      Long aLong = extractAppId(activity);
+      if (aLong != null) {
+        activity.getIntent()
+            .putExtra(DeepLinkIntentReceiver.DeepLinksTargets.APP_VIEW_FRAGMENT, true);
+        activity.getIntent().putExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_ID_KEY, aLong);
+      }
+      SecurePreferences.setApkFyRun();
+    }
+  }
 
   private Long extractAppId(Context context) {
 
@@ -37,23 +49,11 @@ public class ApkFy {
       return appId != null ? Long.parseLong(appId) : null;
     } catch (Exception e) {
       if (appId != null) {
-        CrashReports.logString("APKFY_APP_ID", appId);
+        CrashReport.getInstance().log("APKFY_APP_ID", appId);
       }
       Logger.d(TAG, e.getMessage());
-      CrashReports.logException(e);
+      CrashReport.getInstance().log(e);
     }
     return null;
-  }
-
-  public void run(Activity activity) {
-    if (SecurePreferences.shouldRunApkFy()) {
-      Long aLong = extractAppId(activity);
-      if (aLong != null) {
-        activity.getIntent()
-            .putExtra(DeepLinkIntentReceiver.DeepLinksTargets.APP_VIEW_FRAGMENT, true);
-        activity.getIntent().putExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_ID_KEY, aLong);
-      }
-      SecurePreferences.setApkFyRun();
-    }
   }
 }

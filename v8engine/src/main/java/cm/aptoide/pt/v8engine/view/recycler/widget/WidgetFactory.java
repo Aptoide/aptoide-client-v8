@@ -34,17 +34,25 @@ public class WidgetFactory {
   private WidgetFactory() {
   }
 
-  private static void computeColumnSize() {
-    columnSize = AptoideUtils.MathU.leastCommonMultiple(getDisplayablesSizes());
-    orientation = AptoideUtils.ScreenU.getCurrentOrientation();
-  }
-
   public static Widget newBaseViewHolder(ViewGroup parent, @LayoutRes int viewType) {
     //long nanoTime = System.nanoTime();
     View view = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
     Widget w = V8Engine.getDisplayableWidgetMapping().newWidget(view, viewType);
     //Logger.d(TAG, "newBaseViewHolder = " + ((System.nanoTime() - nanoTime) / 1000000) );
     return w;
+  }
+
+  public static int getColumnSize() {
+    if (orientation != AptoideUtils.ScreenU.getCurrentOrientation()) {
+      computeColumnSize();
+    }
+
+    return columnSize;
+  }
+
+  private static void computeColumnSize() {
+    columnSize = AptoideUtils.MathU.leastCommonMultiple(getDisplayablesSizes());
+    orientation = AptoideUtils.ScreenU.getCurrentOrientation();
   }
 
   private static int[] getDisplayablesSizes() {
@@ -60,13 +68,5 @@ public class WidgetFactory {
     }
 
     return arr;
-  }
-
-  public static int getColumnSize() {
-    if (orientation != AptoideUtils.ScreenU.getCurrentOrientation()) {
-      computeColumnSize();
-    }
-
-    return columnSize;
   }
 }

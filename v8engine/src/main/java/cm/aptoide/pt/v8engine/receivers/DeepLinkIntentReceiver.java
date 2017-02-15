@@ -16,7 +16,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Base64;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
@@ -98,7 +98,6 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
       startFromPackageName(uri.split("aptoidesearch://")[1]);
     } else if (uri.startsWith("aptoidevoicesearch://")) {
       aptoidevoiceSearch(uri.split("aptoidevoicesearch://")[1]);
-
     } else if (uri.startsWith("market")) {
       String params = uri.split("&")[0];
       String[] param = params.split("=");
@@ -109,7 +108,6 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
         packageName = packageName.substring(4);
       }
       startFromPackageName(packageName);
-
     } else if (uri.startsWith("http://market.android.com/details?id=")) {
       String param = uri.split("=")[1];
       startFromPackageName(param);
@@ -128,7 +126,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
         try {
           param = Uri.parse(uri).getQueryParameter("id");
         } catch (NullPointerException e) {
-          Logger.e(TAG, "NullPointerException: no uri: " + uri, e);
+          CrashReport.getInstance().log(e);
         }
       }
       startFromPackageName(param);
@@ -149,8 +147,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
         try {
           ad = new ObjectMapper().readValue(json, GetAdsResponse.Ad.class);
         } catch (IOException e) {
-          CrashReports.logException(e);
-          Logger.printException(e);
+          CrashReport.getInstance().log(e);
         }
 
         if (ad != null) {
@@ -174,8 +171,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
       try {
         params = AptoideUtils.StringU.splitQuery(URI.create(uri));
       } catch (UnsupportedEncodingException e) {
-        CrashReports.logException(e);
-        Logger.printException(e);
+        CrashReport.getInstance().log(e);
       }
 
       if (params != null) {
@@ -191,8 +187,8 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
             long id = Long.parseLong(uid);
             startFromAppView(id, null, true);
           } catch (NumberFormatException e) {
-            CrashReports.logException(e);
-            Logger.printException(e);
+            CrashReport.getInstance().log(e);
+            CrashReport.getInstance().log(e);
             ShowMessage.asToast(getApplicationContext(), R.string.simple_error_occured + uid);
           }
         }
@@ -220,89 +216,57 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
     }
   }
 
-  private void startScheduleDownloads(Uri parse) {
-    Intent intent = new Intent(this, startClass);
-    intent.putExtra(DeepLinksTargets.SCHEDULE_DEEPLINK, true);
-    intent.putExtra(DeepLinksKeys.URI, parse);
-    startActivity(intent);
+  public void startWithRepo(ArrayList<String> repo) {
+    Intent i = new Intent(DeepLinkIntentReceiver.this, startClass);
+    i.putExtra(DeepLinksTargets.NEW_REPO, repo);
+    startActivity(i);
+
+    // TODO: 10-08-2016 jdandrade
+    Analytics.ApplicationLaunch.newRepo();
   }
 
-  private void startGenericDeepLink(Uri parse) {
-    Intent intent = new Intent(this, startClass);
-    intent.putExtra(DeepLinksTargets.GENERIC_DEEPLINK, true);
-    intent.putExtra(DeepLinksKeys.URI, parse);
-    startActivity(intent);
+  private void parseXmlString(String file) {
+
+    try {
+      SAXParserFactory spf = SAXParserFactory.newInstance();
+      SAXParser sp = spf.newSAXParser();
+      XMLReader xr = sp.getXMLReader();
+      XmlAppHandler handler = new XmlAppHandler();
+      xr.setContentHandler(handler);
+
+      InputSource is = new InputSource();
+      is.setCharacterStream(new StringReader(file));
+      xr.parse(is);
+      server = handler.getServers();
+      app = handler.getApp();
+    } catch (IOException | SAXException | ParserConfigurationException e) {
+      CrashReport.getInstance().log(e);
+    }
   }
 
-  private void parseAptoideInstallUri(String substring) {
-    substring = substring.replace("\"", "");
-    String[] split = substring.split("&");
-    String repo = null;
-    String packageName = null;
-    boolean showPopup = false;
-    for (String property : split) {
-      if (property.toLowerCase().contains("package")) {
-        packageName = property.split("=")[1];
-      } else if (property.toLowerCase().contains("store")) {
-        repo = property.split("=")[1];
-      } else if (property.toLowerCase().contains("show_install_popup")) {
-        showPopup = property.split("=")[1].equals("true");
+  @Override public void startActivity(Intent intent) {
+    super.startActivity(intent);
+    finish();
+  }
+
+  public void startFromPackageName(String packageName) {
+    //@Cleanup Realm realm = DeprecatedDatabase.get();
+    //if (DeprecatedDatabase.InstalledQ.isInstalled(packageName, realm)) {
+    //  startFromAppView(packageName);
+    //} else {
+    //  startFromSearch(packageName);
+    //}
+
+    InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
+    installedAccessor.get(packageName).subscribe(installed -> {
+      if (installed != null) {
+        startFromAppView(packageName);
       } else {
-        //old version only with app id
-        try {
-          long id = Long.parseLong(split[0]);
-          startFromAppView(id, packageName, false);
-          return;
-        } catch (NumberFormatException e) {
-          CrashReports.logException(e);
-          Logger.printException(e);
-        }
+        startFromSearch(packageName);
       }
-    }
-    if (!TextUtils.isEmpty(packageName)) {
-      startFromAppview(repo, packageName, showPopup);
-    } else {
-      Logger.e(TAG,
-          "Package name is mandatory, it should be in uri. Ex: aptoideinstall://package=cm.aptoide.pt&store=apps&show_install_popup=true");
-    }
-  }
-
-  private void startFromAppview(String repo, String packageName, boolean showPopup) {
-    Intent intent = new Intent(this, startClass);
-    intent.putExtra(DeepLinksTargets.APP_VIEW_FRAGMENT, true);
-    intent.putExtra(DeepLinksKeys.PACKAGE_NAME_KEY, packageName);
-    intent.putExtra(DeepLinksKeys.STORENAME_KEY, repo);
-    intent.putExtra(DeepLinksKeys.SHOW_AUTO_INSTALL_POPUP, showPopup);
-    startActivity(intent);
-  }
-
-  public void startFromAppView(long id, String packageName, boolean showPopup) {
-    Intent i = new Intent(this, startClass);
-
-    i.putExtra(DeepLinksTargets.APP_VIEW_FRAGMENT, true);
-    i.putExtra(DeepLinksKeys.APP_ID_KEY, id);
-    i.putExtra(DeepLinksKeys.PACKAGE_NAME_KEY, packageName);
-    i.putExtra(DeepLinksKeys.SHOW_AUTO_INSTALL_POPUP, showPopup);
-
-    startActivity(i);
-  }
-
-  public void startFromAppView(String packageName) {
-    Intent i = new Intent(this, startClass);
-
-    i.putExtra(DeepLinksTargets.APP_VIEW_FRAGMENT, true);
-    i.putExtra(DeepLinksKeys.PACKAGE_NAME_KEY, packageName);
-
-    startActivity(i);
-  }
-
-  public void startFromSearch(String query) {
-    Intent i = new Intent(this, startClass);
-
-    i.putExtra(DeepLinksTargets.SEARCH_FRAGMENT, true);
-    i.putExtra(SearchManager.QUERY, query);
-
-    startActivity(i);
+    }, err -> {
+      CrashReport.getInstance().log(err);
+    });
   }
 
   public void aptoidevoiceSearch(String param) {
@@ -325,66 +289,95 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
     finish();
   }
 
-  private void parseXmlString(String file) {
+  public void startFromAppView(long id, String packageName, boolean showPopup) {
+    Intent i = new Intent(this, startClass);
 
-    try {
-      SAXParserFactory spf = SAXParserFactory.newInstance();
-      SAXParser sp = spf.newSAXParser();
-      XMLReader xr = sp.getXMLReader();
-      XmlAppHandler handler = new XmlAppHandler();
-      xr.setContentHandler(handler);
+    i.putExtra(DeepLinksTargets.APP_VIEW_FRAGMENT, true);
+    i.putExtra(DeepLinksKeys.APP_ID_KEY, id);
+    i.putExtra(DeepLinksKeys.PACKAGE_NAME_KEY, packageName);
+    i.putExtra(DeepLinksKeys.SHOW_AUTO_INSTALL_POPUP, showPopup);
 
-      InputSource is = new InputSource();
-      is.setCharacterStream(new StringReader(file));
-      xr.parse(is);
-      server = handler.getServers();
-      app = handler.getApp();
-    } catch (IOException | SAXException | ParserConfigurationException e) {
-      CrashReports.logException(e);
-      Logger.printException(e);
-    }
-  }
-
-  public void startWithRepo(ArrayList<String> repo) {
-    Intent i = new Intent(DeepLinkIntentReceiver.this, startClass);
-    i.putExtra(DeepLinksTargets.NEW_REPO, repo);
     startActivity(i);
-
-    // TODO: 10-08-2016 jdandrade
-    Analytics.ApplicationLaunch.newRepo();
-  }
-
-  public void startFromPackageName(String packageName) {
-    //@Cleanup Realm realm = DeprecatedDatabase.get();
-    //if (DeprecatedDatabase.InstalledQ.isInstalled(packageName, realm)) {
-    //  startFromAppView(packageName);
-    //} else {
-    //  startFromSearch(packageName);
-    //}
-
-    InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
-    installedAccessor.get(packageName).subscribe(installed -> {
-      if (installed != null) {
-        startFromAppView(packageName);
-      } else {
-        startFromSearch(packageName);
-      }
-    }, err -> {
-      Logger.e(TAG, err);
-      CrashReports.logException(err);
-    });
-  }
-
-  @Override public void startActivity(Intent intent) {
-    super.startActivity(intent);
-    finish();
   }
 
   private void downloadMyApp() {
     asyncTask = new MyAppDownloader().execute(getIntent().getDataString());
   }
 
-  private void downloadMyappFile(String myappUri) throws Exception {
+  private void parseAptoideInstallUri(String substring) {
+    substring = substring.replace("\"", "");
+    String[] split = substring.split("&");
+    String repo = null;
+    String packageName = null;
+    boolean showPopup = false;
+    for (String property : split) {
+      if (property.toLowerCase().contains("package")) {
+        packageName = property.split("=")[1];
+      } else if (property.toLowerCase().contains("store")) {
+        repo = property.split("=")[1];
+      } else if (property.toLowerCase().contains("show_install_popup")) {
+        showPopup = property.split("=")[1].equals("true");
+      } else {
+        //old version only with app id
+        try {
+          long id = Long.parseLong(split[0]);
+          startFromAppView(id, packageName, false);
+          return;
+        } catch (NumberFormatException e) {
+          CrashReport.getInstance().log(e);
+        }
+      }
+    }
+    if (!TextUtils.isEmpty(packageName)) {
+      startFromAppview(repo, packageName, showPopup);
+    } else {
+      Logger.e(TAG,
+          "Package name is mandatory, it should be in uri. Ex: aptoideinstall://package=cm.aptoide.pt&store=apps&show_install_popup=true");
+    }
+  }
+
+  private void startGenericDeepLink(Uri parse) {
+    Intent intent = new Intent(this, startClass);
+    intent.putExtra(DeepLinksTargets.GENERIC_DEEPLINK, true);
+    intent.putExtra(DeepLinksKeys.URI, parse);
+    startActivity(intent);
+  }
+
+  private void startScheduleDownloads(Uri parse) {
+    Intent intent = new Intent(this, startClass);
+    intent.putExtra(DeepLinksTargets.SCHEDULE_DEEPLINK, true);
+    intent.putExtra(DeepLinksKeys.URI, parse);
+    startActivity(intent);
+  }
+
+  public void startFromAppView(String packageName) {
+    Intent i = new Intent(this, startClass);
+
+    i.putExtra(DeepLinksTargets.APP_VIEW_FRAGMENT, true);
+    i.putExtra(DeepLinksKeys.PACKAGE_NAME_KEY, packageName);
+
+    startActivity(i);
+  }
+
+  public void startFromSearch(String query) {
+    Intent i = new Intent(this, startClass);
+
+    i.putExtra(DeepLinksTargets.SEARCH_FRAGMENT, true);
+    i.putExtra(SearchManager.QUERY, query);
+
+    startActivity(i);
+  }
+
+  private void startFromAppview(String repo, String packageName, boolean showPopup) {
+    Intent intent = new Intent(this, startClass);
+    intent.putExtra(DeepLinksTargets.APP_VIEW_FRAGMENT, true);
+    intent.putExtra(DeepLinksKeys.PACKAGE_NAME_KEY, packageName);
+    intent.putExtra(DeepLinksKeys.STORENAME_KEY, repo);
+    intent.putExtra(DeepLinksKeys.SHOW_AUTO_INSTALL_POPUP, showPopup);
+    startActivity(intent);
+  }
+
+  private void downloadMyAppFile(String myappUri) throws Exception {
     try {
       URL url = new URL(myappUri);
       URLConnection connection;
@@ -417,8 +410,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
       getit.close();
       saveit.close();
     } catch (Exception e) {
-      CrashReports.logException(e);
-      Logger.printException(e);
+      CrashReport.getInstance().log(e);
     }
   }
 
@@ -432,8 +424,7 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
       server = handler.getServers();
       app = handler.getApp();
     } catch (IOException | SAXException | ParserConfigurationException e) {
-      CrashReports.logException(e);
-      Logger.printException(e);
+      CrashReport.getInstance().log(e);
     }
   }
 
@@ -485,11 +476,10 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
     @Override protected Void doInBackground(String... params) {
 
       try {
-        downloadMyappFile(params[0]);
+        downloadMyAppFile(params[0]);
         parseXmlMyapp(TMP_MYAPP_FILE);
       } catch (Exception e) {
-        CrashReports.logException(e);
-        Logger.printException(e);
+        CrashReport.getInstance().log(e);
       }
 
       return null;

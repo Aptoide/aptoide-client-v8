@@ -244,7 +244,8 @@ public class Translator {
         translated = Application.getContext().getString(R.string.apps_for_kids);
         break;
       case "Aptoide Publishers":
-        translated = AptoideUtils.StringU.getFormattedString(R.string.aptoide_publishers, Application.getConfiguration().getMarketName());
+        translated = AptoideUtils.StringU.getFormattedString(R.string.aptoide_publishers,
+            Application.getConfiguration().getMarketName());
         break;
       case "Music & Video":
         translated = Application.getContext().getString(R.string.music_video);

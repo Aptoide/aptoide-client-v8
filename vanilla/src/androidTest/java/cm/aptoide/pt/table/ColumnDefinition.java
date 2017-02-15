@@ -18,6 +18,15 @@ public class ColumnDefinition<T> {
     this(false, false, name, false, OnConflictStrategy.NONE);
   }
 
+  private ColumnDefinition(boolean isPrimaryKey, boolean autoIncrement, String name,
+      boolean isUnique, OnConflictStrategy onConflictStrategy) {
+    this.isPrimaryKey = isPrimaryKey;
+    this.autoIncrement = autoIncrement;
+    this.name = name;
+    this.isUnique = isUnique;
+    this.onConflictStrategy = onConflictStrategy;
+  }
+
   ColumnDefinition(String name, boolean isPrimaryKey) {
     this(isPrimaryKey, false, name, false, OnConflictStrategy.NONE);
   }
@@ -28,15 +37,6 @@ public class ColumnDefinition<T> {
 
   ColumnDefinition(String name, boolean isUnique, OnConflictStrategy onConflictStrategy) {
     this(false, false, name, isUnique, OnConflictStrategy.NONE);
-  }
-
-  private ColumnDefinition(boolean isPrimaryKey, boolean autoIncrement, String name, boolean isUnique,
-      OnConflictStrategy onConflictStrategy) {
-    this.isPrimaryKey = isPrimaryKey;
-    this.autoIncrement = autoIncrement;
-    this.name = name;
-    this.isUnique = isUnique;
-    this.onConflictStrategy = onConflictStrategy;
   }
 
   public ColumnDefinition withDefaultValue(T defaultValue) {
@@ -61,18 +61,18 @@ public class ColumnDefinition<T> {
   }
 
   public boolean hasDefaultValue() {
-    return defaultValue!=null;
+    return defaultValue != null;
   }
 
   public T getDefaultValue() {
     return defaultValue;
   }
 
-  public String getName() {
-    return name;
-  }
-
   @Override public String toString() {
     return getName();
+  }
+
+  public String getName() {
+    return name;
   }
 }

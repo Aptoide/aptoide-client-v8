@@ -26,6 +26,19 @@ public class SixpackABTest<T> implements ABTest<T> {
     this.alternativeParser = alternativeParser;
   }
 
+  @Override public int hashCode() {
+    return getName().hashCode();
+  }
+
+  @Override public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    ABTest<?> abTest = (ABTest<?>) o;
+
+    return getName().equals(abTest.getName());
+  }
+
   @Override public String getName() {
     return experiment.name;
   }
@@ -63,14 +76,6 @@ public class SixpackABTest<T> implements ABTest<T> {
     return alternativeParser.parse(experiment.getControlAlternative().name);
   }
 
-  private boolean isParticipating() {
-    return participatingExperiment != null;
-  }
-
-  private boolean isPrefetched() {
-    return prefetchedExperiment != null;
-  }
-
   @Override public Observable<Boolean> prefetch() {
     if (!isPrefetched()) {
       return Observable.fromCallable(() -> prefetchedExperiment = experiment.prefetch())
@@ -80,16 +85,11 @@ public class SixpackABTest<T> implements ABTest<T> {
     }
   }
 
-  @Override public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-
-    ABTest<?> abTest = (ABTest<?>) o;
-
-    return getName().equals(abTest.getName());
+  private boolean isParticipating() {
+    return participatingExperiment != null;
   }
 
-  @Override public int hashCode() {
-    return getName().hashCode();
+  private boolean isPrefetched() {
+    return prefetchedExperiment != null;
   }
 }

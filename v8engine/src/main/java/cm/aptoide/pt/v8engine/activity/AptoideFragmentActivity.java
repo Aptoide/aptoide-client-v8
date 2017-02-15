@@ -52,8 +52,6 @@ public abstract class AptoideFragmentActivity extends AptoideBaseActivity {
 	}
 	*/
 
-  protected abstract Fragment createFragment();
-
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     if (savedInstanceState == null) {
@@ -62,6 +60,8 @@ public abstract class AptoideFragmentActivity extends AptoideBaseActivity {
           .commit();
     }
   }
+
+  protected abstract Fragment createFragment();
 
   protected Fragment getCurrentFragment() {
     if (getSupportFragmentManager().getFragments() != null

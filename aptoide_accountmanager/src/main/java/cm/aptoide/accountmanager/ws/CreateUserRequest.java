@@ -8,12 +8,9 @@ package cm.aptoide.accountmanager.ws;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
-import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.io.File;
 import java.util.concurrent.TimeUnit;
@@ -33,28 +30,26 @@ public class CreateUserRequest extends v3accountManager<OAuth> {
   private final String name;
   private final String update;
   private final String userAvatarPath;
+  private String aptoideClientUUID;
 
-  private CreateUserRequest(OkHttpClient client, String email, String password) {
-    this(client, email, password, "", "", "");
+  private CreateUserRequest(OkHttpClient client, String email, String password,
+      String aptoideClientUUID) {
+    this(client, email, password, "", "", "", aptoideClientUUID);
   }
 
   private CreateUserRequest(OkHttpClient client, String email, String password, String name,
-      String update, String userAvatarPath) {
+      String update, String userAvatarPath, String aptoideClientUUID) {
     super(client);
     this.email = email;
     this.password = password;
     this.name = name;
     this.update = update;
     this.userAvatarPath = userAvatarPath;
+    this.aptoideClientUUID = aptoideClientUUID;
   }
 
-  public static CreateUserRequest of(String email, String password) {
-    return new CreateUserRequest(getHttpClient(), email, password);
-  }
-
-  public static CreateUserRequest of(String update, String email, String name, String password,
-      String userAvatarPath) {
-    return new CreateUserRequest(getHttpClient(), email, password, name, update, userAvatarPath);
+  public static CreateUserRequest of(String email, String password, String aptoideClientUUID) {
+    return new CreateUserRequest(getHttpClient(), email, password, aptoideClientUUID);
   }
 
   private static OkHttpClient getHttpClient() {
@@ -66,28 +61,14 @@ public class CreateUserRequest extends v3accountManager<OAuth> {
     return clientBuilder.build();
   }
 
-  private RequestBody createBodyPartFromString(String string) {
-    return RequestBody.create(MediaType.parse("multipart/form-data"), string);
-  }
-
-  public String getEmail() {
-    return email;
+  public static CreateUserRequest of(String update, String email, String name, String password,
+      String userAvatarPath, String aptoideClientUUID) {
+    return new CreateUserRequest(getHttpClient(), email, password, name, update, userAvatarPath,
+        aptoideClientUUID);
   }
 
   public String getPassword() {
     return password;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public String getUpdate() {
-    return update;
-  }
-
-  public String getUserAvatarPath() {
-    return userAvatarPath;
   }
 
   @Override
@@ -136,9 +117,7 @@ public class CreateUserRequest extends v3accountManager<OAuth> {
     parameters.put("mode", "json");
     parameters.put("email", email);
     parameters.put("passhash", passhash);
-    parameters.put("aptoide_uid",
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID());
+    parameters.put("aptoide_uid", aptoideClientUUID);
 
     if (!TextUtils.isEmpty(Application.getConfiguration().getExtraId())) {
       parameters.put("oem_id", Application.getConfiguration().getExtraId());
@@ -152,5 +131,25 @@ public class CreateUserRequest extends v3accountManager<OAuth> {
           AptoideUtils.AlgorithmU.computeHmacSha1(email + passhash + name, "bazaar_hmac"));
     }
     return interfaces.createUser(parameters);
+  }
+
+  public String getUserAvatarPath() {
+    return userAvatarPath;
+  }
+
+  private RequestBody createBodyPartFromString(String string) {
+    return RequestBody.create(MediaType.parse("multipart/form-data"), string);
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public String getUpdate() {
+    return update;
   }
 }

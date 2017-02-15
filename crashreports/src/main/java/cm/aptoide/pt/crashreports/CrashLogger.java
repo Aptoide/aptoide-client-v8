@@ -7,17 +7,17 @@ package cm.aptoide.pt.crashreports;
 public interface CrashLogger {
 
   /**
-   * logs exception in crashes
+   * Log crash exception
    *
    * @param throwable exception you want to send
    */
-  void logException(Throwable throwable);
+  void log(Throwable throwable);
 
   /**
-   * logs string in crashes
+   * Logs key-value pair in crashes
    *
    * @param key unique key to send on crash
    * @param value value you want associated with the key
    */
-  void logString(String key, String value);
+  void log(String key, String value);
 }

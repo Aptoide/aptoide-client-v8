@@ -10,6 +10,7 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.BaseActivity;
 import cm.aptoide.accountmanager.CreateStoreActivity;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -64,8 +65,65 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
         .subscribe(click -> {
           shareCard(displayable);
         }, err -> {
-          Logger.e(TAG, err);
+          CrashReport.getInstance().log(err);
         }));
+  }
+
+  void shareCard(T displayable) {
+    if (!AptoideAccountManager.isLoggedIn()) {
+      ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
+          snackView -> {
+            AptoideAccountManager.openAccountManager(snackView.getContext());
+          });
+      return;
+    }
+
+    if (TextUtils.isEmpty(AptoideAccountManager.getUserData().getUserRepo())
+        && !BaseActivity.UserAccessState.PUBLIC.toString()
+        .equals(ManagerPreferences.getUserAccess())) {
+      ShowMessage.asSnack(getContext(), R.string.private_profile_create_store,
+          R.string.create_store_create, snackView -> {
+            Intent intent = new Intent(getContext(), CreateStoreActivity.class);
+            getContext().startActivity(intent);
+          });
+      return;
+    }
+
+    SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(displayable);
+    AlertDialog.Builder alertDialog = sharePreviewDialog.getPreviewDialogBuilder(getContext());
+
+    Observable.create((Subscriber<? super GenericDialogs.EResponse> subscriber) -> {
+      if (!ManagerPreferences.getUserAccessConfirmed()) {
+        alertDialog.setPositiveButton(R.string.share, (dialogInterface, i) -> {
+          displayable.share(getContext(), sharePreviewDialog.getPrivacyResult());
+          subscriber.onNext(GenericDialogs.EResponse.YES);
+          subscriber.onCompleted();
+        }).setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
+          subscriber.onNext(GenericDialogs.EResponse.NO);
+          subscriber.onCompleted();
+        });
+      } else {
+        alertDialog.setPositiveButton(R.string.continue_option, (dialogInterface, i) -> {
+          displayable.share(getContext(), sharePreviewDialog.getPrivacyResult());
+          subscriber.onNext(GenericDialogs.EResponse.YES);
+          subscriber.onCompleted();
+        }).setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
+          subscriber.onNext(GenericDialogs.EResponse.NO);
+          subscriber.onCompleted();
+        });
+      }
+      alertDialog.show();
+    }).subscribeOn(AndroidSchedulers.mainThread()).subscribe(eResponse -> {
+      switch (eResponse) {
+        case YES:
+          ShowMessage.asSnack(getContext(), R.string.social_timeline_share_dialog_title);
+          break;
+        case NO:
+          break;
+        case CANCEL:
+          break;
+      }
+    });
   }
 
   abstract String getCardTypeName();
@@ -93,6 +151,10 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
     });
   }
 
+  //
+  // all cards are "shareable"
+  //
+
   protected void setCardViewMargin(CardDisplayable displayable, CardView cardView) {
     CardView.LayoutParams layoutParams =
         new CardView.LayoutParams(CardView.LayoutParams.WRAP_CONTENT,
@@ -102,66 +164,5 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
         displayable.getMarginWidth(getContext(),
             getContext().getResources().getConfiguration().orientation), 30);
     cardView.setLayoutParams(layoutParams);
-  }
-
-  //
-  // all cards are "shareable"
-  //
-
-  void shareCard(T displayable) {
-    if (!AptoideAccountManager.isLoggedIn()) {
-      ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
-          snackView -> {
-            AptoideAccountManager.openAccountManager(snackView.getContext());
-          });
-      return;
-    }
-
-    if (TextUtils.isEmpty(AptoideAccountManager.getUserData().getUserRepo())
-        && !BaseActivity.UserAccessState.PUBLIC.toString()
-        .equals(ManagerPreferences.getUserAccess())) {
-      ShowMessage.asSnack(getContext(), R.string.private_profile_create_store,
-          R.string.create_store_create, snackView -> {
-            Intent intent = new Intent(getContext(), CreateStoreActivity.class);
-            getContext().startActivity(intent);
-          });
-      return;
-    }
-
-    SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(displayable);
-    AlertDialog.Builder alertDialog = sharePreviewDialog.showPreviewDialog(getContext());
-
-    Observable.create((Subscriber<? super GenericDialogs.EResponse> subscriber) -> {
-      if (!ManagerPreferences.getUserAccessConfirmed()) {
-        alertDialog.setPositiveButton(R.string.share, (dialogInterface, i) -> {
-          displayable.share(getContext(), sharePreviewDialog.getPrivacyResult());
-          subscriber.onNext(GenericDialogs.EResponse.YES);
-          subscriber.onCompleted();
-        }).setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
-          subscriber.onNext(GenericDialogs.EResponse.NO);
-          subscriber.onCompleted();
-        });
-      } else {
-        alertDialog.setPositiveButton(R.string.continue_option, (dialogInterface, i) -> {
-          displayable.share(getContext(), sharePreviewDialog.getPrivacyResult());
-          subscriber.onNext(GenericDialogs.EResponse.YES);
-          subscriber.onCompleted();
-        }).setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
-          subscriber.onNext(GenericDialogs.EResponse.NO);
-          subscriber.onCompleted();
-        });
-      }
-      alertDialog.show();
-    }).subscribeOn(AndroidSchedulers.mainThread()).subscribe(eResponse -> {
-      switch (eResponse) {
-        case YES:
-          ShowMessage.asSnack(getContext(),R.string.social_timeline_share_dialog_title);
-          break;
-        case NO:
-          break;
-        case CANCEL:
-          break;
-      }
-    });
   }
 }

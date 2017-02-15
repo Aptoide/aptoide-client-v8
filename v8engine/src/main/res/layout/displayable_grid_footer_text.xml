@@ -5,21 +5,20 @@
   -->
 
 <RelativeLayout
-    android:id="@+id/more_layout"
-    style="@style/focusableRowBackground"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/more_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="50dp"
     android:orientation="vertical"
-    android:paddingRight="12dp"
     android:paddingEnd="12dp"
->
+    android:paddingRight="12dp"
+    style="@style/focusableRowBackground"
+    >
 
   <TextView
       android:id="@+id/title"
-      style="?android:attr/textAppearanceMedium"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_alignParentLeft="true"
@@ -30,6 +29,7 @@
       android:maxLines="1"
       android:singleLine="true"
       tools:text="Local Top Apps"
+      style="?android:attr/textAppearanceMedium"
       />
 
 </RelativeLayout>

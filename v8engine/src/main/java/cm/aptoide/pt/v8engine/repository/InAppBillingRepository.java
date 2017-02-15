@@ -42,18 +42,18 @@ public class InAppBillingRepository {
     return InAppBillingAvailableRequest.of(apiVersion, packageName, type)
         .observe()
         .flatMap(response -> {
-      if (response != null && response.isOk()) {
-        if (response.getInAppBillingAvailable().isAvailable()) {
-          return Observable.just(null);
-        } else {
-          return Observable.error(
-              new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
-        }
-      } else {
-        return Observable.error(
-            new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
-      }
-    });
+          if (response != null && response.isOk()) {
+            if (response.getInAppBillingAvailable().isAvailable()) {
+              return Observable.just(null);
+            } else {
+              return Observable.error(
+                  new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
+            }
+          } else {
+            return Observable.error(
+                new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
+          }
+        });
   }
 
   public Observable<List<SKU>> getSKUs(int apiVersion, String packageName, List<String> skuList,
@@ -66,64 +66,50 @@ public class InAppBillingRepository {
             .toList());
   }
 
+  private Observable<InAppBillingSkuDetailsResponse> getSKUListDetails(int apiVersion,
+      String packageName, List<String> skuList, String type) {
+    return InAppBillingSkuDetailsRequest.of(apiVersion, packageName, skuList, operatorManager, type,
+        AptoideAccountManager.getAccessToken()).observe().flatMap(response -> {
+      if (response != null && response.isOk()) {
+        return Observable.just(response);
+      } else {
+        final List<InAppBillingSkuDetailsResponse.PurchaseDataObject> detailList =
+            response.getPublisherResponse().getDetailList();
+        if (detailList.isEmpty()) {
+          return Observable.error(
+              new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
+        }
+        return Observable.error(
+            new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
+      }
+    });
+  }
+
   public Observable<InAppBillingPurchasesResponse.PurchaseInformation> getInAppPurchaseInformation(
       int apiVersion, String packageName, String type) {
     return InAppBillingPurchasesRequest.of(apiVersion, packageName, type,
-        AptoideAccountManager.getAccessToken())
-        .observe()
-        .flatMap(response -> {
-          if (response != null && response.isOk()) {
-            return Observable.just(response.getPurchaseInformation());
-          }
-          return Observable.error(
-              new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
-        });
+        AptoideAccountManager.getAccessToken()).observe().flatMap(response -> {
+      if (response != null && response.isOk()) {
+        return Observable.just(response.getPurchaseInformation());
+      }
+      return Observable.error(new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
+    });
   }
 
   public Observable<Void> deleteInAppPurchase(int apiVersion, String packageName,
       String purchaseToken) {
     return InAppBillingConsumeRequest.of(apiVersion, packageName, purchaseToken,
-        AptoideAccountManager.getAccessToken())
-        .observe()
-        .flatMap(response -> {
-          if (response != null && response.isOk()) {
-            // TODO sync all payment confirmations instead. For now there is no web service for that.
-            confirmationAccessor.removeAll();
-            return Observable.just(null);
-          }
-          if (isDeletionItemNotFound(response.getErrors())) {
-            return Observable.error(
-                new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
-          }
-          return Observable.error(
-              new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
-        });
-  }
-
-  public Observable<InAppBillingSkuDetailsResponse> getSKUDetails(int apiVersion,
-      String packageName, String sku, String type) {
-    return getSKUListDetails(apiVersion, packageName, Collections.singletonList(sku), type);
-  }
-
-  private Observable<InAppBillingSkuDetailsResponse> getSKUListDetails(int apiVersion,
-      String packageName, List<String> skuList, String type) {
-    return InAppBillingSkuDetailsRequest.of(apiVersion, packageName, skuList, operatorManager, type,
-        AptoideAccountManager.getAccessToken())
-        .observe()
-        .flatMap(response -> {
-          if (response != null && response.isOk()) {
-            return Observable.just(response);
-          } else {
-            final List<InAppBillingSkuDetailsResponse.PurchaseDataObject> detailList =
-                response.getPublisherResponse().getDetailList();
-            if (detailList.isEmpty()) {
-              return Observable.error(
-                  new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
-            }
-            return Observable.error(
-                new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
-          }
-        });
+        AptoideAccountManager.getAccessToken()).observe().flatMap(response -> {
+      if (response != null && response.isOk()) {
+        // TODO sync all payment confirmations instead. For now there is no web service for that.
+        confirmationAccessor.removeAll();
+        return Observable.just(null);
+      }
+      if (isDeletionItemNotFound(response.getErrors())) {
+        return Observable.error(new RepositoryItemNotFoundException(V3.getErrorMessage(response)));
+      }
+      return Observable.error(new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
+    });
   }
 
   @NonNull private boolean isDeletionItemNotFound(List<ErrorResponse> errors) {
@@ -133,5 +119,10 @@ public class InAppBillingRepository {
       }
     }
     return false;
+  }
+
+  public Observable<InAppBillingSkuDetailsResponse> getSKUDetails(int apiVersion,
+      String packageName, String sku, String type) {
+    return getSKUListDetails(apiVersion, packageName, Collections.singletonList(sku), type);
   }
 }

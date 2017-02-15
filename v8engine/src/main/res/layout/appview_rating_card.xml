@@ -49,10 +49,10 @@
 
     <RatingBar
         android:id="@+id/appview_rating_bar_avg"
-        style="?attr/gridItemRatingBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:numStars="5"
+        style="?attr/gridItemRatingBar"
         />
   </FrameLayout>
 

@@ -96,35 +96,30 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
     return super.onOptionsItemSelected(item);
   }
 
-  @Override protected void onDestroy() {
-    subscriptions.clear();
-    super.onDestroy();
+  private void bindViews() {
+    content = findViewById(android.R.id.content);
+    mLoginButton = (Button) findViewById(R.id.button_login);
+    mRegisterButton = (Button) findViewById(R.id.button_register);
+    mFacebookLoginButton = (LoginButton) findViewById(R.id.fb_login_button);
+    password_box = (EditText) findViewById(R.id.password);
+    emailBox = (EditText) findViewById(R.id.username);
+    hidePassButton = (Button) findViewById(R.id.btn_show_hide_pass);
+    mToolbar = (Toolbar) findViewById(R.id.toolbar);
+    forgotPassword = (TextView) findViewById(R.id.forgot_password);
+    orMessage = (TextView) findViewById(R.id.or_message);
   }
 
-  private void setupViewListeners() {
-    SpannableString forgetString = new SpannableString(getString(R.string.forgot_passwd));
-    forgetString.setSpan(new UnderlineSpan(), 0, forgetString.length(), 0);
-    forgotPassword.setText(forgetString);
-    // FIXME: 11/11/2016 Avoid redirecting the user to outside of the app
-    forgotPassword.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        Intent passwordRecovery = new Intent(Intent.ACTION_VIEW,
-            Uri.parse("http://m.aptoide.com/account/password-recovery"));
-        startActivity(passwordRecovery);
+  public boolean isSocialLoginsAvailable() {
+    for (AptoidePreferencesConfiguration.SocialLogin socialLogin : AptoidePreferencesConfiguration.SocialLogin
+        .values()) {
+      if (Application.getConfiguration().isLoginAvailable(socialLogin)) {
+        if (socialLogin == AptoidePreferencesConfiguration.SocialLogin.GOOGLE) {
+          return GoogleLoginUtils.isGoogleEnabledOnCurrentDevice(this);
+        }
+        return true;
       }
-    });
-  }
-
-  private void setupToolbar() {
-    if (mToolbar != null) {
-      setSupportActionBar(mToolbar);
-      getSupportActionBar().setHomeButtonEnabled(true);
-      if (!setSkipButton) {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-      }
-      getSupportActionBar().setDisplayShowTitleEnabled(true);
-      getSupportActionBar().setTitle(getActivityTitle());
     }
+    return false;
   }
 
   private void setupShowHidePassButton() {
@@ -141,6 +136,37 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
     });
   }
 
+  private void setupToolbar() {
+    if (mToolbar != null) {
+      setSupportActionBar(mToolbar);
+      getSupportActionBar().setHomeButtonEnabled(true);
+      if (!setSkipButton) {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+      }
+      getSupportActionBar().setDisplayShowTitleEnabled(true);
+      getSupportActionBar().setTitle(getActivityTitle());
+    }
+  }
+
+  private void setupViewListeners() {
+    SpannableString forgetString = new SpannableString(getString(R.string.forgot_passwd));
+    forgetString.setSpan(new UnderlineSpan(), 0, forgetString.length(), 0);
+    forgotPassword.setText(forgetString);
+    // FIXME: 11/11/2016 Avoid redirecting the user to outside of the app
+    forgotPassword.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        Intent passwordRecovery = new Intent(Intent.ACTION_VIEW,
+            Uri.parse("http://m.aptoide.com/account/password-recovery"));
+        startActivity(passwordRecovery);
+      }
+    });
+  }
+
+  @Override protected void onDestroy() {
+    subscriptions.clear();
+    super.onDestroy();
+  }
+
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     AptoideAccountManager.onActivityResult(this, requestCode, resultCode, data);
@@ -151,28 +177,13 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
     super.onBackPressed();
   }
 
-  private void bindViews() {
-    content = findViewById(android.R.id.content);
-    mLoginButton = (Button) findViewById(R.id.button_login);
-    mRegisterButton = (Button) findViewById(R.id.button_register);
-    mFacebookLoginButton = (LoginButton) findViewById(R.id.fb_login_button);
-    password_box = (EditText) findViewById(R.id.password);
-    emailBox = (EditText) findViewById(R.id.username);
-    hidePassButton = (Button) findViewById(R.id.btn_show_hide_pass);
-    mToolbar = (Toolbar) findViewById(R.id.toolbar);
-    forgotPassword = (TextView) findViewById(R.id.forgot_password);
-    orMessage = (TextView) findViewById(R.id.or_message);
-  }
-
   @Override public void onLoginSuccess() {
     subscriptions.add(
-      ShowMessage.asObservableSnack(this, R.string.login_successful)
-          .subscribe(visibility -> {
-        if(visibility==ShowMessage.DISMISSED) {
-          LoginActivity.this.finish();
-        }
-      })
-    );
+        ShowMessage.asObservableSnack(this, R.string.login_successful).subscribe(visibility -> {
+          if (visibility == ShowMessage.DISMISSED) {
+            LoginActivity.this.finish();
+          }
+        }));
   }
 
   @Override public void onLoginFail(String reason) {
@@ -185,18 +196,5 @@ public class LoginActivity extends BaseActivity implements AptoideAccountManager
 
   @Override public String getIntroducedPassword() {
     return password_box.getText().toString();
-  }
-
-  public boolean isSocialLoginsAvailable() {
-    for (AptoidePreferencesConfiguration.SocialLogin socialLogin : AptoidePreferencesConfiguration.SocialLogin
-        .values()) {
-      if (Application.getConfiguration().isLoginAvailable(socialLogin)) {
-        if (socialLogin == AptoidePreferencesConfiguration.SocialLogin.GOOGLE) {
-          return GoogleLoginUtils.isGoogleEnabledOnCurrentDevice(this);
-        }
-        return true;
-      }
-    }
-    return false;
   }
 }

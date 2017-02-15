@@ -47,10 +47,6 @@ public class VideoWidget extends CardWidget<VideoDisplayable> {
     super(itemView);
   }
 
-  @Override String getCardTypeName() {
-    return CARD_TYPE_NAME;
-  }
-
   @Override protected void assignViews(View itemView) {
     super.assignViews(itemView);
     title = (TextView) itemView.findViewById(R.id.card_title);
@@ -138,6 +134,10 @@ public class VideoWidget extends CardWidget<VideoDisplayable> {
               .build())
           .build(), TimelineClickEvent.OPEN_CHANNEL);
     }));
+  }
+
+  @Override String getCardTypeName() {
+    return CARD_TYPE_NAME;
   }
 
   private void setAppNameToFirstLinkedApp(VideoDisplayable displayable) {

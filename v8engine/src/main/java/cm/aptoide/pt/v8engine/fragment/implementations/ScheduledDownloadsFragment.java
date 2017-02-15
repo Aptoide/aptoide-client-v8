@@ -13,9 +13,8 @@ import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
@@ -30,7 +29,7 @@ import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEventCon
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadInstallBaseEvent;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEvent;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEventConverter;
-import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
+import cm.aptoide.pt.v8engine.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
@@ -45,10 +44,7 @@ import rx.android.schedulers.AndroidSchedulers;
 
 import static cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver.SCHEDULE_DOWNLOADS;
 
-/**
- * Created by sithengineer on 19/07/16.
- */
-public class ScheduledDownloadsFragment extends GridRecyclerFragment {
+public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter> {
 
   public static final String OPEN_SCHEDULE_DOWNLOADS_WITH_POPUP_URI =
       "aptoide://cm.aptoide.pt/" + SCHEDULE_DOWNLOADS + "?openMode=AskInstallAll";
@@ -61,8 +57,6 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
   private DownloadEventConverter downloadConverter;
   private Analytics analytics;
   private InstallEventConverter installConverter;
-
-  //	private CompositeSubscription compositeSubscription;
 
   public ScheduledDownloadsFragment() {
   }
@@ -82,9 +76,7 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     Installer installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
-    installManager = new InstallManager(AptoideDownloadManager.getInstance(), installer,
-        AccessorFactory.getAccessorFor(Download.class),
-        AccessorFactory.getAccessorFor(Installed.class));
+    installManager = new InstallManager(AptoideDownloadManager.getInstance(), installer);
     downloadConverter = new DownloadEventConverter();
     installConverter = new InstallEventConverter();
     analytics = Analytics.getInstance();
@@ -95,9 +87,20 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
     openMode = (OpenMode) args.getSerializable(OPEN_MODE);
   }
 
+  @Override public int getContentViewId() {
+    return R.layout.fragment_with_toolbar;
+  }
+
+  @Override public void bindViews(View view) {
+    super.bindViews(view);
+    emptyData = (TextView) view.findViewById(R.id.empty_data);
+    scheduledDownloadRepository = RepositoryFactory.getScheduledDownloadRepository();
+    //		compositeSubscription = new CompositeSubscription();
+    setHasOptionsMenu(true);
+  }
+
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
-    Logger.d(TAG, "refresh excluded updates? " + (create ? "yes" : "no"));
     if (create) {
       switch (openMode) {
         case normal:
@@ -126,34 +129,37 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
     fetchScheduledDownloads();
   }
 
-  //	@Override
-  //	public void onDestroyView() {
-  //		super.onDestroyView();
-  //		Observable.empty().observeOn(RealmSchedulers.getScheduler()).concatWith(Observable.fromCallable(() -> {
-  //			if (compositeSubscription != null && compositeSubscription.hasSubscriptions()) {
-  //				compositeSubscription.unsubscribe();
-  //			}
-  //			return null;
-  //		})).subscribe();
-  //	}
+  private boolean downloadAndInstallScheduledList(List<Scheduled> installing,
+      boolean isStartedAutomatic) {
 
-  @Override public int getContentViewId() {
-    return R.layout.fragment_with_toolbar;
-  }
+    if (installing == null || installing.isEmpty()) return false;
 
-  @Override public void bindViews(View view) {
-    super.bindViews(view);
-    emptyData = (TextView) view.findViewById(R.id.empty_data);
-    scheduledDownloadRepository = RepositoryFactory.getScheduledDownloadRepository();
-    //		compositeSubscription = new CompositeSubscription();
-    setHasOptionsMenu(true);
-  }
+    Context context = getContext();
+    PermissionManager permissionManager = new PermissionManager();
+    PermissionRequest permissionRequest = ((PermissionRequest) context);
+    DownloadFactory downloadFactory = new DownloadFactory();
+    InstallerFactory installerFactory = new InstallerFactory();
 
-  @Override public void setupToolbarDetails(Toolbar toolbar) {
-    toolbar.setTitle(R.string.setting_schdwntitle);
-  }
+    InstallManager installManager = new InstallManager(AptoideDownloadManager.getInstance(),
+        installerFactory.create(context, InstallerFactory.ROLLBACK));
 
-  @Override protected boolean displayHomeUpAsEnabled() {
+    permissionManager.requestExternalStoragePermission(permissionRequest)
+        .flatMap(sucess -> scheduledDownloadRepository.setInstalling(installing))
+        .flatMapIterable(scheduleds -> scheduleds)
+        .map(scheduled -> downloadFactory.create(scheduled))
+        .flatMap(downloadItem -> installManager.install(context, downloadItem)
+            .doOnSubscribe(() -> setupEvents(downloadItem,
+                isStartedAutomatic ? DownloadEvent.Action.AUTO : DownloadEvent.Action.CLICK))
+            .filter(downloadProgress -> downloadProgress.getState() == Progress.DONE)
+            .doOnNext(success -> scheduledDownloadRepository.deleteScheduledDownload(
+                downloadItem.getMd5())))
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(aVoid -> {
+          Logger.i(TAG, "finished installing scheduled downloads");
+        }, throwable -> {
+          Logger.e(TAG, throwable.getMessage());
+        });
+
     return true;
   }
 
@@ -164,7 +170,7 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
         .subscribe(scheduledDownloads -> {
           updateUi(scheduledDownloads);
         }, t -> {
-          Logger.e(TAG, t);
+          CrashReport.getInstance().log(t);
           emptyData.setText(R.string.no_sch_downloads);
           emptyData.setVisibility(View.VISIBLE);
           clearDisplayables();
@@ -183,6 +189,17 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
     //compositeSubscription.add(subscription);
   }
 
+  public void setupEvents(Download download, DownloadEvent.Action action) {
+    DownloadEvent report =
+        downloadConverter.create(download, action, DownloadEvent.AppContext.SCHEDULED);
+    analytics.save(download.getPackageName() + download.getVersionCode(), report);
+
+    InstallEvent installEvent =
+        installConverter.create(download, DownloadInstallBaseEvent.Action.CLICK,
+            DownloadInstallBaseEvent.AppContext.SCHEDULED);
+    analytics.save(download.getPackageName() + download.getVersionCode(), installEvent);
+  }
+
   @UiThread private void updateUi(List<Scheduled> scheduledDownloadList) {
     if (scheduledDownloadList == null || scheduledDownloadList.isEmpty()) {
       emptyData.setText(R.string.no_sch_downloads);
@@ -196,8 +213,16 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
       for (final Scheduled scheduledDownload : scheduledDownloadList) {
         displayables.add(new ScheduledDownloadDisplayable(scheduledDownload, installManager));
       }
-      setDisplayables(displayables);
+      clearDisplayables().addDisplayables(displayables, true);
     }
+  }
+
+  @Override protected boolean displayHomeUpAsEnabled() {
+    return true;
+  }
+
+  @Override public void setupToolbarDetails(Toolbar toolbar) {
+    toolbar.setTitle(R.string.setting_schdwntitle);
   }
 
   @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
@@ -264,53 +289,6 @@ public class ScheduledDownloadsFragment extends GridRecyclerFragment {
     }
 
     return super.onOptionsItemSelected(item);
-  }
-
-  private boolean downloadAndInstallScheduledList(List<Scheduled> installing,
-      boolean isStartedAutomatic) {
-
-    if (installing == null || installing.isEmpty()) return false;
-
-    Context context = getContext();
-    PermissionManager permissionManager = new PermissionManager();
-    PermissionRequest permissionRequest = ((PermissionRequest) context);
-    DownloadFactory downloadFactory = new DownloadFactory();
-    InstallerFactory installerFactory = new InstallerFactory();
-
-    InstallManager installManager = new InstallManager(AptoideDownloadManager.getInstance(),
-        installerFactory.create(context, InstallerFactory.ROLLBACK),
-        AccessorFactory.getAccessorFor(Download.class),
-        AccessorFactory.getAccessorFor(Installed.class));
-
-    permissionManager.requestExternalStoragePermission(permissionRequest)
-        .flatMap(sucess -> scheduledDownloadRepository.setInstalling(installing))
-        .flatMapIterable(scheduleds -> scheduleds)
-        .map(scheduled -> downloadFactory.create(scheduled))
-        .flatMap(downloadItem -> installManager.install(context, downloadItem)
-            .doOnSubscribe(() -> setupEvents(downloadItem,
-                isStartedAutomatic ? DownloadEvent.Action.AUTO : DownloadEvent.Action.CLICK))
-            .filter(downloadProgress -> downloadProgress.getState() == Progress.DONE)
-            .doOnNext(success -> scheduledDownloadRepository.deleteScheduledDownload(
-                downloadItem.getMd5())))
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(aVoid -> {
-          Logger.i(TAG, "finished installing scheduled downloads");
-        }, throwable -> {
-          Logger.e(TAG, throwable.getMessage());
-        });
-
-    return true;
-  }
-
-  public void setupEvents(Download download, DownloadEvent.Action action) {
-    DownloadEvent report =
-        downloadConverter.create(download, action, DownloadEvent.AppContext.SCHEDULED);
-    analytics.save(download.getPackageName() + download.getVersionCode(), report);
-
-    InstallEvent installEvent =
-        installConverter.create(download, DownloadInstallBaseEvent.Action.CLICK,
-            DownloadInstallBaseEvent.AppContext.SCHEDULED);
-    analytics.save(download.getPackageName() + download.getVersionCode(), installEvent);
   }
 
   public enum OpenMode {

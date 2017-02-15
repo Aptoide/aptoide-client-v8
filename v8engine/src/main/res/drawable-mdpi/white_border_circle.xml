@@ -9,6 +9,6 @@
     android:thickness="2dp">
   <solid android:color="@color/white"/>
   <stroke
-      android:width="2dp"
-      android:color="@color/white"/>
+      android:color="@color/white"
+      android:width="2dp"/>
 </shape>

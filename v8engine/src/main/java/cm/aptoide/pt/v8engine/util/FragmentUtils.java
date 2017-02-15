@@ -21,17 +21,17 @@ public final class FragmentUtils {
   private static final AtomicInteger atomicInt = new AtomicInteger(0);
 
   public static void replaceFragment(@NonNull android.app.Activity activity,
+      @NonNull android.app.Fragment fragment) {
+    replaceFragment(activity, fragment,
+        fragment.getClass().getSimpleName() + "_" + atomicInt.incrementAndGet());
+  }
+
+  public static void replaceFragment(@NonNull android.app.Activity activity,
       @NonNull android.app.Fragment fragment, String tag) {
 
     activity.getFragmentManager().beginTransaction()
         //				.setCustomAnimations(ENTER_ANIMATION, EXIT_ANIMATION, ENTER_ANIMATION, EXIT_ANIMATION)
         .addToBackStack(tag).replace(R.id.fragment_placeholder, fragment, tag).commit();
-  }
-
-  public static void replaceFragment(@NonNull android.app.Activity activity,
-      @NonNull android.app.Fragment fragment) {
-    replaceFragment(activity, fragment,
-        fragment.getClass().getSimpleName() + "_" + atomicInt.incrementAndGet());
   }
 
   public static android.app.Fragment getFirstFragment(@NonNull android.app.Activity activity) {
@@ -49,6 +49,13 @@ public final class FragmentUtils {
 
   public static void replaceFragmentV4(
       @NonNull android.support.v4.app.FragmentActivity fragmentActivity,
+      @NonNull android.support.v4.app.Fragment fragment) {
+    replaceFragmentV4(fragmentActivity, fragment,
+        fragment.getClass().getSimpleName() + "_" + atomicInt.incrementAndGet());
+  }
+
+  public static void replaceFragmentV4(
+      @NonNull android.support.v4.app.FragmentActivity fragmentActivity,
       @NonNull android.support.v4.app.Fragment fragment, String tag) {
     fragmentActivity.getSupportFragmentManager()
         .beginTransaction()
@@ -56,13 +63,6 @@ public final class FragmentUtils {
         .addToBackStack(tag)
         .replace(R.id.fragment_placeholder, fragment, tag)
         .commit();
-  }
-
-  public static void replaceFragmentV4(
-      @NonNull android.support.v4.app.FragmentActivity fragmentActivity,
-      @NonNull android.support.v4.app.Fragment fragment) {
-    replaceFragmentV4(fragmentActivity, fragment,
-        fragment.getClass().getSimpleName() + "_" + atomicInt.incrementAndGet());
   }
 
   public static android.support.v4.app.Fragment getFirstFragmentV4(

@@ -19,8 +19,8 @@
       >
 
     <include
-        android:id="@+id/toolbar"
         layout="@layout/toolbar"
+        android:id="@+id/toolbar"
         />
 
   </android.support.design.widget.AppBarLayout>
@@ -81,10 +81,11 @@
       android:layout_height="match_parent"
       android:layout_below="@id/app_bar_layout"
       android:clipToPadding="false"
+      android:paddingEnd="@dimen/recycler_margin"
       android:paddingLeft="@dimen/recycler_margin"
       android:paddingStart="@dimen/recycler_margin"
       android:paddingRight="@dimen/recycler_margin"
-      android:paddingEnd="@dimen/recycler_margin"
+      android:paddingStart="@dimen/recycler_margin"
       android:visibility="gone"
       tools:visibility="visible"
       />

@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine.deprecated.tables;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.Accessor;
 import cm.aptoide.pt.logger.Logger;
 import io.realm.RealmObject;
@@ -22,14 +23,6 @@ public abstract class BaseTable {
   private static final String TAG = BaseTable.class.getSimpleName();
 
   private static final String DROP_TABLE_SQL = "DROP TABLE IF EXISTS ";
-
-  public abstract String getTableName();
-
-  public abstract RealmObject convert(Cursor cursor);
-
-  public String getCustomQuery() {
-    return null;
-  }
 
   public void migrate(SQLiteDatabase db, Accessor<RealmObject> accessor) {
     Cursor cursor = null;
@@ -70,12 +63,19 @@ public abstract class BaseTable {
 
       Logger.d(TAG, "Table " + tableName + " migrated with success.");
     } catch (Exception e) {
-      Logger.e(TAG, e);
-      //CrashReports.logException(e);
+      CrashReport.getInstance().log(e);
     } finally {
       if (cursor != null && !cursor.isClosed()) {
         cursor.close();
       }
     }
   }
+
+  public abstract String getTableName();
+
+  public String getCustomQuery() {
+    return null;
+  }
+
+  public abstract RealmObject convert(Cursor cursor);
 }

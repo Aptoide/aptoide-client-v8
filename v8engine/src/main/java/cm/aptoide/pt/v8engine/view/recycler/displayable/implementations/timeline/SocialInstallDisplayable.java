@@ -24,7 +24,6 @@ import lombok.Getter;
 public class SocialInstallDisplayable extends SocialCardDisplayable {
 
   @Getter private int avatarResource;
-  @Getter private Store store;
   @Getter private int titleResource;
   @Getter private Comment.User user;
   @Getter private long appId;
@@ -45,10 +44,10 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
       String appIcon, String abTestingURL, long likes, long comments, Date date,
       TimelineMetricsManager timelineMetricsManager, SpannableFactory spannableFactory,
       SocialRepository socialRepository, DateCalculator dateCalculator) {
-    super(socialInstall, likes, comments, socialInstall.getUser(), socialInstall.getUserSharer(),
+    super(socialInstall, likes, comments, store, socialInstall.getUser(),
+        socialInstall.getUserSharer(), socialInstall.getMy().isLiked(), socialInstall.getLikes(),
         date, spannableFactory, dateCalculator);
     this.avatarResource = icon;
-    this.store = store;
     this.titleResource = titleResource;
     this.user = user;
     this.appId = appId;
@@ -83,8 +82,8 @@ public class SocialInstallDisplayable extends SocialCardDisplayable {
         R.string.displayable_social_timeline_recommendation_atptoide_team_recommends,
         socialInstall.getUser(), socialInstall.getApp().getId(),
         socialInstall.getApp().getPackageName(), socialInstall.getApp().getName(),
-        socialInstall.getApp().getIcon(), abTestingURL, socialInstall.getLikes(),
-        socialInstall.getComments(), socialInstall.getDate(), timelineMetricsManager,
+        socialInstall.getApp().getIcon(), abTestingURL, socialInstall.getStats().getLikes(),
+        socialInstall.getStats().getComments(), socialInstall.getDate(), timelineMetricsManager,
         spannableFactory, socialRepository, dateCalculator);
   }
 

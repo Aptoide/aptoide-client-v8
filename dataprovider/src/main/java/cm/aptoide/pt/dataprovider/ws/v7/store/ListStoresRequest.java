@@ -64,8 +64,8 @@ public class ListStoresRequest extends V7<ListStores, ListStoresRequest.Body> {
     if (!url.startsWith("/")) {
       url = "/" + url;
     }
-    return new ListStoresRequest(url,
-        (Body) decorator.decorate(new Body(), accessToken), BASE_HOST);
+    return new ListStoresRequest(url, (Body) decorator.decorate(new Body(), accessToken),
+        BASE_HOST);
   }
 
   @Override

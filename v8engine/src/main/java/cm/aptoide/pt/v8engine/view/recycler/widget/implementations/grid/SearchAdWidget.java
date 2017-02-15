@@ -39,6 +39,10 @@ public class SearchAdWidget extends Widget<SearchAdDisplayable> {
     sponsored = (TextView) itemView.findViewById(R.id.sponsored_label);
   }
 
+  @Override public void unbindView() {
+
+  }
+
   @Override public void bindView(SearchAdDisplayable displayable) {
     MinimalAd minimalAd = displayable.getPojo();
 
@@ -53,9 +57,5 @@ public class SearchAdWidget extends Widget<SearchAdDisplayable> {
       ((FragmentShower) view.getContext()).pushFragmentV4(
           V8Engine.getFragmentProvider().newAppViewFragment(minimalAd));
     });
-  }
-
-  @Override public void unbindView() {
-
   }
 }

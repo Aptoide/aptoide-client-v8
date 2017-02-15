@@ -28,6 +28,10 @@ import rx.Observable;
     this.url = url;
   }
 
+  private ListAppsRequest(Body body) {
+    super(body, BASE_HOST);
+  }
+
   public static ListAppsRequest ofAction(String url, StoreCredentials storeCredentials,
       String accessToken, String aptoideClientUUID) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
@@ -43,9 +47,13 @@ import rx.Observable;
     }
   }
 
+  public static ListAppsRequest of(int groupId) {
+    return new ListAppsRequest(new Body(groupId));
+  }
+
   @Override
   protected Observable<ListApps> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-    return interfaces.listApps(url, body, bypassCache);
+    return interfaces.listApps(url != null ? url : "", body, bypassCache);
   }
 
   @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBodyWithStore
@@ -53,6 +61,7 @@ import rx.Observable;
 
     @Getter private Integer limit;
     @Getter @Setter private int offset;
+    @Getter @Setter private Integer groupId;
 
     public Body(StoreCredentials storeCredentials) {
       super(storeCredentials);
@@ -61,6 +70,10 @@ import rx.Observable;
     public Body(StoreCredentials storeCredentials, int limit) {
       super(storeCredentials);
       this.limit = limit;
+    }
+
+    public Body(int groupId) {
+      this.groupId = groupId;
     }
   }
 }

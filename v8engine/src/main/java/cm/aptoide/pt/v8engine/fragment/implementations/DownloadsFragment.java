@@ -1,30 +1,25 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 28/07/2016.
- */
-
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
-import cm.aptoide.pt.crashreports.CrashReports;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
+import android.view.ViewGroup;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.InstallManager;
-import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEventConverter;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEventConverter;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragmentWithDecorator;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
+import cm.aptoide.pt.v8engine.repository.DownloadRepository;
+import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ActiveDownloadDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ActiveDownloadsHeaderDisplayable;
@@ -32,10 +27,10 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Com
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreGridHeaderDisplayable;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import rx.Completable;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -44,11 +39,14 @@ import rx.schedulers.Schedulers;
  */
 public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
 
-  private static final String TAG = DownloadsFragment.class.getSimpleName();
-  private List<Displayable> activeDisplayablesList = new LinkedList<>();
-  private List<Displayable> completedDisplayablesList = new LinkedList<>();
+  private static final String TAG = DownloadsFragment.class.getName();
+
+  // list of apps in the same state
+  private List<Displayable> downloadingDisplayables;
+  private List<Displayable> standingByDisplayables;
+  private List<Displayable> completedDisplayables;
+
   private InstallManager installManager;
-  private List<Progress<Download>> oldDownloadsList;
   private Analytics analytics;
   private InstallEventConverter installConverter;
   private DownloadEventConverter downloadConverter;
@@ -57,141 +55,126 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
     return new DownloadsFragment();
   }
 
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    installManager = new InstallManager(AptoideDownloadManager.getInstance(),
-        new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK),
-        AccessorFactory.getAccessorFor(Download.class),
-        AccessorFactory.getAccessorFor(Installed.class));
-
-    oldDownloadsList = new ArrayList<>();
-    analytics = Analytics.getInstance();
-    installConverter = new InstallEventConverter();
-    downloadConverter = new DownloadEventConverter();
-  }
-
-  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    super.load(create, refresh, savedInstanceState);
-    installManager.getInstallationsAsList()
-        .observeOn(Schedulers.computation())
-        .first()
-        .map(downloads -> sortDownloads(downloads))
-        .observeOn(AndroidSchedulers.mainThread())
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(downloads -> updateUi(downloads), err -> {
-          CrashReports.logException(err);
-        });
-
-    installManager.getInstallationsAsList()
-        .sample(250, TimeUnit.MILLISECONDS)
-        .filter(downloads -> shouldUpdateList(downloads, oldDownloadsList))
-        .map(downloads -> oldDownloadsList = downloads)
-        .map(downloads -> sortDownloads(downloads))
-        .observeOn(AndroidSchedulers.mainThread())
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(downloads -> updateUi(downloads), err -> {
-          CrashReports.logException(err);
-        });
-  }
-
   @Override public int getContentViewId() {
     return R.layout.recycler_fragment_downloads;
   }
 
-  private List<Progress<Download>> sortDownloads(List<Progress<Download>> progressList) {
-    Collections.sort(progressList, (lhs, rhs) -> Long.valueOf(lhs.getRequest().getTimeStamp())
-        .compareTo(rhs.getRequest().getTimeStamp()) * -1);
-    return progressList;
+  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    // not calling super on purpose to avoid cleaning displayables
   }
 
-  private void updateUi(List<Progress<Download>> progressList) {
-    fillDisplayableList(progressList);
-    View v = getView();
-    if (v != null) {
-      if (progressList.size() == 0) {
-        getView().findViewById(R.id.no_apps_downloaded).setVisibility(View.VISIBLE);
-      } else {
-        getView().findViewById(R.id.no_apps_downloaded).setVisibility(View.GONE);
-      }
-    }
-    setDisplayables();
+  @Override public void onViewCreated() {
+    super.onViewCreated();
+
+    // TODO: 1/2/2017 optimize this listener splitting it in 3 listeners: one for each download state
+
+    DownloadRepository downloadRepo = RepositoryFactory.getDownloadRepository();
+    downloadRepo.getAll()
+        .observeOn(Schedulers.computation())
+        .sample(100, TimeUnit.MILLISECONDS)
+        .doOnNext(__ -> {
+          downloadingDisplayables.clear();
+          standingByDisplayables.clear();
+          completedDisplayables.clear();
+        })
+        .flatMap(data -> Observable.from(data)
+            .flatMap(
+                downloadProgress -> createDisplayableForDownload(downloadProgress).toObservable())
+            .toList())
+        // wait for all displayables are created
+        .observeOn(AndroidSchedulers.mainThread())
+        .flatMap(__ -> addListHeaders().andThen(updateUi()).doOnCompleted(() -> {
+          Logger.v(TAG, "updated list of download states");
+        }).toObservable())
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(__ -> {
+          // does nothing
+        }, err -> {
+          CrashReport.getInstance().log(err);
+        });
   }
 
-  private void fillDisplayableList(List<Progress<Download>> progressList) {
-    activeDisplayablesList.clear();
-    completedDisplayablesList.clear();
-    for (final Progress<Download> progress : progressList) {
-      if (isDownloading(progress)) {
-        activeDisplayablesList.add(new ActiveDownloadDisplayable(progress, installManager));
+  private Completable createDisplayableForDownload(Download download) {
+    return Completable.fromCallable(() -> {
+      if (isDownloading(download)) {
+        downloadingDisplayables.add(new ActiveDownloadDisplayable(download, installManager));
+      } else if (isStandingBy(download)) {
+        standingByDisplayables.add(
+            new CompletedDownloadDisplayable(download, installManager, downloadConverter, analytics,
+                installConverter));
       } else {
-        completedDisplayablesList.add(
-            new CompletedDownloadDisplayable(progress, installManager, downloadConverter, analytics,
+        // then it is complete
+        completedDisplayables.add(
+            new CompletedDownloadDisplayable(download, installManager, downloadConverter, analytics,
                 installConverter));
       }
-    }
-    Collections.reverse(activeDisplayablesList);
-    if (completedDisplayablesList.size() > 0) {
-      completedDisplayablesList.add(0, new StoreGridHeaderDisplayable(
-          new GetStoreWidgets.WSWidget().setTitle(
-              AptoideUtils.StringU.getResString(R.string.completed))));
-    }
-    if (activeDisplayablesList.size() > 0) {
-      activeDisplayablesList.add(0,
-          new ActiveDownloadsHeaderDisplayable(AptoideUtils.StringU.getResString(R.string.active),
-              installManager));
-    }
+      return null;
+    });
   }
 
-  private boolean isDownloading(Progress<Download> progress) {
-    return progress.getRequest().getOverallDownloadStatus() == Download.PROGRESS
-        || progress.getRequest().getOverallDownloadStatus() == Download.PENDING
-        || progress.getRequest().getOverallDownloadStatus() == Download.IN_QUEUE;
-  }
+  private Completable addListHeaders() {
+    return Completable.fromCallable(() -> {
 
-  /**
-   * this method checks if the downloads from the 2 lists are equivalents (same {@link
-   * Download#getMd5()} and {@link Download#getOverallDownloadStatus()}
-   *
-   * @param progresses list of the most recent downloads list
-   * @param oldDownloadsList list of the old downloads list
-   * @return true if the lists have different downloads or the download state has change, false
-   * otherwise
-   */
-  private Boolean shouldUpdateList(@NonNull List<Progress<Download>> progresses,
-      @NonNull List<Progress<Download>> oldDownloadsList) {
-    if (progresses.size() != oldDownloadsList.size()) {
-      return true;
-    }
-    for (int i = 0; i < oldDownloadsList.size(); i++) {
-      int oldIndex = getDownloadFromListById(progresses.get(i), oldDownloadsList);
-      int newIndex = getDownloadFromListById(oldDownloadsList.get(i), progresses);
-      if (oldIndex < 0
-          || newIndex < 0
-          || progresses.get(i).getRequest().getOverallDownloadStatus() != oldDownloadsList.get(
-          oldIndex).getRequest().getOverallDownloadStatus()) {
+      // add each list header displayable
 
-        return true;
+      if (!downloadingDisplayables.isEmpty()) {
+        downloadingDisplayables.add(0,
+            new ActiveDownloadsHeaderDisplayable(AptoideUtils.StringU.getResString(R.string.active),
+                installManager));
       }
-    }
-    return false;
-  }
 
-  private int getDownloadFromListById(Progress<Download> downloadProgress,
-      List<Progress<Download>> oldDownloadsList) {
-
-    for (int i = 0; i < oldDownloadsList.size(); i++) {
-      if (TextUtils.equals(oldDownloadsList.get(i).getRequest().getMd5(),
-          downloadProgress.getRequest().getMd5())) {
-        return i;
+      if (!standingByDisplayables.isEmpty()) {
+        standingByDisplayables.add(0, new StoreGridHeaderDisplayable(
+            new GetStoreWidgets.WSWidget().setTitle(
+                AptoideUtils.StringU.getResString(R.string.stand_by))));
       }
-    }
-    return -1;
+      if (!completedDisplayables.isEmpty()) {
+        completedDisplayables.add(0, new StoreGridHeaderDisplayable(
+            new GetStoreWidgets.WSWidget().setTitle(
+                AptoideUtils.StringU.getResString(R.string.completed))));
+      }
+      return null;
+    });
   }
 
-  public void setDisplayables() {
-    LinkedList<Displayable> displayables = new LinkedList<>();
-    displayables.addAll(activeDisplayablesList);
-    displayables.addAll(completedDisplayablesList);
-    setDisplayables(displayables);
+  private Completable updateUi() {
+    return Completable.fromCallable(() -> {
+      clearDisplayables().
+          addDisplayables(downloadingDisplayables, false).
+          addDisplayables(standingByDisplayables, false).
+          addDisplayables(completedDisplayables, true);
+      return null;
+    });
+  }
+
+  private boolean isDownloading(Download progress) {
+    return progress.getOverallDownloadStatus() == Download.PROGRESS;
+  }
+
+  private boolean isStandingBy(Download progress) {
+    return progress.getOverallDownloadStatus() == Download.ERROR
+        || progress.getOverallDownloadStatus() == Download.PENDING
+        || progress.getOverallDownloadStatus() == Download.PAUSED
+        || progress.getOverallDownloadStatus() == Download.IN_QUEUE;
+  }
+
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+
+    // variables initialization
+
+    downloadingDisplayables = new ArrayList<>();
+    standingByDisplayables = new ArrayList<>();
+    completedDisplayables = new ArrayList<>();
+
+    installManager = new InstallManager(AptoideDownloadManager.getInstance(),
+        new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK));
+
+    analytics = Analytics.getInstance();
+    installConverter = new InstallEventConverter();
+    downloadConverter = new DownloadEventConverter();
+
+    return super.onCreateView(inflater, container, savedInstanceState);
   }
 }

@@ -33,6 +33,10 @@ public final class RealmSchedulers {
     threadScheduler = AndroidSchedulers.from(handlerThread.getLooper());
   }
 
+  public static Scheduler getScheduler() {
+    return getInstance().threadScheduler;
+  }
+
   /**
    * Spin-Lock to create a single instance of {@link RealmSchedulers}
    */
@@ -47,10 +51,6 @@ public final class RealmSchedulers {
         return current;
       }
     }
-  }
-
-  public static Scheduler getScheduler() {
-    return getInstance().threadScheduler;
   }
 
   public static boolean isRealmSchedulerThread(Thread otherThread) {

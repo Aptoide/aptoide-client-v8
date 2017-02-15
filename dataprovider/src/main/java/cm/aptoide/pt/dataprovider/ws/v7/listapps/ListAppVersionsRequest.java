@@ -51,15 +51,14 @@ import rx.Observable;
   }
 
   public static ListAppVersionsRequest of(String packageName, List<String> storeNames,
-      String accessToken,
-      String aptoideClientUUID, HashMapNotNull<String, List<String>> storeCredentials) {
-    if(storeNames!= null && !storeNames.isEmpty()) {
+      String accessToken, String aptoideClientUUID,
+      HashMapNotNull<String, List<String>> storeCredentials) {
+    if (storeNames != null && !storeNames.isEmpty()) {
       BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
       Body body = new Body(packageName, storeNames, storeCredentials);
       body.setLimit(MAX_LIMIT);
       return new ListAppVersionsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
-    }
-    else{
+    } else {
       return of(packageName, accessToken, aptoideClientUUID, storeCredentials);
     }
   }
@@ -118,7 +117,7 @@ import rx.Observable;
     }
 
     public void setStoresAuthMap(HashMapNotNull<String, List<String>> storesAuthMap) {
-      if(storesAuthMap!=null) {
+      if (storesAuthMap != null) {
         this.storesAuthMap = storesAuthMap;
         this.storeNames = new LinkedList<>(storesAuthMap.keySet());
       }

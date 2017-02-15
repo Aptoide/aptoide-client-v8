@@ -14,7 +14,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.exceptions.DownloadNotFoundException;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.logger.Logger;
@@ -40,32 +40,6 @@ import rx.subscriptions.CompositeSubscription;
   private Notification notification;
   private Subscription stopMechanismSubscription;
 
-  private void pauseDownloads(Intent intent) {
-    String md5 = intent.getStringExtra(AptoideDownloadManager.FILE_MD5_EXTRA);
-    if (!TextUtils.isEmpty(md5)) {
-      downloadManager.pauseDownload(md5);
-    } else {
-      downloadManager.pauseAllDownloads();
-    }
-  }
-
-  private void startDownload(String md5) throws DownloadNotFoundException {
-    if (!TextUtils.isEmpty(md5)) {
-      subscriptions.add(downloadManager.getDownload(md5).first().subscribe(download -> {
-        downloadManager.startDownload(download)
-            .first()
-            .subscribe(downloadFromRealm -> Logger.d(TAG,
-                "startDownload called with: md5 = [" + md5 + "]"), err -> {
-              CrashReports.logException(err);
-            });
-        setupNotifications();
-      }));
-      return;
-    }
-
-    throw new DownloadNotFoundException("Unable to start a download without an md5");
-  }
-
   @Override public void onCreate() {
     super.onCreate();
     Logger.d(TAG, "Download service is starting");
@@ -84,8 +58,7 @@ import rx.subscriptions.CompositeSubscription;
             try {
               startDownload(md5);
             } catch (DownloadNotFoundException e) {
-              Logger.e(TAG, e);
-              CrashReports.logException(e);
+              CrashReport.getInstance().log(e);
             }
             break;
           case AptoideDownloadManager.DOWNLOADMANAGER_ACTION_PAUSE:
@@ -98,38 +71,39 @@ import rx.subscriptions.CompositeSubscription;
           try {
             startDownload(download.getMd5());
           } catch (DownloadNotFoundException e) {
-            Logger.e(TAG, e);
-            CrashReports.logException(e);
+            CrashReport.getInstance().log(e);
           }
         }
       }, err -> {
-        CrashReports.logException(err);
+        CrashReport.getInstance().log(err);
       });
     }
     return START_STICKY;
   }
 
-  @Override public void onDestroy() {
-    subscriptions.unsubscribe();
-    super.onDestroy();
+  private void startDownload(String md5) throws DownloadNotFoundException {
+    if (!TextUtils.isEmpty(md5)) {
+      subscriptions.add(downloadManager.getDownload(md5).first().subscribe(download -> {
+        downloadManager.startDownload(download)
+            .first()
+            .subscribe(downloadFromRealm -> Logger.d(TAG,
+                "startDownload called with: md5 = [" + md5 + "]"), e -> {
+              CrashReport.getInstance().log(e);
+            });
+        setupNotifications();
+      }));
+      return;
+    }
+
+    throw new DownloadNotFoundException("Unable to start a download without an md5");
   }
 
-  @Nullable @Override public IBinder onBind(Intent intent) {
-    return null;
-  }
-
-  private void setupStopSelfMechanism() {
-    if (stopMechanismSubscription == null || stopMechanismSubscription.isUnsubscribed()) {
-      stopMechanismSubscription = downloadManager.getCurrentDownloads()
-          .observeOn(Schedulers.computation())
-          .filter(downloads -> downloads == null || downloads.size() <= 0)
-          .subscribe(downloads -> {
-            Logger.d(TAG, "Download service is stopping");
-            stopSelf();
-          }, err -> {
-            CrashReports.logException(err);
-          });
-      subscriptions.add(stopMechanismSubscription);
+  private void pauseDownloads(Intent intent) {
+    String md5 = intent.getStringExtra(AptoideDownloadManager.FILE_MD5_EXTRA);
+    if (!TextUtils.isEmpty(md5)) {
+      downloadManager.pauseDownload(md5);
+    } else {
+      downloadManager.pauseAllDownloads();
     }
   }
 
@@ -179,11 +153,26 @@ import rx.subscriptions.CompositeSubscription;
 
       notificationUpdateSubscription =
           downloadManager.getCurrentDownload().distinctUntilChanged().subscribe(download -> {
-          }, err -> {
-            CrashReports.logException(err);
+          }, e -> {
+            CrashReport.getInstance().log(e);
           });
       subscriptions.add(notificationUpdateSubscription);
     }
+  }
+
+  private Intent createNotificationIntent(String intentAction, @Nullable Bundle bundle) {
+    Intent intent =
+        new Intent(AptoideDownloadManager.getContext(), NotificationEventReceiver.class);
+    intent.setAction(intentAction);
+    if (bundle != null) {
+      intent.putExtras(bundle);
+    }
+    return intent;
+  }
+
+  private PendingIntent getPendingIntent(Intent intent, Download download) {
+    return PendingIntent.getBroadcast(AptoideDownloadManager.getContext(),
+        download.getFilesToDownload().get(0).getDownloadId(), intent, 0);
   }
 
   private NotificationCompat.Builder buildStandardNotification(Download download,
@@ -207,18 +196,27 @@ import rx.subscriptions.CompositeSubscription;
     return builder;
   }
 
-  private PendingIntent getPendingIntent(Intent intent, Download download) {
-    return PendingIntent.getBroadcast(AptoideDownloadManager.getContext(),
-        download.getFilesToDownload().get(0).getDownloadId(), intent, 0);
+  private void setupStopSelfMechanism() {
+    if (stopMechanismSubscription == null || stopMechanismSubscription.isUnsubscribed()) {
+      stopMechanismSubscription = downloadManager.getCurrentDownloads()
+          .observeOn(Schedulers.computation())
+          .filter(downloads -> downloads == null || downloads.size() <= 0)
+          .subscribe(downloads -> {
+            Logger.d(TAG, "Download service is stopping");
+            stopSelf();
+          }, err -> {
+            CrashReport.getInstance().log(err);
+          });
+      subscriptions.add(stopMechanismSubscription);
+    }
   }
 
-  private Intent createNotificationIntent(String intentAction, @Nullable Bundle bundle) {
-    Intent intent =
-        new Intent(AptoideDownloadManager.getContext(), NotificationEventReceiver.class);
-    intent.setAction(intentAction);
-    if (bundle != null) {
-      intent.putExtras(bundle);
-    }
-    return intent;
+  @Override public void onDestroy() {
+    subscriptions.unsubscribe();
+    super.onDestroy();
+  }
+
+  @Nullable @Override public IBinder onBind(Intent intent) {
+    return null;
   }
 }

@@ -28,13 +28,13 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
     writeCommentView = itemView.findViewById(R.id.write_comment);
   }
 
+  @Override public void unbindView() {
+
+  }
+
   @Override public void bindView(AppViewCommentsDisplayable displayable) {
     // TODO
 
     writeCommentView.setOnClickListener(v -> ShowMessage.asSnack(v, "TO DO"));
-  }
-
-  @Override public void unbindView() {
-
   }
 }

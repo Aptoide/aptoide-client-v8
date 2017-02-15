@@ -18,7 +18,10 @@ import rx.Observable;
  */
 public class SetReviewRatingRequest extends V7<BaseV7Response, SetReviewRatingRequest.Body> {
 
-  private static final String BASE_HOST = BuildConfig.APTOIDE_WEB_SERVICES_SCHEME + "://" + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST + "/api/7/";
+  private static final String BASE_HOST = BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
+      + "://"
+      + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
+      + "/api/7/";
 
   protected SetReviewRatingRequest(Body body, String baseHost) {
     super(body, baseHost);

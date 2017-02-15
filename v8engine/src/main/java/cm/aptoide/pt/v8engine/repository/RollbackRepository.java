@@ -1,22 +1,14 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
- */
-
 package cm.aptoide.pt.v8engine.repository;
 
 import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.realm.Rollback;
 import rx.Observable;
 
-/**
- * Created by sithengineer on 30/08/16.
- */
-public class RollbackRepository implements Repository {
+public class RollbackRepository implements Repository<Rollback, String> {
 
   private final RollbackAccessor accessor;
 
-  public RollbackRepository(RollbackAccessor accessor) {
+  RollbackRepository(RollbackAccessor accessor) {
     this.accessor = accessor;
   }
 
@@ -112,10 +104,6 @@ public class RollbackRepository implements Repository {
     });
   }
 
-  public Observable<Rollback> getRollback(String packageName) {
-    return accessor.get(packageName);
-  }
-
   */
 
   public Observable<Rollback> getNotConfirmedRollback(String packageName) {
@@ -129,5 +117,9 @@ public class RollbackRepository implements Repository {
 
   public void save(Rollback rollback) {
     accessor.save(rollback);
+  }
+
+  @Override public Observable<Rollback> get(String packageName) {
+    return accessor.get(packageName);
   }
 }

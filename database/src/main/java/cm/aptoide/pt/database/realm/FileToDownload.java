@@ -7,13 +7,14 @@ import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 /**
  * Created by trinkes on 5/16/16.
  */
 
-public class FileToDownload extends RealmObject {
+public @EqualsAndHashCode class FileToDownload extends RealmObject {
 
   public static final int APK = 0;
   public static final int OBB = 1;
@@ -71,17 +72,6 @@ public class FileToDownload extends RealmObject {
     this.status = status;
   }
 
-  public String getFileName() {
-    if (TextUtils.isEmpty(fileName)) {
-      return TextUtils.isEmpty(getMd5()) ? IdUtils.randomString() : getMd5();
-    }
-    return fileName;
-  }
-
-  public void setFileName(String fileName) {
-    this.fileName = fileName;
-  }
-
   public String getLink() {
     return link;
   }
@@ -96,14 +86,6 @@ public class FileToDownload extends RealmObject {
 
   public void setPackageName(String packageName) {
     this.packageName = packageName;
-  }
-
-  public String getPath() {
-    return path;
-  }
-
-  public void setPath(String path) {
-    this.path = path;
   }
 
   public int getDownloadId() {
@@ -130,6 +112,25 @@ public class FileToDownload extends RealmObject {
     this.progress = progress;
   }
 
+  public String getFilePath() {
+    return getPath() + getFileName();
+  }
+
+  public String getPath() {
+    return path;
+  }
+
+  public String getFileName() {
+    if (TextUtils.isEmpty(fileName)) {
+      return TextUtils.isEmpty(getMd5()) ? IdUtils.randomString() : getMd5();
+    }
+    return fileName;
+  }
+
+  public void setFileName(String fileName) {
+    this.fileName = fileName;
+  }
+
   public String getMd5() {
     return md5;
   }
@@ -138,8 +139,8 @@ public class FileToDownload extends RealmObject {
     this.md5 = md5;
   }
 
-  public String getFilePath() {
-    return getPath() + getFileName();
+  public void setPath(String path) {
+    this.path = path;
   }
 
   //@Override protected FileToDownload clone() {

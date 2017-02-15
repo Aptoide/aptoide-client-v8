@@ -4,13 +4,13 @@
   ~ Modified by Neurophobic Animal on 28/06/2016.
   -->
 
-<RelativeLayout style="?attr/backgroundCard"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:clickable="true"
     tools:layout_height="144dp"
+    style="?attr/backgroundCard"
     >
 
   <ImageView
@@ -41,7 +41,6 @@
 
       <TextView
           android:id="@+id/name"
-          style="?android:attr/textAppearanceMedium"
           android:layout_width="match_parent"
           android:layout_height="30dp"
           android:layout_toLeftOf="@id/ic_trusted_search"
@@ -51,6 +50,7 @@
           android:maxLines="1"
           android:textStyle="bold"
           tools:text="Aptoide"
+          style="?android:attr/textAppearanceMedium"
           />
     </RelativeLayout>
 
@@ -58,9 +58,9 @@
         android:id="@+id/app_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="4dp"
         android:layout_marginBottom="18.3dp"
+        android:layout_marginTop="4dp"
+        android:orientation="horizontal"
         >
 
       <TextView
@@ -68,16 +68,16 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_gravity="center"
+          android:background="@drawable/custom_sponsored_label"
           android:drawablePadding="2dp"
           android:maxLines="1"
-          android:paddingTop="3dp"
           android:paddingBottom="3dp"
-          android:paddingRight="12dp"
           android:paddingEnd="12dp"
           android:paddingLeft="12dp"
+          android:paddingRight="12dp"
           android:paddingStart="12dp"
+          android:paddingTop="3dp"
           android:textColor="@color/white"
-          android:background="@drawable/custom_sponsored_label"
           android:textSize="@dimen/text_size_small"
           tools:text="@string/sponsored"
           />

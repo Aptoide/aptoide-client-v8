@@ -10,6 +10,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -17,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.iab.ErrorCodeFactory;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.payment.AptoidePay;
 import cm.aptoide.pt.v8engine.payment.Payer;
@@ -33,6 +36,7 @@ import com.jakewharton.rxrelay.PublishRelay;
 import java.util.List;
 import java.util.Locale;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
 public class PaymentActivity extends ActivityView implements PaymentView {
@@ -61,6 +65,8 @@ public class PaymentActivity extends ActivityView implements PaymentView {
   private PublishRelay<PaymentViewModel> registerPaymentClick;
   private CompositeSubscription paymentClicks;
   private PurchaseIntentFactory intentFactory;
+  private AlertDialog networkErrorDialog;
+  private AlertDialog unknownErrorDialog;
 
   public static Intent getIntent(Context context, AptoideProduct product) {
     final Intent intent = new Intent(context, PaymentActivity.class);
@@ -81,8 +87,7 @@ public class PaymentActivity extends ActivityView implements PaymentView {
     header = findViewById(R.id.activity_payment_header);
     productIcon = (ImageView) findViewById(R.id.activity_payment_product_icon);
     productName = (TextView) findViewById(R.id.activity_payment_product_name);
-    productDescription =
-        (TextView) findViewById(R.id.activity_payment_product_description);
+    productDescription = (TextView) findViewById(R.id.activity_payment_product_description);
 
     body = findViewById(R.id.activity_payment_body);
     selectedPaymentName = (TextView) findViewById(R.id.activity_selected_payment_name);
@@ -99,14 +104,24 @@ public class PaymentActivity extends ActivityView implements PaymentView {
     registerPaymentClick = PublishRelay.create();
     intentFactory = new PurchaseIntentFactory(new ErrorCodeFactory());
     paymentClicks = new CompositeSubscription();
+    final ContextThemeWrapper dialogTheme =
+        new ContextThemeWrapper(this, R.style.AptoideThemeDefault);
+    networkErrorDialog = new AlertDialog.Builder(dialogTheme).setMessage(R.string.connection_error)
+        .setPositiveButton(android.R.string.ok, null)
+        .create();
+    unknownErrorDialog =
+        new AlertDialog.Builder(dialogTheme).setMessage(R.string.having_some_trouble)
+            .setPositiveButton(android.R.string.ok, null)
+            .create();
 
     final AptoideProduct product = getIntent().getParcelableExtra(PRODUCT_EXTRA);
     final ProductRepository productRepository =
         RepositoryFactory.getProductRepository(this, product);
+    final Payer payer = new Payer(this);
     attachPresenter(new PaymentPresenter(this,
             new AptoidePay(RepositoryFactory.getPaymentConfirmationRepository(this, product),
                 RepositoryFactory.getPaymentAuthorizationRepository(this), productRepository,
-                new PaymentAuthorizationFactory(this)), product, new Payer(this), productRepository),
+                new PaymentAuthorizationFactory(this), payer), product, payer, productRepository),
         savedInstanceState);
   }
 
@@ -115,35 +130,41 @@ public class PaymentActivity extends ActivityView implements PaymentView {
     paymentClicks.clear();
   }
 
-  @Override public void dismiss(Purchase purchase) {
-    finish(RESULT_OK, intentFactory.create(purchase));
-  }
-
-  @Override public void dismiss(Throwable throwable) {
-    finish(RESULT_CANCELED, intentFactory.create(throwable));
-  }
-
-  @Override public void dismiss() {
-    finish(RESULT_CANCELED, intentFactory.createFromCancellation());
-  }
-
-  @Override public void showProduct(AptoideProduct product) {
-    ImageLoader.load(product.getIcon(), productIcon);
-    productName.setText(product.getTitle());
-    productDescription.setText(product.getDescription());
+  @Override public Observable<PaymentViewModel> usePaymentSelection() {
+    return usePaymentClick;
   }
 
   @Override public Observable<Void> cancellationSelection() {
-    return Observable.merge(RxView.clicks(cancelButton), RxView.clicks(overlay));
+    return Observable.merge(RxView.clicks(cancelButton), RxView.clicks(overlay))
+        .subscribeOn(AndroidSchedulers.mainThread())
+        .unsubscribeOn(AndroidSchedulers.mainThread());
+  }
+
+  @Override public Observable<Void> buySelection() {
+    return RxView.clicks(buyButton)
+        .subscribeOn(AndroidSchedulers.mainThread())
+        .unsubscribeOn(AndroidSchedulers.mainThread());
   }
 
   @Override public Observable<Void> otherPaymentsSelection() {
-    return RxView.clicks(morePaymentsButton);
+    return RxView.clicks(morePaymentsButton)
+        .subscribeOn(AndroidSchedulers.mainThread())
+        .unsubscribeOn(AndroidSchedulers.mainThread());
   }
 
-  @Override public void hideOtherPayments() {
-    morePaymentsButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.arrow_down, 0);
-    morePaymentsContainer.setVisibility(View.GONE);
+  @Override public Observable<PaymentViewModel> registerPaymentSelection() {
+    return registerPaymentClick;
+  }
+
+  @Override public void showGlobalLoading() {
+    header.setVisibility(View.GONE);
+    body.setVisibility(View.GONE);
+    actionButtons.setVisibility(View.GONE);
+    globalProgressView.setVisibility(View.VISIBLE);
+  }
+
+  @Override public void showPaymentsLoading() {
+    paymentsProgressView.setVisibility(View.VISIBLE);
   }
 
   @Override public void showOtherPayments(List<PaymentViewModel> otherPayments) {
@@ -158,6 +179,9 @@ public class PaymentActivity extends ActivityView implements PaymentView {
     } else {
       morePaymentsContainer.setVisibility(View.VISIBLE);
       morePaymentsButton.setVisibility(View.VISIBLE);
+      int height = otherPayments.size() * AptoideUtils.ScreenU.getPixels(72);
+      int maxHeight = AptoideUtils.ScreenU.getPixels(144);
+      morePaymentsContainer.getLayoutParams().height = Math.min(height, maxHeight);
     }
 
     View view;
@@ -179,6 +203,8 @@ public class PaymentActivity extends ActivityView implements PaymentView {
       switch (otherPayment.getStatus()) {
         case USE:
           paymentClicks.add(RxView.clicks(useButton)
+              .subscribeOn(AndroidSchedulers.mainThread())
+              .unsubscribeOn(AndroidSchedulers.mainThread())
               .doOnNext(click -> usePaymentClick.call(otherPayment))
               .subscribe());
           useButton.setVisibility(View.VISIBLE);
@@ -187,6 +213,8 @@ public class PaymentActivity extends ActivityView implements PaymentView {
           break;
         case REGISTER:
           paymentClicks.add(RxView.clicks(registerButton)
+              .subscribeOn(AndroidSchedulers.mainThread())
+              .unsubscribeOn(AndroidSchedulers.mainThread())
               .doOnNext(click -> registerPaymentClick.call(otherPayment))
               .subscribe());
           registerButton.setVisibility(View.VISIBLE);
@@ -205,34 +233,22 @@ public class PaymentActivity extends ActivityView implements PaymentView {
     }
   }
 
+  @Override public void hideOtherPayments() {
+    morePaymentsButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.arrow_down, 0);
+    morePaymentsContainer.setVisibility(View.GONE);
+  }
+
+  @Override public void showProduct(AptoideProduct product) {
+    ImageLoader.load(product.getIcon(), productIcon);
+    productName.setText(product.getTitle());
+    productDescription.setText(product.getDescription());
+  }
+
   @Override public void showSelectedPayment(PaymentViewModel selectedPayment) {
     selectedPaymentName.setText(selectedPayment.getName());
     selectedPaymentPrice.setText(
         String.format(Locale.getDefault(), "%.2f %s", selectedPayment.getPrice(),
             selectedPayment.getCurrency()));
-  }
-
-  @Override public Observable<Void> buySelection() {
-    return RxView.clicks(buyButton);
-  }
-
-  @Override public void showPaymentsNotFoundMessage() {
-    noPaymentsText.setVisibility(View.VISIBLE);
-  }
-
-  @Override public void showPaymentsLoading() {
-    paymentsProgressView.setVisibility(View.VISIBLE);
-  }
-
-  @Override public void hidePaymentsLoading() {
-    paymentsProgressView.setVisibility(View.GONE);
-  }
-
-  @Override public void showGlobalLoading() {
-    header.setVisibility(View.GONE);
-    body.setVisibility(View.GONE);
-    actionButtons.setVisibility(View.GONE);
-    globalProgressView.setVisibility(View.VISIBLE);
   }
 
   @Override public void hideGlobalLoading() {
@@ -242,12 +258,45 @@ public class PaymentActivity extends ActivityView implements PaymentView {
     globalProgressView.setVisibility(View.GONE);
   }
 
-  @Override public Observable<PaymentViewModel> usePaymentSelection() {
-    return usePaymentClick;
+  @Override public void hidePaymentsLoading() {
+    paymentsProgressView.setVisibility(View.GONE);
   }
 
-  @Override public Observable<PaymentViewModel> registerPaymentSelection() {
-    return registerPaymentClick;
+  @Override public void dismiss(Purchase purchase) {
+    finish(RESULT_OK, intentFactory.create(purchase));
+  }
+
+  @Override public void dismiss(Throwable throwable) {
+    finish(RESULT_CANCELED, intentFactory.create(throwable));
+  }
+
+  @Override public void dismiss() {
+    finish(RESULT_CANCELED, intentFactory.createFromCancellation());
+  }
+
+  @Override public void navigateToAuthorizationView(int paymentId, AptoideProduct product) {
+    startActivity(WebAuthorizationActivity.getIntent(this, paymentId, product));
+  }
+
+  @Override public void showPaymentsNotFoundMessage() {
+    noPaymentsText.setVisibility(View.VISIBLE);
+  }
+
+  @Override public void showNetworkError() {
+    if (!networkErrorDialog.isShowing() && !unknownErrorDialog.isShowing()) {
+      networkErrorDialog.show();
+    }
+  }
+
+  @Override public void showUnknownError() {
+    if (!networkErrorDialog.isShowing() && !unknownErrorDialog.isShowing()) {
+      unknownErrorDialog.show();
+    }
+  }
+
+  @Override public void hideAllErrors() {
+    networkErrorDialog.dismiss();
+    unknownErrorDialog.dismiss();
   }
 
   private void finish(int code, Intent intent) {

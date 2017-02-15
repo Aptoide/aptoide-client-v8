@@ -28,7 +28,7 @@ public class SwipeLoaderLayoutHandler extends LoaderLayoutHandler {
     swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
     swipeContainer.setColorSchemeResources(R.color.default_progress_bar_color,
         R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
-    swipeContainer.setOnRefreshListener(()->((ReloadInterface) loadInterface).reload());
+    swipeContainer.setOnRefreshListener(() -> ((ReloadInterface) loadInterface).reload());
   }
 
   @Override public void onFinishLoading(Throwable throwable) {
@@ -37,14 +37,14 @@ public class SwipeLoaderLayoutHandler extends LoaderLayoutHandler {
     swipeContainer.setEnabled(false);
   }
 
-  @Override protected void onFinishLoading() {
-    super.onFinishLoading();
-    swipeContainer.setRefreshing(false);
+  @Override public void restoreState() {
+    super.restoreState();
     swipeContainer.setEnabled(true);
   }
 
-  @Override public void restoreState() {
-    super.restoreState();
+  @Override protected void onFinishLoading() {
+    super.onFinishLoading();
+    swipeContainer.setRefreshing(false);
     swipeContainer.setEnabled(true);
   }
 

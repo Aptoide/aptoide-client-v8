@@ -9,10 +9,6 @@ import java.util.Set;
 
 public interface Table {
 
-  enum ColumnType {
-    NULL, INTEGER, REAL, TEXT, BLOB
-  }
-
   /**
    * @return Table name
    */
@@ -23,4 +19,8 @@ public interface Table {
    * {@link ColumnType})
    */
   Set<Pair<ColumnDefinition, ColumnType>> getFields();
+
+  enum ColumnType {
+    NULL, INTEGER, REAL, TEXT, BLOB
+  }
 }

@@ -42,6 +42,11 @@ public class FeatureWidget extends Widget<FeatureDisplayable> {
     cardView = (CardView) itemView.findViewById(R.id.card);
   }
 
+  @Override public void unbindView() {
+    url.setOnClickListener(null);
+    getAppButton.setOnClickListener(null);
+  }
+
   @Override public void bindView(FeatureDisplayable displayable) {
     title.setText(displayable.getTitle(getContext()));
     subtitle.setText(displayable.getTimeSinceLastUpdate(getContext()));
@@ -66,10 +71,5 @@ public class FeatureWidget extends Widget<FeatureDisplayable> {
         displayable.getMarginWidth(getContext(),
             getContext().getResources().getConfiguration().orientation), 30);
     cardView.setLayoutParams(layoutParams);
-  }
-
-  @Override public void unbindView() {
-    url.setOnClickListener(null);
-    getAppButton.setOnClickListener(null);
   }
 }

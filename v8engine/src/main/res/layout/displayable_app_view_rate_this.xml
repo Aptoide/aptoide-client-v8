@@ -5,11 +5,11 @@
   -->
 
 <LinearLayout
-    style="@style/AppViewWidget"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    style="@style/AppViewWidget"
     >
 
   <include layout="@layout/separator_horizontal"/>
@@ -26,7 +26,6 @@
       >
 
     <TextView
-        style="?android:attr/textAppearanceSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:maxWidth="120dp"
@@ -34,11 +33,11 @@
         android:text="@string/appview_rate_this_app_text"
         android:textColor="?android:attr/textColorSecondary"
         android:textStyle="bold"
+        style="?android:attr/textAppearanceSmall"
         />
 
     <RatingBar
         android:id="@+id/ratingbar_appview"
-        style="@style/RatingBarLargeSelectable"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:isIndicator="false"
@@ -46,6 +45,7 @@
         android:progressTint="@color/yellow"
         android:secondaryProgressTint="@color/yellow"
         android:stepSize="1"
+        style="@style/RatingBarLargeSelectable"
         />
 
   </LinearLayout>
@@ -55,8 +55,8 @@
   <include layout="@layout/appview_flags_layout"/>
 
   <include
-      android:id="@+id/manual_reviewed_message_layout"
       layout="@layout/app_manual_reviewed_message_layout"
+      android:id="@+id/manual_reviewed_message_layout"
       />
 
   <include

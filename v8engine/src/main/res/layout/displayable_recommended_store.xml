@@ -21,17 +21,17 @@
       />
 
 
-    <ImageView
-        android:id="@+id/store_avatar_row"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:layout_marginLeft="2dp"
-        android:layout_marginStart="2dp"
-        android:layout_marginTop="2dp"
-        android:contentDescription="@null"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_avatar_apps"
-        />
+  <ImageView
+      android:id="@+id/store_avatar_row"
+      android:layout_width="64dp"
+      android:layout_height="64dp"
+      android:layout_marginLeft="2dp"
+      android:layout_marginStart="2dp"
+      android:layout_marginTop="2dp"
+      android:contentDescription="@null"
+      android:scaleType="fitCenter"
+      android:src="@drawable/ic_avatar_apps"
+      />
 
   <LinearLayout
       android:id="@+id/recommended_store_info"
@@ -40,10 +40,10 @@
       android:layout_centerVertical="true"
       android:layout_marginLeft="9dp"
       android:layout_marginStart="9dp"
-      android:layout_toLeftOf="@id/recommended_store_action"
-      android:layout_toStartOf="@id/recommended_store_action"
-      android:layout_toRightOf="@+id/store_avatar_row"
       android:layout_toEndOf="@id/store_avatar_row"
+      android:layout_toLeftOf="@id/recommended_store_action"
+      android:layout_toRightOf="@+id/store_avatar_row"
+      android:layout_toStartOf="@id/recommended_store_action"
       android:orientation="vertical"
       >
 

@@ -68,9 +68,10 @@ public class MyAccountActivity extends BaseActivity {
     return R.layout.my_account_activity;
   }
 
-  @Override protected void onResume() {
-    super.onResume();
-    Logger.d(TAG, "onResume: ");
+  private void bindViews() {
+    mToolbar = (Toolbar) findViewById(R.id.toolbar_login);
+    mLogout = (Button) findViewById(R.id.button_logout);
+    mUsernameTextview = (TextView) findViewById(R.id.username);
   }
 
   private void setupToolbar() {
@@ -83,9 +84,8 @@ public class MyAccountActivity extends BaseActivity {
     }
   }
 
-  private void bindViews() {
-    mToolbar = (Toolbar) findViewById(R.id.toolbar_login);
-    mLogout = (Button) findViewById(R.id.button_logout);
-    mUsernameTextview = (TextView) findViewById(R.id.username);
+  @Override protected void onResume() {
+    super.onResume();
+    Logger.d(TAG, "onResume: ");
   }
 }

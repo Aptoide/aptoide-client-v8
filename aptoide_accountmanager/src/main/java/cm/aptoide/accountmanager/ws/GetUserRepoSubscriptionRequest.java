@@ -7,8 +7,6 @@ package cm.aptoide.accountmanager.ws;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.GetUserRepoSubscription;
-import cm.aptoide.pt.networkclient.WebService;
-import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -19,10 +17,10 @@ import rx.Observable;
  */
 public class GetUserRepoSubscriptionRequest extends v3accountManager<GetUserRepoSubscription> {
 
-  GetUserRepoSubscriptionRequest() { }
+  GetUserRepoSubscriptionRequest() {
+  }
 
-  GetUserRepoSubscriptionRequest(OkHttpClient httpClient,
-      Converter.Factory converterFactory) {
+  GetUserRepoSubscriptionRequest(OkHttpClient httpClient, Converter.Factory converterFactory) {
     super(httpClient, converterFactory);
   }
 

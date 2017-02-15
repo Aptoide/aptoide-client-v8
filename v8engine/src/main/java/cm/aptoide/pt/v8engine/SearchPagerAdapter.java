@@ -19,17 +19,17 @@ public class SearchPagerAdapter extends FragmentStatePagerAdapter {
   private final boolean hasEverywhereResults;
   private String storeName;
 
+  public SearchPagerAdapter(FragmentManager fm, String query, String storeName) {
+    this(fm, query, false, false);
+    this.storeName = storeName;
+  }
+
   public SearchPagerAdapter(FragmentManager fm, String query, boolean hasSubscribedResults,
       boolean hasEverywhereResults) {
     super(fm);
     this.query = query;
     this.hasSubscribedResults = hasSubscribedResults;
     this.hasEverywhereResults = hasEverywhereResults;
-  }
-
-  public SearchPagerAdapter(FragmentManager fm, String query, String storeName) {
-    this(fm, query, false, false);
-    this.storeName = storeName;
   }
 
   @Override public Fragment getItem(int position) {

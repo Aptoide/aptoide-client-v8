@@ -5,14 +5,14 @@ import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
-import cm.aptoide.pt.model.v7.BaseV7Response;
+import cm.aptoide.pt.model.v7.SetComment;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import rx.Observable;
 
-public class PostCommentForStore extends V7<BaseV7Response, PostCommentForStore.Body> {
+public class PostCommentForStore extends V7<SetComment, PostCommentForStore.Body> {
 
   //private static final String BASE_HOST = "http://ws75-primary.aptoide.com/api/7/";
   private static final String BASE_HOST = BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
@@ -38,8 +38,8 @@ public class PostCommentForStore extends V7<BaseV7Response, PostCommentForStore.
     return new PostCommentForStore((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
-  @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
-      boolean bypassCache) {
+  @Override
+  protected Observable<SetComment> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
     return interfaces.postStoreComment(body, true);
   }
 
@@ -51,14 +51,14 @@ public class PostCommentForStore extends V7<BaseV7Response, PostCommentForStore.
     private String body;
     private String commentType = CommentType.STORE.name();
 
-    public Body(long storeId, String text) {
-      this.storeId = storeId;
-      this.body = text;
-    }
-
     public Body(long storeId, String text, long previousCommentId) {
       this(storeId, text);
       this.previousCommentId = previousCommentId;
+    }
+
+    public Body(long storeId, String text) {
+      this.storeId = storeId;
+      this.body = text;
     }
   }
 }

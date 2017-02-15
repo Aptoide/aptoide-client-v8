@@ -34,6 +34,10 @@ public class GridAdWidget extends Widget<GridAdDisplayable> {
     icon = (ImageView) itemView.findViewById(R.id.icon);
   }
 
+  @Override public void unbindView() {
+
+  }
+
   @Override public void bindView(GridAdDisplayable displayable) {
 
     MinimalAd pojo = displayable.getPojo();
@@ -46,9 +50,5 @@ public class GridAdWidget extends Widget<GridAdDisplayable> {
       ((FragmentShower) v.getContext()).pushFragmentV4(
           V8Engine.getFragmentProvider().newAppViewFragment(pojo));
     });
-  }
-
-  @Override public void unbindView() {
-
   }
 }

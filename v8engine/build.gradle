@@ -36,12 +36,21 @@ android {
 
   productFlavors {
     internal {
-      buildConfigField "String", "PAYPAL_ENVIRONMENT", "\"" + project.PAYPAL_ENVIRONMENT_SANDBOX + "\""
+      buildConfigField "String", "PAYPAL_ENVIRONMENT",
+          "\"" + project.PAYPAL_ENVIRONMENT_SANDBOX + "\""
       buildConfigField "String", "PAYPAL_KEY", "\"" + project.PAYPAL_SANDBOX_KEY + "\""
+      buildConfigField "String", "APTOIDE_WEBSOCKETS_SCHEME",
+          "\"" + project.APTOIDE_WEBSOCKETS_SCHEME + "\""
+      buildConfigField "String", "APTOIDE_WEBSOCKETS_HOST",
+          "\"" + project.APTOIDE_WEBSOCKETS_HOST + "\""
     }
     prod {
       buildConfigField "String", "PAYPAL_ENVIRONMENT", "\"" + project.PAYPAL_ENVIRONMENT_LIVE + "\""
       buildConfigField "String", "PAYPAL_KEY", "\"" + project.PAYPAL_PRODUCTION_KEY + "\""
+      buildConfigField "String", "APTOIDE_WEBSOCKETS_SCHEME",
+          "\"" + project.APTOIDE_WEBSOCKETS_SCHEME + "\""
+      buildConfigField "String", "APTOIDE_WEBSOCKETS_HOST",
+          "\"" + project.APTOIDE_WEBSOCKETS_HOST + "\""
     }
   }
 
@@ -69,7 +78,6 @@ android {
       res.srcDirs = ['src/main/res', 'src/main/res/deprecated']
     }
   }
-
 }
 
 dependencies {
@@ -107,19 +115,19 @@ dependencies {
   testCompile "org.robolectric:robolectric:${ROBOELECTRIC_VERSION}"
   testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
   // Force usage of support annotations in the test app, since it is internally used by the runner module.
-  androidTestCompile ("com.android.support.test:runner:${RUNNER_VERSION}"){
-    exclude group:"com.android.support", module:"support-annotations"
+  androidTestCompile("com.android.support.test:runner:${RUNNER_VERSION}") {
+    exclude group: "com.android.support", module: "support-annotations"
   }
   androidTestCompile "com.android.support.test:rules:${RULES_VERSION}"
-  androidTestCompile ("com.android.support:multidex-instrumentation:${MULTIDEX_VERSION}"){
-    exclude group:"com.android.support", module:"support-annotations"
+  androidTestCompile("com.android.support:multidex-instrumentation:${MULTIDEX_VERSION}") {
+    exclude group: "com.android.support", module: "support-annotations"
   }
   androidTestCompile "com.android.support:support-annotations:${SUPPORT_ANNOTATIONS_LIB_VERSION}"
 
   compile "com.android.support:support-annotations:${SUPPORT_ANNOTATIONS_LIB_VERSION}"
   //noinspection GradleDependency
-  compile ("com.android.support:support-v4:${SUPPORT_LIB_VERSION}"){
-    exclude group:"com.android.support", module:"support-annotations"
+  compile("com.android.support:support-v4:${SUPPORT_LIB_VERSION}") {
+    exclude group: "com.android.support", module: "support-annotations"
   }
 
   //noinspection GradleDependency
@@ -164,9 +172,8 @@ dependencies {
   //Only used by localytics
   compile "com.google.android.gms:play-services-ads:${PLAY_SERVICES_VERSION}"
   compile "com.google.android.gms:play-services-gcm:${PLAY_SERVICES_VERSION}"
-  compile 'com.github.jd-alexander:LikeButton:0.2.0'
 
-    // Flurry Android sdk
+  // Flurry Android sdk
   compile "com.flurry.android:analytics:${FLURRY_VERSION}"
 
   // Remote install
@@ -181,4 +188,8 @@ dependencies {
   compile("com.crashlytics.sdk.android:crashlytics:${CRASHLYTICS_VERSION}@aar") {
     transitive = true;
   }
+
+  // Parceler - https://github.com/johncarl81/parceler
+  //compile 'org.parceler:parceler-api:1.1.6'
+  //annotationProcessor 'org.parceler:parceler:1.1.6'
 }

@@ -5,8 +5,8 @@
   -->
 
 <android.support.v7.widget.RecyclerView
-    android:id="@+id/themes_list"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/themes_list"
     android:layout_width="match_parent"
     android:layout_height="41dp"
     android:paddingEnd="0dp"

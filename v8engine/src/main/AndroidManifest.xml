@@ -8,6 +8,7 @@
     package="cm.aptoide.pt.v8engine">
 
 
+  <uses-permission android:name="android.permission.READ_SYNC_STATS"/>
   <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT"/>
   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
   <uses-permission android:name="android.permission.INSTALL_PACKAGES"/>
@@ -17,9 +18,9 @@
   <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
 
   <uses-sdk
-    android:minSdkVersion="15"
-    tools:overrideLibrary="com.paypal.android.sdk.payments"
-    />
+      android:minSdkVersion="15"
+      tools:overrideLibrary="com.paypal.android.sdk.payments"
+      />
 
   <application
       android:allowBackup="true"
@@ -39,7 +40,7 @@
         android:theme="@style/AppBaseTheme.Payment"/>
 
     <activity android:name=".payment.providers.paypal.PayPalPaymentActivity"/>
-    <activity android:name=".payment.authorizations.WebAuthorizationActivity"/>
+    <activity android:name=".activity.WebAuthorizationActivity"/>
 
     <activity
         android:name=".receivers.DeepLinkIntentReceiver"
@@ -150,6 +151,7 @@
     </receiver>
 
     <service android:name=".services.PullingContentService"/>
+
     <receiver android:name=".receivers.PullingContentReceiver">
       <intent-filter>
         <action android:name="android.intent.action.BOOT_COMPLETED"/>
@@ -166,7 +168,7 @@
         android:exported="false">
       <intent-filter>
         <!--<action android:name="android.net.conn.CONNECTIVITY_CHANGE"/> -->
-        <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+        <action android:name="android.net.wifi.WIFI_STATE_CHANGED"/>
       </intent-filter>
     </receiver>
 

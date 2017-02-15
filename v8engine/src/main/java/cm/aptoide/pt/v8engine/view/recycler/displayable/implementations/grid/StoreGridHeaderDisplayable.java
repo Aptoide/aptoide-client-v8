@@ -17,22 +17,23 @@ public class StoreGridHeaderDisplayable extends Displayable {
     this(null, null, null);
   }
 
-  public StoreGridHeaderDisplayable(GetStoreWidgets.WSWidget wsWidget) {
-    this(wsWidget, null, null);
-  }
-
-  public StoreGridHeaderDisplayable(GetStoreWidgets.WSWidget wsWidget, String storeTheme, String tag) {
+  public StoreGridHeaderDisplayable(GetStoreWidgets.WSWidget wsWidget, String storeTheme,
+      String tag) {
     this.wsWidget = wsWidget;
     this.storeTheme = storeTheme;
     this.tag = tag;
     this.moreVisible = true;
   }
 
-  @Override public int getViewLayout() {
-    return R.layout.displayable_grid_header;
+  public StoreGridHeaderDisplayable(GetStoreWidgets.WSWidget wsWidget) {
+    this(wsWidget, null, null);
   }
 
   @Override protected Displayable.Configs getConfig() {
     return new Configs(1, true);
+  }
+
+  @Override public int getViewLayout() {
+    return R.layout.displayable_grid_header;
   }
 }

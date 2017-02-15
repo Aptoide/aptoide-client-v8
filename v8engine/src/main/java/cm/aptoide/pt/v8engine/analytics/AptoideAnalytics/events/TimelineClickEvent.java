@@ -10,14 +10,14 @@ import rx.schedulers.Schedulers;
  */
 
 public class TimelineClickEvent extends Event {
-  public static final String SOURCE_APTOIDE = "Aptoide";
-  public static final String OPEN_ARTICLE = "Open_Article";
-  public static final String OPEN_BLOG = "Open_Blog";
-  public static final String OPEN_VIDEO = "Open_Video";
-  public static final String OPEN_CHANNEL = "Open_Channel";
-  public static final String OPEN_STORE = "Open_Store";
-  public static final String OPEN_APP = "Open_App";
-  public static final String UPDATE_APP = "Update_App";
+  public static final String SOURCE_APTOIDE = "APTOIDE";
+  public static final String OPEN_ARTICLE = "OPEN_ARTICLE";
+  public static final String OPEN_BLOG = "OPEN_BLOG";
+  public static final String OPEN_VIDEO = "OPEN_VIDEO";
+  public static final String OPEN_CHANNEL = "OPEN_CHANNEL";
+  public static final String OPEN_STORE = "OPEN_STORE";
+  public static final String OPEN_APP = "OPEN_APP";
+  public static final String UPDATE_APP = "UPDATE_APP";
   private final SendEventRequest.Body.Data data;
   private final String eventName;
 

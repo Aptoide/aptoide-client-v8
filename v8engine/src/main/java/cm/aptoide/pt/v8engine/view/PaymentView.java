@@ -23,6 +23,8 @@ public interface PaymentView extends View {
 
   Observable<Void> otherPaymentsSelection();
 
+  Observable<PaymentViewModel> registerPaymentSelection();
+
   void showGlobalLoading();
 
   void showPaymentsLoading();
@@ -45,11 +47,17 @@ public interface PaymentView extends View {
 
   void dismiss();
 
+  void navigateToAuthorizationView(int paymentId, AptoideProduct product);
+
   void showPaymentsNotFoundMessage();
 
-  Observable<PaymentViewModel> registerPaymentSelection();
+  void showNetworkError();
 
-  public static class PaymentViewModel {
+  void showUnknownError();
+
+  void hideAllErrors();
+
+  class PaymentViewModel {
 
     private final int id;
     private final String name;
@@ -92,7 +100,7 @@ public interface PaymentView extends View {
       return status;
     }
 
-    public static enum Status {
+    public enum Status {
       REGISTER,
       APPROVING,
       USE

@@ -38,6 +38,17 @@ public class Price {
     return taxRate;
   }
 
+  @Override public int hashCode() {
+    int result;
+    long temp;
+    temp = Double.doubleToLongBits(amount);
+    result = (int) (temp ^ (temp >>> 32));
+    result = 31 * result + currency.hashCode();
+    temp = Double.doubleToLongBits(taxRate);
+    result = 31 * result + (int) (temp ^ (temp >>> 32));
+    return result;
+  }
+
   @Override public boolean equals(Object o) {
     if (this == o) {
       return true;
@@ -59,16 +70,5 @@ public class Price {
     }
 
     return true;
-  }
-
-  @Override public int hashCode() {
-    int result;
-    long temp;
-    temp = Double.doubleToLongBits(amount);
-    result = (int) (temp ^ (temp >>> 32));
-    result = 31 * result + currency.hashCode();
-    temp = Double.doubleToLongBits(taxRate);
-    result = 31 * result + (int) (temp ^ (temp >>> 32));
-    return result;
   }
 }

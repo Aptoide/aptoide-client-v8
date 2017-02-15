@@ -12,6 +12,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.Constants;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -60,9 +61,16 @@ public class Analytics {
       "apps-group-top-games", "apps-group-top-stores", "apps-group-featured-stores",
       "apps-group-editors-choice"
   };
+  private static final AptoideClientUUID aptoideClientUuid;
   static @Getter Analytics instance = new Analytics(new AnalyticsDataSaver());
   private static boolean ACTIVATE_LOCALYTICS = true;
   private static boolean isFirstSession;
+
+  static {
+    aptoideClientUuid = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+  }
+
   private AnalyticsDataSaver saver;
 
   public Analytics(AnalyticsDataSaver saver) {
@@ -71,25 +79,6 @@ public class Analytics {
 
   public static boolean checkBuildVariant() {
     return BuildConfig.BUILD_TYPE.contains("release") && BuildConfig.FLAVOR.contains("dev");
-  }
-
-  /**
-   * Verifica se as flags fornecidas constam em accepted.
-   *
-   * @param flag flags fornecidas
-   * @param accepted flags aceitáveis
-   * @return true caso as flags fornecidas constem em accepted.
-   */
-  private static boolean checkAcceptability(int flag, int accepted) {
-    if (accepted == LOCALYTICS && !ACTIVATE_LOCALYTICS) {
-      Logger.d(TAG, "Localytics Disabled ");
-      return false;
-    } else if (accepted == FLURRY && !ACTIVATE_FLURRY) {
-      Logger.d(TAG, "Flurry Disabled");
-      return false;
-    } else {
-      return (flag & accepted) == accepted;
-    }
   }
 
   private static void track(String event, String key, String attr, int flags) {
@@ -125,6 +114,25 @@ public class Analytics {
       }
     } catch (Exception e) {
       Logger.d(TAG, e.getStackTrace().toString());
+    }
+  }
+
+  /**
+   * Verifica se as flags fornecidas constam em accepted.
+   *
+   * @param flag flags fornecidas
+   * @param accepted flags aceitáveis
+   * @return true caso as flags fornecidas constem em accepted.
+   */
+  private static boolean checkAcceptability(int flag, int accepted) {
+    if (accepted == LOCALYTICS && !ACTIVATE_LOCALYTICS) {
+      Logger.d(TAG, "Localytics Disabled ");
+      return false;
+    } else if (accepted == FLURRY && !ACTIVATE_FLURRY) {
+      Logger.d(TAG, "Flurry Disabled");
+      return false;
+    } else {
+      return (flag & accepted) == accepted;
     }
   }
 
@@ -316,16 +324,12 @@ public class Analytics {
           }
         }
 
-        IdsRepositoryImpl idsRepository =
-            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                DataProvider.getContext());
-
-        String cpuid = idsRepository.getAptoideClientUUID();
+        String cpuid = aptoideClientUuid.getAptoideClientUUID();
 
         Localytics.setCustomerId(cpuid);
 
         //                String cpuid = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext())
-        //                        .getString(EnumPreferences.APTOIDE_CLIENT_UUID.name(), "NoInfo");
+        //                        .getString(EnumPreferences.aptoideClientUuid.name(), "NoInfo");
 
         //                Localytics.setCustomerId(cpuid);
         //
@@ -676,6 +680,10 @@ public class Analytics {
     private static final String INSTALLED = "Installed";
     private static final String DOWNGRADED_ROLLBACK = "Downgraded Rollback";
 
+    public static void installed(String packageName, String trustedBadge) {
+      innerTrack(packageName, INSTALLED, trustedBadge, ALL);
+    }
+
     private static void innerTrack(String packageName, String type, String trustedBadge,
         int flags) {
       try {
@@ -694,10 +702,6 @@ public class Analytics {
       } catch (Exception e) {
         e.printStackTrace();
       }
-    }
-
-    public static void installed(String packageName, String trustedBadge) {
-      innerTrack(packageName, INSTALLED, trustedBadge, ALL);
     }
 
     public static void replaced(String packageName, String trustedBadge) {
@@ -858,12 +862,9 @@ public class Analytics {
       flurryTrack(map, cardType);
     }
 
-    public static void pullToRefresh() {
-      track("Pull-to-refresh_Apps Timeline", FLURRY);
-    }
-
-    public static void endlessScrollLoadMore() {
-      track("Endless-scroll_Apps Timeline", FLURRY);
+    private static void localyticsTrack(HashMap<String, String> map, String cardType) {
+      map.put(CARD_TYPE, cardType);
+      track(EVENT_NAME, map, LOCALYTICS);
     }
 
     private static void flurryTrack(HashMap<String, String> map, String cardType) {
@@ -871,9 +872,12 @@ public class Analytics {
       track(eventName, map, FLURRY);
     }
 
-    private static void localyticsTrack(HashMap<String, String> map, String cardType) {
-      map.put(CARD_TYPE, cardType);
-      track(EVENT_NAME, map, LOCALYTICS);
+    public static void pullToRefresh() {
+      track("Pull-to-refresh_Apps Timeline", FLURRY);
+    }
+
+    public static void endlessScrollLoadMore() {
+      track("Endless-scroll_Apps Timeline", FLURRY);
     }
 
     public static void openTimeline() {
@@ -914,6 +918,10 @@ public class Analytics {
     public static final String WEBSITE = "Website";
     public static final String INSTALLER = "Installer";
 
+    public static void setPartnerDimension(String partner) {
+      setDimension(1, partner);
+    }
+
     private static void setDimension(int i, String s) {
       if (!ACTIVATE_LOCALYTICS && !isFirstSession) {
         return;
@@ -922,10 +930,6 @@ public class Analytics {
       Logger.d(TAG, "Dimension: " + i + ", Value: " + s);
 
       Localytics.setCustomDimension(i, s);
-    }
-
-    public static void setPartnerDimension(String partner) {
-      setDimension(1, partner);
     }
 
     public static void setVerticalDimension(String verticalName) {
@@ -1017,6 +1021,10 @@ public class Analytics {
       STEPS.clear();
     }
 
+    private static String formatStepsToSingleEvent(ArrayList<String> listOfSteps) {
+      return TextUtils.join("_", listOfSteps.subList(0, listOfSteps.indexOf(HOME_SCREEN_STEP)));
+    }
+
     protected static boolean containsUnwantedValues(String source) {
       String[] sourceArray = source.split("_");
       for (String step : sourceArray) {
@@ -1025,10 +1033,6 @@ public class Analytics {
         }
       }
       return false;
-    }
-
-    private static String formatStepsToSingleEvent(ArrayList<String> listOfSteps) {
-      return TextUtils.join("_", listOfSteps.subList(0, listOfSteps.indexOf(HOME_SCREEN_STEP)));
     }
 
     public static void addStepToList(String step) {

@@ -88,21 +88,6 @@ public class CustomTabsHelper {
     customTabsIntent.launchUrl((Activity) context, Uri.parse(url));
   }
 
-  /**
-   * Injects Referrers to the intent so they can be extracted by the url source.
-   * This way the url source can see that we are generating traffic to their page.
-   */
-  private void addRefererHttpHeader(Context context, CustomTabsIntent customTabsIntent) {
-    Bundle httpHeaders = new Bundle();
-    httpHeaders.putString("Referer", "http://m.aptoide.com");
-    customTabsIntent.intent.putExtra(Browser.EXTRA_HEADERS, httpHeaders);
-    customTabsIntent.intent.getExtras();
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-      customTabsIntent.intent.putExtra(Intent.EXTRA_REFERRER_NAME,
-          "android-app://" + context.getPackageName() + "/");
-    }
-  }
-
   @NonNull private CustomTabsIntent.Builder getBuilder(Context context) {
     Intent openInNativeIntent = new Intent(V8Engine.getContext(), CustomTabNativeReceiver.class);
     PendingIntent pendingIntent =
@@ -116,6 +101,21 @@ public class CustomTabsHelper {
         .addMenuItem(context.getString(R.string.customtabs_open_native_app), pendingIntent)
         .setStartAnimations(context, R.anim.slide_in_right, R.anim.slide_out_left)
         .setExitAnimations(context, R.anim.slide_in_left, R.anim.slide_out_right);
+  }
+
+  /**
+   * Injects Referrers to the intent so they can be extracted by the url source.
+   * This way the url source can see that we are generating traffic to their page.
+   */
+  private void addRefererHttpHeader(Context context, CustomTabsIntent customTabsIntent) {
+    Bundle httpHeaders = new Bundle();
+    httpHeaders.putString("Referer", "http://m.aptoide.com");
+    customTabsIntent.intent.putExtra(Browser.EXTRA_HEADERS, httpHeaders);
+    customTabsIntent.intent.getExtras();
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+      customTabsIntent.intent.putExtra(Intent.EXTRA_REFERRER_NAME,
+          "android-app://" + context.getPackageName() + "/");
+    }
   }
 
   private CustomTabsSession getCustomTabsSession() {

@@ -53,6 +53,20 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
     return sendFeedbackFragment;
   }
 
+  @Override public void setArguments(Bundle args) {
+    super.setArguments(args);
+    screenShotPath = args.getString(SCREENSHOT_PATH);
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    int itemId = item.getItemId();
+    if (itemId == android.R.id.home) {
+      getActivity().onBackPressed();
+      return true;
+    }
+    return super.onOptionsItemSelected(item);
+  }
+
   @Override public void setupViews() {
     super.setupViews();
     setHasOptionsMenu(true);
@@ -69,10 +83,6 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
     messageBodyEdit = (EditText) view.findViewById(R.id.FeedBacktext);
     sendFeedbackBtn = (Button) view.findViewById(R.id.FeedBackSendButton);
     logsAndScreenshotsCb = (CheckBox) view.findViewById(R.id.FeedBackCheckBox);
-  }
-
-  @Override public void onAttach(Activity activity) {
-    super.onAttach(activity);
   }
 
   private void sendFeedback() {
@@ -160,6 +170,14 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
     }
   }
 
+  public boolean isContentValid() {
+    return !TextUtils.isEmpty(subgectEdit.getText().toString());
+  }
+
+  @Override public void onAttach(Activity activity) {
+    super.onAttach(activity);
+  }
+
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
   }
@@ -170,23 +188,5 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
 
   @Override public int getContentViewId() {
     return R.layout.activity_feed_back;
-  }
-
-  @Override public void setArguments(Bundle args) {
-    super.setArguments(args);
-    screenShotPath = args.getString(SCREENSHOT_PATH);
-  }
-
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    int itemId = item.getItemId();
-    if (itemId == android.R.id.home) {
-      getActivity().onBackPressed();
-      return true;
-    }
-    return super.onOptionsItemSelected(item);
-  }
-
-  public boolean isContentValid() {
-    return !TextUtils.isEmpty(subgectEdit.getText().toString());
   }
 }

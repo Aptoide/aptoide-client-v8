@@ -40,6 +40,10 @@ public class GridAppListWidget extends Widget<GridAppListDisplayable> {
     tvStoreName = (TextView) itemView.findViewById(R.id.storeName);
   }
 
+  @Override public void unbindView() {
+
+  }
+
   @Override public void bindView(GridAppListDisplayable displayable) {
 
     App app = displayable.getPojo();
@@ -62,9 +66,5 @@ public class GridAppListWidget extends Widget<GridAppListDisplayable> {
           V8Engine.getFragmentProvider().newAppViewFragment(app.getId(), app.getPackageName()));
     });
     ImageLoader.load(app.getIcon(), icon);
-  }
-
-  @Override public void unbindView() {
-
   }
 }

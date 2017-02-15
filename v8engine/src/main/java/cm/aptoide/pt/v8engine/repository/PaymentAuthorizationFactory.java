@@ -18,14 +18,14 @@ public class PaymentAuthorizationFactory {
     this.context = context;
   }
 
-  public Authorization create(int paymentId, Authorization.Status status) {
-    return new WebAuthorization(context, paymentId, "", "", status);
+  public Authorization create(int paymentId, Authorization.Status status, String payerId) {
+    return new WebAuthorization(context, paymentId, "", "", status, payerId);
   }
 
   public cm.aptoide.pt.database.realm.PaymentAuthorization convertToDatabasePaymentAuthorization(
-      PaymentAuthorizationsResponse.PaymentAuthorizationResponse response) {
+      PaymentAuthorizationsResponse.PaymentAuthorizationResponse response, String payerId) {
     return new cm.aptoide.pt.database.realm.PaymentAuthorization(response.getPaymentId(),
-        response.getUrl(), response.getSuccessUrl(), response.getAuthorizationStatus());
+        response.getUrl(), response.getSuccessUrl(), response.getAuthorizationStatus(), payerId);
   }
 
   public cm.aptoide.pt.database.realm.PaymentAuthorization convertToDatabasePaymentAuthorization(
@@ -33,25 +33,27 @@ public class PaymentAuthorizationFactory {
     return new cm.aptoide.pt.database.realm.PaymentAuthorization(
         paymentAuthorization.getPaymentId(), ((WebAuthorization) paymentAuthorization).getUrl(),
         ((WebAuthorization) paymentAuthorization).getRedirectUrl(),
-        paymentAuthorization.getStatus().name());
+        paymentAuthorization.getStatus().name(), paymentAuthorization.getPayerId());
   }
 
-  public cm.aptoide.pt.database.realm.PaymentAuthorization convertToDatabasePaymentAuthorization(int paymentId,
-      Authorization.Status status) {
-    return new cm.aptoide.pt.database.realm.PaymentAuthorization(paymentId, "", "", status.name());
+  public cm.aptoide.pt.database.realm.PaymentAuthorization convertToDatabasePaymentAuthorization(
+      int paymentId, Authorization.Status status, String payerId) {
+    return new cm.aptoide.pt.database.realm.PaymentAuthorization(paymentId, "", "", status.name(),
+        payerId);
   }
 
   public Authorization convertToPaymentAuthorization(
       cm.aptoide.pt.database.realm.PaymentAuthorization paymentAuthorization) {
-    return new WebAuthorization(context, paymentAuthorization.getPaymentId(), paymentAuthorization.getUrl(),
-        paymentAuthorization.getRedirectUrl(),
-        WebAuthorization.Status.valueOf(paymentAuthorization.getStatus()));
+    return new WebAuthorization(context, paymentAuthorization.getPaymentId(),
+        paymentAuthorization.getUrl(), paymentAuthorization.getRedirectUrl(),
+        WebAuthorization.Status.valueOf(paymentAuthorization.getStatus()),
+        paymentAuthorization.getPayerId());
   }
 
   public Authorization convertToPaymentAuthorization(
-      PaymentAuthorizationsResponse.PaymentAuthorizationResponse response) {
+      PaymentAuthorizationsResponse.PaymentAuthorizationResponse response, String payerId) {
     return new WebAuthorization(context, response.getPaymentId(), response.getUrl(),
         response.getSuccessUrl(),
-        WebAuthorization.Status.valueOf(response.getAuthorizationStatus()));
+        WebAuthorization.Status.valueOf(response.getAuthorizationStatus()), payerId);
   }
 }

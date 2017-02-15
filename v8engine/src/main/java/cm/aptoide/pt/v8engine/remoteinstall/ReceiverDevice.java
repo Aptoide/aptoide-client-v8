@@ -8,40 +8,40 @@ import java.net.InetAddress;
 
 public class ReceiverDevice {
 
-    private String deviceName;
-    private InetAddress address;
-    private int port;
+  private String deviceName;
+  private InetAddress address;
+  private int port;
 
-    public ReceiverDevice(String deviceName, InetAddress address, int port) {
-        this.deviceName = deviceName;
-        this.address = address;
-        this.port = port;
-    }
+  public ReceiverDevice(String deviceName, InetAddress address, int port) {
+    this.deviceName = deviceName;
+    this.address = address;
+    this.port = port;
+  }
 
-    public int getPort(){
-        return port;
-    }
+  public int getPort() {
+    return port;
+  }
 
-    public String getDeviceName() {
-        return deviceName;
-    }
+  public String getDeviceName() {
+    return deviceName;
+  }
 
-    public void setDeviceName(String deviceName) {
-        this.deviceName = deviceName;
-    }
+  public void setDeviceName(String deviceName) {
+    this.deviceName = deviceName;
+  }
 
-    public InetAddress getAddress() {
-        return address;
+  public boolean isSameDevice(ReceiverDevice device) {
+    if (address.getHostAddress().equals(device.getAddress().getHostAddress())) {
+      return true;
     }
+    return false;
+  }
 
-    public void setAddress(InetAddress address) {
-        this.address = address;
-    }
+  public InetAddress getAddress() {
+    return address;
+  }
 
-    public boolean isSameDevice(ReceiverDevice device){
-        if(address.getHostAddress().equals(device.getAddress().getHostAddress())){
-            return true;
-        }
-        return false;
-    }
+  public void setAddress(InetAddress address) {
+    this.address = address;
+  }
 }

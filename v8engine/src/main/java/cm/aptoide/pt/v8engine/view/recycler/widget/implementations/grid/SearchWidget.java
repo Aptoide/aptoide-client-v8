@@ -65,6 +65,10 @@ import rx.functions.Action0;
     bottomView = itemView.findViewById(R.id.bottom_view);
   }
 
+  @Override public void unbindView() {
+
+  }
+
   @Override public void bindView(SearchDisplayable displayable) {
     Action0 clickCallback = displayable.getClickCallback();
     ListSearchApps.SearchAppsApp pojo = displayable.getPojo();
@@ -160,12 +164,7 @@ import rx.functions.Action0;
       }
       FragmentUtils.replaceFragmentV4(getContext(), V8Engine.getFragmentProvider()
           .newAppViewFragment(pojo.getId(), pojo.getPackageName(),
-              pojo.getStore().getAppearance().getTheme(),
-              pojo.getStore().getName()));
+              pojo.getStore().getAppearance().getTheme(), pojo.getStore().getName()));
     });
-  }
-
-  @Override public void unbindView() {
-
   }
 }

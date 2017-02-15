@@ -159,21 +159,6 @@ public final class PRNGFixes {
     }
   }
 
-  /**
-   * Gets the hardware serial number of this device.
-   *
-   * @return serial number or {@code null} if not available.
-   */
-  private static String getDeviceSerialNumber() {
-    // We're using the Reflection API because Build.SERIAL is only available
-    // since API Level 9 (Gingerbread, Android 2.3).
-    try {
-      return (String) Build.class.getField("SERIAL").get(null);
-    } catch (Exception ignored) {
-      return null;
-    }
-  }
-
   private static byte[] getBuildFingerprintAndDeviceSerial() {
     StringBuilder result = new StringBuilder();
     String fingerprint = Build.FINGERPRINT;
@@ -188,6 +173,21 @@ public final class PRNGFixes {
       return result.toString().getBytes("UTF-8");
     } catch (UnsupportedEncodingException e) {
       throw new RuntimeException("UTF-8 encoding not supported");
+    }
+  }
+
+  /**
+   * Gets the hardware serial number of this device.
+   *
+   * @return serial number or {@code null} if not available.
+   */
+  private static String getDeviceSerialNumber() {
+    // We're using the Reflection API because Build.SERIAL is only available
+    // since API Level 9 (Gingerbread, Android 2.3).
+    try {
+      return (String) Build.class.getField("SERIAL").get(null);
+    } catch (Exception ignored) {
+      return null;
     }
   }
 

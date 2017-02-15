@@ -18,10 +18,22 @@ import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
  * Created by neuro on 25-05-2016.
  */
 public abstract class GridRecyclerFragmentWithDecorator<T extends BaseAdapter>
-    extends GridRecyclerFragment<T> {
+    extends AptoideBaseFragment<T> {
 
   public GridRecyclerFragmentWithDecorator() {
   }
+
+  @CallSuper @Override public void setupViews() {
+    super.setupViews();
+    RecyclerView.ItemDecoration itemDecoration = getItemDecoration();
+    if (itemDecoration != null) {
+      getRecyclerView().addItemDecoration(itemDecoration);
+    }
+  }
+
+  //public GridRecyclerFragmentWithDecorator(Class<T> adapterClass) {
+  //  super(adapterClass);
+  //}
 
   protected RecyclerView.ItemDecoration getItemDecoration() {
     return new RecyclerView.ItemDecoration() {
@@ -74,17 +86,5 @@ public abstract class GridRecyclerFragmentWithDecorator<T extends BaseAdapter>
         outRect.set(left, top, right, bottom);
       }
     };
-  }
-
-  //public GridRecyclerFragmentWithDecorator(Class<T> adapterClass) {
-  //  super(adapterClass);
-  //}
-
-  @CallSuper @Override public void setupViews() {
-    super.setupViews();
-    RecyclerView.ItemDecoration itemDecoration = getItemDecoration();
-    if(itemDecoration!=null) {
-      recyclerView.addItemDecoration(itemDecoration);
-    }
   }
 }

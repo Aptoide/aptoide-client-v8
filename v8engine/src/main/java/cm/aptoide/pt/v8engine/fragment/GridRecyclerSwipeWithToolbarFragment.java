@@ -16,23 +16,23 @@ public class GridRecyclerSwipeWithToolbarFragment extends GridRecyclerSwipeFragm
   public static final String TITLE_KEY = "TITLE_KEY";
   private String title;
 
+  @Override protected boolean displayHomeUpAsEnabled() {
+    return true;
+  }
+
   @Override public void setupToolbarDetails(Toolbar toolbar) {
     toolbar.setTitle(Translator.translate(title));
     toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
   }
 
-  @Override protected boolean displayHomeUpAsEnabled() {
-    return true;
+  @Override public void loadExtras(Bundle args) {
+    super.loadExtras(args);
+    title = args.getString(TITLE_KEY);
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
     outState.putString(TITLE_KEY, title);
-  }
-
-  @Override public void loadExtras(Bundle args) {
-    super.loadExtras(args);
-    title = args.getString(TITLE_KEY);
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

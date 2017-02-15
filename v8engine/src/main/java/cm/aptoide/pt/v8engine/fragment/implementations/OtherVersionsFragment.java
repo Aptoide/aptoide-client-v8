@@ -24,6 +24,7 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppVersionsRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
@@ -31,9 +32,10 @@ import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.fragment.GridRecyclerFragment;
+import cm.aptoide.pt.v8engine.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.v8engine.util.AppBarStateChangeListener;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
+import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.OtherVersionDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
@@ -44,13 +46,14 @@ import lombok.Getter;
 /**
  * Created by sithengineer on 05/07/16.
  */
-public class OtherVersionsFragment extends GridRecyclerFragment {
+public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
 
   private static final String TAG = OtherVersionsFragment.class.getSimpleName();
 
   @Getter private static final String APP_NAME = "app_name";
   @Getter private static final String APP_IMG_URL = "app_img_url";
   @Getter private static final String APP_PACKAGE = "app_package";
+  private final AptoideClientUUID aptoideClientUUID;
   // vars
   private String appName;
   private String appImgUrl;
@@ -61,6 +64,11 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
 
   // data
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
+
+  public OtherVersionsFragment() {
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+  }
 
   /**
    * @param appName
@@ -80,15 +88,11 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
     return fragment;
   }
 
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-  }
-
-  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    Logger.d(TAG, "Other versions should refresh? " + create);
-
-    fetchOtherVersions(new ArrayList<>());
-    setHeader();
+  @Override public void loadExtras(Bundle args) {
+    super.loadExtras(args);
+    appName = args.getString(APP_NAME);
+    appImgUrl = args.getString(APP_IMG_URL);
+    appPackge = args.getString(APP_PACKAGE);
   }
 
   @Override public int getContentViewId() {
@@ -102,46 +106,19 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
     setHasOptionsMenu(true);
   }
 
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+  }
+
+  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    Logger.d(TAG, "Other versions should refresh? " + create);
+
+    fetchOtherVersions(new ArrayList<>());
+    setHeader();
+  }
+
   @Override public void onResume() {
     super.onResume();
-  }
-
-  protected void setHeader() {
-    if (header != null) {
-      header.setImage(appImgUrl);
-      setTitle(appName);
-    }
-  }
-
-  @Override public void loadExtras(Bundle args) {
-    super.loadExtras(args);
-    appName = args.getString(APP_NAME);
-    appImgUrl = args.getString(APP_IMG_URL);
-    appPackge = args.getString(APP_PACKAGE);
-  }
-
-  @Override protected boolean displayHomeUpAsEnabled() {
-    return true;
-  }
-
-  private void setTitle(String title) {
-    if (hasToolbar()) {
-      getToolbar().setTitle(title);
-    }
-  }
-
-  @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
-    super.onCreateOptionsMenu(menu, inflater);
-    inflater.inflate(R.menu.menu_empty, menu);
-  }
-
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    int itemId = item.getItemId();
-    if (itemId == android.R.id.home) {
-      getActivity().onBackPressed();
-      return true;
-    }
-    return super.onOptionsItemSelected(item);
   }
 
   protected void fetchOtherVersions(List<String> storeNames) {
@@ -158,13 +135,42 @@ public class OtherVersionsFragment extends GridRecyclerFragment {
 
     endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(this.getAdapter(),
         ListAppVersionsRequest.of(appPackge, storeNames, AptoideAccountManager.getAccessToken(),
-            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                DataProvider.getContext()).getAptoideClientUUID(),
-            StoreUtils.getSubscribedStoresAuthMap()), otherVersionsSuccessRequestListener,
-        Throwable::printStackTrace);
+            aptoideClientUUID.getAptoideClientUUID(), StoreUtils.getSubscribedStoresAuthMap()),
+        otherVersionsSuccessRequestListener, Throwable::printStackTrace);
 
-    recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+    getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(false);
+  }
+
+  protected void setHeader() {
+    if (header != null) {
+      header.setImage(appImgUrl);
+      setTitle(appName);
+    }
+  }
+
+  private void setTitle(String title) {
+    if (hasToolbar()) {
+      getToolbar().setTitle(title);
+    }
+  }
+
+  @Override protected boolean displayHomeUpAsEnabled() {
+    return true;
+  }
+
+  @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+    inflater.inflate(R.menu.menu_empty, menu);
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    int itemId = item.getItemId();
+    if (itemId == android.R.id.home) {
+      getActivity().onBackPressed();
+      return true;
+    }
+    return super.onOptionsItemSelected(item);
   }
 
 	/*

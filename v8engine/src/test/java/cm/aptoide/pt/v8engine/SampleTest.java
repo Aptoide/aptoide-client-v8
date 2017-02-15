@@ -7,6 +7,5 @@ import org.mockito.runners.MockitoJUnitRunner;
  * Created by sithengineer on 13/10/2016.
  */
 
-@RunWith(MockitoJUnitRunner.class)
-public class SampleTest {
+@RunWith(MockitoJUnitRunner.class) public class SampleTest {
 }
