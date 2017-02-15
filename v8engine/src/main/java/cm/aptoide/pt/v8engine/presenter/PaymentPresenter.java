@@ -84,13 +84,17 @@ public class PaymentPresenter implements Presenter {
         .doOnNext(loggedIn -> view.showLoading())
         .flatMap(loggedIn -> aptoidePay.availablePayments(product)
             .observeOn(AndroidSchedulers.mainThread())
-            .flatMap(payments -> showProductAndPayments(payments).andThen(aptoidePay.getStatus(payments)))
-            .flatMap(status -> {
-              switch (status) {
+            .flatMap(payments -> showProductAndPayments(payments).andThen(aptoidePay.getConfirmation(payments)))
+            .flatMap(confirmation -> {
+              switch (confirmation.getStatus()) {
                 case NEW:
+                case CANCELED:
+                case FAILED:
                   view.hideLoading();
                   return Observable.empty();
+                case CREATED:
                 case PROCESSING:
+                case PENDING:
                   view.showLoading();
                   return Observable.empty();
                 case COMPLETED:

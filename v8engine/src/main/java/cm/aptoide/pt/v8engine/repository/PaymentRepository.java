@@ -43,23 +43,22 @@ public class PaymentRepository {
 
   public Observable<List<Payment>> getPayments(AptoideProduct product) {
     return productRepository.getPayments(product)
-        .flatMapObservable(payments -> Observable.combineLatest(getConfirmations(product, payments),
+        .flatMapObservable(payments -> Observable.combineLatest(getConfirmation(product),
         getAuthorizations(payments, payer.getId()), Observable.just(payments),
-        (confirmations, authorizations, paymentList) -> {
-          if (payments.isEmpty() || authorizations.isEmpty() || confirmations.isEmpty()) {
+        (confirmation, authorizations, paymentList) -> {
+          if (payments.isEmpty() || authorizations.isEmpty()) {
             return Observable.<List<Payment>>empty();
           }
-          return getCompletePayments(payments, authorizations, payer.getId(), confirmations,
+          return getCompletePayments(payments, authorizations, payer.getId(), confirmation,
               product);
         }))
         .flatMap(result -> result);
   }
 
   private Observable<List<Payment>> getCompletePayments(List<PaymentServiceResponse> payments,
-      List<Authorization> authorizations, String payerId, List<PaymentConfirmation> confirmations,
+      List<Authorization> authorizations, String payerId, PaymentConfirmation confirmation,
       AptoideProduct product) {
-    return Observable.zip(Observable.from(payments), Observable.from(authorizations),
-        Observable.from(confirmations), (payment, authorization, confirmation) -> {
+    return Observable.zip(Observable.from(payments), Observable.from(authorizations), (payment, authorization) -> {
           if (!payment.isAuthorizationRequired()) {
             authorization = authorizationFactory.create(payment.getId(), Authorization.Status.NONE, payerId);
           }
@@ -73,11 +72,8 @@ public class PaymentRepository {
         paymentIds -> authorizationRepository.getPaymentAuthorizations(paymentIds, payerId));
   }
 
-  private Observable<List<PaymentConfirmation>> getConfirmations(AptoideProduct product,
-      List<PaymentServiceResponse> payments) {
-    return getPaymentIds(payments).flatMapObservable(
-        paymentIds -> confirmationRepository.getPaymentConfirmations(product, payer.getId(),
-            paymentIds));
+  private Observable<PaymentConfirmation> getConfirmation(AptoideProduct product) {
+    return confirmationRepository.getPaymentConfirmation(product, payer.getId());
   }
 
   private Single<List<Integer>> getPaymentIds(List<PaymentServiceResponse> payments) {

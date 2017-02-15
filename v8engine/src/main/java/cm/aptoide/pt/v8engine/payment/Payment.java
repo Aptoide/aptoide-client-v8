@@ -24,19 +24,10 @@ public interface Payment {
 
   String getDescription();
 
-  Status getStatus();
-
   Authorization getAuthorization();
 
   PaymentConfirmation getConfirmation();
 
   Completable process();
 
-  enum Status {
-    NEW,
-    PROCESSING,
-    COMPLETED,
-    FAILED,
-    CANCELLED
-  }
 }

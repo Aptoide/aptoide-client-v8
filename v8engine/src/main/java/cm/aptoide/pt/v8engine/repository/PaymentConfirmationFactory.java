@@ -11,13 +11,13 @@ import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 public class PaymentConfirmationFactory {
 
   public PaymentConfirmation create(int productId, String paymentConfirmationId,
-      PaymentConfirmation.Status status, String payerId, int paymentId) {
-    return new PaymentConfirmation(paymentId, productId, payerId, paymentConfirmationId, status);
+      PaymentConfirmation.Status status, String payerId) {
+    return new PaymentConfirmation(productId, payerId, paymentConfirmationId, status);
   }
 
   public PaymentConfirmation convertToPaymentConfirmation(int productId,
       PaymentConfirmationResponse response, String payerId) {
-    return new PaymentConfirmation(response.getPaymentId(), productId, payerId, response.getPaymentConfirmationId(),
+    return new PaymentConfirmation(productId, payerId, response.getPaymentConfirmationId(),
         PaymentConfirmation.Status.valueOf(response.getPaymentStatus()));
   }
 
@@ -25,12 +25,12 @@ public class PaymentConfirmationFactory {
       PaymentConfirmation paymentConfirmation) {
     return new cm.aptoide.pt.database.realm.PaymentConfirmation(
         paymentConfirmation.getPaymentConfirmationId(), paymentConfirmation.getProductId(),
-        paymentConfirmation.getStatus().name(), paymentConfirmation.getPayerId(), paymentConfirmation.getPaymentId());
+        paymentConfirmation.getStatus().name(), paymentConfirmation.getPayerId());
   }
 
   public PaymentConfirmation convertToPaymentConfirmation(
       cm.aptoide.pt.database.realm.PaymentConfirmation paymentConfirmation) {
-    return new PaymentConfirmation(paymentConfirmation.getPaymentId(), paymentConfirmation.getProductId(),
+    return new PaymentConfirmation(paymentConfirmation.getProductId(),
         paymentConfirmation.getPayerId(), paymentConfirmation.getPaymentConfirmationId(),
         PaymentConfirmation.Status.valueOf(paymentConfirmation.getStatus()));
   }

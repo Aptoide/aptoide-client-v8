@@ -66,25 +66,6 @@ public class AptoidePayment implements Payment {
     return authorization;
   }
 
-  @Override public Status getStatus() {
-
-    switch (confirmation.getStatus()) {
-      case COMPLETED:
-        return Status.COMPLETED;
-      case CREATED:
-      case PENDING:
-      case PROCESSING:
-        return Status.PROCESSING;
-      case CANCELED:
-        return Status.CANCELLED;
-      case FAILED:
-        return Status.FAILED;
-      case NEW:
-      default:
-        return Status.NEW;
-    }
-  }
-
   @Override public PaymentConfirmation getConfirmation() {
     return confirmation;
   }

@@ -45,7 +45,7 @@ public class InAppPaymentConfirmationRepository extends PaymentConfirmationRepos
               new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
         })
         .toCompletable()
-        .andThen(syncPaymentConfirmations(product, paymentId));
+        .andThen(syncPaymentConfirmation(product));
   }
 
   @Override

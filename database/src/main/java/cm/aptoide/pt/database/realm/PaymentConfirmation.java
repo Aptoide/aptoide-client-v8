@@ -16,12 +16,10 @@ public class PaymentConfirmation extends RealmObject {
 
   public static final String PRODUCT_ID = "productId";
   public static final String PAYER_ID = "payerId";
-  public static final String PAYMENT_ID = "paymentId";
 
-  private int productId;
+  @PrimaryKey private int productId;
   @Required private String payerId;
   @Required private String status;
-  private int paymentId;
 
   private String paymentConfirmationId;
 
@@ -29,12 +27,11 @@ public class PaymentConfirmation extends RealmObject {
   }
 
   public PaymentConfirmation(String paymentConfirmationId, int productId, String status,
-      String payerId, int paymentId) {
+      String payerId) {
     this.paymentConfirmationId = paymentConfirmationId;
     this.status = status;
     this.productId = productId;
     this.payerId = payerId;
-    this.paymentId = paymentId;
   }
 
   public String getPayerId() {
@@ -53,7 +50,4 @@ public class PaymentConfirmation extends RealmObject {
     return status;
   }
 
-  public int getPaymentId() {
-    return paymentId;
-  }
 }

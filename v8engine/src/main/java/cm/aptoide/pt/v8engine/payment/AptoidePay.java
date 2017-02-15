@@ -66,16 +66,7 @@ public class AptoidePay {
     return payment.getAuthorization().getStatus().equals(Authorization.Status.ACTIVE);
   }
 
-  public Observable<Payment.Status> getStatus(List<Payment> payments) {
-    return Observable.from(payments).map(payment -> payment.getStatus()).toList().map(status -> {
-      if (status.contains(Payment.Status.COMPLETED)) {
-        return Payment.Status.COMPLETED;
-      }
-
-      if (status.contains(Payment.Status.PROCESSING)) {
-        return Payment.Status.PROCESSING;
-      }
-      return Payment.Status.NEW;
-    });
+  public Observable<PaymentConfirmation> getConfirmation(List<Payment> payments) {
+    return Observable.from(payments).take(1).map(payment -> payment.getConfirmation());
   }
 }

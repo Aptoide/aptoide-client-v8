@@ -72,6 +72,7 @@ public class PaymentAuthorizationSync extends RepositorySync {
       SyncResult syncResult, List<String> paymentIds, String payerId) {
 
     final List<PaymentAuthorization> authorizations = new ArrayList<>();
+    final List<String> paymentIdsCopy = new ArrayList<>(paymentIds);
 
     for (PaymentAuthorizationsResponse.PaymentAuthorizationResponse response : responses) {
       final cm.aptoide.pt.v8engine.payment.Authorization paymentAuthorization =
@@ -81,10 +82,10 @@ public class PaymentAuthorizationSync extends RepositorySync {
       if (paymentAuthorization.isPending() || paymentAuthorization.isInitiated()) {
         rescheduleSync(syncResult);
       }
-      paymentIds.remove(String.valueOf(response.getPaymentId()));
+      paymentIdsCopy.remove(String.valueOf(response.getPaymentId()));
     }
 
-    for (String paymentId : paymentIds) {
+    for (String paymentId : paymentIdsCopy) {
       authorizations.add(authorizationFactory.convertToDatabasePaymentAuthorization(
           authorizationFactory.create(Integer.valueOf(paymentId), Authorization.Status.INACTIVE,
               payerId)));
