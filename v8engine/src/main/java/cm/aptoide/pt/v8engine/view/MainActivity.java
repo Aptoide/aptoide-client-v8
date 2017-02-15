@@ -77,11 +77,11 @@ public class MainActivity extends BaseActivity implements MainView, FragmentShow
   }
 
   @Override public void showWizard() {
-    pushFragment(new BaseWizardViewerFragment());
+    getNavigationManager().navigateTo(new BaseWizardViewerFragment());
   }
 
   @Override public void showHome() {
-    pushFragment(V8Engine.getFragmentProvider()
+    getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
         .newHomeFragment(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home,
             V8Engine.getConfiguration().getDefaultTheme()));
   }
@@ -129,24 +129,25 @@ public class MainActivity extends BaseActivity implements MainView, FragmentShow
   }
 
   private void appViewDeepLink(String md5) {
-    pushFragment(AppViewFragment.newInstance(md5));
+    getNavigationManager().navigateTo(AppViewFragment.newInstance(md5));
   }
 
   private void appViewDeepLink(long appId, String packageName, boolean showPopup) {
     AppViewFragment.OpenType openType = showPopup ? AppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP
         : AppViewFragment.OpenType.OPEN_ONLY;
-    pushFragment(V8Engine.getFragmentProvider().newAppViewFragment(appId, packageName, openType));
+    getNavigationManager().navigateTo(
+        V8Engine.getFragmentProvider().newAppViewFragment(appId, packageName, openType));
   }
 
   private void appViewDeepLink(String packageName, String storeName, boolean showPopup) {
     AppViewFragment.OpenType openType = showPopup ? AppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP
         : AppViewFragment.OpenType.OPEN_ONLY;
-    pushFragment(
+    getNavigationManager().navigateTo(
         V8Engine.getFragmentProvider().newAppViewFragment(packageName, storeName, openType));
   }
 
   private void searchDeepLink(String query) {
-    pushFragment(V8Engine.getFragmentProvider().newSearchFragment(query));
+    getNavigationManager().navigateTo(V8Engine.getFragmentProvider().newSearchFragment(query));
   }
 
   private void newrepoDeepLink(ArrayList<String> repos) {
@@ -211,7 +212,7 @@ public class MainActivity extends BaseActivity implements MainView, FragmentShow
         GetStoreWidgets.WSWidget.Data data = new GetStoreWidgets.WSWidget.Data();
         data.setLayout(Layout.valueOf(queryLayout));
         event.setData(data);
-        pushFragment(V8Engine.getFragmentProvider()
+        getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
             .newStoreTabGridRecyclerFragment(event,
                 uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.TITLE),
                 uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.STORE_THEME),
@@ -226,7 +227,7 @@ public class MainActivity extends BaseActivity implements MainView, FragmentShow
     if (uri != null) {
       String openMode = uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.OPEN_MODE);
       if (!TextUtils.isEmpty(openMode)) {
-        pushFragment(V8Engine.getFragmentProvider()
+        getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
             .newScheduledDownloadsFragment(ScheduledDownloadsFragment.OpenMode.valueOf(openMode)));
       }
     }
@@ -251,10 +252,6 @@ public class MainActivity extends BaseActivity implements MainView, FragmentShow
         && !TextUtils.isEmpty(queryName)
         && !TextUtils.isEmpty(queryAction)
         && StoreTabFragmentChooser.validateAcceptedName(Event.Name.valueOf(queryName));
-  }
-
-  @Override public void pushFragment(Fragment fragment) {
-    getNavigationManager().navigateTo(fragment);
   }
 
   @Override public android.support.v4.app.Fragment getLast() {

@@ -15,7 +15,6 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.MyStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -64,7 +63,7 @@ public class MyStoreWidget extends Widget<MyStoreDisplayable> {
 
     storeName.setText(store.getName());
     compositeSubscription.add(RxView.clicks(exploreButton)
-        .subscribe(click -> ((FragmentShower) context).pushFragment(
+        .subscribe(click -> getNavigationManager().navigateTo(
             V8Engine.getFragmentProvider().newStoreFragment(store.getName(), storeTheme))));
   }
 

@@ -11,7 +11,6 @@ import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
@@ -54,7 +53,7 @@ public class RecommendedStoreWidget extends Widget<RecommendedStoreDisplayable> 
     setFollowButtonListener(displayable);
     setButtonText(displayable);
     compositeSubscription.add(RxView.clicks(itemView)
-        .subscribe(click -> displayable.openStoreFragment((FragmentShower) context),
+        .subscribe(click -> displayable.openStoreFragment(getNavigationManager()),
             throwable -> CrashReport.getInstance().log(throwable)));
   }
 

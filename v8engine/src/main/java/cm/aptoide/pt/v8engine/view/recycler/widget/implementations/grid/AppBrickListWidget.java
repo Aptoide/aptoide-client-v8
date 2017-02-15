@@ -15,7 +15,6 @@ import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickListDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
@@ -45,10 +44,9 @@ public class AppBrickListWidget extends Widget<AppBrickListDisplayable> {
     ImageLoader.with(getContext()).load(app.getGraphic(), R.drawable.placeholder_705x345, graphic);
     name.setText(app.getName());
     ratingBar.setRating(app.getStats().getRating().getAvg());
-    final FragmentShower fragmentShower = (FragmentShower) getContext();
     compositeSubscription.add(RxView.clicks(itemView).subscribe(v -> {
       Analytics.AppViewViewedFrom.addStepToList(displayable.getTag());
-      fragmentShower.pushFragment(
+      getNavigationManager().navigateTo(
           V8Engine.getFragmentProvider().newAppViewFragment(app.getId(), app.getPackageName()));
       Analytics.HomePageEditorsChoice.clickOnEditorsChoiceItem(getAdapterPosition(),
           app.getPackageName(), false);

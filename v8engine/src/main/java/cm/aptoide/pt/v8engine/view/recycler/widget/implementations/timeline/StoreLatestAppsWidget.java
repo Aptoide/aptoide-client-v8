@@ -14,7 +14,6 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.TimelineClickEvent;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.StoreLatestAppsDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.HashMap;
@@ -94,7 +93,7 @@ public class StoreLatestAppsWidget extends CardWidget<StoreLatestAppsDisplayable
                 .store(displayable.getStoreName())
                 .build())
             .build(), TimelineClickEvent.OPEN_APP);
-        ((FragmentShower) context).pushFragment(
+        getNavigationManager().navigateTo(
             V8Engine.getFragmentProvider().newAppViewFragment(apps.get(app), packageName));
       }));
     }
@@ -110,7 +109,7 @@ public class StoreLatestAppsWidget extends CardWidget<StoreLatestAppsDisplayable
           .specific(
               SendEventRequest.Body.Specific.builder().store(displayable.getStoreName()).build())
           .build(), TimelineClickEvent.OPEN_STORE);
-      ((FragmentShower) context).pushFragment(
+      getNavigationManager().navigateTo(
           V8Engine.getFragmentProvider().newStoreFragment(displayable.getStoreName()));
     }));
   }

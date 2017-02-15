@@ -13,7 +13,6 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AppBrickDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -40,10 +39,9 @@ import com.jakewharton.rxbinding.view.RxView;
     ImageLoader.with(context)
         .load(displayable.getPojo().getGraphic(), R.drawable.placeholder_705x345, graphic);
 
-    final FragmentShower fragmentShower = (FragmentShower) context;
     compositeSubscription.add(RxView.clicks(itemView).subscribe(v -> {
       Analytics.AppViewViewedFrom.addStepToList(displayable.getTag());
-      fragmentShower.pushFragment(V8Engine.getFragmentProvider()
+      getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
           .newAppViewFragment(displayable.getPojo().getId(),
               displayable.getPojo().getPackageName()));
       Analytics.HomePageEditorsChoice.clickOnEditorsChoiceItem(getAdapterPosition(),

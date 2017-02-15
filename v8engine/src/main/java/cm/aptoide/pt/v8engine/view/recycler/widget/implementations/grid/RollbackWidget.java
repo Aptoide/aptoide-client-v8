@@ -11,7 +11,6 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RollbackDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
@@ -82,7 +81,7 @@ public class RollbackWidget extends Widget<RollbackDisplayable> {
         Rollback.Action action = Rollback.Action.valueOf(pojo.getAction());
         switch (action) {
           case DOWNGRADE:
-            displayable.update((FragmentShower) context);
+            displayable.update(getNavigationManager());
             break;
           case INSTALL:
             //only if the app is installed
@@ -95,11 +94,11 @@ public class RollbackWidget extends Widget<RollbackDisplayable> {
             break;
 
           case UNINSTALL:
-            displayable.install((FragmentShower) context);
+            displayable.install(getNavigationManager());
             break;
 
           case UPDATE:
-            displayable.update((FragmentShower) context);
+            displayable.update(getNavigationManager());
             break;
         }
       }, () -> {

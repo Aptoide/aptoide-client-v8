@@ -14,7 +14,7 @@ import lombok.Getter;
 /**
  * Created by jdandrade on 20/12/2016.
  */
-@EqualsAndHashCode public class SocialRecommendation extends SocialCard implements TimelineCard {
+@EqualsAndHashCode(callSuper = false) public class SocialRecommendation extends SocialCard implements TimelineCard {
 
   @Getter private final String cardId;
   @Getter private final App app;

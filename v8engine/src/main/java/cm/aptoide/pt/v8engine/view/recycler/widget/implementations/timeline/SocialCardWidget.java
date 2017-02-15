@@ -22,7 +22,6 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.customviews.LikeButtonView;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.SocialCardDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Observable;
@@ -141,7 +140,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
     showLikesPreview(displayable);
 
     compositeSubscription.add(RxView.clicks(likePreviewContainer)
-        .subscribe(click -> displayable.likesPreviewClick(((FragmentShower) getContext())),
+        .subscribe(click -> displayable.likesPreviewClick(getNavigationManager()),
             (throwable) -> {
               throwable.printStackTrace();
             }));
@@ -152,7 +151,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
       final String elementId = displayable.getTimelineCard().getCardId();
       Fragment fragment = V8Engine.getFragmentProvider()
           .newCommentGridRecyclerFragment(CommentType.TIMELINE, elementId);
-      ((FragmentShower) getContext()).pushFragment(fragment);
+      getNavigationManager().navigateTo(fragment);
       return null;
     });
   }

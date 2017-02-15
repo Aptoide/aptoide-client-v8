@@ -41,7 +41,6 @@ import cm.aptoide.pt.v8engine.StorePagerAdapter;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.interfaces.DrawerFragment;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
@@ -218,16 +217,15 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
         if (itemId == R.id.navigation_item_my_account) {
           AptoideAccountManager.openAccountManager(getContext());
         } else if (itemId == R.id.navigation_item_rollback) {
-          ((FragmentShower) getActivity()).pushFragment(
-              V8Engine.getFragmentProvider().newRollbackFragment());
+          getNavigationManager().navigateTo(V8Engine.getFragmentProvider().newRollbackFragment());
         } else if (itemId == R.id.navigation_item_setting_scheduled_downloads) {
-          ((FragmentShower) getActivity()).pushFragment(
+          getNavigationManager().navigateTo(
               V8Engine.getFragmentProvider().newScheduledDownloadsFragment());
         } else if (itemId == R.id.navigation_item_excluded_updates) {
-          ((FragmentShower) getActivity()).pushFragment(
+          getNavigationManager().navigateTo(
               V8Engine.getFragmentProvider().newExcludedUpdatesFragment());
         } else if (itemId == R.id.navigation_item_settings) {
-          ((FragmentShower) getActivity()).pushFragment(
+          getNavigationManager().navigateTo(
               V8Engine.getFragmentProvider().newSettingsFragment());
         } else if (itemId == R.id.navigation_item_facebook) {
           openFacebook();
@@ -297,7 +295,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
     String downloadFolderPath = Application.getConfiguration().getCachePath();
     String screenshotFileName = getActivity().getClass().getSimpleName() + ".jpg";
     AptoideUtils.ScreenU.takeScreenshot(getActivity(), downloadFolderPath, screenshotFileName);
-    ((FragmentShower) getActivity()).pushFragment(V8Engine.getFragmentProvider()
+    getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
         .newSendFeedbackFragment(downloadFolderPath + screenshotFileName));
   }
 
@@ -309,7 +307,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(installedFacebook -> {
           if (installedFacebook == null) {
-            ((FragmentShower) getActivity()).pushFragment(
+            getNavigationManager().navigateTo(
                 V8Engine.getFragmentProvider().newSocialFragment(socialUrl, pageTitle));
           } else {
             Intent sharingIntent = new Intent(Intent.ACTION_VIEW, uriToOpenApp);

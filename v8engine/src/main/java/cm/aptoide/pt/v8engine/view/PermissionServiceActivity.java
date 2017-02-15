@@ -225,7 +225,7 @@ public class PermissionServiceActivity extends ActivityView implements Permissio
           super.onNext(eResponse);
           if (eResponse == GenericDialogs.EResponse.YES) {
             if (PermissionServiceActivity.this instanceof FragmentShower) {
-              ((FragmentShower) PermissionServiceActivity.this).pushFragment(
+              getNavigationManager().navigateTo(
                   V8Engine.getFragmentProvider().newSettingsFragment());
             } else {
               Logger.e(PermissionServiceActivity.class.getSimpleName(), new IllegalArgumentException(

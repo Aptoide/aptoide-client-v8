@@ -4,10 +4,10 @@ import android.content.Context;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.model.v7.store.Store;
+import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
@@ -56,8 +56,8 @@ public class RecommendedStoreDisplayable extends DisplayablePojo<Store> {
     StoreUtils.unsubscribeStore(getPojo().getName());
   }
 
-  void openStoreFragment(FragmentShower fragmentShower) {
-    fragmentShower.pushFragment(V8Engine.getFragmentProvider()
+  void openStoreFragment(NavigationManagerV4 navigationManager) {
+    navigationManager.navigateTo(V8Engine.getFragmentProvider()
         .newStoreFragment(getPojo().getName(), getPojo().getAppearance().getTheme()));
   }
 }

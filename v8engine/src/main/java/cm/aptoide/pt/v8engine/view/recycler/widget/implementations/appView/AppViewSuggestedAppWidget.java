@@ -9,7 +9,6 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewSuggestedAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
@@ -42,10 +41,8 @@ public class AppViewSuggestedAppWidget extends Widget<AppViewSuggestedAppDisplay
     ImageLoader.with(context).load(pojo.getIconPath(), iconImageView);
     appNameTextView.setText(pojo.getName());
     descriptionTextView.setText(AptoideUtils.HtmlU.parse(pojo.getDescription()));
-
-    final FragmentShower fragmentShower = (FragmentShower) context;
     compositeSubscription.add(RxView.clicks(layout)
-        .subscribe(__ -> fragmentShower.pushFragment(
+        .subscribe(__ -> getNavigationManager().navigateTo(
             V8Engine.getFragmentProvider().newAppViewFragment(pojo))));
   }
 }

@@ -151,7 +151,7 @@ import rx.android.schedulers.AndroidSchedulers;
       Fragment fragment = V8Engine.getFragmentProvider()
           .newOtherVersionsFragment(currentApp.getName(), currentApp.getIcon(),
               currentApp.getPackageName());
-      fragmentShower.pushFragment(fragment);
+      getNavigationManager().navigateTo(fragment);
     });
 
     final boolean[] isSetupView = { true };
@@ -406,7 +406,7 @@ import rx.android.schedulers.AndroidSchedulers;
         // search for a trusted version
         fragment = V8Engine.getFragmentProvider().newSearchFragment(app.getName(), true);
       }
-      ((FragmentShower) context).pushFragment(fragment);
+      getNavigationManager().navigateTo(fragment);
     };
 
     return v -> {

@@ -11,15 +11,6 @@ import android.support.v4.app.Fragment;
 public interface FragmentShower {
 
   /**
-   * Pushes the passed {@link android.support.v4.app.Fragment v4.Fragment} using the implementing
-   * activity {@link android.support.v4.app.FragmentManager
-   * v4.FragmentManager}
-   *
-   * @param fragment {@link android.support.v4.app.Fragment v4.Fragment} to push
-   */
-  void pushFragment(Fragment fragment);
-
-  /**
    * @return Uses {@link android.support.v4.app.FragmentManager v4.FragmentManager} and returns the
    * {@link android.support.v4.app.Fragment v4.Fragment} at
    * the index position

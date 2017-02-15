@@ -155,7 +155,7 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
     final FragmentShower fragmentShower = (FragmentShower) getContext();
     if (displayable.hasStore()) {
       compositeSubscription.add(RxView.clicks(itemView)
-          .subscribe(click -> displayable.viewClicked(fragmentShower), err -> {
+          .subscribe(click -> displayable.viewClicked(getNavigationManager()), err -> {
             CrashReport.getInstance().log(err);
           }));
     }
