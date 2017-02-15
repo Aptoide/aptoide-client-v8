@@ -18,8 +18,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.annotation.Partners;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.interfaces.LoadInterface;
 import cm.aptoide.pt.v8engine.layouthandler.LoaderLayoutHandler;
 import lombok.Getter;
@@ -96,7 +96,11 @@ public abstract class BaseLoaderFragment extends UIComponentFragment implements 
   }
 
   private void unregisterReceiverForAccountManager() {
-    getContext().unregisterReceiver(receiver);
+    try {
+      getContext().unregisterReceiver(receiver);
+    } catch (IllegalArgumentException ex) {
+      CrashReport.getInstance().log(ex);
+    }
   }
 
   @Partners @CallSuper protected void finishLoading(Throwable throwable) {

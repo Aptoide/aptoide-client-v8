@@ -27,9 +27,9 @@ public abstract class BasePagerToolbarFragment extends BaseLoaderToolbarFragment
   }
 
   @Override public void onDestroyView() {
-    super.onDestroyView();
     viewPager.clearOnPageChangeListeners();
     viewPager = null;
+    super.onDestroyView();
   }
 
   protected void setupViewPager() {

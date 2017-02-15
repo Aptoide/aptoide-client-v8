@@ -140,10 +140,9 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
     showLikesPreview(displayable);
 
     compositeSubscription.add(RxView.clicks(likePreviewContainer)
-        .subscribe(click -> displayable.likesPreviewClick(getNavigationManager()),
-            (throwable) -> {
-              throwable.printStackTrace();
-            }));
+        .subscribe(click -> displayable.likesPreviewClick(getNavigationManager()), (throwable) -> {
+          throwable.printStackTrace();
+        }));
   }
 
   private Observable<Void> showComments(T displayable) {

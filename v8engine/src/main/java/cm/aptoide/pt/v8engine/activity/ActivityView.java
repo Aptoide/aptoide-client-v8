@@ -6,8 +6,8 @@
 package cm.aptoide.pt.v8engine.activity;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.view.View;
@@ -30,8 +30,8 @@ public abstract class ActivityView extends RxAppCompatActivity implements View {
     return navigator;
   }
 
-  @Override public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
-    super.onCreate(savedInstanceState, persistentState);
+  @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
     navigator = NavigationManagerV4.Builder.buildWith(this);
   }
 

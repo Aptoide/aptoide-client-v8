@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
+import android.content.Context;
 import android.os.Build;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;

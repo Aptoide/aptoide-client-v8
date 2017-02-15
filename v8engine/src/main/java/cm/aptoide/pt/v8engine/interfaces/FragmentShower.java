@@ -19,5 +19,4 @@ public interface FragmentShower {
    * in the {@link android.support.v4.app.FragmentManager.BackStackEntry}.
    */
   Fragment getLast();
-
 }

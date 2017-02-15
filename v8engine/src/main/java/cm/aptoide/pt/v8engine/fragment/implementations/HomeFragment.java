@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
- */
-
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.content.BroadcastReceiver;
@@ -26,7 +21,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.util.UserCompleteData;
-import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
@@ -61,9 +55,9 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
   public static final String BACKUP_APPS_PACKAGE_NAME = "pt.aptoide.backupapps";
   public static final String TWITTER_PACKAGE_NAME = "com.twitter.android";
   public static final String APTOIDE_TWITTER_URL = "http://www.twitter.com/aptoide";
-  private static final String TAG = HomeFragment.class.getSimpleName();
-  private DrawerLayout mDrawerLayout;
-  private NavigationView mNavigationView;
+
+  private DrawerLayout drawerLayout;
+  private NavigationView navigationView;
   private BadgeView updatesBadge;
   @Getter @Setter private Event.Name desiredViewPagerItem = null;
   private ChangeTabReceiver receiver;
@@ -80,29 +74,18 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
     return fragment;
   }
 
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    updateRepository = RepositoryFactory.getUpdateRepository();
-  }
-
-  @Partners @Override public void bindViews(View view) {
-    super.bindViews(view);
-
-    mNavigationView = (NavigationView) view.findViewById(R.id.nav_view);
-    mDrawerLayout = (DrawerLayout) view.findViewById(R.id.drawer_layout);
-
-    Analytics.AppViewViewedFrom.addStepToList("HOME");
-
-    setHasOptionsMenu(true);
-  }
-
   @Override public void onResume() {
     super.onResume();
     setUserDataOnHeader();
   }
 
   private void setUserDataOnHeader() {
-    View baseHeaderView = mNavigationView.getHeaderView(0);
+    if(navigationView==null || navigationView.getVisibility()!=View.VISIBLE){
+      // if the navigation view is not visible do nothing
+      return;
+    }
+
+    View baseHeaderView = navigationView.getHeaderView(0);
     TextView userEmail = (TextView) baseHeaderView.findViewById(R.id.profile_email_text);
     TextView userUsername = (TextView) baseHeaderView.findViewById(R.id.profile_name_text);
     ImageView userAvatarImage = (ImageView) baseHeaderView.findViewById(R.id.profile_image);
@@ -135,10 +118,23 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    View view = super.onCreateView(inflater, container, savedInstanceState);
+    return super.onCreateView(inflater, container, savedInstanceState);
+  }
+
+  @Override public void bindViews(View view) {
+    super.bindViews(view);
+
+    updateRepository = RepositoryFactory.getUpdateRepository();
+
+    navigationView = (NavigationView) view.findViewById(R.id.nav_view);
+    drawerLayout = (DrawerLayout) view.findViewById(R.id.drawer_layout);
+
+    setHasOptionsMenu(true);
+
     receiver = new ChangeTabReceiver();
     getContext().registerReceiver(receiver, new IntentFilter(ChangeTabReceiver.SET_TAB_EVENT));
-    return view;
+
+    Analytics.AppViewViewedFrom.addStepToList("HOME");
   }
 
   @Override public void onDestroyView() {
@@ -209,9 +205,9 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
   }
 
   private void setupNavigationView() {
-    if (mNavigationView != null) {
-      mNavigationView.setItemIconTintList(null);
-      mNavigationView.setNavigationItemSelectedListener(menuItem -> {
+    if (navigationView != null) {
+      navigationView.setItemIconTintList(null);
+      navigationView.setNavigationItemSelectedListener(menuItem -> {
 
         int itemId = menuItem.getItemId();
         if (itemId == R.id.navigation_item_my_account) {
@@ -225,8 +221,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
           getNavigationManager().navigateTo(
               V8Engine.getFragmentProvider().newExcludedUpdatesFragment());
         } else if (itemId == R.id.navigation_item_settings) {
-          getNavigationManager().navigateTo(
-              V8Engine.getFragmentProvider().newSettingsFragment());
+          getNavigationManager().navigateTo(V8Engine.getFragmentProvider().newSettingsFragment());
         } else if (itemId == R.id.navigation_item_facebook) {
           openFacebook();
         } else if (itemId == R.id.navigation_item_twitter) {
@@ -237,7 +232,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
           startFeedbackFragment();
         }
 
-        mDrawerLayout.closeDrawer(mNavigationView);
+        drawerLayout.closeDrawer(navigationView);
 
         return false;
       });
@@ -245,12 +240,6 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
   }
 
   private void openFacebook() {
-    //Installed installedFacebook = DeprecatedDatabase.InstalledQ.get(FACEBOOK_PACKAGE_NAME, realm);
-    //openSocialLink(FACEBOOK_PACKAGE_NAME, APTOIDE_FACEBOOK_LINK,
-    //    getContext().getString(R.string.social_facebook_screen_title), Uri.parse(
-    //        AptoideUtils.SocialLinksU.getFacebookPageURL(
-    //            installedFacebook == null ? 0 : installedFacebook.getVersionCode(),
-    //            APTOIDE_FACEBOOK_LINK)));
     InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
     installedAccessor.get(FACEBOOK_PACKAGE_NAME)
         .compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW))
@@ -325,19 +314,19 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
   @Override public void setupToolbarDetails(Toolbar toolbar) {
     toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
     toolbar.setNavigationIcon(R.drawable.ic_drawer);
-    toolbar.setNavigationOnClickListener(v -> mDrawerLayout.openDrawer(GravityCompat.START));
+    toolbar.setNavigationOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
   }
 
   @Override public boolean isDrawerOpened() {
-    return mDrawerLayout.isDrawerOpen(Gravity.LEFT);
+    return drawerLayout.isDrawerOpen(Gravity.LEFT);
   }
 
   @Override public void openDrawer() {
-    mDrawerLayout.openDrawer(Gravity.LEFT);
+    drawerLayout.openDrawer(Gravity.LEFT);
   }
 
   @Override public void closeDrawer() {
-    mDrawerLayout.closeDrawers();
+    drawerLayout.closeDrawers();
   }
 
   public class ChangeTabReceiver extends BroadcastReceiver {

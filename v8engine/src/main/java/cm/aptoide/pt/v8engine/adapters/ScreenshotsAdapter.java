@@ -80,7 +80,6 @@ public class ScreenshotsAdapter
     private ImageView play_button;
     private FrameLayout media_layout;
 
-
     ScreenshotsViewHolder(View itemView, NavigationManagerV4 navigationManager) {
       super(itemView);
       assignViews(itemView);
