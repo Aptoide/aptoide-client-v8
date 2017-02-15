@@ -151,11 +151,16 @@ public class SettingsFragment extends PreferenceFragmentCompat
     }
 
     //set AppStore name
-    findPreference(SettingsConstants.CHECK_AUTO_UPDATE).setTitle(
+    findPreference(SettingsConstants.CHECK_AUTO_UPDATE_CATEGORY).setTitle(
+        AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate,
+            Application.getConfiguration().getMarketName()));
+
+    Preference autoUpdatepreference = findPreference(SettingsConstants.CHECK_AUTO_UPDATE);
+    autoUpdatepreference.setTitle(
         AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate_title,
             Application.getConfiguration().getMarketName()));
-    findPreference(SettingsConstants.CHECK_AUTO_UPDATE_CATEGORY).setTitle(
-        AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate_title,
+    autoUpdatepreference.setSummary(
+        AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate_message,
             Application.getConfiguration().getMarketName()));
 
     findPreference(SettingsConstants.ADULT_CHECK_BOX).setOnPreferenceClickListener(
