@@ -16,5 +16,7 @@ public interface Product {
 
   String getTitle();
 
+  String getPrice();
+
   String getDescription();
 }

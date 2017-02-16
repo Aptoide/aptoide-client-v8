@@ -12,18 +12,20 @@ import cm.aptoide.pt.v8engine.payment.Product;
 /**
  * Created by marcelobenites on 8/30/16.
  */
-public abstract class AptoideProduct implements Product, Parcelable {
+public class AptoideProduct implements Product, Parcelable {
 
   private final int id;
   private final String icon;
   private final String title;
   private final String description;
+  private final String price;
 
-  public AptoideProduct(int id, String icon, String title, String description) {
+  public AptoideProduct(int id, String icon, String title, String description, String price) {
     this.id = id;
     this.icon = icon;
     this.title = title;
     this.description = description;
+    this.price = price;
   }
 
   protected AptoideProduct(Parcel in) {
@@ -31,6 +33,21 @@ public abstract class AptoideProduct implements Product, Parcelable {
     icon = in.readString();
     title = in.readString();
     description = in.readString();
+    price = in.readString();
+  }
+
+  public static final Creator<AptoideProduct> CREATOR = new Creator<AptoideProduct>() {
+    @Override public AptoideProduct createFromParcel(Parcel in) {
+      return new AptoideProduct(in);
+    }
+
+    @Override public AptoideProduct[] newArray(int size) {
+      return new AptoideProduct[size];
+    }
+  };
+
+  @Override public String getPrice() {
+    return price;
   }
 
   @Override public int getId() {
@@ -58,5 +75,6 @@ public abstract class AptoideProduct implements Product, Parcelable {
     dest.writeString(icon);
     dest.writeString(title);
     dest.writeString(description);
+    dest.writeString(price);
   }
 }

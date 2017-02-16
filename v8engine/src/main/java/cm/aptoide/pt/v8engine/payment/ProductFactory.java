@@ -18,7 +18,7 @@ public class ProductFactory {
 
   public AptoideProduct create(GetAppMeta.App app) {
     return new PaidAppProduct(app.getPay().getProductId(), app.getIcon(), app.getName(),
-        app.getMedia().getDescription(), app.getId(), app.getStore().getName());
+        app.getMedia().getDescription(), app.getId(), app.getStore().getName(), app.getPay().getPriceDescription());
   }
 
   public AptoideProduct create(InAppBillingSkuDetailsResponse.Metadata metadata, int apiVersion,
@@ -27,6 +27,6 @@ public class ProductFactory {
     return new InAppBillingProduct(metadata.getId(), metadata.getIcon(),
         purchaseDataObject.getTitle(), purchaseDataObject.getDescription(), apiVersion,
         purchaseDataObject.getProductId(), packageName, developerPayload,
-        purchaseDataObject.getType());
+        purchaseDataObject.getType(), purchaseDataObject.getPrice());
   }
 }

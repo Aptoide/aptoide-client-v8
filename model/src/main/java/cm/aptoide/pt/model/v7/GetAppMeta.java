@@ -61,6 +61,10 @@ import lombok.EqualsAndHashCode;
     public void setPaid() {
       status = "OK";
     }
+
+    public String getPriceDescription() {
+      return getSymbol() + " " + getPrice();
+    }
   }
 
   @Data public static class Developer {

@@ -21,6 +21,7 @@
       />
 
   <LinearLayout
+      android:id="@+id/activity_payment_card"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_centerInParent="true"
@@ -37,7 +38,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:visibility="gone"
         tools:visibility="visible"
         >
 
@@ -85,7 +85,6 @@
         android:layout_marginBottom="16dp"
         android:animateLayoutChanges="true"
         android:orientation="vertical"
-        android:visibility="gone"
         tools:visibility="visible"
         >
 
@@ -95,19 +94,6 @@
           android:layout_width="match_parent"
           android:layout_height="56dp"
           >
-
-        <TextView
-            android:id="@+id/activity_selected_payment_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="16dp"
-            android:layout_toStartOf="@+id/activity_selected_payment_price"
-            android:ellipsize="end"
-            android:lines="1"
-            tools:text="Boa Compra Gold"
-            style="@style/TextAppearance.Aptoide.Title"
-            />
 
         <ImageView
             android:id="@+id/activity_selected_payment_checked_image"
@@ -122,7 +108,7 @@
             />
 
         <TextView
-            android:id="@+id/activity_selected_payment_price"
+            android:id="@+id/activity_product_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -144,32 +130,17 @@
           android:background="@color/activity_payment_dark_gray"
           />
 
-      <Button
-          android:id="@+id/activity_payment_more_payments_button"
+      <RadioGroup
+          android:id="@+id/activity_payment_list"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:drawableEnd="@drawable/arrow_down"
-          android:gravity="start|center_vertical"
-          android:text="@string/activity_payment_more_payments_button"
-          android:visibility="gone"
-          tools:visibility="visible"
-          style="@style/Widget.Aptoide.DropDown.Borderless"
-          />
+          android:orientation="vertical"/>
 
-      <ScrollView
-          android:id="@+id/activity_payment_list_container"
+      <View
           android:layout_width="match_parent"
-          android:layout_height="72dp"
-          android:visibility="gone"
-          >
-        <LinearLayout
-            android:id="@+id/activity_payment_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            tools:ignore="UselessLeaf"
-            />
-      </ScrollView>
+          android:layout_height="0.5dp"
+          android:background="@color/activity_payment_dark_gray"
+          />
     </LinearLayout>
 
     <TextView
@@ -188,7 +159,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="8dp"
-        android:visibility="gone"
         tools:visibility="visible"
         >
 
@@ -214,15 +184,19 @@
 
   <LinearLayout
       android:id="@+id/activity_payment_global_progress_bar"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:layout_alignParentLeft="true"
-      android:layout_alignParentTop="true"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:layout_alignTop="@id/activity_payment_card"
+      android:layout_alignBottom="@id/activity_payment_card"
+      android:layout_alignEnd="@id/activity_payment_card"
+      android:layout_alignRight="@id/activity_payment_card"
+      android:layout_alignStart="@id/activity_payment_card"
+      android:layout_alignLeft="@id/activity_payment_card"
+      android:background="@drawable/dialog_bg"
       android:clickable="true"
-      android:focusable="true"
+      android:orientation="vertical"
       android:gravity="center"
       android:visibility="gone"
-      tools:visibility="visible"
       >
     <ProgressBar
         android:layout_width="wrap_content"

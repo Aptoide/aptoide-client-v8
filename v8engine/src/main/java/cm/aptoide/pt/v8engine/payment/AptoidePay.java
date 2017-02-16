@@ -11,6 +11,7 @@ import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationFactory;
 import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationRepository;
 import cm.aptoide.pt.v8engine.repository.PaymentConfirmationRepository;
 import cm.aptoide.pt.v8engine.repository.PaymentRepository;
+import java.util.Collections;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;

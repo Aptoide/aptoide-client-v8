@@ -62,7 +62,7 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
 
   @NonNull public static String getErrorMessage(BaseV3Response response) {
     final StringBuilder builder = new StringBuilder();
-    if (response != null) {
+    if (response != null && response.getErrors() != null) {
       for (ErrorResponse error : response.getErrors()) {
         builder.append(error.msg);
         builder.append(". ");
