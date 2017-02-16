@@ -5,6 +5,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.addressbook.data.Contact;
 import java.util.ArrayList;
@@ -29,29 +32,44 @@ public class SyncSuccessAdapter extends RecyclerView.Adapter<SyncSuccessAdapter.
   @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     Context context = parent.getContext();
     LayoutInflater inflater = LayoutInflater.from(context);
-    View contactView = inflater.inflate(R.layout.timeline_follow_user, parent, false);
+    View contactView = inflater.inflate(R.layout.addressbook_synced_contacts_item, parent, false);
 
     return new ViewHolder(contactView, mItemListener);
   }
 
   @Override public void onBindViewHolder(ViewHolder holder, int position) {
+    Contact contact = mContacts.get(position);
 
+    ImageLoader.loadWithShadowCircleTransform(contact.getStore().getAvatar(), holder.mMainIcon);
+    ImageLoader.loadWithShadowCircleTransform(contact.getPerson().getAvatar(),
+        holder.mSecondaryIcon);
+    holder.mStoreName.setText(contact.getStore().getName());
+    holder.mUserName.setText(contact.getPerson().getName());
   }
 
   @Override public int getItemCount() {
     return mContacts.size();
   }
 
-  public Contact getItem(int position) {
+  private Contact getItem(int position) {
     return mContacts.get(position);
   }
 
-  public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+  class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     private final SyncSuccessFragment.ContactItemListener mItemListener;
 
-    public ViewHolder(View contactView, SyncSuccessFragment.ContactItemListener itemListener) {
+    ImageView mMainIcon;
+    ImageView mSecondaryIcon;
+    TextView mStoreName;
+    TextView mUserName;
+
+    ViewHolder(View contactView, SyncSuccessFragment.ContactItemListener itemListener) {
       super(contactView);
       this.mItemListener = itemListener;
+      mMainIcon = (ImageView) contactView.findViewById(R.id.main_icon);
+      mSecondaryIcon = (ImageView) contactView.findViewById(R.id.secondary_icon);
+      mStoreName = (TextView) contactView.findViewById(R.id.store_name);
+      mUserName = (TextView) contactView.findViewById(R.id.user_name);
     }
 
     @Override public void onClick(View view) {

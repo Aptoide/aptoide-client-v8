@@ -8,9 +8,13 @@ import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.addressbook.data.Contact;
+import cm.aptoide.pt.v8engine.addressbook.data.ContactsRepositoryImpl;
+import cm.aptoide.pt.v8engine.addressbook.data.SyncAddressBookRequest;
 import cm.aptoide.pt.v8engine.fragment.SupportV4BaseFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import com.jakewharton.rxbinding.view.RxView;
+import java.util.List;
 
 /**
  * Created by jdandrade on 07/02/2017.
@@ -38,7 +42,8 @@ public class AddressBookFragment extends SupportV4BaseFragment implements Addres
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    mActionsListener = new AddressBookPresenter(this);
+    mActionsListener = new AddressBookPresenter(this,
+        new ContactsRepositoryImpl(new SyncAddressBookRequest(null, null)));
   }
 
   @Override public void setupViews() {
@@ -74,9 +79,9 @@ public class AddressBookFragment extends SupportV4BaseFragment implements Addres
             "default"));
   }
 
-  @Override public void showSuccessFragment() {
+  @Override public void showSuccessFragment(List<Contact> contacts) {
     ((FragmentShower) getContext()).pushFragmentV4(
-        V8Engine.getFragmentProvider().newSyncSuccessFragment());
+        V8Engine.getFragmentProvider().newSyncSuccessFragment(contacts));
   }
 
   private void changeSyncState(boolean checked, Button button) {

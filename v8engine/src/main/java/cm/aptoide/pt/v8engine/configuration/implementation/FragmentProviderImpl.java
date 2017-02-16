@@ -6,6 +6,7 @@ import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.v8engine.addressbook.AddressBookFragment;
+import cm.aptoide.pt.v8engine.addressbook.data.Contact;
 import cm.aptoide.pt.v8engine.addressbook.phoneinput.PhoneInputFragment;
 import cm.aptoide.pt.v8engine.addressbook.syncsuccess.SyncSuccessFragment;
 import cm.aptoide.pt.v8engine.configuration.FragmentProvider;
@@ -42,6 +43,7 @@ import cm.aptoide.pt.v8engine.fragment.implementations.storetab.MyStoresSubscrib
 import cm.aptoide.pt.v8engine.fragment.implementations.storetab.StoreTabGridRecyclerFragment;
 import cm.aptoide.pt.viewRateAndCommentReviews.RateAndReviewsFragment;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by neuro on 10-10-2016.
@@ -279,8 +281,8 @@ public class FragmentProviderImpl implements FragmentProvider {
     return AddressBookFragment.newInstance();
   }
 
-  @Override public Fragment newSyncSuccessFragment() {
-    return SyncSuccessFragment.newInstance();
+  @Override public Fragment newSyncSuccessFragment(List<Contact> contacts) {
+    return SyncSuccessFragment.newInstance(contacts);
   }
 
   @Override public Fragment newPhoneInputFragment() {

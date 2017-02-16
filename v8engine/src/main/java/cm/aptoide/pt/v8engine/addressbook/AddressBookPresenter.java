@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.addressbook;
 
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.v8engine.addressbook.data.ContactsRepository;
 
 /**
  * Created by jdandrade on 10/02/2017.
@@ -8,15 +9,20 @@ import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 public class AddressBookPresenter implements AddressBookContract.UserActionsListener {
 
   private final AddressBookContract.View mAddressBookView;
+  private final ContactsRepository mContactsRepository;
 
-  public AddressBookPresenter(AddressBookContract.View addressBookView) {
+  public AddressBookPresenter(AddressBookContract.View addressBookView,
+      ContactsRepository contactsRepository) {
     this.mAddressBookView = addressBookView;
+    this.mContactsRepository = contactsRepository;
   }
 
   @Override public void syncAddressBook() {
-    ManagerPreferences.setAddressBookAsSynced();
-    mAddressBookView.changeAddressBookState(true);
-    mAddressBookView.showSuccessFragment();
+    mContactsRepository.getContacts(contacts -> {
+      ManagerPreferences.setAddressBookAsSynced();
+      mAddressBookView.changeAddressBookState(true);
+      mAddressBookView.showSuccessFragment(contacts);
+    });
   }
 
   @Override public void syncTwitter() {

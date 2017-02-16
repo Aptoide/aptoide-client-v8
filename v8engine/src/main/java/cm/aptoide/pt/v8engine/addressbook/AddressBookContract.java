@@ -1,5 +1,8 @@
 package cm.aptoide.pt.v8engine.addressbook;
 
+import cm.aptoide.pt.v8engine.addressbook.data.Contact;
+import java.util.List;
+
 /**
  * Created by jdandrade on 10/02/2017.
  */
@@ -16,7 +19,7 @@ public interface AddressBookContract {
 
     void showAboutFragment();
 
-    void showSuccessFragment();
+    void showSuccessFragment(List<Contact> contacts);
   }
 
   interface UserActionsListener {

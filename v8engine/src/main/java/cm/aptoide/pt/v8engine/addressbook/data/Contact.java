@@ -1,12 +1,15 @@
 package cm.aptoide.pt.v8engine.addressbook.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.store.Store;
+import lombok.Data;
 
 /**
  * Created by jdandrade on 13/02/2017.
  */
-public class Contact {
+@Data public class Contact {
   private Comment.User person;
   private Store store;
 }

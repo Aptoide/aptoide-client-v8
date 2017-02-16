@@ -12,8 +12,11 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.addressbook.data.Contact;
 import cm.aptoide.pt.v8engine.fragment.SupportV4BaseFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by jdandrade on 13/02/2017.
@@ -21,21 +24,26 @@ import java.util.ArrayList;
 
 public class SyncSuccessFragment extends SupportV4BaseFragment implements SyncSuccessContract.View {
 
-  public static final int NUMBER_OF_COLUMNS = 2;
+  public static final int SYNCED_LIST_NUMBER_OF_COLUMNS = 2;
+  public static final String CONTACTS_JSON = "CONTACTS_JSON";
   private SyncSuccessContract.UserActionsListener mActionsListener;
   ContactItemListener mItemListener = new ContactItemListener() {
     @Override public void onContactClick(Contact clickedContact) {
       mActionsListener.openFriend(clickedContact);
     }
   };
+  private List<Contact> contacts;
   private RecyclerView recyclerView;
   private SyncSuccessAdapter mListAdapter;
   private Button allowFind;
   private Button done;
 
-  public static Fragment newInstance() {
+  public static Fragment newInstance(List<Contact> contacts) {
     SyncSuccessFragment syncSuccessFragment = new SyncSuccessFragment();
+    Gson gson = new Gson();
+    String contactsJson = gson.toJson(contacts);
     Bundle extras = new Bundle();
+    extras.putString(CONTACTS_JSON, contactsJson);
     syncSuccessFragment.setArguments(extras);
     return syncSuccessFragment;
   }
@@ -58,13 +66,22 @@ public class SyncSuccessFragment extends SupportV4BaseFragment implements SyncSu
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     mActionsListener = new SyncSuccessPresenter(this);
-    mListAdapter = new SyncSuccessAdapter(new ArrayList<>(0), mItemListener);
+    mListAdapter = new SyncSuccessAdapter((ArrayList<Contact>) contacts, mItemListener);
+  }
+
+  @Override public void loadExtras(Bundle args) {
+    super.loadExtras(args);
+    final String contactsJson = (String) args.get(CONTACTS_JSON);
+    Gson gson = new Gson();
+    contacts = gson.fromJson(contactsJson, new TypeToken<ArrayList<Contact>>() {
+    }.getType());
   }
 
   @Override public void setupViews() {
     recyclerView.setAdapter(mListAdapter);
     recyclerView.setHasFixedSize(true);
-    recyclerView.setLayoutManager(new GridLayoutManager(getContext(), NUMBER_OF_COLUMNS));
+    recyclerView.setLayoutManager(new GridLayoutManager(getContext(), SYNCED_LIST_NUMBER_OF_COLUMNS));
+
     RxView.clicks(allowFind).subscribe(click -> mActionsListener.allowFindClicked());
     RxView.clicks(done).subscribe(click -> mActionsListener.doneClicked());
   }
