@@ -5,10 +5,6 @@
 
 package cm.aptoide.pt.v8engine.fragment;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.IdRes;
@@ -31,12 +27,10 @@ public abstract class BaseLoaderFragment extends UIComponentFragment implements 
 
   private LoaderLayoutHandler loaderLayoutHandler;
   @Getter private boolean create = true;
-  private BroadcastReceiver receiver;
 
   @CallSuper @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     load(create, false, savedInstanceState);
-    registerReceiverForAccountManager();
   }
 
   @Partners @CallSuper @Nullable @Override
@@ -53,17 +47,6 @@ public abstract class BaseLoaderFragment extends UIComponentFragment implements 
   @IdRes protected abstract int getViewToShowAfterLoadingId();
 
   public abstract void load(boolean create, boolean refresh, Bundle savedInstanceState);
-
-  protected void registerReceiverForAccountManager() {
-    receiver = new BroadcastReceiver() {
-      @Override public void onReceive(Context context, Intent intent) {
-        load(false, true, null);
-      }
-    };
-    IntentFilter intentFilter = new IntentFilter(AptoideAccountManager.LOGIN);
-    intentFilter.addAction(AptoideAccountManager.LOGOUT);
-    getContext().registerReceiver(receiver, intentFilter);
-  }
 
   @CallSuper @Override public void bindViews(View view) {
     if (loaderLayoutHandler != null) {
@@ -86,19 +69,10 @@ public abstract class BaseLoaderFragment extends UIComponentFragment implements 
   }
 
   @CallSuper @Override public void onDestroyView() {
+    super.onDestroyView();
     if (loaderLayoutHandler != null) {
       loaderLayoutHandler.unbindViews();
       loaderLayoutHandler = null;
-    }
-    unregisterReceiverForAccountManager();
-    super.onDestroyView();
-  }
-
-  private void unregisterReceiverForAccountManager() {
-    try {
-      getContext().unregisterReceiver(receiver);
-    } catch (IllegalArgumentException ex) {
-      CrashReport.getInstance().log(ex);
     }
   }
 
