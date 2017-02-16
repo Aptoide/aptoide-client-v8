@@ -40,6 +40,7 @@ import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
 import cm.aptoide.accountmanager.ws.responses.GenericResponseV3;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
+import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
@@ -337,7 +338,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     }
     OAuth2AuthenticationRequest oAuth2AuthenticationRequest =
         OAuth2AuthenticationRequest.of(userName, passwordOrToken, mode, nameForGoogle,
-            aptoideClientUuid.getAptoideClientUUID());
+            aptoideClientUuid.getUniqueIdentifier());
     final ProgressDialog finalGenericPleaseWaitDialog = genericPleaseWaitDialog;
     oAuth2AuthenticationRequest.execute(oAuth -> {
       Logger.d(TAG, "onSuccess() called with: " + "oAuth = [" + oAuth + "]");
@@ -476,7 +477,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
    *
    * @param matureSwitch Switch state
    */
-  public static void updateMatureSwitch(boolean matureSwitch) {
+  @Partners public static void updateMatureSwitch(boolean matureSwitch) {
     AccountManagerPreferences.setMatureSwitch(matureSwitch);
     if (userIsLoggedIn) {
       ChangeUserSettingsRequest.of(matureSwitch)
@@ -531,7 +532,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
 
   private static Observable<String> getNewAccessTokenFromRefreshToken(String refreshToken,
       Action1<Throwable> action1) {
-    return OAuth2AuthenticationRequest.of(refreshToken, aptoideClientUuid.getAptoideClientUUID())
+    return OAuth2AuthenticationRequest.of(refreshToken, aptoideClientUuid.getUniqueIdentifier())
         .observe()
         .observeOn(AndroidSchedulers.mainThread())
         .map(OAuth::getAccessToken)
@@ -645,7 +646,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     String email = callback.getUserEmail();
     String password = callback.getUserPassword();
     if (validateUserCredentials(callback, email, password)) {
-      CreateUserRequest.of(email, password, aptoideClientUuid.getAptoideClientUUID())
+      CreateUserRequest.of(email, password, aptoideClientUuid.getUniqueIdentifier())
           .execute(oAuth -> {
             if (oAuth.hasErrors()) {
               if (oAuth.getErrors() != null && oAuth.getErrors().size() > 0) {
@@ -887,7 +888,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
    *
    * @return A string with the token
    */
-  @Nullable public static String getAccessToken() {
+  @Partners @Nullable public static String getAccessToken() {
     String accessToken = AccountManagerPreferences.getAccessToken();
     if (accessToken == null || TextUtils.isEmpty(accessToken)) {
       accessToken = getUserStringFromAndroidAccountManager(SecureKeys.ACCESS_TOKEN);

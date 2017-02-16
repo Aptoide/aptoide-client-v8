@@ -16,7 +16,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.annotation.Partners;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.interfaces.ReloadInterface;
 import cm.aptoide.pt.v8engine.layouthandler.LoaderLayoutHandler;
 import cm.aptoide.pt.v8engine.layouthandler.SwipeLoaderLayoutHandler;
@@ -33,11 +36,11 @@ public abstract class GridRecyclerSwipeFragment<T extends BaseAdapter>
   protected String storeTheme;
   private BroadcastReceiver receiver;
 
-  @Nullable @Override
+  @Partners @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     if (storeTheme == null) {
-      storeTheme = "default";
+      storeTheme = V8Engine.getConfiguration().getDefaultTheme();
     }
     ThemeUtils.setStoreTheme(getActivity(), storeTheme);
     ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
@@ -77,9 +80,14 @@ public abstract class GridRecyclerSwipeFragment<T extends BaseAdapter>
     getContext().registerReceiver(receiver, intentFilter);
   }
 
-  private void unregisterReceiverForAccountManager() {
-    getContext().unregisterReceiver(receiver);
-  }
+
+    private void unregisterReceiverForAccountManager() {
+      try {
+        getContext().unregisterReceiver(receiver);
+      } catch (IllegalArgumentException ex) {
+        CrashReport.getInstance().log(ex);
+      }
+    }
 
   protected static class BundleCons {
 

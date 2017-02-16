@@ -1,8 +1,14 @@
 package cm.aptoide.pt.v8engine.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import com.trello.rxlifecycle.LifecycleTransformer;
 import com.trello.rxlifecycle.RxLifecycle;
@@ -13,6 +19,19 @@ import rx.Observable;
 public abstract class FragmentView extends RxFragment implements cm.aptoide.pt.v8engine.view.View {
 
   private Presenter presenter;
+
+  private NavigationManagerV4 navigator;
+
+  public NavigationManagerV4 getNavigationManager() {
+    return navigator;
+  }
+
+  @CallSuper @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    navigator = NavigationManagerV4.Builder.buildWith(getActivity());
+    return super.onCreateView(inflater, container, savedInstanceState);
+  }
 
   @NonNull @Override
   public final <T> LifecycleTransformer<T> bindUntilEvent(@NonNull LifecycleEvent lifecycleEvent) {

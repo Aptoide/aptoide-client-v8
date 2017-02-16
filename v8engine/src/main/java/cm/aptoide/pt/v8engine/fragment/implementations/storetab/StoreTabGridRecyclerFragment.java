@@ -13,8 +13,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.Layout;
 import cm.aptoide.pt.v8engine.R;
@@ -41,20 +43,23 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
   protected String title;
   protected String tag;
   protected String storeTheme;
+  protected StoreContext storeContext;
 
-  public static Fragment newInstance(Event event, String storeTheme, String tag) {
-    return newInstance(event, null, storeTheme, tag);
+  public static Fragment newInstance(Event event, String storeTheme, String tag,
+      StoreContext storeContext) {
+    return newInstance(event, null, storeTheme, tag, storeContext);
   }
 
-  public static Fragment newInstance(Event event, String title, String storeTheme, String tag) {
-    Bundle args = buildBundle(event, title, storeTheme, tag);
+  public static Fragment newInstance(Event event, String title, String storeTheme, String tag,
+      StoreContext storeContext) {
+    Bundle args = buildBundle(event, title, storeTheme, tag, storeContext);
     Fragment fragment = StoreTabFragmentChooser.choose(event.getName());
     fragment.setArguments(args);
     return fragment;
   }
 
-  @NonNull
-  protected static Bundle buildBundle(Event event, String title, String storeTheme, String tag) {
+  @Partners @NonNull
+  protected static Bundle buildBundle(Event event, String title, String storeTheme, String tag,StoreContext storeContext) {
     Bundle args = new Bundle();
 
     if (event.getType() != null) {
@@ -67,6 +72,10 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
 
     if (event.getData() != null && event.getData().getLayout() != null) {
       args.putString(BundleCons.LAYOUT, event.getData().getLayout().toString());
+    }
+
+    if (storeContext != null) {
+      args.putSerializable(BundleCons.STORE_CONTEXT, storeContext);
     }
 
     args.putString(BundleCons.TITLE, title);
@@ -82,7 +91,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
     super.onCreate(savedInstanceState);
   }
 
-  @Override public void loadExtras(Bundle args) {
+  @Partners @Override public void loadExtras(Bundle args) {
     if (args.containsKey(BundleCons.TYPE)) {
       type = Event.Type.valueOf(args.getString(BundleCons.TYPE));
     }
@@ -94,6 +103,9 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
     }
     if (args.containsKey(BundleCons.TAG)) {
       tag = args.getString(BundleCons.TAG);
+    }
+    if (args.containsKey(BundleCons.STORE_CONTEXT)) {
+      storeContext = ((StoreContext) args.getSerializable(BundleCons.STORE_CONTEXT));
     }
     title = args.getString(Translator.translate(BundleCons.TITLE));
     action = args.getString(BundleCons.ACTION);
@@ -174,5 +186,6 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
     public static final String STORE_THEME = "storeTheme";
     public static final String LAYOUT = "layout";
     public static final String TAG = "tag";
+    public static String STORE_CONTEXT = "Store_context";
   }
 }

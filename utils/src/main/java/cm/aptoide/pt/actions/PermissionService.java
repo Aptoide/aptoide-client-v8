@@ -13,7 +13,7 @@ import rx.functions.Action0;
 /**
  * Created by sithengineer on 16/06/16.
  */
-public interface PermissionRequest {
+public interface PermissionService {
 
   @TargetApi(Build.VERSION_CODES.M) void requestAccessToExternalFileSystem(
       @Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDenied);

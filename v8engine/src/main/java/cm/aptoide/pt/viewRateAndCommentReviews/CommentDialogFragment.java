@@ -10,18 +10,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.CommentType;
+import cm.aptoide.pt.dataprovider.ws.v7.PostCommentForReview;
+import cm.aptoide.pt.dataprovider.ws.v7.PostCommentForTimelineArticle;
+import cm.aptoide.pt.dataprovider.ws.v7.store.PostCommentForStore;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
+import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.CommentListFragment;
 import com.jakewharton.rxbinding.view.RxView;
+import com.trello.rxlifecycle.android.FragmentEvent;
 import com.trello.rxlifecycle.components.RxDialogFragment;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 
 public class CommentDialogFragment extends RxDialogFragment {
 
@@ -185,19 +194,29 @@ public class CommentDialogFragment extends RxDialogFragment {
       }
     });
 
-    RxView.clicks(commentButton).flatMap(a -> Observable.just(getText())).filter(inputText -> {
-      if (TextUtils.isEmpty(inputText)) {
-        enableError(onEmptyTextError);
-        return false;
-      }
-      disableError();
-      return true;
-    }).subscribe(inputText -> {
-      this.dismiss();
-      commentDialogCallbackContract.okSelected(inputText, idAsLong, previousCommentId, idAsString);
-    }, err -> {
-      CrashReport.getInstance().log(err);
-    });
+    RxView.clicks(commentButton)
+        .flatMap(a -> Observable.just(getText()))
+        .filter(inputText -> {
+          if (TextUtils.isEmpty(inputText)) {
+            enableError(onEmptyTextError);
+            return false;
+          }
+          disableError();
+          return true;
+        })
+        .flatMap(inputText -> submitComment(inputText, idAsLong, previousCommentId,
+            idAsString).observeOn(AndroidSchedulers.mainThread()).doOnError(e -> {
+          CrashReport.getInstance().log(e);
+          ShowMessage.asSnack(this, R.string.error_occured);
+        }).retry().compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW)))
+        .subscribe(resp -> {
+          if (resp.isOk()) {
+            this.dismiss();
+            commentDialogCallbackContract.okSelected(resp, idAsLong, previousCommentId, idAsString);
+          } else {
+            ShowMessage.asSnack(this, R.string.error_occured);
+          }
+        }, throwable -> CrashReport.getInstance().log(throwable));
   }
 
   private void disableError() {
@@ -213,6 +232,42 @@ public class CommentDialogFragment extends RxDialogFragment {
 
   private void enableError(String error) {
     textInputLayout.setError(error);
+  }
+
+  private Observable<? extends BaseV7Response> submitComment(String inputText, long idAsLong,
+      Long previousCommentId, String idAsString) {
+    switch (commentType) {
+      case REVIEW:
+        // new comment on a review
+        return PostCommentForReview.of(idAsLong, inputText, AptoideAccountManager.getAccessToken(),
+            aptoideClientUUID.getUniqueIdentifier()).observe();
+
+      case STORE:
+        // check if this is a new comment on a store or a reply to a previous one
+        if (previousCommentId == null) {
+          return PostCommentForStore.of(idAsLong, inputText, AptoideAccountManager.getAccessToken(),
+              aptoideClientUUID.getUniqueIdentifier()).observe();
+        }
+
+        return PostCommentForStore.of(idAsLong, previousCommentId, inputText,
+            AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
+            .observe();
+
+      case TIMELINE:
+        // check if this is a new comment on a article or a reply to a previous one
+        if (previousCommentId == null) {
+          return PostCommentForTimelineArticle.of(idAsString, inputText,
+              AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
+              .observe();
+        }
+
+        return PostCommentForTimelineArticle.of(idAsString, previousCommentId, inputText,
+            AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
+            .observe();
+    }
+    // default case
+    Logger.e(this.getTag(), "Unable to create reply due to missing comment type");
+    return Observable.empty();
   }
 
   public void setCommentDialogCallbackContract(CommentListFragment commentDialogCallbackContract) {

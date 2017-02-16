@@ -13,6 +13,9 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.annotation.Partners;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.interfaces.LoadInterface;
 import cm.aptoide.pt.v8engine.layouthandler.LoaderLayoutHandler;
 import lombok.Getter;
@@ -20,7 +23,7 @@ import lombok.Getter;
 /**
  * Created by neuro on 16-04-2016.
  */
-public abstract class BaseLoaderFragment extends SupportV4BaseFragment implements LoadInterface {
+public abstract class BaseLoaderFragment extends UIComponentFragment implements LoadInterface {
 
   private LoaderLayoutHandler loaderLayoutHandler;
   @Getter private boolean create = true;
@@ -30,7 +33,7 @@ public abstract class BaseLoaderFragment extends SupportV4BaseFragment implement
     load(create, false, savedInstanceState);
   }
 
-  @CallSuper @Nullable @Override
+  @Partners @CallSuper @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     loaderLayoutHandler = createLoaderLayoutHandler();
@@ -54,7 +57,7 @@ public abstract class BaseLoaderFragment extends SupportV4BaseFragment implement
     }
   }
 
-  @CallSuper protected void finishLoading() {
+  @Partners @CallSuper protected void finishLoading() {
     if (loaderLayoutHandler != null) {
       loaderLayoutHandler.finishLoading();
     }
@@ -73,9 +76,10 @@ public abstract class BaseLoaderFragment extends SupportV4BaseFragment implement
     }
   }
 
-  @CallSuper protected void finishLoading(Throwable throwable) {
+  @Partners @CallSuper protected void finishLoading(Throwable throwable) {
     if (loaderLayoutHandler != null) {
       loaderLayoutHandler.finishLoading(throwable);
     }
+    CrashReport.getInstance().log(throwable);
   }
 }

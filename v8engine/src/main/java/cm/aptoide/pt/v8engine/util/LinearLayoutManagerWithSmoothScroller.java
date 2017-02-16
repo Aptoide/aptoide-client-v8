@@ -16,13 +16,13 @@ import android.support.v7.widget.RecyclerView;
  * <p>
  * from {@see http://stackoverflow.com/questions/31235183/recyclerview-how-to-smooth-scroll-to-top-of-item-on-a-certain-position/32819067}
  */
-public class LinearLayoutManagerWithSmootheScroller extends LinearLayoutManager {
+public class LinearLayoutManagerWithSmoothScroller extends LinearLayoutManager {
 
-  public LinearLayoutManagerWithSmootheScroller(Context context) {
+  public LinearLayoutManagerWithSmoothScroller(Context context) {
     super(context, VERTICAL, false);
   }
 
-  public LinearLayoutManagerWithSmootheScroller(Context context, int orientation,
+  public LinearLayoutManagerWithSmoothScroller(Context context, int orientation,
       boolean reverseLayout) {
     super(context, orientation, reverseLayout);
   }
@@ -46,7 +46,7 @@ public class LinearLayoutManagerWithSmootheScroller extends LinearLayoutManager 
     }
 
     @Override public PointF computeScrollVectorForPosition(int targetPosition) {
-      return LinearLayoutManagerWithSmootheScroller.this.computeScrollVectorForPosition(
+      return LinearLayoutManagerWithSmoothScroller.this.computeScrollVectorForPosition(
           targetPosition);
     }
   }

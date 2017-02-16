@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.payment.AptoidePay;
 import cm.aptoide.pt.v8engine.payment.Payer;
@@ -119,7 +120,10 @@ public class WebAuthorizationActivity extends ActivityView {
           aptoidePay.authorize(webAuthorization.getPaymentId())
               .observeOn(AndroidSchedulers.mainThread())
               .compose(bindUntilEvent(ActivityEvent.DESTROY).forCompletable())
-              .subscribe(() -> hideLoadingAndDismiss(), throwable -> hideLoadingAndDismiss());
+              .subscribe(() -> hideLoadingAndDismiss(), throwable -> {
+                hideLoadingAndDismiss();
+                CrashReport.getInstance().log(throwable);
+              });
         }
       }
 

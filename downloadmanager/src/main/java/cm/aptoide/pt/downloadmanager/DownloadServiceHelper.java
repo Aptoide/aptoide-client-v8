@@ -8,7 +8,7 @@ package cm.aptoide.pt.downloadmanager;
 import android.content.Context;
 import android.content.Intent;
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.actions.PermissionRequest;
+import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
@@ -65,7 +65,7 @@ import rx.schedulers.Schedulers;
     });
   }
 
-  public Observable<Download> startDownload(PermissionRequest permissionRequest,
+  public Observable<Download> startDownload(PermissionService permissionRequest,
       Download download) {
     return startDownload(AccessorFactory.getAccessorFor(Download.class), permissionRequest,
         download).doOnError(e -> {
@@ -80,7 +80,7 @@ import rx.schedulers.Schedulers;
    * @return An observable that reports the download state
    */
   public Observable<Download> startDownload(DownloadAccessor downloadAccessor,
-      PermissionRequest permissionRequest, Download download) {
+      PermissionService permissionRequest, Download download) {
     return permissionManager.requestExternalStoragePermission(permissionRequest)
         .flatMap(success -> permissionManager.requestDownloadAccess(permissionRequest))
         .flatMap(success -> Observable.fromCallable(() -> {

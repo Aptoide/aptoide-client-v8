@@ -39,7 +39,7 @@ public class CommentsReadMoreWidget extends Widget<CommentsReadMoreDisplayable> 
   @Override public void bindView(CommentsReadMoreDisplayable displayable) {
     compositeSubscription.add(RxView.clicks(readMoreButton).subscribe(aVoid -> {
       ListCommentsRequest.of(displayable.getResourceId(), displayable.getNext(), 100,
-          AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID(),
+          AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier(),
           displayable.isReview())
           .execute(listComments -> displayable.getCommentAdder()
               .addComment(listComments.getDatalist().getList()));

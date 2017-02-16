@@ -26,10 +26,6 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
     // TODO
   }
 
-  @Override public void unbindView() {
-
-  }
-
   @Override public void bindView(Displayable displayable) {
     // TODO
   }

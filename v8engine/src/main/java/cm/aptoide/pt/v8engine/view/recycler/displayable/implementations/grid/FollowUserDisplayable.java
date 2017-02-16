@@ -4,10 +4,10 @@ import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import cm.aptoide.pt.model.v7.GetFollowers;
 import cm.aptoide.pt.model.v7.store.Store;
+import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.implementations.TimeLineFollowFragment;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 
@@ -110,7 +110,7 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
     return getPojo().getStore() != null && !TextUtils.isEmpty(getPojo().getStore().getName());
   }
 
-  public void viewClicked(FragmentShower shower) {
+  public void viewClicked(NavigationManagerV4 navigationManager) {
     Store store = getPojo().getStore();
     String theme;
     if (store.getAppearance() != null) {
@@ -120,7 +120,9 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
     } else {
       theme = V8Engine.getConfiguration().getDefaultTheme();
     }
-    shower.pushFragmentV4(V8Engine.getFragmentProvider().newStoreFragment(store.getName(), theme));
+
+    navigationManager.navigateTo(
+        V8Engine.getFragmentProvider().newStoreFragment(store.getName(), theme));
   }
 
   public TimeLineFollowFragment.FollowFragmentOpenMode getOpenMode() {

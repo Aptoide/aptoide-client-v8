@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.timeline;
 
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.ImageView;
@@ -18,7 +19,6 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.TimelineClickEvent;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.AppUpdateDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Observable;
@@ -70,18 +70,20 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
   @Override public void bindView(AppUpdateDisplayable displayable) {
     super.bindView(displayable);
     this.displayable = displayable;
-    appName.setText(displayable.getAppTitle(getContext()));
-    appUpdate.setText(displayable.getHasUpdateText(getContext()));
-    appVersion.setText(displayable.getVersionText(getContext()));
+    final FragmentActivity context = getContext();
+    appName.setText(displayable.getAppTitle(context));
+    appUpdate.setText(displayable.getHasUpdateText(context));
+    appVersion.setText(displayable.getVersionText(context));
     setCardViewMargin(displayable, cardView);
     updateButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.timeline_update_app_dark, 0, 0,
         0);
-    updateButton.setText(displayable.getUpdateAppText(getContext()));
+    updateButton.setText(displayable.getUpdateAppText(context));
     updateButton.setEnabled(true);
-    ImageLoader.load(displayable.getAppIconUrl(), appIcon);
-    ImageLoader.loadWithShadowCircleTransform(displayable.getStoreIconUrl(), storeImage);
+    ImageLoader.with(context).load(displayable.getAppIconUrl(), appIcon);
+    ImageLoader.with(context)
+        .loadWithShadowCircleTransform(displayable.getStoreIconUrl(), storeImage);
     storeName.setText(displayable.getStoreName());
-    updateDate.setText(displayable.getTimeSinceLastUpdate(getContext()));
+    updateDate.setText(displayable.getTimeSinceLastUpdate(context));
     errorText.setVisibility(View.GONE);
 
     compositeSubscription.add(RxView.clicks(store).subscribe(click -> {
@@ -97,7 +99,7 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
               .app(displayable.getPackageName())
               .build())
           .build(), TimelineClickEvent.OPEN_STORE);
-      ((FragmentShower) getContext()).pushFragmentV4(
+      getNavigationManager().navigateTo(
           V8Engine.getFragmentProvider().newStoreFragment(displayable.getStoreName()));
     }));
 
@@ -109,7 +111,7 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
           .specific(
               SendEventRequest.Body.Specific.builder().app(displayable.getPackageName()).build())
           .build(), TimelineClickEvent.OPEN_APP);
-      ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
+      getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
           .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
     }));
 
@@ -124,8 +126,7 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
           .specific(
               SendEventRequest.Body.Specific.builder().app(displayable.getPackageName()).build())
           .build(), TimelineClickEvent.UPDATE_APP);
-      return displayable.requestPermission(getContext())
-          .flatMap(success -> displayable.update(getContext()));
+      return displayable.requestPermission(context).flatMap(success -> displayable.update(context));
     }).retryWhen(errors -> errors.observeOn(AndroidSchedulers.mainThread()).flatMap(error -> {
       showDownloadError(displayable);
       Logger.d(this.getClass().getSimpleName(), " stack : " + error.getMessage());

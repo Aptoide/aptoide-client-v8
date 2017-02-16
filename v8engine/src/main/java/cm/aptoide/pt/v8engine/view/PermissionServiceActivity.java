@@ -1,25 +1,19 @@
 /*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 29/08/2016.
+ * Copyright (c) 2017.
+ * Modified by Marcelo Benites on 18/01/2017.
  */
 
-package cm.aptoide.pt.v8engine.activity;
+package cm.aptoide.pt.v8engine.view;
 
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Bundle;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import cm.aptoide.pt.actions.PermissionRequest;
-import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
-import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
+import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -28,100 +22,26 @@ import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.activity.ActivityView;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
-import cm.aptoide.pt.v8engine.interfaces.UiComponentBasics;
-import lombok.Getter;
 import rx.functions.Action0;
 
 /**
- * Created by neuro on 01-05-2016.
+ * Created by marcelobenites on 18/01/17.
  */
-public abstract class AptoideBaseActivity extends AppCompatActivity
-    implements UiComponentBasics, PermissionRequest {
 
-  private static final String TAG = AptoideBaseActivity.class.getName();
+public abstract class PermissionServiceActivity extends ActivityView implements PermissionService {
+
+  private static final String TAG = PermissionServiceActivity.class.getName();
   private static final int ACCESS_TO_EXTERNAL_FS_REQUEST_ID = 61;
   private static final int ACCESS_TO_ACCOUNTS_REQUEST_ID = 62;
-  @Getter private boolean _resumed = false;
+
   @Nullable private Action0 toRunWhenAccessToFileSystemIsGranted;
   @Nullable private Action0 toRunWhenAccessToFileSystemIsDenied;
   @Nullable private Action0 toRunWhenAccessToAccountsIsGranted;
   @Nullable private Action0 toRunWhenAccessToAccountsIsDenied;
   @Nullable private Action0 toRunWhenDownloadAccessIsGranted;
   @Nullable private Action0 toRunWhenDownloadAccessIsDenied;
-
-  @Override protected void onCreate(Bundle savedInstanceState) {
-
-    super.onCreate(savedInstanceState);
-    // https://fabric.io/downloads/gradle/ndk
-    // Fabric.with(this, new Crashlytics(), new CrashlyticsNdk());
-
-    if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-      ((CrashlyticsCrashLogger) CrashReport.getInstance()
-          .getLogger(CrashlyticsCrashLogger.class)).setLanguage(
-          getResources().getConfiguration().locale.getLanguage());
-    } else {
-      ((CrashlyticsCrashLogger) CrashReport.getInstance()
-          .getLogger(CrashlyticsCrashLogger.class)).setLanguage(
-          getResources().getConfiguration().getLocales().get(0).getLanguage());
-    }
-
-    setUpAnalytics();
-
-    if (getIntent().getExtras() != null) {
-      loadExtras(getIntent().getExtras());
-    }
-    setContentView(getContentViewId());
-    bindViews(getWindow().getDecorView().getRootView());
-    setupToolbar();
-    setupViews();
-  }
-
-  private void setUpAnalytics() {
-    Analytics.Dimensions.setPartnerDimension(Analytics.Dimensions.PARTNER);
-    Analytics.Dimensions.setVerticalDimension(Analytics.Dimensions.VERTICAL);
-    Analytics.Dimensions.setGmsPresent(
-        DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(this));
-  }
-
-  /**
-   * @return the LayoutRes to be set on {@link #setContentView(int)}.
-   */
-  @LayoutRes public abstract int getContentViewId();
-
-  @Override protected void onStart() {
-    super.onStart();
-    Analytics.Lifecycle.Activity.onStart(this);
-  }
-
-  @Override protected void onStop() {
-    super.onStop();
-    Analytics.Lifecycle.Activity.onStop(this);
-  }
-
-  @Override protected void onDestroy() {
-    super.onDestroy();
-  }
-
-  @Override protected void onPause() {
-    super.onPause();
-    _resumed = false;
-    Analytics.Lifecycle.Activity.onPause(this);
-  }
-
-  @Override protected void onResume() {
-    super.onResume();
-    _resumed = true;
-    Analytics.Lifecycle.Activity.onResume(this);
-  }
-
-  //
-  // code to support android M permission system
-  //
-  // android 6 permission system
-  // consider using https://github.com/hotchemi/PermissionsDispatcher
-  //
 
   @TargetApi(Build.VERSION_CODES.M) @Override
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
@@ -173,18 +93,13 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
     }
   }
 
-  /**
-   * @return o nome so monitor associado a esta activity, para efeitos de Analytics.
-   */
-  protected abstract String getAnalyticsScreenName();
-
-  @TargetApi(Build.VERSION_CODES.M)
+  @TargetApi(Build.VERSION_CODES.M) @Override
   public void requestAccessToExternalFileSystem(@Nullable Action0 toRunWhenAccessIsGranted,
       @Nullable Action0 toRunWhenAccessIsDennied) {
     requestAccessToExternalFileSystem(true, toRunWhenAccessIsGranted, toRunWhenAccessIsDennied);
   }
 
-  @TargetApi(Build.VERSION_CODES.M)
+  @TargetApi(Build.VERSION_CODES.M) @Override
   public void requestAccessToExternalFileSystem(boolean forceShowRationale,
       @Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDennied) {
     int hasPermission =
@@ -210,7 +125,7 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
                   return;
                 }
 
-                ActivityCompat.requestPermissions(AptoideBaseActivity.this, new String[] {
+                ActivityCompat.requestPermissions(PermissionServiceActivity.this, new String[] {
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     Manifest.permission.READ_EXTERNAL_STORAGE
                 }, ACCESS_TO_EXTERNAL_FS_REQUEST_ID);
@@ -231,13 +146,14 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
     }
   }
 
-  @TargetApi(Build.VERSION_CODES.M)
+  @TargetApi(Build.VERSION_CODES.M) @Override
   public void requestAccessToAccounts(@Nullable Action0 toRunWhenAccessIsGranted,
       @Nullable Action0 toRunWhenAccessIsDenied) {
     requestAccessToAccounts(true, toRunWhenAccessIsGranted, toRunWhenAccessIsDenied);
   }
 
-  @TargetApi(Build.VERSION_CODES.M) public void requestAccessToAccounts(boolean forceShowRationale,
+  @TargetApi(Build.VERSION_CODES.M) @Override
+  public void requestAccessToAccounts(boolean forceShowRationale,
       @Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDenied) {
     int hasPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.GET_ACCOUNTS);
     if (hasPermission != PackageManager.PERMISSION_GRANTED) {
@@ -261,7 +177,7 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
                   return;
                 }
 
-                ActivityCompat.requestPermissions(AptoideBaseActivity.this, new String[] {
+                ActivityCompat.requestPermissions(PermissionServiceActivity.this, new String[] {
                     Manifest.permission.GET_ACCOUNTS
                 }, ACCESS_TO_ACCOUNTS_REQUEST_ID);
               }
@@ -280,7 +196,7 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
     }
   }
 
-  public void requestDownloadAccess(@Nullable Action0 toRunWhenAccessIsGranted,
+  @Override public void requestDownloadAccess(@Nullable Action0 toRunWhenAccessIsGranted,
       @Nullable Action0 toRunWhenAccessIsDenied) {
     int message = R.string.general_downloads_dialog_no_download_rule_message;
 
@@ -308,12 +224,13 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
         @Override public void onNext(GenericDialogs.EResponse eResponse) {
           super.onNext(eResponse);
           if (eResponse == GenericDialogs.EResponse.YES) {
-            if (AptoideBaseActivity.this instanceof FragmentShower) {
-              ((FragmentShower) AptoideBaseActivity.this).pushFragmentV4(
+            if (PermissionServiceActivity.this instanceof FragmentShower) {
+              getNavigationManager().navigateTo(
                   V8Engine.getFragmentProvider().newSettingsFragment());
             } else {
-              Logger.e(AptoideBaseActivity.class.getSimpleName(), new IllegalArgumentException(
-                  "The Fragment should be an instance of the " + "Activity Context"));
+              Logger.e(PermissionServiceActivity.class.getSimpleName(),
+                  new IllegalArgumentException(
+                      "The Fragment should be an instance of the " + "Activity Context"));
             }
           } else {
             if (toRunWhenAccessIsDenied != null) {

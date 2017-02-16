@@ -243,8 +243,7 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
         @Body PostCommentForReview.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("setComment") Observable<SetComment> postStoreComment(
-        @Body PostCommentForStore.Body body,
+    @POST("setComment") Observable<SetComment> postStoreComment(@Body PostCommentForStore.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("setComment") Observable<SetComment> postTimelineComment(

@@ -7,6 +7,8 @@ package cm.aptoide.pt.dataprovider.util;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
+import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.model.MinimalAdInterface;
 import cm.aptoide.pt.model.StoredMinimalAdInterface;
@@ -55,17 +57,18 @@ public class DataproviderUtils {
 
     public static String parseMacros(@NonNull String clickUrl, IdsRepository idsRepository) {
 
-      if (idsRepository.getAndroidId() != null) {
-        clickUrl = clickUrl.replace("[USER_ANDROID_ID]", idsRepository.getAndroidId());
+      final String androidId = idsRepository.getAndroidId();
+      if (!TextUtils.isEmpty(androidId)) {
+        clickUrl = clickUrl.replace("[USER_ANDROID_ID]", androidId);
       }
-      clickUrl = clickUrl.replace("[USER_UDID]", idsRepository.getAptoideClientUUID());
+      clickUrl = clickUrl.replace("[USER_UDID]", idsRepository.getUniqueIdentifier());
       clickUrl = clickUrl.replace("[USER_AAID]", idsRepository.getAdvertisingId());
       clickUrl = clickUrl.replace("[TIME_STAMP]", String.valueOf(new Date().getTime()));
 
       return clickUrl;
     }
 
-    public static boolean isGooglePlayServicesAvailable(Context context) {
+    @Partners public static boolean isGooglePlayServicesAvailable(Context context) {
       return GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context)
           == ConnectionResult.SUCCESS;
     }

@@ -21,7 +21,7 @@ class GetStoreWidgetsRequestFactory {
 
   public GetStoreWidgetsRequestFactory() {
     aptoideClientUUID = () -> new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext()).getAptoideClientUUID();
+        DataProvider.getContext()).getUniqueIdentifier();
 
     accessToken = AptoideAccountManager::getAccessToken;
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
@@ -29,6 +29,6 @@ class GetStoreWidgetsRequestFactory {
 
   public GetStoreWidgetsRequest newStoreWidgets(String url) {
     return GetStoreWidgetsRequest.ofAction(url, storeCredentialsProvider.fromUrl(url),
-        accessToken.get(), aptoideClientUUID.getAptoideClientUUID());
+        accessToken.get(), aptoideClientUUID.getUniqueIdentifier());
   }
 }

@@ -11,7 +11,7 @@ import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.TextUtils;
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.actions.PermissionRequest;
+import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.model.v7.timeline.AppUpdate;
@@ -198,7 +198,7 @@ public class AppUpdateDisplayable extends CardDisplayable {
   }
 
   public Observable<Void> requestPermission(Context context) {
-    return permissionManager.requestExternalStoragePermission(((PermissionRequest) context));
+    return permissionManager.requestExternalStoragePermission(((PermissionService) context));
   }
 
   public boolean isInstalling(Progress<Download> downloadProgress) {

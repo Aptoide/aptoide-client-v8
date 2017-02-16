@@ -11,6 +11,7 @@ import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.FullReview;
@@ -60,7 +61,7 @@ public class DisplayablesFactory {
   private static final String TAG = DisplayablesFactory.class.getSimpleName();
 
   public static Observable<Displayable> parse(GetStoreWidgets.WSWidget widget, String storeTheme,
-      StoreRepository storeRepository) {
+      StoreRepository storeRepository, StoreContext storeContext) {
 
     LinkedList<Displayable> displayables = new LinkedList<>();
 
@@ -69,16 +70,16 @@ public class DisplayablesFactory {
       switch (widget.getType()) {
 
         case APPS_GROUP:
-          return Observable.just(getApps(widget, storeTheme));
+          return Observable.just(getApps(widget, storeTheme,storeContext));
 
         case MY_STORES_SUBSCRIBED:
-          return getMyStores(widget, storeRepository, storeTheme);
+          return getMyStores(widget, storeRepository, storeTheme, storeContext);
 
         case STORES_GROUP:
-          return Observable.just(getStores(widget, storeTheme));
+          return Observable.just(getStores(widget, storeTheme, storeContext));
 
         case DISPLAYS:
-          return Observable.just(getDisplays(widget, storeTheme));
+          return Observable.just(getDisplays(widget, storeTheme,storeContext));
 
         case ADS:
           Displayable ads = getAds(widget);
@@ -89,7 +90,7 @@ public class DisplayablesFactory {
                 new Event().setName(Event.Name.getAds)));
             widget.setActions(actions);
             StoreGridHeaderDisplayable storeGridHeaderDisplayable =
-                new StoreGridHeaderDisplayable(widget, null, widget.getTag());
+                new StoreGridHeaderDisplayable(widget, null, widget.getTag(),StoreContext.store);
             displayables.add(storeGridHeaderDisplayable);
             displayables.add(ads);
             return Observable.from(displayables);
@@ -106,7 +107,7 @@ public class DisplayablesFactory {
           return Observable.from(createMyStoreDisplayables(widget.getViewObject()));
 
         case STORES_RECOMMENDED:
-          return Observable.just(createRecommendedStores(widget, storeTheme, storeRepository));
+          return Observable.just(createRecommendedStores(widget, storeTheme, storeRepository, storeContext));
 
         case COMMENTS_GROUP:
           return Observable.from(createCommentsGroup(widget));
@@ -121,7 +122,8 @@ public class DisplayablesFactory {
     return Observable.empty();
   }
 
-  private static Displayable getApps(GetStoreWidgets.WSWidget wsWidget, String storeTheme) {
+  private static Displayable getApps(GetStoreWidgets.WSWidget wsWidget, String storeTheme,
+      StoreContext storeContext) {
     ListApps listApps = (ListApps) wsWidget.getViewObject();
     if (listApps == null) {
       return new EmptyDisplayable();
@@ -162,7 +164,7 @@ public class DisplayablesFactory {
             displayables.add(appDisplayablePojo);
           }
         }
-        displayables.add(new FooterDisplayable(wsWidget, wsWidget.getTag()));
+        displayables.add(new FooterDisplayable(wsWidget, wsWidget.getTag(), storeContext));
       }
     } else if (Layout.LIST.equals(wsWidget.getData().getLayout())) {
       if (apps.size() > 0) {
@@ -174,11 +176,13 @@ public class DisplayablesFactory {
       }
     } else {
       if (apps.size() > 0) {
-        displayables.add(new StoreGridHeaderDisplayable(wsWidget, storeTheme, wsWidget.getTag()));
+        displayables.add(
+            new StoreGridHeaderDisplayable(wsWidget, storeTheme, wsWidget.getTag(), storeContext));
       }
 
       for (App app : apps) {
-        DisplayablePojo<App> diplayable = new GridAppDisplayable(app, wsWidget.getTag(), true);
+        DisplayablePojo<App> diplayable =
+            new GridAppDisplayable(app, wsWidget.getTag(), storeContext == StoreContext.home);
         displayables.add(diplayable);
       }
     }
@@ -186,10 +190,9 @@ public class DisplayablesFactory {
   }
 
   private static Observable<Displayable> getMyStores(GetStoreWidgets.WSWidget wsWidget,
-      StoreRepository storeRepository, String storeTheme) {
+      StoreRepository storeRepository, String storeTheme, StoreContext storeContext) {
     return loadLocalSubscribedStores(storeRepository).map(stores -> {
       List<Displayable> tmp = new ArrayList<>(stores.size());
-      Logger.d(TAG, "getMyStores: ");
       int maxStoresToShow = stores.size();
       if (wsWidget.getViewObject() instanceof ListStores) {
         ListStores listStores = (ListStores) wsWidget.getViewObject();
@@ -206,7 +209,7 @@ public class DisplayablesFactory {
       }
       if (tmp.size() > 0) {
         StoreGridHeaderDisplayable header =
-            new StoreGridHeaderDisplayable(wsWidget, storeTheme, wsWidget.getTag());
+            new StoreGridHeaderDisplayable(wsWidget, storeTheme, wsWidget.getTag(), storeContext);
         if (stores.size() <= maxStoresToShow) {
           header.setMoreVisible(false);
         }
@@ -216,7 +219,8 @@ public class DisplayablesFactory {
     });
   }
 
-  private static Displayable getStores(GetStoreWidgets.WSWidget wsWidget, String storeTheme) {
+  private static Displayable getStores(GetStoreWidgets.WSWidget wsWidget, String storeTheme,
+      StoreContext storeContext) {
     Object viewObject = wsWidget.getViewObject();
     ListStores listStores = (ListStores) viewObject;
     if (listStores == null) {
@@ -224,7 +228,7 @@ public class DisplayablesFactory {
     }
     List<Store> stores = listStores.getDatalist().getList();
     List<Displayable> tmp = new ArrayList<>(stores.size());
-    tmp.add(new StoreGridHeaderDisplayable(wsWidget, storeTheme, wsWidget.getTag()));
+    tmp.add(new StoreGridHeaderDisplayable(wsWidget, storeTheme, wsWidget.getTag(), storeContext));
     for (Store store : stores) {
 
       GridStoreDisplayable diplayable = new GridStoreDisplayable(store);
@@ -233,7 +237,8 @@ public class DisplayablesFactory {
     return new DisplayableGroup(tmp);
   }
 
-  private static Displayable getDisplays(GetStoreWidgets.WSWidget wsWidget, String storeTheme) {
+  private static Displayable getDisplays(GetStoreWidgets.WSWidget wsWidget, String storeTheme,
+      StoreContext storeContext) {
     GetStoreDisplays getStoreDisplays = (GetStoreDisplays) wsWidget.getViewObject();
     if (getStoreDisplays == null) {
       return new EmptyDisplayable();
@@ -243,7 +248,7 @@ public class DisplayablesFactory {
 
     for (GetStoreDisplays.EventImage eventImage : getStoreDisplaysList) {
       DisplayablePojo<GetStoreDisplays.EventImage> displayablePojo =
-          new GridDisplayDisplayable(eventImage, storeTheme, wsWidget.getTag());
+          new GridDisplayDisplayable(eventImage, storeTheme, wsWidget.getTag(), storeContext);
 
       Event.Name name = displayablePojo.getPojo().getEvent().getName();
       if (Event.Name.facebook.equals(name)
@@ -300,14 +305,15 @@ public class DisplayablesFactory {
   }
 
   private static Displayable createRecommendedStores(GetStoreWidgets.WSWidget wsWidget,
-      String storeTheme, StoreRepository storeRepository) {
+      String storeTheme, StoreRepository storeRepository, StoreContext storeContext) {
     ListStores listStores = (ListStores) wsWidget.getViewObject();
     if (listStores == null) {
       return new EmptyDisplayable();
     }
     List<Store> stores = listStores.getDatalist().getList();
     List<Displayable> displayables = new LinkedList<>();
-    displayables.add(new StoreGridHeaderDisplayable(wsWidget, storeTheme, wsWidget.getTag()));
+    displayables.add(
+        new StoreGridHeaderDisplayable(wsWidget, storeTheme, wsWidget.getTag(), storeContext));
     for (Store store : stores) {
       if (wsWidget.getData().getLayout() == Layout.LIST) {
         displayables.add(new RecommendedStoreDisplayable(store, storeRepository));
