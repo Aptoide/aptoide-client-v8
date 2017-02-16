@@ -1,4 +1,10 @@
 apply plugin: 'java'
+apply plugin: 'me.tatarka.retrolambda'
+
+retrolambda {
+  jvmArgs '-noverify'
+  //defaultMethods true
+}
 
 dependencies {
   compile fileTree(dir: 'libs', include: ['*.jar'])
