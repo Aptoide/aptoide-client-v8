@@ -435,32 +435,47 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
   private void shareApp(String appName, String packageName, String wUrl) {
 
-    GenericDialogs.createGenericShareDialog(getContext(), getString(R.string.share))
-        .subscribe(eResponse -> {
-          if (GenericDialogs.EResponse.SHARE_EXTERNAL == eResponse) {
-            if (wUrl != null) {
-              Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-              sharingIntent.setType("text/plain");
-              sharingIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.install) + " \"" +
-                  appName + "\"");
-              sharingIntent.putExtra(Intent.EXTRA_TEXT, wUrl);
-              startActivity(Intent.createChooser(sharingIntent, getString(R.string.share)));
-            }
-          } else if (GenericDialogs.EResponse.SHARE_TIMELINE == eResponse) {
-            if (AptoideAccountManager.isLoggedIn()
-                && ManagerPreferences.getShowPreview()
-                && Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
-              SharePreviewDialog sharePreviewDialog = new SharePreviewDialog();
-              AlertDialog.Builder alertDialog =
-                  sharePreviewDialog.getCustomRecommendationPreviewDialogBuilder(getContext(),
-                      appName, app.getIcon());
-              SocialRepository socialRepository = new SocialRepository();
+    //Partners only have onw type of share
+    // if user is not logged in then no share in apps timeline
+    //TODO if user is not logged in and shares in timeline, then show toast with login action
+    if (Application.getConfiguration().getPartnerId() == null
+        || AptoideAccountManager.isLoggedIn()) {
 
-              sharePreviewDialog.showShareCardPreviewDialog(packageName, "app", getContext(),
-                  sharePreviewDialog, alertDialog, socialRepository);
+      GenericDialogs.createGenericShareDialog(getContext(), getString(R.string.share))
+          .subscribe(eResponse -> {
+            if (GenericDialogs.EResponse.SHARE_EXTERNAL == eResponse) {
+
+              shareDefault(appName, packageName, wUrl);
+            } else if (GenericDialogs.EResponse.SHARE_TIMELINE == eResponse) {
+              if (AptoideAccountManager.isLoggedIn()
+                  && ManagerPreferences.getShowPreview()
+                  && Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
+                SharePreviewDialog sharePreviewDialog = new SharePreviewDialog();
+                AlertDialog.Builder alertDialog =
+                    sharePreviewDialog.getCustomRecommendationPreviewDialogBuilder(getContext(),
+                        appName, app.getIcon());
+                SocialRepository socialRepository = new SocialRepository();
+
+                sharePreviewDialog.showShareCardPreviewDialog(packageName, "app", getContext(),
+                    sharePreviewDialog, alertDialog, socialRepository);
+              }
             }
-          }
-        }, Throwable::printStackTrace);
+          }, Throwable::printStackTrace);
+    } else {
+
+      shareDefault(appName, packageName, wUrl);
+    }
+  }
+
+  private void shareDefault(String appName, String packageName, String wUrl) {
+    if (wUrl != null) {
+      Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+      sharingIntent.setType("text/plain");
+      sharingIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.install) + " \"" +
+          appName + "\"");
+      sharingIntent.putExtra(Intent.EXTRA_TEXT, wUrl);
+      startActivity(Intent.createChooser(sharingIntent, getString(R.string.share)));
+    }
   }
 
   private Observable<GetApp> manageOrganicAds(GetApp getApp) {
