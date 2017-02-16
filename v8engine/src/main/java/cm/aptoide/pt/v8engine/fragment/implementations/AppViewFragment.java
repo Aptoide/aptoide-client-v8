@@ -439,7 +439,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     // if user is not logged in then no share in apps timeline
     //TODO if user is not logged in and shares in timeline, then show toast with login action
     if (Application.getConfiguration().getPartnerId() == null
-        || AptoideAccountManager.isLoggedIn()) {
+        && AptoideAccountManager.isLoggedIn()) {
 
       GenericDialogs.createGenericShareDialog(getContext(), getString(R.string.share))
           .subscribe(eResponse -> {
