@@ -5,9 +5,6 @@
 
 package cm.aptoide.pt.v8engine.activity;
 
-/**
- * Created by sithengineer on 10/05/16.
- */
 public class SearchActivity extends BaseActivity {
 
 }

@@ -6,7 +6,7 @@ import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.v8engine.configuration.FragmentProvider;
-import cm.aptoide.pt.v8engine.fragment.CommentListFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.CommentListFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppsTimelineFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.CreateUserFragment;

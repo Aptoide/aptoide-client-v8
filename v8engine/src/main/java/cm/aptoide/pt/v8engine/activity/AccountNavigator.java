@@ -9,7 +9,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.v8engine.fragment.implementations.LoginSignUpFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.MyAccountFragment;
+import cm.aptoide.pt.v8engine.view.MainActivity;
+import rx.Observable;
+import rx.Subscriber;
 
 /**
  * Created by marcelobenites on 09/02/17.
@@ -30,19 +36,19 @@ public class AccountNavigator {
 
   public void navigateToAccountView(boolean useSkip) {
     Bundle extras = new Bundle();
-    extras.putBoolean(LoginActivity.SKIP_BUTTON, useSkip);
+    extras.putBoolean(LoginSignUpFragment.SKIP_BUTTON, useSkip);
     navigateToAccountView(extras);
   }
 
   private void navigateToAccountView(@Nullable Bundle extras) {
     if (accountManager.isLoggedIn()) {
-      context.startActivity(new Intent(context, MyAccountActivity.class));
+      context.startActivity(new Intent(context, MyAccountFragment.class));
     } else {
-      final Intent intent = new Intent(context, LoginActivity.class);
+      final Intent intent = new Intent(context, MainActivity.class);
+      intent.putExtra(MainActivity.FRAGMENT, LoginSignUpFragment.class.getName());
       if (extras != null) {
         intent.putExtras(extras);
       }
-      //Intent intent = new Intent(applicationContext, CreateStoreActivity.class);
       context.startActivity(intent);
     }
   }

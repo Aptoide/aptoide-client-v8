@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.fragment;
+package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -29,6 +29,7 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.activity.AccountNavigator;
+import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.util.CommentOperations;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.view.custom.HorizontalDividerItemDecoration;

@@ -3,25 +3,25 @@
  * Modified by Marcelo Benites on 08/02/2017.
  */
 
-package cm.aptoide.pt.v8engine.activity;
+package cm.aptoide.pt.v8engine.fragment;
 
 import android.app.Dialog;
 import android.app.PendingIntent;
-import android.content.DialogInterface;
 import android.content.IntentSender;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.fragment.FragmentView;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.ErrorDialogFragment;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 /**
  * Created by marcelobenites on 08/02/17.
  */
-
-public abstract class GooglePlayServicesActivity extends BaseActivity {
+public abstract class GooglePlayServicesFragment extends FragmentView {
 
   private static final int RESOLVE_CONNECTION_ERROR_REQUEST_CODE = 1;
   private Dialog errorDialog;
@@ -30,10 +30,13 @@ public abstract class GooglePlayServicesActivity extends BaseActivity {
 
   private boolean resolvingError;
 
-  @Override protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+  @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    super.onActivityCreated(savedInstanceState);
+
     apiAvailability = GoogleApiAvailability.getInstance();
-    clientBuilder = new GoogleApiClient.Builder(this).enableAutoManage(this,
+    final FragmentActivity activity = getActivity();
+
+    clientBuilder = new GoogleApiClient.Builder(activity).enableAutoManage(activity,
         new GoogleApiClient.OnConnectionFailedListener() {
           @Override public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
             if (resolvingError) {
@@ -48,7 +51,7 @@ public abstract class GooglePlayServicesActivity extends BaseActivity {
         });
   }
 
-  @Override protected void onDestroy() {
+  @Override public void onDestroy() {
     super.onDestroy();
     dismissErrorDialog();
   }
@@ -61,10 +64,10 @@ public abstract class GooglePlayServicesActivity extends BaseActivity {
 
   private void showResolution(ConnectionResult result) {
     final PendingIntent errorResolutionPendingIntent =
-        apiAvailability.getErrorResolutionPendingIntent(this, result.getErrorCode(),
+        apiAvailability.getErrorResolutionPendingIntent(getContext(), result.getErrorCode(),
             RESOLVE_CONNECTION_ERROR_REQUEST_CODE);
     try {
-      result.startResolutionForResult(this, RESOLVE_CONNECTION_ERROR_REQUEST_CODE);
+      result.startResolutionForResult(getActivity(), RESOLVE_CONNECTION_ERROR_REQUEST_CODE);
       resolvingError = true;
     } catch (IntentSender.SendIntentException e) {
       CrashReport.getInstance().log(e);
@@ -79,13 +82,9 @@ public abstract class GooglePlayServicesActivity extends BaseActivity {
 
     dismissErrorDialog();
 
-    errorDialog =
-        apiAvailability.getErrorDialog(this, errorCode, RESOLVE_CONNECTION_ERROR_REQUEST_CODE);
-    errorDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-      @Override public void onDismiss(DialogInterface dialog) {
-        resolvingError = false;
-      }
-    });
+    errorDialog = apiAvailability.getErrorDialog(getActivity(), errorCode,
+        RESOLVE_CONNECTION_ERROR_REQUEST_CODE);
+    errorDialog.setOnDismissListener(dialog -> resolvingError = false);
 
     errorDialog.show();
     resolvingError = true;

@@ -53,16 +53,11 @@
 
     <activity android:name=".payment.providers.paypal.PayPalPaymentActivity"/>
     <activity android:name=".activity.WebAuthorizationActivity"/>
-    <activity android:name=".activity.LoginActivity"/>
 
     <activity
         android:name="com.facebook.FacebookActivity"
         android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
         />
-
-    <activity android:name=".activity.MyAccountActivity"/>
-
-    <activity android:name=".activity.SignUpActivity"/>
 
     <activity
         android:name=".activity.CreateUserActivity"

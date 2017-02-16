@@ -250,13 +250,6 @@ public class DeepLinkIntentReceiver extends AppCompatActivity {
   }
 
   public void startFromPackageName(String packageName) {
-    //@Cleanup Realm realm = DeprecatedDatabase.get();
-    //if (DeprecatedDatabase.InstalledQ.isInstalled(packageName, realm)) {
-    //  startFromAppView(packageName);
-    //} else {
-    //  startFromSearch(packageName);
-    //}
-
     InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
     installedAccessor.get(packageName).subscribe(installed -> {
       if (installed != null) {
