@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="please_wait">Pakihintay…</string>
+
+    <string name="WidgetProvider_timestamp_today">Ngayong Araw</string>
+    <string name="WidgetProvider_timestamp_yesterday">Kahapon</string>
+    <string name="WidgetProvider_timestamp_hour_ago">%s oras ang nakalipas</string>
+    <string name="WidgetProvider_timestamp_hours_ago">%s oras ang nakalipas</string>
+    <string name="WidgetProvider_timestamp_minutes_ago">%s minuto ang nakalipas</string>
+    <string name="WidgetProvider_timestamp_just_now">Ngayon lang</string>
+    <string name="WidgetProvider_timestamp_weeks_ago">%s linggo ang nakalipas</string>
+    <string name="WidgetProvider_timestamp_week_ago2">1 linggong nakaraan</string>
+    <string name="WidgetProvider_timestamp_days_ago">%s ng araw na nakaraan</string>
+    <string name="WidgetProvider_timestamp_month_ago">1 buwang nakaraan</string>
+    <string name="WidgetProvider_timestamp_months_ago">%s ng mga buwan na nakaraan</string>
+    <string name="WidgetProvider_timestamp_year_ago">1 taong nakaraan</string>
+    <string name="WidgetProvider_timestamp_years_ago">%s ng mga taong nakaraan</string>
+
+<string name="continue_option">Ipagpatuloy</string>
+
+  </resources>

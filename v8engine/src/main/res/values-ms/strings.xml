@@ -1,0 +1,253 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="updates_filter_summary">Semakan ini, anda tidak akan diberitahu versi beta.</string>
+    <string name="updates_filter_setting_title">Hanya tunjukkan saya versi kemaskini aplikasi yang stabil</string>
+    <string name="unsubscribe">Berhenti melanggan</string>
+    <string name="developer_website">Laman web: %s</string>
+    <string name="not_available">N/A</string>
+    <string name="developer_email">E-mel: %s</string>
+    <string name="developer_privacy_policy">Dasar Privasi: %s</string>
+
+
+    <string name="open">Buka</string>
+    <string name="button_header_more">lebih</string>
+    <string name="search">Cari</string>
+
+    <string name="update">Kemaskini</string>
+    <string name="uninstall">Nyahpasang</string>
+    <string name="downgrade">Turun taraf</string>
+    <string name="menu_select_all">Pilih semua</string>
+    <string name="menu_select_none">Tiada yang Dipilih</string>
+    <string name="clear">Kosongkan</string>
+
+    <string name="excluded_updates">Kemas Kini Terasing</string>
+    <string name="no_excluded_updates_msg">Versi baru aplikasi tidak berfungsi pada peranti anda atau beberapa ciri hilang? Sekat aplikasi daripada dikemaskini. Pergi ke tab Kemas Kini dan tekan lama pada aplikasi yang anda mahu berhenti kemaskini.</string>
+
+    <string name="restore_updates">Simpan Semula Maklumat Terbaru</string>
+    <string name="rollback">Kembalikan</string>
+    <string name="menu_card_timeline_clear">Kosongkan</string>
+    <string name="fragment_social_timeline_no_connection">tiada sambungan rangkaian</string>
+    <string name="fragment_social_timeline_general_error">Mempunyai beberapa masalah. Bolehkah anda cuba semula kemudian?</string>
+
+    <string name="displayable_social_timeline_app_update">Kemaskini</string>
+    <string name="appview_rate_this_app">Menilai aplikasi ini</string>
+    <string name="needs_license">Perlukan Lesen</string>
+    <string name="virus">Virus</string>
+    <string name="additional_information">Maklumat Tambahan</string>
+    <string name="displayable_social_timeline_app_update_updated">Dikemas Kini</string>
+    <string name="displayable_social_timeline_recommendation_similar_and">dan</string>
+    <string name="social_facebook_screen_title">Facebook</string>
+    <string name="social_twitter_screen_title">Twitter</string>
+    <string name="title">TAJUK</string>
+    <string name="feedback_not_valid">Sila masukkan Subjek sah!</string>
+    <string name="ignore_update">Abaikan Kemas Kini</string>
+    <string name="added_to_scheduled">Ditambah ke Menu&gt; Muat Turun Berjadual</string>
+    <string name="wizard_skip"><b>LANGKAU</b></string>
+    <string name="dark">Gelap</string>
+    <string name="light">Terang</string>
+
+    <string name="aptoide_email">aptoide@aptoide.com</string>
+    <string name="aptoide_url">http://www.aptoide.com/</string>
+
+    <string name="access_to_get_accounts_rationale">Anda perlu membolehkan akses kepada Dapatkan Akaun</string>
+    <string name="appview_follow_store_button_text">Ikut?</string>
+    <string name="appview_followers_count_text">%1$s Pengikut</string>
+    <string name="other_versions_downloads_count_text">%1$s muat turun</string>
+
+    <string name="open_apps_manager">Buka Pengurus App</string>
+
+    <string name="no_rollbacks_msg">Cepat menuruntarafkan mana-mana aplikasi ke versi sebelumnya dan selesaikan isu-isu ketidakserasian. Simpan log semua aplikasi anda
+ (melalui %s) termasuk versi dan tarikh pemasangan.</string>
+
+    <string name="fragment_social_timeline_aptoide_team">Pasukan Aptoide</string>
+    <string name="displayable_social_timeline_store_latest_apps_headline">Kedai ini mempunyai App baru</string>
+    <string name="displayable_social_timeline_app_update_name">App %1$s</string>
+    <string name="displayable_social_timeline_app_has_update">ada %1$s</string>
+    <string name="displayable_social_timeline_article_get_app_button">Dapatkan aplikasi %1$s</string>
+    <string name="displayable_social_timeline_app_update_version">Versi %1$s</string>
+    <string name="displayable_social_timeline_app_update_button">Kemas kini %1$s</string>
+    <string name="appview_other_versions"><u>Versi Lain</u></string>
+    <string name="appview_latest_version_text">Versi terkini</string>
+    <string name="appview_read_all">membaca semua&gt;</string>
+    <string name="zero">0</string>
+    <string name="working_well">Berjalan Lancar</string>
+    <string name="fake_app">App Palsu</string>
+    <string name="displayable_social_timeline_app_update_updating">Mengemas kini</string>
+    <string name="displayable_social_timeline_app_update_error">Ralat Kemas Kini</string>
+
+    <string name="other_versions_partial_title_1">Lain-lain</string>
+    <string name="other_versions_partial_title_2">Versi pada Kedai berbeza</string>
+    <string name="displayable_social_timeline_recommendation_similar_to">Berdasarkan %1$s</string>
+    <string name="displayable_social_timeline_recommendation_atptoide_team_recommends">%s mengesyorkan</string>
+    <string name="top_comments">Komen Teratas</string>
+    <string name="rate">Kadar</string>
+    <string name="rate_app">Kadar %s</string>
+    <string name="tap_a_star">Ketik bintang untuk mengadar</string>
+    <string name="other_versions_on_different_stores">Versi lain di kedai-kedai yang berbeza</string>
+    <string name="review_optional">Ulasan (pilihan)</string>
+    <string name="thank_you_for_your_opinion">Terima kasih atas pendapat anda!</string>
+    <string name="five_numeric">5</string>
+    <string name="four_numeric">4</string>
+    <string name="three_numeric">3</string>
+    <string name="two_numeric">2</string>
+    <string name="one_numeric">1</string>
+    <string name="just_reviews">Hanya Ulasan</string>
+    <string name="downgrading_msg">Menurun Taraf</string>
+    <string name="updating_msg">Mengemas kini</string>
+    <string name="installing_msg">Memasang</string>
+    <string name="needs_permission_to_fs">Memerlukan kebenaran untuk menggunakan Sistem Fail luaran</string>
+
+    <string name="pause_all_downloads">Hentikan Muat Turun</string>
+    <string name="all_stores">Semua Kedai</string>
+    <string name="followed_stores">Kedai yang Diikuti</string>
+    <string name="storage_access_permission_request_message">Sila membenarkan akses kepada storan telefon anda supaya kami boleh memuat turun dan memasang aplikasi ini.</string>
+
+    <string name="wizard_welcome_message"><b>Selamat datang!</b></string>
+    <string name="wizard_sub_title_viewpager_one">Mulakan suatu pengembaraan <b>selamat</b> dan <b>seronok</b>.</string>
+    <string name="wizard_description_part_one_viewpager_one"><b>Cari</b> app dengan
+lencana Dipercayai untuk
+pemasangan yang terjamin.</string>
+    <string name="wizard_description_part_two_viewpager_one"><b>Cari</b> aplikasi yang
+anda mahu, tetapi
+tidak pernah dijumpai.</string>
+
+    <string name="wizard_title_viewpager_two"><b>Garis Masa App</b></string>
+    <string name="wizard_sub_title_viewpager_two">Dapatkan <b>aplikasi terkini</b>, cari <b>kedai tematik</b>
+dan akses <b> kandungan peribadi. </b></string>
+
+    <string name="wizard_title_viewpager_three"><b>Sertai komuniti</b></string>
+    <string name="wizard_description_part_one_viewpager_three"><b>Ikut</b> rakan-rakan anda</string>
+    <string name="wizard_description_part_two_viewpager_three"><b>Ulas</b> dan Kadar aplikasi</string>
+    <string name="wizard_description_part_three_viewpager_three"><b>Reka</b> Kedai anda</string>
+    <string name="wizard_register_now_button">Daftar sekarang</string>
+    <string name="wizard_be_a_part_of_aptoide">Jadilah sebahagian daripada Aptoide!</string>
+    <string name="wizard_or_login"><u>atau Log Masuk</u></string>
+
+    <string name="you_need_to_be_logged_in">Anda perlu log masuk</string>
+    <string name="follow">Ikut</string>
+    <string name="followed">Ikuti</string>
+    
+    <string name="dialog_install_warning_proceed_button">Teruskan</string>
+    <string name="dialog_install_warning_search_for_trusted_app_button">Cari</string>
+    <string name="dialog_install_warning_trusted_app_button">Aplikasi Dipercayai</string>
+    <string name="dialog_install_warning_careful_text">Berhati-hati jika anda memilih untuk memasang aplikasi ini. Ia mungkin telah diusik, mempunyai virus atau perisian hasad.</string>
+    <string name="dialog_install_warning_credibility_text">Sebelum meneruskan, periksa
+ komen kredibiliti dan pengguna lain Kedai ini. Aptoide sentiasa mengesyorkan bahawa anda hanya memasang %1$s aplikasi yang Dipercayai.</string>
+    <string name="dialog_install_warning_trusted_version_button">Versi Dipercayai</string>
+    <string name="dialog_install_warning_get_trusted_version_button">Dapatkan</string>
+<string name="appview_good_app_guaranteed">App Baik Dijamin!</string>
+    <string name="appview_good_app_description">Aplikasi ini lulus ujian keselamatan untuk virus, malware dan lain-lain serangan dan tidak 
+ mengandungi apa-apa ancaman!</string>
+
+    <string name="unfollow_yes_no">Adakah anda pasti anda mahu nyahikut?</string>
+    <string name="unfollow">Nyahikut</string>
+    <string name="unfollowing_store_message">Nyahikut %s</string>
+    <string name="store_followed">Kedai %s diikuti</string>
+
+    <string name="be_the_first_to_rate_this_app">Jadi yang pertama untuk menilai app ini</string>
+    <string name="rate_this_app">Nilai app ini</string>
+
+    <string name="flag_results">Keputusan bendera</string>
+    <string name="helpful">Berguna</string>
+    <string name="not_helpful">Tidak Berguna</string>
+    <string name="description_not_available">Penerangan tidak disediakan untuk aplikasi ini</string>
+    <string name="top_stores_fragment_title">Kedai Terbaik</string>
+
+    <string name="home_title">Utama</string>
+    <string name="community">Komuniti</string>
+    <string name="stores">Kedai</string>
+    <string name="updates">Kemas Kini</string>
+    <string name="social_timeline">Garis masa sosial</string>
+    <string name="downloads">Muat turun</string>
+    <string name="latest_reviews">Ulasan terkini</string>
+    <string name="latest_comments">Komen Terbaru</string>
+    <string name="action">Aksi</string>
+    <string name="adventure">Pengembaraan</string>
+    <string name="all">Semua</string>
+    <string name="applications">Aplikasi</string>
+    <string name="arcade">Arked</string>
+    <string name="arcade_action">Arked &amp; Aksi</string>
+    <string name="board">Papan</string>
+    <string name="brain_puzzle">Minda &amp; Teka-teki</string>
+    <string name="books_reference">Buku &amp; Rujukan</string>
+    <string name="business">Perniagaan</string>
+    <string name="card">Kad</string>
+    <string name="cards_casino">Kad &amp; Kasino</string>
+    <string name="casino">Kasino</string>
+    <string name="casual">Kasual</string>
+    <string name="comics">Komik</string>
+    <string name="communication">Komunikasi</string>
+    <string name="demo">Demo</string>
+    <string name="education">Pendidikan</string>
+    <string name="educational">Pendidikan</string>
+    <string name="entertainment">Hiburan</string>
+    <string name="family">Keluarga</string>
+    <string name="finance">Kewangan</string>
+    <string name="games">Permainan</string>
+    <string name="health">Kesihatan</string>
+    <string name="health_fitness">Kesihatan &amp; Kecergasan</string>
+    <string name="highlighted">Ditekankan</string>
+    <string name="local_top_apps">App Terbaik Tempatan</string>
+    <string name="lifestyle">Gaya Hidup</string>
+    <string name="media_video">Media &amp; Video</string>
+    <string name="medical">Perubatan</string>
+    <string name="multimedia">Multimedia</string>
+    <string name="music">Muzik</string>
+    <string name="music_audio">Muzik &amp; Audio</string>
+    <string name="news_magazines">Berita &amp; Majalah</string>
+    <string name="news_weather">Berita &amp; Cuaca</string>
+    <string name="personalization">Pemperibadian</string>
+    <string name="photography">Fotografi</string>
+    <string name="productivity">Produktiviti</string>
+    <string name="puzzle">Teka-teki</string>
+    <string name="racing">Perlumbaan</string>
+    <string name="reference">Rujukan</string>
+    <string name="role_playing">Main Peranan</string>
+    <string name="simulation">Simulasi</string>
+    <string name="social">Sosial</string>
+    <string name="software_libraries">Perpustakaan Perisian</string>
+    <string name="sports">Sukan</string>
+    <string name="sports_games">Permainan Sukan</string>
+    <string name="strategy">Strategi</string>
+    <string name="themes">Tema</string>
+    <string name="tools">Alat</string>
+    <string name="top_apps">App Terbaik</string>
+    <string name="top_games">Permainan Terbaik</string>
+    <string name="transport">Pengangkutan</string>
+    <string name="transportation">Pengangkutan</string>
+    <string name="travel">Pelancongan</string>
+    <string name="travel_local">Pelancongan &amp; Tempatan</string>
+    <string name="trending">Tren</string>
+    <string name="trivia">Trivia</string>
+    <string name="word">Perkataan</string>
+    <string name="libraries_demo">Perpustakaan &amp; Demo</string>
+    <string name="shopping">Beli-belah</string>
+    <string name="weather">Cuaca</string>
+    <string name="latest_applications">App Terbaru</string>
+    <string name="top_apps_in_store">App Terbaik Di Kedai Ini</string>
+    <string name="apps_for_kids">App untuk Kanak-kanak</string>
+    <string name="aptoide_publishers">Penerbit %s</string>
+    <string name="music_video">Muzik &amp; Video</string>
+    <string name="essential_apps">App Penting</string>
+    <string name="summer_apps">App Musim Panas</string>
+    <string name="play_it">Main!</string>
+
+<string name="subscribers">Pelanggan</string>
+  <string name="apps">App</string>
+
+  <string name="apps_timeline"><b>Garis Masa App</b></string>
+  <string name="displayable_social_timeline_article_related_to">Berkaitan dengan %1$s</string>
+  <string name="appstimeline_update_app">app</string>
+  <string name="customtabs_open_native_app">Buka dalam App</string>
+
+
+  <string name="fragment_download_no_connection">Tiada app dimuat turun</string>
+  <string name="fragment_download_no_connection_subtitle">Aplikasi baru akan dipaparkan di sini sebaik sahaja anda mula memuat turun mereka!</string>
+  <string name="newer_version_available">Versi baru telah ada</string>
+
+  <string name="add_store">Tambah kedai</string>
+
+<string name="downgrade_warning_dialog">Dengan penurunan taraf anda mungkin kehilangan data aplikasi yang berkaitan dan anda mungkin log keluar daripada akaun aplikasi.</string>
+
+  <string name="displayable_social_timeline_similar_to">hampir sama dengan %1$s</string>
+
+</resources>

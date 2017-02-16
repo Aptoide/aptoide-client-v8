@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources><string name="download_completed">Tải về hoàn tất</string>
+    <string name="download_paused">Tải về tạm dừng</string>
+    <string name="download_progress">Đang tải về</string>
+    <string name="download_queue">Chờ</string>
+</resources>
