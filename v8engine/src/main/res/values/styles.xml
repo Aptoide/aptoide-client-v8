@@ -186,6 +186,12 @@
     <item name="android:textSize">12sp</item>
   </style>
 
+  <style name="SocialWhiteButton" parent="StoreWhiteButton">
+    <item name="android:layout_height">22dp</item>
+    <item name="android:layout_marginRight">5dp</item>
+    <item name="android:layout_marginLeft">5dp</item>
+  </style>
+
   <style name="WidgetButtonCustom" parent="@android:style/Widget.Button">
     <item name="android:layout_width">wrap_content</item>
     <item name="android:layout_height">wrap_content</item>

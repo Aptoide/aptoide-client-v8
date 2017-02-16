@@ -301,7 +301,7 @@
   <string name="create_store_displayable_message">Create your Store now and start sharing your apps!</string>
   <string name="create_store_displayable_button">CREATE STORE</string>
   <string name="my_store_created_displayable_message">Your Android App store</string>
-  <string name="create_store_displayable_created_store_message">You\'ve just created your Store!</string>
+  <string name="create_store_displayable_created_store_short_term_message">You\'ve just created your Store!</string>
   <string name="create_store_displayable_explore_message">Enter and explore all the possibilities</string>
   <string name="create_store_displayable_explore_button">Explore</string>
 
@@ -364,5 +364,10 @@
   <string name="reviews_expand_button">%d Replies</string>
   <string name="out_of_space_dialog_title">Out of space</string>
   <string name="out_of_space_dialog_message">Please, free space in order to proceed.</string>
+  <string name="store_added_long_time_suggestion_message">show long term</string>
+  <string name="store_added_short_time_suggestion_message">show just created</string>
+  <string name="create_store_displayable_created_store_long_term_message">long term</string>
+  <string name="create_store_displayable_explore_long_term_button">View Store</string>
+  <string name="create_store_displayable_empty_description_message">Add a description for your Store. A good description helps you to get more followers and interaction.</string>
 
 </resources>
