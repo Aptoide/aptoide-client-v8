@@ -28,6 +28,7 @@ import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.Event;
+import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
@@ -212,24 +213,27 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
         int itemId = menuItem.getItemId();
         if (itemId == R.id.navigation_item_my_account) {
           AptoideAccountManager.openAccountManager(getContext());
-        } else if (itemId == R.id.navigation_item_rollback) {
-          getNavigationManager().navigateTo(V8Engine.getFragmentProvider().newRollbackFragment());
-        } else if (itemId == R.id.navigation_item_setting_scheduled_downloads) {
-          getNavigationManager().navigateTo(
-              V8Engine.getFragmentProvider().newScheduledDownloadsFragment());
-        } else if (itemId == R.id.navigation_item_excluded_updates) {
-          getNavigationManager().navigateTo(
-              V8Engine.getFragmentProvider().newExcludedUpdatesFragment());
-        } else if (itemId == R.id.navigation_item_settings) {
-          getNavigationManager().navigateTo(V8Engine.getFragmentProvider().newSettingsFragment());
-        } else if (itemId == R.id.navigation_item_facebook) {
-          openFacebook();
-        } else if (itemId == R.id.navigation_item_twitter) {
-          openTwitter();
-        } else if (itemId == R.id.navigation_item_backup_apps) {
-          openBackupApps();
-        } else if (itemId == R.id.send_feedback) {
-          startFeedbackFragment();
+        } else {
+          final NavigationManagerV4 navigationManager = getNavigationManager();
+          if (itemId == R.id.navigation_item_rollback) {
+            navigationManager.navigateTo(V8Engine.getFragmentProvider().newRollbackFragment());
+          } else if (itemId == R.id.navigation_item_setting_scheduled_downloads) {
+            navigationManager.navigateTo(
+                V8Engine.getFragmentProvider().newScheduledDownloadsFragment());
+          } else if (itemId == R.id.navigation_item_excluded_updates) {
+            navigationManager.navigateTo(
+                V8Engine.getFragmentProvider().newExcludedUpdatesFragment());
+          } else if (itemId == R.id.navigation_item_settings) {
+            navigationManager.navigateTo(V8Engine.getFragmentProvider().newSettingsFragment());
+          } else if (itemId == R.id.navigation_item_facebook) {
+            openFacebook();
+          } else if (itemId == R.id.navigation_item_twitter) {
+            openTwitter();
+          } else if (itemId == R.id.navigation_item_backup_apps) {
+            openBackupApps();
+          } else if (itemId == R.id.send_feedback) {
+            startFeedbackFragment();
+          }
         }
 
         drawerLayout.closeDrawer(navigationView);

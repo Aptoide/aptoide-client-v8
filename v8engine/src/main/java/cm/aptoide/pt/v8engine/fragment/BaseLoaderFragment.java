@@ -36,7 +36,6 @@ public abstract class BaseLoaderFragment extends UIComponentFragment implements 
   @CallSuper @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     load(create, false, savedInstanceState);
-
     registerReceiverForAccountManager();
   }
 

@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -25,7 +26,7 @@ public abstract class FragmentView extends RxFragment implements cm.aptoide.pt.v
     return navigator;
   }
 
-  @Nullable @Override
+  @CallSuper @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     navigator = NavigationManagerV4.Builder.buildWith(getActivity());

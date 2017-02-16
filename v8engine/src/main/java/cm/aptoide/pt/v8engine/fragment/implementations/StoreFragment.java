@@ -102,7 +102,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
     return fragment;
   }
 
-  @Nullable @Override
+  @CallSuper @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     if (storeTheme != null) {
