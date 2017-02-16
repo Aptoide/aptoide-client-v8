@@ -114,7 +114,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
-    if (create || refresh) {
+    if (create || refresh || !hasDisplayables()) {
       String url = action != null ? action.replace(V7.BASE_HOST, "") : null;
 
       if (!StoreTabFragmentChooser.validateAcceptedName(name)) {
