@@ -717,7 +717,7 @@ public class AppViewFragment extends GridRecyclerFragment<BaseAdapter>
     });
   }
 
-  private enum BundleKeys {
+  public enum BundleKeys {
     APP_ID,
     STORE_NAME,
     MINIMAL_AD,

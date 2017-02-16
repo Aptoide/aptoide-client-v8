@@ -303,7 +303,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
     toolbar.setLogo(R.drawable.ic_store);
   }
 
-  protected static class BundleCons {
+  public static class BundleCons {
 
     public static final String STORE_NAME = "storeName";
     public static final String STORE_CONTEXT = "storeContext";
