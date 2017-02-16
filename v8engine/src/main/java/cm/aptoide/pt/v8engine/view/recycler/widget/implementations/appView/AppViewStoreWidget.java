@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
+import android.content.Context;
 import android.os.Build;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
@@ -8,10 +9,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.store.Store;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -52,10 +55,7 @@ import rx.functions.Action1;
   }
 
   @Override public void bindView(AppViewStoreDisplayable displayable) {
-    setupStoreInfo(displayable.getPojo());
-  }
-
-  private void setupStoreInfo(GetApp getApp) {
+    GetApp getApp = displayable.getPojo();
 
     GetAppMeta.App app = getApp.getNodes().getMeta().getData();
     Store store = app.getStore();
@@ -85,13 +85,17 @@ import rx.functions.Action1;
     final String storeName = store.getName();
     final String storeTheme = store.getAppearance().getTheme();
 
+    final IdsRepositoryImpl clientUuid =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
+    final StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(clientUuid);
+
     Action1<Void> openStore = __ -> {
       getNavigationManager().navigateTo(
           V8Engine.getFragmentProvider().newStoreFragment(storeName, storeTheme));
     };
 
     Action1<Void> subscribeStore = __ -> {
-      StoreUtilsProxy.subscribeStore(storeName, getStoreMeta -> {
+      storeUtilsProxy.subscribeStore(storeName, getStoreMeta -> {
         ShowMessage.asSnack(itemView,
             AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
       }, err -> {

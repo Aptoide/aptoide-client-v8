@@ -19,7 +19,7 @@ public class MyStoresFragment extends GetStoreWidgetsFragment {
   public static MyStoresFragment newInstance(Event event, String title, String storeTheme,
       String tag) {
     // TODO: 28-12-2016 neuro ia saltando um preguito com este null lolz
-    Bundle args = buildBundle(event, null, storeTheme, tag);
+    Bundle args = buildBundle(event, null, storeTheme, tag, null);
     MyStoresFragment fragment = new MyStoresFragment();
     fragment.setArguments(args);
     return fragment;

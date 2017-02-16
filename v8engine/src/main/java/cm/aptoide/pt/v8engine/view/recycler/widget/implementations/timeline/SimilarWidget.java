@@ -17,7 +17,6 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.TimelineClickEvent;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.SimilarDisplayable;
 
 /**
@@ -93,7 +92,7 @@ public class SimilarWidget extends CardWidget<SimilarDisplayable> {
               .similar_to(displayable.getSimilarToAppPackageName())
               .build())
           .build(), TimelineClickEvent.OPEN_APP);
-      ((FragmentShower) context).pushFragmentV4(V8Engine.getFragmentProvider()
+      getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
           .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
     });
   }

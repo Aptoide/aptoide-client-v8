@@ -30,7 +30,7 @@ import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.actions.PermissionRequest;
+import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
@@ -94,8 +94,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   }
 
   @Override public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-    // TODO
-    if (key.equals(ManagedKeys.UPDATES_FILTER_ALPHA_BETA_KEY)) {
+    if (shouldRefreshUpdates(key)) {
       UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
       updateAccessor.removeAll();
       UpdateRepository repository = RepositoryFactory.getUpdateRepository();
@@ -106,6 +105,11 @@ public class SettingsFragment extends PreferenceFragmentCompat
             CrashReport.getInstance().log(throwable);
           });
     }
+  }
+
+  private boolean shouldRefreshUpdates(String key) {
+    return key.equals(ManagedKeys.UPDATES_FILTER_ALPHA_BETA_KEY) || key.equals(
+        ManagedKeys.HWSPECS_FILTER) || key.equals(ManagedKeys.UPDATES_SYSTEM_APPS_KEY);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -359,7 +363,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
           return true;
         });
 
-    PermissionRequest permissionRequest = (PermissionRequest) getContext();
+    PermissionService permissionRequest = (PermissionService) getContext();
     autoUpdatePreference.setDependency(SettingsConstants.ALLOW_ROOT_INSTALLATION);
     autoUpdatePreference.setOnPreferenceClickListener(preference -> {
       final CheckBoxPreference checkBoxPreference = (CheckBoxPreference) preference;

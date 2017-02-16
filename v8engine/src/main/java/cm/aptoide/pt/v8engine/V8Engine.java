@@ -17,6 +17,7 @@ import android.preference.PreferenceManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
 import cm.aptoide.pt.actions.UserData;
+import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.ConsoleLogger;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
@@ -54,6 +55,7 @@ import cm.aptoide.pt.v8engine.filemanager.FileManager;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
+import cm.aptoide.pt.v8engine.view.MainActivity;
 import cm.aptoide.pt.v8engine.view.recycler.DisplayableWidgetMapping;
 import com.flurry.android.FlurryAgent;
 import java.util.Collections;
@@ -146,7 +148,7 @@ public abstract class V8Engine extends DataProvider {
     Logger.setDBG(true);
   }
 
-  @Override public void onCreate() {
+  @Partners @Override public void onCreate() {
     try {
       PRNGFixes.apply();
     } catch (Exception e) {
@@ -272,21 +274,21 @@ public abstract class V8Engine extends DataProvider {
     return AptoideAccountManager::invalidateAccessToken;
   }
 
-  protected void setupCrashReports(boolean isDisabled) {
+  @Partners protected void setupCrashReports(boolean isDisabled) {
     CrashReport.getInstance()
         .addLogger(new CrashlyticsCrashLogger(this, isDisabled))
         .addLogger(new ConsoleLogger());
   }
 
-  protected FragmentProvider createFragmentProvider() {
+  @Partners protected FragmentProvider createFragmentProvider() {
     return new FragmentProviderImpl();
   }
 
-  protected ActivityProvider createActivityProvider() {
+  @Partners protected ActivityProvider createActivityProvider() {
     return new ActivityProviderImpl();
   }
 
-  protected DisplayableWidgetMapping createDisplayableWidgetMapping() {
+  @Partners protected DisplayableWidgetMapping createDisplayableWidgetMapping() {
     return DisplayableWidgetMapping.getInstance();
   }
 
@@ -382,8 +384,8 @@ public abstract class V8Engine extends DataProvider {
         .build());
   }
 
-  public void createShortCut() {
-    Intent shortcutIntent = new Intent(this, MainActivityFragment.class);
+  @Partners public void createShortCut() {
+    Intent shortcutIntent = new Intent(this, MainActivity.class);
     shortcutIntent.setAction(Intent.ACTION_MAIN);
     Intent intent = new Intent();
     intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);

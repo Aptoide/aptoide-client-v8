@@ -32,7 +32,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.actions.PermissionRequest;
+import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AppAction;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
@@ -235,7 +236,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     installedRepository = RepositoryFactory.getInstalledRepository();
   }
 
-  @Override public void loadExtras(Bundle args) {
+  @Partners @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
     appId = args.getLong(BundleKeys.APP_ID.name(), -1);
     packageName = args.getString(BundleKeys.PACKAGE_NAME.name(), null);
@@ -256,7 +257,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     return VIEW_ID;
   }
 
-  @Override public void bindViews(View view) {
+  @Partners @Override public void bindViews(View view) {
     super.bindViews(view);
     header = new AppViewHeader(view);
     setHasOptionsMenu(true);
@@ -505,7 +506,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
           }
           if (appAction != AppAction.INSTALL) {
             setUnInstallMenuOptionVisible(() -> new PermissionManager().requestDownloadAccess(
-                (PermissionRequest) getContext())
+                (PermissionService) getContext())
                 .flatMap(success -> installManager.uninstall(getContext(), packageName,
                     app.getFile().getVername()))
                 .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
@@ -582,7 +583,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     });
   }
 
-  protected void showHideOptionsMenu(MenuItem item, boolean visible) {
+  @Partners protected void showHideOptionsMenu(MenuItem item, boolean visible) {
     if (item != null) {
       item.setVisible(visible);
     }
@@ -735,7 +736,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     getLayoutManager().onItemsUpdated(getRecyclerView(), pos, 1);
   }
 
-  private enum BundleKeys {
+  @Partners protected enum BundleKeys {
     APP_ID,
     STORE_NAME,
     MINIMAL_AD,

@@ -33,7 +33,6 @@ import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.util.DialogUtils;
 import cm.aptoide.pt.v8engine.util.LinearLayoutManagerWithSmoothScroller;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewRateAndCommentsDisplayable;
@@ -130,9 +129,8 @@ import rx.functions.Action1;
     compositeSubscription.add(
         RxView.clicks(ratingLayout).subscribe(rateOnClickHandler, handleError));
 
-    final FragmentShower fragmentShower = (FragmentShower) context;
     Action1<Void> commentsOnClickListener = __ -> {
-      fragmentShower.pushFragmentV4(V8Engine.getFragmentProvider()
+      getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
           .newRateAndReviewsFragment(app.getId(), app.getName(), app.getStore().getName(),
               app.getPackageName(), app.getStore().getAppearance().getTheme()));
     };

@@ -16,7 +16,6 @@ import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAppListDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
@@ -59,10 +58,9 @@ public class GridAppListWidget extends Widget<GridAppListDisplayable> {
     tvStoreName.setText(app.getStore().getName());
     tvStoreName.setTypeface(null, Typeface.BOLD);
     final FragmentActivity context = getContext();
-    final FragmentShower fragmentShower = (FragmentShower) context;
     compositeSubscription.add(RxView.clicks(itemView).subscribe(v -> {
       // FIXME
-      fragmentShower.pushFragmentV4(
+      getNavigationManager().navigateTo(
           V8Engine.getFragmentProvider().newAppViewFragment(app.getId(), app.getPackageName()));
     }, throwable -> CrashReport.getInstance().log(throwable)));
 

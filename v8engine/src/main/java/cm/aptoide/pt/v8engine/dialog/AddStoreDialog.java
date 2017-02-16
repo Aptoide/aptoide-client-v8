@@ -21,11 +21,11 @@ import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.BaseV7Response;
+import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.v8engine.MainActivityFragment;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
@@ -40,12 +40,17 @@ public class AddStoreDialog extends DialogFragment {
 
   private final int PRIVATE_STORE_REQUEST_CODE = 20;
   private final AptoideClientUUID aptoideClientUUID;
+  private NavigationManagerV4 navigationManager;
   private String storeName;
   private Dialog loadingDialog;
 
   public AddStoreDialog() {
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
+  }
+
+  public void attachFragmentManager(NavigationManagerV4 navigationManager) {
+    this.navigationManager = navigationManager;
   }
 
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -84,8 +89,7 @@ public class AddStoreDialog extends DialogFragment {
     });
 
     view.findViewById(R.id.button_top_stores).setOnClickListener(v -> {
-      ((MainActivityFragment) getActivity()).pushFragmentV4(
-          V8Engine.getFragmentProvider().newFragmentTopStores());
+      navigationManager.navigateTo(V8Engine.getFragmentProvider().newFragmentTopStores());
       if (isAdded()) {
         dismiss();
       }
@@ -113,7 +117,10 @@ public class AddStoreDialog extends DialogFragment {
   }
 
   private void executeRequest(GetStoreMetaRequest getStoreMetaRequest) {
-    StoreUtilsProxy.subscribeStore(getStoreMetaRequest, getStoreMeta1 -> {
+    final IdsRepositoryImpl clientUuid =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
+
+    new StoreUtilsProxy(clientUuid).subscribeStore(getStoreMetaRequest, getStoreMeta1 -> {
       ShowMessage.asSnack(getView(),
           AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
 

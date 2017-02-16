@@ -12,6 +12,8 @@ import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 import android.util.Log;
 import android.widget.ImageView;
+import cm.aptoide.pt.annotation.Partners;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -32,7 +34,7 @@ public class ImageLoader {
     this.weakContext = new WeakReference<>(context);
   }
 
-  public static ImageLoader with(Context context) {
+  @Partners public static ImageLoader with(Context context) {
     return new ImageLoader(context);
   }
 

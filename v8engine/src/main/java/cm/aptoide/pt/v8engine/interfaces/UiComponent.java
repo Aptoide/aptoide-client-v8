@@ -18,7 +18,7 @@ import android.view.View;
  * methods.
  * </p>
  */
-public interface UiComponentBasics {
+public interface UiComponent {
 
   @LayoutRes int getContentViewId();
 

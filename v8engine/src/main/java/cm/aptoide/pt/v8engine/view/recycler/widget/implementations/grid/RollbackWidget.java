@@ -4,14 +4,13 @@ import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import cm.aptoide.pt.actions.PermissionRequest;
+import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RollbackDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
@@ -76,13 +75,13 @@ public class RollbackWidget extends Widget<RollbackDisplayable> {
 
     compositeSubscription.add(RxView.clicks(rollbackAction).subscribe(view -> {
 
-      final PermissionRequest permissionRequest = ((PermissionRequest) context);
+      final PermissionService permissionRequest = ((PermissionService) getContext());
 
       permissionRequest.requestAccessToExternalFileSystem(() -> {
         Rollback.Action action = Rollback.Action.valueOf(pojo.getAction());
         switch (action) {
           case DOWNGRADE:
-            displayable.update((FragmentShower) context);
+            displayable.update(getNavigationManager());
             break;
           case INSTALL:
             //only if the app is installed
@@ -95,11 +94,11 @@ public class RollbackWidget extends Widget<RollbackDisplayable> {
             break;
 
           case UNINSTALL:
-            displayable.install((FragmentShower) context);
+            displayable.install(getNavigationManager());
             break;
 
           case UPDATE:
-            displayable.update((FragmentShower) context);
+            displayable.update(getNavigationManager());
             break;
         }
       }, () -> {

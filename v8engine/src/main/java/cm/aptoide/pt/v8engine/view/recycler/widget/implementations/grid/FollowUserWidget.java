@@ -10,7 +10,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -83,13 +85,17 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
       final String storeName = displayable.getStoreName();
       final String storeTheme = V8Engine.getConfiguration().getDefaultTheme();
 
+      final IdsRepositoryImpl clientUuid =
+          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
+      final StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(clientUuid);
+
       Action1<Void> openStore = __ -> {
         getNavigationManager().navigateTo(
             V8Engine.getFragmentProvider().newStoreFragment(storeName, storeTheme));
       };
 
       Action1<Void> subscribeStore = __ -> {
-        StoreUtilsProxy.subscribeStore(storeName, getStoreMeta -> {
+        storeUtilsProxy.subscribeStore(storeName, getStoreMeta -> {
           ShowMessage.asSnack(itemView,
               AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
         }, err -> {
@@ -149,7 +155,7 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
     final FragmentShower fragmentShower = (FragmentShower) getContext();
     if (displayable.hasStore()) {
       compositeSubscription.add(RxView.clicks(itemView)
-          .subscribe(click -> displayable.viewClicked(fragmentShower), err -> {
+          .subscribe(click -> displayable.viewClicked(getNavigationManager()), err -> {
             CrashReport.getInstance().log(err);
           }));
     }

@@ -10,7 +10,6 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAdDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
@@ -39,10 +38,9 @@ public class GridAdWidget extends Widget<GridAdDisplayable> {
     final FragmentActivity context = getContext();
     ImageLoader.with(context).load(pojo.getIconPath(), icon);
 
-    final FragmentShower fragmentShower = (FragmentShower) context;
     compositeSubscription.add(RxView.clicks(itemView).subscribe(v -> {
       Analytics.AppViewViewedFrom.addStepToList(displayable.getTag());
-      fragmentShower.pushFragmentV4(V8Engine.getFragmentProvider().newAppViewFragment(pojo));
+      getNavigationManager().navigateTo(V8Engine.getFragmentProvider().newAppViewFragment(pojo));
     }, throwable -> CrashReport.getInstance().log(throwable)));
   }
 }

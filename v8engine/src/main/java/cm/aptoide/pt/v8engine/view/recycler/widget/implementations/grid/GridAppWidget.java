@@ -18,7 +18,6 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -65,11 +64,10 @@ import com.jakewharton.rxbinding.view.RxView;
     ratingBar.setRating(pojo.getStats().getRating().getAvg());
     tvStoreName.setText(pojo.getStore().getName());
     tvAddedTime.setText(DATE_TIME_U.getTimeDiffString(context, pojo.getAdded().getTime()));
-    final FragmentShower fragmentShower = (FragmentShower) context;
     compositeSubscription.add(RxView.clicks(itemView).subscribe(v -> {
       // FIXME
       Analytics.AppViewViewedFrom.addStepToList(displayable.getTag());
-      fragmentShower.pushFragmentV4(V8Engine.getFragmentProvider()
+      getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
           .newAppViewFragment(appId, pojo.getPackageName(),
               pojo.getStore().getAppearance().getTheme(), tvStoreName.getText().toString()));
     }, throwable -> CrashReport.getInstance().log(throwable)));
