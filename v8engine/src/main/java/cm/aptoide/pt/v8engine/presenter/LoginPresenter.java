@@ -53,10 +53,18 @@ public class LoginPresenter implements Presenter {
 
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.RESUME))
-        .flatMap(resumed -> Observable.merge(forgotPasswordSelection(), skipSelection(), successMessageShown(), registerSelection()).compose(
-            view.bindUntilEvent(View.LifecycleEvent.PAUSE)))
+        .flatMap(resumed -> Observable.merge(forgotPasswordSelection(), skipSelection(),
+            successMessageShown(), registerSelection(), showHidePassword())
+            .compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
+
+  }
+
+  private Observable<Void> showHidePassword() {
+    return view.showHidePasswordSelection().doOnNext(__ -> {
+      // TODO: 13/2/2017 sithengineer missing view model to support this...
+    });
   }
 
   private Observable<Void> registerSelection() {
@@ -64,8 +72,7 @@ public class LoginPresenter implements Presenter {
   }
 
   private Observable<Void> successMessageShown() {
-    return view.successMessageShown()
-        .doOnNext(selection -> view.navigateToMainView());
+    return view.successMessageShown().doOnNext(selection -> view.navigateToMainView());
   }
 
   private Observable<Void> forgotPasswordSelection() {

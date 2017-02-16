@@ -18,7 +18,8 @@ import cm.aptoide.accountmanager.Constants;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.activity.LoginActivity;
+import cm.aptoide.pt.v8engine.view.MainActivity;
+import com.facebook.login.LoginFragment;
 
 import static android.accounts.AccountManager.KEY_BOOLEAN_RESULT;
 import static cm.aptoide.pt.preferences.Application.getContext;
@@ -34,7 +35,7 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
 
   public AccountAuthenticator(Context context) {
     super(context);
-    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
   }
 
   @Override
@@ -61,14 +62,15 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
     final Bundle bundle = new Bundle();
     final Intent intent = createAuthActivityIntent(response, accountType, authTokenType, options);
     bundle.putParcelable(AccountManager.KEY_INTENT, intent);
-    //        }
 
     return bundle;
   }
 
   protected Intent createAuthActivityIntent(AccountAuthenticatorResponse response,
       String accountType, String authTokenType, Bundle options) {
-    Intent intent = new Intent(Application.getContext(), LoginActivity.class);
+    Intent intent = new Intent(Application.getContext(), MainActivity.class);
+    intent.putExtra(MainActivity.FRAGMENT, LoginFragment.class.getName());
+    // FIXME: 14/2/2017 sithengineer add this funtionality in main Activity
     intent.putExtra(Constants.ARG_ACCOUNT_TYPE, accountType);
     intent.putExtra(Constants.ARG_AUTH_TYPE, authTokenType);
     intent.putExtra(Constants.ARG_IS_ADDING_NEW_ACCOUNT, true);

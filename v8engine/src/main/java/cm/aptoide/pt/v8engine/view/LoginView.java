@@ -31,6 +31,12 @@ public interface LoginView extends GoogleLoginView {
 
   void navigateToForgotPasswordView();
 
+  void showPassword();
+
+  void hidePassword();
+
+  Observable<Void> showHidePasswordSelection();
+
   Observable<Void> forgotPasswordSelection();
 
   Observable<Void> skipSelection();

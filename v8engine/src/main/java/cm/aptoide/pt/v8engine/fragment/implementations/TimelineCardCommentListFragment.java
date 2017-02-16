@@ -1,7 +1,5 @@
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
-import cm.aptoide.pt.v8engine.fragment.CommentListFragment;
-
 public class TimelineCardCommentListFragment extends CommentListFragment {
 
   //private static final String TAG = StoreGridRecyclerFragment.class.getName();

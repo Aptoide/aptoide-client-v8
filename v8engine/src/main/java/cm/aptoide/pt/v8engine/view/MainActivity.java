@@ -11,6 +11,8 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -64,12 +66,17 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class MainActivity extends BaseActivity implements MainView, FragmentShower {
 
+  public final static String FRAGMENT = "FRAGMENT";
+
   private static final String TAG = MainActivity.class.getSimpleName();
   private StoreUtilsProxy storeUtilsProxy;
   private AptoideAccountManager accountManager;
 
+  private Handler handler;
+
   @Partners @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    handler = new Handler(Looper.getMainLooper());
     setContentView(R.layout.frame_layout);
 
     accountManager = ((V8Engine) getApplicationContext()).getAccountManager();
@@ -243,15 +250,15 @@ public class MainActivity extends BaseActivity implements MainView, FragmentShow
   }
 
   private void setMainPagerPosition(Event.Name name) {
-    AptoideUtils.ThreadU.runOnIoThread(() -> {
-      AptoideUtils.ThreadU.runOnUiThread(() -> {
+    if (handler != null) {
+      handler.post(() -> {
         if (!(getCurrentFragment() instanceof HomeFragment)) {
           return;
         }
 
         ((HomeFragment) getCurrentFragment()).setDesiredViewPagerItem(name);
       });
-    });
+    }
   }
 
   private boolean validateDeepLinkRequiredArgs(String queryType, String queryLayout,

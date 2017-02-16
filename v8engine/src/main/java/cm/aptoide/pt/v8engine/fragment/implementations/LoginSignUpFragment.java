@@ -1,33 +1,30 @@
-/*
- * Copyright (c) 2017.
- * Modified by Marcelo Benites on 06/02/2017.
- */
-
-package cm.aptoide.pt.v8engine.activity;
+package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.Toolbar;
-import android.text.method.PasswordTransformationMethod;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.OAuthException;
-import cm.aptoide.pt.v8engine.account.ErrorsMapper;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.account.ErrorsMapper;
+import cm.aptoide.pt.v8engine.fragment.GoogleLoginFragment;
 import cm.aptoide.pt.v8engine.presenter.LoginPresenter;
 import cm.aptoide.pt.v8engine.view.LoginView;
 import com.facebook.CallbackManager;
@@ -45,120 +42,93 @@ import java.util.Arrays;
 import java.util.List;
 import rx.Observable;
 
-/**
- * Created by marcelobenites on 06/02/17.
- */
-public class LoginActivity extends GoogleLoginActivity implements LoginView {
+public class LoginSignUpFragment extends GoogleLoginFragment implements LoginView {
 
   public static String SKIP_BUTTON = "skip_button";
   private ProgressDialog progressDialog;
   private View content;
-  private SignInButton googleLoginButton;
-  private LoginButton facebookLoginButton;
-
   private CallbackManager callbackManager;
-  private LoginManager facebookLoginManager;
 
-  private PublishRelay<FacebookAccountViewModel> facebookLoginSubject;
   private PublishRelay<Void> skipSubject;
+  private PublishRelay<FacebookAccountViewModel> facebookLoginSubject;
+
+  private LoginManager facebookLoginManager;
   private AlertDialog facebookEmailRequiredDialog;
   private List<String> facebookRequestedPermissions;
-  private Button aptoideLoginButton;
+  private Snackbar successSnackbar;
+
+  private SignInButton googleLoginButton;
+  private LoginButton facebookLoginButton;
+  private Button loginButton;
+  private Button hideShowAptoidePasswordButton;
+
+  private Button registerButton;
   private EditText aptoideEmailEditText;
   private EditText aptoidePasswordEditText;
-  private Button hideShowAptoidePasswordButton;
   private TextView forgotPasswordButton;
   private TextView orMessage;
-  private boolean skipButton;
-  private Snackbar successSnackbar;
-  private Button registerButton;
+  @Nullable private boolean skipButton;
 
-  @Override public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.login_activity_layout);
+  private View inflate(LayoutInflater layoutInflater) {
+    return layoutInflater.inflate(R.layout.fragment_login_sign_up, null);
+  }
 
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+
+    View view = inflate(inflater);
+
+    skipButton = getArguments().getBoolean(SKIP_BUTTON, false);
+    bindViews(view);
+
+    final AptoideAccountManager accountManager =
+        ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+
+    List<String> facebookRequestedPermissions = Arrays.asList("email", "user_friends");
+    attachPresenter(new LoginPresenter(this, accountManager, facebookRequestedPermissions),
+        savedInstanceState);
+
+    return view;
+  }
+
+  private void bindViews(View view) {
+    final Context context = getContext();
     facebookRequestedPermissions = Arrays.asList("email", "user_friends");
-    content = findViewById(android.R.id.content);
-    progressDialog = GenericDialogs.createGenericPleaseWaitDialog(this);
+    content = view.findViewById(android.R.id.content);
+    progressDialog = GenericDialogs.createGenericPleaseWaitDialog(context);
     successSnackbar = Snackbar.make(content, cm.aptoide.accountmanager.R.string.login_successful,
         Snackbar.LENGTH_SHORT);
 
-    skipButton = getIntent().getBooleanExtra(SKIP_BUTTON, false);
     skipSubject = PublishRelay.create();
-    setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-    getSupportActionBar().setHomeButtonEnabled(true);
-    if (!skipButton) {
-      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
-    getSupportActionBar().setDisplayShowTitleEnabled(true);
-    getSupportActionBar().setTitle(cm.aptoide.accountmanager.R.string.login);
 
-    orMessage = (TextView) findViewById(cm.aptoide.accountmanager.R.id.or_message);
-    forgotPasswordButton = (TextView) findViewById(cm.aptoide.accountmanager.R.id.forgot_password);
+    orMessage = (TextView) view.findViewById(cm.aptoide.accountmanager.R.id.or_message);
+    forgotPasswordButton =
+        (TextView) view.findViewById(cm.aptoide.accountmanager.R.id.forgot_password);
 
     googleLoginButton =
-        (SignInButton) findViewById(cm.aptoide.accountmanager.R.id.g_sign_in_button);
+        (SignInButton) view.findViewById(cm.aptoide.accountmanager.R.id.g_sign_in_button);
 
-    aptoideLoginButton = (Button) findViewById(cm.aptoide.accountmanager.R.id.button_login);
-    registerButton = (Button) findViewById(cm.aptoide.accountmanager.R.id.button_register);
-    aptoideEmailEditText = (EditText) findViewById(cm.aptoide.accountmanager.R.id.username);
-    aptoidePasswordEditText = (EditText) findViewById(cm.aptoide.accountmanager.R.id.password);
+    loginButton = (Button) view.findViewById(cm.aptoide.accountmanager.R.id.button_login);
+    registerButton = (Button) view.findViewById(cm.aptoide.accountmanager.R.id.button_register);
+    aptoideEmailEditText = (EditText) view.findViewById(cm.aptoide.accountmanager.R.id.username);
+    aptoidePasswordEditText = (EditText) view.findViewById(cm.aptoide.accountmanager.R.id.password);
     hideShowAptoidePasswordButton =
-        (Button) findViewById(cm.aptoide.accountmanager.R.id.btn_show_hide_pass);
+        (Button) view.findViewById(cm.aptoide.accountmanager.R.id.btn_show_hide_pass);
 
     facebookLoginButton =
-        (LoginButton) findViewById(cm.aptoide.accountmanager.R.id.fb_login_button);
+        (LoginButton) view.findViewById(cm.aptoide.accountmanager.R.id.fb_login_button);
     callbackManager = CallbackManager.Factory.create();
     facebookLoginManager = LoginManager.getInstance();
     facebookLoginSubject = PublishRelay.create();
-    facebookEmailRequiredDialog = new AlertDialog.Builder(this).setMessage(
+    facebookEmailRequiredDialog = new AlertDialog.Builder(context).setMessage(
         cm.aptoide.accountmanager.R.string.facebook_email_permission_regected_message)
         .setPositiveButton(cm.aptoide.accountmanager.R.string.facebook_grant_permission_button,
             (dialog, which) -> {
-              facebookLoginManager.logInWithReadPermissions(LoginActivity.this,
-                  Arrays.asList("email"));
+              facebookLoginManager.logInWithReadPermissions(getActivity(), Arrays.asList("email"));
             })
         .setNegativeButton(android.R.string.cancel, null)
         .create();
-
-    final AptoideAccountManager accountManager =
-        ((V8Engine)getApplicationContext()).getAccountManager();
-
-    attachPresenter(new LoginPresenter(this, accountManager, facebookRequestedPermissions),
-        savedInstanceState);
-  }
-
-  @Override protected void onResume() {
-    super.onResume();
-    RxView.clicks(hideShowAptoidePasswordButton).doOnNext(click -> {
-      final int cursorPosition = aptoidePasswordEditText.getSelectionStart();
-      final boolean passwordShown = aptoidePasswordEditText.getTransformationMethod() == null;
-      hideShowAptoidePasswordButton.setBackgroundResource(
-          passwordShown ? cm.aptoide.accountmanager.R.drawable.icon_closed_eye
-              : cm.aptoide.accountmanager.R.drawable.icon_open_eye);
-      aptoidePasswordEditText.setTransformationMethod(
-          passwordShown ? new PasswordTransformationMethod() : null);
-      aptoidePasswordEditText.setSelection(cursorPosition);
-    }).compose(bindUntilEvent(LifecycleEvent.PAUSE)).subscribe();
-  }
-
-  @Override public boolean onCreateOptionsMenu(Menu menu) {
-    if (skipButton) {
-      menu.add(0, 0, 0, cm.aptoide.accountmanager.R.string.wizard_skip)
-          .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-      return true;
-    } else {
-      return super.onCreateOptionsMenu(menu);
-    }
-  }
-
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    int i = item.getItemId();
-    if (i == android.R.id.home || i == cm.aptoide.accountmanager.R.id.home || i == 0) {
-      skipSubject.call(null);
-      return true;
-    }
-    return super.onOptionsItemSelected(item);
   }
 
   @Override public void showLoading() {
@@ -173,7 +143,8 @@ public class LoginActivity extends GoogleLoginActivity implements LoginView {
     final String message;
     if (throwable instanceof OAuthException) {
       final OAuth oAuth = ((OAuthException) throwable).getoAuth();
-      message = getString(ErrorsMapper.getWebServiceErrorMessageFromCode(oAuth.getErrors().get(0).getCode()));
+      message = getString(
+          ErrorsMapper.getWebServiceErrorMessageFromCode(oAuth.getErrors().get(0).getCode()));
     } else {
       message = getString(cm.aptoide.accountmanager.R.string.unknown_error);
     }
@@ -181,7 +152,7 @@ public class LoginActivity extends GoogleLoginActivity implements LoginView {
   }
 
   @Override public void showFacebookLogin() {
-    FacebookSdk.sdkInitialize(getApplicationContext());
+    FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
     facebookLoginButton.setReadPermissions(facebookRequestedPermissions);
     facebookLoginButton.setVisibility(View.VISIBLE);
     facebookLoginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
@@ -206,6 +177,15 @@ public class LoginActivity extends GoogleLoginActivity implements LoginView {
     showOrMessage();
   }
 
+  @Override public void hideGoogleLogin() {
+    // todo
+    Logger.w(this.getClass().getName(), "to do");
+  }
+
+  @Override public Observable<GoogleAccountViewModel> googleLoginSelection() {
+    return null;
+  }
+
   @Override public void hideFacebookLogin() {
     facebookLoginButton.setVisibility(View.GONE);
   }
@@ -219,11 +199,11 @@ public class LoginActivity extends GoogleLoginActivity implements LoginView {
   }
 
   @Override public void navigateToMainView() {
-    finish();
+    getActivity().finish();
   }
 
   @Override public Observable<AptoideAccountViewModel> aptoideLoginSelection() {
-    return RxView.clicks(aptoideLoginButton)
+    return RxView.clicks(loginButton)
         .map(click -> new AptoideAccountViewModel(aptoideEmailEditText.getText().toString(),
             aptoidePasswordEditText.getText().toString()));
   }
@@ -238,7 +218,21 @@ public class LoginActivity extends GoogleLoginActivity implements LoginView {
   }
 
   @Override public void navigateToRegisterView() {
-    startActivity(new Intent(this, SignUpActivity.class));
+    // startActivity(new Intent(this, SignUpActivity.class));
+  }
+
+  @Override public void showPassword() {
+    // todo
+    Logger.w(this.getClass().getName(), "to do");
+  }
+
+  @Override public void hidePassword() {
+    // todo
+    Logger.w(this.getClass().getName(), "to do");
+  }
+
+  @Override public Observable<Void> showHidePasswordSelection() {
+    return RxView.clicks(hideShowAptoidePasswordButton);
   }
 
   @Override public Observable<Void> registerSelection() {
@@ -261,12 +255,12 @@ public class LoginActivity extends GoogleLoginActivity implements LoginView {
     successSnackbar.show();
   }
 
-  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+  @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     callbackManager.onActivityResult(requestCode, resultCode, data);
   }
 
-  @Override protected void onDestroy() {
+  @Override public void onDestroy() {
     super.onDestroy();
   }
 
