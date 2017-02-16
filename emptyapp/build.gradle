@@ -1,4 +1,4 @@
-apply plugin: 'com.android.library'
+apply plugin: 'com.android.application'
 
 android {
   compileSdkVersion 25
@@ -27,4 +27,6 @@ dependencies {
   })
   compile 'com.android.support:appcompat-v7:25.1.1'
   testCompile 'junit:junit:4.12'
+
+  compile project(':shareapps')
 }
