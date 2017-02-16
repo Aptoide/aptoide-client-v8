@@ -32,7 +32,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.actions.PermissionRequest;
+import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AppAction;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
@@ -235,7 +236,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     installedRepository = RepositoryFactory.getInstalledRepository();
   }
 
-  @Override public void loadExtras(Bundle args) {
+  @Partners @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
     appId = args.getLong(BundleKeys.APP_ID.name(), -1);
     packageName = args.getString(BundleKeys.PACKAGE_NAME.name(), null);
@@ -256,7 +257,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     return VIEW_ID;
   }
 
-  @Override public void bindViews(View view) {
+  @Partners @Override public void bindViews(View view) {
     super.bindViews(view);
     header = new AppViewHeader(view);
     setHasOptionsMenu(true);
@@ -386,7 +387,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     super.onCreateOptionsMenu(menu, inflater);
     this.menu = menu;
     inflater.inflate(R.menu.menu_appview_fragment, menu);
-    SearchUtils.setupGlobalSearchView(menu, getActivity());
+    SearchUtils.setupGlobalSearchView(menu, getNavigationManager());
     uninstallMenuItem = menu.findItem(R.id.menu_uninstall);
   }
 
@@ -505,7 +506,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
           }
           if (appAction != AppAction.INSTALL) {
             setUnInstallMenuOptionVisible(() -> new PermissionManager().requestDownloadAccess(
-                (PermissionRequest) getContext())
+                (PermissionService) getContext())
                 .flatMap(success -> installManager.uninstall(getContext(), packageName,
                     app.getFile().getVername()))
                 .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
@@ -582,7 +583,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     });
   }
 
-  protected void showHideOptionsMenu(MenuItem item, boolean visible) {
+  @Partners protected void showHideOptionsMenu(MenuItem item, boolean visible) {
     if (item != null) {
       item.setVisible(visible);
     }
@@ -735,7 +736,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     getLayoutManager().onItemsUpdated(getRecyclerView(), pos, 1);
   }
 
-  private enum BundleKeys {
+  @Partners protected enum BundleKeys {
     APP_ID,
     STORE_NAME,
     MINIMAL_AD,
@@ -807,24 +808,19 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       String headerImageUrl = app.getGraphic();
       List<GetAppMeta.Media.Screenshot> screenshots = app.getMedia().getScreenshots();
 
-      //			final Drawable colorDrawable = new ColorDrawable(Color.argb(255, 0, 0, 0));
-
+      final Context context = getContext();
       if (!TextUtils.isEmpty(headerImageUrl)) {
-        ImageLoader.load(app.getGraphic(), R.drawable.app_view_header_gradient, featuredGraphic);
-        //				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        //					((FrameLayout)featuredGraphic.getParent()).setForeground(colorDrawable);
-        //				}
+        ImageLoader.with(context)
+            .load(app.getGraphic(), R.drawable.app_view_header_gradient, featuredGraphic);
       } else if (screenshots != null && screenshots.size() > 0 && !TextUtils.isEmpty(
           screenshots.get(0).getUrl())) {
-        ImageLoader.load(screenshots.get(0).getUrl(), R.drawable.app_view_header_gradient,
-            featuredGraphic);
-        //				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        //					((FrameLayout) featuredGraphic.getParent()).setForeground(colorDrawable);
-        //				}
+        ImageLoader.with(context)
+            .load(screenshots.get(0).getUrl(), R.drawable.app_view_header_gradient,
+                featuredGraphic);
       }
 
       if (app.getIcon() != null) {
-        ImageLoader.load(getApp.getNodes().getMeta().getData().getIcon(), appIcon);
+        ImageLoader.with(context).load(getApp.getNodes().getMeta().getData().getIcon(), appIcon);
       }
 
       collapsingToolbar.setTitle(app.getName());
@@ -896,7 +892,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
           break;
       }
 
-      ImageLoader.load(badgeResId, badge);
+      ImageLoader.with(context).load(badgeResId, badge);
       badgeText.setText(badgeMessageId);
 
       Analytics.ViewedApplication.view(app.getPackageName(),

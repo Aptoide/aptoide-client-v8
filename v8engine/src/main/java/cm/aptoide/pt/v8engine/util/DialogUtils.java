@@ -41,15 +41,15 @@ import rx.subscriptions.Subscriptions;
 public class DialogUtils {
 
   private static final String TAG = DialogUtils.class.getSimpleName();
-  private static final Locale LOCALE = Locale.getDefault();
-  private static AptoideClientUUID aptoideClientUUID;
+  private final Locale LOCALE = Locale.getDefault();
+  private final AptoideClientUUID aptoideClientUUID;
 
   public DialogUtils() {
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
   }
 
-  public static Observable<GenericDialogs.EResponse> showRateDialog(@NonNull Activity activity,
+  public Observable<GenericDialogs.EResponse> showRateDialog(@NonNull Activity activity,
       @NonNull String appName, @NonNull String packageName, @Nullable String storeName) {
 
     return Observable.create((Subscriber<? super GenericDialogs.EResponse> subscriber) -> {
@@ -136,11 +136,11 @@ public class DialogUtils {
         // WS call
         if (storeName != null) {
           PostReviewRequest.of(storeName, packageName, reviewTitle, reviewText, reviewRating,
-              AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
+              AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
               .execute(successRequestListener, errorRequestListener);
         } else {
           PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating,
-              AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
+              AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
               .execute(successRequestListener, errorRequestListener);
         }
       });
@@ -150,7 +150,7 @@ public class DialogUtils {
     });
   }
 
-  public static void showRateDialog(@NonNull Activity activity, @NonNull String appName,
+  public void showRateDialog(@NonNull Activity activity, @NonNull String appName,
       @NonNull String packageName, @Nullable String storeName,
       @Nullable Action0 onPositiveCallback) {
 
@@ -217,11 +217,11 @@ public class DialogUtils {
 
       if (storeName != null) {
         PostReviewRequest.of(storeName, packageName, reviewTitle, reviewText, reviewRating,
-            AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
+            AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
             .execute(successRequestListener, errorRequestListener);
       } else {
         PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating,
-            AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
+            AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
             .execute(successRequestListener, errorRequestListener);
       }
     });

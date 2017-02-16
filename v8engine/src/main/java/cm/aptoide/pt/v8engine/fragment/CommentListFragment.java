@@ -4,6 +4,7 @@ import android.app.FragmentManager;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
@@ -20,17 +21,16 @@ import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.PostCommentForReview;
-import cm.aptoide.pt.dataprovider.ws.v7.PostCommentForTimelineArticle;
-import cm.aptoide.pt.dataprovider.ws.v7.store.PostCommentForStore;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
+import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.ListComments;
+import cm.aptoide.pt.model.v7.SetComment;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.interfaces.CommentDialogCallbackContract;
 import cm.aptoide.pt.v8engine.util.CommentOperations;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.view.custom.HorizontalDividerItemDecoration;
@@ -44,15 +44,15 @@ import cm.aptoide.pt.viewRateAndCommentReviews.ComplexComment;
 import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import rx.Observable;
 import rx.functions.Action1;
 
 // TODO: 21/12/2016 sithengineer refactor and split in multiple classes to list comments
 // for each type: store and timeline card
-public class CommentListFragment extends GridRecyclerSwipeFragment {
-
-  //private static final String TAG = StoreGridRecyclerFragment.class.getName();
+public class CommentListFragment extends GridRecyclerSwipeFragment
+    implements CommentDialogCallbackContract {
 
   //
   // consts
@@ -62,7 +62,8 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
   private static final String ELEMENT_ID_AS_LONG = "element_id_as_long";
   private static final String URL_VAL = "url_val";
   private final AptoideClientUUID aptoideClientUUID;
-
+  // control setComment retry
+  protected long lastTotal;
   //
   // vars
   //
@@ -72,10 +73,10 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
   private String url;
   // timeline card comments vars
   private String elementIdAsString;
+  private List<CommentNode> comments;
   // store comments vars
   private long elementIdAsLong;
   private String storeName;
-
   //
   // views
   //
@@ -193,7 +194,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
   }
 
   void caseListSocialTimelineComments(boolean refresh) {
-    String aptoideClientUuid = aptoideClientUUID.getAptoideClientUUID();
+    String aptoideClientUuid = aptoideClientUUID.getUniqueIdentifier();
 
     ListCommentsRequest listCommentsRequest =
         ListCommentsRequest.ofTimeline(url, refresh, elementIdAsString,
@@ -203,7 +204,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
       if (listComments != null
           && listComments.getDatalist() != null
           && listComments.getDatalist().getList() != null) {
-        List<CommentNode> comments = commentOperations.flattenByDepth(
+        comments = commentOperations.flattenByDepth(
             commentOperations.transform(listComments.getDatalist().getList()));
 
         ArrayList<Displayable> displayables = new ArrayList<>(comments.size());
@@ -230,7 +231,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
   void caseListStoreComments(String url, BaseRequestWithStore.StoreCredentials storeCredentials,
       boolean refresh) {
 
-    String aptoideClientUuid = aptoideClientUUID.getAptoideClientUUID();
+    String aptoideClientUuid = aptoideClientUUID.getUniqueIdentifier();
 
     ListCommentsRequest listCommentsRequest =
         ListCommentsRequest.ofStoreAction(url, refresh, storeCredentials,
@@ -250,7 +251,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
       if (listComments != null
           && listComments.getDatalist() != null
           && listComments.getDatalist().getList() != null) {
-        List<CommentNode> comments = commentOperations.flattenByDepth(
+        comments = commentOperations.flattenByDepth(
             commentOperations.transform(listComments.getDatalist().getList()));
 
         ArrayList<Displayable> displayables = new ArrayList<>(comments.size());
@@ -286,11 +287,12 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
         CommentDialogFragment commentDialogFragment =
             CommentDialogFragment.newInstanceTimelineArticleComment(timelineArticleId,
                 previousCommentId);
+        commentDialogFragment.setCommentDialogCallbackContract(this);
 
         return commentDialogFragment.lifecycle()
             .doOnSubscribe(() -> commentDialogFragment.show(fm, "fragment_comment_dialog"))
             .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
-            .flatMap(event -> reloadComments());
+            .flatMap(event -> Observable.empty());
       }
 
       return showSignInMessage();
@@ -308,11 +310,12 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
         CommentDialogFragment commentDialogFragment =
             CommentDialogFragment.newInstanceStoreCommentReply(storeId, previousCommentId,
                 storeName);
+        commentDialogFragment.setCommentDialogCallbackContract(this);
 
         return commentDialogFragment.lifecycle()
             .doOnSubscribe(() -> commentDialogFragment.show(fm, "fragment_comment_dialog"))
             .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
-            .flatMap(event -> reloadComments());
+            .flatMap(event -> Observable.empty());
       }
 
       return showSignInMessage();
@@ -327,19 +330,19 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
   // Timeline Articles comments methods
   //
 
+  private Observable<Void> showSignInMessage() {
+    return ShowMessage.asObservableSnack(this.getActivity(), R.string.you_need_to_be_logged_in,
+        R.string.login, snackView -> {
+          AptoideAccountManager.openAccountManager(CommentListFragment.this.getContext());
+        }).flatMap(a -> Observable.empty());
+  }
+
   private Observable<Void> reloadComments() {
     return Observable.fromCallable(() -> {
       ManagerPreferences.setForceServerRefreshFlag(true);
       super.reload();
       return null;
     });
-  }
-
-  private Observable<Void> showSignInMessage() {
-    return ShowMessage.asObservableSnack(this.getActivity(), R.string.you_need_to_be_logged_in,
-        R.string.login, snackView -> {
-          AptoideAccountManager.openAccountManager(CommentListFragment.this.getContext());
-        }).flatMap(a -> Observable.empty());
   }
 
   @Override public void setupViews() {
@@ -374,12 +377,13 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
         FragmentManager fm = CommentListFragment.this.getActivity().getFragmentManager();
         CommentDialogFragment commentDialogFragment =
             CommentDialogFragment.newInstanceTimelineArticleComment(timelineArticleId);
+        commentDialogFragment.setCommentDialogCallbackContract(this);
         return commentDialogFragment.lifecycle()
             .doOnSubscribe(() -> {
               commentDialogFragment.show(fm, "fragment_comment_dialog");
             })
             .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
-            .flatMap(event -> reloadComments());
+            .flatMap(event -> Observable.empty());
       }
 
       return showSignInMessage();
@@ -395,52 +399,86 @@ public class CommentListFragment extends GridRecyclerSwipeFragment {
         FragmentManager fm = CommentListFragment.this.getActivity().getFragmentManager();
         CommentDialogFragment commentDialogFragment =
             CommentDialogFragment.newInstanceStoreComment(storeCommentId, storeName);
+        commentDialogFragment.setCommentDialogCallbackContract(this);
 
         return commentDialogFragment.lifecycle()
             .doOnSubscribe(() -> {
               commentDialogFragment.show(fm, "fragment_comment_dialog");
             })
             .filter(event -> event.equals(FragmentEvent.DESTROY_VIEW))
-            .flatMap(event -> reloadComments());
+            .flatMap(event -> Observable.empty());
       }
 
       return showSignInMessage();
     });
   }
 
-  private Observable<BaseV7Response> submitComment(String inputText, long idAsLong,
-      Long previousCommentId, String idAsString) {
-    switch (commentType) {
-      case REVIEW:
-        // new comment on a review
-        return PostCommentForReview.of(idAsLong, inputText, AptoideAccountManager.getAccessToken(),
-            aptoideClientUUID.getAptoideClientUUID()).observe();
+  @Override public void okSelected(BaseV7Response response, long longAsId, Long previousCommentId,
+      String idAsString) {
+    if (response instanceof SetComment) {
+      ComplexComment complexComment =
+          getComplexComment(((SetComment) response).getData().getBody(), previousCommentId,
+              ((SetComment) response).getData().getId());
 
-      case STORE:
-        // check if this is a new comment on a store or a reply to a previous one
-        if (previousCommentId == null) {
-          return PostCommentForStore.of(idAsLong, inputText, AptoideAccountManager.getAccessToken(),
-              aptoideClientUUID.getAptoideClientUUID()).observe();
-        }
+      CommentDisplayable commentDisplayable = new CommentDisplayable(complexComment);
 
-        return PostCommentForStore.of(idAsLong, previousCommentId, inputText,
-            AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
-            .observe();
-
-      case TIMELINE:
-        // check if this is a new comment on a article or a reply to a previous one
-        if (previousCommentId == null) {
-          return PostCommentForTimelineArticle.of(idAsString, inputText,
-              AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
-              .observe();
-        }
-
-        return PostCommentForTimelineArticle.of(idAsString, previousCommentId, inputText,
-            AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
-            .observe();
+      if (complexComment.getParent() != null) {
+        insertChildCommentInsideParent(complexComment);
+      } else {
+        addDisplayable(0, commentDisplayable, true);
+      }
+      ManagerPreferences.setForceServerRefreshFlag(true);
+      ShowMessage.asSnack(this.getActivity(), R.string.comment_submitted);
     }
-    // default case
-    Logger.e(this.getTag(), "Unable to create reply due to missing comment type");
-    return Observable.empty();
+  }
+
+  private void insertChildCommentInsideParent(ComplexComment complexComment) {
+    displayables.clear();
+    boolean added = false;
+    ArrayList<Displayable> displayables = new ArrayList<>(comments.size() + 1);
+    for (CommentNode commentNode : comments) {
+      displayables.add(new CommentDisplayable(new ComplexComment(commentNode,
+          createNewCommentFragment(elementIdAsString, commentNode.getComment().getId()))));
+      if (commentNode.getComment().getId() == complexComment.getParent().getId() && !added) {
+        displayables.add(new CommentDisplayable(complexComment));
+        added = true;
+      }
+    }
+    this.displayables = new ArrayList<>(displayables.size());
+    this.displayables.add(new DisplayableGroup(displayables));
+    clearDisplayables();
+    addDisplayables(this.displayables);
+  }
+
+  @NonNull
+  private ComplexComment getComplexComment(String inputText, Long previousCommentId, long id) {
+    Comment comment = new Comment();
+    Comment.User user = new Comment.User();
+    if (!TextUtils.isEmpty(AptoideAccountManager.getUserData().getUserAvatar())) {
+      user.setAvatar(AptoideAccountManager.getUserData().getUserAvatar());
+    } else {
+      if (!TextUtils.isEmpty(AptoideAccountManager.getUserData().getUserAvatarRepo())) {
+        user.setAvatar(AptoideAccountManager.getUserData().getUserAvatarRepo());
+      }
+    }
+    user.setName(AptoideAccountManager.getUserData().getUserName());
+    comment.setUser(user);
+    comment.setBody(inputText);
+    comment.setAdded(new Date());
+    comment.setId(id);
+    CommentNode commentNode = new CommentNode(comment);
+    if (previousCommentId != null) {
+      Comment.Parent parent = new Comment.Parent();
+      parent.setId(previousCommentId);
+      comment.setParent(parent);
+      commentNode.setLevel(2);
+    }
+    if (elementIdAsLong != 0) {
+      return new ComplexComment(commentNode,
+          createNewCommentFragment(elementIdAsLong, commentNode.getComment().getId(), storeName));
+    } else {
+      return new ComplexComment(commentNode,
+          createNewCommentFragment(elementIdAsString, commentNode.getComment().getId()));
+    }
   }
 }

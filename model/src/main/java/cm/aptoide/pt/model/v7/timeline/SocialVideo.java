@@ -14,7 +14,7 @@ import lombok.Getter;
 /**
  * Created by jdandrade on 28/11/2016.
  */
-@EqualsAndHashCode(exclude = { "publisher" }) public class SocialVideo extends SocialCard
+@EqualsAndHashCode(exclude = { "publisher" }, callSuper = false) public class SocialVideo extends SocialCard
     implements TimelineCard {
 
   @Getter private final Publisher publisher;

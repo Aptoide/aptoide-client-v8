@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.iab.ErrorCodeFactory;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -206,7 +207,9 @@ public class PaymentActivity extends ActivityView implements PaymentView {
               .subscribeOn(AndroidSchedulers.mainThread())
               .unsubscribeOn(AndroidSchedulers.mainThread())
               .doOnNext(click -> usePaymentClick.call(otherPayment))
-              .subscribe());
+              .subscribe(__ -> { /* does nothing */}, err -> {
+                CrashReport.getInstance().log(err);
+              }));
           useButton.setVisibility(View.VISIBLE);
           approving.setVisibility(View.GONE);
           registerButton.setVisibility(View.GONE);
@@ -216,7 +219,9 @@ public class PaymentActivity extends ActivityView implements PaymentView {
               .subscribeOn(AndroidSchedulers.mainThread())
               .unsubscribeOn(AndroidSchedulers.mainThread())
               .doOnNext(click -> registerPaymentClick.call(otherPayment))
-              .subscribe());
+              .subscribe(__ -> { /* does nothing */}, err -> {
+                CrashReport.getInstance().log(err);
+              }));
           registerButton.setVisibility(View.VISIBLE);
           approving.setVisibility(View.GONE);
           useButton.setVisibility(View.GONE);
@@ -239,7 +244,7 @@ public class PaymentActivity extends ActivityView implements PaymentView {
   }
 
   @Override public void showProduct(AptoideProduct product) {
-    ImageLoader.load(product.getIcon(), productIcon);
+    ImageLoader.with(this).load(product.getIcon(), productIcon);
     productName.setText(product.getTitle());
     productDescription.setText(product.getDescription());
   }

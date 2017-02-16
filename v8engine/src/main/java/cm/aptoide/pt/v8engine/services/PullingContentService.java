@@ -83,11 +83,11 @@ public class PullingContentService extends Service {
           setUpdatesAction(startId);
           break;
         case PUSH_NOTIFICATIONS_ACTION:
-          setPushNotificationsAction(startId);
+          setPushNotificationsAction(this, startId);
           break;
         case BOOT_COMPLETED_ACTION:
           setUpdatesAction(startId);
-          setPushNotificationsAction(startId);
+          setPushNotificationsAction(this, startId);
           break;
       }
     }
@@ -116,8 +116,9 @@ public class PullingContentService extends Service {
    *
    * @param startId service startid
    */
-  private void setPushNotificationsAction(int startId) {
-    PushNotificationsRequest.of().execute(response -> setPushNotification(response, startId));
+  private void setPushNotificationsAction(Context context, int startId) {
+    PushNotificationsRequest.of()
+        .execute(response -> setPushNotification(context, response, startId));
   }
 
   private void setUpdatesNotification(List<Update> updates, int startId) {
@@ -163,7 +164,8 @@ public class PullingContentService extends Service {
     stopSelf(startId);
   }
 
-  private void setPushNotification(GetPushNotificationsResponse response, int startId) {
+  private void setPushNotification(Context context, GetPushNotificationsResponse response,
+      int startId) {
     for (final GetPushNotificationsResponse.Notification pushNotification : response.getResults()) {
       Intent resultIntent = new Intent(Application.getContext(), PullingContentReceiver.class);
       resultIntent.setAction(PullingContentReceiver.NOTIFICATION_PRESSED_ACTION);
@@ -207,7 +209,7 @@ public class PullingContentService extends Service {
         NotificationTarget notificationTarget =
             new NotificationTarget(Application.getContext(), expandedView,
                 R.id.PushNotificationImageView, notification, PUSH_NOTIFICATION_ID);
-        ImageLoader.loadImageToNotification(notificationTarget, imageUrl);
+        ImageLoader.with(context).loadImageToNotification(notificationTarget, imageUrl);
       }
 
       if (!response.getResults().isEmpty()) {

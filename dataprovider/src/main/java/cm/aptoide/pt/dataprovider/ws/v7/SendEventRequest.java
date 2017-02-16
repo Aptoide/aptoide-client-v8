@@ -35,7 +35,7 @@ public class SendEventRequest extends V7<BaseV7Response, SendEventRequest.Body> 
 
   public static SendEventRequest of(String accessToken, Body.Data data, String eventName) {
     NAME = eventName;
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID.getAptoideClientUUID());
+    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID.getUniqueIdentifier());
     SendEventRequest.Body body =
         new SendEventRequest.Body(data, DataProvider.getConfiguration().getAppId());
 

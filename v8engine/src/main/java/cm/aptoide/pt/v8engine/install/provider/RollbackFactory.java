@@ -48,7 +48,7 @@ public class RollbackFactory {
         rollback.setIcon(icon);
       } else {
         String apkIconPath = AptoideUtils.SystemU.getApkIconPath(info);
-        Bitmap theBitmap = ImageLoader.loadBitmap(context, apkIconPath);
+        Bitmap theBitmap = ImageLoader.with(context).loadBitmap(apkIconPath);
         String imagesCachePath = Application.getConfiguration().getImagesCachePath();
         FileUtils.saveBitmapToFile(new File(imagesCachePath), packageName, theBitmap,
             Bitmap.CompressFormat.PNG, 100);

@@ -22,7 +22,7 @@ import lombok.Data;
   private Parent parent;
 
   @Data public static class User {
-
+    private long id;
     private String name;
     private String avatar;
   }

@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
@@ -70,7 +71,9 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
   @Override public void setupViews() {
     super.setupViews();
     setHasOptionsMenu(true);
-    RxView.clicks(sendFeedbackBtn).subscribe(aVoid -> sendFeedback());
+    RxView.clicks(sendFeedbackBtn).subscribe(aVoid -> sendFeedback(), err -> {
+      CrashReport.getInstance().log(err);
+    });
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {

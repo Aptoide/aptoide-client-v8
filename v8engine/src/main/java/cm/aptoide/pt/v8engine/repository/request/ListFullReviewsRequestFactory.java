@@ -18,13 +18,13 @@ class ListFullReviewsRequestFactory {
 
   public ListFullReviewsRequestFactory() {
     aptoideClientUUID = () -> new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext()).getAptoideClientUUID();
+        DataProvider.getContext()).getUniqueIdentifier();
 
     accessToken = AptoideAccountManager::getAccessToken;
   }
 
   public ListFullReviewsRequest newListFullReviews(String url, boolean refresh) {
     return ListFullReviewsRequest.ofAction(url, refresh, accessToken.get(),
-        aptoideClientUUID.getAptoideClientUUID());
+        aptoideClientUUID.getUniqueIdentifier());
   }
 }

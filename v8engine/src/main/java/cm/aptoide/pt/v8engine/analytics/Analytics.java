@@ -324,7 +324,7 @@ public class Analytics {
           }
         }
 
-        String cpuid = aptoideClientUuid.getAptoideClientUUID();
+        String cpuid = aptoideClientUuid.getUniqueIdentifier();
 
         Localytics.setCustomerId(cpuid);
 
@@ -608,6 +608,24 @@ public class Analytics {
         map.put(STORE_NAME, storeName);
 
         track(EVENT_NAME, map, LOCALYTICS);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+
+    /**
+     * this method still does nothing...
+     *
+     * @param storeName
+     */
+    public static void unSubscribe(String storeName) {
+      try {
+        HashMap<String, String> map = new HashMap<>();
+
+        map.put(ACTION, "Unsubscribe");
+        map.put(STORE_NAME, storeName);
+
+        //track(EVENT_NAME, map, LOCALYTICS);
       } catch (Exception e) {
         e.printStackTrace();
       }

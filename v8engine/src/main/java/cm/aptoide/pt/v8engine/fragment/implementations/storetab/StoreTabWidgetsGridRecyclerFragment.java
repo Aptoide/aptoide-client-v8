@@ -37,12 +37,13 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
     return Observable.from(getStoreWidgets.getDatalist().getList())
         .flatMap(wsWidget -> WSWidgetsUtils.loadWidgetNode(wsWidget,
             StoreUtils.getStoreCredentialsFromUrl(url), refresh,
-            AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID(),
+            AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier(),
             DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(V8Engine.getContext()),
             DataProvider.getConfiguration().getPartnerId(),
             AptoideAccountManager.isMatureSwitchOn()))
         .toList()
-        .map(wsWidgets -> DisplayablesFactory.parse(getStoreWidgets, storeTheme, storeRepository))
+        .map(wsWidgets -> DisplayablesFactory.parse(getStoreWidgets, storeTheme, storeRepository,
+            storeContext))
         .first();
   }
 }

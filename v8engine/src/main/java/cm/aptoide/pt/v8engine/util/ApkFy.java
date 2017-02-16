@@ -1,7 +1,7 @@
 package cm.aptoide.pt.v8engine.util;
 
-import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
@@ -9,6 +9,7 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import static com.google.android.gms.internal.zzs.TAG;
@@ -19,13 +20,20 @@ import static com.google.android.gms.internal.zzs.TAG;
 
 public class ApkFy {
 
-  public void run(Activity activity) {
+  private final Context context;
+  private final Intent intent;
+
+  public ApkFy(Context context, Intent intent) {
+    this.context = context;
+    this.intent = intent;
+  }
+
+  public void run() {
     if (SecurePreferences.shouldRunApkFy()) {
-      Long aLong = extractAppId(activity);
-      if (aLong != null) {
-        activity.getIntent()
-            .putExtra(DeepLinkIntentReceiver.DeepLinksTargets.APP_VIEW_FRAGMENT, true);
-        activity.getIntent().putExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_ID_KEY, aLong);
+      Long appId = extractAppId(context);
+      if (appId != null) {
+        intent.putExtra(DeepLinkIntentReceiver.DeepLinksTargets.APP_VIEW_FRAGMENT, true);
+        intent.putExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_ID_KEY, appId);
       }
       SecurePreferences.setApkFyRun();
     }
@@ -38,15 +46,18 @@ public class ApkFy {
       final String sourceDir = context.getPackageManager()
           .getPackageInfo(V8Engine.getConfiguration().getAppId(), 0).applicationInfo.sourceDir;
       final ZipFile myZipFile = new ZipFile(sourceDir);
-      final InputStream is = myZipFile.getInputStream(myZipFile.getEntry("META-INF/aob"));
+      final ZipEntry entry = myZipFile.getEntry("META-INF/aob");
+      if (entry != null) {
+        final InputStream is = myZipFile.getInputStream(entry);
 
-      Properties properties = new Properties();
-      properties.load(is);
-      if (properties.containsKey("downloadId")) {
-        appId = properties.getProperty("downloadId");
+        Properties properties = new Properties();
+        properties.load(is);
+        if (properties.containsKey("downloadId")) {
+          appId = properties.getProperty("downloadId");
+        }
+
+        return appId != null ? Long.parseLong(appId) : null;
       }
-
-      return appId != null ? Long.parseLong(appId) : null;
     } catch (Exception e) {
       if (appId != null) {
         CrashReport.getInstance().log("APKFY_APP_ID", appId);

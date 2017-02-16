@@ -11,7 +11,7 @@ import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-@EqualsAndHashCode(exclude = { "publisher" }) public class SocialArticle extends SocialCard
+@EqualsAndHashCode(exclude = { "publisher" }, callSuper = false) public class SocialArticle extends SocialCard
     implements TimelineCard {
 
   @Getter private final Publisher publisher;

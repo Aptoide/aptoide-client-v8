@@ -15,6 +15,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -76,8 +77,10 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
       callPermissionAndAction(TYPE_STORAGE);
       dialog.dismiss();
     }));
-    mSubscriptions.add(
-        RxView.clicks(dialog.findViewById(R.id.cancel)).subscribe(click -> dialog.dismiss()));
+    mSubscriptions.add(RxView.clicks(dialog.findViewById(R.id.cancel))
+        .subscribe(click -> dialog.dismiss(), err -> {
+          CrashReport.getInstance().log(err);
+        }));
     dialog.show();
   }
 

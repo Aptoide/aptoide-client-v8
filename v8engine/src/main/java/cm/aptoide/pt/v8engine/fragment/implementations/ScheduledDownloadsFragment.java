@@ -12,7 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.actions.PermissionRequest;
+import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Scheduled;
@@ -115,7 +115,11 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
                         .first()
                         .observeOn(AndroidSchedulers.mainThread())
                         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-                        .subscribe(scheduleds -> downloadAndInstallScheduledList(scheduleds, true));
+                        .subscribe(
+                            scheduledList -> downloadAndInstallScheduledList(scheduledList, true),
+                            err -> {
+                              CrashReport.getInstance().log(err);
+                            });
                     break;
                   case NO:
                     break;
@@ -136,7 +140,7 @@ public class ScheduledDownloadsFragment extends AptoideBaseFragment<BaseAdapter>
 
     Context context = getContext();
     PermissionManager permissionManager = new PermissionManager();
-    PermissionRequest permissionRequest = ((PermissionRequest) context);
+    PermissionService permissionRequest = ((PermissionService) context);
     DownloadFactory downloadFactory = new DownloadFactory();
     InstallerFactory installerFactory = new InstallerFactory();
 

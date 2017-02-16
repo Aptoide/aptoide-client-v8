@@ -24,10 +24,6 @@ public class ActiveDownloadsHeaderWidget extends Widget<ActiveDownloadsHeaderDis
     more = (Button) itemView.findViewById(R.id.more);
   }
 
-  @Override public void unbindView() {
-
-  }
-
   @Override public void bindView(ActiveDownloadsHeaderDisplayable displayable) {
     title.setText(displayable.getLabel());
     more.setText(R.string.pause_all_downloads);
