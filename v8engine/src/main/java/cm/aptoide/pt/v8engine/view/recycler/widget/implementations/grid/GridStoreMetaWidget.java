@@ -148,7 +148,13 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
     editStoreButton.setTextColor(color);
 
     name.setText(store.getName());
-    description.setText(store.getAppearance().getDescription());
+    String descriptionText = store.getAppearance().getDescription();
+    if (TextUtils.isEmpty(descriptionText)) {
+      description.setVisibility(View.GONE);
+    } else {
+      description.setText(descriptionText);
+      description.setVisibility(View.VISIBLE);
+    }
     appsCount.setText(
         NumberFormat.getNumberInstance(Locale.getDefault()).format(store.getStats().getApps()));
     downloadsCount.setText(AptoideUtils.StringU.withSuffix(store.getStats().getDownloads()));
