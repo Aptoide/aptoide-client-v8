@@ -215,6 +215,7 @@ public abstract class V8Engine extends DataProvider {
       }, e -> {
         CrashReport.getInstance().log(e);
       });
+      ManagerPreferences.setAllowRootInstallation(AptoideUtils.SystemU.isRooted());
     } else {
       loadInstalledApps().subscribe();
     }

@@ -364,6 +364,9 @@
   <string name="reviews_expand_button">%d Replies</string>
   <string name="out_of_space_dialog_title">Out of space</string>
   <string name="out_of_space_dialog_message">Please, free space in order to proceed.</string>
+  <string name="setting_category_autoupdate">%s Updates</string>
+  <string name="setting_category_autoupdate_title">Get %s Update notifications</string>
+  <string name="setting_category_autoupdate_message">Periodically check for %s new versions</string>
   <string name="store_added_long_time_suggestion_message">show long term</string>
   <string name="store_added_short_time_suggestion_message">show just created</string>
   <string name="create_store_displayable_created_store_long_term_message">long term</string>
