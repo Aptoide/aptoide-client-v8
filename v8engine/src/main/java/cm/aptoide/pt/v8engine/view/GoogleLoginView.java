@@ -16,6 +16,6 @@ public interface GoogleLoginView extends View {
 
   void hideGoogleLogin();
 
-  Observable<LoginView.GoogleAccountViewModel> googleLoginSelection();
+  Observable<LoginView.GoogleAccountViewModel> googleLoginClick();
 
 }

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      >
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:paddingEnd="80dp"
+        android:paddingLeft="80dp"
+        android:paddingRight="80dp"
+        android:paddingStart="80dp"
+        android:src="@drawable/wizard_aptoide_logo"
+        android:tint="@android:color/white"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+      <TextView
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:paddingEnd="80dp"
+          android:paddingLeft="80dp"
+          android:paddingRight="80dp"
+          android:paddingStart="80dp"
+          android:text="Join the community"
+          android:textAlignment="center"
+          android:textColor="@color/light_custom_gray"
+          android:textSize="22sp"
+          />
+
+      <TextView
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="40dp"
+          android:paddingEnd="80dp"
+          android:paddingLeft="80dp"
+          android:paddingRight="80dp"
+          android:paddingStart="80dp"
+          android:text="Sign up and start creating your user profile and Store. Engage with the community by uploading, rating and sharing apps that you like."
+          android:textAlignment="center"
+          android:textColor="@color/light_custom_gray"
+          android:textSize="12sp"
+          />
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/login_signup_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginTop="40dp"
+        tools:layout="@layout/fragment_login_sign_up"
+        />
+
+  </LinearLayout>
+
+</ScrollView>

@@ -9,7 +9,7 @@ import android.content.Context;
 import android.content.IntentFilter;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
-import cm.aptoide.pt.v8engine.activity.AccountNavigator;
+import cm.aptoide.pt.navigation.AccountNavigator;
 import javax.security.auth.login.LoginException;
 import rx.Observable;
 

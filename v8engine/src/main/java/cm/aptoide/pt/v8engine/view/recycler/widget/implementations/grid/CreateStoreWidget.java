@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.v8engine.activity.AccountNavigator;
+import cm.aptoide.pt.navigation.AccountNavigator;
 import cm.aptoide.pt.v8engine.activity.CreateStoreActivity;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;

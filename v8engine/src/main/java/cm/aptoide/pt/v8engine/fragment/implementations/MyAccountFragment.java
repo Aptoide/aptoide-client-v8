@@ -15,8 +15,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.BuildConfig;
+import cm.aptoide.pt.navigation.AccountNavigator;
+import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.activity.AccountNavigator;
 import cm.aptoide.pt.v8engine.fragment.GooglePlayServicesFragment;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.Scopes;
@@ -37,7 +38,7 @@ public class MyAccountFragment extends GooglePlayServicesFragment {
   private GoogleApiClient client;
 
   private View inflate(LayoutInflater layoutInflater) {
-    return layoutInflater.inflate(cm.aptoide.accountmanager.R.layout.my_account_activity, null);
+    return layoutInflater.inflate(R.layout.my_account_activity, null);
   }
 
   @Nullable @Override
@@ -45,8 +46,8 @@ public class MyAccountFragment extends GooglePlayServicesFragment {
       @Nullable Bundle savedInstanceState) {
     View view = inflate(inflater);
 
-    mLogout = (Button) view.findViewById(cm.aptoide.accountmanager.R.id.button_logout);
-    usernameTextView = (TextView) view.findViewById(cm.aptoide.accountmanager.R.id.username);
+    mLogout = (Button) view.findViewById(R.id.button_logout);
+    usernameTextView = (TextView) view.findViewById(R.id.username);
 
     return view;
   }
@@ -73,7 +74,7 @@ public class MyAccountFragment extends GooglePlayServicesFragment {
     usernameTextView.setText(accountManager.getUserEmail());
   }
 
-  @Override protected GoogleApiClient getClient() {
-    return client;
+  @Override protected void connect() {
+    client.connect();
   }
 }

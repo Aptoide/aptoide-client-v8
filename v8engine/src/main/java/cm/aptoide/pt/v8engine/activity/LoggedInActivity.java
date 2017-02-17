@@ -18,6 +18,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.subscriptions.CompositeSubscription;
@@ -42,11 +43,9 @@ public class LoggedInActivity extends AccountBaseActivity {
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(getLayoutId());
-    aptoideClientUUID =
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext());
-    accountManager =
-        ((V8Engine)getApplicationContext()).getAccountManager();
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+    accountManager = ((V8Engine) getApplicationContext()).getAccountManager();
     mSubscriptions = new CompositeSubscription();
     bindViews();
     setupToolbar();
@@ -58,13 +57,14 @@ public class LoggedInActivity extends AccountBaseActivity {
   }
 
   @Override public int getLayoutId() {
-    return cm.aptoide.accountmanager.R.layout.logged_in_first_screen;
+    return R.layout.logged_in_first_screen;
   }
 
   private void bindViews() {
-    mContinueButton = (Button) findViewById(cm.aptoide.accountmanager.R.id.logged_in_continue);
-    mMoreInfoButton = (Button) findViewById(cm.aptoide.accountmanager.R.id.logged_in_more_info_button);
-    mToolbar = (Toolbar) findViewById(cm.aptoide.accountmanager.R.id.toolbar);
+    mContinueButton = (Button) findViewById(R.id.logged_in_continue);
+    mMoreInfoButton =
+        (Button) findViewById(R.id.logged_in_more_info_button);
+    mToolbar = (Toolbar) findViewById(R.id.toolbar);
   }
 
   private void setupToolbar() {
@@ -101,8 +101,8 @@ public class LoggedInActivity extends AccountBaseActivity {
 
   private void goTo() {
 
-    if (getIntent() != null && getIntent().getBooleanExtra(AptoideAccountManager.IS_FACEBOOK_OR_GOOGLE,
-        false)) {
+    if (getIntent() != null && getIntent().getBooleanExtra(
+        AptoideAccountManager.IS_FACEBOOK_OR_GOOGLE, false)) {
       updateUserInfo();
     } else {
       if (pleaseWaitDialog != null && pleaseWaitDialog.isShowing()) {

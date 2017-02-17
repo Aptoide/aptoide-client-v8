@@ -27,6 +27,12 @@ public interface LoginView extends GoogleLoginView {
 
   void showCheckAptoideCredentialsMessage();
 
+  void showInputFields();
+
+  void showLoginArea();
+
+  void showSignUpArea();
+
   void hideFacebookLogin();
 
   void navigateToForgotPasswordView();
@@ -35,25 +41,23 @@ public interface LoginView extends GoogleLoginView {
 
   void hidePassword();
 
-  Observable<Void> showHidePasswordSelection();
+  Observable<Void> showHidePasswordClick();
 
-  Observable<Void> forgotPasswordSelection();
+  Observable<Void> forgotPasswordClick();
 
-  Observable<Void> skipSelection();
-
-  Observable<Void> registerSelection();
+  Observable<Void> showSignUpClick();
 
   void navigateToMainView();
-
-  void navigateToRegisterView();
 
   Observable<Void> successMessageShown();
 
   void showSuccessMessage();
 
-  Observable<FacebookAccountViewModel> facebookLoginSelection();
+  Observable<FacebookAccountViewModel> facebookLoginClick();
 
-  Observable<AptoideAccountViewModel> aptoideLoginSelection();
+  Observable<Void> showAptoideLoginClick();
+
+  Observable<AptoideAccountViewModel> aptoideLoginClick();
 
   class AptoideAccountViewModel {
 

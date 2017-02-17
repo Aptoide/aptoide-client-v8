@@ -30,6 +30,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.account.ErrorsMapper;
 import com.jakewharton.rxbinding.support.design.widget.RxSnackbar;
@@ -64,17 +65,17 @@ public class CreateUserActivity extends AccountPermissionsBaseActivity {
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(cm.aptoide.accountmanager.R.layout.activity_create_user);
+    setContentView(R.layout.activity_create_user);
     accountManager = ((V8Engine) getApplicationContext()).getAccountManager();
     subscriptions = new CompositeSubscription();
-    toolbar = (Toolbar) findViewById(cm.aptoide.accountmanager.R.id.toolbar);
+    toolbar = (Toolbar) findViewById(R.id.toolbar);
     userAvatar =
-        (RelativeLayout) findViewById(cm.aptoide.accountmanager.R.id.create_user_image_action);
+        (RelativeLayout) findViewById(R.id.create_user_image_action);
     nameEditText =
-        (EditText) findViewById(cm.aptoide.accountmanager.R.id.create_user_username_inserted);
+        (EditText) findViewById(R.id.create_user_username_inserted);
     createUserButton =
-        (Button) findViewById(cm.aptoide.accountmanager.R.id.create_user_create_profile);
-    avatarImage = (ImageView) findViewById(cm.aptoide.accountmanager.R.id.create_user_image);
+        (Button) findViewById(R.id.create_user_create_profile);
+    avatarImage = (ImageView) findViewById(R.id.create_user_image);
     content = findViewById(android.R.id.content);
     progressAvatarUploadDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
         getApplicationContext().getString(cm.aptoide.accountmanager.R.string.please_wait_upload));
@@ -174,8 +175,7 @@ public class CreateUserActivity extends AccountPermissionsBaseActivity {
     FileUtils fileUtils = new FileUtils();
     Uri avatarUrl = null;
     if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-      avatarUrl =
-          getPhotoFileUri(photoAvatar);
+      avatarUrl = getPhotoFileUri(photoAvatar);
       avatarPath = fileUtils.getPathAlt(avatarUrl, getApplicationContext());
     } else if (requestCode == GALLERY_CODE && resultCode == RESULT_OK) {
       avatarUrl = data.getData();

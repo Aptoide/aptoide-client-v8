@@ -47,28 +47,31 @@ public class LoginPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(created -> showOrHideLogins())
         .flatMap(resumed -> Observable.merge(googleLoginSelection(), facebookLoginSelection(),
-            aptoideLoginSelection()))
+            aptoideLoginClick()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
 
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.RESUME))
-        .flatMap(resumed -> Observable.merge(forgotPasswordSelection(), skipSelection(),
-            successMessageShown(), registerSelection(), showHidePassword())
+        .flatMap(resumed -> Observable.merge(forgotPasswordSelection(), successMessageShown(),
+            showSignUpClick(), showLoginClick(), showHidePassword())
             .compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
-
   }
 
   private Observable<Void> showHidePassword() {
-    return view.showHidePasswordSelection().doOnNext(__ -> {
+    return view.showHidePasswordClick().doOnNext(__ -> {
       // TODO: 13/2/2017 sithengineer missing view model to support this...
     });
   }
 
-  private Observable<Void> registerSelection() {
-    return view.registerSelection().doOnNext(selected -> view.navigateToRegisterView());
+  private Observable<Void> showSignUpClick() {
+    return view.showSignUpClick().doOnNext(selected -> view.showSignUpArea());
+  }
+
+  private Observable<Void> showLoginClick() {
+    return view.showAptoideLoginClick().doOnNext(selected -> view.showLoginArea());
   }
 
   private Observable<Void> successMessageShown() {
@@ -76,15 +79,7 @@ public class LoginPresenter implements Presenter {
   }
 
   private Observable<Void> forgotPasswordSelection() {
-    return view.forgotPasswordSelection()
-        .doOnNext(selection -> view.navigateToForgotPasswordView());
-  }
-
-  private Observable<Void> skipSelection() {
-    return view.skipSelection().doOnNext(selection -> {
-      accountManager.sendLoginCancelledBroadcast();
-      view.navigateToMainView();
-    });
+    return view.forgotPasswordClick().doOnNext(selection -> view.navigateToForgotPasswordView());
   }
 
   private void showOrHideLogins() {
@@ -101,7 +96,7 @@ public class LoginPresenter implements Presenter {
   }
 
   private Observable<Void> googleLoginSelection() {
-    return view.googleLoginSelection().doOnNext(selected -> view.showLoading()).<Void>flatMap(
+    return view.googleLoginClick().doOnNext(selected -> view.showLoading()).<Void>flatMap(
         credentials -> accountManager.login(LoginMode.GOOGLE, credentials.getEmail(),
             credentials.getToken(), credentials.getDisplayName())
             .observeOn(AndroidSchedulers.mainThread())
@@ -112,7 +107,7 @@ public class LoginPresenter implements Presenter {
   }
 
   private Observable<Void> facebookLoginSelection() {
-    return view.facebookLoginSelection().doOnNext(selected -> view.showLoading()).<Void>flatMap(
+    return view.facebookLoginClick().doOnNext(selected -> view.showLoading()).<Void>flatMap(
         credentials -> {
           if (declinedRequiredPermissions(credentials.getDeniedPermissions())) {
             view.hideLoading();
@@ -170,8 +165,8 @@ public class LoginPresenter implements Presenter {
     }
   }
 
-  private Observable<Void> aptoideLoginSelection() {
-    return view.aptoideLoginSelection().doOnNext(selected -> view.showLoading()).<Void>flatMap(
+  private Observable<Void> aptoideLoginClick() {
+    return view.aptoideLoginClick().doOnNext(selected -> view.showLoading()).<Void>flatMap(
         credentials -> {
           if (TextUtils.isEmpty(credentials.getPassword()) || TextUtils.isEmpty(
               credentials.getUsername())) {
