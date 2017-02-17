@@ -462,7 +462,10 @@ import rx.android.schedulers.AndroidSchedulers;
   private void showErrorMessage(@Download.DownloadError int downloadError) {
     switch (downloadError) {
       case Download.GENERIC_ERROR:
-        ShowMessage.asSnack(getContext(), R.string.error_occured);
+        GenericDialogs.createGenericOkMessage(getContext(), "",
+            getContext().getString(R.string.error_occured))
+            .subscribe(eResponse -> Logger.d(TAG, "Error dialog"),
+                throwable -> CrashReport.getInstance().log(throwable));
         break;
       case Download.NOT_ENOUGH_SPACE_ERROR:
         GenericDialogs.createGenericOkMessage(getContext(),
