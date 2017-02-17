@@ -66,8 +66,9 @@ public class ManagerPreferences {
   }
 
   public static boolean isAutoUpdateEnable() {
+    //the default value should match with auto_update from settings.xml
     return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
-        .getBoolean(ManagedKeys.AUTO_UPDATE_ENABLE, true);
+        .getBoolean(ManagedKeys.AUTO_UPDATE_ENABLE, false);
   }
 
   public static void setAutoUpdateEnable(boolean state) {
