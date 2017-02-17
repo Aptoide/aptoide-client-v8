@@ -9,7 +9,6 @@ import android.os.Bundle;
 import cm.aptoide.pt.v8engine.payment.AptoidePay;
 import cm.aptoide.pt.v8engine.payment.authorizations.WebAuthorization;
 import cm.aptoide.pt.v8engine.payment.products.AptoideProduct;
-import cm.aptoide.pt.v8engine.repository.ProductRepository;
 import cm.aptoide.pt.v8engine.view.View;
 import cm.aptoide.pt.v8engine.view.WebAuthorizationView;
 import rx.Observable;
@@ -53,7 +52,7 @@ public class WebAuthorizationPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(created -> view.showLoading())
-        .flatMap(loading -> aptoidePay.getPayment(paymentId, product))
+        .flatMap(loading -> aptoidePay.payment(paymentId, product))
         .observeOn(AndroidSchedulers.mainThread())
         .flatMap(payment -> {
           if (payment.isPending()) {

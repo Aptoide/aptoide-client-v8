@@ -9,6 +9,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.view.ContextThemeWrapper;
@@ -32,8 +33,8 @@ import cm.aptoide.pt.v8engine.payment.Purchase;
 import cm.aptoide.pt.v8engine.payment.PurchaseIntentFactory;
 import cm.aptoide.pt.v8engine.payment.products.AptoideProduct;
 import cm.aptoide.pt.v8engine.presenter.PaymentPresenter;
+import cm.aptoide.pt.v8engine.presenter.PaymentSelector;
 import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationFactory;
-import cm.aptoide.pt.v8engine.repository.ProductRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.view.PaymentView;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -47,6 +48,7 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
 
   private static final String PRODUCT_EXTRA = "product";
   private static final String SELECTED_PAYMENT_ID = "selected_payment_id";
+  private static final int PAYPAL_PAYMENT_ID = 1;
 
   private View overlay;
   private View body;
@@ -65,7 +67,6 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
   private AlertDialog unknownErrorDialog;
   private SparseArray<PaymentViewModel> paymentMap;
   private SpannableFactory spannableFactory;
-  private int selectedPaymentId;
 
   public static Intent getIntent(Context context, AptoideProduct product) {
     final Intent intent = new Intent(context, PaymentActivity.class);
@@ -107,21 +108,20 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
             .create();
 
     final AptoideProduct product = getIntent().getParcelableExtra(PRODUCT_EXTRA);
-    final ProductRepository productRepository =
-        RepositoryFactory.getProductRepository(this, product);
     final AptoideAccountManager instance = ((V8Engine) getApplicationContext()).getAccountManager();
     final Payer payer = new Payer(this, instance, new AccountNavigator(this, instance));
     attachPresenter(new PaymentPresenter(this,
         new AptoidePay(RepositoryFactory.getPaymentConfirmationRepository(this, product),
             RepositoryFactory.getPaymentAuthorizationRepository(this),
             new PaymentAuthorizationFactory(this), payer,
-            RepositoryFactory.getPaymentRepository(this, product)), product, payer,
-        productRepository), savedInstanceState);
+            RepositoryFactory.getPaymentRepository(this, product),
+            RepositoryFactory.getProductRepository(this, product)), product, payer,
+        new PaymentSelector(PAYPAL_PAYMENT_ID,
+            PreferenceManager.getDefaultSharedPreferences(getApplicationContext()))), savedInstanceState);
   }
 
   @Override public Observable<PaymentViewModel> paymentSelection() {
     return RxRadioGroup.checkedChanges(paymentRadioGroup)
-        .doOnNext(selectedPaymentId -> this.selectedPaymentId = selectedPaymentId)
         .map(paymentId -> paymentMap.get(paymentId))
         .filter(paymentViewModel -> paymentViewModel != null);
   }
@@ -164,12 +164,7 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
                 payment.getName() + "\n" + payment.getDescription(), payment.getDescription());
       }
       radioButton.setText(radioText);
-
-      if (selectedPaymentId == payment.getId()) {
-        radioButton.setChecked(true);
-      } else {
-        radioButton.setChecked(false);
-      }
+      radioButton.setChecked(payment.isSelected());
 
       paymentMap.append(payment.getId(), payment);
       paymentRadioGroup.addView(radioButton);
@@ -181,11 +176,6 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
     productName.setText(product.getTitle());
     productDescription.setText(product.getDescription());
     productPrice.setText(product.getPrice());
-  }
-
-  @Override public void selectPayment(PaymentViewModel selectedPayment) {
-    selectedPaymentId = selectedPayment.getId();
-    paymentRadioGroup.check(selectedPayment.getId());
   }
 
   @Override public void hideLoading() {

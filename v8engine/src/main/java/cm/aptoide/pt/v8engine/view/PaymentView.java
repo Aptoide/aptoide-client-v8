@@ -45,30 +45,22 @@ public interface PaymentView extends View {
 
   void hideAllErrors();
 
-  void selectPayment(PaymentViewModel paymentViewModel);
-
   class PaymentViewModel {
 
     private final int id;
     private final String name;
     private final String description;
-    private final double price;
-    private final String currency;
+    private final boolean selected;
 
-    public PaymentViewModel(int id, String name, String description, double price, String currency) {
+    public PaymentViewModel(int id, String name, String description, boolean selected) {
       this.id = id;
       this.name = name;
       this.description = description;
-      this.price = price;
-      this.currency = currency;
+      this.selected = selected;
     }
 
     public int getId() {
       return id;
-    }
-
-    public double getPrice() {
-      return price;
     }
 
     public String getName() {
@@ -79,8 +71,8 @@ public interface PaymentView extends View {
       return description;
     }
 
-    public String getCurrency() {
-      return currency;
+    public boolean isSelected() {
+      return selected;
     }
   }
 }

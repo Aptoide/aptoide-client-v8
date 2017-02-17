@@ -24,17 +24,13 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.payment.AptoidePay;
 import cm.aptoide.pt.v8engine.payment.Payer;
-import cm.aptoide.pt.v8engine.payment.authorizations.WebAuthorization;
 import cm.aptoide.pt.v8engine.payment.products.AptoideProduct;
 import cm.aptoide.pt.v8engine.presenter.WebAuthorizationPresenter;
 import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationFactory;
-import cm.aptoide.pt.v8engine.repository.ProductRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.view.WebAuthorizationView;
 import com.jakewharton.rxrelay.PublishRelay;
-import com.trello.rxlifecycle.android.ActivityEvent;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by marcelobenites on 11/11/16.
@@ -74,7 +70,8 @@ public class WebAuthorizationActivity extends ActivityView implements WebAuthori
           RepositoryFactory.getPaymentAuthorizationRepository(this),
           new PaymentAuthorizationFactory(this),
           new Payer(this, accountManager, new AccountNavigator(this, accountManager)),
-          RepositoryFactory.getPaymentRepository(this, product));
+          RepositoryFactory.getPaymentRepository(this, product),
+          RepositoryFactory.getProductRepository(this, product));
 
       webView = (WebView) findViewById(R.id.activity_boa_compra_authorization_web_view);
       webView.getSettings().setJavaScriptEnabled(true);
