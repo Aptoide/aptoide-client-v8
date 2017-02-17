@@ -40,7 +40,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.activity.BaseActivity;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.fragment.BaseWizardViewerFragment;
+import cm.aptoide.pt.v8engine.fragment.WizardFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.HomeFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.ScheduledDownloadsFragment;
@@ -96,7 +96,7 @@ public class MainActivity extends BaseActivity implements MainView, FragmentShow
   }
 
   @Override public void showWizard() {
-    getNavigationManager().navigateTo(new BaseWizardViewerFragment());
+    getNavigationManager().navigateTo(new WizardFragment());
   }
 
   @Override public void showHome() {

@@ -36,6 +36,7 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.account.ErrorsMapper;
 import com.jakewharton.rxbinding.view.RxView;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.TimeUnit;
@@ -356,11 +357,12 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity
                   .getCode()
                   .equals("API-1")) {
                 progressDialog.dismiss();
-                ShowMessage.asObservableSnack(this, cm.aptoide.accountmanager.R.string.ws_error_API_1).subscribe(visibility -> {
-                  if (visibility == ShowMessage.DISMISSED) {
-                    finish();
-                  }
-                });
+                ShowMessage.asObservableSnack(this, cm.aptoide.accountmanager.R.string.ws_error_API_1)
+                    .subscribe(visibility -> {
+                      if (visibility == ShowMessage.DISMISSED) {
+                        finish();
+                      }
+                    });
               } else {
                 onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
                 progressDialog.dismiss();
@@ -593,7 +595,8 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity
           }, throwable -> {
             if (throwable.getClass().equals(SocketTimeoutException.class)) {
               progressDialog.dismiss();
-              ShowMessage.asLongObservableSnack(this, cm.aptoide.accountmanager.R.string.store_upload_photo_failed)
+              ShowMessage.asLongObservableSnack(this,
+                  cm.aptoide.accountmanager.R.string.store_upload_photo_failed)
                   .subscribe(visibility -> {
                     if (visibility == ShowMessage.DISMISSED) {
                       finish();
@@ -601,7 +604,8 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity
                   });
             } else if (throwable.getClass().equals(TimeoutException.class)) {
               progressDialog.dismiss();
-              ShowMessage.asLongObservableSnack(this, cm.aptoide.accountmanager.R.string.store_upload_photo_failed)
+              ShowMessage.asLongObservableSnack(this,
+                  cm.aptoide.accountmanager.R.string.store_upload_photo_failed)
                   .subscribe(visibility -> {
                     if (visibility == ShowMessage.DISMISSED) {
                       finish();
@@ -613,12 +617,12 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity
                 .getCode()
                 .equals("API-1")) {
               progressDialog.dismiss();
-              ShowMessage.asLongObservableSnack(this, cm.aptoide.accountmanager.R.string.ws_error_API_1)
-                  .subscribe(visibility -> {
-                    if (visibility == ShowMessage.DISMISSED) {
-                      finish();
-                    }
-                  });
+              ShowMessage.asLongObservableSnack(this,
+                  cm.aptoide.accountmanager.R.string.ws_error_API_1).subscribe(visibility -> {
+                if (visibility == ShowMessage.DISMISSED) {
+                  finish();
+                }
+              });
             } else {
               progressDialog.dismiss();
               ShowMessage.asLongObservableSnack(this,

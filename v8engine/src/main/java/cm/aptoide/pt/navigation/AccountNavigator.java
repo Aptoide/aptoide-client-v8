@@ -3,19 +3,16 @@
  * Modified by Marcelo Benites on 09/02/2017.
  */
 
-package cm.aptoide.pt.v8engine.activity;
+package cm.aptoide.pt.navigation;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.fragment.implementations.LoginSignUpFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.MyAccountFragment;
 import cm.aptoide.pt.v8engine.view.MainActivity;
-import rx.Observable;
-import rx.Subscriber;
 
 /**
  * Created by marcelobenites on 09/02/17.
@@ -34,9 +31,10 @@ public class AccountNavigator {
     navigateToAccountView(null);
   }
 
+  // FIXME: 16/2/2017 sithengineer
   public void navigateToAccountView(boolean useSkip) {
     Bundle extras = new Bundle();
-    extras.putBoolean(LoginSignUpFragment.SKIP_BUTTON, useSkip);
+    //extras.putBoolean(LoginSignUpFragment.SKIP_BUTTON, useSkip);
     navigateToAccountView(extras);
   }
 

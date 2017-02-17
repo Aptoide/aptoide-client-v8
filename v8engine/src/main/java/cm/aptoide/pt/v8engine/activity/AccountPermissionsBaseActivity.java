@@ -25,6 +25,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.R;
 import com.jakewharton.rxbinding.view.RxView;
 import java.io.File;
 import java.util.List;
@@ -53,57 +54,6 @@ public abstract class AccountPermissionsBaseActivity extends AccountBaseActivity
   private String TAG = "STORAGE";
   private File avatar;
   private CompositeSubscription mSubscriptions;
-
-  @Override public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    mSubscriptions = new CompositeSubscription();
-  }
-
-  @Override public String getActivityTitle() {
-    return null;
-  }
-
-  @Override public int getLayoutId() {
-    return 0;
-  }
-
-  @Override protected void onDestroy() {
-    super.onDestroy();
-    mSubscriptions.clear();
-  }
-
-  public void chooseAvatarSource() {
-    final Dialog dialog = new Dialog(this);
-    dialog.setContentView(cm.aptoide.accountmanager.R.layout.dialog_choose_avatar_layout);
-    mSubscriptions.add(RxView.clicks(dialog.findViewById(cm.aptoide.accountmanager.R.id.button_camera)).subscribe(click -> {
-      callPermissionAndAction(TYPE_CAMERA);
-      dialog.dismiss();
-    }));
-    mSubscriptions.add(RxView.clicks(dialog.findViewById(cm.aptoide.accountmanager.R.id.button_gallery)).subscribe(click -> {
-      callPermissionAndAction(TYPE_STORAGE);
-      dialog.dismiss();
-    }));
-    mSubscriptions.add(RxView.clicks(dialog.findViewById(R.id.cancel))
-        .subscribe(click -> dialog.dismiss(), err -> {
-          CrashReport.getInstance().log(err);
-        }));
-    dialog.show();
-  }
-
-  public void callPermissionAndAction(String type) {
-    String result =
-        AccountPermissionsBaseActivity.checkAndAskPermission(AccountPermissionsBaseActivity.this, type);
-    switch (result) {
-      case AccountPermissionsBaseActivity.CAMERA_PERMISSION_GIVEN:
-        changePermissionValue(true);
-        dispatchTakePictureIntent(getApplicationContext());
-        break;
-      case AccountPermissionsBaseActivity.STORAGE_PERMISSION_GIVEN:
-        changePermissionValue(true);
-        callGallery();
-        break;
-    }
-  }
 
   public static String checkAndAskPermission(final AppCompatActivity activity, String type) {
 
@@ -152,6 +102,60 @@ public abstract class AccountPermissionsBaseActivity extends AccountBaseActivity
       }
     }
     return "";
+  }
+
+  @Override public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    mSubscriptions = new CompositeSubscription();
+  }
+
+  @Override public String getActivityTitle() {
+    return null;
+  }
+
+  @Override public int getLayoutId() {
+    return 0;
+  }
+
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    mSubscriptions.clear();
+  }
+
+  public void chooseAvatarSource() {
+    final Dialog dialog = new Dialog(this);
+    dialog.setContentView(R.layout.dialog_choose_avatar_layout);
+    mSubscriptions.add(
+        RxView.clicks(dialog.findViewById(R.id.button_camera))
+            .subscribe(click -> {
+              callPermissionAndAction(TYPE_CAMERA);
+              dialog.dismiss();
+            }));
+    mSubscriptions.add(
+        RxView.clicks(dialog.findViewById(R.id.button_gallery))
+            .subscribe(click -> {
+              callPermissionAndAction(TYPE_STORAGE);
+              dialog.dismiss();
+            }));
+    mSubscriptions.add(RxView.clicks(dialog.findViewById(R.id.cancel))
+        .subscribe(click -> dialog.dismiss()));
+    dialog.show();
+  }
+
+  public void callPermissionAndAction(String type) {
+    String result =
+        AccountPermissionsBaseActivity.checkAndAskPermission(AccountPermissionsBaseActivity.this,
+            type);
+    switch (result) {
+      case AccountPermissionsBaseActivity.CAMERA_PERMISSION_GIVEN:
+        changePermissionValue(true);
+        dispatchTakePictureIntent(getApplicationContext());
+        break;
+      case AccountPermissionsBaseActivity.STORAGE_PERMISSION_GIVEN:
+        changePermissionValue(true);
+        callGallery();
+        break;
+    }
   }
 
   public void changePermissionValue(boolean b) {
@@ -208,11 +212,11 @@ public abstract class AccountPermissionsBaseActivity extends AccountBaseActivity
     if (!TextUtils.isEmpty(avatarPath)) {
       List<AptoideUtils.IconSizeU.ImageSizeErrors> imageSizeErrors =
           AptoideUtils.IconSizeU.checkIconSizeProperties(avatarPath,
-              getResources().getInteger(cm.aptoide.accountmanager.R.integer.min_avatar_height),
-              getResources().getInteger(cm.aptoide.accountmanager.R.integer.max_avatar_height),
-              getResources().getInteger(cm.aptoide.accountmanager.R.integer.min_avatar_width),
-              getResources().getInteger(cm.aptoide.accountmanager.R.integer.max_avatar_width),
-              getResources().getInteger(cm.aptoide.accountmanager.R.integer.max_avatar_Size));
+              getResources().getInteger(R.integer.min_avatar_height),
+              getResources().getInteger(R.integer.max_avatar_height),
+              getResources().getInteger(R.integer.min_avatar_width),
+              getResources().getInteger(R.integer.max_avatar_width),
+              getResources().getInteger(R.integer.max_avatar_Size));
       if (imageSizeErrors.isEmpty()) {
         loadImage(avatarUrl);
       } else {

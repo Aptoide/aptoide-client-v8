@@ -57,15 +57,15 @@ public class LoggedInActivity2ndStep extends AccountBaseActivity {
   }
 
   @Override public int getLayoutId() {
-    return cm.aptoide.accountmanager.R.layout.logged_in_second_screen;
+    return R.layout.logged_in_second_screen;
   }
 
   private void bindViews() {
-    mToolbar = (Toolbar) findViewById(cm.aptoide.accountmanager.R.id.toolbar);
-    mContinueButton = (Button) findViewById(cm.aptoide.accountmanager.R.id.logged_in_continue);
+    mToolbar = (Toolbar) findViewById(R.id.toolbar);
+    mContinueButton = (Button) findViewById(R.id.logged_in_continue);
     mPrivateProfile =
-        (Button) findViewById(cm.aptoide.accountmanager.R.id.logged_in_private_button);
-    mToolbar = (Toolbar) findViewById(cm.aptoide.accountmanager.R.id.toolbar);
+        (Button) findViewById(R.id.logged_in_private_button);
+    mToolbar = (Toolbar) findViewById(R.id.toolbar);
   }
 
   private void setupToolbar() {

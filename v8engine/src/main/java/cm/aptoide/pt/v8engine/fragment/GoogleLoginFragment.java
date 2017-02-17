@@ -33,8 +33,8 @@ public abstract class GoogleLoginFragment extends GooglePlayServicesFragment
     implements GoogleLoginView {
 
   private static final int RESOLVE_GOOGLE_CREDENTIALS_REQUEST_CODE = 2;
-  private GoogleApiClient client;
   private PublishRelay<LoginView.GoogleAccountViewModel> googleLoginSubject;
+  private GoogleApiClient client;
 
   @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
@@ -46,7 +46,12 @@ public abstract class GoogleLoginFragment extends GooglePlayServicesFragment
             .requestScopes(new Scope(Scopes.PROFILE))
             .requestServerAuthCode(BuildConfig.GMS_SERVER_ID)
             .build();
+
     client = getClientBuilder().addApi(GOOGLE_SIGN_IN_API, options).build();
+  }
+
+  @Override protected void connect() {
+    client.connect();
   }
 
   protected abstract SignInButton getGoogleButton();
@@ -56,7 +61,7 @@ public abstract class GoogleLoginFragment extends GooglePlayServicesFragment
   @Override public void onResume() {
     super.onResume();
     getGoogleButton().setOnClickListener(v -> {
-      client.connect();
+      connect();
       startActivityForResult(Auth.GoogleSignInApi.getSignInIntent(client),
           RESOLVE_GOOGLE_CREDENTIALS_REQUEST_CODE);
     });
@@ -65,10 +70,6 @@ public abstract class GoogleLoginFragment extends GooglePlayServicesFragment
   @Override public void onPause() {
     super.onPause();
     getGoogleButton().setOnClickListener(null);
-  }
-
-  @Override protected GoogleApiClient getClient() {
-    return client;
   }
 
   @Override public void showGoogleLogin() {
@@ -93,7 +94,7 @@ public abstract class GoogleLoginFragment extends GooglePlayServicesFragment
     }
   }
 
-  @Override public Observable<LoginView.GoogleAccountViewModel> googleLoginSelection() {
+  @Override public Observable<LoginView.GoogleAccountViewModel> googleLoginClick() {
     return googleLoginSubject;
   }
 }

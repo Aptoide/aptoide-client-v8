@@ -92,4 +92,10 @@
   <dimen name="appview_side_margin">8dp</dimen>
   <dimen name="fab_margin">20dp</dimen>
   <dimen format="float" name="appstimeline_card_icon" type="dimen">17.7dp</dimen>
+
+  <integer name="min_avatar_height">600</integer>
+  <integer name="max_avatar_height">10240</integer>
+  <integer name="min_avatar_width">600</integer>
+  <integer name="max_avatar_width">10240</integer>
+  <integer name="max_avatar_Size">5242880</integer>
 </resources>
