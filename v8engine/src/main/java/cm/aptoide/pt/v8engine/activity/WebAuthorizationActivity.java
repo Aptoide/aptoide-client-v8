@@ -23,7 +23,6 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.payment.AptoidePay;
-import cm.aptoide.pt.v8engine.payment.Payer;
 import cm.aptoide.pt.v8engine.payment.products.AptoideProduct;
 import cm.aptoide.pt.v8engine.presenter.WebAuthorizationPresenter;
 import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationFactory;
@@ -69,7 +68,6 @@ public class WebAuthorizationActivity extends ActivityView implements WebAuthori
       aptoidePay = new AptoidePay(RepositoryFactory.getPaymentConfirmationRepository(this, product),
           RepositoryFactory.getPaymentAuthorizationRepository(this),
           new PaymentAuthorizationFactory(this),
-          new Payer(this, accountManager, new AccountNavigator(this, accountManager)),
           RepositoryFactory.getPaymentRepository(this, product),
           RepositoryFactory.getProductRepository(this, product));
 

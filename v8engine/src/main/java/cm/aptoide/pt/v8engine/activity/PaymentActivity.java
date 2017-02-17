@@ -113,7 +113,7 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
     attachPresenter(new PaymentPresenter(this,
         new AptoidePay(RepositoryFactory.getPaymentConfirmationRepository(this, product),
             RepositoryFactory.getPaymentAuthorizationRepository(this),
-            new PaymentAuthorizationFactory(this), payer,
+            new PaymentAuthorizationFactory(this),
             RepositoryFactory.getPaymentRepository(this, product),
             RepositoryFactory.getProductRepository(this, product)), product, payer,
         new PaymentSelector(PAYPAL_PAYMENT_ID,

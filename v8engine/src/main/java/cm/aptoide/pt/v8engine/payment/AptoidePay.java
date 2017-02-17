@@ -21,18 +21,16 @@ public class AptoidePay {
   private final PaymentConfirmationRepository confirmationRepository;
   private final PaymentAuthorizationRepository authorizationRepository;
   private final PaymentAuthorizationFactory authorizationFactory;
-  private final Payer payer;
   private final PaymentRepository paymentRepository;
   private final ProductRepository productRepository;
 
   public AptoidePay(PaymentConfirmationRepository confirmationRepository,
       PaymentAuthorizationRepository authorizationRepository,
-      PaymentAuthorizationFactory authorizationFactory, Payer payer,
-      PaymentRepository paymentRepository, ProductRepository productRepository) {
+      PaymentAuthorizationFactory authorizationFactory, PaymentRepository paymentRepository,
+      ProductRepository productRepository) {
     this.confirmationRepository = confirmationRepository;
     this.authorizationRepository = authorizationRepository;
     this.authorizationFactory = authorizationFactory;
-    this.payer = payer;
     this.paymentRepository = paymentRepository;
     this.productRepository = productRepository;
   }
