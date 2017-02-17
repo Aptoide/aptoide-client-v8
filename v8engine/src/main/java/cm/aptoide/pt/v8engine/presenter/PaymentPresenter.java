@@ -97,8 +97,8 @@ public class PaymentPresenter implements Presenter {
             }))
         .observeOn(AndroidSchedulers.mainThread())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(purchase -> hideLoadingAndDismiss(purchase),
-            throwable -> hideLoadingAndDismiss(throwable));
+        .subscribe(purchase -> dismiss(purchase),
+            throwable -> dismiss(throwable));
   }
 
   @Override public void saveState(Bundle state) {
@@ -168,11 +168,6 @@ public class PaymentPresenter implements Presenter {
             payment -> paymentSelector.selectPayment(payment)).toObservable());
   }
 
-  private void hideLoadingAndNavigateToAuthorizationView(Payment payment) {
-    view.hideLoading();
-    view.navigateToAuthorizationView(payment.getId(), product);
-  }
-
   private Observable<Void> buySelection() {
     return view.buySelection()
         .doOnNext(selected -> view.showLoading())
@@ -188,7 +183,7 @@ public class PaymentPresenter implements Presenter {
     }
     return aptoidePay.initiate(payment)
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnCompleted(() -> hideLoadingAndNavigateToAuthorizationView(payment));
+        .doOnCompleted(() -> view.navigateToAuthorizationView(payment.getId(), product));
   }
 
   private Observable<Void> cancellationSelection() {
@@ -210,9 +205,12 @@ public class PaymentPresenter implements Presenter {
         .toSingle();
   }
 
-  private void hideLoadingAndDismiss(Throwable throwable) {
-    view.hideLoading();
+  private void dismiss(Throwable throwable) {
     view.dismiss(throwable);
+  }
+
+  private void dismiss(Purchase purchase) {
+    view.dismiss(purchase);
   }
 
   private void hideLoadingAndShowError(Throwable throwable) {
@@ -225,10 +223,6 @@ public class PaymentPresenter implements Presenter {
     }
   }
 
-  private void hideLoadingAndDismiss(Purchase purchase) {
-    view.hideLoading();
-    view.dismiss(purchase);
-  }
 
   private boolean clearLoginState() {
     return processingLogin = false;

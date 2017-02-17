@@ -142,7 +142,7 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
     progressView.setVisibility(View.VISIBLE);
   }
 
-  @Override public void showPayments(List<PaymentViewModel> otherPayments) {
+  @Override public void showPayments(List<PaymentViewModel> payments) {
     paymentRadioGroup.removeAllViews();
     noPaymentsText.setVisibility(View.GONE);
     body.setVisibility(View.VISIBLE);
@@ -151,7 +151,7 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
 
     RadioButton radioButton;
     CharSequence radioText;
-    for (PaymentViewModel payment : otherPayments) {
+    for (PaymentViewModel payment : payments) {
       radioButton =
           (RadioButton) getLayoutInflater().inflate(R.layout.payment_item, paymentRadioGroup,
               false);
