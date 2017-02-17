@@ -435,11 +435,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
   private void shareApp(String appName, String packageName, String wUrl) {
 
-    //Partners only have onw type of share
-    // if user is not logged in then no share in apps timeline
-    //TODO if user is not logged in and shares in timeline, then show toast with login action
-    if (Application.getConfiguration().getPartnerId() == null
-        && AptoideAccountManager.isLoggedIn()) {
+    if (AptoideAccountManager.isLoggedIn()) {
 
       GenericDialogs.createGenericShareDialog(getContext(), getString(R.string.share))
           .subscribe(eResponse -> {
@@ -467,7 +463,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     }
   }
 
-  private void shareDefault(String appName, String packageName, String wUrl) {
+  @Partners protected void shareDefault(String appName, String packageName, String wUrl) {
     if (wUrl != null) {
       Intent sharingIntent = new Intent(Intent.ACTION_SEND);
       sharingIntent.setType("text/plain");
