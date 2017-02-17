@@ -33,17 +33,6 @@ public abstract class GridRecyclerSwipeFragment<T extends BaseAdapter>
   protected String storeTheme;
   private BroadcastReceiver receiver;
 
-  @Partners @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    if (storeTheme == null) {
-      //storeTheme = V8Engine.getConfiguration().getDefaultTheme();
-    }
-    /*ThemeUtils.setStoreTheme(getActivity(), storeTheme);
-    ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));*/
-    return super.onCreateView(inflater, container, savedInstanceState);
-  }
-
   @NonNull @Override protected LoaderLayoutHandler createLoaderLayoutHandler() {
     return new SwipeLoaderLayoutHandler(getViewToShowAfterLoadingId(), this);
   }
