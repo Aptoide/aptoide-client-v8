@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.SupportV4BaseFragment;
 import com.jakewharton.rxbinding.view.RxView;
@@ -17,6 +18,7 @@ public class PhoneInputFragment extends SupportV4BaseFragment implements PhoneIn
 
   private PhoneInputContract.UserActionsListener mActionsListener;
   private TextView mNotNowV;
+  private TextView mSharePhoneV;
 
   public static PhoneInputFragment newInstance() {
     PhoneInputFragment phoneInputFragment = new PhoneInputFragment();
@@ -32,6 +34,8 @@ public class PhoneInputFragment extends SupportV4BaseFragment implements PhoneIn
 
   @Override public void setupViews() {
     mNotNowV.setPaintFlags(mNotNowV.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+    mSharePhoneV.setText(getString(R.string.addressbook_share_phone,
+        Application.getConfiguration().getMarketName()));
     RxView.clicks(mNotNowV).subscribe(click -> this.mActionsListener.notNowClicked());
   }
 
@@ -41,6 +45,7 @@ public class PhoneInputFragment extends SupportV4BaseFragment implements PhoneIn
 
   @Override public void bindViews(@Nullable View view) {
     mNotNowV = (TextView) view.findViewById(R.id.addressbook_not_now);
+    mSharePhoneV = (TextView) view.findViewById(R.id.addressbook_share_phone_message);
   }
 
   @Override public void finishView() {

@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.addressbook.data.Contact;
@@ -74,9 +75,11 @@ public class AddressBookFragment extends SupportV4BaseFragment implements Addres
   }
 
   @Override public void showAboutFragment() {
+    final String marketName = Application.getConfiguration().getMarketName();
     ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
-        .newDescriptionFragment("About Address Book", getString(R.string.addressbook_data_about),
-            "default"));
+        .newDescriptionFragment("About Address Book",
+            getString(R.string.addressbook_data_about, marketName, marketName, marketName,
+                marketName), "default"));
   }
 
   @Override public void showSuccessFragment(List<Contact> contacts) {

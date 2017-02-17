@@ -7,6 +7,8 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.addressbook.data.Contact;
@@ -37,6 +39,7 @@ public class SyncSuccessFragment extends SupportV4BaseFragment implements SyncSu
   private SyncSuccessAdapter mListAdapter;
   private Button allowFind;
   private Button done;
+  private TextView successMessage;
 
   public static Fragment newInstance(List<Contact> contacts) {
     SyncSuccessFragment syncSuccessFragment = new SyncSuccessFragment();
@@ -56,6 +59,7 @@ public class SyncSuccessFragment extends SupportV4BaseFragment implements SyncSu
     recyclerView = (RecyclerView) view.findViewById(R.id.addressbook_contacts_list);
     allowFind = (Button) view.findViewById(R.id.addressbook_allow_find);
     done = (Button) view.findViewById(R.id.addressbook_done);
+    successMessage = (TextView) view.findViewById(R.id.addressbook_successful_message);
   }
 
   @Override public void onResume() {
@@ -80,7 +84,11 @@ public class SyncSuccessFragment extends SupportV4BaseFragment implements SyncSu
   @Override public void setupViews() {
     recyclerView.setAdapter(mListAdapter);
     recyclerView.setHasFixedSize(true);
-    recyclerView.setLayoutManager(new GridLayoutManager(getContext(), SYNCED_LIST_NUMBER_OF_COLUMNS));
+    recyclerView.setLayoutManager(
+        new GridLayoutManager(getContext(), SYNCED_LIST_NUMBER_OF_COLUMNS));
+
+    successMessage.setText(getString(R.string.addressbook_success_connected_friends, "X",
+        Application.getConfiguration().getMarketName()));
 
     RxView.clicks(allowFind).subscribe(click -> mActionsListener.allowFindClicked());
     RxView.clicks(done).subscribe(click -> mActionsListener.doneClicked());

@@ -10,12 +10,13 @@
       android:layout_gravity="center"
       android:layout_marginBottom="5dp"
       android:layout_marginTop="30dp"
-      android:text="Success!"
+      android:text="@string/addressbook_success"
       android:textColor="@color/greenapple"
       android:textSize="25sp"
       android:textStyle="bold" />
 
   <TextView
+      android:id="@+id/addressbook_successful_message"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center"
@@ -26,7 +27,7 @@
       android:layout_marginTop="5dp"
       android:gravity="center"
       android:lines="3"
-      android:text="We successfully connected you with friends that use Aptoide"
+      android:text="@string/addressbook_success_connected_friends"
       android:textSize="16.9sp" />
 
   <android.support.v7.widget.RecyclerView
@@ -45,7 +46,7 @@
       android:layout_marginLeft="20dp"
       android:layout_marginRight="20dp"
       android:layout_marginStart="20dp"
-      android:text="Allow friends to find you" />
+      android:text="@string/addressbook_allow_friends_find" />
 
   <Button
       android:id="@+id/addressbook_done"
@@ -56,5 +57,5 @@
       android:layout_marginLeft="20dp"
       android:layout_marginRight="20dp"
       android:layout_marginStart="20dp"
-      android:text="Done" />
+      android:text="@string/done" />
 </LinearLayout>

@@ -5,6 +5,7 @@
     android:orientation="vertical">
 
   <TextView
+      android:id="@+id/addressbook_share_phone_message"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_gravity="center"
@@ -14,7 +15,7 @@
       android:layout_marginStart="60dp"
       android:layout_marginTop="50dp"
       android:gravity="center"
-      android:text="Share your phone number so your friends can easily find you on Aptoide"
+      android:text="@string/addressbook_share_phone"
       android:textSize="16.9sp" />
 
   <LinearLayout
@@ -44,7 +45,7 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="000 111 000"
+        android:hint="@string/addressbook_phone_number"
         android:inputType="number"
         android:maxEms="15"
         android:maxLength="15" />
