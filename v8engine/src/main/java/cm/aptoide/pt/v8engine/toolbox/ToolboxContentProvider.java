@@ -199,6 +199,11 @@ public class ToolboxContentProvider extends ContentProvider {
                   intent.setAction(PullingContentService.PUSH_NOTIFICATIONS_ACTION);
                   context.startService(intent);
                   changed++;
+                } else if (entry.getKey().equals("UpdatesAction")) {
+                  Intent intent = new Intent(context, PullingContentService.class);
+                  intent.setAction(PullingContentService.UPDATES_ACTION);
+                  context.startService(intent);
+                  changed++;
                 }
               } else if (value instanceof Boolean) {
                 if (entry.getKey().equals(ManagedKeys.DEBUG)) {

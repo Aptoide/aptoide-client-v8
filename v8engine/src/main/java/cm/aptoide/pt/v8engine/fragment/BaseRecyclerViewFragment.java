@@ -129,6 +129,10 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
     return this;
   }
 
+  @Override public boolean hasDisplayables() {
+    return displayables != null && displayables.size() > 0;
+  }
+
   @Partners @CallSuper @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     if (adapter == null) {

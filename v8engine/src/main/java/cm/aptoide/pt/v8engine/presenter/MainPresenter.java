@@ -53,7 +53,7 @@ public class MainPresenter implements Presenter {
         .subscribe(created -> {
           view.showHome();
           contentPuller.start();
-          if (ManagerPreferences.isAutoUpdateEnable() && !V8Engine.isAutoUpdateWasCalled()) {
+          if (ManagerPreferences.isCheckAutoUpdateEnable() && !V8Engine.isAutoUpdateWasCalled()) {
             // only call auto update when the app was not on the background
             autoUpdate.execute();
           }

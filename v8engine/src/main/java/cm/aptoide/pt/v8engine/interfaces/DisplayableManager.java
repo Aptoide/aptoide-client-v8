@@ -16,4 +16,6 @@ public interface DisplayableManager {
       List<? extends Displayable> displayables, boolean finishedLoading);
 
   DisplayableManager clearDisplayables();
+
+  boolean hasDisplayables();
 }
