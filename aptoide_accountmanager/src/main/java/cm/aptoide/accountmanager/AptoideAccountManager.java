@@ -357,6 +357,13 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
             }
             sendLoginBroadcast();
           }
+        }, throwable -> {
+          removeLocalAccount();
+          getInstance().onLoginFail(getContext().getString(R.string.unknown_error));
+          CrashReport.getInstance().log(throwable);
+          if (finalGenericPleaseWaitDialog != null) {
+            finalGenericPleaseWaitDialog.dismiss();
+          }
         });
       } else { // oAuth.hasErrors() = true
 
