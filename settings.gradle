@@ -17,4 +17,5 @@ include ':vanilla',
     ':imageloader',
     ':downloadmanager',
     ':emptyapp',
-    ':shareapps'
+    ':shareapps',
+    ':shareapppsandroid'

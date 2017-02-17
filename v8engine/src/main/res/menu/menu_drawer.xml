@@ -7,6 +7,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
   <item
+      android:id="@+id/shareapps"
+      android:orderInCategory="0"
+      android:title="Share Apps" />
+
+  <item
       android:id="@+id/navigation_item_my_account"
       android:icon="?attr/icMyAccountDrawable"
       android:orderInCategory="1"

@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:orientation="vertical"
+    >
+
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="70dp"
+      android:background="#00B0C5"
+      android:orientation="horizontal"
+      android:padding="0dp"
+      >
+
+    <ImageButton
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="2dp"
+        android:layout_marginLeft="20dp"
+        android:background="@null"
+        android:scaleType="centerInside"
+        android:src="@drawable/x_button"
+        android:visibility="invisible"
+        />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="7dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="14dp"
+        android:src="@drawable/logo"
+        />
+
+  </LinearLayout>
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      android:weightSum="1"
+      >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="#FFFFFF"
+        android:gravity="center"
+        >
+
+
+      <cm.aptoide.pt.shareapppsandroid.HighwayRadarScan
+          android:id="@+id/radar"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          />
+
+      <cm.aptoide.pt.shareapppsandroid.HighwayRadarTextView
+          android:id="@+id/hotspotTextView"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_margin="5dp"
+          />
+
+      <!--<cm.aptoide.lite.HighwayRadarLowElement-->
+      <!--android:layout_width="match_parent"-->
+      <!--android:layout_height="match_parent"-->
+      <!--android:layout_margin="5dp"-->
+      <!--android:visibility="gone"-->
+      <!--android:id="@+id/hotspotLowTextView"/>-->
+
+      <ProgressBar
+          android:id="@+id/buttonsProgressBar"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerInParent="true"
+          android:indeterminateDrawable="@drawable/custom_progressbarwheel"
+          android:visibility="gone"
+          style="?android:attr/progressBarStyleLarge"
+          />
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/circular_progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        >
+
+      <ProgressBar
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_horizontal"
+          android:indeterminateDrawable="@drawable/custom_progressbarwheel"
+          style="?android:attr/progressBarStyleLarge"
+          />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/groupButtonsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="3.7"
+        android:background="#FFFFFF"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        >
+
+      <LinearLayout
+          android:id="@+id/createGroup"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:layout_weight="0.333"
+          android:background="@drawable/button_selector_main"
+          android:baselineAligned="false"
+          android:clickable="true"
+          android:orientation="vertical"
+          android:weightSum="1"
+          >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="4dp"
+            android:layout_weight="0.9"
+            android:adjustViewBounds="true"
+            android:src="@drawable/creategroup1"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="0.1"
+            android:padding="5dp"
+            android:text="@string/createGroup"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#FFFFFF"
+            android:textSize="10sp"
+            />
+
+      </LinearLayout>
+
+      <LinearLayout
+          android:id="@+id/joinGroup"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:layout_weight="0.333"
+          android:background="@drawable/button_selector_main"
+          android:baselineAligned="false"
+          android:clickable="true"
+          android:orientation="vertical"
+          android:weightSum="1"
+          >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="4dp"
+            android:layout_weight="0.9"
+            android:adjustViewBounds="true"
+            android:src="@drawable/joingroup"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="0.1"
+            android:padding="5dp"
+            android:text="@string/joinGroup"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#FFFFFF"
+            android:textSize="10sp"
+            />
+
+      </LinearLayout>
+
+    </LinearLayout>
+
+  </LinearLayout>
+
+
+</LinearLayout>

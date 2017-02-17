@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/timeline_separator"
+    android:orientation="vertical"
+    >
+
+
+  <!--<TextView-->
+  <!--android:layout_width="wrap_content"-->
+  <!--android:layout_height="wrap_content"-->
+  <!--android:text="Teste : Hello select the apps you want to transfer please"-->
+  <!--android:textSize="15dp"-->
+  <!--android:textColor="#000000"-->
+  <!--android:background="#FFFFFF"-->
+  <!--/>-->
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="70dp"
+      android:background="#00B0C5"
+      android:orientation="horizontal"
+      android:padding="0dp"
+      >
+
+    <ImageButton
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="2dp"
+        android:layout_marginLeft="20dp"
+        android:background="@null"
+        android:scaleType="centerInside"
+        android:src="@drawable/x_button"
+        android:visibility="invisible"
+        />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="7dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="14dp"
+        android:src="@drawable/logo"
+        />
+
+  </LinearLayout>
+
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      >
+
+    <ProgressBar
+        android:id="@+id/appSelectionProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:indeterminateDrawable="@drawable/custom_progressbarwheel"
+        style="?android:attr/progressBarStyleLarge"
+        />
+
+
+    <GridView
+        android:id="@+id/HighwayGridView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:gravity="center"
+        android:horizontalSpacing="2sp"
+        android:numColumns="@integer/numberOfColumns_appSelection"
+        android:scrollbars="none"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="2sp"
+        android:visibility="gone"
+        />
+
+    <Button
+        android:id="@+id/sendButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerHorizontal="true"
+        android:layout_weight="1"
+        android:background="@drawable/roundedbutton"
+        android:text="@string/send"
+        android:textColor="#000000"
+        android:textSize="10sp"
+        />
+
+  </RelativeLayout>
+
+
+</LinearLayout>

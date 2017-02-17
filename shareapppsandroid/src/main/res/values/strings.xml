@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <string name="app_name">Aptoide Lite</string>
+  <!--<string name="action_settings">My Applications</string>-->
+  <!--<string name="title_activity_download_apk">DownloadApk</string>-->
+  <!--<string name="apkfy_wizard_text">Don\'t worry, we didn\'t forget about your app.\nThe download will start in a moment.</string>-->
+
+
+  <string name="youSent">You <b>sent</b> this app</string>
+  <string name="youReceived">You <b>received</b> this app</string>
+  <string name="youAreSending">You are <b>sending</b> this app</string>
+
+  <!--<string name="downloadInProgress">Download in progress</string>-->
+  <!--<string name="downloadComplete">Download complete</string>-->
+  <!--<string name="downloadCompleted">Download completed!</string>-->
+  <!--<string name="downloadCanceled">Download was canceled</string>-->
+
+  <string name="ok">OK</string>
+  <!--<string name="alreadyDownloading">Another Download in progress!</string>-->
+
+  <!--<string name="updating">Updating </string>-->
+  <!--<string name="apkBuilding">Building apk &#8230;</string>-->
+  <!--<string name="completedDeltaProcess">Delta process complete</string>-->
+  <!--<string name="AptoideDeltaUpdates">Aptoide Delta Updates</string>-->
+  <!--<string name="savedDuringDownload">During this download you saved </string>-->
+
+  <!--<string name="preparingApp">Preparing your app &#8230;</string>-->
+
+  <!--<string name="refreshing">Refreshing &#8230;</string>-->
+
+  <string name="enablingWifi">Enabling the Wifi functionality</string>
+  <string name="noHotspotYet">Please, you or your friend(s) should create a hotspot</string>
+  <!--<string name="lollipopError">This option is not available for this Android version yet. Soon it will be updated.</string>-->
+  <string name="couldNotCreateHotspot">Couldn\'t create the hotspot</string>
+  <string name="unkownHotspotError">We are sorry, there was an error while trying to create the hotspot</string>
+
+  <string name="noSelectedHotspot">Please select a hotspot first</string>
+  <string name="errorJoiningNetwork">There was an error joining the network </string>
+  <string name="unkownJoinNetError">We are sorry, there was an error while joining the network.</string>
+
+  <string name="alert">Alert</string>
+  <string name="send">Send</string>
+  <string name="cancel">Cancel</string>
+  <string name="noSelectedAppsToSend">Please select something to send</string>
+
+  <string name="preparingSend">Preparing to send </string>
+  <string name="sending">Sending </string>
+  <string name="transfCompleted">Transference Completed</string>
+  <string name="receive">Receive</string>
+  <string name="receiving">Receiving </string>
+
+  <string name="hotspotLeft">The creator of the group left !</string>
+  <string name="noSpaceForApp">You have no space available to the app: </string>
+  <string name="fileProblem">There was a problem with the file of </string>
+
+  <string name="welcome">Welcome </string>
+  <string name="alertCreatorLeave">You are the creator of this group, if you leave it will be closed </string>
+  <string name="leave">Leave</string>
+  <string name="alertClientLeave">Are you sure you want to leave this group?</string>
+  <string name="alertClearApps1">This action will not just clear the history, but it will also delete the application files.</string>
+  <string name="alertClearApps2">Are you sure you want to delete?</string>
+  <string name="delete">Delete</string>
+
+  <string name="alertInstallApp">Are you sure you want to install the %1$s application?</string>
+  <string name="install">Install</string>
+
+
+  <string name="errorAppVersionNew">There was an error while loading the file %1$s. \nPlease check if the version of your device is higher or the same as the version of the %2$s that you received.</string>
+
+  <string name="alertDeleteApp">Are you sure you want to delete the %1$s application?</string>
+
+  <!--<string name="maxUpdates">99+</string>-->
+  <!--<string name="updateMilestone">Update - Milestone</string>-->
+  <!--<string name="youAlreadySaved">You already saved </string>-->
+
+  <!--<string name="downloadingApp">Downloading app &#8230;</string>-->
+  <!--<string name="hide">Hide</string>-->
+  <!--<string name="sendingToBack">Sending to background &#8230;</string>-->
+  <!--<string name="cancelling">Cancelling &#8230;</string>-->
+
+  <string name="shareApps">Share APPS</string>
+  <string name="createGroup">Create Group</string>
+  <string name="joinGroup">Join Group</string>
+  <string name="upperInstall">INSTALL</string>
+  <string name="upperDelete">DELETE </string>
+  <string name="upperResend">RESEND</string>
+  <string name="deletedMessage">You deleted this file!</string>
+  <string name="noRecords">There are no records available yet! </string>
+  <string name="clearHistory">CLEAR HISTORY</string>
+  <string name="noRecordsDelete">"There are no records to delete"</string>
+
+  <string name="reSendError"><b>ERROR ON SENDING</b></string>
+  <string name="reSendError_no_friends_in_group">At the moment you have no friends in this group. Try again later.</string>
+
+
+  <string name="mobileDataTitle">Mobile data</string>
+  <string name="mobileDataMessage">In order to join a group you have to turn off your mobile data temporarily. \nPlease turn off your data.</string>
+  <string name="turnOffButton">Turn off</string>
+  <string name="mDataJoinGroup">Please turn off your data in order to join a group</string>
+
+  <string name="sendApps">Send APPS</string>
+
+  <string name="reSendOutside"><b>No one is in the group yet</b></string>
+
+  <string name="unsupportedApp">App with this filename %1$s is not supported by this device</string>
+
+</resources>
+

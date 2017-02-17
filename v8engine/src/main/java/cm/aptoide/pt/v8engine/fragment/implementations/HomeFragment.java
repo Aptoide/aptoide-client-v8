@@ -30,6 +30,7 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.shareapppsandroid.HighwayActivity;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.StorePagerAdapter;
@@ -199,7 +200,9 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
           AptoideAccountManager.openAccountManager(getContext());
         } else {
           final NavigationManagerV4 navigationManager = getNavigationManager();
-          if (itemId == R.id.navigation_item_rollback) {
+          if (itemId == R.id.shareapps) {
+            startActivity(new Intent(getContext(), HighwayActivity.class));
+          } else if (itemId == R.id.navigation_item_rollback) {
             navigationManager.navigateTo(V8Engine.getFragmentProvider().newRollbackFragment());
           } else if (itemId == R.id.navigation_item_setting_scheduled_downloads) {
             navigationManager.navigateTo(
