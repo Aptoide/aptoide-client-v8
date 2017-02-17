@@ -46,6 +46,7 @@ public class HighwayActivity extends ActivityView implements HighwayView {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
+    //deviceName = getIntent().getStringExtra("deviceName");
     requestPermissions();
 
     deviceName = getIntent().getStringExtra("deviceName");
@@ -92,7 +93,7 @@ public class HighwayActivity extends ActivityView implements HighwayView {
   private void requestPermissions() {
     ActivityCompat.requestPermissions(this, new String[] {
         Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.WRITE_SETTINGS,
-        Manifest.permission.READ_PHONE_STATE
+        Manifest.permission.READ_PHONE_STATE, Manifest.permission.WRITE_EXTERNAL_STORAGE
     }, PERMISSIONS_REQUEST_CODE);
   }
 

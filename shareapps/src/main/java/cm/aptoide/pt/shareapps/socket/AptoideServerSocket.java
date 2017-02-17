@@ -18,8 +18,6 @@ import lombok.Getter;
 // TODO: 01-02-2017 neuro messagereceiver nao é! lol
 public abstract class AptoideServerSocket extends AptoideSocket implements ServerActionDispatcher {
 
-  private static final int TIMEOUT = 5000;
-
   private final int port;
   ServerSocketTimeoutManager serverSocketTimeoutManager;
   private List<Socket> connectedSockets = new LinkedList<>();
@@ -28,14 +26,17 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
   private boolean shutdown = false;
   private LinkedBlockingQueue<ServerAction> queuedServerActions = new LinkedBlockingQueue<>();
   @Getter private Host host;
+  private int timeout;
 
   public AptoideServerSocket(int port, int timeout) {
     this.port = port;
+    this.timeout = timeout;
   }
 
   public AptoideServerSocket(int bufferSize, int port, int timeout) {
     super(bufferSize);
     this.port = port;
+    this.timeout = timeout;
   }
 
   @Override public AptoideSocket start() {
@@ -50,11 +51,16 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
 
     try {
       ss = new ServerSocket(port);
-      serverSocketTimeoutManager = new ServerSocketTimeoutManager(ss, TIMEOUT);
+      serverSocketTimeoutManager = new ServerSocketTimeoutManager(ss, timeout);
       serverSocketTimeoutManager.reserTimeout();
       host = Host.from(ss);
-      System.out.println(
-          Thread.currentThread().getId() + ": Starting server in port " + port + ": " + this);
+      System.out.println(Thread.currentThread().getId()
+          + ": Starting server in port "
+          + port
+          + " and ip "
+          + host.getIp()
+          + ": "
+          + this);
       while (true) {
         Socket socket = ss.accept();
         connectedSockets.add(socket);

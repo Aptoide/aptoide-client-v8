@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Environment;
 
 /**
  * Created by filipegoncalves on 10-02-2017.
@@ -72,6 +73,8 @@ public class ApplicationReceiver {
     }
     receiveIntent.putExtra("nickname", nickname);
     receiveIntent.putExtra("port", port);
+    receiveIntent.putExtra("ExternalStoragePath",
+        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString());
     receiveIntent.putExtra("isHotspot", isHotspot);
     receiveIntent.putExtra("isOutsideShare", outsideShare);
     receiveIntent.setAction("RECEIVE");

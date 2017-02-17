@@ -25,5 +25,8 @@ public class MainActivity extends Activity {
         startActivity(intent);
       }
     }
+
+    startActivity(new Intent(this, HighwayActivity.class));
+    finish();
   }
 }

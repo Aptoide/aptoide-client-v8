@@ -1,11 +1,9 @@
 package cm.aptoide.pt.shareapppsandroid;
 
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
@@ -133,32 +131,32 @@ public class HighwayAppSelectionActivity extends ActivityView implements Highway
         Toast.LENGTH_SHORT).show();
   }
 
-  @Override public void sendMultipleFiles(List<App> list) {
-    Intent sendIntent = null;
-    if (isHotspot) {
-      System.out.println(
-          "HIGHWAY APP SELECTION ACTIVITY I will try to send a message and i am a hostpot");
-      sendIntent = new Intent(this, HighwayServerService.class);
-      //como sou servidor devo meter o firstSender a ""
-    } else {
-      System.out.println(
-          "HIGHWAY APP SELECTION ACTIVITY I will try to send a message and i am NOT NOT NOT NOT a hotspot");
-      sendIntent = new Intent(this, HighwayClientComm.class);
-      sendIntent.putExtra("targetIP", targetIPAddress);
-    }
-    sendIntent.putExtra("port", porto);
-    System.out.println("App selection activity  : o bool do isHotspot : " + isHotspot);
-    sendIntent.putExtra("isHotspot", isHotspot);
-
-    //        sendIntent.putExtra("fromOutside",false);
-
-    Bundle tmp = new Bundle();
-    tmp.putParcelableArrayList("listOfAppsToInstall",
-        new ArrayList<Parcelable>(list));//change listOfAppsToInstall to listOfAppsTOSend
-    sendIntent.putExtra("bundle", tmp);
-    sendIntent.setAction("SEND");
-    startService(sendIntent);
-  }
+  //@Override public void sendMultipleFiles(List<App> list) {
+  //  Intent sendIntent = null;
+  //  if (isHotspot) {
+  //    System.out.println(
+  //        "HIGHWAY APP SELECTION ACTIVITY I will try to send a message and i am a hostpot");
+  //    sendIntent = new Intent(this, HighwayServerService.class);
+  //    //como sou servidor devo meter o firstSender a ""
+  //  } else {
+  //    System.out.println(
+  //        "HIGHWAY APP SELECTION ACTIVITY I will try to send a message and i am NOT NOT NOT NOT a hotspot");
+  //    sendIntent = new Intent(this, HighwayClientService.class);
+  //    sendIntent.putExtra("targetIP", targetIPAddress);
+  //  }
+  //  sendIntent.putExtra("port", porto);
+  //  System.out.println("App selection activity  : o bool do isHotspot : " + isHotspot);
+  //  sendIntent.putExtra("isHotspot", isHotspot);
+  //
+  //  //        sendIntent.putExtra("fromOutside",false);
+  //
+  //  Bundle tmp = new Bundle();
+  //  tmp.putParcelableArrayList("listOfAppsToInstall",
+  //      new ArrayList<Parcelable>(list));//change listOfAppsToInstall to listOfAppsTOSend
+  //  sendIntent.putExtra("bundle", tmp);
+  //  sendIntent.setAction("SEND");
+  //  startService(sendIntent);
+  //}
 
   @Override public void enableGridView(boolean enable) {
     progressBar.setVisibility(View.GONE);

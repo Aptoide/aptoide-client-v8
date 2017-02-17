@@ -256,6 +256,7 @@ public class ConnectionManager {
         } catch (IllegalAccessException e) {
           e.printStackTrace();
         } catch (InvocationTargetException e) {
+          e.getCause().printStackTrace();
           e.printStackTrace();
         }
       }
@@ -301,6 +302,7 @@ public class ConnectionManager {
         } catch (IllegalAccessException e) {
           e.printStackTrace();
         } catch (InvocationTargetException e) {
+          e.getCause().printStackTrace();
           e.printStackTrace();
         }
       }

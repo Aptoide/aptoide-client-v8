@@ -2,10 +2,19 @@ package cm.aptoide.pt.shareapppsandroid;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import cm.aptoide.pt.shareapps.socket.entities.AndroidAppInfo;
+import cm.aptoide.pt.shareapps.socket.entities.Host;
+import cm.aptoide.pt.shareapps.socket.interfaces.FileServerLifecycle;
 import cm.aptoide.pt.shareapps.socket.message.client.AptoideMessageClientController;
 import cm.aptoide.pt.shareapps.socket.message.client.AptoideMessageClientSocket;
+import cm.aptoide.pt.shareapps.socket.message.interfaces.StorageCapacity;
+import cm.aptoide.pt.shareapps.socket.message.messages.RequestPermissionToSend;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by filipegoncalves on 10-02-2017.
@@ -15,26 +24,82 @@ public class HighwayClientService extends Service {
 
   private int port;
   private String serverIP;
+  private ArrayList<App> listOfApps;
+  private FileServerLifecycle fileServerLifecycle;
+  private AptoideMessageClientController aptoideMessageController;
+  private AptoideMessageClientSocket aptoideMessageClientSocket;
 
   @Override public void onCreate() {
     super.onCreate();
     System.out.println("Inside the onCreate of the service");
+
+    fileServerLifecycle = new FileServerLifecycle() {
+      @Override public void onStartSending(Object o) {
+        System.out.println(" Started sending ");
+        //generate intent, with info of the app. Name, filePath, size,, etc.
+        //intent i=new Intent();
+        //i.setAction("SENDAPP");
+        //sendBroadcast(i);
+      }
+
+      @Override public void onFinishSending(Object o) {
+        System.out.println(" Finished sending ");
+
+      }
+    };
+
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
+
     if (intent.getAction() != null && intent.getAction().equals("RECEIVE")) {
       serverIP = intent.getStringExtra("targetIP");
       port = intent.getIntExtra("port", 0);
       // TODO: 16-02-2017
-      (new AptoideMessageClientSocket(serverIP, port,
-          new AptoideMessageClientController(null, null, null))).startAsync();
+
+      String externalStoragepath=intent.getStringExtra("ExternalStoragePath");
+      long space=intent.getIntExtra("storage",0);
+
+      StorageCapacity storageCapacity = new StorageCapacity() {//todo nao percebo
+        @Override public boolean hasCapacity(long bytes) {
+          return true;
+        }
+      };
+
+      aptoideMessageController =
+          new AptoideMessageClientController(externalStoragepath, storageCapacity, fileServerLifecycle);
+      aptoideMessageClientSocket =
+          new AptoideMessageClientSocket(serverIP, port, aptoideMessageController);
+      aptoideMessageClientSocket.startAsync();
+
+
 
       System.out.println(" Connected ! ");
-    } else if (intent.getAction() != null && intent.getAction().equals("SEND")) {
 
+    } else if (intent.getAction() != null && intent.getAction().equals("SEND")) {
+      Bundle b = intent.getBundleExtra("bundle");
+
+      if (listOfApps == null || listOfApps.get(listOfApps.size() - 1)
+          .isOnChat()) { //null ou ultimo elemento ja acabado de enviar.
+        listOfApps = b.getParcelableArrayList("listOfAppsToInstall");
+        String filePath=listOfApps.get(0).getFilePath();
+        System.out.println(" Filepath from app 0 (test) is:  "+filePath);
+        File apk = new File(filePath);
+        AndroidAppInfo appInfo=new AndroidAppInfo(apk);
+
+        Host host = aptoideMessageController.getHost();
+        aptoideMessageController.send(
+            new RequestPermissionToSend(aptoideMessageController.getMe(),appInfo));
+
+      }else {
+        List<App> tempList = b.getParcelableArrayList("listOfAppsToInstall");
+
+        listOfApps.addAll(tempList);
+      }
     }
 
-    return START_STICKY;
+
+        return START_STICKY;
   }
 
   @Nullable @Override public IBinder onBind(Intent intent) {
@@ -44,6 +109,7 @@ public class HighwayClientService extends Service {
   /**
    * Method to be called after getting the callback of finishSending
    */
+
   public void finishedSending(String appName, String packageName) {
     Intent finishedSending = new Intent();
     finishedSending.setAction("SENDAPP");

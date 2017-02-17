@@ -9,11 +9,7 @@ public interface HighwayAppSelectionView {
 
   void setUpSendListener();
 
-  //    void removeSendListener();
-
   void showNoAppsSelectedToast();
-
-  void sendMultipleFiles(List<App> selectedApps);
 
   void enableGridView(boolean enable);
 

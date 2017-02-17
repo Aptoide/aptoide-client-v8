@@ -8,8 +8,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import cm.aptoide.pt.shareapps.socket.message.client.AptoideMessageClientController;
+import cm.aptoide.pt.shareapps.socket.message.client.AptoideMessageClientSocket;
+import cm.aptoide.pt.shareapps.socket.message.interfaces.StorageCapacity;
 import cm.aptoide.pt.shareapps.socket.message.server.AptoideMessageServerSocket;
 import java.io.File;
 import java.util.List;
@@ -43,11 +47,26 @@ public class HighwayServerService extends Service {
     lastTimestampReceive = System.currentTimeMillis();
     System.out.println("inside of startcommand in the service");
     if (intent.getAction() != null && intent.getAction().equals("RECEIVE")) {
-      port = intent.getIntExtra("port", 0);
+      //port = intent.getIntExtra("port", 0);
       System.out.println("Going to start serving");
-      (new AptoideMessageServerSocket(port, 5000)).startAsync();
+      (new AptoideMessageServerSocket(55555, 500000)).startAsync();
+      String s =
+          Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
+      StorageCapacity storageCapacity = new StorageCapacity() {
+        @Override public boolean hasCapacity(long bytes) {
+          return true;
+        }
+      };
 
-      System.out.println("Connected");
+      AptoideMessageClientController aptoideMessageClientController =
+          new AptoideMessageClientController(s, storageCapacity, null);
+      (new AptoideMessageClientSocket("localhost", 55555, aptoideMessageClientController
+      )).startAsync();
+
+      System.out.println("Connected 342");
+
+
+
     } else if (intent.getAction() != null && intent.getAction().equals("SEND")) {
       //read parcelable
       Bundle b = intent.getBundleExtra("bundle");

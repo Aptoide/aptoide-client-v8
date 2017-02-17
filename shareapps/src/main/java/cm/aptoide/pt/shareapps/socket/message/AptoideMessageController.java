@@ -26,6 +26,7 @@ public abstract class AptoideMessageController implements Sender<Message> {
   private ObjectInputStream objectInputStream;
   private LinkedBlockingQueue<AckMessage> ackMessages = new LinkedBlockingQueue<>();
   @Getter private Host host;
+  @Getter private Host me;
 
   public AptoideMessageController(List<MessageHandler<? extends Message>> messageHandlers) {
     this.messageHandlersMap = buildMessageHandlersMap(messageHandlers);
@@ -46,7 +47,7 @@ public abstract class AptoideMessageController implements Sender<Message> {
     objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
     objectInputStream = new ObjectInputStream(socket.getInputStream());
     host = Host.from(socket);
-
+    me = new Host(socket.getLocalSocketAddress().toString(), socket.getPort());
     startListening(objectInputStream);
   }
 

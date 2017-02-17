@@ -9,8 +9,8 @@ import lombok.Data;
  * Created by neuro on 27-01-2017.
  */
 @Data public class Host implements Serializable {
-  private final String ip;
-  private final int port;
+  private  String ip;
+  private  int port;
 
   public Host(String ip, int port) {
     this.ip = ip;

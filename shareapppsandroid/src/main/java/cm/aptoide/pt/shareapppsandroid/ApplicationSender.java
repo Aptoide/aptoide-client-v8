@@ -67,8 +67,8 @@ public class ApplicationSender {
       sendIntent.putExtra("targetIP", targetIPAddress);
     }
     sendIntent.putExtra("port", port);
-    System.out.println("App selection activity  : o bool do isHotspot : " + isHotspot);
     sendIntent.putExtra("isHotspot", isHotspot);
+
 
     //        sendIntent.putExtra("fromOutside",false);
 
