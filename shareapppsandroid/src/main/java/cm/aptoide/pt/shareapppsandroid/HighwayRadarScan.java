@@ -27,10 +27,11 @@ public class HighwayRadarScan extends View {
   private int cY;
   private int raio;
   private int start;
+  //#e17117
 
-  private int circleColor = Color.parseColor("#00B0C5");//discutir estas cores
-  private int radarColor = Color.parseColor("#9900B0C5");
-  private int tailColor = Color.parseColor("#00B0C5");
+  private int circleColor = Color.parseColor("#e17117");//discutir estas cores
+  private int radarColor = Color.parseColor("#99e17117");
+  private int tailColor = Color.parseColor("#e17117");
   private Paint circle;
   private Paint radar;
   private Matrix matrix;
@@ -122,7 +123,7 @@ public class HighwayRadarScan extends View {
     canvas.drawCircle(cX, cY, 3 * raio / 7, circle);
 
     Shader shader =
-        new SweepGradient(cX, cY, Color.parseColor("#0000B0C5"), Color.parseColor("#ff00B0C5"));
+        new SweepGradient(cX, cY, Color.parseColor("#00e17117"), Color.parseColor("#ffe17117"));
     radar.setShader(shader);
     canvas.concat(matrix);
     canvas.drawCircle(cX, cY, 3 * raio / 7, radar);
