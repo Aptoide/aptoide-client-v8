@@ -91,6 +91,19 @@ public class HighwayActivity extends ActivityView implements HighwayView {
   }
 
   private void requestPermissions() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      if (Settings.System.canWrite(this)) {
+//        startActivity(new Intent(this, HighwayActivity.class));
+//        finish();
+        System.out.println("can write the settings");
+      } else {
+        System.out.println("can not wite the settings");
+        Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+        intent.setData(Uri.parse("package:" + getPackageName()));
+        startActivity(intent);
+      }
+    }
+
     ActivityCompat.requestPermissions(this, new String[] {
         Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.WRITE_SETTINGS,
         Manifest.permission.READ_PHONE_STATE, Manifest.permission.WRITE_EXTERNAL_STORAGE
