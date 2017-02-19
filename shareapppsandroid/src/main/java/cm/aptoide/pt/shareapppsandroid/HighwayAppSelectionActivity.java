@@ -99,6 +99,13 @@ public class HighwayAppSelectionActivity extends ActivityView implements Highway
     super.onPause();
   }
 
+  @Override
+  protected void onDestroy() {
+    adapter.removeListener();
+    presenter.onDestroy();
+    super.onDestroy();
+  }
+
   //
   //    public String checkIfHasObb(String appName) {
   //        boolean hasObb = false;

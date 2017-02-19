@@ -54,56 +54,59 @@ public class HighwayClientService extends Service {
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
 
-    if (intent.getAction() != null && intent.getAction().equals("RECEIVE")) {
-      serverIP = intent.getStringExtra("targetIP");
-      port = intent.getIntExtra("port", 0);
+    if (intent != null) {
 
-      final String externalStoragepath=intent.getStringExtra("ExternalStoragePath");
-      long space=intent.getIntExtra("storage",0);
+      if (intent.getAction() != null && intent.getAction().equals("RECEIVE")) {
+        serverIP = intent.getStringExtra("targetIP");
+        port = intent.getIntExtra("port", 0);
 
-      StorageCapacity storageCapacity = new StorageCapacity() {//todo nao percebo
-        @Override public boolean hasCapacity(long bytes) {
-          long availableSpace = -1L;
-          StatFs stat = new StatFs(externalStoragepath);
-          availableSpace = (long) stat.getAvailableBlocks() * (long) stat.getBlockSize();
-          if (availableSpace > bytes) {
-            return true;
-          }else{
-            return false;
+        final String externalStoragepath=intent.getStringExtra("ExternalStoragePath");
+        long space=intent.getIntExtra("storage",0);
+
+        StorageCapacity storageCapacity = new StorageCapacity() {//todo nao percebo
+          @Override public boolean hasCapacity(long bytes) {
+            long availableSpace = -1L;
+            StatFs stat = new StatFs(externalStoragepath);
+            availableSpace = (long) stat.getAvailableBlocks() * (long) stat.getBlockSize();
+            if (availableSpace > bytes) {
+              return true;
+            }else{
+              return false;
+            }
+
           }
+        };
 
+        aptoideMessageController =
+                new AptoideMessageClientController(externalStoragepath, storageCapacity, fileServerLifecycle);
+        aptoideMessageClientSocket =
+                new AptoideMessageClientSocket(serverIP, port, aptoideMessageController);
+        aptoideMessageClientSocket.startAsync();
+
+
+
+        System.out.println(" Connected ! ");
+
+      } else if (intent.getAction() != null && intent.getAction().equals("SEND")) {
+        Bundle b = intent.getBundleExtra("bundle");
+
+        if (listOfApps == null || listOfApps.get(listOfApps.size() - 1)
+                .isOnChat()) { //null ou ultimo elemento ja acabado de enviar.
+          listOfApps = b.getParcelableArrayList("listOfAppsToInstall");
+          String filePath=listOfApps.get(0).getFilePath();
+          System.out.println(" Filepath from app 0 (test) is:  "+filePath);
+          File apk = new File(filePath);
+          AndroidAppInfo appInfo=new AndroidAppInfo(apk);
+
+          Host host = aptoideMessageController.getHost();
+          aptoideMessageController.send(
+                  new RequestPermissionToSend(aptoideMessageController.getMe(),appInfo));
+
+        }else {
+          List<App> tempList = b.getParcelableArrayList("listOfAppsToInstall");
+
+          listOfApps.addAll(tempList);
         }
-      };
-
-      aptoideMessageController =
-          new AptoideMessageClientController(externalStoragepath, storageCapacity, fileServerLifecycle);
-      aptoideMessageClientSocket =
-          new AptoideMessageClientSocket(serverIP, port, aptoideMessageController);
-      aptoideMessageClientSocket.startAsync();
-
-
-
-      System.out.println(" Connected ! ");
-
-    } else if (intent.getAction() != null && intent.getAction().equals("SEND")) {
-      Bundle b = intent.getBundleExtra("bundle");
-
-      if (listOfApps == null || listOfApps.get(listOfApps.size() - 1)
-          .isOnChat()) { //null ou ultimo elemento ja acabado de enviar.
-        listOfApps = b.getParcelableArrayList("listOfAppsToInstall");
-        String filePath=listOfApps.get(0).getFilePath();
-        System.out.println(" Filepath from app 0 (test) is:  "+filePath);
-        File apk = new File(filePath);
-        AndroidAppInfo appInfo=new AndroidAppInfo(apk);
-
-        Host host = aptoideMessageController.getHost();
-        aptoideMessageController.send(
-            new RequestPermissionToSend(aptoideMessageController.getMe(),appInfo));
-
-      }else {
-        List<App> tempList = b.getParcelableArrayList("listOfAppsToInstall");
-
-        listOfApps.addAll(tempList);
       }
     }
 

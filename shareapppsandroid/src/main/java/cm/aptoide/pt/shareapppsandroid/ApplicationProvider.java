@@ -97,6 +97,13 @@ public class ApplicationProvider {
     return null;
   }
 
+  public void stop(){
+    initializeUITask.cancel(true);
+    if(listener!=null){
+      listener=null;
+    }
+  }
+
   public interface InitializeUIListener {
     void onListInitialized(List<App> itemList);
   }
@@ -112,6 +119,12 @@ public class ApplicationProvider {
 
       listener.onListInitialized(providedAppsList);
       super.onPostExecute(s);
+    }
+
+    @Override
+    protected void onCancelled() {
+      listener=null;
+      super.onCancelled();
     }
   }
 }

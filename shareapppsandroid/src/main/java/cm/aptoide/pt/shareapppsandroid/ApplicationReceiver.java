@@ -89,8 +89,15 @@ public class ApplicationReceiver {
     if (listener != null) {
       this.listener = null;
       //unregister receiver
-      context.unregisterReceiver(receive);
+      try{
+        context.unregisterReceiver(receive);
+      }catch (IllegalArgumentException e){
+      }
     }
+  }
+
+  public void stop(){
+    removeListener();
   }
 
   interface ReceiveAppListener {

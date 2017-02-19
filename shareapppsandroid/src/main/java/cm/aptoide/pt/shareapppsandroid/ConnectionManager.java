@@ -460,6 +460,15 @@ public class ConnectionManager {
         ((i >> 24) & 0xFF);
   }
 
+  public void resume(){//not being called. Receivers were being registered twice.
+    context.registerReceiver(activateButtonsReceiver,
+            new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION));
+    context.registerReceiver(connectingWifi,
+            new IntentFilter(WifiManager.NETWORK_STATE_CHANGED_ACTION));
+    context.registerReceiver(scanAPTXNetworks,
+            new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+  }
+
   public void stop() {
     System.out.println("Going to cancel the tasks");
     this.listenerJoinWifi = null;

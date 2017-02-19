@@ -47,7 +47,8 @@ public class HighwayAppSelectionPresenter implements Presenter {
   }
 
   @Override public void onDestroy() {
-
+    applicationProvider.stop();
+    applicationSender.stop();
   }
 
   private void setAppSelectionListener() {

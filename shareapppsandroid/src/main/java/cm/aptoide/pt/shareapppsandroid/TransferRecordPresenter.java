@@ -99,6 +99,8 @@ public class TransferRecordPresenter implements Presenter {
   }
 
   @Override public void onDestroy() {
+    applicationReceiver.stop();
+    applicationSender.stop();
 
   }
 

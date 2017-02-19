@@ -43,54 +43,56 @@ public class HighwayServerService extends Service {
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
+    if(intent!=null){
+      lastTimestampReceive = System.currentTimeMillis();
+      System.out.println("inside of startcommand in the service");
+      if (intent.getAction() != null && intent.getAction().equals("RECEIVE")) {
+        //port = intent.getIntExtra("port", 0);
+        System.out.println("Going to start serving");
+        (new AptoideMessageServerSocket(55555, 500000)).startAsync();
+        String s =
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
+        StorageCapacity storageCapacity = new StorageCapacity() {
+          @Override public boolean hasCapacity(long bytes) {
+            return true;
+          }
+        };
 
-    lastTimestampReceive = System.currentTimeMillis();
-    System.out.println("inside of startcommand in the service");
-    if (intent.getAction() != null && intent.getAction().equals("RECEIVE")) {
-      //port = intent.getIntExtra("port", 0);
-      System.out.println("Going to start serving");
-      (new AptoideMessageServerSocket(55555, 500000)).startAsync();
-      String s =
-          Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
-      StorageCapacity storageCapacity = new StorageCapacity() {
-        @Override public boolean hasCapacity(long bytes) {
-          return true;
+        AptoideMessageClientController aptoideMessageClientController =
+                new AptoideMessageClientController(s, storageCapacity, null);
+        (new AptoideMessageClientSocket("localhost", 55555, aptoideMessageClientController
+        )).startAsync();
+
+        System.out.println("Connected 342");
+
+
+
+      } else if (intent.getAction() != null && intent.getAction().equals("SEND")) {
+        //read parcelable
+        Bundle b = intent.getBundleExtra("bundle");
+        if (listOfApps == null || listOfApps.get(listOfApps.size() - 1)
+                .isOnChat()) { //null ou ultimo elemento ja acabado de enviar.
+          listOfApps = b.getParcelableArrayList("listOfAppsToInstall");
+          System.out.println(
+                  "serverComm : Just received the list of Apps :  the list of apps size is  :"
+                          + listOfApps.size());
+
+          //create the mesage and send it.
+
+        } else {
+          List<App> tempList = b.getParcelableArrayList("listOfAppsToInstall");
+
+          listOfApps.addAll(tempList);
+
+          //                Intent addedOneMore = new Intent(HighwayServerComm.this, HighwayTransferRecordActivity.class);
+          //                addedOneMore.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+          //                addedOneMore.putExtra("isHotspot", isHotspot);
+          //                addedOneMore.setAction("Addedapps");
+          //                startActivity(addedOneMore);
+
         }
-      };
-
-      AptoideMessageClientController aptoideMessageClientController =
-          new AptoideMessageClientController(s, storageCapacity, null);
-      (new AptoideMessageClientSocket("localhost", 55555, aptoideMessageClientController
-      )).startAsync();
-
-      System.out.println("Connected 342");
-
-
-
-    } else if (intent.getAction() != null && intent.getAction().equals("SEND")) {
-      //read parcelable
-      Bundle b = intent.getBundleExtra("bundle");
-      if (listOfApps == null || listOfApps.get(listOfApps.size() - 1)
-          .isOnChat()) { //null ou ultimo elemento ja acabado de enviar.
-        listOfApps = b.getParcelableArrayList("listOfAppsToInstall");
-        System.out.println(
-            "serverComm : Just received the list of Apps :  the list of apps size is  :"
-                + listOfApps.size());
-
-        //create the mesage and send it.
-
-      } else {
-        List<App> tempList = b.getParcelableArrayList("listOfAppsToInstall");
-
-        listOfApps.addAll(tempList);
-
-        //                Intent addedOneMore = new Intent(HighwayServerComm.this, HighwayTransferRecordActivity.class);
-        //                addedOneMore.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        //                addedOneMore.putExtra("isHotspot", isHotspot);
-        //                addedOneMore.setAction("Addedapps");
-        //                startActivity(addedOneMore);
-
       }
+
     }
 
     return START_STICKY;

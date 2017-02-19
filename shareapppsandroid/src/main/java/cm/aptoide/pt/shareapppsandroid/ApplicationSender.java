@@ -88,7 +88,10 @@ public class ApplicationSender {
     if (listener != null) {
       this.listener = null;
       //unregister send
-      context.unregisterReceiver(send);
+      try{
+        context.unregisterReceiver(send);
+      }catch (IllegalArgumentException e){
+      }
     }
   }
 
@@ -106,6 +109,10 @@ public class ApplicationSender {
         listener.onAppSent(appName, needReSend, isSent, false, positionToReSend);
       }
     };
+  }
+
+  public void stop(){
+    removeListener();
   }
 
   public interface SendListener {

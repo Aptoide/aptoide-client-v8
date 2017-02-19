@@ -62,11 +62,13 @@ public class HighwayPresenter implements Presenter {
   }
 
   @Override public void onResume() {
-
+//    connectionManager.resume();
   }
 
   @Override public void onPause() {
     //call groupmanager.pause etc.
+    //nothing to put.
+
   }
 
   @Override public void onDestroy() {

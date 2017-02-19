@@ -780,7 +780,7 @@ public class HighwayTransferRecordActivity extends ActivityView
 
   @Override protected void onDestroy() {
     System.out.println("Called on destroy of the transferRecordActivity !!!!!!!!!!!!");
-
+    presenter.onDestroy();
     super.onDestroy();
   }
 
