@@ -9,17 +9,17 @@
   <shape
       android:innerRadius="30dp"
       android:shape="ring"
-      android:thickness="4dp"
+      android:thickness="6dp"
       android:useLevel="false">
     <size
         android:height="100dp"
         android:width="100dp" />
 
     <gradient
-        android:centerColor="#DBDBDB"
+        android:centerColor="@color/aptoide_orange"
         android:centerY="0.5"
         android:endColor="#ffffff"
-        android:startColor="#00B0C5"
+        android:startColor="@color/aptoide_orange"
         android:type="sweep"
         android:useLevel="false" />
   </shape>

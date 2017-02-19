@@ -5,4 +5,5 @@
     <attr format="color" name="radarColor" />
     <attr format="color" name="tailColor" />
   </declare-styleable>
+  <attr format="reference" name="toolbarTheme"/>
 </resources>

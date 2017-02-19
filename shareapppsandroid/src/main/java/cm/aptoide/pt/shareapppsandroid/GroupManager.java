@@ -56,6 +56,12 @@ public class GroupManager {
     }
     if (connectionManager.isMobileDataOn()) {
       joiningGroup = false;
+      if (mobileDataDialog) {
+        listener.onError(ConnectionManager.ERROR_MOBILE_DATA_ON_TOAST);
+        return;
+      }
+      mobileDataDialog = true;
+      listener.onError(ConnectionManager.ERROR_MOBILE_DATA_ON_DIALOG);
       return;
     }
     this.joinHotspotTask = new JoinHotspotTask();

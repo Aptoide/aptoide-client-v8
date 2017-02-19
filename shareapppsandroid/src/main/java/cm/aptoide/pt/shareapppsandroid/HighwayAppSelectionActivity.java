@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+import android.widget.Toolbar;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,19 +31,22 @@ public class HighwayAppSelectionActivity extends ActivityView implements Highway
   private HighwayAppSelectionPresenter presenter;
   private ApplicationProvider applicationProvider;
   private ApplicationSender applicationSender;
+  private android.support.v7.widget.Toolbar mToolbar;
+
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.highway_appselection_activity);
     gridView = (GridView) findViewById(R.id.HighwayGridView);
     progressBar = (ProgressBar) findViewById(R.id.appSelectionProgressBar);
+    mToolbar= (android.support.v7.widget.Toolbar) findViewById(R.id.shareAppsToolbar);
 
     gridView.setSelector(new ColorDrawable(Color.BLACK));
 
     sendButton = (Button) findViewById(R.id.sendButton);
 
     isHotspot = getIntent().getBooleanExtra("isAHotspot", false);
-
+    setUpToolbar();
     highwayAppSelectionActivity = this;
 
     applicationProvider = new ApplicationProvider(this);
@@ -116,6 +121,16 @@ public class HighwayAppSelectionActivity extends ActivityView implements Highway
   //        }
   //        return obbsFilePath;
   //    }
+
+  private void setUpToolbar() {
+    if (mToolbar != null) {
+      setSupportActionBar(mToolbar);
+//      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+      getSupportActionBar().setHomeButtonEnabled(true);
+      getSupportActionBar().setDisplayShowTitleEnabled(true);
+      getSupportActionBar().setTitle(getResources().getString(R.string.shareApps));
+    }
+  }
 
   @Override public void setUpSendListener() {
     sendButton.setOnClickListener(new View.OnClickListener() {

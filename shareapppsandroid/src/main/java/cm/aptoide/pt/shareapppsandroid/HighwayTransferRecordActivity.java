@@ -20,6 +20,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
+
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -66,6 +68,7 @@ public class HighwayTransferRecordActivity extends ActivityView
   private ApplicationsManager applicationsManager;
   private ApplicationReceiver applicationReceiver;
   private ApplicationSender applicationSender;
+  private android.support.v7.widget.Toolbar mToolbar;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -77,6 +80,9 @@ public class HighwayTransferRecordActivity extends ActivityView
     textView = (TextView) findViewById(R.id.noRecordsTextView);
     send = (LinearLayout) findViewById(R.id.TransferRecordSendLayout);
     clearHistory = (LinearLayout) findViewById(R.id.TransferRecordClearLayout);
+    mToolbar= (android.support.v7.widget.Toolbar) findViewById(R.id.shareAppsToolbar);
+
+    setUpToolbar();
 
     if (getIntent().getAction() != null && getIntent().getAction()
         .equals("ShareFromOutsideRequest")) {
@@ -103,6 +109,7 @@ public class HighwayTransferRecordActivity extends ActivityView
 
     welcomeText.setText(this.getResources().getString(R.string.welcome) + " " + nickname);
     receivedAppListView.setVisibility(View.GONE);
+
 
     //        Intent receiveIntent = null;
     //        if (isHotspot) {
@@ -234,6 +241,16 @@ public class HighwayTransferRecordActivity extends ActivityView
       receivedAppListView.setAdapter(adapter);
     } else {
       adapter.notifyDataSetChanged();
+    }
+  }
+
+  private void setUpToolbar() {
+    if (mToolbar != null) {
+      setSupportActionBar(mToolbar);
+//      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+      getSupportActionBar().setHomeButtonEnabled(true);
+      getSupportActionBar().setDisplayShowTitleEnabled(true);
+      getSupportActionBar().setTitle(getResources().getString(R.string.shareApps));
     }
   }
 

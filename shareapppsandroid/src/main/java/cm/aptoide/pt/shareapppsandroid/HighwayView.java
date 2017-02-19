@@ -30,7 +30,7 @@ public interface HighwayView {
 
   void openChatClient(String ipAddress, String deviceName, ArrayList<String> pathsFromOutside);
 
-  void openChatHotspot(ArrayList<String> pathsFromOutside);
+  void openChatHotspot(ArrayList<String> pathsFromOutside, String deviceName);
 
   void refreshRadar(ArrayList<String> clients);
 

@@ -1,12 +1,13 @@
 package cm.aptoide.pt.shareapppsandroid;
 
 import android.app.Activity;
+import android.support.v7.app.AppCompatActivity;
 
 /**
  * Created by filipegoncalves on 31-01-2017.
  */
 
-public class ActivityView extends Activity {
+public class ActivityView extends AppCompatActivity {
 
   private Presenter presenter;
 

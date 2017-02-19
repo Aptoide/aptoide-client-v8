@@ -94,6 +94,7 @@ public class HighwayPresenter implements Presenter {
             view.hideButtonsProgressBar();
             System.out.println("Inside presenter on Success for join group");
             analyticsManager.joinGroupSuccess();
+            view.enableButtons(true);
             String ipAddress = connectionManager.getIPAddress();
             if (outsideShareManager != null) {
               ArrayList<String> pathsFromOutside = outsideShareManager.getPathsFromOutsideShare();
@@ -118,12 +119,14 @@ public class HighwayPresenter implements Presenter {
     view.enableButtons(false);
     groupManager.createGroup(randomAlphaNum, deviceName, new GroupManager.GroupListener() {
       @Override public void onSuccess() {
+        view.hideButtonsProgressBar();
+        view.enableButtons(true);
         analyticsManager.createGroupSuccess();
         if (outsideShareManager != null) {
           ArrayList<String> pathsFromOutside = outsideShareManager.getPathsFromOutsideShare();
-          view.openChatHotspot(pathsFromOutside);
+          view.openChatHotspot(pathsFromOutside, deviceName);
         } else {
-          view.openChatHotspot(null);
+          view.openChatHotspot(null, deviceName);
         }
       }
 

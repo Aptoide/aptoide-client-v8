@@ -3,7 +3,9 @@ package cm.aptoide.pt.shareapppsandroid;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.IBinder;
+import android.os.StatFs;
 import android.support.annotation.Nullable;
 import cm.aptoide.pt.shareapps.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.shareapps.socket.entities.Host;
@@ -55,14 +57,21 @@ public class HighwayClientService extends Service {
     if (intent.getAction() != null && intent.getAction().equals("RECEIVE")) {
       serverIP = intent.getStringExtra("targetIP");
       port = intent.getIntExtra("port", 0);
-      // TODO: 16-02-2017
 
-      String externalStoragepath=intent.getStringExtra("ExternalStoragePath");
+      final String externalStoragepath=intent.getStringExtra("ExternalStoragePath");
       long space=intent.getIntExtra("storage",0);
 
       StorageCapacity storageCapacity = new StorageCapacity() {//todo nao percebo
         @Override public boolean hasCapacity(long bytes) {
-          return true;
+          long availableSpace = -1L;
+          StatFs stat = new StatFs(externalStoragepath);
+          availableSpace = (long) stat.getAvailableBlocks() * (long) stat.getBlockSize();
+          if (availableSpace > bytes) {
+            return true;
+          }else{
+            return false;
+          }
+
         }
       };
 

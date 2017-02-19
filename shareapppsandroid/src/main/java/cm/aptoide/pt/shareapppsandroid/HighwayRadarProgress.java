@@ -47,7 +47,8 @@ public class HighwayRadarProgress extends View {
 
   @Override protected void onDraw(Canvas canvas) {
     super.onDraw(canvas);
-    int[] f = { Color.parseColor("#00A8D7A7"), Color.parseColor("#ffA8D7A7") };
+//    int[] f = { Color.parseColor("#00A8D7A7"), Color.parseColor("#ffA8D7A7") };
+    int[] f = { R.color.dark_blue, R.color.dark_blue };
     float[] p = { 0.0f, 1.0f };
     SweepGradient sweepGradient = new SweepGradient(rect.centerX(), rect.centerX(), f, p);
     paint.setShader(sweepGradient);

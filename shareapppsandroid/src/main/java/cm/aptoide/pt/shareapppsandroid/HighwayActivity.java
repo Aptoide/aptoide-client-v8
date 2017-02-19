@@ -10,6 +10,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -30,6 +32,7 @@ public class HighwayActivity extends ActivityView implements HighwayView {
   public HighwayRadarTextView radarTextView;
   public LinearLayout progressBarLayout;
   public String chosenHotspot = "";
+  private Toolbar mToolbar;
   public LinearLayout groupButtonsLayout;
 
   private ProgressBar buttonsProgressBar;//progress bar for when user click the buttons
@@ -56,6 +59,7 @@ public class HighwayActivity extends ActivityView implements HighwayView {
 
     setContentView(R.layout.highway_activity);
 
+    mToolbar= (Toolbar) findViewById(R.id.shareAppsToolbar);
     HighwayRadarScan radar = (HighwayRadarScan) findViewById(R.id.radar);
     radarTextView = (HighwayRadarTextView) findViewById(R.id.hotspotTextView);
 
@@ -66,7 +70,7 @@ public class HighwayActivity extends ActivityView implements HighwayView {
     joinGroupButton = (LinearLayout) findViewById(R.id.joinGroup);//send
     createGroupButton = (LinearLayout) findViewById(R.id.createGroup);//receive
     radarTextView.setActivity(this);
-
+    setUpToolbar();
     presenter = new HighwayPresenter(this, deviceName, new DeactivateHotspotTask(connectionManager),
         connectionManager, analyticsManager, groupManager);
     attachPresenter(presenter);
@@ -146,6 +150,16 @@ public class HighwayActivity extends ActivityView implements HighwayView {
     }
   }
 
+  private void setUpToolbar() {
+    if (mToolbar != null) {
+      setSupportActionBar(mToolbar);
+      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+      getSupportActionBar().setHomeButtonEnabled(true);
+      getSupportActionBar().setDisplayShowTitleEnabled(true);
+      getSupportActionBar().setTitle(getResources().getString(R.string.shareApps));
+    }
+  }
+
   @Override public void onBackPressed() {
     //        try{
     ////            unregisterReceiver(wifireceiver);
@@ -172,7 +186,7 @@ public class HighwayActivity extends ActivityView implements HighwayView {
     if (enable) {
       progressBarLayout.setVisibility(View.GONE);
       groupButtonsLayout.setVisibility(View.VISIBLE);
-      System.out.println("Activating the buttons !!!!!!!!");
+      System.out.println("Activating the buttons !");
     } else {//disable
       progressBarLayout.setVisibility(View.VISIBLE);
       groupButtonsLayout.setVisibility(View.GONE);
@@ -319,7 +333,7 @@ public class HighwayActivity extends ActivityView implements HighwayView {
     startActivity(history);
   }
 
-  @Override public void openChatHotspot(ArrayList<String> pathsFromOutsideShare) {
+  @Override public void openChatHotspot(ArrayList<String> pathsFromOutsideShare, String deviceName) {
     Intent history =
         new Intent().setClass(HighwayActivity.this, HighwayTransferRecordActivity.class);
     System.out.println("Highway activity : going to start the transferRecordActivity !!!!");
