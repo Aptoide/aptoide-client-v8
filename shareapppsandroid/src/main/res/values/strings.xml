@@ -2,36 +2,15 @@
 <resources>
 
   <string name="app_name">Aptoide Lite</string>
-  <!--<string name="action_settings">My Applications</string>-->
-  <!--<string name="title_activity_download_apk">DownloadApk</string>-->
-  <!--<string name="apkfy_wizard_text">Don\'t worry, we didn\'t forget about your app.\nThe download will start in a moment.</string>-->
-
 
   <string name="youSent">You <b>sent</b> this app</string>
   <string name="youReceived">You <b>received</b> this app</string>
   <string name="youAreSending">You are <b>sending</b> this app</string>
 
-  <!--<string name="downloadInProgress">Download in progress</string>-->
-  <!--<string name="downloadComplete">Download complete</string>-->
-  <!--<string name="downloadCompleted">Download completed!</string>-->
-  <!--<string name="downloadCanceled">Download was canceled</string>-->
-
   <string name="ok">OK</string>
-  <!--<string name="alreadyDownloading">Another Download in progress!</string>-->
-
-  <!--<string name="updating">Updating </string>-->
-  <!--<string name="apkBuilding">Building apk &#8230;</string>-->
-  <!--<string name="completedDeltaProcess">Delta process complete</string>-->
-  <!--<string name="AptoideDeltaUpdates">Aptoide Delta Updates</string>-->
-  <!--<string name="savedDuringDownload">During this download you saved </string>-->
-
-  <!--<string name="preparingApp">Preparing your app &#8230;</string>-->
-
-  <!--<string name="refreshing">Refreshing &#8230;</string>-->
 
   <string name="enablingWifi">Enabling the Wifi functionality</string>
   <string name="noHotspotYet">Please, you or your friend(s) should create a hotspot</string>
-  <!--<string name="lollipopError">This option is not available for this Android version yet. Soon it will be updated.</string>-->
   <string name="couldNotCreateHotspot">Couldn\'t create the hotspot</string>
   <string name="unkownHotspotError">We are sorry, there was an error while trying to create the hotspot</string>
 
@@ -69,15 +48,6 @@
   <string name="errorAppVersionNew">There was an error while loading the file %1$s. \nPlease check if the version of your device is higher or the same as the version of the %2$s that you received.</string>
 
   <string name="alertDeleteApp">Are you sure you want to delete the %1$s application?</string>
-
-  <!--<string name="maxUpdates">99+</string>-->
-  <!--<string name="updateMilestone">Update - Milestone</string>-->
-  <!--<string name="youAlreadySaved">You already saved </string>-->
-
-  <!--<string name="downloadingApp">Downloading app &#8230;</string>-->
-  <!--<string name="hide">Hide</string>-->
-  <!--<string name="sendingToBack">Sending to background &#8230;</string>-->
-  <!--<string name="cancelling">Cancelling &#8230;</string>-->
 
   <string name="shareApps">Share APPS</string>
   <string name="createGroup">Create Group</string>
