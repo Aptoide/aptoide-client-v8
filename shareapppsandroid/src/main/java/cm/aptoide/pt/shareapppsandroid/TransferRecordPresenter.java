@@ -60,10 +60,12 @@ public class TransferRecordPresenter implements Presenter {
               transferRecordManager.startedSending(appName, packageName, needReSend, isSent);
           if (!listOfApps.contains(tmp)) {
             listOfApps.add(tmp);
+            view.showNewCard(tmp);
           }
         } else {
-          listOfApps.get(positionToReSend).setSent(isSent);
-          listOfApps.get(positionToReSend).setNeedReSend(needReSend);
+//          listOfApps.get(positionToReSend).setSent(isSent);
+//          listOfApps.get(positionToReSend).setNeedReSend(needReSend);
+          view.updateItemStatus(positionToReSend, isSent, needReSend);
         }
       }
 

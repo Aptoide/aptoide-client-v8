@@ -812,6 +812,13 @@ public class HighwayTransferRecordActivity extends ActivityView
     }
   }
 
+  @Override
+  public void updateItemStatus(int positionToReSend, boolean isSent, boolean needReSend) {
+    if(adapter!=null){
+      adapter.updateItem(positionToReSend, isSent, needReSend);
+    }
+  }
+
   @Override public void showNoConnectedClientsToast() {
     Toast.makeText(HighwayTransferRecordActivity.this,
         HighwayTransferRecordActivity.this.getResources()

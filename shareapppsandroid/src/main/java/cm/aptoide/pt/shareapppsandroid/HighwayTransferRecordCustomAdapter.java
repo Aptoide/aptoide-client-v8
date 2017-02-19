@@ -174,6 +174,12 @@ public class HighwayTransferRecordCustomAdapter extends BaseAdapter {
     notifyDataSetChanged();
   }
 
+  public void updateItem(int positionToReSend, boolean isSent, boolean needReSend) {
+    listOfItems.get(positionToReSend).setNeedReSend(needReSend);
+    listOfItems.get(positionToReSend).setSent(isSent);
+
+  }
+
   public static class ViewHolder {
     TextView senderInfo;
     ImageView appImageIcon;

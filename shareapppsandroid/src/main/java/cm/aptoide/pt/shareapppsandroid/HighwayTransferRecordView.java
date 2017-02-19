@@ -16,6 +16,8 @@ public interface HighwayTransferRecordView {
 
   void showNewCard(HighwayTransferRecordItem item);
 
+  void updateItemStatus(int positionToReSend, boolean isSent, boolean needReSend);//could change to the packageName
+
   void showNoConnectedClientsToast();
 
   void openAppSelectionView();
