@@ -44,21 +44,19 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
   public static ListFullReviewsRequest of(long storeId, int limit, int offset,
       BaseRequestWithStore.StoreCredentials storeCredentials, String accessToken,
       String aptoideClientUUID) {
-    String username = storeCredentials.getUsername();
-    String password = storeCredentials.getPasswordSha1();
 
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
     Body body = new Body(storeId, limit, offset, ManagerPreferences.getAndResetForceServerRefresh(),
-        username, password);
+        storeCredentials);
     return new ListFullReviewsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
   public static ListFullReviewsRequest ofAction(String url, boolean refresh, String accessToken,
-      String aptoideClientUUID) {
+      String aptoideClientUUID, BaseRequestWithStore.StoreCredentials storeCredentials) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
     return new ListFullReviewsRequest(url.replace("listFullReviews", ""),
-        (Body) decorator.decorate(new Body(refresh), accessToken), BASE_HOST);
+        (Body) decorator.decorate(new Body(refresh, storeCredentials), accessToken), BASE_HOST);
   }
 
   public static ListFullReviewsRequest of(String storeName, String packageName, String accessToken,
@@ -101,7 +99,7 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
   }
 
   @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) public static class Body
-      extends BaseBody implements Endless {
+      extends BaseBodyWithStore implements Endless {
 
     @Getter private Integer limit;
     @Getter @Setter private int offset;
@@ -119,22 +117,18 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
     private String storeName;
     private Integer subLimit;
 
-    private String store_user;
-    private String store_pass_sha1;
-
-    public Body(boolean refresh) {
+    public Body(boolean refresh, BaseRequestWithStore.StoreCredentials storeCredentials) {
+      super(storeCredentials);
       this.refresh = refresh;
     }
 
-    public Body(long storeId, int limit, int offset, boolean refresh, String username,
-        String password) {
-
+    public Body(long storeId, int limit, int offset, boolean refresh,
+        BaseRequestWithStore.StoreCredentials storeCredentials) {
+      super(storeCredentials);
       this.storeId = storeId;
       this.limit = limit;
       this.offset = offset;
       this.refresh = refresh;
-      this.store_user = username;
-      this.store_pass_sha1 = password;
     }
 
     public Body(String storeName, String packageName, int limit, int subLimit, boolean refresh) {

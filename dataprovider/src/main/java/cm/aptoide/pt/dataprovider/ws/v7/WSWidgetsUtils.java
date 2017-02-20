@@ -96,7 +96,8 @@ public class WSWidgetsUtils {
               .map(listApps -> wsWidget);
 
         case REVIEWS_GROUP:
-          return ListFullReviewsRequest.ofAction(url, refresh, accessToken, aptoideClientUuid)
+          return ListFullReviewsRequest.ofAction(url, refresh, accessToken, aptoideClientUuid,
+              storeCredentials)
               .observe(refresh)
               .observeOn(Schedulers.io())
               .doOnNext(wsWidget::setViewObject)
