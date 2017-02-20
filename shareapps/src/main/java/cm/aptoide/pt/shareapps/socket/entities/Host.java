@@ -4,11 +4,12 @@ import java.io.Serializable;
 import java.net.ServerSocket;
 import java.net.Socket;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * Created by neuro on 27-01-2017.
  */
-@Data public class Host implements Serializable {
+@Data @Accessors(chain = true) public class Host implements Serializable {
   private  String ip;
   private  int port;
 

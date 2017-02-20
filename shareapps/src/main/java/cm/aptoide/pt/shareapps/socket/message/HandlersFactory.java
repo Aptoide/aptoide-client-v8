@@ -15,10 +15,8 @@ import cm.aptoide.pt.shareapps.socket.message.messages.ReceiveApk;
 import cm.aptoide.pt.shareapps.socket.message.messages.RequestPermissionToSend;
 import cm.aptoide.pt.shareapps.socket.message.messages.SendApk;
 import cm.aptoide.pt.shareapps.socket.message.server.AptoideMessageServerSocket;
-import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -106,27 +104,14 @@ public class HandlersFactory {
         ackMessage.setSuccess(true);
 
         messageSender.send(ackMessage);
-        Host host = receiveApk.getLocalHost();
+        Host receiveApkServerHost = receiveApk.getServerHost();
 
         changeFilesRootDir(receiveApk.getAndroidAppInfo().getFiles());
 
-        // TODO: 03-02-2017 neuro apagar
-        temp(receiveApk.getAndroidAppInfo().getFiles());
-
-        new AptoideFileClientSocket(host.getIp(), host.getPort(),
+        new AptoideFileClientSocket(receiveApkServerHost.getIp(), receiveApkServerHost.getPort(),
             receiveApk.getAndroidAppInfo().getFiles()).start();
       } else {
         messageSender.send(ackMessage);
-      }
-    }
-
-    private void temp(List<FileInfo> files) {
-      Random random = new Random();
-      char r = (char) random.nextInt(255);
-      String parentDirectory = "/tmp/a/" + dir.incrementAndGet();
-      new File(parentDirectory).mkdirs();
-      for (FileInfo file : files) {
-        file.setParentDirectory(parentDirectory);
       }
     }
 
