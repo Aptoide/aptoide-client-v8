@@ -189,7 +189,10 @@ dependencies {
     transitive = true;
   }
 
+  compile 'com.squareup.okhttp3:okhttp:3.5.0'
+
   // Parceler - https://github.com/johncarl81/parceler
   //compile 'org.parceler:parceler-api:1.1.6'
   //annotationProcessor 'org.parceler:parceler:1.1.6'
+
 }

@@ -13,10 +13,13 @@ import android.net.Uri;
 import android.os.Build;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.v8engine.websocket.SearchWebSocketManager;
 import cm.aptoide.pt.v8engine.websocket.WebSocketSingleton;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created with IntelliJ IDEA. User: brutus Date: 26-09-2013 Time: 10:32 To change this template
@@ -42,12 +45,12 @@ public class SuggestionProvider extends SearchRecentSuggestionsProvider {
 
     Cursor c = super.query(uri, projection, selection, selectionArgs, sortOrder);
 
-    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.ECLAIR_MR1 && c != null) {
+    if (c != null) {
       BlockingQueue<MatrixCursor> arrayBlockingQueue = new ArrayBlockingQueue<MatrixCursor>(1);
-      WebSocketSingleton.getInstance().setBlockingQueue(arrayBlockingQueue);
+      SearchWebSocketManager.setBlockingQueue(arrayBlockingQueue);
 
       MatrixCursor matrix_cursor = null;
-      WebSocketSingleton.getInstance().send(selectionArgs[0]);
+      SearchWebSocketManager.getWebSocket().send(buildJson(selectionArgs[0]));
       try {
         matrix_cursor = arrayBlockingQueue.poll(5, TimeUnit.SECONDS);
 
@@ -67,5 +70,16 @@ public class SuggestionProvider extends SearchRecentSuggestionsProvider {
     } else {
       return null;
     }
+  }
+
+  private String buildJson(String query) {
+    JSONObject jsonObject = new JSONObject();
+    try {
+      jsonObject.put("query", query);
+      jsonObject.put("limit", 5);
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
+    return jsonObject.toString();
   }
 }

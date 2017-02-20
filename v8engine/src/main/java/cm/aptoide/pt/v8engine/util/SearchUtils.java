@@ -18,6 +18,7 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.activity.SearchActivity;
+import cm.aptoide.pt.v8engine.websocket.SearchWebSocketManager;
 import cm.aptoide.pt.v8engine.websocket.WebSocketSingleton;
 
 /**
@@ -79,11 +80,14 @@ public class SearchUtils {
       if (!hasFocus) {
         MenuItemCompat.collapseActionView(searchItem);
 
-        WebSocketSingleton.getInstance().disconnect();
+
+        SearchWebSocketManager.disconnect();
       }
     });
 
-    searchView.setOnSearchClickListener(v -> WebSocketSingleton.getInstance().connect());
+
+
+    searchView.setOnSearchClickListener(v -> new SearchWebSocketManager().connect());
   }
 
   public static void setupInsideStoreSearchView(Menu menu, NavigationManagerV4 navigationManager,
