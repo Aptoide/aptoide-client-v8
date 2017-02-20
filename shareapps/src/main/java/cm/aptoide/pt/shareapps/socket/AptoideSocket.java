@@ -30,6 +30,7 @@ public abstract class AptoideSocket {
 
   public AptoideSocket startAsync() {
     executorService.execute(this::start);
+    System.out.println("Started " + getClass().getSimpleName() + " AptoideSocket.");
     return this;
   }
 
