@@ -127,4 +127,8 @@ public class WizardFragment extends FragmentView {
       nextIcon.setVisibility(View.GONE);
     }
   }
+
+  public boolean onBackPressed() {
+    return ((FragmentView)viewPagerAdapter.getItem(viewPager.getCurrentItem())).onBackPressed();
+  }
 }

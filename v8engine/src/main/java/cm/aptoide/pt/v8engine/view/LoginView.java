@@ -27,11 +27,9 @@ public interface LoginView extends GoogleLoginView {
 
   void showCheckAptoideCredentialsMessage();
 
-  void showInputFields();
+  void setLoginAreaVisible();
 
-  void showLoginArea();
-
-  void showSignUpArea();
+  void setSignUpAreaVisible();
 
   void hideFacebookLogin();
 

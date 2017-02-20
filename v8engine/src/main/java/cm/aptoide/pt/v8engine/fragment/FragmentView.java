@@ -82,4 +82,8 @@ public abstract class FragmentView extends RxFragment implements cm.aptoide.pt.v
 
     super.onSaveInstanceState(outState);
   }
+
+  public boolean onBackPressed() {
+    return false;
+  }
 }

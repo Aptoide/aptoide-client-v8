@@ -58,8 +58,6 @@
         android:layout_weight="1"
         android:text="@string/register"
         style="?attr/customButtonWhite"
-        android:visibility="visible"
-        tools:visibility="visible"
         />
 
     <Button
@@ -69,8 +67,6 @@
         android:layout_weight="1"
         android:text="@string/login"
         style="?attr/customButtonWhite"
-        android:visibility="visible"
-        tools:visibility="visible"
         />
   </LinearLayout>
 

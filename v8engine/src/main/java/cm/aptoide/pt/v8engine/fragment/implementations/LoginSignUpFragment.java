@@ -72,15 +72,15 @@ public class LoginSignUpFragment extends GoogleLoginFragment implements LoginVie
     return new LoginSignUpFragment();
   }
 
-  protected int getLayoutId() {
-    return R.layout.fragment_login_sign_up;
-  }
-
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     super.onCreateView(inflater, container, savedInstanceState);
     return inflater.inflate(getLayoutId(), container, false);
+  }
+
+  protected int getLayoutId() {
+    return R.layout.fragment_login_sign_up;
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -94,27 +94,6 @@ public class LoginSignUpFragment extends GoogleLoginFragment implements LoginVie
         ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     attachPresenter(new LoginPresenter(this, accountManager, facebookRequestedPermissions),
         savedInstanceState);
-  }
-
-  @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-    super.onActivityCreated(savedInstanceState);
-
-    successSnackbar =
-        Snackbar.make(showLoginButton, cm.aptoide.accountmanager.R.string.login_successful,
-            Snackbar.LENGTH_SHORT);
-
-    final Context context = getContext();
-
-    facebookEmailRequiredDialog = new AlertDialog.Builder(context).setMessage(
-        cm.aptoide.accountmanager.R.string.facebook_email_permission_regected_message)
-        .setPositiveButton(cm.aptoide.accountmanager.R.string.facebook_grant_permission_button,
-            (dialog, which) -> {
-              facebookLoginManager.logInWithReadPermissions(getActivity(), Arrays.asList("email"));
-            })
-        .setNegativeButton(android.R.string.cancel, null)
-        .create();
-
-    progressDialog = GenericDialogs.createGenericPleaseWaitDialog(context);
   }
 
   private void bindViews(View view) {
@@ -138,6 +117,51 @@ public class LoginSignUpFragment extends GoogleLoginFragment implements LoginVie
     inputCredentials = view.findViewById(R.id.login_fields);
     loginArea = view.findViewById(R.id.login_button_area);
     signUpArea = view.findViewById(R.id.sign_up_button_area);
+
+    successSnackbar =
+        Snackbar.make(showLoginButton, cm.aptoide.accountmanager.R.string.login_successful,
+            Snackbar.LENGTH_SHORT);
+
+    final Context context = getContext();
+
+    facebookEmailRequiredDialog = new AlertDialog.Builder(context).setMessage(
+        cm.aptoide.accountmanager.R.string.facebook_email_permission_regected_message)
+        .setPositiveButton(cm.aptoide.accountmanager.R.string.facebook_grant_permission_button,
+            (dialog, which) -> {
+              facebookLoginManager.logInWithReadPermissions(getActivity(), Arrays.asList("email"));
+            })
+        .setNegativeButton(android.R.string.cancel, null)
+        .create();
+
+    progressDialog = GenericDialogs.createGenericPleaseWaitDialog(context);
+  }
+
+  @Override protected SignInButton getGoogleButton() {
+    return googleLoginButton;
+  }
+
+  @Override protected void showGoogleLoginError() {
+    ShowMessage.asSnack(showLoginButton, cm.aptoide.accountmanager.R.string.unknown_error);
+  }
+
+  @Override public void showGoogleLogin() {
+    super.showGoogleLogin();
+    googleLoginButton.setVisibility(View.VISIBLE);
+  }
+
+  @Override public void hideGoogleLogin() {
+    super.hideGoogleLogin();
+    googleLoginButton.setVisibility(View.GONE);
+  }
+
+  @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    callbackManager.onActivityResult(requestCode, resultCode, data);
+  }
+
+  @Override public Observable<GoogleAccountViewModel> googleLoginClick() {
+    // ??
+    return null;
   }
 
   @Override public void showLoading() {
@@ -180,64 +204,38 @@ public class LoginSignUpFragment extends GoogleLoginFragment implements LoginVie
     });
   }
 
-  @Override public void showGoogleLogin() {
-    super.showGoogleLogin();
-    googleLoginButton.setVisibility(View.VISIBLE);
-  }
-
-  @Override public void hideGoogleLogin() {
-    super.hideGoogleLogin();
-    googleLoginButton.setVisibility(View.GONE);
-  }
-
-  @Override public void showInputFields() {
-    inputCredentials.setVisibility(View.VISIBLE);
-  }
-
-  @Override public void showLoginArea() {
-    loginArea.setVisibility(View.VISIBLE);
-    signUpArea.setVisibility(View.GONE);
-  }
-
-  @Override public void showSignUpArea() {
-    loginArea.setVisibility(View.GONE);
-    signUpArea.setVisibility(View.VISIBLE);
-  }
-
-
-  @Override public Observable<GoogleAccountViewModel> googleLoginClick() {
-    // ??
-    return null;
-  }
-
-  @Override public void hideFacebookLogin() {
-    facebookLoginButton.setVisibility(View.GONE);
-  }
-
-  @Override public Observable<FacebookAccountViewModel> facebookLoginClick() {
-    return facebookLoginSubject;
-  }
-
   @Override public void showPermissionsRequiredMessage() {
     facebookEmailRequiredDialog.show();
   }
 
-  @Override public void navigateToMainView() {
-    getActivity().finish();
-  }
-
-  @Override public Observable<Void> showAptoideLoginClick() {
-    return RxView.clicks(showLoginButton);
-  }
-
-  @Override public Observable<AptoideAccountViewModel> aptoideLoginClick() {
-    return RxView.clicks(buttonLogin)
-        .map(click -> new AptoideAccountViewModel(aptoideEmailEditText.getText().toString(),
-            aptoidePasswordEditText.getText().toString()));
-  }
-
   @Override public void showCheckAptoideCredentialsMessage() {
     ShowMessage.asSnack(showLoginButton, cm.aptoide.accountmanager.R.string.fields_cannot_empty);
+  }
+
+  @Override public void setLoginAreaVisible() {
+    toggleInputFieldsVisibility(true);
+    showLoginButton.setVisibility(View.GONE);
+    loginArea.setVisibility(View.VISIBLE);
+    signUpArea.setVisibility(View.GONE);
+  }
+
+  private void toggleInputFieldsVisibility(boolean visible) {
+    inputCredentials.setVisibility(visible ? View.VISIBLE : View.GONE);
+    if(!visible) {
+      showSignUpButton.setVisibility(View.VISIBLE);
+      showLoginButton.setVisibility(View.VISIBLE);
+    }
+  }
+
+  @Override public void setSignUpAreaVisible() {
+    toggleInputFieldsVisibility(true);
+    showSignUpButton.setVisibility(View.GONE);
+    loginArea.setVisibility(View.GONE);
+    signUpArea.setVisibility(View.VISIBLE);
+  }
+
+  @Override public void hideFacebookLogin() {
+    facebookLoginButton.setVisibility(View.GONE);
   }
 
   @Override public void navigateToForgotPasswordView() {
@@ -259,12 +257,16 @@ public class LoginSignUpFragment extends GoogleLoginFragment implements LoginVie
     return RxView.clicks(hideShowAptoidePasswordButton);
   }
 
+  @Override public Observable<Void> forgotPasswordClick() {
+    return RxView.clicks(forgotPasswordButton);
+  }
+
   @Override public Observable<Void> showSignUpClick() {
     return RxView.clicks(showSignUpButton);
   }
 
-  @Override public Observable<Void> forgotPasswordClick() {
-    return RxView.clicks(forgotPasswordButton);
+  @Override public void navigateToMainView() {
+    getActivity().finish();
   }
 
   @Override public Observable<Void> successMessageShown() {
@@ -275,24 +277,35 @@ public class LoginSignUpFragment extends GoogleLoginFragment implements LoginVie
     successSnackbar.show();
   }
 
-  @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    super.onActivityResult(requestCode, resultCode, data);
-    callbackManager.onActivityResult(requestCode, resultCode, data);
+  @Override public Observable<FacebookAccountViewModel> facebookLoginClick() {
+    return facebookLoginSubject;
   }
 
-  @Override public void onDestroy() {
-    super.onDestroy();
+  @Override public Observable<Void> showAptoideLoginClick() {
+    return RxView.clicks(showLoginButton);
   }
 
-  @Override protected SignInButton getGoogleButton() {
-    return googleLoginButton;
-  }
-
-  @Override protected void showGoogleLoginError() {
-    ShowMessage.asSnack(showLoginButton, cm.aptoide.accountmanager.R.string.unknown_error);
+  @Override public Observable<AptoideAccountViewModel> aptoideLoginClick() {
+    return RxView.clicks(buttonLogin)
+        .map(click -> new AptoideAccountViewModel(aptoideEmailEditText.getText().toString(),
+            aptoidePasswordEditText.getText().toString()));
   }
 
   private void showFacebookLoginError(@StringRes int errorRes) {
     ShowMessage.asSnack(showLoginButton, errorRes);
+  }
+
+  @Override public boolean onBackPressed() {
+    if (areInputFieldsVisibile()) {
+      toggleInputFieldsVisibility(false);
+      return true;
+    }
+
+    return super.onBackPressed();
+  }
+
+  // to use when back is pressed
+  private boolean areInputFieldsVisibile() {
+    return inputCredentials.getVisibility() == View.VISIBLE;
   }
 }

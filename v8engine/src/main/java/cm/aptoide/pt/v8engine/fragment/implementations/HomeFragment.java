@@ -28,15 +28,15 @@ import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.Event;
+import cm.aptoide.pt.navigation.AccountNavigator;
 import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.StorePagerAdapter;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.navigation.AccountNavigator;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.interfaces.DrawerFragment;
+import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
@@ -50,7 +50,7 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created by neuro on 09-05-2016.
  */
-public class HomeFragment extends StoreFragment implements DrawerFragment {
+public class HomeFragment extends StoreFragment {
 
   public static final String APTOIDE_FACEBOOK_LINK = "http://www.facebook.com/aptoide";
   public static final String FACEBOOK_PACKAGE_NAME = "com.facebook.katana";
@@ -331,16 +331,21 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
     toolbar.setNavigationOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
   }
 
-  @Override public boolean isDrawerOpened() {
+  private boolean isDrawerOpened() {
     return drawerLayout.isDrawerOpen(Gravity.LEFT);
   }
 
-  @Override public void openDrawer() {
-    drawerLayout.openDrawer(Gravity.LEFT);
+  private void closeDrawer() {
+    drawerLayout.closeDrawers();
   }
 
-  @Override public void closeDrawer() {
-    drawerLayout.closeDrawers();
+  @Override public boolean onBackPressed() {
+    if(isDrawerOpened()){
+      closeDrawer();
+      return true;
+    }
+
+    return super.onBackPressed();
   }
 
   public class ChangeTabReceiver extends BroadcastReceiver {
