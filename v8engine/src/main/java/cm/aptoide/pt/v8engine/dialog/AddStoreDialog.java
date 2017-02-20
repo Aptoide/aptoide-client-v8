@@ -98,6 +98,9 @@ public class AddStoreDialog extends DialogFragment {
     setupSearchView(view);
     setupStoreSearch(searchView);
     mSubscriptions.add(RxView.clicks(addStoreButton).subscribe(click -> {
+      if (givenStoreName == null) {
+        givenStoreName = searchView.getQuery().toString();
+      }
       if (givenStoreName.length() > 0) {
         AddStoreDialog.this.storeName = givenStoreName;
         AptoideUtils.SystemU.hideKeyboard(getActivity());
