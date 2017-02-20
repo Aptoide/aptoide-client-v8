@@ -25,6 +25,10 @@ import lombok.Data;
     return new Host(serverSocket.getInetAddress().getHostAddress(), serverSocket.getLocalPort());
   }
 
+  public static Host fromLocalhost(Socket socket) {
+    return new Host(socket.getLocalAddress().getHostAddress(), socket.getLocalPort());
+  }
+
   @Override public int hashCode() {
     int result = ip != null ? ip.hashCode() : 0;
     result = 31 * result + port;

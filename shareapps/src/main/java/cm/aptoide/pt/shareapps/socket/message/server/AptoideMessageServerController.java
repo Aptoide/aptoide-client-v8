@@ -15,10 +15,12 @@ public class AptoideMessageServerController extends AptoideMessageController
     implements Sender<Message> {
 
   @Getter private final Host host;
+  @Getter private final Host localHost;
 
   public AptoideMessageServerController(AptoideMessageServerSocket aptoideMessageServerSocket,
-      Host host) {
+      Host localHost, Host host) {
     super(HandlersFactory.newDefaultServerHandlersList(aptoideMessageServerSocket));
+    this.localHost = localHost;
     this.host = host;
   }
 }
