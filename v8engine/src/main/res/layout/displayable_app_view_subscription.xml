@@ -114,7 +114,7 @@
         android:textAppearance="?android:attr/textAppearanceSmallInverse"
         android:textColor="@color/app_view_follow_orange"
         android:textSize="8.4sp"
-        tools:text="@string/appview_follow_store_button_text"
+        tools:text="@string/follow"
         />
 
   </LinearLayout>

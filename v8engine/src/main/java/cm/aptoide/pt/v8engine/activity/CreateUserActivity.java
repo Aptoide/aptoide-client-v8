@@ -23,6 +23,11 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.OAuthException;
+import cm.aptoide.accountmanager.ws.CreateUserRequest;
+import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.accountmanager.OAuthException;
 import cm.aptoide.accountmanager.UserValidationException;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.preferences.Application;
@@ -47,8 +52,6 @@ import rx.subscriptions.CompositeSubscription;
 
 public class CreateUserActivity extends AccountPermissionsBaseActivity {
 
-  private static final String TYPE_STORAGE = "storage";
-  private static final String TYPE_CAMERA = "camera";
   private static int CREATE_USER_REQUEST_CODE = 0; //1:Username and Avatar 2: Username
 
   private String avatarPath;
@@ -100,7 +103,7 @@ public class CreateUserActivity extends AccountPermissionsBaseActivity {
   }
 
   @Override public void loadImage(Uri imagePath) {
-    ImageLoader.loadWithCircleTransform(imagePath, avatarImage);
+    ImageLoader.with(this).loadWithCircleTransform(imagePath, avatarImage, false);
   }
 
   private void setupListeners() {

@@ -247,10 +247,12 @@ public final class Database {
       if (obj != null && obj.isValid()) {
         obj.deleteFromRealm();
         realm.commitTransaction();
+      } else {
+        realm.cancelTransaction();
       }
     } catch (Exception ex) {
-      realm.cancelTransaction();
       CrashReport.getInstance().log(ex);
+      realm.cancelTransaction();
     }
   }
 

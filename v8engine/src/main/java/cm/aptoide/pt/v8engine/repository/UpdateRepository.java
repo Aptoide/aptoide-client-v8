@@ -58,7 +58,7 @@ public class UpdateRepository implements Repository<Update, String> {
   private Observable<List<App>> getNetworkUpdates(List<Long> storeIds, boolean bypassCache) {
     Logger.d(TAG, String.format("getNetworkUpdates() -> using %d stores", storeIds.size()));
     return ListAppsUpdatesRequest.of(storeIds, accountManager.getAccessToken(),
-        aptoideClientUUID.getAptoideClientUUID()).observe(bypassCache).map(result -> {
+        aptoideClientUUID.getUniqueIdentifier()).observe(bypassCache).map(result -> {
       if (result != null && result.isOk()) {
         return result.getList();
       }

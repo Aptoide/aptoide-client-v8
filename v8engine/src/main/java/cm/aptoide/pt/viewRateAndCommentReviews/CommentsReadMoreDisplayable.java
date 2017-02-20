@@ -30,12 +30,12 @@ public class CommentsReadMoreDisplayable extends Displayable {
     this.isReview = isReview;
   }
 
-  @Override public int getViewLayout() {
-    return R.layout.comments_read_more_layout;
-  }
-
   @Override protected Configs getConfig() {
     return new Configs(1, true);
+  }
+
+  @Override public int getViewLayout() {
+    return R.layout.comments_read_more_layout;
   }
 
   public long getResourceId() {

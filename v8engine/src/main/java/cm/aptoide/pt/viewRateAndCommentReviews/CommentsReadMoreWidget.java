@@ -41,7 +41,7 @@ public class CommentsReadMoreWidget extends Widget<CommentsReadMoreDisplayable> 
     accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
     compositeSubscription.add(RxView.clicks(readMoreButton).subscribe(aVoid -> {
       ListCommentsRequest.of(displayable.getResourceId(), displayable.getNext(), 100,
-          accountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID(),
+          accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier(),
           displayable.isReview())
           .execute(listComments -> displayable.getCommentAdder()
               .addComment(listComments.getDatalist().getList()));

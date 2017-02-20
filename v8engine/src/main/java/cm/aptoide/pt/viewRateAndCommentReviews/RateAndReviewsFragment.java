@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
@@ -29,7 +30,6 @@ import cm.aptoide.pt.navigation.AccountNavigator;
 import cm.aptoide.pt.v8engine.adapters.CommentsAdapter;
 import cm.aptoide.pt.v8engine.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.util.DialogUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
@@ -49,13 +49,8 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     implements ItemCommentAdderView<Review, CommentsAdapter> {
 
   private static final String TAG = RateAndReviewsFragment.class.getSimpleName();
-  @Getter private static final String APP_ID = "app_id";
-  @Getter private static final String PACKAGE_NAME = "package_name";
-  @Getter private static final String STORE_NAME = "store_name";
-  @Getter private static final String APP_NAME = "app_name";
-  @Getter private static final String REVIEW_ID = "review_id";
-  @Getter private static final String STORE_THEME = "store_theme";
   private AptoideClientUUID aptoideClientUUID;
+  private DialogUtils dialogUtils;
 
   private long appId;
   @Getter private long reviewId;
@@ -74,17 +69,19 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
+    dialogUtils = new DialogUtils(accountManager, aptoideClientUUID,
+        new AccountNavigator(getContext(), accountManager));
   }
 
   public static RateAndReviewsFragment newInstance(long appId, String appName, String storeName,
       String packageName, String storeTheme) {
     RateAndReviewsFragment fragment = new RateAndReviewsFragment();
     Bundle args = new Bundle();
-    args.putLong(APP_ID, appId);
-    args.putString(APP_NAME, appName);
-    args.putString(STORE_NAME, storeName);
-    args.putString(PACKAGE_NAME, packageName);
-    args.putString(STORE_THEME, storeTheme);
+    args.putLong(BundleCons.APP_ID, appId);
+    args.putString(BundleCons.APP_NAME, appName);
+    args.putString(BundleCons.STORE_NAME, storeName);
+    args.putString(BundleCons.PACKAGE_NAME, packageName);
+    args.putString(BundleCons.STORE_THEME, storeTheme);
     fragment.setArguments(args);
     return fragment;
   }
@@ -93,11 +90,11 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
       String packageName, long reviewId) {
     RateAndReviewsFragment fragment = new RateAndReviewsFragment();
     Bundle args = new Bundle();
-    args.putLong(APP_ID, appId);
-    args.putString(APP_NAME, appName);
-    args.putString(STORE_NAME, storeName);
-    args.putString(PACKAGE_NAME, packageName);
-    args.putLong(REVIEW_ID, reviewId);
+    args.putLong(BundleCons.APP_ID, appId);
+    args.putString(BundleCons.APP_NAME, appName);
+    args.putString(BundleCons.STORE_NAME, storeName);
+    args.putString(BundleCons.PACKAGE_NAME, packageName);
+    args.putLong(BundleCons.REVIEW_ID, reviewId);
     fragment.setArguments(args);
     return fragment;
   }
@@ -129,28 +126,21 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
       return true;
     }
     if (itemId == R.id.menu_install) {
-      ((FragmentShower) getContext()).pushFragment(V8Engine.getFragmentProvider()
+      getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
           .newAppViewFragment(packageName, storeName, AppViewFragment.OpenType.OPEN_AND_INSTALL));
       return true;
     }
     return super.onOptionsItemSelected(item);
   }
 
-  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    super.load(create, refresh, savedInstanceState);
-    Logger.d(TAG, "Other versions should refresh? " + create);
-    fetchRating(refresh);
-    fetchReviews();
-  }
-
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
-    appId = args.getLong(APP_ID);
-    reviewId = args.getLong(REVIEW_ID);
-    packageName = args.getString(PACKAGE_NAME);
-    storeName = args.getString(STORE_NAME);
-    appName = args.getString(APP_NAME);
-    storeTheme = args.getString(STORE_THEME);
+    appId = args.getLong(BundleCons.APP_ID);
+    reviewId = args.getLong(BundleCons.REVIEW_ID);
+    packageName = args.getString(BundleCons.PACKAGE_NAME);
+    storeName = args.getString(BundleCons.STORE_NAME);
+    appName = args.getString(BundleCons.APP_NAME);
+    storeTheme = args.getString(BundleCons.STORE_THEME);
   }
 
   @Override public int getContentViewId() {
@@ -167,10 +157,26 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     ratingBarsLayout = new RatingBarsLayout(view);
 
     floatingActionButton.setOnClickListener(v -> {
-      DialogUtils.showRateDialog(getActivity(), appName, packageName, storeName,
-          () -> fetchReviews(), accountManager,
-          new AccountNavigator(getActivity(), accountManager));
+      dialogUtils.showRateDialog(getActivity(), appName, packageName, storeName);
     });
+  }
+
+  private void invalidateReviews() {
+    clearDisplayables();
+    fetchReviews();
+  }
+
+  private void fetchReviews() {
+    ListReviewsRequest reviewsRequest =
+        ListReviewsRequest.of(storeName, packageName, accountManager.getAccessToken(),
+            aptoideClientUUID.getUniqueIdentifier());
+
+    getRecyclerView().removeOnScrollListener(endlessRecyclerOnScrollListener);
+    endlessRecyclerOnScrollListener =
+        new EndlessRecyclerOnScrollListener(this.getAdapter(), reviewsRequest,
+            new ListFullReviewsSuccessRequestListener(this, accountManager, aptoideClientUUID), Throwable::printStackTrace);
+    getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
+    endlessRecyclerOnScrollListener.onLoadMore(false);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -181,9 +187,16 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     }
   }
 
+  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    super.load(create, refresh, savedInstanceState);
+    Logger.d(TAG, "Other versions should refresh? " + create);
+    fetchRating(refresh);
+    fetchReviews();
+  }
+
   private void fetchRating(boolean refresh) {
     GetAppRequest.of(appId, accountManager.getAccessToken(),
-        aptoideClientUUID.getAptoideClientUUID(), packageName)
+        aptoideClientUUID.getUniqueIdentifier(), packageName)
         .observe(refresh)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
@@ -198,20 +211,6 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
         }, err -> {
           CrashReport.getInstance().log(err);
         });
-  }
-
-  private void fetchReviews() {
-    ListReviewsRequest reviewsRequest =
-        ListReviewsRequest.of(storeName, packageName, accountManager.getAccessToken(),
-            aptoideClientUUID.getAptoideClientUUID());
-
-    endlessRecyclerOnScrollListener =
-        new EndlessRecyclerOnScrollListener(this.getAdapter(), reviewsRequest,
-            new ListFullReviewsSuccessRequestListener(this, accountManager,
-                new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext())),
-            Throwable::printStackTrace);
-    getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
-    endlessRecyclerOnScrollListener.onLoadMore(false);
   }
 
   public void setupTitle(String title) {
@@ -260,5 +259,17 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
         getAdapter().notifyItemRemoved(i);
       }
     }
+  }
+
+  /**
+   * Bundle of constants
+   */
+  @Partners public static class BundleCons {
+    public static final String APP_ID = "app_id";
+    public static final String PACKAGE_NAME = "package_name";
+    public static final String STORE_NAME = "store_name";
+    public static final String APP_NAME = "app_name";
+    public static final String REVIEW_ID = "review_id";
+    public static final String STORE_THEME = "store_theme";
   }
 }

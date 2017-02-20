@@ -34,7 +34,7 @@ proguard/
 ### Aptoide team custom excludes
 *.iml
 .idea/*
-!.idea/codeStyleSettings.xml
+#.idea/codeStyleSettings.xml
 .DS_Store
 captures/
 

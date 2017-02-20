@@ -110,25 +110,6 @@ public class AptoideDownloadManager {
     startNextDownload();
   }
 
-  public void pauseDownload(String md5) {
-    downloadAccessor.get(md5).first().map(download -> {
-      download.setOverallDownloadStatus(Download.PAUSED);
-      downloadAccessor.save(download);
-      for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
-        FileDownloader.getImpl().pause(fileToDownload.getDownloadId());
-      }
-      return download;
-    }).subscribe(download -> {
-      Logger.d(TAG, "Download with " + md5 + " paused");
-    }, throwable -> {
-      if (throwable instanceof DownloadNotFoundException) {
-        Logger.d(TAG, "there are no download to pause with the md5: " + md5);
-      } else {
-        throwable.printStackTrace();
-      }
-    });
-  }
-
   /**
    * Observe changes to a download. This observable never completes it will emmit items whenever
    * the download state changes.
@@ -297,30 +278,46 @@ public class AptoideDownloadManager {
   }
 
   public void removeDownload(String md5) {
-    downloadAccessor.get(md5).map(download -> {
-      if (download == null) {
-        Observable.error(new DownloadNotFoundException());
-      }
-      for (int i = 0; i < download.getFilesToDownload().size(); i++) {
-        final FileToDownload fileToDownload = download.getFilesToDownload().get(i);
-        FileDownloader.getImpl()
-            .clear(fileToDownload.getDownloadId(), fileToDownload.getFilePath());
+    Observable.fromCallable(() -> pauseDownload(md5))
+        .flatMap(paused -> downloadAccessor.get(md5))
+        .first(download -> download.getOverallDownloadStatus() == Download.PAUSED)
+        .doOnNext(download -> {
+          for (int i = 0; i < download.getFilesToDownload().size(); i++) {
+            final FileToDownload fileToDownload = download.getFilesToDownload().get(i);
+            FileDownloader.getImpl()
+                .clear(fileToDownload.getDownloadId(), fileToDownload.getFilePath());
+          }
+        })
+        .subscribe(download -> {
+          deleteDownloadFiles(download);
+          deleteDownloadFromDb(download.getMd5());
+        }, throwable -> {
+          if (throwable instanceof NullPointerException) {
+            Logger.d(TAG, "Download item was null, are you pressing on remove button too fast?");
+          } else {
+            throwable.printStackTrace();
+          }
+        });
+  }
+
+  public Void pauseDownload(String md5) {
+    downloadAccessor.get(md5).first().map(download -> {
+      download.setOverallDownloadStatus(Download.PAUSED);
+      downloadAccessor.save(download);
+      for (int i = download.getFilesToDownload().size() - 1; i >= 0; i--) {
+        FileDownloader.getImpl().pause(download.getFilesToDownload().get(i).getDownloadId());
       }
       return download;
-    }).first(download -> download.getOverallDownloadStatus() != Download.PROGRESS).map(download -> {
-      deleteDownloadFiles(download);
-      deleteDownloadFromDb(download.getMd5());
-      return download;
-    }).subscribe(aVoid -> {
+    }).subscribe(download -> {
+      Logger.d(TAG, "Download with " + md5 + " paused");
     }, throwable -> {
       if (throwable instanceof DownloadNotFoundException) {
-        Logger.d(TAG, "Download not found, are you pressing on remove button too fast?");
-      } else if (throwable instanceof NullPointerException) {
-        Logger.d(TAG, "Download item was null, are you pressing on remove button too fast?");
+        Logger.d(TAG, "there are no download to pause with the md5: " + md5);
       } else {
         throwable.printStackTrace();
       }
     });
+    return null;
   }
 
   private void deleteDownloadFiles(Download download) {

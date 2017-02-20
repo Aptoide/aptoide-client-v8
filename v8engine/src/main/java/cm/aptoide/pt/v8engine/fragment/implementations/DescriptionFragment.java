@@ -127,7 +127,7 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
     } else if (hasAppId) {
       GetAppRequest.of(appId, V8Engine.getConfiguration().getPartnerId() == null ? null : storeName,
           StoreUtils.getStoreCredentials(storeName), accountManager.getAccessToken(),
-          aptoideClientUUID.getAptoideClientUUID(), packageName).execute(getApp -> {
+          aptoideClientUUID.getUniqueIdentifier(), packageName).execute(getApp -> {
         setupAppDescription(getApp);
         setupTitle(getApp);
         finishLoading();

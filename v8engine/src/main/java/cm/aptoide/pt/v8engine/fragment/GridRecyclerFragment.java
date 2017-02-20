@@ -33,6 +33,10 @@ public abstract class GridRecyclerFragment<T extends BaseAdapter>
     return R.id.recycler_view;
   }
 
+  @Override protected RecyclerView.LayoutManager createLayoutManager() {
+    return new BaseGridLayoutManager(getActivity(), getAdapter());
+  }
+
   @Override protected T createAdapter() {
     try {
       return (T) adapterClass.getConstructor().newInstance();
@@ -43,9 +47,5 @@ public abstract class GridRecyclerFragment<T extends BaseAdapter>
 
     // default case. code should never reach here
     return null;
-  }
-
-  @Override protected RecyclerView.LayoutManager createLayoutManager() {
-    return new BaseGridLayoutManager(getActivity(), getAdapter());
   }
 }

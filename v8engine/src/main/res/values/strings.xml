@@ -201,6 +201,7 @@
   <string name="social_timeline">Social Timeline</string>
   <string name="downloads">Downloads</string>
   <string name="apps_timeline"><b>Apps Timeline</b></string>
+  <string name="timeline"><b>Timeline</b></string>
   <string name="latest_reviews">Latest Reviews</string>
   <string name="latest_comments">Latest Comments</string>
   <string name="action">Action</string>
@@ -301,7 +302,7 @@
   <string name="create_store_displayable_message">Create your Store now and start sharing your apps!</string>
   <string name="create_store_displayable_button">CREATE STORE</string>
   <string name="my_store_created_displayable_message">Your Android App store</string>
-  <string name="create_store_displayable_created_store_message">You\'ve just created your Store!</string>
+  <string name="create_store_displayable_created_store_short_term_message">You\'ve just created your Store!</string>
   <string name="create_store_displayable_explore_message">Enter and explore all the possibilities</string>
   <string name="create_store_displayable_explore_button">Explore</string>
 
@@ -344,7 +345,7 @@
 
   <!-- Comments on store -->
   <string name="comment_store">Comment Store</string>
-  <string name="comment_store_title">Comments in this Store</string>
+  <string name="comment_store_title">Comments on this Store</string>
   <string name="be_the_first_to_send_feedback_about_this_store">Be the first to send feedback about this store</string>
 
 
@@ -364,6 +365,48 @@
   <string name="reviews_expand_button">%d Replies</string>
   <string name="out_of_space_dialog_title">Out of space</string>
   <string name="out_of_space_dialog_message">Please, free space in order to proceed.</string>
+  <string name="setting_category_autoupdate">%s Updates</string>
+  <string name="setting_category_autoupdate_title">Get %s Update notifications</string>
+  <string name="setting_category_autoupdate_message">Periodically check for %s new versions</string>
+  <string name="store_added_long_time_suggestion_message">show long term</string>
+  <string name="store_added_short_time_suggestion_message">show just created</string>
+  <string name="create_store_displayable_created_store_long_term_message">long term</string>
+  <string name="create_store_displayable_explore_long_term_button">View Store</string>
+  <string name="create_store_displayable_empty_description_message">Add a description for your Store. A good description helps you to get more followers and interaction.</string>
+
+  <!-- Address book -->
+  <string name="addressbook_increase_network_message">Increase your network.</string>
+  <string name="addressbook_connect_with_friends_message">Connect with friends.</string>
+  <string name="addressbook_sync">Sync Address Book</string>
+  <string name="not_now">Not now</string>
+  <string name="follow_friends">Follow Friends</string>
+  <string name="addressbook_data_about"><b>How %1$s Uses your Data</b>
+    \n\nThis feature allows %2$s to search for friends and family that already are using %3$s.
+    You\'ll upload your phone\'s address book to %4$s\'s servers and we\'ll do all the hard work.
+    \n\nWe\'ll use this information to connect you with your friends and family improving that way the Apps Timeline content.
+    \n\nIf you choose to send invitation via text message, standard rates may apply.</string>
+  <string name="addressbook_success">Success!</string>
+  <string name="addressbook_allow_friends_find">Allow friends to find you</string>
+  <string name="google">Google</string>
+  <string name="done">Done</string>
+  <string name="addressbook_share_phone">Share your phone number so your friends can easily find you on %s</string>
+  <string name="addressbook_phone_number">Phone number</string>
+  <string name="addressbook_insuccess_connection">We weren\'t able to connect with your address book!</string>
+  <string name="addressbook_invite_friends">Invite friends to join you!</string>
+  <string name="addressbook_thanks_for_connecting">Thank you for connecting</string>
+  <string name="addressbook_success_connected_friends">We successfully connected you with %1$s friends that use %2$s</string>
+
+  <!-- 02/2017 strings for login / sign up -->
+  <string name="join_company">Join %s</string>
+  <string name="login">Login</string>
+  <string name="login_company">Login %s</string>
+  <string name="connect_with_facebook">Connect with Facebook</string>
+  <string name="connect_with_google">Connect with Google</string>
+  <string name="accept_terms_signup">By joining Aptoide you agree to Aptoide\'s Terms and Conditions and Content Policy for Developers</string>
+  <string name="recover_password">Recover your password</string>
+  <string name="email">Email</string>
+  <string name="password">Password</string>
+  <string name="create_password">Create Password</string>
 
   <!-- Login -->
   <string name="activity_login_title">Login</string>

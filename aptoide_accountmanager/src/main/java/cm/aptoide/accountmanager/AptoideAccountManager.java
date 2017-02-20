@@ -26,6 +26,7 @@ import cm.aptoide.accountmanager.ws.OAuth2AuthenticationRequest;
 import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
+import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
@@ -141,7 +142,7 @@ public class AptoideAccountManager {
   private Single<cm.aptoide.accountmanager.Account> getServerAccount(LoginMode mode,
       String username, String password, String name) {
     return OAuth2AuthenticationRequest.of(username, password, mode, name,
-        aptoideClientUuid.getAptoideClientUUID(), this).observe().flatMap(oAuth -> {
+        aptoideClientUuid.getUniqueIdentifier(), this).observe().flatMap(oAuth -> {
       if (!oAuth.hasErrors()) {
         return Observable.just(
             new cm.aptoide.accountmanager.Account(username, oAuth.getRefreshToken(),
@@ -247,8 +248,7 @@ public class AptoideAccountManager {
   }
 
   private Observable<String> getNewAccessTokenFromRefreshToken(String refreshToken) {
-    return OAuth2AuthenticationRequest.of(refreshToken, aptoideClientUuid.getAptoideClientUUID(),
-        this)
+    return OAuth2AuthenticationRequest.of(refreshToken, aptoideClientUuid.getUniqueIdentifier(), this)
         .observe()
         .observeOn(AndroidSchedulers.mainThread())
         .map(OAuth::getAccessToken)
@@ -311,7 +311,7 @@ public class AptoideAccountManager {
   public Completable createAccount(String email, String password) {
     return validateAccountCredentials(email, password).andThen(
         CreateUserRequest.of(email.toLowerCase(), password,
-            aptoideClientUuid.getAptoideClientUUID(), this).observe(true))
+            aptoideClientUuid.getUniqueIdentifier(), this).observe(true))
         .toSingle()
         .flatMap(oAuth -> {
           if (oAuth.hasErrors()) {
@@ -476,7 +476,7 @@ public class AptoideAccountManager {
         })
         .flatMap(account -> CreateUserRequest.of("true", account.getUsername(), name,
             secureCoderDecoder.decrypt(account.getEncryptedPassword()), (TextUtils.isEmpty(avatarPath)? "" : avatarPath),
-            aptoideClientUuid.getAptoideClientUUID(), this)
+            aptoideClientUuid.getUniqueIdentifier(), this)
             .observe())
         .flatMap(response -> {
           if (!response.hasErrors()) {

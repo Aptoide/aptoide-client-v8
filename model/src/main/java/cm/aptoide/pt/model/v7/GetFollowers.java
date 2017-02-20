@@ -2,12 +2,13 @@ package cm.aptoide.pt.model.v7;
 
 import cm.aptoide.pt.model.v7.store.Store;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * Created by trinkes on 16/12/2016.
  */
-
-@Data public class GetFollowers extends BaseV7EndlessDatalistResponse<GetFollowers.TimelineUser> {
+@EqualsAndHashCode(callSuper = false) @Data public class GetFollowers
+    extends BaseV7EndlessDatalistResponse<GetFollowers.TimelineUser> {
 
   @Data public static class TimelineUser {
     long id;

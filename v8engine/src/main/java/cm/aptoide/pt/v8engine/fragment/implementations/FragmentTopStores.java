@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.model.v7.store.ListStores;
@@ -33,7 +34,9 @@ public class FragmentTopStores extends AptoideBaseFragment<BaseAdapter> implemen
       listStores -> Observable.fromCallable(() -> createDisplayables(listStores))
           .subscribeOn(Schedulers.computation())
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-          .subscribe(this::addDisplayables);
+          .subscribe(displayables -> addDisplayables(displayables), err -> {
+            CrashReport.getInstance().log(err);
+          });
 
   public static FragmentTopStores newInstance() {
     return new FragmentTopStores();

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import cm.aptoide.pt.annotation.Ignore;
+import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.interfaces.LifecycleSchim;
@@ -34,9 +35,9 @@ import rx.subscriptions.CompositeSubscription;
 
   //public abstract Type getType();
 
-  protected abstract Configs getConfig();
+  @Partners protected abstract Configs getConfig();
 
-  @LayoutRes public abstract int getViewLayout();
+  @Partners @LayoutRes public abstract int getViewLayout();
 
   public int getSpanSize() {
     return WidgetFactory.getColumnSize() / getPerLineCount();

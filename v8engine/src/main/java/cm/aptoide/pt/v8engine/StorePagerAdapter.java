@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.store.GetStore;
 import cm.aptoide.pt.model.v7.store.GetStoreTabs;
@@ -22,14 +23,16 @@ import java.util.List;
 public class StorePagerAdapter extends FragmentStatePagerAdapter {
 
   private final List<GetStoreTabs.Tab> tabs;
+  private final StoreContext storeContext;
   private final EnumMap<Event.Name, Integer> availableEventsMap = new EnumMap<>(Event.Name.class);
   private String storeTheme;
   private long storeId;
 
-  public StorePagerAdapter(FragmentManager fm, GetStore getStore) {
+  public StorePagerAdapter(FragmentManager fm, GetStore getStore, StoreContext storeContext) {
     super(fm);
     this.storeId = getStore.getNodes().getMeta().getData().getId();
     tabs = getStore.getNodes().getTabs().getList();
+    this.storeContext = storeContext;
     translateTabs(tabs);
     if (getStore.getNodes().getMeta().getData().getId() != 15) {
       storeTheme = getStore.getNodes().getMeta().getData().getAppearance().getTheme();
@@ -96,7 +99,7 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
             .newAppsTimelineFragment(event.getAction(), storeTheme);
       default:
         return V8Engine.getFragmentProvider()
-            .newStoreTabGridRecyclerFragment(event, storeTheme, tab.getTag());
+            .newStoreTabGridRecyclerFragment(event, storeTheme, tab.getTag(), storeContext);
     }
   }
 

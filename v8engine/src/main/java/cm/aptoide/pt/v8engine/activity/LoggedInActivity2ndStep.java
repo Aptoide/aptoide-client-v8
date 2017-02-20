@@ -80,7 +80,7 @@ public class LoggedInActivity2ndStep extends AccountBaseActivity {
           getApplicationContext().getString(cm.aptoide.accountmanager.R.string.please_wait));
       pleaseWaitDialog.show();
 
-      SetUserRequest.of(aptoideClientUUID.getAptoideClientUUID(), UserAccessState.PUBLIC.toString(),
+      SetUserRequest.of(aptoideClientUUID.getUniqueIdentifier(), UserAccessState.PUBLIC.toString(),
           accountManager.getAccessToken()).execute(answer -> {
         if (answer.isOk()) {
           Logger.v(TAG, "user is public");
@@ -102,17 +102,18 @@ public class LoggedInActivity2ndStep extends AccountBaseActivity {
           getApplicationContext().getString(cm.aptoide.accountmanager.R.string.please_wait));
       pleaseWaitDialog.show();
 
-      SetUserRequest.of(aptoideClientUUID.getAptoideClientUUID(),
-          UserAccessState.UNLISTED.toString(), accountManager.getAccessToken()).execute(answer -> {
-        if (answer.isOk()) {
-          Logger.v(TAG, "user is private");
-          Toast.makeText(LoggedInActivity2ndStep.this,
-              cm.aptoide.accountmanager.R.string.successful, Toast.LENGTH_SHORT).show();
-        } else {
-          Logger.v(TAG, "user is private: error: " + answer.getError().getDescription());
-          Toast.makeText(LoggedInActivity2ndStep.this,
-              cm.aptoide.accountmanager.R.string.unknown_error, Toast.LENGTH_SHORT).show();
-        }
+      SetUserRequest.of(aptoideClientUUID.getUniqueIdentifier(),
+          UserAccessState.UNLISTED.toString(), accountManager.getAccessToken())
+          .execute(answer -> {
+            if (answer.isOk()) {
+              Logger.v(TAG, "user is private");
+              Toast.makeText(LoggedInActivity2ndStep.this, R.string.successful, Toast.LENGTH_SHORT)
+                  .show();
+            } else {
+              Logger.v(TAG, "user is private: error: " + answer.getError().getDescription());
+              Toast.makeText(LoggedInActivity2ndStep.this, R.string.unknown_error,
+                  Toast.LENGTH_SHORT).show();
+            }
 
         goTo();
       }, throwable -> {

@@ -16,7 +16,7 @@ import rx.functions.Action0;
  * Created by marcelobenites on 18/01/17.
  */
 
-public class PermissionServiceFragment extends FragmentView implements PermissionService {
+public abstract class PermissionServiceFragment extends FragmentView implements PermissionService {
 
   @TargetApi(Build.VERSION_CODES.M)
   @Override public void requestAccessToExternalFileSystem(@Nullable Action0 toRunWhenAccessIsGranted,

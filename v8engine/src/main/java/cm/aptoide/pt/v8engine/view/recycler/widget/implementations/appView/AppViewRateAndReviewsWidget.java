@@ -6,6 +6,8 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -35,11 +37,13 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.navigation.AccountNavigator;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.util.DialogUtils;
-import cm.aptoide.pt.v8engine.util.LinearLayoutManagerWithSmootheScroller;
+import cm.aptoide.pt.v8engine.util.LinearLayoutManagerWithSmoothScroller;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewRateAndCommentsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import com.jakewharton.rxbinding.view.RxView;
 import java.util.List;
+import rx.functions.Action1;
 
 /**
  * Created by sithengineer on 30/06/16.
@@ -50,7 +54,8 @@ import java.util.List;
   public static final long TIME_BETWEEN_SCROLL = 2 * DateUtils.SECOND_IN_MILLIS;
   private static final String TAG = AppViewRateAndReviewsWidget.class.getSimpleName();
   private static final int MAX_COMMENTS = 3;
-  private final AptoideClientUUID aptoideClientUUID;
+  private AptoideClientUUID aptoideClientUUID;
+  private DialogUtils dialogUtils;
   private AptoideAccountManager accountManager;
   private View emptyReviewsLayout;
   private View ratingLayout;
@@ -73,11 +78,8 @@ import java.util.List;
   private int usersToVote;
   private TextView emptyReviewTextView;
 
-  public AppViewRateAndReviewsWidget(View itemView) {
+  public AppViewRateAndReviewsWidget(@NonNull View itemView) {
     super(itemView);
-
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
   }
 
   @Override protected void assignViews(View itemView) {
@@ -98,15 +100,14 @@ import java.util.List;
         (ContentLoadingProgressBar) itemView.findViewById(R.id.top_comments_progress);
   }
 
-  @Override public void unbindView() {
-  }
-
   @Override public void bindView(AppViewRateAndCommentsDisplayable displayable) {
     GetApp pojo = displayable.getPojo();
     GetAppMeta.App app = pojo.getNodes().getMeta().getData();
     GetAppMeta.Stats stats = app.getStats();
 
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
     accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
+    dialogUtils = new DialogUtils(accountManager, aptoideClientUUID, new AccountNavigator(getContext(), accountManager));
     appName = app.getName();
     packageName = app.getPackageName();
     storeName = app.getStore().getName();
@@ -118,30 +119,33 @@ import java.util.List;
     ratingValue.setText(String.format(AptoideUtils.LocaleU.DEFAULT, "%.1f", ratingAvg));
     ratingBar.setRating(ratingAvg);
 
-    View.OnClickListener rateOnClickListener = v -> {
-      DialogUtils.showRateDialog(getContext(), appName, packageName, storeName, this::loadReviews,
-          accountManager, new AccountNavigator(getContext(), accountManager));
-    };
+    Action1<Throwable> handleError = throwable -> CrashReport.getInstance().log(throwable);
 
-    rateThisButton.setOnClickListener(rateOnClickListener);
-    rateThisButtonLarge.setOnClickListener(rateOnClickListener);
-    ratingLayout.setOnClickListener(rateOnClickListener);
-    //rateThisAppButton.setOnClickListener(rateOnClickListener);
+    final FragmentActivity context = getContext();
+    Action1<Void> rateOnClickHandler =
+        __ -> dialogUtils.showRateDialog(context, appName, packageName, storeName);
+    compositeSubscription.add(
+        RxView.clicks(rateThisButton).subscribe(rateOnClickHandler, handleError));
+    compositeSubscription.add(
+        RxView.clicks(rateThisButtonLarge).subscribe(rateOnClickHandler, handleError));
+    compositeSubscription.add(
+        RxView.clicks(ratingLayout).subscribe(rateOnClickHandler, handleError));
 
-    View.OnClickListener commentsOnClickListener = v -> {
-      ((FragmentShower) getContext()).pushFragment(V8Engine.getFragmentProvider()
+    Action1<Void> commentsOnClickListener = __ -> {
+      getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
           .newRateAndReviewsFragment(app.getId(), app.getName(), app.getStore().getName(),
               app.getPackageName(), app.getStore().getAppearance().getTheme()));
     };
-    readAllButton.setOnClickListener(commentsOnClickListener);
-    commentsLayout.setOnClickListener(commentsOnClickListener);
+    compositeSubscription.add(
+        RxView.clicks(readAllButton).subscribe(commentsOnClickListener, handleError));
+    compositeSubscription.add(
+        RxView.clicks(commentsLayout).subscribe(commentsOnClickListener, handleError));
 
-    LinearLayoutManagerWithSmootheScroller layoutManager =
-        new LinearLayoutManagerWithSmootheScroller(getContext(), LinearLayoutManager.HORIZONTAL,
-            false);
+    LinearLayoutManagerWithSmoothScroller layoutManager =
+        new LinearLayoutManagerWithSmoothScroller(context, LinearLayoutManager.HORIZONTAL, false);
     topReviewsList.setLayoutManager(layoutManager);
-    topReviewsList.setNestedScrollingEnabled(
-        false); // because otherwise the AppBar won't be collapsed
+    // because otherwise the AppBar won't be collapsed
+    topReviewsList.setNestedScrollingEnabled(false);
 
     loadReviews();
   }
@@ -150,14 +154,15 @@ import java.util.List;
     loadTopReviews(storeName, packageName);
   }
 
-  public void loadTopReviews(String storeName, String packageName) {
+  private void loadTopReviews(String storeName, String packageName) {
+    final FragmentActivity context = getContext();
     ListReviewsRequest.ofTopReviews(storeName, packageName, MAX_COMMENTS,
-        accountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
+        accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
         .execute(listReviews -> {
 
               List<Review> reviews = listReviews.getDatalist().getList();
               if (reviews == null || reviews.isEmpty()) {
-                topReviewsList.setAdapter(new TopReviewsAdapter(getContext()));
+                topReviewsList.setAdapter(new TopReviewsAdapter(context));
                 loadedData(false);
                 return;
               }
@@ -165,11 +170,11 @@ import java.util.List;
               loadedData(true);
               final List<Review> list = listReviews.getDatalist().getList();
               topReviewsList.setAdapter(
-                  new TopReviewsAdapter(getContext(), list.toArray(new Review[list.size()])));
+                  new TopReviewsAdapter(context, list.toArray(new Review[list.size()])));
               scheduleAnimations();
             }, e -> {
               loadedData(false);
-              topReviewsList.setAdapter(new TopReviewsAdapter(getContext()));
+              topReviewsList.setAdapter(new TopReviewsAdapter(context));
               CrashReport.getInstance().log(e);
             }, true // bypass cache flag
         );
@@ -242,9 +247,9 @@ import java.util.List;
     }
   }
 
-  public static final class MiniTopReviewViewHolder extends RecyclerView.ViewHolder {
+  private static final class MiniTopReviewViewHolder extends RecyclerView.ViewHolder {
 
-    public static final int LAYOUT_ID = R.layout.mini_top_comment;
+    private static final int LAYOUT_ID = R.layout.mini_top_comment;
 
     private static final AptoideUtils.DateTimeU DATE_TIME_U = AptoideUtils.DateTimeU.getInstance();
 
@@ -255,7 +260,7 @@ import java.util.List;
     private TextView addedDate;
     private TextView commentText;
 
-    public MiniTopReviewViewHolder(View itemView) {
+    private MiniTopReviewViewHolder(View itemView) {
       super(itemView);
       bindViews(itemView);
     }
@@ -270,8 +275,9 @@ import java.util.List;
     }
 
     public void setup(Context context, Review review) {
-      ImageLoader.loadWithCircleTransformAndPlaceHolderAvatarSize(review.getUser().getAvatar(),
-          userIconImageView, R.drawable.layer_1);
+      ImageLoader.with(context)
+          .loadWithCircleTransformAndPlaceHolderAvatarSize(review.getUser().getAvatar(),
+              userIconImageView, R.drawable.layer_1);
       userName.setText(review.getUser().getName());
       ratingBar.setRating(review.getStats().getRating());
       commentTitle.setText(review.getTitle());

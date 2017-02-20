@@ -1,29 +1,14 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 23/08/2016.
- */
-
 package cm.aptoide.pt.v8engine.interfaces;
 
 import android.support.v4.app.Fragment;
 
 /**
- * Created by sithengineer on 12/05/16.
  * <p>
  * Abstraction methods to manipulate {@link android.app.Fragment Fragment} (or {@link
  * android.support.v4.app.Fragment v4.Fragment}).
  * </p>
  */
 public interface FragmentShower {
-
-  /**
-   * Pushes the passed {@link android.support.v4.app.Fragment v4.Fragment} using the implementing
-   * activity {@link android.support.v4.app.FragmentManager
-   * v4.FragmentManager}
-   *
-   * @param fragment {@link android.support.v4.app.Fragment v4.Fragment} to push
-   */
-  void pushFragment(Fragment fragment);
 
   /**
    * @return Uses {@link android.support.v4.app.FragmentManager v4.FragmentManager} and returns the
@@ -34,5 +19,4 @@ public interface FragmentShower {
    * in the {@link android.support.v4.app.FragmentManager.BackStackEntry}.
    */
   Fragment getLast();
-
 }

@@ -7,6 +7,8 @@ package cm.aptoide.pt.v8engine.activity;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.view.View;
 import com.trello.rxlifecycle.LifecycleTransformer;
@@ -21,6 +23,17 @@ import rx.Observable;
 public abstract class ActivityView extends RxAppCompatActivity implements View {
 
   private Presenter presenter;
+
+  private NavigationManagerV4 navigator;
+
+  public NavigationManagerV4 getNavigationManager() {
+    return navigator;
+  }
+
+  @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    navigator = NavigationManagerV4.Builder.buildWith(this);
+  }
 
   @NonNull @Override
   public final <T> LifecycleTransformer<T> bindUntilEvent(@NonNull LifecycleEvent lifecycleEvent) {

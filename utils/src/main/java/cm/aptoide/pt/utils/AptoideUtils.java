@@ -264,12 +264,14 @@ public class AptoideUtils {
     }
 
     public static String computeMd5(@NonNull PackageInfo packageInfo) {
+
       String sourceDir = packageInfo.applicationInfo.sourceDir;
       File apkFile = new File(sourceDir);
       return computeMd5(apkFile);
     }
 
     public static String computeMd5(File f) {
+      long time = System.currentTimeMillis();
       byte[] buffer = new byte[1024];
       int read, i;
       String md5hash;
@@ -295,7 +297,7 @@ public class AptoideUtils {
         }
         md5hash = tmp.concat(md5hash);
       }
-
+      Logger.v(TAG, "computeMd5: duration: " + (System.currentTimeMillis() - time) + " ms");
       return md5hash;
     }
 
@@ -1718,7 +1720,7 @@ public class AptoideUtils {
           new StringBuilder(vername + ";" + SystemU.TERMINAL_INFO + ";" + myscr + ";id:");
 
       if (aptoideClientUUID != null) {
-        sb.append(aptoideClientUUID.getAptoideClientUUID());
+        sb.append(aptoideClientUUID.getUniqueIdentifier());
       }
       sb.append(";");
 

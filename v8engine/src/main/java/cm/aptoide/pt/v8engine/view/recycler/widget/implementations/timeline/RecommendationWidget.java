@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.timeline;
 
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.ImageView;
@@ -16,7 +17,6 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.TimelineClickEvent;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.RecommendationDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
 
@@ -63,21 +63,22 @@ public class RecommendationWidget extends CardWidget<RecommendationDisplayable> 
 
   @Override public void bindView(RecommendationDisplayable displayable) {
     super.bindView(displayable);
-    title.setText(displayable.getStyledTitle(getContext()));
-    subtitle.setText(displayable.getTimeSinceRecommendation(getContext()));
+    final FragmentActivity context = getContext();
+    title.setText(displayable.getStyledTitle(context));
+    subtitle.setText(displayable.getTimeSinceRecommendation(context));
 
     setCardViewMargin(displayable, cardView);
 
-    ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarResource(), image);
+    ImageLoader.with(context).loadWithShadowCircleTransform(displayable.getAvatarResource(), image);
 
-    ImageLoader.load(displayable.getAppIcon(), appIcon);
+    ImageLoader.with(context).load(displayable.getAppIcon(), appIcon);
 
     appName.setText(displayable.getAppName());
 
-    similarApps.setText(displayable.getSimilarAppsText(getContext()));
+    similarApps.setText(displayable.getSimilarAppsText(context));
 
     getApp.setVisibility(View.VISIBLE);
-    getApp.setText(displayable.getAppText(getContext()));
+    getApp.setText(displayable.getAppText(context));
 
     compositeSubscription.add(RxView.clicks(cardContent).subscribe(a -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
@@ -93,7 +94,7 @@ public class RecommendationWidget extends CardWidget<RecommendationDisplayable> 
               .based_on(displayable.getSimilarAppPackageName())
               .build())
           .build(), TimelineClickEvent.OPEN_APP);
-      ((FragmentShower) getContext()).pushFragment(V8Engine.getFragmentProvider()
+      getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
           .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
     }));
   }

@@ -5,6 +5,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.annotation.Partners;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.v8engine.R;
@@ -28,12 +30,8 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
     super(itemView);
   }
 
-  @Override protected void assignViews(View itemView) {
+  @Partners @Override protected void assignViews(View itemView) {
     adultSwitch = (SwitchCompat) itemView.findViewById(R.id.adult_content);
-  }
-
-  @Override public void unbindView() {
-
   }
 
   @Override public void bindView(AdultRowDisplayable displayable) {

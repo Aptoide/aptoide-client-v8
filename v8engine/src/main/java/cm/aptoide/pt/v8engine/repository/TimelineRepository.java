@@ -40,7 +40,7 @@ public class TimelineRepository {
   public Observable<Datalist<TimelineCard>> getTimelineCards(Integer limit, int offset,
       List<String> packageNames, boolean refresh) {
     return GetUserTimelineRequest.of(action, limit, offset, packageNames,
-        accountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
+        accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
         .observe(refresh)
         .doOnNext(item -> filter.clear())
         .map(getUserTimeline -> getUserTimeline.getDatalist())
@@ -77,6 +77,6 @@ public class TimelineRepository {
 
   public Observable<TimelineStats> getTimelineStats(boolean byPassCache) {
     return GetTimelineStatsRequest.of(accountManager.getAccessToken(),
-        aptoideClientUUID.getAptoideClientUUID()).observe(byPassCache);
+        aptoideClientUUID.getUniqueIdentifier()).observe(byPassCache);
   }
 }

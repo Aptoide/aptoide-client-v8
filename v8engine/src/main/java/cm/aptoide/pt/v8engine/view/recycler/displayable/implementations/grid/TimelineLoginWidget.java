@@ -2,6 +2,12 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.view.View;
 import android.widget.Button;
+import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
@@ -24,6 +30,8 @@ public class TimelineLoginWidget extends Widget<TimelineLoginDisplayable> {
 
   @Override public void bindView(TimelineLoginDisplayable displayable) {
     compositeSubscription.add(
-        RxView.clicks(button).subscribe(click -> displayable.login()));
+        RxView.clicks(button).subscribe(click -> displayable.login(), err -> {
+          CrashReport.getInstance().log(err);
+        }));
   }
 }

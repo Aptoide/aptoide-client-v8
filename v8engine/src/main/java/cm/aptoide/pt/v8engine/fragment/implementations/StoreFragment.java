@@ -24,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
@@ -104,7 +105,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
     return fragment;
   }
 
-  @Nullable @Override
+  @CallSuper @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     if (storeTheme != null) {
@@ -122,7 +123,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     if (create || getStore == null) {
       GetStoreRequest.of(StoreUtils.getStoreCredentials(storeName), storeContext,
-          accountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
+          accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
           .observe(refresh)
           .observeOn(AndroidSchedulers.mainThread())
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
@@ -155,10 +156,10 @@ public class StoreFragment extends BasePagerToolbarFragment {
   }
 
   @Override public void onDestroyView() {
-    super.onDestroyView();
     if (storeTheme != null && !storeContext.equals(StoreContext.store)) {
       ThemeUtils.setAptoideTheme(getActivity());
     }
+    super.onDestroyView();
   }
 
   @Override protected void setupViewPager() {
@@ -234,7 +235,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   }
 
   @Override protected PagerAdapter createPagerAdapter() {
-    return new StorePagerAdapter(getChildFragmentManager(), getStore);
+    return new StorePagerAdapter(getChildFragmentManager(), getStore, storeContext);
   }
 
   @Override public void onDestroy() {
@@ -286,7 +287,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   }
 
   protected void setupSearch(Menu menu) {
-    SearchUtils.setupInsideStoreSearchView(menu, getActivity(), storeName);
+    SearchUtils.setupInsideStoreSearchView(menu, getNavigationManager(), storeName);
   }
 
   @Override public void setupViews() {
@@ -303,14 +304,14 @@ public class StoreFragment extends BasePagerToolbarFragment {
     toolbar.setLogo(R.drawable.ic_store);
   }
 
-  @CallSuper @Override public void setupToolbar() {
+  @Partners @CallSuper @Override public void setupToolbar() {
     super.setupToolbar();
     // FIXME: 17/1/2017 sithengineer is this the right place to have this event ?? why ??
     Logger.d(TAG, "LOCALYTICS TESTING - STORES ACTION ENTER " + storeName);
     Analytics.Stores.enter(storeName);
   }
 
-  protected static class BundleCons {
+  @Partners public static class BundleCons {
 
     public static final String STORE_NAME = "storeName";
     public static final String STORE_CONTEXT = "storeContext";

@@ -4,6 +4,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.v7.V7EndlessController;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.store.Store;
 
 /**
@@ -11,28 +12,27 @@ import cm.aptoide.pt.model.v7.store.Store;
  */
 class ListStoresRequestFactory {
 
-  private final IdsRepository idsRepository;
+  private final AptoideClientUUID aptoideClientUUID;
   private final AptoideAccountManager accountManager;
 
-  public ListStoresRequestFactory(IdsRepository idsRepository,
+  public ListStoresRequestFactory(AptoideClientUUID aptoideClientUUID,
       AptoideAccountManager accountManager) {
-    this.idsRepository = idsRepository;
+    this.aptoideClientUUID = aptoideClientUUID;
     this.accountManager = accountManager;
   }
 
   public ListStoresRequest newListStoresRequest(int offset, int limit) {
     return ListStoresRequest.ofTopStores(offset, limit, accountManager.getAccessToken(),
-        idsRepository.getAptoideClientUUID());
+        aptoideClientUUID.getUniqueIdentifier());
   }
 
   public V7EndlessController<Store> listStores(int offset, int limit) {
-    return new V7EndlessController<>(
-        ListStoresRequest.ofTopStores(offset, limit, accountManager.getAccessToken(),
-            idsRepository.getAptoideClientUUID()));
+    return new V7EndlessController<>(ListStoresRequest.ofTopStores(offset, limit, accountManager.getAccessToken(),
+        aptoideClientUUID.getUniqueIdentifier()));
   }
 
   public ListStoresRequest newListStoresRequest(String url) {
     return ListStoresRequest.ofAction(url, accountManager.getAccessToken(),
-        idsRepository.getAptoideClientUUID());
+        aptoideClientUUID.getUniqueIdentifier());
   }
 }

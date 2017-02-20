@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.timeline;
 
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.util.LongSparseArray;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
@@ -13,7 +14,6 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.TimelineClickEvent;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.StoreLatestAppsDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.HashMap;
@@ -60,9 +60,10 @@ public class StoreLatestAppsWidget extends CardWidget<StoreLatestAppsDisplayable
     super.bindView(displayable);
 
     title.setText(displayable.getStoreName());
-    subtitle.setText(displayable.getTimeSinceLastUpdate(getContext()));
+    final FragmentActivity context = getContext();
+    subtitle.setText(displayable.getTimeSinceLastUpdate(context));
     setCardViewMargin(displayable, cardView);
-    ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
+    ImageLoader.with(context).loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
 
     appsContaner.removeAllViews();
     apps.clear();
@@ -71,7 +72,7 @@ public class StoreLatestAppsWidget extends CardWidget<StoreLatestAppsDisplayable
     for (StoreLatestAppsDisplayable.LatestApp latestApp : displayable.getLatestApps()) {
       latestAppView = inflater.inflate(R.layout.social_timeline_latest_app, appsContaner, false);
       latestAppIcon = (ImageView) latestAppView.findViewById(R.id.social_timeline_latest_app);
-      ImageLoader.load(latestApp.getIconUrl(), latestAppIcon);
+      ImageLoader.with(context).load(latestApp.getIconUrl(), latestAppIcon);
       appsContaner.addView(latestAppView);
       apps.put(latestAppView, latestApp.getAppId());
       appsPackages.put(latestApp.getAppId(), latestApp.getPackageName());
@@ -92,7 +93,7 @@ public class StoreLatestAppsWidget extends CardWidget<StoreLatestAppsDisplayable
                 .store(displayable.getStoreName())
                 .build())
             .build(), TimelineClickEvent.OPEN_APP);
-        ((FragmentShower) getContext()).pushFragment(
+        getNavigationManager().navigateTo(
             V8Engine.getFragmentProvider().newAppViewFragment(apps.get(app), packageName));
       }));
     }
@@ -108,7 +109,7 @@ public class StoreLatestAppsWidget extends CardWidget<StoreLatestAppsDisplayable
           .specific(
               SendEventRequest.Body.Specific.builder().store(displayable.getStoreName()).build())
           .build(), TimelineClickEvent.OPEN_STORE);
-      ((FragmentShower) getContext()).pushFragment(
+      getNavigationManager().navigateTo(
           V8Engine.getFragmentProvider().newStoreFragment(displayable.getStoreName()));
     }));
   }

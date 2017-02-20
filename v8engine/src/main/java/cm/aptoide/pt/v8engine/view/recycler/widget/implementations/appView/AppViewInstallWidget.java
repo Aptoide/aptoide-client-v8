@@ -135,10 +135,6 @@ import rx.android.schedulers.AndroidSchedulers;
     notLatestAvailableText = itemView.findViewById(R.id.not_latest_available_text);
   }
 
-  @Override public void unbindView() {
-    super.unbindView();
-  }
-
   @Override public void bindView(AppViewInstallDisplayable displayable) {
     displayable.setInstallButton(actionButton);
 
@@ -163,7 +159,7 @@ import rx.android.schedulers.AndroidSchedulers;
       Fragment fragment = V8Engine.getFragmentProvider()
           .newOtherVersionsFragment(currentApp.getName(), currentApp.getIcon(),
               currentApp.getPackageName());
-      fragmentShower.pushFragment(fragment);
+      getNavigationManager().navigateTo(fragment);
     });
 
     final boolean[] isSetupView = { true };
@@ -420,7 +416,7 @@ import rx.android.schedulers.AndroidSchedulers;
         // search for a trusted version
         fragment = V8Engine.getFragmentProvider().newSearchFragment(app.getName(), true);
       }
-      ((FragmentShower) context).pushFragment(fragment);
+      getNavigationManager().navigateTo(fragment);
     };
 
     return v -> {
@@ -476,7 +472,10 @@ import rx.android.schedulers.AndroidSchedulers;
   private void showErrorMessage(@Download.DownloadError int downloadError) {
     switch (downloadError) {
       case Download.GENERIC_ERROR:
-        ShowMessage.asSnack(getContext(), R.string.error_occured);
+        GenericDialogs.createGenericOkMessage(getContext(), "",
+            getContext().getString(R.string.error_occured))
+            .subscribe(eResponse -> Logger.d(TAG, "Error dialog"),
+                throwable -> CrashReport.getInstance().log(throwable));
         break;
       case Download.NOT_ENOUGH_SPACE_ERROR:
         GenericDialogs.createGenericOkMessage(getContext(),

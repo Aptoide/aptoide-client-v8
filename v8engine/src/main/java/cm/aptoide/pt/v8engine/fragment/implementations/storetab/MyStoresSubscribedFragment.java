@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
@@ -17,6 +18,7 @@ import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablesFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
@@ -45,9 +47,8 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
 
   @Override protected V7<ListStores, ? extends Endless> buildRequest(boolean refresh, String url) {
 
-    GetMyStoreListRequest request =
-        GetMyStoreListRequest.of(url, accountManager.getAccessToken(),
-            aptoideClientUUID.getAptoideClientUUID(), true);
+    GetMyStoreListRequest request = GetMyStoreListRequest.of(url, accountManager.getAccessToken(),
+        aptoideClientUUID.getUniqueIdentifier(), true);
 
     return request;
   }
@@ -64,7 +65,9 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
       if (WSWidgetsUtils.shouldAddObjectView(errorsList, throwable)) {
         DisplayablesFactory.loadLocalSubscribedStores(storeRepository)
             .compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW))
-            .subscribe(stores -> addDisplayables(getStoresDisplayable(stores)));
+            .subscribe(stores -> addDisplayables(getStoresDisplayable(stores)), err -> {
+              CrashReport.getInstance().log(err);
+            });
       } else {
         finishLoading(throwable);
       }
@@ -77,8 +80,11 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
     for (int i = 0; i < list.size(); i++) {
       if (i == 0 || list.get(i - 1).getId() != list.get(i).getId()) {
         if (layout == Layout.LIST) {
-          storesDisplayables.add(new RecommendedStoreDisplayable(list.get(i), storeRepository,
-              getContext(),  accountManager));
+          final IdsRepositoryImpl idsRepository =
+              new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
+          storesDisplayables.add(
+              new RecommendedStoreDisplayable(list.get(i), storeRepository, accountManager,
+                  new StoreUtilsProxy(idsRepository, accountManager)));
         } else {
           storesDisplayables.add(new GridStoreDisplayable(list.get(i)));
         }

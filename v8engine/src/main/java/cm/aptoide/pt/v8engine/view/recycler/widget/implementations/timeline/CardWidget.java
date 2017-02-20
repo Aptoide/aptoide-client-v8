@@ -64,7 +64,7 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
         //  final String elementId = displayable.getTimelineCard().getCardId();
         //  Fragment fragment = V8Engine.getFragmentProvider()
         //      .newCommentGridRecyclerFragment(CommentType.TIMELINE, elementId);
-        //  ((FragmentShower) getContext()).pushFragmentV4(fragment);
+        //  getNavigationManager().navigateTo(fragment);
         //  return null;
         //});
         //})

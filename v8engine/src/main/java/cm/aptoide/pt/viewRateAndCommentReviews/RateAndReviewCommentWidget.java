@@ -7,6 +7,7 @@ package cm.aptoide.pt.viewRateAndCommentReviews;
 
 import android.content.res.Resources;
 import android.os.Build;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.AppCompatRatingBar;
 import android.util.DisplayMetrics;
@@ -99,15 +100,17 @@ import rx.Observable;
 
     accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
     accountNavigator = new AccountNavigator(getContext(), accountManager);
-    ImageLoader.loadWithCircleTransformAndPlaceHolderAvatarSize(review.getUser().getAvatar(),
-        userImage, R.drawable.layer_1);
+    final FragmentActivity context = getContext();
+    ImageLoader.with(context)
+        .loadWithCircleTransformAndPlaceHolderAvatarSize(review.getUser().getAvatar(), userImage,
+            R.drawable.layer_1);
     username.setText(review.getUser().getName());
     ratingBar.setRating(review.getStats().getRating());
     reviewTitle.setText(review.getTitle());
     reviewText.setText(review.getBody());
-    reviewDate.setText(DATE_TIME_U.getTimeDiffString(getContext(), review.getAdded().getTime()));
+    reviewDate.setText(DATE_TIME_U.getTimeDiffString(context, review.getAdded().getTime()));
 
-    if (DisplayMetrics.DENSITY_300 > getContext().getResources().getDisplayMetrics().densityDpi) {
+    if (DisplayMetrics.DENSITY_300 > context.getResources().getDisplayMetrics().densityDpi) {
       flagHelfull.setText("");
       flagNotHelfull.setText("");
     }
@@ -117,7 +120,7 @@ import rx.Observable;
 
     compositeSubscription.add(RxView.clicks(reply).flatMap(a -> {
       if (accountManager.isLoggedIn()) {
-        FragmentManager fm = getContext().getSupportFragmentManager();
+        FragmentManager fm = context.getSupportFragmentManager();
         CommentDialogFragment commentDialogFragment =
             CommentDialogFragment.newInstanceReview(review.getId(), appName);
         commentDialogFragment.show(fm, "fragment_comment_dialog");
@@ -161,8 +164,8 @@ import rx.Observable;
       }
     }));
 
-    final Resources.Theme theme = getContext().getTheme();
-    final Resources res = getContext().getResources();
+    final Resources.Theme theme = context.getTheme();
+    final Resources res = context.getResources();
     int color =
         getItemId() % 2 == 0 ? R.color.white : R.color.displayable_rate_and_review_background;
 
@@ -183,7 +186,7 @@ import rx.Observable;
 
   private void loadCommentsForThisReview(long reviewId, int limit, CommentAdder commentAdder) {
     ListCommentsRequest.of(reviewId, limit, accountManager.getAccessToken(),
-        aptoideClientUUID.getAptoideClientUUID(), true).execute(listComments -> {
+        aptoideClientUUID.getUniqueIdentifier(), true).execute(listComments -> {
       if (listComments.isOk()) {
         List<Comment> comments = listComments.getDatalist().getList();
         commentAdder.addComment(comments);
@@ -202,7 +205,7 @@ import rx.Observable;
 
     if (accountManager.isLoggedIn()) {
       SetReviewRatingRequest.of(reviewId, positive, accountManager.getAccessToken(),
-          aptoideClientUUID.getAptoideClientUUID()).execute(response -> {
+          aptoideClientUUID.getUniqueIdentifier()).execute(response -> {
         if (response == null) {
           Logger.e(TAG, "empty response");
           return;

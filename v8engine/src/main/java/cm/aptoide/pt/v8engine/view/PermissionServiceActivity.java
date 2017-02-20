@@ -30,7 +30,7 @@ import rx.functions.Action0;
  * Created by marcelobenites on 18/01/17.
  */
 
-public class PermissionServiceActivity extends ActivityView implements PermissionService {
+public abstract class PermissionServiceActivity extends ActivityView implements PermissionService {
 
   private static final String TAG = PermissionServiceActivity.class.getName();
   private static final int ACCESS_TO_EXTERNAL_FS_REQUEST_ID = 61;
@@ -43,8 +43,8 @@ public class PermissionServiceActivity extends ActivityView implements Permissio
   @Nullable private Action0 toRunWhenDownloadAccessIsGranted;
   @Nullable private Action0 toRunWhenDownloadAccessIsDenied;
 
-  @TargetApi(Build.VERSION_CODES.M)
-  @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+  @TargetApi(Build.VERSION_CODES.M) @Override
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
       @NonNull int[] grantResults) {
 
     // got this error on fabric => added this check
@@ -93,14 +93,14 @@ public class PermissionServiceActivity extends ActivityView implements Permissio
     }
   }
 
-  @TargetApi(Build.VERSION_CODES.M)
-  @Override public void requestAccessToExternalFileSystem(@Nullable Action0 toRunWhenAccessIsGranted,
+  @TargetApi(Build.VERSION_CODES.M) @Override
+  public void requestAccessToExternalFileSystem(@Nullable Action0 toRunWhenAccessIsGranted,
       @Nullable Action0 toRunWhenAccessIsDennied) {
     requestAccessToExternalFileSystem(true, toRunWhenAccessIsGranted, toRunWhenAccessIsDennied);
   }
 
-  @TargetApi(Build.VERSION_CODES.M)
-  @Override public void requestAccessToExternalFileSystem(boolean forceShowRationale,
+  @TargetApi(Build.VERSION_CODES.M) @Override
+  public void requestAccessToExternalFileSystem(boolean forceShowRationale,
       @Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDennied) {
     int hasPermission =
         ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -146,14 +146,14 @@ public class PermissionServiceActivity extends ActivityView implements Permissio
     }
   }
 
-  @TargetApi(Build.VERSION_CODES.M)
-  @Override public void requestAccessToAccounts(@Nullable Action0 toRunWhenAccessIsGranted,
+  @TargetApi(Build.VERSION_CODES.M) @Override
+  public void requestAccessToAccounts(@Nullable Action0 toRunWhenAccessIsGranted,
       @Nullable Action0 toRunWhenAccessIsDenied) {
     requestAccessToAccounts(true, toRunWhenAccessIsGranted, toRunWhenAccessIsDenied);
   }
 
-  @TargetApi(Build.VERSION_CODES.M)
-  @Override public void requestAccessToAccounts(boolean forceShowRationale,
+  @TargetApi(Build.VERSION_CODES.M) @Override
+  public void requestAccessToAccounts(boolean forceShowRationale,
       @Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDenied) {
     int hasPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.GET_ACCOUNTS);
     if (hasPermission != PackageManager.PERMISSION_GRANTED) {
@@ -225,11 +225,12 @@ public class PermissionServiceActivity extends ActivityView implements Permissio
           super.onNext(eResponse);
           if (eResponse == GenericDialogs.EResponse.YES) {
             if (PermissionServiceActivity.this instanceof FragmentShower) {
-              ((FragmentShower) PermissionServiceActivity.this).pushFragment(
+              getNavigationManager().navigateTo(
                   V8Engine.getFragmentProvider().newSettingsFragment());
             } else {
-              Logger.e(PermissionServiceActivity.class.getSimpleName(), new IllegalArgumentException(
-                  "The Fragment should be an instance of the " + "Activity Context"));
+              Logger.e(PermissionServiceActivity.class.getSimpleName(),
+                  new IllegalArgumentException(
+                      "The Fragment should be an instance of the " + "Activity Context"));
             }
           } else {
             if (toRunWhenAccessIsDenied != null) {

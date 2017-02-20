@@ -28,7 +28,6 @@ import cm.aptoide.pt.navigation.AccountNavigator;
 import cm.aptoide.pt.v8engine.adapters.CommentsAdapter;
 import cm.aptoide.pt.v8engine.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.util.DialogUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
@@ -65,6 +64,7 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
   private RatingTotalsLayout ratingTotalsLayout;
   private RatingBarsLayout ratingBarsLayout;
   private FloatingActionButton floatingActionButton;
+  private DialogUtils dialogUtils;
   private AptoideAccountManager accountManager;
 
   //
@@ -123,19 +123,16 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
+    dialogUtils = new DialogUtils(accountManager,
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext()),
+        new AccountNavigator(getContext(), accountManager));
     final RateAndReviewsPresenter presenter =
         new RateAndReviewsPresenter(appId, storeName, packageName, this,
-            ConcreteSchedulerProvider.getInstance(), accountManager, new IdsRepositoryImpl(
-            SecurePreferencesImplementation.getInstance(),
-                DataProvider.getContext()).getAptoideClientUUID());
+            ConcreteSchedulerProvider.getInstance(), accountManager,
+            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+                DataProvider.getContext()).getUniqueIdentifier());
 
     attachPresenter(presenter, savedInstanceState);
-  }
-
-  @CallSuper @Override
-  public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    super.load(create, refresh, savedInstanceState);
-    // ??
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -148,13 +145,13 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
     storeTheme = args.getString(STORE_THEME);
   }
 
-  //
-  // MVP methods
-  //
-
   @Override public int getContentViewId() {
     return R.layout.fragment_rate_and_reviews;
   }
+
+  //
+  // MVP methods
+  //
 
   @CallSuper @Override public void bindViews(View view) {
     super.bindViews(view);
@@ -171,6 +168,12 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
       ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
       ThemeUtils.setStoreTheme(getActivity(), storeTheme);
     }
+  }
+
+  @CallSuper @Override
+  public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    super.load(create, refresh, savedInstanceState);
+    // ??
   }
 
   @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
@@ -197,7 +200,7 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
     }
     if (itemId == R.id.menu_install) {
       // todo Navigator n = new Navigator();
-      ((FragmentShower) getContext()).pushFragment(V8Engine.getFragmentProvider()
+      getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
           .newAppViewFragment(packageName, storeName, AppViewFragment.OpenType.OPEN_AND_INSTALL));
       return true;
     }
@@ -217,8 +220,7 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
   }
 
   @Override public Observable<GenericDialogs.EResponse> showRateView() {
-    return DialogUtils.showRateDialog(getActivity(), appName, packageName, storeName, accountManager,
-        new AccountNavigator(getActivity(), accountManager));
+    return dialogUtils.showRateDialog(getActivity(), appName, packageName, storeName);
   }
 
   @Override public void showNextReviews(int offset, List<Review> reviews) {

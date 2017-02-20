@@ -75,6 +75,7 @@ public class LoginSignUpFragment extends GoogleLoginFragment implements LoginVie
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
+    super.onCreateView(inflater, container, savedInstanceState);
     return inflater.inflate(getLayoutId(), container, false);
   }
 

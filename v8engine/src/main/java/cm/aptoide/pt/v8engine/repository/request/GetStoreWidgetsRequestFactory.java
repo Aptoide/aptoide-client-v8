@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.repository.request;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.repository.IdsRepository;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 
 /**
@@ -10,19 +11,19 @@ import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
  */
 class GetStoreWidgetsRequestFactory {
 
-  private final IdsRepository idsRepository;
+  private final AptoideClientUUID aptoideClientUUID;
   private final AptoideAccountManager accountManager;
   private final StoreCredentialsProvider storeCredentialsProvider;
 
-  public GetStoreWidgetsRequestFactory(IdsRepository idsRepository,
+  public GetStoreWidgetsRequestFactory(AptoideClientUUID aptoideClientUUID,
       AptoideAccountManager accountManager, StoreCredentialsProvider storeCredentialsProvider) {
-    this.idsRepository = idsRepository;
+    this.aptoideClientUUID = aptoideClientUUID;
     this.accountManager = accountManager;
     this.storeCredentialsProvider = storeCredentialsProvider;
   }
 
   public GetStoreWidgetsRequest newStoreWidgets(String url) {
     return GetStoreWidgetsRequest.ofAction(url, storeCredentialsProvider.fromUrl(url),
-        accountManager.getAccessToken(), idsRepository.getAptoideClientUUID());
+        accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier());
   }
 }

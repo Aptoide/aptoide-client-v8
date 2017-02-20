@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,13 @@ public abstract class UIComponentFragment extends PermissionServiceFragment
     ScreenTrackingUtils.getInstance().incrementNumberOfScreens();
   }
 
+  @CallSuper @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    View v = super.onCreateView(inflater, container, savedInstanceState);
+    return v!=null ? v : inflater.inflate(getContentViewId(), null);
+  }
+
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     bindViews(view);
@@ -33,11 +41,6 @@ public abstract class UIComponentFragment extends PermissionServiceFragment
   @Override public void onDestroy() {
     super.onDestroy();
     ScreenTrackingUtils.getInstance().decrementNumberOfScreens();
-  }
-
-  @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
-      Bundle savedInstanceState) {
-    return inflater.inflate(getContentViewId(), container, false);
   }
 
   /**

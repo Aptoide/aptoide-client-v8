@@ -23,10 +23,22 @@ public interface FragmentProvider {
 
   Fragment newStoreFragment(String storeName);
 
+  /**
+   * @param storeContext is needed to give context to fragment ex: store downloads vs global
+   * downloads
+   */
   Fragment newStoreFragment(String storeName, StoreContext storeContext, String storeTheme);
 
+  /**
+   * @param storeContext is needed to give context to fragment ex: store downloads vs global
+   * downloads
+   */
   Fragment newStoreFragment(String storeName, StoreContext storeContext);
 
+  /**
+   * @param storeContext is needed to give context to fragment ex: store downloads vs global
+   * downloads
+   */
   Fragment newHomeFragment(String storeName, StoreContext storeContext, String storeTheme);
 
   Fragment newSearchFragment(String query);
@@ -56,10 +68,19 @@ public interface FragmentProvider {
 
   Fragment newLatestReviewsFragment(long storeId);
 
-  Fragment newStoreTabGridRecyclerFragment(Event event, String storeTheme, String tag);
+  /**
+   * @param storeContext is needed to give context to fragment ex: store downloads vs global
+   * downloads
+   */
+  Fragment newStoreTabGridRecyclerFragment(Event event, String storeTheme, String tag,
+      StoreContext storeContext);
 
-  Fragment newStoreTabGridRecyclerFragment(Event event, String title, String storeTheme,
-      String tag);
+  /**
+   * @param storeContext is needed to give context to fragment ex: store downloads vs global
+   * downloads
+   */
+  Fragment newStoreTabGridRecyclerFragment(Event event, String title, String storeTheme, String tag,
+      StoreContext storeContext);
 
   Fragment newListAppsFragment();
 
