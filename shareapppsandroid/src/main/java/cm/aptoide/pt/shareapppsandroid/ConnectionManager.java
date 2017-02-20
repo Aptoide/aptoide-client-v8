@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkInfo;
@@ -11,6 +12,7 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
@@ -25,6 +27,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import static android.content.Context.CONNECTIVITY_SERVICE;
+import static android.content.Context.WIFI_SERVICE;
 
 /**
  * Created by filipegoncalves on 31-01-2017.
@@ -50,11 +53,12 @@ public class ConnectionManager {
   private InactivityListener inactivityListener;
   private ClientsConnectedListener clientsConnectedListener;
   private Timer scanner;
+  private static ConnectionManager instance;
 
   private BroadcastReceiver activateButtonsReceiver = new BroadcastReceiver() {
     @Override public void onReceive(Context context, Intent intent) {
       if (wifimanager == null) {
-        wifimanager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        wifimanager = (WifiManager) context.getSystemService(WIFI_SERVICE);
       }
       if (listenerActivateButtons != null) {
         listenerActivateButtons.onStateChanged(wifimanager.isWifiEnabled());
@@ -172,10 +176,25 @@ public class ConnectionManager {
       }
     }
   };
+  private final SharedPreferences prefs;
 
-  public ConnectionManager(Context context) {
+  private ConnectionManager(Context context, SharedPreferences sharedPreferences,
+      WifiManager wifimanager) {
     this.context = context;
+    this.wifimanager = wifimanager;
+
+    prefs = sharedPreferences;
+    prefs.edit().putBoolean("wifiOnStart", this.wifimanager.isWifiEnabled()).commit();
   }
+
+  public static ConnectionManager getInstance(Context context){
+    if(instance==null){
+      instance=new ConnectionManager(context, PreferenceManager.getDefaultSharedPreferences(context),
+          (WifiManager) context.getSystemService(WIFI_SERVICE));
+    }
+  return instance;
+  }
+
 
   public void start(WifiStateListener listener) {
     this.listenerActivateButtons = listener;
@@ -202,7 +221,7 @@ public class ConnectionManager {
 
   private void scheduleScan() {
     if (wifimanager == null) {
-      wifimanager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+      wifimanager = (WifiManager) context.getSystemService(WIFI_SERVICE);
     }
     if (!wifimanager.isWifiEnabled()) {
       wifimanager.setWifiEnabled(true);
@@ -216,7 +235,7 @@ public class ConnectionManager {
   }
 
   public void resetHotspot(boolean enable) {
-    WifiManager wifimanager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+    WifiManager wifimanager = (WifiManager) context.getSystemService(WIFI_SERVICE);
     WifiConfiguration wc = DataHolder.getInstance().getWcOnJoin();
 
     Method[] wmMethods = wifimanager.getClass()
@@ -238,7 +257,7 @@ public class ConnectionManager {
 
   public int enableHotspot(String randomAlphaNum, String deviceName) {
     if (wifimanager == null) {
-      wifimanager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+      wifimanager = (WifiManager) context.getSystemService(WIFI_SERVICE);
     }
     if (wifimanager.isWifiEnabled()) {
       wifimanager.setWifiEnabled(false);
@@ -368,7 +387,7 @@ public class ConnectionManager {
 
   public void cleanNetworks() {
     if (wifimanager == null) {
-      wifimanager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+      wifimanager = (WifiManager) context.getSystemService(WIFI_SERVICE);
     }
     List<WifiConfiguration> list = wifimanager.getConfiguredNetworks();
     if (list != null) {
@@ -485,6 +504,20 @@ public class ConnectionManager {
       scanner.cancel();
       scanner.purge();
       scanner = null;
+    }
+  }
+
+  public void recoverNetworkState(){
+    if(wifimanager==null){
+      wifimanager = (WifiManager) context.getSystemService(WIFI_SERVICE);
+    }
+    wifimanager.disconnect();
+    Boolean wifiOnStart = prefs.getBoolean("wifiOnStart", false);
+    if(wifiOnStart){
+      wifimanager.setWifiEnabled(true);
+      System.out.println("Recovering wifi state, it was on before. ");
+    }else{
+      wifimanager.setWifiEnabled(false);
     }
   }
 

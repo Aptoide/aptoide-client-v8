@@ -75,5 +75,7 @@
 
   <string name="unsupportedApp">App with this filename %1$s is not supported by this device</string>
 
+  <string name="recoveringWifiState">Recovering the Wifi state, from when you joined the app</string>
+
 </resources>
 

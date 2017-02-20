@@ -182,4 +182,13 @@ public class HighwayPresenter implements Presenter {
   public void setOutsideShareManager(OutsideShareManager outsideShareManager) {
     this.outsideShareManager = outsideShareManager;
   }
+
+  public void recoverNetworkState(){
+    connectionManager.recoverNetworkState();
+    view.showRecoveringWifiStateToast();
+  }
+
+  public void forgetAPTXNetwork(){
+    connectionManager.cleanNetworks();
+  }
 }

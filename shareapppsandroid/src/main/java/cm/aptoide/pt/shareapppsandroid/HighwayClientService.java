@@ -34,8 +34,8 @@ public class HighwayClientService extends Service {
     super.onCreate();
     System.out.println("Inside the onCreate of the service");
 
-    fileServerLifecycle = new FileServerLifecycle() {
-      @Override public void onStartSending(Object o) {
+    fileServerLifecycle = new FileServerLifecycle<AndroidAppInfo>() {
+      @Override public void onStartSending(AndroidAppInfo o) {
         System.out.println(" Started sending ");
         //generate intent, with info of the app. Name, filePath, size,, etc.
         //intent i=new Intent();
@@ -44,7 +44,7 @@ public class HighwayClientService extends Service {
         //create notification for the app.
       }
 
-      @Override public void onFinishSending(Object o) {
+      @Override public void onFinishSending(AndroidAppInfo o) {
         System.out.println(" Finished sending ");
 
       }
@@ -61,7 +61,6 @@ public class HighwayClientService extends Service {
         port = intent.getIntExtra("port", 0);
 
         final String externalStoragepath=intent.getStringExtra("ExternalStoragePath");
-        long space=intent.getIntExtra("storage",0);
 
         StorageCapacity storageCapacity = new StorageCapacity() {//todo nao percebo
           @Override public boolean hasCapacity(long bytes) {

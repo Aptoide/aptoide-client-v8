@@ -10,7 +10,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -53,7 +52,7 @@ public class HighwayActivity extends ActivityView implements HighwayView {
     requestPermissions();
 
     deviceName = getIntent().getStringExtra("deviceName");
-    connectionManager = new ConnectionManager(this);
+    connectionManager = ConnectionManager.getInstance(this);
     analyticsManager = new AnalyticsManager(getApplicationContext(), getIntent());
     groupManager = new GroupManager(connectionManager);
 
@@ -147,6 +146,10 @@ public class HighwayActivity extends ActivityView implements HighwayView {
       //                System.out.println("way is : : : "+way);
       //                pathsFromOutsideShare.add(way);
       //            }
+    } else if(intent.getAction()!=null && intent.getAction().equals("LEAVINGSHAREAPPSCLIENT")){
+      recoverNetworkState();
+      forgetAPTXNetwork();
+
     }
   }
 
@@ -158,6 +161,40 @@ public class HighwayActivity extends ActivityView implements HighwayView {
       getSupportActionBar().setDisplayShowTitleEnabled(true);
       getSupportActionBar().setTitle(getResources().getString(R.string.shareApps));
     }
+  }
+
+  private void recoverNetworkState() {
+    //check if wifi was enabled before and re use it.
+    presenter.recoverNetworkState();
+
+  }
+
+  private void forgetAPTXNetwork(){
+    presenter.forgetAPTXNetwork();
+    //System.out.println("Forget APTX inside the mainactivity- called on the beggining");
+    //if(wm==null){
+    //  wm = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+    //}
+    //List<WifiConfiguration> list = wm.getConfiguredNetworks();
+    //if(list!=null){
+    //  for( WifiConfiguration i : list ) {
+    //    if(i.SSID!=null){
+    //      String[] separated=i.SSID.split("_");
+    //      String tmp=separated[0].trim();
+    //      System.out.println("Trying to remove a APTX network.");
+    //      System.out.println("This one is i : "+ i.SSID);
+    //      System.out.println("SEPARATED 0 is : "+ tmp );
+    //      if(tmp.contains("APTX")){
+    //        System.out.println("Trying to remove a network");
+    //        boolean remove = wm.removeNetwork(i.networkId);
+    //        System.out.println("removed the network : "+remove);
+    //      }
+    //    }
+    //
+    //
+    //  }
+    //}
+
   }
 
   @Override public void onBackPressed() {
@@ -355,6 +392,10 @@ public class HighwayActivity extends ActivityView implements HighwayView {
 
   @Override public void refreshRadarLowerVersions(ArrayList<String> clients) {
     radarTextView.showForLowerVersions(clients);
+  }
+
+  @Override public void showRecoveringWifiStateToast() {
+    Toast.makeText(this,this.getResources().getString(R.string.recoveringWifiState) , Toast.LENGTH_SHORT).show();
   }
 
   public void joinSingleHotspot() {

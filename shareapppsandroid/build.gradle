@@ -31,4 +31,5 @@ dependencies {
 
   compile project(path: ':shareapps')
   compile project(path: ':utils')
+  compile 'com.android.support:design:25.0.1'
 }

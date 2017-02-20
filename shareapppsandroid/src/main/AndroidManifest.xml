@@ -24,7 +24,6 @@
 
     <activity
         android:name=".HighwayActivity"
-        android:launchMode="singleTask"
         android:screenOrientation="locked">
       <intent-filter>
         <action android:name="android.intent.action.VIEW" />

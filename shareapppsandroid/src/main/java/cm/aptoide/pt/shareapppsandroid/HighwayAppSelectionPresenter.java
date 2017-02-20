@@ -80,6 +80,7 @@ public class HighwayAppSelectionPresenter implements Presenter {
     //        } else {
     //            Toast.makeText(HighwayAppSelectionActivity.this, HighwayAppSelectionActivity.this.getResources().getString(R.string.noSelectedAppsToSend), Toast.LENGTH_SHORT).show();
     //        }
+    System.out.println("selectedApps size : " + selectedApps.size());
     if (selectedApps.size() > 0) {
       applicationSender.sendApp(selectedApps);
     } else {

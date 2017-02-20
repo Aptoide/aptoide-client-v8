@@ -36,6 +36,8 @@ public interface HighwayView {
 
   void refreshRadarLowerVersions(ArrayList<String> clients);
 
+  void showRecoveringWifiStateToast();
+
   //    void setCreateGroupListener(View.OnClickListener listener );
   //
   //    void setJoinGroupListener(View.OnClickListener listener);

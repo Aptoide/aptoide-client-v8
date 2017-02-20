@@ -4,13 +4,11 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.view.View;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-import android.widget.Toolbar;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +22,7 @@ public class HighwayAppSelectionActivity extends ActivityView implements Highway
   private boolean isHotspot;
   private HighwayAppSelectionCustomAdapter adapter;
   private List<App> listOfSelectedApps = new ArrayList<>();
-  private Button sendButton;
+  private FloatingActionButton sendButton;
   private GridView gridView;
   private String nickname;
   private ProgressBar progressBar;
@@ -43,7 +41,7 @@ public class HighwayAppSelectionActivity extends ActivityView implements Highway
 
     gridView.setSelector(new ColorDrawable(Color.BLACK));
 
-    sendButton = (Button) findViewById(R.id.sendButton);
+    sendButton = (FloatingActionButton) findViewById(R.id.sendButton);
 
     isHotspot = getIntent().getBooleanExtra("isAHotspot", false);
     setUpToolbar();
@@ -143,6 +141,7 @@ public class HighwayAppSelectionActivity extends ActivityView implements Highway
     sendButton.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
         presenter.clickedSendButton();
+        System.out.println("Clicked send button!");
       }
     });
   }

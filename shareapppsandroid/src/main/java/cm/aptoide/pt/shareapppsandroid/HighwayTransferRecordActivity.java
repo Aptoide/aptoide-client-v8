@@ -20,8 +20,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
-
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -570,6 +568,7 @@ public class HighwayTransferRecordActivity extends ActivityView
                   System.out.println("Client pressed leave button ");
 
                   sendDisconnectMessage();
+                  i.setAction("LEAVINGSHAREAPPSCLIENT");
                   //send disconnect message antes
                   DataHolder.getInstance().setHotspot(false);
                   DataHolder.getInstance().setServiceRunning(false);
