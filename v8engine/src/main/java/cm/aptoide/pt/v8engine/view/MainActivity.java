@@ -32,13 +32,13 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.activity.BaseActivity;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.fragment.FragmentView;
 import cm.aptoide.pt.v8engine.fragment.WizardFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.HomeFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.ScheduledDownloadsFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.storetab.StoreTabFragmentChooser;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
-import cm.aptoide.pt.v8engine.interfaces.DrawerFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.presenter.MainPresenter;
 import cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver;
@@ -95,6 +95,14 @@ public class MainActivity extends BaseActivity implements MainView, FragmentShow
 
   @Override public void showDeepLink() {
     handleDeepLinks();
+  }
+
+  @Override public void pushFragment(Fragment fragment) {
+    FragmentUtils.replaceFragmentV4(this, fragment);
+  }
+
+  @Override public Fragment getLast() {
+    return FragmentUtils.getLastFragmentV4(this);
   }
 
   private void handleDeepLinks() {
@@ -256,30 +264,19 @@ public class MainActivity extends BaseActivity implements MainView, FragmentShow
         && StoreTabFragmentChooser.validateAcceptedName(Event.Name.valueOf(queryName));
   }
 
-  @Override public void pushFragment(Fragment fragment) {
-    FragmentUtils.replaceFragmentV4(this, fragment);
-  }
-
-  @Override public Fragment getLast() {
-    return FragmentUtils.getLastFragmentV4(this);
-  }
-
   @Override public void onBackPressed() {
+    final int lastFragmentIndex = getSupportFragmentManager().getFragments().size() - 1;
+    final Fragment lastFragment = getSupportFragmentManager().getFragments().get(lastFragmentIndex);
 
-    // A little hammered to close the drawer on back pressed :)
-    if (getSupportFragmentManager().getFragments()
-        .get(getSupportFragmentManager().getFragments().size() - 1) instanceof DrawerFragment) {
-      DrawerFragment fragment = (DrawerFragment) getSupportFragmentManager().getFragments()
-          .get(getSupportFragmentManager().getFragments().size() - 1);
-      if (fragment.isDrawerOpened()) {
-        fragment.closeDrawer();
+    if (lastFragment instanceof FragmentView) {
+      // similar code in FragmentActivity#onBackPressed()
+      boolean handledBackPressed = ((FragmentView) lastFragment).onBackPressed();
+      if (handledBackPressed) {
         return;
-      } else {
-        super.onBackPressed();
       }
-    } else {
-      super.onBackPressed();
     }
+
+    super.onBackPressed();
   }
 
   private Fragment getCurrentFragment() {

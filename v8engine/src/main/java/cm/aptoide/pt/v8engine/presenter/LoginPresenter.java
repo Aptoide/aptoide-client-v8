@@ -60,39 +60,9 @@ public class LoginPresenter implements Presenter {
         .subscribe();
   }
 
-  private Observable<Void> showHidePassword() {
-    return view.showHidePasswordClick().doOnNext(__ -> {
-      // TODO: 13/2/2017 sithengineer missing view model to support this...
-    });
-  }
-
-  private Observable<Void> showSignUpClick() {
-    return view.showSignUpClick().doOnNext(selected -> view.showSignUpArea());
-  }
-
-  private Observable<Void> showLoginClick() {
-    return view.showAptoideLoginClick().doOnNext(selected -> view.showLoginArea());
-  }
-
-  private Observable<Void> successMessageShown() {
-    return view.successMessageShown().doOnNext(selection -> view.navigateToMainView());
-  }
-
-  private Observable<Void> forgotPasswordSelection() {
-    return view.forgotPasswordClick().doOnNext(selection -> view.navigateToForgotPasswordView());
-  }
-
   private void showOrHideLogins() {
     showOrHideFacebookLogin();
     showOrHideGoogleLogin();
-  }
-
-  private void showOrHideFacebookLogin() {
-    if (accountManager.isFacebookLoginEnabled()) {
-      view.showFacebookLogin();
-    } else {
-      view.hideFacebookLogin();
-    }
   }
 
   private Observable<Void> googleLoginSelection() {
@@ -125,6 +95,66 @@ public class LoginPresenter implements Presenter {
         }).retry();
   }
 
+  private Observable<Void> aptoideLoginClick() {
+    return view.aptoideLoginClick().doOnNext(selected -> view.showLoading()).<Void>flatMap(
+        credentials -> {
+          if (TextUtils.isEmpty(credentials.getPassword()) || TextUtils.isEmpty(
+              credentials.getUsername())) {
+            view.showCheckAptoideCredentialsMessage();
+            return Observable.empty();
+          }
+          return accountManager.login(LoginMode.APTOIDE, credentials.getUsername(),
+              credentials.getPassword(), null)
+              .observeOn(AndroidSchedulers.mainThread())
+              .doOnCompleted(() -> view.showSuccessMessage())
+              .doOnTerminate(() -> view.hideLoading())
+              .doOnError(throwable -> view.showError(throwable))
+              .toObservable();
+        }).retry();
+  }
+
+  private Observable<Void> forgotPasswordSelection() {
+    return view.forgotPasswordClick().doOnNext(selection -> view.navigateToForgotPasswordView());
+  }
+
+  private Observable<Void> successMessageShown() {
+    return view.successMessageShown().doOnNext(selection -> view.navigateToMainView());
+  }
+
+  private Observable<Void> showSignUpClick() {
+    return view.showSignUpClick().doOnNext(__ -> view.setSignUpAreaVisible());
+  }
+
+  private Observable<Void> showLoginClick() {
+    return view.showAptoideLoginClick().doOnNext(selected -> view.setLoginAreaVisible());
+  }
+
+  private Observable<Void> showHidePassword() {
+    return view.showHidePasswordClick().doOnNext(__ -> {
+      // TODO: 13/2/2017 sithengineer missing view model to support this...
+    });
+  }
+
+  private void showOrHideFacebookLogin() {
+    if (accountManager.isFacebookLoginEnabled()) {
+      view.showFacebookLogin();
+    } else {
+      view.hideFacebookLogin();
+    }
+  }
+
+  private void showOrHideGoogleLogin() {
+    if (accountManager.isGoogleLoginEnabled()) {
+      view.showGoogleLogin();
+    } else {
+      view.hideGoogleLogin();
+    }
+  }
+
+  private boolean declinedRequiredPermissions(Set<String> declinedPermissions) {
+    return declinedPermissions.containsAll(facebookRequiredPermissions);
+  }
+
   private Single<String> getFacebookUsername(AccessToken accessToken) {
     return Single.create(new Single.OnSubscribe<String>() {
       @Override public void call(SingleSubscriber<? super String> singleSubscriber) {
@@ -151,36 +181,6 @@ public class LoginPresenter implements Presenter {
         request.executeAsync();
       }
     });
-  }
-
-  private boolean declinedRequiredPermissions(Set<String> declinedPermissions) {
-    return declinedPermissions.containsAll(facebookRequiredPermissions);
-  }
-
-  private void showOrHideGoogleLogin() {
-    if (accountManager.isGoogleLoginEnabled()) {
-      view.showGoogleLogin();
-    } else {
-      view.hideGoogleLogin();
-    }
-  }
-
-  private Observable<Void> aptoideLoginClick() {
-    return view.aptoideLoginClick().doOnNext(selected -> view.showLoading()).<Void>flatMap(
-        credentials -> {
-          if (TextUtils.isEmpty(credentials.getPassword()) || TextUtils.isEmpty(
-              credentials.getUsername())) {
-            view.showCheckAptoideCredentialsMessage();
-            return Observable.empty();
-          }
-          return accountManager.login(LoginMode.APTOIDE, credentials.getUsername(),
-              credentials.getPassword(), null)
-              .observeOn(AndroidSchedulers.mainThread())
-              .doOnCompleted(() -> view.showSuccessMessage())
-              .doOnTerminate(() -> view.hideLoading())
-              .doOnError(throwable -> view.showError(throwable))
-              .toObservable();
-        }).retry();
   }
 
   @Override public void saveState(Bundle state) {
