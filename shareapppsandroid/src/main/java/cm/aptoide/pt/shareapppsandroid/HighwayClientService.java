@@ -67,11 +67,7 @@ public class HighwayClientService extends Service {
             long availableSpace = -1L;
             StatFs stat = new StatFs(externalStoragepath);
             availableSpace = (long) stat.getAvailableBlocks() * (long) stat.getBlockSize();
-            if (availableSpace > bytes) {
-              return true;
-            }else{
-              return false;
-            }
+            return availableSpace > bytes;
 
           }
         };
@@ -99,7 +95,7 @@ public class HighwayClientService extends Service {
 
           Host host = aptoideMessageController.getHost();
           aptoideMessageController.send(
-                  new RequestPermissionToSend(aptoideMessageController.getMe(),appInfo));
+              new RequestPermissionToSend(aptoideMessageController.getLocalhost(), appInfo));
 
         }else {
           List<App> tempList = b.getParcelableArrayList("listOfAppsToInstall");
