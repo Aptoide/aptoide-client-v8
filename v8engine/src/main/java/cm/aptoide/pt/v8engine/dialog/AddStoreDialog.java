@@ -12,7 +12,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.SearchView;
@@ -28,12 +27,13 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.BaseV7Response;
+import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.v8engine.MainActivityFragment;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.activity.StoreSearchActivity;
@@ -41,7 +41,6 @@ import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.websocket.StoreAutoCompleteWebSocket;
 import com.jakewharton.rxbinding.view.RxView;
-import java.lang.reflect.Field;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -53,6 +52,8 @@ public class AddStoreDialog extends DialogFragment {
 
   private final int PRIVATE_STORE_REQUEST_CODE = 20;
   private static String STORE_WEBSOCKET_PORT = "9002";
+  private final AptoideClientUUID aptoideClientUUID;
+  private NavigationManagerV4 navigationManager;
   private String storeName;
   private Dialog loadingDialog;
   private CompositeSubscription mSubscriptions;
@@ -62,7 +63,16 @@ public class AddStoreDialog extends DialogFragment {
   private TextView topStoreText1;
   private TextView topStoreText2;
   private static StoreAutoCompleteWebSocket storeAutoCompleteWebSocket;
-  private String givenStoreName;;
+  private String givenStoreName;
+
+  public AddStoreDialog() {
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+  }
+
+  public void attachFragmentManager(NavigationManagerV4 navigationManager) {
+    this.navigationManager = navigationManager;
+  }
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -101,8 +111,7 @@ public class AddStoreDialog extends DialogFragment {
   }
 
   private void topStoresAction() {
-    ((MainActivityFragment) getActivity()).pushFragmentV4(
-        V8Engine.getFragmentProvider().newFragmentTopStores());
+    navigationManager.navigateTo(V8Engine.getFragmentProvider().newFragmentTopStores());
     if (isAdded()) {
       dismiss();
     }
@@ -154,7 +163,10 @@ public class AddStoreDialog extends DialogFragment {
   }
 
   private void executeRequest(GetStoreMetaRequest getStoreMetaRequest) {
-    StoreUtilsProxy.subscribeStore(getStoreMetaRequest, getStoreMeta1 -> {
+    final IdsRepositoryImpl clientUuid =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
+
+    new StoreUtilsProxy(clientUuid).subscribeStore(getStoreMetaRequest, getStoreMeta1 -> {
       ShowMessage.asSnack(getView(),
           AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
 
@@ -182,9 +194,7 @@ public class AddStoreDialog extends DialogFragment {
 
   private GetStoreMetaRequest buildRequest(String storeName) {
     return GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName),
-        AptoideAccountManager.getAccessToken(),
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID());
+        AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier());
   }
 
   private void showLoadingDialog() {
@@ -238,7 +248,8 @@ public class AddStoreDialog extends DialogFragment {
       }
     });
 
-    searchView.setOnSearchClickListener(v -> new StoreAutoCompleteWebSocket().connect(STORE_WEBSOCKET_PORT));
+    searchView.setOnSearchClickListener(
+        v -> new StoreAutoCompleteWebSocket().connect(STORE_WEBSOCKET_PORT));
   }
 
   private enum BundleArgs {

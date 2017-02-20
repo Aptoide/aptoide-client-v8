@@ -1,9 +1,7 @@
 package cm.aptoide.pt.v8engine.websocket;
 
 import android.database.MatrixCursor;
-import android.util.Log;
-import cm.aptoide.pt.crashreports.CrashReports;
-import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.adapters.StoreAutoCompleteAdapter;
 import java.util.ArrayList;
@@ -22,7 +20,8 @@ import org.json.JSONException;
 public class StoreAutoCompleteWebSocket extends WebSocketManager {
 
   @Getter private static List<String> results = new ArrayList<String>();
-  StoreAutoCompleteAdapter storeAutoCompleteAdapter1 = new StoreAutoCompleteAdapter(Application.getContext());
+  StoreAutoCompleteAdapter storeAutoCompleteAdapter1 =
+      new StoreAutoCompleteAdapter(Application.getContext());
 
   @Override public WebSocket connect(String port) {
     request = new Request.Builder().url(WEBSOCKETS_SCHEME + WEBSOCKETS_HOST + ":" + port).build();
@@ -44,8 +43,7 @@ public class StoreAutoCompleteWebSocket extends WebSocketManager {
 
       blockingQueue.add(matrixCursor);
     } catch (JSONException e) {
-      Logger.printException(e);
-      CrashReports.logException(e);
+      CrashReport.getInstance().log(e);
     }
   }
 

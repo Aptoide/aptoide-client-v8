@@ -1,9 +1,7 @@
 package cm.aptoide.pt.v8engine.websocket;
 
-import android.app.SearchManager;
 import android.database.MatrixCursor;
-import cm.aptoide.pt.crashreports.CrashReports;
-import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.crashreports.CrashReport;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.WebSocket;
@@ -47,8 +45,7 @@ public class SearchAppsWebSocket extends WebSocketManager {
 
       blockingQueue.add(matrixCursor);
     } catch (JSONException e) {
-      Logger.printException(e);
-      CrashReports.logException(e);
+      CrashReport.getInstance().log(e);
     }
   }
 

@@ -5,8 +5,7 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
 import android.util.Log;
-import cm.aptoide.pt.crashreports.CrashReports;
-import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.websocket.StoreAutoCompleteWebSocket;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -56,8 +55,7 @@ public class StoreSearchSuggestionProvider extends SearchRecentSuggestionsProvid
               .add("1");
         }
       } catch (InterruptedException e) {
-        Logger.printException(e);
-        CrashReports.logException(e);
+        CrashReport.getInstance().log(e);
       } finally {
         c.close();
       }

@@ -26,11 +26,9 @@ import cm.aptoide.pt.v8engine.websocket.SearchAppsWebSocket;
 public class SearchUtils {
 
   private static String SEARCH_WEBSOCKET = "9000";
+
   public static void setupGlobalSearchView(Menu menu, NavigationManagerV4 navigationManager) {
     setupSearchView(menu.findItem(R.id.action_search), navigationManager,
-
-  public static void setupGlobalSearchView(Menu menu, FragmentActivity fragmentActivity) {
-    setupSearchView(menu.findItem(R.id.action_search), fragmentActivity,
         s -> V8Engine.getFragmentProvider().newSearchFragment(s));
   }
 
