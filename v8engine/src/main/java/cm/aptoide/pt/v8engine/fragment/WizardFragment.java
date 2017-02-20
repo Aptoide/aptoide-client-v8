@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.fragment;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -15,7 +16,6 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.adapters.DumbEagerFragmentPagerAdapter;
 import cm.aptoide.pt.v8engine.fragment.implementations.JoinCommunityFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.WizardPageOneFragment;
-import cm.aptoide.pt.v8engine.fragment.implementations.WizardPageThreeFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.WizardPageTwoFragment;
 import com.jakewharton.rxbinding.support.v4.view.RxViewPager;
 import com.jakewharton.rxbinding.view.RxView;
@@ -57,7 +57,7 @@ public class WizardFragment extends FragmentView {
 
     viewPagerAdapter = new DumbEagerFragmentPagerAdapter(getActivity().getSupportFragmentManager());
     viewPagerAdapter.attachFragments(WizardPageOneFragment.newInstance(),
-        WizardPageTwoFragment.newInstance(), WizardPageThreeFragment.newInstance(),
+        WizardPageTwoFragment.newInstance(), //WizardPageThreeFragment.newInstance(),
         JoinCommunityFragment.newInstance());
 
     viewPager.setAdapter(viewPagerAdapter);
@@ -129,6 +129,10 @@ public class WizardFragment extends FragmentView {
   }
 
   public boolean onBackPressed() {
-    return ((FragmentView)viewPagerAdapter.getItem(viewPager.getCurrentItem())).onBackPressed();
+    Fragment f = viewPagerAdapter.getItem(viewPager.getCurrentItem());
+    if (FragmentView.class.isAssignableFrom(f.getClass())) {
+      return ((FragmentView) f).onBackPressed();
+    }
+    return super.onBackPressed();
   }
 }

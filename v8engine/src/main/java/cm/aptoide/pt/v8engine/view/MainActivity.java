@@ -111,10 +111,7 @@ public class MainActivity extends BaseActivity implements MainView, FragmentShow
   }
 
   @Override public Fragment getLast() {
-    FragmentManager fragmentManager = getSupportFragmentManager();
-    FragmentManager.BackStackEntry backStackEntry =
-        fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1);
-    return fragmentManager.findFragmentByTag(backStackEntry.getName());
+    return getLastFragment();
   }
 
   private void handleDeepLinks() {
@@ -259,11 +256,11 @@ public class MainActivity extends BaseActivity implements MainView, FragmentShow
   private void setMainPagerPosition(Event.Name name) {
     if (handler != null) {
       handler.post(() -> {
-        if (!(getCurrentFragment() instanceof HomeFragment)) {
-          return;
+        //final Fragment fragment = getCurrentFragment();
+        final Fragment fragment = getLastFragment();
+        if ((fragment instanceof HomeFragment)) {
+          ((HomeFragment) fragment).setDesiredViewPagerItem(name);
         }
-
-        ((HomeFragment) getCurrentFragment()).setDesiredViewPagerItem(name);
       });
     }
   }
@@ -278,27 +275,27 @@ public class MainActivity extends BaseActivity implements MainView, FragmentShow
   }
 
   @Override public void onBackPressed() {
-    final int lastFragmentIndex = getSupportFragmentManager().getFragments().size() - 1;
-    final Fragment lastFragment = getSupportFragmentManager().getFragments().get(lastFragmentIndex);
-
-    if (lastFragment instanceof FragmentView) {
+    final Fragment f = getLastFragment();
+    if (FragmentView.class.isAssignableFrom(f.getClass())) {
       // similar code in FragmentActivity#onBackPressed()
-      boolean handledBackPressed = ((FragmentView) lastFragment).onBackPressed();
+      boolean handledBackPressed = ((FragmentView) f).onBackPressed();
       if (handledBackPressed) {
         return;
       }
     }
-
     super.onBackPressed();
   }
 
-  private Fragment getCurrentFragment() {
-    if (getSupportFragmentManager().getFragments() != null
-        && getSupportFragmentManager().getFragments().size() > 0) {
-      return getSupportFragmentManager().getFragments()
-          .get(getSupportFragmentManager().getFragments().size() - 1);
-    } else {
-      return null;
-    }
+  //private Fragment getCurrentFragment() {
+  //  FragmentManager.BackStackEntry backStackEntry =
+  //      getSupportFragmentManager().getBackStackEntryAt(0);
+  //  return getSupportFragmentManager().findFragmentByTag(backStackEntry.getName());
+  //}
+
+  private Fragment getLastFragment() {
+    FragmentManager fragmentManager = getSupportFragmentManager();
+    FragmentManager.BackStackEntry backStackEntry =
+        fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1);
+    return getSupportFragmentManager().findFragmentByTag(backStackEntry.getName());
   }
 }

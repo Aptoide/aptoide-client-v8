@@ -11,7 +11,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import cm.aptoide.accountmanager.BuildConfig;
 import cm.aptoide.pt.v8engine.view.GoogleLoginView;
-import cm.aptoide.pt.v8engine.view.LoginView;
+import cm.aptoide.pt.v8engine.view.LoginSignUpView;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -33,7 +33,7 @@ public abstract class GoogleLoginFragment extends GooglePlayServicesFragment
     implements GoogleLoginView {
 
   private static final int RESOLVE_GOOGLE_CREDENTIALS_REQUEST_CODE = 2;
-  private PublishRelay<LoginView.GoogleAccountViewModel> googleLoginSubject;
+  private PublishRelay<LoginSignUpView.GoogleAccountViewModel> googleLoginSubject;
   private GoogleApiClient client;
 
   @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -86,7 +86,7 @@ public abstract class GoogleLoginFragment extends GooglePlayServicesFragment
       final GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
       final GoogleSignInAccount account = result.getSignInAccount();
       if (result.isSuccess() && account != null) {
-        googleLoginSubject.call(new LoginView.GoogleAccountViewModel(account.getDisplayName(),
+        googleLoginSubject.call(new LoginSignUpView.GoogleAccountViewModel(account.getDisplayName(),
             account.getServerAuthCode(), account.getEmail()));
       } else {
         showGoogleLoginError();
@@ -94,7 +94,7 @@ public abstract class GoogleLoginFragment extends GooglePlayServicesFragment
     }
   }
 
-  @Override public Observable<LoginView.GoogleAccountViewModel> googleLoginClick() {
+  @Override public Observable<LoginSignUpView.GoogleAccountViewModel> googleLoginClick() {
     return googleLoginSubject;
   }
 }

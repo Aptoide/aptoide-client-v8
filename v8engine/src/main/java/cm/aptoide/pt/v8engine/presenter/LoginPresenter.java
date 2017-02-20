@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.LoginMode;
-import cm.aptoide.pt.v8engine.view.LoginView;
+import cm.aptoide.pt.v8engine.view.LoginSignUpView;
 import cm.aptoide.pt.v8engine.view.View;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
@@ -30,11 +30,11 @@ import rx.subscriptions.Subscriptions;
 
 public class LoginPresenter implements Presenter {
 
-  private final LoginView view;
+  private final LoginSignUpView view;
   private final AptoideAccountManager accountManager;
   private final Collection<String> facebookRequiredPermissions;
 
-  public LoginPresenter(LoginView view, AptoideAccountManager accountManager,
+  public LoginPresenter(LoginSignUpView view, AptoideAccountManager accountManager,
       Collection<String> facebookRequiredPermissions) {
     this.view = view;
     this.accountManager = accountManager;
@@ -46,8 +46,8 @@ public class LoginPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(created -> showOrHideLogins())
-        .flatMap(resumed -> Observable.merge(googleLoginSelection(), facebookLoginSelection(),
-            aptoideLoginClick()))
+        .flatMap(resumed -> Observable.merge(googleLoginClick(), facebookLoginClick(),
+            aptoideLoginClick(), aptoideSignUpClick()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
 
@@ -65,7 +65,7 @@ public class LoginPresenter implements Presenter {
     showOrHideGoogleLogin();
   }
 
-  private Observable<Void> googleLoginSelection() {
+  private Observable<Void> googleLoginClick() {
     return view.googleLoginClick().doOnNext(selected -> view.showLoading()).<Void>flatMap(
         credentials -> accountManager.login(LoginMode.GOOGLE, credentials.getEmail(),
             credentials.getToken(), credentials.getDisplayName())
@@ -76,7 +76,7 @@ public class LoginPresenter implements Presenter {
             .toObservable()).retry();
   }
 
-  private Observable<Void> facebookLoginSelection() {
+  private Observable<Void> facebookLoginClick() {
     return view.facebookLoginClick().doOnNext(selected -> view.showLoading()).<Void>flatMap(
         credentials -> {
           if (declinedRequiredPermissions(credentials.getDeniedPermissions())) {
@@ -105,6 +105,24 @@ public class LoginPresenter implements Presenter {
           }
           return accountManager.login(LoginMode.APTOIDE, credentials.getUsername(),
               credentials.getPassword(), null)
+              .observeOn(AndroidSchedulers.mainThread())
+              .doOnCompleted(() -> view.showSuccessMessage())
+              .doOnTerminate(() -> view.hideLoading())
+              .doOnError(throwable -> view.showError(throwable))
+              .toObservable();
+        }).retry();
+  }
+
+  private Observable<Void> aptoideSignUpClick() {
+    return view.aptoideSignUpClick().doOnNext(__ -> view.showLoading()).<Void>flatMap(
+        credentials -> {
+          if (TextUtils.isEmpty(credentials.getPassword()) || TextUtils.isEmpty(
+              credentials.getUsername())) {
+            view.showCheckAptoideCredentialsMessage();
+            return Observable.empty();
+          }
+          return accountManager.createAccount(credentials.getUsername(),
+              credentials.getPassword())
               .observeOn(AndroidSchedulers.mainThread())
               .doOnCompleted(() -> view.showSuccessMessage())
               .doOnTerminate(() -> view.hideLoading())

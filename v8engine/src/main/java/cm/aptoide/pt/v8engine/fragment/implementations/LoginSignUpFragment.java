@@ -26,7 +26,7 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.account.ErrorsMapper;
 import cm.aptoide.pt.v8engine.fragment.GoogleLoginFragment;
 import cm.aptoide.pt.v8engine.presenter.LoginPresenter;
-import cm.aptoide.pt.v8engine.view.LoginView;
+import cm.aptoide.pt.v8engine.view.LoginSignUpView;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -42,7 +42,7 @@ import java.util.Arrays;
 import java.util.List;
 import rx.Observable;
 
-public class LoginSignUpFragment extends GoogleLoginFragment implements LoginView {
+public class LoginSignUpFragment extends GoogleLoginFragment implements LoginSignUpView {
 
   private ProgressDialog progressDialog;
   private CallbackManager callbackManager;
@@ -290,12 +290,18 @@ public class LoginSignUpFragment extends GoogleLoginFragment implements LoginVie
             aptoidePasswordEditText.getText().toString()));
   }
 
+  @Override public Observable<AptoideAccountViewModel> aptoideSignUpClick() {
+    return RxView.clicks(buttonSignUp)
+        .map(click -> new AptoideAccountViewModel(aptoideEmailEditText.getText().toString(),
+            aptoidePasswordEditText.getText().toString()));
+  }
+
   private void showFacebookLoginError(@StringRes int errorRes) {
     ShowMessage.asSnack(showLoginButton, errorRes);
   }
 
   @Override public boolean onBackPressed() {
-    if (areInputFieldsVisibile()) {
+    if (areInputFieldsVisible()) {
       toggleInputFieldsVisibility(false);
       return true;
     }
@@ -304,7 +310,7 @@ public class LoginSignUpFragment extends GoogleLoginFragment implements LoginVie
   }
 
   // to use when back is pressed
-  private boolean areInputFieldsVisibile() {
+  private boolean areInputFieldsVisible() {
     return inputCredentials.getVisibility() == View.VISIBLE;
   }
 }

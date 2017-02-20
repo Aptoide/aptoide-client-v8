@@ -13,7 +13,7 @@ import rx.Observable;
  * Created by marcelobenites on 07/02/17.
  */
 
-public interface LoginView extends GoogleLoginView {
+public interface LoginSignUpView extends GoogleLoginView {
 
   void showLoading();
 
@@ -56,6 +56,8 @@ public interface LoginView extends GoogleLoginView {
   Observable<Void> showAptoideLoginClick();
 
   Observable<AptoideAccountViewModel> aptoideLoginClick();
+
+  Observable<AptoideAccountViewModel> aptoideSignUpClick();
 
   class AptoideAccountViewModel {
 

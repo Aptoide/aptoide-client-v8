@@ -31,4 +31,9 @@ public class JoinCommunityFragment extends FragmentView {
 
     return view;
   }
+
+  @Override public boolean onBackPressed() {
+    // TODO: 20/2/2017 sithengineer  
+    return super.onBackPressed();
+  }
 }
