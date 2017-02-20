@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Pair;
 import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
@@ -81,8 +82,9 @@ public class DisplayablesFactory {
           return Observable.just(getDisplays(widget, storeTheme, storeContext));
 
         case ADS:
-          Displayable ads = getAds(widget);
-          if (ads != null) {
+          List<Displayable> adsList = getAds(widget);
+          if (adsList.size() > 0) {
+            DisplayableGroup ads = new DisplayableGroup(adsList);
             // Header hammered
             LinkedList<GetStoreWidgets.WSWidget.Action> actions = new LinkedList<>();
             actions.add(new GetStoreWidgets.WSWidget.Action().setEvent(
@@ -93,6 +95,8 @@ public class DisplayablesFactory {
             displayables.add(storeGridHeaderDisplayable);
             displayables.add(ads);
             return Observable.from(displayables);
+          } else {
+            return Observable.empty();
           }
 
         case STORE_META:
@@ -261,7 +265,7 @@ public class DisplayablesFactory {
     return new DisplayableGroup(tmp);
   }
 
-  private static Displayable getAds(GetStoreWidgets.WSWidget wsWidget) {
+  private static @NonNull List<Displayable> getAds(GetStoreWidgets.WSWidget wsWidget) {
     GetAdsResponse getAdsResponse = (GetAdsResponse) wsWidget.getViewObject();
     if (getAdsResponse != null
         && getAdsResponse.getAds() != null
@@ -273,10 +277,10 @@ public class DisplayablesFactory {
         GridAdDisplayable diplayable = new GridAdDisplayable(MinimalAd.from(ad), wsWidget.getTag());
         tmp.add(diplayable);
       }
-      return new DisplayableGroup(tmp);
+      return tmp;
     }
 
-    return null;
+    return Collections.emptyList();
   }
 
   private static List<Displayable> createReviewsGroupDisplayables(
