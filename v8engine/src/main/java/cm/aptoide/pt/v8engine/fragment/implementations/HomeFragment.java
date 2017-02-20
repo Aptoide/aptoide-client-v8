@@ -36,7 +36,6 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.StorePagerAdapter;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
@@ -80,72 +79,16 @@ public class HomeFragment extends StoreFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
-    accountNavigator = new AccountNavigator(getContext(), accountManager);
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    accountNavigator =
+        new AccountNavigator(NavigationManagerV4.Builder.buildWith(getActivity()), accountManager);
     updateRepository = RepositoryFactory.getUpdateRepository(getContext());
-  }
-
-  @Override public void onResume() {
-    super.onResume();
-    setUserDataOnHeader();
-  }
-
-  private void setUserDataOnHeader() {
-    if(navigationView==null || navigationView.getVisibility()!=View.VISIBLE){
-      // if the navigation view is not visible do nothing
-      return;
-    }
-
-    View baseHeaderView = navigationView.getHeaderView(0);
-    TextView userEmail = (TextView) baseHeaderView.findViewById(R.id.profile_email_text);
-    TextView userUsername = (TextView) baseHeaderView.findViewById(R.id.profile_name_text);
-    ImageView userAvatarImage = (ImageView) baseHeaderView.findViewById(R.id.profile_image);
-
-    if (accountManager.isLoggedIn()) {
-
-      userEmail.setVisibility(View.VISIBLE);
-      userUsername.setVisibility(View.VISIBLE);
-
-      User user = accountManager.getUser();
-      userEmail.setText(user.getUsername());
-      userUsername.setText(user.getName());
-
-      ImageLoader.with(getContext())
-          .loadWithCircleTransformAndPlaceHolder(user.getAvatar(), userAvatarImage,
-              R.drawable.user_account_white);
-
-      return;
-    }
-
-    userEmail.setText("");
-    userUsername.setText("");
-
-    userEmail.setVisibility(View.GONE);
-    userUsername.setVisibility(View.GONE);
-
-    ImageLoader.with(getContext()).load(R.drawable.user_account_white, userAvatarImage);
   }
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     return super.onCreateView(inflater, container, savedInstanceState);
-  }
-
-  @Override public void bindViews(View view) {
-    super.bindViews(view);
-
-    updateRepository = RepositoryFactory.getUpdateRepository(getContext());
-
-    navigationView = (NavigationView) view.findViewById(R.id.nav_view);
-    drawerLayout = (DrawerLayout) view.findViewById(R.id.drawer_layout);
-
-    setHasOptionsMenu(true);
-
-    receiver = new ChangeTabReceiver();
-    getContext().registerReceiver(receiver, new IntentFilter(ChangeTabReceiver.SET_TAB_EVENT));
-
-    Analytics.AppViewViewedFrom.addStepToList("HOME");
   }
 
   @Override public void onDestroyView() {
@@ -331,21 +274,78 @@ public class HomeFragment extends StoreFragment {
     toolbar.setNavigationOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
   }
 
+  @Override public void onResume() {
+    super.onResume();
+    setUserDataOnHeader();
+  }
+
+  private void setUserDataOnHeader() {
+    if (navigationView == null || navigationView.getVisibility() != View.VISIBLE) {
+      // if the navigation view is not visible do nothing
+      return;
+    }
+
+    View baseHeaderView = navigationView.getHeaderView(0);
+    TextView userEmail = (TextView) baseHeaderView.findViewById(R.id.profile_email_text);
+    TextView userUsername = (TextView) baseHeaderView.findViewById(R.id.profile_name_text);
+    ImageView userAvatarImage = (ImageView) baseHeaderView.findViewById(R.id.profile_image);
+
+    if (accountManager.isLoggedIn()) {
+
+      userEmail.setVisibility(View.VISIBLE);
+      userUsername.setVisibility(View.VISIBLE);
+
+      User user = accountManager.getUser();
+      userEmail.setText(user.getUsername());
+      userUsername.setText(user.getName());
+
+      ImageLoader.with(getContext())
+          .loadWithCircleTransformAndPlaceHolder(user.getAvatar(), userAvatarImage,
+              R.drawable.user_account_white);
+
+      return;
+    }
+
+    userEmail.setText("");
+    userUsername.setText("");
+
+    userEmail.setVisibility(View.GONE);
+    userUsername.setVisibility(View.GONE);
+
+    ImageLoader.with(getContext()).load(R.drawable.user_account_white, userAvatarImage);
+  }
+
+  @Override public void bindViews(View view) {
+    super.bindViews(view);
+
+    updateRepository = RepositoryFactory.getUpdateRepository(getContext());
+
+    navigationView = (NavigationView) view.findViewById(R.id.nav_view);
+    drawerLayout = (DrawerLayout) view.findViewById(R.id.drawer_layout);
+
+    setHasOptionsMenu(true);
+
+    receiver = new ChangeTabReceiver();
+    getContext().registerReceiver(receiver, new IntentFilter(ChangeTabReceiver.SET_TAB_EVENT));
+
+    Analytics.AppViewViewedFrom.addStepToList("HOME");
+  }
+
+  @Override public boolean onBackPressed() {
+    if (isDrawerOpened()) {
+      closeDrawer();
+      return true;
+    }
+
+    return super.onBackPressed();
+  }
+
   private boolean isDrawerOpened() {
     return drawerLayout.isDrawerOpen(Gravity.LEFT);
   }
 
   private void closeDrawer() {
     drawerLayout.closeDrawers();
-  }
-
-  @Override public boolean onBackPressed() {
-    if(isDrawerOpened()){
-      closeDrawer();
-      return true;
-    }
-
-    return super.onBackPressed();
   }
 
   public class ChangeTabReceiver extends BroadcastReceiver {

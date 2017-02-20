@@ -59,6 +59,8 @@ public interface LoginSignUpView extends GoogleLoginView {
 
   Observable<AptoideAccountViewModel> aptoideSignUpClick();
 
+  boolean isPasswordVisible();
+
   class AptoideAccountViewModel {
 
     private final String username;

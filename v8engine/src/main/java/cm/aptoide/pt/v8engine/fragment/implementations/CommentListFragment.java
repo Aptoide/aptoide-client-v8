@@ -3,8 +3,8 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -27,15 +27,15 @@ import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.ListComments;
 import cm.aptoide.pt.model.v7.SetComment;
-import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.navigation.AccountNavigator;
+import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.interfaces.CommentDialogCallbackContract;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.navigation.AccountNavigator;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
+import cm.aptoide.pt.v8engine.interfaces.CommentDialogCallbackContract;
 import cm.aptoide.pt.v8engine.util.CommentOperations;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.view.custom.HorizontalDividerItemDecoration;
@@ -66,9 +66,9 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   private static final String ELEMENT_ID_AS_STRING = "element_id_as_string";
   private static final String ELEMENT_ID_AS_LONG = "element_id_as_long";
   private static final String URL_VAL = "url_val";
-  private AptoideClientUUID aptoideClientUUID;
   // control setComment retry
   protected long lastTotal;
+  private AptoideClientUUID aptoideClientUUID;
   //
   // vars
   //
@@ -89,14 +89,6 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   private AptoideAccountManager accountManager;
   private AccountNavigator accountNavigator;
 
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
-    accountNavigator = new AccountNavigator(getContext(), accountManager);
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
-  }
-
   public static Fragment newInstance(CommentType commentType, String timelineArticleId) {
     Bundle args = new Bundle();
     args.putString(ELEMENT_ID_AS_STRING, timelineArticleId);
@@ -115,6 +107,15 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     CommentListFragment fragment = new CommentListFragment();
     fragment.setArguments(args);
     return fragment;
+  }
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    accountNavigator =
+        new AccountNavigator(NavigationManagerV4.Builder.buildWith(getActivity()), accountManager);
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {
@@ -401,7 +402,6 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   }
 
   public Observable<Void> createNewCommentFragment(long storeCommentId, String storeName) {
-
 
     return Observable.just(accountManager.isLoggedIn()).flatMap(isLoggedIn -> {
 

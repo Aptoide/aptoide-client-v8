@@ -21,13 +21,14 @@ import cm.aptoide.pt.dataprovider.ws.v7.PostReviewRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.navigation.AccountNavigator;
+import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.navigation.AccountNavigator;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.util.DialogUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.InstalledAppDisplayable;
@@ -72,13 +73,13 @@ import java.util.Locale;
   @Override public void bindView(InstalledAppDisplayable displayable) {
     Installed pojo = displayable.getPojo();
 
-
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
-    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
-    accountNavigator = new AccountNavigator(getContext(), accountManager);
-    dialogUtils = new DialogUtils(accountManager, aptoideClientUUID,
-        new AccountNavigator(getContext(), accountManager));
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    final AccountNavigator accountNavigator =
+        new AccountNavigator(NavigationManagerV4.Builder.buildWith(getContext()), accountManager);
+    this.accountNavigator = accountNavigator;
+    dialogUtils = new DialogUtils(accountManager, aptoideClientUUID, accountNavigator);
     appName = pojo.getName();
     packageName = pojo.getPackageName();
 

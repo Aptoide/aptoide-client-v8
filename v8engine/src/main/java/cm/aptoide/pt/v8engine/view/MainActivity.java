@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.view;
 
-import android.accounts.AccountManager;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -30,8 +29,6 @@ import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.Layout;
 import cm.aptoide.pt.navigation.NavigationManagerV4;
-import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -108,10 +105,6 @@ public class MainActivity extends BaseActivity implements MainView, FragmentShow
 
   @Override public void showDeepLink() {
     handleDeepLinks();
-  }
-
-  @Override public Fragment getLast() {
-    return getLastFragment();
   }
 
   private void handleDeepLinks() {
@@ -257,7 +250,7 @@ public class MainActivity extends BaseActivity implements MainView, FragmentShow
     if (handler != null) {
       handler.post(() -> {
         //final Fragment fragment = getCurrentFragment();
-        final Fragment fragment = getLastFragment();
+        final Fragment fragment = getLast();
         if ((fragment instanceof HomeFragment)) {
           ((HomeFragment) fragment).setDesiredViewPagerItem(name);
         }
@@ -275,7 +268,7 @@ public class MainActivity extends BaseActivity implements MainView, FragmentShow
   }
 
   @Override public void onBackPressed() {
-    final Fragment f = getLastFragment();
+    final Fragment f = getLast();
     if (FragmentView.class.isAssignableFrom(f.getClass())) {
       // similar code in FragmentActivity#onBackPressed()
       boolean handledBackPressed = ((FragmentView) f).onBackPressed();
@@ -286,13 +279,7 @@ public class MainActivity extends BaseActivity implements MainView, FragmentShow
     super.onBackPressed();
   }
 
-  //private Fragment getCurrentFragment() {
-  //  FragmentManager.BackStackEntry backStackEntry =
-  //      getSupportFragmentManager().getBackStackEntryAt(0);
-  //  return getSupportFragmentManager().findFragmentByTag(backStackEntry.getName());
-  //}
-
-  private Fragment getLastFragment() {
+  @Override public Fragment getLast() {
     FragmentManager fragmentManager = getSupportFragmentManager();
     FragmentManager.BackStackEntry backStackEntry =
         fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1);

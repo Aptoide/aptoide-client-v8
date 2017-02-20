@@ -12,12 +12,13 @@ import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.Comment;
+import cm.aptoide.pt.navigation.AccountNavigator;
+import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.navigation.AccountNavigator;
 import cm.aptoide.pt.v8engine.util.CommentOperations;
 import cm.aptoide.pt.v8engine.view.custom.HorizontalDividerItemDecoration;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
@@ -48,7 +49,6 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
 
   public StoreLatestCommentsWidget(View itemView) {
     super(itemView);
-
   }
 
   @Override protected void assignViews(View itemView) {
@@ -56,8 +56,9 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
   }
 
   @Override public void bindView(StoreLatestCommentsDisplayable displayable) {
-    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
-    accountNavigator = new AccountNavigator(getContext(), accountManager);
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    accountNavigator =
+        new AccountNavigator(NavigationManagerV4.Builder.buildWith(getContext()), accountManager);
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
     LinearLayoutManager layoutManager = new LinearLayoutManager(recyclerView.getContext());
@@ -74,25 +75,23 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
   }
 
   private void setAdapter(List<Comment> comments) {
-    recyclerView.setAdapter(
-        new CommentListAdapter(storeId, storeName, comments, getContext().getSupportFragmentManager(),
-            recyclerView, Observable.fromCallable(() -> reloadComments()), accountManager,
-            accountNavigator));
+    recyclerView.setAdapter(new CommentListAdapter(storeId, storeName, comments,
+        getContext().getSupportFragmentManager(), recyclerView,
+        Observable.fromCallable(() -> reloadComments()), accountManager, accountNavigator));
   }
 
   private Void reloadComments() {
     ManagerPreferences.setForceServerRefreshFlag(true);
-    compositeSubscription.add(
-        ListCommentsRequest.of(storeId, 0, 3, accountManager.getAccessToken(),
-            aptoideClientUUID.getUniqueIdentifier(), false)
-            .observe()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(listComments -> {
-              setAdapter(listComments.getDatalist().getList());
-            }, err -> {
-              CrashReport.getInstance().log(err);
-            }));
+    compositeSubscription.add(ListCommentsRequest.of(storeId, 0, 3, accountManager.getAccessToken(),
+        aptoideClientUUID.getUniqueIdentifier(), false)
+        .observe()
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(listComments -> {
+          setAdapter(listComments.getDatalist().getList());
+        }, err -> {
+          CrashReport.getInstance().log(err);
+        }));
     return null;
   }
 

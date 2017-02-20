@@ -11,6 +11,8 @@ import cm.aptoide.pt.v8engine.fragment.FragmentView;
 
 public class JoinCommunityFragment extends FragmentView {
 
+  private FragmentView fragment;
+
   public static Fragment newInstance() {
     return new JoinCommunityFragment();
   }
@@ -23,17 +25,22 @@ public class JoinCommunityFragment extends FragmentView {
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(getLayoutId(), container, false);
+    fragment = LoginSignUpFragment.newInstance();
     // nested fragments only work using dynamic fragment addition.
     getActivity().getSupportFragmentManager()
         .beginTransaction()
-        .add(R.id.login_signup_layout, LoginSignUpFragment.newInstance())
+        .add(R.id.login_signup_layout, fragment)
         .commit();
 
     return view;
   }
 
   @Override public boolean onBackPressed() {
-    // TODO: 20/2/2017 sithengineer  
+    // pass the event to the containing fragment
+    if(fragment!=null) {
+      return fragment.onBackPressed();
+    }
+
     return super.onBackPressed();
   }
 }

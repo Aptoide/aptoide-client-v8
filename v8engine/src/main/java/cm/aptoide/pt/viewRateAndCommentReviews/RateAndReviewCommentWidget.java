@@ -26,13 +26,14 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.Review;
+import cm.aptoide.pt.navigation.AccountNavigator;
+import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.navigation.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
@@ -98,8 +99,9 @@ import rx.Observable;
     final Review review = displayable.getPojo().getReview();
     final String appName = displayable.getPojo().getAppName();
 
-    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
-    accountNavigator = new AccountNavigator(getContext(), accountManager);
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    accountNavigator =
+        new AccountNavigator(NavigationManagerV4.Builder.buildWith(getContext()), accountManager);
     final FragmentActivity context = getContext();
     ImageLoader.with(context)
         .loadWithCircleTransformAndPlaceHolderAvatarSize(review.getUser().getAvatar(), userImage,

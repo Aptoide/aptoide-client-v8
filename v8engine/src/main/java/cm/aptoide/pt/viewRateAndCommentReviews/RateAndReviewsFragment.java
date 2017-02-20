@@ -23,10 +23,11 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Review;
+import cm.aptoide.pt.navigation.AccountNavigator;
+import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.navigation.AccountNavigator;
 import cm.aptoide.pt.v8engine.adapters.CommentsAdapter;
 import cm.aptoide.pt.v8engine.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
@@ -64,15 +65,6 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
   private AptoideAccountManager accountManager;
 
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
-    dialogUtils = new DialogUtils(accountManager, aptoideClientUUID,
-        new AccountNavigator(getContext(), accountManager));
-  }
-
   public static RateAndReviewsFragment newInstance(long appId, String appName, String storeName,
       String packageName, String storeTheme) {
     RateAndReviewsFragment fragment = new RateAndReviewsFragment();
@@ -97,6 +89,15 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     args.putLong(BundleCons.REVIEW_ID, reviewId);
     fragment.setArguments(args);
     return fragment;
+  }
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+    dialogUtils = new DialogUtils(accountManager, aptoideClientUUID,
+        new AccountNavigator(NavigationManagerV4.Builder.buildWith(getActivity()), accountManager));
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {
@@ -161,24 +162,6 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     });
   }
 
-  private void invalidateReviews() {
-    clearDisplayables();
-    fetchReviews();
-  }
-
-  private void fetchReviews() {
-    ListReviewsRequest reviewsRequest =
-        ListReviewsRequest.of(storeName, packageName, accountManager.getAccessToken(),
-            aptoideClientUUID.getUniqueIdentifier());
-
-    getRecyclerView().removeOnScrollListener(endlessRecyclerOnScrollListener);
-    endlessRecyclerOnScrollListener =
-        new EndlessRecyclerOnScrollListener(this.getAdapter(), reviewsRequest,
-            new ListFullReviewsSuccessRequestListener(this, accountManager, aptoideClientUUID), Throwable::printStackTrace);
-    getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
-    endlessRecyclerOnScrollListener.onLoadMore(false);
-  }
-
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     if (storeTheme != null) {
@@ -213,6 +196,20 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
         });
   }
 
+  private void fetchReviews() {
+    ListReviewsRequest reviewsRequest =
+        ListReviewsRequest.of(storeName, packageName, accountManager.getAccessToken(),
+            aptoideClientUUID.getUniqueIdentifier());
+
+    getRecyclerView().removeOnScrollListener(endlessRecyclerOnScrollListener);
+    endlessRecyclerOnScrollListener =
+        new EndlessRecyclerOnScrollListener(this.getAdapter(), reviewsRequest,
+            new ListFullReviewsSuccessRequestListener(this, accountManager, aptoideClientUUID),
+            Throwable::printStackTrace);
+    getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
+    endlessRecyclerOnScrollListener.onLoadMore(false);
+  }
+
   public void setupTitle(String title) {
     if (hasToolbar()) {
       getToolbar().setTitle(title);
@@ -222,6 +219,11 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   private void setupRating(GetAppMeta.App data) {
     ratingTotalsLayout.setup(data);
     ratingBarsLayout.setup(data);
+  }
+
+  private void invalidateReviews() {
+    clearDisplayables();
+    fetchReviews();
   }
 
   /*

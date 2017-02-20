@@ -9,9 +9,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.navigation.AccountNavigator;
+import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.navigation.AccountNavigator;
 
 /**
  * Created by jdandrade on 18-07-2016.
@@ -28,8 +29,9 @@ public class WizardPageThreeFragment extends Fragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
-    accountNavigator = new AccountNavigator(getContext(), accountManager);
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    accountNavigator =
+        new AccountNavigator(NavigationManagerV4.Builder.buildWith(getActivity()), accountManager);
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -42,7 +44,6 @@ public class WizardPageThreeFragment extends Fragment {
   public void setUpListeners(View view) {
     final Button registerButton = (Button) view.findViewById(R.id.registerButton);
     final TextView loginLink = (TextView) view.findViewById(R.id.login_link);
-
 
     if (accountManager.isLoggedIn()) {
       view.findViewById(R.id.login_register_layout).setVisibility(View.GONE);

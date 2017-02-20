@@ -19,12 +19,13 @@ import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Review;
+import cm.aptoide.pt.navigation.AccountNavigator;
+import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.util.schedulers.ConcreteSchedulerProvider;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.navigation.AccountNavigator;
 import cm.aptoide.pt.v8engine.adapters.CommentsAdapter;
 import cm.aptoide.pt.v8engine.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
@@ -122,10 +123,10 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     dialogUtils = new DialogUtils(accountManager,
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext()),
-        new AccountNavigator(getContext(), accountManager));
+        new AccountNavigator(NavigationManagerV4.Builder.buildWith(getActivity()), accountManager));
     final RateAndReviewsPresenter presenter =
         new RateAndReviewsPresenter(appId, storeName, packageName, this,
             ConcreteSchedulerProvider.getInstance(), accountManager,

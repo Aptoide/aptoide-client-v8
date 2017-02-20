@@ -8,7 +8,10 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +21,6 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.OAuthException;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -44,6 +46,10 @@ import rx.Observable;
 
 public class LoginSignUpFragment extends GoogleLoginFragment implements LoginSignUpView {
 
+  private static final String TAG = LoginSignUpFragment.class.getName();
+
+  private static final String SKIP_BUTTON = "USE_SKIP_BUTTON";
+
   private ProgressDialog progressDialog;
   private CallbackManager callbackManager;
 
@@ -68,8 +74,19 @@ public class LoginSignUpFragment extends GoogleLoginFragment implements LoginSig
   private Button buttonSignUp;
   private Button buttonLogin;
 
+  private boolean isPasswordVisible = false;
+  private boolean useSkipButton;
+
   public static LoginSignUpFragment newInstance() {
     return new LoginSignUpFragment();
+  }
+
+  public static Fragment newInstance(boolean useSkip) {
+    Fragment f = new LoginSignUpFragment();
+    Bundle args = new Bundle();
+    args.putBoolean(LoginSignUpFragment.SKIP_BUTTON, useSkip);
+    f.setArguments(args);
+    return f;
   }
 
   @Nullable @Override
@@ -83,10 +100,42 @@ public class LoginSignUpFragment extends GoogleLoginFragment implements LoginSig
     return R.layout.fragment_login_sign_up;
   }
 
+  @Override public boolean onBackPressed() {
+    if (areInputFieldsVisible()) {
+      toggleInputFieldsVisibility(false);
+      return true;
+    }
+
+    return super.onBackPressed();
+  }
+
+  // to use when back is pressed
+  private boolean areInputFieldsVisible() {
+    return inputCredentials.getVisibility() == View.VISIBLE;
+  }
+
+  private void toggleInputFieldsVisibility(boolean inputFieldsVisible) {
+    inputCredentials.setVisibility(inputFieldsVisible ? View.VISIBLE : View.GONE);
+    if (inputFieldsVisible) {
+      showLoginButton.setVisibility(View.GONE);
+      showSignUpButton.setVisibility(View.GONE);
+    } else {
+      showSignUpButton.setVisibility(View.VISIBLE);
+      showLoginButton.setVisibility(View.VISIBLE);
+    }
+  }
+
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
     facebookRequestedPermissions = Arrays.asList("email", "user_friends");
+
+    final Bundle args = getArguments();
+    useSkipButton = args != null && args.getBoolean(SKIP_BUTTON, false);
+    if (useSkipButton) {
+      // FIXME: 20/2/2017 sithengineer
+      Log.e(TAG, "implement this.");
+    }
 
     bindViews(view);
 
@@ -213,22 +262,12 @@ public class LoginSignUpFragment extends GoogleLoginFragment implements LoginSig
 
   @Override public void setLoginAreaVisible() {
     toggleInputFieldsVisibility(true);
-    showLoginButton.setVisibility(View.GONE);
     loginArea.setVisibility(View.VISIBLE);
     signUpArea.setVisibility(View.GONE);
   }
 
-  private void toggleInputFieldsVisibility(boolean visible) {
-    inputCredentials.setVisibility(visible ? View.VISIBLE : View.GONE);
-    if(!visible) {
-      showSignUpButton.setVisibility(View.VISIBLE);
-      showLoginButton.setVisibility(View.VISIBLE);
-    }
-  }
-
   @Override public void setSignUpAreaVisible() {
     toggleInputFieldsVisibility(true);
-    showSignUpButton.setVisibility(View.GONE);
     loginArea.setVisibility(View.GONE);
     signUpArea.setVisibility(View.VISIBLE);
   }
@@ -243,13 +282,13 @@ public class LoginSignUpFragment extends GoogleLoginFragment implements LoginSig
   }
 
   @Override public void showPassword() {
-    // todo
-    Logger.w(this.getClass().getName(), "to do");
+    isPasswordVisible = false;
+    aptoidePasswordEditText.setTransformationMethod(null);
   }
 
   @Override public void hidePassword() {
-    // todo
-    Logger.w(this.getClass().getName(), "to do");
+    isPasswordVisible = true;
+    aptoidePasswordEditText.setTransformationMethod(new PasswordTransformationMethod());
   }
 
   @Override public Observable<Void> showHidePasswordClick() {
@@ -296,21 +335,11 @@ public class LoginSignUpFragment extends GoogleLoginFragment implements LoginSig
             aptoidePasswordEditText.getText().toString()));
   }
 
+  @Override public boolean isPasswordVisible() {
+    return isPasswordVisible;
+  }
+
   private void showFacebookLoginError(@StringRes int errorRes) {
     ShowMessage.asSnack(showLoginButton, errorRes);
-  }
-
-  @Override public boolean onBackPressed() {
-    if (areInputFieldsVisible()) {
-      toggleInputFieldsVisibility(false);
-      return true;
-    }
-
-    return super.onBackPressed();
-  }
-
-  // to use when back is pressed
-  private boolean areInputFieldsVisible() {
-    return inputCredentials.getVisibility() == View.VISIBLE;
   }
 }

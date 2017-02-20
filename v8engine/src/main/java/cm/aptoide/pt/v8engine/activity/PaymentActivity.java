@@ -17,11 +17,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.iab.ErrorCodeFactory;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.navigation.AccountNavigator;
+import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -121,10 +122,9 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
     final AptoideProduct product = getIntent().getParcelableExtra(PRODUCT_EXTRA);
     final ProductRepository productRepository =
         RepositoryFactory.getProductRepository(this, product);
-    final AptoideAccountManager instance =
-        ((V8Engine)getApplicationContext()).getAccountManager();
+    final AptoideAccountManager instance = ((V8Engine) getApplicationContext()).getAccountManager();
     final Payer payer = new Payer(this, instance,
-        new AccountNavigator(this, instance));
+        new AccountNavigator(NavigationManagerV4.Builder.buildWith(this), instance));
     attachPresenter(new PaymentPresenter(this,
             new AptoidePay(RepositoryFactory.getPaymentConfirmationRepository(this, product),
                 RepositoryFactory.getPaymentAuthorizationRepository(this), productRepository,

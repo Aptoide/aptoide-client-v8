@@ -121,8 +121,7 @@ public class LoginPresenter implements Presenter {
             view.showCheckAptoideCredentialsMessage();
             return Observable.empty();
           }
-          return accountManager.createAccount(credentials.getUsername(),
-              credentials.getPassword())
+          return accountManager.createAccount(credentials.getUsername(), credentials.getPassword())
               .observeOn(AndroidSchedulers.mainThread())
               .doOnCompleted(() -> view.showSuccessMessage())
               .doOnTerminate(() -> view.hideLoading())
@@ -149,7 +148,11 @@ public class LoginPresenter implements Presenter {
 
   private Observable<Void> showHidePassword() {
     return view.showHidePasswordClick().doOnNext(__ -> {
-      // TODO: 13/2/2017 sithengineer missing view model to support this...
+      if (view.isPasswordVisible()) {
+        view.hidePassword();
+      } else {
+        view.showPassword();
+      }
     });
   }
 

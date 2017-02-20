@@ -18,8 +18,9 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.navigation.AccountNavigator;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.navigation.AccountNavigator;
+import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.payment.AptoidePay;
@@ -65,11 +66,11 @@ public class WebAuthorizationActivity extends ActivityView {
       final ProductRepository productRepository =
           RepositoryFactory.getProductRepository(this, product);
       final AptoideAccountManager instance =
-          ((V8Engine)getApplicationContext()).getAccountManager();
+          ((V8Engine) getApplicationContext()).getAccountManager();
       aptoidePay = new AptoidePay(RepositoryFactory.getPaymentConfirmationRepository(this, product),
           RepositoryFactory.getPaymentAuthorizationRepository(this), productRepository,
           new PaymentAuthorizationFactory(this), new Payer(this, instance,
-          new AccountNavigator(this, instance)));
+          new AccountNavigator(NavigationManagerV4.Builder.buildWith(this), instance)));
 
       webView = (WebView) findViewById(R.id.activity_boa_compra_authorization_web_view);
       webView.getSettings().setJavaScriptEnabled(true);
