@@ -77,6 +77,7 @@ public class GroupManager {
 
   public void cancel() {
     joinTask.cancel(false);
+    activateHotspotTask.cancel(false);
   }
 
   public void stop() {
@@ -135,6 +136,13 @@ public class GroupManager {
         } else {
           listener.onError(integer);
         }
+      }
+    }
+
+    @Override protected void onCancelled() {
+      super.onCancelled();
+      if(listener != null){
+        listener = null;
       }
     }
   }

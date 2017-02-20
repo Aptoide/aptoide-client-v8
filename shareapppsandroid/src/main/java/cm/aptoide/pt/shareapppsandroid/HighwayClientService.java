@@ -3,7 +3,6 @@ package cm.aptoide.pt.shareapppsandroid;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.IBinder;
 import android.os.StatFs;
 import android.support.annotation.Nullable;
@@ -42,6 +41,7 @@ public class HighwayClientService extends Service {
         //intent i=new Intent();
         //i.setAction("SENDAPP");
         //sendBroadcast(i);
+        //create notification for the app.
       }
 
       @Override public void onFinishSending(Object o) {
