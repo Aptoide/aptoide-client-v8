@@ -3,8 +3,9 @@ package cm.aptoide.pt.shareapps.socket.message;
 import cm.aptoide.pt.shareapps.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.shareapps.socket.entities.FileInfo;
 import cm.aptoide.pt.shareapps.socket.entities.Host;
-import cm.aptoide.pt.shareapps.socket.file.AptoideFileClientSocket;
+import cm.aptoide.pt.shareapps.socket.file.ShareAppsClientSocket;
 import cm.aptoide.pt.shareapps.socket.file.ShareAppsServerSocket;
+import cm.aptoide.pt.shareapps.socket.interfaces.FileClientLifecycle;
 import cm.aptoide.pt.shareapps.socket.interfaces.FileServerLifecycle;
 import cm.aptoide.pt.shareapps.socket.message.interfaces.Sender;
 import cm.aptoide.pt.shareapps.socket.message.interfaces.StorageCapacity;
@@ -44,11 +45,12 @@ public class HandlersFactory {
   }
 
   public static List<MessageHandler<? extends Message>> newDefaultClientHandlersList(String rootDir,
-      StorageCapacity storageCapacity, FileServerLifecycle<AndroidAppInfo> serverLifecycle) {
+      StorageCapacity storageCapacity, FileServerLifecycle<AndroidAppInfo> serverLifecycle,
+      FileClientLifecycle<AndroidAppInfo> fileClientLifecycle) {
     List<MessageHandler<? extends Message>> messageHandlers = new LinkedList<>();
 
     messageHandlers.add(new SendApkHandler(serverLifecycle));
-    messageHandlers.add(new ReceiveApkHandler(rootDir, storageCapacity));
+    messageHandlers.add(new ReceiveApkHandler(rootDir, storageCapacity, fileClientLifecycle));
 
     return messageHandlers;
   }
@@ -91,25 +93,29 @@ public class HandlersFactory {
     static AtomicInteger dir = new AtomicInteger('a');
     private final String root;
     private final StorageCapacity storageCapacity;
+    private final FileClientLifecycle<AndroidAppInfo> fileClientLifecycle;
 
-    public ReceiveApkHandler(String root, StorageCapacity storageCapacity) {
+    public ReceiveApkHandler(String root, StorageCapacity storageCapacity,
+        FileClientLifecycle<AndroidAppInfo> fileClientLifecycle) {
       super(ReceiveApk.class);
       this.root = root;
       this.storageCapacity = storageCapacity;
+      this.fileClientLifecycle = fileClientLifecycle;
     }
 
     @Override public void handleMessage(ReceiveApk receiveApk, Sender<Message> messageSender) {
       AckMessage ackMessage = new AckMessage(messageSender.getHost());
-      if (storageCapacity.hasCapacity(receiveApk.getAndroidAppInfo().getFilesSize())) {
+      AndroidAppInfo androidAppInfo = receiveApk.getAndroidAppInfo();
+      if (storageCapacity.hasCapacity(androidAppInfo.getFilesSize())) {
         ackMessage.setSuccess(true);
 
         messageSender.send(ackMessage);
         Host receiveApkServerHost = receiveApk.getServerHost();
 
-        changeFilesRootDir(receiveApk.getAndroidAppInfo().getFiles());
+        changeFilesRootDir(androidAppInfo.getFiles());
 
-        new AptoideFileClientSocket(receiveApkServerHost.getIp(), receiveApkServerHost.getPort(),
-            receiveApk.getAndroidAppInfo().getFiles()).start();
+        new ShareAppsClientSocket(receiveApkServerHost.getIp(), receiveApkServerHost.getPort(),
+            androidAppInfo.getFiles(), androidAppInfo, fileClientLifecycle).start();
       } else {
         messageSender.send(ackMessage);
       }

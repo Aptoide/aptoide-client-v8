@@ -77,7 +77,8 @@ public class HighwayServerService extends Service {
           }
         };
 
-        aptoideMessageClientController = new AptoideMessageClientController(s, storageCapacity, fileServerLifecycle );
+        AptoideMessageClientController aptoideMessageClientController =
+            new AptoideMessageClientController(s, storageCapacity, fileServerLifecycle, null);
         (new AptoideMessageClientSocket("localhost", 55555, aptoideMessageClientController
         )).startAsync();
 

@@ -1,6 +1,7 @@
 package cm.aptoide.pt.shareapps.socket.example;
 
 import cm.aptoide.pt.shareapps.socket.entities.AndroidAppInfo;
+import cm.aptoide.pt.shareapps.socket.interfaces.FileClientLifecycle;
 import cm.aptoide.pt.shareapps.socket.interfaces.FileServerLifecycle;
 import cm.aptoide.pt.shareapps.socket.message.client.AptoideMessageClientController;
 
@@ -11,7 +12,7 @@ import cm.aptoide.pt.shareapps.socket.message.client.AptoideMessageClientControl
 public class ExampleMessageController extends AptoideMessageClientController {
 
   public ExampleMessageController() {
-    super("/tmp/a", bytes -> true, newFileServerLifecycle());
+    super("/tmp/a", bytes -> true, newFileServerLifecycle(), newFileClientLifecycle());
   }
 
   private static FileServerLifecycle<AndroidAppInfo> newFileServerLifecycle() {
@@ -24,6 +25,20 @@ public class ExampleMessageController extends AptoideMessageClientController {
       @Override public void onFinishSending(AndroidAppInfo androidAppInfo) {
         System.out.println(
             "onFinishSending() called with: " + "androidAppInfo = [" + androidAppInfo + "]");
+      }
+    };
+  }
+
+  private static FileClientLifecycle<AndroidAppInfo> newFileClientLifecycle() {
+    return new FileClientLifecycle<AndroidAppInfo>() {
+      @Override public void onStartReceiving(AndroidAppInfo androidAppInfo) {
+        System.out.println(
+            "onStartReceiving() called with: " + "androidAppInfo = [" + androidAppInfo + "]");
+      }
+
+      @Override public void onFinishReceiving(AndroidAppInfo androidAppInfo) {
+        System.out.println(
+            "onFinishReceiving() called with: " + "androidAppInfo = [" + androidAppInfo + "]");
       }
     };
   }

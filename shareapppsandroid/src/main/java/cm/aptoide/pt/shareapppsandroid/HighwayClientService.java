@@ -8,6 +8,7 @@ import android.os.StatFs;
 import android.support.annotation.Nullable;
 import cm.aptoide.pt.shareapps.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.shareapps.socket.entities.Host;
+import cm.aptoide.pt.shareapps.socket.interfaces.FileClientLifecycle;
 import cm.aptoide.pt.shareapps.socket.interfaces.FileServerLifecycle;
 import cm.aptoide.pt.shareapps.socket.message.client.AptoideMessageClientController;
 import cm.aptoide.pt.shareapps.socket.message.client.AptoideMessageClientSocket;
@@ -26,13 +27,24 @@ public class HighwayClientService extends Service {
   private int port;
   private String serverIP;
   private ArrayList<App> listOfApps;
-  private FileServerLifecycle fileServerLifecycle;
+  private FileServerLifecycle<AndroidAppInfo> fileServerLifecycle;
+  private FileClientLifecycle<AndroidAppInfo> fileClientLifecycle;
   private AptoideMessageClientController aptoideMessageController;
   private AptoideMessageClientSocket aptoideMessageClientSocket;
 
   @Override public void onCreate() {
     super.onCreate();
     System.out.println("Inside the onCreate of the service");
+
+    fileClientLifecycle = new FileClientLifecycle<AndroidAppInfo>() {
+      @Override public void onStartReceiving(AndroidAppInfo androidAppInfo) {
+        System.out.println(" Started receiving ");
+      }
+
+      @Override public void onFinishReceiving(AndroidAppInfo androidAppInfo) {
+        System.out.println(" Finished receiving ");
+      }
+    };
 
     fileServerLifecycle = new FileServerLifecycle<AndroidAppInfo>() {
       @Override public void onStartSending(AndroidAppInfo o) {
@@ -73,7 +85,8 @@ public class HighwayClientService extends Service {
         };
 
         aptoideMessageController =
-                new AptoideMessageClientController(externalStoragepath, storageCapacity, fileServerLifecycle);
+            new AptoideMessageClientController(externalStoragepath, storageCapacity,
+                fileServerLifecycle, fileClientLifecycle);
         aptoideMessageClientSocket =
                 new AptoideMessageClientSocket(serverIP, port, aptoideMessageController);
         aptoideMessageClientSocket.startAsync();
