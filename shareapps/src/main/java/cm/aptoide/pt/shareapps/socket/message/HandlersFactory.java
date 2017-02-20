@@ -106,7 +106,7 @@ public class HandlersFactory {
         ackMessage.setSuccess(true);
 
         messageSender.send(ackMessage);
-        Host host = receiveApk.getHost();
+        Host host = receiveApk.getLocalHost();
 
         changeFilesRootDir(receiveApk.getAndroidAppInfo().getFiles());
 
@@ -147,7 +147,7 @@ public class HandlersFactory {
     }
 
     @Override public void handleMessage(ExitMessage message, Sender<Message> messageSender) {
-      aptoideMessageServerSocket.removeHost(message.getHost());
+      aptoideMessageServerSocket.removeHost(message.getLocalHost());
     }
   }
 }

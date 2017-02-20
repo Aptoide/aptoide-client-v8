@@ -8,7 +8,7 @@ import lombok.ToString;
 @ToString(callSuper = true) public class ReceiveApk extends AndroidAppInfoMessage
     implements Serializable {
 
-  public ReceiveApk(Host host, AndroidAppInfo androidAppInfo) {
-    super(host, androidAppInfo);
+  public ReceiveApk(Host localhost, AndroidAppInfo androidAppInfo) {
+    super(localhost, androidAppInfo);
   }
 }

@@ -16,8 +16,8 @@ import lombok.ToString;
   private final List<Host> hosts;
   private final int serverPort;
 
-  public SendApk(Host host, AndroidAppInfo androidAppInfo, List<Host> hosts, int serverPort) {
-    super(host, androidAppInfo);
+  public SendApk(Host localhost, AndroidAppInfo androidAppInfo, List<Host> hosts, int serverPort) {
+    super(localhost, androidAppInfo);
     this.hosts = hosts;
     this.serverPort = serverPort;
   }

@@ -7,9 +7,9 @@ import lombok.ToString;
 
 @ToString public abstract class Message implements Serializable {
 
-  @Getter protected final Host host;
+  @Getter protected final Host localHost;
 
-  protected Message(Host host) {
-    this.host = host;
+  protected Message(Host localHost) {
+    this.localHost = localHost;
   }
 }

@@ -11,7 +11,7 @@ import lombok.ToString;
 @ToString(callSuper = true) public class RequestPermissionToSend extends AndroidAppInfoMessage
     implements Serializable {
 
-  public RequestPermissionToSend(Host host, AndroidAppInfo androidAppInfo) {
-    super(host, androidAppInfo);
+  public RequestPermissionToSend(Host localhost, AndroidAppInfo androidAppInfo) {
+    super(localhost, androidAppInfo);
   }
 }

@@ -43,10 +43,10 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
   public void requestPermissionToSendApk(RequestPermissionToSend message) {
     int availablePort = getAvailablePort();
     // TODO: 06-02-2017 neuro may not be a bad idea to replace this null with the actual host :/
-    sendWithAck(message.getHost(),
+    sendWithAck(message.getLocalHost(),
         new SendApk(null, message.getAndroidAppInfo(), getConnectedHosts(), availablePort));
-    sendToOthers(message.getHost(),
-        new ReceiveApk(new Host(message.getHost().getIp(), availablePort),
+    sendToOthers(message.getLocalHost(),
+        new ReceiveApk(new Host(message.getLocalHost().getIp(), availablePort),
             message.getAndroidAppInfo()));
   }
 

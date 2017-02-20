@@ -13,7 +13,7 @@ import lombok.ToString;
 
   @Getter @Setter private boolean success;
 
-  public AckMessage(Host host) {
-    super(host);
+  public AckMessage(Host localhost) {
+    super(localhost);
   }
 }

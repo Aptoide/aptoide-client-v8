@@ -12,8 +12,8 @@ public class HostLeftMessage extends Message {
 
   @Getter private final Host hostThatLeft;
 
-  public HostLeftMessage(Host host, Host hostThatLeft) {
-    super(host);
+  public HostLeftMessage(Host localhost, Host hostThatLeft) {
+    super(localhost);
     this.hostThatLeft = hostThatLeft;
   }
 }

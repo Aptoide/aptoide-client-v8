@@ -9,7 +9,7 @@ import cm.aptoide.pt.shareapps.socket.message.Message;
 
 public class ExitMessage extends Message {
 
-  public ExitMessage(Host host) {
-    super(host);
+  public ExitMessage(Host localhost) {
+    super(localhost);
   }
 }

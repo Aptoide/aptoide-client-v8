@@ -13,8 +13,8 @@ import lombok.ToString;
 
   @Getter private final AndroidAppInfo androidAppInfo;
 
-  public AndroidAppInfoMessage(Host host, AndroidAppInfo androidAppInfo) {
-    super(host);
+  public AndroidAppInfoMessage(Host localhost, AndroidAppInfo androidAppInfo) {
+    super(localhost);
     this.androidAppInfo = androidAppInfo;
   }
 }
