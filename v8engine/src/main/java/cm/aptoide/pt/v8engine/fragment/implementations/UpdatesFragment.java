@@ -78,14 +78,6 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
     updateRepository = RepositoryFactory.getUpdateRepository();
   }
 
-  @Override public void onDestroyView() {
-    super.onDestroyView();
-
-    if (updateReloadSubscription != null && !updateReloadSubscription.isUnsubscribed()) {
-      updateReloadSubscription.unsubscribe();
-    }
-  }
-
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     //super.load(create, refresh, savedInstanceState);
     // overridden to avoid calling super, since it removes the displayables automatically
@@ -219,5 +211,13 @@ public class UpdatesFragment extends GridRecyclerSwipeFragment {
       CrashReport.getInstance().log(e);
       finishLoading();
     });
+  }
+
+  @Override public void onDestroyView() {
+    super.onDestroyView();
+
+    if (updateReloadSubscription != null && !updateReloadSubscription.isUnsubscribed()) {
+      updateReloadSubscription.unsubscribe();
+    }
   }
 }

@@ -50,8 +50,9 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class AddStoreDialog extends DialogFragment {
 
-  private final int PRIVATE_STORE_REQUEST_CODE = 20;
   private static String STORE_WEBSOCKET_PORT = "9002";
+  private static StoreAutoCompleteWebSocket storeAutoCompleteWebSocket;
+  private final int PRIVATE_STORE_REQUEST_CODE = 20;
   private final AptoideClientUUID aptoideClientUUID;
   private NavigationManagerV4 navigationManager;
   private String storeName;
@@ -62,7 +63,6 @@ public class AddStoreDialog extends DialogFragment {
   private LinearLayout topStoresButton;
   private TextView topStoreText1;
   private TextView topStoreText2;
-  private static StoreAutoCompleteWebSocket storeAutoCompleteWebSocket;
   private String givenStoreName;
 
   public AddStoreDialog() {
@@ -74,11 +74,15 @@ public class AddStoreDialog extends DialogFragment {
     this.navigationManager = navigationManager;
   }
 
-  @Override public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    mSubscriptions = new CompositeSubscription();
-    if (savedInstanceState != null) {
-      storeName = savedInstanceState.getString(BundleArgs.STORE_NAME.name());
+  @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+
+    if (requestCode == PRIVATE_STORE_REQUEST_CODE) {
+      switch (resultCode) {
+        case Activity.RESULT_OK:
+          dismiss();
+          break;
+      }
     }
   }
 
@@ -113,44 +117,6 @@ public class AddStoreDialog extends DialogFragment {
     mSubscriptions.add(RxView.clicks(topStoreText2).subscribe(click -> topStoresAction()));
   }
 
-  private void topStoresAction() {
-    navigationManager.navigateTo(V8Engine.getFragmentProvider().newFragmentTopStores());
-    if (isAdded()) {
-      dismiss();
-    }
-  }
-
-  private void setupSearchView(View view) {
-    searchView.setIconifiedByDefault(false);
-    ImageView image = ((ImageView) view.findViewById(R.id.search_mag_icon));
-    image.setImageDrawable(null);
-  }
-
-  @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    super.onActivityResult(requestCode, resultCode, data);
-
-    if (requestCode == PRIVATE_STORE_REQUEST_CODE) {
-      switch (resultCode) {
-        case Activity.RESULT_OK:
-          dismiss();
-          break;
-      }
-    }
-  }
-
-  @Override public void onSaveInstanceState(Bundle outState) {
-    super.onSaveInstanceState(outState);
-    outState.putString(BundleArgs.STORE_NAME.name(), storeName);
-  }
-
-  @Override public void onDetach() {
-    super.onDetach();
-    mSubscriptions.clear();
-    if (storeAutoCompleteWebSocket != null) {
-      storeAutoCompleteWebSocket.disconnect();
-    }
-  }
-
   private void bindViews(View view) {
     searchView = (SearchView) view.findViewById(R.id.edit_store_uri);
     addStoreButton = (Button) view.findViewById(R.id.button_dialog_add_store);
@@ -159,58 +125,10 @@ public class AddStoreDialog extends DialogFragment {
     topStoreText2 = (TextView) view.findViewById(R.id.top_stores_text_2);
   }
 
-  private void getStore(String storeName) {
-    GetStoreMetaRequest getStoreMetaRequest = buildRequest(storeName);
-
-    executeRequest(getStoreMetaRequest);
-  }
-
-  private void executeRequest(GetStoreMetaRequest getStoreMetaRequest) {
-    final IdsRepositoryImpl clientUuid =
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
-
-    new StoreUtilsProxy(clientUuid).subscribeStore(getStoreMetaRequest, getStoreMeta1 -> {
-      ShowMessage.asSnack(getView(),
-          AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
-
-      dismissLoadingDialog();
-      dismiss();
-    }, e -> {
-      if (e instanceof AptoideWsV7Exception) {
-        BaseV7Response baseResponse = ((AptoideWsV7Exception) e).getBaseResponse();
-
-        BaseV7Response.Error error = baseResponse.getError();
-        if (StoreUtils.PRIVATE_STORE_ERROR.equals(error.getCode())) {
-          DialogFragment dialogFragment = PrivateStoreDialog.newInstance(AddStoreDialog
-              .this, PRIVATE_STORE_REQUEST_CODE, storeName, false);
-          dialogFragment.show(getFragmentManager(), PrivateStoreDialog.class.getName());
-        } else {
-          ShowMessage.asSnack(getActivity(), error.getDescription());
-        }
-        dismissLoadingDialog();
-      } else {
-        dismissLoadingDialog();
-        ShowMessage.asSnack(getActivity(), R.string.error_occured);
-      }
-    }, storeName);
-  }
-
-  private GetStoreMetaRequest buildRequest(String storeName) {
-    return GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName),
-        AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier());
-  }
-
-  private void showLoadingDialog() {
-
-    if (loadingDialog == null) {
-      loadingDialog = GenericDialogs.createGenericPleaseWaitDialog(getActivity());
-    }
-
-    loadingDialog.show();
-  }
-
-  void dismissLoadingDialog() {
-    loadingDialog.dismiss();
+  private void setupSearchView(View view) {
+    searchView.setIconifiedByDefault(false);
+    ImageView image = ((ImageView) view.findViewById(R.id.search_mag_icon));
+    image.setImageDrawable(null);
   }
 
   private void setupStoreSearch(SearchView searchView) {
@@ -253,6 +171,88 @@ public class AddStoreDialog extends DialogFragment {
 
     searchView.setOnSearchClickListener(
         v -> new StoreAutoCompleteWebSocket().connect(STORE_WEBSOCKET_PORT));
+  }
+
+  private void getStore(String storeName) {
+    GetStoreMetaRequest getStoreMetaRequest = buildRequest(storeName);
+
+    executeRequest(getStoreMetaRequest);
+  }
+
+  private void showLoadingDialog() {
+
+    if (loadingDialog == null) {
+      loadingDialog = GenericDialogs.createGenericPleaseWaitDialog(getActivity());
+    }
+
+    loadingDialog.show();
+  }
+
+  private void topStoresAction() {
+    navigationManager.navigateTo(V8Engine.getFragmentProvider().newFragmentTopStores());
+    if (isAdded()) {
+      dismiss();
+    }
+  }
+
+  private GetStoreMetaRequest buildRequest(String storeName) {
+    return GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName),
+        AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier());
+  }
+
+  private void executeRequest(GetStoreMetaRequest getStoreMetaRequest) {
+    final IdsRepositoryImpl clientUuid =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
+
+    new StoreUtilsProxy(clientUuid).subscribeStore(getStoreMetaRequest, getStoreMeta1 -> {
+      ShowMessage.asSnack(getView(),
+          AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
+
+      dismissLoadingDialog();
+      dismiss();
+    }, e -> {
+      if (e instanceof AptoideWsV7Exception) {
+        BaseV7Response baseResponse = ((AptoideWsV7Exception) e).getBaseResponse();
+
+        BaseV7Response.Error error = baseResponse.getError();
+        if (StoreUtils.PRIVATE_STORE_ERROR.equals(error.getCode())) {
+          DialogFragment dialogFragment = PrivateStoreDialog.newInstance(AddStoreDialog
+              .this, PRIVATE_STORE_REQUEST_CODE, storeName, false);
+          dialogFragment.show(getFragmentManager(), PrivateStoreDialog.class.getName());
+        } else {
+          ShowMessage.asSnack(getActivity(), error.getDescription());
+        }
+        dismissLoadingDialog();
+      } else {
+        dismissLoadingDialog();
+        ShowMessage.asSnack(getActivity(), R.string.error_occured);
+      }
+    }, storeName);
+  }
+
+  void dismissLoadingDialog() {
+    loadingDialog.dismiss();
+  }
+
+  @Override public void onDetach() {
+    super.onDetach();
+    mSubscriptions.clear();
+    if (storeAutoCompleteWebSocket != null) {
+      storeAutoCompleteWebSocket.disconnect();
+    }
+  }
+
+  @Override public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    mSubscriptions = new CompositeSubscription();
+    if (savedInstanceState != null) {
+      storeName = savedInstanceState.getString(BundleArgs.STORE_NAME.name());
+    }
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putString(BundleArgs.STORE_NAME.name(), storeName);
   }
 
   private enum BundleArgs {

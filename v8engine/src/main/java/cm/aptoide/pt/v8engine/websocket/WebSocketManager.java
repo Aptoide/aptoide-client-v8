@@ -27,17 +27,15 @@ public class WebSocketManager extends WebSocketListener implements WebSocket {
   public static final String WEBSOCKETS_HOST = BuildConfig.APTOIDE_WEBSOCKETS_HOST;
   protected static final String TAG = "Websockets";
   public static BlockingQueue<Cursor> blockingQueue;
+  protected static String[] matrix_columns = new String[] {
+      SearchManager.SUGGEST_COLUMN_ICON_1, SearchManager.SUGGEST_COLUMN_TEXT_1,
+      SearchManager.SUGGEST_COLUMN_QUERY, "_id"
+  };
   static WebSocket webSocket;
   static Request request;
   static OkHttpClient client;
   ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
   ScheduledFuture<?> future;
-
-  protected static String[] matrix_columns = new String[] {
-      SearchManager.SUGGEST_COLUMN_ICON_1, SearchManager.SUGGEST_COLUMN_TEXT_1,
-      SearchManager.SUGGEST_COLUMN_QUERY, "_id"
-  };
-
 
   public WebSocketManager() {
   }
@@ -48,8 +46,8 @@ public class WebSocketManager extends WebSocketListener implements WebSocket {
     }
   }
 
-  protected WebSocket reconnect() {
-    return client.newWebSocket(request, new WebSocketManager());
+  public static void setBlockingQueue(BlockingQueue a) {
+    blockingQueue = a;
   }
 
   public WebSocket getWebSocket() {
@@ -59,8 +57,8 @@ public class WebSocketManager extends WebSocketListener implements WebSocket {
     return webSocket;
   }
 
-  public static void setBlockingQueue(BlockingQueue a) {
-    blockingQueue = a;
+  protected WebSocket reconnect() {
+    return client.newWebSocket(request, new WebSocketManager());
   }
 
   public WebSocket connect(String port) {

@@ -13,6 +13,6 @@
     android:searchSuggestAuthority="cm.aptoide.pt.v8engine.provider.SearchSuggestionProvider"
     android:searchSuggestIntentAction="android.intent.action.SEARCH"
     android:searchSuggestSelection=" ?"
-    android:searchSuggestThreshold="3" >
+    android:searchSuggestThreshold="3">
 
 </searchable>

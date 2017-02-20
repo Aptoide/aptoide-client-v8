@@ -20,5 +20,4 @@ public class SearchRecentSuggestionsProviderWrapper extends SearchRecentSuggesti
     }
     return jsonObject.toString();
   }
-
 }

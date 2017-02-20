@@ -23,14 +23,6 @@ public class StoreAutoCompleteWebSocket extends WebSocketManager {
   StoreAutoCompleteAdapter storeAutoCompleteAdapter1 =
       new StoreAutoCompleteAdapter(Application.getContext());
 
-  @Override public WebSocket connect(String port) {
-    request = new Request.Builder().url(WEBSOCKETS_SCHEME + WEBSOCKETS_HOST + ":" + port).build();
-    client = new OkHttpClient();
-    webSocket = client.newWebSocket(request, new StoreAutoCompleteWebSocket());
-
-    return webSocket;
-  }
-
   @Override public void onMessage(WebSocket webSocket, String responseMessage) {
     super.onMessage(webSocket, responseMessage);
     try {
@@ -47,10 +39,6 @@ public class StoreAutoCompleteWebSocket extends WebSocketManager {
     }
   }
 
-  @Override protected WebSocket reconnect() {
-    return client.newWebSocket(request, new StoreAutoCompleteWebSocket());
-  }
-
   @Override public WebSocket getWebSocket() {
     if (webSocket == null) {
       webSocket = reconnect();
@@ -58,9 +46,16 @@ public class StoreAutoCompleteWebSocket extends WebSocketManager {
     return webSocket;
   }
 
-  public void sendAndReceive(String query, StoreAutoCompleteAdapter storeAutoCompleteAdapter) {
-    send(query);
-    storeAutoCompleteAdapter1 = storeAutoCompleteAdapter;
+  @Override protected WebSocket reconnect() {
+    return client.newWebSocket(request, new StoreAutoCompleteWebSocket());
+  }
+
+  @Override public WebSocket connect(String port) {
+    request = new Request.Builder().url(WEBSOCKETS_SCHEME + WEBSOCKETS_HOST + ":" + port).build();
+    client = new OkHttpClient();
+    webSocket = client.newWebSocket(request, new StoreAutoCompleteWebSocket());
+
+    return webSocket;
   }
 
   @Override public boolean send(String text) {
@@ -68,5 +63,10 @@ public class StoreAutoCompleteWebSocket extends WebSocketManager {
       connect("9002");
     }
     return super.send(text);
+  }
+
+  public void sendAndReceive(String query, StoreAutoCompleteAdapter storeAutoCompleteAdapter) {
+    send(query);
+    storeAutoCompleteAdapter1 = storeAutoCompleteAdapter;
   }
 }

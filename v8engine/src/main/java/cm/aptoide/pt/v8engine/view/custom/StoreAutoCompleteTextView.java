@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.AutoCompleteTextView;
 
 /**
@@ -15,28 +14,24 @@ public class StoreAutoCompleteTextView extends AutoCompleteTextView {
 
   private static final int MESSAGE_TEXT_CHANGED = 100;
   private static final int DEFAULT_AUTOCOMPLETE_DELAY = 2000;
-
+  private final Handler mHandler = new Handler() {
+    @Override public void handleMessage(Message msg) {
+      StoreAutoCompleteTextView.super.performFiltering((CharSequence) msg.obj, msg.arg1);
+    }
+  };
   private int mAutoCompleteDelay = DEFAULT_AUTOCOMPLETE_DELAY;
 
   public StoreAutoCompleteTextView(Context context, AttributeSet attrs) {
     super(context, attrs);
   }
 
-  private final Handler mHandler = new Handler() {
-    @Override
-    public void handleMessage(Message msg) {
-      StoreAutoCompleteTextView.super.performFiltering((CharSequence) msg.obj, msg.arg1);
-    }
-  };
-
-  @Override
-  protected void performFiltering(CharSequence text, int keyCode) {
+  @Override protected void performFiltering(CharSequence text, int keyCode) {
     mHandler.removeMessages(MESSAGE_TEXT_CHANGED);
-    mHandler.sendMessageDelayed(mHandler.obtainMessage(MESSAGE_TEXT_CHANGED, text), mAutoCompleteDelay);
+    mHandler.sendMessageDelayed(mHandler.obtainMessage(MESSAGE_TEXT_CHANGED, text),
+        mAutoCompleteDelay);
   }
 
-  @Override
-  public void onFilterComplete(int count) {
+  @Override public void onFilterComplete(int count) {
     super.onFilterComplete(count);
   }
 }

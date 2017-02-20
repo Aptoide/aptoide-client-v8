@@ -19,14 +19,14 @@ public class StoreSearchSuggestionProvider extends SearchRecentSuggestionsProvid
 
   private static final String TAG = "StoreWebsockets";
 
-  public String getSearchProvider() {
-    return "cm.aptoide.pt.v8engine.provider.StoreSearchSuggestionProvider";
-  }
-
   @Override public boolean onCreate() {
 
     setupSuggestions(getSearchProvider(), DATABASE_MODE_QUERIES);
     return super.onCreate();
+  }
+
+  public String getSearchProvider() {
+    return "cm.aptoide.pt.v8engine.provider.StoreSearchSuggestionProvider";
   }
 
   @Override public Cursor query(final Uri uri, String[] projection, String selection,

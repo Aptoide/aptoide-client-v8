@@ -21,14 +21,14 @@ import java.util.concurrent.TimeUnit;
  */
 public class SearchSuggestionProvider extends SearchRecentSuggestionsProviderWrapper {
 
-  public String getSearchProvider() {
-    return "cm.aptoide.pt.v8engine.provider.SearchSuggestionProvider";
-  }
-
   @Override public boolean onCreate() {
 
     setupSuggestions(getSearchProvider(), DATABASE_MODE_QUERIES);
     return super.onCreate();
+  }
+
+  public String getSearchProvider() {
+    return "cm.aptoide.pt.v8engine.provider.SearchSuggestionProvider";
   }
 
   @Override public Cursor query(final Uri uri, String[] projection, String selection,

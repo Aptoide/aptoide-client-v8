@@ -91,9 +91,9 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:clickable="true"
+          android:text="@string/add_store_dialog_top_stores"
           android:textColor="@color/white"
           android:textSize="11sp"
-          android:text="@string/add_store_dialog_top_stores"
           />
 
       <TextView
@@ -101,9 +101,9 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:clickable="true"
+          android:text="@string/add_store_dialog_top_stores_small_text"
           android:textColor="@color/white"
           android:textSize="9sp"
-          android:text="@string/add_store_dialog_top_stores_small_text"
           />
 
     </LinearLayout>

@@ -14,6 +14,17 @@ import org.json.JSONException;
 
 public class SearchAppsWebSocket extends WebSocketManager {
 
+  @Override public WebSocket getWebSocket() {
+    if (webSocket == null) {
+      webSocket = reconnect();
+    }
+    return webSocket;
+  }
+
+  @Override protected WebSocket reconnect() {
+    return client.newWebSocket(request, new SearchAppsWebSocket());
+  }
+
   @Override public WebSocket connect(String port) {
     request = new Request.Builder().url(WEBSOCKETS_SCHEME + WEBSOCKETS_HOST + ":" + port).build();
     client = new OkHttpClient();
@@ -22,15 +33,11 @@ public class SearchAppsWebSocket extends WebSocketManager {
     return webSocket;
   }
 
-  @Override protected WebSocket reconnect() {
-    return client.newWebSocket(request, new SearchAppsWebSocket());
-  }
-
-  @Override public WebSocket getWebSocket() {
+  @Override public boolean send(String text) {
     if (webSocket == null) {
-      webSocket = reconnect();
+      connect("9000");
     }
-    return webSocket;
+    return super.send(text);
   }
 
   @Override public void onMessage(WebSocket webSocket, String responseMessage) {
@@ -47,12 +54,5 @@ public class SearchAppsWebSocket extends WebSocketManager {
     } catch (JSONException e) {
       CrashReport.getInstance().log(e);
     }
-  }
-
-  @Override public boolean send(String text) {
-    if (webSocket == null) {
-      connect("9000");
-    }
-    return super.send(text);
   }
 }

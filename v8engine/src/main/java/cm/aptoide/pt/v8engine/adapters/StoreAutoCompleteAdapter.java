@@ -1,6 +1,5 @@
 package cm.aptoide.pt.v8engine.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,9 +11,7 @@ import android.widget.Filterable;
 import android.widget.TextView;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.websocket.StoreAutoCompleteWebSocket;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONException;
@@ -27,14 +24,16 @@ import org.json.JSONObject;
 public class StoreAutoCompleteAdapter extends BaseAdapter implements Filterable {
 
   private static int MAX_SUGGESTIONS = 5;
+  private static StoreAutoCompleteWebSocket storeAutoCompleteWebSocket;
   private Context context;
   private List<String> suggestions = new ArrayList<>();
-  private static StoreAutoCompleteWebSocket storeAutoCompleteWebSocket;
 
-  public StoreAutoCompleteAdapter(Context context, StoreAutoCompleteWebSocket storeAutoCompleteWebSocket) {
+  public StoreAutoCompleteAdapter(Context context,
+      StoreAutoCompleteWebSocket storeAutoCompleteWebSocket) {
     this.context = context;
     this.storeAutoCompleteWebSocket = storeAutoCompleteWebSocket;
   }
+
   public StoreAutoCompleteAdapter(Context context) {
     this.context = context;
   }
@@ -74,7 +73,7 @@ public class StoreAutoCompleteAdapter extends BaseAdapter implements Filterable 
             sendQuery(charSequence);
           }
           AptoideUtils.ThreadU.runOnUiThread(() -> {
-            Log.d("Ribas" , Thread.currentThread().toString());
+            Log.d("Ribas", Thread.currentThread().toString());
             filterResults.values = storeAutoCompleteWebSocket.getResults();
             filterResults.count = storeAutoCompleteWebSocket.getResults().size();
           });
@@ -82,18 +81,19 @@ public class StoreAutoCompleteAdapter extends BaseAdapter implements Filterable 
         return filterResults;
       }
 
-      @Override
-      protected void publishResults(final CharSequence charSequence, final FilterResults filterResults) {
+      @Override protected void publishResults(final CharSequence charSequence,
+          final FilterResults filterResults) {
         if (filterResults != null && filterResults.count > 0) {
           AptoideUtils.ThreadU.runOnUiThread(() -> {
             suggestions = (List<String>) filterResults.values;
-            Log.d("Ribas" , Thread.currentThread().toString());
+            Log.d("Ribas", Thread.currentThread().toString());
             notifyDataSetChanged();
           });
         } else {
           notifyDataSetInvalidated();
         }
-      }};
+      }
+    };
     return filter;
   }
 
