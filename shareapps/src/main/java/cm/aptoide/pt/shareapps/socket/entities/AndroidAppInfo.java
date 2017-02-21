@@ -50,6 +50,21 @@ import lombok.Data;
     return patchObb != null;
   }
 
+  public List<FileInfo> getFileInfosList() {
+    List<FileInfo> list = new LinkedList<>();
+    list.add(apk);
+
+    if (hasMainObb()) {
+      list.add(getMainObb());
+    }
+
+    if (hasPatchObb()) {
+      list.add(getPatchObb());
+    }
+
+    return list;
+  }
+
   public List<FileInfo> getFiles() {
     List<FileInfo> fileInfos = new LinkedList<>();
 

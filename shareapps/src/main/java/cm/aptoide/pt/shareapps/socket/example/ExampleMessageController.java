@@ -17,6 +17,10 @@ public class ExampleMessageController extends AptoideMessageClientController {
 
   private static FileServerLifecycle<AndroidAppInfo> newFileServerLifecycle() {
     return new FileServerLifecycle<AndroidAppInfo>() {
+      @Override public void onProgressChanged(float progress) {
+        System.out.println("onProgressChanged() called with: " + "progress = [" + progress + "]");
+      }
+
       @Override public void onStartSending(AndroidAppInfo androidAppInfo) {
         System.out.println(
             "onStartSending() called with: " + "androidAppInfo = [" + androidAppInfo + "]");

@@ -2,12 +2,14 @@ package cm.aptoide.pt.shareapps.socket.file;
 
 import cm.aptoide.pt.shareapps.socket.AptoideServerSocket;
 import cm.aptoide.pt.shareapps.socket.AptoideSocket;
+import cm.aptoide.pt.shareapps.socket.entities.FileInfo;
 import cm.aptoide.pt.shareapps.socket.interfaces.FileServerLifecycle;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -15,20 +17,20 @@ import java.util.List;
  */
 public class AptoideFileServerSocket<T> extends AptoideServerSocket {
 
-  private final List<String> filePaths;
+  private final List<FileInfo> fileInfos;
   private boolean startedSending = false;
 
   private T fileDescriptor;
   private FileServerLifecycle<T> fileServerLifecycle;
 
-  public AptoideFileServerSocket(int port, List<String> filePaths, int timeout) {
+  public AptoideFileServerSocket(int port, List<FileInfo> fileInfos, int timeout) {
     super(port, timeout);
-    this.filePaths = filePaths;
+    this.fileInfos = fileInfos;
   }
 
-  public AptoideFileServerSocket(int bufferSize, int port, List<String> filePaths, int timeout) {
+  public AptoideFileServerSocket(int bufferSize, int port, List<FileInfo> fileInfos, int timeout) {
     super(bufferSize, port, timeout);
-    this.filePaths = filePaths;
+    this.fileInfos = fileInfos;
   }
 
   @Override public AptoideSocket start() {
@@ -49,7 +51,7 @@ public class AptoideFileServerSocket<T> extends AptoideServerSocket {
     InputStream in = null;
 
     try {
-      for (String filePath : filePaths) {
+      for (String filePath : getFilePaths()) {
         System.out.println(Thread.currentThread().getId() + ": Started sending " + filePath);
         in = new FileInputStream(filePath);
         copy(in, socket.getOutputStream(), null);
@@ -69,6 +71,16 @@ public class AptoideFileServerSocket<T> extends AptoideServerSocket {
         e.printStackTrace();
       }
     }
+  }
+
+  private List<String> getFilePaths() {
+    List<String> filePaths = new LinkedList<>();
+
+    for (FileInfo fileInfo : fileInfos) {
+      filePaths.add(fileInfo.getFilePath());
+    }
+
+    return filePaths;
   }
 
   public AptoideFileServerSocket<T> setFileServerLifecycle(T fileDescriptor,
