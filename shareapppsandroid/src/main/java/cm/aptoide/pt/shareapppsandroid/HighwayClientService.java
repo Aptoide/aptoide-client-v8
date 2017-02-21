@@ -3,9 +3,12 @@ package cm.aptoide.pt.shareapppsandroid;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.StatFs;
 import android.support.annotation.Nullable;
+import android.widget.Toast;
 import cm.aptoide.pt.shareapps.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.shareapps.socket.entities.Host;
 import cm.aptoide.pt.shareapps.socket.interfaces.FileClientLifecycle;
@@ -17,6 +20,7 @@ import cm.aptoide.pt.shareapps.socket.message.messages.RequestPermissionToSend;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimerTask;
 
 /**
  * Created by filipegoncalves on 10-02-2017.
@@ -39,16 +43,19 @@ public class HighwayClientService extends Service {
     fileClientLifecycle = new FileClientLifecycle<AndroidAppInfo>() {
       @Override public void onStartReceiving(AndroidAppInfo androidAppInfo) {
         System.out.println(" Started receiving ");
+        showToast(" Started receiving ");
       }
 
       @Override public void onFinishReceiving(AndroidAppInfo androidAppInfo) {
         System.out.println(" Finished receiving ");
+        showToast(" Finished receiving ");
       }
     };
 
     fileServerLifecycle = new FileServerLifecycle<AndroidAppInfo>() {
       @Override public void onStartSending(AndroidAppInfo o) {
         System.out.println(" Started sending ");
+        showToast(" Started sending ");
         //generate intent, with info of the app. Name, filePath, size,, etc.
         //intent i=new Intent();
         //i.setAction("SENDAPP");
@@ -58,10 +65,18 @@ public class HighwayClientService extends Service {
 
       @Override public void onFinishSending(AndroidAppInfo o) {
         System.out.println(" Finished sending ");
+        showToast(" Finished sending ");
 
       }
     };
+  }
 
+  @Deprecated private void showToast(final String str) {
+    new Handler(Looper.getMainLooper()).post(new TimerTask() {
+      @Override public void run() {
+        Toast.makeText(getBaseContext(), str, Toast.LENGTH_LONG).show();
+      }
+    });
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {

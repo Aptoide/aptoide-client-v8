@@ -9,11 +9,13 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.support.annotation.Nullable;
-
+import android.widget.Toast;
 import cm.aptoide.pt.shareapps.socket.entities.AndroidAppInfo;
-import cm.aptoide.pt.shareapps.socket.entities.Host;
+import cm.aptoide.pt.shareapps.socket.interfaces.FileClientLifecycle;
 import cm.aptoide.pt.shareapps.socket.interfaces.FileServerLifecycle;
 import cm.aptoide.pt.shareapps.socket.message.client.AptoideMessageClientController;
 import cm.aptoide.pt.shareapps.socket.message.client.AptoideMessageClientSocket;
@@ -22,6 +24,7 @@ import cm.aptoide.pt.shareapps.socket.message.messages.RequestPermissionToSend;
 import cm.aptoide.pt.shareapps.socket.message.server.AptoideMessageServerSocket;
 import java.io.File;
 import java.util.List;
+import java.util.TimerTask;
 
 import static android.R.attr.id;
 
@@ -38,6 +41,7 @@ public class HighwayServerService extends Service {
   private Object mBuilderReceive;
   private long lastTimestampReceive;
   private long lastTimestampSend;
+  private FileClientLifecycle<AndroidAppInfo> fileClientLifecycle;
   private FileServerLifecycle fileServerLifecycle;
 
   private List<App> listOfApps;
@@ -45,20 +49,43 @@ public class HighwayServerService extends Service {
 
   @Override public void onCreate() {
     super.onCreate();
+
+    fileClientLifecycle = new FileClientLifecycle<AndroidAppInfo>() {
+      @Override public void onStartReceiving(AndroidAppInfo androidAppInfo) {
+        System.out.println(" Started receiving ");
+        showToast(" Started receiving ");
+      }
+
+      @Override public void onFinishReceiving(AndroidAppInfo androidAppInfo) {
+        System.out.println(" Finished receiving ");
+        showToast(" Finished receiving ");
+      }
+    };
+
     fileServerLifecycle = new FileServerLifecycle<AndroidAppInfo>() {
 
       @Override
       public void onStartSending(AndroidAppInfo androidAppInfo) {
         System.out.println("Server : started sending");
+        showToast("Server : started sending");
       }
 
       @Override
       public void onFinishSending(AndroidAppInfo androidAppInfo) {
         System.out.println("Server : finished sending");
+        showToast("Server : finished sending");
       }
     };
 
       System.out.println(" Inside the service of the server");
+  }
+
+  @Deprecated private void showToast(final String str) {
+    new Handler(Looper.getMainLooper()).post(new TimerTask() {
+      @Override public void run() {
+        Toast.makeText(getBaseContext(), str, Toast.LENGTH_LONG).show();
+      }
+    });
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
@@ -78,7 +105,8 @@ public class HighwayServerService extends Service {
         };
 
         AptoideMessageClientController aptoideMessageClientController =
-            new AptoideMessageClientController(s, storageCapacity, fileServerLifecycle, null);
+            new AptoideMessageClientController(s, storageCapacity, fileServerLifecycle,
+                fileClientLifecycle);
         (new AptoideMessageClientSocket("localhost", 55555, aptoideMessageClientController
         )).startAsync();
 
