@@ -160,8 +160,7 @@ public class LoginSignUpFragment extends GoogleLoginFragment implements LoginVie
   }
 
   @Override public Observable<GoogleAccountViewModel> googleLoginClick() {
-    // ??
-    return null;
+    return Observable.empty();
   }
 
   @Override public void showLoading() {
