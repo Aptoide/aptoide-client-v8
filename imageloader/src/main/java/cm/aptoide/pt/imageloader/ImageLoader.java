@@ -11,13 +11,16 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import cm.aptoide.pt.annotation.Partners;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.FutureTarget;
 import com.bumptech.glide.request.target.NotificationTarget;
+import com.bumptech.glide.request.target.Target;
 import java.lang.ref.WeakReference;
 import java.util.concurrent.ExecutionException;
 
@@ -39,8 +42,36 @@ public class ImageLoader {
   }
 
   /**
+   * Cancel the image loading request
+   *
+   * @param target Previously returned {@link Target} from {@link ImageLoader}.load...
+   */
+  public static void cancel(View target) {
+    Glide.clear(target);
+  }
+
+  /**
+   * Cancel the image loading request
+   *
+   * @param target Previously returned {@link Target} from {@link ImageLoader}.load...
+   */
+  public static <R> void cancel(FutureTarget<R> target) {
+    Glide.clear(target);
+  }
+
+  /**
+   * Cancel the image loading request
+   *
+   * @param target Previously returned {@link Target} from {@link ImageLoader}.load...
+   */
+  public static <R> void cancel(Target<R> target) {
+    Glide.clear(target);
+  }
+
+  /**
    * Blocking call to load a bitmap.
    *
+   * @param apkIconPath Path for the bitmap to be loaded.
    * @return Loaded bitmap or null.
    */
   @WorkerThread public @Nullable Bitmap loadBitmap(String apkIconPath) {
@@ -71,17 +102,17 @@ public class ImageLoader {
    * @param imageView destination container for the image
    * @param placeHolderDrawableId placeholder while the image is loading or when is not loaded
    */
-  public void loadWithCircleTransformAndPlaceHolderAvatarSize(String url, ImageView imageView,
+  public Target<GlideDrawable> loadWithCircleTransformAndPlaceHolderAvatarSize(String url, ImageView imageView,
       @DrawableRes int placeHolderDrawableId) {
-    loadWithCircleTransformAndPlaceHolder(AptoideUtils.IconSizeU.generateStringAvatar(url),
+    return loadWithCircleTransformAndPlaceHolder(AptoideUtils.IconSizeU.generateStringAvatar(url),
         imageView, placeHolderDrawableId);
   }
 
-  public void loadWithCircleTransformAndPlaceHolder(String url, ImageView imageView,
+  public Target<GlideDrawable> loadWithCircleTransformAndPlaceHolder(String url, ImageView imageView,
       @DrawableRes int placeHolderDrawableId) {
     Context context = weakContext.get();
     if (context != null) {
-      Glide.with(context)
+      return Glide.with(context)
           .load(url)
           .transform(new CircleTransform(context))
           .placeholder(placeHolderDrawableId)
@@ -89,12 +120,13 @@ public class ImageLoader {
     } else {
       Log.e(TAG, "::loadWithCircleTransformAndPlaceHolder() Context is null");
     }
+    return null;
   }
 
-  public void loadWithCircleTransform(Uri url, ImageView imageView, boolean cache) {
+  public Target<GlideDrawable> loadWithCircleTransform(Uri url, ImageView imageView, boolean cache) {
     Context context = weakContext.get();
     if (context != null) {
-      Glide.with(context)
+      return Glide.with(context)
           .load(url.toString())
           .transform(new CircleTransform(context))
           .skipMemoryCache(!cache)
@@ -103,24 +135,26 @@ public class ImageLoader {
     } else {
       Log.e(TAG, "::loadWithCircleTransform() Context is null");
     }
+    return null;
   }
 
-  public void loadWithShadowCircleTransform(String url, ImageView imageView) {
+  public Target<GlideDrawable> loadWithShadowCircleTransform(String url, ImageView imageView) {
     Context context = weakContext.get();
     if (context != null) {
-      Glide.with(context)
+      return Glide.with(context)
           .load(url)
           .transform(new ShadowCircleTransformation(context, imageView))
           .into(imageView);
     } else {
       Log.e(TAG, "::loadWithShadowCircleTransform() Context is null");
     }
+    return null;
   }
 
-  public void loadWithShadowCircleTransform(@DrawableRes int drawableId, ImageView imageView) {
+  public Target<GlideDrawable> loadWithShadowCircleTransform(@DrawableRes int drawableId, ImageView imageView) {
     Context context = weakContext.get();
     if (context != null) {
-      Glide.with(context)
+      return Glide.with(context)
           .fromResource()
           .load(drawableId)
           .transform(new ShadowCircleTransformation(context, imageView))
@@ -128,26 +162,28 @@ public class ImageLoader {
     } else {
       Log.e(TAG, "::loadWithShadowCircleTransform() Context is null");
     }
+    return null;
   }
 
-  public void loadWithShadowCircleTransform(String url, ImageView imageView,
+  public Target<GlideDrawable> loadWithShadowCircleTransform(String url, ImageView imageView,
       @ColorInt int shadowColor) {
     Context context = weakContext.get();
     if (context != null) {
-      Glide.with(context)
+      return Glide.with(context)
           .load(AptoideUtils.IconSizeU.generateSizeStoreString(url))
           .transform(new ShadowCircleTransformation(context, imageView, shadowColor))
           .into(imageView);
     } else {
       Log.e(TAG, "::loadWithShadowCircleTransform() Context is null");
     }
+    return null;
   }
 
-  public void loadWithShadowCircleTransform(@DrawableRes int drawableId, ImageView imageView,
+  public Target<GlideDrawable> loadWithShadowCircleTransform(@DrawableRes int drawableId, ImageView imageView,
       @ColorInt int shadowColor) {
     Context context = weakContext.get();
     if (context != null) {
-      Glide.with(context)
+      return Glide.with(context)
           .fromResource()
           .load(drawableId)
           .transform(new ShadowCircleTransformation(context, imageView, shadowColor))
@@ -155,58 +191,64 @@ public class ImageLoader {
     } else {
       Log.e(TAG, "::loadWithShadowCircleTransform() Context is null");
     }
+    return null;
   }
 
-  public void loadImageToNotification(NotificationTarget notificationTarget, String url) {
+  public NotificationTarget loadImageToNotification(NotificationTarget notificationTarget, String url) {
     Context context = weakContext.get();
     if (context != null) {
-      Glide.with(context.getApplicationContext())
+      return Glide.with(context.getApplicationContext())
           .load(AptoideUtils.IconSizeU.generateStringNotification(url))
           .asBitmap()
           .into(notificationTarget);
     } else {
       Log.e(TAG, "::loadImageToNotification() Context is null");
     }
+    return notificationTarget;
   }
 
-  public void load(@DrawableRes int drawableId, ImageView imageView) {
+  public Target<GlideDrawable> load(@DrawableRes int drawableId, ImageView imageView) {
     Context context = weakContext.get();
     if (context != null) {
-      Glide.with(context).load(drawableId).into(imageView);
+      return Glide.with(context).load(drawableId).into(imageView);
     } else {
       Log.e(TAG, "::load() Context is null");
     }
+    return null;
   }
 
-  public void loadScreenshotToThumb(String url, String orientation,
+  public Target<GlideDrawable> loadScreenshotToThumb(String url, String orientation,
       @DrawableRes int loadingPlaceHolder, ImageView imageView) {
     Context context = weakContext.get();
     if (context != null) {
-      Glide.with(context)
+      return Glide.with(context)
           .load(AptoideUtils.IconSizeU.screenshotToThumb(url, orientation))
           .placeholder(loadingPlaceHolder)
           .into(imageView);
     } else {
       Log.e(TAG, "::loadScreenshotToThumb() Context is null");
     }
+    return null;
   }
 
-  public void load(String url, @DrawableRes int loadingPlaceHolder, ImageView imageView) {
+  public Target<GlideDrawable> load(String url, @DrawableRes int loadingPlaceHolder, ImageView imageView) {
     Context context = weakContext.get();
     if (context != null) {
-      Glide.with(context).load(url).placeholder(loadingPlaceHolder).into(imageView);
+      return Glide.with(context).load(url).placeholder(loadingPlaceHolder).into(imageView);
     } else {
       Log.e(TAG, "::load() Context is null");
     }
+    return null;
   }
 
-  public void load(String url, ImageView imageView) {
+  public Target<GlideDrawable> load(String url, ImageView imageView) {
     Context context = weakContext.get();
     if (context != null) {
-      Glide.with(context).load(AptoideUtils.IconSizeU.getNewImageUrl(url)).into(imageView);
+      return Glide.with(context).load(AptoideUtils.IconSizeU.getNewImageUrl(url)).into(imageView);
     } else {
       Log.e(TAG, "::load() Context is null");
     }
+    return null;
   }
 
   /**
@@ -258,10 +300,10 @@ public class ImageLoader {
     return null;
   }
 
-  public void loadUsingCircleTransform(@DrawableRes int drawableId, ImageView imageView) {
+  public Target<GlideDrawable> loadUsingCircleTransform(@DrawableRes int drawableId, ImageView imageView) {
     Context context = weakContext.get();
     if (context != null) {
-      Glide.with(context)
+      return Glide.with(context)
           .fromResource()
           .load(drawableId)
           .transform(new CircleTransform(context))
@@ -269,18 +311,20 @@ public class ImageLoader {
     } else {
       Log.e(TAG, "::loadUsingCircleTransform() Context is null");
     }
+    return null;
   }
 
-  public void loadUsingCircleTransform(@NonNull Uri url, @NonNull ImageView imageView) {
-    loadUsingCircleTransform(url.toString(), imageView);
+  public Target<GlideDrawable> loadUsingCircleTransform(@NonNull Uri url, @NonNull ImageView imageView) {
+    return loadUsingCircleTransform(url.toString(), imageView);
   }
 
-  public void loadUsingCircleTransform(@NonNull String url, @NonNull ImageView imageView) {
+  public Target<GlideDrawable> loadUsingCircleTransform(@NonNull String url, @NonNull ImageView imageView) {
     Context context = weakContext.get();
     if (context != null) {
-      Glide.with(context).load(url).transform(new CircleTransform(context)).into(imageView);
+      return Glide.with(context).load(url).transform(new CircleTransform(context)).into(imageView);
     } else {
       Log.e(TAG, "::loadUsingCircleTransform() Context is null");
     }
+    return null;
   }
 }
