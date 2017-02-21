@@ -12,6 +12,7 @@ import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -162,6 +163,14 @@ public class HighwayActivity extends ActivityView implements HighwayView {
       getSupportActionBar().setDisplayShowTitleEnabled(true);
       getSupportActionBar().setTitle(getResources().getString(R.string.shareApps));
     }
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    int i = item.getItemId();
+//    todo add check for the right button
+      finish();
+
+    return super.onOptionsItemSelected(item);
   }
 
   private void recoverNetworkState() {
