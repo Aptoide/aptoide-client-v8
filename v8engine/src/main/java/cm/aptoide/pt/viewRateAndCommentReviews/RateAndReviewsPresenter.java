@@ -10,6 +10,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.util.schedulers.SchedulerProvider;
+import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.view.View;
 import rx.Observable;
@@ -28,7 +29,9 @@ public class RateAndReviewsPresenter implements Presenter {
 
   public RateAndReviewsPresenter(@NonNull long appId, @NonNull String storeName,
       @NonNull String packageName, @NonNull RateAndReviewsView view,
-      @NonNull SchedulerProvider schedulerProvider) {
+      @NonNull SchedulerProvider schedulerProvider,
+      StoreCredentialsProvider storeCredentialsProvider) {
+
     this.view = view;
     this.schedulerProvider = schedulerProvider;
 
@@ -36,7 +39,7 @@ public class RateAndReviewsPresenter implements Presenter {
         DataProvider.getContext()).getUniqueIdentifier();
 
     request = ListReviewsRequest.of(storeName, packageName, AptoideAccountManager.getAccessToken(),
-        aptoideClientUUID);
+        aptoideClientUUID, storeCredentialsProvider.get(storeName));
 
     ratingRequest =
         GetAppRequest.of(appId, AptoideAccountManager.getAccessToken(), aptoideClientUUID,

@@ -75,6 +75,7 @@ import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
 import cm.aptoide.pt.v8engine.interfaces.Payments;
 import cm.aptoide.pt.v8engine.interfaces.Scrollable;
+import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.payment.ProductFactory;
 import cm.aptoide.pt.v8engine.receivers.AppBoughtReceiver;
 import cm.aptoide.pt.v8engine.repository.AdsRepository;
@@ -83,6 +84,7 @@ import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.SocialRepository;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
+import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
 import cm.aptoide.pt.v8engine.util.referrer.ReferrerUtils;
@@ -161,6 +163,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private AppAction appAction = AppAction.OPEN;
   private InstalledRepository installedRepository;
   private GetApp getApp;
+  private StoreCredentialsProvider storeCredentialsProvider;
 
   public static AppViewFragment newInstance(String md5) {
     Bundle bundle = new Bundle();
@@ -234,6 +237,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE)));
     adsRepository = new AdsRepository();
     installedRepository = RepositoryFactory.getInstalledRepository();
+    storeCredentialsProvider = new StoreCredentialsProviderImpl();
   }
 
   @Partners @Override public void loadExtras(Bundle args) {
@@ -618,7 +622,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             installedRepository);
     displayables.add(installDisplayable);
     displayables.add(new AppViewStoreDisplayable(getApp));
-    displayables.add(new AppViewRateAndCommentsDisplayable(getApp));
+    displayables.add(new AppViewRateAndCommentsDisplayable(getApp, storeCredentialsProvider));
 
     // only show screen shots / video if the app has them
     if (isMediaAvailable(media)) {
