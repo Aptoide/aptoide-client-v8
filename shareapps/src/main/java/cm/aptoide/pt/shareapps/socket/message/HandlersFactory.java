@@ -112,9 +112,13 @@ public class HandlersFactory {
 
         changeFilesRootDir(androidAppInfo.getFiles());
 
-        new ShareAppsFileClientSocket(receiveApkServerHost.getIp(), receiveApkServerHost.getPort(),
-            androidAppInfo.getFiles()).setFileClientSocket(androidAppInfo, fileClientLifecycle)
-            .start();
+        ShareAppsFileClientSocket shareAppsFileClientSocket =
+            new ShareAppsFileClientSocket(receiveApkServerHost.getIp(),
+                receiveApkServerHost.getPort(), androidAppInfo.getFiles());
+        if (fileClientLifecycle != null) {
+          shareAppsFileClientSocket.setFileClientSocket(androidAppInfo, fileClientLifecycle);
+        }
+        shareAppsFileClientSocket.start();
       } else {
         messageSender.send(ackMessage);
       }

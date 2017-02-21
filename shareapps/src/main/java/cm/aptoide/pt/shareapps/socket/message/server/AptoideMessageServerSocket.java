@@ -58,6 +58,7 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
       boolean hostPresent = false;
       // TODO: 01-02-2017 neuro optimize :)
       for (AptoideMessageServerController aptoideMessageController : aptoideMessageControllers) {
+        System.out.println(aptoideMessageController.getHost());
         if (aptoideMessageController.getHost().equals(host)) {
           try {
             hostPresent = true;
@@ -67,7 +68,7 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
           }
         }
       }
-      if (hostPresent) {
+      if (!hostPresent) {
         throw new IllegalArgumentException(
             "Host " + host + " is not connected to AptoideMessageServerSocket!");
       }
