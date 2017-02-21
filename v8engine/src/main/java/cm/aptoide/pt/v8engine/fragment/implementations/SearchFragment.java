@@ -190,7 +190,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
       setupViewPager();
       if (create) {
         //only show the search results after choosing the tab to show
-        setupAbTest().compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW))
+        setupAbTest().compose(bindUntilEvent(LifecycleEvent.DESTROY))
             .subscribe(setup -> finishLoading(), throwable -> {
               CrashReport.getInstance().log(throwable);
               finishLoading();

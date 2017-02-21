@@ -43,7 +43,7 @@ public class RateAndReviewsPresenter implements Presenter {
         .flatMap(resume -> Observable.merge(showReviews(), showRating()))
         //.subscribeOn(schedulerProvider.io())
         .observeOn(schedulerProvider.ui())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY_VIEW))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(aVoid -> {
         }, err -> {
           view.showError(err);
@@ -63,7 +63,7 @@ public class RateAndReviewsPresenter implements Presenter {
           CrashReport.getInstance().log(exception);
         }
       });
-    }).compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY_VIEW)).subscribe(aVoid -> {
+    }).compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY)).subscribe(aVoid -> {
     }, err -> {
       view.showError(err);
       CrashReport.getInstance().log(err);

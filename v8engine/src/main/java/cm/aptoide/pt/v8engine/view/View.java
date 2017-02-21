@@ -24,17 +24,12 @@ public interface View {
 
   void attachPresenter(Presenter presenter, Bundle savedInstanceState);
 
-  // TODO: Make it simple. We need to abstract implementation details (e.g. Activity and Fragment life cycle events).
   enum LifecycleEvent {
-    ATTACH,
     CREATE,
-    CREATE_VIEW,
     START,
     RESUME,
     PAUSE,
     STOP,
-    DESTROY_VIEW,
     DESTROY,
-    DETACH
   }
 }

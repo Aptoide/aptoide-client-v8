@@ -48,7 +48,7 @@ public abstract class FragmentView extends RxFragment implements cm.aptoide.pt.v
   }
 
   @Override public Observable<LifecycleEvent> getLifecycle() {
-    return lifecycle().map(event -> convertToEvent(event));
+    return lifecycle().flatMap(event -> convertToEvent(event));
   }
 
   @Override public void attachPresenter(Presenter presenter, Bundle savedInstanceState) {
@@ -59,24 +59,24 @@ public abstract class FragmentView extends RxFragment implements cm.aptoide.pt.v
     this.presenter.present();
   }
 
-  @NonNull private LifecycleEvent convertToEvent(FragmentEvent event) {
+  @NonNull private Observable<LifecycleEvent> convertToEvent(FragmentEvent event) {
     switch (event) {
       case CREATE:
-        return LifecycleEvent.CREATE;
+        return Observable.empty();
       case CREATE_VIEW:
-        return LifecycleEvent.CREATE_VIEW;
+        return Observable.just(LifecycleEvent.CREATE);
       case START:
-        return LifecycleEvent.START;
+        return Observable.just(LifecycleEvent.START);
       case RESUME:
-        return LifecycleEvent.RESUME;
+        return Observable.just(LifecycleEvent.RESUME);
       case PAUSE:
-        return LifecycleEvent.PAUSE;
+        return Observable.just(LifecycleEvent.PAUSE);
       case STOP:
-        return LifecycleEvent.STOP;
-      case DESTROY:
-        return LifecycleEvent.DESTROY;
+        return Observable.just(LifecycleEvent.STOP);
       case DESTROY_VIEW:
-        return LifecycleEvent.DESTROY_VIEW;
+        return Observable.just(LifecycleEvent.DESTROY);
+      case DESTROY:
+        return Observable.empty();
       default:
         throw new IllegalStateException("Unrecognized event: " + event.name());
     }

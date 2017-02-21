@@ -64,7 +64,7 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
       errorsList.add(WSWidgetsUtils.USER_NOT_LOGGED_ERROR);
       if (WSWidgetsUtils.shouldAddObjectView(errorsList, throwable)) {
         DisplayablesFactory.loadLocalSubscribedStores(storeRepository)
-            .compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW))
+            .compose(bindUntilEvent(LifecycleEvent.DESTROY))
             .subscribe(stores -> addDisplayables(getStoresDisplayable(stores)), err -> {
               CrashReport.getInstance().log(err);
             });

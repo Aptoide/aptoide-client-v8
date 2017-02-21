@@ -31,7 +31,7 @@ public class MyStoresFragment extends GetStoreWidgetsFragment {
           .distinct()
           .observeOn(AndroidSchedulers.mainThread())
           .skip(1)
-          .compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW))
+          .compose(bindUntilEvent(LifecycleEvent.DESTROY))
           .subscribe(stores -> {
             Logger.d(TAG, "Store database changed, reloading...");
             super.load(false, true, null);

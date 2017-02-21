@@ -365,7 +365,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
         return createNewCommentFragment(elementIdAsString);
       }
       return createNewCommentFragment(elementIdAsLong, storeName);
-    }).compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW)).subscribe(a -> {
+    }).compose(bindUntilEvent(LifecycleEvent.DESTROY)).subscribe(a -> {
       // no-op
     });
   }

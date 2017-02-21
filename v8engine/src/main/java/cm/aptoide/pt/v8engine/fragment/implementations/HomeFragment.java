@@ -256,7 +256,7 @@ public class HomeFragment extends StoreFragment {
   private void openFacebook() {
     InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
     installedAccessor.get(FACEBOOK_PACKAGE_NAME)
-        .compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW))
+        .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(installedFacebook -> {
           openSocialLink(FACEBOOK_PACKAGE_NAME, APTOIDE_FACEBOOK_LINK,
