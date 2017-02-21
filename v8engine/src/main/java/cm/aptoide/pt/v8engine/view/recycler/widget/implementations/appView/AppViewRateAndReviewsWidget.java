@@ -22,6 +22,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
@@ -121,7 +122,7 @@ import rx.functions.Action1;
     final FragmentActivity context = getContext();
     Action1<Void> rateOnClickHandler =
         __ -> dialogUtils.showRateDialog(context, appName, packageName, storeName,
-            () -> loadReviews());
+            () -> loadReviews(displayable.getStoreCredentials()));
     compositeSubscription.add(
         RxView.clicks(rateThisButton).subscribe(rateOnClickHandler, handleError));
     compositeSubscription.add(
@@ -145,37 +146,38 @@ import rx.functions.Action1;
     // because otherwise the AppBar won't be collapsed
     topReviewsList.setNestedScrollingEnabled(false);
 
-    loadReviews();
+    loadReviews(displayable.getStoreCredentials());
   }
 
-  private void loadReviews() {
-    loadTopReviews(storeName, packageName);
+  private void loadReviews(BaseRequestWithStore.StoreCredentials storeCredentials) {
+    loadTopReviews(storeName, packageName, storeCredentials);
   }
 
-  private void loadTopReviews(String storeName, String packageName) {
+  private void loadTopReviews(String storeName, String packageName,
+      BaseRequestWithStore.StoreCredentials storeCredentials) {
     final FragmentActivity context = getContext();
     ListReviewsRequest.ofTopReviews(storeName, packageName, MAX_COMMENTS,
-        AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
-        .execute(listReviews -> {
+        AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier(),
+        storeCredentials).execute(listReviews -> {
 
-              List<Review> reviews = listReviews.getDatalist().getList();
-              if (reviews == null || reviews.isEmpty()) {
-                topReviewsList.setAdapter(new TopReviewsAdapter(context));
-                loadedData(false);
-                return;
-              }
+          List<Review> reviews = listReviews.getDatalist().getList();
+          if (reviews == null || reviews.isEmpty()) {
+            topReviewsList.setAdapter(new TopReviewsAdapter(context));
+            loadedData(false);
+            return;
+          }
 
-              loadedData(true);
-              final List<Review> list = listReviews.getDatalist().getList();
-              topReviewsList.setAdapter(
-                  new TopReviewsAdapter(context, list.toArray(new Review[list.size()])));
-              scheduleAnimations();
-            }, e -> {
-              loadedData(false);
-              topReviewsList.setAdapter(new TopReviewsAdapter(context));
-              CrashReport.getInstance().log(e);
-            }, true // bypass cache flag
-        );
+          loadedData(true);
+          final List<Review> list = listReviews.getDatalist().getList();
+          topReviewsList.setAdapter(
+              new TopReviewsAdapter(context, list.toArray(new Review[list.size()])));
+          scheduleAnimations();
+        }, e -> {
+          loadedData(false);
+          topReviewsList.setAdapter(new TopReviewsAdapter(context));
+          CrashReport.getInstance().log(e);
+        }, true // bypass cache flag
+    );
   }
 
   private void loadedData(boolean hasReviews) {
