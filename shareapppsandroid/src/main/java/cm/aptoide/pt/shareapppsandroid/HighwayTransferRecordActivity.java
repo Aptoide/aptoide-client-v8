@@ -541,7 +541,6 @@ public class HighwayTransferRecordActivity extends ActivityView
                   //intent para o mainactivity
                   //manter estado.
                   setInitialApConfig();
-
                   startActivity(i);
                 }
               })

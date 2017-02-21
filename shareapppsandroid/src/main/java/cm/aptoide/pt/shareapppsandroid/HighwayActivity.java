@@ -70,6 +70,7 @@ public class HighwayActivity extends ActivityView implements HighwayView {
     createGroupButton = (LinearLayout) findViewById(R.id.createGroup);//receive
     radarTextView.setActivity(this);
     setUpToolbar();
+
     presenter = new HighwayPresenter(this, deviceName, new DeactivateHotspotTask(connectionManager),
         connectionManager, analyticsManager, groupManager);
     attachPresenter(presenter);

@@ -58,7 +58,7 @@ public class ConnectionManager {
   private BroadcastReceiver activateButtonsReceiver = new BroadcastReceiver() {
     @Override public void onReceive(Context context, Intent intent) {
       if (wifimanager == null) {
-        wifimanager = (WifiManager) context.getSystemService(WIFI_SERVICE);
+        wifimanager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
       }
       if (listenerActivateButtons != null) {
         listenerActivateButtons.onStateChanged(wifimanager.isWifiEnabled());
@@ -116,6 +116,7 @@ public class ConnectionManager {
           }
         }
       } else {
+        System.out.println("tHERE ARE NO APTX NETWORKS");
         if (noHotspotsFoundCounter >= 2 && !showedNoHotspotMessage) {
           showedNoHotspotMessage = true;
           inactivityListener.onInactivity(true);
@@ -190,7 +191,7 @@ public class ConnectionManager {
   public static ConnectionManager getInstance(Context context){
     if(instance==null){
       instance=new ConnectionManager(context, PreferenceManager.getDefaultSharedPreferences(context),
-          (WifiManager) context.getSystemService(WIFI_SERVICE));
+          (WifiManager) context.getSystemService(Context.WIFI_SERVICE));
     }
   return instance;
   }
@@ -221,7 +222,7 @@ public class ConnectionManager {
 
   private void scheduleScan() {
     if (wifimanager == null) {
-      wifimanager = (WifiManager) context.getSystemService(WIFI_SERVICE);
+      wifimanager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
     }
     if (!wifimanager.isWifiEnabled()) {
       wifimanager.setWifiEnabled(true);
@@ -235,7 +236,7 @@ public class ConnectionManager {
   }
 
   public void resetHotspot(boolean enable) {
-    WifiManager wifimanager = (WifiManager) context.getSystemService(WIFI_SERVICE);
+    WifiManager wifimanager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
     WifiConfiguration wc = DataHolder.getInstance().getWcOnJoin();
 
     Method[] wmMethods = wifimanager.getClass()
@@ -257,7 +258,7 @@ public class ConnectionManager {
 
   public int enableHotspot(String randomAlphaNum, String deviceName) {
     if (wifimanager == null) {
-      wifimanager = (WifiManager) context.getSystemService(WIFI_SERVICE);
+      wifimanager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
     }
     if (wifimanager.isWifiEnabled()) {
       wifimanager.setWifiEnabled(false);
@@ -387,7 +388,7 @@ public class ConnectionManager {
 
   public void cleanNetworks() {
     if (wifimanager == null) {
-      wifimanager = (WifiManager) context.getSystemService(WIFI_SERVICE);
+      wifimanager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
     }
     List<WifiConfiguration> list = wifimanager.getConfiguredNetworks();
     if (list != null) {
@@ -397,10 +398,12 @@ public class ConnectionManager {
         System.out.println("Trying to remove a APTX network.");
         System.out.println("This one is i : " + i.SSID);
         System.out.println("SEPARATED 0 is : " + tmp);
-        if (tmp.equals("APTX")) {
+        if (tmp.contains("APTX")) {
           System.out.println("TRying to remove a network");
           boolean remove = wifimanager.removeNetwork(i.networkId);
           System.out.println("boolean from remove network is : " + remove);
+        }else{
+          System.out.println("tmp is not aptx can not remove this network;");
         }
       }
     }
@@ -509,7 +512,7 @@ public class ConnectionManager {
 
   public void recoverNetworkState(){
     if(wifimanager==null){
-      wifimanager = (WifiManager) context.getSystemService(WIFI_SERVICE);
+      wifimanager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
     }
     wifimanager.disconnect();
     Boolean wifiOnStart = prefs.getBoolean("wifiOnStart", false);
