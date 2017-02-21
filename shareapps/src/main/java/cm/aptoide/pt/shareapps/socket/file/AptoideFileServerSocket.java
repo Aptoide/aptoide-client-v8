@@ -4,6 +4,8 @@ import cm.aptoide.pt.shareapps.socket.AptoideServerSocket;
 import cm.aptoide.pt.shareapps.socket.AptoideSocket;
 import cm.aptoide.pt.shareapps.socket.entities.FileInfo;
 import cm.aptoide.pt.shareapps.socket.interfaces.FileServerLifecycle;
+import cm.aptoide.pt.shareapps.socket.interfaces.ProgressAccumulator;
+import cm.aptoide.pt.shareapps.socket.util.MultiProgressAccumulator;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -11,6 +13,8 @@ import java.io.InputStream;
 import java.net.Socket;
 import java.util.LinkedList;
 import java.util.List;
+
+import static cm.aptoide.pt.shareapps.socket.util.FileInfoUtils.computeTotalSize;
 
 /**
  * Created by neuro on 27-01-2017.
@@ -48,13 +52,16 @@ public class AptoideFileServerSocket<T> extends AptoideServerSocket {
       startedSending = true;
     }
 
+    ProgressAccumulator progressAccumulator =
+        new MultiProgressAccumulator(computeTotalSize(fileInfos), fileServerLifecycle);
+
     InputStream in = null;
 
     try {
       for (String filePath : getFilePaths()) {
         System.out.println(Thread.currentThread().getId() + ": Started sending " + filePath);
         in = new FileInputStream(filePath);
-        copy(in, socket.getOutputStream(), null);
+        copy(in, socket.getOutputStream(), progressAccumulator);
         System.out.println(Thread.currentThread().getId() + ": Finished sending " + filePath);
         in.close();
       }

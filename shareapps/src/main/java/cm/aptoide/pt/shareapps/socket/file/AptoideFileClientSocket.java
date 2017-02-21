@@ -11,6 +11,8 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.List;
 
+import static cm.aptoide.pt.shareapps.socket.util.FileInfoUtils.computeTotalSize;
+
 /**
  * Created by neuro on 27-01-2017.
  */
@@ -52,15 +54,6 @@ public class AptoideFileClientSocket<T> extends AptoideClientSocket {
     if (fileClientLifecycle != null) {
       fileClientLifecycle.onFinishReceiving(fileDescriptor);
     }
-  }
-
-  private long computeTotalSize(List<FileInfo> fileInfos) {
-    long total = 0;
-    for (FileInfo fileInfo : fileInfos) {
-      total += fileInfo.getSize();
-    }
-
-    return total;
   }
 
   public AptoideFileClientSocket<T> setFileClientLifecycle(T fileDescriptor,
