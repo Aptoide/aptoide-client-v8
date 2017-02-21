@@ -18,7 +18,6 @@ import java.util.List;
 public class AptoideFileClientSocket<T> extends AptoideClientSocket {
 
   private final List<FileInfo> fileInfos;
-  private boolean startedSending = false;
 
   private T fileDescriptor;
   private FileClientLifecycle<T> fileClientLifecycle;
@@ -35,9 +34,8 @@ public class AptoideFileClientSocket<T> extends AptoideClientSocket {
 
   @Override protected void onConnected(Socket socket) throws IOException {
 
-    if (!startedSending && fileClientLifecycle != null) {
+    if (fileClientLifecycle != null) {
       fileClientLifecycle.onStartReceiving(fileDescriptor);
-      startedSending = true;
     }
 
     ProgressAccumulator progressAccumulator =
@@ -65,7 +63,7 @@ public class AptoideFileClientSocket<T> extends AptoideClientSocket {
     return total;
   }
 
-  public AptoideFileClientSocket setFileClientSocket(T fileDescriptor,
+  public AptoideFileClientSocket<T> setFileClientLifecycle(T fileDescriptor,
       FileClientLifecycle<T> fileClientLifecycle) {
 
     if (fileDescriptor == null) {

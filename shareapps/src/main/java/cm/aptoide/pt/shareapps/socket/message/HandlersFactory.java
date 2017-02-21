@@ -4,7 +4,7 @@ import cm.aptoide.pt.shareapps.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.shareapps.socket.entities.FileInfo;
 import cm.aptoide.pt.shareapps.socket.entities.Host;
 import cm.aptoide.pt.shareapps.socket.file.ShareAppsFileClientSocket;
-import cm.aptoide.pt.shareapps.socket.file.ShareAppsServerSocket;
+import cm.aptoide.pt.shareapps.socket.file.ShareAppsFileServerSocket;
 import cm.aptoide.pt.shareapps.socket.interfaces.FileClientLifecycle;
 import cm.aptoide.pt.shareapps.socket.interfaces.FileServerLifecycle;
 import cm.aptoide.pt.shareapps.socket.message.interfaces.Sender;
@@ -80,8 +80,8 @@ public class HandlersFactory {
     }
 
     @Override public void handleMessage(SendApk sendApkMessage, Sender<Message> messageSender) {
-      new ShareAppsServerSocket(sendApkMessage.getServerPort(), sendApkMessage.getAndroidAppInfo(),
-          serverLifecycle, 5000).startAsync();
+      new ShareAppsFileServerSocket(sendApkMessage.getServerPort(),
+          sendApkMessage.getAndroidAppInfo(), 5000).startAsync();
       messageSender.send(new AckMessage(messageSender.getHost()));
       // TODO: 03-02-2017 neuro maybe a good ideia to stop the server somewhat :)
     }
@@ -116,7 +116,7 @@ public class HandlersFactory {
             new ShareAppsFileClientSocket(receiveApkServerHost.getIp(),
                 receiveApkServerHost.getPort(), androidAppInfo.getFiles());
         if (fileClientLifecycle != null) {
-          shareAppsFileClientSocket.setFileClientSocket(androidAppInfo, fileClientLifecycle);
+          shareAppsFileClientSocket.setFileClientLifecycle(androidAppInfo, fileClientLifecycle);
         }
         shareAppsFileClientSocket.start();
       } else {
