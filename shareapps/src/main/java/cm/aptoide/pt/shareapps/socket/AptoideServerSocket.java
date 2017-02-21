@@ -19,7 +19,7 @@ import lombok.Getter;
 public abstract class AptoideServerSocket extends AptoideSocket implements ServerActionDispatcher {
 
   private final int port;
-  ServerSocketTimeoutManager serverSocketTimeoutManager;
+  private ServerSocketTimeoutManager serverSocketTimeoutManager;
   private List<Socket> connectedSockets = new LinkedList<>();
   private ServerSocket ss;
   private boolean serving = false;
