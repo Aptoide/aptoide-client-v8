@@ -32,7 +32,7 @@ public class AptoideFileServerSocket extends AptoideServerSocket {
       for (String filePath : filePaths) {
         System.out.println(Thread.currentThread().getId() + ": Started sending " + filePath);
         in = new FileInputStream(filePath);
-        copy(in, socket.getOutputStream());
+        copy(in, socket.getOutputStream(), null);
         System.out.println(Thread.currentThread().getId() + ": Finished sending " + filePath);
         in.close();
       }

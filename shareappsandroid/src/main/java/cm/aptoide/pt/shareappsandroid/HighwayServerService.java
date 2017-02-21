@@ -62,6 +62,10 @@ public class HighwayServerService extends Service {
         System.out.println(" Finished receiving ");
         showToast(" Finished receiving ");
       }
+
+      @Override public void onProgressChanged(float progress) {
+        System.out.println("onProgressChanged() called with: " + "progress = [" + progress + "]");
+      }
     };
 
     fileServerLifecycle = new FileServerLifecycle<AndroidAppInfo>() {

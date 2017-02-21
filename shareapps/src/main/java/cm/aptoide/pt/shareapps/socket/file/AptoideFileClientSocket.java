@@ -3,6 +3,8 @@ package cm.aptoide.pt.shareapps.socket.file;
 import cm.aptoide.pt.shareapps.socket.AptoideClientSocket;
 import cm.aptoide.pt.shareapps.socket.entities.FileInfo;
 import cm.aptoide.pt.shareapps.socket.interfaces.FileClientLifecycle;
+import cm.aptoide.pt.shareapps.socket.interfaces.ProgressAccumulator;
+import cm.aptoide.pt.shareapps.socket.util.MultiProgressAccumulator;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -21,7 +23,6 @@ public class AptoideFileClientSocket<T> extends AptoideClientSocket {
   private T fileDescriptor;
   private FileClientLifecycle<T> fileClientLifecycle;
 
-
   public AptoideFileClientSocket(String host, int port, List<FileInfo> fileInfos) {
     super(host, port);
     this.fileInfos = fileInfos;
@@ -39,17 +40,29 @@ public class AptoideFileClientSocket<T> extends AptoideClientSocket {
       startedSending = true;
     }
 
+    ProgressAccumulator progressAccumulator =
+        new MultiProgressAccumulator(computeTotalSize(fileInfos), fileClientLifecycle);
+
     for (FileInfo fileInfo : fileInfos) {
       System.out.println(Thread.currentThread().getId() + ": Start receiving " + fileInfo);
       OutputStream out = new FileOutputStream(fileInfo.getFilePath());
 
-      copy(socket.getInputStream(), out, fileInfo.getSize());
+      copy(socket.getInputStream(), out, fileInfo.getSize(), progressAccumulator);
       out.close();
     }
 
     if (fileClientLifecycle != null) {
       fileClientLifecycle.onFinishReceiving(fileDescriptor);
     }
+  }
+
+  private long computeTotalSize(List<FileInfo> fileInfos) {
+    long total = 0;
+    for (FileInfo fileInfo : fileInfos) {
+      total += fileInfo.getSize();
+    }
+
+    return total;
   }
 
   public AptoideFileClientSocket setFileClientSocket(T fileDescriptor,

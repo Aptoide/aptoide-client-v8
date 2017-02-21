@@ -1,5 +1,6 @@
 package cm.aptoide.pt.shareapps.socket;
 
+import cm.aptoide.pt.shareapps.socket.interfaces.ProgressAccumulator;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -44,11 +45,13 @@ public abstract class AptoideSocket {
     executorService.shutdownNow();
   }
 
-  protected void copy(InputStream in, OutputStream out) throws IOException {
-    copy(in, out, Long.MAX_VALUE);
+  protected void copy(InputStream in, OutputStream out, ProgressAccumulator progressAccumulator)
+      throws IOException {
+    copy(in, out, Long.MAX_VALUE, progressAccumulator);
   }
 
-  protected void copy(InputStream in, OutputStream out, long len) throws IOException {
+  protected void copy(InputStream in, OutputStream out, long len,
+      ProgressAccumulator progressAccumulator) throws IOException {
     byte[] buf = new byte[bufferSize];
 
     int totalBytesRead = 0;
@@ -56,7 +59,9 @@ public abstract class AptoideSocket {
     while ((totalBytesRead) != len
         && (bytesRead = in.read(buf, 0, (int) Math.min(buf.length, len - totalBytesRead))) != -1) {
       out.write(buf, 0, bytesRead);
-
+      if (progressAccumulator != null) {
+        progressAccumulator.addProgress(bytesRead);
+      }
       totalBytesRead += bytesRead;
     }
   }
