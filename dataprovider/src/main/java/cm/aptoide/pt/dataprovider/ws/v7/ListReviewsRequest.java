@@ -43,18 +43,20 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
   }
 
   public static ListReviewsRequest of(String storeName, String packageName, String accessToken,
-      String aptoideClientUUID) {
-    return of(storeName, packageName, MAX_REVIEWS, MAX_COMMENTS, accessToken, aptoideClientUUID);
+      String aptoideClientUUID, BaseRequestWithStore.StoreCredentials storecredentials) {
+    return of(storeName, packageName, MAX_REVIEWS, MAX_COMMENTS, accessToken, aptoideClientUUID,
+        storecredentials);
   }
 
   /**
    * example call: http://ws75.aptoide.com/api/7/listReviews/store_name/apps/package_name/com.supercell.clashofclans/limit/10
    */
   public static ListReviewsRequest of(String storeName, String packageName, int maxReviews,
-      int maxComments, String accessToken, String aptoideClientUUID) {
+      int maxComments, String accessToken, String aptoideClientUUID,
+      BaseRequestWithStore.StoreCredentials storecredentials) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
     Body body = new Body(storeName, packageName, maxReviews, maxComments,
-        ManagerPreferences.getAndResetForceServerRefresh());
+        ManagerPreferences.getAndResetForceServerRefresh(), storecredentials);
     return new ListReviewsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
@@ -62,11 +64,10 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
    * example call: http://ws75.aptoide.com/api/7/listReviews/store_name/apps/package_name/com.supercell.clashofclans/sub_limit/0/limit/3
    */
   public static ListReviewsRequest ofTopReviews(String storeName, String packageName,
-      int maxReviews, String accessToken, String aptoideClientUUID) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-    Body body = new Body(storeName, packageName, maxReviews, 0,
-        ManagerPreferences.getAndResetForceServerRefresh());
-    return new ListReviewsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
+      int maxReviews, String accessToken, String aptoideClientUUID,
+      BaseRequestWithStore.StoreCredentials storeCredentials) {
+    return of(storeName, packageName, maxReviews, 0, accessToken, aptoideClientUUID,
+        storeCredentials);
   }
 
   @Override protected Observable<ListReviews> loadDataFromNetwork(Interfaces interfaces,
@@ -76,7 +77,7 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
   }
 
   @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) public static class Body
-      extends BaseBody implements Endless {
+      extends BaseBodyWithStore implements Endless {
 
     @Getter private Integer limit;
     @Getter @Setter private int offset;
@@ -93,22 +94,19 @@ public class ListReviewsRequest extends V7<ListReviews, ListReviewsRequest.Body>
     private String packageName;
     private String storeName;
     private Integer subLimit;
-    private String store_user;
-    private String store_pass_sha1;
 
-    public Body(long storeId, int limit, int subLimit, boolean refresh, String username,
-        String password) {
-
+    public Body(long storeId, int limit, int subLimit, boolean refresh,
+        BaseRequestWithStore.StoreCredentials storeCredentials) {
+      super(storeCredentials);
       this.storeId = storeId;
       this.limit = limit;
       this.subLimit = subLimit;
       this.refresh = refresh;
-      this.store_user = username;
-      this.store_pass_sha1 = password;
     }
 
-    public Body(String storeName, String packageName, int limit, int subLimit, boolean refresh) {
-
+    public Body(String storeName, String packageName, int limit, int subLimit, boolean refresh,
+        BaseRequestWithStore.StoreCredentials storeCredentials) {
+      super(storeCredentials);
       this.packageName = packageName;
       this.storeName = storeName;
       this.limit = limit;
