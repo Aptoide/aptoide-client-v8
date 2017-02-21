@@ -80,7 +80,7 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
             try {
               serverSocketTimeoutManager.reserTimeout();
               connectedSockets.remove(socket);
-              System.out.println("ShareApps: Closing server client socket.");
+              System.out.println("ShareApps: Closing " + getClass().getSimpleName() + " socket.");
               socket.close();
             } catch (IOException e) {
               e.printStackTrace();
