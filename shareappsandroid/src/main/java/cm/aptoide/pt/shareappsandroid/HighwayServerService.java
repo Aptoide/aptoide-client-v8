@@ -65,15 +65,22 @@ public class HighwayServerService extends Service {
 
       @Override public void onProgressChanged(float progress) {
         System.out.println("onProgressChanged() called with: " + "progress = [" + progress + "]");
+        showToast("onProgressChanged() called with: " + "progress = [" + progress + "]");
       }
     };
 
     fileServerLifecycle = new FileServerLifecycle<AndroidAppInfo>() {
 
+      @Override public void onProgressChanged(float progress) {
+        System.out.println("onProgressChanged() called with: progress = [" + progress + "]");
+        showToast("onProgressChanged() called with: progress = [" + progress + "]");
+      }
+
       @Override
       public void onStartSending(AndroidAppInfo androidAppInfo) {
         System.out.println("Server : started sending");
         showToast("Server : started sending");
+
       }
 
       @Override public void onProgressChanged(float progress) {
@@ -143,10 +150,24 @@ public class HighwayServerService extends Service {
 
           //create the mesage and send it.
 
-          String filePath=listOfApps.get(0).getFilePath();
-          System.out.println(" Filepath from app 0 (test) is:  "+filePath);
-          File apk = new File(filePath);
-          AndroidAppInfo appInfo=new AndroidAppInfo(apk);
+          for(int i=0;i<listOfApps.size();i++){
+            String filePath=listOfApps.get(i).getFilePath();
+            String appName= listOfApps.get(i).getAppName();
+            String packageName = listOfApps.get(i).getPackageName();
+            String obbsFilePath = listOfApps.get(i).getObbsFilePath();
+
+            System.out.println(" Filepath from app 0 (test) is:  "+filePath);
+            File apk = new File(filePath);
+
+            AndroidAppInfo appInfo;
+            if(!obbsFilePath.equals("noObbs")){
+
+              appInfo=new AndroidAppInfo(filePath,appName,packageName, obbsFilePath ,apk);
+
+            }else{
+              appInfo=new AndroidAppInfo(filePath,appName,packageName,apk);
+
+            }
 
           aptoideMessageClientController.send(
                   new RequestPermissionToSend(aptoideMessageClientController.getLocalhost(), appInfo));

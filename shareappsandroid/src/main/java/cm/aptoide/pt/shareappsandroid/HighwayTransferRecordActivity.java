@@ -140,7 +140,7 @@ public class HighwayTransferRecordActivity extends ActivityView
     applicationReceiver =
         new ApplicationReceiver(getApplicationContext(), isHotspot, porto, targetIPAddress,
             nickname);
-    applicationSender = new ApplicationSender(getApplicationContext(), isHotspot);
+    applicationSender = ApplicationSender.getInstance(getApplicationContext(), isHotspot);
     transferRecordManager = new TransferRecordManager(applicationsManager);
 
     presenter = new TransferRecordPresenter(this, applicationReceiver, applicationSender,
@@ -815,6 +815,7 @@ public class HighwayTransferRecordActivity extends ActivityView
   public void updateItemStatus(int positionToReSend, boolean isSent, boolean needReSend) {
     if(adapter!=null){
       adapter.updateItem(positionToReSend, isSent, needReSend);
+      adapter.notifyDataSetChanged();
     }
   }
 

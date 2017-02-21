@@ -53,23 +53,44 @@ public class HighwayClientService extends Service {
 
       @Override public void onProgressChanged(float progress) {
         System.out.println("onProgressChanged() called with: " + "progress = [" + progress + "]");
+        //showToast("onProgressChanged() called with: " + "progress = [" + progress + "]");
       }
     };
 
     fileServerLifecycle = new FileServerLifecycle<AndroidAppInfo>() {
+      @Override public void onProgressChanged(float progress) {
+        System.out.println("onProgressChanged() called with: progress = [" + progress + "]");
+        //showToast("onProgressChanged() called with: progress = [" + progress + "]");
+      }
+
       @Override public void onStartSending(AndroidAppInfo o) {
         System.out.println(" Started sending ");
         showToast(" Started sending ");
-        //generate intent, with info of the app. Name, filePath, size,, etc.
-        //intent i=new Intent();
-        //i.setAction("SENDAPP");
-        //sendBroadcast(i);
+
+        Intent i = new Intent();
+        i.putExtra("isSent",false);
+        i.putExtra("needReSend", false);//add field with pos to resend and change its value only if it is != 100000 (onstartcommand)
+        i.putExtra("appName",o.getAppName());
+        i.putExtra("packageName",o.getPackageName());
+        i.putExtra("positionToReSend",100000);
+        i.setAction("SENDAPP");
+        sendBroadcast(i);
+
         //create notification for the app.
       }
 
       @Override public void onFinishSending(AndroidAppInfo o) {
         System.out.println(" Finished sending ");
         showToast(" Finished sending ");
+
+        Intent i = new Intent();
+        i.putExtra("isSent",true);
+        i.putExtra("needReSend", false);
+        i.putExtra("appName",o.getAppName());
+        i.putExtra("packageName",o.getPackageName());
+        i.putExtra("positionToReSend",100000);
+        i.setAction("SENDAPP");
+        sendBroadcast(i);
 
       }
     };
@@ -78,7 +99,7 @@ public class HighwayClientService extends Service {
   @Deprecated private void showToast(final String str) {
     new Handler(Looper.getMainLooper()).post(new TimerTask() {
       @Override public void run() {
-        Toast.makeText(getBaseContext(), str, Toast.LENGTH_LONG).show();
+        Toast.makeText(getBaseContext(), str, Toast.LENGTH_SHORT).show();
       }
     });
   }
@@ -120,15 +141,28 @@ public class HighwayClientService extends Service {
         if (listOfApps == null || listOfApps.get(listOfApps.size() - 1)
                 .isOnChat()) { //null ou ultimo elemento ja acabado de enviar.
           listOfApps = b.getParcelableArrayList("listOfAppsToInstall");
-          String filePath=listOfApps.get(0).getFilePath();
-          System.out.println(" Filepath from app 0 (test) is:  "+filePath);
-          File apk = new File(filePath);
-          AndroidAppInfo appInfo=new AndroidAppInfo(apk);
+          for(int i=0;i<listOfApps.size();i++){
 
-          Host host = aptoideMessageController.getHost();
-          aptoideMessageController.send(
-              new RequestPermissionToSend(aptoideMessageController.getLocalhost(), appInfo));
+            String filePath=listOfApps.get(i).getFilePath();
+            String appName= listOfApps.get(i).getAppName();
+            String packageName = listOfApps.get(i).getPackageName();
+            String obbsFilePath = listOfApps.get(i).getObbsFilePath();
 
+            System.out.println(" Filepath from app 0 (test) is:  "+filePath);
+            File apk = new File(filePath);
+
+            AndroidAppInfo appInfo=new AndroidAppInfo(appName,packageName,filePath,apk);
+
+            if(!obbsFilePath.equals("noObbs")){
+
+              appInfo.setObbsFilePath(obbsFilePath);
+
+            }
+
+            Host host = aptoideMessageController.getHost();
+            aptoideMessageController.send(
+                new RequestPermissionToSend(aptoideMessageController.getLocalhost(), appInfo));
+          }
         }else {
           List<App> tempList = b.getParcelableArrayList("listOfAppsToInstall");
 
@@ -136,6 +170,7 @@ public class HighwayClientService extends Service {
         }
       }
     }
+
 
 
         return START_STICKY;

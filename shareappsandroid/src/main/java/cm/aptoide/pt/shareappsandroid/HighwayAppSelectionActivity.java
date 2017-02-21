@@ -1,5 +1,6 @@
 package cm.aptoide.pt.shareappsandroid;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -49,7 +50,7 @@ public class HighwayAppSelectionActivity extends ActivityView implements Highway
     highwayAppSelectionActivity = this;
 
     applicationProvider = new ApplicationProvider(this);
-    applicationSender = new ApplicationSender(this, isHotspot);
+    applicationSender = ApplicationSender.getInstance(this, isHotspot);
 
     presenter =
         new HighwayAppSelectionPresenter(applicationProvider, applicationSender, this, isHotspot);
@@ -218,6 +219,13 @@ public class HighwayAppSelectionActivity extends ActivityView implements Highway
     if (adapter != null) {
       adapter.notifyDataSetChanged();
     }
+  }
+
+  @Override public void goBackToTransferRecord() {
+    Intent i= new Intent().setClass(HighwayAppSelectionActivity.this, HighwayTransferRecordActivity.class);
+    i.putExtra("isHotspot",isHotspot);
+    startActivity(i);
+
   }
 
   //    @Override

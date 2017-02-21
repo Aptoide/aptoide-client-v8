@@ -36,6 +36,7 @@ public class HighwayAppSelectionPresenter implements Presenter {
         setAppSelectionListener();
       }
     });
+
   }
 
   @Override public void onResume() {
@@ -83,6 +84,7 @@ public class HighwayAppSelectionPresenter implements Presenter {
     System.out.println("selectedApps size : " + selectedApps.size());
     if (selectedApps.size() > 0) {
       applicationSender.sendApp(selectedApps);
+      view.goBackToTransferRecord();
     } else {
       view.showNoAppsSelectedToast();
     }

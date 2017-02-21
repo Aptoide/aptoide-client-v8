@@ -26,12 +26,20 @@ public class ApplicationSender {
   private String targetIPAddress;
   private BroadcastReceiver send;
   private IntentFilter intentFilter;
+  private static ApplicationSender instance;
 
   public ApplicationSender(Context context, boolean isHotspot) {
     this.context = context;
     this.isHotspot = isHotspot;
     this.intentFilter = new IntentFilter();
     intentFilter.addAction("SENDAPP");
+  }
+
+  public static ApplicationSender getInstance(Context context, boolean isHotspot){
+    if(instance==null){
+      instance=new ApplicationSender(context, isHotspot);
+    }
+    return instance;
   }
 
   public void sendApp(List<App> selectedApps) {
@@ -54,7 +62,7 @@ public class ApplicationSender {
         }
       }
     };
-    context.registerReceiver(send, new IntentFilter());
+    context.registerReceiver(send, intentFilter);
   }
 
   public Intent generateIntentToSend(List<App> selectedApps) {
@@ -101,7 +109,7 @@ public class ApplicationSender {
   }
 
   public void stop(){
-    removeListener();
+    //removeListener();
   }
 
   public void removeListener() {

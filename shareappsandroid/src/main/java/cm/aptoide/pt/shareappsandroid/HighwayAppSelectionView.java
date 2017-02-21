@@ -21,6 +21,8 @@ public interface HighwayAppSelectionView {
 
   void notifyChanges();
 
+  void goBackToTransferRecord();
+
   interface AppSelectionListener {
 
     void onAppSelected(AppViewModel item);

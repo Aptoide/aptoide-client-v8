@@ -79,6 +79,7 @@ public class TransferRecordPresenter implements Presenter {
                   .isSent()) {
                 listOfApps.get(i).setNeedReSend(needReSend);
                 listOfApps.get(i).setSent(isSent);
+                view.updateItemStatus(i,isSent,needReSend);
                 //                            i=-1;//to do only for the last app sent with this name.
               }
             }

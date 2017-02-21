@@ -174,9 +174,9 @@ public class HighwayTransferRecordCustomAdapter extends BaseAdapter {
     notifyDataSetChanged();
   }
 
-  public void updateItem(int positionToReSend, boolean isSent, boolean needReSend) {
-    listOfItems.get(positionToReSend).setNeedReSend(needReSend);
-    listOfItems.get(positionToReSend).setSent(isSent);
+  public void updateItem(int positionToUpdate, boolean isSent, boolean needReSend) {
+    listOfItems.get(positionToUpdate).setNeedReSend(needReSend);
+    listOfItems.get(positionToUpdate).setSent(isSent);
 
   }
 
