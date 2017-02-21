@@ -18,6 +18,7 @@ import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -50,7 +51,6 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class AddStoreDialog extends DialogFragment {
 
-  private static String STORE_WEBSOCKET_PORT = "9002";
   private static StoreAutoCompleteWebSocket storeAutoCompleteWebSocket;
   private final int PRIVATE_STORE_REQUEST_CODE = 20;
   private final AptoideClientUUID aptoideClientUUID;
@@ -70,8 +70,9 @@ public class AddStoreDialog extends DialogFragment {
         DataProvider.getContext());
   }
 
-  public void attachFragmentManager(NavigationManagerV4 navigationManager) {
-    this.navigationManager = navigationManager;
+  @Override public void onAttach(Context context) {
+    super.onAttach(context);
+    navigationManager = NavigationManagerV4.Builder.buildWith(getActivity());
   }
 
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -88,11 +89,9 @@ public class AddStoreDialog extends DialogFragment {
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
-
     if (getDialog() != null) {
-      getDialog().getWindow().setTitle(getString(R.string.subscribe_store));
+      getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
     }
-
     return inflater.inflate(R.layout.dialog_add_store, container, false);
   }
 
@@ -102,19 +101,23 @@ public class AddStoreDialog extends DialogFragment {
     setupSearchView(view);
     setupStoreSearch(searchView);
     mSubscriptions.add(RxView.clicks(addStoreButton).subscribe(click -> {
-      if (givenStoreName == null) {
-        givenStoreName = searchView.getQuery().toString();
-      }
-      if (givenStoreName.length() > 0) {
-        AddStoreDialog.this.storeName = givenStoreName;
-        AptoideUtils.SystemU.hideKeyboard(getActivity());
-        getStore(givenStoreName);
-        showLoadingDialog();
-      }
+      addStoreAction();
     }));
     mSubscriptions.add(RxView.clicks(topStoresButton).subscribe(click -> topStoresAction()));
     mSubscriptions.add(RxView.clicks(topStoreText1).subscribe(click -> topStoresAction()));
     mSubscriptions.add(RxView.clicks(topStoreText2).subscribe(click -> topStoresAction()));
+  }
+
+  private void addStoreAction() {
+    if (givenStoreName == null) {
+      givenStoreName = searchView.getQuery().toString();
+    }
+    if (givenStoreName.length() > 0) {
+      AddStoreDialog.this.storeName = givenStoreName;
+      AptoideUtils.SystemU.hideKeyboard(getActivity());
+      getStore(givenStoreName);
+      showLoadingDialog();
+    }
   }
 
   private void bindViews(View view) {
@@ -136,11 +139,14 @@ public class AddStoreDialog extends DialogFragment {
         (SearchManager) V8Engine.getContext().getSystemService(Context.SEARCH_SERVICE);
     ComponentName cn = new ComponentName(V8Engine.getContext(), StoreSearchActivity.class);
     searchView.setSearchableInfo(searchManager.getSearchableInfo(cn));
+    StoreAutoCompleteWebSocket storeAutoCompleteWebSocket = new StoreAutoCompleteWebSocket();
 
     searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
       @Override public boolean onQueryTextSubmit(String query) {
-        //TODO: add store button action
-        return false;
+        givenStoreName = query;
+        searchView.setQuery(givenStoreName, false);
+        addStoreAction();
+        return true;
       }
 
       @Override public boolean onQueryTextChange(String newText) {
@@ -164,13 +170,13 @@ public class AddStoreDialog extends DialogFragment {
     searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
       @Override public void onFocusChange(View view, boolean hasFocus) {
         if (!hasFocus) {
-          StoreAutoCompleteWebSocket.disconnect();
+          storeAutoCompleteWebSocket.disconnect();
         }
       }
     });
 
     searchView.setOnSearchClickListener(
-        v -> new StoreAutoCompleteWebSocket().connect(STORE_WEBSOCKET_PORT));
+        v -> storeAutoCompleteWebSocket.connect(storeAutoCompleteWebSocket.STORE_WEBSOCKET_PORT));
   }
 
   private void getStore(String storeName) {

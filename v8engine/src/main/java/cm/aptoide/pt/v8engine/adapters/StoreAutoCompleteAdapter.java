@@ -1,7 +1,6 @@
 package cm.aptoide.pt.v8engine.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,12 +26,6 @@ public class StoreAutoCompleteAdapter extends BaseAdapter implements Filterable 
   private static StoreAutoCompleteWebSocket storeAutoCompleteWebSocket;
   private Context context;
   private List<String> suggestions = new ArrayList<>();
-
-  public StoreAutoCompleteAdapter(Context context,
-      StoreAutoCompleteWebSocket storeAutoCompleteWebSocket) {
-    this.context = context;
-    this.storeAutoCompleteWebSocket = storeAutoCompleteWebSocket;
-  }
 
   public StoreAutoCompleteAdapter(Context context) {
     this.context = context;
@@ -69,11 +62,10 @@ public class StoreAutoCompleteAdapter extends BaseAdapter implements Filterable 
           if (storeAutoCompleteWebSocket.getWebSocket() != null) {
             sendQuery(charSequence);
           } else {
-            storeAutoCompleteWebSocket.connect("9002");
+            storeAutoCompleteWebSocket.connect(storeAutoCompleteWebSocket.STORE_WEBSOCKET_PORT);
             sendQuery(charSequence);
           }
           AptoideUtils.ThreadU.runOnUiThread(() -> {
-            Log.d("Ribas", Thread.currentThread().toString());
             filterResults.values = storeAutoCompleteWebSocket.getResults();
             filterResults.count = storeAutoCompleteWebSocket.getResults().size();
           });
@@ -86,7 +78,6 @@ public class StoreAutoCompleteAdapter extends BaseAdapter implements Filterable 
         if (filterResults != null && filterResults.count > 0) {
           AptoideUtils.ThreadU.runOnUiThread(() -> {
             suggestions = (List<String>) filterResults.values;
-            Log.d("Ribas", Thread.currentThread().toString());
             notifyDataSetChanged();
           });
         } else {
@@ -98,7 +89,7 @@ public class StoreAutoCompleteAdapter extends BaseAdapter implements Filterable 
   }
 
   private void sendQuery(CharSequence charSequence) {
-    storeAutoCompleteWebSocket.sendAndReceive(buildJson(charSequence.toString()).toString(), this);
+    storeAutoCompleteWebSocket.sendAndReceive(buildJson(charSequence.toString()), this);
   }
 
   private String buildJson(String query) {
@@ -112,7 +103,4 @@ public class StoreAutoCompleteAdapter extends BaseAdapter implements Filterable 
     return jsonObj.toString();
   }
 
-  public void updateSuggestions(List<String> results) {
-    suggestions = results;
-  }
 }

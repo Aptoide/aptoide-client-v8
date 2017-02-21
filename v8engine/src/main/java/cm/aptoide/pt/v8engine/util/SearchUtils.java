@@ -41,6 +41,8 @@ public class SearchUtils {
     final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
     ComponentName cn = new ComponentName(V8Engine.getContext(), SearchActivity.class);
     searchView.setSearchableInfo(searchManager.getSearchableInfo(cn));
+    SearchAppsWebSocket searchAppsWebSocket = new SearchAppsWebSocket();
+
 
     searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
       @Override public boolean onQueryTextSubmit(String s) {
@@ -79,10 +81,10 @@ public class SearchUtils {
     searchView.setOnQueryTextFocusChangeListener((v, hasFocus) -> {
       if (!hasFocus) {
         MenuItemCompat.collapseActionView(searchItem);
-        SearchAppsWebSocket.disconnect();
+        searchAppsWebSocket.disconnect();
       }
     });
-    searchView.setOnSearchClickListener(v -> new SearchAppsWebSocket().connect(SEARCH_WEBSOCKET));
+    searchView.setOnSearchClickListener(v -> searchAppsWebSocket.connect(SEARCH_WEBSOCKET));
   }
 
   public static void setupInsideStoreSearchView(Menu menu, NavigationManagerV4 navigationManager,

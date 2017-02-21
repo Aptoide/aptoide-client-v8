@@ -19,6 +19,8 @@ import org.json.JSONException;
 
 public class StoreAutoCompleteWebSocket extends WebSocketManager {
 
+  public static String STORE_WEBSOCKET_PORT = "9002";
+
   @Getter private static List<String> results = new ArrayList<String>();
   StoreAutoCompleteAdapter storeAutoCompleteAdapter1 =
       new StoreAutoCompleteAdapter(Application.getContext());
@@ -60,7 +62,7 @@ public class StoreAutoCompleteWebSocket extends WebSocketManager {
 
   @Override public boolean send(String text) {
     if (webSocket == null) {
-      connect("9002");
+      connect(STORE_WEBSOCKET_PORT);
     }
     return super.send(text);
   }

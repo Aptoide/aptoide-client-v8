@@ -40,7 +40,7 @@ public class WebSocketManager extends WebSocketListener implements WebSocket {
   public WebSocketManager() {
   }
 
-  public static void disconnect() {
+  public void disconnect() {
     if (webSocket != null) {
       webSocket.close(1000, "");
     }
