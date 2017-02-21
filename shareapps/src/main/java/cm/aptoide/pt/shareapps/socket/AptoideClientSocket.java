@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import lombok.Setter;
 
 /**
  * Created by neuro on 27-01-2017.
@@ -13,6 +14,7 @@ public abstract class AptoideClientSocket extends AptoideSocket {
 
   private final String hostName;
   private final int port;
+  @Setter private int retries = 3;
 
   public AptoideClientSocket(String hostName, int port) {
     this.hostName = hostName;
@@ -28,8 +30,21 @@ public abstract class AptoideClientSocket extends AptoideSocket {
   @Override public AptoideSocket start() {
 
     Socket socket = null;
+
+    while (socket == null && retries-- > 0) {
+      try {
+        socket = new Socket(hostName, port);
+      } catch (IOException e) {
+        e.printStackTrace();
+        try {
+          Thread.sleep(1000);
+        } catch (InterruptedException e1) {
+          e1.printStackTrace();
+        }
+      }
+    }
+
     try {
-      socket = new Socket(hostName, port);
       onConnected(socket);
     } catch (UnknownHostException e) {
       e.printStackTrace();
@@ -47,7 +62,8 @@ public abstract class AptoideClientSocket extends AptoideSocket {
       }
     }
 
-    System.out.println("Thread " + Thread.currentThread().getId() + " finished receiving files.");
+    System.out.println(
+        "ShareApps: Thread " + Thread.currentThread().getId() + " finished receiving files.");
     return this;
   }
 

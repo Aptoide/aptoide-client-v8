@@ -29,7 +29,7 @@ public class ShareAppsServerSocket extends AptoideFileServerSocket {
   }
 
   @Override protected void onNewClient(Socket socket) {
-    if (!startedSending) {
+    if (!startedSending && fileServerLifecycle != null) {
       fileServerLifecycle.onStartSending(androidAppInfo);
       startedSending = true;
     }
@@ -38,7 +38,9 @@ public class ShareAppsServerSocket extends AptoideFileServerSocket {
 
   @Override public AptoideSocket start() {
     AptoideSocket start = super.start();
-    fileServerLifecycle.onFinishSending(androidAppInfo);
+    if (fileServerLifecycle != null) {
+      fileServerLifecycle.onFinishSending(androidAppInfo);
+    }
     return start;
   }
 }

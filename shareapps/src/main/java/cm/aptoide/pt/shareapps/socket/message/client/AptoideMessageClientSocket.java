@@ -21,8 +21,8 @@ public class AptoideMessageClientSocket extends AptoideClientSocket {
   }
 
   @Override protected void onConnected(Socket socket) throws IOException {
-    System.out.println("filipezzz: " + aptoideMessageController.getHost());
-    System.out.println("filipezzz: " + filipe);
+    System.out.println("ShareApps: filipezzz: " + aptoideMessageController.getHost());
+    System.out.println("ShareApps: filipezzz: " + filipe);
     aptoideMessageController.onConnect(socket);
     filipe = new Host(socket.getInetAddress().getHostAddress(), socket.getLocalPort());
   }

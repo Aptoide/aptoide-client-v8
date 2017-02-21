@@ -43,7 +43,7 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
     executorService.execute(newOrderDispatcherLooper());
 
     if (serving) {
-      System.out.println("AptoideFileServerSocket already serving!");
+      System.out.println("ShareApps: AptoideFileServerSocket already serving!");
       return this;
     } else {
       serving = true;
@@ -80,7 +80,7 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
             try {
               serverSocketTimeoutManager.reserTimeout();
               connectedSockets.remove(socket);
-              System.out.println("Closing server client socket.");
+              System.out.println("ShareApps: Closing server client socket.");
               socket.close();
             } catch (IOException e) {
               e.printStackTrace();
@@ -90,7 +90,7 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
       }
     } catch (IOException e) {
       // Ignore, when socket is closed during accept() it lands here.
-      System.out.println("Server explicitly closed " + this.getClass().getSimpleName());
+      System.out.println("ShareApps: Server explicitly closed " + this.getClass().getSimpleName());
     }
     return this;
   }
@@ -113,7 +113,7 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
   public void shutdown() {
 
     if (shutdown) {
-      System.out.println("Server already shut down!");
+      System.out.println("ShareApps: Server already shut down!");
       return;
     }
 
@@ -134,7 +134,7 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
         }
       }
     } else {
-      System.out.println("AptoideFileServerSocket already shutdown!");
+      System.out.println("ShareApps: AptoideFileServerSocket already shutdown!");
     }
 
     shutdownExecutorService();

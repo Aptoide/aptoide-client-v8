@@ -46,7 +46,7 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
     sendWithAck(message.getLocalHost(),
         new SendApk(null, message.getAndroidAppInfo(), getConnectedHosts(), availablePort));
     sendToOthers(message.getLocalHost(), new ReceiveApk(getHost(), message.getAndroidAppInfo(),
-        message.getLocalHost().setPort(availablePort)));
+        new Host(message.getLocalHost().getIp(), availablePort)));
   }
 
   private int getAvailablePort() {
@@ -55,15 +55,21 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
 
   public void sendWithAck(Host host, Message message) {
     dispatchServerAction(() -> {
+      boolean hostPresent = false;
       // TODO: 01-02-2017 neuro optimize :)
       for (AptoideMessageServerController aptoideMessageController : aptoideMessageControllers) {
         if (aptoideMessageController.getHost().equals(host)) {
           try {
+            hostPresent = true;
             aptoideMessageController.sendWithAck(message);
           } catch (InterruptedException e) {
             e.printStackTrace();
           }
         }
+      }
+      if (hostPresent) {
+        throw new IllegalArgumentException(
+            "Host " + host + " is not connected to AptoideMessageServerSocket!");
       }
     });
   }
@@ -89,7 +95,7 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
         localExecutorService.awaitTermination(5, TimeUnit.SECONDS);
       } catch (InterruptedException e) {
         e.printStackTrace();
-        System.out.println("Executor service took too long to complete requests.");
+        System.out.println("ShareApps: Executor service took too long to complete requests.");
       }
     });
   }
@@ -111,7 +117,7 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
       AptoideMessageServerController aptoideMessageServerController = iterator.next();
       if (aptoideMessageServerController.getHost().getIp().equals(host.getIp())) {
         iterator.remove();
-        System.out.println("Host " + host + " removed from the server.");
+        System.out.println("ShareApps: Host " + host + " removed from the server.");
         sendToOthers(host, new HostLeftMessage(getHost(), host));
       }
     }

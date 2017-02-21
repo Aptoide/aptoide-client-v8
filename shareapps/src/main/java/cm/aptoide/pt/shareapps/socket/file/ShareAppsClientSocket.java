@@ -24,13 +24,15 @@ public class ShareAppsClientSocket extends AptoideFileClientSocket {
   }
 
   @Override protected void onConnected(Socket socket) throws IOException {
-    if (!startedSending) {
+    if (!startedSending && fileClientLifecycle != null) {
       fileClientLifecycle.onStartReceiving(androidAppInfo);
       startedSending = true;
     }
 
     super.onConnected(socket);
 
-    fileClientLifecycle.onFinishReceiving(androidAppInfo);
+    if (fileClientLifecycle != null) {
+      fileClientLifecycle.onFinishReceiving(androidAppInfo);
+    }
   }
 }
