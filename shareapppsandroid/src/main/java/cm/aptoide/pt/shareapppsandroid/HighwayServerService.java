@@ -11,9 +11,14 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+
+import cm.aptoide.pt.shareapps.socket.entities.AndroidAppInfo;
+import cm.aptoide.pt.shareapps.socket.entities.Host;
+import cm.aptoide.pt.shareapps.socket.interfaces.FileServerLifecycle;
 import cm.aptoide.pt.shareapps.socket.message.client.AptoideMessageClientController;
 import cm.aptoide.pt.shareapps.socket.message.client.AptoideMessageClientSocket;
 import cm.aptoide.pt.shareapps.socket.message.interfaces.StorageCapacity;
+import cm.aptoide.pt.shareapps.socket.message.messages.RequestPermissionToSend;
 import cm.aptoide.pt.shareapps.socket.message.server.AptoideMessageServerSocket;
 import java.io.File;
 import java.util.List;
@@ -33,13 +38,27 @@ public class HighwayServerService extends Service {
   private Object mBuilderReceive;
   private long lastTimestampReceive;
   private long lastTimestampSend;
+  private FileServerLifecycle fileServerLifecycle;
 
   private List<App> listOfApps;
+  private AptoideMessageClientController aptoideMessageClientController;
 
   @Override public void onCreate() {
     super.onCreate();
+    fileServerLifecycle = new FileServerLifecycle<AndroidAppInfo>() {
 
-    System.out.println(" Inside the service of the server");
+      @Override
+      public void onStartSending(AndroidAppInfo androidAppInfo) {
+        System.out.println("Server : started sending");
+      }
+
+      @Override
+      public void onFinishSending(AndroidAppInfo androidAppInfo) {
+        System.out.println("Server : finished sending");
+      }
+    };
+
+      System.out.println(" Inside the service of the server");
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
@@ -58,8 +77,7 @@ public class HighwayServerService extends Service {
           }
         };
 
-        AptoideMessageClientController aptoideMessageClientController =
-                new AptoideMessageClientController(s, storageCapacity, null);
+        aptoideMessageClientController = new AptoideMessageClientController(s, storageCapacity, fileServerLifecycle );
         (new AptoideMessageClientSocket("localhost", 55555, aptoideMessageClientController
         )).startAsync();
 
@@ -79,17 +97,18 @@ public class HighwayServerService extends Service {
 
           //create the mesage and send it.
 
+          String filePath=listOfApps.get(0).getFilePath();
+          System.out.println(" Filepath from app 0 (test) is:  "+filePath);
+          File apk = new File(filePath);
+          AndroidAppInfo appInfo=new AndroidAppInfo(apk);
+
+          aptoideMessageClientController.send(
+                  new RequestPermissionToSend(aptoideMessageClientController.getLocalhost(), appInfo));
+
         } else {
           List<App> tempList = b.getParcelableArrayList("listOfAppsToInstall");
 
           listOfApps.addAll(tempList);
-
-          //                Intent addedOneMore = new Intent(HighwayServerComm.this, HighwayTransferRecordActivity.class);
-          //                addedOneMore.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-          //                addedOneMore.putExtra("isHotspot", isHotspot);
-          //                addedOneMore.setAction("Addedapps");
-          //                startActivity(addedOneMore);
-
         }
       }
 
