@@ -52,6 +52,8 @@ import rx.subscriptions.CompositeSubscription;
 public class AddStoreDialog extends DialogFragment {
 
   private static StoreAutoCompleteWebSocket storeAutoCompleteWebSocket;
+  public static final int PRIVATE_STORE_INVALID_CREDENTIALS_CODE = 21;
+  public static final int PRIVATE_STORE_ERROR_CODE = 22;
   private final int PRIVATE_STORE_REQUEST_CODE = 20;
   private final AptoideClientUUID aptoideClientUUID;
   private NavigationManagerV4 navigationManager;
@@ -83,6 +85,12 @@ public class AddStoreDialog extends DialogFragment {
         case Activity.RESULT_OK:
           dismiss();
           break;
+        case PRIVATE_STORE_INVALID_CREDENTIALS_CODE:
+          ShowMessage.asSnack(this, R.string.ws_error_invalid_grant);
+          break;
+        case PRIVATE_STORE_ERROR_CODE:
+        default:
+          ShowMessage.asSnack(this, R.string.error_occured);
       }
     }
   }

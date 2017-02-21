@@ -29,7 +29,6 @@ import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 
@@ -41,17 +40,12 @@ import cm.aptoide.pt.v8engine.util.StoreUtils;
 public class PrivateStoreDialog extends DialogFragment {
 
   public static final String TAG = "PrivateStoreDialog";
-  private final AptoideClientUUID aptoideClientUUID;
+  private AptoideClientUUID aptoideClientUUID;
   private ProgressDialog loadingDialog;
   private String storeName;
   private String storeUser;
   private String storePassSha1;
   private boolean isInsideStore;
-
-  public PrivateStoreDialog() {
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
-  }
 
   public static PrivateStoreDialog newInstance(Fragment returnFragment, int requestCode,
       String storeName, boolean isInsideStore) {
@@ -73,6 +67,8 @@ public class PrivateStoreDialog extends DialogFragment {
 
   @Override public void onCreate(final Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
     final Bundle args = getArguments();
     if (args != null) {
       storeName = args.getString(BundleArgs.STORE_NAME.name());
@@ -105,11 +101,13 @@ public class PrivateStoreDialog extends DialogFragment {
                   baseResponse.getError().getCode())) {
                 storeUser = null;
                 storePassSha1 = null;
-                ShowMessage.asSnack(rootView, R.string.ws_error_invalid_grant);
+                getTargetFragment().onActivityResult(getTargetRequestCode(),
+                    AddStoreDialog.PRIVATE_STORE_INVALID_CREDENTIALS_CODE, null);
               }
             } else {
               e.printStackTrace();
-              ShowMessage.asSnack(getView(), R.string.error_occured);
+              getTargetFragment().onActivityResult(getTargetRequestCode(),
+                  AddStoreDialog.PRIVATE_STORE_ERROR_CODE, null);
               dismiss();
             }
           });
