@@ -14,16 +14,18 @@ import rx.Observable;
 public class ShareInstallCardRequest extends V7<BaseV7Response, ShareInstallCardRequest.Body> {
 
   private static String packageName;
+  private static String type;
   private static String access_token;
 
   protected ShareInstallCardRequest(ShareInstallCardRequest.Body body, String baseHost) {
     super(body, baseHost);
   }
 
-  public static ShareInstallCardRequest of(String packageName, String accessToken,
+  public static ShareInstallCardRequest of(String packageName, String accessToken, String shareType,
       String aptoideClientUUID) {
     ShareInstallCardRequest.packageName = packageName;
     access_token = accessToken;
+    type = shareType;
     ShareInstallCardRequest.Body body = new ShareInstallCardRequest.Body(packageName);
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
     return new ShareInstallCardRequest(
@@ -32,11 +34,11 @@ public class ShareInstallCardRequest extends V7<BaseV7Response, ShareInstallCard
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.shareInstallCard(body, packageName, access_token);
+    return interfaces.shareInstallCard(body, packageName, access_token, type);
   }
 
-  @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true)
-  public static class Body extends BaseBody {
+  @Data @Accessors(chain = false) @EqualsAndHashCode(callSuper = true) public static class Body
+      extends BaseBody {
 
     private String packageName;
 

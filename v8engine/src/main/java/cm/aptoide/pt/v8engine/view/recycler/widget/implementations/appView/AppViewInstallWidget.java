@@ -22,10 +22,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.actions.PermissionRequest;
-import cm.aptoide.pt.database.accessors.AccessorFactory;
+import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
@@ -63,8 +62,6 @@ import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewInstallDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
-import rx.Observable;
-import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -101,7 +98,7 @@ import rx.android.schedulers.AndroidSchedulers;
 
   private App trustedVersion;
   //private DownloadServiceHelper downloadServiceHelper;
-  private PermissionRequest permissionRequest;
+  private PermissionService permissionRequest;
   private InstallManager installManager;
   private boolean isUpdate;
   private DownloadEventConverter downloadInstallEventConverter;
@@ -139,9 +136,7 @@ import rx.android.schedulers.AndroidSchedulers;
     AptoideDownloadManager downloadManager = AptoideDownloadManager.getInstance();
     downloadManager.initDownloadService(getContext());
     Installer installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
-    installManager = new InstallManager(downloadManager, installer,
-        AccessorFactory.getAccessorFor(Download.class),
-        AccessorFactory.getAccessorFor(Installed.class));
+    installManager = new InstallManager(downloadManager, installer);
     downloadInstallEventConverter = new DownloadEventConverter();
     installConverter = new InstallEventConverter();
     analytics = Analytics.getInstance();
@@ -156,51 +151,16 @@ import rx.android.schedulers.AndroidSchedulers;
       Fragment fragment = V8Engine.getFragmentProvider()
           .newOtherVersionsFragment(currentApp.getName(), currentApp.getIcon(),
               currentApp.getPackageName());
-      fragmentShower.pushFragmentV4(fragment);
+      getNavigationManager().navigateTo(fragment);
     });
 
+    final boolean[] isSetupView = { true };
     compositeSubscription.add(
         displayable.getState().observeOn(AndroidSchedulers.mainThread()).subscribe(widgetState -> {
-          switch (widgetState.getButtonState()) {
-            case AppViewInstallDisplayable.ACTION_INSTALLING:
-              if (widgetState.getProgress() != null) {
-                downloadProgress.setIndeterminate(widgetState.getProgress().isIndeterminate());
-                downloadStatusUpdate(widgetState.getProgress(), currentApp);
-                if (!isDownloadBarVisible()) {
-                  setDownloadBarVisible();
-                  setupDownloadControls(currentApp, widgetState.getProgress(), displayable);
-                }
-                break;
-              }
-            case AppViewInstallDisplayable.ACTION_INSTALL:
-              //App not installed
-              setDownloadBarInvisible();
-              setupInstallOrBuyButton(displayable, getApp);
-              if (widgetState.getProgress() != null) {
-                downloadStatusUpdate(widgetState.getProgress(), currentApp);
-              }
-              ((AppMenuOptions) fragmentShower.getLastV4()).setUnInstallMenuOptionVisible(null);
-              break;
-            case AppViewInstallDisplayable.ACTION_DOWNGRADE:
-              //downgrade
-              setDownloadBarInvisible();
-              setupActionButton(R.string.downgrade, downgradeListener(currentApp));
-              break;
-            case AppViewInstallDisplayable.ACTION_OPEN:
-              //current installed version
-              setDownloadBarInvisible();
-              setupActionButton(R.string.open,
-                  v -> AptoideUtils.SystemU.openApp(currentApp.getPackageName()));
-              break;
-            case AppViewInstallDisplayable.ACTION_UPDATE:
-              //update
-              isUpdate = true;
-              setDownloadBarInvisible();
-              setupActionButton(R.string.update,
-                  installOrUpgradeListener(currentApp, getApp.getNodes().getVersions(),
-                      displayable));
-              break;
-          }
+          updateUi(displayable, getApp, currentApp, fragmentShower, widgetState, !isSetupView[0]);
+          isSetupView[0] = false;
+        }, (throwable) -> {
+          Logger.v(TAG, throwable.getMessage());
         }));
 
     if (isThisTheLatestVersionAvailable(currentApp, getApp.getNodes().getVersions())) {
@@ -214,11 +174,51 @@ import rx.android.schedulers.AndroidSchedulers;
       latestAvailableLayout.setVisibility(View.GONE);
     }
 
-    permissionRequest = ((PermissionRequest) getContext());
+    permissionRequest = ((PermissionService) getContext());
   }
 
-  @Override public void unbindView() {
-    super.unbindView();
+  private void updateUi(AppViewInstallDisplayable displayable, GetApp getApp,
+      GetAppMeta.App currentApp, FragmentShower fragmentShower,
+      AppViewInstallDisplayable.WidgetState widgetState, boolean shouldShowError) {
+    Logger.d(TAG, "updateUi() called with: " + shouldShowError + "]");
+    if (widgetState.getProgress() != null) {
+      downloadStatusUpdate(widgetState.getProgress(), currentApp, shouldShowError);
+    }
+    switch (widgetState.getButtonState()) {
+      case AppViewInstallDisplayable.ACTION_INSTALLING:
+        if (widgetState.getProgress() != null) {
+          downloadProgress.setIndeterminate(widgetState.getProgress().isIndeterminate());
+          if (!isDownloadBarVisible()) {
+            setDownloadBarVisible();
+            setupDownloadControls(currentApp, widgetState.getProgress(), displayable);
+          }
+          break;
+        }
+      case AppViewInstallDisplayable.ACTION_INSTALL:
+        //App not installed
+        setDownloadBarInvisible();
+        setupInstallOrBuyButton(displayable, getApp);
+        ((AppMenuOptions) fragmentShower.getLast()).setUnInstallMenuOptionVisible(null);
+        break;
+      case AppViewInstallDisplayable.ACTION_DOWNGRADE:
+        //downgrade
+        setDownloadBarInvisible();
+        setupActionButton(R.string.downgrade, downgradeListener(currentApp));
+        break;
+      case AppViewInstallDisplayable.ACTION_OPEN:
+        //current installed version
+        setDownloadBarInvisible();
+        setupActionButton(R.string.open,
+            v -> AptoideUtils.SystemU.openApp(currentApp.getPackageName()));
+        break;
+      case AppViewInstallDisplayable.ACTION_UPDATE:
+        //update
+        isUpdate = true;
+        setDownloadBarInvisible();
+        setupActionButton(R.string.update,
+            installOrUpgradeListener(currentApp, getApp.getNodes().getVersions(), displayable));
+        break;
+    }
   }
 
   private void setupActionButton(@StringRes int text, View.OnClickListener onClickListener) {
@@ -269,7 +269,7 @@ import rx.android.schedulers.AndroidSchedulers;
   private View.OnClickListener downgradeListener(final GetAppMeta.App app) {
     return view -> {
       final Context context = view.getContext();
-      final PermissionRequest permissionRequest = (PermissionRequest) getContext();
+      final PermissionService permissionRequest = (PermissionService) getContext();
 
       permissionRequest.requestAccessToExternalFileSystem(() -> {
 
@@ -293,7 +293,7 @@ import rx.android.schedulers.AndroidSchedulers;
                           .observeOn(AndroidSchedulers.mainThread())
                           .subscribe(progress -> {
                             Logger.d(TAG, "Installing");
-                          }, throwable -> Logger.e(TAG, throwable)));
+                          }, throwable -> CrashReport.getInstance().log(throwable)));
                   Analytics.Rollback.downgradeDialogContinue();
                 } else {
                   Analytics.Rollback.downgradeDialogCancel();
@@ -353,7 +353,6 @@ import rx.android.schedulers.AndroidSchedulers;
     int downloadAction = isUpdate ? Download.ACTION_UPDATE : Download.ACTION_INSTALL;
     PermissionManager permissionManager = new PermissionManager();
     final View.OnClickListener installHandler = v -> {
-
       if (installOrUpgradeMsg == R.string.installing_msg) {
         Analytics.ClickedOnInstallButton.clicked(app);
         Analytics.DownloadComplete.installClicked(app.getId());
@@ -377,55 +376,20 @@ import rx.android.schedulers.AndroidSchedulers;
                 && ManagerPreferences.getShowPreview()
                 && Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
               SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(displayable);
-              AlertDialog.Builder alertDialog = sharePreviewDialog.showPreviewDialog(getContext());
+              AlertDialog.Builder alertDialog =
+                  sharePreviewDialog.getPreviewDialogBuilder(getContext());
               SocialRepository socialRepository = new SocialRepository();
 
-              Observable.create((Subscriber<? super GenericDialogs.EResponse> subscriber) -> {
-                if (!ManagerPreferences.getUserAccessConfirmed()) {
-                  alertDialog.setPositiveButton(R.string.share, (dialogInterface, i) -> {
-                    socialRepository.share(displayable, context,
-                        sharePreviewDialog.getPrivacyResult());
-                    subscriber.onNext(GenericDialogs.EResponse.YES);
-                    subscriber.onCompleted();
-                  }).setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
-                    subscriber.onNext(GenericDialogs.EResponse.NO);
-                    subscriber.onCompleted();
-                  });
-                } else {
-                  alertDialog.setPositiveButton(R.string.continue_option, (dialogInterface, i) -> {
-                    socialRepository.share(displayable, context,
-                        sharePreviewDialog.getPrivacyResult());
-                    subscriber.onNext(GenericDialogs.EResponse.YES);
-                    subscriber.onCompleted();
-                  }).setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
-                    subscriber.onNext(GenericDialogs.EResponse.NO);
-                    subscriber.onCompleted();
-                  }).setNeutralButton(R.string.dont_show_again, (dialogInterface, i) -> {
-                    subscriber.onNext(GenericDialogs.EResponse.CANCEL);
-                    subscriber.onCompleted();
-                    ManagerPreferences.setShowPreview(false);
-                  });
-                }
-
-                alertDialog.show();
-              }).subscribeOn(AndroidSchedulers.mainThread()).subscribe(eResponse -> {
-                switch (eResponse) {
-                  case YES:
-                    ShowMessage.asSnack(getContext(), R.string.social_timeline_share_dialog_title);
-                    break;
-                  case NO:
-                    break;
-                  case CANCEL:
-                    break;
-                }
-              });
+              sharePreviewDialog.showShareCardPreviewDialog(
+                  displayable.getPojo().getNodes().getMeta().getData().getPackageName(), "install",
+                  context, sharePreviewDialog, alertDialog, socialRepository);
             }
             ShowMessage.asSnack(v, installOrUpgradeMsg);
           }, err -> {
             if (err instanceof SecurityException) {
               ShowMessage.asSnack(v, R.string.needs_permission_to_fs);
             }
-            Logger.e(TAG, err);
+            CrashReport.getInstance().log(err);
           }));
     };
 
@@ -442,7 +406,7 @@ import rx.android.schedulers.AndroidSchedulers;
         // search for a trusted version
         fragment = V8Engine.getFragmentProvider().newSearchFragment(app.getName(), true);
       }
-      ((FragmentShower) context).pushFragmentV4(fragment);
+      getNavigationManager().navigateTo(fragment);
     };
 
     return v -> {
@@ -460,7 +424,8 @@ import rx.android.schedulers.AndroidSchedulers;
     };
   }
 
-  private void downloadStatusUpdate(@NonNull Progress<Download> progress, GetAppMeta.App app) {
+  private void downloadStatusUpdate(@NonNull Progress<Download> progress, GetAppMeta.App app,
+      boolean shouldShowError) {
     switch (progress.getRequest().getOverallDownloadStatus()) {
       case Download.PAUSED: {
         actionResume.setVisibility(View.VISIBLE);
@@ -476,6 +441,9 @@ import rx.android.schedulers.AndroidSchedulers;
         break;
       }
       case Download.ERROR: {
+        if (shouldShowError) {
+          showErrorMessage(progress.getRequest().getDownloadError());
+        }
         break;
       }
 
@@ -488,6 +456,24 @@ import rx.android.schedulers.AndroidSchedulers;
         }
         break;
       }
+    }
+  }
+
+  private void showErrorMessage(@Download.DownloadError int downloadError) {
+    switch (downloadError) {
+      case Download.GENERIC_ERROR:
+        GenericDialogs.createGenericOkMessage(getContext(), "",
+            getContext().getString(R.string.error_occured))
+            .subscribe(eResponse -> Logger.d(TAG, "Error dialog"),
+                throwable -> CrashReport.getInstance().log(throwable));
+        break;
+      case Download.NOT_ENOUGH_SPACE_ERROR:
+        GenericDialogs.createGenericOkMessage(getContext(),
+            getContext().getString(R.string.out_of_space_dialog_title),
+            getContext().getString(R.string.out_of_space_dialog_message))
+            .subscribe(eResponse -> Logger.d(TAG, "Showing no space dialog"),
+                throwable -> CrashReport.getInstance().log(throwable));
+        break;
     }
   }
 
@@ -507,7 +493,7 @@ import rx.android.schedulers.AndroidSchedulers;
       PermissionManager permissionManager = new PermissionManager();
       compositeSubscription.add(permissionManager.requestDownloadAccess(permissionRequest)
           .flatMap(permissionGranted -> permissionManager.requestExternalStoragePermission(
-              (PermissionRequest) getContext()))
+              (PermissionService) getContext()))
           .flatMap(success -> {
             Download download =
                 new DownloadFactory().create(displayable.getPojo().getNodes().getMeta().getData(),
@@ -520,7 +506,7 @@ import rx.android.schedulers.AndroidSchedulers;
           .subscribe(downloadProgress -> {
             Logger.d(TAG, "Installing");
           }, err -> {
-            Logger.e(TAG, err);
+            CrashReport.getInstance().log(err);
           }));
     });
   }

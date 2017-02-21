@@ -80,14 +80,33 @@ public abstract class WebService<T, U> {
     return defaultConverterFactory;
   }
 
+  public Observable<U> observe() {
+    return observe(false);
+  }
+
+  public Observable<U> observe(boolean bypassCache) {
+    return createServiceObservable().flatMap(response -> prepareAndLoad(response, bypassCache))
+        .subscribeOn(Schedulers.io());
+  }
+
   private Observable<T> createServiceObservable() {
     return Observable.fromCallable(() -> createService());
+  }
+
+  private Observable<U> prepareAndLoad(T t, boolean bypassCache) {
+    onLoadDataFromNetwork();
+    return loadDataFromNetwork(t, bypassCache);
   }
 
   private T createService() {
     return getRetrofit(httpClient, converterFactory, RxJavaCallAdapterFactory.create(),
         baseHost).create(clazz);
   }
+
+  private void onLoadDataFromNetwork() {
+  }
+
+  protected abstract Observable<U> loadDataFromNetwork(T t, boolean bypassCache);
 
   private Retrofit getRetrofit(OkHttpClient httpClient, Converter.Factory converterFactory,
       CallAdapter.Factory factory, String baseHost) {
@@ -101,36 +120,12 @@ public abstract class WebService<T, U> {
     return retrofit;
   }
 
-  protected abstract Observable<U> loadDataFromNetwork(T t, boolean bypassCache);
-
-  private Observable<U> prepareAndLoad(T t, boolean bypassCache) {
-    onLoadDataFromNetwork();
-    return loadDataFromNetwork(t, bypassCache);
-  }
-
-  private void onLoadDataFromNetwork() {
-  }
-
-  public Observable<U> observe(boolean bypassCache) {
-    return createServiceObservable().flatMap(response -> prepareAndLoad(response, bypassCache))
-        .subscribeOn(Schedulers.io());
-  }
-
-  public Observable<U> observe() {
-    return observe(false);
-  }
-
   public void execute(SuccessRequestListener<U> successRequestListener) {
     execute(successRequestListener, false);
   }
 
   public void execute(SuccessRequestListener<U> successRequestListener, boolean bypassCache) {
     execute(successRequestListener, defaultErrorRequestListener(), bypassCache);
-  }
-
-  public void execute(SuccessRequestListener<U> successRequestListener,
-      ErrorRequestListener errorRequestListener) {
-    execute(successRequestListener, errorRequestListener, false);
   }
 
   public void execute(SuccessRequestListener<U> successRequestListener,
@@ -146,6 +141,11 @@ public abstract class WebService<T, U> {
       Logger.e(ErrorRequestListener.class.getName(), "Erro por implementar");
       e.printStackTrace();
     };
+  }
+
+  public void execute(SuccessRequestListener<U> successRequestListener,
+      ErrorRequestListener errorRequestListener) {
+    execute(successRequestListener, errorRequestListener, false);
   }
 
   protected boolean isNoNetworkException(Throwable throwable) {

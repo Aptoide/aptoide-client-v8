@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
 import android.content.Context;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,10 +19,12 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
@@ -30,13 +33,14 @@ import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.util.DialogUtils;
-import cm.aptoide.pt.v8engine.util.LinearLayoutManagerWithSmootheScroller;
+import cm.aptoide.pt.v8engine.util.LinearLayoutManagerWithSmoothScroller;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewRateAndCommentsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import com.jakewharton.rxbinding.view.RxView;
 import java.util.List;
+import rx.functions.Action1;
 
 /**
  * Created by sithengineer on 30/06/16.
@@ -47,6 +51,8 @@ import java.util.List;
   public static final long TIME_BETWEEN_SCROLL = 2 * DateUtils.SECOND_IN_MILLIS;
   private static final String TAG = AppViewRateAndReviewsWidget.class.getSimpleName();
   private static final int MAX_COMMENTS = 3;
+  private final AptoideClientUUID aptoideClientUUID;
+  private final DialogUtils dialogUtils;
   private View emptyReviewsLayout;
   private View ratingLayout;
   private View commentsLayout;
@@ -70,6 +76,10 @@ import java.util.List;
 
   public AppViewRateAndReviewsWidget(View itemView) {
     super(itemView);
+
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+    dialogUtils = new DialogUtils();
   }
 
   @Override protected void assignViews(View itemView) {
@@ -106,78 +116,66 @@ import java.util.List;
     ratingValue.setText(String.format(AptoideUtils.LocaleU.DEFAULT, "%.1f", ratingAvg));
     ratingBar.setRating(ratingAvg);
 
-    View.OnClickListener rateOnClickListener = v -> {
-      DialogUtils.showRateDialog(getContext(), appName, packageName, storeName, this::loadReviews);
-    };
+    Action1<Throwable> handleError = throwable -> CrashReport.getInstance().log(throwable);
 
-    rateThisButton.setOnClickListener(rateOnClickListener);
-    rateThisButtonLarge.setOnClickListener(rateOnClickListener);
-    ratingLayout.setOnClickListener(rateOnClickListener);
-    //rateThisAppButton.setOnClickListener(rateOnClickListener);
+    final FragmentActivity context = getContext();
+    Action1<Void> rateOnClickHandler =
+        __ -> dialogUtils.showRateDialog(context, appName, packageName, storeName,
+            () -> loadReviews());
+    compositeSubscription.add(
+        RxView.clicks(rateThisButton).subscribe(rateOnClickHandler, handleError));
+    compositeSubscription.add(
+        RxView.clicks(rateThisButtonLarge).subscribe(rateOnClickHandler, handleError));
+    compositeSubscription.add(
+        RxView.clicks(ratingLayout).subscribe(rateOnClickHandler, handleError));
 
-    View.OnClickListener commentsOnClickListener = v -> {
-      ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
+    Action1<Void> commentsOnClickListener = __ -> {
+      getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
           .newRateAndReviewsFragment(app.getId(), app.getName(), app.getStore().getName(),
               app.getPackageName(), app.getStore().getAppearance().getTheme()));
     };
-    readAllButton.setOnClickListener(commentsOnClickListener);
-    commentsLayout.setOnClickListener(commentsOnClickListener);
+    compositeSubscription.add(
+        RxView.clicks(readAllButton).subscribe(commentsOnClickListener, handleError));
+    compositeSubscription.add(
+        RxView.clicks(commentsLayout).subscribe(commentsOnClickListener, handleError));
 
-    LinearLayoutManagerWithSmootheScroller layoutManager =
-        new LinearLayoutManagerWithSmootheScroller(getContext(), LinearLayoutManager.HORIZONTAL,
-            false);
+    LinearLayoutManagerWithSmoothScroller layoutManager =
+        new LinearLayoutManagerWithSmoothScroller(context, LinearLayoutManager.HORIZONTAL, false);
     topReviewsList.setLayoutManager(layoutManager);
-    topReviewsList.setNestedScrollingEnabled(
-        false); // because otherwise the AppBar won't be collapsed
+    // because otherwise the AppBar won't be collapsed
+    topReviewsList.setNestedScrollingEnabled(false);
 
     loadReviews();
-  }
-
-  @Override public void unbindView() {
   }
 
   private void loadReviews() {
     loadTopReviews(storeName, packageName);
   }
 
-  private void scheduleAnimations() {
-    final int topReviewsCount = topReviewsList.getLayoutManager().getItemCount();
-    if (topReviewsCount > 1) {
-      for (int i = 0; i < topReviewsCount - 1; ++i) {
-        final int count = i + 1;
-        topReviewsList.postDelayed(() -> {
-          topReviewsList.smoothScrollToPosition(count);
-        }, count * TIME_BETWEEN_SCROLL);
-      }
-    } else {
-      Logger.w(TAG, "Not enough top reviews to do paging animation.");
-    }
-  }
-
-  public void loadTopReviews(String storeName, String packageName) {
+  private void loadTopReviews(String storeName, String packageName) {
+    final FragmentActivity context = getContext();
     ListReviewsRequest.ofTopReviews(storeName, packageName, MAX_COMMENTS,
-        AptoideAccountManager.getAccessToken(),
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID()).execute(listReviews -> {
+        AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
+        .execute(listReviews -> {
 
-          List<Review> reviews = listReviews.getDatalist().getList();
-          if (reviews == null || reviews.isEmpty()) {
-            topReviewsList.setAdapter(new TopReviewsAdapter(getContext()));
-            loadedData(false);
-            return;
-          }
+              List<Review> reviews = listReviews.getDatalist().getList();
+              if (reviews == null || reviews.isEmpty()) {
+                topReviewsList.setAdapter(new TopReviewsAdapter(context));
+                loadedData(false);
+                return;
+              }
 
-          loadedData(true);
-          final List<Review> list = listReviews.getDatalist().getList();
-          topReviewsList.setAdapter(
-              new TopReviewsAdapter(getContext(), list.toArray(new Review[list.size()])));
-          scheduleAnimations();
-        }, e -> {
-          loadedData(false);
-          topReviewsList.setAdapter(new TopReviewsAdapter(getContext()));
-          Logger.e(TAG, e);
-        }, true // bypass cache flag
-    );
+              loadedData(true);
+              final List<Review> list = listReviews.getDatalist().getList();
+              topReviewsList.setAdapter(
+                  new TopReviewsAdapter(context, list.toArray(new Review[list.size()])));
+              scheduleAnimations();
+            }, e -> {
+              loadedData(false);
+              topReviewsList.setAdapter(new TopReviewsAdapter(context));
+              CrashReport.getInstance().log(e);
+            }, true // bypass cache flag
+        );
   }
 
   private void loadedData(boolean hasReviews) {
@@ -200,6 +198,20 @@ import java.util.List;
       if (usersToVote == 0) {
         emptyReviewTextView.setText(R.string.be_the_first_to_rate_this_app);
       }
+    }
+  }
+
+  private void scheduleAnimations() {
+    final int topReviewsCount = topReviewsList.getLayoutManager().getItemCount();
+    if (topReviewsCount > 1) {
+      for (int i = 0; i < topReviewsCount - 1; ++i) {
+        final int count = i + 1;
+        topReviewsList.postDelayed(() -> {
+          topReviewsList.smoothScrollToPosition(count);
+        }, count * TIME_BETWEEN_SCROLL);
+      }
+    } else {
+      Logger.w(TAG, "Not enough top reviews to do paging animation.");
     }
   }
 
@@ -233,9 +245,9 @@ import java.util.List;
     }
   }
 
-  public static final class MiniTopReviewViewHolder extends RecyclerView.ViewHolder {
+  private static final class MiniTopReviewViewHolder extends RecyclerView.ViewHolder {
 
-    public static final int LAYOUT_ID = R.layout.mini_top_comment;
+    private static final int LAYOUT_ID = R.layout.mini_top_comment;
 
     private static final AptoideUtils.DateTimeU DATE_TIME_U = AptoideUtils.DateTimeU.getInstance();
 
@@ -246,7 +258,7 @@ import java.util.List;
     private TextView addedDate;
     private TextView commentText;
 
-    public MiniTopReviewViewHolder(View itemView) {
+    private MiniTopReviewViewHolder(View itemView) {
       super(itemView);
       bindViews(itemView);
     }
@@ -261,8 +273,9 @@ import java.util.List;
     }
 
     public void setup(Context context, Review review) {
-      ImageLoader.loadWithCircleTransformAndPlaceHolderAvatarSize(review.getUser().getAvatar(),
-          userIconImageView, R.drawable.layer_1);
+      ImageLoader.with(context)
+          .loadWithCircleTransformAndPlaceHolderAvatarSize(review.getUser().getAvatar(),
+              userIconImageView, R.drawable.layer_1);
       userName.setText(review.getUser().getName());
       ratingBar.setRating(review.getStats().getRating());
       commentTitle.setText(review.getTitle());

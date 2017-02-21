@@ -1,17 +1,12 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 11/07/2016.
- */
-
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.DrawableRes;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Malware;
@@ -19,15 +14,11 @@ import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.OtherVersionDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import java.util.Locale;
 
-/**
- * Created by sithengineer on 07/07/16.
- */
 @Displayables({ OtherVersionDisplayable.class }) public class OtherVersionWidget
     extends Widget<OtherVersionDisplayable> implements View.OnClickListener {
 
@@ -84,18 +75,36 @@ import java.util.Locale;
           getContext().getString(R.string.other_versions_downloads_count_text),
           AptoideUtils.StringU.withSuffix(app.getStats().getDownloads())));
 
-      ImageLoader.load(app.getStore().getAvatar(), storeIcon);
+      ImageLoader.with(getContext()).load(app.getStore().getAvatar(), storeIcon);
       storeNameView.setText(app.getStore().getName());
       followers.setText(String.format(DEFAULT_LOCALE,
           getContext().getString(R.string.appview_followers_count_text),
           app.getStore().getStats().getSubscribers()));
     } catch (NullPointerException e) {
-      Logger.e(TAG, e);
+      CrashReport.getInstance().log(e);
     }
   }
 
-  @Override public void unbindView() {
+  private void setItemBackgroundColor(View itemView) {
+    final Resources.Theme theme = itemView.getContext().getTheme();
+    final Resources res = itemView.getResources();
 
+    int color;
+    if (getLayoutPosition() % 2 == 0) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        color = res.getColor(R.color.light_custom_gray, theme);
+      } else {
+        color = res.getColor(R.color.light_custom_gray);
+      }
+    } else {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        color = res.getColor(R.color.white, theme);
+      } else {
+        color = res.getColor(R.color.white);
+      }
+    }
+
+    itemView.setBackgroundColor(color);
   }
 
   private void setBadge(App app) {
@@ -122,38 +131,16 @@ import java.util.Locale;
         break;
     }
     // keep the remaining compound drawables in TextView and set the one on the right
-    Drawable[] drawables = version.getCompoundDrawables();
+    // Drawable[] drawables = version.getCompoundDrawables();
     //version.setCompoundDrawables(drawables[0], drawables[1], ImageLoader.load(badgeResId), drawables[3]);
     // does not work properly because "The Drawables must already have had setBounds(Rect) called". info from:
     // https://developer.android.com/reference/android/widget/TextView.html#setCompoundDrawables
     trustedBadge.setImageResource(badgeResId);
   }
 
-  private void setItemBackgroundColor(View itemView) {
-    final Resources.Theme theme = itemView.getContext().getTheme();
-    final Resources res = itemView.getResources();
-
-    int color;
-    if (getLayoutPosition() % 2 == 0) {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        color = res.getColor(R.color.light_custom_gray, theme);
-      } else {
-        color = res.getColor(R.color.light_custom_gray);
-      }
-    } else {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        color = res.getColor(R.color.white, theme);
-      } else {
-        color = res.getColor(R.color.white);
-      }
-    }
-
-    itemView.setBackgroundColor(color);
-  }
-
   @Override public void onClick(View v) {
     Logger.d(TAG, "showing other version for app with id = " + appId);
-    ((FragmentShower) getContext()).pushFragmentV4(
+    getNavigationManager().navigateTo(
         V8Engine.getFragmentProvider().newAppViewFragment(appId, packageName, null, storeName));
   }
 }

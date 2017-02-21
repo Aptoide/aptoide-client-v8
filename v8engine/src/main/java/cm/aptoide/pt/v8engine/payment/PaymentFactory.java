@@ -35,8 +35,8 @@ public class PaymentFactory {
         return new PayPalPayment(context, paymentService.getId(), paymentService.getShortName(),
             paymentService.getName(), paymentService.getSign(),
             getPrice(paymentService.getPrice(), paymentService.getCurrency(),
-                paymentService.getTaxRate(), paymentService.getSign()), getPayPalConfiguration(), product,
-            paymentService.getDescription(),
+                paymentService.getTaxRate(), paymentService.getSign()), getPayPalConfiguration(),
+            product, paymentService.getDescription(),
             RepositoryFactory.getPaymentConfirmationRepository(context, product),
             paymentService.isAuthorizationRequired());
       case BOACOMPRA:
@@ -45,7 +45,8 @@ public class PaymentFactory {
         return new AptoidePayment(paymentService.getId(), paymentService.getShortName(),
             paymentService.getName(), paymentService.getDescription(), product,
             getPrice(paymentService.getPrice(), paymentService.getCurrency(),
-                paymentService.getTaxRate(), paymentService.getSign()), paymentService.isAuthorizationRequired(),
+                paymentService.getTaxRate(), paymentService.getSign()),
+            paymentService.isAuthorizationRequired(),
             RepositoryFactory.getPaymentConfirmationRepository(context, product));
       default:
         throw new IllegalArgumentException(
@@ -53,8 +54,8 @@ public class PaymentFactory {
     }
   }
 
-  @NonNull private Price getPrice(double price, String currency, double taxRate,
-      String currencySymbol) {
+  @NonNull
+  private Price getPrice(double price, String currency, double taxRate, String currencySymbol) {
     return new Price(price, currency, currencySymbol, taxRate);
   }
 

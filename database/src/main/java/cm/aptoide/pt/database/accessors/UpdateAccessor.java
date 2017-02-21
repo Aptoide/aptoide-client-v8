@@ -11,7 +11,7 @@ import rx.schedulers.Schedulers;
  */
 public class UpdateAccessor extends SimpleAccessor<Update> {
 
-  public UpdateAccessor(Database db) {
+  UpdateAccessor(Database db) {
     super(db, Update.class);
   }
 
@@ -27,19 +27,6 @@ public class UpdateAccessor extends SimpleAccessor<Update> {
         .subscribeOn(RealmSchedulers.getScheduler())
         .observeOn(Schedulers.io());
   }
-
-  // same as get all method
-  //public Observable<List<Update>> getUpdates() {
-  //  return Observable.fromCallable(() -> Database.get())
-  //      .flatMap(realm -> realm.where(Update.class)
-  //          .equalTo(Update.EXCLUDED, false)
-  //          .findAll()
-  //          .asObservable())
-  //      .unsubscribeOn(RealmSchedulers.getScheduler())
-  //      .flatMap((data) -> database.copyFromRealm(data))
-  //      .subscribeOn(RealmSchedulers.getScheduler())
-  //      .observeOn(Schedulers.io());
-  //}
 
   public Observable<List<Update>> getAll() {
     return database.getAll(Update.class);
@@ -73,10 +60,10 @@ public class UpdateAccessor extends SimpleAccessor<Update> {
     return Observable.fromCallable(() -> Database.getInternal())
         .flatMap(realm -> Observable.defer(() -> {
           Update update = realm.where(Update.class)
-            .equalTo(Update.EXCLUDED, isExcluded)
-            .contains(Update.PACKAGE_NAME, packageName)
-            .findFirst();
-          return Observable.just(update!=null);
+              .equalTo(Update.EXCLUDED, isExcluded)
+              .contains(Update.PACKAGE_NAME, packageName)
+              .findFirst();
+          return Observable.just(update != null);
         }))
         .unsubscribeOn(RealmSchedulers.getScheduler())
         .subscribeOn(RealmSchedulers.getScheduler())
@@ -87,7 +74,25 @@ public class UpdateAccessor extends SimpleAccessor<Update> {
     database.delete(Update.class, Update.PACKAGE_NAME, packageName);
   }
 
+  public void removeAll(List<String> packageNameList) {
+    database.deleteAllIn(Update.class, Update.PACKAGE_NAME, packageNameList.toArray(new String[0]));
+  }
+
+  public void saveAll(List<Update> updates) {
+    database.insertAll(updates);
+  }
+
   public void save(Update update) {
     database.insert(update);
+  }
+
+  public Observable<Boolean> isExcluded(String packageName) {
+    return Observable.fromCallable(() -> Database.getInternal())
+        .flatMap(realm -> database.count(realm.where(Update.class)
+            .equalTo(Update.PACKAGE_NAME, packageName)
+            .equalTo(Update.EXCLUDED, true)).map(count -> count > 0L))
+        .unsubscribeOn(RealmSchedulers.getScheduler())
+        .subscribeOn(RealmSchedulers.getScheduler())
+        .observeOn(Schedulers.io());
   }
 }

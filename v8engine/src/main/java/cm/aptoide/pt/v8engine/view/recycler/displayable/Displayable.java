@@ -1,14 +1,10 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 23/08/2016.
- */
-
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import cm.aptoide.pt.annotation.Ignore;
+import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.interfaces.LifecycleSchim;
@@ -39,7 +35,17 @@ import rx.subscriptions.CompositeSubscription;
 
   //public abstract Type getType();
 
-  @LayoutRes public abstract int getViewLayout();
+  @Partners protected abstract Configs getConfig();
+
+  @Partners @LayoutRes public abstract int getViewLayout();
+
+  public int getSpanSize() {
+    return WidgetFactory.getColumnSize() / getPerLineCount();
+  }
+
+  //
+  // LifecycleSchim interface
+  // optional methods
 
   /**
    * Same code as in {@link Type#getPerLineCount()} todo: terminar este doc
@@ -57,14 +63,6 @@ import rx.subscriptions.CompositeSubscription;
 
     return tmp != 0 ? tmp : 1;
   }
-
-  public int getSpanSize() {
-    return WidgetFactory.getColumnSize() / getPerLineCount();
-  }
-
-  //
-  // LifecycleSchim interface
-  // optional methods
 
   /**
    * Sets visibility of this component to visible. Schimmed component lifecycle from the using
@@ -115,8 +113,6 @@ import rx.subscriptions.CompositeSubscription;
     fixedPerLineCount = true;
     return this;
   }
-
-  protected abstract Configs getConfig();
 
   @Getter public class Configs {
     private final int defaultPerLineCount;

@@ -25,11 +25,11 @@ import lombok.EqualsAndHashCode;
     super(pojo);
   }
 
-  @Override public int getViewLayout() {
-    return R.layout.displayable_grid_store_subscribed;
-  }
-
   @Override protected Configs getConfig() {
     return new Configs(3, false);
+  }
+
+  @Override public int getViewLayout() {
+    return R.layout.displayable_grid_store_subscribed;
   }
 }

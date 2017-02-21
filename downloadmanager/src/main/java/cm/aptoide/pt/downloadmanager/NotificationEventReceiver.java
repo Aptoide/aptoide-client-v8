@@ -17,6 +17,10 @@ import android.text.TextUtils;
 
   private static final String TAG = NotificationEventReceiver.class.getSimpleName();
 
+  @Override public void onReceive(Context context, Intent intent) {
+    onReceive(intent);
+  }
+
   public void onReceive(Intent intent) {
 
     String action = intent.getAction();
@@ -38,16 +42,6 @@ import android.text.TextUtils;
             downloadManager.getDownloadNotificationActionsInterface().button1Pressed();
           }
           break;
-        case AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD:
-          if (intent.hasExtra(AptoideDownloadManager.FILE_MD5_EXTRA)) {
-            String md5 = intent.getStringExtra(AptoideDownloadManager.FILE_MD5_EXTRA);
-            if (!TextUtils.isEmpty(md5)) {
-              downloadManager.getDownload(md5)
-                  .subscribe(download -> downloadManager.startDownload(download),
-                      throwable -> throwable.printStackTrace());
-            }
-          }
-          break;
         case AptoideDownloadManager.DOWNLOADMANAGER_ACTION_NOTIFICATION:
           if (downloadManager.getDownloadNotificationActionsInterface() != null) {
             if (intent.hasExtra(AptoideDownloadManager.FILE_MD5_EXTRA)) {
@@ -59,9 +53,5 @@ import android.text.TextUtils;
           }
       }
     }
-  }
-
-  @Override public void onReceive(Context context, Intent intent) {
-    onReceive(intent);
   }
 }

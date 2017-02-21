@@ -8,6 +8,7 @@ package cm.aptoide.pt.v8engine;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.store.GetStore;
 import cm.aptoide.pt.model.v7.store.GetStoreTabs;
@@ -22,14 +23,16 @@ import java.util.List;
 public class StorePagerAdapter extends FragmentStatePagerAdapter {
 
   private final List<GetStoreTabs.Tab> tabs;
+  private final StoreContext storeContext;
   private final EnumMap<Event.Name, Integer> availableEventsMap = new EnumMap<>(Event.Name.class);
   private String storeTheme;
   private long storeId;
 
-  public StorePagerAdapter(FragmentManager fm, GetStore getStore) {
+  public StorePagerAdapter(FragmentManager fm, GetStore getStore, StoreContext storeContext) {
     super(fm);
     this.storeId = getStore.getNodes().getMeta().getData().getId();
     tabs = getStore.getNodes().getTabs().getList();
+    this.storeContext = storeContext;
     translateTabs(tabs);
     if (getStore.getNodes().getMeta().getData().getId() != 15) {
       storeTheme = getStore.getNodes().getMeta().getData().getAppearance().getTheme();
@@ -44,6 +47,17 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
       t.setLabel(Translator.translate(t.getLabel()));
   }
 
+  private void validateGetStore() {
+    Iterator<GetStoreTabs.Tab> iterator = tabs.iterator();
+    while (iterator.hasNext()) {
+      GetStoreTabs.Tab next = iterator.next();
+
+      if (next.getEvent().getName() == null || next.getEvent().getType() == null) {
+        iterator.remove();
+      }
+    }
+  }
+
   private void fillAvailableEventsMap(GetStore getStore) {
     List<GetStoreTabs.Tab> list = getStore.getNodes().getTabs().getList();
     for (int i = 0; i < list.size(); i++) {
@@ -55,15 +69,8 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
     }
   }
 
-  private void validateGetStore() {
-    Iterator<GetStoreTabs.Tab> iterator = tabs.iterator();
-    while (iterator.hasNext()) {
-      GetStoreTabs.Tab next = iterator.next();
-
-      if (next.getEvent().getName() == null || next.getEvent().getType() == null) {
-        iterator.remove();
-      }
-    }
+  public boolean containsEventName(Event.Name name) {
+    return availableEventsMap.containsKey(name);
   }
 
   @Override public Fragment getItem(int position) {
@@ -84,10 +91,6 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
     }
   }
 
-  public Event.Name getEventName(int position) {
-    return tabs.get(position).getEvent().getName();
-  }
-
   private Fragment caseAPI(GetStoreTabs.Tab tab) {
     Event event = tab.getEvent();
     switch (event.getName()) {
@@ -96,27 +99,8 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
             .newAppsTimelineFragment(event.getAction(), storeTheme);
       default:
         return V8Engine.getFragmentProvider()
-            .newStoreTabGridRecyclerFragment(event, storeTheme, tab.getTag());
+            .newStoreTabGridRecyclerFragment(event, storeTheme, tab.getTag(), storeContext);
     }
-  }
-
-  public boolean containsEventName(Event.Name name) {
-    return availableEventsMap.containsKey(name);
-  }
-
-  /**
-   * Returns the position of an Event, given a name.
-   *
-   * @param name name of the Event {@link Event.Name}
-   * @return returns a positive integer 0...X if there is an Event with requested name, else returns
-   * -1.
-   */
-  public Integer getEventNamePosition(Event.Name name) {
-    final Integer integer = availableEventsMap.get(name);
-    if (integer == null) {
-      return -1;
-    }
-    return integer;
   }
 
   private Fragment caseClient(Event event, GetStoreTabs.Tab tab) {
@@ -142,6 +126,25 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
         // Safe to throw exception as the tab should be filtered prior to getting here.
         throw new RuntimeException("Fragment type not implemented!");
     }
+  }
+
+  public Event.Name getEventName(int position) {
+    return tabs.get(position).getEvent().getName();
+  }
+
+  /**
+   * Returns the position of an Event, given a name.
+   *
+   * @param name name of the Event {@link Event.Name}
+   * @return returns a positive integer 0...X if there is an Event with requested name, else returns
+   * -1.
+   */
+  public Integer getEventNamePosition(Event.Name name) {
+    final Integer integer = availableEventsMap.get(name);
+    if (integer == null) {
+      return -1;
+    }
+    return integer;
   }
 
   @Override public int getCount() {

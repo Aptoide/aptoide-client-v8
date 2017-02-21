@@ -13,7 +13,6 @@ import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.appView.AppViewDescriptionDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -50,8 +49,8 @@ import com.jakewharton.rxbinding.view.RxView;
     if (!TextUtils.isEmpty(media.getDescription())) {
       descriptionTextView.setText(AptoideUtils.HtmlU.parse(media.getDescription()));
       compositeSubscription.add(RxView.clicks(readMoreBtn).subscribe(click -> {
-        ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
-            .newDescriptionFragment(app.getId(), app.getPackageName(), storeName, storeTheme));
+        getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
+            .newDescriptionFragment(app.getName(), media.getDescription(), storeTheme));
       }));
     } else {
       // only show "default" description if the app doesn't have one
@@ -62,8 +61,8 @@ import com.jakewharton.rxbinding.view.RxView;
     if (!TextUtils.isEmpty(media.getDescription())) {
       descriptionTextView.setText(AptoideUtils.HtmlU.parse(media.getDescription()));
       compositeSubscription.add(RxView.clicks(readMoreBtn).subscribe(click -> {
-        ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
-            .newDescriptionFragment(app.getId(), app.getPackageName(), storeName, storeTheme));
+        getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
+            .newDescriptionFragment(app.getName(), media.getDescription(), storeTheme));
       }));
     } else {
       // only show "default" description if the app doesn't have one

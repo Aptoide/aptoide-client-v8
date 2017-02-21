@@ -10,7 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.adapters.ViewPagerAdapterScreenshots;
-import cm.aptoide.pt.v8engine.fragment.SupportV4BaseFragment;
+import cm.aptoide.pt.v8engine.fragment.UIComponentFragment;
 import java.util.ArrayList;
 
 /**
@@ -18,7 +18,7 @@ import java.util.ArrayList;
  * <p>
  * code migrated from v7
  */
-public class ScreenshotsViewerFragment extends SupportV4BaseFragment {
+public class ScreenshotsViewerFragment extends UIComponentFragment {
 
   // vars
   private ArrayList<String> uris;
@@ -79,6 +79,14 @@ public class ScreenshotsViewerFragment extends SupportV4BaseFragment {
     showSystemUI();
   }
 
+  // This snippet shows the system bars. It does this by removing all the flags
+  // except for the ones that make the content appear under the system bars.
+  private void showSystemUI() {
+    screenshots.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+  }
+
   // This snippet hides the system bars.
   private void hideSystemUI() {
     // Set the IMMERSIVE flag.
@@ -92,14 +100,6 @@ public class ScreenshotsViewerFragment extends SupportV4BaseFragment {
         | View.SYSTEM_UI_FLAG_FULLSCREEN
         // hide status bar
         | View.SYSTEM_UI_FLAG_IMMERSIVE);
-  }
-
-  // This snippet shows the system bars. It does this by removing all the flags
-  // except for the ones that make the content appear under the system bars.
-  private void showSystemUI() {
-    screenshots.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
   }
 
   @Override public int getContentViewId() {

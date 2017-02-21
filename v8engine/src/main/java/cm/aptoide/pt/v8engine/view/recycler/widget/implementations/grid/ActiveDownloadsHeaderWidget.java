@@ -30,8 +30,4 @@ public class ActiveDownloadsHeaderWidget extends Widget<ActiveDownloadsHeaderDis
     more.setVisibility(View.VISIBLE);
     more.setOnClickListener(view -> displayable.pauseAllDownloads(getContext()));
   }
-
-  @Override public void unbindView() {
-
-  }
 }

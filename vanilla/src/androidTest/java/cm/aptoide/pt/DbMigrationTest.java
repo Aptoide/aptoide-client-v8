@@ -5,24 +5,18 @@
 
 package cm.aptoide.pt;
 
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
 import android.os.Looper;
-import android.support.annotation.IntegerRes;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.LargeTest;
 import android.support.test.runner.AndroidJUnit4;
 import android.util.Pair;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
-import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
-import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -35,9 +29,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.deprecated.SQLiteDatabaseHelper;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -114,8 +106,7 @@ import static org.junit.Assert.fail;
     }
   }
 
-  @Test
-  public void scheduledDownloads() {
+  @Test public void scheduledDownloads() {
     // prepare
     final Table scheduleTable = tableBag.get(TableBag.TableName.SCHEDULED);
     final int nr_values = 5;
@@ -146,7 +137,7 @@ import static org.junit.Assert.fail;
     // trigger migration
     ManagerPreferences.setNeedsSqliteDbMigration(true);
     int newVersion = dbVersion.incrementAndGet();
-    dbHelper.onUpgrade(db, newVersion-1, newVersion);
+    dbHelper.onUpgrade(db, newVersion - 1, newVersion);
 
     // main thread ID for asserting purposes
     final long mainThreadId = Looper.getMainLooper().getThread().getId();
@@ -170,13 +161,33 @@ import static org.junit.Assert.fail;
       assertNotEquals(mainThreadId, Thread.currentThread().getId());
 
       // assert data fields
-      assertEquals(scheduled.getName(),
-          insertedValues[finalI].get(ScheduledTable.name.getName()));
+      assertEquals(scheduled.getName(), insertedValues[finalI].get(ScheduledTable.name.getName()));
 
       assertEquals(scheduled.getMd5(), insertedValues[finalI].get(ScheduledTable.md5.getName()));
 
-      assertEquals(scheduled.getIcon(),
-          insertedValues[finalI].get(ScheduledTable.icon.getName()));
+      assertEquals(scheduled.getIcon(), insertedValues[finalI].get(ScheduledTable.icon.getName()));
+    }
+  }
+
+  private void putValues(Table table, ContentValues[] insertedValues, int i) {
+    String columnName;
+    for (Pair<ColumnDefinition, Table.ColumnType> column : table.getFields()) {
+      columnName = column.first.getName();
+      if (!column.first.hasDefaultValue()) {
+        switch (column.second) {
+          case TEXT: {
+            insertedValues[i].put(columnName, columnName + i);
+            break;
+          }
+          case INTEGER: {
+            insertedValues[i].put(columnName, i);
+            break;
+          }
+          default: {
+            throw new UnsupportedOperationException("Unknown type to insert in DB");
+          }
+        }
+      }
     }
   }
 
@@ -218,7 +229,7 @@ import static org.junit.Assert.fail;
     // trigger migration
     ManagerPreferences.setNeedsSqliteDbMigration(true);
     int newVersion = dbVersion.incrementAndGet();
-    dbHelper.onUpgrade(db, newVersion-1, newVersion);
+    dbHelper.onUpgrade(db, newVersion - 1, newVersion);
 
     // main thread ID for asserting purposes
     final long mainThreadId = Looper.getMainLooper().getThread().getId();
@@ -245,8 +256,7 @@ import static org.junit.Assert.fail;
       assertEquals(excluded.getPackageName(),
           insertedValues[finalI].get(ExcludedTable.package_name.getName()));
 
-      assertEquals(excluded.getLabel(),
-          insertedValues[finalI].get(ExcludedTable.name.getName()));
+      assertEquals(excluded.getLabel(), insertedValues[finalI].get(ExcludedTable.name.getName()));
 
       assertEquals(excluded.getVersionCode(),
           insertedValues[finalI].get(ExcludedTable.vercode.getName()));
@@ -256,28 +266,6 @@ import static org.junit.Assert.fail;
 
       assertEquals(excluded.getIcon(),
           insertedValues[finalI].get(ExcludedTable.iconpath.getName()));
-    }
-  }
-
-  private void putValues(Table table, ContentValues[] insertedValues, int i) {
-    String columnName;
-    for (Pair<ColumnDefinition, Table.ColumnType> column : table.getFields()) {
-      columnName = column.first.getName();
-      if (!column.first.hasDefaultValue()) {
-        switch (column.second) {
-          case TEXT: {
-            insertedValues[i].put(columnName, columnName + i);
-            break;
-          }
-          case INTEGER: {
-            insertedValues[i].put(columnName, i);
-            break;
-          }
-          default: {
-            throw new UnsupportedOperationException("Unknown type to insert in DB");
-          }
-        }
-      }
     }
   }
 }

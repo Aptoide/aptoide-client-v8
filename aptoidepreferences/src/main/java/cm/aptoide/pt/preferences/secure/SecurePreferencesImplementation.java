@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.preferences.Application;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -40,7 +41,7 @@ public class SecurePreferencesImplementation implements SharedPreferences {
     }
   }
 
-  public static SharedPreferences getInstance() {
+  @Partners public static SharedPreferences getInstance() {
     return getInstance(Application.getContext());
   }
 

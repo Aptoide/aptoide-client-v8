@@ -24,22 +24,21 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
 
   public static String TAG = EndlessRecyclerOnScrollListener.class.getSimpleName();
 
-  private final BaseAdapter adapter;
-  private final V7<? extends BaseV7EndlessResponse, ? extends Endless> v7request;
-  private final Action1 successRequestListener;
-
+  protected final BaseAdapter adapter;
+  protected final V7<? extends BaseV7EndlessResponse, ? extends Endless> v7request;
+  protected final Action1 successRequestListener;
+  protected ErrorRequestListener errorRequestListener;
+  protected int total;
+  protected int offset;
+  protected boolean stableData = false;
+  @Setter protected BooleanAction onFirstLoadListener;
+  @Setter protected Action0 onEndOfListReachedListener;
+  protected boolean endCallbackCalled;
+  protected boolean firstCallbackCalled;
+  protected boolean loading;
   private int visibleThreshold;
   // The minimum amount of items to have below your current scroll position before load
   private boolean bypassCache;
-  private ErrorRequestListener errorRequestListener;
-  private int total;
-  private int offset;
-  private boolean stableData = false;
-  @Setter private BooleanAction onFirstLoadListener;
-  @Setter private Action0 onEndOfListReachedListener;
-  private boolean endCallbackCalled;
-  private boolean firstCallbackCalled;
-  private boolean loading;
   private int firstVisibleItem;
   private int totalItemCount;
   private int visibleItemCount;
@@ -50,18 +49,6 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
       ErrorRequestListener errorRequestListener) {
     this(baseAdapter, v7request, successRequestListener, errorRequestListener, 0, false, null,
         null);
-  }
-
-  public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(BaseAdapter baseAdapter,
-      V7<T, ? extends Endless> v7request, Action1<T> successRequestListener,
-      ErrorRequestListener errorRequestListener, boolean bypassCache) {
-    this(baseAdapter, v7request, successRequestListener, errorRequestListener, 0, bypassCache, null,
-        null);
-  }
-
-  public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(
-      BaseAdapter baseAdapter) {
-    this(baseAdapter, null, null, null, 0, false, null, null);
   }
 
   public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(BaseAdapter baseAdapter,
@@ -78,6 +65,18 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
     this.endCallbackCalled = false;
     this.firstCallbackCalled = false;
     this.onFirstLoadListener = onFirstLoadListener;
+  }
+
+  public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(BaseAdapter baseAdapter,
+      V7<T, ? extends Endless> v7request, Action1<T> successRequestListener,
+      ErrorRequestListener errorRequestListener, boolean bypassCache) {
+    this(baseAdapter, v7request, successRequestListener, errorRequestListener, 0, bypassCache, null,
+        null);
+  }
+
+  public <T extends BaseV7EndlessResponse> EndlessRecyclerOnScrollListener(
+      BaseAdapter baseAdapter) {
+    this(baseAdapter, null, null, null, 0, false, null, null);
   }
 
   @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -99,10 +98,6 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
     return !loading
         && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)
         && hasMoreElements();
-  }
-
-  private boolean hasMoreElements() {
-    return (stableData) ? offset < total : offset <= total;
   }
 
   public void onLoadMore(boolean bypassCache) {
@@ -154,6 +149,10 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
             loading = false;
           });
     }
+  }
+
+  protected boolean hasMoreElements() {
+    return (stableData) ? offset < total : offset <= total;
   }
 
   public void removeListeners() {

@@ -63,6 +63,7 @@ public @Data class ResponseCacheEntry {
       e.printStackTrace();
     }
   }
+
   //@JsonIgnore
   public Response getResponse(Request request) {
     Response.Builder builder = new Response.Builder();
@@ -92,8 +93,7 @@ public @Data class ResponseCacheEntry {
     return builder.build();
   }
 
-  @JsonIgnore
-  boolean isValid() {
+  @JsonIgnore boolean isValid() {
     return System.currentTimeMillis() <= validity;
   }
 }

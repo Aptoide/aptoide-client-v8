@@ -13,7 +13,6 @@ import cm.aptoide.pt.v8engine.payment.products.AptoideProduct;
 import cm.aptoide.pt.v8engine.repository.sync.SyncAdapterBackgroundSync;
 import rx.Completable;
 import rx.Observable;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by marcelobenites on 16/12/16.
@@ -39,21 +38,20 @@ public abstract class PaymentConfirmationRepository {
   public abstract Completable createPaymentConfirmation(int paymentId,
       String paymentConfirmationId);
 
-  public Observable<PaymentConfirmation> getPaymentConfirmation(Product product) {
-    return confirmationAccessor.getPaymentConfirmations(product.getId())
-        .flatMap(paymentConfirmations -> Observable.from(paymentConfirmations)
-            .map(paymentConfirmation -> confirmationFactory.convertToPaymentConfirmation(paymentConfirmation)))
-        .doOnSubscribe(() -> backgroundSync.syncConfirmation(((AptoideProduct) product)));
+  public Observable<PaymentConfirmation> getPaymentConfirmation(Product product, String payerId) {
+    return syncPaymentConfirmation((AptoideProduct) product).andThen(
+        confirmationAccessor.getPaymentConfirmations(product.getId(), payerId)
+            .flatMap(paymentConfirmations -> Observable.from(paymentConfirmations)
+                .map(paymentConfirmation -> confirmationFactory.convertToPaymentConfirmation(
+                    paymentConfirmation))));
   }
 
-  protected Completable createPaymentConfirmation(int paymentId, String paymentConfirmationId,
-      AptoideProduct product) {
-    return Completable.fromAction(() -> {
-      backgroundSync.syncConfirmation(product, paymentId, paymentConfirmationId);
-    }).subscribeOn(Schedulers.io());
+  protected Completable syncPaymentConfirmation(AptoideProduct product) {
+    return backgroundSync.syncConfirmation(product);
   }
 
-  protected void syncPaymentConfirmation(AptoideProduct product) {
-    backgroundSync.syncConfirmation(product);
+  protected Completable createPaymentConfirmation(AptoideProduct product, int paymentId,
+      String paymentConfirmationId) {
+    return backgroundSync.syncConfirmation(product, paymentId, paymentConfirmationId);
   }
 }

@@ -40,7 +40,6 @@ public class SocialArticleDisplayable extends SocialCardDisplayable {
   @Getter private String avatarUrl;
   @Getter private long appId;
   @Getter private String abUrl;
-  @Getter private Store store;
   @Getter private Comment.User user;
   @Getter private String packageName;
 
@@ -60,8 +59,9 @@ public class SocialArticleDisplayable extends SocialCardDisplayable {
       List<App> relatedToAppsList, Date date, DateCalculator dateCalculator,
       SpannableFactory spannableFactory, TimelineMetricsManager timelineMetricsManager,
       SocialRepository socialRepository) {
-    super(socialArticle, numberOfLikes, numberOfComments, socialArticle.getUser(),
-        socialArticle.getUserSharer(), date, spannableFactory, dateCalculator);
+    super(socialArticle, numberOfLikes, numberOfComments, store, user,
+        socialArticle.getUserSharer(), socialArticle.getMy().isLiked(), socialArticle.getLikes(),
+        date, spannableFactory, dateCalculator);
     this.articleTitle = articleTitle;
     this.link = link;
     this.developerLink = developerLink;
@@ -70,7 +70,6 @@ public class SocialArticleDisplayable extends SocialCardDisplayable {
     this.avatarUrl = avatarUrl;
     this.appId = appId;
     this.abUrl = abUrl;
-    this.store = store;
     this.user = user;
     this.relatedToAppsList = relatedToAppsList;
     this.date = date;
@@ -103,9 +102,10 @@ public class SocialArticleDisplayable extends SocialCardDisplayable {
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
             socialArticle.getPublisher().getBaseUrl()), socialArticle.getPublisher().getName(),
         socialArticle.getThumbnailUrl(), socialArticle.getPublisher().getLogoUrl(), appId,
-        abTestingURL, socialArticle.getStore(), socialArticle.getUser(), socialArticle.getLikes(),
-        socialArticle.getComments(), socialArticle.getApps(), socialArticle.getDate(),
-        dateCalculator, spannableFactory, timelineMetricsManager, socialRepository);
+        abTestingURL, socialArticle.getStore(), socialArticle.getUser(),
+        socialArticle.getStats().getLikes(), socialArticle.getStats().getComments(),
+        socialArticle.getApps(), socialArticle.getDate(), dateCalculator, spannableFactory,
+        timelineMetricsManager, socialRepository);
   }
 
   public Observable<List<Installed>> getRelatedToApplication() {

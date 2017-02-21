@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    style="@style/AppViewWidget"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -9,17 +8,18 @@
     android:paddingLeft="0dp"
     android:paddingRight="0dp"
     android:paddingStart="0dp"
+    style="@style/AppViewWidget"
     >
 
   <!-- comments -->
 
   <RelativeLayout
       android:id="@+id/more_layout"
-      style="@style/focusableRowBackground"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:minHeight="50dp"
       android:orientation="vertical"
+      style="@style/focusableRowBackground"
       >
 
     <TextView
@@ -28,6 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="4dp"
+        android:layout_marginStart="4dp"
         android:gravity="center_vertical"
         android:text="@string/comments"
         android:textAppearance="?android:textAppearanceMedium"
@@ -39,18 +40,22 @@
         android:id="@+id/write_comment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:background="@drawable/border_grey"
         android:orientation="horizontal"
+        android:paddingEnd="12dp"
         android:paddingLeft="12dp"
         android:paddingRight="12dp"
+        android:paddingStart="12dp"
         >
 
       <ImageView
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_gravity="center_vertical"
+          android:paddingEnd="4dp"
           android:paddingRight="4dp"
           android:src="?attr/icAppviewsPencil"
           />
@@ -74,10 +79,12 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:background="?attr/backgroundMain"
+      android:drawableEnd="@drawable/ic_see_more_comments"
       android:drawablePadding="15dp"
       android:drawableRight="@drawable/ic_see_more_comments"
       android:gravity="right"
       android:paddingBottom="10dp"
+      android:paddingEnd="13dp"
       android:paddingRight="13dp"
       android:paddingTop="15dp"
       android:text="@string/see_more"

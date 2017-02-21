@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.downloadmanager;
 
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -20,6 +19,7 @@ import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadLargeFileListener;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.exception.FileDownloadHttpException;
+import com.liulishuo.filedownloader.exception.FileDownloadOutOfSpaceException;
 import io.realm.RealmList;
 import java.io.File;
 import java.util.concurrent.TimeUnit;
@@ -83,23 +83,6 @@ class DownloadTask extends FileDownloadLargeFileListener {
         .publish();
   }
 
-  @NonNull private static String getFilePathFromFileType(FileToDownload fileToDownload) {
-    String path;
-    switch (fileToDownload.getFileType()) {
-      case FileToDownload.APK:
-        path = AptoideDownloadManager.APK_PATH;
-        break;
-      case FileToDownload.OBB:
-        path = AptoideDownloadManager.OBB_PATH + fileToDownload.getPackageName() + "/";
-        break;
-      case FileToDownload.GENERIC:
-      default:
-        path = AptoideDownloadManager.DOWNLOADS_STORAGE_PATH;
-        break;
-    }
-    return path;
-  }
-
   /**
    * Update the overall download progress. It updates the value on database and in memory list
    *
@@ -120,6 +103,169 @@ class DownloadTask extends FileDownloadLargeFileListener {
     saveDownloadInDb(download);
     Logger.d(TAG, "Download: " + download.getMd5() + " Progress: " + download.getOverallProgress());
     return download;
+  }
+
+  private void setDownloadStatus(@Download.DownloadState int status, Download download) {
+    setDownloadStatus(status, download, null);
+  }
+
+  private synchronized void saveDownloadInDb(Download download) {
+    Observable.fromCallable(() -> {
+      downloadAccessor.save(download);
+      return null;
+    }).subscribeOn(Schedulers.io()).subscribe();
+  }
+
+  private void setDownloadStatus(@Download.DownloadState int status, Download download,
+      @Nullable BaseDownloadTask task) {
+    if (task != null) {
+      for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
+        if (fileToDownload.getDownloadId() == task.getId()) {
+          fileToDownload.setStatus(status);
+        }
+      }
+    }
+
+    this.download.setOverallDownloadStatus(status);
+    saveDownloadInDb(download);
+    if (status == Download.PROGRESS || status == Download.PENDING) {
+      AptoideDownloadManager.getInstance().setDownloading(true);
+    } else {
+      AptoideDownloadManager.getInstance().setDownloading(false);
+    }
+  }
+
+  public Observable<Download> getObservable() {
+    return observable;
+  }
+
+  @Override protected void pending(BaseDownloadTask task, long soFarBytes, long totalBytes) {
+    setDownloadStatus(Download.PENDING, download, task);
+  }
+
+  @Override protected void pending(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+    pending(task, (long) soFarBytes, (long) totalBytes);
+    setDownloadStatus(Download.PENDING, download, task);
+  }
+
+  @Override protected void progress(BaseDownloadTask task, long soFarBytes, long totalBytes) {
+    for (FileToDownload fileToDownload : download.getFilesToDownload()) {
+      if (fileToDownload.getDownloadId() == task.getId()) {
+        //sometimes to totalBytes = 0, i believe that's when a 301(Moved Permanently) http error occurs
+        if (totalBytes > 0) {
+          fileToDownload.setProgress((int) Math.floor(
+              (float) soFarBytes / totalBytes * AptoideDownloadManager.PROGRESS_MAX_VALUE));
+        } else {
+          fileToDownload.setProgress(0);
+        }
+      }
+    }
+    this.download.setDownloadSpeed(task.getSpeed() * 1024);
+    if (download.getOverallDownloadStatus() != Download.PROGRESS) {
+      setDownloadStatus(Download.PROGRESS, download, task);
+    }
+  }
+
+  @Override protected void progress(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+    progress(task, (long) soFarBytes, (long) totalBytes);
+  }
+
+  @Override protected void paused(BaseDownloadTask task, long soFarBytes, long totalBytes) {
+    setDownloadStatus(Download.PAUSED, download, task);
+    AptoideDownloadManager.getInstance().currentDownloadFinished();
+  }
+
+  @Override protected void paused(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+    paused(task, (long) soFarBytes, (long) totalBytes);
+  }
+
+  @Override protected void blockComplete(BaseDownloadTask task) {
+
+  }
+
+  @Override protected void completed(BaseDownloadTask task) {
+    Observable.from(download.getFilesToDownload())
+        .filter(file -> file.getDownloadId() == task.getId())
+        .flatMap(file -> {
+          file.setStatus(Download.COMPLETED);
+          for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
+            if (fileToDownload.getStatus() != Download.COMPLETED) {
+              file.setProgress(AptoideDownloadManager.PROGRESS_MAX_VALUE);
+              return Observable.just(null);
+            }
+          }
+          return CheckMd5AndMoveFileToRightPlace(download).doOnNext(fileMoved -> {
+            if (fileMoved) {
+              Logger.d(TAG, "Download md5 match");
+              file.setProgress(AptoideDownloadManager.PROGRESS_MAX_VALUE);
+            } else {
+              Logger.e(TAG, "Download md5 is not correct");
+              download.setDownloadError(Download.GENERIC_ERROR);
+              setDownloadStatus(Download.ERROR, download, task);
+            }
+          });
+        })
+        .doOnUnsubscribe(() -> AptoideDownloadManager.getInstance().setDownloading(false))
+        .subscribeOn(Schedulers.io())
+        .subscribe(success -> saveDownloadInDb(download),
+            throwable -> setDownloadStatus(Download.ERROR, download));
+    download.setDownloadSpeed(task.getSpeed() * 1024);
+  }
+
+  @Override protected void error(BaseDownloadTask task, Throwable e) {
+    stopDownloadQueue(download);
+    if (e instanceof FileDownloadHttpException
+        && ((FileDownloadHttpException) e).getCode() == FILE_NOTFOUND_HTTP_ERROR) {
+      Logger.d(TAG, "File not found on link: " + task.getUrl());
+      for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
+        if (TextUtils.equals(fileToDownload.getLink(), task.getUrl()) && !TextUtils.isEmpty(
+            fileToDownload.getAltLink())) {
+          fileToDownload.setLink(fileToDownload.getAltLink());
+          fileToDownload.setAltLink(null);
+          downloadAccessor.save(download);
+          startDownload();
+          return;
+        }
+      }
+    } else {
+      Logger.d(TAG, "Error on download: " + download.getMd5());
+      // Apparently throwable e can be null.
+      if (e != null) {
+        e.printStackTrace();
+      }
+      if (analytics != null) {
+        analytics.onError(download, e);
+      }
+    }
+    if (e instanceof FileDownloadOutOfSpaceException) {
+      download.setDownloadError(Download.NOT_ENOUGH_SPACE_ERROR);
+    } else {
+      download.setDownloadError(Download.GENERIC_ERROR);
+    }
+    setDownloadStatus(Download.ERROR, download, task);
+    AptoideDownloadManager.getInstance().currentDownloadFinished();
+  }
+
+  /**
+   * this method will pause all downloads listed on {@link Download#filesToDownload} without change
+   * download state, the listener is removed in order to keep the download state, this means that
+   * the "virtual" pause will not affect the download state
+   */
+  private void stopDownloadQueue(Download download) {
+    //this try catch sucks
+    try {
+      for (int i = download.getFilesToDownload().size() - 1; i >= 0; i--) {
+        FileToDownload fileToDownload = download.getFilesToDownload().get(i);
+        FileDownloader.getImpl()
+            .getStatus(fileToDownload.getDownloadId(), fileToDownload.getPath());
+        int taskId = FileDownloader.getImpl().replaceListener(fileToDownload.getDownloadId(), null);
+        if (taskId != 0) {
+          FileDownloader.getImpl().pause(taskId);
+        }
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   /**
@@ -176,146 +322,8 @@ class DownloadTask extends FileDownloadLargeFileListener {
     saveDownloadInDb(download);
   }
 
-  private synchronized void saveDownloadInDb(Download download) {
-    Observable.fromCallable(() -> {
-      downloadAccessor.save(download);
-      return null;
-    }).subscribeOn(Schedulers.io()).subscribe();
-  }
-
-  public Observable<Download> getObservable() {
-    return observable;
-  }
-
-  @Override protected void pending(BaseDownloadTask task, int soFarBytes, int totalBytes) {
-    pending(task, (long) soFarBytes, (long) totalBytes);
-    setDownloadStatus(Download.PENDING, download, task);
-  }
-
-  @Override protected void progress(BaseDownloadTask task, int soFarBytes, int totalBytes) {
-    progress(task, (long) soFarBytes, (long) totalBytes);
-  }
-
-  @Override protected void paused(BaseDownloadTask task, int soFarBytes, int totalBytes) {
-    paused(task, (long) soFarBytes, (long) totalBytes);
-  }
-
-  @Override protected void pending(BaseDownloadTask task, long soFarBytes, long totalBytes) {
-    setDownloadStatus(Download.PENDING, download, task);
-  }
-
-  @Override protected void progress(BaseDownloadTask task, long soFarBytes, long totalBytes) {
-    for (FileToDownload fileToDownload : download.getFilesToDownload()) {
-      if (fileToDownload.getDownloadId() == task.getId()) {
-        //sometimes to totalBytes = 0, i believe that's when a 301(Moved Permanently) http error occurs
-        if (totalBytes > 0) {
-          fileToDownload.setProgress((int) Math.floor(
-              (float) soFarBytes / totalBytes * AptoideDownloadManager.PROGRESS_MAX_VALUE));
-        } else {
-          fileToDownload.setProgress(0);
-        }
-      }
-    }
-    this.download.setDownloadSpeed(task.getSpeed() * 1024);
-    if (download.getOverallDownloadStatus() != Download.PROGRESS) {
-      setDownloadStatus(Download.PROGRESS, download, task);
-    }
-  }
-
-  @Override protected void blockComplete(BaseDownloadTask task) {
-
-  }
-
-  @Override protected void completed(BaseDownloadTask task) {
-    Observable.from(download.getFilesToDownload())
-        .filter(file -> file.getDownloadId() == task.getId())
-        .flatMap(file -> {
-          file.setStatus(Download.COMPLETED);
-          for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
-            if (fileToDownload.getStatus() != Download.COMPLETED) {
-              file.setProgress(AptoideDownloadManager.PROGRESS_MAX_VALUE);
-              return Observable.just(null);
-            }
-          }
-          return CheckMd5AndMoveFileToRightPlace(download).doOnNext(fileMoved -> {
-            if (fileMoved) {
-              Logger.d(TAG, "Download md5 match");
-              file.setProgress(AptoideDownloadManager.PROGRESS_MAX_VALUE);
-            } else {
-              Logger.e(TAG, "Download md5 is not correct");
-              setDownloadStatus(Download.ERROR, download, task);
-            }
-          });
-        })
-        .doOnUnsubscribe(() -> AptoideDownloadManager.getInstance().setDownloading(false))
-        .subscribeOn(Schedulers.io())
-        .subscribe(success -> saveDownloadInDb(download),
-            throwable -> setDownloadStatus(Download.ERROR, download));
-    download.setDownloadSpeed(task.getSpeed() * 1024);
-  }
-
-  @Override protected void paused(BaseDownloadTask task, long soFarBytes, long totalBytes) {
-    setDownloadStatus(Download.PAUSED, download, task);
-    AptoideDownloadManager.getInstance().currentDownloadFinished();
-  }
-
-  @Override protected void error(BaseDownloadTask task, Throwable e) {
-    if (e instanceof FileDownloadHttpException
-        && ((FileDownloadHttpException) e).getCode() == FILE_NOTFOUND_HTTP_ERROR) {
-      Logger.d(TAG, "File not found on link: " + task.getUrl());
-      for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
-        if (TextUtils.equals(fileToDownload.getLink(), task.getUrl()) && !TextUtils.isEmpty(
-            fileToDownload.getAltLink())) {
-          fileToDownload.setLink(fileToDownload.getAltLink());
-          fileToDownload.setAltLink(null);
-          downloadAccessor.save(download);
-          Intent intent =
-              new Intent(AptoideDownloadManager.getContext(), NotificationEventReceiver.class);
-          intent.setAction(AptoideDownloadManager.DOWNLOADMANAGER_ACTION_START_DOWNLOAD);
-          intent.putExtra(AptoideDownloadManager.FILE_MD5_EXTRA, download.getMd5());
-          AptoideDownloadManager.getContext().sendBroadcast(intent);
-          return;
-        }
-      }
-    } else {
-      Logger.d(TAG, "Error on download: " + download.getMd5());
-      // Apparently throwable e can be null.
-      if (e != null) {
-        e.printStackTrace();
-      }
-      if (analytics != null) {
-        analytics.onError(download, e);
-      }
-    }
-    setDownloadStatus(Download.ERROR, download, task);
-    AptoideDownloadManager.getInstance().currentDownloadFinished();
-  }
-
   @Override protected void warn(BaseDownloadTask task) {
     setDownloadStatus(Download.WARN, download, task);
-  }
-
-  private void setDownloadStatus(@Download.DownloadState int status, Download download) {
-    setDownloadStatus(status, download, null);
-  }
-
-  private void setDownloadStatus(@Download.DownloadState int status, Download download,
-      @Nullable BaseDownloadTask task) {
-    if (task != null) {
-      for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
-        if (fileToDownload.getDownloadId() == task.getId()) {
-          fileToDownload.setStatus(status);
-        }
-      }
-    }
-
-    this.download.setOverallDownloadStatus(status);
-    saveDownloadInDb(download);
-    if (status == Download.PROGRESS || status == Download.PENDING) {
-      AptoideDownloadManager.getInstance().setDownloading(true);
-    } else {
-      AptoideDownloadManager.getInstance().setDownloading(false);
-    }
   }
 
   private Observable<Boolean> CheckMd5AndMoveFileToRightPlace(Download download) {
@@ -336,5 +344,22 @@ class DownloadTask extends FileDownloadLargeFileListener {
       }
       return true;
     });
+  }
+
+  @NonNull private String getFilePathFromFileType(FileToDownload fileToDownload) {
+    String path;
+    switch (fileToDownload.getFileType()) {
+      case FileToDownload.APK:
+        path = AptoideDownloadManager.APK_PATH;
+        break;
+      case FileToDownload.OBB:
+        path = AptoideDownloadManager.OBB_PATH + fileToDownload.getPackageName() + "/";
+        break;
+      case FileToDownload.GENERIC:
+      default:
+        path = AptoideDownloadManager.DOWNLOADS_STORAGE_PATH;
+        break;
+    }
+    return path;
   }
 }

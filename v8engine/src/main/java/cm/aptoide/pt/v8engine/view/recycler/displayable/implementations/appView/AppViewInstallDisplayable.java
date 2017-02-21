@@ -102,7 +102,7 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
   }
 
   public void buyApp(Context context, GetAppMeta.App app) {
-    Fragment fragment = ((FragmentShower) context).getLastV4();
+    Fragment fragment = ((FragmentShower) context).getLast();
     if (Payments.class.isAssignableFrom(fragment.getClass())) {
       ((Payments) fragment).buyApp(app);
     }
@@ -118,6 +118,10 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
     this.installButton = installButton;
   }
 
+  @Override protected Configs getConfig() {
+    return new Configs(1, true);
+  }
+
   @Override public int getViewLayout() {
     return R.layout.displayable_app_view_install;
   }
@@ -130,10 +134,6 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
   @Override public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
     super.onViewStateRestored(savedInstanceState);
     Logger.i(TAG, "onViewStateRestored");
-  }
-
-  @Override protected Configs getConfig() {
-    return new Configs(1, true);
   }
 
   @Override public void onResume() {
@@ -156,6 +156,22 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
     });
   }
 
+  private Observable<WidgetState> getInstallationObservable(String md5,
+      InstallManager installManager) {
+    return installManager.getAsListInstallation(md5).map(progress -> {
+      if (progress != null && progress.getState() != Progress.DONE && (progress.getState()
+          == Progress.ACTIVE
+          || progress.getRequest().getOverallDownloadStatus() == Download.PAUSED)) {
+
+        widgetState.setButtonState(ACTION_INSTALLING);
+      } else {
+        widgetState.setButtonState(ACTION_NO_STATE);
+      }
+      widgetState.setProgress(progress);
+      return widgetState;
+    });
+  }
+
   @NonNull private Observable<WidgetState> getInstalledAppObservable(GetAppMeta.App currentApp,
       InstalledRepository installedRepository) {
     return installedRepository.getAsList(currentApp.getPackageName()).map(installeds -> {
@@ -171,22 +187,6 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
       } else {
         widgetState.setButtonState(ACTION_INSTALL);
       }
-      return widgetState;
-    });
-  }
-
-  private Observable<WidgetState> getInstallationObservable(String md5,
-      InstallManager installManager) {
-    return installManager.getAsListInstallation(md5).map(progress -> {
-      if (progress != null && progress.getState() != Progress.DONE && (progress.getState()
-          == Progress.ACTIVE
-          || progress.getRequest().getOverallDownloadStatus() == Download.PAUSED)) {
-
-        widgetState.setButtonState(ACTION_INSTALLING);
-      } else {
-        widgetState.setButtonState(ACTION_NO_STATE);
-      }
-      widgetState.setProgress(progress);
       return widgetState;
     });
   }

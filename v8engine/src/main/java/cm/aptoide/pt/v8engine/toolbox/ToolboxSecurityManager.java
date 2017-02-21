@@ -24,6 +24,14 @@ public class ToolboxSecurityManager {
     return signature.equals(getSignature(uidPackageName)) && packageName.equals(uidPackageName);
   }
 
+  private String getPackageName(int uid) {
+    final String[] packagesForUid = packageManager.getPackagesForUid(uid);
+    if (packagesForUid != null) {
+      return packagesForUid[0];
+    }
+    return null;
+  }
+
   private String getSignature(String packageName) {
     try {
       final Signature[] signatures =
@@ -32,14 +40,6 @@ public class ToolboxSecurityManager {
         return signatures[0].toCharsString();
       }
     } catch (PackageManager.NameNotFoundException ignored) {
-    }
-    return null;
-  }
-
-  private String getPackageName(int uid) {
-    final String[] packagesForUid = packageManager.getPackagesForUid(uid);
-    if (packagesForUid != null) {
-      return packagesForUid[0];
     }
     return null;
   }

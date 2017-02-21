@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.model.v7;
 
-import cm.aptoide.pt.model.v3.PaymentServiceResponse;
 import cm.aptoide.pt.model.v7.listapp.File;
 import cm.aptoide.pt.model.v7.store.Store;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -56,7 +55,7 @@ import lombok.EqualsAndHashCode;
     private String status;
 
     public boolean isPaid() {
-      return status.equalsIgnoreCase("OK");
+      return "OK".equalsIgnoreCase(status);
     }
 
     public void setPaid() {

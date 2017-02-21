@@ -5,118 +5,141 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.database.schedulers.RealmSchedulers;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import java.util.Collections;
 import java.util.List;
+import rx.Completable;
 import rx.Observable;
+import rx.Single;
 import rx.schedulers.Schedulers;
 
 /**
  * Created by trinkes on 9/23/16.
  */
 
-public class UpdateRepository implements Repository {
+public class UpdateRepository implements Repository<Update, String> {
+
   private static final String TAG = UpdateRepository.class.getName();
+
+  private final AptoideClientUUID aptoideClientUUID;
+
   private UpdateAccessor updateAccessor;
   private StoreAccessor storeAccessor;
 
-  public UpdateRepository(UpdateAccessor updateAccessor, StoreAccessor storeAccessor) {
+  UpdateRepository(UpdateAccessor updateAccessor, StoreAccessor storeAccessor) {
     this.updateAccessor = updateAccessor;
     this.storeAccessor = storeAccessor;
+
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
   }
 
-  public Observable<List<Update>> getUpdates() {
-    return getUpdates(false);
-  }
-
-  public @NonNull Observable<List<Update>> getUpdates(boolean bypassCache) {
+  public @NonNull Completable sync(boolean bypassCache) {
     return storeAccessor.getAll()
-        .observeOn(Schedulers.io())
         .first()
-        .flatMapIterable(stores -> stores)
-        .map(store -> store.getStoreId())
-        .toList()
+        .observeOn(Schedulers.io())
+        .flatMap(stores -> Observable.from(stores).map(store -> store.getStoreId()).toList())
         .flatMap(storeIds -> getNetworkUpdates(storeIds, bypassCache))
-        .flatMap(updates -> {
-          if (!updates.isEmpty()) {
-            // network fetch succeeded. remove local non-excluded updates
-            // and save the new updates
-            return removeNonExcluded().flatMapIterable(aVoid -> updates)
-                .flatMap(app -> saveUpdate(app))
-                .toList();
-          }
-          // there was a network error
-          return Observable.just(null);
-        })
-        // return the local (non-excluded) updates
-        .flatMap(aVoid -> getStoredUpdates());
+        .toSingle()
+        .flatMapCompletable(updates -> {
+          // remove local non-excluded updates
+          // save the new updates
+          // return all the local (non-excluded) updates
+          // this is a non-closing Observable, so new db modifications will trigger this observable
+          return removeAllNonExcluded().andThen(saveNewUpdates(updates));
+        });
   }
 
   private Observable<List<App>> getNetworkUpdates(List<Long> storeIds, boolean bypassCache) {
+    Logger.d(TAG, String.format("getNetworkUpdates() -> using %d stores", storeIds.size()));
     return ListAppsUpdatesRequest.of(storeIds, AptoideAccountManager.getAccessToken(),
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID()).observe(bypassCache).map(result -> {
-      if (result.isOk()) {
+        aptoideClientUUID.getUniqueIdentifier()).observe(bypassCache).map(result -> {
+      if (result != null && result.isOk()) {
         return result.getList();
       }
       return Collections.<App>emptyList();
-    }).onErrorReturn(throwable -> Collections.emptyList());
+    });
   }
 
-  @NonNull private Observable<Void> saveUpdate(App app) {
-    return updateAccessor.get(app.getPackageName())
+  public Completable removeAllNonExcluded() {
+    return updateAccessor.getAll(false)
         .first()
-        .filter(update -> update == null || !update.isExcluded())
-        .doOnNext(update -> updateAccessor.save(new Update(app)))
-        .map(update -> null);
+        .toSingle()
+        .flatMapCompletable(updates -> removeAll(updates));
   }
 
-  /**
-   * Get all updates that should be shown to user, the excluded updates are not in the list
-   * <dl>
-   * <dt><b>Scheduler:</b></dt>
-   * <dd>{@code getUpdates} operate by default on {@link RealmSchedulers}.</dd>
-   * </dl>
-   *
-   * @return an observable with a list of updates
-   */
-  //@Deprecated public Observable<List<Update>> getUpdates() {
-  //  return updateAccessor.getAll(false);
-  //}
-  private Observable<List<Update>> getStoredUpdates() {
-    return updateAccessor.getAll(false);
+  private Completable saveNewUpdates(List<App> updates) {
+    return Completable.fromSingle(Observable.from(updates)
+        .map(app -> new Update(app))
+        .toList()
+        .toSingle()
+        .flatMap(updateList -> {
+          Logger.d(TAG, String.format("filter %d updates for non excluded and save the remainder",
+              updateList.size()));
+          return saveNonExcludedUpdates(updateList);
+        }));
+  }
+
+  public Completable removeAll(List<Update> updates) {
+    return Observable.from(updates)
+        .map(update -> update.getPackageName())
+        .toList()
+        .flatMap(updatesAsPackageNames -> {
+          if (updatesAsPackageNames != null && !updatesAsPackageNames.isEmpty()) {
+            updateAccessor.removeAll(updatesAsPackageNames);
+          }
+          return null;
+        })
+        .toCompletable();
+  }
+
+  @NonNull private Single<List<Update>> saveNonExcludedUpdates(List<Update> updateList) {
+    // remove excluded from list
+    // save the remainder
+    return Observable.from(updateList)
+        .flatMap(update -> updateAccessor.isExcluded(update.getPackageName()).flatMap(excluded -> {
+          if (excluded) {
+            return Observable.empty();
+          }
+          return Observable.just(update);
+        }))
+        .toList()
+        .toSingle()
+        .doOnSuccess(updateListFiltered -> {
+          if (updateListFiltered != null && !updateList.isEmpty()) {
+            updateAccessor.saveAll(updateListFiltered);
+          }
+        });
+  }
+
+  public @NonNull Observable<List<Update>> getAll(boolean isExcluded) {
+    return updateAccessor.getAllSorted(isExcluded);
+  }
+
+  @Override public void save(Update entity) {
+    updateAccessor.insert(entity);
   }
 
   public Observable<Update> get(String packageName) {
     return updateAccessor.get(packageName);
   }
 
-  public Observable<List<Update>> getAllWithExluded() {
-    return updateAccessor.getAll();
-  }
-
-  private Observable<Void> removeNonExcluded() {
-    return getStoredUpdates().first()
-        .flatMapIterable(list -> list)
-        .doOnNext(update -> remove(update))
+  public Completable remove(List<Update> updates) {
+    return Observable.from(updates)
+        .map(update -> update.getPackageName())
         .toList()
-        .map(list -> null);
+        .doOnNext(updatesAsPackages -> updateAccessor.removeAll(updatesAsPackages))
+        .toCompletable();
   }
 
-  public Observable<Void> removeAll() {
-    return Observable.fromCallable(() -> {
-      updateAccessor.removeAll();
-      return null;
-    });
-  }
-
-  public Observable<Void> remove(Update update) {
-    return Observable.fromCallable(() -> {
+  public Completable remove(Update update) {
+    return Completable.fromCallable(() -> {
       updateAccessor.remove(update.getPackageName());
       return null;
     });
@@ -138,10 +161,6 @@ public class UpdateRepository implements Repository {
       updateAccessor.insert(update);
       return null;
     });
-  }
-
-  public Observable<List<Update>> getAllSorted(boolean isExcluded) {
-    return updateAccessor.getAllSorted(isExcluded);
   }
 
   public Observable<Boolean> contains(String packageName, boolean isExcluded) {

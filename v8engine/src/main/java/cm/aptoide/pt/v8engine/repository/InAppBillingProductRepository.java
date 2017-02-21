@@ -37,7 +37,8 @@ public class InAppBillingProductRepository implements ProductRepository {
         ((InAppBillingProduct) product).getApiVersion(),
         ((InAppBillingProduct) product).getPackageName(), ((InAppBillingProduct) product).getType())
         .flatMap(purchaseInformation -> convertToPurchase(purchaseInformation,
-            ((InAppBillingProduct) product).getSku())).toSingle()
+            ((InAppBillingProduct) product).getSku()))
+        .toSingle()
         .subscribeOn(Schedulers.io());
   }
 
@@ -47,8 +48,15 @@ public class InAppBillingProductRepository implements ProductRepository {
         ((InAppBillingProduct) product).getType()).flatMapIterable(
         paymentServices -> paymentServices)
         .map(paymentService -> paymentFactory.create(paymentService, product))
-        .toList().toSingle()
+        .toList()
+        .toSingle()
         .subscribeOn(Schedulers.io());
+  }
+
+  private Observable<List<PaymentServiceResponse>> getServerInAppBillingPaymentServices(
+      int apiVersion, String packageName, String sku, String type) {
+    return inAppBillingRepository.getSKUDetails(apiVersion, packageName, sku, type)
+        .map(response -> response.getPaymentServices());
   }
 
   private Observable<Purchase> convertToPurchase(
@@ -64,11 +72,5 @@ public class InAppBillingProductRepository implements ProductRepository {
         .switchIfEmpty(Observable.error(
             new RepositoryItemNotFoundException("No purchase found for SKU " + sku)))
         .first();
-  }
-
-  private Observable<List<PaymentServiceResponse>> getServerInAppBillingPaymentServices(int apiVersion,
-      String packageName, String sku, String type) {
-    return inAppBillingRepository.getSKUDetails(apiVersion, packageName, sku, type)
-        .map(response -> response.getPaymentServices());
   }
 }

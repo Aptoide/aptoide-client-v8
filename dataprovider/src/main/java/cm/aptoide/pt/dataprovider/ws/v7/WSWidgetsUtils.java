@@ -156,6 +156,10 @@ public class WSWidgetsUtils {
     }
   }
 
+  private static boolean isKnownType(Type type) {
+    return type != null;
+  }
+
   public static boolean shouldAddObjectView(List<String> list, Throwable throwable) {
     if (throwable instanceof AptoideWsV7Exception) {
       for (BaseV7Response.Error error : ((AptoideWsV7Exception) throwable).getBaseResponse()
@@ -166,9 +170,5 @@ public class WSWidgetsUtils {
       }
     }
     return false;
-  }
-
-  private static boolean isKnownType(Type type) {
-    return type != null;
   }
 }

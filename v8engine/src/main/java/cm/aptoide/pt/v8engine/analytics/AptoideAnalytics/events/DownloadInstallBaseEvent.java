@@ -5,6 +5,8 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.DownloadAnalyticsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.Event;
@@ -18,6 +20,7 @@ import lombok.ToString;
 
 public @EqualsAndHashCode(callSuper = false) @Data @ToString class DownloadInstallBaseEvent
     extends Event {
+  private final AptoideClientUUID aptoideClientUUID;
   private Action action;
   private int versionCode;
   private Origin origin;
@@ -30,7 +33,7 @@ public @EqualsAndHashCode(callSuper = false) @Data @ToString class DownloadInsta
   private String name;
   private AppContext context;
   private DownloadInstallEventConverter downloadInstallEventConverter;
-  private cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody.ResultStatus resultStatus;
+  private DownloadInstallAnalyticsBaseBody.ResultStatus resultStatus;
   private Throwable error;
 
   public DownloadInstallBaseEvent(Action action, Origin origin, String packageName, String url,
@@ -48,12 +51,15 @@ public @EqualsAndHashCode(callSuper = false) @Data @ToString class DownloadInsta
     this.name = eventName;
     this.context = context;
     this.downloadInstallEventConverter = downloadInstallEventConverter;
+
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
   }
 
   @Override public void send() {
     if (isReadyToSend()) {
-      DownloadAnalyticsRequest.of(new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-              DataProvider.getContext()).getAptoideClientUUID(), AptoideAccountManager.getAccessToken(),
+      DownloadAnalyticsRequest.of(aptoideClientUUID.getUniqueIdentifier(),
+          AptoideAccountManager.getAccessToken(),
           downloadInstallEventConverter.convert(this, resultStatus, error), action.name(), name,
           context.name())
           .observe()
@@ -64,12 +70,12 @@ public @EqualsAndHashCode(callSuper = false) @Data @ToString class DownloadInsta
     }
   }
 
-  public void setError(Throwable error) {
-    this.error = error;
-  }
-
   @CallSuper public boolean isReadyToSend() {
     return resultStatus != null;
+  }
+
+  public void setError(Throwable error) {
+    this.error = error;
   }
 
   public enum Action {

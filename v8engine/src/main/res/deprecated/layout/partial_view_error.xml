@@ -5,9 +5,9 @@
   -->
 
 <ScrollView
-    android:id="@+id/generic_error"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/generic_error"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:layout_gravity="center_horizontal"
@@ -31,7 +31,6 @@
 
     <TextView
         android:id="@+id/error_text"
-        style="?android:textAppearanceMedium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -40,16 +39,17 @@
         android:text="@string/error503"
         android:textColor="?attr/customColor"
         android:textStyle="bold"
+        style="?android:textAppearanceMedium"
         />
 
     <TextView
         android:id="@+id/error_text2"
-        style="?android:textAppearanceMedium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:gravity="center_horizontal"
         android:text="@string/having_some_trouble"
+        style="?android:textAppearanceMedium"
         />
 
     <TextView

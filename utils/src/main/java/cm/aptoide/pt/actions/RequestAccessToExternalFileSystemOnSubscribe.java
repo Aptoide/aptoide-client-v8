@@ -11,12 +11,11 @@ import rx.Subscriber;
 /**
  * Created by marcelobenites on 7/25/16.
  */
-public class RequestAccessToExternalFileSystemOnSubscribe
-    implements Observable.OnSubscribe<Void> {
+public class RequestAccessToExternalFileSystemOnSubscribe implements Observable.OnSubscribe<Void> {
 
-  private final PermissionRequest permissionRequest;
+  private final PermissionService permissionRequest;
 
-  public RequestAccessToExternalFileSystemOnSubscribe(PermissionRequest permissionRequest) {
+  public RequestAccessToExternalFileSystemOnSubscribe(PermissionService permissionRequest) {
     this.permissionRequest = permissionRequest;
   }
 

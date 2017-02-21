@@ -21,10 +21,6 @@ public class AccountManagerUtils {
     return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
   }
 
-  public static int getSdkVer() {
-    return Build.VERSION.SDK_INT;
-  }
-
   @TargetApi(Build.VERSION_CODES.LOLLIPOP) @SuppressWarnings("deprecation")
   public static String getAbis() {
     final String[] abis = getSdkVer() >= 21 ? Build.SUPPORTED_ABIS : new String[] {
@@ -38,6 +34,10 @@ public class AccountManagerUtils {
       }
     }
     return builder.toString();
+  }
+
+  public static int getSdkVer() {
+    return Build.VERSION.SDK_INT;
   }
 
   public static int getNumericScreenSize(Context context) {

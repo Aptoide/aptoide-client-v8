@@ -141,8 +141,4 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
       dialogPermissions.show(getContext().getSupportFragmentManager(), "");
     });
   }
-
-  @Override public void unbindView() {
-
-  }
 }

@@ -9,14 +9,13 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import cm.aptoide.pt.actions.PermissionRequest;
+import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Event;
-import cm.aptoide.pt.v8engine.Progress;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.implementations.HomeFragment;
@@ -24,7 +23,6 @@ import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdatesHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import java.util.ArrayList;
-import rx.Observable;
 import rx.schedulers.Schedulers;
 
 /**
@@ -76,7 +74,7 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
     });
     */
     more.setOnClickListener((view) -> {
-      ((PermissionRequest) getContext()).requestAccessToExternalFileSystem(() -> {
+      ((PermissionService) getContext()).requestAccessToExternalFileSystem(() -> {
         UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
         compositeSubscription.add(
             updateAccessor.getAll(false)
@@ -90,13 +88,8 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
                   }
                   return downloadList;
                 })
-                .flatMapIterable(downloads -> downloads)
-                .map(download -> displayable.getInstallManager()
-                    .install(UpdatesHeaderWidget.this.getContext(), download)
-                    .doOnSubscribe(() -> displayable.setupDownloadEvent(download)))
-                .toList()
-                .flatMap(observables -> Observable.merge(observables))
-                .filter(downloading -> downloading.getState() == Progress.DONE)
+                .flatMap(downloads -> displayable.getInstallManager()
+                    .startInstalls(downloads, getContext()))
                 .subscribe(aVoid -> Logger.i(TAG, "Update task completed"),
                     throwable -> throwable.printStackTrace()));
       }, () -> {

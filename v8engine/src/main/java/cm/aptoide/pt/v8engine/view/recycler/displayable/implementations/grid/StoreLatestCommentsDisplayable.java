@@ -9,8 +9,8 @@ import java.util.List;
 public class StoreLatestCommentsDisplayable extends Displayable {
 
   private final long storeId;
-  private String storeName;
   private final List<Comment> comments;
+  private String storeName;
 
   public StoreLatestCommentsDisplayable() {
     this.storeId = -1;
@@ -31,12 +31,12 @@ public class StoreLatestCommentsDisplayable extends Displayable {
     return storeId;
   }
 
-  @Override public int getViewLayout() {
-    return R.layout.displayable_grid_latest_store_comments;
-  }
-
   @Override protected Configs getConfig() {
     return new Configs(1, true);
+  }
+
+  @Override public int getViewLayout() {
+    return R.layout.displayable_grid_latest_store_comments;
   }
 
   public String getStoreName() {

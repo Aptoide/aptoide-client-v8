@@ -35,10 +35,41 @@ public final class MultiDexHelper {
   private static final String PREFS_FILE = "multidex.version";
   private static final String KEY_DEX_NUMBER = "dex.number";
 
-  private static SharedPreferences getMultiDexPreferences(Context context) {
-    return context.getSharedPreferences(PREFS_FILE,
-        Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB ? Context.MODE_PRIVATE
-            : Context.MODE_PRIVATE | Context.MODE_MULTI_PROCESS);
+  /**
+   * get all the classes name in "classes.dex", "classes2.dex", ....
+   *
+   * @param context the application context
+   * @return all the classes name
+   * @throws PackageManager.NameNotFoundException
+   * @throws IOException
+   */
+  public static List<Map.Entry<String, String>> getAllClasses(Context context)
+      throws PackageManager.NameNotFoundException, IOException {
+    List<Map.Entry<String, String>> classNames = new ArrayList<>();
+    for (String path : getSourcePaths(context)) {
+      DexFile dexfile = null;
+      try {
+        if (path.endsWith(EXTRACTED_SUFFIX)) {
+          //NOT use new DexFile(path), because it will throw "permission error in
+          // /data/dalvik-cache"
+          dexfile = DexFile.loadDex(path, path + ".tmp", 0);
+        } else {
+          dexfile = new DexFile(path);
+        }
+        Enumeration<String> dexEntries = dexfile.entries();
+        while (dexEntries.hasMoreElements()) {
+          classNames.add(new AbstractMap.SimpleImmutableEntry<>(dexEntries.nextElement(), path));
+        }
+      } catch (IOException e) {
+        throw new IOException("Error at loading dex file '" +
+            path + "'");
+      } finally {
+        if (dexfile != null) {
+          dexfile.close();
+        }
+      }
+    }
+    return classNames;
   }
 
   /**
@@ -80,40 +111,9 @@ public final class MultiDexHelper {
     return sourcePaths;
   }
 
-  /**
-   * get all the classes name in "classes.dex", "classes2.dex", ....
-   *
-   * @param context the application context
-   * @return all the classes name
-   * @throws PackageManager.NameNotFoundException
-   * @throws IOException
-   */
-  public static List<Map.Entry<String, String>> getAllClasses(Context context)
-      throws PackageManager.NameNotFoundException, IOException {
-    List<Map.Entry<String, String>> classNames = new ArrayList<>();
-    for (String path : getSourcePaths(context)) {
-      DexFile dexfile = null;
-      try {
-        if (path.endsWith(EXTRACTED_SUFFIX)) {
-          //NOT use new DexFile(path), because it will throw "permission error in
-          // /data/dalvik-cache"
-          dexfile = DexFile.loadDex(path, path + ".tmp", 0);
-        } else {
-          dexfile = new DexFile(path);
-        }
-        Enumeration<String> dexEntries = dexfile.entries();
-        while (dexEntries.hasMoreElements()) {
-          classNames.add(new AbstractMap.SimpleImmutableEntry<>(dexEntries.nextElement(), path));
-        }
-      } catch (IOException e) {
-        throw new IOException("Error at loading dex file '" +
-            path + "'");
-      } finally {
-        if (dexfile != null) {
-          dexfile.close();
-        }
-      }
-    }
-    return classNames;
+  private static SharedPreferences getMultiDexPreferences(Context context) {
+    return context.getSharedPreferences(PREFS_FILE,
+        Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB ? Context.MODE_PRIVATE
+            : Context.MODE_PRIVATE | Context.MODE_MULTI_PROCESS);
   }
 }

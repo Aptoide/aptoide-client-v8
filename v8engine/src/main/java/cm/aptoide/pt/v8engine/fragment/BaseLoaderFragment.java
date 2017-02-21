@@ -5,10 +5,6 @@
 
 package cm.aptoide.pt.v8engine.fragment;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.IdRes;
@@ -18,6 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.annotation.Partners;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.interfaces.LoadInterface;
 import cm.aptoide.pt.v8engine.layouthandler.LoaderLayoutHandler;
 import lombok.Getter;
@@ -25,40 +23,30 @@ import lombok.Getter;
 /**
  * Created by neuro on 16-04-2016.
  */
-public abstract class BaseLoaderFragment extends SupportV4BaseFragment implements LoadInterface {
+public abstract class BaseLoaderFragment extends UIComponentFragment implements LoadInterface {
 
   private LoaderLayoutHandler loaderLayoutHandler;
   @Getter private boolean create = true;
-  private BroadcastReceiver receiver;
 
   @CallSuper @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     load(create, false, savedInstanceState);
-
-    registerReceiverForAccountManager();
   }
 
-  @CallSuper @Nullable @Override
+  @Partners @CallSuper @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     loaderLayoutHandler = createLoaderLayoutHandler();
     return super.onCreateView(inflater, container, savedInstanceState);
   }
 
-  protected void registerReceiverForAccountManager() {
-    receiver = new BroadcastReceiver() {
-      @Override public void onReceive(Context context, Intent intent) {
-        load(false, true, null);
-      }
-    };
-    IntentFilter intentFilter = new IntentFilter(AptoideAccountManager.LOGIN);
-    intentFilter.addAction(AptoideAccountManager.LOGOUT);
-    getContext().registerReceiver(receiver, intentFilter);
+  @NonNull protected LoaderLayoutHandler createLoaderLayoutHandler() {
+    return new LoaderLayoutHandler(getViewToShowAfterLoadingId(), this);
   }
 
-  private void unregisterReceiverForAccountManager() {
-    getContext().unregisterReceiver(receiver);
-  }
+  @IdRes protected abstract int getViewToShowAfterLoadingId();
+
+  public abstract void load(boolean create, boolean refresh, Bundle savedInstanceState);
 
   @CallSuper @Override public void bindViews(View view) {
     if (loaderLayoutHandler != null) {
@@ -66,6 +54,12 @@ public abstract class BaseLoaderFragment extends SupportV4BaseFragment implement
     }
     if (!create) {
       finishLoading();
+    }
+  }
+
+  @Partners @CallSuper protected void finishLoading() {
+    if (loaderLayoutHandler != null) {
+      loaderLayoutHandler.finishLoading();
     }
   }
 
@@ -80,26 +74,12 @@ public abstract class BaseLoaderFragment extends SupportV4BaseFragment implement
       loaderLayoutHandler.unbindViews();
       loaderLayoutHandler = null;
     }
-    unregisterReceiverForAccountManager();
   }
 
-  @NonNull protected LoaderLayoutHandler createLoaderLayoutHandler() {
-    return new LoaderLayoutHandler(getViewToShowAfterLoadingId(), this);
-  }
-
-  @IdRes protected abstract int getViewToShowAfterLoadingId();
-
-  @CallSuper protected void finishLoading() {
-    if (loaderLayoutHandler != null) {
-      loaderLayoutHandler.finishLoading();
-    }
-  }
-
-  @CallSuper protected void finishLoading(Throwable throwable) {
+  @Partners @CallSuper protected void finishLoading(Throwable throwable) {
     if (loaderLayoutHandler != null) {
       loaderLayoutHandler.finishLoading(throwable);
     }
+    CrashReport.getInstance().log(throwable);
   }
-
-  public abstract void load(boolean create, boolean refresh, Bundle savedInstanceState);
 }

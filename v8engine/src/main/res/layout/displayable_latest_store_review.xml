@@ -4,10 +4,10 @@
   ~ Modified by SithEngineer on 02/08/2016.
   -->
 
-<RelativeLayout style="?attr/backgroundCard"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    style="?attr/backgroundCard"
     >
 
 
@@ -16,6 +16,7 @@
       android:layout_width="96dp"
       android:layout_height="96dp"
       android:layout_alignParentLeft="true"
+      android:layout_alignParentStart="true"
       android:layout_centerVertical="true"
       android:layout_margin="5dp"
       />
@@ -25,8 +26,10 @@
       android:id="@+id/score"
       android:layout_width="37dp"
       android:layout_height="37dp"
+      android:layout_alignParentEnd="true"
       android:layout_alignParentRight="true"
       android:layout_alignTop="@id/app_icon"
+      android:layout_marginEnd="5dp"
       android:layout_marginRight="5dp"
       android:background="@drawable/rating_shape"
       >
@@ -47,21 +50,23 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_alignTop="@id/app_icon"
+      android:layout_toEndOf="@id/app_icon"
       android:layout_toLeftOf="@id/score"
       android:layout_toRightOf="@id/app_icon"
+      android:layout_toStartOf="@id/score"
       android:gravity="center_vertical"
       >
 
 
     <TextView
         android:id="@+id/app_name"
-        style="?android:attr/textAppearanceMedium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="2dp"
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:maxLines="1"
+        style="?android:attr/textAppearanceMedium"
         />
 
     <LinearLayout
@@ -84,6 +89,7 @@
           android:layout_width="match_parent"
           android:layout_height="match_parent"
           android:layout_marginLeft="10dp"
+          android:layout_marginStart="10dp"
           android:gravity="center_vertical"
           android:maxLines="1"
           android:textSize="12sp"
@@ -98,6 +104,7 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:layout_below="@id/content"
+      android:layout_toEndOf="@id/app_icon"
       android:layout_toRightOf="@id/app_icon"
       android:ellipsize="end"
       android:gravity="center_vertical"

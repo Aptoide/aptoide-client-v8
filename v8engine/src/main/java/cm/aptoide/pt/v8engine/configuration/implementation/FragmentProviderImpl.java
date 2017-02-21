@@ -132,14 +132,15 @@ public class FragmentProviderImpl implements FragmentProvider {
   }
 
   @Override
-  public Fragment newStoreTabGridRecyclerFragment(Event event, String storeTheme, String tag) {
-    return StoreTabGridRecyclerFragment.newInstance(event, storeTheme, tag);
+  public Fragment newStoreTabGridRecyclerFragment(Event event, String storeTheme, String tag,
+      StoreContext storeContext) {
+    return StoreTabGridRecyclerFragment.newInstance(event, storeTheme, tag, storeContext);
   }
 
   @Override
   public Fragment newStoreTabGridRecyclerFragment(Event event, String title, String storeTheme,
-      String tag) {
-    return StoreTabGridRecyclerFragment.newInstance(event, title, storeTheme, tag);
+      String tag, StoreContext storeContext) {
+    return StoreTabGridRecyclerFragment.newInstance(event, title, storeTheme, tag, storeContext);
   }
 
   @Override public Fragment newListAppsFragment() {
@@ -234,6 +235,11 @@ public class FragmentProviderImpl implements FragmentProvider {
     return DescriptionFragment.newInstance(appId, packageName, storeName, storeTheme);
   }
 
+  @Override
+  public Fragment newDescriptionFragment(String appName, String description, String storeTheme) {
+    return DescriptionFragment.newInstance(appName, description, storeTheme);
+  }
+
   @Override public Fragment newSocialFragment(String socialUrl, String pageTitle) {
     return SocialFragment.newInstance(socialUrl, pageTitle);
   }
@@ -252,13 +258,18 @@ public class FragmentProviderImpl implements FragmentProvider {
     return TimeLineFollowFragment.newInstance(openMode, followNumber, storeTheme);
   }
 
+  @Override public Fragment newTimeLineFollowStatsFragment(
+      TimeLineFollowFragment.FollowFragmentOpenMode openMode, String storeTheme, String cardUid,
+      long numberOfLikes) {
+    return TimeLineFollowFragment.newInstance(openMode, storeTheme, cardUid, numberOfLikes);
+  }
+
   @Override
   public Fragment newCommentGridRecyclerFragment(CommentType commentType, String elementId) {
     return CommentListFragment.newInstance(commentType, elementId);
   }
 
-  @Override
-  public Fragment newCommentGridRecyclerFragmentUrl(CommentType commentType, String url) {
+  @Override public Fragment newCommentGridRecyclerFragmentUrl(CommentType commentType, String url) {
     return CommentListFragment.newInstanceUrl(commentType, url);
   }
 }

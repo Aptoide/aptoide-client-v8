@@ -30,7 +30,6 @@
 
   <RatingBar
       android:id="@+id/rating_bar"
-      style="@style/RatingBarReviewDialog"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center"
@@ -40,6 +39,7 @@
       android:numStars="5"
       android:rating="3.0"
       android:stepSize="1.0"
+      style="@style/RatingBarReviewDialog"
       />
 
   <TextView

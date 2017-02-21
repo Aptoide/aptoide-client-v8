@@ -2,15 +2,17 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FeatureDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import com.jakewharton.rxbinding.view.RxView;
 
 /**
  * Created by marcelobenites on 6/21/16.
@@ -23,7 +25,7 @@ public class FeatureWidget extends Widget<FeatureDisplayable> {
   private TextView articleTitle;
   private ImageView thumbnail;
   private View url;
-  private Button getAppButton;
+  //private Button getAppButton;
   private CardView cardView;
 
   public FeatureWidget(View itemView) {
@@ -37,24 +39,24 @@ public class FeatureWidget extends Widget<FeatureDisplayable> {
     articleTitle = (TextView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_title);
     thumbnail = (ImageView) itemView.findViewById(R.id.partial_social_timeline_thumbnail_image);
     url = itemView.findViewById(R.id.partial_social_timeline_thumbnail);
-    getAppButton =
-        (Button) itemView.findViewById(R.id.partial_social_timeline_thumbnail_get_app_button);
+    //getAppButton =
+    //    (Button) itemView.findViewById(R.id.partial_social_timeline_thumbnail_get_app_button);
     cardView = (CardView) itemView.findViewById(R.id.card);
   }
 
   @Override public void bindView(FeatureDisplayable displayable) {
-    title.setText(displayable.getTitle(getContext()));
-    subtitle.setText(displayable.getTimeSinceLastUpdate(getContext()));
+    final FragmentActivity context = getContext();
+    title.setText(displayable.getTitle(context));
+    subtitle.setText(displayable.getTimeSinceLastUpdate(context));
     articleTitle.setText(displayable.getTitleResource());
     setCardviewMargin(displayable);
-    ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarResource(), image);
-    ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
+    ImageLoader.with(context).loadWithShadowCircleTransform(displayable.getAvatarResource(), image);
+    ImageLoader.with(context).load(displayable.getThumbnailUrl(), thumbnail);
 
-    url.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(displayable.getUrl())));
-      }
-    });
+    compositeSubscription.add(RxView.clicks(url)
+        .subscribe(v -> context.startActivity(
+            new Intent(Intent.ACTION_VIEW, Uri.parse(displayable.getUrl()))),
+            throwable -> CrashReport.getInstance().log(throwable)));
   }
 
   private void setCardviewMargin(FeatureDisplayable displayable) {
@@ -66,10 +68,5 @@ public class FeatureWidget extends Widget<FeatureDisplayable> {
         displayable.getMarginWidth(getContext(),
             getContext().getResources().getConfiguration().orientation), 30);
     cardView.setLayoutParams(layoutParams);
-  }
-
-  @Override public void unbindView() {
-    url.setOnClickListener(null);
-    getAppButton.setOnClickListener(null);
   }
 }

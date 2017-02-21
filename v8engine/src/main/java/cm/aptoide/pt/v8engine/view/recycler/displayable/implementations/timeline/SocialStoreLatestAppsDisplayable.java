@@ -24,7 +24,6 @@ public class SocialStoreLatestAppsDisplayable extends SocialCardDisplayable {
   @Getter private String avatarUrl;
   @Getter private List<SocialStoreLatestAppsDisplayable.LatestApp> latestApps;
   @Getter private String abTestingUrl;
-  @Getter private Store store;
   @Getter private Store sharedStore;
   @Getter private Comment.User user;
   @Getter private Comment.User userSharer;
@@ -32,7 +31,6 @@ public class SocialStoreLatestAppsDisplayable extends SocialCardDisplayable {
 
   private DateCalculator dateCalculator;
 
-  //private Date latestUpdate;
   private TimelineMetricsManager timelineMetricsManager;
   private SocialRepository socialRepository;
 
@@ -45,19 +43,18 @@ public class SocialStoreLatestAppsDisplayable extends SocialCardDisplayable {
       long likes, long comments, DateCalculator dateCalculator,
       TimelineMetricsManager timelineMetricsManager, SocialRepository socialRepository,
       SpannableFactory spannableFactory) {
-    super(socialStoreLatestApps, likes, comments, socialStoreLatestApps.getUser(),
-        socialStoreLatestApps.getUserSharer(), socialStoreLatestApps.getDate(), spannableFactory,
-        dateCalculator);
+    super(socialStoreLatestApps, likes, comments, socialStoreLatestApps.getOwnerStore(),
+        socialStoreLatestApps.getUser(), socialStoreLatestApps.getUserSharer(),
+        socialStoreLatestApps.getMy().isLiked(), socialStoreLatestApps.getLikes(),
+        socialStoreLatestApps.getDate(), spannableFactory, dateCalculator);
     this.storeName = storeName;
-    socialStoreLatestApps.getSharedStore().getId();
+    //socialStoreLatestApps.getSharedStore().getId();
     this.avatarUrl = avatarUrl;
     this.latestApps = latestApps;
     this.abTestingUrl = abTestingUrl;
     this.dateCalculator = dateCalculator;
-    //this.latestUpdate = latestUpdate;
     this.timelineMetricsManager = timelineMetricsManager;
     this.socialRepository = socialRepository;
-    this.store = socialStoreLatestApps.getOwnerStore();
     this.sharedStore = socialStoreLatestApps.getSharedStore();
     this.user = socialStoreLatestApps.getUser();
     this.userSharer = socialStoreLatestApps.getUserSharer();
@@ -89,8 +86,8 @@ public class SocialStoreLatestAppsDisplayable extends SocialCardDisplayable {
 
     // TODO: 22/12/2016 socialStoreLatestApps.getLatestUpdate() 
     return new SocialStoreLatestAppsDisplayable(socialStoreLatestApps, ownerStoreName,
-        ownerStoreAvatar, latestApps, abTestingURL, socialStoreLatestApps.getLikes(),
-        socialStoreLatestApps.getComments(), dateCalculator, timelineMetricsManager,
+        ownerStoreAvatar, latestApps, abTestingURL, socialStoreLatestApps.getStats().getLikes(),
+        socialStoreLatestApps.getStats().getComments(), dateCalculator, timelineMetricsManager,
         socialRepository, spannableFactory);
   }
 

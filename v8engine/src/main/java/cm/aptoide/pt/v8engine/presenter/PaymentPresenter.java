@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.presenter;
 
 import android.os.Bundle;
 import cm.aptoide.pt.v8engine.payment.AptoidePay;
+import cm.aptoide.pt.v8engine.payment.Authorization;
 import cm.aptoide.pt.v8engine.payment.Payer;
 import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
@@ -15,6 +16,7 @@ import cm.aptoide.pt.v8engine.payment.products.AptoideProduct;
 import cm.aptoide.pt.v8engine.repository.ProductRepository;
 import cm.aptoide.pt.v8engine.view.PaymentView;
 import cm.aptoide.pt.v8engine.view.View;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.security.auth.login.LoginException;
@@ -58,23 +60,28 @@ public class PaymentPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> View.LifecycleEvent.RESUME.equals(event))
         .flatMap(resumed -> Observable.merge(paymentUseSelection(), otherPaymentsSelection(),
-            cancellationSelection()))
-        .retry()
+            cancellationSelection()).retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
 
     view.getLifecycle()
         .filter(event -> View.LifecycleEvent.CREATE.equals(event))
-        .flatMap(created -> Observable.merge(buySelection(), paymentRegisterSelection()))
+        .flatMap(created -> Observable.merge(buySelection(), paymentRegisterSelection())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnError(throwable -> hideGlobalAndPaymentsLoadingAndShowError(throwable))
+            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(selected -> {
-        }, throwable -> hideGlobalAndPaymentsLoadingAndDismiss(throwable));
+        .subscribe();
+
+    view.getLifecycle()
+        .filter(event -> View.LifecycleEvent.DESTROY.equals(event))
+        .doOnNext(destroyed -> view.hideAllErrors())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe();
 
     view.getLifecycle()
         .filter(event -> View.LifecycleEvent.CREATE.equals(event))
         .flatMap(created -> login())
-        .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(loggedIn -> showGlobalAndPaymentsLoading())
         .flatMap(loggedIn -> Observable.merge(aptoidePay.getConfirmation(product),
             loadPayments().cast(PaymentConfirmation.class)))
@@ -89,7 +96,9 @@ public class PaymentPresenter implements Presenter {
           }
 
           if (paymentConfirmation.isCompleted()) {
-            return productRepository.getPurchase(product).toObservable();
+            return productRepository.getPurchase(product)
+                .toObservable()
+                .observeOn(AndroidSchedulers.mainThread());
           }
           return Observable.empty();
         })
@@ -166,18 +175,23 @@ public class PaymentPresenter implements Presenter {
   private Observable<Void> paymentRegisterSelection() {
     return view.registerPaymentSelection()
         .doOnNext(selection -> view.showGlobalLoading())
-        .flatMap(paymentViewModel -> getSelectedPayment(getAllPayments(),
-            paymentViewModel))
-        .<Void>flatMap(payment -> aptoidePay.authorize(payment)
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnCompleted(() -> view.hideGlobalLoading())
-              .toObservable());
+        .flatMap(paymentViewModel -> getSelectedPayment(getAllPayments(), paymentViewModel))
+        .map(payment -> payment.getAuthorization()).<Void>flatMap(authorization -> {
+          return aptoidePay.initiate(authorization)
+              .observeOn(AndroidSchedulers.mainThread())
+              .doOnCompleted(() -> hideGlobalLoadingAndNavigateToAuthorizationView(authorization))
+              .toObservable();
+        });
+  }
+
+  private void hideGlobalLoadingAndNavigateToAuthorizationView(Authorization authorization) {
+    view.hideGlobalLoading();
+    view.navigateToAuthorizationView(authorization.getPaymentId(), product);
   }
 
   private Observable<Void> buySelection() {
-    return view.buySelection()
-        .doOnNext(payment -> view.showGlobalLoading())
-        .flatMap(payment -> aptoidePay.process(selectedPayment).toObservable());
+    return view.buySelection().doOnNext(payment -> view.showGlobalLoading()).<Void>flatMap(
+        payment -> aptoidePay.process(selectedPayment).toObservable());
   }
 
   private Observable<Void> otherPaymentsSelection() {
@@ -220,8 +234,8 @@ public class PaymentPresenter implements Presenter {
 
   private PaymentView.PaymentViewModel convertToPaymentViewModel(Payment payment) {
     return new PaymentView.PaymentViewModel(payment.getId(), payment.getName(),
-        payment.getDescription(), payment.getPrice().getAmount(), payment.getPrice().getCurrencySymbol(),
-        getPaymentViewStatus(payment));
+        payment.getDescription(), payment.getPrice().getAmount(),
+        payment.getPrice().getCurrencySymbol(), getPaymentViewStatus(payment));
   }
 
   private PaymentView.PaymentViewModel.Status getPaymentViewStatus(Payment payment) {
@@ -260,10 +274,7 @@ public class PaymentPresenter implements Presenter {
     if (selectedPayment != null && selectedPayment.getId() == payment.getId()) {
       return true;
     }
-    if (selectedPayment == null && payment.getId() == 1) { // PayPal
-      return true;
-    }
-    return false;
+    return selectedPayment == null && payment.getId() == 1;
   }
 
   private void showGlobalAndPaymentsLoading() {
@@ -275,6 +286,17 @@ public class PaymentPresenter implements Presenter {
     view.hideGlobalLoading();
     view.hidePaymentsLoading();
     view.dismiss(throwable);
+  }
+
+  private void hideGlobalAndPaymentsLoadingAndShowError(Throwable throwable) {
+    view.hideGlobalLoading();
+    view.hidePaymentsLoading();
+
+    if (throwable instanceof IOException) {
+      view.showNetworkError();
+    } else {
+      view.showUnknownError();
+    }
   }
 
   private void hideGlobalAndPaymentsLoadingAndDismiss(Purchase purchase) {

@@ -7,9 +7,6 @@ package cm.aptoide.pt.networkclient;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
-import cm.aptoide.pt.networkclient.okhttp.UserAgentInterceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 
 /**
  * <a href="http://d.android.com/tools/testing/testing_android.html">Testing Fundamentals</a>

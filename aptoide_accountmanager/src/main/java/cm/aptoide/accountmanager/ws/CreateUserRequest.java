@@ -52,12 +52,6 @@ public class CreateUserRequest extends v3accountManager<OAuth> {
     return new CreateUserRequest(getHttpClient(), email, password, aptoideClientUUID);
   }
 
-  public static CreateUserRequest of(String update, String email, String name, String password,
-      String userAvatarPath, String aptoideClientUUID) {
-    return new CreateUserRequest(getHttpClient(), email, password, name, update, userAvatarPath,
-        aptoideClientUUID);
-  }
-
   private static OkHttpClient getHttpClient() {
     OkHttpClient.Builder clientBuilder =
         OkHttpClientFactory.newClient(() -> AptoideAccountManager.getAccessToken()).newBuilder();
@@ -67,28 +61,14 @@ public class CreateUserRequest extends v3accountManager<OAuth> {
     return clientBuilder.build();
   }
 
-  private RequestBody createBodyPartFromString(String string) {
-    return RequestBody.create(MediaType.parse("multipart/form-data"), string);
-  }
-
-  public String getEmail() {
-    return email;
+  public static CreateUserRequest of(String update, String email, String name, String password,
+      String userAvatarPath, String aptoideClientUUID) {
+    return new CreateUserRequest(getHttpClient(), email, password, name, update, userAvatarPath,
+        aptoideClientUUID);
   }
 
   public String getPassword() {
     return password;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public String getUpdate() {
-    return update;
-  }
-
-  public String getUserAvatarPath() {
-    return userAvatarPath;
   }
 
   @Override
@@ -151,5 +131,25 @@ public class CreateUserRequest extends v3accountManager<OAuth> {
           AptoideUtils.AlgorithmU.computeHmacSha1(email + passhash + name, "bazaar_hmac"));
     }
     return interfaces.createUser(parameters);
+  }
+
+  public String getUserAvatarPath() {
+    return userAvatarPath;
+  }
+
+  private RequestBody createBodyPartFromString(String string) {
+    return RequestBody.create(MediaType.parse("multipart/form-data"), string);
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public String getUpdate() {
+    return update;
   }
 }

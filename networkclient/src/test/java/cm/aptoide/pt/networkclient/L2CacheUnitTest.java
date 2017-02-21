@@ -1,8 +1,8 @@
 package cm.aptoide.pt.networkclient;
 
-import cm.aptoide.pt.crashreports.CrashReports;
-import cm.aptoide.pt.networkclient.okhttp.cache.Sha1KeyAlgorithm;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.networkclient.okhttp.cache.L2Cache;
+import cm.aptoide.pt.networkclient.okhttp.cache.Sha1KeyAlgorithm;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Vector;
@@ -30,8 +30,7 @@ public class L2CacheUnitTest {
 
   private static Vector<Request> usedRequests;
 
-  @BeforeClass
-  public static void init() {
+  @BeforeClass public static void init() {
     cache = new L2Cache(new Sha1KeyAlgorithm());
     usedRequests = new Vector<>(2);
 
@@ -61,8 +60,7 @@ public class L2CacheUnitTest {
     response = responseBuilder.build();
   }
 
-  @AfterClass
-  public static void destroy() {
+  @AfterClass public static void destroy() {
     cache.destroy();
     usedRequests.clear();
     usedRequests = null;
@@ -71,15 +69,13 @@ public class L2CacheUnitTest {
     response = null;
   }
 
-  @Before
-  public void emptyCacheBeforeEachTest() {
+  @Before public void emptyCacheBeforeEachTest() {
     for (Request req : usedRequests) {
       cache.remove(req);
     }
   }
 
-  @Test(timeout = 300)
-  public void putShouldNotBeNull() {
+  @Test(timeout = 300) public void putShouldNotBeNull() {
     usedRequests.add(request);
     cache.put(request, response);
     Response resp1 = cache.get(request);
@@ -89,14 +85,12 @@ public class L2CacheUnitTest {
       assertEquals("stored response body after put() is not the same",
           response.body().source().readString(charset), resp1.body().source().readString(charset));
     } catch (Exception e) {
-      CrashReports.logException(e);
-      e.printStackTrace();
+      CrashReport.getInstance().log(e);
       fail();
     }
   }
 
-  @Test(timeout = 300)
-  public void simpleGet() throws IOException {
+  @Test(timeout = 300) public void simpleGet() throws IOException {
     usedRequests.add(request);
     cache.put(request, response);
     Response cachedResponse = cache.get(request);
@@ -112,14 +106,12 @@ public class L2CacheUnitTest {
       assertEquals("response body content after get() is not the same", expectedResponseBodyData,
           currentData);
     } catch (Exception e) {
-      CrashReports.logException(e);
-      e.printStackTrace();
+      CrashReport.getInstance().log(e);
       fail();
     }
   }
 
-  @Test(timeout = 300)
-  public void cacheControlInvalidatedResponse() throws InterruptedException {
+  @Test(timeout = 300) public void cacheControlInvalidatedResponse() throws InterruptedException {
     Response response2 = response.newBuilder().header("Cache-Control", "max-age=0").build();
 
     usedRequests.add(request);

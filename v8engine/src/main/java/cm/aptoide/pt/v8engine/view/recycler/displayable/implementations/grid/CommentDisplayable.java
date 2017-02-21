@@ -19,12 +19,12 @@ public class CommentDisplayable extends Displayable {
     this.comment = null;
   }
 
-  @Override public int getViewLayout() {
-    return R.layout.comment_layout;
-  }
-
   @Override protected Configs getConfig() {
     return new Configs(1, true);
+  }
+
+  @Override public int getViewLayout() {
+    return R.layout.comment_layout;
   }
 
   public Comment getComment() {

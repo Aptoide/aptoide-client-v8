@@ -8,10 +8,10 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 import android.content.Context;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Rollback;
+import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.install.Installer;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 import rx.Observable;
@@ -39,16 +39,21 @@ public class RollbackDisplayable extends DisplayablePojo<Rollback> {
     return new DownloadFactory().create(getPojo());
   }
 
-  @Override public int getViewLayout() {
-    return R.layout.rollback_row;
-  }
-
   @Override protected Configs getConfig() {
     return new Configs(1, false);
   }
 
-  public void install(FragmentShower context) {
-    openAppview(context);
+  @Override public int getViewLayout() {
+    return R.layout.rollback_row;
+  }
+
+  public void install(NavigationManagerV4 navigationManager) {
+    openAppview(navigationManager);
+  }
+
+  public void openAppview(NavigationManagerV4 navigationManager) {
+    navigationManager.navigateTo(
+        V8Engine.getFragmentProvider().newAppViewFragment(getPojo().getMd5()));
   }
 
   public Observable<Void> uninstall(Context context, Download appDownload) {
@@ -56,16 +61,11 @@ public class RollbackDisplayable extends DisplayablePojo<Rollback> {
         appDownload.getFilesToDownload().get(0).getPackageName(), appDownload.getVersionName());
   }
 
-  public void downgrade(FragmentShower context) {
-    openAppview(context);
+  public void downgrade(NavigationManagerV4 navigationManager) {
+    openAppview(navigationManager);
   }
 
-  public void update(FragmentShower context) {
-    openAppview(context);
-  }
-
-  public void openAppview(FragmentShower fragmentShower) {
-    fragmentShower.pushFragmentV4(
-        V8Engine.getFragmentProvider().newAppViewFragment(getPojo().getMd5()));
+  public void update(NavigationManagerV4 navigationManager) {
+    openAppview(navigationManager);
   }
 }

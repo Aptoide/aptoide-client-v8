@@ -8,11 +8,11 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
  */
 public class AdultRowDisplayable extends Displayable {
 
-  @Override public int getViewLayout() {
-    return R.layout.row_adult_switch;
-  }
-
   @Override protected Configs getConfig() {
     return new Configs(1, true);
+  }
+
+  @Override public int getViewLayout() {
+    return R.layout.row_adult_switch;
   }
 }

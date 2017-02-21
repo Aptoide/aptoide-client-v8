@@ -38,7 +38,8 @@ import com.jakewharton.rxbinding.view.RxView;
     if (moreIsVisible) {
       compositeSubscription.add(RxView.clicks(more).subscribe(a -> {
         getNavigationManager().navigateUsing(wsWidget.getActions().get(0).getEvent(),
-            displayable.getStoreTheme(), wsWidget.getTitle(), displayable.getTag());
+            displayable.getStoreTheme(), wsWidget.getTitle(), displayable.getTag(),
+            displayable.getStoreContext());
         Analytics.AppViewViewedFrom.addStepToList(wsWidget.getTag());
       }));
     }

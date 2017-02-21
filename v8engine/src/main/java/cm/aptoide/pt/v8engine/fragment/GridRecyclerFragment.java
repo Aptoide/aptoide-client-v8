@@ -6,7 +6,7 @@
 package cm.aptoide.pt.v8engine.fragment;
 
 import android.support.v7.widget.RecyclerView;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseGridLayoutManager;
@@ -33,19 +33,19 @@ public abstract class GridRecyclerFragment<T extends BaseAdapter>
     return R.id.recycler_view;
   }
 
+  @Override protected RecyclerView.LayoutManager createLayoutManager() {
+    return new BaseGridLayoutManager(getActivity(), getAdapter());
+  }
+
   @Override protected T createAdapter() {
     try {
       return (T) adapterClass.getConstructor().newInstance();
     } catch (Exception e) {
       e.printStackTrace();
-      CrashReports.logException(e);
+      CrashReport.getInstance().log(e);
     }
 
     // default case. code should never reach here
     return null;
-  }
-
-  @Override protected RecyclerView.LayoutManager createLayoutManager() {
-    return new BaseGridLayoutManager(getActivity(), adapter);
   }
 }

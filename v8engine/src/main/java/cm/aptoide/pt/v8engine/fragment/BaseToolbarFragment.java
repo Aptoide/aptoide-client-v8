@@ -10,12 +10,21 @@ import cm.aptoide.pt.v8engine.R;
 /**
  * Created by neuro on 06-05-2016.
  */
-public abstract class BaseToolbarFragment extends SupportV4BaseFragment {
+public abstract class BaseToolbarFragment extends UIComponentFragment {
 
   private Toolbar toolbar;
 
   protected Toolbar getToolbar() {
     return toolbar;
+  }
+
+  @Override public void onDestroyView() {
+    super.onDestroyView();
+    toolbar = null;
+  }
+
+  @Override public void setupViews() {
+    setupToolbar();
   }
 
   protected boolean hasToolbar() {
@@ -43,15 +52,6 @@ public abstract class BaseToolbarFragment extends SupportV4BaseFragment {
 
       setupToolbarDetails(toolbar);
     }
-  }
-
-  @Override public void onDestroyView() {
-    super.onDestroyView();
-    toolbar = null;
-  }
-
-  @Override public void setupViews() {
-    setupToolbar();
   }
 
   @Override public void bindViews(View view) {

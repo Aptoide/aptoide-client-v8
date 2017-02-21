@@ -20,6 +20,7 @@
       android:id="@+id/btn_close_screenshots_window"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_alignParentEnd="true"
       android:layout_alignParentRight="true"
       android:padding="10dp"
       android:src="@drawable/ic_close_btn"

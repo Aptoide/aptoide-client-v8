@@ -59,38 +59,34 @@ public class PayPalPaymentActivity extends AppCompatActivity {
     startActivityForResult(activityIntent, PAY_APP_REQUEST_CODE);
   }
 
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    stopService(serviceIntent);
+  }
+
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     if (requestCode == PAY_APP_REQUEST_CODE) {
-      final Intent result =
-          new Intent(PayPalPayment.PAYMENT_RESULT_ACTION);
+      final Intent result = new Intent(PayPalPayment.PAYMENT_RESULT_ACTION);
       switch (resultCode) {
         case Activity.RESULT_OK:
           sendBroadcast(
-              result.putExtra(PayPalPayment.PAYMENT_STATUS_EXTRA,
-                  PayPalPayment.PAYMENT_STATUS_OK)
+              result.putExtra(PayPalPayment.PAYMENT_STATUS_EXTRA, PayPalPayment.PAYMENT_STATUS_OK)
                   .putExtra(PayPalPayment.PAYMENT_CONFIRMATION_EXTRA,
                       (Parcelable) data.getParcelableExtra(
                           PaymentActivity.EXTRA_RESULT_CONFIRMATION)));
           break;
         case Activity.RESULT_CANCELED:
-          sendBroadcast(
-              result.putExtra(PayPalPayment.PAYMENT_STATUS_EXTRA,
-                  PayPalPayment.PAYMENT_STATUS_CANCELLED));
+          sendBroadcast(result.putExtra(PayPalPayment.PAYMENT_STATUS_EXTRA,
+              PayPalPayment.PAYMENT_STATUS_CANCELLED));
           break;
         case PaymentActivity.RESULT_EXTRAS_INVALID:
         default:
-          sendBroadcast(
-              result.putExtra(PayPalPayment.PAYMENT_STATUS_EXTRA,
-                  PayPalPayment.PAYMENT_STATUS_FAILED));
+          sendBroadcast(result.putExtra(PayPalPayment.PAYMENT_STATUS_EXTRA,
+              PayPalPayment.PAYMENT_STATUS_FAILED));
           break;
       }
       finish();
     }
-  }
-
-  @Override protected void onDestroy() {
-    super.onDestroy();
-    stopService(serviceIntent);
   }
 }

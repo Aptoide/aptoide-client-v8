@@ -4,8 +4,8 @@
   ~ Modified by Neurophobic Animal on 07/06/2016.
   -->
 
-<ScrollView android:id="@+id/no_search_results_layout"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/no_search_results_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:visibility="gone"
@@ -40,8 +40,10 @@
           android:id="@+id/search_text"
           android:layout_width="250dp"
           android:layout_height="50dp"
+          android:layout_marginEnd="5dp"
           android:layout_marginLeft="5dp"
           android:layout_marginRight="5dp"
+          android:layout_marginStart="5dp"
           android:background="@null"
           android:imeOptions="actionSearch"
           android:inputType="text"
@@ -52,8 +54,10 @@
           android:layout_width="60dp"
           android:layout_height="50dp"
           android:background="@drawable/search_button_shape_layout"
+          android:paddingEnd="15dp"
           android:paddingLeft="15dp"
           android:paddingRight="15dp"
+          android:paddingStart="15dp"
           android:scaleType="fitCenter"
           android:src="@drawable/ic_search_icon"
           />

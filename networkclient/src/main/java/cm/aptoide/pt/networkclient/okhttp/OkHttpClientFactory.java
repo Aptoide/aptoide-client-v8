@@ -30,26 +30,6 @@ public class OkHttpClientFactory {
   private static OkHttpClient httpClientInstance;
   private static L2Cache cache;
 
-  static OkHttpClient newClient(File cacheDirectory, int cacheMaxSize,
-      @NonNull List<Interceptor> interceptors,
-      UserAgentGenerator userAgentGenerator) {
-
-    OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
-
-    //		if (BuildConfig.DEBUG) {
-    //			clientBuilder.addNetworkInterceptor(new StethoInterceptor());
-    //		}
-    clientBuilder.readTimeout(45, TimeUnit.SECONDS);
-    clientBuilder.writeTimeout(45, TimeUnit.SECONDS);
-    clientBuilder.cache(new Cache(cacheDirectory, cacheMaxSize)); // 10 MiB
-    for (Interceptor interceptor : interceptors) {
-      clientBuilder.addInterceptor(interceptor);
-    }
-    clientBuilder.addInterceptor(new UserAgentInterceptor(userAgentGenerator));
-
-    return clientBuilder.build();
-  }
-
   public static OkHttpClient newClient(UserAgentGenerator userAgentGenerator) {
     return newClient(userAgentGenerator, false);
   }
@@ -94,9 +74,28 @@ public class OkHttpClientFactory {
     return httpClientInstance;
   }
 
+  static OkHttpClient newClient(File cacheDirectory, int cacheMaxSize,
+      @NonNull List<Interceptor> interceptors, UserAgentGenerator userAgentGenerator) {
+
+    OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
+
+    //		if (BuildConfig.DEBUG) {
+    //			clientBuilder.addNetworkInterceptor(new StethoInterceptor());
+    //		}
+    clientBuilder.readTimeout(45, TimeUnit.SECONDS);
+    clientBuilder.writeTimeout(45, TimeUnit.SECONDS);
+    clientBuilder.cache(new Cache(cacheDirectory, cacheMaxSize)); // 10 MiB
+    for (Interceptor interceptor : interceptors) {
+      clientBuilder.addInterceptor(interceptor);
+    }
+    clientBuilder.addInterceptor(new UserAgentInterceptor(userAgentGenerator));
+
+    return clientBuilder.build();
+  }
+
   // FIXME: inject cache or cache cleaning policy instead of exposing a method like this
   public static void cleanInMemoryCache() {
-    if(cache!=null) {
+    if (cache != null) {
       cache.clean();
     }
   }

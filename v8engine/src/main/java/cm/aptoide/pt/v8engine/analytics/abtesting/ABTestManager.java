@@ -58,10 +58,6 @@ public class ABTestManager {
     return prefetchTests().doOnNext(success -> Logger.i(TAG, "ABTestManager initialized"));
   }
 
-  private boolean isInitialized() {
-    return sixpack != null;
-  }
-
   private void initializeSixpack(String clientId) {
     sixpack = sixpackBuilder.setSixpackUrl(HttpUrl.parse(sixpackUrl))
         .setHttpClient(httpClient)
@@ -76,12 +72,6 @@ public class ABTestManager {
         .withAlternatives(new Alternative(SearchTabAlternativeParser.FOLLOWED_STORES),
             new Alternative(SearchTabAlternativeParser.ALL_STORES))
         .build(), new SearchTabAlternativeParser()));
-  }
-
-  private void registerControlTests() {
-    if (controlTests.isEmpty()) {
-      controlTests.add(new ControlABTest<>(SEARCH_TAB_TEST, ""));
-    }
   }
 
   private Observable<Void> prefetchTests() {
@@ -104,6 +94,10 @@ public class ABTestManager {
     }
   }
 
+  private boolean isInitialized() {
+    return sixpack != null;
+  }
+
   @SuppressWarnings("unchecked") private <T> ABTest<T> getControl(String name) {
     synchronized (controlTests) {
       registerControlTests();
@@ -113,6 +107,12 @@ public class ABTestManager {
         }
       }
       throw new IllegalArgumentException("No AB test for name: " + name);
+    }
+  }
+
+  private void registerControlTests() {
+    if (controlTests.isEmpty()) {
+      controlTests.add(new ControlABTest<>(SEARCH_TAB_TEST, ""));
     }
   }
 }

@@ -16,15 +16,17 @@
       style="?attr/customRowForeground"
   -->
   <RelativeLayout
-      style="?attr/backgroundCard"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      style="?attr/backgroundCard"
       >
 
     <ImageView
         android:id="@+id/icon"
         android:layout_width="96dp"
         android:layout_height="96dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:padding="8dp"
         tools:src="@drawable/com_facebook_profile_picture_blank_square"
@@ -34,8 +36,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/icon"
         android:layout_toLeftOf="@+id/is_excluded"
         android:layout_toRightOf="@+id/icon"
+        android:layout_toStartOf="@+id/is_excluded"
         android:orientation="vertical"
         >
 
@@ -46,7 +50,6 @@
           android:layout_gravity="center_horizontal"
           android:ellipsize="end"
           android:maxLines="1"
-          android:singleLine="true"
           android:textAppearance="?android:attr/textAppearanceMedium"
           tools:text="AliExpress"
           />
@@ -55,11 +58,8 @@
           android:id="@+id/version_code"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_below="@+id/name"
-          android:layout_toLeftOf="@+id/is_excluded"
-          android:layout_toRightOf="@+id/icon"
           android:ellipsize="end"
-          android:singleLine="true"
+          android:maxLines="1"
           android:textAppearance="?android:attr/textAppearanceSmall"
           tools:text="4.2.1"
           />
@@ -68,12 +68,9 @@
           android:id="@+id/apk_id"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_below="@+id/version_code"
           android:layout_gravity="center_horizontal"
-          android:layout_toLeftOf="@+id/is_excluded"
-          android:layout_toRightOf="@+id/icon"
           android:ellipsize="end"
-          android:singleLine="true"
+          android:maxLines="1"
           android:textAppearance="?android:attr/textAppearanceSmall"
           tools:text="com.aliexpress"
           />
@@ -84,6 +81,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/icon"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="5dp"
         android:focusable="false"

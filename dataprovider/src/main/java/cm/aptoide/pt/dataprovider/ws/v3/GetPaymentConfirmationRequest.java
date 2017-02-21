@@ -19,18 +19,11 @@ public class GetPaymentConfirmationRequest extends V3<PaymentConfirmationRespons
     super(baseHost, baseBody);
   }
 
-  public static GetPaymentConfirmationRequest of(int productId, NetworkOperatorManager operatorManager,
-      int apiVersion, String accessToken) {
+  public static GetPaymentConfirmationRequest of(int productId,
+      NetworkOperatorManager operatorManager, int apiVersion, String accessToken) {
     final BaseBody args = getBaseBody(productId, operatorManager, accessToken);
     args.put("reqtype", "iabpurchasestatus");
     args.put("apiversion", String.valueOf(apiVersion));
-    return new GetPaymentConfirmationRequest(BASE_HOST, args);
-  }
-
-  public static GetPaymentConfirmationRequest of(int productId, NetworkOperatorManager operatorManager,
-      String accessToken) {
-    final BaseBody args = getBaseBody(productId, operatorManager, accessToken);
-    args.put("reqtype", "apkpurchasestatus");
     return new GetPaymentConfirmationRequest(BASE_HOST, args);
   }
 
@@ -44,6 +37,13 @@ public class GetPaymentConfirmationRequest extends V3<PaymentConfirmationRespons
 
     addNetworkInformation(operatorManager, args);
     return args;
+  }
+
+  public static GetPaymentConfirmationRequest of(int productId,
+      NetworkOperatorManager operatorManager, String accessToken) {
+    final BaseBody args = getBaseBody(productId, operatorManager, accessToken);
+    args.put("reqtype", "apkpurchasestatus");
+    return new GetPaymentConfirmationRequest(BASE_HOST, args);
   }
 
   @Override

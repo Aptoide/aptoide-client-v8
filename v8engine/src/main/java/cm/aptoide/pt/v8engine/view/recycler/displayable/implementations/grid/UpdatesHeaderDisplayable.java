@@ -41,12 +41,12 @@ public class UpdatesHeaderDisplayable extends Displayable {
     this.installConverter = installConverter;
   }
 
-  @Override public int getViewLayout() {
-    return R.layout.updates_header_row;
-  }
-
   @Override protected Configs getConfig() {
     return new Configs(1, true);
+  }
+
+  @Override public int getViewLayout() {
+    return R.layout.updates_header_row;
   }
 
   public Observable<Progress<Download>> install(FragmentActivity context, Download download) {

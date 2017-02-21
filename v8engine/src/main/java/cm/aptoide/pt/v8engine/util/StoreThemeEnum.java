@@ -168,7 +168,7 @@ public enum StoreThemeEnum {
   APTOIDE_STORE_THEME_HAPPYBLUE(R.style.AptoideThemeDefaultLightblue, R.color.transparent_lightblue,
       R.color.lightblue, R.drawable.custom_categ_lightsky, R.drawable.gradient_lightsky,
       R.color.lightblue_700, R.drawable.button_border_lightblue, R.drawable.ic_check_light_blue,
-      R.drawable.ic_plus_light_blue), ;
+      R.drawable.ic_plus_light_blue),;
 
   private final int color700tint;
   private final int buttonLayout;
@@ -199,6 +199,10 @@ public enum StoreThemeEnum {
     return values()[ordinal];
   }
 
+  public static StoreThemeEnum get(Store store) {
+    return get(store.getAppearance().getTheme());
+  }
+
   public static StoreThemeEnum get(String s) {
 
     StoreThemeEnum theme;
@@ -210,10 +214,6 @@ public enum StoreThemeEnum {
     }
 
     return theme;
-  }
-
-  public static StoreThemeEnum get(Store store) {
-    return get(store.getAppearance().getTheme());
   }
 
   public static StoreThemeEnum get(int i) {
@@ -232,15 +232,15 @@ public enum StoreThemeEnum {
     return plusmarkDrawable;
   }
 
+  @ColorInt public int getStoreHeaderInt() {
+    return V8Engine.getContext().getResources().getColor(getStoreHeader());
+  }
+
   /**
    * Used on AppBar
    */
   @ColorRes public int getStoreHeader() {
     return storeHeader;
-  }
-
-  @ColorInt public int getStoreHeaderInt() {
-    return V8Engine.getContext().getResources().getColor(getStoreHeader());
   }
 
   public int getThemeResource() {
@@ -266,12 +266,12 @@ public enum StoreThemeEnum {
     return color700tint;
   }
 
-  @DrawableRes public int getButtonLayout() {
-    return buttonLayout;
-  }
-
   public Drawable getButtonLayoutDrawable() {
     return V8Engine.getContext().getResources().getDrawable(getButtonLayout());
+  }
+
+  @DrawableRes public int getButtonLayout() {
+    return buttonLayout;
   }
 
   @DrawableRes public int getCheckmarkDrawable() {

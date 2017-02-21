@@ -32,8 +32,4 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
     title.setText(pojo);
     title.setVisibility(View.VISIBLE);
   }
-
-  @Override public void unbindView() {
-
-  }
 }

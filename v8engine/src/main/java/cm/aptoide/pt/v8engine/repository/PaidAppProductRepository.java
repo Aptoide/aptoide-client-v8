@@ -35,8 +35,8 @@ public class PaidAppProductRepository implements ProductRepository {
 
   @Override public Single<Purchase> getPurchase(AptoideProduct product) {
     final PaidAppProduct paidAppProduct = (PaidAppProduct) product;
-    return appRepository.getPaidApp(paidAppProduct.getAppId(), false,
-        paidAppProduct.getStoreName(), true).toSingle().flatMap(app -> {
+    return appRepository.getPaidApp(paidAppProduct.getAppId(), false, paidAppProduct.getStoreName(),
+        true).toSingle().flatMap(app -> {
       if (app.getPayment().isPaid()) {
         return Single.just(purchaseFactory.create(app));
       }
@@ -50,12 +50,14 @@ public class PaidAppProductRepository implements ProductRepository {
         ((PaidAppProduct) product).getStoreName(), true).toObservable()
         .flatMapIterable(paymentServices -> paymentServices)
         .map(paymentService -> paymentFactory.create(paymentService, product))
-        .toList().toSingle();
+        .toList()
+        .toSingle();
   }
 
   private Single<List<PaymentServiceResponse>> getServerPaidAppPaymentServices(long appId,
       boolean sponsored, String storeName, boolean refresh) {
     return appRepository.getPaidApp(appId, sponsored, storeName, refresh)
-        .map(paidApp -> paidApp.getPayment().getPaymentServices()).toSingle();
+        .map(paidApp -> paidApp.getPayment().getPaymentServices())
+        .toSingle();
   }
 }

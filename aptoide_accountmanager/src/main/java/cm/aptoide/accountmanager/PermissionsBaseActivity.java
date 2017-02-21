@@ -15,6 +15,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -46,6 +47,57 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
   private String TAG = "STORAGE";
   private File avatar;
   private CompositeSubscription mSubscriptions;
+
+  @Override public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    mSubscriptions = new CompositeSubscription();
+  }
+
+  @Override protected String getActivityTitle() {
+    return null;
+  }
+
+  @Override int getLayoutId() {
+    return 0;
+  }
+
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    mSubscriptions.clear();
+  }
+
+  public void chooseAvatarSource() {
+    final Dialog dialog = new Dialog(this);
+    dialog.setContentView(R.layout.dialog_choose_avatar_layout);
+    mSubscriptions.add(RxView.clicks(dialog.findViewById(R.id.button_camera)).subscribe(click -> {
+      callPermissionAndAction(TYPE_CAMERA);
+      dialog.dismiss();
+    }));
+    mSubscriptions.add(RxView.clicks(dialog.findViewById(R.id.button_gallery)).subscribe(click -> {
+      callPermissionAndAction(TYPE_STORAGE);
+      dialog.dismiss();
+    }));
+    mSubscriptions.add(RxView.clicks(dialog.findViewById(R.id.cancel))
+        .subscribe(click -> dialog.dismiss(), err -> {
+          CrashReport.getInstance().log(err);
+        }));
+    dialog.show();
+  }
+
+  public void callPermissionAndAction(String type) {
+    String result =
+        PermissionsBaseActivity.checkAndAskPermission(PermissionsBaseActivity.this, type);
+    switch (result) {
+      case PermissionsBaseActivity.CAMERA_PERMISSION_GIVEN:
+        changePermissionValue(true);
+        dispatchTakePictureIntent(getApplicationContext());
+        break;
+      case PermissionsBaseActivity.STORAGE_PERMISSION_GIVEN:
+        changePermissionValue(true);
+        callGallery();
+        break;
+    }
+  }
 
   public static String checkAndAskPermission(final AppCompatActivity activity, String type) {
 
@@ -96,72 +148,8 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
     return "";
   }
 
-  protected static String createAvatarPhotoName(String avatar) {
-    //SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-mm-yyyy");
-    String output = avatar /*+ simpleDateFormat.toString()*/;
-    return output;
-  }
-
-  @Override public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    mSubscriptions = new CompositeSubscription();
-  }
-
-  @Override protected void onDestroy() {
-    super.onDestroy();
-    mSubscriptions.clear();
-  }
-
-  @Override protected String getActivityTitle() {
-    return null;
-  }
-
-  @Override int getLayoutId() {
-    return 0;
-  }
-
-  public void chooseAvatarSource() {
-    final Dialog dialog = new Dialog(this);
-    dialog.setContentView(R.layout.dialog_choose_avatar_layout);
-    mSubscriptions.add(RxView.clicks(dialog.findViewById(R.id.button_camera)).subscribe(click -> {
-      callPermissionAndAction(TYPE_CAMERA);
-      dialog.dismiss();
-    }));
-    mSubscriptions.add(RxView.clicks(dialog.findViewById(R.id.button_gallery)).subscribe(click -> {
-      callPermissionAndAction(TYPE_STORAGE);
-      dialog.dismiss();
-    }));
-    mSubscriptions.add(
-        RxView.clicks(dialog.findViewById(R.id.cancel)).subscribe(click -> dialog.dismiss()));
-    dialog.show();
-  }
-
-  public void callPermissionAndAction(String type) {
-    String result =
-        PermissionsBaseActivity.checkAndAskPermission(PermissionsBaseActivity.this, type);
-    switch (result) {
-      case PermissionsBaseActivity.CAMERA_PERMISSION_GIVEN:
-        changePermissionValue(true);
-        dispatchTakePictureIntent(getApplicationContext());
-        break;
-      case PermissionsBaseActivity.STORAGE_PERMISSION_GIVEN:
-        changePermissionValue(true);
-        callGallery();
-        break;
-    }
-  }
-
   public void changePermissionValue(boolean b) {
     result = b;
-  }
-
-  public void callGallery() {
-    if (result) {
-      Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-      if (intent.resolveActivity(getPackageManager()) != null) {
-        startActivityForResult(intent, GALLERY_CODE);
-      }
-    }
   }
 
   public void dispatchTakePictureIntent(Context context) {
@@ -175,9 +163,19 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
                   PermissionsBaseActivity.createAvatarPhotoName(photoAvatar)).getPath()));
           takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uriForFile);
         } else {
-          takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, getPhotoFileUri(PermissionsBaseActivity.createAvatarPhotoName(photoAvatar)));
+          takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+              getPhotoFileUri(PermissionsBaseActivity.createAvatarPhotoName(photoAvatar)));
         }
         startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+      }
+    }
+  }
+
+  public void callGallery() {
+    if (result) {
+      Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+      if (intent.resolveActivity(getPackageManager()) != null) {
+        startActivityForResult(intent, GALLERY_CODE);
       }
     }
   }
@@ -200,6 +198,12 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
     return Uri.fromFile(new File(storageDir.getPath() + File.separator + fileName));
   }
 
+  protected static String createAvatarPhotoName(String avatar) {
+    //SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-mm-yyyy");
+    String output = avatar /*+ simpleDateFormat.toString()*/;
+    return output;
+  }
+
   protected void checkAvatarRequirements(String avatarPath, Uri avatarUrl) {
     if (!TextUtils.isEmpty(avatarPath)) {
       List<AptoideUtils.IconSizeU.ImageSizeErrors> imageSizeErrors =
@@ -216,6 +220,10 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
       }
     }
   }
+
+  abstract void loadImage(Uri imagePath);
+
+  abstract void showIconPropertiesError(String errors);
 
   private String getErrorsMessage(List<AptoideUtils.IconSizeU.ImageSizeErrors> imageSizeErrors) {
     StringBuilder message = new StringBuilder();
@@ -248,8 +256,4 @@ public abstract class PermissionsBaseActivity extends BaseActivity {
 
     return message.toString();
   }
-
-  abstract void showIconPropertiesError(String errors);
-
-  abstract void loadImage(Uri imagePath);
 }

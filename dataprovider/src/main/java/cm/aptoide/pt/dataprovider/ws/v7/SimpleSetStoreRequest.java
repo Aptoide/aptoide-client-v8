@@ -28,8 +28,8 @@ public class SimpleSetStoreRequest extends V7<BaseV7Response, SimpleSetStoreRequ
     return new SimpleSetStoreRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
-  public static SimpleSetStoreRequest of(String accessToken, String aptoideClientUUID,
-      long storeId, String storeTheme, String storeDescription) {
+  public static SimpleSetStoreRequest of(String accessToken, String aptoideClientUUID, long storeId,
+      String storeTheme, String storeDescription) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
     Body body = new Body(accessToken, storeId, storeTheme, storeDescription);
     return new SimpleSetStoreRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
@@ -61,18 +61,14 @@ public class SimpleSetStoreRequest extends V7<BaseV7Response, SimpleSetStoreRequ
     }
   }
 
-  @Data
-  public static class StoreProperties {
+  @Data public static class StoreProperties {
 
-    @JsonProperty("theme")
-    private String theme;
-    @JsonProperty("description")
-    private String description;
+    @JsonProperty("theme") private String theme;
+    @JsonProperty("description") private String description;
 
     public StoreProperties(String theme, String description) {
       this.theme = theme;
       this.description = description;
     }
-
   }
 }

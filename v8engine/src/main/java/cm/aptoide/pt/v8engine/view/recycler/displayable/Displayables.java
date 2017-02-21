@@ -19,22 +19,19 @@ import java.util.Queue;
  */
 public class Displayables implements LifecycleSchim {
 
-  private final Queue<Displayable> temporaryDisplayables = new LinkedList<>();
-  private final List<Displayable> displayables = new LinkedList<>();
+  private final Queue<Displayable> temporaryDisplayables;
+  private final List<Displayable> displayables;
 
-  public Displayables() { }
+  public Displayables() {
+    temporaryDisplayables = new LinkedList<>();
+    displayables = new LinkedList<>();
+  }
 
   public void add(int position, List<? extends Displayable> displayables) {
     Collections.reverse(displayables);
 
     for (Displayable displayable : displayables) {
       add(position, displayable);
-    }
-  }
-
-  public void add(List<? extends Displayable> displayables) {
-    for (Displayable displayable : displayables) {
-      add(displayable);
     }
   }
 
@@ -48,34 +45,8 @@ public class Displayables implements LifecycleSchim {
     }
   }
 
-  public void add(Displayable displayable) {
-    if (shouldIgnore(displayable)) return;
-
-    if (displayable instanceof DisplayableGroup) {
-      addDisplayableGroup((DisplayableGroup) displayable);
-    } else {
-      displayables.add(displayable);
-    }
-  }
-
   private boolean shouldIgnore(Displayable displayable) {
     return displayable instanceof EmptyDisplayable;
-  }
-
-  /**
-   * Uses a breadth-first-search to reach all leaf nodes transversing the list in width.
-   */
-  private void addDisplayableGroup(DisplayableGroup displayable) {
-    temporaryDisplayables.clear();
-    temporaryDisplayables.addAll(displayable.getChildren());
-    while (!temporaryDisplayables.isEmpty()) {
-      Displayable innerDisplayable = temporaryDisplayables.poll();
-      if (innerDisplayable instanceof DisplayableGroup) {
-        temporaryDisplayables.addAll(((DisplayableGroup) innerDisplayable).getChildren());
-      } else {
-        displayables.add(innerDisplayable);
-      }
-    }
   }
 
   /**
@@ -97,6 +68,38 @@ public class Displayables implements LifecycleSchim {
     displayables.addAll(position, temp);
   }
 
+  public void add(List<? extends Displayable> displayables) {
+    for (Displayable displayable : displayables) {
+      add(displayable);
+    }
+  }
+
+  public void add(Displayable displayable) {
+    if (shouldIgnore(displayable)) return;
+
+    if (displayable instanceof DisplayableGroup) {
+      addDisplayableGroup((DisplayableGroup) displayable);
+    } else {
+      displayables.add(displayable);
+    }
+  }
+
+  /**
+   * Uses a breadth-first-search to reach all leaf nodes transversing the list in width.
+   */
+  private void addDisplayableGroup(DisplayableGroup displayable) {
+    temporaryDisplayables.clear();
+    temporaryDisplayables.addAll(displayable.getChildren());
+    while (!temporaryDisplayables.isEmpty()) {
+      Displayable innerDisplayable = temporaryDisplayables.poll();
+      if (innerDisplayable instanceof DisplayableGroup) {
+        temporaryDisplayables.addAll(((DisplayableGroup) innerDisplayable).getChildren());
+      } else {
+        displayables.add(innerDisplayable);
+      }
+    }
+  }
+
   public Displayable pop() {
     if (displayables.size() > 0) {
       return displayables.remove(displayables.size() - 1);
@@ -110,12 +113,6 @@ public class Displayables implements LifecycleSchim {
       return displayables.get(position);
     } else {
       return null;
-    }
-  }
-
-  public void remove(int pos) {
-    if (pos >= 0 && pos < displayables.size()) {
-      displayables.remove(pos);
     }
   }
 
@@ -143,6 +140,12 @@ public class Displayables implements LifecycleSchim {
 
   public int size() {
     return displayables.size();
+  }
+
+  public void remove(int pos) {
+    if (pos >= 0 && pos < displayables.size()) {
+      displayables.remove(pos);
+    }
   }
 
   public void clear() {

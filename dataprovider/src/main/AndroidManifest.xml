@@ -3,8 +3,8 @@
   ~ Modified by SithEngineer on 20/04/2016.
   -->
 
-<manifest package="cm.aptoide.pt.dataprovider"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="cm.aptoide.pt.dataprovider">
 
   <application
       android:allowBackup="true"

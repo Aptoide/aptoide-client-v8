@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.model.v7.store.ListStores;
@@ -33,7 +34,9 @@ public class FragmentTopStores extends AptoideBaseFragment<BaseAdapter> implemen
       listStores -> Observable.fromCallable(() -> createDisplayables(listStores))
           .subscribeOn(Schedulers.computation())
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-          .subscribe(this::addDisplayables);
+          .subscribe(displayables -> addDisplayables(displayables), err -> {
+            CrashReport.getInstance().log(err);
+          });
 
   public static FragmentTopStores newInstance() {
     return new FragmentTopStores();
@@ -47,11 +50,6 @@ public class FragmentTopStores extends AptoideBaseFragment<BaseAdapter> implemen
     return displayables;
   }
 
-  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    super.load(create, refresh, savedInstanceState);
-    fetchStores();
-  }
-
   @Override public int getContentViewId() {
     return R.layout.fragment_with_toolbar;
   }
@@ -62,23 +60,28 @@ public class FragmentTopStores extends AptoideBaseFragment<BaseAdapter> implemen
     setHasOptionsMenu(true);
   }
 
+  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    super.load(create, refresh, savedInstanceState);
+    fetchStores();
+  }
+
   private void fetchStores() {
     final ListStoresRequest listStoresRequest =
         requestFactory.newListStoresRequest(offset, STORES_LIMIT_PER_REQUEST);
     EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(this.getAdapter(), listStoresRequest, listener,
             Throwable::printStackTrace);
-    recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+    getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener.onLoadMore(false);
+  }
+
+  @Override protected boolean displayHomeUpAsEnabled() {
+    return true;
   }
 
   @Override public void setupToolbarDetails(Toolbar toolbar) {
     toolbar.setTitle(R.string.top_stores_fragment_title);
     toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
-  }
-
-  @Override protected boolean displayHomeUpAsEnabled() {
-    return true;
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {

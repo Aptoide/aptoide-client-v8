@@ -10,8 +10,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.text.TextUtils;
-import cm.aptoide.pt.crashreports.CrashReports;
-import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.utils.AptoideUtils;
 import io.realm.RealmObject;
 
@@ -65,8 +64,7 @@ public final class Installed extends BaseTable {
           return new cm.aptoide.pt.database.realm.Installed(packageInfo);
         }
       } catch (PackageManager.NameNotFoundException ex) {
-        CrashReports.logException(ex);
-        Logger.e(TAG, ex);
+        CrashReport.getInstance().log(ex);
       }
     }
     return null;

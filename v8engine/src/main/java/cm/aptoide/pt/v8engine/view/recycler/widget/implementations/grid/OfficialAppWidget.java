@@ -10,14 +10,13 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
@@ -27,7 +26,6 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
-import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.Translator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.OfficialAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -112,7 +110,7 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
     this.appSize.setText(String.format(context.getString(R.string.app_size),
         AptoideUtils.StringU.formatBytes(appData.getFile().getFilesize(), false)));
 
-    ImageLoader.load(appData.getIcon(), this.appImage);
+    ImageLoader.with(context).load(appData.getIcon(), this.appImage);
 
     // check if app is installed. if it is, show open button
 
@@ -127,8 +125,7 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
       installButton.setBackgroundDrawable(d);
     }
 
-    installButton.setText(
-        getContext().getString(isAppInstalled ? R.string.open : R.string.install));
+    installButton.setText(context.getString(isAppInstalled ? R.string.open : R.string.install));
 
     compositeSubscription.add(RxView.clicks(installButton).subscribe(a -> {
       if (isAppInstalled) {
@@ -138,21 +135,20 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
         Fragment appView = V8Engine.getFragmentProvider()
             .newAppViewFragment(appData.getPackageName(),
                 AppViewFragment.OpenType.OPEN_AND_INSTALL);
-        FragmentUtils.replaceFragmentV4(this.getContext(), appView);
+        getNavigationManager().navigateTo(appView);
       }
     }, err -> {
-      Log.e(TAG, "", err);
-      CrashReports.logException(err);
+      CrashReport.getInstance().log(err);
     }));
-  }
-
-  private void hideOfficialAppMessage() {
-    installMessage.setVisibility(View.GONE);
-    verticalSeparator.setVisibility(View.GONE);
   }
 
   private boolean isAppInstalled(GetApp app) {
     InstalledRepository installedRepo = RepositoryFactory.getInstalledRepository();
     return installedRepo.contains(app.getNodes().getMeta().getData().getPackageName());
+  }
+
+  private void hideOfficialAppMessage() {
+    installMessage.setVisibility(View.GONE);
+    verticalSeparator.setVisibility(View.GONE);
   }
 }

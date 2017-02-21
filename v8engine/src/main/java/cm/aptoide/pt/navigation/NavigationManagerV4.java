@@ -1,10 +1,12 @@
 package cm.aptoide.pt.navigation;
 
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.model.v7.Event;
 
-public interface NavigationManagerV4  {
+public interface NavigationManagerV4 {
 
-  void navigateUsing(Event event, String storeTheme, String title, String tag);
+  void navigateUsing(Event event, String storeTheme, String title, String tag,
+      StoreContext storeContext);
 
   void navigateTo(android.support.v4.app.Fragment fragment);
 
@@ -14,7 +16,8 @@ public interface NavigationManagerV4  {
 
   final class Builder {
 
-    public static NavigationManagerV4 buildWith(android.support.v4.app.FragmentActivity fragmentActivityV4) {
+    public static NavigationManagerV4 buildWith(
+        android.support.v4.app.FragmentActivity fragmentActivityV4) {
       return new ConcreteNavigationManagerV4(fragmentActivityV4);
     }
   }

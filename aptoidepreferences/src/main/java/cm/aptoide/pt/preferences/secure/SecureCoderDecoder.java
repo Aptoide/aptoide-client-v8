@@ -40,6 +40,46 @@ public class SecureCoderDecoder {
     this.sKey = sKey;
   }
 
+  static String generateAesKeyName(Context context)
+      throws InvalidKeySpecException, NoSuchAlgorithmException, NoSuchProviderException {
+    final char[] password = context.getPackageName().toCharArray();
+
+    final byte[] salt = getDeviceSerialNumber(context).getBytes();
+
+    SecretKey key;
+    try {
+      // what if there's an OS upgrade and now supports the primary
+      // PBE
+      key = generatePBEKey(password, salt, PRIMARY_PBE_KEY_ALG, ITERATIONS, KEY_SIZE);
+    } catch (NoSuchAlgorithmException e) {
+      // older devices may not support the have the implementation,
+      // try with a weaker algorithm
+      key = generatePBEKey(password, salt, BACKUP_PBE_KEY_ALG, ITERATIONS, KEY_SIZE);
+    }
+    return encode(key.getEncoded());
+  }
+
+  /**
+   * Gets the hardware serial number of this device.
+   *
+   * @return serial number or Settings.Secure.ANDROID_ID if not available.
+   */
+  static String getDeviceSerialNumber(Context context) {
+    // We're using the Reflection API because Build.SERIAL is only available
+    // since API Level 9 (Gingerbread, Android 2.3).
+    try {
+      String deviceSerial = (String) Build.class.getField("SERIAL").get(null);
+      if (TextUtils.isEmpty(deviceSerial)) {
+        deviceSerial =
+            Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+      }
+      return deviceSerial;
+    } catch (Exception ignored) {
+      // default to Android_ID
+      return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+    }
+  }
+
   /**
    * Derive a secure key based on the passphraseOrPin
    *
@@ -66,31 +106,8 @@ public class SecureCoderDecoder {
     return secretKey;
   }
 
-  static byte[] decode(String input) {
-    return Base64.decode(input, Base64.NO_PADDING | Base64.NO_WRAP);
-  }
-
   private static String encode(byte[] input) {
     return Base64.encodeToString(input, Base64.NO_PADDING | Base64.NO_WRAP);
-  }
-
-  static String generateAesKeyName(Context context)
-      throws InvalidKeySpecException, NoSuchAlgorithmException, NoSuchProviderException {
-    final char[] password = context.getPackageName().toCharArray();
-
-    final byte[] salt = getDeviceSerialNumber(context).getBytes();
-
-    SecretKey key;
-    try {
-      // what if there's an OS upgrade and now supports the primary
-      // PBE
-      key = generatePBEKey(password, salt, PRIMARY_PBE_KEY_ALG, ITERATIONS, KEY_SIZE);
-    } catch (NoSuchAlgorithmException e) {
-      // older devices may not support the have the implementation,
-      // try with a weaker algorithm
-      key = generatePBEKey(password, salt, BACKUP_PBE_KEY_ALG, ITERATIONS, KEY_SIZE);
-    }
-    return encode(key.getEncoded());
   }
 
   static String generateAesKeyValue() throws NoSuchAlgorithmException {
@@ -111,27 +128,6 @@ public class SecureCoderDecoder {
     return encode(generator.generateKey().getEncoded());
   }
 
-  /**
-   * Gets the hardware serial number of this device.
-   *
-   * @return serial number or Settings.Secure.ANDROID_ID if not available.
-   */
-  static String getDeviceSerialNumber(Context context) {
-    // We're using the Reflection API because Build.SERIAL is only available
-    // since API Level 9 (Gingerbread, Android 2.3).
-    try {
-      String deviceSerial = (String) Build.class.getField("SERIAL").get(null);
-      if (TextUtils.isEmpty(deviceSerial)) {
-        deviceSerial =
-            Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-      }
-      return deviceSerial;
-    } catch (Exception ignored) {
-      // default to Android_ID
-      return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-    }
-  }
-
   public String decrypt(String ciphertext) {
     if (ciphertext == null || ciphertext.length() == 0) {
       return ciphertext;
@@ -146,6 +142,10 @@ public class SecureCoderDecoder {
       }
       return null;
     }
+  }
+
+  static byte[] decode(String input) {
+    return Base64.decode(input, Base64.NO_PADDING | Base64.NO_WRAP);
   }
 
   public String encrypt(String cleartext) {

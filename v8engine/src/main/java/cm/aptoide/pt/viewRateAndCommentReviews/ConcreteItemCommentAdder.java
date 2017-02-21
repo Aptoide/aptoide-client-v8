@@ -11,7 +11,8 @@ public class ConcreteItemCommentAdder<T> extends CommentAdder {
   private final ItemCommentAdderView commentAdderView;
   private final T review;
 
-  public ConcreteItemCommentAdder(int reviewIndex, ItemCommentAdderView commentAdderView, T review) {
+  public ConcreteItemCommentAdder(int reviewIndex, ItemCommentAdderView commentAdderView,
+      T review) {
     super(reviewIndex);
     this.commentAdderView = commentAdderView;
     this.review = review;

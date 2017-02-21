@@ -54,7 +54,7 @@ public class PostCacheInterceptor implements Interceptor {
     Response response = chain.proceed(request);
 
     // we only cache successful responses
-    if(response.isSuccessful()) {
+    if (response.isSuccessful()) {
       cache.put(request, response);
     }
     return response;

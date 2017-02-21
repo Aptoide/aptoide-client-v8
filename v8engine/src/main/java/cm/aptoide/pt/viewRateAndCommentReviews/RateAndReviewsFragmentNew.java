@@ -1,6 +1,7 @@
 package cm.aptoide.pt.viewRateAndCommentReviews;
 
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -8,11 +9,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Review;
@@ -23,7 +23,6 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.adapters.CommentsAdapter;
 import cm.aptoide.pt.v8engine.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.util.DialogUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
@@ -60,6 +59,7 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
   private RatingTotalsLayout ratingTotalsLayout;
   private RatingBarsLayout ratingBarsLayout;
   private FloatingActionButton floatingActionButton;
+  private DialogUtils dialogUtils;
 
   //
   // static constructors
@@ -95,16 +95,6 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
   // base methods
   //
 
-  @Override public void loadExtras(Bundle args) {
-    super.loadExtras(args);
-    appId = args.getLong(APP_ID);
-    reviewId = args.getLong(REVIEW_ID);
-    packageName = args.getString(PACKAGE_NAME);
-    storeName = args.getString(STORE_NAME);
-    appName = args.getString(APP_NAME);
-    storeTheme = args.getString(STORE_THEME);
-  }
-
   @Override protected boolean displayHomeUpAsEnabled() {
     return true;
   }
@@ -126,12 +116,39 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
+    dialogUtils = new DialogUtils();
     final RateAndReviewsPresenter presenter =
         new RateAndReviewsPresenter(appId, storeName, packageName, this,
             ConcreteSchedulerProvider.getInstance());
 
     attachPresenter(presenter, savedInstanceState);
+  }
+
+  @Override public void loadExtras(Bundle args) {
+    super.loadExtras(args);
+    appId = args.getLong(APP_ID);
+    reviewId = args.getLong(REVIEW_ID);
+    packageName = args.getString(PACKAGE_NAME);
+    storeName = args.getString(STORE_NAME);
+    appName = args.getString(APP_NAME);
+    storeTheme = args.getString(STORE_THEME);
+  }
+
+  @Override public int getContentViewId() {
+    return R.layout.fragment_rate_and_reviews;
+  }
+
+  //
+  // MVP methods
+  //
+
+  @CallSuper @Override public void bindViews(View view) {
+    super.bindViews(view);
+    floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fab);
+    setHasOptionsMenu(true);
+
+    ratingTotalsLayout = new RatingTotalsLayout(view);
+    ratingBarsLayout = new RatingBarsLayout(view);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -142,25 +159,10 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
     }
   }
 
-  //
-  // MVP methods
-  //
-
-  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+  @CallSuper @Override
+  public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    super.load(create, refresh, savedInstanceState);
     // ??
-  }
-
-  @Override public int getContentViewId() {
-    return R.layout.fragment_rate_and_reviews;
-  }
-
-  @Override public void bindViews(View view) {
-    super.bindViews(view);
-    floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fab);
-    setHasOptionsMenu(true);
-
-    ratingTotalsLayout = new RatingTotalsLayout(view);
-    ratingBarsLayout = new RatingBarsLayout(view);
   }
 
   @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
@@ -175,8 +177,7 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
         installMenuItem.setTitle(R.string.open);
       }
     }, err -> {
-      Logger.e(TAG, err);
-      CrashReports.logException(err);
+      CrashReport.getInstance().log(err);
     });
   }
 
@@ -188,7 +189,7 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
     }
     if (itemId == R.id.menu_install) {
       // todo Navigator n = new Navigator();
-      ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
+      getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
           .newAppViewFragment(packageName, storeName, AppViewFragment.OpenType.OPEN_AND_INSTALL));
       return true;
     }
@@ -200,7 +201,7 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
   }
 
   @Override public Observable<Integer> nextReviews() {
-    return RxEndlessRecyclerView.loadMore(recyclerView, getAdapter());
+    return RxEndlessRecyclerView.loadMore(getRecyclerView(), getAdapter());
   }
 
   @Override public Observable<Void> rateApp() {
@@ -208,7 +209,7 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
   }
 
   @Override public Observable<GenericDialogs.EResponse> showRateView() {
-    return DialogUtils.showRateDialog(getActivity(), appName, packageName, storeName);
+    return dialogUtils.showRateDialog(getActivity(), appName, packageName, storeName);
   }
 
   @Override public void showNextReviews(int offset, List<Review> reviews) {

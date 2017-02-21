@@ -21,11 +21,11 @@ public class InstalledAppDisplayable extends DisplayablePojo<Installed> {
     super(pojo);
   }
 
-  @Override public int getViewLayout() {
-    return R.layout.installed_row;
-  }
-
   @Override protected Configs getConfig() {
     return new Configs(1, false);
+  }
+
+  @Override public int getViewLayout() {
+    return R.layout.installed_row;
   }
 }

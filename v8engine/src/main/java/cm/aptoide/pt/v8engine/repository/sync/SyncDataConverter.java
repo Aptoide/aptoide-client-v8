@@ -61,13 +61,14 @@ public class SyncDataConverter {
           && packageName != null
           && type != null
           && apiVersion != -1) {
-        return new InAppBillingProduct(id, icon, title, description, apiVersion, sku,
-            packageName, developerPayload, type);
+        return new InAppBillingProduct(id, icon, title, description, apiVersion, sku, packageName,
+            developerPayload, type);
       }
       if (id != -1 && storeName != null) {
         return new PaidAppProduct(id, icon, title, description, appId, storeName);
       }
-    } return null;
+    }
+    return null;
   }
 
   public Bundle toBundle(AptoideProduct product) {

@@ -45,9 +45,13 @@ public class SignUpActivity extends BaseActivity implements AptoideAccountManage
     return R.layout.sign_up_activity_layout;
   }
 
-  private void setupListeners() {
-    setupShowHidePassButton();
-    AptoideAccountManager.setupRegisterUser(this, signUpButton);
+  private void bindViews() {
+    content = findViewById(android.R.id.content);
+    signUpButton = (Button) findViewById(R.id.submitCreateUser);
+    mToolbar = (Toolbar) findViewById(R.id.toolbar);
+    emailBox = (EditText) findViewById(R.id.username);
+    password_box = (EditText) findViewById(R.id.password);
+    hidePasswordButton = (Button) findViewById(R.id.btn_show_hide_pass);
   }
 
   private void setupToolbar() {
@@ -60,13 +64,9 @@ public class SignUpActivity extends BaseActivity implements AptoideAccountManage
     }
   }
 
-  private void bindViews() {
-    content = findViewById(android.R.id.content);
-    signUpButton = (Button) findViewById(R.id.submitCreateUser);
-    mToolbar = (Toolbar) findViewById(R.id.toolbar);
-    emailBox = (EditText) findViewById(R.id.username);
-    password_box = (EditText) findViewById(R.id.password);
-    hidePasswordButton = (Button) findViewById(R.id.btn_show_hide_pass);
+  private void setupListeners() {
+    setupShowHidePassButton();
+    AptoideAccountManager.setupRegisterUser(this, signUpButton);
   }
 
   private void setupShowHidePassButton() {

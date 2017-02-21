@@ -8,11 +8,11 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
  */
 
 public class CreateStoreDisplayable extends Displayable {
-  @Override public int getViewLayout() {
-    return R.layout.create_store_displayable_layout;
-  }
-
   @Override protected Configs getConfig() {
     return new Configs(1, true);
+  }
+
+  @Override public int getViewLayout() {
+    return R.layout.create_store_displayable_layout;
   }
 }

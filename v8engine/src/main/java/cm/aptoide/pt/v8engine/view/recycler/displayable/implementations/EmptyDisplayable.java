@@ -22,20 +22,20 @@ public class EmptyDisplayable extends Displayable {
     this.spanSize = spanSize;
   }
 
-  @Override public int getViewLayout() {
-    return R.layout.displayable_empty;
+  @Override protected Configs getConfig() {
+    return new Configs(1, true);
   }
 
-  @Override public int getDefaultPerLineCount() {
-    // Stub
-    return 1;
+  @Override public int getViewLayout() {
+    return R.layout.displayable_empty;
   }
 
   @Override public int getSpanSize() {
     return spanSize;
   }
 
-  @Override protected Configs getConfig() {
-    return new Configs(1, true);
+  @Override public int getDefaultPerLineCount() {
+    // Stub
+    return 1;
   }
 }

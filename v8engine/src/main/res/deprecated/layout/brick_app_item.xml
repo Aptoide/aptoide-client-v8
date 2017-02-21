@@ -4,8 +4,8 @@
   ~ Modified by Neurophobic Animal on 18/05/2016.
   -->
 
-<FrameLayout android:id="@+id/brick_app_item"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/brick_app_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     >

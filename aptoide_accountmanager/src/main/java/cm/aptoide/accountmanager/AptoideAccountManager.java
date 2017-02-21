@@ -40,9 +40,11 @@ import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
 import cm.aptoide.accountmanager.ws.responses.GenericResponseV3;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.annotation.Partners;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.preferences.AptoidePreferencesConfiguration;
@@ -97,7 +99,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
       ".removedaccount.broadcast";
 
   private final static AptoideAccountManager instance = new AptoideAccountManager();
-  private static final IdsRepositoryImpl idsRepository =
+  private static final AptoideClientUUID aptoideClientUuid =
       new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
           DataProvider.getContext());
   private static String TAG = AptoideAccountManager.class.getSimpleName();
@@ -140,6 +142,22 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
             return Observable.empty();
           });
     });
+  }
+
+  public static boolean isLoggedIn() {
+    AccountManager manager = AccountManager.get(getContext());
+    return manager.getAccountsByType(Constants.ACCOUNT_TYPE).length != 0;
+  }
+
+  /**
+   * This method should be used to open login or account activity
+   *
+   * @param openMyAccount true if is expeted to open myAccountActivity after login
+   */
+  public static void openAccountManager(Context context, boolean openMyAccount) {
+    Bundle extras = new Bundle();
+    extras.putBoolean(LoginActivity.OPEN_MY_ACCOUNT_ON_LOGIN_SUCCESS, openMyAccount);
+    openAccountManager(context, extras);
   }
 
   /**
@@ -189,24 +207,6 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
   }
 
   /**
-   * This method should be used to open login or account activity
-   *
-   * @param openMyAccount true if is expeted to open myAccountActivity after login
-   */
-  public static void openAccountManager(Context context, boolean openMyAccount) {
-    Bundle extras = new Bundle();
-    extras.putBoolean(LoginActivity.OPEN_MY_ACCOUNT_ON_LOGIN_SUCCESS, openMyAccount);
-    openAccountManager(context, extras);
-  }
-
-  /**
-   * This method should be used to open login or account activity
-   */
-  public static void openAccountManager(Context context) {
-    openAccountManager(context, null);
-  }
-
-  /**
    * This method should be used to login users for ABAN
    *
    * @param phoneNumber users inserted phonenumber
@@ -218,11 +218,6 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     setMCallback(loginInterface);
     AptoideAccountManager.loginUserCredentials(LoginMode.ABAN, phoneNumber, token, username,
         context);
-  }
-
-  public static boolean isLoggedIn() {
-    AccountManager manager = AccountManager.get(getContext());
-    return manager.getAccountsByType(Constants.ACCOUNT_TYPE).length != 0;
   }
 
   static AptoideAccountManager getInstance() {
@@ -258,95 +253,37 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     getContext().sendBroadcast(new Intent().setAction(LOGOUT));
   }
 
-  public static @Nullable String getRefreshToken() {
-    String refreshToken = AccountManagerPreferences.getRefreshToken();
-
-    if (refreshToken == null || TextUtils.isEmpty(refreshToken)) {
-      refreshToken = getUserStringFromAndroidAccountManager(SecureKeys.REFRESH_TOKEN);
-      AccountManagerPreferences.setRefreshToken(refreshToken);
-    }
-
-    if (refreshToken == null || TextUtils.isEmpty(refreshToken)) {
-      try {
-        refreshToken = getRefreshTokenFromAccountManager(); // as it is done in V7
-        AccountManagerPreferences.setRefreshToken(refreshToken);
-      } catch (Exception e) {
-        Logger.e(TAG, e);
+  public static void removeLocalAccount() {
+    AccountManager manager = AccountManager.get(getContext());
+    Account[] accounts = manager.getAccountsByType(Constants.ACCOUNT_TYPE);
+    userIsLoggedIn = false;
+    for (Account account : accounts) {
+      if (Build.VERSION.SDK_INT >= 22) {
+        manager.removeAccountExplicitly(account);
+      } else {
+        manager.removeAccount(account, null, null);
       }
     }
-
-    return refreshToken;
+    AccountManagerPreferences.removeUserEmail();
+    AccountManagerPreferences.removeAccessToken();
+    AccountManagerPreferences.removeRefreshToken();
+    AccountManagerPreferences.removeMatureSwitch();
+    AccountManagerPreferences.removeQueueName();
+    AccountManagerPreferences.removeUserAvatar();
+    AccountManagerPreferences.removeUserNickName();
+    AccountManagerPreferences.removeUserRepo();
+    AccountManagerPreferences.removeRepoAvatar();
   }
 
   /**
-   * Get the accessToken used to authenticate user on aptoide webservices
-   *
-   * @return A string with the token
+   * This method should be used to open login or account activity
    */
-  @Nullable public static String getAccessToken() {
-    String accessToken = AccountManagerPreferences.getAccessToken();
-    if (accessToken == null || TextUtils.isEmpty(accessToken)) {
-      accessToken = getUserStringFromAndroidAccountManager(SecureKeys.ACCESS_TOKEN);
-      AccountManagerPreferences.setAccessToken(accessToken);
-    }
-    return accessToken;
-  }
-
-  public static void setAccessTokenOnLocalAccount(String accessToken, @Nullable Account userAccount,
-      @NonNull String dataKey) {
-    AccountManager accountManager = AccountManager.get(getContext());
-
-    if (userAccount == null) {
-      Account[] accounts = accountManager.getAccounts();
-      for (final Account account : accounts) {
-        if (TextUtils.equals(account.name, AptoideAccountManager.getUserEmail())
-            && TextUtils.equals(account.type, Constants.ACCOUNT_TYPE)) {
-          userAccount = account;
-          break;
-        }
-      }
-    } else {
-      accountManager.setUserData(userAccount, dataKey, accessToken);
-    }
-  }
-
-  private static String getUserStringFromAndroidAccountManager(String key) {
-    AccountManager manager = AccountManager.get(getContext());
-    Account[] accountsByType = manager.getAccountsByType(Constants.ACCOUNT_TYPE);
-
-    return accountsByType.length > 0 ? manager.getUserData(accountsByType[0], key) : null;
-  }
-
-  private static @Nullable String getRefreshTokenFromAccountManager()
-      throws AuthenticatorException, OperationCanceledException, IOException {
-    AccountManager manager = AccountManager.get(getContext());
-    Account[] accountsByType = manager.getAccountsByType(Constants.ACCOUNT_TYPE);
-    String refreshToken =
-        manager.blockingGetAuthToken(accountsByType[0], Constants.AUTHTOKEN_TYPE_FULL_ACCESS,
-            false);
-    return refreshToken;
+  public static void openAccountManager(Context context) {
+    openAccountManager(context, null);
   }
 
   @Nullable public static LoginMode getLoginMode() {
     return AccountManagerPreferences.getLoginMode();
-  }
-
-  /**
-   * Get the userEmail of current logged user
-   *
-   * @return A string with the userEmail
-   */
-  public static String getUserEmail() {
-    String userName = AccountManagerPreferences.getUserEmail();
-    if (userName == null || TextUtils.isEmpty(userName)) {
-      AccountManager accountManager = AccountManager.get(getContext());
-      Account[] accounts = accountManager.getAccountsByType(Constants.ACCOUNT_TYPE);
-      if (accounts.length > 0) {
-        userName = accounts[0].name;
-        AccountManagerPreferences.setUserEmail(userName);
-      }
-    }
-    return userName;
   }
 
   /**
@@ -395,11 +332,13 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     ProgressDialog genericPleaseWaitDialog = null;
     if (context != null) {
       genericPleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(context);
-      genericPleaseWaitDialog.show();
+      if (!((Activity) context).isFinishing()) {
+        genericPleaseWaitDialog.show();
+      }
     }
     OAuth2AuthenticationRequest oAuth2AuthenticationRequest =
         OAuth2AuthenticationRequest.of(userName, passwordOrToken, mode, nameForGoogle,
-            idsRepository.getAptoideClientUUID());
+            aptoideClientUuid.getUniqueIdentifier());
     final ProgressDialog finalGenericPleaseWaitDialog = genericPleaseWaitDialog;
     oAuth2AuthenticationRequest.execute(oAuth -> {
       Logger.d(TAG, "onSuccess() called with: " + "oAuth = [" + oAuth + "]");
@@ -417,6 +356,13 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
               finalGenericPleaseWaitDialog.dismiss();
             }
             sendLoginBroadcast();
+          }
+        }, throwable -> {
+          removeLocalAccount();
+          getInstance().onLoginFail(getContext().getString(R.string.unknown_error));
+          CrashReport.getInstance().log(throwable);
+          if (finalGenericPleaseWaitDialog != null) {
+            finalGenericPleaseWaitDialog.dismiss();
           }
         });
       } else { // oAuth.hasErrors() = true
@@ -538,7 +484,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
    *
    * @param matureSwitch Switch state
    */
-  public static void updateMatureSwitch(boolean matureSwitch) {
+  @Partners public static void updateMatureSwitch(boolean matureSwitch) {
     AccountManagerPreferences.setMatureSwitch(matureSwitch);
     if (userIsLoggedIn) {
       ChangeUserSettingsRequest.of(matureSwitch)
@@ -547,7 +493,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
           .observeOn(AndroidSchedulers.mainThread())
           .doOnError(throwable -> {
             Logger.e(TAG, "Unable to update mature switch to " + Boolean.toString(matureSwitch));
-            CrashReports.logException(throwable);
+            CrashReport.getInstance().log(throwable);
           })
           .subscribe();
     }
@@ -571,6 +517,103 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
             s -> getNewAccessTokenFromRefreshToken(getRefreshToken(), getOnErrorAction(context)));
   }
 
+  public static @Nullable String getRefreshToken() {
+    String refreshToken = AccountManagerPreferences.getRefreshToken();
+
+    if (refreshToken == null || TextUtils.isEmpty(refreshToken)) {
+      refreshToken = getUserStringFromAndroidAccountManager(SecureKeys.REFRESH_TOKEN);
+      AccountManagerPreferences.setRefreshToken(refreshToken);
+    }
+
+    if (refreshToken == null || TextUtils.isEmpty(refreshToken)) {
+      try {
+        refreshToken = getRefreshTokenFromAccountManager(); // as it is done in V7
+        AccountManagerPreferences.setRefreshToken(refreshToken);
+      } catch (Exception e) {
+        CrashReport.getInstance().log(e);
+      }
+    }
+
+    return refreshToken;
+  }
+
+  private static Observable<String> getNewAccessTokenFromRefreshToken(String refreshToken,
+      Action1<Throwable> action1) {
+    return OAuth2AuthenticationRequest.of(refreshToken, aptoideClientUuid.getUniqueIdentifier())
+        .observe()
+        .observeOn(AndroidSchedulers.mainThread())
+        .map(OAuth::getAccessToken)
+        .subscribeOn(Schedulers.io())
+        .doOnNext(accessToken -> {
+          setAccessTokenOnLocalAccount(accessToken, null, SecureKeys.ACCESS_TOKEN);
+          AccountManagerPreferences.setAccessToken(accessToken);
+        })
+        .doOnError(action1)
+        .observeOn(AndroidSchedulers.mainThread());
+  }
+
+  private static Action1<Throwable> getOnErrorAction(Context context) {
+    return new Action1<Throwable>() {
+      @Override public void call(Throwable throwable) {
+        removeLocalAccount();
+        openAccountManager(context);
+      }
+    };
+  }
+
+  private static String getUserStringFromAndroidAccountManager(String key) {
+    AccountManager manager = AccountManager.get(getContext());
+    Account[] accountsByType = manager.getAccountsByType(Constants.ACCOUNT_TYPE);
+
+    return accountsByType.length > 0 ? manager.getUserData(accountsByType[0], key) : null;
+  }
+
+  private static @Nullable String getRefreshTokenFromAccountManager()
+      throws AuthenticatorException, OperationCanceledException, IOException {
+    AccountManager manager = AccountManager.get(getContext());
+    Account[] accountsByType = manager.getAccountsByType(Constants.ACCOUNT_TYPE);
+    String refreshToken =
+        manager.blockingGetAuthToken(accountsByType[0], Constants.AUTHTOKEN_TYPE_FULL_ACCESS,
+            false);
+    return refreshToken;
+  }
+
+  public static void setAccessTokenOnLocalAccount(String accessToken, @Nullable Account userAccount,
+      @NonNull String dataKey) {
+    AccountManager accountManager = AccountManager.get(getContext());
+
+    if (userAccount == null) {
+      Account[] accounts = accountManager.getAccounts();
+      for (final Account account : accounts) {
+        if (TextUtils.equals(account.name, AptoideAccountManager.getUserEmail())
+            && TextUtils.equals(account.type, Constants.ACCOUNT_TYPE)) {
+          userAccount = account;
+          break;
+        }
+      }
+    } else {
+      accountManager.setUserData(userAccount, dataKey, accessToken);
+    }
+  }
+
+  /**
+   * Get the userEmail of current logged user
+   *
+   * @return A string with the userEmail
+   */
+  public static String getUserEmail() {
+    String userName = AccountManagerPreferences.getUserEmail();
+    if (userName == null || TextUtils.isEmpty(userName)) {
+      AccountManager accountManager = AccountManager.get(getContext());
+      Account[] accounts = accountManager.getAccountsByType(Constants.ACCOUNT_TYPE);
+      if (accounts.length > 0) {
+        userName = accounts[0].name;
+        AccountManagerPreferences.setUserEmail(userName);
+      }
+    }
+    return userName;
+  }
+
   /**
    * Method used when the given AccessToken is invalid or has expired. The method will ask to
    * server for other accessToken. This request is synchronous.
@@ -592,21 +635,6 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
         .first();
   }
 
-  private static Observable<String> getNewAccessTokenFromRefreshToken(String refreshToken,
-      Action1<Throwable> action1) {
-    return OAuth2AuthenticationRequest.of(refreshToken, idsRepository.getAptoideClientUUID())
-        .observe()
-        .observeOn(AndroidSchedulers.mainThread())
-        .map(OAuth::getAccessToken)
-        .subscribeOn(Schedulers.io())
-        .doOnNext(accessToken -> {
-          setAccessTokenOnLocalAccount(accessToken, null, SecureKeys.ACCESS_TOKEN);
-          AccountManagerPreferences.setAccessToken(accessToken);
-        })
-        .doOnError(action1)
-        .observeOn(AndroidSchedulers.mainThread());
-  }
-
   static void setupRegisterUser(IRegisterUser callback, Button signupButton) {
     final WeakReference callBackWeakReference = new WeakReference(callback);
     signupButton.setOnClickListener(v -> {
@@ -625,37 +653,38 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     String email = callback.getUserEmail();
     String password = callback.getUserPassword();
     if (validateUserCredentials(callback, email, password)) {
-      CreateUserRequest.of(email, password, idsRepository.getAptoideClientUUID()).execute(oAuth -> {
-        if (oAuth.hasErrors()) {
-          if (oAuth.getErrors() != null && oAuth.getErrors().size() > 0) {
-            callback.onRegisterFail(
-                ErrorsMapper.getWebServiceErrorMessageFromCode(oAuth.getErrors().get(0).code));
+      CreateUserRequest.of(email, password, aptoideClientUuid.getUniqueIdentifier())
+          .execute(oAuth -> {
+            if (oAuth.hasErrors()) {
+              if (oAuth.getErrors() != null && oAuth.getErrors().size() > 0) {
+                callback.onRegisterFail(
+                    ErrorsMapper.getWebServiceErrorMessageFromCode(oAuth.getErrors().get(0).code));
+                genericPleaseWaitDialog.dismiss();
+              } else {
+                callback.onRegisterFail(R.string.unknown_error);
+                genericPleaseWaitDialog.dismiss();
+              }
+            } else {
+              Bundle bundle = new Bundle();
+              bundle.putString(AptoideLoginUtils.APTOIDE_LOGIN_USER_NAME_KEY, email);
+              bundle.putString(AptoideLoginUtils.APTOIDE_LOGIN_PASSWORD_KEY, password);
+              bundle.putString(AptoideLoginUtils.APTOIDE_LOGIN_REFRESH_TOKEN_KEY,
+                  oAuth.getRefresh_token());
+              bundle.putString(AptoideLoginUtils.APTOIDE_LOGIN_ACCESS_TOKEN_KEY,
+                  oAuth.getAccessToken());
+              callback.onRegisterSuccess(bundle);
+              genericPleaseWaitDialog.dismiss();
+            }
+          }, e -> {
+            if (e instanceof NetworkErrorException) {
+              callback.onRegisterFail(R.string.unknown_error);
+            }
+            if (e instanceof SocketTimeoutException) {
+              AptoideAccountManager.loginUserCredentials(LoginMode.APTOIDE, email, password, null);
+            }
             genericPleaseWaitDialog.dismiss();
-          } else {
-            callback.onRegisterFail(R.string.unknown_error);
-            genericPleaseWaitDialog.dismiss();
-          }
-        } else {
-          Bundle bundle = new Bundle();
-          bundle.putString(AptoideLoginUtils.APTOIDE_LOGIN_USER_NAME_KEY, email);
-          bundle.putString(AptoideLoginUtils.APTOIDE_LOGIN_PASSWORD_KEY, password);
-          bundle.putString(AptoideLoginUtils.APTOIDE_LOGIN_REFRESH_TOKEN_KEY,
-              oAuth.getRefresh_token());
-          bundle.putString(AptoideLoginUtils.APTOIDE_LOGIN_ACCESS_TOKEN_KEY,
-              oAuth.getAccessToken());
-          callback.onRegisterSuccess(bundle);
-          genericPleaseWaitDialog.dismiss();
-        }
-      }, e -> {
-        if (e instanceof NetworkErrorException) {
-          callback.onRegisterFail(R.string.unknown_error);
-        }
-        if (e instanceof SocketTimeoutException) {
-          AptoideAccountManager.loginUserCredentials(LoginMode.APTOIDE, email, password, null);
-        }
-        genericPleaseWaitDialog.dismiss();
-        e.printStackTrace();
-      }, true);
+            e.printStackTrace();
+          }, true);
     } else {
       genericPleaseWaitDialog.dismiss();
     }
@@ -732,15 +761,6 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
     return hasNumber && hasLetter;
   }
 
-  private static Action1<Throwable> getOnErrorAction(Context context) {
-    return new Action1<Throwable>() {
-      @Override public void call(Throwable throwable) {
-        removeLocalAccount();
-        openAccountManager(context);
-      }
-    };
-  }
-
   public static void unsubscribeStore(String storeName) {
     ChangeUserRepoSubscriptionRequest.of(storeName, false)
         .execute(genericResponseV3 -> Logger.d(TAG, "Successfully unsubscribed " + storeName),
@@ -765,43 +785,6 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
         .observe()
         .observeOn(AndroidSchedulers.mainThread())
         .map(getUserRepoSubscription -> getUserRepoSubscription.getSubscription());
-  }
-
-  public static Observable<CheckUserCredentialsJson> refreshAndSaveUserInfoData() {
-    return refreshUserInfoData().doOnNext(AptoideAccountManager::saveUserInfo);
-  }
-
-  public static Observable<CheckUserCredentialsJson> refreshUserInfoData() {
-    return CheckUserCredentialsRequest.of(getAccessToken())
-        .observe()
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribeOn(Schedulers.io())
-        .doOnError(e -> {
-          Logger.e(TAG, e);
-          CrashReports.logException(e);
-        });
-  }
-
-  public static void removeLocalAccount() {
-    AccountManager manager = AccountManager.get(getContext());
-    Account[] accounts = manager.getAccountsByType(Constants.ACCOUNT_TYPE);
-    userIsLoggedIn = false;
-    for (Account account : accounts) {
-      if (Build.VERSION.SDK_INT >= 22) {
-        manager.removeAccountExplicitly(account);
-      } else {
-        manager.removeAccount(account, null, null);
-      }
-    }
-    AccountManagerPreferences.removeUserEmail();
-    AccountManagerPreferences.removeAccessToken();
-    AccountManagerPreferences.removeRefreshToken();
-    AccountManagerPreferences.removeMatureSwitch();
-    AccountManagerPreferences.removeQueueName();
-    AccountManagerPreferences.removeUserAvatar();
-    AccountManagerPreferences.removeUserNickName();
-    AccountManagerPreferences.removeUserRepo();
-    AccountManagerPreferences.removeRepoAvatar();
   }
 
   /**
@@ -881,26 +864,57 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
       try {
         accountManager.addAccountExplicitly(account, encryptPassword, null);
       } catch (SecurityException e) {
-        e.printStackTrace();
-        CrashReports.logException(e);
+        CrashReport.getInstance().log(e);
       }
       accountManager.setUserData(account, SecureKeys.REFRESH_TOKEN, refreshToken);
       AccountManagerPreferences.setRefreshToken(refreshToken);
 
       return refreshAndSaveUserInfoData().doOnError(e -> {
-        Logger.e(TAG, e);
+        CrashReport.getInstance().log(e);
       }).map(userData -> true);
     }
     return Observable.just(false);
   }
 
+  public static Observable<CheckUserCredentialsJson> refreshAndSaveUserInfoData() {
+    return refreshUserInfoData().doOnNext(AptoideAccountManager::saveUserInfo);
+  }
+
+  public static Observable<CheckUserCredentialsJson> refreshUserInfoData() {
+    return CheckUserCredentialsRequest.of(getAccessToken())
+        .observe()
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribeOn(Schedulers.io())
+        .doOnError(e -> {
+          CrashReport.getInstance().log(e);
+        });
+  }
+
+  /**
+   * Get the accessToken used to authenticate user on aptoide webservices
+   *
+   * @return A string with the token
+   */
+  @Partners @Nullable public static String getAccessToken() {
+    String accessToken = AccountManagerPreferences.getAccessToken();
+    if (accessToken == null || TextUtils.isEmpty(accessToken)) {
+      accessToken = getUserStringFromAndroidAccountManager(SecureKeys.ACCESS_TOKEN);
+      AccountManagerPreferences.setAccessToken(accessToken);
+    }
+    return accessToken;
+  }
+
   void onLoginFail(String reason) {
-    mCallback.onLoginFail(reason);
+    if (mCallback != null) mCallback.onLoginFail(reason);
   }
 
   void onLoginSuccess(LoginMode loginType, String loginOrigin, String username, String password) {
+
     userIsLoggedIn = true;
-    mCallback.onLoginSuccess();
+
+    if (mCallback != null) {
+      mCallback.onLoginSuccess();
+    }
     if (analytics != null) {
       analytics.login(loginType.name());
     }
@@ -973,7 +987,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
    * @return The user name introduced by user
    */
   String getIntroducedUserName() {
-    return mCallback.getIntroducedUserName();
+    return mCallback == null ? null : mCallback.getIntroducedUserName();
   }
 
   /**
@@ -982,7 +996,7 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
    * @return The password introduced by user
    */
   String getIntroducedPassword() {
-    return mCallback.getIntroducedPassword();
+    return mCallback == null ? null : mCallback.getIntroducedPassword();
   }
 
   /*******************************************************/

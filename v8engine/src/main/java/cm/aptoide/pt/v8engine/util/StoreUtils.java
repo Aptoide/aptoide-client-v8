@@ -2,7 +2,8 @@ package cm.aptoide.pt.v8engine.util;
 
 import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.annotation.Partners;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
@@ -10,6 +11,7 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.store.GetStoreMeta;
@@ -21,6 +23,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import rx.Observable;
 
 /**
  * Created by neuro on 14-10-2016.
@@ -32,9 +35,13 @@ public class StoreUtils {
   public static final String PRIVATE_STORE_WRONG_CREDENTIALS = "STORE-4";
 
   private static StoreCredentialsProviderImpl storeCredentialsProvider;
+  private static AptoideClientUUID aptoideClientUUID;
 
   static {
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
+
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
   }
 
   @Deprecated
@@ -42,14 +49,8 @@ public class StoreUtils {
     return storeCredentialsProvider.get(storeId);
   }
 
-  @Deprecated
-  public static BaseRequestWithStore.StoreCredentials getStoreCredentials(String storeName) {
-    return storeCredentialsProvider.get(storeName);
-  }
-
-  @Deprecated
-  public static @Nullable BaseRequestWithStore.StoreCredentials getStoreCredentialsFromUrl(
-      String url) {
+  @Partners @Deprecated public static @Nullable
+  BaseRequestWithStore.StoreCredentials getStoreCredentialsFromUrl(String url) {
     return storeCredentialsProvider.fromUrl(url);
   }
 
@@ -61,41 +62,8 @@ public class StoreUtils {
       @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
       @Nullable ErrorRequestListener errorRequestListener) {
     subscribeStore(GetStoreMetaRequest.of(getStoreCredentials(storeName),
-        AptoideAccountManager.getAccessToken(),
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID()), successRequestListener,
-        errorRequestListener);
-  }
-
-  public static boolean isSubscribedStore(String storeName) {
-    StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
-    return storeAccessor.get(storeName) != null;
-  }
-
-  public static String split(String repoUrl) {
-    Logger.d("Aptoide-RepoUtils", "Splitting " + repoUrl);
-    repoUrl = formatRepoUri(repoUrl);
-    return repoUrl.split("http://")[1].split("\\.store")[0].split("\\.bazaarandroid.com")[0];
-  }
-
-  public static String formatRepoUri(String repoUri) {
-
-    repoUri = repoUri.toLowerCase(Locale.ENGLISH);
-
-    if (repoUri.contains("http//")) {
-      repoUri = repoUri.replaceFirst("http//", "http://");
-    }
-
-    if (repoUri.length() != 0 && repoUri.charAt(repoUri.length() - 1) != '/') {
-      repoUri = repoUri + '/';
-      Logger.d("Aptoide-ManageRepo", "repo uri: " + repoUri);
-    }
-    if (!repoUri.startsWith("http://")) {
-      repoUri = "http://" + repoUri;
-      Logger.d("Aptoide-ManageRepo", "repo uri: " + repoUri);
-    }
-
-    return repoUri;
+        AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier()),
+        successRequestListener, errorRequestListener);
   }
 
   /**
@@ -141,13 +109,49 @@ public class StoreUtils {
       if (errorRequestListener != null) {
         errorRequestListener.onError(e);
       }
-      CrashReports.logException(e);
+      CrashReport.getInstance().log(e);
     });
+  }
+
+  @Deprecated
+  public static BaseRequestWithStore.StoreCredentials getStoreCredentials(String storeName) {
+    return storeCredentialsProvider.get(storeName);
   }
 
   private static boolean isPrivateCredentialsSet(GetStoreMetaRequest getStoreMetaRequest) {
     return getStoreMetaRequest.getBody().getStoreUser() != null
         && getStoreMetaRequest.getBody().getStorePassSha1() != null;
+  }
+
+  public static Observable<Boolean> isSubscribedStore(String storeName) {
+    StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
+    return storeAccessor.get(storeName).map(store -> store != null);
+  }
+
+  public static String split(String repoUrl) {
+    Logger.d("Aptoide-RepoUtils", "Splitting " + repoUrl);
+    repoUrl = formatRepoUri(repoUrl);
+    return repoUrl.split("http://")[1].split("\\.store")[0].split("\\.bazaarandroid.com")[0];
+  }
+
+  public static String formatRepoUri(String repoUri) {
+
+    repoUri = repoUri.toLowerCase(Locale.ENGLISH);
+
+    if (repoUri.contains("http//")) {
+      repoUri = repoUri.replaceFirst("http//", "http://");
+    }
+
+    if (repoUri.length() != 0 && repoUri.charAt(repoUri.length() - 1) != '/') {
+      repoUri = repoUri + '/';
+      Logger.d("Aptoide-ManageRepo", "repo uri: " + repoUri);
+    }
+    if (!repoUri.startsWith("http://")) {
+      repoUri = "http://" + repoUri;
+      Logger.d("Aptoide-ManageRepo", "repo uri: " + repoUri);
+    }
+
+    return repoUri;
   }
 
   public static List<Long> getSubscribedStoresIds() {

@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -11,28 +12,31 @@ public class StoreGridHeaderDisplayable extends Displayable {
   @Getter private final GetStoreWidgets.WSWidget wsWidget;
   @Getter private final String storeTheme;
   @Getter private final String tag;
+  @Getter private StoreContext storeContext;
   @Getter @Setter private boolean moreVisible;
 
   public StoreGridHeaderDisplayable() {
-    this(null, null, null);
+    this(null, null, null, null);
   }
 
-  public StoreGridHeaderDisplayable(GetStoreWidgets.WSWidget wsWidget) {
-    this(wsWidget, null, null);
-  }
-
-  public StoreGridHeaderDisplayable(GetStoreWidgets.WSWidget wsWidget, String storeTheme, String tag) {
+  public StoreGridHeaderDisplayable(GetStoreWidgets.WSWidget wsWidget, String storeTheme,
+      String tag, StoreContext storeContext) {
     this.wsWidget = wsWidget;
     this.storeTheme = storeTheme;
     this.tag = tag;
+    this.storeContext = storeContext;
     this.moreVisible = true;
   }
 
-  @Override public int getViewLayout() {
-    return R.layout.displayable_grid_header;
+  public StoreGridHeaderDisplayable(GetStoreWidgets.WSWidget wsWidget) {
+    this(wsWidget, null, null, null);
   }
 
   @Override protected Displayable.Configs getConfig() {
     return new Configs(1, true);
+  }
+
+  @Override public int getViewLayout() {
+    return R.layout.displayable_grid_header;
   }
 }

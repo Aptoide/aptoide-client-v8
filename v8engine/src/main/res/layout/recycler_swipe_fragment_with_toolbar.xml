@@ -24,8 +24,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
+        android:paddingEnd="@dimen/recycler_margin"
         android:paddingLeft="@dimen/recycler_margin"
         android:paddingRight="@dimen/recycler_margin"
+        android:paddingStart="@dimen/recycler_margin"
         />
 
 
@@ -36,7 +38,7 @@
       android:id="@+id/fabAdd"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_gravity="right|bottom"
+      android:layout_gravity="right|end|bottom"
       android:layout_margin="@dimen/fab_margin"
       android:src="@drawable/ic_add"
       android:visibility="gone"

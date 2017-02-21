@@ -5,7 +5,7 @@
 
 package cm.aptoide.pt.v8engine.websocket;
 
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
@@ -54,61 +54,6 @@ public class HybiParser {
 
   public HybiParser(WebSocketClient client) {
     mClient = client;
-  }
-
-  private static byte[] mask(byte[] payload, byte[] mask, int offset) {
-    if (mask.length == 0) {
-      return payload;
-    }
-
-    for (int i = 0; i < payload.length - offset; i++) {
-      payload[offset + i] = (byte) (payload[offset + i] ^ mask[i % 4]);
-    }
-    return payload;
-  }
-
-  /**
-   * Copies elements from {@code original} into a new array, from indexes start (inclusive) to end
-   * (exclusive). The
-   * original order of elements is preserved. If {@code end} is greater than {@code
-   * original.length}, the result is
-   * padded with the value {@code (byte) 0}.
-   *
-   * @param original the original array
-   * @param start the start index, inclusive
-   * @param end the end index, exclusive
-   * @return the new array
-   * @throws ArrayIndexOutOfBoundsException if {@code start < 0 || start > original.length}
-   * @throws IllegalArgumentException if {@code start > end}
-   * @throws NullPointerException if {@code original == null}
-   * @since 1.6
-   */
-  private static byte[] copyOfRange(byte[] original, int start, int end) {
-    if (start > end) {
-      throw new IllegalArgumentException();
-    }
-    int originalLength = original.length;
-    if (start < 0 || start > originalLength) {
-      throw new ArrayIndexOutOfBoundsException();
-    }
-    int resultLength = end - start;
-    int copyLength = Math.min(resultLength, originalLength - start);
-    byte[] result = new byte[resultLength];
-    System.arraycopy(original, start, result, 0, copyLength);
-    return result;
-  }
-
-  private static long byteArrayToLong(byte[] b, int offset, int length) {
-    if (b.length < length) {
-      throw new IllegalArgumentException("length must be less than or equal to b.length");
-    }
-
-    long value = 0;
-    for (int i = 0; i < length; i++) {
-      int shift = (length - 1 - i) * 8;
-      value += (b[i + offset] & 0x000000FF) << shift;
-    }
-    return value;
   }
 
   public void start(HappyDataInputStream stream) throws IOException {
@@ -182,20 +127,140 @@ public class HybiParser {
     mStage = mMasked ? 3 : 4;
   }
 
-  public byte[] frame(String data) {
-    return frame(data, OP_TEXT, -1);
+  private void emitFrame() throws IOException {
+    byte[] payload = mask(mPayload, mMask, 0);
+    int opcode = mOpcode;
+
+    if (opcode == OP_CONTINUATION) {
+      if (mMode == 0) {
+        throw new ProtocolError("Mode was not set.");
+      }
+      mBuffer.write(payload);
+      if (mFinal) {
+        byte[] message = mBuffer.toByteArray();
+        if (mMode == MODE_TEXT) {
+          mClient.getListener().onMessage(encode(message));
+        } else {
+          mClient.getListener().onMessage(message);
+        }
+        reset();
+      }
+    } else if (opcode == OP_TEXT) {
+      if (mFinal) {
+        String messageText = encode(payload);
+        mClient.getListener().onMessage(messageText);
+      } else {
+        mMode = MODE_TEXT;
+        mBuffer.write(payload);
+      }
+    } else if (opcode == OP_BINARY) {
+      if (mFinal) {
+        mClient.getListener().onMessage(payload);
+      } else {
+        mMode = MODE_BINARY;
+        mBuffer.write(payload);
+      }
+    } else if (opcode == OP_CLOSE) {
+      int code = (payload.length >= 2) ? 256 * payload[0] + payload[1] : 0;
+      String reason = (payload.length > 2) ? encode(slice(payload, 2)) : null;
+      Logger.d(TAG, "Got close op! " + code + " " + reason);
+      mClient.getListener().onDisconnect(code, reason);
+    } else if (opcode == OP_PING) {
+      if (payload.length > 125) {
+        throw new ProtocolError("Ping payload too large");
+      }
+      Logger.d(TAG, "Sending pong!!");
+      mClient.sendFrame(frame(payload, OP_PONG, -1));
+    } else if (opcode == OP_PONG) {
+      String message = encode(payload);
+      // FIXME: Fire callback...
+      Logger.d(TAG, "Got pong! " + message);
+    }
   }
 
-  public byte[] frame(byte[] data) {
-    return frame(data, OP_BINARY, -1);
+  private int getInteger(byte[] bytes) throws ProtocolError {
+    long i = byteArrayToLong(bytes, 0, bytes.length);
+    if (i < 0 || i > Integer.MAX_VALUE) {
+      throw new ProtocolError("Bad integer: " + i);
+    }
+    return (int) i;
+  }
+
+  private static byte[] mask(byte[] payload, byte[] mask, int offset) {
+    if (mask.length == 0) {
+      return payload;
+    }
+
+    for (int i = 0; i < payload.length - offset; i++) {
+      payload[offset + i] = (byte) (payload[offset + i] ^ mask[i % 4]);
+    }
+    return payload;
+  }
+
+  private String encode(byte[] buffer) {
+    try {
+      return new String(buffer, "UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      CrashReport.getInstance().log(e);
+      throw new RuntimeException(e);
+    }
+  }
+
+  private void reset() {
+    mMode = 0;
+    mBuffer.reset();
+  }
+
+  private byte[] slice(byte[] array, int start) {
+    return copyOfRange(array, start, array.length);
   }
 
   private byte[] frame(byte[] data, int opcode, int errorCode) {
     return frame((Object) data, opcode, errorCode);
   }
 
-  private byte[] frame(String data, int opcode, int errorCode) {
-    return frame((Object) data, opcode, errorCode);
+  private static long byteArrayToLong(byte[] b, int offset, int length) {
+    if (b.length < length) {
+      throw new IllegalArgumentException("length must be less than or equal to b.length");
+    }
+
+    long value = 0;
+    for (int i = 0; i < length; i++) {
+      int shift = (length - 1 - i) * 8;
+      value += (b[i + offset] & 0x000000FF) << shift;
+    }
+    return value;
+  }
+
+  /**
+   * Copies elements from {@code original} into a new array, from indexes start (inclusive) to end
+   * (exclusive). The
+   * original order of elements is preserved. If {@code end} is greater than {@code
+   * original.length}, the result is
+   * padded with the value {@code (byte) 0}.
+   *
+   * @param original the original array
+   * @param start the start index, inclusive
+   * @param end the end index, exclusive
+   * @return the new array
+   * @throws ArrayIndexOutOfBoundsException if {@code start < 0 || start > original.length}
+   * @throws IllegalArgumentException if {@code start > end}
+   * @throws NullPointerException if {@code original == null}
+   * @since 1.6
+   */
+  private static byte[] copyOfRange(byte[] original, int start, int end) {
+    if (start > end) {
+      throw new IllegalArgumentException();
+    }
+    int originalLength = original.length;
+    if (start < 0 || start > originalLength) {
+      throw new ArrayIndexOutOfBoundsException();
+    }
+    int resultLength = end - start;
+    int copyLength = Math.min(resultLength, originalLength - start);
+    byte[] result = new byte[resultLength];
+    System.arraycopy(original, start, result, 0, copyLength);
+    return result;
   }
 
   private byte[] frame(Object data, int opcode, int errorCode) {
@@ -251,6 +316,31 @@ public class HybiParser {
     return frame;
   }
 
+  /**
+   * Copied from AOSP Arrays.java.
+   */
+
+  private byte[] decode(String string) {
+    try {
+      return (string).getBytes("UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      CrashReport.getInstance().log(e);
+      throw new RuntimeException(e);
+    }
+  }
+
+  public byte[] frame(String data) {
+    return frame(data, OP_TEXT, -1);
+  }
+
+  private byte[] frame(String data, int opcode, int errorCode) {
+    return frame((Object) data, opcode, errorCode);
+  }
+
+  public byte[] frame(byte[] data) {
+    return frame(data, OP_BINARY, -1);
+  }
+
   public void ping(String message) {
     mClient.send(frame(message, OP_PING, -1));
   }
@@ -261,96 +351,6 @@ public class HybiParser {
     }
     mClient.send(frame(reason, OP_CLOSE, code));
     mClosed = true;
-  }
-
-  private void emitFrame() throws IOException {
-    byte[] payload = mask(mPayload, mMask, 0);
-    int opcode = mOpcode;
-
-    if (opcode == OP_CONTINUATION) {
-      if (mMode == 0) {
-        throw new ProtocolError("Mode was not set.");
-      }
-      mBuffer.write(payload);
-      if (mFinal) {
-        byte[] message = mBuffer.toByteArray();
-        if (mMode == MODE_TEXT) {
-          mClient.getListener().onMessage(encode(message));
-        } else {
-          mClient.getListener().onMessage(message);
-        }
-        reset();
-      }
-    } else if (opcode == OP_TEXT) {
-      if (mFinal) {
-        String messageText = encode(payload);
-        mClient.getListener().onMessage(messageText);
-      } else {
-        mMode = MODE_TEXT;
-        mBuffer.write(payload);
-      }
-    } else if (opcode == OP_BINARY) {
-      if (mFinal) {
-        mClient.getListener().onMessage(payload);
-      } else {
-        mMode = MODE_BINARY;
-        mBuffer.write(payload);
-      }
-    } else if (opcode == OP_CLOSE) {
-      int code = (payload.length >= 2) ? 256 * payload[0] + payload[1] : 0;
-      String reason = (payload.length > 2) ? encode(slice(payload, 2)) : null;
-      Logger.d(TAG, "Got close op! " + code + " " + reason);
-      mClient.getListener().onDisconnect(code, reason);
-    } else if (opcode == OP_PING) {
-      if (payload.length > 125) {
-        throw new ProtocolError("Ping payload too large");
-      }
-      Logger.d(TAG, "Sending pong!!");
-      mClient.sendFrame(frame(payload, OP_PONG, -1));
-    } else if (opcode == OP_PONG) {
-      String message = encode(payload);
-      // FIXME: Fire callback...
-      Logger.d(TAG, "Got pong! " + message);
-    }
-  }
-
-  private void reset() {
-    mMode = 0;
-    mBuffer.reset();
-  }
-
-  private String encode(byte[] buffer) {
-    try {
-      return new String(buffer, "UTF-8");
-    } catch (UnsupportedEncodingException e) {
-      CrashReports.logException(e);
-      throw new RuntimeException(e);
-    }
-  }
-
-  /**
-   * Copied from AOSP Arrays.java.
-   */
-
-  private byte[] decode(String string) {
-    try {
-      return (string).getBytes("UTF-8");
-    } catch (UnsupportedEncodingException e) {
-      CrashReports.logException(e);
-      throw new RuntimeException(e);
-    }
-  }
-
-  private int getInteger(byte[] bytes) throws ProtocolError {
-    long i = byteArrayToLong(bytes, 0, bytes.length);
-    if (i < 0 || i > Integer.MAX_VALUE) {
-      throw new ProtocolError("Bad integer: " + i);
-    }
-    return (int) i;
-  }
-
-  private byte[] slice(byte[] array, int start) {
-    return copyOfRange(array, start, array.length);
   }
 
   public static class ProtocolError extends IOException {

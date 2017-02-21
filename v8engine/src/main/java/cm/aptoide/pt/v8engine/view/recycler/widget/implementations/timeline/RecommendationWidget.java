@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.timeline;
 
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.ImageView;
@@ -16,7 +17,6 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.TimelineClickEvent;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.RecommendationDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
 
@@ -40,10 +40,6 @@ public class RecommendationWidget extends CardWidget<RecommendationDisplayable> 
     super(itemView);
   }
 
-  @Override String getCardTypeName() {
-    return CARD_TYPE_NAME;
-  }
-
   @Override protected void assignViews(View itemView) {
     super.assignViews(itemView);
     title = (TextView) itemView.findViewById(
@@ -60,29 +56,29 @@ public class RecommendationWidget extends CardWidget<RecommendationDisplayable> 
         R.id.displayable_social_timeline_recommendation_similar_apps);
     getApp = (TextView) itemView.findViewById(
         R.id.displayable_social_timeline_recommendation_get_app_button);
-    cardView =
-        (CardView) itemView.findViewById(R.id.displayable_social_timeline_recommendation_card);
+    cardView = (CardView) itemView.findViewById(R.id.card);
     cardContent = (RelativeLayout) itemView.findViewById(
         R.id.displayable_social_timeline_recommendation_card_content);
   }
 
   @Override public void bindView(RecommendationDisplayable displayable) {
     super.bindView(displayable);
-    title.setText(displayable.getStyledTitle(getContext()));
-    subtitle.setText(displayable.getTimeSinceRecommendation(getContext()));
+    final FragmentActivity context = getContext();
+    title.setText(displayable.getStyledTitle(context));
+    subtitle.setText(displayable.getTimeSinceRecommendation(context));
 
     setCardViewMargin(displayable, cardView);
 
-    ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarResource(), image);
+    ImageLoader.with(context).loadWithShadowCircleTransform(displayable.getAvatarResource(), image);
 
-    ImageLoader.load(displayable.getAppIcon(), appIcon);
+    ImageLoader.with(context).load(displayable.getAppIcon(), appIcon);
 
     appName.setText(displayable.getAppName());
 
-    similarApps.setText(displayable.getSimilarAppsText(getContext()));
+    similarApps.setText(displayable.getSimilarAppsText(context));
 
     getApp.setVisibility(View.VISIBLE);
-    getApp.setText(displayable.getAppText(getContext()));
+    getApp.setText(displayable.getAppText(context));
 
     compositeSubscription.add(RxView.clicks(cardContent).subscribe(a -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
@@ -98,8 +94,12 @@ public class RecommendationWidget extends CardWidget<RecommendationDisplayable> 
               .based_on(displayable.getSimilarAppPackageName())
               .build())
           .build(), TimelineClickEvent.OPEN_APP);
-      ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
+      getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
           .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
     }));
+  }
+
+  @Override String getCardTypeName() {
+    return CARD_TYPE_NAME;
   }
 }

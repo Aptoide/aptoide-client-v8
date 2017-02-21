@@ -3,12 +3,12 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 import android.os.Build;
 import android.support.annotation.ColorRes;
 import android.support.annotation.Dimension;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -51,12 +51,14 @@ public class CommentWidget extends Widget<CommentDisplayable> {
   @Override public void bindView(CommentDisplayable displayable) {
     Comment comment = displayable.getComment();
 
-    ImageLoader.loadWithCircleTransformAndPlaceHolderAvatarSize(comment.getUser().getAvatar(),
-        userAvatar, R.drawable.layer_1);
+    final FragmentActivity context = getContext();
+    ImageLoader.with(context)
+        .loadWithCircleTransformAndPlaceHolderAvatarSize(comment.getUser().getAvatar(), userAvatar,
+            R.drawable.layer_1);
     userName.setText(comment.getUser().getName());
 
     String date = AptoideUtils.DateTimeU.getInstance()
-        .getTimeDiffString(getContext(), comment.getAdded().getTime());
+        .getTimeDiffString(context, comment.getAdded().getTime());
     datePos1.setText(date);
     datePos2.setText(date);
 
@@ -74,12 +76,15 @@ public class CommentWidget extends Widget<CommentDisplayable> {
     final ComplexComment complexComment = comment;
 
     // switch background color according to level
-    @ColorRes int bgColor = (complexComment.getLevel() == 1) ? R.color.comment_gray : R.color.white;
+    @ColorRes int bgColor = (complexComment.getLevel() == 1) ? R.color.white : R.color.comment_gray;
+    final FragmentActivity context = getContext();
+    int color;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      outerLayout.setBackgroundColor(getContext().getColor(bgColor));
+      color = context.getColor(bgColor);
     } else {
-      outerLayout.setBackgroundColor(getContext().getResources().getColor(bgColor));
+      color = context.getResources().getColor(bgColor);
     }
+    outerLayout.setBackgroundColor(color);
 
     // set left/start margin width in default comment
     setLayoutLeftPadding(complexComment);
@@ -93,8 +98,7 @@ public class CommentWidget extends Widget<CommentDisplayable> {
           }))
           .retry()
           .subscribe(aVoid -> { /* nothing else to do */ }, err -> {
-            Logger.e(TAG, err);
-            CrashReports.logException(err);
+            CrashReport.getInstance().log(err);
           }));
     } else {
       // other levels

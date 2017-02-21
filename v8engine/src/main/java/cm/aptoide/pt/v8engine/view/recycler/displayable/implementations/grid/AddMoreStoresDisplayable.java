@@ -13,11 +13,11 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
  */
 public class AddMoreStoresDisplayable extends Displayable {
 
-  @Override public int getViewLayout() {
-    return R.layout.add_more_stores_row;
-  }
-
   @Override protected Configs getConfig() {
     return new Configs(1, true);
+  }
+
+  @Override public int getViewLayout() {
+    return R.layout.add_more_stores_row;
   }
 }

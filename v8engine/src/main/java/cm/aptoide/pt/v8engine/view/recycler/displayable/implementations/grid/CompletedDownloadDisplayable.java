@@ -1,13 +1,8 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 27/07/2016.
- */
-
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.content.Context;
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.actions.PermissionRequest;
+import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.InstallManager;
@@ -19,34 +14,49 @@ import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadEventCon
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.DownloadInstallBaseEvent;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEvent;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEventConverter;
-import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
-import lombok.Setter;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import rx.Observable;
 import rx.functions.Action0;
 
 /**
  * Created by trinkes on 7/15/16.
  */
-public class CompletedDownloadDisplayable extends DisplayablePojo<Progress<Download>> {
+public class CompletedDownloadDisplayable extends Displayable {
 
-  private InstallManager installManager;
-  private DownloadEventConverter converter;
-  private Analytics analytics;
-  @Setter private Action0 onResumeAction;
-  @Setter private Action0 onPauseAction;
-  private InstallEventConverter installConverter;
+  private final InstallManager installManager;
+  private final DownloadEventConverter converter;
+  private final Analytics analytics;
+  private final InstallEventConverter installConverter;
+
+  private final Download download;
+
+  private Action0 onPauseAction;
+  private Action0 onResumeAction;
 
   public CompletedDownloadDisplayable() {
-    super();
+    this.installManager = null;
+    this.converter = null;
+    this.analytics = null;
+    this.installConverter = null;
+    this.download = null;
   }
 
-  public CompletedDownloadDisplayable(Progress<Download> pojo, InstallManager installManager,
-      DownloadEventConverter converter, Analytics analytics, InstallEventConverter installConverter) {
-    super(pojo);
+  public CompletedDownloadDisplayable(Download download, InstallManager installManager,
+      DownloadEventConverter converter, Analytics analytics,
+      InstallEventConverter installConverter) {
+    this.download = download;
     this.installManager = installManager;
     this.converter = converter;
     this.analytics = analytics;
     this.installConverter = installConverter;
+  }
+
+  @Override protected Configs getConfig() {
+    return new Configs(1, false);
+  }
+
+  @Override public int getViewLayout() {
+    return R.layout.completed_donwload_row_layout;
   }
 
   @Override public void onResume() {
@@ -63,53 +73,56 @@ public class CompletedDownloadDisplayable extends DisplayablePojo<Progress<Downl
     super.onPause();
   }
 
-  @Override protected Configs getConfig() {
-    return new Configs(1, false);
-  }
-
-  @Override public int getViewLayout() {
-    return R.layout.completed_donwload_row_layout;
-  }
-
   public void removeDownload(Context context) {
-    installManager.removeInstallationFile(getPojo().getRequest().getMd5(), context);
+    installManager.removeInstallationFile(download.getMd5(), context);
   }
 
   public Observable<Integer> downloadStatus() {
-    return installManager.getInstallation(getPojo().getRequest().getMd5())
+    return installManager.getInstallation(download.getMd5())
         .map(installationProgress -> installationProgress.getRequest().getOverallDownloadStatus())
         .onErrorReturn(throwable -> Download.NOT_DOWNLOADED);
   }
 
-  public Observable<Progress<Download>> resumeDownload(Context context,
-      PermissionRequest permissionRequest) {
-    PermissionManager permissionManager = new PermissionManager();
-    return permissionManager.requestExternalStoragePermission(permissionRequest)
-        .flatMap(success -> permissionManager.requestDownloadAccess(permissionRequest))
-        .flatMap(success -> installManager.install(context, getPojo().getRequest())
-            .doOnSubscribe(() -> setupEvents(getPojo().getRequest())));
-  }
-
   public Observable<Progress<Download>> installOrOpenDownload(Context context,
-      PermissionRequest permissionRequest) {
-    return installManager.getInstallation(getPojo().getRequest().getMd5()).flatMap(installed -> {
+      PermissionService permissionRequest) {
+    return installManager.getInstallation(download.getMd5()).flatMap(installed -> {
       if (installed.getState() == Progress.DONE) {
-        AptoideUtils.SystemU.openApp(
-            getPojo().getRequest().getFilesToDownload().get(0).getPackageName());
+        AptoideUtils.SystemU.openApp(download.getFilesToDownload().get(0).getPackageName());
         return Observable.empty();
       }
       return resumeDownload(context, permissionRequest);
     });
   }
 
-  public void setupEvents(Download download) {
-    DownloadEvent report = converter.create(download, DownloadEvent.Action.CLICK,
-        DownloadEvent.AppContext.DOWNLOADS);
+  public Observable<Progress<Download>> resumeDownload(Context context,
+      PermissionService permissionRequest) {
+    PermissionManager permissionManager = new PermissionManager();
+    return permissionManager.requestExternalStoragePermission(permissionRequest)
+        .flatMap(success -> permissionManager.requestDownloadAccess(permissionRequest))
+        .flatMap(success -> installManager.install(context, download)
+            .doOnSubscribe(() -> setupEvents(download)));
+  }
+
+  private void setupEvents(Download download) {
+    DownloadEvent report =
+        converter.create(download, DownloadEvent.Action.CLICK, DownloadEvent.AppContext.DOWNLOADS);
     analytics.save(download.getPackageName() + download.getVersionCode(), report);
 
     InstallEvent installEvent =
         installConverter.create(download, DownloadInstallBaseEvent.Action.CLICK,
             DownloadInstallBaseEvent.AppContext.DOWNLOADS);
     analytics.save(download.getPackageName() + download.getVersionCode(), installEvent);
+  }
+
+  public Download getDownload() {
+    return download;
+  }
+
+  public void setOnPauseAction(Action0 onPauseAction) {
+    this.onPauseAction = onPauseAction;
+  }
+
+  public void setOnResumeAction(Action0 onResumeAction) {
+    this.onResumeAction = onResumeAction;
   }
 }

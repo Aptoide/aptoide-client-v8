@@ -7,6 +7,7 @@ import android.widget.Button;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.SetUserRequest;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -22,7 +23,7 @@ public class LoggedInActivity extends BaseActivity {
 
   private static final String TAG = LoggedInActivity.class.getSimpleName();
 
-  private final IdsRepositoryImpl idsRepository =
+  private final AptoideClientUUID aptoideClientUUID =
       new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
           DataProvider.getContext());
 
@@ -67,7 +68,7 @@ public class LoggedInActivity extends BaseActivity {
           getApplicationContext().getString(R.string.please_wait));
       pleaseWaitDialog.show();
 
-      SetUserRequest.of(idsRepository.getAptoideClientUUID(), UserAccessState.PUBLIC.toString(),
+      SetUserRequest.of(aptoideClientUUID.getUniqueIdentifier(), UserAccessState.PUBLIC.toString(),
           AptoideAccountManager.getAccessToken()).execute(answer -> {
         if (answer.isOk()) {
           Logger.v(TAG, "user is public");
@@ -87,15 +88,6 @@ public class LoggedInActivity extends BaseActivity {
     }));
   }
 
-  private void updateUserInfo() {
-    AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
-      if (pleaseWaitDialog != null && pleaseWaitDialog.isShowing()) {
-        pleaseWaitDialog.dismiss();
-      }
-      finish();
-    }, throwable -> throwable.printStackTrace());
-  }
-
   private void goTo() {
 
     if (getIntent() != null && getIntent().getBooleanExtra(AptoideLoginUtils.IS_FACEBOOK_OR_GOOGLE,
@@ -108,6 +100,15 @@ public class LoggedInActivity extends BaseActivity {
       startActivity(getIntent().setClass(this, CreateStoreActivity.class));
       finish();
     }
+  }
+
+  private void updateUserInfo() {
+    AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(refreshed -> {
+      if (pleaseWaitDialog != null && pleaseWaitDialog.isShowing()) {
+        pleaseWaitDialog.dismiss();
+      }
+      finish();
+    }, throwable -> throwable.printStackTrace());
   }
 }
 

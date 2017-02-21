@@ -8,17 +8,17 @@ import java.util.List;
  * created by SithEngineer
  */
 public class CommentNode {
-  private Comment comment;
   private final List<CommentNode> childComments;
+  private Comment comment;
   private int level = 1;
+
+  public CommentNode() {
+    this(null);
+  }
 
   public CommentNode(Comment comment) {
     this.comment = comment;
     childComments = new ArrayList<>();
-  }
-
-  public CommentNode() {
-    this(null);
   }
 
   public Comment getComment() {
@@ -34,7 +34,7 @@ public class CommentNode {
   }
 
   public boolean hasChild() {
-    return childComments.size()>0;
+    return childComments.size() > 0;
   }
 
   public List<CommentNode> getChildComments() {

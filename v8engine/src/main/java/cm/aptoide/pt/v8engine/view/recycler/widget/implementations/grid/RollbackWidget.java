@@ -1,29 +1,23 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 28/07/2016.
- */
-
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import cm.aptoide.pt.actions.PermissionRequest;
+import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RollbackDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import com.jakewharton.rxbinding.view.RxView;
 import java.text.DateFormat;
 
 import static android.text.format.DateFormat.getTimeFormat;
 
-/**
- * Created by sithengineer on 14/06/16.
- */
 public class RollbackWidget extends Widget<RollbackDisplayable> {
 
   private static final String TAG = RollbackWidget.class.getSimpleName();
@@ -49,70 +43,67 @@ public class RollbackWidget extends Widget<RollbackDisplayable> {
   @Override public void bindView(RollbackDisplayable displayable) {
     final Rollback pojo = displayable.getPojo();
 
-    ImageLoader.load(pojo.getIcon(), appIcon);
+    final FragmentActivity context = getContext();
+    ImageLoader.with(context).load(pojo.getIcon(), appIcon);
     appName.setText(pojo.getAppName());
     appUpdateVersion.setText(pojo.getVersionName());
 
     StringBuilder builder = new StringBuilder();
     switch (Rollback.Action.valueOf(pojo.getAction())) {
       case UPDATE:
-        builder.append(getContext().getString(R.string.rollback_updated));
+        builder.append(context.getString(R.string.rollback_updated));
         rollbackAction.setText(R.string.downgrade);
         break;
       case DOWNGRADE:
-        builder.append(getContext().getString(R.string.rollback_downgraded));
+        builder.append(context.getString(R.string.rollback_downgraded));
         rollbackAction.setText(R.string.update);
         break;
       case UNINSTALL:
-        builder.append(getContext().getString(R.string.rollback_uninstalled));
+        builder.append(context.getString(R.string.rollback_uninstalled));
         rollbackAction.setText(R.string.install);
         break;
       case INSTALL:
-        builder.append(getContext().getString(R.string.rollback_installed));
+        builder.append(context.getString(R.string.rollback_installed));
         rollbackAction.setText(R.string.uninstall);
         break;
     }
-    DateFormat timeFormat = getTimeFormat(getContext());
+    DateFormat timeFormat = getTimeFormat(context);
     builder.append(" ");
-    builder.append(String.format(getContext().getString(R.string.at_time),
-        timeFormat.format(pojo.getTimestamp())));
+    builder.append(
+        String.format(context.getString(R.string.at_time), timeFormat.format(pojo.getTimestamp())));
     appState.setText(builder.toString());
 
-    rollbackAction.setOnClickListener(view -> {
+    compositeSubscription.add(RxView.clicks(rollbackAction).subscribe(view -> {
 
-      //			@Cleanup
-      //			Realm realm = Database.get();
-      //			Database.RollbackQ.upadteRollbackWithAction(realm, pojo, Rollback.Action.UPDATE);
-
-      final PermissionRequest permissionRequest = ((PermissionRequest) getContext());
+      final PermissionService permissionRequest = ((PermissionService) getContext());
 
       permissionRequest.requestAccessToExternalFileSystem(() -> {
         Rollback.Action action = Rollback.Action.valueOf(pojo.getAction());
         switch (action) {
           case DOWNGRADE:
-            displayable.update((FragmentShower) getContext());
+            displayable.update(getNavigationManager());
             break;
           case INSTALL:
             //only if the app is installed
             //ShowMessage.asSnack(view, R.string.uninstall_msg);
-            ShowMessage.asSnack(view, R.string.uninstall);
+            ShowMessage.asSnack(context, R.string.uninstall);
             compositeSubscription.add(
-                displayable.uninstall(getContext(), displayable.getDownloadFromPojo())
+                displayable.uninstall(context, displayable.getDownloadFromPojo())
                     .subscribe(uninstalled -> {
                     }, throwable -> throwable.printStackTrace()));
             break;
 
           case UNINSTALL:
-            displayable.install((FragmentShower) getContext());
+            displayable.install(getNavigationManager());
             break;
 
           case UPDATE:
-            displayable.update((FragmentShower) getContext());
+            displayable.update(getNavigationManager());
             break;
         }
       }, () -> {
-        Logger.e(TAG, "unable to access to external FS");
+        Logger.e(TAG, "Unable to access external file system");
       });
-    });
+    }, throwable -> CrashReport.getInstance().log(throwable)));
   }
 }

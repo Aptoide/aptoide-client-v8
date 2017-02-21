@@ -12,9 +12,8 @@ import lombok.EqualsAndHashCode;
 /**
  * Created by marcelobenites on 16/11/16.
  */
-@Data
-@EqualsAndHashCode(callSuper = true)
-public class PaymentConfirmationResponse extends BaseV3Response {
+@Data @EqualsAndHashCode(callSuper = true) public class PaymentConfirmationResponse
+    extends BaseV3Response {
 
   @JsonProperty("payStatus") private String paymentStatus;
   @JsonProperty("paykey") private String paymentConfirmationId;

@@ -244,7 +244,8 @@ public class Translator {
         translated = Application.getContext().getString(R.string.apps_for_kids);
         break;
       case "Aptoide Publishers":
-        translated = AptoideUtils.StringU.getFormattedString(R.string.aptoide_publishers, Application.getConfiguration().getMarketName());
+        translated = AptoideUtils.StringU.getFormattedString(R.string.aptoide_publishers,
+            Application.getConfiguration().getMarketName());
         break;
       case "Music & Video":
         translated = Application.getContext().getString(R.string.music_video);
@@ -268,6 +269,9 @@ public class Translator {
         translated = Application.getContext().getString(R.string.more_editors_choice);
         break;
       case "Comments in this store":
+        translated = Application.getContext().getString(R.string.comment_store_title);
+        break;
+      case "Comments on this store":
         translated = Application.getContext().getString(R.string.comment_store_title);
         break;
       default:

@@ -6,6 +6,8 @@
 package cm.aptoide.pt.database.accessors;
 
 import android.text.TextUtils;
+import cm.aptoide.pt.database.realm.PaymentAuthorization;
+import cm.aptoide.pt.database.realm.PaymentConfirmation;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.logger.Logger;
 import io.realm.DynamicRealm;
@@ -199,6 +201,18 @@ class RealmToRealmDatabaseMigration implements RealmMigration {
           .addField("url", String.class)
           .addField("redirectUrl", String.class)
           .addField("status", String.class, FieldAttribute.REQUIRED);
+
+      oldVersion++;
+    }
+    if (oldVersion == 8080) {
+      schema.get("Download").addField("downloadError", int.class);
+
+      realm.delete(PaymentConfirmation.class.getSimpleName());
+      realm.delete(PaymentAuthorization.class.getSimpleName());
+
+      schema.get("PaymentConfirmation").addField("payerId", String.class, FieldAttribute.REQUIRED);
+
+      schema.get("PaymentAuthorization").addField("payerId", String.class, FieldAttribute.REQUIRED);
 
       oldVersion++;
     }

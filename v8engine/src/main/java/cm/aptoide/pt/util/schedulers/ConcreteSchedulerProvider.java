@@ -11,9 +11,12 @@ import rx.schedulers.Schedulers;
 public class ConcreteSchedulerProvider implements SchedulerProvider {
 
   private static ConcreteSchedulerProvider INSTANCE;
-  private ConcreteSchedulerProvider() { }
+
+  private ConcreteSchedulerProvider() {
+  }
+
   public static synchronized ConcreteSchedulerProvider getInstance() {
-    if(INSTANCE == null) {
+    if (INSTANCE == null) {
       INSTANCE = new ConcreteSchedulerProvider();
     }
     return INSTANCE;

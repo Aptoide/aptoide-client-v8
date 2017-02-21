@@ -18,14 +18,6 @@ public class ApkPermissionGroup {
     this.descriptions.add(description);
   }
 
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
   public List<String> getDescriptions() {
     return descriptions;
   }
@@ -44,6 +36,14 @@ public class ApkPermissionGroup {
         && this.getName()
         .equals(((ApkPermissionGroup) o).getName())
         && this.descriptions.size() == ((ApkPermissionGroup) o).descriptions.size();
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
   }
 }
 

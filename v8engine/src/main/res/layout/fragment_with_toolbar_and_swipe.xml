@@ -5,9 +5,9 @@
   -->
 
 <android.support.design.widget.CoordinatorLayout
-    android:id="@+id/toolbar_and_swipe_coordinator_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/toolbar_and_swipe_coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
@@ -68,8 +68,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
+        android:paddingEnd="@dimen/recycler_margin"
         android:paddingLeft="@dimen/recycler_margin"
         android:paddingRight="@dimen/recycler_margin"
+        android:paddingStart="@dimen/recycler_margin"
         />
 
   </android.support.v4.widget.SwipeRefreshLayout>
@@ -81,8 +83,8 @@
       >
 
     <include
-        android:id="@+id/toolbar"
         layout="@layout/toolbar"
+        android:id="@+id/toolbar"
         />
 
   </android.support.design.widget.AppBarLayout>

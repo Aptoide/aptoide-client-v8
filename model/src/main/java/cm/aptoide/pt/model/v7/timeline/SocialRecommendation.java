@@ -1,7 +1,6 @@
 package cm.aptoide.pt.model.v7.timeline;
 
 import cm.aptoide.pt.model.v7.Comment;
-import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.Store;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -15,14 +14,12 @@ import lombok.Getter;
 /**
  * Created by jdandrade on 20/12/2016.
  */
-@EqualsAndHashCode public class SocialRecommendation implements TimelineCard {
+@EqualsAndHashCode(callSuper = false) public class SocialRecommendation extends SocialCard implements TimelineCard {
 
   @Getter private final String cardId;
   @Getter private final App app;
   @Getter private final Ab ab;
-  @Getter private final long likes;
-  @Getter private final long comments;
-  @Getter private final Review.Stats stats;
+  @Getter private final SocialCardStats stats;
   @Getter private final Store store;
   @Getter private final Comment.User userSharer;
   @Getter private final Date date;
@@ -30,9 +27,11 @@ import lombok.Getter;
 
   @JsonCreator public SocialRecommendation(@JsonProperty("uid") String cardId,
       @JsonProperty("apps") List<App> apps, @JsonProperty("ab") Ab ab,
-      @JsonProperty("user_sharer") Comment.User userSharer, @JsonProperty("user") Comment.User user,
+      @JsonProperty("user_sharer") Comment.User userSharer, @JsonProperty("my") My my,
+      @JsonProperty("likes") List<UserTimeline> likes, @JsonProperty("user") Comment.User user,
       @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC") @JsonProperty("date") Date date,
-      @JsonProperty("stats") Review.Stats stats, @JsonProperty("store") Store store) {
+      @JsonProperty("stats") SocialCardStats stats, @JsonProperty("store") Store store) {
+    super(likes, my);
     this.ab = ab;
     this.date = date;
     this.cardId = cardId;
@@ -40,8 +39,6 @@ import lombok.Getter;
     this.userSharer = userSharer;
     this.stats = stats;
     this.store = store;
-    this.likes = stats.getLikes();
-    this.comments = stats.getComments();
     if (!apps.isEmpty()) {
       this.app = apps.get(0);
     } else {

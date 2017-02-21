@@ -7,8 +7,10 @@
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:paddingBottom="20dp"
+    android:paddingEnd="10dp"
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
+    android:paddingStart="10dp"
     android:paddingTop="20dp"
     >
   <TextView
@@ -16,6 +18,7 @@
       android:layout_height="wrap_content"
       android:layout_centerVertical="true"
       android:layout_toLeftOf="@+id/create_store_action"
+      android:layout_toStartOf="@+id/create_store_action"
       android:text="@string/create_store_displayable_message"
       android:textColor="?attr/inverseTextColor"
       />
@@ -23,6 +26,7 @@
       android:id="@+id/create_store_action"
       android:layout_width="125dp"
       android:layout_height="wrap_content"
+      android:layout_alignParentEnd="true"
       android:layout_alignParentRight="true"
       android:layout_centerVertical="true"
       android:gravity="center"

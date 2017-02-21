@@ -29,8 +29,4 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
     final GetApp pojo = displayable.getPojo();
     // TODO
   }
-
-  @Override public void unbindView() {
-
-  }
 }

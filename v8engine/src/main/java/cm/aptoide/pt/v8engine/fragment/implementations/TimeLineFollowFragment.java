@@ -1,16 +1,20 @@
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.GetFollowersRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetFollowingRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.GetUserLikesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.GetFollowers;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -29,9 +33,16 @@ import rx.functions.Action1;
 
 public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment {
 
-  public static final String OPEN_MODE = "OPEN_MODE";
+  private final AptoideClientUUID aptoideClientUUID;
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
   private TimeLineFollowFragment.FollowFragmentOpenMode openMode;
+  @Nullable private String cardUid;
+  @Nullable private Long numberOfLikes;
+
+  public TimeLineFollowFragment() {
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+  }
 
   public static TimeLineFollowFragment newInstance(FollowFragmentOpenMode openMode,
       long followNumber, String storeTheme) {
@@ -46,8 +57,21 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
             R.string.social_timeline_following_fragment_title, followNumber));
         break;
     }
-    args.putSerializable(OPEN_MODE, openMode);
+    args.putSerializable(BundleKeys.OPEN_MODE, openMode);
     args.putString(BundleCons.STORE_THEME, storeTheme);
+    TimeLineFollowFragment fragment = new TimeLineFollowFragment();
+    fragment.setArguments(args);
+    return fragment;
+  }
+
+  public static TimeLineFollowFragment newInstance(FollowFragmentOpenMode openMode,
+      String storeTheme, String cardUid, long numberOfLikes) {
+    Bundle args = new Bundle();
+    args.putString(TITLE_KEY, DataProvider.getContext().getString(R.string.likes));
+    args.putSerializable(BundleKeys.OPEN_MODE, openMode);
+    args.putString(BundleCons.STORE_THEME, storeTheme);
+    args.putString(BundleKeys.CARD_UID, cardUid);
+    args.putLong(BundleKeys.NUMBER_LIKES, numberOfLikes);
     TimeLineFollowFragment fragment = new TimeLineFollowFragment();
     fragment.setArguments(args);
     return fragment;
@@ -59,7 +83,9 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
 
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
-    openMode = (FollowFragmentOpenMode) args.get(OPEN_MODE);
+    openMode = (FollowFragmentOpenMode) args.get(BundleKeys.OPEN_MODE);
+    cardUid = (String) args.get(BundleKeys.CARD_UID);
+    numberOfLikes = (Long) args.get(BundleKeys.NUMBER_LIKES);
   }
 
   @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
@@ -76,6 +102,16 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
     return super.onOptionsItemSelected(item);
   }
 
+  @Override public void bindViews(View view) {
+    super.bindViews(view);
+    setHasOptionsMenu(true);
+  }
+
+  @Override public void onDestroyView() {
+    endlessRecyclerOnScrollListener.removeListeners();
+    super.onDestroyView();
+  }
+
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
     if (create || refresh) {
@@ -84,15 +120,20 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
       switch (openMode) {
         case FOLLOWERS:
           request = GetFollowersRequest.of(AptoideAccountManager.getAccessToken(),
-              new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                  DataProvider.getContext()).getAptoideClientUUID());
+              aptoideClientUUID.getUniqueIdentifier());
           break;
-        default:
         case FOLLOWING:
           request = GetFollowingRequest.of(AptoideAccountManager.getAccessToken(),
-              new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                  DataProvider.getContext()).getAptoideClientUUID());
+              aptoideClientUUID.getUniqueIdentifier());
           break;
+        case LIKE_PREVIEW:
+          request = GetUserLikesRequest.of(AptoideAccountManager.getAccessToken(),
+              new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+                  DataProvider.getContext()).getUniqueIdentifier(), cardUid);
+          break;
+        default:
+          throw new IllegalStateException(
+              "There is a case (openMode) that it is not being handled.");
       }
       LinkedList<Displayable> dispList = new LinkedList<>();
 
@@ -100,53 +141,32 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
       Action1<GetFollowers> action = (followersList) -> {
         hidden[0] += followersList.getDatalist().getHidden();
         for (GetFollowers.TimelineUser user : followersList.getDatalist().getList()) {
-          dispList.add(new FollowUserDisplayable(user));
+          dispList.add(new FollowUserDisplayable(user, openMode));
         }
         addDisplayables(dispList);
         dispList.clear();
       };
 
-      EndlessRecyclerOnScrollListener.BooleanAction<GetFollowers> firstRequest = response -> {
-        dispList.add(0, new MessageWhiteBgDisplayable(getHeaderMessage()));
-        return false;
-      };
+      EndlessRecyclerOnScrollListener.BooleanAction<GetFollowers> firstRequest = null;
+      if (openMode == FollowFragmentOpenMode.FOLLOWERS
+          || openMode == FollowFragmentOpenMode.FOLLOWING) {
+        firstRequest = response -> {
+          dispList.add(0, new MessageWhiteBgDisplayable(getHeaderMessage()));
+          return false;
+        };
+      }
 
-      recyclerView.clearOnScrollListeners();
+      getRecyclerView().clearOnScrollListeners();
       endlessRecyclerOnScrollListener =
           new EndlessRecyclerOnScrollListener(this.getAdapter(), request, action,
-              Throwable::printStackTrace, 6, true, firstRequest, null);
+              (throwable) -> throwable.printStackTrace(), 6, true, firstRequest, null);
       endlessRecyclerOnScrollListener.setOnEndOfListReachedListener(
           () -> addDisplayable(new MessageWhiteBgDisplayable(getFooterMessage(hidden[0]))));
-      recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+      getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
       endlessRecyclerOnScrollListener.onLoadMore(refresh);
     } else {
-      recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
+      getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
     }
-  }
-
-  @Override public void onDestroyView() {
-    endlessRecyclerOnScrollListener.removeListeners();
-    super.onDestroyView();
-  }
-
-  @Override public void bindViews(View view) {
-    super.bindViews(view);
-    setHasOptionsMenu(true);
-  }
-
-  public String getFooterMessage(int hidden) {
-    String footerMessage;
-    switch (openMode) {
-      case FOLLOWERS:
-        footerMessage = getString(R.string.private_followers_message, hidden);
-        break;
-      case FOLLOWING:
-        footerMessage = getString(R.string.private_following_message, hidden);
-        break;
-      default:
-        footerMessage = "";
-    }
-    return footerMessage;
   }
 
   public String getHeaderMessage() {
@@ -164,7 +184,31 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
     return headerMessage;
   }
 
+  public String getFooterMessage(int hidden) {
+    String footerMessage;
+    switch (openMode) {
+      case FOLLOWERS:
+        footerMessage = getString(R.string.private_followers_message, hidden);
+        break;
+      case FOLLOWING:
+        footerMessage = getString(R.string.private_following_message, hidden);
+        break;
+      case LIKE_PREVIEW:
+        footerMessage = getString(R.string.social_timeline_users_private, hidden);
+        break;
+      default:
+        footerMessage = "";
+    }
+    return footerMessage;
+  }
+
   public enum FollowFragmentOpenMode {
-    FOLLOWERS, FOLLOWING,
+    FOLLOWERS, FOLLOWING, LIKE_PREVIEW
+  }
+
+  @Partners public class BundleKeys {
+    public static final String OPEN_MODE = "OPEN_MODE";
+    public static final String CARD_UID = "CARDUID";
+    public static final String NUMBER_LIKES = "NUMBER_LIKES";
   }
 }

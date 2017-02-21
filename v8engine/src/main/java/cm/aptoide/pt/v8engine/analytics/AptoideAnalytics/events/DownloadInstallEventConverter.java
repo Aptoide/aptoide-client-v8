@@ -65,24 +65,6 @@ abstract class DownloadInstallEventConverter<T extends DownloadInstallBaseEvent>
   protected abstract DownloadInstallAnalyticsBaseBody.Data convertSpecificFields(T report,
       DownloadInstallAnalyticsBaseBody.Data data);
 
-  public DownloadInstallBaseEvent.Origin getOrigin(Download download) {
-    DownloadInstallBaseEvent.Origin origin;
-    switch (download.getAction()) {
-      case Download.ACTION_INSTALL:
-        origin = DownloadInstallBaseEvent.Origin.INSTALL;
-        break;
-      case Download.ACTION_UPDATE:
-        origin = DownloadInstallBaseEvent.Origin.UPDATE;
-        break;
-      case Download.ACTION_DOWNGRADE:
-        origin = DownloadInstallBaseEvent.Origin.DOWNGRADE;
-        break;
-      default:
-        origin = DownloadInstallBaseEvent.Origin.INSTALL;
-    }
-    return origin;
-  }
-
   public T create(Download download, DownloadInstallBaseEvent.Action action,
       DownloadInstallBaseEvent.AppContext context) {
     return create(download, action, context, getOrigin(download));
@@ -107,6 +89,24 @@ abstract class DownloadInstallEventConverter<T extends DownloadInstallBaseEvent>
 
     return createEventObject(action, origin, download.getPackageName(), appUrl, obbPath,
         patchObbPath, context, download.getVersionCode());
+  }
+
+  public DownloadInstallBaseEvent.Origin getOrigin(Download download) {
+    DownloadInstallBaseEvent.Origin origin;
+    switch (download.getAction()) {
+      case Download.ACTION_INSTALL:
+        origin = DownloadInstallBaseEvent.Origin.INSTALL;
+        break;
+      case Download.ACTION_UPDATE:
+        origin = DownloadInstallBaseEvent.Origin.UPDATE;
+        break;
+      case Download.ACTION_DOWNGRADE:
+        origin = DownloadInstallBaseEvent.Origin.DOWNGRADE;
+        break;
+      default:
+        origin = DownloadInstallBaseEvent.Origin.INSTALL;
+    }
+    return origin;
   }
 
   protected abstract T createEventObject(DownloadInstallBaseEvent.Action action,

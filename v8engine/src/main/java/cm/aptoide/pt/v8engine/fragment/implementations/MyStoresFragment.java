@@ -12,13 +12,14 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 
 public class MyStoresFragment extends GetStoreWidgetsFragment {
+
   private static final String TAG = MyStoresFragment.class.getSimpleName();
   private Subscription subscription;
 
   public static MyStoresFragment newInstance(Event event, String title, String storeTheme,
       String tag) {
     // TODO: 28-12-2016 neuro ia saltando um preguito com este null lolz
-    Bundle args = buildBundle(event, null, storeTheme, tag);
+    Bundle args = buildBundle(event, null, storeTheme, tag, null);
     MyStoresFragment fragment = new MyStoresFragment();
     fragment.setArguments(args);
     return fragment;
@@ -26,7 +27,8 @@ public class MyStoresFragment extends GetStoreWidgetsFragment {
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     if (subscription == null || subscription.isUnsubscribed()) {
-      subscription = storeRepository.getAll().distinct()
+      subscription = storeRepository.getAll()
+          .distinct()
           .observeOn(AndroidSchedulers.mainThread())
           .skip(1)
           .compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW))

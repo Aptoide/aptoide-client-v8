@@ -190,6 +190,23 @@ public class AptoideUtils {
 
     private static final String TAG = AlgorithmU.class.getName();
 
+    public static String computeSha1(String text) {
+      try {
+        return convToHex(computeSha1(text.getBytes("iso-8859-1")));
+      } catch (UnsupportedEncodingException e) {
+        Logger.e(TAG, "computeSha1(String)", e);
+      }
+      return "";
+    }
+
+    private static String convToHex(byte[] data) {
+      final StringBuilder buffer = new StringBuilder();
+      for (byte b : data) {
+        buffer.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
+      }
+      return buffer.toString();
+    }
+
     public static byte[] computeSha1(byte[] bytes) {
       MessageDigest md;
       try {
@@ -201,15 +218,6 @@ public class AptoideUtils {
       }
 
       return new byte[0];
-    }
-
-    public static String computeSha1(String text) {
-      try {
-        return convToHex(computeSha1(text.getBytes("iso-8859-1")));
-      } catch (UnsupportedEncodingException e) {
-        Logger.e(TAG, "computeSha1(String)", e);
-      }
-      return "";
     }
 
     public static String computeHmacSha1(String value, @NonNull String keyString) {
@@ -255,15 +263,15 @@ public class AptoideUtils {
       return buf.toString();
     }
 
-    private static String convToHex(byte[] data) {
-      final StringBuilder buffer = new StringBuilder();
-      for (byte b : data) {
-        buffer.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
-      }
-      return buffer.toString();
+    public static String computeMd5(@NonNull PackageInfo packageInfo) {
+
+      String sourceDir = packageInfo.applicationInfo.sourceDir;
+      File apkFile = new File(sourceDir);
+      return computeMd5(apkFile);
     }
 
     public static String computeMd5(File f) {
+      long time = System.currentTimeMillis();
       byte[] buffer = new byte[1024];
       int read, i;
       String md5hash;
@@ -289,14 +297,8 @@ public class AptoideUtils {
         }
         md5hash = tmp.concat(md5hash);
       }
-
+      Logger.v(TAG, "computeMd5: duration: " + (System.currentTimeMillis() - time) + " ms");
       return md5hash;
-    }
-
-    public static String computeMd5(@NonNull PackageInfo packageInfo) {
-      String sourceDir = packageInfo.applicationInfo.sourceDir;
-      File apkFile = new File(sourceDir);
-      return computeMd5(apkFile);
     }
 
     public static int randomBetween(int min, int max) {
@@ -310,18 +312,11 @@ public class AptoideUtils {
 
   public static final class MathU {
 
-    /**
-     * Uses Euclid's algorithm: <p>gcd(a,0) = 0</p> <p>gcd(a,b) = gcd(b, a mod b)</p>
-     *
-     * @return The greatest common divisor between a and b.
-     */
-    public static int greatestCommonDivisor(int a, int b) {
-      while (b > 0) {
-        int temp = b;
-        b = a % b; // % is remainder
-        a = temp;
-      }
-      return a;
+    public static int leastCommonMultiple(int[] input) {
+      int result = input[0];
+      for (int i = 1; i < input.length; i++)
+        result = leastCommonMultiple(result, input[i]);
+      return result;
     }
 
     /**
@@ -338,11 +333,27 @@ public class AptoideUtils {
       return (Math.abs(a) / greatestCommonDivisor(a, b)) * Math.abs(b);
     }
 
-    public static int leastCommonMultiple(int[] input) {
-      int result = input[0];
-      for (int i = 1; i < input.length; i++)
-        result = leastCommonMultiple(result, input[i]);
-      return result;
+    /**
+     * Uses Euclid's algorithm: <p>gcd(a,0) = 0</p> <p>gcd(a,b) = gcd(b, a mod b)</p>
+     *
+     * @return The greatest common divisor between a and b.
+     */
+    public static int greatestCommonDivisor(int a, int b) {
+      while (b > 0) {
+        int temp = b;
+        b = a % b; // % is remainder
+        a = temp;
+      }
+      return a;
+    }
+
+    public static double mapValueFromRangeToRange(double value, double fromLow, double fromHigh,
+        double toLow, double toHigh) {
+      return toLow + ((value - fromLow) / (fromHigh - fromLow) * (toHigh - toLow));
+    }
+
+    public static double clamp(double value, double low, double high) {
+      return Math.min(Math.max(value, low), high);
     }
   }
 
@@ -413,10 +424,6 @@ public class AptoideUtils {
       }
     }
 
-    public static int getCurrentOrientation() {
-      return context.getResources().getConfiguration().orientation;
-    }
-
     public static float getScreenWidthInDip() {
       if (getCurrentOrientation() != screenWidthInDipCache.orientation) {
         WindowManager wm = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE));
@@ -428,17 +435,16 @@ public class AptoideUtils {
       return screenWidthInDipCache.value;
     }
 
+    public static int getCurrentOrientation() {
+      return context.getResources().getConfiguration().orientation;
+    }
+
     public static int getPixels(int dipValue) {
       Resources r = context.getResources();
       int px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue,
           r.getDisplayMetrics());
       Logger.d("getPixels", "" + px);
       return px;
-    }
-
-    private static int getScreenSizeInt() {
-      return context.getResources().getConfiguration().screenLayout
-          & Configuration.SCREENLAYOUT_SIZE_MASK;
     }
 
     public static int getNumericScreenSize() {
@@ -449,6 +455,11 @@ public class AptoideUtils {
 
     public static String getScreenSize() {
       return Size.values()[getScreenSizeInt()].name().toLowerCase(Locale.ENGLISH);
+    }
+
+    private static int getScreenSizeInt() {
+      return context.getResources().getConfiguration().screenLayout
+          & Configuration.SCREENLAYOUT_SIZE_MASK;
     }
 
     public static int getDensityDpi() {
@@ -561,6 +572,24 @@ public class AptoideUtils {
   public static final class StringU {
 
     /**
+     * <p>Joins the elements of the provided {@code Iterable} into a single String containing the
+     * provided elements.</p> <p> <p>No delimiter is added
+     * before
+     * or after the list. A {@code null} separator is the same as an empty String ("").</p>
+     *
+     * @param iterable the {@code Iterable} providing the values to join together, may be null
+     * @param separator the separator character to use, null treated as ""
+     * @return the joined String, {@code null} if null iterator input
+     * @since 2.3
+     */
+    public static String join(final Iterable<?> iterable, final String separator) {
+      if (iterable == null) {
+        return null;
+      }
+      return join(iterable.iterator(), separator);
+    }
+
+    /**
      * <p>Joins the elements of the provided {@code Iterator} into a single String containing the
      * provided elements.</p> <p> <p>No delimiter is added
      * before
@@ -604,24 +633,6 @@ public class AptoideUtils {
       return buf.toString();
     }
 
-    /**
-     * <p>Joins the elements of the provided {@code Iterable} into a single String containing the
-     * provided elements.</p> <p> <p>No delimiter is added
-     * before
-     * or after the list. A {@code null} separator is the same as an empty String ("").</p>
-     *
-     * @param iterable the {@code Iterable} providing the values to join together, may be null
-     * @param separator the separator character to use, null treated as ""
-     * @return the joined String, {@code null} if null iterator input
-     * @since 2.3
-     */
-    public static String join(final Iterable<?> iterable, final String separator) {
-      if (iterable == null) {
-        return null;
-      }
-      return join(iterable.iterator(), separator);
-    }
-
     public static String toString(Object obj) {
       return obj == null ? "" : obj.toString();
     }
@@ -648,7 +659,6 @@ public class AptoideUtils {
     }
 
     /**
-     *
      * @param bytes file size
      * @return formatted string for file file showing a Human perceptible file size
      */
@@ -735,10 +745,6 @@ public class AptoideUtils {
       return Build.VERSION.RELEASE.replaceAll(";", " ");
     }
 
-    public static int getSdkVer() {
-      return Build.VERSION.SDK_INT;
-    }
-
     public static String getGlEsVer() {
       return ((ActivityManager) context.getSystemService(
           Context.ACTIVITY_SERVICE)).getDeviceConfigurationInfo().getGlEsVersion();
@@ -756,6 +762,10 @@ public class AptoideUtils {
         }
       }
       return builder.toString();
+    }
+
+    public static int getSdkVer() {
+      return Build.VERSION.SDK_INT;
     }
 
     public static String getCountryCode() {
@@ -805,10 +815,6 @@ public class AptoideUtils {
       return found;
     }
 
-    public static List<PackageInfo> getAllInstalledApps() {
-      return context.getPackageManager().getInstalledPackages(PackageManager.GET_SIGNATURES);
-    }
-
     public static List<PackageInfo> getUserInstalledApps() {
       List<PackageInfo> tmp = new LinkedList<>();
 
@@ -819,6 +825,10 @@ public class AptoideUtils {
       }
 
       return tmp;
+    }
+
+    public static List<PackageInfo> getAllInstalledApps() {
+      return context.getPackageManager().getInstalledPackages(PackageManager.GET_SIGNATURES);
     }
 
     public static String getApkLabel(PackageInfo packageInfo) {
@@ -929,7 +939,8 @@ public class AptoideUtils {
               }
             }
           } catch (Exception e) {
-            Logger.printException(e);
+            Logger.e(TAG, e);
+            throw new RuntimeException(e);
           }
         }
       }
@@ -1028,9 +1039,12 @@ public class AptoideUtils {
 
   public static final class ThreadU {
 
+    private static final String TAG = ThreadU.class.getName();
+
     public static void runOnIoThread(Runnable runnable) {
       Observable.just(null).observeOn(Schedulers.io()).subscribe(o -> runnable.run(), e -> {
-        Logger.printException(e);
+        Logger.e(TAG, e);
+        throw new RuntimeException(e);
       });
     }
 
@@ -1046,16 +1060,16 @@ public class AptoideUtils {
       }
     }
 
+    public static boolean isUiThread() {
+      return Looper.getMainLooper().getThread() == Thread.currentThread();
+    }
+
     public static void sleep(long l) {
       try {
         Thread.sleep(l);
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
-    }
-
-    public static boolean isUiThread() {
-      return Looper.getMainLooper().getThread() == Thread.currentThread();
     }
   }
 
@@ -1150,6 +1164,38 @@ public class AptoideUtils {
       return instance;
     }
 
+    public String getTimeDiffAll(Context context, long time) {
+
+      long diffTime = new Date().getTime() - time;
+
+      if (isYesterday(time) || isToday(time)) {
+        getTimeDiffString(context, time);
+      } else {
+        if (diffTime < DateUtils.WEEK_IN_MILLIS) {
+          int diffDays = Double.valueOf(Math.ceil(diffTime / millisInADay)).intValue();
+          return diffDays == 1 ? mTimestampLabelYesterday
+              : AptoideUtils.StringU.getFormattedString(R.string.WidgetProvider_timestamp_days_ago,
+                  diffDays);
+        } else if (diffTime < DateUtils.WEEK_IN_MILLIS * 4) {
+          int diffDays = Double.valueOf(Math.ceil(diffTime / WEEK_IN_MILLIS)).intValue();
+          return diffDays == 1 ? mTimestampLabelWeekAgo
+              : AptoideUtils.StringU.getFormattedString(R.string.WidgetProvider_timestamp_weeks_ago,
+                  diffDays);
+        } else if (diffTime < DateUtils.WEEK_IN_MILLIS * 4 * 12) {
+          int diffDays = Double.valueOf(Math.ceil(diffTime / (WEEK_IN_MILLIS * 4))).intValue();
+          return diffDays == 1 ? mTimestampLabelMonthAgo : AptoideUtils.StringU.getFormattedString(
+              R.string.WidgetProvider_timestamp_months_ago, diffDays);
+        } else {
+          int diffDays = Double.valueOf(Math.ceil(diffTime / (WEEK_IN_MILLIS * 4 * 12))).intValue();
+          return diffDays == 1 ? mTimestampLabelYearAgo
+              : AptoideUtils.StringU.getFormattedString(R.string.WidgetProvider_timestamp_years_ago,
+                  diffDays);
+        }
+      }
+
+      return getTimeDiffString(context, time);
+    }
+
     /**
      * Checks if the given date is yesterday.
      *
@@ -1212,38 +1258,6 @@ public class AptoideUtils {
         return formatDateTime(context, timedate, DateUtils.FORMAT_NUMERIC_DATE);
       }
     }
-
-    public String getTimeDiffAll(Context context, long time) {
-
-      long diffTime = new Date().getTime() - time;
-
-      if (isYesterday(time) || isToday(time)) {
-        getTimeDiffString(context, time);
-      } else {
-        if (diffTime < DateUtils.WEEK_IN_MILLIS) {
-          int diffDays = Double.valueOf(Math.ceil(diffTime / millisInADay)).intValue();
-          return diffDays == 1 ? mTimestampLabelYesterday
-              : AptoideUtils.StringU.getFormattedString(R.string.WidgetProvider_timestamp_days_ago,
-                  diffDays);
-        } else if (diffTime < DateUtils.WEEK_IN_MILLIS * 4) {
-          int diffDays = Double.valueOf(Math.ceil(diffTime / WEEK_IN_MILLIS)).intValue();
-          return diffDays == 1 ? mTimestampLabelWeekAgo
-              : AptoideUtils.StringU.getFormattedString(R.string.WidgetProvider_timestamp_weeks_ago,
-                  diffDays);
-        } else if (diffTime < DateUtils.WEEK_IN_MILLIS * 4 * 12) {
-          int diffDays = Double.valueOf(Math.ceil(diffTime / (WEEK_IN_MILLIS * 4))).intValue();
-          return diffDays == 1 ? mTimestampLabelMonthAgo : AptoideUtils.StringU.getFormattedString(
-              R.string.WidgetProvider_timestamp_months_ago, diffDays);
-        } else {
-          int diffDays = Double.valueOf(Math.ceil(diffTime / (WEEK_IN_MILLIS * 4 * 12))).intValue();
-          return diffDays == 1 ? mTimestampLabelYearAgo
-              : AptoideUtils.StringU.getFormattedString(R.string.WidgetProvider_timestamp_years_ago,
-                  diffDays);
-        }
-      }
-
-      return getTimeDiffString(context, time);
-    }
   }
 
   /**
@@ -1257,6 +1271,7 @@ public class AptoideUtils {
     public static final int ICONS_SIZE_TYPE = 0;
     public static final HashMap<Integer, String> mIconSizes;
     public static final int STORE_ICONS_SIZE_TYPE = 1;
+    private static final String TAG = IconSizeU.class.getName();
     static final private int baseLine = 96;
     static final private int baseLineAvatar = 150;
     static final private int baseLineXNotification = 320;
@@ -1286,8 +1301,210 @@ public class AptoideUtils {
       mIconSizes.put(DisplayMetrics.DENSITY_LOW, "96x96");
     }
 
+    public static String screenshotToThumb(String imageUrl, String orientation) {
+
+      String screen = null;
+
+      try {
+
+        if (imageUrl.contains("_screen")) {
+          screen = parseScreenshotUrl(imageUrl, orientation);
+        } else {
+
+          String[] splitString = imageUrl.split("/");
+          StringBuilder db = new StringBuilder();
+          for (int i = 0; i != splitString.length - 1; i++) {
+            db.append(splitString[i]);
+            db.append("/");
+          }
+
+          db.append("thumbs/mobile/");
+          db.append(splitString[splitString.length - 1]);
+          screen = db.toString();
+        }
+      } catch (Exception e) {
+        Logger.e(TAG, e);
+        throw e;
+      }
+
+      return screen;
+    }
+
+    private static String parseScreenshotUrl(String screenshotUrl, String orientation) {
+      String sizeString = generateSizeStringScreenshotsdd(orientation);
+
+      String[] splitUrl = splitUrlExtension(screenshotUrl);
+      return splitUrl[0] + "_" + sizeString + "." + splitUrl[1];
+    }
+
+    private static String generateSizeStringScreenshotsdd(String orient) {
+      float densityMultiplier = densityMultiplier();
+
+      int size;
+      if (orient != null && orient.equals("portrait")) {
+        size = baseLineScreenshotPort * ((int) densityMultiplier);
+      } else {
+        size = baseLineScreenshotLand * ((int) densityMultiplier);
+      }
+
+      return size + "x" + ScreenU.getDensityDpi();
+    }
+
     private static String[] splitUrlExtension(String url) {
       return url.split(RegexU.SPLIT_URL_EXTENSION);
+    }
+
+    private static Float densityMultiplier() {
+      if (context == null) {
+        return 0f;
+      }
+
+      float densityMultiplier = context.getResources().getDisplayMetrics().density;
+
+      if (densityMultiplier <= 0.75f) {
+        densityMultiplier = 0.75f;
+      } else if (densityMultiplier <= 1) {
+        densityMultiplier = 1f;
+      } else if (densityMultiplier <= 1.333f) {
+        densityMultiplier = 1.3312500f;
+      } else if (densityMultiplier <= 1.5f) {
+        densityMultiplier = 1.5f;
+      } else if (densityMultiplier <= 2f) {
+        densityMultiplier = 2f;
+      } else if (densityMultiplier <= 3f) {
+        densityMultiplier = 3f;
+      } else {
+        densityMultiplier = 4f;
+      }
+      return densityMultiplier;
+    }
+
+    public static String generateStringNotification(String url) {
+      if (context == null || url == null) {
+        return "";
+      }
+      float densityMultiplier = densityMultiplier();
+
+      int sizeX = (int) (baseLineXNotification * densityMultiplier);
+      int sizeY = (int) (baseLineYNotification * densityMultiplier);
+
+      //Logger.d("Aptoide-IconSize", "Size is " + size);
+
+      //return sizeX + "x" + sizeY;
+      String[] splittedUrl = splitUrlExtension(url);
+      url = splittedUrl[0] + "_" + sizeX + "x" + sizeY + "." + splittedUrl[1];
+
+      return url;
+    }
+
+    public static String generateSizeStoreString(String url) {
+
+      if (context == null || url == null) {
+        return "";
+      }
+
+      String iconRes = mStoreIconSizes.get(context.getResources().getDisplayMetrics().densityDpi);
+      iconRes = (TextUtils.isEmpty(iconRes) ? getDefaultSize(STORE_ICONS_SIZE_TYPE) : iconRes);
+
+      if (TextUtils.isEmpty(iconRes)) {
+        return url;
+      } else {
+        String[] splittedUrl = splitUrlExtension(url);
+        return splittedUrl[0] + "_" + iconRes + "." + splittedUrl[1];
+      }
+    }
+
+    private static String getDefaultSize(int varType) {
+
+      switch (varType) {
+        case STORE_ICONS_SIZE_TYPE:
+          if (ScreenU.getDensityDpi() < DisplayMetrics.DENSITY_HIGH) {
+            return mStoreIconSizes.get(DisplayMetrics.DENSITY_LOW);
+          } else {
+            return mStoreIconSizes.get(DisplayMetrics.DENSITY_XXHIGH);
+          }
+        case ICONS_SIZE_TYPE:
+          if (ScreenU.getDensityDpi() < DisplayMetrics.DENSITY_HIGH) {
+            return mIconSizes.get(DisplayMetrics.DENSITY_LOW);
+          } else {
+            return mIconSizes.get(DisplayMetrics.DENSITY_XXXHIGH);
+          }
+      }
+      return null;
+    }
+
+    public static String generateStringAvatar(String url) {
+      if (context == null || url == null) {
+        return "";
+      }
+      float densityMultiplier = densityMultiplier();
+
+      int size = Math.round(baseLineAvatar * densityMultiplier);
+
+      //Logger.d("Aptoide-IconSize", "Size is " + size);
+
+      //return size + "x" + size;
+
+      String[] splittedUrl = splitUrlExtension(url);
+      return splittedUrl[0] + "_" + getUserAvatarIconSize() + "." + splittedUrl[1];
+    }
+
+    private static String getUserAvatarIconSize() {
+      if (ScreenU.getDensityDpi() <= DisplayMetrics.DENSITY_HIGH) {
+        return "50x50";
+      } else {
+        return "150x150";
+      }
+    }
+
+    public static String getNewImageUrl(String imageUrl) {
+
+      if (TextUtils.isEmpty(imageUrl)) {
+        return imageUrl;
+      } else if (imageUrl.contains("portrait")) {
+        return parseScreenshots(imageUrl);
+      } else if (imageUrl.contains("_icon")) {
+        return parseIcon(imageUrl);
+      }
+      return imageUrl;
+    }
+
+    private static String parseScreenshots(String orient) {
+      if (context == null || orient == null) {
+        return "";
+      }
+      boolean isPortrait = orient != null && orient.equals("portrait");
+      int dpi = ScreenU.getDensityDpi();
+
+      String[] splittedUrl = splitUrlExtension(orient);
+      return splittedUrl[0] + "_" + getThumbnailSize(dpi, isPortrait) + "." + splittedUrl[1];
+    }
+
+    /**
+     * On v7 webservices there is no attribute of HD icon. <br />Instead, the logic is that if the
+     * filename ends with <b>_icon</b> it is an HD icon.
+     *
+     * @param iconUrl The String with the URL of the icon
+     * @return A String with
+     */
+    private static String parseIcon(String iconUrl) {
+
+      if (context == null || iconUrl == null) {
+        return "";
+      }
+      try {
+        if (iconUrl.contains("_icon")) {
+          String sizeString = IconSizeU.generateSizeString();
+          if (sizeString != null && !sizeString.isEmpty()) {
+            String[] splittedUrl = splitUrlExtension(iconUrl);
+            iconUrl = splittedUrl[0] + "_" + sizeString + "." + splittedUrl[1];
+          }
+        }
+      } catch (Exception e) {
+        Logger.e(TAG, e);
+        throw e;
+      }
+      return iconUrl;
     }
 
     private static String getThumbnailSize(int density, boolean isPortrait) {
@@ -1326,209 +1543,9 @@ public class AptoideUtils {
       }
     }
 
-    private static String getUserAvatarIconSize() {
-      if (ScreenU.getDensityDpi() <= DisplayMetrics.DENSITY_HIGH) {
-        return "50x50";
-      } else {
-        return "150x150";
-      }
-    }
-
-    private static Float densityMultiplier() {
-      if (context == null) {
-        return 0f;
-      }
-
-      float densityMultiplier = context.getResources().getDisplayMetrics().density;
-
-      if (densityMultiplier <= 0.75f) {
-        densityMultiplier = 0.75f;
-      } else if (densityMultiplier <= 1) {
-        densityMultiplier = 1f;
-      } else if (densityMultiplier <= 1.333f) {
-        densityMultiplier = 1.3312500f;
-      } else if (densityMultiplier <= 1.5f) {
-        densityMultiplier = 1.5f;
-      } else if (densityMultiplier <= 2f) {
-        densityMultiplier = 2f;
-      } else if (densityMultiplier <= 3f) {
-        densityMultiplier = 3f;
-      } else {
-        densityMultiplier = 4f;
-      }
-      return densityMultiplier;
-    }
-
-    private static String getDefaultSize(int varType) {
-
-      switch (varType) {
-        case STORE_ICONS_SIZE_TYPE:
-          if (ScreenU.getDensityDpi() < DisplayMetrics.DENSITY_HIGH) {
-            return mStoreIconSizes.get(DisplayMetrics.DENSITY_LOW);
-          } else {
-            return mStoreIconSizes.get(DisplayMetrics.DENSITY_XXHIGH);
-          }
-        case ICONS_SIZE_TYPE:
-          if (ScreenU.getDensityDpi() < DisplayMetrics.DENSITY_HIGH) {
-            return mIconSizes.get(DisplayMetrics.DENSITY_LOW);
-          } else {
-            return mIconSizes.get(DisplayMetrics.DENSITY_XXXHIGH);
-          }
-      }
-      return null;
-    }
-
-    private static String generateSizeStringScreenshotsdd(String orient) {
-      float densityMultiplier = densityMultiplier();
-
-      int size;
-      if (orient != null && orient.equals("portrait")) {
-        size = baseLineScreenshotPort * ((int) densityMultiplier);
-      } else {
-        size = baseLineScreenshotLand * ((int) densityMultiplier);
-      }
-
-      return size + "x" + ScreenU.getDensityDpi();
-    }
-
-    private static String parseScreenshotUrl(String screenshotUrl, String orientation) {
-      String sizeString = generateSizeStringScreenshotsdd(orientation);
-
-      String[] splitUrl = splitUrlExtension(screenshotUrl);
-      return splitUrl[0] + "_" + sizeString + "." + splitUrl[1];
-    }
-
-    public static String screenshotToThumb(String imageUrl, String orientation) {
-
-      String screen = null;
-
-      try {
-
-        if (imageUrl.contains("_screen")) {
-          screen = parseScreenshotUrl(imageUrl, orientation);
-        } else {
-
-          String[] splitString = imageUrl.split("/");
-          StringBuilder db = new StringBuilder();
-          for (int i = 0; i != splitString.length - 1; i++) {
-            db.append(splitString[i]);
-            db.append("/");
-          }
-
-          db.append("thumbs/mobile/");
-          db.append(splitString[splitString.length - 1]);
-          screen = db.toString();
-        }
-      } catch (Exception e) {
-        Logger.printException(e);
-      }
-
-      return screen;
-    }
-
-    public static String generateStringNotification(String url) {
-      if (context == null || url == null) {
-        return "";
-      }
-      float densityMultiplier = densityMultiplier();
-
-      int sizeX = (int) (baseLineXNotification * densityMultiplier);
-      int sizeY = (int) (baseLineYNotification * densityMultiplier);
-
-      //Logger.d("Aptoide-IconSize", "Size is " + size);
-
-      //return sizeX + "x" + sizeY;
-      String[] splittedUrl = splitUrlExtension(url);
-      url = splittedUrl[0] + "_" + sizeX + "x" + sizeY + "." + splittedUrl[1];
-
-      return url;
-    }
-
-    public static String generateSizeStoreString(String url) {
-
-      if (context == null || url == null) {
-        return "";
-      }
-
-      String iconRes = mStoreIconSizes.get(context.getResources().getDisplayMetrics().densityDpi);
-      iconRes = (TextUtils.isEmpty(iconRes) ? getDefaultSize(STORE_ICONS_SIZE_TYPE) : iconRes);
-
-      if (TextUtils.isEmpty(iconRes)) {
-        return url;
-      } else {
-        String[] splittedUrl = splitUrlExtension(url);
-        return splittedUrl[0] + "_" + iconRes + "." + splittedUrl[1];
-      }
-    }
-
     private static String generateSizeString() {
       String iconRes = mIconSizes.get(context.getResources().getDisplayMetrics().densityDpi);
       return iconRes != null ? iconRes : getDefaultSize(ICONS_SIZE_TYPE);
-    }
-
-    public static String generateStringAvatar(String url) {
-      if (context == null || url == null) {
-        return "";
-      }
-      float densityMultiplier = densityMultiplier();
-
-      int size = Math.round(baseLineAvatar * densityMultiplier);
-
-      //Logger.d("Aptoide-IconSize", "Size is " + size);
-
-      //return size + "x" + size;
-
-      String[] splittedUrl = splitUrlExtension(url);
-      return splittedUrl[0] + "_" + getUserAvatarIconSize() + "." + splittedUrl[1];
-    }
-
-    private static String parseScreenshots(String orient) {
-      if (context == null || orient == null) {
-        return "";
-      }
-      boolean isPortrait = orient != null && orient.equals("portrait");
-      int dpi = ScreenU.getDensityDpi();
-
-      String[] splittedUrl = splitUrlExtension(orient);
-      return splittedUrl[0] + "_" + getThumbnailSize(dpi, isPortrait) + "." + splittedUrl[1];
-    }
-
-    /**
-     * On v7 webservices there is no attribute of HD icon. <br />Instead, the logic is that if the
-     * filename ends with <b>_icon</b> it is an HD icon.
-     *
-     * @param iconUrl The String with the URL of the icon
-     * @return A String with
-     */
-    private static String parseIcon(String iconUrl) {
-
-      if (context == null || iconUrl == null) {
-        return "";
-      }
-      try {
-        if (iconUrl.contains("_icon")) {
-          String sizeString = IconSizeU.generateSizeString();
-          if (sizeString != null && !sizeString.isEmpty()) {
-            String[] splittedUrl = splitUrlExtension(iconUrl);
-            iconUrl = splittedUrl[0] + "_" + sizeString + "." + splittedUrl[1];
-          }
-        }
-      } catch (Exception e) {
-        Logger.printException(e);
-      }
-      return iconUrl;
-    }
-
-    public static String getNewImageUrl(String imageUrl) {
-
-      if (TextUtils.isEmpty(imageUrl)) {
-        return imageUrl;
-      } else if (imageUrl.contains("portrait")) {
-        return parseScreenshots(imageUrl);
-      } else if (imageUrl.contains("_icon")) {
-        return parseIcon(imageUrl);
-      }
-      return imageUrl;
     }
 
     /**
@@ -1549,8 +1566,8 @@ public class AptoideUtils {
       return originalUrl;
     }
 
-    public static List<ImageSizeErrors> checkIconSizeProperties(String avatarPath, int minHeight, int maxHeight,
-        int minWidth, int maxWidth, int maxImageSize) {
+    public static List<ImageSizeErrors> checkIconSizeProperties(String avatarPath, int minHeight,
+        int maxHeight, int minWidth, int maxWidth, int maxImageSize) {
       ImageInfo imageInfo = getImageInfo(avatarPath);
       List<ImageSizeErrors> errors = new LinkedList<>();
       if (imageInfo.getHeight() < minHeight) {
@@ -1703,7 +1720,7 @@ public class AptoideUtils {
           new StringBuilder(vername + ";" + SystemU.TERMINAL_INFO + ";" + myscr + ";id:");
 
       if (aptoideClientUUID != null) {
-        sb.append(aptoideClientUUID.getAptoideClientUUID());
+        sb.append(aptoideClientUUID.getUniqueIdentifier());
       }
       sb.append(";");
 

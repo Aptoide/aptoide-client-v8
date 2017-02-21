@@ -23,4 +23,8 @@
   <string name="WidgetProvider_timestamp_year_ago">1 year ago</string>
   <string name="WidgetProvider_timestamp_years_ago">%s years ago</string>
 
+  <!-- Share options -->
+  <string name="share_options_share_external">Share via...</string>
+  <string name="share_options_share_in_timeline">Share in Apps Timeline</string>
+
 </resources>

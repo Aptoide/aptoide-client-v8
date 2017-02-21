@@ -63,8 +63,7 @@ public class ListFullReviewsRequest extends V7<ListFullReviews, ListFullReviewsR
 
   public static ListFullReviewsRequest of(String storeName, String packageName, String accessToken,
       String aptoideClientUUID) {
-    return of(storeName, packageName, MAX_REVIEWS, MAX_COMMENTS, accessToken,
-        aptoideClientUUID);
+    return of(storeName, packageName, MAX_REVIEWS, MAX_COMMENTS, accessToken, aptoideClientUUID);
   }
 
   /**

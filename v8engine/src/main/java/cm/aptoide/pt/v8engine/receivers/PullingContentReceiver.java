@@ -27,7 +27,8 @@ public class PullingContentReceiver extends BroadcastReceiver {
     if (action != null) {
       switch (action) {
         case Intent.ACTION_BOOT_COMPLETED:
-          context.startService(new Intent(context, PullingContentService.class).setAction(BOOT_COMPLETED_ACTION));
+          context.startService(
+              new Intent(context, PullingContentService.class).setAction(BOOT_COMPLETED_ACTION));
           break;
         case NOTIFICATION_PRESSED_ACTION:
           pushNotificationPressed(context, intent);

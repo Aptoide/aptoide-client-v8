@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.v8engine.R;
 
 /**
@@ -19,22 +20,30 @@ public abstract class BaseLoaderToolbarFragment extends BaseLoaderFragment {
 
   private Toolbar toolbar;
 
-  protected Toolbar getToolbar() {
+  @Partners protected Toolbar getToolbar() {
     return toolbar;
-  }
-
-  protected boolean hasToolbar() {
-    return toolbar != null;
   }
 
   @CallSuper @Override public void setupViews() {
     setupToolbar();
   }
 
+  @Partners protected boolean hasToolbar() {
+    return toolbar != null;
+  }
+
+  protected boolean displayHomeUpAsEnabled() {
+    return false;
+  }
+
+  protected void setupToolbarDetails(Toolbar toolbar) {
+    // does nothing. placeholder method.
+  }
+
   /**
    * Setup the toolbar, if present.
    */
-  @CallSuper @Override public void setupToolbar() {
+  @Partners @CallSuper @Override public void setupToolbar() {
     if (hasToolbar()) {
       ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
       boolean showUp = displayHomeUpAsEnabled();
@@ -46,21 +55,13 @@ public abstract class BaseLoaderToolbarFragment extends BaseLoaderFragment {
     }
   }
 
-  protected boolean displayHomeUpAsEnabled() {
-    return false;
-  }
-
-  protected void setupToolbarDetails(Toolbar toolbar) {
-    // does nothing. placeholder method.
-  }
-
-  @CallSuper @Override public void onDestroyView() {
-    super.onDestroyView();
-    toolbar = null;
-  }
-
   @CallSuper @Override public void bindViews(View view) {
     super.bindViews(view);
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+  }
+
+  @CallSuper @Override public void onDestroyView() {
+    toolbar = null;
+    super.onDestroyView();
   }
 }

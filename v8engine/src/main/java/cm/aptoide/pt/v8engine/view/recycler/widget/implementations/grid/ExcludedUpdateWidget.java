@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 15/07/2016.
- */
-
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.view.View;
@@ -43,7 +38,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
   @Override public void bindView(final ExcludedUpdateDisplayable displayable) {
     final Update excludedUpdate = displayable.getPojo();
 
-    ImageLoader.load(excludedUpdate.getIcon(), icon);
+    ImageLoader.with(getContext()).load(excludedUpdate.getIcon(), icon);
     name.setText(excludedUpdate.getLabel());
     versionCode.setText(excludedUpdate.getUpdateVersionName());
     packageName.setText(excludedUpdate.getPackageName());
@@ -53,9 +48,5 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
     });
 
     isExcluded.setChecked(displayable.isSelected());
-  }
-
-  @Override public void unbindView() {
-
   }
 }

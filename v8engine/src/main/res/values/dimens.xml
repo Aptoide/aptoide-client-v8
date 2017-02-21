@@ -91,5 +91,5 @@
   <dimen name="other_versions_title_bottom_margin">50dp</dimen>
   <dimen name="appview_side_margin">8dp</dimen>
   <dimen name="fab_margin">20dp</dimen>
-  <dimen name="appstimeline_card_icon" type="dimen" format="float">17.7dp</dimen>
+  <dimen format="float" name="appstimeline_card_icon" type="dimen">17.7dp</dimen>
 </resources>

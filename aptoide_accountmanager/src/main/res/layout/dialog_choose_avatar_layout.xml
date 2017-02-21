@@ -10,10 +10,11 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginLeft="21dp"
+      android:layout_marginStart="21dp"
       android:layout_marginTop="20dp"
-      android:textSize="16sp"
-      android:textColor="@color/create_store_title_color"
       android:text="@string/upload_dialog_title"
+      android:textColor="@color/create_store_title_color"
+      android:textSize="16sp"
       />
 
 
@@ -21,10 +22,11 @@
       android:id="@+id/button_camera"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_alignLeft="@+id/button_gallery"
+      android:layout_alignStart="@+id/button_gallery"
+      android:layout_below="@+id/title"
       android:layout_marginTop="28dp"
       android:orientation="horizontal"
-      android:layout_below="@+id/title"
-      android:layout_alignLeft="@+id/button_gallery"
       >
 
     <ImageView
@@ -38,10 +40,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="25dp"
+        android:layout_marginStart="25dp"
         android:maxLines="1"
-        android:textSize="12sp"
-        android:textColor="@color/create_store_title_color"
         android:text="@string/upload_dialog_photo"
+        android:textColor="@color/create_store_title_color"
+        android:textSize="12sp"
         />
 
   </LinearLayout>
@@ -50,9 +53,10 @@
       android:id="@+id/button_gallery"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginTop="29dp"
-      android:layout_marginLeft="21dp"
       android:layout_below="@id/button_camera"
+      android:layout_marginLeft="21dp"
+      android:layout_marginStart="21dp"
+      android:layout_marginTop="29dp"
       android:orientation="horizontal"
       >
 
@@ -67,10 +71,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="25dp"
-        android:textSize="12sp"
+        android:layout_marginStart="25dp"
         android:maxLines="1"
-        android:textColor="@color/create_store_title_color"
         android:text="@string/upload_dialog_gallery"
+        android:textColor="@color/create_store_title_color"
+        android:textSize="12sp"
         />
 
   </LinearLayout>
@@ -80,11 +85,12 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_below="@id/button_gallery"
-      android:layout_marginTop="35dp"
-      android:layout_marginLeft="200dp"
       android:layout_marginBottom="20dp"
-      android:textSize="12sp"
+      android:layout_marginLeft="200dp"
+      android:layout_marginStart="200dp"
+      android:layout_marginTop="35dp"
       android:text="@string/cancel"
+      android:textSize="12sp"
       />
 
 </RelativeLayout>

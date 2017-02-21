@@ -11,16 +11,17 @@
 
   <TextView
       android:id="@+id/permission_name"
-      style="@android:style/TextAppearance.Small"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:ellipsize="end"
       android:maxLines="1"
       android:paddingBottom="1dp"
       android:paddingLeft="2dp"
+      android:paddingStart="2dp"
       android:paddingTop="4dp"
       android:textColor="?android:attr/textColorSecondary"
       android:textStyle="bold"
+      style="@android:style/TextAppearance.Small"
       />
 
 </LinearLayout>

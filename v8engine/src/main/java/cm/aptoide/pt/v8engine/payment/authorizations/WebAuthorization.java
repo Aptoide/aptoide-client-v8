@@ -17,8 +17,9 @@ public class WebAuthorization extends Authorization {
   private final String url;
   private final String redirectUrl;
 
-  public WebAuthorization(Context context, int paymentId, String url, String redirectUrl, Status status) {
-    super(paymentId, status);
+  public WebAuthorization(Context context, int paymentId, String url, String redirectUrl,
+      Status status, String payerId) {
+    super(paymentId, payerId, status);
     this.context = context;
     this.url = url;
     this.redirectUrl = redirectUrl;
@@ -30,9 +31,5 @@ public class WebAuthorization extends Authorization {
 
   public String getRedirectUrl() {
     return redirectUrl;
-  }
-
-  @Override public void authorize() {
-    context.startActivity(WebAuthorizationActivity.getIntent(context, url, redirectUrl));
   }
 }

@@ -28,39 +28,39 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="22.7dp"
         android:layout_marginEnd="44dp"
         android:layout_marginStart="44dp"
+        android:layout_marginTop="22.7dp"
         android:gravity="center_horizontal"
         >
-    <TextView
-        android:id="@+id/error_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:gravity="center_horizontal"
-        android:text="@string/fragment_download_no_connection"
-        style="?android:textAppearanceMedium"
-        android:textColor="?attr/customColor"
-        android:fontFamily="sans-serif"
-        android:textStyle="bold"
-        android:textSize="17.4sp"
-        tools:targetApi="jelly_bean"
-        />
+      <TextView
+          android:id="@+id/error_text"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerHorizontal="true"
+          android:fontFamily="sans-serif"
+          android:gravity="center_horizontal"
+          android:text="@string/fragment_download_no_connection"
+          android:textColor="?attr/customColor"
+          android:textSize="17.4sp"
+          android:textStyle="bold"
+          tools:targetApi="jelly_bean"
+          style="?android:textAppearanceMedium"
+          />
 
-    <TextView
-        android:id="@+id/error_text2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/error_text"
-        android:layout_marginTop="10dp"
-        android:gravity="center_horizontal"
-        android:text="@string/fragment_download_no_connection_subtitle"
-        style="?android:textAppearanceMedium"
-        android:fontFamily="sans-serif"
-        android:textSize="17.4sp"
-        tools:targetApi="jelly_bean"
-        />
+      <TextView
+          android:id="@+id/error_text2"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_below="@+id/error_text"
+          android:layout_marginTop="10dp"
+          android:fontFamily="sans-serif"
+          android:gravity="center_horizontal"
+          android:text="@string/fragment_download_no_connection_subtitle"
+          android:textSize="17.4sp"
+          tools:targetApi="jelly_bean"
+          style="?android:textAppearanceMedium"
+          />
     </RelativeLayout>
   </LinearLayout>
 </ScrollView>

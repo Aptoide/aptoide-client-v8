@@ -138,7 +138,7 @@
 
       <TextView
           android:id="@+id/description"
-          android:layout_width="match_parent"
+          android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:layout_weight="1"
           android:ellipsize="end"
@@ -175,58 +175,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingBottom="6dp"
-        android:weightSum="3"
-        >
-
-      <ImageButton
-          android:id="@+id/youtube_or_facebook_button"
-          android:layout_width="0dp"
-          android:layout_height="22dp"
-          android:layout_marginEnd="5dp"
-          android:layout_marginLeft="10dp"
-          android:layout_marginRight="5dp"
-          android:layout_marginStart="10dp"
-          android:layout_weight="1"
-          android:background="@drawable/rounded_corners_white"
-          android:clickable="false"
-          android:src="@drawable/youtube_logo"
-          android:visibility="gone"
-          tools:visibility="visible"
-          />
-
-      <ImageButton
-          android:id="@+id/twitch_button"
-          android:layout_width="0dp"
-          android:layout_height="22dp"
-          android:layout_marginEnd="5dp"
-          android:layout_marginLeft="5dp"
-          android:layout_marginRight="5dp"
-          android:layout_marginStart="5dp"
-          android:layout_weight="1"
-          android:background="@drawable/rounded_corners_white"
-          android:clickable="false"
-          android:src="@drawable/twitch_logo"
-          android:visibility="gone"
-          tools:visibility="visible"
-          />
-
-      <ImageButton
-          android:id="@+id/twitter_button"
-          android:layout_width="0dp"
-          android:layout_height="22dp"
-          android:layout_marginEnd="10dp"
-          android:layout_marginLeft="5dp"
-          android:layout_marginRight="10dp"
-          android:layout_marginStart="5dp"
-          android:layout_weight="1"
-          android:background="@drawable/rounded_corners_white"
-          android:clickable="false"
-          android:src="@drawable/twitter_logo"
-          android:visibility="gone"
-          tools:visibility="visible"
-          />
-
-    </LinearLayout>
+        />
 
   </LinearLayout>
 

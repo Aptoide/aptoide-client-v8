@@ -50,6 +50,7 @@
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/ic_map_appview"
         android:drawablePadding="8dp"
+        android:drawableStart="@drawable/ic_map_appview"
         android:gravity="center_vertical"
         android:padding="@dimen/appview_developer_padding"
         android:textColor="?android:attr/textColorSecondary"
@@ -63,6 +64,7 @@
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/ic_mail_appview"
         android:drawablePadding="8dp"
+        android:drawableStart="@drawable/ic_mail_appview"
         android:gravity="center_vertical"
         android:padding="@dimen/appview_developer_padding"
         android:textColor="?android:attr/textColorSecondary"
@@ -76,6 +78,7 @@
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/ic_locked_appview"
         android:drawablePadding="8dp"
+        android:drawableStart="@drawable/ic_locked_appview"
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:maxLines="1"
@@ -87,16 +90,17 @@
 
     <TextView
         android:id="@+id/permissions_label"
-        style="@style/focusableRowBackground"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/ic_permissions_appview"
         android:drawablePadding="8dp"
+        android:drawableStart="@drawable/ic_permissions_appview"
         android:gravity="center_vertical"
         android:padding="@dimen/appview_developer_padding"
         android:text="@string/permissions"
         android:textColor="?android:attr/textColorSecondary"
         android:textSize="14sp"
+        style="@style/focusableRowBackground"
         />
   </LinearLayout>
 

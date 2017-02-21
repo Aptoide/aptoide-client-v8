@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="78dp"
     android:background="@drawable/dialog_bg_2"
-    android:weightSum="5"
-    android:paddingLeft="12dp"
-    android:paddingStart="12dp"
-    android:paddingRight="12dp"
+    android:orientation="horizontal"
     android:paddingEnd="12dp"
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp"
+    android:paddingStart="12dp"
+    android:weightSum="5"
     >
 
   <TextView
+      android:id="@+id/textView3"
       android:layout_width="0dp"
       android:layout_height="match_parent"
+      android:layout_marginEnd="20dp"
+      android:layout_marginRight="20dp"
       android:layout_weight="3"
+      android:gravity="left|center"
       android:text="@string/be_the_first_to_send_feedback_about_this_store"
       android:textSize="14sp"
       android:textStyle="bold"
-      android:gravity="left|center"
-      android:layout_marginRight="20dp"
-      android:layout_marginEnd="20dp"
-      android:id="@+id/textView3"
       />
 
   <Button
       android:id="@+id/comment_store_button"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
+      android:layout_gravity="center"
       android:layout_weight="2"
       android:text="@string/comment_store"
-      android:textSize="@dimen/text_size_small"
       android:textAllCaps="true"
-      android:layout_gravity="center"
+      android:textSize="@dimen/text_size_small"
       />
 
 </LinearLayout>

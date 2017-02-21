@@ -5,10 +5,10 @@
   -->
 
 <android.support.design.widget.CoordinatorLayout
-    android:id="@+id/app_view_fragment_coordinator_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/app_view_fragment_coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:showIn="@layout/activity_app_view"
@@ -38,9 +38,9 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
-        style="@style/AptoideAppView"
         android:layout_gravity="center_horizontal"
         android:clipToPadding="false"
+        style="@style/AptoideAppView"
         />
 
   </FrameLayout>

@@ -63,12 +63,6 @@ public final class SecurityUtils {
     return INVALID_APP_SIGNATURE;
   }
 
-  private static String getSystemProperty(String name) throws Exception {
-    Class systemPropertyClazz = Class.forName("android.os.SystemProperties");
-    return (String) systemPropertyClazz.getMethod("get", new Class[] { String.class })
-        .invoke(systemPropertyClazz, name);
-  }
-
   public static boolean checkEmulator() {
     try {
       boolean goldfish = getSystemProperty("ro.hardware").contains("goldfish");
@@ -81,6 +75,12 @@ public final class SecurityUtils {
 
     }
     return false;
+  }
+
+  private static String getSystemProperty(String name) throws Exception {
+    Class systemPropertyClazz = Class.forName("android.os.SystemProperties");
+    return (String) systemPropertyClazz.getMethod("get", new Class[] { String.class })
+        .invoke(systemPropertyClazz, name);
   }
 
   public static boolean checkDebuggable(Context context) {

@@ -19,6 +19,9 @@ android {
 
     buildConfigField "String", "GMS_SERVER_ID", "\"" + project.GMS_SERVER_ID + "\""
     resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID + "\""
+
+    buildConfigField "String", "BACKUP_SIGNATURE", "\"" + project.BACKUP_SIGNATURE + "\""
+    buildConfigField "String", "UPLOADER_SIGNATURE", "\"" + project.UPLOADER_SIGNATURE + "\""
   }
 
   lintOptions {
@@ -43,7 +46,6 @@ android {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
   }
-
 }
 
 dependencies {

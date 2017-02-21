@@ -35,12 +35,12 @@ public class VanillaConfiguration implements AptoidePreferencesConfiguration {
     return PATH_CACHE;
   }
 
-  @Override public String getUserAvatarCachePath() {
-    return PATH_CACHE_USER_AVATAR;
-  }
-
   @Override public String getApkCachePath() {
     return PATH_CACHE_APKS;
+  }
+
+  @Override public String getUserAvatarCachePath() {
+    return PATH_CACHE_USER_AVATAR;
   }
 
   @Override public String getImagesCachePath() {
@@ -108,6 +108,14 @@ public class VanillaConfiguration implements AptoidePreferencesConfiguration {
     return "default";
   }
 
+  @Override public int getDefaultThemeRes() {
+    return StoreThemeEnum.get(getDefaultTheme()).getThemeResource();
+  }
+
+  @Override public String getFeedbackEmail() {
+    return FEEDBACK_EMAIL;
+  }
+
   @Override public boolean isLoginAvailable(SocialLogin loginType) {
     switch (loginType) {
       case FACEBOOK:
@@ -127,13 +135,5 @@ public class VanillaConfiguration implements AptoidePreferencesConfiguration {
 
   @Override public boolean isCreateStoreAndSetUserPrivacyAvailable() {
     return true;
-  }
-
-  @Override public int getDefaultThemeRes() {
-    return StoreThemeEnum.get(getDefaultTheme()).getThemeResource();
-  }
-
-  @Override public String getFeedbackEmail() {
-    return FEEDBACK_EMAIL;
   }
 }

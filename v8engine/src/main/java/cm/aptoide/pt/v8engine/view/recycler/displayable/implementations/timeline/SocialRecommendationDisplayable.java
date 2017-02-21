@@ -23,7 +23,6 @@ import lombok.Getter;
 public class SocialRecommendationDisplayable extends SocialCardDisplayable {
 
   @Getter private int avatarResource;
-  @Getter private Store store;
   @Getter private int titleResource;
   @Getter private Comment.User user;
   @Getter private long appId;
@@ -45,11 +44,11 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
       long numberOfComments, TimelineMetricsManager timelineMetricsManager,
       SpannableFactory spannableFactory, SocialRepository socialRepository,
       DateCalculator dateCalculator) {
-    super(socialRecommendation, numberOfLikes, numberOfComments, socialRecommendation.getUser(),
-        socialRecommendation.getUserSharer(), socialRecommendation.getDate(), spannableFactory,
-        dateCalculator);
+    super(socialRecommendation, numberOfLikes, numberOfComments, store,
+        socialRecommendation.getUser(), socialRecommendation.getUserSharer(),
+        socialRecommendation.getMy().isLiked(), socialRecommendation.getLikes(),
+        socialRecommendation.getDate(), spannableFactory, dateCalculator);
     this.avatarResource = avatarResource;
-    this.store = store;
     this.titleResource = titleResource;
     this.user = user;
     this.appId = appId;
@@ -84,9 +83,9 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
         R.string.displayable_social_timeline_recommendation_atptoide_team_recommends,
         socialRecommendation.getUser(), socialRecommendation.getApp().getId(),
         socialRecommendation.getApp().getPackageName(), socialRecommendation.getApp().getName(),
-        socialRecommendation.getApp().getIcon(), abTestingURL, socialRecommendation.getLikes(),
-        socialRecommendation.getComments(), timelineMetricsManager, spannableFactory,
-        socialRepository, dateCalculator);
+        socialRecommendation.getApp().getIcon(), abTestingURL,
+        socialRecommendation.getStats().getLikes(), socialRecommendation.getStats().getComments(),
+        timelineMetricsManager, spannableFactory, socialRepository, dateCalculator);
   }
 
   public String getTitle() {

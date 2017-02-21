@@ -9,7 +9,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Store;
@@ -133,13 +133,13 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
     // table "ExcludedAd" was deliberedly left out due to its irrelevance in the DB upgrade
 
     if (agregateExceptions != null) {
-      CrashReports.logException(agregateExceptions);
+      CrashReport.getInstance().log(agregateExceptions);
     }
     Logger.w(TAG, "Migrating database finished.");
   }
 
   private void logException(Exception ex) {
-    Logger.e(TAG, ex);
+    CrashReport.getInstance().log(ex);
 
     if (agregateExceptions == null) {
       agregateExceptions = ex;

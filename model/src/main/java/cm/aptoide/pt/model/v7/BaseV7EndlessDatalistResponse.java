@@ -11,8 +11,8 @@ import lombok.EqualsAndHashCode;
 /**
  * Created by sithengineer on 18/08/16.
  */
-@EqualsAndHashCode(callSuper = true)
-@Data public class BaseV7EndlessDatalistResponse<T> extends BaseV7EndlessResponse {
+@EqualsAndHashCode(callSuper = true) @Data public class BaseV7EndlessDatalistResponse<T>
+    extends BaseV7EndlessResponse {
 
   private Datalist<T> datalist;
 

@@ -2,8 +2,8 @@
   ~ Copyright (c) 2016.
   ~ Modified by SithEngineer on 21/07/2016.
   -->
-<LinearLayout android:id="@+id/dialog_permissions"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dialog_permissions"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/dialog_bg"
@@ -23,6 +23,7 @@
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_gravity="center_vertical"
+        android:paddingEnd="14dp"
         android:paddingRight="14dp"
         android:src="@drawable/ic_avatar_apps"
         />
@@ -36,7 +37,6 @@
 
       <TextView
           android:id="@+id/dialog_app_name"
-          style="?android:attr/textAppearanceMedium"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_gravity="center_vertical"
@@ -44,6 +44,7 @@
           android:maxLines="1"
           android:paddingBottom="4dp"
           android:textStyle="bold"
+          style="?android:attr/textAppearanceMedium"
           />
 
       <TextView
@@ -79,11 +80,13 @@
       android:id="@+id/dialog_ok_button"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_gravity="right"
+      android:layout_gravity="right|end"
       android:background="?attr/selectableItemBackground"
       android:paddingBottom="8dp"
+      android:paddingEnd="24dp"
       android:paddingLeft="24dp"
       android:paddingRight="24dp"
+      android:paddingStart="24dp"
       android:paddingTop="8dp"
       android:text="@android:string/ok"
       android:textColor="@android:color/darker_gray"

@@ -3,7 +3,8 @@ package cm.aptoide.pt.v8engine.view.recycler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.annotation.Partners;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
@@ -158,28 +159,18 @@ public class DisplayableWidgetMapping {
   private Class<? extends Widget> widgetClass;
   private Map<Integer, DisplayableWidgetMapping> viewTypeMapping = new HashMap<>();
 
-  protected DisplayableWidgetMapping() {
+  @Partners protected DisplayableWidgetMapping() {
     parseMappings(createMapping());
   }
 
-  public DisplayableWidgetMapping(Class<? extends Widget> widgetClass,
-      Class<? extends Displayable> displayableClass) {
-    this.displayableClass = displayableClass;
-    this.widgetClass = widgetClass;
-  }
-
-  public static DisplayableWidgetMapping getInstance() {
-    return instance;
-  }
-
-  protected void parseMappings(@NonNull List<DisplayableWidgetMapping> mapping) {
+  @Partners protected void parseMappings(@NonNull List<DisplayableWidgetMapping> mapping) {
     for (DisplayableWidgetMapping displayableWidgetMapping : mapping) {
       viewTypeMapping.put(displayableWidgetMapping.newDisplayable().getViewLayout(),
           displayableWidgetMapping);
     }
   }
 
-  protected List<DisplayableWidgetMapping> createMapping() {
+  @Partners protected List<DisplayableWidgetMapping> createMapping() {
 
     LinkedList<DisplayableWidgetMapping> displayableWidgetMappings = new LinkedList<>();
 
@@ -367,6 +358,28 @@ public class DisplayableWidgetMapping {
     return displayableWidgetMappings;
   }
 
+  @Partners @Nullable public Displayable newDisplayable() {
+    try {
+      return displayableClass.newInstance();
+    } catch (Exception e) {
+      CrashReport.getInstance().log(e);
+      String errMsg =
+          String.format("Error instantiating displayable '%s'", displayableClass.getName());
+      Logger.e(TAG, errMsg, e);
+      throw new RuntimeException(errMsg);
+    }
+  }
+
+  @Partners public DisplayableWidgetMapping(Class<? extends Widget> widgetClass,
+      Class<? extends Displayable> displayableClass) {
+    this.displayableClass = displayableClass;
+    this.widgetClass = widgetClass;
+  }
+
+  public static DisplayableWidgetMapping getInstance() {
+    return instance;
+  }
+
   public Widget newWidget(View view, int viewType) {
     DisplayableWidgetMapping displayableWidgetMapping = viewTypeMapping.get(viewType);
     if (displayableWidgetMapping != null) {
@@ -375,6 +388,19 @@ public class DisplayableWidgetMapping {
 
     throw new IllegalStateException(String.format("There's no widget for '%s' viewType", viewType)
         + "\nDid you forget to add the mapping to DisplayableWidgetMapping enum??");
+  }
+
+  @Nullable private Widget newWidget(View view) {
+    Class[] cArg = new Class[1];
+    cArg[0] = View.class;
+    try {
+      return widgetClass.getDeclaredConstructor(cArg).newInstance(view);
+    } catch (Exception e) {
+      CrashReport.getInstance().log(e);
+      String errMsg = String.format("Error instantiating widget '%s'", widgetClass.getName());
+      Logger.e(TAG, errMsg, e);
+      throw new RuntimeException(errMsg);
+    }
   }
 
   public List<Displayable> getCachedDisplayables() {
@@ -389,37 +415,12 @@ public class DisplayableWidgetMapping {
     return cachedDisplayables;
   }
 
-  @Nullable private Widget newWidget(View view) {
-    Class[] cArg = new Class[1];
-    cArg[0] = View.class;
-    try {
-      return widgetClass.getDeclaredConstructor(cArg).newInstance(view);
-    } catch (Exception e) {
-      CrashReports.logException(e);
-      String errMsg = String.format("Error instantiating widget '%s'", widgetClass.getName());
-      Logger.e(TAG, errMsg, e);
-      throw new RuntimeException(errMsg);
-    }
-  }
-
-  @Nullable public Displayable newDisplayable() {
-    try {
-      return displayableClass.newInstance();
-    } catch (Exception e) {
-      CrashReports.logException(e);
-      String errMsg =
-          String.format("Error instantiating displayable '%s'", displayableClass.getName());
-      Logger.e(TAG, errMsg, e);
-      throw new RuntimeException(errMsg);
-    }
-  }
-
   /**
    * needed in the partners to get the displayableClass
    *
    * @return displayableClass
    */
-  public Class<? extends Displayable> getDisplayableClass() {
+  @Partners public Class<? extends Displayable> getDisplayableClass() {
     return displayableClass;
   }
 
@@ -428,7 +429,7 @@ public class DisplayableWidgetMapping {
    *
    * @return widgetClass
    */
-  public Class<? extends Widget> getWidgetClass() {
+  @Partners public Class<? extends Widget> getWidgetClass() {
     return widgetClass;
   }
 
@@ -437,7 +438,7 @@ public class DisplayableWidgetMapping {
    *
    * @return Map of widgets and displayables
    */
-  public Map<Integer, DisplayableWidgetMapping> getViewTypeMapping() {
+  @Partners protected Map<Integer, DisplayableWidgetMapping> getViewTypeMapping() {
     return viewTypeMapping;
   }
 }

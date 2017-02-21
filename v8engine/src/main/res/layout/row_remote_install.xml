@@ -1,25 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    >
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageView"
-        android:src="@drawable/img_tvicon"
-        android:layout_marginTop="6dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="14dp"
-        android:layout_marginBottom="5dp" />
+  <ImageView
+      android:id="@+id/imageView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="5dp"
+      android:layout_marginEnd="14dp"
+      android:layout_marginLeft="0dp"
+      android:layout_marginRight="14dp"
+      android:layout_marginStart="0dp"
+      android:layout_marginTop="6dp"
+      android:src="@drawable/img_tvicon"
+      />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/deviceNameText"
-        android:layout_marginTop="20dp"
-        android:textColor="#ff6600"
-        android:text="BRAVIA 2015"
-        android:textSize="14.1sp" />
+  <TextView
+      android:id="@+id/deviceNameText"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="20dp"
+      android:text="BRAVIA 2015"
+      android:textAppearance="?android:attr/textAppearanceMedium"
+      android:textColor="#ff6600"
+      android:textSize="14.1sp"
+      />
 </LinearLayout>

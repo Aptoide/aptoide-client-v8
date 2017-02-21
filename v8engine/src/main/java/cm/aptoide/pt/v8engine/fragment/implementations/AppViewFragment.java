@@ -19,6 +19,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
@@ -29,16 +30,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.actions.PermissionRequest;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.annotation.Partners;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AppAction;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
-import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.database.realm.Rollback;
@@ -66,6 +68,7 @@ import cm.aptoide.pt.v8engine.activity.PaymentActivity;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.dialog.DialogBadgeV7;
 import cm.aptoide.pt.v8engine.dialog.RemoteInstallDialog;
+import cm.aptoide.pt.v8engine.dialog.SharePreviewDialog;
 import cm.aptoide.pt.v8engine.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
@@ -78,6 +81,7 @@ import cm.aptoide.pt.v8engine.repository.AdsRepository;
 import cm.aptoide.pt.v8engine.repository.AppRepository;
 import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
+import cm.aptoide.pt.v8engine.repository.SocialRepository;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
@@ -158,19 +162,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private InstalledRepository installedRepository;
   private GetApp getApp;
 
-  public static AppViewFragment newInstance(String packageName, String storeName,
-      OpenType openType) {
-    Bundle bundle = new Bundle();
-    if (!TextUtils.isEmpty(packageName)) {
-      bundle.putString(BundleKeys.PACKAGE_NAME.name(), packageName);
-    }
-    bundle.putSerializable(BundleKeys.SHOULD_INSTALL.name(), openType);
-    bundle.putString(BundleKeys.STORE_NAME.name(), storeName);
-    AppViewFragment fragment = new AppViewFragment();
-    fragment.setArguments(bundle);
-    return fragment;
-  }
-
   public static AppViewFragment newInstance(String md5) {
     Bundle bundle = new Bundle();
     bundle.putString(BundleKeys.MD5.name(), md5);
@@ -219,13 +210,24 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     return newInstance(packageName, null, openType);
   }
 
+  public static AppViewFragment newInstance(String packageName, String storeName,
+      OpenType openType) {
+    Bundle bundle = new Bundle();
+    if (!TextUtils.isEmpty(packageName)) {
+      bundle.putString(BundleKeys.PACKAGE_NAME.name(), packageName);
+    }
+    bundle.putSerializable(BundleKeys.SHOULD_INSTALL.name(), openType);
+    bundle.putString(BundleKeys.STORE_NAME.name(), storeName);
+    AppViewFragment fragment = new AppViewFragment();
+    fragment.setArguments(bundle);
+    return fragment;
+  }
+
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     permissionManager = new PermissionManager();
     Installer installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
-    installManager = new InstallManager(AptoideDownloadManager.getInstance(), installer,
-        AccessorFactory.getAccessorFor(Download.class),
-        AccessorFactory.getAccessorFor(Installed.class));
+    installManager = new InstallManager(AptoideDownloadManager.getInstance(), installer);
 
     productFactory = new ProductFactory();
     appRepository = new AppRepository(new NetworkOperatorManager(
@@ -234,7 +236,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     installedRepository = RepositoryFactory.getInstalledRepository();
   }
 
-  @Override public void loadExtras(Bundle args) {
+  @Partners @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
     appId = args.getLong(BundleKeys.APP_ID.name(), -1);
     packageName = args.getString(BundleKeys.PACKAGE_NAME.name(), null);
@@ -251,96 +253,96 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     storeTheme = args.getString(StoreFragment.BundleCons.STORE_THEME);
   }
 
-  private void setupObservables(GetApp getApp) {
-
-    // ??
-
-    final long storeId = getApp.getNodes().getMeta().getData().getStore().getId();
-
-    // For stores subscription
-    //DeprecatedDatabase.StoreQ.getAll(realm)
-    //    .asObservable()
-    //    .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-    //    .subscribe(stores -> {
-    //      if (DeprecatedDatabase.StoreQ.get(storeId, realm) != null) {
-    //        adapter.notifyDataSetChanged();
-    //      }
-    //    });
-
-    final StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
-    storeAccessor.getAll()
-        .flatMapIterable(list -> list)
-        .filter(store -> store != null && store.getStoreId() == storeId)
-        .observeOn(AndroidSchedulers.mainThread())
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(store -> {
-          adapter.notifyDataSetChanged();
-        });
-
-    // ??
-
-    // For install actions
-    //DeprecatedDatabase.RollbackQ.getAll(realm)
-    //    .asObservable()
-    //    .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-    //    .subscribe(rollbacks -> {
-    //      adapter.notifyDataSetChanged();
-    //    });
-
-    final RollbackAccessor rollbackAccessor = AccessorFactory.getAccessorFor(Rollback.class);
-    rollbackAccessor.getAll()
-        .observeOn(AndroidSchedulers.mainThread())
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(rollbacks -> {
-          adapter.notifyDataSetChanged();
-        });
-
-    // TODO: 27-05-2016 neuro install actions, not present in v7
+  @Override public int getContentViewId() {
+    return VIEW_ID;
   }
 
-  protected LinkedList<Displayable> setupDisplayables(GetApp getApp) {
-    LinkedList<Displayable> displayables = new LinkedList<>();
+  @Partners @Override public void bindViews(View view) {
+    super.bindViews(view);
+    header = new AppViewHeader(view);
+    setHasOptionsMenu(true);
+  }
 
-    GetAppMeta.App app = getApp.getNodes().getMeta().getData();
-    GetAppMeta.Media media = app.getMedia();
+  @Override public void onDestroyView() {
+    super.onDestroyView();
 
-    final boolean shouldInstall = openType == OpenType.OPEN_AND_INSTALL;
-    openType = null;
-    installDisplayable =
-        AppViewInstallDisplayable.newInstance(getApp, installManager, minimalAd, shouldInstall,
-            installedRepository);
-    displayables.add(installDisplayable);
-    displayables.add(new AppViewStoreDisplayable(getApp));
-    displayables.add(new AppViewRateAndCommentsDisplayable(getApp));
-
-    // only show screen shots / video if the app has them
-    if (isMediaAvailable(media)) {
-      displayables.add(new AppViewScreenshotsDisplayable(app));
+    if (storeTheme != null) {
+      ThemeUtils.setStatusBarThemeColor(getActivity(),
+          StoreThemeEnum.get(V8Engine.getConfiguration().getDefaultTheme()));
     }
-    displayables.add(new AppViewDescriptionDisplayable(getApp));
+  }
 
-    displayables.add(new AppViewFlagThisDisplayable(getApp));
-    if (suggestedAds != null) {
-      displayables.add(new AppViewSuggestedAppsDisplayable(suggestedAds));
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+  }
+
+  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    super.load(create, refresh, savedInstanceState);
+
+    if (subscription != null) {
+      subscription.unsubscribe();
     }
-    displayables.add(new AppViewDeveloperDisplayable(getApp));
 
-    return displayables;
+    if (appId >= 0) {
+      Logger.d(TAG, "loading app info using app ID");
+      subscription = appRepository.getApp(appId, refresh, sponsored, storeName, packageName)
+          .map(getApp -> this.getApp = getApp)
+          .flatMap(getApp -> manageOrganicAds(getApp))
+          .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
+          .observeOn(AndroidSchedulers.mainThread())
+          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+          .subscribe(getApp -> {
+            setupAppView(getApp);
+          }, throwable -> finishLoading(throwable));
+    } else if (!TextUtils.isEmpty(md5)) {
+      subscription = appRepository.getAppFromMd5(md5, refresh, sponsored)
+          .map(getApp -> this.getApp = getApp)
+          .flatMap(getApp -> manageOrganicAds(getApp))
+          .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
+          .observeOn(AndroidSchedulers.mainThread())
+          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+          .subscribe(getApp -> {
+            setupAppView(getApp);
+          }, throwable -> {
+            finishLoading(throwable);
+            CrashReport.getInstance().log(key_appId, String.valueOf(appId));
+            CrashReport.getInstance().log(key_packageName, String.valueOf(packageName));
+            CrashReport.getInstance().log(key_md5sum, md5);
+          });
+    } else {
+      Logger.d(TAG, "loading app info using app package name");
+      subscription = appRepository.getApp(packageName, refresh, sponsored, storeName)
+          .map(getApp -> this.getApp = getApp)
+          .flatMap(getApp -> manageOrganicAds(getApp))
+          .observeOn(AndroidSchedulers.mainThread())
+          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+          .subscribe(getApp -> {
+            setupAppView(getApp);
+          }, throwable -> {
+            finishLoading(throwable);
+            CrashReport.getInstance().log(key_appId, String.valueOf(appId));
+            CrashReport.getInstance().log(key_packageName, String.valueOf(packageName));
+            CrashReport.getInstance().log(key_md5sum, md5);
+          });
+    }
+  }
+
+  @Override public void onResume() {
+    super.onResume();
+
+    // restore download bar status
+    // TODO: 04/08/16 sithengineer restore download bar status
+  }
+
+  @Override public void onPause() {
+    super.onPause();
+
+    // save download bar status
+    // TODO: 04/08/16 sithengineer save download bar status
   }
 
   private boolean hasDescription(GetAppMeta.Media media) {
     return !TextUtils.isEmpty(media.getDescription());
-  }
-
-  private boolean isMediaAvailable(GetAppMeta.Media media) {
-    if (media != null) {
-      List<GetAppMeta.Media.Screenshot> screenshots = media.getScreenshots();
-      List<GetAppMeta.Media.Video> videos = media.getVideos();
-      boolean hasScreenShots = screenshots != null && screenshots.size() > 0;
-      boolean hasVideos = videos != null && videos.size() > 0;
-      return hasScreenShots || hasVideos;
-    }
-    return false;
   }
 
   public void buyApp(GetAppMeta.App app) {
@@ -385,7 +387,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     super.onCreateOptionsMenu(menu, inflater);
     this.menu = menu;
     inflater.inflate(R.menu.menu_appview_fragment, menu);
-    SearchUtils.setupGlobalSearchView(menu, getActivity());
+    SearchUtils.setupGlobalSearchView(menu, getNavigationManager());
     uninstallMenuItem = menu.findItem(R.id.menu_uninstall);
   }
 
@@ -396,7 +398,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       getActivity().onBackPressed();
       return true;
     } else if (i == R.id.menu_share) {
-      shareApp(appName, wUrl);
+      shareApp(appName, packageName, wUrl);
       return true;
     } else if (i == R.id.menu_schedule) {
 
@@ -431,7 +433,37 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     return super.onOptionsItemSelected(item);
   }
 
-  private void shareApp(String appName, String wUrl) {
+  private void shareApp(String appName, String packageName, String wUrl) {
+
+    if (AptoideAccountManager.isLoggedIn()) {
+
+      GenericDialogs.createGenericShareDialog(getContext(), getString(R.string.share))
+          .subscribe(eResponse -> {
+            if (GenericDialogs.EResponse.SHARE_EXTERNAL == eResponse) {
+
+              shareDefault(appName, packageName, wUrl);
+            } else if (GenericDialogs.EResponse.SHARE_TIMELINE == eResponse) {
+              if (AptoideAccountManager.isLoggedIn()
+                  && ManagerPreferences.getShowPreview()
+                  && Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
+                SharePreviewDialog sharePreviewDialog = new SharePreviewDialog();
+                AlertDialog.Builder alertDialog =
+                    sharePreviewDialog.getCustomRecommendationPreviewDialogBuilder(getContext(),
+                        appName, app.getIcon());
+                SocialRepository socialRepository = new SocialRepository();
+
+                sharePreviewDialog.showShareCardPreviewDialog(packageName, "app", getContext(),
+                    sharePreviewDialog, alertDialog, socialRepository);
+              }
+            }
+          }, Throwable::printStackTrace);
+    } else {
+
+      shareDefault(appName, packageName, wUrl);
+    }
+  }
+
+  @Partners protected void shareDefault(String appName, String packageName, String wUrl) {
     if (wUrl != null) {
       Intent sharingIntent = new Intent(Intent.ACTION_SEND);
       sharingIntent.setType("text/plain");
@@ -442,100 +474,29 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     }
   }
 
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-  }
+  private Observable<GetApp> manageOrganicAds(GetApp getApp) {
+    String packageName = getApp.getNodes().getMeta().getData().getPackageName();
+    String storeName = getApp.getNodes().getMeta().getData().getStore().getName();
 
-  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    super.load(create, refresh, savedInstanceState);
-
-    if (subscription != null) {
-      subscription.unsubscribe();
-    }
-
-    if (appId >= 0) {
-      Logger.d(TAG, "loading app info using app ID");
-      subscription = appRepository.getApp(appId, refresh, sponsored, storeName, packageName)
-          .map(getApp -> this.getApp = getApp)
-          .flatMap(getApp -> manageOrganicAds(getApp))
-          .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
-          .observeOn(AndroidSchedulers.mainThread())
-          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-          .subscribe(getApp -> {
-            setupAppView(getApp);
-          }, throwable -> finishLoading(throwable));
-    } else if (!TextUtils.isEmpty(md5)) {
-      subscription = appRepository.getAppFromMd5(md5, refresh, sponsored)
-          .map(getApp -> this.getApp = getApp)
-          .flatMap(getApp -> manageOrganicAds(getApp))
-          .flatMap(getApp -> manageSuggestedAds(getApp).onErrorReturn(throwable -> getApp))
-          .observeOn(AndroidSchedulers.mainThread())
-          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-          .subscribe(getApp -> {
-            setupAppView(getApp);
-          }, throwable -> {
-            finishLoading(throwable);
-            CrashReports.logString(key_appId, String.valueOf(appId));
-            CrashReports.logString(key_packageName, String.valueOf(packageName));
-            CrashReports.logString(key_md5sum, md5);
-          });
+    if (minimalAd == null) {
+      return adsRepository.getAdsFromAppView(packageName, storeName).doOnNext(ad -> {
+        minimalAd = ad;
+        handleAdsLogic(minimalAd);
+      }).map(ad -> getApp).onErrorReturn(throwable -> getApp);
     } else {
-      Logger.d(TAG, "loading app info using app package name");
-      subscription = appRepository.getApp(packageName, refresh, sponsored, storeName)
-          .map(getApp -> this.getApp = getApp)
-          .flatMap(getApp -> manageOrganicAds(getApp))
-          .observeOn(AndroidSchedulers.mainThread())
-          .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-          .subscribe(getApp -> {
-            setupAppView(getApp);
-          }, throwable -> {
-            finishLoading(throwable);
-            CrashReports.logString(key_appId, String.valueOf(appId));
-            CrashReports.logString(key_packageName, String.valueOf(packageName));
-            CrashReports.logString(key_md5sum, md5);
-          });
+      handleAdsLogic(minimalAd);
+      return Observable.just(getApp);
     }
   }
 
-  @Override public int getContentViewId() {
-    return VIEW_ID;
-  }
+  @NonNull private Observable<GetApp> manageSuggestedAds(GetApp getApp1) {
+    List<String> keywords = getApp1.getNodes().getMeta().getData().getMedia().getKeywords();
+    String packageName = getApp1.getNodes().getMeta().getData().getPackageName();
 
-  @Override protected boolean displayHomeUpAsEnabled() {
-    return true;
-  }
-
-  @Override protected void setupToolbarDetails(Toolbar toolbar) {
-    toolbar.setTitle("");
-  }
-
-  @Override public void onDestroyView() {
-    super.onDestroyView();
-
-    if (storeTheme != null) {
-      ThemeUtils.setStatusBarThemeColor(getActivity(),
-          StoreThemeEnum.get(V8Engine.getConfiguration().getDefaultTheme()));
-    }
-  }
-
-  @Override public void bindViews(View view) {
-    super.bindViews(view);
-    header = new AppViewHeader(view);
-    setHasOptionsMenu(true);
-  }
-
-  @Override public void onResume() {
-    super.onResume();
-
-    // restore download bar status
-    // TODO: 04/08/16 sithengineer restore download bar status
-  }
-
-  @Override public void onPause() {
-    super.onPause();
-
-    // save download bar status
-    // TODO: 04/08/16 sithengineer save download bar status
+    return adsRepository.getAdsFromAppviewSuggested(packageName, keywords).map(minimalAds -> {
+      suggestedAds = minimalAds;
+      return getApp1;
+    });
   }
 
   private void setupAppView(GetApp getApp) {
@@ -556,7 +517,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
           }
           if (appAction != AppAction.INSTALL) {
             setUnInstallMenuOptionVisible(() -> new PermissionManager().requestDownloadAccess(
-                (PermissionRequest) getContext())
+                (PermissionService) getContext())
                 .flatMap(success -> installManager.uninstall(getContext(), packageName,
                     app.getFile().getVername()))
                 .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
@@ -565,10 +526,12 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
           } else {
             setUnInstallMenuOptionVisible(null);
           }
+        }, err -> {
+          CrashReport.getInstance().log(err);
         });
 
     header.setup(getApp);
-    setDisplayables(setupDisplayables(getApp));
+    clearDisplayables().addDisplayables(setupDisplayables(getApp), true);
     setupObservables(getApp);
     showHideOptionsMenu(true);
     setupShare(getApp);
@@ -593,43 +556,6 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     finishLoading();
   }
 
-  private void updateLocalVars(GetAppMeta.App app) {
-    appId = app.getId();
-    packageName = app.getPackageName();
-    storeName = app.getStore().getName();
-    storeTheme = app.getStore().getAppearance().getTheme();
-    md5 = app.getMd5();
-    appName = app.getName();
-  }
-
-  protected void showHideOptionsMenu(MenuItem item, boolean visible) {
-    if (item != null) {
-      item.setVisible(visible);
-    }
-  }
-
-  private void showHideOptionsMenu(boolean visible) {
-    for (int i = 0; i < menu.size(); i++) {
-      MenuItem item = menu.getItem(i);
-      showHideOptionsMenu(item, visible);
-    }
-  }
-
-  private Observable<GetApp> manageOrganicAds(GetApp getApp) {
-    String packageName = getApp.getNodes().getMeta().getData().getPackageName();
-    String storeName = getApp.getNodes().getMeta().getData().getStore().getName();
-
-    if (minimalAd == null) {
-      return adsRepository.getAdsFromAppView(packageName, storeName).doOnNext(ad -> {
-        minimalAd = ad;
-        handleAdsLogic(minimalAd);
-      }).map(ad -> getApp).onErrorReturn(throwable -> getApp);
-    } else {
-      handleAdsLogic(minimalAd);
-      return Observable.just(getApp);
-    }
-  }
-
   private void handleAdsLogic(MinimalAd minimalAd) {
     DataproviderUtils.AdNetworksUtils.knockCpc(minimalAd);
     Analytics.LTV.cpi(minimalAd.getPackageName());
@@ -637,58 +563,13 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         () -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES, false));
   }
 
-  //
-  // Scrollable interface
-  //
-
-  @NonNull private Observable<GetApp> manageSuggestedAds(GetApp getApp1) {
-    List<String> keywords = getApp1.getNodes().getMeta().getData().getMedia().getKeywords();
-    String packageName = getApp1.getNodes().getMeta().getData().getPackageName();
-
-    return adsRepository.getAdsFromAppviewSuggested(packageName, keywords).map(minimalAds -> {
-      suggestedAds = minimalAds;
-      return getApp1;
-    });
-  }
-
-  @Override public void scroll(Position position) {
-    RecyclerView rView = getRecyclerView();
-    if (rView == null || getAdapter().getItemCount() == 0) {
-      Logger.e(TAG, "Recycler view is null or there are no elements in the adapter");
-      return;
-    }
-
-    if (position == Position.FIRST) {
-      rView.scrollToPosition(0);
-    } else if (position == Position.LAST) {
-      rView.scrollToPosition(getAdapter().getItemCount());
-    }
-  }
-
-  @Override public void itemAdded(int pos) {
-    getLayoutManager().onItemsAdded(getRecyclerView(), pos, 1);
-  }
-
-  @Override public void itemRemoved(int pos) {
-    getLayoutManager().onItemsRemoved(getRecyclerView(), pos, 1);
-  }
-
-  //
-  // micro widget for header
-  //
-
-  @Override public void itemChanged(int pos) {
-    getLayoutManager().onItemsUpdated(getRecyclerView(), pos, 1);
-  }
-
-  @Override public void setUnInstallMenuOptionVisible(@Nullable Action0 unInstallAction) {
-    this.unInstallAction = unInstallAction;
-    showHideOptionsMenu(uninstallMenuItem, unInstallAction != null);
-  }
-
-  public void setupShare(GetApp app) {
-    appName = app.getNodes().getMeta().getData().getName();
-    wUrl = app.getNodes().getMeta().getData().getUrls().getW();
+  private void updateLocalVars(GetAppMeta.App app) {
+    appId = app.getId();
+    packageName = app.getPackageName();
+    storeName = app.getStore().getName();
+    storeTheme = app.getStore().getAppearance().getTheme();
+    md5 = app.getMd5();
+    appName = app.getName();
   }
 
   public Observable<AppAction> installAction() {
@@ -713,7 +594,160 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     });
   }
 
-  private enum BundleKeys {
+  @Partners protected void showHideOptionsMenu(MenuItem item, boolean visible) {
+    if (item != null) {
+      item.setVisible(visible);
+    }
+  }
+
+  @Override public void setUnInstallMenuOptionVisible(@Nullable Action0 unInstallAction) {
+    this.unInstallAction = unInstallAction;
+    showHideOptionsMenu(uninstallMenuItem, unInstallAction != null);
+  }
+
+  protected LinkedList<Displayable> setupDisplayables(GetApp getApp) {
+    LinkedList<Displayable> displayables = new LinkedList<>();
+
+    GetAppMeta.App app = getApp.getNodes().getMeta().getData();
+    GetAppMeta.Media media = app.getMedia();
+
+    final boolean shouldInstall = openType == OpenType.OPEN_AND_INSTALL;
+    openType = null;
+    installDisplayable =
+        AppViewInstallDisplayable.newInstance(getApp, installManager, minimalAd, shouldInstall,
+            installedRepository);
+    displayables.add(installDisplayable);
+    displayables.add(new AppViewStoreDisplayable(getApp));
+    displayables.add(new AppViewRateAndCommentsDisplayable(getApp));
+
+    // only show screen shots / video if the app has them
+    if (isMediaAvailable(media)) {
+      displayables.add(new AppViewScreenshotsDisplayable(app));
+    }
+    displayables.add(new AppViewDescriptionDisplayable(getApp));
+
+    displayables.add(new AppViewFlagThisDisplayable(getApp));
+    if (suggestedAds != null) {
+      displayables.add(new AppViewSuggestedAppsDisplayable(suggestedAds));
+    }
+    displayables.add(new AppViewDeveloperDisplayable(getApp));
+
+    return displayables;
+  }
+
+  private void setupObservables(GetApp getApp) {
+
+    // ??
+
+    final long storeId = getApp.getNodes().getMeta().getData().getStore().getId();
+
+    // For stores subscription
+    //DeprecatedDatabase.StoreQ.getAll(realm)
+    //    .asObservable()
+    //    .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+    //    .subscribe(stores -> {
+    //      if (DeprecatedDatabase.StoreQ.get(storeId, realm) != null) {
+    //        adapter.notifyDataSetChanged();
+    //      }
+    //    });
+
+    final StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
+    storeAccessor.getAll()
+        .flatMapIterable(list -> list)
+        .filter(store -> store != null && store.getStoreId() == storeId)
+        .observeOn(AndroidSchedulers.mainThread())
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(store -> {
+          getAdapter().notifyDataSetChanged();
+        });
+
+    // ??
+
+    // For install actions
+    //DeprecatedDatabase.RollbackQ.getAll(realm)
+    //    .asObservable()
+    //    .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+    //    .subscribe(rollbacks -> {
+    //      adapter.notifyDataSetChanged();
+    //    });
+
+    final RollbackAccessor rollbackAccessor = AccessorFactory.getAccessorFor(Rollback.class);
+    rollbackAccessor.getAll()
+        .observeOn(AndroidSchedulers.mainThread())
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(rollbacks -> {
+          getAdapter().notifyDataSetChanged();
+        });
+
+    // TODO: 27-05-2016 neuro install actions, not present in v7
+  }
+
+  private void showHideOptionsMenu(boolean visible) {
+    for (int i = 0; i < menu.size(); i++) {
+      MenuItem item = menu.getItem(i);
+      showHideOptionsMenu(item, visible);
+    }
+  }
+
+  //
+  // Scrollable interface
+  //
+
+  public void setupShare(GetApp app) {
+    appName = app.getNodes().getMeta().getData().getName();
+    wUrl = app.getNodes().getMeta().getData().getUrls().getW();
+  }
+
+  private boolean isMediaAvailable(GetAppMeta.Media media) {
+    if (media != null) {
+      List<GetAppMeta.Media.Screenshot> screenshots = media.getScreenshots();
+      List<GetAppMeta.Media.Video> videos = media.getVideos();
+      boolean hasScreenShots = screenshots != null && screenshots.size() > 0;
+      boolean hasVideos = videos != null && videos.size() > 0;
+      return hasScreenShots || hasVideos;
+    }
+    return false;
+  }
+
+  @Override protected boolean displayHomeUpAsEnabled() {
+    return true;
+  }
+
+  @Override protected void setupToolbarDetails(Toolbar toolbar) {
+    toolbar.setTitle("");
+  }
+
+  //
+  // micro widget for header
+  //
+
+  @Override public void scroll(Position position) {
+    RecyclerView rView = getRecyclerView();
+    if (rView == null || getAdapter().getItemCount() == 0) {
+      Logger.e(TAG, "Recycler view is null or there are no elements in the adapter");
+      return;
+    }
+
+    if (position == Position.FIRST) {
+      rView.scrollToPosition(0);
+    } else if (position == Position.LAST) {
+      rView.scrollToPosition(getAdapter().getItemCount());
+    }
+  }
+
+  @Override public void itemAdded(int pos) {
+    getLayoutManager().onItemsAdded(getRecyclerView(), pos, 1);
+  }
+
+  @Override public void itemRemoved(int pos) {
+    getLayoutManager().onItemsRemoved(getRecyclerView(), pos, 1);
+  }
+
+  @Override public void itemChanged(int pos) {
+    getLayoutManager().onItemsUpdated(getRecyclerView(), pos, 1);
+  }
+
+  @Partners protected enum BundleKeys {
     APP_ID,
     STORE_NAME,
     MINIMAL_AD,
@@ -785,24 +819,19 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       String headerImageUrl = app.getGraphic();
       List<GetAppMeta.Media.Screenshot> screenshots = app.getMedia().getScreenshots();
 
-      //			final Drawable colorDrawable = new ColorDrawable(Color.argb(255, 0, 0, 0));
-
+      final Context context = getContext();
       if (!TextUtils.isEmpty(headerImageUrl)) {
-        ImageLoader.load(app.getGraphic(), R.drawable.app_view_header_gradient, featuredGraphic);
-        //				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        //					((FrameLayout)featuredGraphic.getParent()).setForeground(colorDrawable);
-        //				}
+        ImageLoader.with(context)
+            .load(app.getGraphic(), R.drawable.app_view_header_gradient, featuredGraphic);
       } else if (screenshots != null && screenshots.size() > 0 && !TextUtils.isEmpty(
           screenshots.get(0).getUrl())) {
-        ImageLoader.load(screenshots.get(0).getUrl(), R.drawable.app_view_header_gradient,
-            featuredGraphic);
-        //				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        //					((FrameLayout) featuredGraphic.getParent()).setForeground(colorDrawable);
-        //				}
+        ImageLoader.with(context)
+            .load(screenshots.get(0).getUrl(), R.drawable.app_view_header_gradient,
+                featuredGraphic);
       }
 
       if (app.getIcon() != null) {
-        ImageLoader.load(getApp.getNodes().getMeta().getData().getIcon(), appIcon);
+        ImageLoader.with(context).load(getApp.getNodes().getMeta().getData().getIcon(), appIcon);
       }
 
       collapsingToolbar.setTitle(app.getName());
@@ -874,7 +903,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
           break;
       }
 
-      ImageLoader.load(badgeResId, badge);
+      ImageLoader.with(context).load(badgeResId, badge);
       badgeText.setText(badgeMessageId);
 
       Analytics.ViewedApplication.view(app.getPackageName(),

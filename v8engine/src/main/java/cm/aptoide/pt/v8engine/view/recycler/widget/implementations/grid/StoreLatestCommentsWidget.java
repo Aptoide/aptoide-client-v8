@@ -6,11 +6,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
-import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -35,7 +35,7 @@ import rx.schedulers.Schedulers;
 
 public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplayable> {
 
-  private static final String TAG = StoreLatestCommentsWidget.class.getName();
+  private final AptoideClientUUID aptoideClientUUID;
 
   private RecyclerView recyclerView;
 
@@ -44,6 +44,9 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
 
   public StoreLatestCommentsWidget(View itemView) {
     super(itemView);
+
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
   }
 
   @Override protected void assignViews(View itemView) {
@@ -75,16 +78,14 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
     ManagerPreferences.setForceServerRefreshFlag(true);
     compositeSubscription.add(
         ListCommentsRequest.of(storeId, 0, 3, AptoideAccountManager.getAccessToken(),
-            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                DataProvider.getContext()).getAptoideClientUUID(), false)
+            aptoideClientUUID.getUniqueIdentifier(), false)
             .observe()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(listComments -> {
               setAdapter(listComments.getDatalist().getList());
             }, err -> {
-              Logger.e(TAG, err);
-              CrashReports.logException(err);
+              CrashReport.getInstance().log(err);
             }));
     return null;
   }

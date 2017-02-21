@@ -12,11 +12,11 @@
 
   <ProgressBar
       android:id="@+id/progress_bar_endless"
-      style="?android:attr/progressBarStyleLarge"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_gravity="center"
       android:indeterminateOnly="true"
+      style="?android:attr/progressBarStyleLarge"
       />
 
 </LinearLayout>

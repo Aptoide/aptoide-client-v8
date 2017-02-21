@@ -14,23 +14,30 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.widget.RemoteViews;
-import cm.aptoide.pt.crashreports.CrashReports;
+import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.ws.v3.PushNotificationsRequest;
+import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v3.GetPushNotificationsResponse;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver;
 import cm.aptoide.pt.v8engine.receivers.PullingContentReceiver;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.UpdateRepository;
+import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import com.bumptech.glide.request.target.NotificationTarget;
+import java.util.ArrayList;
 import java.util.List;
+import rx.Observable;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -47,23 +54,13 @@ public class PullingContentService extends Service {
   public static final int UPDATE_NOTIFICATION_ID = 123;
   private static final String TAG = PullingContentService.class.getSimpleName();
   private CompositeSubscription subscriptions;
-
-  public static void setAlarm(AlarmManager am, Context context, String action, long time) {
-    Intent intent = new Intent(context, PullingContentService.class);
-    intent.setAction(action);
-    PendingIntent pendingIntent =
-        PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-    am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 5000, time, pendingIntent);
-  }
-
-  private boolean isAlarmUp(Context context, String action) {
-    Intent intent = new Intent(context, PullingContentService.class);
-    intent.setAction(action);
-    return (PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_NO_CREATE) != null);
-  }
+  private InstallManager installManager;
 
   @Override public void onCreate() {
     super.onCreate();
+    installManager = new InstallManager(AptoideDownloadManager.getInstance(),
+        new InstallerFactory().create(this, InstallerFactory.ROLLBACK));
+
     subscriptions = new CompositeSubscription();
     AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
     if (!isAlarmUp(this, PUSH_NOTIFICATIONS_ACTION)) {
@@ -72,6 +69,20 @@ public class PullingContentService extends Service {
     if (!isAlarmUp(this, UPDATES_ACTION)) {
       setAlarm(alarm, this, UPDATES_ACTION, UPDATES_INTERVAL);
     }
+  }
+
+  private boolean isAlarmUp(Context context, String action) {
+    Intent intent = new Intent(context, PullingContentService.class);
+    intent.setAction(action);
+    return (PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_NO_CREATE) != null);
+  }
+
+  public static void setAlarm(AlarmManager am, Context context, String action, long time) {
+    Intent intent = new Intent(context, PullingContentService.class);
+    intent.setAction(action);
+    PendingIntent pendingIntent =
+        PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 5000, time, pendingIntent);
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
@@ -83,11 +94,11 @@ public class PullingContentService extends Service {
           setUpdatesAction(startId);
           break;
         case PUSH_NOTIFICATIONS_ACTION:
-          setPushNotificationsAction(startId);
+          setPushNotificationsAction(this, startId);
           break;
         case BOOT_COMPLETED_ACTION:
           setUpdatesAction(startId);
-          setPushNotificationsAction(startId);
+          setPushNotificationsAction(this, startId);
           break;
       }
     }
@@ -96,35 +107,59 @@ public class PullingContentService extends Service {
 
   /**
    * Setup on updates action received
+   *
    * @param startId service startid
    */
-  private void setUpdatesAction(int startId){
+  private void setUpdatesAction(int startId) {
     UpdateRepository repository = RepositoryFactory.getUpdateRepository();
-    subscriptions.add(repository.getUpdates(true).first().subscribe(updates -> {
-      Logger.d(TAG, "updates refreshed");
-      setUpdatesNotification(updates, startId);
-    }, throwable -> {
-      throwable.printStackTrace();
-      CrashReports.logException(throwable);
-    }));
+    subscriptions.add(repository.sync(true)
+        .andThen(repository.getAll(false))
+        .first()
+        .observeOn(Schedulers.computation())
+        .flatMap(updates -> autoUpdate(updates).flatMap(autoUpdateRunned -> {
+          if (autoUpdateRunned) {
+            return Observable.empty();
+          } else {
+            return Observable.just(updates);
+          }
+        }))
+        .subscribe(updates -> {
+          setUpdatesNotification(updates, startId);
+        }, throwable -> {
+          throwable.printStackTrace();
+          CrashReport.getInstance().log(throwable);
+        }));
   }
 
   /**
    * setup on push notifications action received
+   *
    * @param startId service startid
    */
-  private void setPushNotificationsAction(int startId){
+  private void setPushNotificationsAction(Context context, int startId) {
     PushNotificationsRequest.of()
-        .execute(response -> setPushNotification(response, startId));
+        .execute(response -> setPushNotification(context, response, startId));
   }
 
-  @Override public void onDestroy() {
-    subscriptions.clear();
-    super.onDestroy();
-  }
-
-  @Nullable @Override public IBinder onBind(Intent intent) {
-    return null;
+  /**
+   * @return true if updateList were installed with success, false otherwise
+   */
+  private Observable<Boolean> autoUpdate(List<Update> updateList) {
+    return Observable.just(
+        ManagerPreferences.isAutoUpdateEnable() && ManagerPreferences.allowRootInstallation())
+        .flatMap(shouldAutoUpdateRun -> {
+          if (shouldAutoUpdateRun) {
+            return Observable.just(updateList).observeOn(Schedulers.io()).map(updates -> {
+              ArrayList<Download> downloadList = new ArrayList<>(updates.size());
+              for (Update update : updates) {
+                downloadList.add(new DownloadFactory().create(update));
+              }
+              return downloadList;
+            }).flatMap(downloads -> installManager.startInstalls(downloads, this));
+          } else {
+            return Observable.just(false);
+          }
+        });
   }
 
   private void setUpdatesNotification(List<Update> updates, int startId) {
@@ -154,7 +189,8 @@ public class PullingContentService extends Service {
               resultPendingIntent)
               .setOngoing(false)
               .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
-              .setLargeIcon(BitmapFactory.decodeResource(Application.getContext().getResources(), Application.getConfiguration().getIcon()))
+              .setLargeIcon(BitmapFactory.decodeResource(Application.getContext().getResources(),
+                  Application.getConfiguration().getIcon()))
               .setContentTitle(contentTitle)
               .setContentText(contentText)
               .setTicker(tickerText)
@@ -169,7 +205,8 @@ public class PullingContentService extends Service {
     stopSelf(startId);
   }
 
-  private void setPushNotification(GetPushNotificationsResponse response, int startId) {
+  private void setPushNotification(Context context, GetPushNotificationsResponse response,
+      int startId) {
     for (final GetPushNotificationsResponse.Notification pushNotification : response.getResults()) {
       Intent resultIntent = new Intent(Application.getContext(), PullingContentReceiver.class);
       resultIntent.setAction(PullingContentReceiver.NOTIFICATION_PRESSED_ACTION);
@@ -186,7 +223,8 @@ public class PullingContentService extends Service {
               resultPendingIntent)
               .setOngoing(false)
               .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
-              .setLargeIcon(BitmapFactory.decodeResource(Application.getContext().getResources(), Application.getConfiguration().getIcon()))
+              .setLargeIcon(BitmapFactory.decodeResource(Application.getContext().getResources(),
+                  Application.getConfiguration().getIcon()))
               .setContentTitle(pushNotification.getTitle())
               .setContentText(pushNotification.getMessage())
               .build();
@@ -195,8 +233,10 @@ public class PullingContentService extends Service {
       final NotificationManager managerNotification = (NotificationManager) Application.getContext()
           .getSystemService(Context.NOTIFICATION_SERVICE);
 
-      if (Build.VERSION.SDK_INT >= 16 && Build.VERSION.SDK_INT < 24 && pushNotification.getImages() != null && TextUtils.isEmpty(
-          pushNotification.getImages().getIconUrl())) {
+      if (Build.VERSION.SDK_INT >= 16
+          && Build.VERSION.SDK_INT < 24
+          && pushNotification.getImages() != null
+          && TextUtils.isEmpty(pushNotification.getImages().getIconUrl())) {
 
         String imageUrl = pushNotification.getImages().getBannerUrl();
         RemoteViews expandedView = new RemoteViews(Application.getContext().getPackageName(),
@@ -210,7 +250,7 @@ public class PullingContentService extends Service {
         NotificationTarget notificationTarget =
             new NotificationTarget(Application.getContext(), expandedView,
                 R.id.PushNotificationImageView, notification, PUSH_NOTIFICATION_ID);
-        ImageLoader.loadImageToNotification(notificationTarget, imageUrl);
+        ImageLoader.with(context).loadImageToNotification(notificationTarget, imageUrl);
       }
 
       if (!response.getResults().isEmpty()) {
@@ -220,5 +260,14 @@ public class PullingContentService extends Service {
       managerNotification.notify(PUSH_NOTIFICATION_ID, notification);
     }
     stopSelf(startId);
+  }
+
+  @Override public void onDestroy() {
+    subscriptions.clear();
+    super.onDestroy();
+  }
+
+  @Nullable @Override public IBinder onBind(Intent intent) {
+    return null;
   }
 }

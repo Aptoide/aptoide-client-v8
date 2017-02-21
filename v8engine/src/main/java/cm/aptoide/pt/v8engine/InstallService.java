@@ -19,7 +19,6 @@ import android.text.TextUtils;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.ScheduledAccessor;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
@@ -73,9 +72,7 @@ public class InstallService extends Service {
     downloadManager = AptoideDownloadManager.getInstance();
     downloadManager.initDownloadService(this);
     rollbackInstaller = new InstallerFactory().create(this, InstallerFactory.ROLLBACK);
-    installManager = new InstallManager(downloadManager, rollbackInstaller,
-        AccessorFactory.getAccessorFor(Download.class),
-        AccessorFactory.getAccessorFor(Installed.class));
+    installManager = new InstallManager(downloadManager, rollbackInstaller);
     subscriptions = new CompositeSubscription();
     setupNotification();
     installerTypeMap = new HashMap();
@@ -108,15 +105,6 @@ public class InstallService extends Service {
     return START_STICKY;
   }
 
-  private Observable<Boolean> stopDownload(String md5) {
-    return hasNextDownload().doOnSubscribe(() -> downloadManager.pauseDownload(md5));
-  }
-
-  private void stopAllDownloads() {
-    downloadManager.pauseAllDownloads();
-    removeNotificationAndStop();
-  }
-
   @Override public void onDestroy() {
     subscriptions.unsubscribe();
     super.onDestroy();
@@ -124,6 +112,15 @@ public class InstallService extends Service {
 
   @Nullable @Override public IBinder onBind(Intent intent) {
     return null;
+  }
+
+  private Observable<Boolean> stopDownload(String md5) {
+    return hasNextDownload().doOnSubscribe(() -> downloadManager.pauseDownload(md5));
+  }
+
+  private void stopAllDownloads() {
+    downloadManager.pauseAllDownloads();
+    removeNotificationAndStop();
   }
 
   private void treatNext(boolean hasNext) {

@@ -45,7 +45,4 @@ import java.util.List;
         new LinearLayoutManager(getContext(), OrientationHelper.HORIZONTAL, false));
     recyclerView.setAdapter(adapter);
   }
-
-  @Override public void unbindView() {
-  }
 }

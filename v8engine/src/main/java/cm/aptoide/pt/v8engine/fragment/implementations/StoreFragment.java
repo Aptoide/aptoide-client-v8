@@ -24,11 +24,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.Event;
@@ -58,19 +60,20 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private static final String TAG = StoreFragment.class.getSimpleName();
 
   private final int PRIVATE_STORE_REQUEST_CODE = 20;
+  private final AptoideClientUUID aptoideClientUUID;
   protected PagerSlidingTabStrip pagerSlidingTabStrip;
   private String storeName;
   private StoreContext storeContext;
   private GetStore getStore;
   private String storeTheme;
 
-  public static StoreFragment newInstance(String storeName, String storeTheme) {
-    return newInstance(storeName, StoreContext.store, storeTheme);
+  public StoreFragment() {
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
   }
 
-  //Delete after completing themes implementation
-  public static StoreFragment newInstance(String storeName) {
-    return newInstance(storeName, StoreContext.store);
+  public static StoreFragment newInstance(String storeName, String storeTheme) {
+    return newInstance(storeName, StoreContext.store, storeTheme);
   }
 
   public static StoreFragment newInstance(String storeName, StoreContext storeContext,
@@ -85,6 +88,11 @@ public class StoreFragment extends BasePagerToolbarFragment {
   }
 
   //Delete after completing themes implementation
+  public static StoreFragment newInstance(String storeName) {
+    return newInstance(storeName, StoreContext.store);
+  }
+
+  //Delete after completing themes implementation
   public static StoreFragment newInstance(String storeName, StoreContext storeContext) {
     Bundle args = new Bundle();
     args.putString(BundleCons.STORE_NAME, storeName);
@@ -94,7 +102,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
     return fragment;
   }
 
-  @Nullable @Override
+  @CallSuper @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     if (storeTheme != null) {
@@ -105,32 +113,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
     return super.onCreateView(inflater, container, savedInstanceState);
   }
 
-  @Override public void onDestroyView() {
-    super.onDestroyView();
-    if (storeTheme != null && !storeContext.equals(StoreContext.store)) {
-      ThemeUtils.setAptoideTheme(getActivity());
-    }
-  }
-
-  @Override public void onDestroy() {
-    super.onDestroy();
-    if (storeTheme != null) {
-      ThemeUtils.setStatusBarThemeColor(getActivity(),
-          StoreThemeEnum.get(V8Engine.getConfiguration().getDefaultTheme()));
-    }
-  }
-
-  @Override public void loadExtras(Bundle args) {
-    super.loadExtras(args);
-    storeName = args.getString(BundleCons.STORE_NAME);
-    storeContext = (StoreContext) args.get(BundleCons.STORE_CONTEXT);
-    storeTheme = args.getString(BundleCons.STORE_THEME);
-  }
-
-  @Override public int getContentViewId() {
-    return R.layout.store_activity;
-  }
-
   @Override protected int getViewToShowAfterLoadingId() {
     return R.id.app_bar_layout;
   }
@@ -138,9 +120,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     if (create || getStore == null) {
       GetStoreRequest.of(StoreUtils.getStoreCredentials(storeName), storeContext,
-          AptoideAccountManager.getAccessToken(),
-          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-              DataProvider.getContext()).getAptoideClientUUID())
+          AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
           .observe(refresh)
           .observeOn(AndroidSchedulers.mainThread())
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
@@ -170,6 +150,13 @@ public class StoreFragment extends BasePagerToolbarFragment {
     } else {
       setupViewPager();
     }
+  }
+
+  @Override public void onDestroyView() {
+    if (storeTheme != null && !storeContext.equals(StoreContext.store)) {
+      ThemeUtils.setAptoideTheme(getActivity());
+    }
+    super.onDestroyView();
   }
 
   @Override protected void setupViewPager() {
@@ -216,10 +203,9 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
         if (Event.Name.getUserTimeline.equals(adapter.getEventName(position))) {
           Analytics.AppsTimeline.openTimeline();
-          floatingActionButton.hide();
-          floatingActionButton.setOnClickListener(null);
-        } else if (Integer.valueOf(position)
-            .equals(adapter.getEventNamePosition(Event.Name.myStores))) {
+        }
+
+        if (Integer.valueOf(position).equals(adapter.getEventNamePosition(Event.Name.myStores))) {
           FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
 
           CoordinatorLayout.LayoutParams params =
@@ -246,7 +232,26 @@ public class StoreFragment extends BasePagerToolbarFragment {
   }
 
   @Override protected PagerAdapter createPagerAdapter() {
-    return new StorePagerAdapter(getChildFragmentManager(), getStore);
+    return new StorePagerAdapter(getChildFragmentManager(), getStore, storeContext);
+  }
+
+  @Override public void onDestroy() {
+    super.onDestroy();
+    if (storeTheme != null) {
+      ThemeUtils.setStatusBarThemeColor(getActivity(),
+          StoreThemeEnum.get(V8Engine.getConfiguration().getDefaultTheme()));
+    }
+  }
+
+  @Override public void loadExtras(Bundle args) {
+    super.loadExtras(args);
+    storeName = args.getString(BundleCons.STORE_NAME);
+    storeContext = (StoreContext) args.get(BundleCons.STORE_CONTEXT);
+    storeTheme = args.getString(BundleCons.STORE_THEME);
+  }
+
+  @Override public int getContentViewId() {
+    return R.layout.store_activity;
   }
 
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -261,6 +266,13 @@ public class StoreFragment extends BasePagerToolbarFragment {
     }
   }
 
+  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+    inflater.inflate(R.menu.menu_search, menu);
+
+    setupSearch(menu);
+  }
+
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     int i = item.getItemId();
 
@@ -271,27 +283,13 @@ public class StoreFragment extends BasePagerToolbarFragment {
     return super.onOptionsItemSelected(item);
   }
 
-  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    super.onCreateOptionsMenu(menu, inflater);
-    inflater.inflate(R.menu.menu_search, menu);
-
-    setupSearch(menu);
-  }
-
   protected void setupSearch(Menu menu) {
-    SearchUtils.setupInsideStoreSearchView(menu, getActivity(), storeName);
+    SearchUtils.setupInsideStoreSearchView(menu, getNavigationManager(), storeName);
   }
 
   @Override public void setupViews() {
     super.setupViews();
     setHasOptionsMenu(true);
-  }
-
-  @CallSuper @Override public void setupToolbar() {
-    super.setupToolbar();
-    // FIXME: 17/1/2017 sithengineer is this the right place to have this event ?? why ??
-    Logger.d(TAG, "LOCALYTICS TESTING - STORES ACTION ENTER " + storeName);
-    Analytics.Stores.enter(storeName);
   }
 
   protected boolean displayHomeUpAsEnabled() {
@@ -303,7 +301,14 @@ public class StoreFragment extends BasePagerToolbarFragment {
     toolbar.setLogo(R.drawable.ic_store);
   }
 
-  protected static class BundleCons {
+  @Partners @CallSuper @Override public void setupToolbar() {
+    super.setupToolbar();
+    // FIXME: 17/1/2017 sithengineer is this the right place to have this event ?? why ??
+    Logger.d(TAG, "LOCALYTICS TESTING - STORES ACTION ENTER " + storeName);
+    Analytics.Stores.enter(storeName);
+  }
+
+  @Partners public static class BundleCons {
 
     public static final String STORE_NAME = "storeName";
     public static final String STORE_CONTEXT = "storeContext";

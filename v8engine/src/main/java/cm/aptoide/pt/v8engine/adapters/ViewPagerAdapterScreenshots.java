@@ -14,13 +14,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.V8Engine;
 import java.util.ArrayList;
 
 /**
- * Created by sithengineer on 12/05/16.
- * <p>
- * code migrated form v7
+ * Code migrated form v7
  */
 public class ViewPagerAdapterScreenshots extends PagerAdapter {
 
@@ -30,33 +27,34 @@ public class ViewPagerAdapterScreenshots extends PagerAdapter {
     this.uris = uris;
   }
 
-  private int getPlaceholder(Context ctx) {
-    int id;
-    if (ctx.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-      id = R.drawable.placeholder_144x240;
-    } else {
-      id = R.drawable.placeholder_256x160;
-    }
-    return id;
-  }
-
   @Override public int getCount() {
     return uris.size();
   }
 
   @Override public Object instantiateItem(ViewGroup container, final int position) {
-    final Context context = V8Engine.getContext();
+    final Context context = container.getContext();
 
     final View rootView =
         LayoutInflater.from(context).inflate(R.layout.row_item_screenshots_big, null);
 
     final ImageView imageView = (ImageView) rootView.findViewById(R.id.screenshot_image_big);
 
-    ImageLoader.load(uris.get(position), getPlaceholder(context), imageView);
+    ImageLoader.with(context).load(uris.get(position), getPlaceholder(context), imageView);
 
     container.addView(rootView);
 
     return rootView;
+  }
+
+  private int getPlaceholder(Context context) {
+    int id;
+    if (context.getResources().getConfiguration().orientation
+        == Configuration.ORIENTATION_PORTRAIT) {
+      id = R.drawable.placeholder_144x240;
+    } else {
+      id = R.drawable.placeholder_256x160;
+    }
+    return id;
   }
 
   @Override public void destroyItem(ViewGroup container, int position, Object object) {

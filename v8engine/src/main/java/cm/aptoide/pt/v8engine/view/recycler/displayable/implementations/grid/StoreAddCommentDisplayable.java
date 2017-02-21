@@ -4,7 +4,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 
-public class StoreAddCommentDisplayable  extends Displayable {
+public class StoreAddCommentDisplayable extends Displayable {
 
   private final long storeId;
   private final String storeName;
@@ -30,12 +30,12 @@ public class StoreAddCommentDisplayable  extends Displayable {
     return storeName;
   }
 
-  @Override public int getViewLayout() {
-    return R.layout.displayable_grid_add_store_comment;
-  }
-
   @Override protected Configs getConfig() {
     return new Configs(1, true);
+  }
+
+  @Override public int getViewLayout() {
+    return R.layout.displayable_grid_add_store_comment;
   }
 
   public StoreThemeEnum getStoreTheme() {

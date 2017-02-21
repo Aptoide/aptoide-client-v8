@@ -7,12 +7,11 @@ import rx.Subscriber;
 /**
  * Created by diogoloureiro on 09/09/16.
  */
-public class RequestDownloadAccessOnSubscribe
-    implements Observable.OnSubscribe<Void> {
+public class RequestDownloadAccessOnSubscribe implements Observable.OnSubscribe<Void> {
 
-  private final PermissionRequest permissionRequest;
+  private final PermissionService permissionRequest;
 
-  public RequestDownloadAccessOnSubscribe(PermissionRequest permissionRequest) {
+  public RequestDownloadAccessOnSubscribe(PermissionService permissionRequest) {
     this.permissionRequest = permissionRequest;
   }
 

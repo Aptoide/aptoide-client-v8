@@ -25,7 +25,8 @@ public class PaidAppProduct extends AptoideProduct {
   private final long appId;
   private final String storeName;
 
-  public PaidAppProduct(int id, String icon, String title, String description, long appId, String storeName) {
+  public PaidAppProduct(int id, String icon, String title, String description, long appId,
+      String storeName) {
     super(id, icon, title, description);
     this.appId = appId;
     this.storeName = storeName;

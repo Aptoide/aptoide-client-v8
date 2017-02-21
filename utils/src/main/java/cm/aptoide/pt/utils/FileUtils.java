@@ -44,10 +44,6 @@ public class FileUtils {
   public FileUtils() {
   }
 
-  public static boolean fileExists(String path) {
-    return !TextUtils.isEmpty(path) && new File(path).exists();
-  }
-
   public static boolean removeFile(String filePAth) {
     boolean toReturn = false;
     if (!TextUtils.isEmpty(filePAth)) {
@@ -158,30 +154,8 @@ public class FileUtils {
     }
   }
 
-  public Observable<Long> deleteFolder(File... folders) {
-    return Observable.from(folders)
-        .observeOn(Schedulers.io())
-        .flatMap(filePath -> Observable.fromCallable(() -> {
-          long size = deleteDir(filePath);
-          Logger.d(TAG, "deleting folder " + filePath.getPath() + " size: " + size);
-          return size;
-        }).onErrorResumeNext(throwable -> Observable.empty()))
-        .toList()
-        .map(deletedSizes -> {
-          long size = 0;
-          for (int i = 0; i < deletedSizes.size(); i++) {
-            size += deletedSizes.get(i);
-          }
-          return size;
-        });
-  }
-
-  public Observable<Long> deleteFolder(String... folders) {
-    File[] files = new File[folders.length];
-    for (int i = 0; i < folders.length; i++) {
-      files[i] = new File(folders[i]);
-    }
-    return deleteFolder(files);
+  public static boolean fileExists(String path) {
+    return !TextUtils.isEmpty(path) && new File(path).exists();
   }
 
   /**
@@ -237,6 +211,32 @@ public class FileUtils {
     }
   }
 
+  public Observable<Long> deleteFolder(File... folders) {
+    return Observable.from(folders)
+        .observeOn(Schedulers.io())
+        .flatMap(filePath -> Observable.fromCallable(() -> {
+          long size = deleteDir(filePath);
+          Logger.d(TAG, "deleting folder " + filePath.getPath() + " size: " + size);
+          return size;
+        }).onErrorResumeNext(throwable -> Observable.empty()))
+        .toList()
+        .map(deletedSizes -> {
+          long size = 0;
+          for (int i = 0; i < deletedSizes.size(); i++) {
+            size += deletedSizes.get(i);
+          }
+          return size;
+        });
+  }
+
+  public Observable<Long> deleteFolder(String... folders) {
+    File[] files = new File[folders.length];
+    for (int i = 0; i < folders.length; i++) {
+      files[i] = new File(folders[i]);
+    }
+    return deleteFolder(files);
+  }
+
   public String getPath(Uri uri, Context context) {
 
     String[] projection = { MediaStore.Images.Media.DATA };
@@ -247,22 +247,17 @@ public class FileUtils {
     return cursor.getString(column_index);
   }
 
-
   public String getPathAlt(Uri contentUri, Context context) {
     {
-      try
-      {
-        String[] proj = {MediaStore.Images.Media.DATA};
+      try {
+        String[] proj = { MediaStore.Images.Media.DATA };
         Cursor cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
         int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
         cursor.moveToFirst();
         return cursor.getString(column_index);
-      }
-      catch (Exception e)
-      {
+      } catch (Exception e) {
         return contentUri.getPath();
       }
     }
   }
-
 }

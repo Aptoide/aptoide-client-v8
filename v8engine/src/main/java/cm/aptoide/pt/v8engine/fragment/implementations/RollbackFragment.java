@@ -12,7 +12,6 @@ import android.widget.TextView;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.RollbackAccessor;
 import cm.aptoide.pt.database.realm.Rollback;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
@@ -34,7 +33,8 @@ import rx.schedulers.Schedulers;
 
 public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
 
-  private static final String TAG = RollbackFragment.class.getSimpleName();
+  private static final SimpleDateFormat dateFormat =
+      new SimpleDateFormat("dd-MM-yyyy", AptoideUtils.LocaleU.DEFAULT);
   private TextView emptyData;
   private Installer installManager;
 
@@ -45,12 +45,12 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
     return new RollbackFragment();
   }
 
-  @Override protected void setupToolbarDetails(Toolbar toolbar) {
-    toolbar.setTitle(R.string.rollback);
-  }
-
   @Override protected boolean displayHomeUpAsEnabled() {
     return true;
+  }
+
+  @Override protected void setupToolbarDetails(Toolbar toolbar) {
+    toolbar.setTitle(R.string.rollback);
   }
 
   @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
@@ -75,11 +75,6 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
     return super.onOptionsItemSelected(item);
   }
 
-  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    Logger.d(TAG, "refresh rollbacks? " + (create ? "yes" : "no"));
-    AptoideUtils.ThreadU.runOnUiThread(this::fetchRollbacks);
-  }
-
   @Override public int getContentViewId() {
     return R.layout.fragment_with_toolbar;
   }
@@ -90,6 +85,11 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
     setHasOptionsMenu(true);
 
     installManager = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
+  }
+
+  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+    super.load(create, refresh, savedInstanceState);
+    AptoideUtils.ThreadU.runOnUiThread(this::fetchRollbacks);
   }
 
   @UiThread private void fetchRollbacks() {
@@ -106,7 +106,7 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
             emptyData.setVisibility(View.VISIBLE);
           } else {
             emptyData.setVisibility(View.GONE);
-            setDisplayables(rollbacks);
+            clearDisplayables().addDisplayables(rollbacks, true);
           }
           finishLoading();
         });
@@ -120,9 +120,7 @@ public class RollbackFragment extends AptoideBaseFragment<BaseAdapter> {
       long daysAgo = TimeUnit.MILLISECONDS.toDays(rollback.getTimestamp());
       if (lastDay != daysAgo) {
         lastDay = daysAgo;
-        displayables.add(new FooterRowDisplayable(
-            new SimpleDateFormat("dd-MM-yyyy", AptoideUtils.LocaleU.DEFAULT).format(
-                rollback.getTimestamp())));
+        displayables.add(new FooterRowDisplayable(dateFormat.format(rollback.getTimestamp())));
       }
       displayables.add(new RollbackDisplayable(installManager, rollback));
     }

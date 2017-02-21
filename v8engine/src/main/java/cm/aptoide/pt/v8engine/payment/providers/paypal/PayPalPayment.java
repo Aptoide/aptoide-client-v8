@@ -9,11 +9,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
+import cm.aptoide.pt.v8engine.payment.AptoidePayment;
 import cm.aptoide.pt.v8engine.payment.Price;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentCancellationException;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentFailureException;
-import cm.aptoide.pt.v8engine.payment.AptoidePayment;
 import cm.aptoide.pt.v8engine.repository.PaymentConfirmationRepository;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 import java.math.BigDecimal;
@@ -63,6 +63,18 @@ public class PayPalPayment extends AptoidePayment {
         .toCompletable();
   }
 
+  private void startPayPalActivity(Price price, Product product) {
+    context.startActivity(PayPalPaymentActivity.getIntent(context,
+        new com.paypal.android.sdk.payments.PayPalPayment(BigDecimal.valueOf(price.getAmount()),
+            price.getCurrency(), product.getTitle(),
+            com.paypal.android.sdk.payments.PayPalPayment.PAYMENT_INTENT_SALE), configuration));
+  }
+
+  private boolean isPaymentConfirmationIntent(Intent intent) {
+    return intent != null && PAYMENT_RESULT_ACTION.equals(intent.getAction()) && intent.hasExtra(
+        PAYMENT_STATUS_EXTRA);
+  }
+
   private Observable<String> getIntentPaymentConfirmationId(Intent intent, int id, int productId) {
     final com.paypal.android.sdk.payments.PaymentConfirmation payPalConfirmation;
     switch (intent.getIntExtra(PAYMENT_STATUS_EXTRA, PAYMENT_STATUS_FAILED)) {
@@ -80,17 +92,5 @@ public class PayPalPayment extends AptoidePayment {
       default:
         return Observable.error(new PaymentFailureException("PayPal payment failed"));
     }
-  }
-
-  private boolean isPaymentConfirmationIntent(Intent intent) {
-    return intent != null && PAYMENT_RESULT_ACTION.equals(intent.getAction()) && intent.hasExtra(
-        PAYMENT_STATUS_EXTRA);
-  }
-
-  private void startPayPalActivity(Price price, Product product) {
-    context.startActivity(PayPalPaymentActivity.getIntent(context,
-        new com.paypal.android.sdk.payments.PayPalPayment(BigDecimal.valueOf(price.getAmount()),
-            price.getCurrency(), product.getTitle(),
-            com.paypal.android.sdk.payments.PayPalPayment.PAYMENT_INTENT_SALE), configuration));
   }
 }

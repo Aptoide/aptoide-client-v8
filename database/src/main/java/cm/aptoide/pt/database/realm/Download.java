@@ -8,27 +8,22 @@ package cm.aptoide.pt.database.realm;
 import android.content.Context;
 import android.support.annotation.IntDef;
 import android.support.annotation.IntRange;
+import android.support.annotation.NonNull;
 import cm.aptoide.pt.database.R;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import lombok.EqualsAndHashCode;
 
-/**
- * Created by sithengineer on 17/05/16.
- */
-public class Download extends RealmObject {
-
-  public static String TAG = Download.class.getSimpleName();
+@EqualsAndHashCode(callSuper = false) public class Download extends RealmObject {
 
   public static final int ACTION_INSTALL = 0;
   public static final int ACTION_UPDATE = 1;
   public static final int ACTION_DOWNGRADE = 2;
-
   public static final String DOWNLOAD_ID = "appId";
   public static final String MD5 = "md5";
-
   public static final int INVALID_STATUS = 0;
   public static final int COMPLETED = 1;
   public static final int BLOCK_COMPLETE = 2;
@@ -43,7 +38,10 @@ public class Download extends RealmObject {
   public static final int RETRY = 11;
   public static final int NOT_DOWNLOADED = 12;
   public static final int IN_QUEUE = 13;
-
+  //errors
+  public static final int GENERIC_ERROR = 1;
+  public static final int NOT_ENOUGH_SPACE_ERROR = 2;
+  public static String TAG = Download.class.getSimpleName();
   RealmList<FileToDownload> filesToDownload;
   @DownloadState int overallDownloadStatus = 0;
   @IntRange(from = 0, to = 100) int overallProgress = 0;
@@ -57,8 +55,17 @@ public class Download extends RealmObject {
   private int action;
   private boolean scheduled;
   private String versionName;
+  @Download.DownloadError private int downloadError;
 
   public Download() {
+  }
+
+  public @Download.DownloadError int getDownloadError() {
+    return downloadError;
+  }
+
+  public void setDownloadError(int downloadError) {
+    this.downloadError = downloadError;
   }
 
   public long getTimeStamp() {
@@ -99,7 +106,17 @@ public class Download extends RealmObject {
       case ERROR:
       case FILE_MISSING:
       default:
-        toReturn = context.getString(R.string.simple_error_occured);
+        toReturn = getErrorMessage(context);
+    }
+    return toReturn;
+  }
+
+  @NonNull private String getErrorMessage(Context context) {
+    String toReturn;
+    if (downloadError == NOT_ENOUGH_SPACE_ERROR) {
+      toReturn = context.getString(R.string.out_of_space_error);
+    } else {
+      toReturn = context.getString(R.string.simple_error_occured);
     }
     return toReturn;
   }
@@ -176,12 +193,12 @@ public class Download extends RealmObject {
     this.action = action;
   }
 
-  public void setScheduled(boolean scheduled) {
-    this.scheduled = scheduled;
-  }
-
   public boolean isScheduled() {
     return scheduled;
+  }
+
+  public void setScheduled(boolean scheduled) {
+    this.scheduled = scheduled;
   }
 
   public String getMd5() {
@@ -190,6 +207,14 @@ public class Download extends RealmObject {
 
   public void setMd5(String md5) {
     this.md5 = md5;
+  }
+
+  public String getVersionName() {
+    return versionName;
+  }
+
+  public void setVersionName(String versionName) {
+    this.versionName = versionName;
   }
 
   @IntDef({
@@ -203,11 +228,7 @@ public class Download extends RealmObject {
 
   }
 
-  public String getVersionName() {
-    return versionName;
-  }
-
-  public void setVersionName(String versionName) {
-    this.versionName = versionName;
+  @Retention(RetentionPolicy.SOURCE) @IntDef({ GENERIC_ERROR, NOT_ENOUGH_SPACE_ERROR })
+  public @interface DownloadError {
   }
 }

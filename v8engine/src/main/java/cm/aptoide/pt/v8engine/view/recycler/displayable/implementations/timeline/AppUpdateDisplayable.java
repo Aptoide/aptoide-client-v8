@@ -11,7 +11,7 @@ import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.TextUtils;
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.actions.PermissionRequest;
+import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.model.v7.timeline.AppUpdate;
@@ -189,10 +189,6 @@ public class AppUpdateDisplayable extends CardDisplayable {
     return context.getString(R.string.displayable_social_timeline_app_update_updating);
   }
 
-  public String getUpdateErrorText(Context context) {
-    return context.getString(R.string.displayable_social_timeline_app_update_error);
-  }
-
   @Override public int getViewLayout() {
     return R.layout.displayable_social_timeline_app_update;
   }
@@ -202,7 +198,7 @@ public class AppUpdateDisplayable extends CardDisplayable {
   }
 
   public Observable<Void> requestPermission(Context context) {
-    return permissionManager.requestExternalStoragePermission(((PermissionRequest) context));
+    return permissionManager.requestExternalStoragePermission(((PermissionService) context));
   }
 
   public boolean isInstalling(Progress<Download> downloadProgress) {
@@ -219,5 +215,26 @@ public class AppUpdateDisplayable extends CardDisplayable {
 
   @Override public void share(Context context, boolean privacyResult) {
     socialRepository.share(getTimelineCard(), context, privacyResult);
+  }
+
+  public String getErrorMessage(Context context, int error) {
+    String toReturn = null;
+    switch (error) {
+      case Download.GENERIC_ERROR:
+        toReturn = getUpdateErrorText(context);
+        break;
+      case Download.NOT_ENOUGH_SPACE_ERROR:
+        toReturn = getUpdateNoSpaceErrorText(context);
+        break;
+    }
+    return toReturn;
+  }
+
+  public String getUpdateErrorText(Context context) {
+    return context.getString(R.string.displayable_social_timeline_app_update_error);
+  }
+
+  private String getUpdateNoSpaceErrorText(Context context) {
+    return context.getString(R.string.out_of_space_error);
   }
 }

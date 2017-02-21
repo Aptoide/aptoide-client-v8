@@ -11,8 +11,7 @@ import lombok.EqualsAndHashCode;
 /**
  * Created by sithengineer on 02/08/16.
  */
-@EqualsAndHashCode(callSuper = true)
-@Data public class FullReview extends Review {
+@EqualsAndHashCode(callSuper = true) @Data public class FullReview extends Review {
 
   private AppData data;
 
