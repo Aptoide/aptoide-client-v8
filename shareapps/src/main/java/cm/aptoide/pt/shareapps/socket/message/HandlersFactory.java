@@ -72,16 +72,20 @@ public class HandlersFactory {
 
   private static class SendApkHandler extends MessageHandler<SendApk> {
 
-    private final FileServerLifecycle<AndroidAppInfo> serverLifecycle;
+    private final FileServerLifecycle<AndroidAppInfo> fileServerLifecycle;
 
-    public SendApkHandler(FileServerLifecycle<AndroidAppInfo> serverLifecycle) {
+    public SendApkHandler(FileServerLifecycle<AndroidAppInfo> fileServerLifecycle) {
       super(SendApk.class);
-      this.serverLifecycle = serverLifecycle;
+      this.fileServerLifecycle = fileServerLifecycle;
     }
 
     @Override public void handleMessage(SendApk sendApkMessage, Sender<Message> messageSender) {
-      new ShareAppsFileServerSocket(sendApkMessage.getServerPort(),
-          sendApkMessage.getAndroidAppInfo(), 5000).startAsync();
+      ShareAppsFileServerSocket shareAppsFileServerSocket =
+          new ShareAppsFileServerSocket(sendApkMessage.getServerPort(),
+              sendApkMessage.getAndroidAppInfo(), 5000);
+      shareAppsFileServerSocket.startAsync();
+      shareAppsFileServerSocket.setFileServerLifecycle(sendApkMessage.getAndroidAppInfo(),
+          fileServerLifecycle);
       messageSender.send(new AckMessage(messageSender.getHost()));
       // TODO: 03-02-2017 neuro maybe a good ideia to stop the server somewhat :)
     }
