@@ -3,7 +3,7 @@ package cm.aptoide.pt.shareapps.socket.message;
 import cm.aptoide.pt.shareapps.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.shareapps.socket.entities.FileInfo;
 import cm.aptoide.pt.shareapps.socket.entities.Host;
-import cm.aptoide.pt.shareapps.socket.file.ShareAppsClientSocket;
+import cm.aptoide.pt.shareapps.socket.file.ShareAppsFileClientSocket;
 import cm.aptoide.pt.shareapps.socket.file.ShareAppsServerSocket;
 import cm.aptoide.pt.shareapps.socket.interfaces.FileClientLifecycle;
 import cm.aptoide.pt.shareapps.socket.interfaces.FileServerLifecycle;
@@ -18,7 +18,6 @@ import cm.aptoide.pt.shareapps.socket.message.messages.SendApk;
 import cm.aptoide.pt.shareapps.socket.message.server.AptoideMessageServerSocket;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by neuro on 02-02-2017.
@@ -90,7 +89,6 @@ public class HandlersFactory {
 
   private static class ReceiveApkHandler extends MessageHandler<ReceiveApk> {
 
-    static AtomicInteger dir = new AtomicInteger('a');
     private final String root;
     private final StorageCapacity storageCapacity;
     private final FileClientLifecycle<AndroidAppInfo> fileClientLifecycle;
@@ -114,8 +112,9 @@ public class HandlersFactory {
 
         changeFilesRootDir(androidAppInfo.getFiles());
 
-        new ShareAppsClientSocket(receiveApkServerHost.getIp(), receiveApkServerHost.getPort(),
-            androidAppInfo.getFiles(), androidAppInfo, fileClientLifecycle).start();
+        new ShareAppsFileClientSocket(receiveApkServerHost.getIp(), receiveApkServerHost.getPort(),
+            androidAppInfo.getFiles()).setFileClientSocket(androidAppInfo, fileClientLifecycle)
+            .start();
       } else {
         messageSender.send(ackMessage);
       }
