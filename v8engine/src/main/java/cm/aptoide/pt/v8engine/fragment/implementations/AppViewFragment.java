@@ -128,7 +128,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   //
   private AppViewHeader header;
   private long appId;
-  private String packageName;
+  @Partners @Getter private String packageName;
   private OpenType openType;
   private Scheduled scheduled;
   private String storeTheme;
@@ -155,8 +155,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private String md5;
   private PermissionManager permissionManager;
   private Menu menu;
-  private String appName;
-  private String wUrl;
+  @Partners @Getter private String appName;
+  @Partners @Getter private String wUrl;
   private GetAppMeta.App app;
   private AppAction appAction = AppAction.OPEN;
   private InstalledRepository installedRepository;
