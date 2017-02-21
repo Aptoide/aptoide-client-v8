@@ -46,7 +46,12 @@ public class GroupManager {
     if (joiningGroup) {
       return;
     }
-    joinTask = joinHotspotTask.execute();
+    try{
+      joinTask = joinHotspotTask.execute();
+    }catch (IllegalStateException e){
+      //TODO ERROR bc highwayActivity is singletask->doesn't create new groupManager + lazzy patern (reuse task)
+      joinTask=new JoinHotspotTask().execute();
+    }
   }
 
   public void retryToJoinGroup(Group group) {//after mobileDataDialog
