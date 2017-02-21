@@ -15,8 +15,10 @@ import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
 import cm.aptoide.pt.shareapps.socket.entities.AndroidAppInfo;
+import cm.aptoide.pt.shareapps.socket.entities.Host;
 import cm.aptoide.pt.shareapps.socket.interfaces.FileClientLifecycle;
 import cm.aptoide.pt.shareapps.socket.interfaces.FileServerLifecycle;
+import cm.aptoide.pt.shareapps.socket.interfaces.HostsChangedCallback;
 import cm.aptoide.pt.shareapps.socket.message.client.AptoideMessageClientController;
 import cm.aptoide.pt.shareapps.socket.message.client.AptoideMessageClientSocket;
 import cm.aptoide.pt.shareapps.socket.message.interfaces.StorageCapacity;
@@ -95,7 +97,14 @@ public class HighwayServerService extends Service {
       if (intent.getAction() != null && intent.getAction().equals("RECEIVE")) {
         //port = intent.getIntExtra("port", 0);
         System.out.println("Going to start serving");
-        (new AptoideMessageServerSocket(55555, 500000)).startAsync();
+        AptoideMessageServerSocket aptoideMessageServerSocket =
+            new AptoideMessageServerSocket(55555, 500000);
+        aptoideMessageServerSocket.setHostsChangedCallbackCallback(new HostsChangedCallback() {
+          @Override public void hostsChanged(List<Host> hostList) {
+            System.out.println("hostsChanged() called with: " + "hostList = [" + hostList + "]");
+          }
+        });
+        aptoideMessageServerSocket.startAsync();
         String s =
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
         StorageCapacity storageCapacity = new StorageCapacity() {

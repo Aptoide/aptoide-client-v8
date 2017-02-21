@@ -1,6 +1,7 @@
 package cm.aptoide.pt.shareapps.socket;
 
 import cm.aptoide.pt.shareapps.socket.entities.Host;
+import cm.aptoide.pt.shareapps.socket.interfaces.HostsChangedCallback;
 import cm.aptoide.pt.shareapps.socket.interfaces.serveraction.ServerAction;
 import cm.aptoide.pt.shareapps.socket.interfaces.serveraction.ServerActionDispatcher;
 import cm.aptoide.pt.shareapps.socket.util.ServerSocketTimeoutManager;
@@ -11,6 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Created by neuro on 27-01-2017.
@@ -27,6 +29,7 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
   private LinkedBlockingQueue<ServerAction> queuedServerActions = new LinkedBlockingQueue<>();
   @Getter private Host host;
   private int timeout;
+  @Setter private HostsChangedCallback hostsChangedCallbackCallback;
 
   public AptoideServerSocket(int port, int timeout) {
     this.port = port;
@@ -64,6 +67,9 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
       while (true) {
         Socket socket = ss.accept();
         connectedSockets.add(socket);
+        if (hostsChangedCallbackCallback != null) {
+          hostsChangedCallbackCallback.hostsChanged(getConnectedHosts());
+        }
 
         executorService.execute(() -> {
           try {
@@ -108,6 +114,17 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
     };
   }
 
+  public List<Host> getConnectedHosts() {
+    List<Host> hosts = new LinkedList<>();
+
+    for (Socket connectedSocket : connectedSockets) {
+      hosts.add(
+          new Host(connectedSocket.getInetAddress().getHostAddress(), connectedSocket.getPort()));
+    }
+
+    return hosts;
+  }
+
   protected abstract void onNewClient(Socket socket);
 
   public void shutdown() {
@@ -138,17 +155,6 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
     }
 
     shutdownExecutorService();
-  }
-
-  public List<Host> getConnectedHosts() {
-    List<Host> hosts = new LinkedList<>();
-
-    for (Socket connectedSocket : connectedSockets) {
-      hosts.add(
-          new Host(connectedSocket.getInetAddress().getHostAddress(), connectedSocket.getPort()));
-    }
-
-    return hosts;
   }
 
   @Override public void dispatchServerAction(ServerAction serverAction) {
