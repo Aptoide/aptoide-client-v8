@@ -200,6 +200,7 @@ class DownloadTask extends FileDownloadLargeFileListener {
               file.setProgress(AptoideDownloadManager.PROGRESS_MAX_VALUE);
             } else {
               Logger.e(TAG, "Download md5 is not correct");
+              download.setDownloadError(Download.GENERIC_ERROR);
               setDownloadStatus(Download.ERROR, download, task);
             }
           });
