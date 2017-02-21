@@ -3,6 +3,7 @@ package cm.aptoide.pt.shareapps.socket.message;
 import cm.aptoide.pt.shareapps.socket.entities.Host;
 import cm.aptoide.pt.shareapps.socket.message.interfaces.Sender;
 import cm.aptoide.pt.shareapps.socket.message.messages.AckMessage;
+import cm.aptoide.pt.shareapps.socket.message.messages.ExitMessage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -27,6 +28,7 @@ public abstract class AptoideMessageController implements Sender<Message> {
   private LinkedBlockingQueue<AckMessage> ackMessages = new LinkedBlockingQueue<>();
   @Getter private Host host;
   @Getter private Host localhost;
+  private Socket socket;
 
   public AptoideMessageController(List<MessageHandler<? extends Message>> messageHandlers) {
     this.messageHandlersMap = buildMessageHandlersMap(messageHandlers);
@@ -44,6 +46,7 @@ public abstract class AptoideMessageController implements Sender<Message> {
   }
 
   public void onConnect(Socket socket) throws IOException {
+    this.socket = socket;
     objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
     objectInputStream = new ObjectInputStream(socket.getInputStream());
     localhost = Host.fromLocalhost(socket);
@@ -89,15 +92,6 @@ public abstract class AptoideMessageController implements Sender<Message> {
     return messageHandlersMap.containsKey(message.getClass());
   }
 
-  @Override public synchronized void send(Message message) {
-    System.out.println(Thread.currentThread().getId() + ": Sending message: " + message);
-    try {
-      objectOutputStream.writeObject(message);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
-
   public synchronized boolean sendWithAck(Message message) throws InterruptedException {
     // TODO: 02-02-2017 neuro no ack waiting lol
     AckMessage ackMessage = null;
@@ -112,5 +106,23 @@ public abstract class AptoideMessageController implements Sender<Message> {
     System.out.println(Thread.currentThread().getId() + ": Received ack: " + ackMessage);
 
     return ackMessage != null && ackMessage.isSuccess();
+  }
+
+  public void exit() {
+    send(new ExitMessage(getLocalhost()));
+    try {
+      socket.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  @Override public synchronized void send(Message message) {
+    System.out.println(Thread.currentThread().getId() + ": Sending message: " + message);
+    try {
+      objectOutputStream.writeObject(message);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 }

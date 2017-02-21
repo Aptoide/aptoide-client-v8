@@ -76,6 +76,10 @@ public class HighwayServerService extends Service {
         showToast("Server : started sending");
       }
 
+      @Override public void onProgressChanged(float progress) {
+        System.out.println("onProgressChanged() called with: " + "progress = [" + progress + "]");
+      }
+
       @Override
       public void onFinishSending(AndroidAppInfo androidAppInfo) {
         System.out.println("Server : finished sending");
@@ -146,6 +150,7 @@ public class HighwayServerService extends Service {
 
           aptoideMessageClientController.send(
                   new RequestPermissionToSend(aptoideMessageClientController.getLocalhost(), appInfo));
+          aptoideMessageClientController.exit();
 
         } else {
           List<App> tempList = b.getParcelableArrayList("listOfAppsToInstall");
