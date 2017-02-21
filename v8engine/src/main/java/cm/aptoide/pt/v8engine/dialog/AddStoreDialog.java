@@ -117,9 +117,7 @@ public class AddStoreDialog extends DialogFragment {
   }
 
   private void addStoreAction() {
-    if (givenStoreName == null) {
-      givenStoreName = searchView.getQuery().toString();
-    }
+    givenStoreName = searchView.getQuery().toString();
     if (givenStoreName.length() > 0) {
       AddStoreDialog.this.storeName = givenStoreName;
       AptoideUtils.SystemU.hideKeyboard(getActivity());
@@ -158,6 +156,7 @@ public class AddStoreDialog extends DialogFragment {
       }
 
       @Override public boolean onQueryTextChange(String newText) {
+        //searchView.setQuery(newText, false);
         return false;
       }
     });
