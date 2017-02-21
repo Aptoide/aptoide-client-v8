@@ -51,7 +51,7 @@
     <activity android:name=".payment.providers.paypal.PayPalPaymentActivity"/>
     <activity android:name=".activity.WebAuthorizationActivity"/>
 
-    <activity android:name="cm.aptoide.pt.shareapppsandroid.HighwayActivity" />
+    <activity android:name="cm.aptoide.pt.shareappsandroid.HighwayActivity" />
 
     <activity
         android:name=".receivers.DeepLinkIntentReceiver"

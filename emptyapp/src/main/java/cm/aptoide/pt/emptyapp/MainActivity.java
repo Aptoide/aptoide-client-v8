@@ -6,7 +6,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import cm.aptoide.pt.shareapppsandroid.HighwayActivity;
+import cm.aptoide.pt.shareappsandroid.HighwayActivity;
 
 /**
  * Created by neuro on 17-02-2017.

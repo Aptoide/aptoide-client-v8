@@ -1,36 +1,31 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="cm.aptoide.pt.emptyapp">
+    package="cm.aptoide.pt.shareappsandroid">
 
-  <permission android:name="android.permission.READ_PHONE_STATE" />
 
-  <uses-permission android:name="android.permission.WRITE_SETTINGS" />
   <uses-permission android:name="android.permission.INTERNET" />
-  <uses-permission android:name="android.permission.READ_SYNC_STATS" />
-  <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
-  <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-  <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
   <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-  <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
-  <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+  <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+  <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+  <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+  <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+  <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+  <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+
+  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
   <application
       android:allowBackup="true"
       android:label="@string/app_name"
-      android:supportsRtl="true"
-      android:theme="@style/Theme.AppCompat.NoActionBar">
+      android:supportsRtl="true">
+
 
     <activity
-        android:name=".MainActivity"
-        android:label="@string/app_name">
-      <intent-filter>
-        <action android:name="android.intent.action.MAIN" />
-
-        <category android:name="android.intent.category.LAUNCHER" />
-      </intent-filter>
-    </activity>
-
-
-    <activity android:name="cm.aptoide.pt.shareappsandroid.HighwayActivity">
+        android:name="cm.aptoide.pt.shareappsandroid.HighwayActivity"
+        android:launchMode="singleTask"
+        android:screenOrientation="locked">
       <intent-filter>
         <action android:name="android.intent.action.VIEW" />
 
@@ -61,9 +56,9 @@
         android:enabled="true"
         android:exported="true" />
     <!--<service-->
-    <!--android:name=".HighwayServerComm"-->
-    <!--android:enabled="true"-->
-    <!--android:exported="true" />-->
+        <!--android:name=".HighwayServerComm"-->
+        <!--android:enabled="true"-->
+        <!--android:exported="true" />-->
 
     <service
         android:name="cm.aptoide.pt.shareappsandroid.HighwayClientService"
@@ -74,10 +69,16 @@
         android:enabled="true"
         android:exported="true" />
 
-    <activity android:name="cm.aptoide.pt.shareappsandroid.HighwayTransferRecordActivity">
+    <activity
+        android:name="cm.aptoide.pt.shareappsandroid.HighwayTransferRecordActivity"
+
+        android:configChanges="orientation|keyboardHidden|screenSize"
+        android:launchMode="singleTask">
 
     </activity>
 
+
   </application>
+
 
 </manifest>

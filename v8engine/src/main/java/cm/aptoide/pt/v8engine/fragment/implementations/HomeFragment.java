@@ -30,7 +30,7 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.shareapppsandroid.HighwayActivity;
+import cm.aptoide.pt.shareappsandroid.HighwayActivity;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.StorePagerAdapter;
