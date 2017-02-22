@@ -49,7 +49,7 @@ public class StoreUtilsProxy {
         successRequestListener, errorRequestListener, storeName);
   }
 
-  public void unSubscribeStore(String storeName){
+  public void unSubscribeStore(String storeName) {
     Analytics.Stores.unSubscribe(storeName);
     StoreUtils.unsubscribeStore(storeName);
   }

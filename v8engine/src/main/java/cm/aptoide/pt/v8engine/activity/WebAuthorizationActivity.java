@@ -97,14 +97,6 @@ public class WebAuthorizationActivity extends ActivityView {
         });
   }
 
-  @Override protected void onDestroy() {
-    super.onDestroy();
-    ((ViewGroup) webView.getParent()).removeView(webView);
-    webView.setWebViewClient(null);
-    webView.destroy();
-    unknownErrorDialog.dismiss();
-  }
-
   private void hideLoadingAndDismiss() {
     progressBarContainer.setVisibility(View.GONE);
     finish();
@@ -133,5 +125,13 @@ public class WebAuthorizationActivity extends ActivityView {
       }
     });
     webView.loadUrl(webAuthorization.getUrl());
+  }
+
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    ((ViewGroup) webView.getParent()).removeView(webView);
+    webView.setWebViewClient(null);
+    webView.destroy();
+    unknownErrorDialog.dismiss();
   }
 }

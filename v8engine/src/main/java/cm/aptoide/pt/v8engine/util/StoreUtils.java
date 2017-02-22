@@ -31,8 +31,9 @@ import rx.Observable;
 
 public class StoreUtils {
 
-  public static final String PRIVATE_STORE_ERROR = "STORE-3";
-  public static final String PRIVATE_STORE_WRONG_CREDENTIALS = "STORE-4";
+  public static final String PRIVATE_STORE_ERROR_CODE = "STORE-3";
+  public static final String PRIVATE_STORE_WRONG_CREDENTIALS_ERROR_CODE = "STORE-4";
+  public static final String STORE_SUSPENDED_ERROR_CODE = "STORE-7";
 
   private static StoreCredentialsProviderImpl storeCredentialsProvider;
   private static AptoideClientUUID aptoideClientUUID;
@@ -185,5 +186,27 @@ public class StoreUtils {
     }
     StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
     storeAccessor.remove(name);
+  }
+
+  public static StoreError getErrorType(String code) {
+    StoreError error;
+    switch (code) {
+      case PRIVATE_STORE_WRONG_CREDENTIALS_ERROR_CODE:
+        error = StoreError.PRIVATE_STORE_WRONG_CREDENTIALS;
+        break;
+      case PRIVATE_STORE_ERROR_CODE:
+        error = StoreError.PRIVATE_STORE_ERROR;
+        break;
+      case STORE_SUSPENDED_ERROR_CODE:
+        error = StoreError.STORE_SUSPENDED;
+        break;
+      default:
+        error = StoreError.GENERIC_ERROR;
+    }
+    return error;
+  }
+
+  public enum StoreError {
+    PRIVATE_STORE_ERROR, PRIVATE_STORE_WRONG_CREDENTIALS, GENERIC_ERROR, STORE_SUSPENDED;
   }
 }

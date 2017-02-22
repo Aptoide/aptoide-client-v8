@@ -5,12 +5,12 @@
   -->
 
 <searchable xmlns:android="http://schemas.android.com/apk/res/android"
-    android:hint="@string/srch_hint"
-    android:includeInGlobalSearch="true"
+    android:hint="@string/store_name"
+    android:includeInGlobalSearch="false"
     android:label="@string/srch_hint"
     android:queryAfterZeroResults="false"
 
-    android:searchSuggestAuthority="cm.aptoide.pt.v8engine.provider.SearchSuggestionProvider"
+    android:searchSuggestAuthority="cm.aptoide.pt.v8engine.provider.StoreSearchSuggestionProvider"
     android:searchSuggestIntentAction="android.intent.action.SEARCH"
     android:searchSuggestSelection=" ?"
     android:searchSuggestThreshold="3">

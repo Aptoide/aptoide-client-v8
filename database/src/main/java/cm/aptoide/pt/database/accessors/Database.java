@@ -28,7 +28,6 @@ public final class Database {
 
   public static final int SCHEMA_VERSION = 8081; // if you bump this value, also add changes to the
   //private static final String TAG = Database.class.getName();
-  private static final String KEY = "KRbjij20wgVyUFhMxm2gUHg0s1HwPUX7DLCp92VKMCt";
   private static final String DB_NAME = "aptoide.realm.db";
   private static final String DB_NAME_E = "aptoide_mobile.db";
 
