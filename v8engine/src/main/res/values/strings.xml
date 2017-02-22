@@ -305,6 +305,7 @@
   <string name="create_store_displayable_created_store_short_term_message">You\'ve just created your Store!</string>
   <string name="create_store_displayable_explore_message">Enter and explore all the possibilities</string>
   <string name="create_store_displayable_explore_button">Explore</string>
+  <string name="follow_store_displayable">Follow Store</string>
 
   <!-- stores tab > my store with no apps -->
   <string name="install_app_outter_pt1">Your store doesn\'t have applications yet.</string>
