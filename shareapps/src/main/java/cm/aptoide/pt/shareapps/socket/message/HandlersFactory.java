@@ -16,6 +16,7 @@ import cm.aptoide.pt.shareapps.socket.message.messages.ReceiveApk;
 import cm.aptoide.pt.shareapps.socket.message.messages.RequestPermissionToSend;
 import cm.aptoide.pt.shareapps.socket.message.messages.SendApk;
 import cm.aptoide.pt.shareapps.socket.message.server.AptoideMessageServerSocket;
+import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -114,7 +115,8 @@ public class HandlersFactory {
         messageSender.send(ackMessage);
         Host receiveApkServerHost = receiveApk.getServerHost();
 
-        changeFilesRootDir(androidAppInfo.getFiles());
+        String generatedRoot = changeFilesRootDir(androidAppInfo);
+        boolean mkdirs = new File(generatedRoot).mkdirs();
 
         ShareAppsFileClientSocket shareAppsFileClientSocket =
             new ShareAppsFileClientSocket(receiveApkServerHost.getIp(),
@@ -128,10 +130,15 @@ public class HandlersFactory {
       }
     }
 
-    private void changeFilesRootDir(List<FileInfo> fileInfos) {
-      for (FileInfo fileInfo : fileInfos) {
-        fileInfo.setParentDirectory(root);
+    private String changeFilesRootDir(AndroidAppInfo androidAppInfo) {
+      String packageName = androidAppInfo.getPackageName();
+      String rootToFiles = root + "/" + packageName;
+
+      for (FileInfo fileInfo : androidAppInfo.getFileInfosList()) {
+        fileInfo.setParentDirectory(rootToFiles);
       }
+
+      return rootToFiles;
     }
   }
 
