@@ -247,11 +247,11 @@ public class InstallManager {
     boolean wasRootDialogShowed = SecurePreferences.isRootDialogShowed();
     boolean isRooted = AptoideUtils.SystemU.isRooted();
     boolean canGiveRoot = ManagerPreferences.allowRootInstallation();
-    return isRooted && !wasRootDialogShowed && canGiveRoot;
+    return isRooted && !wasRootDialogShowed && !canGiveRoot;
   }
 
   public void rootInstallAllowed(boolean allowRoot) {
-    SecurePreferences.setRootDialogShowed(allowRoot);
+    SecurePreferences.setRootDialogShowed(true);
     ManagerPreferences.setAllowRootInstallation(allowRoot);
     AptoideUtils.SystemU.askForRoot();
   }

@@ -66,14 +66,13 @@ public abstract class GridRecyclerSwipeFragment<T extends BaseAdapter>
     getContext().registerReceiver(receiver, intentFilter);
   }
 
-
-    private void unregisterReceiverForAccountManager() {
-      try {
-        getContext().unregisterReceiver(receiver);
-      } catch (IllegalArgumentException ex) {
-        CrashReport.getInstance().log(ex);
-      }
+  private void unregisterReceiverForAccountManager() {
+    try {
+      getContext().unregisterReceiver(receiver);
+    } catch (IllegalArgumentException ex) {
+      CrashReport.getInstance().log(ex);
     }
+  }
 
   protected static class BundleCons {
 

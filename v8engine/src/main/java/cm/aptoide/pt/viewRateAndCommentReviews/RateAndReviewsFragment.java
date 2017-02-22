@@ -29,7 +29,9 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.adapters.CommentsAdapter;
 import cm.aptoide.pt.v8engine.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
+import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.util.DialogUtils;
+import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -61,6 +63,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   private RatingTotalsLayout ratingTotalsLayout;
   private RatingBarsLayout ratingBarsLayout;
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
+  private StoreCredentialsProvider storeCredentialsProvider;
 
   public RateAndReviewsFragment() {
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
@@ -165,7 +168,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   private void fetchReviews() {
     ListReviewsRequest reviewsRequest =
         ListReviewsRequest.of(storeName, packageName, AptoideAccountManager.getAccessToken(),
-            aptoideClientUUID.getUniqueIdentifier());
+            aptoideClientUUID.getUniqueIdentifier(), storeCredentialsProvider.get(storeName));
 
     getRecyclerView().removeOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener =
@@ -218,6 +221,11 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   private void setupRating(GetAppMeta.App data) {
     ratingTotalsLayout.setup(data);
     ratingBarsLayout.setup(data);
+  }
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    storeCredentialsProvider = new StoreCredentialsProviderImpl();
   }
 
   /*

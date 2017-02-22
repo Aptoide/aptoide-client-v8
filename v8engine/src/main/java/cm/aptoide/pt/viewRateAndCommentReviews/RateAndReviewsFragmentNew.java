@@ -23,7 +23,9 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.adapters.CommentsAdapter;
 import cm.aptoide.pt.v8engine.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
+import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.util.DialogUtils;
+import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -117,9 +119,10 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     dialogUtils = new DialogUtils();
+    StoreCredentialsProvider storeCredentialsProvider = new StoreCredentialsProviderImpl();
     final RateAndReviewsPresenter presenter =
         new RateAndReviewsPresenter(appId, storeName, packageName, this,
-            ConcreteSchedulerProvider.getInstance());
+            ConcreteSchedulerProvider.getInstance(), storeCredentialsProvider);
 
     attachPresenter(presenter, savedInstanceState);
   }

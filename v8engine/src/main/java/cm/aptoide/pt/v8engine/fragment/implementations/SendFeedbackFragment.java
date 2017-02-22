@@ -9,8 +9,10 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
@@ -45,6 +47,7 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
   private String screenShotPath;
   private EditText messageBodyEdit;
   private EditText subgectEdit;
+  private Subscription unManagedSubscription;
 
   public static SendFeedbackFragment newInstance(String screenshotFilePath) {
     SendFeedbackFragment sendFeedbackFragment = new SendFeedbackFragment();
@@ -66,6 +69,25 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
       return true;
     }
     return super.onOptionsItemSelected(item);
+  }
+
+  @Override public void onAttach(Activity activity) {
+    super.onAttach(activity);
+  }
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+  }
+
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+  }
+
+  @Override public void onDestroyView() {
+    super.onDestroyView();
+    if (unManagedSubscription != null) {
+      unManagedSubscription.unsubscribe();
+    }
   }
 
   @Override public void setupViews() {
@@ -131,7 +153,9 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
       //}
 
       InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
-      Subscription unManagedSubscription = installedAccessor.get(getContext().getPackageName())
+      //attach screenshots and logs
+      //				Analytics.SendFeedback.sendFeedback();
+      unManagedSubscription = installedAccessor.get(getContext().getPackageName()).first()
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(installed1 -> {
             String versionName = "";
@@ -147,16 +171,14 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
               ArrayList<Uri> uris = new ArrayList<Uri>();
               File ss = new File(screenShotPath);
               if (ss != null) {
-                Uri urifile = Uri.fromFile(ss);
-                uris.add(urifile);
+                uris.add(getUriFromFile(ss));
               }
 
               File logs =
                   AptoideUtils.SystemU.readLogs(Application.getConfiguration().getCachePath(),
                       LOGS_FILE_NAME);
               if (logs != null) {
-                Uri urifile = Uri.fromFile(logs);
-                uris.add(urifile);
+                uris.add(getUriFromFile(logs));
               }
               emailIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
             }
@@ -177,16 +199,18 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
     return !TextUtils.isEmpty(subgectEdit.getText().toString());
   }
 
-  @Override public void onAttach(Activity activity) {
-    super.onAttach(activity);
-  }
-
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-  }
-
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
+  private Uri getUriFromFile(File file) {
+    Uri photoURI;
+    //read: https://inthecheesefactory.com/blog/how-to-share-access-to-file-with-fileprovider-on-android-nougat/en
+    if (Build.VERSION.SDK_INT > 23) {
+      //content://....apk for nougat
+      photoURI = FileProvider.getUriForFile(getContext(),
+          V8Engine.getConfiguration().getAppId() + ".provider", file);
+    } else {
+      //file://....apk for < nougat
+      photoURI = Uri.fromFile(file);
+    }
+    return photoURI;
   }
 
   @Override public int getContentViewId() {

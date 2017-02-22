@@ -5,12 +5,12 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Pair;
 import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.model.v2.GetAdsResponse;
 import cm.aptoide.pt.model.v7.Event;
@@ -70,7 +70,7 @@ public class DisplayablesFactory {
       switch (widget.getType()) {
 
         case APPS_GROUP:
-          return Observable.just(getApps(widget, storeTheme,storeContext));
+          return Observable.just(getApps(widget, storeTheme, storeContext));
 
         case MY_STORES_SUBSCRIBED:
           return getMyStores(widget, storeRepository, storeTheme, storeContext);
@@ -79,21 +79,24 @@ public class DisplayablesFactory {
           return Observable.just(getStores(widget, storeTheme, storeContext));
 
         case DISPLAYS:
-          return Observable.just(getDisplays(widget, storeTheme,storeContext));
+          return Observable.just(getDisplays(widget, storeTheme, storeContext));
 
         case ADS:
-          Displayable ads = getAds(widget);
-          if (ads != null) {
+          List<Displayable> adsList = getAds(widget);
+          if (adsList.size() > 0) {
+            DisplayableGroup ads = new DisplayableGroup(adsList);
             // Header hammered
             LinkedList<GetStoreWidgets.WSWidget.Action> actions = new LinkedList<>();
             actions.add(new GetStoreWidgets.WSWidget.Action().setEvent(
                 new Event().setName(Event.Name.getAds)));
             widget.setActions(actions);
             StoreGridHeaderDisplayable storeGridHeaderDisplayable =
-                new StoreGridHeaderDisplayable(widget, null, widget.getTag(),StoreContext.store);
+                new StoreGridHeaderDisplayable(widget, null, widget.getTag(), StoreContext.store);
             displayables.add(storeGridHeaderDisplayable);
             displayables.add(ads);
             return Observable.from(displayables);
+          } else {
+            return Observable.empty();
           }
 
         case STORE_META:
@@ -107,7 +110,8 @@ public class DisplayablesFactory {
           return Observable.from(createMyStoreDisplayables(widget.getViewObject()));
 
         case STORES_RECOMMENDED:
-          return Observable.just(createRecommendedStores(widget, storeTheme, storeRepository, storeContext));
+          return Observable.just(
+              createRecommendedStores(widget, storeTheme, storeRepository, storeContext));
 
         case COMMENTS_GROUP:
           return Observable.from(createCommentsGroup(widget));
@@ -261,7 +265,7 @@ public class DisplayablesFactory {
     return new DisplayableGroup(tmp);
   }
 
-  private static Displayable getAds(GetStoreWidgets.WSWidget wsWidget) {
+  private static @NonNull List<Displayable> getAds(GetStoreWidgets.WSWidget wsWidget) {
     GetAdsResponse getAdsResponse = (GetAdsResponse) wsWidget.getViewObject();
     if (getAdsResponse != null
         && getAdsResponse.getAds() != null
@@ -273,10 +277,10 @@ public class DisplayablesFactory {
         GridAdDisplayable diplayable = new GridAdDisplayable(MinimalAd.from(ad), wsWidget.getTag());
         tmp.add(diplayable);
       }
-      return new DisplayableGroup(tmp);
+      return tmp;
     }
 
-    return null;
+    return Collections.emptyList();
   }
 
   private static List<Displayable> createReviewsGroupDisplayables(
@@ -347,7 +351,8 @@ public class DisplayablesFactory {
   }
 
   public static Observable<List<Store>> loadLocalSubscribedStores(StoreRepository storeRepository) {
-    return storeRepository.getAll().first()
+    return storeRepository.getAll()
+        .first()
         .observeOn(Schedulers.computation())
         .flatMap(stores -> Observable.from(stores).map(store -> {
           Store nwStore = new Store();

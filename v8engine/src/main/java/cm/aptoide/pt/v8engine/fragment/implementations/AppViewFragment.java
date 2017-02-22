@@ -75,6 +75,7 @@ import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
 import cm.aptoide.pt.v8engine.interfaces.Payments;
 import cm.aptoide.pt.v8engine.interfaces.Scrollable;
+import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.payment.ProductFactory;
 import cm.aptoide.pt.v8engine.receivers.AppBoughtReceiver;
 import cm.aptoide.pt.v8engine.repository.AdsRepository;
@@ -83,6 +84,7 @@ import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.SocialRepository;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
+import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
 import cm.aptoide.pt.v8engine.util.referrer.ReferrerUtils;
@@ -128,7 +130,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   //
   private AppViewHeader header;
   private long appId;
-  private String packageName;
+  @Partners @Getter private String packageName;
   private OpenType openType;
   private Scheduled scheduled;
   private String storeTheme;
@@ -155,12 +157,13 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private String md5;
   private PermissionManager permissionManager;
   private Menu menu;
-  private String appName;
-  private String wUrl;
+  @Partners @Getter private String appName;
+  @Partners @Getter private String wUrl;
   private GetAppMeta.App app;
   private AppAction appAction = AppAction.OPEN;
   private InstalledRepository installedRepository;
   private GetApp getApp;
+  private StoreCredentialsProvider storeCredentialsProvider;
 
   public static AppViewFragment newInstance(String md5) {
     Bundle bundle = new Bundle();
@@ -234,6 +237,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
         (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE)));
     adsRepository = new AdsRepository();
     installedRepository = RepositoryFactory.getInstalledRepository();
+    storeCredentialsProvider = new StoreCredentialsProviderImpl();
   }
 
   @Partners @Override public void loadExtras(Bundle args) {
@@ -436,32 +440,43 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
   private void shareApp(String appName, String packageName, String wUrl) {
 
-    GenericDialogs.createGenericShareDialog(getContext(), getString(R.string.share))
-        .subscribe(eResponse -> {
-          if (GenericDialogs.EResponse.SHARE_EXTERNAL == eResponse) {
-            if (wUrl != null) {
-              Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-              sharingIntent.setType("text/plain");
-              sharingIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.install) + " \"" +
-                  appName + "\"");
-              sharingIntent.putExtra(Intent.EXTRA_TEXT, wUrl);
-              startActivity(Intent.createChooser(sharingIntent, getString(R.string.share)));
-            }
-          } else if (GenericDialogs.EResponse.SHARE_TIMELINE == eResponse) {
-            if (AptoideAccountManager.isLoggedIn()
-                && ManagerPreferences.getShowPreview()
-                && Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
-              SharePreviewDialog sharePreviewDialog = new SharePreviewDialog();
-              AlertDialog.Builder alertDialog =
-                  sharePreviewDialog.getCustomRecommendationPreviewDialogBuilder(getContext(),
-                      appName, app.getIcon());
-              SocialRepository socialRepository = new SocialRepository();
+    if (AptoideAccountManager.isLoggedIn()) {
 
-              sharePreviewDialog.showShareCardPreviewDialog(packageName, "app", getContext(),
-                  sharePreviewDialog, alertDialog, socialRepository);
+      GenericDialogs.createGenericShareDialog(getContext(), getString(R.string.share))
+          .subscribe(eResponse -> {
+            if (GenericDialogs.EResponse.SHARE_EXTERNAL == eResponse) {
+
+              shareDefault(appName, packageName, wUrl);
+            } else if (GenericDialogs.EResponse.SHARE_TIMELINE == eResponse) {
+              if (AptoideAccountManager.isLoggedIn()
+                  && ManagerPreferences.getShowPreview()
+                  && Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
+                SharePreviewDialog sharePreviewDialog = new SharePreviewDialog();
+                AlertDialog.Builder alertDialog =
+                    sharePreviewDialog.getCustomRecommendationPreviewDialogBuilder(getContext(),
+                        appName, app.getIcon());
+                SocialRepository socialRepository = new SocialRepository();
+
+                sharePreviewDialog.showShareCardPreviewDialog(packageName, "app", getContext(),
+                    sharePreviewDialog, alertDialog, socialRepository);
+              }
             }
-          }
-        }, Throwable::printStackTrace);
+          }, Throwable::printStackTrace);
+    } else {
+
+      shareDefault(appName, packageName, wUrl);
+    }
+  }
+
+  @Partners protected void shareDefault(String appName, String packageName, String wUrl) {
+    if (wUrl != null) {
+      Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+      sharingIntent.setType("text/plain");
+      sharingIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.install) + " \"" +
+          appName + "\"");
+      sharingIntent.putExtra(Intent.EXTRA_TEXT, wUrl);
+      startActivity(Intent.createChooser(sharingIntent, getString(R.string.share)));
+    }
   }
 
   private Observable<GetApp> manageOrganicAds(GetApp getApp) {
@@ -608,7 +623,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             installedRepository);
     displayables.add(installDisplayable);
     displayables.add(new AppViewStoreDisplayable(getApp));
-    displayables.add(new AppViewRateAndCommentsDisplayable(getApp));
+    displayables.add(new AppViewRateAndCommentsDisplayable(getApp, storeCredentialsProvider));
 
     // only show screen shots / video if the app has them
     if (isMediaAvailable(media)) {

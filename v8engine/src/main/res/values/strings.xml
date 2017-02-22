@@ -201,6 +201,7 @@
   <string name="social_timeline">Social Timeline</string>
   <string name="downloads">Downloads</string>
   <string name="apps_timeline"><b>Apps Timeline</b></string>
+  <string name="timeline"><b>Timeline</b></string>
   <string name="latest_reviews">Latest Reviews</string>
   <string name="latest_comments">Latest Comments</string>
   <string name="action">Action</string>
@@ -372,5 +373,46 @@
   <string name="create_store_displayable_created_store_long_term_message">long term</string>
   <string name="create_store_displayable_explore_long_term_button">View Store</string>
   <string name="create_store_displayable_empty_description_message">Add a description for your Store. A good description helps you to get more followers and interaction.</string>
+
+  <!-- Address book -->
+  <string name="addressbook_increase_network_message">Increase your network.</string>
+  <string name="addressbook_connect_with_friends_message">Connect with friends.</string>
+  <string name="addressbook_sync">Sync Address Book</string>
+  <string name="not_now">Not now</string>
+  <string name="follow_friends">Follow Friends</string>
+  <string name="addressbook_data_about"><b>How %1$s Uses your Data</b>
+    \n\n%1$s will search your address book for friends and family that are using our App Store. We\’ll only use this information to
+    improve your %1$s experience by connecting you to more people that can share apps related content with you.
+    \n\n\nTo protect your privacy, all data will be encoded before sending it to %1$s servers.</string>
+  <string name="addressbook_success">Success!</string>
+  <string name="addressbook_allow_friends_find">Allow friends to find you</string>
+  <string name="google">Google</string>
+  <string name="done">Done</string>
+  <string name="addressbook_share_phone">Share your phone number so your friends can easily find you on %s</string>
+  <string name="addressbook_phone_number">Phone number</string>
+  <string name="addressbook_insuccess_connection">We weren\'t able to connect with your address book!</string>
+  <string name="addressbook_invite_friends">Invite friends to join you!</string>
+  <string name="addressbook_thanks_for_connecting">Thank you for connecting</string>
+  <string name="addressbook_success_connected_friends">We successfully connected you with %1$s friends that use %2$s</string>
+  <string name="addressbook_2nd_msg">We will encrypt your data and won\'t share it with anyone.</string>
+  <string name="addressbook_3rd_msg">Read more about it here</string>
+
+  <!-- 02/2017 strings for login / sign up -->
+  <string name="join_company">Join %s</string>
+  <string name="login">Login</string>
+  <string name="login_company">Login %s</string>
+  <string name="connect_with_facebook">Connect with Facebook</string>
+  <string name="connect_with_google">Connect with Google</string>
+  <string name="accept_terms_signup">By joining Aptoide you agree to Aptoide\'s Terms and Conditions and Content Policy for Developers</string>
+  <string name="recover_password">Recover your password</string>
+  <string name="email">Email</string>
+  <string name="password">Password</string>
+  <string name="create_password">Create Password</string>
+  <string name="store_suspended_message">Store suspended</string>
+
+  <!-- Add stores dialog -->
+  <string name="add_store_dialog_title">You can find exclusive taylored content made just for you in different stores</string>
+  <string name="add_store_dialog_top_stores">DISCOVER TOP STORES</string>
+  <string name="add_store_dialog_top_stores_small_text">and find exclusive content!</string>
 
 </resources>
