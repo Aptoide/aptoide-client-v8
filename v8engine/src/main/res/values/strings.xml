@@ -394,6 +394,8 @@
   <string name="addressbook_invite_friends">Invite friends to join you!</string>
   <string name="addressbook_thanks_for_connecting">Thank you for connecting</string>
   <string name="addressbook_success_connected_friends">We successfully connected you with %1$s friends that use %2$s</string>
+  <string name="addressbook_2nd_msg">We will encrypt your data and won\'t share it with anyone.</string>
+  <string name="addressbook_3rd_msg">Read more about it here</string>
 
   <!-- 02/2017 strings for login / sign up -->
   <string name="join_company">Join %s</string>
