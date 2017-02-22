@@ -372,8 +372,8 @@
   <string name="not_now">Not now</string>
   <string name="follow_friends">Follow Friends</string>
   <string name="addressbook_data_about"><b>How %1$s Uses your Data</b>
-    \n\nThis feature allows %2$s to search for friends and family that already are using %3$s.
-    You\'ll upload your phone\'s address book to %4$s\'s servers and we\'ll do all the hard work.
+    \n\nThis feature allows %1$s to search for friends and family that already are using %1$s.
+    You\'ll upload your phone\'s address book to %1$s\'s servers and we\'ll do all the hard work.
     \n\nWe\'ll use this information to connect you with your friends and family improving that way the Apps Timeline content.
     \n\nIf you choose to send invitation via text message, standard rates may apply.</string>
   <string name="addressbook_success">Success!</string>

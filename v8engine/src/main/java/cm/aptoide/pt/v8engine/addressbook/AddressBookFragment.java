@@ -78,8 +78,7 @@ public class AddressBookFragment extends SupportV4BaseFragment implements Addres
     final String marketName = Application.getConfiguration().getMarketName();
     ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
         .newDescriptionFragment("About Address Book",
-            getString(R.string.addressbook_data_about, marketName, marketName, marketName,
-                marketName), "default"));
+            getString(R.string.addressbook_data_about, marketName), "default"));
   }
 
   @Override public void showSuccessFragment(List<Contact> contacts) {
