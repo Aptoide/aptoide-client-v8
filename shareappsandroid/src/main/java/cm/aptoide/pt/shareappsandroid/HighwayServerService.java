@@ -51,21 +51,45 @@ public class HighwayServerService extends Service {
 
   @Override public void onCreate() {
     super.onCreate();
-
+    if (mNotifyManager == null) {
+      mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+    }
     fileClientLifecycle = new FileClientLifecycle<AndroidAppInfo>() {
       @Override public void onStartReceiving(AndroidAppInfo androidAppInfo) {
         System.out.println(" Started receiving ");
         showToast(" Started receiving ");
+
+        //show notification
+        createReceiveNotification(androidAppInfo.getAppName());
+
+        Intent i = new Intent();
+        i.putExtra("FinishedReceiving",false);
+        i.putExtra("appName",androidAppInfo.getAppName());
+        i.setAction("RECEIVEAPP");
+        sendBroadcast(i);
       }
 
       @Override public void onFinishReceiving(AndroidAppInfo androidAppInfo) {
         System.out.println(" Finished receiving ");
         showToast(" Finished receiving ");
+
+        finishReceiveNotification(androidAppInfo.getFilePath());
+
+        Intent i = new Intent();
+        i.putExtra("FinishedReceiving",true);
+        i.putExtra("needReSend", false);
+        i.putExtra("appName",androidAppInfo.getAppName());
+        i.putExtra("packageName",androidAppInfo.getPackageName());
+        i.putExtra("tmpFilePath",androidAppInfo.getFilePath());
+        i.setAction("RECEIVEAPP");
+        sendBroadcast(i);
       }
 
-      @Override public void onProgressChanged(float progress) {
+      @Override public void onProgressChanged(float progress) {//todo add AndroidAPpInfo - to get appname
         System.out.println("onProgressChanged() called with: " + "progress = [" + progress + "]");
-        showToast("onProgressChanged() called with: " + "progress = [" + progress + "]");
+//        showToast("onProgressChanged() called with: " + "progress = [" + progress + "]");
+        int actualProgress=Math.round(progress*100);
+        showReceiveProgress("insertAppName",actualProgress);
       }
     };
 
@@ -81,16 +105,30 @@ public class HighwayServerService extends Service {
         System.out.println("Server : started sending");
         showToast("Server : started sending");
 
-      }
+        Intent i = new Intent();
+        i.putExtra("isSent",false);
+        i.putExtra("needReSend", false);//add field with pos to resend and change its value only if it is != 100000 (onstartcommand)
+        i.putExtra("appName",androidAppInfo.getAppName());
+        i.putExtra("packageName",androidAppInfo.getPackageName());
+        i.putExtra("positionToReSend",100000);
+        i.setAction("SENDAPP");
+        sendBroadcast(i);
 
-      @Override public void onProgressChanged(float progress) {
-        System.out.println("onProgressChanged() called with: " + "progress = [" + progress + "]");
       }
 
       @Override
       public void onFinishSending(AndroidAppInfo androidAppInfo) {
         System.out.println("Server : finished sending");
         showToast("Server : finished sending");
+
+        Intent i = new Intent();
+        i.putExtra("isSent",true);
+        i.putExtra("needReSend", false);
+        i.putExtra("appName",androidAppInfo.getAppName());
+        i.putExtra("packageName",androidAppInfo.getPackageName());
+        i.putExtra("positionToReSend",100000);
+        i.setAction("SENDAPP");
+        sendBroadcast(i);
       }
     };
 
@@ -117,6 +155,7 @@ public class HighwayServerService extends Service {
         aptoideMessageServerSocket.setHostsChangedCallbackCallback(new HostsChangedCallback() {
           @Override public void hostsChanged(List<Host> hostList) {
             System.out.println("hostsChanged() called with: " + "hostList = [" + hostList + "]");
+//            DataHolder.getInstance().setConnectedClients(hostList);
           }
         });
         aptoideMessageServerSocket.startAsync();
@@ -240,7 +279,7 @@ public class HighwayServerService extends Service {
     }
   }
 
-  private void createReceiveNotification(String receivingAppName, String receivingApkFilePath) {
+  private void createReceiveNotification(String receivingAppName) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
       mBuilderReceive = new Notification.Builder(this);
       ((Notification.Builder) mBuilderReceive).setContentTitle(
@@ -250,30 +289,27 @@ public class HighwayServerService extends Service {
               this.getResources().getString(R.string.receiving) + " " + receivingAppName)
           .setSmallIcon(R.mipmap.lite);
 
-      File f = new File(receivingApkFilePath);
-      Intent install = new Intent(Intent.ACTION_VIEW).setDataAndType(Uri.fromFile(f),
-          "application/vnd.android.package-archive");
-      PendingIntent contentIntent = PendingIntent.getActivity(this, 0, install, 0);
-
-      ((Notification.Builder) mBuilderReceive).setContentIntent(contentIntent);
     }
   }
 
-  private void showReceiveProgress(String receivingAppName, int total, int actual) {
+  private void showReceiveProgress(String receivingAppName, int actual) {
 
     if (System.currentTimeMillis() - lastTimestampReceive > 1000 / 3) {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
         ((Notification.Builder) mBuilderReceive).setContentText(
             this.getResources().getString(R.string.receiving) + " " + receivingAppName);
 
-        ((Notification.Builder) mBuilderReceive).setProgress(total, actual, false);
+        ((Notification.Builder) mBuilderReceive).setProgress(100, actual, false);
+        if (mNotifyManager == null) {
+          mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        }
         mNotifyManager.notify(id, ((Notification.Builder) mBuilderReceive).getNotification());
       }
       lastTimestampReceive = System.currentTimeMillis();
     }
   }
 
-  private void finishReceiveNotification() {
+  private void finishReceiveNotification(String receivedApkFilePath) {
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
       ((Notification.Builder) mBuilderReceive).setContentText(
@@ -282,6 +318,14 @@ public class HighwayServerService extends Service {
           .setSmallIcon(android.R.drawable.stat_sys_download_done)
           .setProgress(0, 0, false)
           .setAutoCancel(true);
+
+      File f = new File(receivedApkFilePath);
+      Intent install = new Intent(Intent.ACTION_VIEW).setDataAndType(Uri.fromFile(f),
+              "application/vnd.android.package-archive");
+      PendingIntent contentIntent = PendingIntent.getActivity(this, 0, install, 0);
+
+      ((Notification.Builder) mBuilderReceive).setContentIntent(contentIntent);
+
       mNotifyManager.notify(id, ((Notification.Builder) mBuilderReceive).getNotification());
     }
   }
