@@ -100,6 +100,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
   @Override public void onResume() {
     super.onResume();
     setUserDataOnHeader();
+    getToolbar().setTitle("");
   }
 
   private void setUserDataOnHeader() {
@@ -325,7 +326,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
   }
 
   @Override public void setupToolbarDetails(Toolbar toolbar) {
-    //toolbar.setLogo(R.drawable.logo_aptoide);
+    toolbar.setTitle("");
     toolbar.setNavigationIcon(R.drawable.ic_drawer);
     toolbar.setNavigationOnClickListener(v -> mDrawerLayout.openDrawer(GravityCompat.START));
   }
