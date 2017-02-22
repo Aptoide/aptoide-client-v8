@@ -7,7 +7,6 @@ import android.database.MatrixCursor;
 import android.net.Uri;
 import android.util.Log;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.websocket.StoreAutoCompleteWebSocket;
 import cm.aptoide.pt.v8engine.websocket.WebSocketManager;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -19,7 +18,8 @@ import org.json.JSONObject;
  * Created by pedroribeiro on 18/01/17.
  */
 
-public abstract class SearchRecentSuggestionsProviderWrapper extends SearchRecentSuggestionsProvider {
+public abstract class SearchRecentSuggestionsProviderWrapper
+    extends SearchRecentSuggestionsProvider {
 
   private static final String TAG = "StoreWebsockets";
 
