@@ -16,6 +16,7 @@ import android.os.Environment;
 import android.os.Parcelable;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -151,11 +152,19 @@ public class HighwayTransferRecordActivity extends ActivityView
   private void setUpToolbar() {
     if (mToolbar != null) {
       setSupportActionBar(mToolbar);
-      //      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
       getSupportActionBar().setHomeButtonEnabled(true);
       getSupportActionBar().setDisplayShowTitleEnabled(true);
       getSupportActionBar().setTitle(getResources().getString(R.string.shareApps));
     }
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    int i = item.getItemId();
+    //    todo add check for the right button
+    onBackPressed();
+
+    return super.onOptionsItemSelected(item);
   }
 
   public void readApkArchive(List<String> list) {

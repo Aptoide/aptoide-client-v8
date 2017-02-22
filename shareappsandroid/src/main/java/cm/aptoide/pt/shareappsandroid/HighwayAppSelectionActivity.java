@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.ProgressBar;
@@ -87,11 +88,19 @@ public class HighwayAppSelectionActivity extends ActivityView implements Highway
   private void setUpToolbar() {
     if (mToolbar != null) {
       setSupportActionBar(mToolbar);
-      //      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
       getSupportActionBar().setHomeButtonEnabled(true);
       getSupportActionBar().setDisplayShowTitleEnabled(true);
       getSupportActionBar().setTitle(getResources().getString(R.string.shareApps));
     }
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    int i = item.getItemId();
+    //    todo add check for the right button
+    finish();
+
+    return super.onOptionsItemSelected(item);
   }
 
   @Override public void onBackPressed() {
