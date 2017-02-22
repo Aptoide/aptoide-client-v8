@@ -285,7 +285,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
   }
 
   private void startFeedbackFragment() {
-    String downloadFolderPath = Application.getConfiguration().getCachePath();
+    String downloadFolderPath = Application.getContext().getCacheDir().getPath();
     String screenshotFileName = getActivity().getClass().getSimpleName() + ".jpg";
     AptoideUtils.ScreenU.takeScreenshot(getActivity(), downloadFolderPath, screenshotFileName);
     getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
