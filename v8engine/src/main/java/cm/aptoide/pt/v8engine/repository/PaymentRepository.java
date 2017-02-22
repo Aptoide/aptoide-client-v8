@@ -11,8 +11,8 @@ import cm.aptoide.pt.v8engine.payment.Payer;
 import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.payment.PaymentFactory;
+import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentFailureException;
-import cm.aptoide.pt.v8engine.payment.products.AptoideProduct;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -45,17 +45,16 @@ public class PaymentRepository {
     this.payer = payer;
   }
 
-  public Observable<List<Payment>> getPayments(AptoideProduct product) {
-    return productRepository.getPayments(product)
+  public Observable<List<Payment>> getPayments() {
+    return productRepository.getPayments()
         .map(payments -> sortedPayments(payments))
-        .flatMapObservable(payments -> Observable.combineLatest(getConfirmation(product),
+        .flatMapObservable(payments -> Observable.combineLatest(
             getAuthorizations(payments, payer.getId()), Observable.just(payments),
-            (confirmation, authorizations, paymentList) -> {
+            (authorizations, paymentList) -> {
               if (payments.isEmpty() || authorizations.isEmpty()) {
                 return Observable.<List<Payment>>empty();
               }
-              return getCompletePayments(payments, authorizations, payer.getId(), confirmation,
-                  product);
+              return getPaymentsWithAuthorizations(payments, authorizations, payer.getId());
             }))
         .flatMap(result -> result);
   }
@@ -69,21 +68,20 @@ public class PaymentRepository {
     return payments;
   }
 
-  private Observable<List<Payment>> getCompletePayments(List<PaymentServiceResponse> payments,
-      List<Authorization> authorizations, String payerId, PaymentConfirmation confirmation,
-      AptoideProduct product) {
+  private Observable<List<Payment>> getPaymentsWithAuthorizations(List<PaymentServiceResponse> payments,
+      List<Authorization> authorizations, String payerId) {
     return Observable.zip(Observable.from(payments), Observable.from(authorizations),
         (payment, authorization) -> {
           if (!payment.isAuthorizationRequired()) {
             authorization =
                 authorizationFactory.create(payment.getId(), Authorization.Status.NONE, payerId);
           }
-          return paymentFactory.create(payment, product, authorization, confirmation);
+          return paymentFactory.create(payment, authorization, confirmationRepository);
         }).toList();
   }
 
-  public Observable<Payment> getPayment(int paymentId, AptoideProduct product) {
-    return getPayments(product).flatMap(payments -> Observable.from(payments)
+  public Observable<Payment> getPayment(int paymentId) {
+    return getPayments().flatMap(payments -> Observable.from(payments)
         .filter(payment -> payment.getId() == paymentId)
         .switchIfEmpty(Observable.error(
             new PaymentFailureException("Payment " + paymentId + "not available"))));
@@ -95,7 +93,7 @@ public class PaymentRepository {
         paymentIds -> authorizationRepository.getPaymentAuthorizations(paymentIds, payerId));
   }
 
-  private Observable<PaymentConfirmation> getConfirmation(AptoideProduct product) {
+  public Observable<PaymentConfirmation> getConfirmation(Product product) {
     return confirmationRepository.getPaymentConfirmation(product, payer.getId());
   }
 

@@ -16,26 +16,17 @@ public class AptoidePayment implements Payment {
 
   private final PaymentConfirmationRepository confirmationRepository;
   private final int id;
-  private final String type;
   private final String name;
-  private final Product product;
-  private final Price price;
   private final String description;
   private final Authorization authorization;
-  private final PaymentConfirmation confirmation;
 
-  public AptoidePayment(int id, String type, String name, String description, Product product,
-      Price price, PaymentConfirmationRepository confirmationRepository, Authorization authorization,
-      PaymentConfirmation confirmation) {
+  public AptoidePayment(int id, String name, String description, PaymentConfirmationRepository confirmationRepository,
+      Authorization authorization) {
     this.id = id;
-    this.type = type;
     this.name = name;
-    this.product = product;
-    this.price = price;
     this.description = description;
     this.confirmationRepository = confirmationRepository;
     this.authorization = authorization;
-    this.confirmation = confirmation;
   }
 
   @Override public int getId() {
@@ -46,58 +37,15 @@ public class AptoidePayment implements Payment {
     return name;
   }
 
-  @Override public String getType() {
-    return type;
-  }
-
-  @Override public Product getProduct() {
-    return product;
-  }
-
-  @Override public Price getPrice() {
-    return price;
-  }
-
   @Override public String getDescription() {
     return description;
-  }
-
-  @Override public boolean isPendingAuthorization() {
-    return authorization.isInitiated()
-        || authorization.isPendingInitiation()
-        || authorization.isFailed();
-  }
-
-  @Override public boolean isCompleted() {
-    return confirmation.isCompleted();
   }
 
   @Override public Authorization getAuthorization() {
     return authorization;
   }
 
-  @Override public boolean isPending() {
-    return confirmation.isPending()
-        || authorization.isPending();
-  }
-
-  @Override public boolean isFailed() {
-    return confirmation.isFailed();
-  }
-
-  @Override public boolean isNew() {
-    return confirmation.isNew();
-  }
-
-  @Override public boolean isAuthorized() {
-    return authorization.isAuthorized();
-  }
-
-  @Override public PaymentConfirmation getConfirmation() {
-    return confirmation;
-  }
-
-  @Override public Completable process() {
-    return confirmationRepository.createPaymentConfirmation(id);
+  @Override public Completable process(Product product) {
+    return confirmationRepository.createPaymentConfirmation(id, product);
   }
 }

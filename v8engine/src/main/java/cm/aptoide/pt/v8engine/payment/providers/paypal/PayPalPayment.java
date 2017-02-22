@@ -11,7 +11,6 @@ import android.content.IntentFilter;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.v8engine.payment.AptoidePayment;
 import cm.aptoide.pt.v8engine.payment.Authorization;
-import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.payment.Price;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.exception.PaymentCancellationException;
@@ -42,26 +41,25 @@ public class PayPalPayment extends AptoidePayment {
   private final PayPalConfiguration configuration;
   private final PaymentConfirmationRepository confirmationRepository;
 
-  public PayPalPayment(Context context, int id, String type, String name, String sign, Price price,
-      PayPalConfiguration configuration, Product product, String description,
+  public PayPalPayment(Context context, int id, String name, String description,
       PaymentConfirmationRepository confirmationRepository, Authorization authorization,
-      PaymentConfirmation confirmation) {
-    super(id, type, name, description, product, price, confirmationRepository, authorization, confirmation);
+      PayPalConfiguration configuration) {
+    super(id, name, description, confirmationRepository, authorization);
     this.context = context;
     this.configuration = configuration;
     this.confirmationRepository = confirmationRepository;
   }
 
-  @Override public Completable process() {
+  @Override public Completable process(Product product) {
     final IntentFilter paymentResultFilter = new IntentFilter();
     paymentResultFilter.addAction(PAYMENT_RESULT_ACTION);
     return Observable.create(
         new BroadcastRegisterOnSubscribe(context, paymentResultFilter, null, null))
-        .doOnSubscribe(() -> startPayPalActivity(getPrice(), getProduct()))
+        .doOnSubscribe(() -> startPayPalActivity(product.getPrice(), product))
         .first(intent -> isPaymentConfirmationIntent(intent))
-        .flatMap(intent -> getIntentPaymentConfirmationId(intent, getId(), getProduct().getId()))
+        .flatMap(intent -> getIntentPaymentConfirmationId(intent, getId(), product.getId()))
         .flatMap(paymentConfirmationId -> confirmationRepository.createPaymentConfirmation(getId(),
-            paymentConfirmationId).toObservable())
+            paymentConfirmationId, product).toObservable())
         .toCompletable();
   }
 

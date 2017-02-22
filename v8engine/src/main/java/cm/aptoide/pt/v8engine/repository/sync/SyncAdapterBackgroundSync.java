@@ -12,7 +12,7 @@ import android.content.SyncStatusObserver;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.preferences.AptoidePreferencesConfiguration;
-import cm.aptoide.pt.v8engine.payment.products.AptoideProduct;
+import cm.aptoide.pt.v8engine.payment.Product;
 import java.util.Collections;
 import java.util.List;
 import rx.Completable;
@@ -46,7 +46,6 @@ public class SyncAdapterBackgroundSync {
 
   private Completable sync(Bundle bundle) {
     bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-    bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
     bundle.putBoolean(ContentResolver.SYNC_EXTRAS_IGNORE_BACKOFF, true);
 
     final Account account = getAccount();
@@ -84,13 +83,13 @@ public class SyncAdapterBackgroundSync {
     }).toCompletable();
   }
 
-  public Completable syncConfirmation(AptoideProduct product) {
+  public Completable syncConfirmation(Product product) {
     final Bundle bundle = syncDataConverter.toBundle(product);
     bundle.putBoolean(AptoideSyncAdapter.EXTRA_PAYMENT_CONFIRMATIONS, true);
     return sync(bundle);
   }
 
-  public Completable syncConfirmation(AptoideProduct product, int paymentId,
+  public Completable syncConfirmation(Product product, int paymentId,
       String paymentConfirmationId) {
     final Bundle bundle = syncDataConverter.toBundle(product);
     bundle.putBoolean(AptoideSyncAdapter.EXTRA_PAYMENT_CONFIRMATIONS, true);

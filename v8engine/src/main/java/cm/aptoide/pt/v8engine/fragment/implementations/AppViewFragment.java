@@ -77,6 +77,7 @@ import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
 import cm.aptoide.pt.v8engine.interfaces.Payments;
 import cm.aptoide.pt.v8engine.interfaces.Scrollable;
 import cm.aptoide.pt.v8engine.payment.ProductFactory;
+import cm.aptoide.pt.v8engine.payment.products.ParcelableProduct;
 import cm.aptoide.pt.v8engine.receivers.AppBoughtReceiver;
 import cm.aptoide.pt.v8engine.repository.AdsRepository;
 import cm.aptoide.pt.v8engine.repository.AppRepository;
@@ -348,7 +349,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   }
 
   public void buyApp(GetAppMeta.App app) {
-    startActivityForResult(PaymentActivity.getIntent(getActivity(), productFactory.create(app)),
+    startActivityForResult(PaymentActivity.getIntent(getActivity(),
+        (ParcelableProduct) productFactory.create(app)),
         PAY_APP_REQUEST_CODE);
   }
 

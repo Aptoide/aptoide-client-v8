@@ -17,7 +17,7 @@ import java.util.List;
 import rx.Completable;
 import rx.Observable;
 
-public class PaymentAuthorizationRepository implements Repository<Authorization, Integer> {
+public class PaymentAuthorizationRepository {
 
   private final PaymentAuthorizationAccessor authotizationAccessor;
   private final SyncAdapterBackgroundSync backgroundSync;
@@ -44,14 +44,6 @@ public class PaymentAuthorizationRepository implements Repository<Authorization,
               new RepositoryIllegalArgumentException(V3.getErrorMessage(response)));
         })
         .toCompletable();
-  }
-
-  @Override public void save(Authorization entity) {
-    /* no-op */
-  }
-
-  @Override public Observable<Authorization> get(Integer id) {
-    return null;
   }
 
   public Observable<Authorization> getPaymentAuthorization(int paymentId, String payerId) {

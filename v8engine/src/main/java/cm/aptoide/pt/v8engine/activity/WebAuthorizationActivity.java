@@ -19,11 +19,11 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.navigation.AccountNavigator;
-import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.payment.AptoidePay;
-import cm.aptoide.pt.v8engine.payment.products.AptoideProduct;
+import cm.aptoide.pt.v8engine.payment.Payer;
+import cm.aptoide.pt.v8engine.payment.products.ParcelableProduct;
 import cm.aptoide.pt.v8engine.presenter.WebAuthorizationPresenter;
 import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationFactory;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
@@ -48,7 +48,7 @@ public class WebAuthorizationActivity extends ActivityView implements WebAuthori
   private PublishRelay<Void> mainUrlSubject;
   private PublishRelay<Void> redirectUrlSubject;
 
-  public static Intent getIntent(Context context, int paymentId, AptoideProduct product) {
+  public static Intent getIntent(Context context, int paymentId, ParcelableProduct product) {
     final Intent intent = new Intent(context, WebAuthorizationActivity.class);
     intent.putExtra(EXTRA_PAYMENT_ID, paymentId);
     intent.putExtra(EXTRA_PRODUCT, product);
@@ -62,14 +62,15 @@ public class WebAuthorizationActivity extends ActivityView implements WebAuthori
 
     if (getIntent().hasExtra(EXTRA_PAYMENT_ID) && getIntent().hasExtra(EXTRA_PRODUCT)) {
       paymentId = getIntent().getIntExtra(EXTRA_PAYMENT_ID, 0);
-      final AptoideProduct product = getIntent().getParcelableExtra(EXTRA_PRODUCT);
+      final ParcelableProduct product = getIntent().getParcelableExtra(EXTRA_PRODUCT);
       final AptoideAccountManager accountManager =
           ((V8Engine) getApplicationContext()).getAccountManager();
       aptoidePay = new AptoidePay(RepositoryFactory.getPaymentConfirmationRepository(this, product),
           RepositoryFactory.getPaymentAuthorizationRepository(this),
           new PaymentAuthorizationFactory(this),
           RepositoryFactory.getPaymentRepository(this, product),
-          RepositoryFactory.getProductRepository(this, product));
+          RepositoryFactory.getProductRepository(this, product),
+          new Payer(this, accountManager, new AccountNavigator(this, accountManager)));
 
       webView = (WebView) findViewById(R.id.activity_boa_compra_authorization_web_view);
       webView.getSettings().setJavaScriptEnabled(true);

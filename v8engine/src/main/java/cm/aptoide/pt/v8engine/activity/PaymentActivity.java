@@ -29,9 +29,10 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.payment.AptoidePay;
 import cm.aptoide.pt.v8engine.payment.Payer;
+import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.Purchase;
 import cm.aptoide.pt.v8engine.payment.PurchaseIntentFactory;
-import cm.aptoide.pt.v8engine.payment.products.AptoideProduct;
+import cm.aptoide.pt.v8engine.payment.products.ParcelableProduct;
 import cm.aptoide.pt.v8engine.presenter.PaymentPresenter;
 import cm.aptoide.pt.v8engine.presenter.PaymentSelector;
 import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationFactory;
@@ -68,7 +69,7 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
   private SparseArray<PaymentViewModel> paymentMap;
   private SpannableFactory spannableFactory;
 
-  public static Intent getIntent(Context context, AptoideProduct product) {
+  public static Intent getIntent(Context context, ParcelableProduct product) {
     final Intent intent = new Intent(context, PaymentActivity.class);
     intent.putExtra(PRODUCT_EXTRA, product);
     return intent;
@@ -107,17 +108,18 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
             .setPositiveButton(android.R.string.ok, null)
             .create();
 
-    final AptoideProduct product = getIntent().getParcelableExtra(PRODUCT_EXTRA);
+    final ParcelableProduct product = getIntent().getParcelableExtra(PRODUCT_EXTRA);
     final AptoideAccountManager instance = ((V8Engine) getApplicationContext()).getAccountManager();
     final Payer payer = new Payer(this, instance, new AccountNavigator(this, instance));
     attachPresenter(new PaymentPresenter(this,
-        new AptoidePay(RepositoryFactory.getPaymentConfirmationRepository(this, product),
-            RepositoryFactory.getPaymentAuthorizationRepository(this),
-            new PaymentAuthorizationFactory(this),
-            RepositoryFactory.getPaymentRepository(this, product),
-            RepositoryFactory.getProductRepository(this, product)), product, payer,
-        new PaymentSelector(PAYPAL_PAYMENT_ID,
-            PreferenceManager.getDefaultSharedPreferences(getApplicationContext()))), savedInstanceState);
+            new AptoidePay(RepositoryFactory.getPaymentConfirmationRepository(this, product),
+                RepositoryFactory.getPaymentAuthorizationRepository(this),
+                new PaymentAuthorizationFactory(this),
+                RepositoryFactory.getPaymentRepository(this, product),
+                RepositoryFactory.getProductRepository(this, product), payer), product, payer,
+            new PaymentSelector(PAYPAL_PAYMENT_ID,
+                PreferenceManager.getDefaultSharedPreferences(getApplicationContext()))),
+        savedInstanceState);
   }
 
   @Override public Observable<PaymentViewModel> paymentSelection() {
@@ -171,11 +173,12 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
     }
   }
 
-  @Override public void showProduct(AptoideProduct product) {
+  @Override public void showProduct(Product product) {
     ImageLoader.with(this).load(product.getIcon(), productIcon);
     productName.setText(product.getTitle());
     productDescription.setText(product.getDescription());
-    productPrice.setText(product.getPrice());
+    productPrice.setText(product.getPrice().getCurrencySymbol() + " " +
+        product.getPrice().getAmount());
   }
 
   @Override public void hideLoading() {
@@ -194,8 +197,8 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
     finish(RESULT_CANCELED, intentFactory.createFromCancellation());
   }
 
-  @Override public void navigateToAuthorizationView(int paymentId, AptoideProduct product) {
-    startActivity(WebAuthorizationActivity.getIntent(this, paymentId, product));
+  @Override public void navigateToAuthorizationView(int paymentId, Product product) {
+    startActivity(WebAuthorizationActivity.getIntent(this, paymentId, (ParcelableProduct) product));
   }
 
   @Override public void showPaymentsNotFoundMessage() {

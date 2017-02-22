@@ -7,20 +7,21 @@ package cm.aptoide.pt.v8engine.payment.products;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import cm.aptoide.pt.v8engine.payment.Price;
 import cm.aptoide.pt.v8engine.payment.Product;
 
 /**
  * Created by marcelobenites on 8/30/16.
  */
-public class AptoideProduct implements Product, Parcelable {
+public class ParcelableProduct implements Product, Parcelable {
 
   private final int id;
   private final String icon;
   private final String title;
   private final String description;
-  private final String price;
+  private final Price price;
 
-  public AptoideProduct(int id, String icon, String title, String description, String price) {
+  public ParcelableProduct(int id, String icon, String title, String description, Price price) {
     this.id = id;
     this.icon = icon;
     this.title = title;
@@ -28,25 +29,25 @@ public class AptoideProduct implements Product, Parcelable {
     this.price = price;
   }
 
-  protected AptoideProduct(Parcel in) {
+  protected ParcelableProduct(Parcel in) {
     id = in.readInt();
     icon = in.readString();
     title = in.readString();
     description = in.readString();
-    price = in.readString();
+    price = new Price(in.readDouble(), in.readString(), in.readString(), in.readDouble());
   }
 
-  public static final Creator<AptoideProduct> CREATOR = new Creator<AptoideProduct>() {
-    @Override public AptoideProduct createFromParcel(Parcel in) {
-      return new AptoideProduct(in);
+  public static final Creator<ParcelableProduct> CREATOR = new Creator<ParcelableProduct>() {
+    @Override public ParcelableProduct createFromParcel(Parcel in) {
+      return new ParcelableProduct(in);
     }
 
-    @Override public AptoideProduct[] newArray(int size) {
-      return new AptoideProduct[size];
+    @Override public ParcelableProduct[] newArray(int size) {
+      return new ParcelableProduct[size];
     }
   };
 
-  @Override public String getPrice() {
+  @Override public Price getPrice() {
     return price;
   }
 
@@ -75,6 +76,9 @@ public class AptoideProduct implements Product, Parcelable {
     dest.writeString(icon);
     dest.writeString(title);
     dest.writeString(description);
-    dest.writeString(price);
+    dest.writeDouble(price.getAmount());
+    dest.writeString(price.getCurrency());
+    dest.writeString(price.getCurrencySymbol());
+    dest.writeDouble(price.getTaxRate());
   }
 }

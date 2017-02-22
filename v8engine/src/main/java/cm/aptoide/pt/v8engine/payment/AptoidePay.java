@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.payment;
 
-import cm.aptoide.pt.v8engine.payment.products.AptoideProduct;
 import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationFactory;
 import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationRepository;
 import cm.aptoide.pt.v8engine.repository.PaymentConfirmationRepository;
@@ -23,42 +22,50 @@ public class AptoidePay {
   private final PaymentAuthorizationFactory authorizationFactory;
   private final PaymentRepository paymentRepository;
   private final ProductRepository productRepository;
+  private final Payer payer;
 
   public AptoidePay(PaymentConfirmationRepository confirmationRepository,
       PaymentAuthorizationRepository authorizationRepository,
       PaymentAuthorizationFactory authorizationFactory, PaymentRepository paymentRepository,
-      ProductRepository productRepository) {
+      ProductRepository productRepository, Payer payer) {
     this.confirmationRepository = confirmationRepository;
     this.authorizationRepository = authorizationRepository;
     this.authorizationFactory = authorizationFactory;
     this.paymentRepository = paymentRepository;
     this.productRepository = productRepository;
+    this.payer = payer;
   }
 
-  public Observable<List<Payment>> payments(AptoideProduct product) {
-    return paymentRepository.getPayments(product);
+  public Observable<List<Payment>> payments() {
+    return paymentRepository.getPayments();
   }
 
-  public Observable<Payment> payment(int paymentId, AptoideProduct product) {
-    return paymentRepository.getPayment(paymentId, product);
+  public Observable<Payment> payment(int paymentId) {
+    return paymentRepository.getPayment(paymentId);
   }
 
   public Completable initiate(Payment payment) {
-    if (payment.isAuthorized()) {
+    if (payment.getAuthorization().isAuthorized()
+        || payment.getAuthorization().isInitiated()) {
       return Completable.complete();
     }
     return authorizationRepository.createPaymentAuthorization(payment.getId());
   }
 
-  public Completable process(Payment payment) {
-    return payment.process();
+  public Completable authorize(int paymentId) {
+    return authorizationRepository.saveAuthorization(authorizationFactory.create(paymentId,
+        Authorization.Status.PENDING, payer.getId()));
   }
 
-  public Observable<PaymentConfirmation> confirmation(List<Payment> payments) {
-    return Observable.from(payments).take(1).map(payment -> payment.getConfirmation());
+  public Completable process(Payment payment, Product product) {
+    return payment.process(product);
   }
 
-  public Single<Purchase> purchase(AptoideProduct product) {
+  public Observable<PaymentConfirmation> confirmation(Product product) {
+    return paymentRepository.getConfirmation(product);
+  }
+
+  public Single<Purchase> purchase(Product product) {
     return productRepository.getPurchase(product);
   }
 }

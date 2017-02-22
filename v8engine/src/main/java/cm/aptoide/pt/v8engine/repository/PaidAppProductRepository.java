@@ -6,11 +6,10 @@
 package cm.aptoide.pt.v8engine.repository;
 
 import cm.aptoide.pt.model.v3.PaymentServiceResponse;
-import cm.aptoide.pt.v8engine.payment.Payment;
 import cm.aptoide.pt.v8engine.payment.PaymentFactory;
+import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.Purchase;
 import cm.aptoide.pt.v8engine.payment.PurchaseFactory;
-import cm.aptoide.pt.v8engine.payment.products.AptoideProduct;
 import cm.aptoide.pt.v8engine.payment.products.PaidAppProduct;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.util.List;
@@ -25,15 +24,17 @@ public class PaidAppProductRepository implements ProductRepository {
   private final AppRepository appRepository;
   private final PurchaseFactory purchaseFactory;
   private final PaymentFactory paymentFactory;
+  private final PaidAppProduct product;
 
   public PaidAppProductRepository(AppRepository appRepository, PurchaseFactory purchaseFactory,
-      PaymentFactory paymentFactory) {
+      PaymentFactory paymentFactory, PaidAppProduct product) {
     this.appRepository = appRepository;
     this.purchaseFactory = purchaseFactory;
     this.paymentFactory = paymentFactory;
+    this.product = product;
   }
 
-  @Override public Single<Purchase> getPurchase(AptoideProduct product) {
+  @Override public Single<Purchase> getPurchase(Product product) {
     final PaidAppProduct paidAppProduct = (PaidAppProduct) product;
     return appRepository.getPaidApp(paidAppProduct.getAppId(), false, paidAppProduct.getStoreName(),
         true).toSingle().flatMap(app -> {
@@ -45,9 +46,9 @@ public class PaidAppProductRepository implements ProductRepository {
     });
   }
 
-  @Override public Single<List<PaymentServiceResponse>> getPayments(AptoideProduct product) {
-    return getServerPaidAppPaymentServices(((PaidAppProduct) product).getAppId(), false,
-        ((PaidAppProduct) product).getStoreName(), true);
+  @Override public Single<List<PaymentServiceResponse>> getPayments() {
+    return getServerPaidAppPaymentServices(product.getAppId(), false,
+        product.getStoreName(), true);
   }
 
   private Single<List<PaymentServiceResponse>> getServerPaidAppPaymentServices(long appId,

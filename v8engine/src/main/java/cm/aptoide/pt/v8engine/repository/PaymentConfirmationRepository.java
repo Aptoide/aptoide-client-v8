@@ -9,7 +9,6 @@ import cm.aptoide.pt.database.accessors.PaymentConfirmationAccessor;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.v8engine.payment.PaymentConfirmation;
 import cm.aptoide.pt.v8engine.payment.Product;
-import cm.aptoide.pt.v8engine.payment.products.AptoideProduct;
 import cm.aptoide.pt.v8engine.repository.sync.SyncAdapterBackgroundSync;
 import rx.Completable;
 import rx.Observable;
@@ -33,25 +32,25 @@ public abstract class PaymentConfirmationRepository {
     this.confirmationFactory = confirmationFactory;
   }
 
-  public abstract Completable createPaymentConfirmation(int paymentId);
+  public abstract Completable createPaymentConfirmation(int paymentId, Product product);
 
-  public abstract Completable createPaymentConfirmation(int paymentId,
-      String paymentConfirmationId);
+  public abstract Completable createPaymentConfirmation(int paymentId, String paymentConfirmationId,
+      Product product);
 
   public Observable<PaymentConfirmation> getPaymentConfirmation(Product product,
       String payerId) {
-    return syncPaymentConfirmation((AptoideProduct) product).andThen(
+    return syncPaymentConfirmation(product).andThen(
         confirmationAccessor.getPaymentConfirmations(product.getId(), payerId)
             .flatMap(paymentConfirmations -> Observable.from(paymentConfirmations)
                 .map(paymentConfirmation -> confirmationFactory.convertToPaymentConfirmation(
                     paymentConfirmation))));
   }
 
-  protected Completable syncPaymentConfirmation(AptoideProduct product) {
+  protected Completable syncPaymentConfirmation(Product product) {
     return backgroundSync.syncConfirmation(product);
   }
 
-  protected Completable createPaymentConfirmation(AptoideProduct product, int paymentId,
+  protected Completable createPaymentConfirmation(Product product, int paymentId,
       String paymentConfirmationId) {
     return backgroundSync.syncConfirmation(product, paymentId, paymentConfirmationId);
   }
