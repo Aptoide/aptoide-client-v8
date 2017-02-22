@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cm.aptoide.pt.shareapps.socket.entities.Host;
+
 /**
  * Singleton without controller.
  * <p>Holds references to main stuff used in our webview app
@@ -23,7 +25,7 @@ public class DataHolder {
   private boolean isServiceRunning = false;
   private boolean isHotspot = false;
   private WifiConfiguration wcOnJoin;
-  private ArrayList<String> connectedClients;
+  private List<Host> connectedClients;
 
   public static DataHolder getInstance() {
     return holder;
@@ -72,39 +74,39 @@ public class DataHolder {
     this.wcOnJoin = wcOnJoin;
   }
 
-  public ArrayList<String> getConnectedClients() {
+  public List<Host> getConnectedClients() {
     return connectedClients;
   }
 
-  public void setConnectedClients(ArrayList<String> connectedClients) {
+  public void setConnectedClients(List<Host> connectedClients) {
     this.connectedClients = connectedClients;
   }
 
-  public void addConnectedClient(String arg) {
-    if (arg != null && connectedClients != null) {
-      this.connectedClients.add(arg);
-    }
-  }
+//  public void addConnectedClient(String arg) {
+//    if (arg != null && connectedClients != null) {
+//      this.connectedClients.add(arg);
+//    }
+//  }
 
-  public void removeConnectedClient(String arg) {
-    if (connectedClients != null && arg != null) {
-
-      System.out.println("Size of the list before removing : " + connectedClients.size());
-      if (connectedClients.contains(arg)) {
-        List<String> listaTmp = new ArrayList<>();
-        for (int i = 0; i < connectedClients.size(); i++) {
-          if (connectedClients.get(i).equals(arg)) {
-            listaTmp.add(connectedClients.get(i));
-          }
-        }
-
-        if (listaTmp != null) {
-          connectedClients.removeAll(listaTmp);
-          System.out.println("removing arg, now size is : " + connectedClients.size());
-        }
-      }
-    }
-  }
+//  public void removeConnectedClient(String arg) {
+//    if (connectedClients != null && arg != null) {
+//
+//      System.out.println("Size of the list before removing : " + connectedClients.size());
+//      if (connectedClients.contains(arg)) {
+//        List<String> listaTmp = new ArrayList<>();
+//        for (int i = 0; i < connectedClients.size(); i++) {
+//          if (connectedClients.get(i).equals(arg)) {
+//            listaTmp.add(connectedClients.get(i));
+//          }
+//        }
+//
+//        if (listaTmp != null) {
+//          connectedClients.removeAll(listaTmp);
+//          System.out.println("removing arg, now size is : " + connectedClients.size());
+//        }
+//      }
+//    }
+//  }
 
   public void createConnectedClientsList() {
     this.connectedClients = new ArrayList<>();

@@ -3,6 +3,8 @@ package cm.aptoide.pt.shareappsandroid;
 import java.util.ArrayList;
 import java.util.List;
 
+import cm.aptoide.pt.shareapps.socket.entities.Host;
+
 /**
  * Created by filipegoncalves on 09-02-2017.
  */
@@ -12,7 +14,7 @@ public class TransferRecordPresenter implements Presenter {
   private HighwayTransferRecordView view;
 
   private List<HighwayTransferRecordItem> listOfApps;
-  private List<String> connectedClients;
+  private List<Host> connectedClients;
   private ApplicationReceiver applicationReceiver;
   private ApplicationSender applicationSender;
   private TransferRecordManager transferRecordManager;
@@ -163,7 +165,7 @@ public class TransferRecordPresenter implements Presenter {
 
   }
 
-  public void setListOfConnectedClients(List<String> connectedClients) {
+  public void setListOfConnectedClients(List<Host> connectedClients) {
     this.connectedClients = connectedClients;
   }
 

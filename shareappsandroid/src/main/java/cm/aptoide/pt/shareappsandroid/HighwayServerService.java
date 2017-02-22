@@ -97,13 +97,19 @@ public class HighwayServerService extends Service {
 
       @Override public void onProgressChanged(float progress) {
         System.out.println("onProgressChanged() called with: progress = [" + progress + "]");
-        showToast("onProgressChanged() called with: progress = [" + progress + "]");
+//        showToast("onProgressChanged() called with: progress = [" + progress + "]");
+        int actualProgress=Math.round(progress*100);
+        showSendProgress("insertAppName",actualProgress);
       }
 
       @Override
       public void onStartSending(AndroidAppInfo androidAppInfo) {
         System.out.println("Server : started sending");
         showToast("Server : started sending");
+
+        //create notification
+
+        createSendNotification();
 
         Intent i = new Intent();
         i.putExtra("isSent",false);
@@ -120,6 +126,8 @@ public class HighwayServerService extends Service {
       public void onFinishSending(AndroidAppInfo androidAppInfo) {
         System.out.println("Server : finished sending");
         showToast("Server : finished sending");
+
+        finishSendNotification();
 
         Intent i = new Intent();
         i.putExtra("isSent",true);
@@ -155,7 +163,7 @@ public class HighwayServerService extends Service {
         aptoideMessageServerSocket.setHostsChangedCallbackCallback(new HostsChangedCallback() {
           @Override public void hostsChanged(List<Host> hostList) {
             System.out.println("hostsChanged() called with: " + "hostList = [" + hostList + "]");
-//            DataHolder.getInstance().setConnectedClients(hostList);
+            DataHolder.getInstance().setConnectedClients(hostList);
           }
         });
         aptoideMessageServerSocket.startAsync();
@@ -180,8 +188,8 @@ public class HighwayServerService extends Service {
       } else if (intent.getAction() != null && intent.getAction().equals("SEND")) {
         //read parcelable
         Bundle b = intent.getBundleExtra("bundle");
-        if (listOfApps == null || listOfApps.get(listOfApps.size() - 1)
-                .isOnChat()) { //null ou ultimo elemento ja acabado de enviar.
+//        if (listOfApps == null || listOfApps.get(listOfApps.size() - 1)
+//                .isOnChat()) { //null ou ultimo elemento ja acabado de enviar.
           listOfApps = b.getParcelableArrayList("listOfAppsToInstall");
           System.out.println(
                   "serverComm : Just received the list of Apps :  the list of apps size is  :"
@@ -212,11 +220,11 @@ public class HighwayServerService extends Service {
                   new RequestPermissionToSend(aptoideMessageClientController.getLocalhost(), appInfo));
           aptoideMessageClientController.exit();
 
-        } else {
-          List<App> tempList = b.getParcelableArrayList("listOfAppsToInstall");
-
-          listOfApps.addAll(tempList);
-        }
+//        } else {
+//          List<App> tempList = b.getParcelableArrayList("listOfAppsToInstall");
+//
+//          listOfApps.addAll(tempList);
+//        }
       }
 
     }
@@ -231,15 +239,15 @@ public class HighwayServerService extends Service {
   /**
    * Method to be called after getting the callback of finishSending
    */
-  public void finishedSending(String appName, String packageName) {
-    Intent finishedSending = new Intent();
-    finishedSending.setAction("SENDAPP");
-    finishedSending.putExtra("isSent", false);
-    finishedSending.putExtra("needReSend", false);
-    finishedSending.putExtra("appName", appName);
-    finishedSending.putExtra("packageName", packageName);
-    finishedSending.putExtra("positionToReSend", 100000);
-  }
+//  public void finishedSending(String appName, String packageName) {
+//    Intent finishedSending = new Intent();
+//    finishedSending.setAction("SENDAPP");
+//    finishedSending.putExtra("isSent", false);
+//    finishedSending.putExtra("needReSend", false);
+//    finishedSending.putExtra("appName", appName);
+//    finishedSending.putExtra("packageName", packageName);
+//    finishedSending.putExtra("positionToReSend", 100000);
+//  }
 
   private void createSendNotification() {
 
@@ -253,14 +261,17 @@ public class HighwayServerService extends Service {
     }
   }
 
-  private void showSendProgress(String sendingAppName, int total, int actual) {
+  private void showSendProgress(String sendingAppName, int actual) {
 
     if (System.currentTimeMillis() - lastTimestampSend > 1000 / 3) {
       System.out.println("Inside the timertask of the sendPRogressTask");
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
         ((Notification.Builder) mBuilderSend).setContentText(
             this.getResources().getString(R.string.sending) + " " + sendingAppName);
-        ((Notification.Builder) mBuilderSend).setProgress(total, actual, false);
+        ((Notification.Builder) mBuilderSend).setProgress(100, actual, false);
+        if (mNotifyManager == null) {
+          mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        }
         mNotifyManager.notify(id, ((Notification.Builder) mBuilderSend).getNotification());
       }
       lastTimestampSend = System.currentTimeMillis();
@@ -275,6 +286,9 @@ public class HighwayServerService extends Service {
           .setSmallIcon(android.R.drawable.stat_sys_download_done)
           .setProgress(0, 0, false)
           .setAutoCancel(true);
+      if (mNotifyManager == null) {
+        mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+      }
       mNotifyManager.notify(id, ((Notification.Builder) mBuilderSend).getNotification());
     }
   }
@@ -325,7 +339,9 @@ public class HighwayServerService extends Service {
       PendingIntent contentIntent = PendingIntent.getActivity(this, 0, install, 0);
 
       ((Notification.Builder) mBuilderReceive).setContentIntent(contentIntent);
-
+      if (mNotifyManager == null) {
+        mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+      }
       mNotifyManager.notify(id, ((Notification.Builder) mBuilderReceive).getNotification());
     }
   }
