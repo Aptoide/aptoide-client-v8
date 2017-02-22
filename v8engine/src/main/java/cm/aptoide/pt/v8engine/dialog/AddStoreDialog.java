@@ -135,20 +135,20 @@ public class AddStoreDialog extends DialogFragment {
       dismissLoadingDialog();
       dismiss();
     }, e -> {
+      dismissLoadingDialog();
       if (e instanceof AptoideWsV7Exception) {
         BaseV7Response baseResponse = ((AptoideWsV7Exception) e).getBaseResponse();
-
         BaseV7Response.Error error = baseResponse.getError();
-        if (StoreUtils.PRIVATE_STORE_ERROR.equals(error.getCode())) {
-          DialogFragment dialogFragment = PrivateStoreDialog.newInstance(AddStoreDialog
-              .this, PRIVATE_STORE_REQUEST_CODE, storeName, false);
-          dialogFragment.show(getFragmentManager(), PrivateStoreDialog.class.getName());
-        } else {
-          ShowMessage.asSnack(getActivity(), error.getDescription());
+        switch (StoreUtils.getErrorType(error.getCode())) {
+          case PRIVATE_STORE_ERROR:
+            DialogFragment dialogFragment = PrivateStoreDialog.newInstance(AddStoreDialog
+                .this, PRIVATE_STORE_REQUEST_CODE, storeName, false);
+            dialogFragment.show(getFragmentManager(), PrivateStoreDialog.class.getName());
+            break;
+          default:
+            ShowMessage.asSnack(getActivity(), error.getDescription());
         }
-        dismissLoadingDialog();
       } else {
-        dismissLoadingDialog();
         ShowMessage.asSnack(getActivity(), R.string.error_occured);
       }
     }, storeName);
