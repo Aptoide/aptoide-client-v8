@@ -5,18 +5,19 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/store_main_layout_row"
+    android:id="@+id/store_tab_follow_store_layout"
     android:layout_width="match_parent"
     android:layout_height="110dp"
+    android:layout_gravity="center"
     android:gravity="center"
     android:orientation="vertical"
     style="?attr/backgroundCard"
     >
   <ImageView
       android:id="@+id/follow_store_image"
-      android:layout_width="64dp"
-      android:layout_height="64dp"
+      android:layout_width="57dp"
+      android:layout_height="57dp"
+      android:layout_marginTop="3dp"
       android:contentDescription="@null"
       android:scaleType="fitCenter"
       android:src="@drawable/follow_store"
@@ -26,14 +27,12 @@
       android:id="@+id/follow_store_text"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginTop="8dp"
-      android:drawablePadding="5dp"
-      android:drawableStart="@drawable/icon_store"
+      android:layout_marginTop="5dp"
       android:ellipsize="end"
       android:gravity="center_horizontal"
       android:maxLines="1"
+      android:text="@string/follow_store"
       android:textColor="@color/default_color"
       android:textSize="12sp"
-      tools:text="@string/follow_store_displayable"
       />
 </LinearLayout>

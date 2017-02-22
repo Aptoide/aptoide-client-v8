@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
+import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 
@@ -10,8 +11,8 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 public class FollowStoreDisplayable extends Displayable {
 
   @Override protected Configs getConfig() {
-    return new Configs(1,
-        true); //todo: maybe add this displayable to type class and get default values from there
+    return new Configs(Type.FOLLOW_STORE.getDefaultPerLineCount(),
+        Type.FOLLOW_STORE.isFixedPerLineCount()); //todo: maybe add this displayable to type class and get default values from there
   }
 
   @Override public int getViewLayout() {
