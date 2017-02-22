@@ -68,8 +68,8 @@ import rx.schedulers.Schedulers;
     compositeSubscription.add(RxView.clicks(itemView)
         .flatMap(click -> displayable.downloadStatus()
             .filter(status -> status == Download.COMPLETED)
-            .flatMap(status -> displayable.installOrOpenDownload(context,
-                (PermissionService) context)))
+            .flatMap(
+                status -> displayable.installOrOpenDownload(context, (PermissionService) context)))
         .retry()
         .subscribe(success -> {
         }, throwable -> throwable.printStackTrace()));
@@ -77,8 +77,7 @@ import rx.schedulers.Schedulers;
     compositeSubscription.add(RxView.clicks(resumeDownloadButton)
         .flatMap(click -> displayable.downloadStatus()
             .filter(status -> status == Download.PAUSED || status == Download.ERROR)
-            .flatMap(status -> displayable.resumeDownload(context,
-                (PermissionService) context)))
+            .flatMap(status -> displayable.resumeDownload(context, (PermissionService) context)))
         .retry()
         .subscribe(success -> {
         }, throwable -> throwable.printStackTrace()));

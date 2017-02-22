@@ -33,6 +33,16 @@ public abstract class FragmentView extends RxFragment implements cm.aptoide.pt.v
     return super.onCreateView(inflater, container, savedInstanceState);
   }
 
+  @Override public void onSaveInstanceState(Bundle outState) {
+    if (presenter != null) {
+      presenter.saveState(outState);
+    } else {
+      Log.w(this.getClass().getName(), "No presenter was attached.");
+    }
+
+    super.onSaveInstanceState(outState);
+  }
+
   @NonNull @Override
   public final <T> LifecycleTransformer<T> bindUntilEvent(@NonNull LifecycleEvent lifecycleEvent) {
     return RxLifecycle.bindUntilEvent(getLifecycle(), lifecycleEvent);
@@ -71,15 +81,5 @@ public abstract class FragmentView extends RxFragment implements cm.aptoide.pt.v
       default:
         throw new IllegalStateException("Unrecognized event: " + event.name());
     }
-  }
-
-  @Override public void onSaveInstanceState(Bundle outState) {
-    if (presenter != null) {
-      presenter.saveState(outState);
-    } else {
-      Log.w(this.getClass().getName(), "No presenter was attached.");
-    }
-
-    super.onSaveInstanceState(outState);
   }
 }

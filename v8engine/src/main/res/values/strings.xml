@@ -410,4 +410,9 @@
   <string name="create_password">Create Password</string>
   <string name="store_suspended_message">Store suspended</string>
 
+  <!-- Add stores dialog -->
+  <string name="add_store_dialog_title">You can find exclusive taylored content made just for you in different stores</string>
+  <string name="add_store_dialog_top_stores">DISCOVER TOP STORES</string>
+  <string name="add_store_dialog_top_stores_small_text">and find exclusive content!</string>
+
 </resources>

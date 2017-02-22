@@ -34,10 +34,11 @@ android {
     minSdkVersion 15
     targetSdkVersion TARGET_SDK_VERSION
     testProguardFile 'proguard-rules-test.pro'
-    manifestPlaceholders = [toolboxProviderAuthority   : "cm.aptoide.pt.StubProvider",
-                            suggestionProviderAuthority: "cm.aptoide.pt.v8engine.provider.SuggestionProvider",
-                            currentApplicationId       : "cm.aptoide.pt",
-                            fabricApiKey               : project.FABRIC_API_KEY]
+    manifestPlaceholders = [toolboxProviderAuthority        : "cm.aptoide.pt.StubProvider",
+                            suggestionProviderAuthority     : "cm.aptoide.pt.v8engine.provider.SearchSuggestionProvider",
+                            storeSuggestionProviderAuthority: "cm.aptoide.pt.v8engine.provider.StoreSearchSuggestionProvider",
+                            currentApplicationId            : "cm.aptoide.pt",
+                            fabricApiKey                    : project.FABRIC_API_KEY]
 
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     multiDexEnabled true
@@ -71,9 +72,10 @@ android {
       buildConfigField "String", "CONTENT_AUTHORITY",
           "\"" + APPLICATION_ID + ".StubProvider.internal\""
 
-      manifestPlaceholders = [toolboxProviderAuthority   : "cm.aptoide.pt.StubProvider.internal",
-                              suggestionProviderAuthority: "cm.aptoide.pt.v8engine.provider.SuggestionProvider.internal",
-                              currentApplicationId       : "cm.aptoide.pt.internal"]
+      manifestPlaceholders = [toolboxProviderAuthority        : "cm.aptoide.pt.StubProvider.internal",
+                              suggestionProviderAuthority     : "cm.aptoide.pt.v8engine.provider.SearchSuggestionProvider.internal",
+                              storeSuggestionProviderAuthority: "cm.aptoide.pt.v8engine.provider.StoreSearchSuggestionProvider.internal",
+                              currentApplicationId            : "cm.aptoide.pt.internal"]
     }
 
     dev {
@@ -88,9 +90,10 @@ android {
       resValue "string", "content_authority", APPLICATION_ID + ".StubProvider.dev"
       buildConfigField "String", "CONTENT_AUTHORITY", "\"" + APPLICATION_ID + ".StubProvider.dev\""
 
-      manifestPlaceholders = [toolboxProviderAuthority   : "cm.aptoide.pt.StubProvider.dev",
-                              suggestionProviderAuthority: "cm.aptoide.pt.v8engine.provider.SuggestionProvider.dev",
-                              currentApplicationId       : "cm.aptoide.pt.dev"]
+      manifestPlaceholders = [toolboxProviderAuthority        : "cm.aptoide.pt.StubProvider.dev",
+                              suggestionProviderAuthority     : "cm.aptoide.pt.v8engine.provider.SearchSuggestionProvider.dev",
+                              storeSuggestionProviderAuthority: "cm.aptoide.pt.v8engine.provider.StoreSearchSuggestionProvider.dev",
+                              currentApplicationId            : "cm.aptoide.pt.dev"]
     }
 
     prod {

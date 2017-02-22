@@ -59,7 +59,8 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
   }
 
   @Partners @NonNull
-  protected static Bundle buildBundle(Event event, String title, String storeTheme, String tag,StoreContext storeContext) {
+  protected static Bundle buildBundle(Event event, String title, String storeTheme, String tag,
+      StoreContext storeContext) {
     Bundle args = new Bundle();
 
     if (event.getType() != null) {
