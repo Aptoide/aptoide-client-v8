@@ -72,14 +72,14 @@ public class HighwayClientService extends Service {
       @Override public void onFinishReceiving(AndroidAppInfo androidAppInfo) {
         System.out.println(" Finished receiving ");
         showToast(" Finished receiving ");
-        finishReceiveNotification(androidAppInfo.getFilePath());
+        finishReceiveNotification(androidAppInfo.getApk().getFilePath());
 
         Intent i = new Intent();
         i.putExtra("FinishedReceiving",true);
         i.putExtra("needReSend", false);
         i.putExtra("appName",androidAppInfo.getAppName());
         i.putExtra("packageName",androidAppInfo.getPackageName());
-        i.putExtra("tmpFilePath",androidAppInfo.getFilePath());
+        i.putExtra("tmpFilePath",androidAppInfo.getApk().getFilePath());
         i.setAction("RECEIVEAPP");
         sendBroadcast(i);
       }
@@ -304,7 +304,9 @@ public class HighwayClientService extends Service {
 
             if(!obbsFilePath.equals("noObbs")){
 
-              appInfo.setObbsFilePath(obbsFilePath);
+
+              // TODO: 22-02-2017
+              //appInfo.setObbsFilePath(obbsFilePath);
 
             }
 

@@ -14,8 +14,6 @@ import lombok.Data;
   private FileInfo apk, mainObb, patchObb;
   private String appName;
   private String packageName;
-  private String filePath;
-  private String obbsFilePath;
 
   public AndroidAppInfo(String appName, String packageName, File apk, File mainObb, File patchObb) {
     this(appName, packageName, apk, mainObb);

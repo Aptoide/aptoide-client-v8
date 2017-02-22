@@ -73,14 +73,14 @@ public class HighwayServerService extends Service {
         System.out.println(" Finished receiving ");
         showToast(" Finished receiving ");
 
-        finishReceiveNotification(androidAppInfo.getFilePath());
+        finishReceiveNotification(androidAppInfo.getApk().getFilePath());
 
         Intent i = new Intent();
         i.putExtra("FinishedReceiving",true);
         i.putExtra("needReSend", false);
         i.putExtra("appName",androidAppInfo.getAppName());
         i.putExtra("packageName",androidAppInfo.getPackageName());
-        i.putExtra("tmpFilePath",androidAppInfo.getFilePath());
+        i.putExtra("filePath",androidAppInfo.getApk().getFilePath());
         i.setAction("RECEIVEAPP");
         sendBroadcast(i);
       }
@@ -205,7 +205,6 @@ public class HighwayServerService extends Service {
   private void showSendProgress(String sendingAppName, int actual) {
 
     if (System.currentTimeMillis() - lastTimestampSend > 1000 / 3) {
-      System.out.println("Inside the timertask of the sendPRogressTask");
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
         ((Notification.Builder) mBuilderSend).setContentText(
             this.getResources().getString(R.string.sending) + " " + sendingAppName);
@@ -282,10 +281,12 @@ public class HighwayServerService extends Service {
           }
         };
 
-        AptoideMessageClientController aptoideMessageClientController =
+        // TODO: 22-02-2017 fix this hardcoded ip
+
+        aptoideMessageClientController =
             new AptoideMessageClientController(s, storageCapacity, fileServerLifecycle,
                 fileClientLifecycle);
-        (new AptoideMessageClientSocket("localhost", 55555, aptoideMessageClientController
+        (new AptoideMessageClientSocket("192.168.43.1", 55555, aptoideMessageClientController
         )).startAsync();
 
         System.out.println("Connected 342");
