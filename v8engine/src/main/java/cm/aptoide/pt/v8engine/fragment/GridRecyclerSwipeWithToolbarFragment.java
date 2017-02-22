@@ -22,7 +22,7 @@ public class GridRecyclerSwipeWithToolbarFragment extends GridRecyclerSwipeFragm
 
   @Override public void setupToolbarDetails(Toolbar toolbar) {
     toolbar.setTitle(Translator.translate(title));
-    toolbar.setLogo(R.drawable.icon);
+    toolbar.setLogo(R.drawable.logo_toolbar);
   }
 
   @Override public void loadExtras(Bundle args) {
