@@ -45,24 +45,26 @@ public class ApplicationSender {
   public void sendApp(List<App> selectedApps) {
     Intent intent = generateIntentToSend(selectedApps);
     context.startService(intent);
-    send = new BroadcastReceiver() {
-      @Override public void onReceive(Context context, Intent intent) {
-        //dps aqui intent.getAction...
-        boolean isSent = intent.getBooleanExtra("isSent", false);
-        boolean needReSend = intent.getBooleanExtra("needReSend", false);
-        String appName = intent.getStringExtra("appName");
-        String packageName = intent.getStringExtra("packageName");
-        int positionToReSend = intent.getIntExtra("positionToReSend", 100000);
+    if (send == null) {
+      send = new BroadcastReceiver() {
+        @Override public void onReceive(Context context, Intent intent) {
+          //dps aqui intent.getAction...
+          boolean isSent = intent.getBooleanExtra("isSent", false);
+          boolean needReSend = intent.getBooleanExtra("needReSend", false);
+          String appName = intent.getStringExtra("appName");
+          String packageName = intent.getStringExtra("packageName");
+          int positionToReSend = intent.getIntExtra("positionToReSend", 100000);
 
-        if (!isSent || needReSend) {
-          listener.onAppStartingToSend(appName, packageName, needReSend, isSent, positionToReSend);
-        } else {
-          System.out.println("Application Sender : : : : Sent an App");
-          listener.onAppSent(appName, needReSend, isSent, false, positionToReSend);
+          if (!isSent || needReSend) {
+            listener.onAppStartingToSend(appName, packageName, needReSend, isSent, positionToReSend);
+          } else {
+            System.out.println("Application Sender : : : : Sent an App");
+            listener.onAppSent(appName, needReSend, isSent, false, positionToReSend);
+          }
         }
-      }
-    };
-    context.registerReceiver(send, intentFilter);
+      };
+      context.registerReceiver(send, intentFilter);
+    }
   }
 
   public Intent generateIntentToSend(List<App> selectedApps) {

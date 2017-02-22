@@ -814,13 +814,12 @@ public class HighwayTransferRecordActivity extends ActivityView
   }
 
   @Override public void showNewCard(HighwayTransferRecordItem item) {
-    if (receivedAppListView.getVisibility() == View.INVISIBLE) {
+    if (receivedAppListView.getVisibility() != View.VISIBLE) {
       receivedAppListView.setVisibility(View.VISIBLE);
     }
 
     if (adapter != null) {
       adapter.addTransferedItem(item);
-      adapter.notifyDataSetChanged();
     }
   }
 
