@@ -58,7 +58,7 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
   @Override public void bindView(StoreLatestCommentsDisplayable displayable) {
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     accountNavigator =
-        new AccountNavigator(NavigationManagerV4.Builder.buildWith(getContext()), accountManager);
+        new AccountNavigator(getNavigationManager(), accountManager);
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
     LinearLayoutManager layoutManager = new LinearLayoutManager(recyclerView.getContext());

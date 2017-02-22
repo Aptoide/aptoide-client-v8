@@ -20,7 +20,6 @@ import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.navigation.AccountNavigator;
-import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.util.schedulers.ConcreteSchedulerProvider;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -126,7 +125,7 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     dialogUtils = new DialogUtils(accountManager,
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext()),
-        new AccountNavigator(NavigationManagerV4.Builder.buildWith(getActivity()), accountManager));
+        new AccountNavigator(getNavigationManager(), accountManager));
     final RateAndReviewsPresenter presenter =
         new RateAndReviewsPresenter(appId, storeName, packageName, this,
             ConcreteSchedulerProvider.getInstance(), accountManager,

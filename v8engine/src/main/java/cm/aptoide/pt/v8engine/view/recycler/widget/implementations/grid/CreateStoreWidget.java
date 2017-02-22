@@ -34,7 +34,7 @@ public class CreateStoreWidget extends Widget<CreateStoreDisplayable> {
   @Override public void bindView(CreateStoreDisplayable displayable) {
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     accountNavigator =
-        new AccountNavigator(NavigationManagerV4.Builder.buildWith(getContext()), accountManager);
+        new AccountNavigator(getNavigationManager(), accountManager);
     if (accountManager.isLoggedIn()) {
       button.setText(R.string.create_store_displayable_button);
     } else {

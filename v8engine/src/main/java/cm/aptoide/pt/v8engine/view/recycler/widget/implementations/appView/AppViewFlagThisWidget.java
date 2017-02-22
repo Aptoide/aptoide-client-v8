@@ -15,7 +15,6 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.navigation.AccountNavigator;
-import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
@@ -80,7 +79,7 @@ import rx.android.schedulers.AndroidSchedulers;
   @Override public void bindView(AppViewFlagThisDisplayable displayable) {
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     accountNavigator =
-        new AccountNavigator(NavigationManagerV4.Builder.buildWith(getContext()), accountManager);
+        new AccountNavigator(getNavigationManager(), accountManager);
     GetApp pojo = displayable.getPojo();
     GetAppMeta.App app = pojo.getNodes().getMeta().getData();
 

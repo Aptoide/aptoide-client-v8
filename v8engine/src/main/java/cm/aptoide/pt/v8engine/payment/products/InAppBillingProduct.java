@@ -6,11 +6,12 @@
 package cm.aptoide.pt.v8engine.payment.products;
 
 import android.os.Parcel;
+import cm.aptoide.pt.v8engine.payment.Price;
 
 /**
  * Created by marcelobenites on 8/16/16.
  */
-public class InAppBillingProduct extends AptoideProduct {
+public class InAppBillingProduct extends ParcelableProduct {
 
   public static final Creator<InAppBillingProduct> CREATOR = new Creator<InAppBillingProduct>() {
     @Override public InAppBillingProduct createFromParcel(Parcel in) {
@@ -29,8 +30,8 @@ public class InAppBillingProduct extends AptoideProduct {
   private final String type;
 
   public InAppBillingProduct(int id, String icon, String title, String description, int apiVersion,
-      String sku, String packageName, String developerPayload, String type) {
-    super(id, icon, title, description);
+      String sku, String packageName, String developerPayload, String type, Price price) {
+    super(id, icon, title, description, price);
     this.apiVersion = apiVersion;
     this.sku = sku;
     this.packageName = packageName;

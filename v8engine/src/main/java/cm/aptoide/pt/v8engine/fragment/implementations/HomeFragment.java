@@ -81,7 +81,7 @@ public class HomeFragment extends StoreFragment {
     super.onCreate(savedInstanceState);
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     accountNavigator =
-        new AccountNavigator(NavigationManagerV4.Builder.buildWith(getActivity()), accountManager);
+        new AccountNavigator(getNavigationManager(), accountManager);
     updateRepository = RepositoryFactory.getUpdateRepository(getContext());
   }
 

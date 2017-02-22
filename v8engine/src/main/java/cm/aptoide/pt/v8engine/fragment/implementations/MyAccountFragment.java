@@ -70,7 +70,7 @@ public class MyAccountFragment extends GooglePlayServicesFragment implements MyA
         ((V8Engine) getActivity().getApplicationContext()).getAccountManager();
 
     AccountNavigator accountNavigator =
-        new AccountNavigator(NavigationManagerV4.Builder.buildWith(getActivity()), accountManager);
+        new AccountNavigator(getNavigationManager(), accountManager);
 
     final GoogleSignInOptions options =
         new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail()

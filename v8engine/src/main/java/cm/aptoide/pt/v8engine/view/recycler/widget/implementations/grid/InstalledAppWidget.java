@@ -77,7 +77,7 @@ import java.util.Locale;
         DataProvider.getContext());
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     final AccountNavigator accountNavigator =
-        new AccountNavigator(NavigationManagerV4.Builder.buildWith(getContext()), accountManager);
+        new AccountNavigator(getNavigationManager(), accountManager);
     this.accountNavigator = accountNavigator;
     dialogUtils = new DialogUtils(accountManager, aptoideClientUUID, accountNavigator);
     appName = pojo.getName();

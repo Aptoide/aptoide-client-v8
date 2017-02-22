@@ -27,7 +27,7 @@ public class PaymentAuthorizationAccessor extends SimpleAccessor<PaymentAuthoriz
   }
 
   public void updateAll(List<PaymentAuthorization> paymentAuthorizations) {
-    database.updateAll(PaymentAuthorization.class, paymentAuthorizations);
+    database.insertAll(paymentAuthorizations);
   }
 
   public void save(PaymentAuthorization paymentAuthorization) {

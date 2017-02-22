@@ -97,7 +97,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
     dialogUtils = new DialogUtils(accountManager, aptoideClientUUID,
-        new AccountNavigator(NavigationManagerV4.Builder.buildWith(getActivity()), accountManager));
+        new AccountNavigator(getNavigationManager(), accountManager));
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {

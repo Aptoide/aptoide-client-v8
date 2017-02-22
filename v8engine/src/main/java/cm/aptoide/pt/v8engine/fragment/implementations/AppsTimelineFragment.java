@@ -34,7 +34,6 @@ import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.model.v7.timeline.Video;
 import cm.aptoide.pt.navigation.AccountNavigator;
-import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
@@ -119,7 +118,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
-    accountNavigator = new AccountNavigator(NavigationManagerV4.Builder.buildWith(getActivity()), accountManager);
+    accountNavigator = new AccountNavigator(getNavigationManager(), accountManager);
     dateCalculator = new DateCalculator();
     spannableFactory = new SpannableFactory();
     downloadFactory = new DownloadFactory();

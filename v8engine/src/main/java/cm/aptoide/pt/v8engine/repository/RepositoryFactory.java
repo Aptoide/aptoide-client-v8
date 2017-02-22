@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.repository;
 
 import android.accounts.AccountManager;
 import android.content.Context;
+import android.support.v4.app.FragmentActivity;
 import android.telephony.TelephonyManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
@@ -22,13 +23,15 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.iab.InAppBillingSerializer;
+import cm.aptoide.pt.navigation.AccountNavigator;
+import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.payment.Payer;
 import cm.aptoide.pt.v8engine.payment.PaymentFactory;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.PurchaseFactory;
-import cm.aptoide.pt.v8engine.payment.products.AptoideProduct;
 import cm.aptoide.pt.v8engine.payment.products.InAppBillingProduct;
 import cm.aptoide.pt.v8engine.payment.products.PaidAppProduct;
 import cm.aptoide.pt.v8engine.repository.sync.SyncAdapterBackgroundSync;
@@ -65,18 +68,26 @@ public final class RepositoryFactory {
     return new DownloadRepository(AccessorFactory.getAccessorFor(Download.class));
   }
 
-  public static ProductRepository getProductRepository(Context context, AptoideProduct product) {
+  public static ProductRepository getProductRepository(Context context, Product product) {
     final PurchaseFactory purchaseFactory = new PurchaseFactory(new InAppBillingSerializer());
     final PaymentFactory paymentFactory = new PaymentFactory(context);
     final NetworkOperatorManager operatorManager = getNetworkOperatorManager(context);
     if (product instanceof InAppBillingProduct) {
       return new InAppBillingProductRepository(new InAppBillingRepository(operatorManager,
           AccessorFactory.getAccessorFor(PaymentConfirmation.class), getAccountManager(context)),
-          purchaseFactory, paymentFactory);
+          purchaseFactory, paymentFactory, (InAppBillingProduct) product);
     } else {
       return new PaidAppProductRepository(getAppRepository(context), purchaseFactory,
-          paymentFactory);
+          paymentFactory, (PaidAppProduct) product);
     }
+  }
+
+  public static PaymentRepository getPaymentRepository(FragmentActivity activity, Product product) {
+    return new PaymentRepository(getProductRepository(activity, product),
+        getPaymentConfirmationRepository(activity, product),
+        getPaymentAuthorizationRepository(activity), new PaymentAuthorizationFactory(activity),
+        new PaymentFactory(activity), new Payer(activity, getAccountManager(activity),
+        new AccountNavigator(NavigationManagerV4.Builder.buildWith(activity), getAccountManager(activity))));
   }
 
   public static AppRepository getAppRepository(Context context) {
@@ -95,12 +106,13 @@ public final class RepositoryFactory {
     if (product instanceof InAppBillingProduct) {
       return new InAppPaymentConfirmationRepository(getNetworkOperatorManager(context),
           AccessorFactory.getAccessorFor(PaymentConfirmation.class), getBackgroundSync(context),
-          new PaymentConfirmationFactory(), (InAppBillingProduct) product,
-          getAccountManager(context));
-    } else {
+          new PaymentConfirmationFactory(), getAccountManager(context));
+    } else if (product instanceof PaidAppProduct) {
       return new PaidAppPaymentConfirmationRepository(getNetworkOperatorManager(context),
           AccessorFactory.getAccessorFor(PaymentConfirmation.class), getBackgroundSync(context),
-          new PaymentConfirmationFactory(), (PaidAppProduct) product, getAccountManager(context));
+          new PaymentConfirmationFactory(), getAccountManager(context));
+    } else {
+      throw new IllegalArgumentException("No compatible repository for product " + product.getId());
     }
   }
 
@@ -122,6 +134,6 @@ public final class RepositoryFactory {
   }
 
   private static AptoideAccountManager getAccountManager(Context context) {
-    return ((V8Engine)context.getApplicationContext()).getAccountManager();
+    return ((V8Engine) context.getApplicationContext()).getAccountManager();
   }
 }

@@ -67,7 +67,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
     super.bindView(displayable);
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     accountNavigator =
-        new AccountNavigator(NavigationManagerV4.Builder.buildWith(getContext()), accountManager);
+        new AccountNavigator(getNavigationManager(), accountManager);
 
     if (displayable.getUserSharer() != null) {
       if (displayable.getUserSharer().getName() != null && !displayable.getUser()

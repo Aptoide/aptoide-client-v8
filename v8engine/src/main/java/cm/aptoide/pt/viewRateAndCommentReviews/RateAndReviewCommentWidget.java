@@ -27,7 +27,6 @@ import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.navigation.AccountNavigator;
-import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -101,7 +100,7 @@ import rx.Observable;
 
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     accountNavigator =
-        new AccountNavigator(NavigationManagerV4.Builder.buildWith(getContext()), accountManager);
+        new AccountNavigator(getNavigationManager(), accountManager);
     final FragmentActivity context = getContext();
     ImageLoader.with(context)
         .loadWithCircleTransformAndPlaceHolderAvatarSize(review.getUser().getAvatar(), userImage,

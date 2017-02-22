@@ -108,7 +108,7 @@ import rx.functions.Action1;
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     dialogUtils = new DialogUtils(accountManager, aptoideClientUUID,
-        new AccountNavigator(NavigationManagerV4.Builder.buildWith(getContext()), accountManager));
+        new AccountNavigator(getNavigationManager(), accountManager));
     appName = app.getName();
     packageName = app.getPackageName();
     storeName = app.getStore().getName();
