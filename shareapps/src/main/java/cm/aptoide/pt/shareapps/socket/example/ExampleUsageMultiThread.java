@@ -60,7 +60,7 @@ public class ExampleUsageMultiThread {
       private AndroidAppInfo buildAppInfo() {
         File apk = new File(LOCAL_FILE_NAME);
 
-        return new AndroidAppInfo(apk);
+        return new AndroidAppInfo("appName", "packageName", apk);
       }
     };
   }

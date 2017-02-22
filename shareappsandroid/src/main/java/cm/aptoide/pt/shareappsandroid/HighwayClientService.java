@@ -24,7 +24,6 @@ import cm.aptoide.pt.shareapps.socket.message.interfaces.StorageCapacity;
 import cm.aptoide.pt.shareapps.socket.message.messages.RequestPermissionToSend;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.TimerTask;
 
 import static android.R.attr.id;
@@ -94,13 +93,6 @@ public class HighwayClientService extends Service {
     };
 
     fileServerLifecycle = new FileServerLifecycle<AndroidAppInfo>() {
-      @Override public void onProgressChanged(float progress) {
-        System.out.println("onProgressChanged() called with: progress = [" + progress + "]");
-        //showToast("onProgressChanged() called with: progress = [" + progress + "]");
-        int actualProgress=Math.round(progress*100);
-        showSendProgress("insertAppName",actualProgress);
-      }
-
       @Override public void onStartSending(AndroidAppInfo o) {
         System.out.println(" Started sending ");
         showToast(" Started sending ");
@@ -116,7 +108,13 @@ public class HighwayClientService extends Service {
 
         //create notification for the app.
         createSendNotification();
+      }
 
+      @Override public void onProgressChanged(float progress) {
+        System.out.println("onProgressChanged() called with: progress = [" + progress + "]");
+        //showToast("onProgressChanged() called with: progress = [" + progress + "]");
+        int actualProgress = Math.round(progress * 100);
+        showSendProgress("insertAppName", actualProgress);
       }
 
       @Override public void onFinishSending(AndroidAppInfo o) {
@@ -144,6 +142,115 @@ public class HighwayClientService extends Service {
         Toast.makeText(getBaseContext(), str, Toast.LENGTH_SHORT).show();
       }
     });
+  }
+
+  private void createReceiveNotification(String receivingAppName) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+      mBuilderReceive = new Notification.Builder(this);
+      ((Notification.Builder) mBuilderReceive).setContentTitle(
+          this.getResources().getString(R.string.shareApps) + " - " + this.getResources()
+              .getString(R.string.receive))
+          .setContentText(
+              this.getResources().getString(R.string.receiving) + " " + receivingAppName)
+          .setSmallIcon(R.mipmap.lite);
+    }
+  }
+
+  private void finishReceiveNotification(String receivedApkFilePath) {
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+      ((Notification.Builder) mBuilderReceive).setContentText(
+          this.getResources().getString(R.string.transfCompleted))
+          // Removes the progress bar
+          .setSmallIcon(android.R.drawable.stat_sys_download_done)
+          .setProgress(0, 0, false)
+          .setAutoCancel(true);
+
+      File f = new File(receivedApkFilePath);
+      Intent install = new Intent(Intent.ACTION_VIEW).setDataAndType(Uri.fromFile(f),
+          "application/vnd.android.package-archive");
+      PendingIntent contentIntent = PendingIntent.getActivity(this, 0, install, 0);
+
+      ((Notification.Builder) mBuilderReceive).setContentIntent(contentIntent);
+      if (mNotifyManager == null) {
+        mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+      }
+      mNotifyManager.notify(id, ((Notification.Builder) mBuilderReceive).getNotification());
+    }
+  }
+
+  //  /**
+  //   * Method to be called after getting the callback of finishSending
+  //   */
+  //
+  //  public void finishedSending(String appName, String packageName) {
+  //    Intent finishedSending = new Intent();
+  //    finishedSending.setAction("SENDAPP");
+  //    finishedSending.putExtra("isSent", false);
+  //    finishedSending.putExtra("needReSend", false);
+  //    finishedSending.putExtra("appName", appName);
+  //    finishedSending.putExtra("packageName", packageName);
+  //    finishedSending.putExtra("positionToReSend", 100000);
+  //  }
+
+  private void showReceiveProgress(String receivingAppName, int actual) {
+
+    if (System.currentTimeMillis() - lastTimestampReceive > 1000 / 3) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+        ((Notification.Builder) mBuilderReceive).setContentText(
+            this.getResources().getString(R.string.receiving) + " " + receivingAppName);
+
+        ((Notification.Builder) mBuilderReceive).setProgress(100, actual, false);
+        if (mNotifyManager == null) {
+          mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        }
+        mNotifyManager.notify(id, ((Notification.Builder) mBuilderReceive).getNotification());
+      }
+      lastTimestampReceive = System.currentTimeMillis();
+    }
+  }
+
+  private void showSendProgress(String sendingAppName, int actual) {
+
+    if (System.currentTimeMillis() - lastTimestampSend > 1000 / 3) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+        ((Notification.Builder) mBuilderSend).setContentText(
+            this.getResources().getString(R.string.sending) + " " + sendingAppName);
+        ((Notification.Builder) mBuilderSend).setProgress(100, actual, false);
+        if (mNotifyManager == null) {
+          mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        }
+        mNotifyManager.notify(id, ((Notification.Builder) mBuilderSend).getNotification());
+      }
+      lastTimestampSend = System.currentTimeMillis();
+    }
+  }
+
+  private void createSendNotification() {
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+      mBuilderSend = new Notification.Builder(this);
+      ((Notification.Builder) mBuilderSend).setContentTitle(
+          this.getResources().getString(R.string.shareApps) + " - " + this.getResources()
+              .getString(R.string.send))
+          .setContentText(this.getResources().getString(R.string.preparingSend))
+          .setSmallIcon(R.mipmap.lite);
+    }
+  }
+
+  private void finishSendNotification() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+      ((Notification.Builder) mBuilderSend).setContentText(
+          this.getResources().getString(R.string.transfCompleted))
+          // Removes the progress bar
+          .setSmallIcon(android.R.drawable.stat_sys_download_done)
+          .setProgress(0, 0, false)
+          .setAutoCancel(true);
+      if (mNotifyManager == null) {
+        mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+      }
+      mNotifyManager.notify(id, ((Notification.Builder) mBuilderSend).getNotification());
+    }
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
@@ -193,7 +300,7 @@ public class HighwayClientService extends Service {
             System.out.println(" Filepath from app 0 (test) is:  "+filePath);
             File apk = new File(filePath);
 
-            AndroidAppInfo appInfo=new AndroidAppInfo(appName,packageName,filePath,apk);
+            AndroidAppInfo appInfo = new AndroidAppInfo(appName, packageName, apk);
 
             if(!obbsFilePath.equals("noObbs")){
 
@@ -220,115 +327,5 @@ public class HighwayClientService extends Service {
 
   @Nullable @Override public IBinder onBind(Intent intent) {
     return null;
-  }
-
-//  /**
-//   * Method to be called after getting the callback of finishSending
-//   */
-//
-//  public void finishedSending(String appName, String packageName) {
-//    Intent finishedSending = new Intent();
-//    finishedSending.setAction("SENDAPP");
-//    finishedSending.putExtra("isSent", false);
-//    finishedSending.putExtra("needReSend", false);
-//    finishedSending.putExtra("appName", appName);
-//    finishedSending.putExtra("packageName", packageName);
-//    finishedSending.putExtra("positionToReSend", 100000);
-//  }
-
-  private void createSendNotification() {
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-      mBuilderSend = new Notification.Builder(this);
-      ((Notification.Builder) mBuilderSend).setContentTitle(
-              this.getResources().getString(R.string.shareApps) + " - " + this.getResources()
-                      .getString(R.string.send))
-              .setContentText(this.getResources().getString(R.string.preparingSend))
-              .setSmallIcon(R.mipmap.lite);
-    }
-  }
-
-  private void showSendProgress(String sendingAppName, int actual) {
-
-    if (System.currentTimeMillis() - lastTimestampSend > 1000 / 3) {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-        ((Notification.Builder) mBuilderSend).setContentText(
-                this.getResources().getString(R.string.sending) + " " + sendingAppName);
-        ((Notification.Builder) mBuilderSend).setProgress(100, actual, false);
-        if (mNotifyManager == null) {
-          mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        }
-        mNotifyManager.notify(id, ((Notification.Builder) mBuilderSend).getNotification());
-      }
-      lastTimestampSend = System.currentTimeMillis();
-    }
-  }
-
-  private void finishSendNotification() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-      ((Notification.Builder) mBuilderSend).setContentText(
-              this.getResources().getString(R.string.transfCompleted))
-              // Removes the progress bar
-              .setSmallIcon(android.R.drawable.stat_sys_download_done)
-              .setProgress(0, 0, false)
-              .setAutoCancel(true);
-      if (mNotifyManager == null) {
-        mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-      }
-      mNotifyManager.notify(id, ((Notification.Builder) mBuilderSend).getNotification());
-    }
-  }
-
-  private void createReceiveNotification(String receivingAppName) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-      mBuilderReceive = new Notification.Builder(this);
-      ((Notification.Builder) mBuilderReceive).setContentTitle(
-              this.getResources().getString(R.string.shareApps) + " - " + this.getResources()
-                      .getString(R.string.receive))
-              .setContentText(
-                      this.getResources().getString(R.string.receiving) + " " + receivingAppName)
-              .setSmallIcon(R.mipmap.lite);
-
-    }
-  }
-
-  private void showReceiveProgress(String receivingAppName, int actual) {
-
-    if (System.currentTimeMillis() - lastTimestampReceive > 1000 / 3) {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-        ((Notification.Builder) mBuilderReceive).setContentText(
-                this.getResources().getString(R.string.receiving) + " " + receivingAppName);
-
-        ((Notification.Builder) mBuilderReceive).setProgress(100, actual, false);
-        if (mNotifyManager == null) {
-          mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        }
-        mNotifyManager.notify(id, ((Notification.Builder) mBuilderReceive).getNotification());
-      }
-      lastTimestampReceive = System.currentTimeMillis();
-    }
-  }
-
-  private void finishReceiveNotification(String receivedApkFilePath) {
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-      ((Notification.Builder) mBuilderReceive).setContentText(
-              this.getResources().getString(R.string.transfCompleted))
-              // Removes the progress bar
-              .setSmallIcon(android.R.drawable.stat_sys_download_done)
-              .setProgress(0, 0, false)
-              .setAutoCancel(true);
-
-      File f = new File(receivedApkFilePath);
-      Intent install = new Intent(Intent.ACTION_VIEW).setDataAndType(Uri.fromFile(f),
-              "application/vnd.android.package-archive");
-      PendingIntent contentIntent = PendingIntent.getActivity(this, 0, install, 0);
-
-      ((Notification.Builder) mBuilderReceive).setContentIntent(contentIntent);
-      if (mNotifyManager == null) {
-        mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-      }
-      mNotifyManager.notify(id, ((Notification.Builder) mBuilderReceive).getNotification());
-    }
   }
 }

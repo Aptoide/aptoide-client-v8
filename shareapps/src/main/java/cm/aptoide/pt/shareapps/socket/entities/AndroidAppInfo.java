@@ -17,55 +17,21 @@ import lombok.Data;
   private String filePath;
   private String obbsFilePath;
 
-  public AndroidAppInfo(String appName, String packageName, String filePath, String obbsFilePath, File apk) {
-    this.appName = appName;
-    this.packageName = packageName;
-    this.filePath = filePath;
-    this.obbsFilePath = obbsFilePath;
-    this.apk = new FileInfo(apk);
-  }
-
-  public AndroidAppInfo(String appName, String packageName, String filePath,File apk) {
-    this.appName = appName;
-    this.packageName = packageName;
-    this.filePath = filePath;
-    this.apk = new FileInfo(apk);
-  }
-
-
-  public AndroidAppInfo(File apk, File mainObb, File patchObb) {
-    this(apk, mainObb);
+  public AndroidAppInfo(String appName, String packageName, File apk, File mainObb, File patchObb) {
+    this(appName, packageName, apk, mainObb);
     this.patchObb = new FileInfo(patchObb);
   }
 
-  public AndroidAppInfo(File apk, File mainObb) {
-    this(apk);
+  public AndroidAppInfo(String appName, String packageName, File apk, File mainObb) {
+    this(appName, packageName, apk);
     this.mainObb = new FileInfo(mainObb);
   }
 
-  public AndroidAppInfo(File apk) {
+  public AndroidAppInfo(String appName, String packageName, File apk) {
+    this.appName = appName;
+    this.packageName = packageName;
     this.apk = new FileInfo(apk);
   }
-
-  //public String getAppName(){
-  //  return this.appName;
-  //}
-  //
-  //public String getPackageName(){
-  //  return this.packageName;
-  //}
-  //
-  //public String getFilePath(){
-  //  return this.filePath;
-  //}
-  //
-  //public String getObbsFilePath(){
-  //  if(obbsFilePath!=null && !obbsFilePath.isEmpty()){
-  //    return this.getObbsFilePath();
-  //  }else{
-  //    return "noObbs";
-  //  }
-  //}
 
   public List<String> getFilesPathsList() {
     List<String> list = new LinkedList<>();
