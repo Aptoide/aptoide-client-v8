@@ -27,21 +27,20 @@
       >
 
     <android.support.v7.widget.Toolbar
-      xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto"
-      android:id="@+id/toolbar"
-      android:layout_width="match_parent"
-      android:layout_height="112dp"
-      android:minHeight="112dp"
-      android:theme="?attr/toolbarTheme"
-      android:gravity="center"
-      android:layout_gravity="center"
-      app:layout_collapseMode="pin"
-      app:layout_scrollFlags="scroll|enterAlways"
-      app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-      app:titleMarginStart="20dp"
-      app:titleTextAppearance="@style/toolbar_title_style"
-    >
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:minHeight="112dp"
+        android:theme="?attr/toolbarTheme"
+        app:layout_collapseMode="pin"
+        app:layout_scrollFlags="scroll|enterAlways"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:titleMarginStart="20dp"
+        >
 
       <ImageView
           android:layout_width="match_parent"
