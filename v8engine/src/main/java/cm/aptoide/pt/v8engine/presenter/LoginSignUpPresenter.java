@@ -28,13 +28,13 @@ import rx.subscriptions.Subscriptions;
  * Created by marcelobenites on 06/02/17.
  */
 
-public class LoginPresenter implements Presenter {
+public class LoginSignUpPresenter implements Presenter {
 
   private final LoginSignUpView view;
   private final AptoideAccountManager accountManager;
   private final Collection<String> facebookRequiredPermissions;
 
-  public LoginPresenter(LoginSignUpView view, AptoideAccountManager accountManager,
+  public LoginSignUpPresenter(LoginSignUpView view, AptoideAccountManager accountManager,
       Collection<String> facebookRequiredPermissions) {
     this.view = view;
     this.accountManager = accountManager;
@@ -54,8 +54,7 @@ public class LoginPresenter implements Presenter {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.RESUME))
         .flatMap(resumed -> Observable.merge(forgotPasswordSelection(), successMessageShown(),
-            showSignUpClick(), showLoginClick(), showHidePassword())
-            .compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE)))
+            showHidePassword()).compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
   }
@@ -138,14 +137,6 @@ public class LoginPresenter implements Presenter {
     return view.successMessageShown().doOnNext(selection -> view.navigateToMainView());
   }
 
-  private Observable<Void> showSignUpClick() {
-    return view.showSignUpClick().doOnNext(__ -> view.setSignUpAreaVisible());
-  }
-
-  private Observable<Void> showLoginClick() {
-    return view.showAptoideLoginClick().doOnNext(selected -> view.setLoginAreaVisible());
-  }
-
   private Observable<Void> showHidePassword() {
     return view.showHidePasswordClick().doOnNext(__ -> {
       if (view.isPasswordVisible()) {
@@ -205,10 +196,10 @@ public class LoginPresenter implements Presenter {
   }
 
   @Override public void saveState(Bundle state) {
-
+    // does nothing
   }
 
   @Override public void restoreState(Bundle state) {
-
+    // does nothing
   }
 }

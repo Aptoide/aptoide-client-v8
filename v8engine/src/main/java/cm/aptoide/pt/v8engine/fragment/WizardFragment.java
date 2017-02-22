@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.fragment;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -62,6 +63,12 @@ public class WizardFragment extends FragmentView {
 
     viewPager.setAdapter(viewPagerAdapter);
     viewPager.setCurrentItem(0);
+
+    BottomSheetBehavior<View> bottomSheetBehavior =
+        BottomSheetBehavior.from(view.findViewWithTag("bottom_sheet"));
+    bottomSheetBehavior.setHideable(true);
+    bottomSheetBehavior.setSkipCollapsed(true);
+    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
   }
 
   private void createRadioButtons() {

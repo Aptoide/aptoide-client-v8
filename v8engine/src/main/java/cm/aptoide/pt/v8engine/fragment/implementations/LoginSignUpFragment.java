@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
@@ -21,14 +22,18 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.OAuthException;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
+import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.account.ErrorsMapper;
 import cm.aptoide.pt.v8engine.fragment.GoogleLoginFragment;
-import cm.aptoide.pt.v8engine.presenter.LoginPresenter;
+import cm.aptoide.pt.v8engine.presenter.LoginSignUpPresenter;
 import cm.aptoide.pt.v8engine.view.LoginSignUpView;
+import cm.aptoide.pt.v8engine.viewModel.AptoideAccountViewModel;
+import cm.aptoide.pt.v8engine.viewModel.FacebookAccountViewModel;
+import cm.aptoide.pt.v8engine.viewModel.GoogleAccountViewModel;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -49,6 +54,8 @@ public class LoginSignUpFragment extends GoogleLoginFragment implements LoginSig
   private static final String TAG = LoginSignUpFragment.class.getName();
 
   private static final String SKIP_BUTTON = "USE_SKIP_BUTTON";
+  private static final String CLEAR_BACK_STACK = "CLEAR_BACK_STACK";
+  private static final String IS_LOGIN = "IS_LOGIN";
 
   private ProgressDialog progressDialog;
   private CallbackManager callbackManager;
@@ -62,12 +69,9 @@ public class LoginSignUpFragment extends GoogleLoginFragment implements LoginSig
 
   private SignInButton googleLoginButton;
   private LoginButton facebookLoginButton;
-  private Button showLoginButton;
   private Button hideShowAptoidePasswordButton;
-  private View inputCredentials;
   private View loginArea;
   private View signUpArea;
-  private Button showSignUpButton;
   private EditText aptoideEmailEditText;
   private EditText aptoidePasswordEditText;
   private TextView forgotPasswordButton;
@@ -76,15 +80,25 @@ public class LoginSignUpFragment extends GoogleLoginFragment implements LoginSig
 
   private boolean isPasswordVisible = false;
   private boolean useSkipButton;
+  private boolean isLogin;
 
   public static LoginSignUpFragment newInstance() {
+    return newInstance(true);
+  }
+
+  public static LoginSignUpFragment newInstance(boolean isLogin) {
+    Fragment f = new LoginSignUpFragment();
+    Bundle args = new Bundle();
+    args.putBoolean(LoginSignUpFragment.IS_LOGIN, isLogin);
+    f.setArguments(args);
     return new LoginSignUpFragment();
   }
 
-  public static Fragment newInstance(boolean useSkip) {
+  public static Fragment newInstance(boolean useSkip, boolean isLogin) {
     Fragment f = new LoginSignUpFragment();
     Bundle args = new Bundle();
     args.putBoolean(LoginSignUpFragment.SKIP_BUTTON, useSkip);
+    args.putBoolean(LoginSignUpFragment.IS_LOGIN, isLogin);
     f.setArguments(args);
     return f;
   }
@@ -100,31 +114,6 @@ public class LoginSignUpFragment extends GoogleLoginFragment implements LoginSig
     return R.layout.fragment_login_sign_up;
   }
 
-  @Override public boolean onBackPressed() {
-    if (areInputFieldsVisible()) {
-      toggleInputFieldsVisibility(false);
-      return true;
-    }
-
-    return super.onBackPressed();
-  }
-
-  // to use when back is pressed
-  private boolean areInputFieldsVisible() {
-    return inputCredentials.getVisibility() == View.VISIBLE;
-  }
-
-  private void toggleInputFieldsVisibility(boolean inputFieldsVisible) {
-    inputCredentials.setVisibility(inputFieldsVisible ? View.VISIBLE : View.GONE);
-    if (inputFieldsVisible) {
-      showLoginButton.setVisibility(View.GONE);
-      showSignUpButton.setVisibility(View.GONE);
-    } else {
-      showSignUpButton.setVisibility(View.VISIBLE);
-      showLoginButton.setVisibility(View.VISIBLE);
-    }
-  }
-
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
@@ -137,11 +126,13 @@ public class LoginSignUpFragment extends GoogleLoginFragment implements LoginSig
       Log.e(TAG, "implement this.");
     }
 
+    isLogin = args != null && args.getBoolean(IS_LOGIN, true);
+
     bindViews(view);
 
     final AptoideAccountManager accountManager =
         ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    attachPresenter(new LoginPresenter(this, accountManager, facebookRequestedPermissions),
+    attachPresenter(new LoginSignUpPresenter(this, accountManager, facebookRequestedPermissions),
         savedInstanceState);
   }
 
@@ -150,9 +141,7 @@ public class LoginSignUpFragment extends GoogleLoginFragment implements LoginSig
 
     googleLoginButton = (SignInButton) view.findViewById(R.id.g_sign_in_button);
 
-    showLoginButton = (Button) view.findViewById(R.id.button_select_login);
     buttonLogin = (Button) view.findViewById(R.id.button_login);
-    showSignUpButton = (Button) view.findViewById(R.id.button_select_sign_up);
     buttonSignUp = (Button) view.findViewById(R.id.button_sign_up);
     aptoideEmailEditText = (EditText) view.findViewById(R.id.username);
     aptoidePasswordEditText = (EditText) view.findViewById(R.id.password);
@@ -163,12 +152,11 @@ public class LoginSignUpFragment extends GoogleLoginFragment implements LoginSig
     facebookLoginManager = LoginManager.getInstance();
     facebookLoginSubject = PublishRelay.create();
 
-    inputCredentials = view.findViewById(R.id.login_fields);
     loginArea = view.findViewById(R.id.login_button_area);
     signUpArea = view.findViewById(R.id.sign_up_button_area);
 
     successSnackbar =
-        Snackbar.make(showLoginButton, cm.aptoide.accountmanager.R.string.login_successful,
+        Snackbar.make(buttonLogin, cm.aptoide.accountmanager.R.string.login_successful,
             Snackbar.LENGTH_SHORT);
 
     final Context context = getContext();
@@ -183,14 +171,16 @@ public class LoginSignUpFragment extends GoogleLoginFragment implements LoginSig
         .create();
 
     progressDialog = GenericDialogs.createGenericPleaseWaitDialog(context);
+    showLoginOrSignUpArea();
+  }
+
+  private void showLoginOrSignUpArea() {
+    loginArea.setVisibility(isLogin ? View.VISIBLE : View.GONE);
+    signUpArea.setVisibility(isLogin ? View.GONE : View.VISIBLE);
   }
 
   @Override protected SignInButton getGoogleButton() {
     return googleLoginButton;
-  }
-
-  @Override protected void showGoogleLoginError() {
-    ShowMessage.asSnack(showLoginButton, cm.aptoide.accountmanager.R.string.unknown_error);
   }
 
   @Override public void showGoogleLogin() {
@@ -203,13 +193,17 @@ public class LoginSignUpFragment extends GoogleLoginFragment implements LoginSig
     googleLoginButton.setVisibility(View.GONE);
   }
 
+  @Override public Observable<GoogleAccountViewModel> googleLoginClick() {
+    return Observable.empty();
+  }
+
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     callbackManager.onActivityResult(requestCode, resultCode, data);
   }
 
-  @Override public Observable<GoogleAccountViewModel> googleLoginClick() {
-    return Observable.empty();
+  @Override protected void showGoogleLoginError() {
+    ShowMessage.asSnack(buttonLogin, cm.aptoide.accountmanager.R.string.unknown_error);
   }
 
   @Override public void showLoading() {
@@ -229,7 +223,7 @@ public class LoginSignUpFragment extends GoogleLoginFragment implements LoginSig
     } else {
       message = getString(cm.aptoide.accountmanager.R.string.unknown_error);
     }
-    ShowMessage.asSnack(showLoginButton, message);
+    ShowMessage.asSnack(buttonLogin, message);
   }
 
   @Override public void showFacebookLogin() {
@@ -257,19 +251,7 @@ public class LoginSignUpFragment extends GoogleLoginFragment implements LoginSig
   }
 
   @Override public void showCheckAptoideCredentialsMessage() {
-    ShowMessage.asSnack(showLoginButton, cm.aptoide.accountmanager.R.string.fields_cannot_empty);
-  }
-
-  @Override public void setLoginAreaVisible() {
-    toggleInputFieldsVisibility(true);
-    loginArea.setVisibility(View.VISIBLE);
-    signUpArea.setVisibility(View.GONE);
-  }
-
-  @Override public void setSignUpAreaVisible() {
-    toggleInputFieldsVisibility(true);
-    loginArea.setVisibility(View.GONE);
-    signUpArea.setVisibility(View.VISIBLE);
+    ShowMessage.asSnack(buttonLogin, cm.aptoide.accountmanager.R.string.fields_cannot_empty);
   }
 
   @Override public void hideFacebookLogin() {
@@ -299,12 +281,18 @@ public class LoginSignUpFragment extends GoogleLoginFragment implements LoginSig
     return RxView.clicks(forgotPasswordButton);
   }
 
-  @Override public Observable<Void> showSignUpClick() {
-    return RxView.clicks(showSignUpButton);
-  }
-
   @Override public void navigateToMainView() {
-    getActivity().finish();
+    Fragment home =
+        HomeFragment.newInstance(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home,
+            V8Engine.getConfiguration().getDefaultTheme());
+
+    // clean all the back stack in the Fragment Manager
+    final FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+    if (fragmentManager.getBackStackEntryCount() > 0) {
+      while (fragmentManager.popBackStackImmediate()) ;
+    }
+
+    getNavigationManager().navigateTo(home);
   }
 
   @Override public Observable<Void> successMessageShown() {
@@ -317,10 +305,6 @@ public class LoginSignUpFragment extends GoogleLoginFragment implements LoginSig
 
   @Override public Observable<FacebookAccountViewModel> facebookLoginClick() {
     return facebookLoginSubject;
-  }
-
-  @Override public Observable<Void> showAptoideLoginClick() {
-    return RxView.clicks(showLoginButton);
   }
 
   @Override public Observable<AptoideAccountViewModel> aptoideLoginClick() {
@@ -339,7 +323,17 @@ public class LoginSignUpFragment extends GoogleLoginFragment implements LoginSig
     return isPasswordVisible;
   }
 
+  @Override public void showAptoideLogin() {
+    isLogin = true;
+    showLoginOrSignUpArea();
+  }
+
+  @Override public void showSignUp() {
+    isLogin = false;
+    showLoginOrSignUpArea();
+  }
+
   private void showFacebookLoginError(@StringRes int errorRes) {
-    ShowMessage.asSnack(showLoginButton, errorRes);
+    ShowMessage.asSnack(buttonLogin, errorRes);
   }
 }

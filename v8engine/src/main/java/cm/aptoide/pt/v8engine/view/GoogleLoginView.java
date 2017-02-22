@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.view;
 
+import cm.aptoide.pt.v8engine.viewModel.GoogleAccountViewModel;
 import rx.Observable;
 
 /**
@@ -16,6 +17,5 @@ public interface GoogleLoginView extends View {
 
   void hideGoogleLogin();
 
-  Observable<LoginSignUpView.GoogleAccountViewModel> googleLoginClick();
-
+  Observable<GoogleAccountViewModel> googleLoginClick();
 }

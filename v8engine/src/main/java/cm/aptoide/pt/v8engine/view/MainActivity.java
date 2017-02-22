@@ -98,8 +98,8 @@ public class MainActivity extends BaseActivity implements MainView, FragmentShow
 
   @Override public void showHome() {
     NavigationManagerV4 nav = getNavigationManager();
-    nav.navigateTo(V8Engine.getFragmentProvider()
-        .newHomeFragment(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home,
+    nav.navigateTo(
+        HomeFragment.newInstance(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home,
             V8Engine.getConfiguration().getDefaultTheme()));
   }
 

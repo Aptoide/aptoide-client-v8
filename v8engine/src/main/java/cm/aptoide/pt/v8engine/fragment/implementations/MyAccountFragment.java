@@ -8,7 +8,6 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,22 +20,24 @@ import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.GooglePlayServicesFragment;
+import cm.aptoide.pt.v8engine.presenter.MyAccountPresenter;
+import cm.aptoide.pt.v8engine.view.MyAccountView;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
+import com.jakewharton.rxbinding.view.RxView;
+import rx.Observable;
 
 import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
 /**
  * Created by trinkes on 5/2/16.
  */
-public class MyAccountFragment extends GooglePlayServicesFragment {
+public class MyAccountFragment extends GooglePlayServicesFragment implements MyAccountView {
 
-  private Button mLogout;
+  private Button logoutButton;
   private TextView usernameTextView;
-  private AptoideAccountManager accountManager;
-  private AccountNavigator accountNavigator;
   private GoogleApiClient client;
 
   public static Fragment newInstance() {
@@ -48,7 +49,7 @@ public class MyAccountFragment extends GooglePlayServicesFragment {
       @Nullable Bundle savedInstanceState) {
     View view = inflate(inflater);
 
-    mLogout = (Button) view.findViewById(R.id.button_logout);
+    logoutButton = (Button) view.findViewById(R.id.button_logout);
     usernameTextView = (TextView) view.findViewById(R.id.username);
 
     return view;
@@ -58,27 +59,31 @@ public class MyAccountFragment extends GooglePlayServicesFragment {
     return layoutInflater.inflate(R.layout.my_account_activity, null);
   }
 
+  public Observable<Void> signOutClick() {
+    return RxView.clicks(logoutButton);
+  }
+
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    final FragmentActivity parentActivity = getActivity();
-    mLogout.setOnClickListener(v -> {
-      accountManager.logout(client);
-      accountNavigator.navigateToAccountView();
-      parentActivity.finish();
-    });
-    accountManager = ((V8Engine) parentActivity.getApplicationContext()).getAccountManager();
+    AptoideAccountManager accountManager =
+        ((V8Engine) getActivity().getApplicationContext()).getAccountManager();
 
-    accountNavigator =
+    AccountNavigator accountNavigator =
         new AccountNavigator(NavigationManagerV4.Builder.buildWith(getActivity()), accountManager);
+
     final GoogleSignInOptions options =
         new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail()
             .requestScopes(new Scope("https://www.googleapis.com/auth/contacts.readonly"))
             .requestScopes(new Scope(Scopes.PROFILE))
             .requestServerAuthCode(BuildConfig.GMS_SERVER_ID)
             .build();
+
     client = getClientBuilder().addApi(GOOGLE_SIGN_IN_API, options).build();
     usernameTextView.setText(accountManager.getUserEmail());
+
+    attachPresenter(new MyAccountPresenter(this, accountManager, accountNavigator, client),
+        savedInstanceState);
   }
 
   @Override protected void connect() {

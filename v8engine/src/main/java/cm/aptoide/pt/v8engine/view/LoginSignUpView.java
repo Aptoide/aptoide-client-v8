@@ -5,8 +5,8 @@
 
 package cm.aptoide.pt.v8engine.view;
 
-import com.facebook.AccessToken;
-import java.util.Set;
+import cm.aptoide.pt.v8engine.viewModel.AptoideAccountViewModel;
+import cm.aptoide.pt.v8engine.viewModel.FacebookAccountViewModel;
 import rx.Observable;
 
 /**
@@ -27,10 +27,6 @@ public interface LoginSignUpView extends GoogleLoginView {
 
   void showCheckAptoideCredentialsMessage();
 
-  void setLoginAreaVisible();
-
-  void setSignUpAreaVisible();
-
   void hideFacebookLogin();
 
   void navigateToForgotPasswordView();
@@ -43,8 +39,6 @@ public interface LoginSignUpView extends GoogleLoginView {
 
   Observable<Void> forgotPasswordClick();
 
-  Observable<Void> showSignUpClick();
-
   void navigateToMainView();
 
   Observable<Void> successMessageShown();
@@ -53,75 +47,13 @@ public interface LoginSignUpView extends GoogleLoginView {
 
   Observable<FacebookAccountViewModel> facebookLoginClick();
 
-  Observable<Void> showAptoideLoginClick();
-
   Observable<AptoideAccountViewModel> aptoideLoginClick();
 
   Observable<AptoideAccountViewModel> aptoideSignUpClick();
 
   boolean isPasswordVisible();
 
-  class AptoideAccountViewModel {
+  void showAptoideLogin();
 
-    private final String username;
-    private final String password;
-
-    public AptoideAccountViewModel(String username, String password) {
-      this.username = username;
-      this.password = password;
-    }
-
-    public String getUsername() {
-      return username;
-    }
-
-    public String getPassword() {
-      return password;
-    }
-  }
-
-  class GoogleAccountViewModel {
-
-    private final String displayName;
-    private final String token;
-    private final String email;
-
-    public GoogleAccountViewModel(String displayName, String token, String email) {
-      this.displayName = displayName;
-      this.token = token;
-      this.email = email;
-    }
-
-    public String getDisplayName() {
-      return displayName;
-    }
-
-    public String getToken() {
-      return token;
-    }
-
-    public String getEmail() {
-      return email;
-    }
-  }
-
-  class FacebookAccountViewModel {
-
-    private final AccessToken token;
-    private final Set<String> deniedPermissions;
-
-    public FacebookAccountViewModel(AccessToken token, Set<String> deniedPermissions) {
-      this.token = token;
-      this.deniedPermissions = deniedPermissions;
-    }
-
-    public AccessToken getToken() {
-      return token;
-    }
-
-    public Set<String> getDeniedPermissions() {
-      return deniedPermissions;
-    }
-  }
-
+  void showSignUp();
 }

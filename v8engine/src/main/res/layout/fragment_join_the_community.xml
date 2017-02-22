@@ -1,71 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="20dp"
+    android:weightSum="11"
+    tools:background="@color/aptoide_orange"
     >
+
+  <ImageView
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_gravity="center"
+      android:layout_weight="2"
+      android:paddingEnd="80dp"
+      android:paddingLeft="80dp"
+      android:paddingRight="80dp"
+      android:paddingStart="80dp"
+      android:src="@drawable/wizard_aptoide_logo"
+      android:tint="@android:color/white"
+      />
+
+  <TextView
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_weight="2"
+      android:gravity="bottom|center_horizontal"
+      android:paddingEnd="80dp"
+      android:paddingLeft="80dp"
+      android:paddingRight="80dp"
+      android:paddingStart="80dp"
+      android:text="Join the community"
+      android:textAlignment="center"
+      android:textColor="@color/light_custom_gray"
+      android:textSize="26sp"
+      />
+
+  <TextView
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_marginTop="40dp"
+      android:layout_weight="3"
+      android:gravity="top|center_horizontal"
+      android:paddingEnd="80dp"
+      android:paddingLeft="80dp"
+      android:paddingRight="80dp"
+      android:paddingStart="80dp"
+      android:text="Sign up and start creating your user profile and Store. Engage with the community by uploading, rating and sharing apps that you like."
+      android:textAlignment="center"
+      android:textColor="@color/light_custom_gray"
+      android:textSize="14sp"
+      />
+
   <LinearLayout
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
+      android:layout_height="0dp"
+      android:layout_marginEnd="15dp"
+      android:layout_marginLeft="15dp"
+      android:layout_marginRight="15dp"
+      android:layout_marginStart="15dp"
+      android:layout_weight="4"
       android:orientation="vertical"
       >
-
-    <ImageView
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/fb_login_button"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:paddingEnd="80dp"
-        android:paddingLeft="80dp"
-        android:paddingRight="80dp"
-        android:paddingStart="80dp"
-        android:src="@drawable/wizard_aptoide_logo"
-        android:tint="@android:color/white"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        />
+
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/g_sign_in_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
         />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_height="52dp"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal"
+        android:weightSum="2"
         >
-
-      <TextView
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:paddingEnd="80dp"
-          android:paddingLeft="80dp"
-          android:paddingRight="80dp"
-          android:paddingStart="80dp"
-          android:text="Join the community"
-          android:textAlignment="center"
-          android:textColor="@color/light_custom_gray"
-          android:textSize="22sp"
+      <Button
+          android:id="@+id/button_select_sign_up"
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:layout_weight="1"
+          android:text="@string/register"
+          style="?attr/customButtonWhite"
           />
 
-      <TextView
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="40dp"
-          android:paddingEnd="80dp"
-          android:paddingLeft="80dp"
-          android:paddingRight="80dp"
-          android:paddingStart="80dp"
-          android:text="Sign up and start creating your user profile and Store. Engage with the community by uploading, rating and sharing apps that you like."
-          android:textAlignment="center"
-          android:textColor="@color/light_custom_gray"
-          android:textSize="12sp"
+      <Button
+          android:id="@+id/button_select_login"
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:layout_weight="1"
+          android:text="@string/login"
+          style="?attr/customButtonWhite"
           />
-
     </LinearLayout>
-
-    <FrameLayout
-        android:id="@+id/login_signup_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|bottom"
-        android:layout_marginTop="40dp"
-        tools:layout="@layout/fragment_login_sign_up"
-        />
 
   </LinearLayout>
 
-</ScrollView>
+</LinearLayout>
