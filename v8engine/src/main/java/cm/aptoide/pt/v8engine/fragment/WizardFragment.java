@@ -56,10 +56,14 @@ public class WizardFragment extends FragmentView {
     skipText = view.findViewById(R.id.skip_text);
     nextIcon = view.findViewById(R.id.next_icon);
 
+    ArrayList<Fragment> fragmentList = new ArrayList<>();
+    fragmentList.add(WizardPageOneFragment.newInstance());
+    fragmentList.add(WizardPageTwoFragment.newInstance());
+    //fragmentList.add(WizardPageThreeFragment.newInstance());
+    fragmentList.add(JoinCommunityFragment.newInstance());
+
     viewPagerAdapter = new DumbEagerFragmentPagerAdapter(getActivity().getSupportFragmentManager());
-    viewPagerAdapter.attachFragments(WizardPageOneFragment.newInstance(),
-        WizardPageTwoFragment.newInstance(), //WizardPageThreeFragment.newInstance(),
-        JoinCommunityFragment.newInstance());
+    viewPagerAdapter.attachFragments(fragmentList);
 
     viewPager.setAdapter(viewPagerAdapter);
     viewPager.setCurrentItem(0);

@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by jdandrade on 18-07-2016.
@@ -12,15 +12,14 @@ import java.util.Collections;
  */
 public class DumbEagerFragmentPagerAdapter extends FragmentPagerAdapter {
 
-  private final ArrayList<Fragment> fragments = new ArrayList<>(4);
+  private final ArrayList<Fragment> fragments = new ArrayList<>();
 
   public DumbEagerFragmentPagerAdapter(FragmentManager fragmentManager) {
     super(fragmentManager);
-    attachFragments();
   }
 
-  public void attachFragments(Fragment... fragments) {
-    Collections.addAll(this.fragments, fragments);
+  public void attachFragments(List<Fragment> fragments) {
+    this.fragments.addAll(fragments);
   }
 
   @Override public int getCount() {
