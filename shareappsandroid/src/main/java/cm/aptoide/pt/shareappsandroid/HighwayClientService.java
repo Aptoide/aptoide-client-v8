@@ -79,7 +79,7 @@ public class HighwayClientService extends Service {
         i.putExtra("needReSend", false);
         i.putExtra("appName",androidAppInfo.getAppName());
         i.putExtra("packageName",androidAppInfo.getPackageName());
-        i.putExtra("tmpFilePath",androidAppInfo.getApk().getFilePath());
+        i.putExtra("filePath",androidAppInfo.getApk().getFilePath());
         i.setAction("RECEIVEAPP");
         sendBroadcast(i);
       }

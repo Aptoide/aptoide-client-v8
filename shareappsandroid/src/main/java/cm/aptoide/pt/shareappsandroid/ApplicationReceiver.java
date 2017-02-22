@@ -44,9 +44,10 @@ public class ApplicationReceiver {
         boolean finishedReceiving = intent.getBooleanExtra("FinishedReceiving", false);
         String appName = intent.getStringExtra("appName");
         if (finishedReceiving) {
-          String tmpFilePath = intent.getStringExtra("tempFilePath");
+          String filePath = intent.getStringExtra("filePath");
+          String packageName = intent.getStringExtra("packageName");
           boolean needResend = intent.getBooleanExtra("needReSend", false);
-          listener.onReceivedApp(appName, tmpFilePath, needResend);
+          listener.onReceivedApp(appName, filePath, needResend);
         } else {
           listener.onStartedReceiving(appName);
         }
@@ -104,6 +105,6 @@ public class ApplicationReceiver {
 
     void onStartedReceiving(String appName);
 
-    void onReceivedApp(String appName, String tmpFilePath, boolean needResend);
+    void onReceivedApp(String appName, String filePath, boolean needResend);
   }
 }

@@ -55,8 +55,8 @@ public class TransferRecordManager {
     return app;
   }
 
-  public HighwayTransferRecordItem readApkArchive(String filePath, boolean needReSend) {
-    HighwayTransferRecordItem item = applicationsManager.readApkArchive(filePath, needReSend);
+  public HighwayTransferRecordItem readApkArchive(String appName, String filePath, boolean needReSend) {
+    HighwayTransferRecordItem item = applicationsManager.readApkArchive(appName, filePath, needReSend);
     return item;
   }
 

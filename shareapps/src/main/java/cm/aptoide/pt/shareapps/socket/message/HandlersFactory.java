@@ -132,7 +132,7 @@ public class HandlersFactory {
 
     private String changeFilesRootDir(AndroidAppInfo androidAppInfo) {
       String packageName = androidAppInfo.getPackageName();
-      String rootToFiles = root + "/" + packageName;
+      String rootToFiles = root + File.separatorChar + packageName;
 
       for (FileInfo fileInfo : androidAppInfo.getFileInfosList()) {
         fileInfo.setParentDirectory(rootToFiles);

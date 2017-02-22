@@ -83,23 +83,20 @@ public class ApplicationsManager {
     return obbsFilePath;
   }
 
-  public HighwayTransferRecordItem readApkArchive(String tmpFilePath, boolean needReSend) {
-    String receivedApkFilePath =
-        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-            + "/"
-            + tmpFilePath;
+  public HighwayTransferRecordItem readApkArchive(String appName, String filePath, boolean needReSend) {
+
     PackageManager packageManager = context.getPackageManager();
-    PackageInfo packageInfo = packageManager.getPackageArchiveInfo(receivedApkFilePath, 0);
+    PackageInfo packageInfo = packageManager.getPackageArchiveInfo(filePath, 0);
     if (packageInfo != null) {
-      packageInfo.applicationInfo.sourceDir = receivedApkFilePath;
-      packageInfo.applicationInfo.publicSourceDir = receivedApkFilePath;
+      packageInfo.applicationInfo.sourceDir = filePath;
+      packageInfo.applicationInfo.publicSourceDir = filePath;
       Drawable icon = packageInfo.applicationInfo.loadIcon(packageManager);
-      String appName = (String) packageInfo.applicationInfo.loadLabel(packageManager);
+      String name = (String) packageInfo.applicationInfo.loadLabel(packageManager);
       String packageName = packageInfo.applicationInfo.packageName;
       String versionName = packageInfo.versionName;
       //            App aux=new App(icon,appName,receivedFilePath);
       HighwayTransferRecordItem tmp =
-          new HighwayTransferRecordItem(icon, appName, packageName, receivedApkFilePath, true,
+          new HighwayTransferRecordItem(icon, name, packageName, filePath, true,
               versionName);// received e o bool metido no intent.
       tmp.setFromOutside("inside");
       //            if (!listOfItems.contains(tmp)) {
@@ -112,7 +109,7 @@ public class ApplicationsManager {
       //            if (!needReSend) {// nao foi dos problemas do send e dos clientes, Ou seja, foi ele que nao conseguiu abrir mesmo.
       System.out.println("Inside the error part of the receiving app bigger version");
       HighwayTransferRecordItem tmp = new HighwayTransferRecordItem(
-          context.getResources().getDrawable(android.R.drawable.sym_def_app_icon), tmpFilePath,
+          context.getResources().getDrawable(android.R.drawable.sym_def_app_icon), appName,
           "ErrorPackName", "Could not read the original filepath", true, "No version available");
       tmp.setFromOutside("inside");
       return tmp;

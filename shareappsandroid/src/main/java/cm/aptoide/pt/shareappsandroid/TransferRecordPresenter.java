@@ -42,10 +42,10 @@ public class TransferRecordPresenter implements Presenter {
         //future
       }
 
-      @Override public void onReceivedApp(String appName, String tmpFilePath, boolean needReSend) {
+      @Override public void onReceivedApp(String appName, String filePath, boolean needReSend) {
         //                String receivedApkFilePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + tmpFilePath;
         HighwayTransferRecordItem item =
-            transferRecordManager.readApkArchive(tmpFilePath, needReSend);
+            transferRecordManager.readApkArchive(appName, filePath, needReSend);
         if (!listOfApps.contains(item)) {
           listOfApps.add(item);
         }
@@ -177,10 +177,12 @@ public class TransferRecordPresenter implements Presenter {
     if (isHotspot) {
       connectedClients = DataHolder.getInstance()
           .getConnectedClients();//to-do extract to a model with a broadcastreceiver to listen to connect's and disconnect's
-      if (connectedClients != null || connectedClients.size() < 1) {
+      if (connectedClients == null || connectedClients.size() < 1) {
         view.showNoConnectedClientsToast();
+      }else {
+        view.openAppSelectionView();
       }
-    } else {
+    }else {
       view.openAppSelectionView();
     }
   }

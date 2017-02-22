@@ -20,16 +20,10 @@ public class HighwayTransferRecordCustomAdapter extends BaseAdapter {
 
   private Context context;
   private ViewHolder viewHolder;
-  private View view;
-  //    private Activity activity;
   private List<HighwayTransferRecordItem> listOfItems;
-  private String appName;
-  private String filePath;
   private MyOnClickListenerToInstall myOnClickListenerToInstall;
   private MyOnClickListenerToDelete myOnClickListenerToDelete;
   private HighwayTransferRecordView.TransferRecordListener listener;
-  private String versionName;
-  private boolean resend;
 
   public HighwayTransferRecordCustomAdapter(Context context,
       List<HighwayTransferRecordItem> listOfItems) {
