@@ -151,7 +151,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     });
 
     CheckBoxPreference matureChkBox = (CheckBoxPreference) findPreference("matureChkBox");
-    if (accountManager.getAccount().isMature()) {
+    if (accountManager.isAccountMature()) {
       matureChkBox.setChecked(true);
     } else {
       matureChkBox.setChecked(false);

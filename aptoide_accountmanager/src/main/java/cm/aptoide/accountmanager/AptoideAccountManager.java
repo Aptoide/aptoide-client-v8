@@ -107,13 +107,6 @@ public class AptoideAccountManager {
     }).onErrorReturn(throwable -> null).toBlocking().value();
   }
 
-  public Account.Type getAccountType() {
-    return getAccountAsync().map(account -> account.getType())
-        .onErrorReturn(throwable -> null)
-        .toBlocking()
-        .value();
-  }
-
   public Completable login(Account.Type type, final String email, final String password,
       final String name) {
     return OAuth2AuthenticationRequest.of(email, password, type, name,
@@ -170,11 +163,6 @@ public class AptoideAccountManager {
             return Completable.error(new OAuthException(oAuth));
           }
         });
-  }
-
-  public String getUserEmail() {
-    final Account account = getAccount();
-    return account == null ? null : account.getEmail();
   }
 
   public Completable createAccount(String email, String password) {
@@ -321,6 +309,26 @@ public class AptoideAccountManager {
     return getAccountAsync().onErrorReturn(throwable -> null).toBlocking().value();
   }
 
+  public String getAccessToken() {
+    final Account account = getAccount();
+    return account == null ? null : account.getToken();
+  }
+
+  public Account.Type getAccountType() {
+    final Account account = getAccount();
+    return account == null ? null : account.getType();
+  }
+
+  public String getUserEmail() {
+    final Account account = getAccount();
+    return account == null ? null : account.getEmail();
+  }
+
+  public boolean isAccountMature() {
+    final Account account = getAccount();
+    return account == null ? false: account.isMature();
+  }
+
   private Single<android.accounts.Account> getAndroidAccountAsync() {
     return Single.defer(() -> {
       final android.accounts.Account[] accounts =
@@ -352,13 +360,6 @@ public class AptoideAccountManager {
           }
           return Completable.error(new IllegalStateException("Failed to refresh account"));
         });
-  }
-
-  public String getAccessToken() {
-    return getAccountAsync().onErrorReturn(throwable -> null)
-        .map(account -> account == null ? null : account.getToken())
-        .toBlocking()
-        .value();
   }
 
   public boolean isGoogleLoginEnabled() {
