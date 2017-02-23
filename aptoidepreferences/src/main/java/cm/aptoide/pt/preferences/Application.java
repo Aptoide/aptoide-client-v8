@@ -33,7 +33,7 @@ public abstract class Application extends android.app.Application {
     AptoideUtils.setContext(this);
   }
 
-  @Partners protected abstract AptoidePreferencesConfiguration createConfiguration();
+  @Partners public abstract AptoidePreferencesConfiguration createConfiguration();
 
   @Override public void onCreate() {
     super.onCreate();

@@ -15,7 +15,7 @@ import android.widget.RadioGroup;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.adapters.DumbEagerFragmentPagerAdapter;
-import cm.aptoide.pt.v8engine.fragment.implementations.JoinCommunityFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.LoginSignUpFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.WizardPageOneFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.WizardPageTwoFragment;
 import com.jakewharton.rxbinding.support.v4.view.RxViewPager;
@@ -31,7 +31,7 @@ import java.util.ArrayList;
  */
 // TODO: 16/2/2017 sithengineer add MVP to this view
 public class WizardFragment extends FragmentView
-    implements JoinCommunityFragment.BottomSheetStateListener {
+    implements LoginSignUpFragment.BottomSheetStateListener {
 
   private DumbEagerFragmentPagerAdapter viewPagerAdapter;
   private ViewPager viewPager;
@@ -66,7 +66,7 @@ public class WizardFragment extends FragmentView
     ArrayList<Fragment> fragmentList = new ArrayList<>();
     fragmentList.add(WizardPageOneFragment.newInstance());
     fragmentList.add(WizardPageTwoFragment.newInstance());
-    fragmentList.add(JoinCommunityFragment.newInstance(true).registerBottomSheetStateListener(this));
+    fragmentList.add(LoginSignUpFragment.newInstance(true).registerBottomSheetStateListener(this));
 
     viewPagerAdapter = new DumbEagerFragmentPagerAdapter(getActivity().getSupportFragmentManager());
     viewPagerAdapter.attachFragments(fragmentList);

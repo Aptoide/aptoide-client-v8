@@ -49,9 +49,7 @@ public interface LoginSignUpView extends GoogleLoginView {
 
   void navigateToMainView();
 
-  Observable<Void> successMessageShown();
-
-  void showSuccessMessage();
+  void hideKeyboard();
 
   Observable<FacebookAccountViewModel> facebookLoginClick();
 
@@ -60,4 +58,6 @@ public interface LoginSignUpView extends GoogleLoginView {
   Observable<AptoideAccountViewModel> aptoideSignUpClick();
 
   boolean isPasswordVisible();
+
+  void navigateToCreateProfile();
 }

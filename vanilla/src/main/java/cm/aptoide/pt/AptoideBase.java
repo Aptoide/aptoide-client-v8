@@ -20,7 +20,7 @@ public class AptoideBase extends V8Engine {
     super.onCreate();
   }
 
-  @Override protected AptoidePreferencesConfiguration createConfiguration() {
+  @Override public AptoidePreferencesConfiguration createConfiguration() {
     return new VanillaConfiguration();
   }
 }
