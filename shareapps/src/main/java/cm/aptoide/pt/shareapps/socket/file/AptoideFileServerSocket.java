@@ -103,6 +103,7 @@ public class AptoideFileServerSocket<T> extends AptoideServerSocket {
 
     this.fileDescriptor = fileDescriptor;
     this.fileServerLifecycle = fileServerLifecycle;
+    this.onError = fileServerLifecycle;
 
     return this;
   }
