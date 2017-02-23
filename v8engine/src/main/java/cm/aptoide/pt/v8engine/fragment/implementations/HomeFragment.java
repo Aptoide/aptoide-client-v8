@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.User;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -36,7 +37,6 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.StorePagerAdapter;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
@@ -106,12 +106,12 @@ public class HomeFragment extends StoreFragment {
       userEmail.setVisibility(View.VISIBLE);
       userUsername.setVisibility(View.VISIBLE);
 
-      User user = accountManager.getUser();
-      userEmail.setText(user.getUsername());
-      userUsername.setText(user.getName());
+      Account account = accountManager.getAccount();
+      userEmail.setText(account.getEmail());
+      userUsername.setText(account.getNickname());
 
       ImageLoader.with(getContext())
-          .loadWithCircleTransformAndPlaceHolder(user.getAvatar(), userAvatarImage,
+          .loadWithCircleTransformAndPlaceHolder(account.getAvatar(), userAvatarImage,
               R.drawable.user_account_white);
 
       return;

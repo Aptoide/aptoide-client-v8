@@ -10,40 +10,38 @@ import cm.aptoide.pt.actions.UserData;
 public class User implements UserData {
 
   private final String id;
-  private final String username;
-  private final String name;
-  private final String webInstallName;
+  private final String email;
+  private final String nickname;
   private final String avatar;
   private final String store;
   private final String storeAvatar;
   private final boolean mature;
+  private final String access;
+  private final boolean accessConfirmed;
 
-  public User(String userId, String userNickName, String username, String webInstallName,
-      String avatar, String store, boolean mature, String storeAvatar) {
-    id = userId;
-    this.name = userNickName;
-    this.username = username;
-    this.webInstallName = webInstallName;
+  public User(String id, String nickname, String email, String avatar, String store, boolean mature,
+      String storeAvatar, String access, boolean accessConfirmed) {
+    this.id = id;
+    this.nickname = nickname;
+    this.email = email;
     this.avatar = avatar;
     this.store = store;
     this.storeAvatar = storeAvatar;
     this.mature = mature;
+    this.access = access;
+    this.accessConfirmed = accessConfirmed;
   }
 
   public String getId() {
     return id;
   }
 
-  public String getUsername() {
-    return username;
+  public String getEmail() {
+    return email;
   }
 
-  public String getName() {
-    return name;
-  }
-
-  public String getWebInstallName() {
-    return webInstallName;
+  public String getNickname() {
+    return nickname;
   }
 
   public String getAvatar() {
@@ -60,5 +58,13 @@ public class User implements UserData {
 
   public boolean isMature() {
     return mature;
+  }
+
+  public String getAccess() {
+    return access;
+  }
+
+  public boolean isAccessConfirmed() {
+    return accessConfirmed;
   }
 }

@@ -15,34 +15,24 @@ import lombok.Data;
 @Data public class CheckUserCredentialsJson {
 
   public String status;
-  public String token;
-  public int id;
-  public String avatar;
-  //default avatar
-  public String ravatarHd;
-  public String username;
-  @JsonProperty("queueName") public String queueName;
   public List<ErrorResponse> errors;
-  public Settings settings;
-  public String access;
-  @JsonProperty("access_confirmed") public Boolean accessConfirmed;
-  public RepoDescription repoDescription;
-  String repo;
 
   public boolean hasErrors() {
     return errors != null && errors.size() > 0;
   }
 
-  @Data public static class RepoDescription {
-    public long id_store;
-    public String description;
-    public String theme;
-    public String items;
-  }
+  public int id;
+  public String token;
+  public String repo;
+  public String avatar;
+  public String username;
+  public String email;
+  public Settings settings;
+  public String access;
+  @JsonProperty("access_confirmed") public boolean accessConfirmed;
+  public String ravatarHd;
 
   @Data public static class Settings {
-
-    public String timeline;
     @JsonProperty("matureswitch") public String matureswitch;
   }
 }

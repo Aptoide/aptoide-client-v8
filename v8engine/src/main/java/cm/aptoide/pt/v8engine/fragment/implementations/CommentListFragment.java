@@ -27,7 +27,6 @@ import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.ListComments;
 import cm.aptoide.pt.model.v7.SetComment;
-import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -465,14 +464,14 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   private ComplexComment getComplexComment(String inputText, Long previousCommentId, long id) {
     Comment comment = new Comment();
     Comment.User user = new Comment.User();
-    if (!TextUtils.isEmpty(accountManager.getUser().getAvatar())) {
-      user.setAvatar(accountManager.getUser().getAvatar());
+    if (!TextUtils.isEmpty(accountManager.getAccount().getAvatar())) {
+      user.setAvatar(accountManager.getAccount().getAvatar());
     } else {
-      if (!TextUtils.isEmpty(accountManager.getUser().getStoreAvatar())) {
-        user.setAvatar(accountManager.getUser().getStoreAvatar());
+      if (!TextUtils.isEmpty(accountManager.getAccount().getStoreAvatar())) {
+        user.setAvatar(accountManager.getAccount().getStoreAvatar());
       }
     }
-    user.setName(accountManager.getUser().getStoreAvatar());
+    user.setName(accountManager.getAccount().getStoreAvatar());
     comment.setUser(user);
     comment.setBody(inputText);
     comment.setAdded(new Date());

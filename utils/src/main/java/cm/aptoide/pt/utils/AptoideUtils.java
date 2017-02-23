@@ -1724,7 +1724,7 @@ public class AptoideUtils {
       }
       sb.append(";");
 
-      String userEmail = userData.getUsername();
+      String userEmail = userData.getEmail();
       if (!TextUtils.isEmpty(userEmail)) {
         sb.append(userEmail);
       }

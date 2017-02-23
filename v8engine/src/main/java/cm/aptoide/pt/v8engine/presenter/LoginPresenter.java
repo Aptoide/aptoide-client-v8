@@ -7,8 +7,8 @@ package cm.aptoide.pt.v8engine.presenter;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.ws.LoginMode;
 import cm.aptoide.pt.v8engine.view.LoginView;
 import cm.aptoide.pt.v8engine.view.View;
 import com.facebook.AccessToken;
@@ -67,7 +67,7 @@ public class LoginPresenter implements Presenter {
 
   private Observable<Void> googleLoginSelection() {
     return view.googleLoginClick().doOnNext(selected -> view.showLoading()).<Void>flatMap(
-        credentials -> accountManager.login(LoginMode.GOOGLE, credentials.getEmail(),
+        credentials -> accountManager.login(Account.Type.GOOGLE, credentials.getEmail(),
             credentials.getToken(), credentials.getDisplayName())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnCompleted(() -> view.showSuccessMessage())
@@ -86,7 +86,7 @@ public class LoginPresenter implements Presenter {
           }
 
           return getFacebookUsername(credentials.getToken()).flatMapCompletable(
-              username -> accountManager.login(LoginMode.FACEBOOK, username,
+              username -> accountManager.login(Account.Type.FACEBOOK, username,
                   credentials.getToken().getToken(), null)
                   .observeOn(AndroidSchedulers.mainThread())
                   .doOnCompleted(() -> view.showSuccessMessage())
@@ -103,7 +103,7 @@ public class LoginPresenter implements Presenter {
             view.showCheckAptoideCredentialsMessage();
             return Observable.empty();
           }
-          return accountManager.login(LoginMode.APTOIDE, credentials.getUsername(),
+          return accountManager.login(Account.Type.APTOIDE, credentials.getUsername(),
               credentials.getPassword(), null)
               .observeOn(AndroidSchedulers.mainThread())
               .doOnCompleted(() -> view.showSuccessMessage())

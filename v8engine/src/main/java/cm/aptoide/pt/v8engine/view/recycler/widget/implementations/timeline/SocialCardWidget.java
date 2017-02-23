@@ -110,8 +110,8 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
             if (!displayable.isLiked()) {
               UserTimeline user = new UserTimeline();
               Store store = new Store();
-              store.setAvatar(accountManager.getUser().getStoreAvatar());
-              user.setAvatar(accountManager.getUser().getAvatar());
+              store.setAvatar(accountManager.getAccount().getStoreAvatar());
+              user.setAvatar(accountManager.getAccount().getAvatar());
               user.setStore(store);
               addUserToPreview(marginOfTheNextLikePreview, user);
               likePreviewContainer.invalidate();

@@ -149,7 +149,7 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
 
           if (!accessTokenRetry) {
             accessTokenRetry = true;
-            return DataProvider.invalidateAccessToken().flatMap(s -> {
+            return DataProvider.invalidateAccessToken().flatMapObservable(s -> {
               V7.this.body.setAccessToken(s);
               return V7.this.observe(bypassCache);
             });

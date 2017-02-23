@@ -15,7 +15,6 @@ import android.content.pm.PackageInfo;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
 import cm.aptoide.pt.actions.UserData;
@@ -68,6 +67,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import rx.Observable;
+import rx.Single;
 import rx.schedulers.Schedulers;
 
 /**
@@ -136,7 +136,7 @@ public abstract class V8Engine extends DataProvider {
   private static void regenerateUserAgent(final AptoideAccountManager accountManager) {
     SecurePreferences.setUserAgent(
         AptoideUtils.NetworkUtils.getDefaultUserAgent(aptoideClientUUID, new UserData() {
-          public String getUsername() {
+          public String getEmail() {
             return accountManager.getUserEmail();
           }
         }, AptoideUtils.Core.getDefaultVername(), getConfiguration().getPartnerId()));
@@ -153,7 +153,7 @@ public abstract class V8Engine extends DataProvider {
           new SecureCoderDecoder.Builder(this).create(), AccountManager.get(this),
           new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this),
           new ExternalServicesLoginAvailability(this, getConfiguration(),
-              GoogleApiAvailability.getInstance()));
+              GoogleApiAvailability.getInstance()), new AccountAnalytcs());
     }
     return accountManager;
   }
@@ -210,7 +210,7 @@ public abstract class V8Engine extends DataProvider {
       createShortCut();
       PreferenceManager.setDefaultValues(this, R.xml.settings, false);
       if (accountManager.isLoggedIn() && ManagerPreferences.isFirstRunV7()) {
-        accountManager.removeLocalAccount();
+        accountManager.removeAccount();
       }
       loadInstalledApps().doOnNext(o -> {
         if (accountManager.isLoggedIn()) {
@@ -228,7 +228,7 @@ public abstract class V8Engine extends DataProvider {
       }).subscribe();
 
       // load picture, name and email
-      accountManager.syncUser().subscribe(() -> {
+      accountManager.syncCurrentAccount().subscribe(() -> {
       }, e -> {
         CrashReport.getInstance().log(e);
       });
@@ -282,14 +282,14 @@ public abstract class V8Engine extends DataProvider {
           CrashReport.getInstance().log(throwable);
         });
 
-    accountManager.setAnalytics(new AccountAnalytcs());
     Logger.d(TAG, "onCreate took " + (System.currentTimeMillis() - l) + " millis.");
   }
 
   @Override protected TokenInvalidator getTokenInvalidator() {
     return new TokenInvalidator() {
-      @Override public Observable<String> invalidateAccessToken(@NonNull Context context) {
-        return accountManager.invalidateAccessToken();
+      @Override public Single<String> invalidateAccessToken() {
+        return accountManager.refreshAccountToken()
+            .andThen(Single.just(accountManager.getAccount().getToken()));
       }
     };
   }
