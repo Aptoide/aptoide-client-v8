@@ -52,6 +52,14 @@ public class HighwayAppSelectionPresenter implements Presenter {
     applicationSender.stop();
   }
 
+  @Override public void onStop() {
+
+  }
+
+  @Override public void onStart() {
+
+  }
+
   private void setAppSelectionListener() {
     view.setAppSelectionListener(new HighwayAppSelectionView.AppSelectionListener() {
       @Override public void onAppSelected(AppViewModel item) {

@@ -58,6 +58,9 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
   public static final String TWITTER_PACKAGE_NAME = "com.twitter.android";
   public static final String APTOIDE_TWITTER_URL = "http://www.twitter.com/aptoide";
 
+  //private static final int SPOT_SHARE_PERMISSION_REQUEST_CODE = 6531;
+
+
   private DrawerLayout drawerLayout;
   private NavigationView navigationView;
   private BadgeView updatesBadge;
@@ -201,6 +204,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
         } else {
           final NavigationManagerV4 navigationManager = getNavigationManager();
           if (itemId == R.id.shareapps) {
+            //requestPermissions();
             startActivity(new Intent(getContext(), HighwayActivity.class));
           } else if (itemId == R.id.navigation_item_rollback) {
             navigationManager.navigateTo(V8Engine.getFragmentProvider().newRollbackFragment());
@@ -352,4 +356,66 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
       }
     }
   }
+
+  //private void requestPermissions() {
+  //  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+  //    //check if already has the permissions
+  //    ArrayList<String> permissionsArray = new ArrayList<>();
+  //    if(ContextCompat.checkSelfPermission(getContext(),
+  //        Manifest.permission.READ_PHONE_STATE)!= PackageManager.PERMISSION_GRANTED){
+  //
+  //      permissionsArray.add(Manifest.permission.READ_PHONE_STATE);
+  //
+  //    }
+  //
+  //    if(ContextCompat.checkSelfPermission(getContext(),Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
+  //      permissionsArray.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+  //
+  //    }
+  //
+  //    if(ContextCompat.checkSelfPermission(getContext(),Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED){
+  //
+  //      permissionsArray.add(Manifest.permission.ACCESS_FINE_LOCATION);
+  //    }
+  //
+  //    if(ContextCompat.checkSelfPermission(getContext(),Manifest.permission.WRITE_SETTINGS)!= PackageManager.PERMISSION_GRANTED){//special
+  //      if(Settings.System.canWrite(getContext())){
+  //        permissionsArray.add(Manifest.permission.WRITE_SETTINGS);
+  //        System.out.println("can write settings!");
+  //      }else{
+  //        System.out.println("can not write the settings");
+  //        Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+  //        intent.setData(Uri.parse("package:" + getContext().getPackageName()));
+  //        startActivity(intent);
+  //      }
+  //    }
+  //
+  //    if(permissionsArray.size()>0){
+  //
+  //      String[] missingPermissions = new String[permissionsArray.size()];
+  //      missingPermissions = permissionsArray.toArray(missingPermissions);
+  //
+  //      ActivityCompat.requestPermissions(getActivity(), missingPermissions, SPOT_SHARE_PERMISSION_REQUEST_CODE);
+  //    }
+  //  }
+  //}
+  //
+  //@Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+  //    @NonNull int[] grantResults) {
+  //  switch (requestCode){
+  //    case SPOT_SHARE_PERMISSION_REQUEST_CODE:{
+  //      if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+  //        System.out.println("write settings permission granted ! ");
+  //      }else{
+  //        //in the future show dialog (?)
+  //        System.out.println("write settings permission failed to be granted");
+  //        //finish();
+  //      }
+  //      break;
+  //    }
+  //
+  //  }
+  //  super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+  //
+  //}
 }

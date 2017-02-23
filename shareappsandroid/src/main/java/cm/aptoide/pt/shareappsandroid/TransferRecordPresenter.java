@@ -109,6 +109,14 @@ public class TransferRecordPresenter implements Presenter {
 
   }
 
+  @Override public void onStop() {
+
+  }
+
+  @Override public void onStart() {
+
+  }
+
   private void setTransferRecordListener() {
     view.setAdapterListeners(new HighwayTransferRecordView.TransferRecordListener() {
       @Override public void onInstallApp(HighwayTransferRecordItem item) {

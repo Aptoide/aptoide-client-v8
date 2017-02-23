@@ -29,4 +29,14 @@ public class ActivityView extends AppCompatActivity {
     super.onDestroy();
     presenter.onDestroy();
   }
+
+  @Override protected void onStart() {
+    super.onStart();
+    presenter.onStart();
+  }
+
+  @Override protected void onStop() {
+    super.onStop();
+    presenter.onStop();
+  }
 }

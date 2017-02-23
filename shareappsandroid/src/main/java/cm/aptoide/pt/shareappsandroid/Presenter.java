@@ -12,4 +12,8 @@ public interface Presenter {
   void onPause();
 
   void onDestroy();
+
+  void onStop();
+
+  void onStart();
 }

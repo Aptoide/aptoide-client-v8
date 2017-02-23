@@ -25,16 +25,20 @@ public class HighwayPresenter implements Presenter {
   private GroupManager groupManager;
   private OutsideShareManager outsideShareManager;
   private boolean isOutsideShare;
+  private final PermissionManager permissionManager;
+  private boolean permissionRequested;
 
   public HighwayPresenter(HighwayView view, String deviceName,
       DeactivateHotspotTask deactivateHotspotTask, ConnectionManager connectionManager,
-      AnalyticsManager analyticsManager, GroupManager groupManager) {
+      AnalyticsManager analyticsManager, GroupManager groupManager,
+      PermissionManager permissionManager) {
     this.view = view;
     this.deviceName = deviceName;
     this.deactivateHotspotTask = deactivateHotspotTask;
     this.connectionManager = connectionManager;
     this.analyticsManager = analyticsManager;
     this.groupManager = groupManager;
+    this.permissionManager = permissionManager;
   }
 
   @Override public void onCreate() {
@@ -44,6 +48,36 @@ public class HighwayPresenter implements Presenter {
     outsideShare = false;
     joinGroupFlag = false;
 
+    permissionManager.registerListener(new PermissionListener() {
+      @Override public void onPermissionGranted() {
+
+
+        deactivateHotspot();
+        permissionRequested=false;
+
+
+
+      }
+
+      @Override public void onPermissionDenied() {
+        view.dismiss();
+        permissionRequested=false;
+      }
+    });
+
+  if(permissionManager.checkPermissions()){
+    deactivateHotspot();
+  }
+  //else{
+  //  permissionManager.requestPermissions();
+  //}
+
+
+  }
+
+
+
+  private void deactivateHotspot() {
     deactivateHotspotTask.setListener(new SimpleListener() {
       @Override public void onEvent() {
         view.showConnections();//fillTheRadar
@@ -63,6 +97,10 @@ public class HighwayPresenter implements Presenter {
 
   @Override public void onResume() {
 //    connectionManager.resume();
+    if(!permissionManager.checkPermissions() && !permissionRequested){
+      permissionManager.requestPermissions();
+      permissionRequested=true;
+    }
   }
 
   @Override public void onPause() {
@@ -75,6 +113,18 @@ public class HighwayPresenter implements Presenter {
     deactivateHotspotTask.cancel(false);
     connectionManager.stop();
     groupManager.stop();
+    permissionManager.removeListener();
+
+  }
+
+  @Override public void onStop() {
+
+  }
+
+  @Override public void onStart() {
+    //if(!permissionManager.checkPermissions()){
+    //  permissionManager.requestPermissions();
+    //}
   }
 
   //should be on the presenter interface?

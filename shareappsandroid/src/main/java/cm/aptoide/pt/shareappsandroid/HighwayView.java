@@ -38,6 +38,8 @@ public interface HighwayView {
 
   void showRecoveringWifiStateToast();
 
+  void dismiss();
+
   //    void setCreateGroupListener(View.OnClickListener listener );
   //
   //    void setJoinGroupListener(View.OnClickListener listener);

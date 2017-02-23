@@ -15,7 +15,7 @@ import cm.aptoide.pt.shareapps.socket.entities.Host;
  * Singleton without controller.
  * <p>Holds references to main stuff used in our webview app
  * </p>
- * Created by jandrade on 10-08-2015.
+ * Created by FilipeGonçalves on 10-08-2015.
  */
 public class DataHolder {
   private static final DataHolder holder = new DataHolder();
