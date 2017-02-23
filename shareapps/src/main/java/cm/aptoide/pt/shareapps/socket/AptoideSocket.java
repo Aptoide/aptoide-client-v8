@@ -1,5 +1,6 @@
 package cm.aptoide.pt.shareapps.socket;
 
+import cm.aptoide.pt.shareapps.socket.interfaces.OnError;
 import cm.aptoide.pt.shareapps.socket.interfaces.ProgressAccumulator;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,13 +30,20 @@ public abstract class AptoideSocket {
     this(executorService, 8192);
   }
 
-  public AptoideSocket startAsync() {
-    executorService.execute(this::start);
+  public AptoideSocket startAsync(OnError<IOException> onError) {
+    executorService.execute(() -> {
+      try {
+        start();
+      } catch (IOException e) {
+        onError.onError(e);
+        e.printStackTrace(System.out);
+      }
+    });
     System.out.println("ShareApps: Started " + getClass().getSimpleName() + " AptoideSocket.");
     return this;
   }
 
-  public abstract AptoideSocket start();
+  public abstract AptoideSocket start() throws IOException;
 
   public void shutdownExecutorService() {
     executorService.shutdown();

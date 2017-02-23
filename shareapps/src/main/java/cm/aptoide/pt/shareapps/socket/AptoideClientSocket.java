@@ -1,9 +1,7 @@
 package cm.aptoide.pt.shareapps.socket;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import lombok.Setter;
 
 /**
@@ -27,7 +25,7 @@ public abstract class AptoideClientSocket extends AptoideSocket {
     this.port = port;
   }
 
-  @Override public AptoideSocket start() {
+  @Override public AptoideSocket start() throws IOException {
 
     Socket socket = null;
 
@@ -44,19 +42,15 @@ public abstract class AptoideClientSocket extends AptoideSocket {
       }
     }
 
+    if (socket == null) {
+      throw new RuntimeException("Couldn't connect to " + hostName + ":" + port);
+    }
+
     try {
       onConnected(socket);
-    } catch (UnknownHostException e) {
-      e.printStackTrace();
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
-      e.printStackTrace();
     } finally {
       try {
-        if (socket != null) {
-          socket.close();
-        }
+        socket.close();
       } catch (IOException e) {
         e.printStackTrace();
       }
