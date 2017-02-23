@@ -192,6 +192,10 @@ dependencies {
   //lib phone number
   compile "com.googlecode.libphonenumber:libphonenumber:${LIB_PHONE_NUMBER_VERSION}"
 
+  compile('com.twitter.sdk.android:twitter-core:2.3.0@aar') {
+    transitive = true;
+  }
+
   // Parceler - https://github.com/johncarl81/parceler
   //compile 'org.parceler:parceler-api:1.1.6'
   //annotationProcessor 'org.parceler:parceler:1.1.6'

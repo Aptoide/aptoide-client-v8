@@ -22,6 +22,9 @@ android {
 
     buildConfigField "String", "BACKUP_SIGNATURE", "\"" + project.BACKUP_SIGNATURE + "\""
     buildConfigField "String", "UPLOADER_SIGNATURE", "\"" + project.UPLOADER_SIGNATURE + "\""
+
+    buildConfigField "String", "TWITTER_KEY_INTERNAL", "\"" + project.TWITTER_KEY + "\""
+    buildConfigField "String", "TWITTER_SECRET_INTERNAL", "\"" + project.TWITTER_SECRET + "\""
   }
 
   lintOptions {

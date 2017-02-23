@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.addressbook;
 
+import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,6 +18,12 @@ import cm.aptoide.pt.v8engine.addressbook.data.ContactsRepositoryImpl;
 import cm.aptoide.pt.v8engine.fragment.SupportV4BaseFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import com.jakewharton.rxbinding.view.RxView;
+import com.twitter.sdk.android.core.Callback;
+import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.TwitterAuthToken;
+import com.twitter.sdk.android.core.TwitterException;
+import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 import java.util.List;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -26,12 +33,17 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class AddressBookFragment extends SupportV4BaseFragment implements AddressBookContract.View {
 
+  TwitterAuthClient mTwitterAuthClient;
   private AddressBookContract.UserActionsListener mActionsListener;
   private Button addressBookSyncButton;
   private Button facebookSyncButton;
   private Button twitterSyncButton;
   private TextView dismissV;
   private TextView about;
+
+  private long userId;
+  private String token;
+  private String secret;
 
   public AddressBookFragment() {
 
@@ -63,9 +75,31 @@ public class AddressBookFragment extends SupportV4BaseFragment implements Addres
           }, throwable -> CrashReport.getInstance().log(throwable));
     });
     RxView.clicks(facebookSyncButton).subscribe(click -> mActionsListener.syncFacebook());
-    RxView.clicks(twitterSyncButton).subscribe(click -> mActionsListener.syncTwitter());
+    RxView.clicks(twitterSyncButton).subscribe(click -> twitterLogin());
     RxView.clicks(dismissV).subscribe(click -> mActionsListener.finishViewClick());
     RxView.clicks(about).subscribe(click -> mActionsListener.aboutClick());
+  }
+
+  private void twitterLogin() {
+    mTwitterAuthClient = new TwitterAuthClient();
+    mTwitterAuthClient.authorize(getActivity(), new Callback<TwitterSession>() {
+      @Override public void success(Result<TwitterSession> result) {
+        mActionsListener.syncTwitter();
+        saveUserData(result);
+        //todo: make userconnection request with twitter information
+      }
+
+      @Override public void failure(TwitterException exception) {
+      }
+    });
+  }
+
+  private void saveUserData(Result<TwitterSession> result) {
+    TwitterSession twitterSession = result.data;
+    userId = twitterSession.getUserId();
+    TwitterAuthToken twitterAuthToken = twitterSession.getAuthToken();
+    token = twitterAuthToken.token;
+    secret = twitterAuthToken.secret;
   }
 
   @Override public void finishView() {
@@ -119,5 +153,10 @@ public class AddressBookFragment extends SupportV4BaseFragment implements Addres
     twitterSyncButton = (Button) view.findViewById(R.id.twitter_sync_button);
     dismissV = (TextView) view.findViewById(R.id.addressbook_not_now);
     about = (TextView) view.findViewById(R.id.addressbook_about);
+  }
+
+  @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    mTwitterAuthClient.onActivityResult(requestCode, resultCode, data);
   }
 }
