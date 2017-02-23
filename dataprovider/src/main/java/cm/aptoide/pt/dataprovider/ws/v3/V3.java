@@ -103,7 +103,7 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
 
             if (!accessTokenRetry) {
               accessTokenRetry = true;
-              return DataProvider.invalidateAccessToken().flatMap(s -> {
+              return DataProvider.invalidateAccessToken().flatMapObservable(s -> {
                 this.map.setAccess_token(s);
                 return V3.this.observe(bypassCache).observeOn(AndroidSchedulers.mainThread());
               });

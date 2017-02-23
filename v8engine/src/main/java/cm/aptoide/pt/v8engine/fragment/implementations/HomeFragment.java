@@ -19,8 +19,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.User;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
@@ -153,8 +153,7 @@ public class HomeFragment extends StoreFragment {
   @Override public void setupViews() {
     super.setupViews();
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    accountNavigator =
-        new AccountNavigator(getNavigationManager(), accountManager);
+    accountNavigator = new AccountNavigator(getNavigationManager(), accountManager);
     setupNavigationView();
   }
 
@@ -292,16 +291,17 @@ public class HomeFragment extends StoreFragment {
 
     if (accountManager.isLoggedIn()) {
 
-      userEmail.setVisibility(View.VISIBLE);
-      userUsername.setVisibility(View.VISIBLE);
+      Account account = accountManager.getAccount();
+      if (account != null) {
+        userEmail.setVisibility(View.VISIBLE);
+        userUsername.setVisibility(View.VISIBLE);
+        userEmail.setText(account.getEmail());
+        userUsername.setText(account.getNickname());
 
-      User user = accountManager.getUser();
-      userEmail.setText(user.getUsername());
-      userUsername.setText(user.getName());
-
-      ImageLoader.with(getContext())
-          .loadWithCircleTransformAndPlaceHolder(user.getAvatar(), userAvatarImage,
-              R.drawable.user_account_white);
+        ImageLoader.with(getContext())
+            .loadWithCircleTransformAndPlaceHolder(account.getAvatar(), userAvatarImage,
+                R.drawable.user_account_white);
+      }
 
       return;
     }

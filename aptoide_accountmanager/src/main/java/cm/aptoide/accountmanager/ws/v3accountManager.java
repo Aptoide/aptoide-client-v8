@@ -96,12 +96,11 @@ abstract class v3accountManager<U> extends WebService<v3accountManager.Interface
 
                 if (!accessTokenRetry) {
                   accessTokenRetry = true;
-                  return accountManager.invalidateAccessToken()
-                      .flatMap(s -> {
-                        this.map.setAccess_token(s);
-                        return v3accountManager.this.observe(bypassCache)
-                            .observeOn(AndroidSchedulers.mainThread());
-                      });
+                  return accountManager.refreshAccountToken()
+                      .andThen(v3accountManager.this.observe(bypassCache)
+                          .doOnSubscribe(() -> this.map.setAccess_token(
+                              accountManager.getAccount().getToken()))
+                          .observeOn(AndroidSchedulers.mainThread()));
                 } else {
                   return Observable.error(new NetworkErrorException());
                 }

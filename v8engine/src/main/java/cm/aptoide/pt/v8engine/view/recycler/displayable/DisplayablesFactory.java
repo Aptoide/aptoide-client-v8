@@ -373,20 +373,4 @@ public class DisplayablesFactory {
 
     return new DisplayableGroup(displayables);
   }
-
-  private static GetStoreMeta convertUserInfoStore(CheckUserCredentialsJson userInfo) {
-    if (!TextUtils.isEmpty(userInfo.getRepo())) {
-      GetStoreMeta getStoreMeta = new GetStoreMeta();
-      Store store = new Store();
-      Store.Appearance appearance = new Store.Appearance();
-      appearance.setTheme(userInfo.getRepoDescription().getTheme());
-      store.setAppearance(appearance);
-      store.setName(userInfo.getRepo());
-      store.setAvatar(userInfo.getRavatarHd());
-      getStoreMeta.setData(store);
-      return getStoreMeta;
-    } else {
-      return null;
-    }
-  }
 }

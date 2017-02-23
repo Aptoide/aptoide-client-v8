@@ -86,7 +86,7 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
       return;
     }
 
-    if (TextUtils.isEmpty(accountManager.getUser().getStore())
+    if (TextUtils.isEmpty(accountManager.getAccount().getStore())
         && !AccountBaseActivity.UserAccessState.PUBLIC.toString()
         .equals(ManagerPreferences.getUserAccess())) {
       ShowMessage.asSnack(getContext(), R.string.private_profile_create_store,

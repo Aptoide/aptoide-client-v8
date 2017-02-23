@@ -114,7 +114,7 @@ public class LoggedInActivity extends AccountBaseActivity {
   }
 
   private void updateUserInfo() {
-    accountManager.syncUser().subscribe(() -> {
+    accountManager.syncCurrentAccount().subscribe(() -> {
       if (pleaseWaitDialog != null && pleaseWaitDialog.isShowing()) {
         pleaseWaitDialog.dismiss();
       }

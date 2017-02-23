@@ -7,6 +7,7 @@ package cm.aptoide.accountmanager.ws;
 
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
@@ -24,7 +25,7 @@ public class OAuth2AuthenticationRequest extends v3accountManager<OAuth> {
 
   private String username;
   private String password;
-  private LoginMode mode;
+  private Account.Type mode;
   private String nameForGoogle;
   private String grantType;
   private String refreshToken;
@@ -35,7 +36,7 @@ public class OAuth2AuthenticationRequest extends v3accountManager<OAuth> {
     this.aptoideClientUUID = aptoideClientUUID;
   }
 
-  public static OAuth2AuthenticationRequest of(String username, String password, LoginMode mode,
+  public static OAuth2AuthenticationRequest of(String username, String password, Account.Type mode,
       @Nullable String nameForGoogle, String aptoideClientUUID,
       AptoideAccountManager accountManager) {
     return new OAuth2AuthenticationRequest(aptoideClientUUID, accountManager).setUsername(username)

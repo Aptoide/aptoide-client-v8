@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
- */
-
 package cm.aptoide.pt.v8engine.deprecated;
 
 import android.content.Context;
@@ -23,14 +18,11 @@ import cm.aptoide.pt.v8engine.deprecated.tables.Repo;
 import cm.aptoide.pt.v8engine.deprecated.tables.Rollback;
 import cm.aptoide.pt.v8engine.deprecated.tables.Scheduled;
 
-/**
- * Created by sithengineer on 24/08/16.
- */
 public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 
   private static final String TAG = SQLiteDatabaseHelper.class.getSimpleName();
-  private static final int DATABASE_VERSION = 55;
-  private Throwable agregateExceptions;
+  private static final int DATABASE_VERSION = 58; // 56
+  private Throwable aggregateExceptions;
 
   public SQLiteDatabaseHelper(Context context) {
     super(context, "aptoide.db", null, DATABASE_VERSION);
@@ -54,8 +46,8 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
     migrate(db);
 
     ManagerPreferences.setNeedsSqliteDbMigration(false);
-
     SecurePreferences.setWizardAvailable(true);
+    SecurePreferences.setLogoutUser(true);
   }
 
   @Override public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -132,8 +124,8 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
     // table "AmazonABTesting" was deliberedly left out due to its irrelevance in the DB upgrade
     // table "ExcludedAd" was deliberedly left out due to its irrelevance in the DB upgrade
 
-    if (agregateExceptions != null) {
-      CrashReport.getInstance().log(agregateExceptions);
+    if (aggregateExceptions != null) {
+      CrashReport.getInstance().log(aggregateExceptions);
     }
     Logger.w(TAG, "Migrating database finished.");
   }
@@ -141,10 +133,10 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
   private void logException(Exception ex) {
     CrashReport.getInstance().log(ex);
 
-    if (agregateExceptions == null) {
-      agregateExceptions = ex;
+    if (aggregateExceptions == null) {
+      aggregateExceptions = ex;
     } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-      agregateExceptions.addSuppressed(ex);
+      aggregateExceptions.addSuppressed(ex);
     }
   }
 }

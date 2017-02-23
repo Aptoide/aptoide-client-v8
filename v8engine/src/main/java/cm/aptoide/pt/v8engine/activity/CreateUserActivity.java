@@ -23,11 +23,6 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.OAuthException;
-import cm.aptoide.accountmanager.ws.CreateUserRequest;
-import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.accountmanager.OAuthException;
 import cm.aptoide.accountmanager.UserValidationException;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.preferences.Application;
@@ -110,7 +105,7 @@ public class CreateUserActivity extends AccountPermissionsBaseActivity {
     subscriptions.add(RxView.clicks(userAvatar).subscribe(click -> chooseAvatarSource()));
     subscriptions.add(RxView.clicks(createUserButton)
         .doOnNext(click -> hideKeyboardAndShowProgressDialog())
-        .flatMap(click -> accountManager.createUser(nameEditText.getText().toString(), avatarPath)
+        .flatMap(click -> accountManager.updateAccount(nameEditText.getText().toString(), avatarPath)
             .toObservable()
             .timeout(90, TimeUnit.SECONDS)
             .observeOn(AndroidSchedulers.mainThread())

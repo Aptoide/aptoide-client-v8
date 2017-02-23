@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AccountManagerPreferences;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -82,11 +83,10 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
 
   @Override public void bindView(GridStoreMetaDisplayable displayable) {
 
-
-    IdsRepositoryImpl idsRepository =
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
-    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
-    storeUtilsProxy = new StoreUtilsProxy(idsRepository, accountManager);
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    storeUtilsProxy = new StoreUtilsProxy(
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext()),
+        accountManager);
     final GetStoreMeta getStoreMeta = displayable.getPojo();
     final cm.aptoide.pt.model.v7.store.Store store = getStoreMeta.getData();
     final StoreThemeEnum theme = StoreThemeEnum.get(store.getAppearance().getTheme());
@@ -117,8 +117,9 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
       this.socialChannelsLayout.setVisibility(View.GONE);
     }
 
-    if (!TextUtils.isEmpty(AccountManagerPreferences.getUserRepo())) {
-      if (AccountManagerPreferences.getUserRepo().equals(store.getName())) {
+    final Account account = accountManager.getAccount();
+    if (account != null && !TextUtils.isEmpty(account.getStore())) {
+      if (account.getStore().equals(store.getName())) {
         descriptionContentLayout.setVisibility(View.VISIBLE);
         if (TextUtils.isEmpty(store.getAppearance().getDescription())) {
           description.setText("Add a description to your store by editing it.");
@@ -188,14 +189,13 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
                 storeWrapper.getStore().getName()));
       } else {
         storeWrapper.setStoreSubscribed(true);
-        storeUtilsProxy.subscribeStore(storeWrapper.getStore().getName(),
-            subscribedStoreMeta -> {
-              ShowMessage.asSnack(itemView,
-                  AptoideUtils.StringU.getFormattedString(R.string.store_followed,
-                      subscribedStoreMeta.getData().getName()));
-            }, err -> {
-              CrashReport.getInstance().log(err);
-            }, accountManager);
+        storeUtilsProxy.subscribeStore(storeWrapper.getStore().getName(), subscribedStoreMeta -> {
+          ShowMessage.asSnack(itemView,
+              AptoideUtils.StringU.getFormattedString(R.string.store_followed,
+                  subscribedStoreMeta.getData().getName()));
+        }, err -> {
+          CrashReport.getInstance().log(err);
+        }, accountManager);
       }
       updateSubscribeButtonText(storeWrapper.isStoreSubscribed());
     };
