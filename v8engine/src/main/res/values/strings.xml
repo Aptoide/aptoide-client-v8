@@ -383,6 +383,7 @@
   <string name="create_store_displayable_created_store_long_term_message">long term</string>
   <string name="create_store_displayable_explore_long_term_button">View Store</string>
   <string name="create_store_displayable_empty_description_message">Add a description for your Store. A good description helps you to get more followers and interaction.</string>
+  <string name="fragment_spot_share_preview_start_button">Start</string>
 
   <!-- Address book -->
   <string name="addressbook_increase_network_message">Increase your network.</string>
