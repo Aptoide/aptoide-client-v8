@@ -18,6 +18,7 @@ import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import com.jakewharton.rxbinding.view.RxView;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.TwitterAuthToken;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterAuthClient;
@@ -36,6 +37,10 @@ public class AddressBookFragment extends SupportV4BaseFragment implements Addres
   private Button twitterSyncButton;
   private TextView dismissV;
   private TextView about;
+
+  private long userId;
+  private String token;
+  private String secret;
 
   public AddressBookFragment() {
 
@@ -70,11 +75,21 @@ public class AddressBookFragment extends SupportV4BaseFragment implements Addres
     mTwitterAuthClient.authorize(getActivity(), new Callback<TwitterSession>() {
       @Override public void success(Result<TwitterSession> result) {
         mActionsListener.syncTwitter();
+        saveUserData(result);
+        //todo: make userconnection request with twitter information
       }
 
       @Override public void failure(TwitterException exception) {
       }
     });
+  }
+
+  private void saveUserData(Result<TwitterSession> result) {
+    TwitterSession twitterSession = result.data;
+    userId = twitterSession.getUserId();
+    TwitterAuthToken twitterAuthToken = twitterSession.getAuthToken();
+    token = twitterAuthToken.token;
+    secret = twitterAuthToken.secret;
   }
 
   @Override public void finishView() {
