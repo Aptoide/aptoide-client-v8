@@ -12,6 +12,7 @@ public abstract class AptoideSocket {
 
   protected final ExecutorService executorService;
   protected final int bufferSize;
+  protected OnError<IOException> onError = Throwable::printStackTrace;
 
   public AptoideSocket() {
     this(Executors.newCachedThreadPool(), 8192);
@@ -30,7 +31,7 @@ public abstract class AptoideSocket {
     this(executorService, 8192);
   }
 
-  public AptoideSocket startAsync(OnError<IOException> onError) {
+  public AptoideSocket startAsync() {
     executorService.execute(() -> {
       try {
         start();

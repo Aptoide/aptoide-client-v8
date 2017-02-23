@@ -29,15 +29,11 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
     super(port, timeout);
   }
 
-  @Override protected void onNewClient(Socket socket) {
-    try {
+  @Override protected void onNewClient(Socket socket) throws IOException {
       AptoideMessageServerController shareAppsMessageController =
           new AptoideMessageServerController(this, Host.fromLocalhost(socket), Host.from(socket));
       aptoideMessageControllers.add(shareAppsMessageController);
       shareAppsMessageController.onConnect(socket);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
   }
 
   public void requestPermissionToSendApk(RequestPermissionToSend message) {

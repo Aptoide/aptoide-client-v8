@@ -82,6 +82,9 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
                 + socket.getPort());
             onNewClient(socket);
             serverSocketTimeoutManager.reserTimeout();
+          } catch (IOException e) {
+            e.printStackTrace(System.out);
+            onError.onError(e);
           } finally {
             try {
               serverSocketTimeoutManager.reserTimeout();
@@ -125,7 +128,7 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
     return hosts;
   }
 
-  protected abstract void onNewClient(Socket socket);
+  protected abstract void onNewClient(Socket socket) throws IOException;
 
   public void shutdown() {
 
