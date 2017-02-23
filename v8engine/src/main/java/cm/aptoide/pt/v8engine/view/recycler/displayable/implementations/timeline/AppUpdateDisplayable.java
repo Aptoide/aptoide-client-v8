@@ -43,6 +43,7 @@ public class AppUpdateDisplayable extends CardDisplayable {
   @Getter private String appIconUrl;
   @Getter private String storeIconUrl;
   @Getter private String storeName;
+  @Getter private String storeTheme;
 
   private Date dateUpdated;
   private String appVersionName;
@@ -70,7 +71,7 @@ public class AppUpdateDisplayable extends CardDisplayable {
       long appId, String abUrl, InstallManager installManager, PermissionManager permissionManager,
       TimelineMetricsManager timelineMetricsManager, SocialRepository socialRepository,
       DownloadEventConverter downloadConverter, InstallEventConverter installConverter,
-      Analytics analytics) {
+      Analytics analytics, String storeTheme) {
     super(appUpdate);
     this.appIconUrl = appIconUrl;
     this.storeIconUrl = storeIconUrl;
@@ -91,6 +92,7 @@ public class AppUpdateDisplayable extends CardDisplayable {
     this.downloadConverter = downloadConverter;
     this.installConverter = installConverter;
     this.analytics = analytics;
+    this.storeTheme = storeTheme;
   }
 
   public static AppUpdateDisplayable from(AppUpdate appUpdate, SpannableFactory spannableFactory,
@@ -110,7 +112,8 @@ public class AppUpdateDisplayable extends CardDisplayable {
         appUpdate.getPackageName(), downloadFactory.create(appUpdate, Download.ACTION_UPDATE),
         dateCalculator, appUpdate.getId(), abTestingURL, installManager, permissionManager,
         timelineMetricsManager, socialRepository, new DownloadEventConverter(),
-        new InstallEventConverter(), Analytics.getInstance());
+        new InstallEventConverter(), Analytics.getInstance(),
+        appUpdate.getStore().getAppearance().getTheme());
   }
 
   public Observable<Progress<Download>> update(Context context) {

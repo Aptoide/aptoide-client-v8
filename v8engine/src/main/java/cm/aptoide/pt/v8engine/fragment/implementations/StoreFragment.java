@@ -67,6 +67,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private StoreContext storeContext;
   private GetStore getStore;
   private String storeTheme;
+  private Event.Name defaultTab;
 
   public StoreFragment() {
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
@@ -74,30 +75,10 @@ public class StoreFragment extends BasePagerToolbarFragment {
   }
 
   public static StoreFragment newInstance(String storeName, String storeTheme) {
-    return newInstance(storeName, StoreContext.store, storeTheme);
-  }
-
-  public static StoreFragment newInstance(String storeName, StoreContext storeContext,
-      String storeTheme) {
     Bundle args = new Bundle();
     args.putString(BundleCons.STORE_NAME, storeName);
-    args.putSerializable(BundleCons.STORE_CONTEXT, storeContext);
+    args.putSerializable(BundleCons.STORE_CONTEXT, StoreContext.store);
     args.putString(BundleCons.STORE_THEME, storeTheme);
-    StoreFragment fragment = new StoreFragment();
-    fragment.setArguments(args);
-    return fragment;
-  }
-
-  //Delete after completing themes implementation
-  public static StoreFragment newInstance(String storeName) {
-    return newInstance(storeName, StoreContext.store);
-  }
-
-  //Delete after completing themes implementation
-  public static StoreFragment newInstance(String storeName, StoreContext storeContext) {
-    Bundle args = new Bundle();
-    args.putString(BundleCons.STORE_NAME, storeName);
-    args.putSerializable(BundleCons.STORE_CONTEXT, storeContext);
     StoreFragment fragment = new StoreFragment();
     fragment.setArguments(args);
     return fragment;
@@ -234,7 +215,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
         }
       }
     });
-
+    changeToTab(defaultTab);
     finishLoading();
   }
 
@@ -255,6 +236,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
     storeName = args.getString(BundleCons.STORE_NAME);
     storeContext = (StoreContext) args.get(BundleCons.STORE_CONTEXT);
     storeTheme = args.getString(BundleCons.STORE_THEME);
+    defaultTab = (Event.Name) args.get(BundleCons.DEFAULT_TAB_TO_OPEN);
   }
 
   @Override public int getContentViewId() {
@@ -285,6 +267,17 @@ public class StoreFragment extends BasePagerToolbarFragment {
           break;
       }
     });
+  }
+
+  protected void changeToTab(Event.Name tabToChange) {
+    if (tabToChange != null) {
+      StorePagerAdapter storePagerAdapter = viewPager.getAdapter() instanceof StorePagerAdapter
+          ? ((StorePagerAdapter) viewPager.getAdapter()) : null;
+      if (storePagerAdapter != null) {
+        viewPager.setCurrentItem(
+            ((StorePagerAdapter) viewPager.getAdapter()).getEventNamePosition(tabToChange));
+      }
+    }
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -334,5 +327,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
     public static final String STORE_NAME = "storeName";
     public static final String STORE_CONTEXT = "storeContext";
     public static final String STORE_THEME = "storeTheme";
+    public static final String DEFAULT_TAB_TO_OPEN = "default_tab_to_open";
   }
 }

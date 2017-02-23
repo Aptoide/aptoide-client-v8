@@ -339,14 +339,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
 
     @Override public void onReceive(Context context, Intent intent) {
       Event.Name tabToChange = (Event.Name) intent.getSerializableExtra(SET_TAB_EVENT);
-      if (tabToChange != null) {
-        StorePagerAdapter storePagerAdapter = viewPager.getAdapter() instanceof StorePagerAdapter
-            ? ((StorePagerAdapter) viewPager.getAdapter()) : null;
-        if (storePagerAdapter != null) {
-          viewPager.setCurrentItem(
-              ((StorePagerAdapter) viewPager.getAdapter()).getEventNamePosition(tabToChange));
-        }
-      }
+      changeToTab(tabToChange);
     }
   }
 }

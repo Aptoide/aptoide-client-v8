@@ -27,8 +27,6 @@ public class SocialVideoWidget extends SocialCardWidget<SocialVideoDisplayable> 
 
   private TextView title;
   private TextView subtitle;
-  private ImageView storeAvatar;
-  private ImageView userAvatar;
   private TextView videoTitle;
   private ImageView thumbnail;
   private View url;

@@ -99,8 +99,9 @@ public class AppUpdateWidget extends CardWidget<AppUpdateDisplayable> {
               .app(displayable.getPackageName())
               .build())
           .build(), TimelineClickEvent.OPEN_STORE);
-      getNavigationManager().navigateTo(
-          V8Engine.getFragmentProvider().newStoreFragment(displayable.getStoreName()));
+      // TODO: 23/02/2017 trinkes get store theme
+      getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
+          .newStoreFragment(displayable.getStoreName(), displayable.getStoreTheme()));
     }));
 
     compositeSubscription.add(RxView.clicks(appIcon).subscribe(click -> {

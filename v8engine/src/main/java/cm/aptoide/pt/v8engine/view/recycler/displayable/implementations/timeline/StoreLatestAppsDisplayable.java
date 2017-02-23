@@ -23,6 +23,7 @@ public class StoreLatestAppsDisplayable extends CardDisplayable {
   @Getter private String avatarUrl;
   @Getter private List<LatestApp> latestApps;
   @Getter private String abUrl;
+  @Getter private String storeTheme;
   private DateCalculator dateCalculator;
   private Date date;
   private TimelineMetricsManager timelineMetricsManager;

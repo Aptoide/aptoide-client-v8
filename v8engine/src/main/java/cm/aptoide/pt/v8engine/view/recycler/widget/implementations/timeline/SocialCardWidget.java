@@ -31,6 +31,8 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
 
   private static final String TAG = SocialCardWidget.class.getName();
   private final LayoutInflater inflater;
+  protected ImageView userAvatar;
+  protected ImageView storeAvatar;
   private TextView comments;
   private LinearLayout like;
   private LikeButtonView likeButton;
@@ -57,6 +59,8 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
     sharedBy = (TextView) itemView.findViewById(R.id.social_shared_by);
     likePreviewContainer = (RelativeLayout) itemView.findViewById(
         R.id.displayable_social_timeline_likes_preview_container);
+    storeAvatar = (ImageView) itemView.findViewById(R.id.card_image);
+    userAvatar = (ImageView) itemView.findViewById(R.id.card_user_avatar);
   }
 
   @Override @CallSuper public void bindView(T displayable) {
@@ -143,6 +147,10 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
         .subscribe(click -> displayable.likesPreviewClick(getNavigationManager()), (throwable) -> {
           throwable.printStackTrace();
         }));
+
+    compositeSubscription.add(
+        Observable.merge(RxView.clicks(storeAvatar), RxView.clicks(userAvatar))
+            .subscribe(click -> openStore(displayable.getStore().getName(), "DEFAULT")));
   }
 
   private Observable<Void> showComments(T displayable) {
@@ -210,5 +218,10 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
         break;
       }
     }
+  }
+
+  private void openStore(String storeName, String storeTheme) {
+    getNavigationManager().navigateTo(
+        V8Engine.getFragmentProvider().newStoreFragment(storeName, storeTheme));
   }
 }

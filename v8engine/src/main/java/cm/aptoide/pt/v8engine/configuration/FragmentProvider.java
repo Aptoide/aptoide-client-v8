@@ -21,20 +21,6 @@ public interface FragmentProvider {
 
   Fragment newStoreFragment(String storeName, String storeTheme);
 
-  Fragment newStoreFragment(String storeName);
-
-  /**
-   * @param storeContext is needed to give context to fragment ex: store downloads vs global
-   * downloads
-   */
-  Fragment newStoreFragment(String storeName, StoreContext storeContext, String storeTheme);
-
-  /**
-   * @param storeContext is needed to give context to fragment ex: store downloads vs global
-   * downloads
-   */
-  Fragment newStoreFragment(String storeName, StoreContext storeContext);
-
   /**
    * @param storeContext is needed to give context to fragment ex: store downloads vs global
    * downloads

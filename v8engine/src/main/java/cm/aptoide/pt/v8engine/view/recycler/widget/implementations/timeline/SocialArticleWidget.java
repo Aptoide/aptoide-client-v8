@@ -27,8 +27,6 @@ public class SocialArticleWidget extends SocialCardWidget<SocialArticleDisplayab
   private TextView title;
   private TextView subtitle;
   //private TextView time;
-  private ImageView storeAvatar;
-  private ImageView userAvatar;
   private TextView articleTitle;
   private ImageView thumbnail;
   private View url;
