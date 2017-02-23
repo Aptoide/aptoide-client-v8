@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.activity;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import cm.aptoide.pt.actions.PermissionRequest;
@@ -104,75 +106,6 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
     super.onDestroy();
   }
 
-  @Override protected void onPause() {
-    super.onPause();
-    _resumed = false;
-    Analytics.Lifecycle.Activity.onPause(this);
-  }
-
-  @Override protected void onResume() {
-    super.onResume();
-    _resumed = true;
-    Analytics.Lifecycle.Activity.onResume(this);
-  }
-
-  //
-  // code to support android M permission system
-  //
-  // android 6 permission system
-  // consider using https://github.com/hotchemi/PermissionsDispatcher
-  //
-
-  @TargetApi(Build.VERSION_CODES.M) @Override
-  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-      @NonNull int[] grantResults) {
-
-    // got this error on fabric => added this check
-    if (grantResults.length == 0) {
-      super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-    switch (requestCode) {
-
-      case ACCESS_TO_EXTERNAL_FS_REQUEST_ID:
-        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-          // Permission Granted
-          Logger.i(TAG, "access to read and write to external storage was granted");
-          if (toRunWhenAccessToFileSystemIsGranted != null) {
-            toRunWhenAccessToFileSystemIsGranted.call();
-          }
-        } else {
-          if (toRunWhenAccessToFileSystemIsDenied != null) {
-            toRunWhenAccessToFileSystemIsDenied.call();
-          }
-          ShowMessage.asSnack(findViewById(android.R.id.content),
-              "access to read and write to external " +
-                  "storage" +
-                  " was denied");
-        }
-        break;
-
-      case ACCESS_TO_ACCOUNTS_REQUEST_ID:
-        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-          // Permission Granted
-          Logger.i(TAG, "access to get accounts was granted");
-          if (toRunWhenAccessToAccountsIsGranted != null) {
-            toRunWhenAccessToAccountsIsGranted.call();
-          }
-        } else {
-          if (toRunWhenAccessToAccountsIsDenied != null) {
-            toRunWhenAccessToAccountsIsDenied.call();
-          }
-          ShowMessage.asSnack(findViewById(android.R.id.content),
-              "access to get accounts was denied");
-        }
-        break;
-
-      default:
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        break;
-    }
-  }
-
   /**
    * @return o nome so monitor associado a esta activity, para efeitos de Analytics.
    */
@@ -183,6 +116,13 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
       @Nullable Action0 toRunWhenAccessIsDennied) {
     requestAccessToExternalFileSystem(true, toRunWhenAccessIsGranted, toRunWhenAccessIsDennied);
   }
+
+  //
+  // code to support android M permission system
+  //
+  // android 6 permission system
+  // consider using https://github.com/hotchemi/PermissionsDispatcher
+  //
 
   @TargetApi(Build.VERSION_CODES.M)
   public void requestAccessToExternalFileSystem(boolean forceShowRationale,
@@ -332,5 +272,78 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
   private void showMessageOKCancel(String message,
       SimpleSubscriber<GenericDialogs.EResponse> subscriber) {
     GenericDialogs.createGenericOkCancelMessage(this, "", message).subscribe(subscriber);
+  }
+
+  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    FragmentManager fragment = getSupportFragmentManager();
+    if (fragment != null) {
+      fragment.findFragmentByTag("AddressBookFragment_1")
+          .onActivityResult(requestCode, resultCode, data);
+    } else {
+      Logger.d("Twitter", "fragment is null");
+    }
+  }
+
+  @Override protected void onPause() {
+    super.onPause();
+    _resumed = false;
+    Analytics.Lifecycle.Activity.onPause(this);
+  }
+
+  @Override protected void onResume() {
+    super.onResume();
+    _resumed = true;
+    Analytics.Lifecycle.Activity.onResume(this);
+  }
+
+  @TargetApi(Build.VERSION_CODES.M) @Override
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+      @NonNull int[] grantResults) {
+
+    // got this error on fabric => added this check
+    if (grantResults.length == 0) {
+      super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+    switch (requestCode) {
+
+      case ACCESS_TO_EXTERNAL_FS_REQUEST_ID:
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+          // Permission Granted
+          Logger.i(TAG, "access to read and write to external storage was granted");
+          if (toRunWhenAccessToFileSystemIsGranted != null) {
+            toRunWhenAccessToFileSystemIsGranted.call();
+          }
+        } else {
+          if (toRunWhenAccessToFileSystemIsDenied != null) {
+            toRunWhenAccessToFileSystemIsDenied.call();
+          }
+          ShowMessage.asSnack(findViewById(android.R.id.content),
+              "access to read and write to external " +
+                  "storage" +
+                  " was denied");
+        }
+        break;
+
+      case ACCESS_TO_ACCOUNTS_REQUEST_ID:
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+          // Permission Granted
+          Logger.i(TAG, "access to get accounts was granted");
+          if (toRunWhenAccessToAccountsIsGranted != null) {
+            toRunWhenAccessToAccountsIsGranted.call();
+          }
+        } else {
+          if (toRunWhenAccessToAccountsIsDenied != null) {
+            toRunWhenAccessToAccountsIsDenied.call();
+          }
+          ShowMessage.asSnack(findViewById(android.R.id.content),
+              "access to get accounts was denied");
+        }
+        break;
+
+      default:
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        break;
+    }
   }
 }
