@@ -19,4 +19,8 @@ public class PermissionManager {
   public Observable<Void> requestDownloadAccess(PermissionRequest permissionRequest) {
     return Observable.create(new RequestDownloadAccessOnSubscribe(permissionRequest));
   }
+
+  public Observable<Void> requestContactsAccess(PermissionRequest permissionRequest) {
+    return Observable.create(new RequestContactsAccessOnSubscribe(permissionRequest));
+  }
 }

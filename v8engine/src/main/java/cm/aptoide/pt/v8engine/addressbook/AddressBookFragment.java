@@ -6,16 +6,19 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.actions.PermissionRequest;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.addressbook.data.Contact;
 import cm.aptoide.pt.v8engine.addressbook.data.ContactsRepositoryImpl;
-import cm.aptoide.pt.v8engine.addressbook.data.SyncAddressBookRequest;
 import cm.aptoide.pt.v8engine.fragment.SupportV4BaseFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.List;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by jdandrade on 07/02/2017.
@@ -43,15 +46,22 @@ public class AddressBookFragment extends SupportV4BaseFragment implements Addres
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    mActionsListener = new AddressBookPresenter(this,
-        new ContactsRepositoryImpl(new SyncAddressBookRequest(null, null)));
+    mActionsListener = new AddressBookPresenter(this, new ContactsRepositoryImpl());
   }
 
   @Override public void setupViews() {
     mActionsListener.getButtonsState();
     dismissV.setPaintFlags(dismissV.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
     about.setPaintFlags(about.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-    RxView.clicks(addressBookSyncButton).subscribe(click -> mActionsListener.syncAddressBook());
+    RxView.clicks(addressBookSyncButton).subscribe(click -> {
+      PermissionManager permissionManager = new PermissionManager();
+      final PermissionRequest permissionRequest = (PermissionRequest) getContext();
+      permissionManager.requestContactsAccess(permissionRequest)
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe(success -> {
+            mActionsListener.syncAddressBook();
+          }, throwable -> CrashReport.getInstance().log(throwable));
+    });
     RxView.clicks(facebookSyncButton).subscribe(click -> mActionsListener.syncFacebook());
     RxView.clicks(twitterSyncButton).subscribe(click -> mActionsListener.syncTwitter());
     RxView.clicks(dismissV).subscribe(click -> mActionsListener.finishViewClick());
@@ -84,6 +94,11 @@ public class AddressBookFragment extends SupportV4BaseFragment implements Addres
   @Override public void showSuccessFragment(List<Contact> contacts) {
     ((FragmentShower) getContext()).pushFragmentV4(
         V8Engine.getFragmentProvider().newSyncSuccessFragment(contacts));
+  }
+
+  @Override public void showInviteFriendsFragment() {
+    ((FragmentShower) getContext()).pushFragmentV4(
+        V8Engine.getFragmentProvider().newInviteFriendsFragment());
   }
 
   private void changeSyncState(boolean checked, Button button) {

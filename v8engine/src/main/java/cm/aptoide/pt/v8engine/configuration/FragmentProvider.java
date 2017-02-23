@@ -132,4 +132,6 @@ public interface FragmentProvider {
   Fragment newSyncSuccessFragment(List<Contact> contacts);
 
   Fragment newPhoneInputFragment();
+
+  Fragment newInviteFriendsFragment();
 }

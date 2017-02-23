@@ -20,6 +20,8 @@ public interface AddressBookContract {
     void showAboutFragment();
 
     void showSuccessFragment(List<Contact> contacts);
+
+    void showInviteFriendsFragment();
   }
 
   interface UserActionsListener {

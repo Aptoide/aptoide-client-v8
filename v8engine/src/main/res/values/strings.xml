@@ -386,6 +386,7 @@
   <string name="addressbook_invite_friends">Invite friends to join you!</string>
   <string name="addressbook_thanks_for_connecting">Thank you for connecting</string>
   <string name="addressbook_success_connected_friends">We successfully connected you with %1$s friends that use %2$s</string>
+  <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">We didn\'t find any contacts that are using Aptoide</string>
 
 
 </resources>

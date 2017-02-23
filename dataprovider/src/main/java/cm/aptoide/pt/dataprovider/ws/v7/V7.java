@@ -312,6 +312,9 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
     Observable<BaseV7Response> setDownloadAnalyticsEvent(@Path(value = "name") String name,
         @Path(value = "action") String action, @Path(value = "context") String context,
         @Body DownloadInstallAnalyticsBaseBody body);
+
+    @POST("user/connections/set") Observable<GetFollowers> setConnections(
+        @Body SyncAddressBookRequest.Body body);
   }
 }
 
