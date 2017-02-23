@@ -20,6 +20,6 @@ public interface PhoneInputContract {
 
     void notNowClicked();
 
-    void submitClicked();
+    void submitClicked(String phoneNumber);
   }
 }

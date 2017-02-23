@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
@@ -40,6 +41,7 @@ public class AddressBookFragment extends SupportV4BaseFragment implements Addres
   private Button twitterSyncButton;
   private TextView dismissV;
   private TextView about;
+  private ProgressBar addressBookSyncProgress;
 
   private long userId;
   private String token;
@@ -65,6 +67,7 @@ public class AddressBookFragment extends SupportV4BaseFragment implements Addres
     mActionsListener.getButtonsState();
     dismissV.setPaintFlags(dismissV.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
     about.setPaintFlags(about.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+    addressBookSyncProgress.setIndeterminate(true);
     RxView.clicks(addressBookSyncButton).subscribe(click -> {
       PermissionManager permissionManager = new PermissionManager();
       final PermissionRequest permissionRequest = (PermissionRequest) getContext();
@@ -135,6 +138,14 @@ public class AddressBookFragment extends SupportV4BaseFragment implements Addres
         V8Engine.getFragmentProvider().newInviteFriendsFragment());
   }
 
+  @Override public void setAddressBookProgressIndicator(boolean showProgress) {
+    if (showProgress) {
+      addressBookSyncProgress.setVisibility(View.VISIBLE);
+    } else {
+      addressBookSyncButton.setVisibility(View.INVISIBLE);
+    }
+  }
+
   private void changeSyncState(boolean checked, Button button) {
     if (checked) {
       button.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_check, 0);
@@ -153,6 +164,8 @@ public class AddressBookFragment extends SupportV4BaseFragment implements Addres
     twitterSyncButton = (Button) view.findViewById(R.id.twitter_sync_button);
     dismissV = (TextView) view.findViewById(R.id.addressbook_not_now);
     about = (TextView) view.findViewById(R.id.addressbook_about);
+    addressBookSyncProgress =
+        (ProgressBar) view.findViewById(R.id.addressbook_addressbook_sync_progress);
   }
 
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {

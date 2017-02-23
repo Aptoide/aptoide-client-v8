@@ -37,7 +37,7 @@ public class SocialRepository {
         .subscribe(baseV7Response -> {
           final String userAccess = privacy ? BaseActivity.UserAccessState.UNLISTED.toString()
               : BaseActivity.UserAccessState.PUBLIC.toString();
-          SetUserRequest.of(aptoideClientUUID, userAccess, accessToken)
+          SetUserRequest.of(aptoideClientUUID, userAccess, accessToken, null)
               .observe()
               .subscribe(baseV7Response1 -> Logger.d(this.getClass().getSimpleName(),
                   baseV7Response.toString()), throwable -> throwable.printStackTrace());
@@ -66,7 +66,7 @@ public class SocialRepository {
         .subscribe(baseV7Response -> {
           final String userAccess = privacy ? BaseActivity.UserAccessState.UNLISTED.toString()
               : BaseActivity.UserAccessState.PUBLIC.toString();
-          SetUserRequest.of(aptoideClientUUID, userAccess, accessToken)
+          SetUserRequest.of(aptoideClientUUID, userAccess, accessToken, null)
               .observe()
               .subscribe(baseV7Response1 -> Logger.d(this.getClass().getSimpleName(),
                   baseV7Response.toString()), throwable -> throwable.printStackTrace());

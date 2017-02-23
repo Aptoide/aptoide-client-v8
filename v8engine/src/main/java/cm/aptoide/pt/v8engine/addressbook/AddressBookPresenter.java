@@ -18,11 +18,13 @@ public class AddressBookPresenter implements AddressBookContract.UserActionsList
   }
 
   @Override public void syncAddressBook() {
+    mAddressBookView.setAddressBookProgressIndicator(true);
     mContactsRepository.getContacts(contacts -> {
       if (!contacts.isEmpty()) {
         ManagerPreferences.setAddressBookAsSynced();
         mAddressBookView.changeAddressBookState(true);
         mAddressBookView.showSuccessFragment(contacts);
+        mAddressBookView.setAddressBookProgressIndicator(false);
       }
       mAddressBookView.showInviteFriendsFragment();
     });

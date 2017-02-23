@@ -46,14 +46,25 @@
         android:text="@string/addressbook_connect_with_friends_message"
         android:textColor="?android:attr/textColorSecondary" />
 
-    <Button
-        android:id="@+id/addressbook_sync_button"
-        style="?attr/customButton"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:drawableRight="@drawable/ic_check"
-        android:padding="10dp"
-        android:text="@string/addressbook_sync" />
+        android:layout_height="wrap_content">
+      <Button
+          android:id="@+id/addressbook_sync_button"
+          style="?attr/customButton"
+          android:layout_width="match_parent"
+          android:layout_height="60dp"
+          android:drawableRight="@drawable/ic_check"
+          android:padding="10dp"
+          android:text="@string/addressbook_sync" />
+      <ProgressBar
+          android:id="@+id/addressbook_addressbook_sync_progress"
+          android:layout_margin="5dp"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentEnd="true"
+          android:visibility="invisible"/>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

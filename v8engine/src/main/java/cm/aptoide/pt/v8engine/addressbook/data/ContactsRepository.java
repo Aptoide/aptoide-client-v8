@@ -10,8 +10,15 @@ import java.util.List;
 public interface ContactsRepository {
   void getContacts(@NonNull LoadContactsCallback callback);
 
+  void submitPhoneNumber(@NonNull SubmitContactCallback callback, String userPhone);
+
   interface LoadContactsCallback {
 
     void onContactsLoaded(List<Contact> contacts);
+  }
+
+  interface SubmitContactCallback {
+
+    void onPhoneNumberSubmission(boolean success);
   }
 }

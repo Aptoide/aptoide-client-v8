@@ -22,6 +22,8 @@ public interface AddressBookContract {
     void showSuccessFragment(List<Contact> contacts);
 
     void showInviteFriendsFragment();
+
+    void setAddressBookProgressIndicator(boolean showProgress);
   }
 
   interface UserActionsListener {

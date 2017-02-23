@@ -69,7 +69,7 @@ public class LoggedInActivity extends BaseActivity {
       pleaseWaitDialog.show();
 
       SetUserRequest.of(aptoideClientUUID.getAptoideClientUUID(), UserAccessState.PUBLIC.toString(),
-          AptoideAccountManager.getAccessToken()).execute(answer -> {
+          AptoideAccountManager.getAccessToken(), null).execute(answer -> {
         if (answer.isOk()) {
           Logger.v(TAG, "user is public");
           ShowMessage.asSnack(this, R.string.successful);
