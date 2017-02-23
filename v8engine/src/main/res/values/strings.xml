@@ -390,9 +390,12 @@
   <string name="not_now">Not now</string>
   <string name="follow_friends">Follow Friends</string>
   <string name="addressbook_data_about"><b>How %1$s Uses your Data</b>
-    \n\n%1$s will search your address book for friends and family that are using our App Store. We\’ll only use this information to
-    improve your %1$s experience by connecting you to more people that can share apps related content with you.
-    \n\n\nTo protect your privacy, all data will be encoded before sending it to %1$s servers.</string>
+    \n\n%1$s will search your address book for friends and family that are using our App Store. We\'ll
+    only use this information to improve your %1$s experience by connecting you to more people
+    that can share apps related content with you.\n\n\nTo protect your privacy, no clear private data
+    will be sent out to %1$s servers. An anonymous signature (hash) will be created with your data
+    and that hash cannot be reversed into the original contact info.
+  </string>
   <string name="addressbook_success">Success!</string>
   <string name="addressbook_allow_friends_find">Allow friends to find you</string>
   <string name="google">Google</string>
@@ -403,8 +406,10 @@
   <string name="addressbook_invite_friends">Invite friends to join you!</string>
   <string name="addressbook_thanks_for_connecting">Thank you for connecting</string>
   <string name="addressbook_success_connected_friends">We successfully connected you with %1$s friends that use %2$s</string>
-  <string name="addressbook_2nd_msg">We will encrypt your data and won\'t share it with anyone.</string>
-  <string name="addressbook_3rd_msg">Read more about it here</string>
+  <string name="addressbook_2nd_msg">%1$s will browse your address book for friends and family
+    that are using our App Store. To protect your privacy, no private data will be sent out to %1$s
+    servers</string>
+  <string name="addressbook_3rd_msg">LEARN MORE</string>
 
   <!-- 02/2017 strings for login / sign up -->
   <string name="join_company">Join %s</string>
