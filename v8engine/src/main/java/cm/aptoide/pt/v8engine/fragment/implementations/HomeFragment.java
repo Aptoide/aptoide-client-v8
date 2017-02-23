@@ -81,7 +81,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
   }
 
   private void setUserDataOnHeader() {
-    if(navigationView==null || navigationView.getVisibility()!=View.VISIBLE){
+    if (navigationView == null || navigationView.getVisibility() != View.VISIBLE) {
       // if the navigation view is not visible do nothing
       return;
     }
@@ -120,22 +120,6 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     return super.onCreateView(inflater, container, savedInstanceState);
-  }
-
-  @Override public void bindViews(View view) {
-    super.bindViews(view);
-
-    updateRepository = RepositoryFactory.getUpdateRepository();
-
-    navigationView = (NavigationView) view.findViewById(R.id.nav_view);
-    drawerLayout = (DrawerLayout) view.findViewById(R.id.drawer_layout);
-
-    setHasOptionsMenu(true);
-
-    receiver = new ChangeTabReceiver();
-    getContext().registerReceiver(receiver, new IntentFilter(ChangeTabReceiver.SET_TAB_EVENT));
-
-    Analytics.AppViewViewedFrom.addStepToList("HOME");
   }
 
   @Override public void onDestroyView() {
@@ -285,7 +269,7 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
   }
 
   private void startFeedbackFragment() {
-    String downloadFolderPath = Application.getConfiguration().getCachePath();
+    String downloadFolderPath = Application.getContext().getCacheDir().getPath();
     String screenshotFileName = getActivity().getClass().getSimpleName() + ".jpg";
     AptoideUtils.ScreenU.takeScreenshot(getActivity(), downloadFolderPath, screenshotFileName);
     getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
@@ -319,6 +303,22 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
     toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
     toolbar.setNavigationIcon(R.drawable.ic_drawer);
     toolbar.setNavigationOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
+  }
+
+  @Override public void bindViews(View view) {
+    super.bindViews(view);
+
+    updateRepository = RepositoryFactory.getUpdateRepository();
+
+    navigationView = (NavigationView) view.findViewById(R.id.nav_view);
+    drawerLayout = (DrawerLayout) view.findViewById(R.id.drawer_layout);
+
+    setHasOptionsMenu(true);
+
+    receiver = new ChangeTabReceiver();
+    getContext().registerReceiver(receiver, new IntentFilter(ChangeTabReceiver.SET_TAB_EVENT));
+
+    Analytics.AppViewViewedFrom.addStepToList("HOME");
   }
 
   @Override public boolean isDrawerOpened() {

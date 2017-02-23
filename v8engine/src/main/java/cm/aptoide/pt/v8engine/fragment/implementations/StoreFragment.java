@@ -34,6 +34,7 @@ import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.store.GetStore;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.StorePagerAdapter;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -127,17 +128,23 @@ public class StoreFragment extends BasePagerToolbarFragment {
             if (throwable instanceof AptoideWsV7Exception) {
               BaseV7Response baseResponse = ((AptoideWsV7Exception) throwable).getBaseResponse();
 
-              if (StoreUtils.PRIVATE_STORE_ERROR.equals(baseResponse.getError().getCode())
-                  || StoreUtils.PRIVATE_STORE_WRONG_CREDENTIALS.equals(
-                  baseResponse.getError().getCode())) {
-                DialogFragment dialogFragment =
-                    (DialogFragment) getFragmentManager().findFragmentByTag(PrivateStoreDialog.TAG);
-                if (dialogFragment == null) {
-                  dialogFragment =
-                      PrivateStoreDialog.newInstance(this, PRIVATE_STORE_REQUEST_CODE, storeName,
-                          true);
-                  dialogFragment.show(getFragmentManager(), PrivateStoreDialog.TAG);
-                }
+              switch (StoreUtils.getErrorType(baseResponse.getError().getCode())) {
+                case PRIVATE_STORE_ERROR:
+                case PRIVATE_STORE_WRONG_CREDENTIALS:
+                  DialogFragment dialogFragment =
+                      (DialogFragment) getFragmentManager().findFragmentByTag(
+                          PrivateStoreDialog.TAG);
+                  if (dialogFragment == null) {
+                    dialogFragment =
+                        PrivateStoreDialog.newInstance(this, PRIVATE_STORE_REQUEST_CODE, storeName,
+                            true);
+                    dialogFragment.show(getFragmentManager(), PrivateStoreDialog.TAG);
+                  }
+                  break;
+                case STORE_SUSPENDED:
+                  showStoreSuspendedPopup(storeName);
+                default:
+                  finishLoading(throwable);
               }
             } else {
               finishLoading(throwable);
@@ -230,6 +237,20 @@ public class StoreFragment extends BasePagerToolbarFragment {
           break;
       }
     }
+  }
+
+  private void showStoreSuspendedPopup(String storeName) {
+    GenericDialogs.createGenericOkCancelMessage(getContext(), "", R.string.store_suspended_message,
+        android.R.string.ok, R.string.unfollow).subscribe(eResponse -> {
+      switch (eResponse) {
+        case NO:
+          StoreUtils.unsubscribeStore(storeName);
+        case YES:
+        case CANCEL:
+          getActivity().onBackPressed();
+          break;
+      }
+    });
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

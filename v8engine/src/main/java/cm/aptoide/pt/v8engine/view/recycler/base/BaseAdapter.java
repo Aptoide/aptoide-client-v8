@@ -49,8 +49,8 @@ public class BaseAdapter extends RecyclerView.Adapter<Widget> implements Lifecyc
   }
 
   @Override public void onViewRecycled(Widget holder) {
-    super.onViewRecycled(holder);
     holder.unbindView();
+    super.onViewRecycled(holder);
   }
 
   public Displayable popDisplayable() {

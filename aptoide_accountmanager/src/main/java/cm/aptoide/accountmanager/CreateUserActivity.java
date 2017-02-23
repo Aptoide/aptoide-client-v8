@@ -257,7 +257,7 @@ public class CreateUserActivity extends PermissionsBaseActivity
       avatarPath = fileUtils.getPathAlt(avatarUrl, getApplicationContext());
     } else if (requestCode == GALLERY_CODE && resultCode == RESULT_OK) {
       avatarUrl = data.getData();
-      avatarPath = fileUtils.getPath(avatarUrl, getApplicationContext());
+      avatarPath = fileUtils.getPathAlt(avatarUrl, getApplicationContext());
     }
     checkAvatarRequirements(avatarPath, avatarUrl);
   }

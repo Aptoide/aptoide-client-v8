@@ -41,11 +41,6 @@ public abstract class BaseActivity extends PermissionServiceActivity {
     setUpAnalytics();
   }
 
-  @Override protected void onStop() {
-    super.onStop();
-    Analytics.Lifecycle.Activity.onStop(this);
-  }
-
   private void setUpAnalytics() {
     Analytics.Dimensions.setPartnerDimension(Analytics.Dimensions.PARTNER);
     Analytics.Dimensions.setVerticalDimension(Analytics.Dimensions.VERTICAL);
@@ -53,10 +48,9 @@ public abstract class BaseActivity extends PermissionServiceActivity {
         DataproviderUtils.AdNetworksUtils.isGooglePlayServicesAvailable(this));
   }
 
-  @Override protected void onPause() {
-    super.onPause();
-    _resumed = false;
-    Analytics.Lifecycle.Activity.onPause(this);
+  @Override protected void onStart() {
+    super.onStart();
+    Analytics.Lifecycle.Activity.onStart(this);
   }
 
   @Override protected void onResume() {
@@ -65,9 +59,15 @@ public abstract class BaseActivity extends PermissionServiceActivity {
     Analytics.Lifecycle.Activity.onResume(this);
   }
 
-  @Override protected void onStart() {
-    super.onStart();
-    Analytics.Lifecycle.Activity.onStart(this);
+  @Override protected void onPause() {
+    super.onPause();
+    _resumed = false;
+    Analytics.Lifecycle.Activity.onPause(this);
+  }
+
+  @Override protected void onStop() {
+    super.onStop();
+    Analytics.Lifecycle.Activity.onStop(this);
   }
 
   @Override protected void onNewIntent(Intent intent) {
