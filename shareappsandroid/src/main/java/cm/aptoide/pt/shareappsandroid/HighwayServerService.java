@@ -25,6 +25,7 @@ import cm.aptoide.pt.shareapps.socket.message.interfaces.StorageCapacity;
 import cm.aptoide.pt.shareapps.socket.message.messages.RequestPermissionToSend;
 import cm.aptoide.pt.shareapps.socket.message.server.AptoideMessageServerSocket;
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.TimerTask;
 
@@ -55,6 +56,10 @@ public class HighwayServerService extends Service {
       mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
     }
     fileClientLifecycle = new FileClientLifecycle<AndroidAppInfo>() {
+      @Override public void onError(IOException e) {
+        e.printStackTrace();
+      }
+
       @Override public void onStartReceiving(AndroidAppInfo androidAppInfo) {
         System.out.println(" Started receiving ");
         showToast(" Started receiving ");
@@ -114,11 +119,8 @@ public class HighwayServerService extends Service {
         sendBroadcast(i);
       }
 
-      @Override public void onProgressChanged(float progress) {
-        System.out.println("onProgressChanged() called with: progress = [" + progress + "]");
-        //        showToast("onProgressChanged() called with: progress = [" + progress + "]");
-        int actualProgress = Math.round(progress * 100);
-        showSendProgress("insertAppName", actualProgress);
+      @Override public void onError(IOException e) {
+        e.printStackTrace();
       }
 
       @Override
@@ -137,6 +139,15 @@ public class HighwayServerService extends Service {
         i.setAction("SENDAPP");
         sendBroadcast(i);
       }
+
+      @Override public void onProgressChanged(float progress) {
+        System.out.println("onProgressChanged() called with: progress = [" + progress + "]");
+        //        showToast("onProgressChanged() called with: progress = [" + progress + "]");
+        int actualProgress = Math.round(progress * 100);
+        showSendProgress("insertAppName", actualProgress);
+      }
+
+
     };
 
       System.out.println(" Inside the service of the server");
@@ -202,22 +213,6 @@ public class HighwayServerService extends Service {
     }
   }
 
-  private void showSendProgress(String sendingAppName, int actual) {
-
-    if (System.currentTimeMillis() - lastTimestampSend > 1000 / 3) {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-        ((Notification.Builder) mBuilderSend).setContentText(
-            this.getResources().getString(R.string.sending) + " " + sendingAppName);
-        ((Notification.Builder) mBuilderSend).setProgress(100, actual, false);
-        if (mNotifyManager == null) {
-          mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        }
-        mNotifyManager.notify(id, ((Notification.Builder) mBuilderSend).getNotification());
-      }
-      lastTimestampSend = System.currentTimeMillis();
-    }
-  }
-
   /**
    * Method to be called after getting the callback of finishSending
    */
@@ -239,6 +234,22 @@ public class HighwayServerService extends Service {
               .getString(R.string.send))
           .setContentText(this.getResources().getString(R.string.preparingSend))
           .setSmallIcon(R.mipmap.lite);
+    }
+  }
+
+  private void showSendProgress(String sendingAppName, int actual) {
+
+    if (System.currentTimeMillis() - lastTimestampSend > 1000 / 3) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+        ((Notification.Builder) mBuilderSend).setContentText(
+            this.getResources().getString(R.string.sending) + " " + sendingAppName);
+        ((Notification.Builder) mBuilderSend).setProgress(100, actual, false);
+        if (mNotifyManager == null) {
+          mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        }
+        mNotifyManager.notify(id, ((Notification.Builder) mBuilderSend).getNotification());
+      }
+      lastTimestampSend = System.currentTimeMillis();
     }
   }
 

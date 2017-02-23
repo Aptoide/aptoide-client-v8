@@ -33,18 +33,13 @@ public abstract class AptoideSocket {
 
   public AptoideSocket startAsync() {
     executorService.execute(() -> {
-      try {
-        start();
-      } catch (IOException e) {
-        onError.onError(e);
-        e.printStackTrace(System.out);
-      }
+      start();
     });
     System.out.println("ShareApps: Started " + getClass().getSimpleName() + " AptoideSocket.");
     return this;
   }
 
-  public abstract AptoideSocket start() throws IOException;
+  public abstract AptoideSocket start();
 
   public void shutdownExecutorService() {
     executorService.shutdown();

@@ -25,7 +25,7 @@ public abstract class AptoideClientSocket extends AptoideSocket {
     this.port = port;
   }
 
-  @Override public AptoideSocket start() throws IOException {
+  @Override public AptoideSocket start() {
 
     Socket socket = null;
 
@@ -49,6 +49,9 @@ public abstract class AptoideClientSocket extends AptoideSocket {
 
     try {
       onConnected(socket);
+    } catch (IOException e) {
+      e.printStackTrace(System.out);
+      onError.onError(e);
     } finally {
       try {
         socket.close();
