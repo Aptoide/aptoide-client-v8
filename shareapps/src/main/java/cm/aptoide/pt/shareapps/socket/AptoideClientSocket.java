@@ -33,7 +33,8 @@ public abstract class AptoideClientSocket extends AptoideSocket {
       try {
         socket = new Socket(hostName, port);
       } catch (IOException e) {
-        e.printStackTrace();
+        e.printStackTrace(System.out);
+        onError.onError(e);
         try {
           Thread.sleep(1000);
         } catch (InterruptedException e1) {
