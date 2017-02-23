@@ -27,11 +27,13 @@ public class AptoideFileClientSocket<T> extends AptoideClientSocket {
   public AptoideFileClientSocket(String host, int port, List<FileInfo> fileInfos) {
     super(host, port);
     this.fileInfos = fileInfos;
+    onError = fileClientLifecycle;
   }
 
   public AptoideFileClientSocket(int bufferSize, String host, int port, List<FileInfo> fileInfos) {
     super(bufferSize, host, port);
     this.fileInfos = fileInfos;
+    onError = fileClientLifecycle;
   }
 
   @Override protected void onConnected(Socket socket) throws IOException {
