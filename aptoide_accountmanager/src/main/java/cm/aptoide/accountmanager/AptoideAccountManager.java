@@ -207,17 +207,28 @@ public class AptoideAccountManager implements Application.ActivityLifecycleCallb
   }
 
   /**
-   * This method should be used to login users for ABAN
+   * This method should be used to login users for Mobile verification Login
    *
    * @param phoneNumber users inserted phonenumber
-   * @param token users token sended by Aban
+   * @param token users token sended by the Mobile provider
    * @param username users inserted username
    */
-  public static void openAccountManager(ILoginInterface loginInterface, Context context,
+  @Partners public static void openAccountManager(ILoginInterface loginInterface, Context context,
       String phoneNumber, String token, String username) {
     setMCallback(loginInterface);
-    AptoideAccountManager.loginUserCredentials(LoginMode.ABAN, phoneNumber, token, username,
-        context);
+    switch (cm.aptoide.pt.preferences.Application.getConfiguration().getDefaultStore()) {
+      case "aban-app-store":
+        AptoideAccountManager.loginUserCredentials(LoginMode.ABAN, phoneNumber, token, username,
+            context);
+        break;
+      case "dsc-market":
+        AptoideAccountManager.loginUserCredentials(LoginMode.DSC, phoneNumber, token, username,
+            context);
+        break;
+      default:
+        throw new IllegalArgumentException(
+            "Unknown Login Mode! Please check if you added to the LoginMode Enum");
+    }
   }
 
   static AptoideAccountManager getInstance() {
