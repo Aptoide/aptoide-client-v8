@@ -79,7 +79,8 @@ public class AptoideAccountManager {
   }
 
   public boolean isLoggedIn() {
-    return androidAccountManager.getAccountsByType(Constants.ACCOUNT_TYPE).length != 0;
+    final Account account = getAccount();
+    return (account != null && !TextUtils.isEmpty(account.getEmail()) && !TextUtils.isEmpty(account.getPassword()));
   }
 
   public void logout(GoogleApiClient client) {
