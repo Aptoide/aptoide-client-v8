@@ -99,7 +99,7 @@ public class DisplayablesFactory {
             return Observable.empty();
           }
 
-        case STORE_META:
+        case HOME_META:
           return Observable.just(
               new GridStoreMetaDisplayable((GetStoreMeta) widget.getViewObject()));
 

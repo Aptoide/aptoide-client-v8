@@ -48,7 +48,7 @@ import rx.Observable;
       String accessToken, String aptoideClientUUID) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
-    return new GetStoreMetaRequest(new V7Url(url).remove("getStoreMeta").get(),
+    return new GetStoreMetaRequest(new V7Url(url).remove("home").get(),
         (Body) decorator.decorate(new Body(storeCredentials), accessToken), BASE_HOST);
   }
 

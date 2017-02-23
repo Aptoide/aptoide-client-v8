@@ -76,7 +76,7 @@ public class WSWidgetsUtils {
               .onErrorResumeNext(throwable -> Observable.empty())
               .map(listApps -> wsWidget);
 
-        case STORE_META:
+        case HOME_META:
           return GetStoreMetaRequest.ofAction(url, storeCredentials, accessToken, aptoideClientUuid)
               .observe(refresh)
               .observeOn(Schedulers.io())
