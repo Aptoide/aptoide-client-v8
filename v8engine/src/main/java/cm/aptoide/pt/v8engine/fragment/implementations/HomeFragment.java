@@ -79,9 +79,6 @@ public class HomeFragment extends StoreFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    accountNavigator =
-        new AccountNavigator(getNavigationManager(), accountManager);
     updateRepository = RepositoryFactory.getUpdateRepository(getContext());
   }
 
@@ -155,6 +152,9 @@ public class HomeFragment extends StoreFragment {
 
   @Override public void setupViews() {
     super.setupViews();
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    accountNavigator =
+        new AccountNavigator(getNavigationManager(), accountManager);
     setupNavigationView();
   }
 

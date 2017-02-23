@@ -59,7 +59,7 @@ public class DialogUtils {
       if (!accountManager.isLoggedIn()) {
         ShowMessage.asSnack(activity, R.string.you_need_to_be_logged_in, R.string.login,
             snackView -> {
-              accountNavigator.navigateToAccountView(false);
+              accountNavigator.navigateToAccountView();
             });
         subscriber.onNext(GenericDialogs.EResponse.CANCEL);
         subscriber.onCompleted();
@@ -159,7 +159,7 @@ public class DialogUtils {
     if (!accountManager.isLoggedIn()) {
       ShowMessage.asSnack(activity, R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> {
-            accountNavigator.navigateToAccountView(false);
+            accountNavigator.navigateToAccountView();
           });
 
       return;

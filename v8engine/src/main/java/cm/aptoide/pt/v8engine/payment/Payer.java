@@ -52,7 +52,7 @@ public class Payer {
       }
       return Observable.create(new BroadcastRegisterOnSubscribe(context, intentFilter, null, null))
           .doOnSubscribe(() -> {
-            accountNavigator.navigateToAccountView(false);
+            accountNavigator.navigateToAccountView();
           })
           .flatMap(intent -> {
             if (AptoideAccountManager.LOGIN.equals(intent.getAction())) {

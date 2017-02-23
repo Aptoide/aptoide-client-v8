@@ -6,7 +6,7 @@
 package cm.aptoide.pt.navigation;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.v8engine.fragment.implementations.LoginSignUpFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.JoinCommunityFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.MyAccountFragment;
 
 /**
@@ -24,15 +24,10 @@ public class AccountNavigator {
   }
 
   public void navigateToAccountView() {
-    navigateToAccountView(false);
-  }
-
-  // FIXME: 16/2/2017 sithengineer
-  public void navigateToAccountView(boolean useSkip) {
     if (accountManager.isLoggedIn()) {
       navigationManager.navigateTo(MyAccountFragment.newInstance());
     } else {
-      navigationManager.navigateTo(LoginSignUpFragment.newInstance(useSkip));
+      navigationManager.navigateTo(JoinCommunityFragment.newInstance(true));
     }
   }
 }

@@ -5,6 +5,7 @@
     android:background="@color/aptoide_orange"
     android:gravity="center_horizontal"
     android:orientation="vertical"
+    android:paddingBottom="@dimen/bottom_skip_bar_height"
     >
 
   <ImageView

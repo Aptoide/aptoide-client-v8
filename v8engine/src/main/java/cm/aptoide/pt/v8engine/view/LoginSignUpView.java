@@ -15,6 +15,14 @@ import rx.Observable;
 
 public interface LoginSignUpView extends GoogleLoginView {
 
+  Observable<Void> showAptoideLoginAreaClick();
+
+  Observable<Void> showAptoideSignUpAreaClick();
+
+  void showAptoideSignUpArea();
+
+  void showAptoideLoginArea();
+
   void showLoading();
 
   void hideLoading();
@@ -52,8 +60,4 @@ public interface LoginSignUpView extends GoogleLoginView {
   Observable<AptoideAccountViewModel> aptoideSignUpClick();
 
   boolean isPasswordVisible();
-
-  void showAptoideLogin();
-
-  void showSignUp();
 }

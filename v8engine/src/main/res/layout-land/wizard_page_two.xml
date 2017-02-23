@@ -6,6 +6,7 @@
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:weightSum="1"
+    android:paddingBottom="@dimen/bottom_skip_bar_height"
     >
 
   <ImageView

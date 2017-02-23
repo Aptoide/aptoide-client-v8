@@ -54,12 +54,12 @@ public class WizardPageThreeFragment extends Fragment {
     registerButton.setTransformationMethod(null);
 
     registerButton.setOnClickListener(view1 -> {
-      accountNavigator.navigateToAccountView(true);
+      accountNavigator.navigateToAccountView();
       getActivity().onBackPressed();
     });
 
     loginLink.setOnClickListener(view1 -> {
-      accountNavigator.navigateToAccountView(true);
+      accountNavigator.navigateToAccountView();
       getActivity().onBackPressed();
     });
   }

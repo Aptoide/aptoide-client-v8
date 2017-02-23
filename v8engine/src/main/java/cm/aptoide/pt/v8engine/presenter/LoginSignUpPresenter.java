@@ -47,7 +47,7 @@ public class LoginSignUpPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(created -> showOrHideLogins())
         .flatMap(resumed -> Observable.merge(googleLoginClick(), facebookLoginClick(),
-            aptoideLoginClick(), aptoideSignUpClick()))
+            aptoideLoginClick(), aptoideSignUpClick(), aptoideShowLoginClick(), aptoideShowSignUpClick()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
 
@@ -57,6 +57,14 @@ public class LoginSignUpPresenter implements Presenter {
             showHidePassword()).compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
+  }
+
+  private Observable<Void> aptoideShowSignUpClick() {
+    return view.showAptoideSignUpAreaClick().doOnNext(__-> view.showAptoideSignUpArea());
+  }
+
+  private Observable<Void> aptoideShowLoginClick() {
+    return view.showAptoideLoginAreaClick().doOnNext(__-> view.showAptoideLoginArea());
   }
 
   private void showOrHideLogins() {

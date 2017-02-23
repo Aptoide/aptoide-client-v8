@@ -12,10 +12,10 @@
     <item name="android:windowBackground">@color/background_window</item>
     <item name="android:ratingBarStyle">@style/RatingBarSmall</item>
 
-    <item name="colorPrimary">@color/aptoide_orange</item>
+    <item name="colorPrimary">@color/default_color</item>
     <item name="colorPrimaryDark">@color/aptoide_color_focused</item>
     <item name="colorAccent">@color/aptoide_color_focused</item>
-    <item name="customColor">@color/aptoide_orange</item>
+    <item name="customColor">@color/default_color</item>
 
     <!--toolbar-->
     <item name="toolbarTheme">@style/Toolbar</item>
@@ -51,6 +51,7 @@
     <item name="colorButtonNormal">@color/default_color</item>
     <item name="customButton">@style/WidgetButtonCustomAptoide</item>
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideWhite</item>
+    <item name="customButtonThinLine">@style/WidgetButtonCustomAptoideThinLine</item>
     <item name="headerSeparatorButton">@style/headerSeparatorButtonStyleAptoide</item>
     <item name="navigationDrawerColor">@style/navigationDrawerColorLight</item>
     <item name="customRowForegroundHomeLayout">@style/customRowStyleHomeLayout</item>

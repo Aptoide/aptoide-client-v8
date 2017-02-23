@@ -2,8 +2,8 @@ package cm.aptoide.pt.v8engine.fragment;
 
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -30,7 +30,8 @@ import java.util.ArrayList;
  * It also manages swapping pages and UI changes (Indicator + skip/next arrow)
  */
 // TODO: 16/2/2017 sithengineer add MVP to this view
-public class WizardFragment extends FragmentView {
+public class WizardFragment extends FragmentView
+    implements JoinCommunityFragment.BottomSheetStateListener {
 
   private DumbEagerFragmentPagerAdapter viewPagerAdapter;
   private ViewPager viewPager;
@@ -39,19 +40,25 @@ public class WizardFragment extends FragmentView {
   private View nextIcon;
 
   private ArrayList<RadioButton> wizardButtons;
+  private View skipOrNextLayout;
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.fragment_wizard, container, false);
+    View view = inflater.inflate(getLayoutId(), container, false);
     bind(view);
     createRadioButtons();
     setupHandlers();
     return view;
   }
 
+  @LayoutRes public int getLayoutId() {
+    return R.layout.fragment_wizard;
+  }
+
   private void bind(View view) {
     viewPager = (ViewPager) view.findViewById(R.id.view_pager);
+    skipOrNextLayout = view.findViewById(R.id.skip_next_layout);
     radioGroup = (RadioGroup) view.findViewById(R.id.view_pager_radio_group);
     skipText = view.findViewById(R.id.skip_text);
     nextIcon = view.findViewById(R.id.next_icon);
@@ -59,20 +66,13 @@ public class WizardFragment extends FragmentView {
     ArrayList<Fragment> fragmentList = new ArrayList<>();
     fragmentList.add(WizardPageOneFragment.newInstance());
     fragmentList.add(WizardPageTwoFragment.newInstance());
-    //fragmentList.add(WizardPageThreeFragment.newInstance());
-    fragmentList.add(JoinCommunityFragment.newInstance());
+    fragmentList.add(JoinCommunityFragment.newInstance(true).registerBottomSheetStateListener(this));
 
     viewPagerAdapter = new DumbEagerFragmentPagerAdapter(getActivity().getSupportFragmentManager());
     viewPagerAdapter.attachFragments(fragmentList);
 
     viewPager.setAdapter(viewPagerAdapter);
     viewPager.setCurrentItem(0);
-
-    BottomSheetBehavior<View> bottomSheetBehavior =
-        BottomSheetBehavior.from(view.findViewWithTag("bottom_sheet"));
-    bottomSheetBehavior.setHideable(true);
-    bottomSheetBehavior.setSkipCollapsed(true);
-    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
   }
 
   private void createRadioButtons() {
@@ -145,5 +145,13 @@ public class WizardFragment extends FragmentView {
       return ((FragmentView) f).onBackPressed();
     }
     return super.onBackPressed();
+  }
+
+  @Override public void expanded() {
+    skipOrNextLayout.setVisibility(View.GONE);
+  }
+
+  @Override public void hidden() {
+    skipOrNextLayout.setVisibility(View.VISIBLE);
   }
 }

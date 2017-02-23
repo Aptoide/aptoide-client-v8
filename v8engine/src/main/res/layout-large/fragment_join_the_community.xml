@@ -47,7 +47,7 @@ android:fitsSystemWindows="true"
           android:text="Join the community"
           android:textAlignment="center"
           android:textColor="@color/light_custom_gray"
-          android:textSize="26sp"
+          android:textSize="38sp"
           />
 
       <TextView
@@ -62,7 +62,7 @@ android:fitsSystemWindows="true"
           android:text="Sign up and start creating your user profile and Store. Engage with the community by uploading, rating and sharing apps that you like."
           android:textAlignment="center"
           android:textColor="@color/light_custom_gray"
-          android:textSize="14sp"
+          android:textSize="22sp"
           />
 
     </LinearLayout>
@@ -72,11 +72,11 @@ android:fitsSystemWindows="true"
   <FrameLayout
       android:id="@+id/login_signup_layout"
       android:layout_width="match_parent"
-      android:layout_height="380dp"
+      android:layout_height="400dp"
       android:visibility="visible"
       android:elevation="12dp"
       app:behavior_hideable="false"
-      app:behavior_peekHeight="250dp"
+      app:behavior_peekHeight="280dp"
       app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
       />
 
