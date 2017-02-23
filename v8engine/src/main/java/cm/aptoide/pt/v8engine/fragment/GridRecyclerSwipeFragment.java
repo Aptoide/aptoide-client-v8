@@ -19,12 +19,9 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.interfaces.ReloadInterface;
 import cm.aptoide.pt.v8engine.layouthandler.LoaderLayoutHandler;
 import cm.aptoide.pt.v8engine.layouthandler.SwipeLoaderLayoutHandler;
-import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
-import cm.aptoide.pt.v8engine.util.ThemeUtils;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 
 /**
@@ -35,17 +32,6 @@ public abstract class GridRecyclerSwipeFragment<T extends BaseAdapter>
 
   protected String storeTheme;
   private BroadcastReceiver receiver;
-
-  @Partners @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    if (storeTheme == null) {
-      storeTheme = V8Engine.getConfiguration().getDefaultTheme();
-    }
-    ThemeUtils.setStoreTheme(getActivity(), storeTheme);
-    ThemeUtils.setStatusBarThemeColor(getActivity(), StoreThemeEnum.get(storeTheme));
-    return super.onCreateView(inflater, container, savedInstanceState);
-  }
 
   @NonNull @Override protected LoaderLayoutHandler createLoaderLayoutHandler() {
     return new SwipeLoaderLayoutHandler(getViewToShowAfterLoadingId(), this);
@@ -80,14 +66,13 @@ public abstract class GridRecyclerSwipeFragment<T extends BaseAdapter>
     getContext().registerReceiver(receiver, intentFilter);
   }
 
-
-    private void unregisterReceiverForAccountManager() {
-      try {
-        getContext().unregisterReceiver(receiver);
-      } catch (IllegalArgumentException ex) {
-        CrashReport.getInstance().log(ex);
-      }
+  private void unregisterReceiverForAccountManager() {
+    try {
+      getContext().unregisterReceiver(receiver);
+    } catch (IllegalArgumentException ex) {
+      CrashReport.getInstance().log(ex);
     }
+  }
 
   protected static class BundleCons {
 

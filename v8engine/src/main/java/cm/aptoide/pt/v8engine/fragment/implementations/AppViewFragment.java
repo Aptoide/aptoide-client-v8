@@ -273,6 +273,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     if (storeTheme != null) {
       ThemeUtils.setStatusBarThemeColor(getActivity(),
           StoreThemeEnum.get(V8Engine.getConfiguration().getDefaultTheme()));
+      ThemeUtils.setAptoideTheme(getActivity());
     }
   }
 

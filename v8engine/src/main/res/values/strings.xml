@@ -5,6 +5,15 @@
 
 <resources>
 
+  <!-- NavDrawer List items -->
+  <string name="my_account">My Account</string>
+  <string name="spot_share">Spot&amp;Share</string>
+  <string name="setting_schdwntitle">Scheduled Downloads</string>
+  <string name="settings">Settings</string>
+  <string name="facebook">Facebook</string>
+  <string name="twitter">Twitter</string>
+  <string name="backup_apps">Backup Apps</string>
+
   <string name="dark">Dark</string>
   <string name="light">Light</string>
 
@@ -381,10 +390,12 @@
   <string name="not_now">Not now</string>
   <string name="follow_friends">Follow Friends</string>
   <string name="addressbook_data_about"><b>How %1$s Uses your Data</b>
-    \n\nThis feature allows %2$s to search for friends and family that already are using %3$s.
-    You\'ll upload your phone\'s address book to %4$s\'s servers and we\'ll do all the hard work.
-    \n\nWe\'ll use this information to connect you with your friends and family improving that way the Apps Timeline content.
-    \n\nIf you choose to send invitation via text message, standard rates may apply.</string>
+    \n\n%1$s will search your address book for friends and family that are using our App Store. We\'ll
+    only use this information to improve your %1$s experience by connecting you to more people
+    that can share apps related content with you.\n\n\nTo protect your privacy, no clear private data
+    will be sent out to %1$s servers. An anonymous signature (hash) will be created with your data
+    and that hash cannot be reversed into the original contact info.
+  </string>
   <string name="addressbook_success">Success!</string>
   <string name="addressbook_allow_friends_find">Allow friends to find you</string>
   <string name="google">Google</string>
@@ -395,6 +406,10 @@
   <string name="addressbook_invite_friends">Invite friends to join you!</string>
   <string name="addressbook_thanks_for_connecting">Thank you for connecting</string>
   <string name="addressbook_success_connected_friends">We successfully connected you with %1$s friends that use %2$s</string>
+  <string name="addressbook_2nd_msg">%1$s will browse your address book for friends and family
+    that are using our App Store. To protect your privacy, no private data will be sent out to %1$s
+    servers</string>
+  <string name="addressbook_3rd_msg">LEARN MORE</string>
 
   <!-- 02/2017 strings for login / sign up -->
   <string name="join_company">Join %s</string>
@@ -407,5 +422,11 @@
   <string name="email">Email</string>
   <string name="password">Password</string>
   <string name="create_password">Create Password</string>
+  <string name="store_suspended_message">Store suspended</string>
+
+  <!-- Add stores dialog -->
+  <string name="add_store_dialog_title">You can find exclusive taylored content made just for you in different stores</string>
+  <string name="add_store_dialog_top_stores">DISCOVER TOP STORES</string>
+  <string name="add_store_dialog_top_stores_small_text">and find exclusive content!</string>
 
 </resources>

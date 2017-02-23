@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2016.
- * Modified by Neurophobic Animal on 07/06/2016.
- */
-
 package cm.aptoide.pt.v8engine.provider;
 
 import android.app.SearchManager;
@@ -10,21 +5,23 @@ import android.content.SearchRecentSuggestionsProvider;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
-import android.os.Build;
+import android.util.Log;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.v8engine.websocket.WebSocketSingleton;
+import cm.aptoide.pt.v8engine.websocket.WebSocketManager;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
- * Created with IntelliJ IDEA. User: brutus Date: 26-09-2013 Time: 10:32 To change this template
- * use
- * File | Settings |
- * File Templates.
+ * Created by pedroribeiro on 18/01/17.
  */
-public class SuggestionProvider extends SearchRecentSuggestionsProvider {
+
+public abstract class SearchRecentSuggestionsProviderWrapper
+    extends SearchRecentSuggestionsProvider {
+
+  private static final String TAG = "StoreWebsockets";
 
   @Override public boolean onCreate() {
 
@@ -32,27 +29,28 @@ public class SuggestionProvider extends SearchRecentSuggestionsProvider {
     return super.onCreate();
   }
 
-  public String getSearchProvider() {
-    return "cm.aptoide.pt.v8engine.provider.SuggestionProvider";
-  }
+  public abstract String getSearchProvider();
 
   @Override public Cursor query(final Uri uri, String[] projection, String selection,
       final String[] selectionArgs, String sortOrder) {
-    Logger.d("TAG", "query: " + selectionArgs[0]);
+    Log.d(TAG, "search-query: " + selectionArgs[0]);
 
     Cursor c = super.query(uri, projection, selection, selectionArgs, sortOrder);
 
-    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.ECLAIR_MR1 && c != null) {
+    if (c != null) {
       BlockingQueue<MatrixCursor> arrayBlockingQueue = new ArrayBlockingQueue<MatrixCursor>(1);
-      WebSocketSingleton.getInstance().setBlockingQueue(arrayBlockingQueue);
+      WebSocketManager.setBlockingQueue(arrayBlockingQueue);
 
-      MatrixCursor matrix_cursor = null;
-      WebSocketSingleton.getInstance().send(selectionArgs[0]);
+      MatrixCursor matrixCursor = null;
+
+      WebSocketManager storeAutoCompleteWebSocket = getWebSocket();
+      storeAutoCompleteWebSocket.send(buildJson(selectionArgs[0]));
+      //SearchWebSocketManager.getWebSocket().send();
       try {
-        matrix_cursor = arrayBlockingQueue.poll(5, TimeUnit.SECONDS);
+        matrixCursor = arrayBlockingQueue.poll(5, TimeUnit.SECONDS);
 
         for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
-          matrix_cursor.newRow()
+          matrixCursor.newRow()
               .add(c.getString(c.getColumnIndex(SearchManager.SUGGEST_COLUMN_ICON_1)))
               .add(c.getString(c.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1)))
               .add(c.getString(c.getColumnIndex(SearchManager.SUGGEST_COLUMN_QUERY)))
@@ -63,9 +61,22 @@ public class SuggestionProvider extends SearchRecentSuggestionsProvider {
       } finally {
         c.close();
       }
-      return matrix_cursor;
+      return matrixCursor;
     } else {
       return null;
     }
+  }
+
+  public abstract WebSocketManager getWebSocket();
+
+  protected String buildJson(String query) {
+    JSONObject jsonObject = new JSONObject();
+    try {
+      jsonObject.put("query", query);
+      jsonObject.put("limit", 5);
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
+    return jsonObject.toString();
   }
 }

@@ -47,6 +47,7 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
   private String screenShotPath;
   private EditText messageBodyEdit;
   private EditText subgectEdit;
+  private Subscription unManagedSubscription;
 
   public static SendFeedbackFragment newInstance(String screenshotFilePath) {
     SendFeedbackFragment sendFeedbackFragment = new SendFeedbackFragment();
@@ -68,6 +69,25 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
       return true;
     }
     return super.onOptionsItemSelected(item);
+  }
+
+  @Override public void onAttach(Activity activity) {
+    super.onAttach(activity);
+  }
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+  }
+
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+  }
+
+  @Override public void onDestroyView() {
+    super.onDestroyView();
+    if (unManagedSubscription != null) {
+      unManagedSubscription.unsubscribe();
+    }
   }
 
   @Override public void setupViews() {
@@ -133,7 +153,9 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
       //}
 
       InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
-      Subscription unManagedSubscription = installedAccessor.get(getContext().getPackageName())
+      //attach screenshots and logs
+      //				Analytics.SendFeedback.sendFeedback();
+      unManagedSubscription = installedAccessor.get(getContext().getPackageName()).first()
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(installed1 -> {
             String versionName = "";
@@ -189,18 +211,6 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
       photoURI = Uri.fromFile(file);
     }
     return photoURI;
-  }
-
-  @Override public void onAttach(Activity activity) {
-    super.onAttach(activity);
-  }
-
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-  }
-
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
   }
 
   @Override public int getContentViewId() {

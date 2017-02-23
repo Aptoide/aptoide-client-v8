@@ -151,7 +151,9 @@ public class DisplayablesFactory {
 
         nrAppBricks = Math.min(nrAppBricks, apps.size());
 
-        if (apps.size() == 2) {
+        if (apps.size() == 1) {
+          useBigBrick = true;
+        } else if (apps.size() == 2) {
           useBigBrick = false;
         }
 
@@ -351,7 +353,8 @@ public class DisplayablesFactory {
   }
 
   public static Observable<List<Store>> loadLocalSubscribedStores(StoreRepository storeRepository) {
-    return storeRepository.getAll().first()
+    return storeRepository.getAll()
+        .first()
         .observeOn(Schedulers.computation())
         .flatMap(stores -> Observable.from(stores).map(store -> {
           Store nwStore = new Store();

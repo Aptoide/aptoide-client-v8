@@ -119,6 +119,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
         compositeSubscription.add(RxView.clicks(editStoreButton)
             .subscribe(click -> editStore(store.getId(), store.getAppearance().getTheme(),
                 store.getAppearance().getDescription(), store.getAvatar())));
+        subscribeButton.setVisibility(View.GONE);
       }
     }
   }
