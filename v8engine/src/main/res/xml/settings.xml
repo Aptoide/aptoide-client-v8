@@ -10,6 +10,16 @@
     android:title="@string/settings_title_bar">
 
   <PreferenceCategory
+      android:title="@string/setting_general"
+      >
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="updatesFilterAlphaBetaKey"
+        android:summary="@string/updates_filter_summary"
+        android:title="@string/updates_filter_setting_title"/>
+
+  </PreferenceCategory>
+  <PreferenceCategory
       android:title="@string/setting_general_download_rules"
       >
 
@@ -69,11 +79,6 @@
         android:key="showUpdatesNotification"
         android:summary="@string/setting_updates_notification_sum"
         android:title="@string/setting_updates_notification_title"/>
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="updatesFilterAlphaBetaKey"
-        android:summary="@string/updates_filter_summary"
-        android:title="@string/updates_filter_setting_title"/>
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="updatesSystemAppsKey"
