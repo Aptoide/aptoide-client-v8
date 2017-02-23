@@ -8,13 +8,10 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayableGroup;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FollowStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreDisplayable;
-import java.util.ArrayList;
 import java.util.List;
 import rx.Observable;
-import rx.Scheduler;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by trinkes on 13/12/2016.
@@ -35,8 +32,8 @@ public class MyStoresFragment extends GetStoreWidgetsFragment {
   }
 
   @Override protected Observable<List<Displayable>> buildDisplayables(boolean refresh, String url) {
-    Observable<List<Displayable>> widgetList =  super.buildDisplayables(refresh, url).map(displayables -> addFollowStoreDisplayable(displayables));
-    //criar método para eliminar o 6º diplayable do tipo stores (followed stores) e adicionar o novo displayable (follow store (novo) ) na posição onde inicialmente existe a primeira followed store (usualmente a apps)
+    Observable<List<Displayable>> widgetList =
+        super.buildDisplayables(refresh, url).map(this::addFollowStoreDisplayable);
     return widgetList;
   }
 
@@ -58,7 +55,7 @@ public class MyStoresFragment extends GetStoreWidgetsFragment {
   private List<Displayable> addFollowStoreDisplayable(List<Displayable> displayables) {
     int groupPosition = 0;
     int gridStoreDisplayablePosition = 0;
-    for(int i = 0; i < displayables.size(); i++) {
+    for (int i = 0; i < displayables.size(); i++) {
       if (displayables.get(i) instanceof DisplayableGroup) {
         groupPosition = i;
         break;
@@ -66,13 +63,18 @@ public class MyStoresFragment extends GetStoreWidgetsFragment {
     }
     DisplayableGroup displayableGroup = (DisplayableGroup) displayables.get(groupPosition);
     List<Displayable> displayableList = displayableGroup.getChildren();
-    for(int i = 0; i < displayableList.size(); i++) {
+    for (int i = 0; i < displayableList.size(); i++) {
       if (displayableList.get(i) instanceof GridStoreDisplayable) {
         gridStoreDisplayablePosition = i;
         break;
       }
     }
-    ((DisplayableGroup) displayables.get(groupPosition)).getChildren().add(gridStoreDisplayablePosition, new FollowStoreDisplayable());
+    ((DisplayableGroup) displayables.get(groupPosition)).getChildren()
+        .add(gridStoreDisplayablePosition, new FollowStoreDisplayable());
+    if (displayableList.size() > 6) {
+      ((DisplayableGroup) displayables.get(groupPosition)).getChildren()
+          .remove(displayableList.size() - 1);
+    }
     return displayables;
   }
 }
