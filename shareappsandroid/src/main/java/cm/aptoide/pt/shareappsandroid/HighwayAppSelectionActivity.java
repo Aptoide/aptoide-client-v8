@@ -91,7 +91,7 @@ public class HighwayAppSelectionActivity extends ActivityView implements Highway
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
       getSupportActionBar().setHomeButtonEnabled(true);
       getSupportActionBar().setDisplayShowTitleEnabled(true);
-      getSupportActionBar().setTitle(getResources().getString(R.string.shareApps));
+      getSupportActionBar().setTitle(getResources().getString(R.string.spot_share));
     }
   }
 

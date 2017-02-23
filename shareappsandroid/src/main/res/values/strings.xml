@@ -2,6 +2,8 @@
 <resources>
 
 
+  <string name="spot_share">Spot&amp;Share</string>
+
   <string name="youSent">You <b>sent</b> this app</string>
   <string name="youReceived">You <b>received</b> this app</string>
   <string name="youAreSending">You are <b>sending</b> this app</string>

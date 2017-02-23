@@ -120,7 +120,7 @@ public class HighwayActivity extends ActivityView implements HighwayView {
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
       getSupportActionBar().setHomeButtonEnabled(true);
       getSupportActionBar().setDisplayShowTitleEnabled(true);
-      getSupportActionBar().setTitle(getResources().getString(R.string.shareApps));
+      getSupportActionBar().setTitle(getResources().getString(R.string.spot_share));
     }
   }
 

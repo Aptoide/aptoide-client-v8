@@ -119,7 +119,7 @@
             android:layout_marginTop="4dp"
             android:layout_weight="0.9"
             android:adjustViewBounds="true"
-            android:src="@drawable/creategroup1"
+            android:src="@drawable/creategroup"
             />
 
         <TextView
