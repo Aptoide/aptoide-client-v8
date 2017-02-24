@@ -9,11 +9,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
 import android.support.annotation.Nullable;
-import android.widget.Toast;
 import cm.aptoide.pt.shareapps.socket.entities.AndroidAppInfo;
 import cm.aptoide.pt.shareapps.socket.entities.Host;
 import cm.aptoide.pt.shareapps.socket.interfaces.FileClientLifecycle;
@@ -27,7 +24,6 @@ import cm.aptoide.pt.shareapps.socket.message.server.AptoideMessageServerSocket;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.TimerTask;
 
 import static android.R.attr.id;
 
@@ -62,8 +58,6 @@ public class HighwayServerService extends Service {
 
       @Override public void onStartReceiving(AndroidAppInfo androidAppInfo) {
         System.out.println(" Started receiving ");
-        showToast(" Started receiving ");
-
         //show notification
         createReceiveNotification(androidAppInfo.getAppName());
 
@@ -76,7 +70,7 @@ public class HighwayServerService extends Service {
 
       @Override public void onFinishReceiving(AndroidAppInfo androidAppInfo) {
         System.out.println(" Finished receiving ");
-        showToast(" Finished receiving ");
+
 
         finishReceiveNotification(androidAppInfo.getApk().getFilePath());
 
@@ -92,7 +86,7 @@ public class HighwayServerService extends Service {
 
       @Override public void onProgressChanged(float progress) {//todo add AndroidAPpInfo - to get appname
         System.out.println("onProgressChanged() called with: " + "progress = [" + progress + "]");
-//        showToast("onProgressChanged() called with: " + "progress = [" + progress + "]");
+
         int actualProgress=Math.round(progress*100);
         showReceiveProgress("insertAppName",actualProgress);
       }
@@ -103,9 +97,6 @@ public class HighwayServerService extends Service {
       @Override
       public void onStartSending(AndroidAppInfo androidAppInfo) {
         System.out.println("Server : started sending");
-        showToast("Server : started sending");
-
-        //create notification
 
         createSendNotification();
 
@@ -126,7 +117,6 @@ public class HighwayServerService extends Service {
       @Override
       public void onFinishSending(AndroidAppInfo androidAppInfo) {
         System.out.println("Server : finished sending");
-        showToast("Server : finished sending");
 
         finishSendNotification();
 
@@ -142,7 +132,6 @@ public class HighwayServerService extends Service {
 
       @Override public void onProgressChanged(float progress) {
         System.out.println("onProgressChanged() called with: progress = [" + progress + "]");
-        //        showToast("onProgressChanged() called with: progress = [" + progress + "]");
         int actualProgress = Math.round(progress * 100);
         showSendProgress("insertAppName", actualProgress);
       }
@@ -153,13 +142,7 @@ public class HighwayServerService extends Service {
       System.out.println(" Inside the service of the server");
   }
 
-  @Deprecated private void showToast(final String str) {
-    new Handler(Looper.getMainLooper()).post(new TimerTask() {
-      @Override public void run() {
-        Toast.makeText(getBaseContext(), str, Toast.LENGTH_LONG).show();
-      }
-    });
-  }
+
 
   private void createReceiveNotification(String receivingAppName) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
