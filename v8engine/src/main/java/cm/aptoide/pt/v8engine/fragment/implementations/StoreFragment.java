@@ -28,13 +28,13 @@ import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.Event;
-import cm.aptoide.pt.model.v7.store.GetStore;
+import cm.aptoide.pt.model.v7.store.GetHome;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.R;
@@ -65,7 +65,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   protected PagerSlidingTabStrip pagerSlidingTabStrip;
   private String storeName;
   private StoreContext storeContext;
-  private GetStore getStore;
+  private GetHome getHome;
   private String storeTheme;
   private Event.Name defaultTab;
 
@@ -100,14 +100,14 @@ public class StoreFragment extends BasePagerToolbarFragment {
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    if (create || getStore == null) {
-      GetStoreRequest.of(StoreUtils.getStoreCredentials(storeName), storeContext,
+    if (create || getHome == null) {
+      GetHomeRequest.of(StoreUtils.getStoreCredentials(storeName), storeContext,
           AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
           .observe(refresh)
           .observeOn(AndroidSchedulers.mainThread())
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .subscribe((getStore) -> {
-            this.getStore = getStore;
+            this.getHome = getStore;
             setupViewPager();
           }, (throwable) -> {
             if (throwable instanceof AptoideWsV7Exception) {
@@ -220,7 +220,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   }
 
   @Override protected PagerAdapter createPagerAdapter() {
-    return new StorePagerAdapter(getChildFragmentManager(), getStore, storeContext);
+    return new StorePagerAdapter(getChildFragmentManager(), getHome, storeContext);
   }
 
   @Override public void onDestroy() {

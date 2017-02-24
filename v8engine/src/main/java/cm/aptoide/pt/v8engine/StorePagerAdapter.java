@@ -10,7 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.model.v7.Event;
-import cm.aptoide.pt.model.v7.store.GetStore;
+import cm.aptoide.pt.model.v7.store.GetHome;
 import cm.aptoide.pt.model.v7.store.GetStoreTabs;
 import cm.aptoide.pt.v8engine.util.Translator;
 import java.util.EnumMap;
@@ -28,18 +28,18 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
   private String storeTheme;
   private long storeId;
 
-  public StorePagerAdapter(FragmentManager fm, GetStore getStore, StoreContext storeContext) {
+  public StorePagerAdapter(FragmentManager fm, GetHome getHome, StoreContext storeContext) {
     super(fm);
-    this.storeId = getStore.getNodes().getMeta().getData().getId();
-    tabs = getStore.getNodes().getTabs().getList();
+    storeId = getHome.getNodes().getMeta().getData().getStore().getId();
+    tabs = getHome.getNodes().getTabs().getList();
     this.storeContext = storeContext;
     translateTabs(tabs);
-    if (getStore.getNodes().getMeta().getData().getId() != 15) {
-      storeTheme = getStore.getNodes().getMeta().getData().getAppearance().getTheme();
+    if (storeId != 15) {
+      storeTheme = getHome.getNodes().getMeta().getData().getStore().getAppearance().getTheme();
     }
     validateGetStore();
 
-    fillAvailableEventsMap(getStore);
+    fillAvailableEventsMap(getHome);
   }
 
   private void translateTabs(List<GetStoreTabs.Tab> tabs) {
@@ -58,8 +58,8 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
     }
   }
 
-  private void fillAvailableEventsMap(GetStore getStore) {
-    List<GetStoreTabs.Tab> list = getStore.getNodes().getTabs().getList();
+  private void fillAvailableEventsMap(GetHome getHome) {
+    List<GetStoreTabs.Tab> list = getHome.getNodes().getTabs().getList();
     for (int i = 0; i < list.size(); i++) {
       Event event = list.get(i).getEvent();
 
