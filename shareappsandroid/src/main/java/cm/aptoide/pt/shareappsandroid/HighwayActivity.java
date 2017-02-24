@@ -1,7 +1,6 @@
 package cm.aptoide.pt.shareappsandroid;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,6 +12,7 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -407,12 +407,8 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
   private Dialog buildMobileDataDialog() {
     //        mobileDataDialog=true;
 
-    AlertDialog.Builder builder;
-    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
-      builder = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT);
-    } else {
-      builder = new AlertDialog.Builder(this);
-    }
+    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
     builder.setTitle(this.getResources().getString(R.string.mobileDataTitle))
         .setMessage(this.getResources().getString(R.string.mobileDataMessage))
         .setPositiveButton(this.getResources().getString(R.string.turnOffButton),

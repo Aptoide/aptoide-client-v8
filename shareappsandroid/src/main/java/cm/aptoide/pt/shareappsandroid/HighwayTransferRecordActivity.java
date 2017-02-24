@@ -1,6 +1,5 @@
 package cm.aptoide.pt.shareappsandroid;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,10 +9,10 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -660,12 +659,8 @@ public class HighwayTransferRecordActivity extends ActivityView
     //            }
     //        }
     if (isHotspot) {//pq e uma String
-      AlertDialog.Builder builder;
-      if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
-        builder = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT);
-      } else {
-        builder = new AlertDialog.Builder(this);
-      }
+      AlertDialog.Builder builder= new AlertDialog.Builder(this);
+
       builder.setTitle(this.getResources().getString(R.string.alert))
           .setMessage(this.getResources().getString(R.string.alertCreatorLeave))
           .setPositiveButton(this.getResources().getString(R.string.leave),
@@ -688,12 +683,8 @@ public class HighwayTransferRecordActivity extends ActivityView
               });
       return builder.create();
     } else {
-      AlertDialog.Builder builder;
-      if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
-        builder = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT);
-      } else {
-        builder = new AlertDialog.Builder(this);
-      }
+      AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
       builder.setTitle(this.getResources().getString(R.string.alert))
           .setMessage(this.getResources().getString(R.string.alertClientLeave))
           .setPositiveButton(this.getResources().getString(R.string.leave),
@@ -859,12 +850,7 @@ public class HighwayTransferRecordActivity extends ActivityView
 
   public Dialog createDialogToDelete() {
 
-    AlertDialog.Builder builder;
-    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
-      builder = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT);
-    } else {
-      builder = new AlertDialog.Builder(this);
-    }
+    AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
     builder.setTitle(this.getResources().getString(R.string.alert))
         .setMessage(this.getResources().getString(R.string.alertClearApps1) + " \n" +
@@ -917,12 +903,8 @@ public class HighwayTransferRecordActivity extends ActivityView
     String message =
         String.format(getResources().getString(R.string.errorAppVersionNew), appName, appName);
 
-    AlertDialog.Builder builder;
-    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
-      builder = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT);
-    } else {
-      builder = new AlertDialog.Builder(this);
-    }
+    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
 
     builder.setMessage(message);
     builder.setPositiveButton(this.getResources().getString(R.string.ok),
@@ -944,12 +926,8 @@ public class HighwayTransferRecordActivity extends ActivityView
   public Dialog createDialogToInstall(final String appName, final String filePath) {
     String message = String.format(getResources().getString(R.string.alertInstallApp), appName);
 
-    AlertDialog.Builder builder;
-    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
-      builder = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT);
-    } else {
-      builder = new AlertDialog.Builder(this);
-    }
+    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
     builder.setTitle(getResources().getString(R.string.alert));
     builder.setMessage(message);
     builder.setPositiveButton(getResources().getString(R.string.install),
@@ -992,12 +970,7 @@ public class HighwayTransferRecordActivity extends ActivityView
 
     String message =
         String.format(getResources().getString(R.string.alertDeleteApp), item.getAppName());
-    AlertDialog.Builder builder;
-    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
-      builder = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT);
-    } else {
-      builder = new AlertDialog.Builder(this);
-    }
+    AlertDialog.Builder builder= new AlertDialog.Builder(this);
 
     builder.setTitle(getResources().getString(R.string.alert));
     builder.setMessage(message);
