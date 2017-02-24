@@ -37,7 +37,6 @@ import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.PRNGFixes;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -149,8 +148,7 @@ public abstract class V8Engine extends DataProvider {
 
   public AptoideAccountManager getAccountManager() {
     if (accountManager == null) {
-      accountManager = new AptoideAccountManager(this, getConfiguration(),
-          new SecureCoderDecoder.Builder(this).create(), AccountManager.get(this),
+      accountManager = new AptoideAccountManager(this, getConfiguration(), AccountManager.get(this),
           new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this),
           new ExternalServicesLoginAvailability(this, getConfiguration(),
               GoogleApiAvailability.getInstance()), new AccountAnalytcs());
@@ -203,7 +201,7 @@ public abstract class V8Engine extends DataProvider {
     db.close();
 
     final AptoideAccountManager accountManager = getAccountManager();
-    if(SecurePreferences.shouldLogoutUser()){
+    if (SecurePreferences.shouldLogoutUser()) {
       accountManager.removeAccount();
       SecurePreferences.setLogoutUser(false);
     }

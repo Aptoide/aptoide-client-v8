@@ -5,6 +5,10 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,6 +64,9 @@ public class LoginSignUpFragment extends FragmentView implements JoinCommunityVi
   }
 
   @Override public boolean onBackPressed() {
+
+    FragmentManager fragmManager = getActivity().getSupportFragmentManager();
+
     if (loginFragment.onBackPressed()) {
       bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
       return true;
@@ -78,15 +85,18 @@ public class LoginSignUpFragment extends FragmentView implements JoinCommunityVi
 
     Bundle args = getArguments();
     boolean withBottomBar = args != null && args.getBoolean(BOTTOM_SHEET_WITH_BOTTOM_BAR, false);
-    bottomSheetBehavior.setState(
-        withBottomBar ? BottomSheetBehavior.STATE_COLLAPSED : BottomSheetBehavior.STATE_EXPANDED);
 
     // pass some of this logic to the presenter
     final View mainContent = view.findViewById(R.id.main_content);
     final int originalBottomPadding = withBottomBar ? mainContent.getPaddingBottom() : 0;
-    if (!withBottomBar) {
-      mainContent.setPadding(0, 0, 0, 0);
+    if (withBottomBar) {
+      view.findViewById(R.id.appbar).setVisibility(View.GONE);
+    } else {
+      view.findViewById(R.id.appbar).setVisibility(View.VISIBLE);
+      setupToolbar(view);
     }
+    mainContent.setPadding(0, 0, 0, originalBottomPadding);
+    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
     bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
       @Override public void onStateChanged(@NonNull View bottomSheet, int newState) {
         switch (newState) {
@@ -108,6 +118,16 @@ public class LoginSignUpFragment extends FragmentView implements JoinCommunityVi
       @Override public void onSlide(@NonNull View bottomSheet, float slideOffset) {
       }
     });
+  }
+
+  private void setupToolbar(View view) {
+    Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+    toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
+    toolbar.setTitle(getString(R.string.my_account));
+    ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+
+    ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+    actionBar.setDisplayHomeAsUpEnabled(true);
   }
 
   public LoginSignUpFragment registerBottomSheetStateListener(

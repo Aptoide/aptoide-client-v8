@@ -5,10 +5,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
+import cm.aptoide.pt.v8engine.view.MainActivity;
 import com.trello.rxlifecycle.LifecycleTransformer;
 import com.trello.rxlifecycle.RxLifecycle;
 import com.trello.rxlifecycle.android.FragmentEvent;
@@ -40,6 +42,17 @@ public abstract class FragmentView extends RxFragment implements cm.aptoide.pt.v
     }
 
     super.onSaveInstanceState(outState);
+  }
+
+  /**
+   * Do not override this method in fragments to handle back stack navigation, before deciding if
+   * toolbar menu items should be handled in activity or the fragment.
+   *
+   * The back navigation menu item selection handling is currently done in the {@link
+   * MainActivity}.
+   */
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    return super.onOptionsItemSelected(item);
   }
 
   @NonNull @Override

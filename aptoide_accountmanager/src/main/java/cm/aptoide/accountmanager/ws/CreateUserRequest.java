@@ -70,10 +70,6 @@ public class CreateUserRequest extends v3accountManager<OAuth> {
         userAvatarPath, aptoideClientUUID, accountManager);
   }
 
-  public String getPassword() {
-    return password;
-  }
-
   @Override
   protected Observable<OAuth> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
 

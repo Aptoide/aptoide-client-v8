@@ -1,8 +1,8 @@
 package cm.aptoide.pt.v8engine.presenter;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.navigation.AccountNavigator;
 import cm.aptoide.pt.v8engine.view.MyAccountView;
 import cm.aptoide.pt.v8engine.view.View;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -12,15 +12,15 @@ public class MyAccountPresenter implements Presenter {
 
   private final MyAccountView view;
   private final AptoideAccountManager accountManager;
-  private final AccountNavigator accountNavigator;
   private final GoogleApiClient client;
+  private final FragmentManager fragmentManager;
 
   public MyAccountPresenter(MyAccountView view, AptoideAccountManager accountManager,
-      AccountNavigator accountNavigator, GoogleApiClient client) {
+      GoogleApiClient client, FragmentManager fragmentManager) {
     this.view = view;
     this.accountManager = accountManager;
-    this.accountNavigator = accountNavigator;
     this.client = client;
+    this.fragmentManager = fragmentManager;
   }
 
   @Override public void present() {
@@ -32,12 +32,14 @@ public class MyAccountPresenter implements Presenter {
   }
 
   private Observable<Void> signOutClick() {
-    return view.signOutClick().doOnNext(__ -> signOut());
+    return view.signOutClick().doOnNext(__ -> {
+      signOut();
+      view.navigateToLoginAfterLogout();
+    });
   }
 
   private void signOut() {
     accountManager.logout(client);
-    accountNavigator.navigateToAccountView();
   }
 
   @Override public void saveState(Bundle state) {

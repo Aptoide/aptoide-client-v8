@@ -18,8 +18,8 @@ import rx.functions.Action0;
 
 public abstract class PermissionServiceFragment extends FragmentView implements PermissionService {
 
-  @TargetApi(Build.VERSION_CODES.M)
-  @Override public void requestAccessToExternalFileSystem(@Nullable Action0 toRunWhenAccessIsGranted,
+  @TargetApi(Build.VERSION_CODES.M) @Override
+  public void requestAccessToExternalFileSystem(@Nullable Action0 toRunWhenAccessIsGranted,
       @Nullable Action0 toRunWhenAccessIsDenied) {
     try {
       ((PermissionService) this.getActivity()).requestAccessToExternalFileSystem(
@@ -30,8 +30,8 @@ public abstract class PermissionServiceFragment extends FragmentView implements 
     }
   }
 
-  @TargetApi(Build.VERSION_CODES.M)
-  @Override public void requestAccessToExternalFileSystem(boolean forceShowRationale,
+  @TargetApi(Build.VERSION_CODES.M) @Override
+  public void requestAccessToExternalFileSystem(boolean forceShowRationale,
       @Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDenied) {
     try {
       ((PermissionService) this.getActivity()).requestAccessToExternalFileSystem(forceShowRationale,
@@ -42,8 +42,8 @@ public abstract class PermissionServiceFragment extends FragmentView implements 
     }
   }
 
-  @TargetApi(Build.VERSION_CODES.M)
-  @Override public void requestAccessToAccounts(@Nullable Action0 toRunWhenAccessIsGranted,
+  @TargetApi(Build.VERSION_CODES.M) @Override
+  public void requestAccessToAccounts(@Nullable Action0 toRunWhenAccessIsGranted,
       @Nullable Action0 toRunWhenAccessIsDenied) {
     try {
       ((PermissionService) this.getActivity()).requestAccessToAccounts(toRunWhenAccessIsGranted,
@@ -54,8 +54,8 @@ public abstract class PermissionServiceFragment extends FragmentView implements 
     }
   }
 
-  @TargetApi(Build.VERSION_CODES.M)
-  @Override public void requestAccessToAccounts(boolean forceShowRationale,
+  @TargetApi(Build.VERSION_CODES.M) @Override
+  public void requestAccessToAccounts(boolean forceShowRationale,
       @Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDenied) {
     try {
       ((PermissionService) this.getActivity()).requestAccessToAccounts(forceShowRationale,
@@ -66,8 +66,8 @@ public abstract class PermissionServiceFragment extends FragmentView implements 
     }
   }
 
-  @TargetApi(Build.VERSION_CODES.M)
-  @Override public void requestDownloadAccess(@Nullable Action0 toRunWhenAccessIsGranted,
+  @TargetApi(Build.VERSION_CODES.M) @Override
+  public void requestDownloadAccess(@Nullable Action0 toRunWhenAccessIsGranted,
       @Nullable Action0 toRunWhenAccessIsDenied) {
     try {
       ((PermissionService) this.getActivity()).requestDownloadAccess(toRunWhenAccessIsGranted,

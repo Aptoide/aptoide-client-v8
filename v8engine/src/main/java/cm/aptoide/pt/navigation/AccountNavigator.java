@@ -27,7 +27,7 @@ public class AccountNavigator {
     if (accountManager.isLoggedIn()) {
       navigationManager.navigateTo(MyAccountFragment.newInstance());
     } else {
-      navigationManager.navigateTo(LoginSignUpFragment.newInstance(true));
+      navigationManager.navigateTo(LoginSignUpFragment.newInstance(false));
     }
   }
 }

@@ -15,20 +15,19 @@ public class Account {
   private final String email;
   private final String nickname;
   private final String avatar;
-
   private final String refreshToken;
   private final String token;
-  private final String password;
   private final Type type;
   private final String store;
   private final String storeAvatar;
   private final boolean mature;
   private final String access;
   private final boolean accessConfirmed;
+  private String password;
 
   public Account(String id, String email, String nickname, String avatar, String refreshToken,
-      String token, String password, Type type, String store, String storeAvatar,
-      boolean mature, String access, boolean accessConfirmed) {
+      String token, String password, Type type, String store, String storeAvatar, boolean mature,
+      String access, boolean accessConfirmed) {
     this.id = id;
     this.email = email;
     this.nickname = nickname;
@@ -42,10 +41,6 @@ public class Account {
     this.mature = mature;
     this.access = access;
     this.accessConfirmed = accessConfirmed;
-  }
-
-  public String getPassword() {
-    return password;
   }
 
   public String getEmail() {
@@ -96,7 +91,11 @@ public class Account {
     return accessConfirmed;
   }
 
-  public static enum Type {
+  public String getPassword() {
+    return password;
+  }
+
+  public enum Type {
     APTOIDE, GOOGLE, FACEBOOK, ABAN
   }
 }

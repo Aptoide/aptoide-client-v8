@@ -39,7 +39,6 @@ import java.util.Map;
  * Created by marcelobenites on 7/7/16.
  */
 public class ToolboxContentProvider extends ContentProvider {
-  private static final String TAG = ToolboxContentProvider.class.getSimpleName();
 
   private static final String BACKUP_PACKAGE = "pt.aptoide.backupapps";
   private static final String UPLOADER_PACKAGE = "pt.caixamagica.aptoide.uploader";
@@ -66,7 +65,7 @@ public class ToolboxContentProvider extends ContentProvider {
     uriMatcher.addURI(authority, "passHash", PASSHASH);
     uriMatcher.addURI(authority, "loginName", LOGIN_NAME);
     uriMatcher.addURI(authority, "changePreference", CHANGE_PREFERENCE);
-    aptoideAccountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
+    aptoideAccountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     return true;
   }
 
@@ -105,13 +104,13 @@ public class ToolboxContentProvider extends ContentProvider {
 
           if (account != null) {
             final MatrixCursor passwordCursor = new MatrixCursor(new String[] { "userPass" }, 1);
-            if (cm.aptoide.accountmanager.Account.Type.APTOIDE.equals(account.getType())) {
+            if (Account.Type.APTOIDE.equals(account.getType())) {
               passwordCursor.addRow(new String[] {
                   AptoideUtils.AlgorithmU.computeSha1(account.getPassword())
               });
               return passwordCursor;
-            } else if (cm.aptoide.accountmanager.Account.Type.APTOIDE.equals(
-                account.getType()) || cm.aptoide.accountmanager.Account.Type.GOOGLE.equals(account.getType())) {
+            } else if (Account.Type.FACEBOOK.equals(account.getType())
+                || Account.Type.GOOGLE.equals(account.getType())) {
               passwordCursor.addRow(new String[] { account.getPassword() });
               return passwordCursor;
             }
@@ -121,7 +120,8 @@ public class ToolboxContentProvider extends ContentProvider {
 
           if (account != null) {
             final MatrixCursor loginTypeCursor = new MatrixCursor(new String[] { "loginType" }, 1);
-            loginTypeCursor.addRow(new String[] { account.getType().name().toLowerCase(Locale.US) });
+            loginTypeCursor.addRow(
+                new String[] { account.getType().name().toLowerCase(Locale.US) });
             return loginTypeCursor;
           }
           throw new IllegalStateException("User not logged in.");

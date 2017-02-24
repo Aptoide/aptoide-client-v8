@@ -14,8 +14,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.annotation.Partners;
@@ -251,8 +251,10 @@ public class MainActivity extends BaseActivity implements MainView, FragmentShow
       handler.post(() -> {
         //final Fragment fragment = getCurrentFragment();
         final Fragment fragment = getLast();
-        if ((fragment instanceof HomeFragment)) {
+        if (fragment != null && (fragment instanceof HomeFragment)) {
           ((HomeFragment) fragment).setDesiredViewPagerItem(name);
+        } else {
+          throw new IllegalStateException("No more fragments available in the back stack");
         }
       });
     }
@@ -267,9 +269,19 @@ public class MainActivity extends BaseActivity implements MainView, FragmentShow
         && StoreTabFragmentChooser.validateAcceptedName(Event.Name.valueOf(queryName));
   }
 
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case android.R.id.home: {
+        onBackPressed();
+        break;
+      }
+    }
+    return super.onOptionsItemSelected(item);
+  }
+
   @Override public void onBackPressed() {
     final Fragment f = getLast();
-    if (FragmentView.class.isAssignableFrom(f.getClass())) {
+    if (f != null && FragmentView.class.isAssignableFrom(f.getClass())) {
       // similar code in FragmentActivity#onBackPressed()
       boolean handledBackPressed = ((FragmentView) f).onBackPressed();
       if (handledBackPressed) {
@@ -280,9 +292,6 @@ public class MainActivity extends BaseActivity implements MainView, FragmentShow
   }
 
   @Override public Fragment getLast() {
-    FragmentManager fragmentManager = getSupportFragmentManager();
-    FragmentManager.BackStackEntry backStackEntry =
-        fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1);
-    return getSupportFragmentManager().findFragmentByTag(backStackEntry.getName());
+    return getNavigationManager().peekLast();
   }
 }

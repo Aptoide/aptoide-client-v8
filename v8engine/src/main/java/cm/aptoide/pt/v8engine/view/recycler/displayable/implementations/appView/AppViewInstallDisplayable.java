@@ -103,7 +103,7 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
 
   public void buyApp(Context context, GetAppMeta.App app) {
     Fragment fragment = ((FragmentShower) context).getLast();
-    if (Payments.class.isAssignableFrom(fragment.getClass())) {
+    if (fragment!=null && Payments.class.isAssignableFrom(fragment.getClass())) {
       ((Payments) fragment).buyApp(app);
     }
   }

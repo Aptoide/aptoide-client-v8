@@ -9,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
@@ -22,6 +21,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.OAuthException;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -91,6 +91,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment implemen
   }
 
   @Override public boolean onBackPressed() {
+
     if (credentialsEditTextsArea.getVisibility() == View.VISIBLE) {
       credentialsEditTextsArea.setVisibility(View.GONE);
       loginSignupSelectionArea.setVisibility(View.VISIBLE);
@@ -273,13 +274,9 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment implemen
         HomeFragment.newInstance(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home,
             V8Engine.getConfiguration().getDefaultTheme());
 
-    // clean all the back stack in the Fragment Manager
-    final FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-    if (fragmentManager.getBackStackEntryCount() > 0) {
-      while (fragmentManager.popBackStackImmediate()) ;
-    }
-
-    getNavigationManager().navigateTo(home);
+    final NavigationManagerV4 navManager = getNavigationManager();
+    navManager.cleanBackStack();
+    navManager.navigateTo(home);
   }
 
   @Override public void hideKeyboard() {

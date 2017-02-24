@@ -20,7 +20,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -60,20 +59,13 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private static final String TAG = StoreFragment.class.getSimpleName();
 
   private final int PRIVATE_STORE_REQUEST_CODE = 20;
+  protected PagerSlidingTabStrip pagerSlidingTabStrip;
   private AptoideClientUUID aptoideClientUUID;
   private AptoideAccountManager accountManager;
-  protected PagerSlidingTabStrip pagerSlidingTabStrip;
   private String storeName;
   private StoreContext storeContext;
   private GetStore getStore;
   private String storeTheme;
-
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
-    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
-  }
 
   public static StoreFragment newInstance(String storeName, String storeTheme) {
     return newInstance(storeName, StoreContext.store, storeTheme);
@@ -103,6 +95,28 @@ public class StoreFragment extends BasePagerToolbarFragment {
     StoreFragment fragment = new StoreFragment();
     fragment.setArguments(args);
     return fragment;
+  }
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+  }
+
+  @Override public void onDestroy() {
+    super.onDestroy();
+    if (storeTheme != null) {
+      ThemeUtils.setStatusBarThemeColor(getActivity(),
+          StoreThemeEnum.get(V8Engine.getConfiguration().getDefaultTheme()));
+    }
+  }
+
+  @Override public void loadExtras(Bundle args) {
+    super.loadExtras(args);
+    storeName = args.getString(BundleCons.STORE_NAME);
+    storeContext = (StoreContext) args.get(BundleCons.STORE_CONTEXT);
+    storeTheme = args.getString(BundleCons.STORE_THEME);
   }
 
   @CallSuper @Nullable @Override
@@ -238,21 +252,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
     return new StorePagerAdapter(getChildFragmentManager(), getStore, storeContext);
   }
 
-  @Override public void onDestroy() {
-    super.onDestroy();
-    if (storeTheme != null) {
-      ThemeUtils.setStatusBarThemeColor(getActivity(),
-          StoreThemeEnum.get(V8Engine.getConfiguration().getDefaultTheme()));
-    }
-  }
-
-  @Override public void loadExtras(Bundle args) {
-    super.loadExtras(args);
-    storeName = args.getString(BundleCons.STORE_NAME);
-    storeContext = (StoreContext) args.get(BundleCons.STORE_CONTEXT);
-    storeTheme = args.getString(BundleCons.STORE_THEME);
-  }
-
   @Override public int getContentViewId() {
     return R.layout.store_activity;
   }
@@ -274,16 +273,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
     inflater.inflate(R.menu.menu_search, menu);
 
     setupSearch(menu);
-  }
-
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    int i = item.getItemId();
-
-    if (i == android.R.id.home) {
-      getActivity().onBackPressed();
-      return true;
-    }
-    return super.onOptionsItemSelected(item);
   }
 
   protected void setupSearch(Menu menu) {

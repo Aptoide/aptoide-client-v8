@@ -13,8 +13,7 @@ import cm.aptoide.pt.v8engine.view.PermissionServiceFragment;
 /**
  * Created by neuro on 14-04-2016.
  */
-public abstract class UIComponentFragment extends PermissionServiceFragment
-    implements UiComponent {
+public abstract class UIComponentFragment extends PermissionServiceFragment implements UiComponent {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -23,13 +22,6 @@ public abstract class UIComponentFragment extends PermissionServiceFragment
       loadExtras(getArguments());
     }
     ScreenTrackingUtils.getInstance().incrementNumberOfScreens();
-  }
-
-  @CallSuper @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    View v = super.onCreateView(inflater, container, savedInstanceState);
-    return v!=null ? v : inflater.inflate(getContentViewId(), null);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -59,6 +51,13 @@ public abstract class UIComponentFragment extends PermissionServiceFragment
 
   @Override public void setupToolbar() {
     // optional method
+  }
+
+  @CallSuper @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    super.onCreateView(inflater, container, savedInstanceState);
+    return inflater.inflate(getContentViewId(), container, false);
   }
 
   @Override public void setUserVisibleHint(boolean isVisibleToUser) {
