@@ -15,7 +15,7 @@ public class RequestContactsAccessOnSubscribe implements Observable.OnSubscribe<
   }
 
   @Override public void call(Subscriber<? super Void> subscriber) {
-    permissionRequest.requestAccessToContacts(true, () -> {
+    permissionRequest.requestAccessToContacts(false, () -> {
       if (!subscriber.isUnsubscribed()) {
         subscriber.onNext(null);
         subscriber.onCompleted();

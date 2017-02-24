@@ -14,7 +14,7 @@ import rx.Observable;
 public class SyncAddressBookRequest extends V7<GetFollowers, SyncAddressBookRequest.Body> {
 
   private static final String BASE_HOST = BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
-      + "s://"
+      + "://"
       + BuildConfig.APTOIDE_WEB_SERVICES_WRITE_V7_HOST
       + "/api/7/";
 
@@ -46,27 +46,6 @@ public class SyncAddressBookRequest extends V7<GetFollowers, SyncAddressBookRequ
       boolean bypassCache) {
     return interfaces.setConnections(body);
   }
-
-  //private List<Contact> getMockedResponse() {
-  //
-  //  List<Contact> contacts = new ArrayList<>();
-  //
-  //  for (int i = 0; i < 8; i++) {
-  //    Contact contact = new Contact();
-  //    Comment.User user = new Comment.User();
-  //    user.setName("João");
-  //    user.setAvatar(
-  //        "http://pool.img.aptoide.com/user/6e8fa2b3ed61fe34c7baad7332807551_avatar.jpg");
-  //    contact.setPerson(user);
-  //    Store store = new Store();
-  //    store.setName("Joao's store");
-  //    store.setAvatar(
-  //        "http://pool.img.aptoide.com/apps/815872daa4e7a55f93cb3692aff65e31_ravatar.jpg");
-  //    contact.setStore(store);
-  //    contacts.add(contact);
-  //  }
-  //  return contacts;
-  //}
 
   @Data public static class Body extends BaseBody implements Endless {
     private Contacts contacts;

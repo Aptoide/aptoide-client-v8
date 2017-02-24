@@ -54,6 +54,8 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
   @Nullable private Action0 toRunWhenAccessToAccountsIsDenied;
   @Nullable private Action0 toRunWhenDownloadAccessIsGranted;
   @Nullable private Action0 toRunWhenDownloadAccessIsDenied;
+  @Nullable private Action0 toRunWhenAccessToContactsIsGranted;
+  @Nullable private Action0 toRunWhenAccessToContactsIsDenied;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
 
@@ -187,49 +189,6 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
       this.toRunWhenAccessToAccountsIsDenied = toRunWhenAccessIsDenied;
 
       if (forceShowRationale || ActivityCompat.shouldShowRequestPermissionRationale(this,
-          Manifest.permission.READ_CONTACTS)) {
-        Logger.i(TAG, "showing rationale and requesting permission to access accounts");
-
-        // TODO: 19/07/16 sithengineer improve this rationale messages
-        showMessageOKCancel("You need to allow access to get contacts",
-            new SimpleSubscriber<GenericDialogs.EResponse>() {
-
-              @Override public void onNext(GenericDialogs.EResponse eResponse) {
-                super.onNext(eResponse);
-                if (eResponse != GenericDialogs.EResponse.YES) {
-                  if (toRunWhenAccessToAccountsIsDenied != null) {
-                    toRunWhenAccessToAccountsIsDenied.call();
-                  }
-                  return;
-                }
-
-                ActivityCompat.requestPermissions(AptoideBaseActivity.this, new String[] {
-                    Manifest.permission.READ_CONTACTS
-                }, PERMISSIONS_REQUEST_READ_CONTACTS);
-              }
-            });
-        return;
-      }
-
-      ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.READ_CONTACTS },
-          PERMISSIONS_REQUEST_READ_CONTACTS);
-      Logger.i(TAG, "requesting permission to access accounts");
-      return;
-    }
-    Logger.i(TAG, "already has permission to access accounts");
-    if (toRunWhenAccessIsGranted != null) {
-      toRunWhenAccessIsGranted.call();
-    }
-  }
-
-  @TargetApi(Build.VERSION_CODES.M) public void requestAccessToContacts(boolean forceShowRationale,
-      @Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDenied) {
-    int hasPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS);
-    if (hasPermission != PackageManager.PERMISSION_GRANTED) {
-      this.toRunWhenAccessToAccountsIsGranted = toRunWhenAccessIsGranted;
-      this.toRunWhenAccessToAccountsIsDenied = toRunWhenAccessIsDenied;
-
-      if (forceShowRationale || ActivityCompat.shouldShowRequestPermissionRationale(this,
           Manifest.permission.GET_ACCOUNTS)) {
         Logger.i(TAG, "showing rationale and requesting permission to access accounts");
 
@@ -256,6 +215,48 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
 
       ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.GET_ACCOUNTS },
           ACCESS_TO_ACCOUNTS_REQUEST_ID);
+      Logger.i(TAG, "requesting permission to access accounts");
+      return;
+    }
+    Logger.i(TAG, "already has permission to access accounts");
+    if (toRunWhenAccessIsGranted != null) {
+      toRunWhenAccessIsGranted.call();
+    }
+  }
+
+  @TargetApi(Build.VERSION_CODES.M) public void requestAccessToContacts(boolean forceShowRationale,
+      @Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDenied) {
+    int hasPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS);
+    if (hasPermission != PackageManager.PERMISSION_GRANTED) {
+      this.toRunWhenAccessToContactsIsGranted = toRunWhenAccessIsGranted;
+      this.toRunWhenAccessToContactsIsDenied = toRunWhenAccessIsDenied;
+
+      if (forceShowRationale) {
+        Logger.i(TAG, "showing rationale and requesting permission to access accounts");
+
+        // TODO: 19/07/16 sithengineer improve this rationale messages
+        showMessageOKCancel("You need to allow access to get contacts",
+            new SimpleSubscriber<GenericDialogs.EResponse>() {
+
+              @Override public void onNext(GenericDialogs.EResponse eResponse) {
+                super.onNext(eResponse);
+                if (eResponse != GenericDialogs.EResponse.YES) {
+                  if (toRunWhenAccessToContactsIsDenied != null) {
+                    toRunWhenAccessToContactsIsDenied.call();
+                  }
+                  return;
+                }
+
+                ActivityCompat.requestPermissions(AptoideBaseActivity.this, new String[] {
+                    Manifest.permission.READ_CONTACTS
+                }, PERMISSIONS_REQUEST_READ_CONTACTS);
+              }
+            });
+        return;
+      }
+
+      ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.READ_CONTACTS },
+          PERMISSIONS_REQUEST_READ_CONTACTS);
       Logger.i(TAG, "requesting permission to access accounts");
       return;
     }
@@ -350,6 +351,19 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
       super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
     switch (requestCode) {
+      case PERMISSIONS_REQUEST_READ_CONTACTS:
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+          // Permission Granted
+          Logger.i(TAG, "access to read and write to external storage was granted");
+          if (toRunWhenAccessToContactsIsGranted != null) {
+            toRunWhenAccessToContactsIsGranted.call();
+          }
+        } else {
+          if (toRunWhenAccessToContactsIsDenied != null) {
+            toRunWhenAccessToContactsIsDenied.call();
+          }
+        }
+        break;
 
       case ACCESS_TO_EXTERNAL_FS_REQUEST_ID:
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {

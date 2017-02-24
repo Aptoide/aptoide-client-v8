@@ -13,6 +13,7 @@ import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.model.v7.TwitterModel;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -70,13 +71,15 @@ public class AddressBookFragment extends SupportV4BaseFragment implements Addres
     about.setPaintFlags(about.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
     addressBookSyncProgress.setIndeterminate(true);
     RxView.clicks(addressBookSyncButton).subscribe(click -> {
-      PermissionManager permissionManager = new PermissionManager();
-      final PermissionRequest permissionRequest = (PermissionRequest) getContext();
-      permissionManager.requestContactsAccess(permissionRequest)
-          .observeOn(AndroidSchedulers.mainThread())
-          .subscribe(success -> {
-            mActionsListener.syncAddressBook();
-          }, throwable -> CrashReport.getInstance().log(throwable));
+      if (!ManagerPreferences.getAddressBookSyncState()) {
+        PermissionManager permissionManager = new PermissionManager();
+        final PermissionRequest permissionRequest = (PermissionRequest) getContext();
+        permissionManager.requestContactsAccess(permissionRequest)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(success -> {
+              mActionsListener.syncAddressBook();
+            }, throwable -> CrashReport.getInstance().log(throwable));
+      }
     });
     RxView.clicks(facebookSyncButton).subscribe(click -> mActionsListener.syncFacebook());
     RxView.clicks(twitterSyncButton).subscribe(click -> twitterLogin());

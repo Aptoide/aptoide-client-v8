@@ -87,8 +87,9 @@ public class SyncSuccessFragment extends SupportV4BaseFragment implements SyncSu
     recyclerView.setLayoutManager(
         new GridLayoutManager(getContext(), SYNCED_LIST_NUMBER_OF_COLUMNS));
 
-    successMessage.setText(getString(R.string.addressbook_success_connected_friends, "X",
-        Application.getConfiguration().getMarketName()));
+    successMessage.setText(
+        getString(R.string.addressbook_success_connected_friends, Integer.toString(contacts.size()),
+            Application.getConfiguration().getMarketName()));
 
     RxView.clicks(allowFind).subscribe(click -> mActionsListener.allowFindClicked());
     RxView.clicks(done).subscribe(click -> mActionsListener.doneClicked());

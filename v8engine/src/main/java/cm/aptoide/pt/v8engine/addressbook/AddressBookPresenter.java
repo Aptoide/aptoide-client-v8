@@ -22,15 +22,18 @@ public class AddressBookPresenter implements AddressBookContract.UserActionsList
 
   @Override public void syncAddressBook() {
     mAddressBookView.setAddressBookProgressIndicator(true);
-    mContactsRepository.getContacts(contacts -> {
-      if (!contacts.isEmpty()) {
-        ManagerPreferences.setAddressBookAsSynced();
-        mAddressBookView.changeAddressBookState(true);
-        mAddressBookView.showSuccessFragment(contacts);
-        mAddressBookView.setAddressBookProgressIndicator(false);
-      }
-      mAddressBookView.showInviteFriendsFragment();
-    });
+    mContactsRepository.getContacts(contacts -> Observable.just(contacts)
+        .subscribeOn(AndroidSchedulers.mainThread())
+        .subscribe(ignore -> {
+          mAddressBookView.changeAddressBookState(true);
+          ManagerPreferences.setAddressBookAsSynced();
+          if (!contacts.isEmpty()) {
+            mAddressBookView.showSuccessFragment(contacts);
+            mAddressBookView.setAddressBookProgressIndicator(false);
+          } else {
+            mAddressBookView.showInviteFriendsFragment();
+          }
+        }));
   }
 
   @Override public void syncTwitter(TwitterModel twitterModel) {
