@@ -553,6 +553,7 @@ public class HighwayTransferRecordActivity extends ActivityView
                   //intent para o mainactivity
                   //manter estado.
                   setInitialApConfig();
+                  i.setAction("LEAVINGSHAREAPPSCLIENT");
                   startActivity(i);
                 }
               })
