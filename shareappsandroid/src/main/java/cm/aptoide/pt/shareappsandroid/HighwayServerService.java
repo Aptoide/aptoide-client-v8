@@ -147,7 +147,7 @@ public class HighwayServerService extends Service {
               .getString(R.string.receive))
           .setContentText(
               this.getResources().getString(R.string.receiving) + " " + receivingAppName)
-          .setSmallIcon(R.mipmap.lite);
+          .setSmallIcon(R.mipmap.ic_launcher);
     }
   }
 
@@ -211,7 +211,7 @@ public class HighwayServerService extends Service {
           this.getResources().getString(R.string.shareApps) + " - " + this.getResources()
               .getString(R.string.send))
           .setContentText(this.getResources().getString(R.string.preparingSend))
-          .setSmallIcon(R.mipmap.lite);
+          .setSmallIcon(R.mipmap.ic_launcher);
     }
   }
 
