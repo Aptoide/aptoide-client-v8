@@ -74,6 +74,13 @@ public class StoreFragment extends BasePagerToolbarFragment {
         DataProvider.getContext());
   }
 
+  public static StoreFragment newInstance(String storeName, String storeTheme,
+      Event.Name defaultTab) {
+    StoreFragment storeFragment = newInstance(storeName, storeTheme);
+    storeFragment.getArguments().putSerializable(BundleCons.DEFAULT_TAB_TO_OPEN, defaultTab);
+    return storeFragment;
+  }
+
   public static StoreFragment newInstance(String storeName, String storeTheme) {
     Bundle args = new Bundle();
     args.putString(BundleCons.STORE_NAME, storeName);

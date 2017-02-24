@@ -58,6 +58,11 @@ public class FragmentProviderImpl implements FragmentProvider {
   }
 
   @Override
+  public Fragment newStoreFragment(String storeName, String storeTheme, Event.Name defaultTab) {
+    return StoreFragment.newInstance(storeName, storeTheme, defaultTab);
+  }
+
+  @Override
   public Fragment newHomeFragment(String storeName, StoreContext storeContext, String storeTheme) {
     return HomeFragment.newInstance(storeName, storeContext, storeTheme);
   }

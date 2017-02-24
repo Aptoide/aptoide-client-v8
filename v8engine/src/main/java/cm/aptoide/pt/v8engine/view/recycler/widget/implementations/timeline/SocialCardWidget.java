@@ -16,6 +16,7 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.model.v7.timeline.UserTimeline;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -221,7 +222,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
   }
 
   private void openStore(String storeName, String storeTheme) {
-    getNavigationManager().navigateTo(
-        V8Engine.getFragmentProvider().newStoreFragment(storeName, storeTheme));
+    getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
+        .newStoreFragment(storeName, storeTheme, Event.Name.getUserTimeline));
   }
 }
