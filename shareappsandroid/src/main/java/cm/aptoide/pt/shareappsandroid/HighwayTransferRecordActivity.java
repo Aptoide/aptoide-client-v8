@@ -882,7 +882,7 @@ public class HighwayTransferRecordActivity extends ActivityView
     return builder.create();
   }
 
-  @Override public void refreshAdapter() {
+  @Override public void refreshAdapter(List<HighwayTransferRecordItem> toRemoveList) {
     if (adapter != null) {
       adapter.clearListOfItems(toRemoveList);
       adapter.notifyDataSetChanged();

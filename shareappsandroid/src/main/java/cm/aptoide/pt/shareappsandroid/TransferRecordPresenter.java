@@ -218,8 +218,8 @@ public class TransferRecordPresenter implements Presenter {
 
   public void deleteAllApps() {
     transferRecordManager.deleteAllApps(new TransferRecordManager.DeleteAppsListener() {
-      @Override public void onDeleteAllApps() {
-        view.refreshAdapter();
+      @Override public void onDeleteAllApps(List<HighwayTransferRecordItem> toRemoveList) {
+        view.refreshAdapter(toRemoveList);
         view.hideReceivedAppMenu();
       }
     }, listOfApps);

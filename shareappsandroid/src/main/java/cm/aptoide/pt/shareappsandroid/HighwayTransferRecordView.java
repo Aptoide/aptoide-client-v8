@@ -26,7 +26,7 @@ public interface HighwayTransferRecordView {
 
   void showDeleteHistoryDialog();
 
-  void refreshAdapter();
+  void refreshAdapter(List<HighwayTransferRecordItem> toRemoveList);
 
   void hideReceivedAppMenu();
 

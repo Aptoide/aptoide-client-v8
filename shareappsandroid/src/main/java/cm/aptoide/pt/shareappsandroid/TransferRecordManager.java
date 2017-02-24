@@ -20,7 +20,7 @@ public class TransferRecordManager {
     List<HighwayTransferRecordItem> toRemoveList = findAppsToRemove(listOfApps);
     if (toRemoveList != null) {
       listOfApps.remove(toRemoveList);
-      listener.onDeleteAllApps();
+      listener.onDeleteAllApps(toRemoveList);
     }
   }
 
@@ -29,8 +29,8 @@ public class TransferRecordManager {
     for (int i = 0; i < listOfApps.size(); i++) {
       if (listOfApps.get(i).isSent() || listOfApps.get(i)
           .isReceived()) {//no isSending or need resend
-        toRemoveList.add(listOfApps.get(i));
         listOfApps.get(i).setDeleted(true);
+        toRemoveList.add(listOfApps.get(i));
         if (listOfApps.get(i).isReceived()) {
           String tmpFilePath = listOfApps.get(i).getFilePath();
           System.out.println("GOing to delete this filepath : " + tmpFilePath);
@@ -72,6 +72,6 @@ public class TransferRecordManager {
 
   public interface DeleteAppsListener {
 
-    void onDeleteAllApps();
+    void onDeleteAllApps(List<HighwayTransferRecordItem> toRemoveList);
   }
 }
