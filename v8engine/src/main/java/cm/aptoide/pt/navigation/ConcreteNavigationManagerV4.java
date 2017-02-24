@@ -1,6 +1,5 @@
 package cm.aptoide.pt.navigation;
 
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -12,7 +11,6 @@ import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import java.lang.ref.WeakReference;
-import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
@@ -61,16 +59,17 @@ class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
     final FragmentManager fragmentManager = activity.getSupportFragmentManager();
 
     // add current fragment
-    String tag = generateTag(fragmentManager);
+    String tag = Integer.toString(fragmentManager.getBackStackEntryCount());
     fragmentManager.beginTransaction()
         .setCustomAnimations(ENTER_ANIMATION, EXIT_ANIMATION, ENTER_ANIMATION, EXIT_ANIMATION)
         .addToBackStack(tag)
-        .replace(R.id.fragment_placeholder, fragment)
+        .replace(R.id.fragment_placeholder, fragment, tag)
         .commit();
 
     fragmentStack.add(fragment);
   }
 
+  /*
   @Override public void navigateTo(Fragment fragment, @Nullable List<Fragment> newBackStack) {
     FragmentActivity activity = weakReference.get();
 
@@ -83,32 +82,34 @@ class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
 
     final FragmentManager fragmentManager = activity.getSupportFragmentManager();
 
+    int backStackTag = 0;
     if (newBackStack != null && newBackStack.size() > 0) {
       // replace the entire back stack in the current fragment manager
       cleanBackStack(fragmentManager);
-
+      fragmentManager.executePendingTransactions();
       for (Fragment f : newBackStack) {
-        String tag = generateTag(fragmentManager);
+        String tag = Integer.toString(backStackTag++);
         fragmentManager.beginTransaction()
             .setCustomAnimations(ENTER_ANIMATION, EXIT_ANIMATION, ENTER_ANIMATION, EXIT_ANIMATION)
             .addToBackStack(tag)
-            .replace(R.id.fragment_placeholder, f, tag)
-            .commit();
+            .add(R.id.fragment_placeholder, f, tag)
+            .commitNow();
 
         fragmentStack.add(f);
       }
     }
 
     // add current fragment
-    String tag = generateTag(fragmentManager);
+    String tag = Integer.toString(backStackTag);
     fragmentManager.beginTransaction()
         .setCustomAnimations(ENTER_ANIMATION, EXIT_ANIMATION, ENTER_ANIMATION, EXIT_ANIMATION)
         .addToBackStack(tag)
-        .replace(R.id.fragment_placeholder, fragment, tag)
-        .commit();
+        .add(R.id.fragment_placeholder, fragment, tag)
+        .commitNow();
 
     fragmentStack.add(fragment);
   }
+  */
 
   @Override public void cleanBackStack() {
     FragmentActivity activity = weakReference.get();
@@ -127,15 +128,32 @@ class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
     return fragmentStack.size() > 0 ? fragmentStack.peek() : null;
   }
 
+  @Override public void navigateToWithoutBackSave(Fragment fragment) {
+    FragmentActivity activity = weakReference.get();
+
+    if (activity == null) {
+      CrashReport.getInstance()
+          .log(new RuntimeException(
+              "Activity is null in " + ConcreteNavigationManagerV4.class.getName()));
+      return;
+    }
+
+    final FragmentManager fragmentManager = activity.getSupportFragmentManager();
+
+    // add current fragment
+    fragmentManager.beginTransaction()
+        .setCustomAnimations(ENTER_ANIMATION, EXIT_ANIMATION, ENTER_ANIMATION, EXIT_ANIMATION)
+        .replace(R.id.fragment_placeholder, fragment)
+        .commit();
+
+    fragmentStack.add(fragment);
+  }
+
   private synchronized void cleanBackStack(FragmentManager fragmentManager) {
     for (int i = 0; i < fragmentManager.getBackStackEntryCount(); ++i) {
       fragmentManager.popBackStack();
     }
 
     fragmentStack.clear();
-  }
-
-  private String generateTag(FragmentManager fManager) {
-    return Integer.toString(fManager.getBackStackEntryCount());
   }
 }

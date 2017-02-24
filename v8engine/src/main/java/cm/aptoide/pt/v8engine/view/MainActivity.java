@@ -28,7 +28,6 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.Layout;
-import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -97,10 +96,9 @@ public class MainActivity extends BaseActivity implements MainView, FragmentShow
   }
 
   @Override public void showHome() {
-    NavigationManagerV4 nav = getNavigationManager();
-    nav.navigateTo(
-        HomeFragment.newInstance(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home,
-            V8Engine.getConfiguration().getDefaultTheme()));
+    Fragment home = HomeFragment.newInstance(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home,
+        V8Engine.getConfiguration().getDefaultTheme());
+    getNavigationManager().navigateTo(home);
   }
 
   @Override public void showDeepLink() {

@@ -29,8 +29,6 @@ import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
 import com.jakewharton.rxbinding.view.RxView;
-import java.util.ArrayList;
-import java.util.List;
 import rx.Observable;
 
 import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
@@ -67,12 +65,12 @@ public class MyAccountFragment extends GooglePlayServicesFragment implements MyA
   }
 
   @Override public void navigateToLoginAfterLogout() {
+    getNavigationManager().cleanBackStack();
+    //getNavigationManager().navigateTo(LoginSignUpFragment.newInstance(false));
     Fragment home =
         HomeFragment.newInstance(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home,
             V8Engine.getConfiguration().getDefaultTheme());
-    final List<Fragment> fragmentList = new ArrayList<>();
-    fragmentList.add(home);
-    getNavigationManager().navigateTo(LoginSignUpFragment.newInstance(false), fragmentList);
+    getNavigationManager().navigateTo(home);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

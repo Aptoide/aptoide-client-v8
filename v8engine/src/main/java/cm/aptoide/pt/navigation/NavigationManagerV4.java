@@ -19,11 +19,13 @@ public interface NavigationManagerV4 {
    * @param newBackStack New back stack
    * @param fragment Current fragment to display
    */
-  void navigateTo(Fragment fragment, @Nullable List<Fragment> newBackStack);
+  //void navigateTo(Fragment fragment, @Nullable List<Fragment> newBackStack);
 
   void cleanBackStack();
 
   Fragment peekLast();
+
+  void navigateToWithoutBackSave(Fragment fragment);
 
   //
   // Builder

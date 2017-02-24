@@ -24,7 +24,6 @@ import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.navigation.AccountNavigator;
-import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -206,20 +205,6 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
         }, err -> {
           CrashReport.getInstance().log(err);
         });
-  }
-
-  private void fetchReviews() {
-    ListReviewsRequest reviewsRequest =
-        ListReviewsRequest.of(storeName, packageName, accountManager.getAccessToken(),
-            aptoideClientUUID.getUniqueIdentifier());
-
-    getRecyclerView().removeOnScrollListener(endlessRecyclerOnScrollListener);
-    endlessRecyclerOnScrollListener =
-        new EndlessRecyclerOnScrollListener(this.getAdapter(), reviewsRequest,
-            new ListFullReviewsSuccessRequestListener(this, accountManager, aptoideClientUUID),
-            Throwable::printStackTrace);
-    getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
-    endlessRecyclerOnScrollListener.onLoadMore(false);
   }
 
   public void setupTitle(String title) {
