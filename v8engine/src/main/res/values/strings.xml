@@ -430,4 +430,8 @@
   <string name="add_store_dialog_top_stores">DISCOVER TOP STORES</string>
   <string name="add_store_dialog_top_stores_small_text">and find exclusive content!</string>
 
+
+  <string name="permission_access_deny">access to read and write to external storage was denied</string>
+  <string name="permission_account_deny">access to get accounts was denied</string>
+
 </resources>
