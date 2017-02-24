@@ -54,7 +54,7 @@ public class MainPresenter implements Presenter {
             //view.showWizard();
             SecurePreferences.setWizardAvailable(false);
           }
-          view.showWizard(); // FIXME: 16/2/2017 sithengineer remove this line
+          //view.showWizard(); // FIXME: 16/2/2017 sithengineer remove this line
           view.showDeepLink();
         }, throwable -> CrashReport.getInstance().log(throwable));
   }
