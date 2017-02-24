@@ -170,7 +170,6 @@ public class HighwayTransferRecordCustomAdapter extends BaseAdapter {
   public void updateItem(int positionToUpdate, boolean isSent, boolean needReSend) {
     listOfItems.get(positionToUpdate).setNeedReSend(needReSend);
     listOfItems.get(positionToUpdate).setSent(isSent);
-
   }
 
   public static class ViewHolder {

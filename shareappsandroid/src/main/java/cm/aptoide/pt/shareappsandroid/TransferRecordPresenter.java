@@ -69,8 +69,8 @@ public class TransferRecordPresenter implements Presenter {
             view.showNewCard(tmp);
           }
         } else {
-//          listOfApps.get(positionToReSend).setSent(isSent);
-//          listOfApps.get(positionToReSend).setNeedReSend(needReSend);
+          //          listOfApps.get(positionToReSend).setSent(isSent);
+          //          listOfApps.get(positionToReSend).setNeedReSend(needReSend);
           view.updateItemStatus(positionToReSend, isSent, needReSend);
         }
       }
@@ -85,7 +85,7 @@ public class TransferRecordPresenter implements Presenter {
                   .isSent()) {
                 listOfApps.get(i).setNeedReSend(needReSend);
                 listOfApps.get(i).setSent(isSent);
-                view.updateItemStatus(i,isSent,needReSend);
+                view.updateItemStatus(i, isSent, needReSend);
                 //                            i=-1;//to do only for the last app sent with this name.
               }
             }
@@ -115,7 +115,6 @@ public class TransferRecordPresenter implements Presenter {
   @Override public void onDestroy() {
     applicationReceiver.stop();
     applicationSender.stop();
-
   }
 
   @Override public void onStop() {
@@ -196,10 +195,10 @@ public class TransferRecordPresenter implements Presenter {
           .getConnectedClients();//to-do extract to a model with a broadcastreceiver to listen to connect's and disconnect's
       if (connectedClients == null || connectedClients.size() < 2) {
         view.showNoConnectedClientsToast();
-      }else {
+      } else {
         view.openAppSelectionView();
       }
-    }else {
+    } else {
       view.openAppSelectionView();
     }
   }

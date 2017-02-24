@@ -107,7 +107,13 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     }
   }
 
-  @Override public boolean checkPermissions() {
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    int i = item.getItemId();
+    //    todo add check for the right button
+    finish();
+
+    return super.onOptionsItemSelected(item);
+  }  @Override public boolean checkPermissions() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
           != PackageManager.PERMISSION_GRANTED) {
@@ -132,7 +138,23 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     return true;
   }
 
-  @Override public void requestPermissions() {
+  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+
+    if (requestCode == WRITE_SETTINGS_REQUEST_CODE
+        && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+        && Settings.System.canWrite(this)) {
+
+      if (permissionListener != null) {
+        permissionListener.onPermissionGranted();
+      } else {
+        permissionListener.onPermissionDenied();
+      }
+    } else {
+      Group group = new Group(chosenHotspot);
+      presenter.onActivityResult(group);
+    }
+  }  @Override public void requestPermissions() {
     if (!checkPermissions() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
       //check if already has the permissions
@@ -176,40 +198,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     }
   }
 
-  @Override public void registerListener(PermissionListener listener) {
-    this.permissionListener = listener;
-  }
-
-  @Override public void removeListener() {
-    this.permissionListener = null;
-  }
-
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    int i = item.getItemId();
-    //    todo add check for the right button
-    finish();
-
-    return super.onOptionsItemSelected(item);
-  }
-
-  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    super.onActivityResult(requestCode, resultCode, data);
-
-    if(requestCode==WRITE_SETTINGS_REQUEST_CODE && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Settings.System.canWrite(this)){
-
-
-        if (permissionListener != null) {
-          permissionListener.onPermissionGranted();
-        }else{
-          permissionListener.onPermissionDenied();
-        }
-
-    }else{
-      Group group = new Group(chosenHotspot);
-      presenter.onActivityResult(group);
-    }
-  }
-
   @Override public void onBackPressed() {
     //        try{
     ////            unregisterReceiver(wifireceiver);
@@ -219,6 +207,8 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     //        }
 
     super.onBackPressed();
+  }  @Override public void registerListener(PermissionListener listener) {
+    this.permissionListener = listener;
   }
 
   @Override protected void onNewIntent(Intent intent) {
@@ -258,6 +248,8 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
       recoverNetworkState();
       forgetAPTXNetwork();
     }
+  }  @Override public void removeListener() {
+    this.permissionListener = null;
   }
 
   @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
@@ -276,7 +268,7 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
 
               Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
               intent.setData(Uri.parse("package:" + getPackageName()));
-              startActivityForResult(intent,WRITE_SETTINGS_REQUEST_CODE);
+              startActivityForResult(intent, WRITE_SETTINGS_REQUEST_CODE);
             } else {
               if (permissionListener != null) {
                 permissionListener.onPermissionGranted();
@@ -513,6 +505,10 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
         Toast.LENGTH_SHORT).show();
   }
 
+  @Override public void dismiss() {
+    finish();
+  }
+
   public void joinSingleHotspot() {
     Group g = new Group(chosenHotspot);
     presenter.clickJoinGroup(g);
@@ -555,7 +551,11 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     this.joinGroupFlag = joinGroupFlag;
   }
 
-  @Override public void dismiss() {
-    finish();
-  }
+
+
+
+
+
+
+
 }

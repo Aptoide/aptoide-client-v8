@@ -16,7 +16,8 @@ public class TransferRecordManager {
     this.applicationsManager = applicationsManager;
   }
 
-  public void deleteAllApps(DeleteAppsListener listener, List<HighwayTransferRecordItem> listOfApps) {
+  public void deleteAllApps(DeleteAppsListener listener,
+      List<HighwayTransferRecordItem> listOfApps) {
     List<HighwayTransferRecordItem> toRemoveList = findAppsToRemove(listOfApps);
     if (toRemoveList != null) {
       listOfApps.remove(toRemoveList);
@@ -24,7 +25,8 @@ public class TransferRecordManager {
     }
   }
 
-  private List<HighwayTransferRecordItem> findAppsToRemove(List<HighwayTransferRecordItem> listOfApps) {
+  private List<HighwayTransferRecordItem> findAppsToRemove(
+      List<HighwayTransferRecordItem> listOfApps) {
     List<HighwayTransferRecordItem> toRemoveList = new ArrayList<>();
     for (int i = 0; i < listOfApps.size(); i++) {
       if (listOfApps.get(i).isSent() || listOfApps.get(i)
@@ -54,8 +56,10 @@ public class TransferRecordManager {
     return app;
   }
 
-  public HighwayTransferRecordItem readApkArchive(String appName, String filePath, boolean needReSend) {
-    HighwayTransferRecordItem item = applicationsManager.readApkArchive(appName, filePath, needReSend);
+  public HighwayTransferRecordItem readApkArchive(String appName, String filePath,
+      boolean needReSend) {
+    HighwayTransferRecordItem item =
+        applicationsManager.readApkArchive(appName, filePath, needReSend);
     return item;
   }
 

@@ -97,10 +97,10 @@ public class ApplicationProvider {
     return null;
   }
 
-  public void stop(){
+  public void stop() {
     initializeUITask.cancel(true);
-    if(listener!=null){
-      listener=null;
+    if (listener != null) {
+      listener = null;
     }
   }
 
@@ -121,9 +121,8 @@ public class ApplicationProvider {
       super.onPostExecute(s);
     }
 
-    @Override
-    protected void onCancelled() {
-      listener=null;
+    @Override protected void onCancelled() {
+      listener = null;
       super.onCancelled();
     }
   }

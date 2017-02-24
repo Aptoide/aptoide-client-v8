@@ -19,6 +19,7 @@ import java.util.List;
 
 public class ApplicationSender {
 
+  private static ApplicationSender instance;
   private Context context;
   private SendListener listener;
   private boolean isHotspot;
@@ -26,7 +27,6 @@ public class ApplicationSender {
   private String targetIPAddress;
   private BroadcastReceiver send;
   private IntentFilter intentFilter;
-  private static ApplicationSender instance;
 
   public ApplicationSender(Context context, boolean isHotspot) {
     this.context = context;
@@ -36,9 +36,9 @@ public class ApplicationSender {
     intentFilter.addAction("ERRORSENDING");
   }
 
-  public static ApplicationSender getInstance(Context context, boolean isHotspot){
-    if(instance==null){
-      instance=new ApplicationSender(context, isHotspot);
+  public static ApplicationSender getInstance(Context context, boolean isHotspot) {
+    if (instance == null) {
+      instance = new ApplicationSender(context, isHotspot);
     }
     return instance;
   }
@@ -50,7 +50,7 @@ public class ApplicationSender {
       send = new BroadcastReceiver() {
         @Override public void onReceive(Context context, Intent intent) {
           //dps aqui intent.getAction...
-          if(intent.getAction()!=null && intent.getAction().equals("SENDAPP")){
+          if (intent.getAction() != null && intent.getAction().equals("SENDAPP")) {
             boolean isSent = intent.getBooleanExtra("isSent", false);
             boolean needReSend = intent.getBooleanExtra("needReSend", false);
             String appName = intent.getStringExtra("appName");
@@ -58,15 +58,15 @@ public class ApplicationSender {
             int positionToReSend = intent.getIntExtra("positionToReSend", 100000);
 
             if (!isSent || needReSend) {
-              listener.onAppStartingToSend(appName, packageName, needReSend, isSent, positionToReSend);
+              listener.onAppStartingToSend(appName, packageName, needReSend, isSent,
+                  positionToReSend);
             } else {
               System.out.println("Application Sender : : : : Sent an App");
               listener.onAppSent(appName, needReSend, isSent, false, positionToReSend);
             }
-          }else if(intent.getAction()!=null && intent.getAction().equals("ERRORSENDING")){
+          } else if (intent.getAction() != null && intent.getAction().equals("ERRORSENDING")) {
             listener.onErrorSendingApp();
           }
-
         }
       };
       context.registerReceiver(send, intentFilter);
@@ -84,7 +84,6 @@ public class ApplicationSender {
     }
     sendIntent.putExtra("port", port);
     sendIntent.putExtra("isHotspot", isHotspot);
-
 
     //        sendIntent.putExtra("fromOutside",false);
 
@@ -116,8 +115,7 @@ public class ApplicationSender {
     };
   }
 
-
-  public void stop(){
+  public void stop() {
     //removeListener();
   }
 

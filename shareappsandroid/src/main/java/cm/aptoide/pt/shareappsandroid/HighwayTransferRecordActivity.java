@@ -109,7 +109,6 @@ public class HighwayTransferRecordActivity extends ActivityView
     welcomeText.setText(this.getResources().getString(R.string.welcome) + " " + nickname);
     receivedAppListView.setVisibility(View.GONE);
 
-
     //        Intent receiveIntent = null;
     //        if (isHotspot) {
     //            receiveIntent = new Intent(getApplicationContext(), HighwayServerComm.class);
@@ -158,14 +157,6 @@ public class HighwayTransferRecordActivity extends ActivityView
     }
   }
 
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    int i = item.getItemId();
-    //    todo add check for the right button
-    onBackPressed();
-
-    return super.onOptionsItemSelected(item);
-  }
-
   public void readApkArchive(List<String> list) {
     if (packageManager == null) {
       packageManager = getPackageManager();
@@ -197,8 +188,6 @@ public class HighwayTransferRecordActivity extends ActivityView
     }
   }
 
-  //method to check apk archive's similar to receive
-
   public void sendFilesFromOutside(List<App> list) {
     System.out.println(
         "I am here inside the sendFilesFromOutside the size of the list is : " + list.size());
@@ -223,7 +212,7 @@ public class HighwayTransferRecordActivity extends ActivityView
     startService(sendIntent);
   }
 
-  //method to send (startSErvice with action send
+  //method to check apk archive's similar to receive
 
   public String checkIfHasObb(String appName) {
     boolean hasObb = false;
@@ -245,6 +234,16 @@ public class HighwayTransferRecordActivity extends ActivityView
       }
     }
     return obbsFilePath;
+  }
+
+  //method to send (startSErvice with action send
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    int i = item.getItemId();
+    //    todo add check for the right button
+    onBackPressed();
+
+    return super.onOptionsItemSelected(item);
   }
 
   @Override public void onBackPressed() {
@@ -525,6 +524,119 @@ public class HighwayTransferRecordActivity extends ActivityView
     }
   }
 
+  private Dialog createOnBackDialog() {
+    final Intent i = new Intent(this, HighwayActivity.class);
+
+    if (listOfItems != null && listOfItems.size() >= 1) {
+      listOfItems.clear();
+      if (adapter != null) {
+        adapter.clearListOfItems();
+      }
+    }
+    //        if(isHotspot==null){
+    //            if(DataHolder.getInstance().getWcOnJoin()!=null){
+    //                isHotspot="true";
+    //            }else{
+    //                isHotspot="false";
+    //            }
+    //        }
+    if (isHotspot) {//pq e uma String
+      AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+      builder.setTitle(this.getResources().getString(R.string.alert))
+          .setMessage(this.getResources().getString(R.string.alertCreatorLeave))
+          .setPositiveButton(this.getResources().getString(R.string.leave),
+              new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                  System.out.println("Pressed leave ");
+
+                  //intent para o mainactivity
+                  //manter estado.
+                  setInitialApConfig();
+                  startActivity(i);
+                }
+              })
+          .setNegativeButton(this.getResources().getString(R.string.cancel),
+              new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                  // User cancelled the dialog
+                  System.out.println("Person pressed the CANCEL BUTTON !!!!!!!! ");
+                }
+              });
+      return builder.create();
+    } else {
+      AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+      builder.setTitle(this.getResources().getString(R.string.alert))
+          .setMessage(this.getResources().getString(R.string.alertClientLeave))
+          .setPositiveButton(this.getResources().getString(R.string.leave),
+              new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                  System.out.println("Client pressed leave button ");
+
+                  sendDisconnectMessage();
+                  i.setAction("LEAVINGSHAREAPPSCLIENT");
+                  //send disconnect message antes
+                  DataHolder.getInstance().setHotspot(false);
+                  DataHolder.getInstance().setServiceRunning(false);
+                  startActivity(i);
+                }
+              })
+          .setNegativeButton(this.getResources().getString(R.string.cancel),
+              new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                  // User cancelled the dialog
+                  System.out.println("Person pressed the CANCEL BUTTON !!!!!!!! ");
+                }
+              });
+      return builder.create();
+    }
+  }
+
+  private void setInitialApConfig() {
+    if (wifimanager == null) {
+      wifimanager = (WifiManager) getSystemService(WIFI_SERVICE);
+    }
+    Method[] methods = wifimanager.getClass().getDeclaredMethods();
+    WifiConfiguration wc = DataHolder.getInstance().getWcOnJoin();
+    for (Method m : methods) {
+      if (m.getName().equals("setWifiApConfiguration")) {
+
+        try {
+          Method setConfigMethod =
+              wifimanager.getClass().getMethod("setWifiApConfiguration", WifiConfiguration.class);
+          System.out.println("Re-seting the wifiAp configuration to what it was before !!! ");
+          setConfigMethod.invoke(wifimanager, wc);
+        } catch (NoSuchMethodException e) {
+          e.printStackTrace();
+        } catch (IllegalAccessException e) {
+          e.printStackTrace();
+        } catch (InvocationTargetException e) {
+          e.printStackTrace();
+        }
+      }
+      if (m.getName().equals("setWifiApEnabled")) {
+
+        try {
+          System.out.println("Desligar o hostpot ");
+          m.invoke(wifimanager, wc, false);
+        } catch (IllegalAccessException e) {
+          e.printStackTrace();
+        } catch (InvocationTargetException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+  }
+
+  private void sendDisconnectMessage() {
+    Intent disconnect = new Intent(this, HighwayClientComm.class);
+    disconnect.putExtra("disconnectMessage", "disconnectMessageFromClientCode");
+    disconnect.putExtra("disconnectNickname", nickname);
+    disconnect.setAction("DISCONNECT");
+    startService(disconnect);
+  }
+
   public void getReceivedApps() {//n sao so as recebidas e tmb para as enviadas.
 
     packageManager = getPackageManager();
@@ -642,119 +754,6 @@ public class HighwayTransferRecordActivity extends ActivityView
 
   }
 
-  private Dialog createOnBackDialog() {
-    final Intent i = new Intent(this, HighwayActivity.class);
-
-    if (listOfItems != null && listOfItems.size() >= 1) {
-      listOfItems.clear();
-      if (adapter != null) {
-        adapter.clearListOfItems();
-      }
-    }
-    //        if(isHotspot==null){
-    //            if(DataHolder.getInstance().getWcOnJoin()!=null){
-    //                isHotspot="true";
-    //            }else{
-    //                isHotspot="false";
-    //            }
-    //        }
-    if (isHotspot) {//pq e uma String
-      AlertDialog.Builder builder= new AlertDialog.Builder(this);
-
-      builder.setTitle(this.getResources().getString(R.string.alert))
-          .setMessage(this.getResources().getString(R.string.alertCreatorLeave))
-          .setPositiveButton(this.getResources().getString(R.string.leave),
-              new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                  System.out.println("Pressed leave ");
-
-                  //intent para o mainactivity
-                  //manter estado.
-                  setInitialApConfig();
-                  startActivity(i);
-                }
-              })
-          .setNegativeButton(this.getResources().getString(R.string.cancel),
-              new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                  // User cancelled the dialog
-                  System.out.println("Person pressed the CANCEL BUTTON !!!!!!!! ");
-                }
-              });
-      return builder.create();
-    } else {
-      AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-      builder.setTitle(this.getResources().getString(R.string.alert))
-          .setMessage(this.getResources().getString(R.string.alertClientLeave))
-          .setPositiveButton(this.getResources().getString(R.string.leave),
-              new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                  System.out.println("Client pressed leave button ");
-
-                  sendDisconnectMessage();
-                  i.setAction("LEAVINGSHAREAPPSCLIENT");
-                  //send disconnect message antes
-                  DataHolder.getInstance().setHotspot(false);
-                  DataHolder.getInstance().setServiceRunning(false);
-                  startActivity(i);
-                }
-              })
-          .setNegativeButton(this.getResources().getString(R.string.cancel),
-              new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                  // User cancelled the dialog
-                  System.out.println("Person pressed the CANCEL BUTTON !!!!!!!! ");
-                }
-              });
-      return builder.create();
-    }
-  }
-
-  private void setInitialApConfig() {
-    if (wifimanager == null) {
-      wifimanager = (WifiManager) getSystemService(WIFI_SERVICE);
-    }
-    Method[] methods = wifimanager.getClass().getDeclaredMethods();
-    WifiConfiguration wc = DataHolder.getInstance().getWcOnJoin();
-    for (Method m : methods) {
-      if (m.getName().equals("setWifiApConfiguration")) {
-
-        try {
-          Method setConfigMethod =
-              wifimanager.getClass().getMethod("setWifiApConfiguration", WifiConfiguration.class);
-          System.out.println("Re-seting the wifiAp configuration to what it was before !!! ");
-          setConfigMethod.invoke(wifimanager, wc);
-        } catch (NoSuchMethodException e) {
-          e.printStackTrace();
-        } catch (IllegalAccessException e) {
-          e.printStackTrace();
-        } catch (InvocationTargetException e) {
-          e.printStackTrace();
-        }
-      }
-      if (m.getName().equals("setWifiApEnabled")) {
-
-        try {
-          System.out.println("Desligar o hostpot ");
-          m.invoke(wifimanager, wc, false);
-        } catch (IllegalAccessException e) {
-          e.printStackTrace();
-        } catch (InvocationTargetException e) {
-          e.printStackTrace();
-        }
-      }
-    }
-  }
-
-  private void sendDisconnectMessage() {
-    Intent disconnect = new Intent(this, HighwayClientComm.class);
-    disconnect.putExtra("disconnectMessage", "disconnectMessageFromClientCode");
-    disconnect.putExtra("disconnectNickname", nickname);
-    disconnect.setAction("DISCONNECT");
-    startService(disconnect);
-  }
-
   //    private void deleteAllApps() {
   //        toRemoveList = new ArrayList<>();
   //
@@ -804,7 +803,8 @@ public class HighwayTransferRecordActivity extends ActivityView
   }
 
   @Override public void showNewCard(HighwayTransferRecordItem item) {
-    if (receivedAppListView.getVisibility() != View.VISIBLE && textView.getVisibility()==View.VISIBLE) {
+    if (receivedAppListView.getVisibility() != View.VISIBLE
+        && textView.getVisibility() == View.VISIBLE) {
       receivedAppListView.setVisibility(View.VISIBLE);
       textView.setVisibility(View.GONE);
     }
@@ -814,9 +814,8 @@ public class HighwayTransferRecordActivity extends ActivityView
     }
   }
 
-  @Override
-  public void updateItemStatus(int positionToReSend, boolean isSent, boolean needReSend) {
-    if(adapter!=null){
+  @Override public void updateItemStatus(int positionToReSend, boolean isSent, boolean needReSend) {
+    if (adapter != null) {
       adapter.updateItem(positionToReSend, isSent, needReSend);
       adapter.notifyDataSetChanged();
     }
@@ -905,7 +904,6 @@ public class HighwayTransferRecordActivity extends ActivityView
 
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-
     builder.setMessage(message);
     builder.setPositiveButton(this.getResources().getString(R.string.ok),
         new DialogInterface.OnClickListener() {
@@ -967,23 +965,22 @@ public class HighwayTransferRecordActivity extends ActivityView
   }
 
   @Override public void showGeneralErrorToast(boolean isHotspot) {
-    Toast.makeText(this,R.string.fragment_social_timeline_general_error,Toast.LENGTH_LONG).show();//string from v8engine
+    Toast.makeText(this, R.string.fragment_social_timeline_general_error, Toast.LENGTH_LONG)
+        .show();//string from v8engine
     Intent i = new Intent(this, HighwayActivity.class);
-    if(isHotspot){
+    if (isHotspot) {
       setInitialApConfig();
       startActivity(i);
-
-    }else{
+    } else {
       startActivity(i);
     }
-
   }
 
   private Dialog createDialogToDelete(final HighwayTransferRecordItem item) {
 
     String message =
         String.format(getResources().getString(R.string.alertDeleteApp), item.getAppName());
-    AlertDialog.Builder builder= new AlertDialog.Builder(this);
+    AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
     builder.setTitle(getResources().getString(R.string.alert));
     builder.setMessage(message);

@@ -121,8 +121,9 @@ public class HighwayRadarScan extends View {
     canvas.drawCircle(cX, cY, raio / 3, circle);
     canvas.drawCircle(cX, cY, 3 * raio / 7, circle);
 
-//    Shader shader = new SweepGradient(cX, cY, Color.parseColor("#00e17117"), Color.parseColor("#ffe17117"));
-    Shader shader = new SweepGradient(cX, cY, Color.parseColor("#00ffa726"), Color.parseColor("#ffffa726"));
+    //    Shader shader = new SweepGradient(cX, cY, Color.parseColor("#00e17117"), Color.parseColor("#ffe17117"));
+    Shader shader =
+        new SweepGradient(cX, cY, Color.parseColor("#00ffa726"), Color.parseColor("#ffffa726"));
     radar.setShader(shader);
     canvas.concat(matrix);
     canvas.drawCircle(cX, cY, 3 * raio / 7, radar);

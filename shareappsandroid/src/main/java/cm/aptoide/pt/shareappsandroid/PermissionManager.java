@@ -13,5 +13,4 @@ public interface PermissionManager {
   void registerListener(PermissionListener listener);
 
   void removeListener();
-
 }

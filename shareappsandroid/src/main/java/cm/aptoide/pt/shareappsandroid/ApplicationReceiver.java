@@ -42,7 +42,7 @@ public class ApplicationReceiver {
     context.startService(intent);
     receive = new BroadcastReceiver() {
       @Override public void onReceive(Context context, Intent intent) {
-        if(intent.getAction()!=null && intent.getAction().equals("RECEIVEAPP")){
+        if (intent.getAction() != null && intent.getAction().equals("RECEIVEAPP")) {
           boolean finishedReceiving = intent.getBooleanExtra("FinishedReceiving", false);
           String appName = intent.getStringExtra("appName");
           if (finishedReceiving) {
@@ -53,7 +53,7 @@ public class ApplicationReceiver {
           } else {
             listener.onStartedReceiving(appName);
           }
-        }else if(intent.getAction()!=null && intent.getAction().equals("ERRORRECEIVING")){
+        } else if (intent.getAction() != null && intent.getAction().equals("ERRORRECEIVING")) {
           listener.onErrorReceiving();
         }
       }
@@ -99,9 +99,9 @@ public class ApplicationReceiver {
     if (listener != null) {
       this.listener = null;
       //unregister receiver
-      try{
+      try {
         context.unregisterReceiver(receive);
-      }catch (IllegalArgumentException e){
+      } catch (IllegalArgumentException e) {
       }
     }
   }

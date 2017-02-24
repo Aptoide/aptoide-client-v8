@@ -55,9 +55,9 @@
         android:enabled="true"
         android:exported="true" />
     <!--<service-->
-        <!--android:name=".HighwayServerComm"-->
-        <!--android:enabled="true"-->
-        <!--android:exported="true" />-->
+    <!--android:name=".HighwayServerComm"-->
+    <!--android:enabled="true"-->
+    <!--android:exported="true" />-->
 
     <service
         android:name="cm.aptoide.pt.shareappsandroid.HighwayClientService"
