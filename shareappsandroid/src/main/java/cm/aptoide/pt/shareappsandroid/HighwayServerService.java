@@ -62,8 +62,8 @@ public class HighwayServerService extends Service {
         createReceiveNotification(androidAppInfo.getAppName());
 
         Intent i = new Intent();
-        i.putExtra("FinishedReceiving",false);
-        i.putExtra("appName",androidAppInfo.getAppName());
+        i.putExtra("FinishedReceiving", false);
+        i.putExtra("appName", androidAppInfo.getAppName());
         i.setAction("RECEIVEAPP");
         sendBroadcast(i);
       }
@@ -71,41 +71,41 @@ public class HighwayServerService extends Service {
       @Override public void onFinishReceiving(AndroidAppInfo androidAppInfo) {
         System.out.println(" Finished receiving ");
 
-
         finishReceiveNotification(androidAppInfo.getApk().getFilePath());
 
         Intent i = new Intent();
-        i.putExtra("FinishedReceiving",true);
+        i.putExtra("FinishedReceiving", true);
         i.putExtra("needReSend", false);
-        i.putExtra("appName",androidAppInfo.getAppName());
-        i.putExtra("packageName",androidAppInfo.getPackageName());
-        i.putExtra("filePath",androidAppInfo.getApk().getFilePath());
+        i.putExtra("appName", androidAppInfo.getAppName());
+        i.putExtra("packageName", androidAppInfo.getPackageName());
+        i.putExtra("filePath", androidAppInfo.getApk().getFilePath());
         i.setAction("RECEIVEAPP");
         sendBroadcast(i);
       }
 
-      @Override public void onProgressChanged(float progress) {//todo add AndroidAPpInfo - to get appname
+      @Override
+      public void onProgressChanged(float progress) {//todo add AndroidAPpInfo - to get appname
         System.out.println("onProgressChanged() called with: " + "progress = [" + progress + "]");
 
-        int actualProgress=Math.round(progress*100);
-        showReceiveProgress("insertAppName",actualProgress);
+        int actualProgress = Math.round(progress * 100);
+        showReceiveProgress("insertAppName", actualProgress);
       }
     };
 
     fileServerLifecycle = new FileServerLifecycle<AndroidAppInfo>() {
 
-      @Override
-      public void onStartSending(AndroidAppInfo androidAppInfo) {
+      @Override public void onStartSending(AndroidAppInfo androidAppInfo) {
         System.out.println("Server : started sending");
 
         createSendNotification();
 
         Intent i = new Intent();
-        i.putExtra("isSent",false);
-        i.putExtra("needReSend", false);//add field with pos to resend and change its value only if it is != 100000 (onstartcommand)
-        i.putExtra("appName",androidAppInfo.getAppName());
-        i.putExtra("packageName",androidAppInfo.getPackageName());
-        i.putExtra("positionToReSend",100000);
+        i.putExtra("isSent", false);
+        i.putExtra("needReSend",
+            false);//add field with pos to resend and change its value only if it is != 100000 (onstartcommand)
+        i.putExtra("appName", androidAppInfo.getAppName());
+        i.putExtra("packageName", androidAppInfo.getPackageName());
+        i.putExtra("positionToReSend", 100000);
         i.setAction("SENDAPP");
         sendBroadcast(i);
       }
@@ -114,18 +114,17 @@ public class HighwayServerService extends Service {
         e.printStackTrace();
       }
 
-      @Override
-      public void onFinishSending(AndroidAppInfo androidAppInfo) {
+      @Override public void onFinishSending(AndroidAppInfo androidAppInfo) {
         System.out.println("Server : finished sending");
 
         finishSendNotification();
 
         Intent i = new Intent();
-        i.putExtra("isSent",true);
+        i.putExtra("isSent", true);
         i.putExtra("needReSend", false);
-        i.putExtra("appName",androidAppInfo.getAppName());
-        i.putExtra("packageName",androidAppInfo.getPackageName());
-        i.putExtra("positionToReSend",100000);
+        i.putExtra("appName", androidAppInfo.getAppName());
+        i.putExtra("packageName", androidAppInfo.getPackageName());
+        i.putExtra("positionToReSend", 100000);
         i.setAction("SENDAPP");
         sendBroadcast(i);
       }
@@ -135,14 +134,10 @@ public class HighwayServerService extends Service {
         int actualProgress = Math.round(progress * 100);
         showSendProgress("insertAppName", actualProgress);
       }
-
-
     };
 
-      System.out.println(" Inside the service of the server");
+    System.out.println(" Inside the service of the server");
   }
-
-
 
   private void createReceiveNotification(String receivingAppName) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -252,7 +247,7 @@ public class HighwayServerService extends Service {
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
-    if(intent!=null){
+    if (intent != null) {
       lastTimestampReceive = System.currentTimeMillis();
       System.out.println("inside of startcommand in the service");
       if (intent.getAction() != null && intent.getAction().equals("RECEIVE")) {
@@ -267,8 +262,8 @@ public class HighwayServerService extends Service {
           }
         });
         aptoideMessageServerSocket.startAsync();
-        String s =
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
+        String s = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+            .toString();
         StorageCapacity storageCapacity = new StorageCapacity() {
           @Override public boolean hasCapacity(long bytes) {
             return true;
@@ -280,58 +275,47 @@ public class HighwayServerService extends Service {
         aptoideMessageClientController =
             new AptoideMessageClientController(s, storageCapacity, fileServerLifecycle,
                 fileClientLifecycle);
-        (new AptoideMessageClientSocket("192.168.43.1", 55555, aptoideMessageClientController
-        )).startAsync();
+        (new AptoideMessageClientSocket("192.168.43.1", 55555,
+            aptoideMessageClientController)).startAsync();
 
         System.out.println("Connected 342");
-
-
-
       } else if (intent.getAction() != null && intent.getAction().equals("SEND")) {
         //read parcelable
         Bundle b = intent.getBundleExtra("bundle");
-//        if (listOfApps == null || listOfApps.get(listOfApps.size() - 1)
-//                .isOnChat()) { //null ou ultimo elemento ja acabado de enviar.
-          listOfApps = b.getParcelableArrayList("listOfAppsToInstall");
-          System.out.println(
-                  "serverComm : Just received the list of Apps :  the list of apps size is  :"
-                          + listOfApps.size());
+        //        if (listOfApps == null || listOfApps.get(listOfApps.size() - 1)
+        //                .isOnChat()) { //null ou ultimo elemento ja acabado de enviar.
+        listOfApps = b.getParcelableArrayList("listOfAppsToInstall");
+        System.out.println(
+            "serverComm : Just received the list of Apps :  the list of apps size is  :"
+                + listOfApps.size());
 
-          //create the mesage and send it.
+        //create the mesage and send it.
 
-          for(int i=0;i<listOfApps.size();i++){
-            String filePath=listOfApps.get(i).getFilePath();
-            String appName= listOfApps.get(i).getAppName();
-            String packageName = listOfApps.get(i).getPackageName();
-            String obbsFilePath = listOfApps.get(i).getObbsFilePath();
+        for (int i = 0; i < listOfApps.size(); i++) {
+          String filePath = listOfApps.get(i).getFilePath();
+          String appName = listOfApps.get(i).getAppName();
+          String packageName = listOfApps.get(i).getPackageName();
+          String obbsFilePath = listOfApps.get(i).getObbsFilePath();
 
-            System.out.println(" Filepath from app 0 (test) is:  "+filePath);
-            File apk = new File(filePath);
+          System.out.println(" Filepath from app 0 (test) is:  " + filePath);
+          File apk = new File(filePath);
 
-            File mainObb = null;
-            File patchObb = null;
+          File mainObb = null;
+          File patchObb = null;
 
-            AndroidAppInfo appInfo;
-            if(!obbsFilePath.equals("noObbs")){
+          AndroidAppInfo appInfo;
+          if (!obbsFilePath.equals("noObbs")) {
 
-              appInfo = new AndroidAppInfo(appName, packageName, apk, mainObb, patchObb);
-
-            }else{
-              appInfo = new AndroidAppInfo(appName, packageName, apk);
-
-            }
+            appInfo = new AndroidAppInfo(appName, packageName, apk, mainObb, patchObb);
+          } else {
+            appInfo = new AndroidAppInfo(appName, packageName, apk);
+          }
 
           aptoideMessageClientController.send(
-                  new RequestPermissionToSend(aptoideMessageClientController.getLocalhost(), appInfo));
-          aptoideMessageClientController.exit();
+              new RequestPermissionToSend(aptoideMessageClientController.getLocalhost(), appInfo));
 
-//        } else {
-//          List<App> tempList = b.getParcelableArrayList("listOfAppsToInstall");
-//
-//          listOfApps.addAll(tempList);
-//        }
+        }
       }
-
     }
 
     return START_STICKY;

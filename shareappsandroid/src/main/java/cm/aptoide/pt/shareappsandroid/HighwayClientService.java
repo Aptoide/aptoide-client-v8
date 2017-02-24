@@ -314,12 +314,11 @@ public class HighwayClientService extends Service {
             aptoideMessageController.send(
                 new RequestPermissionToSend(aptoideMessageController.getLocalhost(), appInfo));
           }
-//        }else {
-//          List<App> tempList = b.getParcelableArrayList("listOfAppsToInstall");
-//
-//          listOfApps.addAll(tempList);
-//        }
       }
+
+      // TODO create new action to disconnect from server
+      //aptoideMessageClientController.exit();
+
     }
 
 
