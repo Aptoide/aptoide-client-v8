@@ -1,5 +1,6 @@
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
+import android.support.annotation.Nullable;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
@@ -9,22 +10,21 @@ import rx.Observable;
 /**
  * Created by trinkes on 23/02/2017.
  */
-public class GetHomeRequest extends V7<GetHome, GetHomeAndStoreBody> {
+public class GetHomeRequest extends V7<GetHome, GetHomeBody> {
 
-  protected GetHomeRequest(GetHomeAndStoreBody body, String baseHost) {
+  protected GetHomeRequest(GetHomeBody body, String baseHost) {
     super(body, baseHost);
   }
 
-  public static GetHomeRequest of(BaseRequestWithStore.StoreCredentials storeCredentials,
-      StoreContext storeContext, String accessToken, String aptoideClientUUID) {
+  public static GetHomeRequest of(@Nullable BaseRequestWithStore.StoreCredentials storeCredentials,
+      @Nullable Long userId, StoreContext storeContext, String accessToken,
+      String aptoideClientUUID) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
-    final GetHomeAndStoreBody body =
-        new GetHomeAndStoreBody(storeCredentials, WidgetsArgs.createDefault());
+    final GetHomeBody body = new GetHomeBody(storeCredentials, WidgetsArgs.createDefault(), userId);
     body.setContext(storeContext);
 
-    return new GetHomeRequest((GetHomeAndStoreBody) decorator.decorate(body, accessToken),
-        BASE_HOST);
+    return new GetHomeRequest((GetHomeBody) decorator.decorate(body, accessToken), BASE_HOST);
   }
 
   @Override

@@ -10,8 +10,9 @@ import cm.aptoide.pt.dataprovider.util.ToRetryThrowable;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppVersionsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeAndStoreBody;
+import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetMyStoreListRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreDisplaysRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
@@ -178,11 +179,11 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
         @Body ListAppsUpdatesRequest.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("home/get") Observable<GetHome> getHome(@Body GetHomeAndStoreBody body,
+    @POST("home/get") Observable<GetHome> getHome(@Body GetHomeBody body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("getStore{url}") Observable<GetStore> getStore(
-        @Path(value = "url", encoded = true) String path, @Body GetHomeAndStoreBody body,
+        @Path(value = "url", encoded = true) String path, @Body GetStoreBody body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("getStoreDisplays{url}") Observable<GetStoreDisplays> getStoreDisplays(

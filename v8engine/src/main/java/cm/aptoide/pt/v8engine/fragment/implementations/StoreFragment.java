@@ -68,10 +68,22 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private GetHome getHome;
   private String storeTheme;
   private Event.Name defaultTab;
+  @Nullable private Long userId;
 
   public StoreFragment() {
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
+  }
+
+  public static StoreFragment newInstance(long userId, String storeTheme, Event.Name defaultTab) {
+    Bundle args = new Bundle();
+    args.putLong(BundleCons.USER_ID, userId);
+    args.putSerializable(BundleCons.STORE_CONTEXT, StoreContext.store);
+    args.putString(BundleCons.STORE_THEME, storeTheme);
+    args.putSerializable(BundleCons.DEFAULT_TAB_TO_OPEN, defaultTab);
+    StoreFragment fragment = new StoreFragment();
+    fragment.setArguments(args);
+    return fragment;
   }
 
   public static StoreFragment newInstance(String storeName, String storeTheme,
@@ -108,13 +120,15 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     if (create || getHome == null) {
-      GetHomeRequest.of(StoreUtils.getStoreCredentials(storeName), storeContext,
+      GetHomeRequest.of(StoreUtils.getStoreCredentials(storeName), userId, storeContext,
           AptoideAccountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
           .observe(refresh)
           .observeOn(AndroidSchedulers.mainThread())
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .subscribe((getStore) -> {
+            storeName = getStore.getNodes().getMeta().getData().getStore().getName();
             this.getHome = getStore;
+            getToolbar().setTitle(storeName);
             setupViewPager();
           }, (throwable) -> {
             if (throwable instanceof AptoideWsV7Exception) {
@@ -244,6 +258,9 @@ public class StoreFragment extends BasePagerToolbarFragment {
     storeContext = (StoreContext) args.get(BundleCons.STORE_CONTEXT);
     storeTheme = args.getString(BundleCons.STORE_THEME);
     defaultTab = (Event.Name) args.get(BundleCons.DEFAULT_TAB_TO_OPEN);
+    if (args.containsKey(BundleCons.USER_ID)) {
+      userId = args.getLong(BundleCons.USER_ID);
+    }
   }
 
   @Override public int getContentViewId() {
@@ -335,5 +352,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
     public static final String STORE_CONTEXT = "storeContext";
     public static final String STORE_THEME = "storeTheme";
     public static final String DEFAULT_TAB_TO_OPEN = "default_tab_to_open";
+    public static final String USER_ID = "userId";
   }
 }

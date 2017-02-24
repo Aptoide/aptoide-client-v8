@@ -17,11 +17,11 @@ import rx.Observable;
  */
 
 @EqualsAndHashCode(callSuper = true) public class GetStoreRequest
-    extends BaseRequestWithStore<GetStore, GetHomeAndStoreBody> {
+    extends BaseRequestWithStore<GetStore, GetStoreBody> {
 
   private final String url;
 
-  private GetStoreRequest(String url, String baseHost, GetHomeAndStoreBody body) {
+  private GetStoreRequest(String url, String baseHost, GetStoreBody body) {
     super(body, baseHost);
     this.url = url;
   }
@@ -30,23 +30,20 @@ import rx.Observable;
       String accessToken, String aptoideClientUUID) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
-    final GetHomeAndStoreBody body =
-        new GetHomeAndStoreBody(storeCredentials, WidgetsArgs.createDefault());
+    final GetStoreBody body = new GetStoreBody(storeCredentials, WidgetsArgs.createDefault());
     body.setContext(storeContext);
 
-    return new GetStoreRequest("", BASE_HOST,
-        (GetHomeAndStoreBody) decorator.decorate(body, accessToken));
+    return new GetStoreRequest("", BASE_HOST, (GetStoreBody) decorator.decorate(body, accessToken));
   }
 
   public static GetStoreRequest ofAction(String url, StoreCredentials storeCredentials,
       String accessToken, String aptoideClientUUID) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
-    final GetHomeAndStoreBody body =
-        new GetHomeAndStoreBody(storeCredentials, WidgetsArgs.createDefault());
+    final GetStoreBody body = new GetStoreBody(storeCredentials, WidgetsArgs.createDefault());
 
     return new GetStoreRequest(new V7Url(url).remove("getStore").get(), BASE_HOST,
-        (GetHomeAndStoreBody) decorator.decorate(body, accessToken));
+        (GetStoreBody) decorator.decorate(body, accessToken));
   }
 
   @Override

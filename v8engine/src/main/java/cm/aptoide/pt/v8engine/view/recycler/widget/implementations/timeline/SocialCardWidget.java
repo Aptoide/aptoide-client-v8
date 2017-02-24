@@ -150,8 +150,13 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
         }));
 
     compositeSubscription.add(
-        Observable.merge(RxView.clicks(storeAvatar), RxView.clicks(userAvatar))
-            .subscribe(click -> openStore(displayable.getStore().getName(), "DEFAULT")));
+        Observable.merge(RxView.clicks(storeAvatar), RxView.clicks(userAvatar)).subscribe(click -> {
+          if (displayable.getStore() == null) {
+            openStore(displayable.getUser().getId(), "DEFAULT");
+          } else {
+            openStore(displayable.getStore().getName(), "DEFAULT");
+          }
+        }));
   }
 
   private Observable<Void> showComments(T displayable) {
@@ -219,6 +224,11 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
         break;
       }
     }
+  }
+
+  private void openStore(long userId, String storeTheme) {
+    getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
+        .newStoreFragment(userId, storeTheme, Event.Name.getUserTimeline));
   }
 
   private void openStore(String storeName, String storeTheme) {
