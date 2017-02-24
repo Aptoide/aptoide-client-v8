@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt;
 
+import android.content.Context;
 import android.support.multidex.MultiDex;
 import cm.aptoide.pt.preferences.AptoidePreferencesConfiguration;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -15,9 +16,13 @@ import cm.aptoide.pt.v8engine.V8Engine;
 public class AptoideBase extends V8Engine {
 
   @Override public void onCreate() {
-    MultiDex.install(this);
-    super.onCreate();
     setupCrashReports(BuildConfig.CRASH_REPORTS_DISABLED);
+    super.onCreate();
+  }
+
+  @Override protected void attachBaseContext(Context base) {
+    super.attachBaseContext(base);
+    MultiDex.install(this);
   }
 
   @Override public AptoidePreferencesConfiguration createConfiguration() {

@@ -145,4 +145,6 @@ public interface FragmentProvider {
   Fragment newCommentGridRecyclerFragment(CommentType commentType, String elementId);
 
   Fragment newCommentGridRecyclerFragmentUrl(CommentType commentType, String url);
+
+  Fragment newSpotShareFragment();
 }

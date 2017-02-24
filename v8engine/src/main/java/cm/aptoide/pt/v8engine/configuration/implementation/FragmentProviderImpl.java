@@ -26,6 +26,7 @@ import cm.aptoide.pt.v8engine.fragment.implementations.SearchPagerTabFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.SendFeedbackFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.SettingsFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.SocialFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.SpotSharePreviewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.TimeLineFollowFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.UpdatesFragment;
@@ -271,5 +272,9 @@ public class FragmentProviderImpl implements FragmentProvider {
 
   @Override public Fragment newCommentGridRecyclerFragmentUrl(CommentType commentType, String url) {
     return CommentListFragment.newInstanceUrl(commentType, url);
+  }
+
+  @Override public Fragment newSpotShareFragment() {
+    return SpotSharePreviewFragment.newInstance();
   }
 }

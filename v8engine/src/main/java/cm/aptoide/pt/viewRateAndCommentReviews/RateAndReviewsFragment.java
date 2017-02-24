@@ -31,7 +31,9 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.adapters.CommentsAdapter;
 import cm.aptoide.pt.v8engine.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
+import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.util.DialogUtils;
+import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -63,6 +65,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   private RatingTotalsLayout ratingTotalsLayout;
   private RatingBarsLayout ratingBarsLayout;
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
+  private StoreCredentialsProvider storeCredentialsProvider;
   private AptoideAccountManager accountManager;
 
   public static RateAndReviewsFragment newInstance(long appId, String appName, String storeName,
@@ -89,15 +92,6 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     args.putLong(BundleCons.REVIEW_ID, reviewId);
     fragment.setArguments(args);
     return fragment;
-  }
-
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
-    dialogUtils = new DialogUtils(accountManager, aptoideClientUUID,
-        new AccountNavigator(getNavigationManager(), accountManager));
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {
@@ -162,6 +156,24 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     });
   }
 
+  private void invalidateReviews() {
+    clearDisplayables();
+    fetchReviews();
+  }
+
+  private void fetchReviews() {
+    ListReviewsRequest reviewsRequest =
+        ListReviewsRequest.of(storeName, packageName, accountManager.getAccessToken(),
+            aptoideClientUUID.getUniqueIdentifier(), storeCredentialsProvider.get(storeName));
+
+    getRecyclerView().removeOnScrollListener(endlessRecyclerOnScrollListener);
+    endlessRecyclerOnScrollListener =
+        new EndlessRecyclerOnScrollListener(this.getAdapter(), reviewsRequest,
+            new ListFullReviewsSuccessRequestListener(this, accountManager, aptoideClientUUID), Throwable::printStackTrace);
+    getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
+    endlessRecyclerOnScrollListener.onLoadMore(false);
+  }
+
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     if (storeTheme != null) {
@@ -221,18 +233,15 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     ratingBarsLayout.setup(data);
   }
 
-  private void invalidateReviews() {
-    clearDisplayables();
-    fetchReviews();
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+    dialogUtils = new DialogUtils(accountManager, aptoideClientUUID,
+        new AccountNavigator(getNavigationManager(), accountManager));
+    storeCredentialsProvider = new StoreCredentialsProviderImpl();
   }
-
-  /*
-  public void refreshReviews() {
-    if(endlessRecyclerOnScrollListener!=null) {
-      endlessRecyclerOnScrollListener.onLoadMore(false);
-    }
-  }
-  */
 
   @NonNull @Override
   public CommentsReadMoreDisplayable createReadMoreDisplayable(final int itemPosition,

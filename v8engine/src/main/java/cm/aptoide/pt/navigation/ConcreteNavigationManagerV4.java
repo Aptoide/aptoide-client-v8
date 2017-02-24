@@ -131,7 +131,6 @@ class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
     for (int i = 0; i < fragmentManager.getBackStackEntryCount(); ++i) {
       fragmentManager.popBackStack();
     }
-    fragmentManager.executePendingTransactions();
 
     fragmentStack.clear();
   }

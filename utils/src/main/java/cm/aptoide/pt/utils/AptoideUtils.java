@@ -1258,6 +1258,10 @@ public class AptoideUtils {
         return formatDateTime(context, timedate, DateUtils.FORMAT_NUMERIC_DATE);
       }
     }
+
+    public String getTimeDiffString(long timedate) {
+      return getTimeDiffString(getContext(), timedate);
+    }
   }
 
   /**

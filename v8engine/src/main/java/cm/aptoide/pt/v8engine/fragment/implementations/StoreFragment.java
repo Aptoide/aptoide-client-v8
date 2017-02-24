@@ -10,10 +10,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -35,12 +33,11 @@ import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.store.GetStore;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.StorePagerAdapter;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.behavior.ScrollAwareFABBehavior;
-import cm.aptoide.pt.v8engine.dialog.AddStoreDialog;
 import cm.aptoide.pt.v8engine.dialog.PrivateStoreDialog;
 import cm.aptoide.pt.v8engine.fragment.BasePagerToolbarFragment;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
@@ -148,17 +145,23 @@ public class StoreFragment extends BasePagerToolbarFragment {
             if (throwable instanceof AptoideWsV7Exception) {
               BaseV7Response baseResponse = ((AptoideWsV7Exception) throwable).getBaseResponse();
 
-              if (StoreUtils.PRIVATE_STORE_ERROR.equals(baseResponse.getError().getCode())
-                  || StoreUtils.PRIVATE_STORE_WRONG_CREDENTIALS.equals(
-                  baseResponse.getError().getCode())) {
-                DialogFragment dialogFragment =
-                    (DialogFragment) getFragmentManager().findFragmentByTag(PrivateStoreDialog.TAG);
-                if (dialogFragment == null) {
-                  dialogFragment =
-                      PrivateStoreDialog.newInstance(this, PRIVATE_STORE_REQUEST_CODE, storeName,
-                          true);
-                  dialogFragment.show(getFragmentManager(), PrivateStoreDialog.TAG);
-                }
+              switch (StoreUtils.getErrorType(baseResponse.getError().getCode())) {
+                case PRIVATE_STORE_ERROR:
+                case PRIVATE_STORE_WRONG_CREDENTIALS:
+                  DialogFragment dialogFragment =
+                      (DialogFragment) getFragmentManager().findFragmentByTag(
+                          PrivateStoreDialog.TAG);
+                  if (dialogFragment == null) {
+                    dialogFragment =
+                        PrivateStoreDialog.newInstance(this, PRIVATE_STORE_REQUEST_CODE, storeName,
+                            true);
+                    dialogFragment.show(getFragmentManager(), PrivateStoreDialog.TAG);
+                  }
+                  break;
+                case STORE_SUSPENDED:
+                  showStoreSuspendedPopup(storeName);
+                default:
+                  finishLoading(throwable);
               }
             } else {
               finishLoading(throwable);
@@ -198,49 +201,19 @@ public class StoreFragment extends BasePagerToolbarFragment {
       }
     });
 
-    /*
-     *  On Orientation change keep the fab up on subscribed stores
-     */
-    if (viewPager.getCurrentItem() == adapter.getEventNamePosition(Event.Name.myStores)) {
-      FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-      floatingActionButton.setOnClickListener(
-          v -> new AddStoreDialog().show(fragmentManager, "addStoreDialog"));
-      floatingActionButton.show();
-    } else {
-      floatingActionButton.hide();
-    }
+
 
     /* Be careful maintaining this code
      * this affects both the main ViewPager when we open app
      * and the ViewPager inside the StoresView
+     *
+     * This code was changed when FAB was migrated to a followstorewidget 23/02/2017
      */
     viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
       @Override public void onPageSelected(int position) {
         StorePagerAdapter adapter = (StorePagerAdapter) viewPager.getAdapter();
-
         if (Event.Name.getUserTimeline.equals(adapter.getEventName(position))) {
           Analytics.AppsTimeline.openTimeline();
-        }
-
-        if (Integer.valueOf(position).equals(adapter.getEventNamePosition(Event.Name.myStores))) {
-          FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-
-          CoordinatorLayout.LayoutParams params =
-              (CoordinatorLayout.LayoutParams) floatingActionButton.getLayoutParams();
-          params.setBehavior(new ScrollAwareFABBehavior());
-          floatingActionButton.setLayoutParams(params);
-
-          floatingActionButton.setOnClickListener(
-              v -> new AddStoreDialog().show(fragmentManager, "addStoreDialog"));
-          floatingActionButton.show();
-        } else {
-          CoordinatorLayout.LayoutParams layoutParams =
-              (CoordinatorLayout.LayoutParams) floatingActionButton.getLayoutParams();
-          layoutParams.setBehavior(null);
-          floatingActionButton.setLayoutParams(layoutParams);
-
-          floatingActionButton.hide();
-          floatingActionButton.setOnClickListener(null);
         }
       }
     });
@@ -266,6 +239,20 @@ public class StoreFragment extends BasePagerToolbarFragment {
           break;
       }
     }
+  }
+
+  private void showStoreSuspendedPopup(String storeName) {
+    GenericDialogs.createGenericOkCancelMessage(getContext(), "", R.string.store_suspended_message,
+        android.R.string.ok, R.string.unfollow).subscribe(eResponse -> {
+      switch (eResponse) {
+        case NO:
+          StoreUtils.unsubscribeStore(storeName);
+        case YES:
+        case CANCEL:
+          getActivity().onBackPressed();
+          break;
+      }
+    });
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

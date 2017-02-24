@@ -32,6 +32,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Com
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.CreateStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.ExcludedUpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FeatureDisplayable;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FollowStoreDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FollowUserDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FooterDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.FooterRowDisplayable;
@@ -99,6 +100,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.Complete
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.CreateStoreWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.ExcludedUpdateWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.FeatureWidget;
+import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.FollowStoreWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.FollowUserWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.FooterRowWidget;
 import cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid.FooterWidget;
@@ -355,6 +357,8 @@ public class DisplayableWidgetMapping {
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping((TimelineLoginWidget.class), TimelineLoginDisplayable.class));
 
+    displayableWidgetMappings.add(
+        new DisplayableWidgetMapping((FollowStoreWidget.class), FollowStoreDisplayable.class));
     return displayableWidgetMappings;
   }
 

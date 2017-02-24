@@ -617,8 +617,6 @@ public class Analytics {
 
     /**
      * this method still does nothing...
-     *
-     * @param storeName
      */
     public static void unSubscribe(String storeName) {
       try {
