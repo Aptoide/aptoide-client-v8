@@ -11,7 +11,9 @@ import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.model.v7.TwitterModel;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.addressbook.data.Contact;
@@ -43,10 +45,6 @@ public class AddressBookFragment extends SupportV4BaseFragment implements Addres
   private TextView addressbook_2nd_msg;
   private TextView about;
   private ProgressBar addressBookSyncProgress;
-
-  private long userId;
-  private String token;
-  private String secret;
 
   public AddressBookFragment() {
 
@@ -90,22 +88,24 @@ public class AddressBookFragment extends SupportV4BaseFragment implements Addres
     mTwitterAuthClient = new TwitterAuthClient();
     mTwitterAuthClient.authorize(getActivity(), new Callback<TwitterSession>() {
       @Override public void success(Result<TwitterSession> result) {
-        mActionsListener.syncTwitter();
-        saveUserData(result);
-        //todo: make userconnection request with twitter information
+        TwitterModel twitterModel = saveUserData(result);
+        mActionsListener.syncTwitter(twitterModel);
       }
 
       @Override public void failure(TwitterException exception) {
+        ShowMessage.asLongSnack(getActivity(), "Twitter authorization error");
       }
     });
   }
 
-  private void saveUserData(Result<TwitterSession> result) {
+  private TwitterModel saveUserData(Result<TwitterSession> result) {
+    TwitterModel twitterModel = new TwitterModel();
     TwitterSession twitterSession = result.data;
-    userId = twitterSession.getUserId();
     TwitterAuthToken twitterAuthToken = twitterSession.getAuthToken();
-    token = twitterAuthToken.token;
-    secret = twitterAuthToken.secret;
+    twitterModel.setId(twitterSession.getUserId());
+    twitterModel.setToken(twitterAuthToken.token);
+    twitterModel.setSecret(twitterAuthToken.secret);
+    return twitterModel;
   }
 
   @Override public void finishView() {

@@ -26,9 +26,20 @@ public class SyncAddressBookRequest extends V7<GetFollowers, SyncAddressBookRequ
       List<String> numbers, List<String> emails) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
-    return new SyncAddressBookRequest(
-        ((SyncAddressBookRequest.Body) decorator.decorate(new Body(new Contacts(numbers, emails)),
+    return new SyncAddressBookRequest(((SyncAddressBookRequest.Body) decorator.decorate(
+        new Body(new Contacts(numbers, emails), null),
             accessToken)), BASE_HOST);
+  }
+
+  /**
+   * This constructor was created in order to send user twitter info
+   */
+  public static SyncAddressBookRequest of(String accessToken, String aptoideClientUUID, long id,
+      String token, String secret) {
+    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+
+    return new SyncAddressBookRequest(((SyncAddressBookRequest.Body) decorator.decorate(
+        new Body(null, new Twitter(id, token, secret)), accessToken)), BASE_HOST);
   }
 
   @Override protected Observable<GetFollowers> loadDataFromNetwork(Interfaces interfaces,
@@ -59,11 +70,13 @@ public class SyncAddressBookRequest extends V7<GetFollowers, SyncAddressBookRequ
 
   @Data public static class Body extends BaseBody implements Endless {
     private Contacts contacts;
+    private Twitter twitter;
     private int limit = 25;
     private int offset;
 
-    public Body(Contacts contacts) {
+    public Body(Contacts contacts, Twitter twitter) {
       this.contacts = contacts;
+      this.twitter = twitter;
     }
 
     @Override public int getOffset() {
@@ -86,6 +99,18 @@ public class SyncAddressBookRequest extends V7<GetFollowers, SyncAddressBookRequ
     public Contacts(List<String> phones, List<String> emails) {
       this.phones = phones;
       this.emails = emails;
+    }
+  }
+
+  @Data private static class Twitter {
+    private Long id;
+    private String token;
+    private String secret;
+
+    public Twitter(Long id, String token, String secret) {
+      this.id = id;
+      this.token = token;
+      this.secret = secret;
     }
   }
 }

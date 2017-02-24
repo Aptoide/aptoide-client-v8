@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.addressbook.data;
 
 import android.support.annotation.NonNull;
+import cm.aptoide.pt.model.v7.TwitterModel;
 import java.util.List;
 
 /**
@@ -9,6 +10,9 @@ import java.util.List;
 
 public interface ContactsRepository {
   void getContacts(@NonNull LoadContactsCallback callback);
+
+  void getTwitterContacts(@NonNull TwitterModel twitterModel,
+      @NonNull LoadContactsCallback callback);
 
   void submitPhoneNumber(@NonNull SubmitContactCallback callback, String userPhone);
 

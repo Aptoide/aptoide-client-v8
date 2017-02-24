@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.addressbook;
 
+import cm.aptoide.pt.model.v7.TwitterModel;
 import cm.aptoide.pt.v8engine.addressbook.data.Contact;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public interface AddressBookContract {
 
     void syncAddressBook();
 
-    void syncTwitter();
+    void syncTwitter(TwitterModel twitterModel);
 
     void syncFacebook();
 

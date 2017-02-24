@@ -9,12 +9,11 @@ import cm.aptoide.pt.dataprovider.ws.v7.SyncAddressBookRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.GetFollowers;
+import cm.aptoide.pt.model.v7.TwitterModel;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.addressbook.utils.ContactUtils;
 import cm.aptoide.pt.v8engine.addressbook.utils.StringEncryption;
-import com.google.i18n.phonenumbers.PhoneNumberUtil;
-import com.google.i18n.phonenumbers.Phonenumber;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -59,6 +58,30 @@ public class ContactsRepositoryImpl implements ContactsRepository {
         }, (throwable) -> {
           throwable.printStackTrace();
         });
+  }
+
+  @Override public void getTwitterContacts(@NonNull TwitterModel twitterModel,
+      @NonNull LoadContactsCallback callback) {
+    AptoideClientUUID aptoideClientUUID =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext());
+    SyncAddressBookRequest.of(AptoideAccountManager.getAccessToken(),
+        aptoideClientUUID.getAptoideClientUUID(), twitterModel.getId(), twitterModel.getToken(),
+        twitterModel.getSecret()).observe().subscribe(getFollowers -> {
+      List<Contact> contactList = new ArrayList<>();
+      for (GetFollowers.TimelineUser user : getFollowers.getDatalist().getList()) {
+        Contact contact = new Contact();
+        contact.setStore(user.getStore());
+        Comment.User person = new Comment.User();
+        person.setAvatar(user.getAvatar());
+        person.setName(user.getName());
+        contact.setPerson(person);
+        contactList.add(contact);
+      }
+      callback.onContactsLoaded(contactList);
+    }, (throwable) -> {
+      throwable.printStackTrace();
+    });
   }
 
   @Override

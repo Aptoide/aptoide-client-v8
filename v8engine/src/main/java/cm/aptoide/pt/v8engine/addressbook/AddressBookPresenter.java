@@ -1,7 +1,10 @@
 package cm.aptoide.pt.v8engine.addressbook;
 
+import cm.aptoide.pt.model.v7.TwitterModel;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.v8engine.addressbook.data.ContactsRepository;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by jdandrade on 10/02/2017.
@@ -30,9 +33,18 @@ public class AddressBookPresenter implements AddressBookContract.UserActionsList
     });
   }
 
-  @Override public void syncTwitter() {
-    ManagerPreferences.setTwitterAsSynced();
-    mAddressBookView.changeTwitterState(true);
+  @Override public void syncTwitter(TwitterModel twitterModel) {
+    mContactsRepository.getTwitterContacts(twitterModel, contacts -> Observable.just(contacts)
+        .subscribeOn(AndroidSchedulers.mainThread())
+        .subscribe(ignore -> {
+          mAddressBookView.changeTwitterState(true);
+          if (!contacts.isEmpty()) {
+            ManagerPreferences.setTwitterAsSynced();
+            mAddressBookView.showSuccessFragment(contacts);
+          } else {
+            mAddressBookView.showInviteFriendsFragment();
+          }
+        }));
   }
 
   @Override public void syncFacebook() {

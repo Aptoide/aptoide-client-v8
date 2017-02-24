@@ -15,7 +15,7 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentManager;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import cm.aptoide.pt.actions.PermissionRequest;
@@ -321,10 +321,9 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
 
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    FragmentManager fragment = getSupportFragmentManager();
+    Fragment fragment = getSupportFragmentManager().findFragmentByTag("AddressBookFragment_1");
     if (fragment != null) {
-      fragment.findFragmentByTag("AddressBookFragment_1")
-          .onActivityResult(requestCode, resultCode, data);
+      fragment.onActivityResult(requestCode, resultCode, data);
     } else {
       Logger.d("Twitter", "fragment is null");
     }
