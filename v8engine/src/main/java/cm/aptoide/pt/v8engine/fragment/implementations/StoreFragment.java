@@ -247,7 +247,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
         android.R.string.ok, R.string.unfollow).subscribe(eResponse -> {
       switch (eResponse) {
         case NO:
-          StoreUtils.unsubscribeStore(storeName);
+          StoreUtils.unsubscribeStore(storeName, accountManager);
         case YES:
         case CANCEL:
           getActivity().onBackPressed();

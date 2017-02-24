@@ -22,9 +22,11 @@ public class RequestFactory {
   private final ListFullReviewsRequestFactory listFullReviewsRequestFactory;
   private final GetStoreRequestFactory getStoreRequestFactory;
   private final GetStoreWidgetsRequestFactory getStoreWidgetsRequestFactory;
+  private final StoreCredentialsProvider storeCredentialsProvider;
 
   public RequestFactory(IdsRepository idsRepository, AptoideAccountManager accountManager,
       StoreCredentialsProvider storeCredentialsProvider) {
+    this.storeCredentialsProvider = storeCredentialsProvider;
     listStoresRequestFactory = new ListStoresRequestFactory(idsRepository, accountManager);
     listAppsRequestFactory = new ListAppsRequestFactory(accountManager, idsRepository);
     listFullReviewsRequestFactory =
@@ -52,7 +54,7 @@ public class RequestFactory {
   }
 
   public ListFullReviewsRequest newListFullReviews(String url, boolean refresh) {
-    return this.listFullReviewsRequestFactory.newListFullReviews(url, refresh);
+    return this.listFullReviewsRequestFactory.newListFullReviews(url, refresh, storeCredentialsProvider.fromUrl(url));
   }
 
   public GetStoreRequest newStore(String url) {

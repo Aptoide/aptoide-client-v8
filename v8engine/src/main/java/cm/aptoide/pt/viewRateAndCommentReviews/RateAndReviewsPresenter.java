@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
 import cm.aptoide.pt.util.schedulers.SchedulerProvider;
@@ -30,7 +31,7 @@ public class RateAndReviewsPresenter implements Presenter {
     this.view = view;
     this.schedulerProvider = schedulerProvider;
     this.request = ListReviewsRequest.of(storeName, packageName, accountManager.getAccessToken(),
-        aptoideClientUUID);
+        aptoideClientUUID, new BaseRequestWithStore.StoreCredentials());
     this.ratingRequest =
         GetAppRequest.of(appId, accountManager.getAccessToken(), aptoideClientUUID,
             packageName);
