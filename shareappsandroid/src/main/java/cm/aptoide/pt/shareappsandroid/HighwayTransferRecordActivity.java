@@ -966,6 +966,19 @@ public class HighwayTransferRecordActivity extends ActivityView
     }
   }
 
+  @Override public void showGeneralErrorToast(boolean isHotspot) {
+    Toast.makeText(this,R.string.fragment_social_timeline_general_error,Toast.LENGTH_LONG).show();//string from v8engine
+    Intent i = new Intent(this, HighwayActivity.class);
+    if(isHotspot){
+      setInitialApConfig();
+      startActivity(i);
+
+    }else{
+      startActivity(i);
+    }
+
+  }
+
   private Dialog createDialogToDelete(final HighwayTransferRecordItem item) {
 
     String message =

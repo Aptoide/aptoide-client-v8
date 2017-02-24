@@ -57,6 +57,11 @@ public class HighwayClientService extends Service {
 
     fileClientLifecycle = new FileClientLifecycle<AndroidAppInfo>() {
       @Override public void onError(IOException e) {
+        System.out.println("Fell on error  Client !! ");
+
+        Intent i = new Intent();
+        i.setAction("ERRORRECEIVING");
+
         e.printStackTrace();
       }
 
@@ -118,6 +123,9 @@ public class HighwayClientService extends Service {
 
       @Override public void onError(IOException e) {
         e.printStackTrace();
+
+        Intent i = new Intent();
+        i.setAction("ERRORSENDING");
       }
 
       @Override public void onFinishSending(AndroidAppInfo o) {

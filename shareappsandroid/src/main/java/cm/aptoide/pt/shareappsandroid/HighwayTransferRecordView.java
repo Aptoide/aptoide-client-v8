@@ -42,6 +42,8 @@ public interface HighwayTransferRecordView {
 
   void generateAdapter(List<HighwayTransferRecordItem> list);
 
+  void showGeneralErrorToast(boolean isHotspot);
+
   interface TransferRecordListener {
     void onInstallApp(HighwayTransferRecordItem item);
 

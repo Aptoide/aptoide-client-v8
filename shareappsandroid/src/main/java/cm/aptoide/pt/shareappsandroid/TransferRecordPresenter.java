@@ -50,6 +50,11 @@ public class TransferRecordPresenter implements Presenter {
         }
         view.showNewCard(item);
       }
+
+      @Override public void onErrorReceiving() {
+        //handling error
+        view.showGeneralErrorToast(isHotspot);
+      }
     });
     setTransferRecordListener();
     applicationSender.setListener(new ApplicationSender.SendListener() {
@@ -90,6 +95,11 @@ public class TransferRecordPresenter implements Presenter {
             listOfApps.get(positionToReSend).setSent(isSent);
           }
         }
+      }
+
+      @Override public void onErrorSendingApp() {
+        //handle error
+        view.showGeneralErrorToast(isHotspot);
       }
     });
   }
