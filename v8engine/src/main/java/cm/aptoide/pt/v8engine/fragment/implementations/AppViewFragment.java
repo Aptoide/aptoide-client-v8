@@ -28,6 +28,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -817,6 +818,22 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
     // setup methods
     public void setup(@NonNull GetApp getApp) {
+
+      //setup smooth scroll
+      getRecyclerView().addOnScrollListener(new RecyclerView.OnScrollListener() {
+        int scrollDy = 0;
+
+        @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+          scrollDy += dy;
+        }
+
+        @Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+          super.onScrollStateChanged(recyclerView, newState);
+          if (scrollDy == 0 && (newState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE)) {
+            appBarLayout.setExpanded(true);
+          }
+        }
+      });
 
       GetAppMeta.App app = getApp.getNodes().getMeta().getData();
 
