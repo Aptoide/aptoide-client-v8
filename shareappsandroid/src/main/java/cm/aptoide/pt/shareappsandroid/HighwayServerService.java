@@ -46,6 +46,9 @@ public class HighwayServerService extends Service {
   private List<App> listOfApps;
   private AptoideMessageClientController aptoideMessageClientController;
 
+  private String receivingAppName;
+  private String sendingAppName;
+
   @Override public void onCreate() {
     super.onCreate();
     if (mNotifyManager == null) {
@@ -58,6 +61,8 @@ public class HighwayServerService extends Service {
 
       @Override public void onStartReceiving(AndroidAppInfo androidAppInfo) {
         System.out.println(" Started receiving ");
+
+        receivingAppName=androidAppInfo.getAppName();
         //show notification
         createReceiveNotification(androidAppInfo.getAppName());
 
@@ -88,7 +93,7 @@ public class HighwayServerService extends Service {
         System.out.println("onProgressChanged() called with: " + "progress = [" + progress + "]");
 
         int actualProgress = Math.round(progress * 100);
-        showReceiveProgress("insertAppName", actualProgress);
+        showReceiveProgress(receivingAppName, actualProgress);
       }
     };
 
@@ -96,6 +101,8 @@ public class HighwayServerService extends Service {
 
       @Override public void onStartSending(AndroidAppInfo androidAppInfo) {
         System.out.println("Server : started sending");
+
+        sendingAppName=androidAppInfo.getAppName();
 
         createSendNotification();
 
@@ -132,7 +139,7 @@ public class HighwayServerService extends Service {
       @Override public void onProgressChanged(float progress) {
         System.out.println("onProgressChanged() called with: progress = [" + progress + "]");
         int actualProgress = Math.round(progress * 100);
-        showSendProgress("insertAppName", actualProgress);
+        showSendProgress(sendingAppName, actualProgress);
       }
     };
 

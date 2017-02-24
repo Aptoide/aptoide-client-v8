@@ -44,6 +44,9 @@ public class HighwayClientService extends Service {
   private AptoideMessageClientController aptoideMessageController;
   private AptoideMessageClientSocket aptoideMessageClientSocket;
 
+  private String receivingAppName;
+  private String sendingAppName;
+
   @Override public void onCreate() {
     super.onCreate();
     System.out.println("Inside the onCreate of the service");
@@ -60,6 +63,7 @@ public class HighwayClientService extends Service {
       @Override public void onStartReceiving(AndroidAppInfo androidAppInfo) {
         System.out.println(" Started receiving ");
 
+        receivingAppName=androidAppInfo.getAppName();
         //show notification
         createReceiveNotification(androidAppInfo.getAppName());
 
@@ -89,13 +93,15 @@ public class HighwayClientService extends Service {
       @Override public void onProgressChanged(float progress) {
         //System.out.println("onProgressChanged() called with: " + "progress = [" + progress + "]");
         int actualProgress=Math.round(progress*100);
-        showReceiveProgress("insertAppName",actualProgress);
+        showReceiveProgress(receivingAppName,actualProgress);
       }
     };
 
     fileServerLifecycle = new FileServerLifecycle<AndroidAppInfo>() {
       @Override public void onStartSending(AndroidAppInfo o) {
         System.out.println(" Started sending ");
+
+        sendingAppName=o.getAppName();
 
         Intent i = new Intent();
         i.putExtra("isSent",false);
@@ -132,11 +138,9 @@ public class HighwayClientService extends Service {
 
       @Override public void onProgressChanged(float progress) {
         //System.out.println("onProgressChanged() called with: progress = [" + progress + "]");
-        if(BuildConfig.DEBUG){
-          //showToast("onProgressChanged() called with: progress = [" + progress + "]");
-        }
+
         int actualProgress = Math.round(progress * 100);
-        showSendProgress("insertAppName", actualProgress);
+        showSendProgress(sendingAppName, actualProgress);
       }
 
 
