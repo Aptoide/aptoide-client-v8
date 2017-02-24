@@ -11,21 +11,20 @@ import java.util.List;
 public class TransferRecordManager {
 
   private ApplicationsManager applicationsManager;
-  private List<HighwayTransferRecordItem> listOfApps;
 
   public TransferRecordManager(ApplicationsManager applicationsManager) {
     this.applicationsManager = applicationsManager;
   }
 
-  public void deleteAllApps(DeleteAppsListener listener) {
-    List<HighwayTransferRecordItem> toRemoveList = findAppsToRemove();
+  public void deleteAllApps(DeleteAppsListener listener, List<HighwayTransferRecordItem> listOfApps) {
+    List<HighwayTransferRecordItem> toRemoveList = findAppsToRemove(listOfApps);
     if (toRemoveList != null) {
       listOfApps.remove(toRemoveList);
       listener.onDeleteAllApps();
     }
   }
 
-  private List<HighwayTransferRecordItem> findAppsToRemove() {
+  private List<HighwayTransferRecordItem> findAppsToRemove(List<HighwayTransferRecordItem> listOfApps) {
     List<HighwayTransferRecordItem> toRemoveList = new ArrayList<>();
     for (int i = 0; i < listOfApps.size(); i++) {
       if (listOfApps.get(i).isSent() || listOfApps.get(i)

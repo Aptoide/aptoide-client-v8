@@ -1,9 +1,8 @@
 package cm.aptoide.pt.shareappsandroid;
 
+import cm.aptoide.pt.shareapps.socket.entities.Host;
 import java.util.ArrayList;
 import java.util.List;
-
-import cm.aptoide.pt.shareapps.socket.entities.Host;
 
 /**
  * Created by filipegoncalves on 09-02-2017.
@@ -213,7 +212,7 @@ public class TransferRecordPresenter implements Presenter {
         view.refreshAdapter();
         view.hideReceivedAppMenu();
       }
-    });
+    }, listOfApps);
   }
 
   public void deleteAppFile(HighwayTransferRecordItem item) {
