@@ -40,6 +40,7 @@ public class AddressBookFragment extends SupportV4BaseFragment implements Addres
   private Button facebookSyncButton;
   private Button twitterSyncButton;
   private TextView dismissV;
+  private TextView addressbook_2nd_msg;
   private TextView about;
   private ProgressBar addressBookSyncProgress;
 
@@ -64,6 +65,8 @@ public class AddressBookFragment extends SupportV4BaseFragment implements Addres
   }
 
   @Override public void setupViews() {
+    addressbook_2nd_msg.setText(
+        getString(R.string.addressbook_2nd_msg, V8Engine.getConfiguration().getMarketName()));
     mActionsListener.getButtonsState();
     dismissV.setPaintFlags(dismissV.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
     about.setPaintFlags(about.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
@@ -166,6 +169,7 @@ public class AddressBookFragment extends SupportV4BaseFragment implements Addres
     about = (TextView) view.findViewById(R.id.addressbook_about);
     addressBookSyncProgress =
         (ProgressBar) view.findViewById(R.id.addressbook_addressbook_sync_progress);
+    addressbook_2nd_msg = (TextView) view.findViewById(R.id.addressbook_2nd_msg);
   }
 
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
