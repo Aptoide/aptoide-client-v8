@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.dataprovider.ws.v7.SetUserRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.SetConnectionRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SyncAddressBookRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.Comment;
@@ -100,16 +100,18 @@ public class ContactsRepositoryImpl implements ContactsRepository {
       AptoideClientUUID aptoideClientUUID =
           new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
               DataProvider.getContext());
-      SetUserRequest.of(aptoideClientUUID.getAptoideClientUUID(), null,
-          AptoideAccountManager.getAccessToken(), phoneNumber).observe().subscribe(response -> {
-        if (response.isOk()) {
-          callback.onPhoneNumberSubmission(true);
-        } else {
-          callback.onPhoneNumberSubmission(false);
-        }
-      }, throwable -> {
-        callback.onPhoneNumberSubmission(false);
-      });
+      SetConnectionRequest.of(aptoideClientUUID.getAptoideClientUUID(),
+          AptoideAccountManager.getAccessToken(), hashedPhoneNumber)
+          .observe()
+          .subscribe(response -> {
+            if (response.isOk()) {
+              callback.onPhoneNumberSubmission(true);
+            } else {
+              callback.onPhoneNumberSubmission(false);
+            }
+          }, throwable -> {
+            callback.onPhoneNumberSubmission(false);
+          });
     } else {
       callback.onPhoneNumberSubmission(false);
     }

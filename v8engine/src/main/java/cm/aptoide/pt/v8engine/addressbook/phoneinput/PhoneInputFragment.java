@@ -65,10 +65,6 @@ public class PhoneInputFragment extends SupportV4BaseFragment implements PhoneIn
   }
 
   @Override public void showProgressIndicator(boolean active) {
-    if (getView() == null) {
-      return;
-    }
-
     // TODO: 14/02/2017 manipulate progress
   }
 

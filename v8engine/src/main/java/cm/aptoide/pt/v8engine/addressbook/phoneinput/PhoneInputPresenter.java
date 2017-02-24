@@ -1,6 +1,8 @@
 package cm.aptoide.pt.v8engine.addressbook.phoneinput;
 
 import cm.aptoide.pt.v8engine.addressbook.data.ContactsRepository;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by jdandrade on 14/02/2017.
@@ -20,12 +22,19 @@ public class PhoneInputPresenter implements PhoneInputContract.UserActionsListen
   }
 
   @Override public void submitClicked(String phoneNumber) {
+    mPhoneInputView.showProgressIndicator(true);
     mContactsRepository.submitPhoneNumber(success -> {
-      if (success) {
-        mPhoneInputView.showSubmissionSuccess();
-      } else {
+      Observable.just(success).subscribeOn(AndroidSchedulers.mainThread()).subscribe(success1 -> {
+        if (success) {
+          mPhoneInputView.showSubmissionSuccess();
+        } else {
+          mPhoneInputView.showSubmissionError();
+        }
+        mPhoneInputView.showProgressIndicator(false);
+      }, throwable -> {
         mPhoneInputView.showSubmissionError();
-      }
+        mPhoneInputView.showProgressIndicator(false);
+      });
     }, phoneNumber);
   }
 }

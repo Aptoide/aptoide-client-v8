@@ -41,8 +41,8 @@ public class AddressBookPresenter implements AddressBookContract.UserActionsList
         .subscribeOn(AndroidSchedulers.mainThread())
         .subscribe(ignore -> {
           mAddressBookView.changeTwitterState(true);
+          ManagerPreferences.setTwitterAsSynced();
           if (!contacts.isEmpty()) {
-            ManagerPreferences.setTwitterAsSynced();
             mAddressBookView.showSuccessFragment(contacts);
           } else {
             mAddressBookView.showInviteFriendsFragment();

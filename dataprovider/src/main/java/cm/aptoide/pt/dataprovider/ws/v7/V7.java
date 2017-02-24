@@ -315,6 +315,9 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
 
     @POST("user/connections/add") Observable<GetFollowers> setConnections(
         @Body SyncAddressBookRequest.Body body);
+
+    @POST("user/connections/set") Observable<BaseV7Response> setConnection(
+        @Body SetConnectionRequest.Body body);
   }
 }
 
