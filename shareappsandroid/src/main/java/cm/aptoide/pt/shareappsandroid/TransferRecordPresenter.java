@@ -185,7 +185,7 @@ public class TransferRecordPresenter implements Presenter {
     if (isHotspot) {
       connectedClients = DataHolder.getInstance()
           .getConnectedClients();//to-do extract to a model with a broadcastreceiver to listen to connect's and disconnect's
-      if (connectedClients == null || connectedClients.size() < 1) {
+      if (connectedClients == null || connectedClients.size() < 2) {
         view.showNoConnectedClientsToast();
       }else {
         view.openAppSelectionView();
