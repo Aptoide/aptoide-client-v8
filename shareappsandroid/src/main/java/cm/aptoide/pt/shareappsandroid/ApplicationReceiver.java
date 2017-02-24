@@ -68,10 +68,9 @@ public class ApplicationReceiver {
       //                targetIPAddress = aux;
       //            }
       System.out.println("Will start a client service");
-
       receiveIntent = new Intent(context, HighwayClientService.class);
-      receiveIntent.putExtra("targetIP", targetIPAddress);
     }
+    receiveIntent.putExtra("targetIP", targetIPAddress);
     receiveIntent.putExtra("nickname", nickname);
     receiveIntent.putExtra("port", port);
     receiveIntent.putExtra("ExternalStoragePath",

@@ -259,6 +259,9 @@ public class HighwayServerService extends Service {
       System.out.println("inside of startcommand in the service");
       if (intent.getAction() != null && intent.getAction().equals("RECEIVE")) {
         //port = intent.getIntExtra("port", 0);
+        String serverIPAddress = intent.getStringExtra("targetIP");
+        System.out.println("!!! " +serverIPAddress);
+
         System.out.println("Going to start serving");
         AptoideMessageServerSocket aptoideMessageServerSocket =
             new AptoideMessageServerSocket(55555, 500000);
@@ -282,7 +285,7 @@ public class HighwayServerService extends Service {
         aptoideMessageClientController =
             new AptoideMessageClientController(s, storageCapacity, fileServerLifecycle,
                 fileClientLifecycle);
-        (new AptoideMessageClientSocket("192.168.43.1", 55555,
+        (new AptoideMessageClientSocket(serverIPAddress, 55555,
             aptoideMessageClientController)).startAsync();
 
         System.out.println("Connected 342");
