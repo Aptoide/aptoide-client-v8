@@ -28,7 +28,9 @@ import cm.aptoide.pt.navigation.AccountNavigator;
 import cm.aptoide.pt.v8engine.adapters.CommentsAdapter;
 import cm.aptoide.pt.v8engine.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
+import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.util.DialogUtils;
+import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -126,6 +128,7 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
     dialogUtils = new DialogUtils(accountManager,
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext()),
         new AccountNavigator(getContext(), accountManager));
+    StoreCredentialsProvider storeCredentialsProvider = new StoreCredentialsProviderImpl();
     final RateAndReviewsPresenter presenter =
         new RateAndReviewsPresenter(appId, storeName, packageName, this,
             ConcreteSchedulerProvider.getInstance(), accountManager,

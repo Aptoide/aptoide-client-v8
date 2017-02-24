@@ -10,9 +10,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
@@ -59,7 +62,8 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
   }
 
   @Partners @NonNull
-  protected static Bundle buildBundle(Event event, String title, String storeTheme, String tag,StoreContext storeContext) {
+  protected static Bundle buildBundle(Event event, String title, String storeTheme, String tag,
+      StoreContext storeContext) {
     Bundle args = new Bundle();
 
     if (event.getType() != null) {
@@ -147,6 +151,12 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
     } else {
       return super.getContentViewId();
     }
+  }
+
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    return super.onCreateView(inflater, container, savedInstanceState);
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {

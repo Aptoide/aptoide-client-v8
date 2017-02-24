@@ -191,7 +191,7 @@ public abstract class V8Engine extends DataProvider {
 
     generateAptoideUUID().subscribe();
 
-    regenerateUserAgent(getAccountManager());
+    regenerateUserAgent(accountManager);
 
     IntentFilter intentFilter = new IntentFilter(AptoideAccountManager.LOGIN);
     intentFilter.addAction(AptoideAccountManager.LOGOUT);

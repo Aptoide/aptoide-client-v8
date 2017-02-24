@@ -180,14 +180,6 @@
 
   <string name="feedback_send_button">Send Feedback</string>
 
-  <!-- NavDrawer List items -->
-  <string name="my_account">My Account</string>
-  <string name="setting_schdwntitle">Scheduled Downloads</string>
-  <string name="settings">Settings</string>
-  <string name="facebook">Facebook</string>
-  <string name="twitter">Twitter</string>
-  <string name="backup_apps">Backup Apps</string>
-
   <string name="menu_context_reparse">Reload</string>
   <string name="menu_context_remove">Remove</string>
 
@@ -319,6 +311,7 @@
   <string name="setting_ethernet">Ethernet</string>
   <string name="setting_sum_general_download_rules">Download Apps, Editors\' Choice, Top Apps and Stores over allowed mobile data connections</string>
   <string name="setting_general_download_rules">General Download Rules</string>
+  <string name="setting_general">General</string>
   <string name="setting_hwspecstitle">Hardware Specs</string>
   <string name="setting_hwspecssum">Hardware Info about your phone</string>
   <string name="setting_appfiltersum">Don\'t show applications that are not compatible with this device</string>

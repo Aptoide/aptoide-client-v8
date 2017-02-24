@@ -673,7 +673,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
       storeAvatarPath = fileUtils.getPathAlt(avatarUrl, getApplicationContext());
     } else if (requestCode == GALLERY_CODE && resultCode == RESULT_OK) {
       avatarUrl = data.getData();
-      storeAvatarPath = fileUtils.getPath(avatarUrl, getApplicationContext());
+      storeAvatarPath = fileUtils.getPathAlt(avatarUrl, getApplicationContext());
     }
     checkAvatarRequirements(storeAvatarPath, avatarUrl);
   }

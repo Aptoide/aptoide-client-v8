@@ -29,7 +29,6 @@ import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
@@ -101,15 +100,22 @@ public class PrivateStoreDialog extends DialogFragment {
             if (e instanceof AptoideWsV7Exception) {
               BaseV7Response baseResponse = ((AptoideWsV7Exception) e).getBaseResponse();
 
-              if (StoreUtils.PRIVATE_STORE_WRONG_CREDENTIALS.equals(
-                  baseResponse.getError().getCode())) {
-                storeUser = null;
-                storePassSha1 = null;
-                ShowMessage.asSnack(rootView, R.string.ws_error_invalid_grant);
+              switch (StoreUtils.getErrorType(baseResponse.getError().getCode())) {
+                case PRIVATE_STORE_WRONG_CREDENTIALS:
+                  storeUser = null;
+                  storePassSha1 = null;
+                  getTargetFragment().onActivityResult(getTargetRequestCode(),
+                      AddStoreDialog.PRIVATE_STORE_INVALID_CREDENTIALS_CODE, null);
+                  break;
+                default:
+                  getTargetFragment().onActivityResult(getTargetRequestCode(),
+                      AddStoreDialog.PRIVATE_STORE_ERROR_CODE, null);
+                  dismiss();
               }
             } else {
               e.printStackTrace();
-              ShowMessage.asSnack(getView(), R.string.error_occured);
+              getTargetFragment().onActivityResult(getTargetRequestCode(),
+                  AddStoreDialog.PRIVATE_STORE_ERROR_CODE, null);
               dismiss();
             }
           }, accountManager);

@@ -17,12 +17,10 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.Constants;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.view.MainActivity;
 import com.facebook.login.LoginFragment;
 
 import static android.accounts.AccountManager.KEY_BOOLEAN_RESULT;
-import static cm.aptoide.pt.preferences.Application.getContext;
 
 /**
  * Created by brutus on 09-12-2013.
@@ -33,9 +31,9 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
   private static final String TAG = AccountAuthenticator.class.getSimpleName();
   private final AptoideAccountManager accountManager;
 
-  public AccountAuthenticator(Context context) {
+  public AccountAuthenticator(Context context, AptoideAccountManager accountManager) {
     super(context);
-    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    this.accountManager = accountManager;
   }
 
   @Override

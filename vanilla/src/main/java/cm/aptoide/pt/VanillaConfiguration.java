@@ -72,7 +72,7 @@ public class VanillaConfiguration implements AptoidePreferencesConfiguration {
   }
 
   @Override public String getSearchAuthority() {
-    return APP_ID + ".SuggestionProvider";
+    return APP_ID + ".SearchSuggestionProvider";
   }
 
   @Override public String getAutoUpdatesSyncAdapterAuthority() {

@@ -109,6 +109,8 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
         return V8Engine.getFragmentProvider().newUpdatesFragment();
       case myDownloads:
         return V8Engine.getFragmentProvider().newDownloadsFragment();
+      case mySpotShare:
+        return V8Engine.getFragmentProvider().newSpotShareFragment();
       case myStores:
         return V8Engine.getFragmentProvider()
             .newSubscribedStoresFragment(event, tab.getLabel(), storeTheme, tab.getTag());

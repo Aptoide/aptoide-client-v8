@@ -8,6 +8,9 @@ package cm.aptoide.pt.v8engine.account;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import cm.aptoide.pt.v8engine.V8Engine;
+
+import static cm.aptoide.pt.preferences.Application.getContext;
 
 /**
  * Created by brutus on 11-12-2013.
@@ -15,7 +18,8 @@ import android.os.IBinder;
 public class AccountAuthenticatorService extends Service {
 
   @Override public IBinder onBind(Intent intent) {
-    AccountAuthenticator authenticator = new AccountAuthenticator(this);
+    AccountAuthenticator authenticator = new AccountAuthenticator(this,
+        ((V8Engine) getContext().getApplicationContext()).getAccountManager());
     return authenticator.getIBinder();
   }
 }

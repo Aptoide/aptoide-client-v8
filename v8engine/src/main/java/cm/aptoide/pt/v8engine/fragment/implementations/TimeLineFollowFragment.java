@@ -111,11 +111,6 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
     setHasOptionsMenu(true);
   }
 
-  @Override public void onDestroyView() {
-    endlessRecyclerOnScrollListener.removeListeners();
-    super.onDestroyView();
-  }
-
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
     if (create || refresh) {
@@ -204,6 +199,11 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
         footerMessage = "";
     }
     return footerMessage;
+  }
+
+  @Override public void onDestroyView() {
+    endlessRecyclerOnScrollListener.removeListeners();
+    super.onDestroyView();
   }
 
   public enum FollowFragmentOpenMode {
