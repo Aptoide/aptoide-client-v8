@@ -315,30 +315,29 @@ public class HighwayTransferRecordActivity extends ActivityView
       receivedAppListView.setVisibility(View.VISIBLE);
       outsideShare = false;
 
-      tmpFilePath = getIntent().getStringExtra("receivedFilePath");
-      System.out.println("The tmpFilePath is : " + tmpFilePath);
-      received = getIntent().getBooleanExtra("received", true);
-      nameOfTheApp = getIntent().getStringExtra("nameOfTheApp");
-      packageName = getIntent().getStringExtra("AppPackageName");
-      System.out.println("O app package name is : " + packageName);
-      needReSend = getIntent().getBooleanExtra("needReSend", true);
-      isSent = getIntent().getBooleanExtra("isSent", false);
-      positionToReSend = getIntent().getIntExtra("positionToReSend", 100000);
-      System.out.println("Need Resend BOOLEAN IS AT  :: :: : "
-          + needReSend);//se precisar de re send msotra o icone
-      System.out.println("O received boolean esta a  : : : " + received);
-
-      //pode haver problemas relacionados com a troca de filepath aqui. POde nao estar o (i).
-      receivedFilePath =
-          Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-              + "/"
-              + tmpFilePath;
-      System.out.println(
-          "transfer REcord Activity _: the received file path is :::: " + receivedFilePath);
-
-      getReceivedApps();
-      handleReceivedApp(received, needReSend,
-          tmpFilePath);//build ReceiveFilePath on the other side.
+      //tmpFilePath = getIntent().getStringExtra("receivedFilePath");
+      //System.out.println("The tmpFilePath is : " + tmpFilePath);
+      //received = getIntent().getBooleanExtra("received", true);
+      //nameOfTheApp = getIntent().getStringExtra("nameOfTheApp");
+      //packageName = getIntent().getStringExtra("AppPackageName");
+      //System.out.println("O app package name is : " + packageName);
+      //needReSend = getIntent().getBooleanExtra("needReSend", true);
+      //isSent = getIntent().getBooleanExtra("isSent", false);
+      //positionToReSend = getIntent().getIntExtra("positionToReSend", 100000);
+      //System.out.println("Need Resend BOOLEAN IS AT  :: :: : "
+      //    + needReSend);//se precisar de re send msotra o icone
+      //System.out.println("O received boolean esta a  : : : " + received);
+      //
+      ////pode haver problemas relacionados com a troca de filepath aqui. POde nao estar o (i).
+      //receivedFilePath =
+      //    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+      //        + "/"
+      //        + tmpFilePath;
+      //System.out.println(
+      //    "transfer REcord Activity _: the received file path is :::: " + receivedFilePath);
+      //
+      //getReceivedApps();
+      //handleReceivedApp(received, needReSend, tmpFilePath);//build ReceiveFilePath on the other side.
     }
 
     if (adapter == null) {
@@ -814,8 +813,9 @@ public class HighwayTransferRecordActivity extends ActivityView
   }
 
   @Override public void showNewCard(HighwayTransferRecordItem item) {
-    if (receivedAppListView.getVisibility() != View.VISIBLE) {
+    if (receivedAppListView.getVisibility() != View.VISIBLE && textView.getVisibility()==View.VISIBLE) {
       receivedAppListView.setVisibility(View.VISIBLE);
+      textView.setVisibility(View.GONE);
     }
 
     if (adapter != null) {
