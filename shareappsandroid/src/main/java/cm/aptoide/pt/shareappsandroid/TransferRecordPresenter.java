@@ -1,9 +1,8 @@
 package cm.aptoide.pt.shareappsandroid;
 
+import cm.aptoide.pt.shareapps.socket.entities.Host;
 import java.util.ArrayList;
 import java.util.List;
-
-import cm.aptoide.pt.shareapps.socket.entities.Host;
 
 /**
  * Created by filipegoncalves on 09-02-2017.
@@ -51,6 +50,11 @@ public class TransferRecordPresenter implements Presenter {
         }
         view.showNewCard(item);
       }
+
+      @Override public void onErrorReceiving() {
+        //handling error
+        view.showGeneralErrorToast(isHotspot);
+      }
     });
     setTransferRecordListener();
     applicationSender.setListener(new ApplicationSender.SendListener() {
@@ -65,8 +69,8 @@ public class TransferRecordPresenter implements Presenter {
             view.showNewCard(tmp);
           }
         } else {
-//          listOfApps.get(positionToReSend).setSent(isSent);
-//          listOfApps.get(positionToReSend).setNeedReSend(needReSend);
+          //          listOfApps.get(positionToReSend).setSent(isSent);
+          //          listOfApps.get(positionToReSend).setNeedReSend(needReSend);
           view.updateItemStatus(positionToReSend, isSent, needReSend);
         }
       }
@@ -81,7 +85,7 @@ public class TransferRecordPresenter implements Presenter {
                   .isSent()) {
                 listOfApps.get(i).setNeedReSend(needReSend);
                 listOfApps.get(i).setSent(isSent);
-                view.updateItemStatus(i,isSent,needReSend);
+                view.updateItemStatus(i, isSent, needReSend);
                 //                            i=-1;//to do only for the last app sent with this name.
               }
             }
@@ -91,6 +95,11 @@ public class TransferRecordPresenter implements Presenter {
             listOfApps.get(positionToReSend).setSent(isSent);
           }
         }
+      }
+
+      @Override public void onErrorSendingApp() {
+        //handle error
+        view.showGeneralErrorToast(isHotspot);
       }
     });
   }
@@ -106,7 +115,6 @@ public class TransferRecordPresenter implements Presenter {
   @Override public void onDestroy() {
     applicationReceiver.stop();
     applicationSender.stop();
-
   }
 
   @Override public void onStop() {
@@ -185,12 +193,12 @@ public class TransferRecordPresenter implements Presenter {
     if (isHotspot) {
       connectedClients = DataHolder.getInstance()
           .getConnectedClients();//to-do extract to a model with a broadcastreceiver to listen to connect's and disconnect's
-      if (connectedClients == null || connectedClients.size() < 1) {
+      if (connectedClients == null || connectedClients.size() < 2) {
         view.showNoConnectedClientsToast();
-      }else {
+      } else {
         view.openAppSelectionView();
       }
-    }else {
+    } else {
       view.openAppSelectionView();
     }
   }
@@ -209,11 +217,11 @@ public class TransferRecordPresenter implements Presenter {
 
   public void deleteAllApps() {
     transferRecordManager.deleteAllApps(new TransferRecordManager.DeleteAppsListener() {
-      @Override public void onDeleteAllApps() {
-        view.refreshAdapter();
+      @Override public void onDeleteAllApps(List<HighwayTransferRecordItem> toRemoveList) {
+        view.refreshAdapter(toRemoveList);
         view.hideReceivedAppMenu();
       }
-    });
+    }, listOfApps);
   }
 
   public void deleteAppFile(HighwayTransferRecordItem item) {

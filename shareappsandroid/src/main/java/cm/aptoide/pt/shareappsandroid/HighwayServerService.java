@@ -9,12 +9,10 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
 import android.support.annotation.Nullable;
-import android.widget.Toast;
 import cm.aptoide.pt.shareapps.socket.entities.AndroidAppInfo;
+import cm.aptoide.pt.shareapps.socket.entities.FileInfo;
 import cm.aptoide.pt.shareapps.socket.entities.Host;
 import cm.aptoide.pt.shareapps.socket.interfaces.FileClientLifecycle;
 import cm.aptoide.pt.shareapps.socket.interfaces.FileServerLifecycle;
@@ -26,8 +24,8 @@ import cm.aptoide.pt.shareapps.socket.message.messages.RequestPermissionToSend;
 import cm.aptoide.pt.shareapps.socket.message.server.AptoideMessageServerSocket;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.TimerTask;
 
 import static android.R.attr.id;
 
@@ -50,6 +48,9 @@ public class HighwayServerService extends Service {
   private List<App> listOfApps;
   private AptoideMessageClientController aptoideMessageClientController;
 
+  private String receivingAppName;
+  private String sendingAppName;
+
   @Override public void onCreate() {
     super.onCreate();
     if (mNotifyManager == null) {
@@ -58,12 +59,15 @@ public class HighwayServerService extends Service {
     fileClientLifecycle = new FileClientLifecycle<AndroidAppInfo>() {
       @Override public void onError(IOException e) {
         e.printStackTrace();
+
+        Intent i = new Intent();
+        i.setAction("ERRORRECEIVING");
       }
 
       @Override public void onStartReceiving(AndroidAppInfo androidAppInfo) {
         System.out.println(" Started receiving ");
-        showToast(" Started receiving ");
 
+        receivingAppName = androidAppInfo.getAppName();
         //show notification
         createReceiveNotification(androidAppInfo.getAppName());
 
@@ -75,8 +79,7 @@ public class HighwayServerService extends Service {
       }
 
       @Override public void onFinishReceiving(AndroidAppInfo androidAppInfo) {
-        System.out.println(" Finished receiving ");
-        showToast(" Finished receiving ");
+        System.out.println(" Finished receiving " + androidAppInfo);
 
         finishReceiveNotification(androidAppInfo.getApk().getFilePath());
 
@@ -92,10 +95,10 @@ public class HighwayServerService extends Service {
 
       @Override
       public void onProgressChanged(float progress) {//todo add AndroidAPpInfo - to get appname
-        System.out.println("onProgressChanged() called with: " + "progress = [" + progress + "]");
-        //        showToast("onProgressChanged() called with: " + "progress = [" + progress + "]");
+        //System.out.println("onProgressChanged() called with: " + "progress = [" + progress + "]");
+
         int actualProgress = Math.round(progress * 100);
-        showReceiveProgress("insertAppName", actualProgress);
+        showReceiveProgress(receivingAppName, actualProgress);
       }
     };
 
@@ -103,9 +106,8 @@ public class HighwayServerService extends Service {
 
       @Override public void onStartSending(AndroidAppInfo androidAppInfo) {
         System.out.println("Server : started sending");
-        showToast("Server : started sending");
 
-        //create notification
+        sendingAppName = androidAppInfo.getAppName();
 
         createSendNotification();
 
@@ -120,13 +122,8 @@ public class HighwayServerService extends Service {
         sendBroadcast(i);
       }
 
-      @Override public void onError(IOException e) {
-        e.printStackTrace();
-      }
-
       @Override public void onFinishSending(AndroidAppInfo androidAppInfo) {
-        System.out.println("Server : finished sending");
-        showToast("Server : finished sending");
+        System.out.println("Server : finished sending " + androidAppInfo);
 
         finishSendNotification();
 
@@ -138,25 +135,23 @@ public class HighwayServerService extends Service {
         i.putExtra("positionToReSend", 100000);
         i.setAction("SENDAPP");
         sendBroadcast(i);
+      }      @Override public void onError(IOException e) {
+        System.out.println("Fell on error Server !! ");
+        e.printStackTrace();
+        Intent i = new Intent();
+        i.setAction("ERRORSENDING");
       }
 
+
+
       @Override public void onProgressChanged(float progress) {
-        System.out.println("onProgressChanged() called with: progress = [" + progress + "]");
-        //        showToast("onProgressChanged() called with: progress = [" + progress + "]");
+        //System.out.println("onProgressChanged() called with: progress = [" + progress + "]");
         int actualProgress = Math.round(progress * 100);
-        showSendProgress("insertAppName", actualProgress);
+        showSendProgress(sendingAppName, actualProgress);
       }
     };
 
     System.out.println(" Inside the service of the server");
-  }
-
-  @Deprecated private void showToast(final String str) {
-    new Handler(Looper.getMainLooper()).post(new TimerTask() {
-      @Override public void run() {
-        Toast.makeText(getBaseContext(), str, Toast.LENGTH_LONG).show();
-      }
-    });
   }
 
   private void createReceiveNotification(String receivingAppName) {
@@ -167,7 +162,7 @@ public class HighwayServerService extends Service {
               .getString(R.string.receive))
           .setContentText(
               this.getResources().getString(R.string.receiving) + " " + receivingAppName)
-          .setSmallIcon(R.mipmap.lite);
+          .setSmallIcon(R.mipmap.ic_launcher);
     }
   }
 
@@ -231,7 +226,22 @@ public class HighwayServerService extends Service {
           this.getResources().getString(R.string.shareApps) + " - " + this.getResources()
               .getString(R.string.send))
           .setContentText(this.getResources().getString(R.string.preparingSend))
-          .setSmallIcon(R.mipmap.lite);
+          .setSmallIcon(R.mipmap.ic_launcher);
+    }
+  }
+
+  private void finishSendNotification() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+      ((Notification.Builder) mBuilderSend).setContentText(
+          this.getResources().getString(R.string.transfCompleted))
+          // Removes the progress bar
+          .setSmallIcon(android.R.drawable.stat_sys_download_done)
+          .setProgress(0, 0, false)
+          .setAutoCancel(true);
+      if (mNotifyManager == null) {
+        mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+      }
+      mNotifyManager.notify(id, ((Notification.Builder) mBuilderSend).getNotification());
     }
   }
 
@@ -248,21 +258,6 @@ public class HighwayServerService extends Service {
         mNotifyManager.notify(id, ((Notification.Builder) mBuilderSend).getNotification());
       }
       lastTimestampSend = System.currentTimeMillis();
-    }
-  }
-
-  private void finishSendNotification() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-      ((Notification.Builder) mBuilderSend).setContentText(
-          this.getResources().getString(R.string.transfCompleted))
-          // Removes the progress bar
-          .setSmallIcon(android.R.drawable.stat_sys_download_done)
-          .setProgress(0, 0, false)
-          .setAutoCancel(true);
-      if (mNotifyManager == null) {
-        mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-      }
-      mNotifyManager.notify(id, ((Notification.Builder) mBuilderSend).getNotification());
     }
   }
 
@@ -323,13 +318,9 @@ public class HighwayServerService extends Service {
           File mainObb = null;
           File patchObb = null;
 
-          AndroidAppInfo appInfo;
-          if (!obbsFilePath.equals("noObbs")) {
+          List<FileInfo> fileInfoList = getFileInfo(filePath, obbsFilePath);
 
-            appInfo = new AndroidAppInfo(appName, packageName, apk, mainObb, patchObb);
-          } else {
-            appInfo = new AndroidAppInfo(appName, packageName, apk);
-          }
+          AndroidAppInfo appInfo = new AndroidAppInfo(appName, packageName, fileInfoList);
 
           aptoideMessageClientController.send(
               new RequestPermissionToSend(aptoideMessageClientController.getLocalhost(), appInfo));
@@ -342,4 +333,28 @@ public class HighwayServerService extends Service {
   @Nullable @Override public IBinder onBind(Intent intent) {
     return null;
   }
+
+  public List<FileInfo> getFileInfo(String filePath, String obbsFilePath){
+    List<FileInfo> fileInfoList = new ArrayList<>();
+    //getApk
+    File apk = new File(filePath);
+    FileInfo apkFileInfo = new FileInfo(apk);
+    fileInfoList.add(apkFileInfo);
+    //getObbs
+
+    if (!obbsFilePath.equals("noObbs")) {
+      File obbFolder = new File(obbsFilePath);
+      File[] list = obbFolder.listFiles();
+      if (list != null) {
+        if (list.length > 0) {
+          for(int i=0;i<list.length;i++){
+            fileInfoList.add(new FileInfo(list[i]));
+          }
+        }
+      }
+    }
+
+    return fileInfoList;
+  }
+
 }

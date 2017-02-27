@@ -11,27 +11,28 @@ import java.util.List;
 public class TransferRecordManager {
 
   private ApplicationsManager applicationsManager;
-  private List<HighwayTransferRecordItem> listOfApps;
 
   public TransferRecordManager(ApplicationsManager applicationsManager) {
     this.applicationsManager = applicationsManager;
   }
 
-  public void deleteAllApps(DeleteAppsListener listener) {
-    List<HighwayTransferRecordItem> toRemoveList = findAppsToRemove();
+  public void deleteAllApps(DeleteAppsListener listener,
+      List<HighwayTransferRecordItem> listOfApps) {
+    List<HighwayTransferRecordItem> toRemoveList = findAppsToRemove(listOfApps);
     if (toRemoveList != null) {
       listOfApps.remove(toRemoveList);
-      listener.onDeleteAllApps();
+      listener.onDeleteAllApps(toRemoveList);
     }
   }
 
-  private List<HighwayTransferRecordItem> findAppsToRemove() {
+  private List<HighwayTransferRecordItem> findAppsToRemove(
+      List<HighwayTransferRecordItem> listOfApps) {
     List<HighwayTransferRecordItem> toRemoveList = new ArrayList<>();
     for (int i = 0; i < listOfApps.size(); i++) {
       if (listOfApps.get(i).isSent() || listOfApps.get(i)
           .isReceived()) {//no isSending or need resend
-        toRemoveList.add(listOfApps.get(i));
         listOfApps.get(i).setDeleted(true);
+        toRemoveList.add(listOfApps.get(i));
         if (listOfApps.get(i).isReceived()) {
           String tmpFilePath = listOfApps.get(i).getFilePath();
           System.out.println("GOing to delete this filepath : " + tmpFilePath);
@@ -55,8 +56,10 @@ public class TransferRecordManager {
     return app;
   }
 
-  public HighwayTransferRecordItem readApkArchive(String appName, String filePath, boolean needReSend) {
-    HighwayTransferRecordItem item = applicationsManager.readApkArchive(appName, filePath, needReSend);
+  public HighwayTransferRecordItem readApkArchive(String appName, String filePath,
+      boolean needReSend) {
+    HighwayTransferRecordItem item =
+        applicationsManager.readApkArchive(appName, filePath, needReSend);
     return item;
   }
 
@@ -73,6 +76,6 @@ public class TransferRecordManager {
 
   public interface DeleteAppsListener {
 
-    void onDeleteAllApps();
+    void onDeleteAllApps(List<HighwayTransferRecordItem> toRemoveList);
   }
 }

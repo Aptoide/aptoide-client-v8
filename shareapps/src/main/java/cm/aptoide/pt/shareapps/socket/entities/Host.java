@@ -10,8 +10,8 @@ import lombok.experimental.Accessors;
  * Created by neuro on 27-01-2017.
  */
 @Data @Accessors(chain = true) public class Host implements Serializable {
-  private  String ip;
-  private  int port;
+  private String ip;
+  private int port;
 
   public Host(String ip, int port) {
     this.ip = ip;

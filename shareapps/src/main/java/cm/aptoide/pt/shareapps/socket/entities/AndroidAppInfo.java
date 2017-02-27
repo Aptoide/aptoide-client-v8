@@ -2,7 +2,6 @@ package cm.aptoide.pt.shareapps.socket.entities;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.LinkedList;
 import java.util.List;
 import lombok.Data;
 
@@ -14,6 +13,7 @@ import lombok.Data;
   private FileInfo apk, mainObb, patchObb;
   private String appName;
   private String packageName;
+  private List<FileInfo> fileInfos;
 
   public AndroidAppInfo(String appName, String packageName, File apk, File mainObb, File patchObb) {
     this(appName, packageName, apk, mainObb);
@@ -31,71 +31,33 @@ import lombok.Data;
     this.apk = new FileInfo(apk);
   }
 
-  public List<String> getFilesPathsList() {
-    List<String> list = new LinkedList<>();
-    list.add(apk.getFilePath());
-
-    if (hasMainObb()) {
-      list.add(getMainObb().getFilePath());
-    }
-
-    if (hasPatchObb()) {
-      list.add(getPatchObb().getFilePath());
-    }
-
-    return list;
-  }
-
-  public boolean hasMainObb() {
-    return mainObb != null;
-  }
-
-  public boolean hasPatchObb() {
-    return patchObb != null;
-  }
-
-  public List<FileInfo> getFileInfosList() {
-    List<FileInfo> list = new LinkedList<>();
-    list.add(apk);
-
-    if (hasMainObb()) {
-      list.add(getMainObb());
-    }
-
-    if (hasPatchObb()) {
-      list.add(getPatchObb());
-    }
-
-    return list;
+  public AndroidAppInfo(String appName, String packageName, List<FileInfo> fileInfos) {
+    this.fileInfos = fileInfos;
+    this.packageName = packageName;
+    this.appName = appName;
+    this.apk = extractApk();
   }
 
   public List<FileInfo> getFiles() {
-    List<FileInfo> fileInfos = new LinkedList<>();
-
-    fileInfos.add(apk);
-
-    if (hasMainObb()) {
-      fileInfos.add(mainObb);
-    }
-
-    if (hasMainObb()) {
-      fileInfos.add(patchObb);
-    }
-
     return fileInfos;
   }
 
   public long getFilesSize() {
-    long total = apk.getSize();
-
-    if (hasMainObb()) {
-      total += mainObb.getSize();
+    long total=0;
+    if(fileInfos!=null){
+      for(int i=0;i<fileInfos.size();i++){
+        total += fileInfos.get(i).getSize();
+      }
     }
-
-    if (hasPatchObb()) {
-      total += patchObb.getSize();
-    }
-
     return total;
+  }
+
+  private FileInfo extractApk(){
+    for(int i=0;i<fileInfos.size();i++){
+      if(fileInfos.get(i).getFilePath().endsWith(".apk")){
+        return fileInfos.get(i);
+      }
+    }
+    return null;
   }
 }

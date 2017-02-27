@@ -83,7 +83,8 @@ public class ApplicationsManager {
     return obbsFilePath;
   }
 
-  public HighwayTransferRecordItem readApkArchive(String appName, String filePath, boolean needReSend) {
+  public HighwayTransferRecordItem readApkArchive(String appName, String filePath,
+      boolean needReSend) {
 
     PackageManager packageManager = context.getPackageManager();
     PackageInfo packageInfo = packageManager.getPackageArchiveInfo(filePath, 0);

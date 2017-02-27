@@ -30,10 +30,10 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
   }
 
   @Override protected void onNewClient(Socket socket) throws IOException {
-      AptoideMessageServerController shareAppsMessageController =
-          new AptoideMessageServerController(this, Host.fromLocalhost(socket), Host.from(socket));
-      aptoideMessageControllers.add(shareAppsMessageController);
-      shareAppsMessageController.onConnect(socket);
+    AptoideMessageServerController shareAppsMessageController =
+        new AptoideMessageServerController(this, Host.fromLocalhost(socket), Host.from(socket));
+    aptoideMessageControllers.add(shareAppsMessageController);
+    shareAppsMessageController.onConnect(socket);
   }
 
   public void requestPermissionToSendApk(RequestPermissionToSend message) {

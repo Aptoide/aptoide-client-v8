@@ -5,6 +5,7 @@ package cm.aptoide.pt.shareappsandroid;
  */
 
 public interface PermissionListener {
-  void  onPermissionGranted();
+  void onPermissionGranted();
+
   void onPermissionDenied();
 }

@@ -185,14 +185,14 @@ public class ConnectionManager {
     prefs.edit().putBoolean("wifiOnStart", this.wifimanager.isWifiEnabled()).commit();
   }
 
-  public static ConnectionManager getInstance(Context context){
-    if(instance==null){
-      instance=new ConnectionManager(context, PreferenceManager.getDefaultSharedPreferences(context),
-          (WifiManager) context.getSystemService(Context.WIFI_SERVICE));
+  public static ConnectionManager getInstance(Context context) {
+    if (instance == null) {
+      instance =
+          new ConnectionManager(context, PreferenceManager.getDefaultSharedPreferences(context),
+              (WifiManager) context.getSystemService(Context.WIFI_SERVICE));
     }
-  return instance;
+    return instance;
   }
-
 
   public void start(WifiStateListener listener) {
     this.listenerActivateButtons = listener;
@@ -399,7 +399,7 @@ public class ConnectionManager {
           System.out.println("TRying to remove a network");
           boolean remove = wifimanager.removeNetwork(i.networkId);
           System.out.println("boolean from remove network is : " + remove);
-        }else{
+        } else {
           System.out.println("tmp is not aptx can not remove this network;");
         }
       }
@@ -479,13 +479,13 @@ public class ConnectionManager {
         ((i >> 24) & 0xFF);
   }
 
-  public void resume(){//not being called. Receivers were being registered twice.
+  public void resume() {//not being called. Receivers were being registered twice.
     context.registerReceiver(activateButtonsReceiver,
-            new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION));
+        new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION));
     context.registerReceiver(connectingWifi,
-            new IntentFilter(WifiManager.NETWORK_STATE_CHANGED_ACTION));
+        new IntentFilter(WifiManager.NETWORK_STATE_CHANGED_ACTION));
     context.registerReceiver(scanAPTXNetworks,
-            new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+        new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
   }
 
   public void stop() {
@@ -507,16 +507,16 @@ public class ConnectionManager {
     }
   }
 
-  public void recoverNetworkState(){
-    if(wifimanager==null){
+  public void recoverNetworkState() {
+    if (wifimanager == null) {
       wifimanager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
     }
     wifimanager.disconnect();
     Boolean wifiOnStart = prefs.getBoolean("wifiOnStart", false);
-    if(wifiOnStart){
+    if (wifiOnStart) {
       wifimanager.setWifiEnabled(true);
       System.out.println("Recovering wifi state, it was on before. ");
-    }else{
+    } else {
       wifimanager.setWifiEnabled(false);
     }
   }

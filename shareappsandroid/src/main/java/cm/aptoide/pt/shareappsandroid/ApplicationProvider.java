@@ -54,7 +54,7 @@ public class ApplicationProvider {
     }
   }
 
-  public String checkIfHasObb(String appName) {
+  public String checkIfHasObb(String packageName) {
     boolean hasObb = false;
     String obbsFilePath = "noObbs";
     String obbPath = Environment.getExternalStoragePublicDirectory("/") + "/Android/Obb/";
@@ -63,10 +63,10 @@ public class ApplicationProvider {
     if (list != null) {
       System.out.println("list lenght is : " + list.length);
       if (list.length > 0) {
-        System.out.println("appName is : " + appName);
+        System.out.println("appName is : " + packageName);
         for (int i = 0; i < list.length; i++) {
           System.out.println("List get name is : " + list[i].getName());
-          if (list[i].getName().equals(appName)) {
+          if (list[i].getName().equals(packageName)) {
             hasObb = true;
             obbsFilePath = list[i].getAbsolutePath();
           }
@@ -97,10 +97,10 @@ public class ApplicationProvider {
     return null;
   }
 
-  public void stop(){
+  public void stop() {
     initializeUITask.cancel(true);
-    if(listener!=null){
-      listener=null;
+    if (listener != null) {
+      listener = null;
     }
   }
 
@@ -121,9 +121,8 @@ public class ApplicationProvider {
       super.onPostExecute(s);
     }
 
-    @Override
-    protected void onCancelled() {
-      listener=null;
+    @Override protected void onCancelled() {
+      listener = null;
       super.onCancelled();
     }
   }

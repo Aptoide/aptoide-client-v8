@@ -134,7 +134,7 @@ public class HandlersFactory {
       String packageName = androidAppInfo.getPackageName();
       String rootToFiles = root + File.separatorChar + packageName;
 
-      for (FileInfo fileInfo : androidAppInfo.getFileInfosList()) {
+      for (FileInfo fileInfo : androidAppInfo.getFiles()) {
         fileInfo.setParentDirectory(rootToFiles);
       }
 

@@ -36,7 +36,6 @@ public class HighwayAppSelectionPresenter implements Presenter {
         setAppSelectionListener();
       }
     });
-
   }
 
   @Override public void onResume() {

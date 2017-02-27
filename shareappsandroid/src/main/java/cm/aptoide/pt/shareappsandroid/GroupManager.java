@@ -46,11 +46,11 @@ public class GroupManager {
     if (joiningGroup) {
       return;
     }
-    try{
+    try {
       joinTask = joinHotspotTask.execute();
-    }catch (IllegalStateException e){
+    } catch (IllegalStateException e) {
       //TODO ERROR bc highwayActivity is singletask->doesn't create new groupManager + lazzy patern (reuse task)
-      joinTask=new JoinHotspotTask().execute();
+      joinTask = new JoinHotspotTask().execute();
     }
   }
 
@@ -146,7 +146,7 @@ public class GroupManager {
 
     @Override protected void onCancelled() {
       super.onCancelled();
-      if(listener != null){
+      if (listener != null) {
         listener = null;
       }
     }

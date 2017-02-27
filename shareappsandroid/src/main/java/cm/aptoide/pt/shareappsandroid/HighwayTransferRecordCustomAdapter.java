@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -157,7 +156,7 @@ public class HighwayTransferRecordCustomAdapter extends BaseAdapter {
     }
   }
 
-  public void clearListOfItems(ArrayList<HighwayTransferRecordItem> list) {
+  public void clearListOfItems(List<HighwayTransferRecordItem> list) {
     if (listOfItems != null && list != null) {
       listOfItems.removeAll(list);
     }
@@ -171,7 +170,6 @@ public class HighwayTransferRecordCustomAdapter extends BaseAdapter {
   public void updateItem(int positionToUpdate, boolean isSent, boolean needReSend) {
     listOfItems.get(positionToUpdate).setNeedReSend(needReSend);
     listOfItems.get(positionToUpdate).setSent(isSent);
-
   }
 
   public static class ViewHolder {

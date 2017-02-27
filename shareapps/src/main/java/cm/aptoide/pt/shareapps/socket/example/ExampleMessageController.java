@@ -45,14 +45,14 @@ public class ExampleMessageController extends AptoideMessageClientController {
             "onStartReceiving() called with: " + "androidAppInfo = [" + androidAppInfo + "]");
       }
 
-      @Override public void onError(IOException e) {
-        e.printStackTrace();
-      }
-
       @Override public void onFinishReceiving(AndroidAppInfo androidAppInfo) {
         System.out.println(
             "onFinishReceiving() called with: " + "androidAppInfo = [" + androidAppInfo + "]");
+      }      @Override public void onError(IOException e) {
+        e.printStackTrace();
       }
+
+
 
       @Override public void onProgressChanged(float progress) {
         System.out.println("onProgressChanged() called with: " + "progress = [" + progress + "]");

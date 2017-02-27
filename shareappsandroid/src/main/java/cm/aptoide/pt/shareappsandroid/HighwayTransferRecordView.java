@@ -16,7 +16,8 @@ public interface HighwayTransferRecordView {
 
   void showNewCard(HighwayTransferRecordItem item);
 
-  void updateItemStatus(int positionToUpdate, boolean isSent, boolean needReSend);//could change to the packageName
+  void updateItemStatus(int positionToUpdate, boolean isSent,
+      boolean needReSend);//could change to the packageName
 
   void showNoConnectedClientsToast();
 
@@ -26,7 +27,7 @@ public interface HighwayTransferRecordView {
 
   void showDeleteHistoryDialog();
 
-  void refreshAdapter();
+  void refreshAdapter(List<HighwayTransferRecordItem> toRemoveList);
 
   void hideReceivedAppMenu();
 
@@ -41,6 +42,8 @@ public interface HighwayTransferRecordView {
   void notifyChanged();
 
   void generateAdapter(List<HighwayTransferRecordItem> list);
+
+  void showGeneralErrorToast(boolean isHotspot);
 
   interface TransferRecordListener {
     void onInstallApp(HighwayTransferRecordItem item);

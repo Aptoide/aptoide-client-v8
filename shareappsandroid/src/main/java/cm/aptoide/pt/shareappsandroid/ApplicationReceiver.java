@@ -33,6 +33,7 @@ public class ApplicationReceiver {
     this.nickname = nickname;
     receiveFilter = new IntentFilter();
     receiveFilter.addAction("RECEIVEAPP");
+    receiveFilter.addAction("ERRORRECEIVING");
   }
 
   public void startListening(ReceiveAppListener receiveAppListener) {
@@ -41,15 +42,19 @@ public class ApplicationReceiver {
     context.startService(intent);
     receive = new BroadcastReceiver() {
       @Override public void onReceive(Context context, Intent intent) {
-        boolean finishedReceiving = intent.getBooleanExtra("FinishedReceiving", false);
-        String appName = intent.getStringExtra("appName");
-        if (finishedReceiving) {
-          String filePath = intent.getStringExtra("filePath");
-          String packageName = intent.getStringExtra("packageName");
-          boolean needResend = intent.getBooleanExtra("needReSend", false);
-          listener.onReceivedApp(appName, filePath, needResend);
-        } else {
-          listener.onStartedReceiving(appName);
+        if (intent.getAction() != null && intent.getAction().equals("RECEIVEAPP")) {
+          boolean finishedReceiving = intent.getBooleanExtra("FinishedReceiving", false);
+          String appName = intent.getStringExtra("appName");
+          if (finishedReceiving) {
+            String filePath = intent.getStringExtra("filePath");
+            String packageName = intent.getStringExtra("packageName");
+            boolean needResend = intent.getBooleanExtra("needReSend", false);
+            listener.onReceivedApp(appName, filePath, needResend);
+          } else {
+            listener.onStartedReceiving(appName);
+          }
+        } else if (intent.getAction() != null && intent.getAction().equals("ERRORRECEIVING")) {
+          listener.onErrorReceiving();
         }
       }
     };
@@ -94,9 +99,9 @@ public class ApplicationReceiver {
     if (listener != null) {
       this.listener = null;
       //unregister receiver
-      try{
+      try {
         context.unregisterReceiver(receive);
-      }catch (IllegalArgumentException e){
+      } catch (IllegalArgumentException e) {
       }
     }
   }
@@ -106,5 +111,7 @@ public class ApplicationReceiver {
     void onStartedReceiving(String appName);
 
     void onReceivedApp(String appName, String filePath, boolean needResend);
+
+    void onErrorReceiving();
   }
 }

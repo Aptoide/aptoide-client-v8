@@ -34,7 +34,6 @@ public class HighwayAppSelectionActivity extends ActivityView implements Highway
   private ApplicationSender applicationSender;
   private Toolbar mToolbar;
 
-
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.highway_appselection_activity);
@@ -231,10 +230,10 @@ public class HighwayAppSelectionActivity extends ActivityView implements Highway
   }
 
   @Override public void goBackToTransferRecord() {
-    Intent i= new Intent().setClass(HighwayAppSelectionActivity.this, HighwayTransferRecordActivity.class);
-    i.putExtra("isHotspot",isHotspot);
+    Intent i = new Intent().setClass(HighwayAppSelectionActivity.this,
+        HighwayTransferRecordActivity.class);
+    i.putExtra("isHotspot", isHotspot);
     startActivity(i);
-
   }
 
   //    @Override

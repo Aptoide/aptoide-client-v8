@@ -16,6 +16,7 @@ public class HighwayPresenter implements Presenter {
   private final HighwayView view;
   private final DeactivateHotspotTask deactivateHotspotTask;
   private final ConnectionManager connectionManager;
+  private final PermissionManager permissionManager;
   private String deviceName;
   private boolean mobileData;
   private boolean mobileDataDialog;
@@ -25,7 +26,6 @@ public class HighwayPresenter implements Presenter {
   private GroupManager groupManager;
   private OutsideShareManager outsideShareManager;
   private boolean isOutsideShare;
-  private final PermissionManager permissionManager;
   private boolean permissionRequested;
 
   public HighwayPresenter(HighwayView view, String deviceName,
@@ -51,31 +51,24 @@ public class HighwayPresenter implements Presenter {
     permissionManager.registerListener(new PermissionListener() {
       @Override public void onPermissionGranted() {
 
-
         deactivateHotspot();
-        permissionRequested=false;
-
-
-
+        permissionRequested = false;
       }
 
       @Override public void onPermissionDenied() {
         view.dismiss();
-        permissionRequested=false;
+        permissionRequested = false;
       }
     });
 
-  if(permissionManager.checkPermissions()){
-    deactivateHotspot();
+    if (permissionManager.checkPermissions()) {
+      deactivateHotspot();
+    }
+    //else{
+    //  permissionManager.requestPermissions();
+    //}
+
   }
-  //else{
-  //  permissionManager.requestPermissions();
-  //}
-
-
-  }
-
-
 
   private void deactivateHotspot() {
     deactivateHotspotTask.setListener(new SimpleListener() {
@@ -96,10 +89,10 @@ public class HighwayPresenter implements Presenter {
   }
 
   @Override public void onResume() {
-//    connectionManager.resume();
-    if(!permissionManager.checkPermissions() && !permissionRequested){
+    //    connectionManager.resume();
+    if (!permissionManager.checkPermissions() && !permissionRequested) {
       permissionManager.requestPermissions();
-      permissionRequested=true;
+      permissionRequested = true;
     }
   }
 
@@ -114,7 +107,6 @@ public class HighwayPresenter implements Presenter {
     connectionManager.stop();
     groupManager.stop();
     permissionManager.removeListener();
-
   }
 
   @Override public void onStop() {
@@ -233,12 +225,12 @@ public class HighwayPresenter implements Presenter {
     this.outsideShareManager = outsideShareManager;
   }
 
-  public void recoverNetworkState(){
+  public void recoverNetworkState() {
     connectionManager.recoverNetworkState();
     view.showRecoveringWifiStateToast();
   }
 
-  public void forgetAPTXNetwork(){
+  public void forgetAPTXNetwork() {
     connectionManager.cleanNetworks();
   }
 }
