@@ -38,43 +38,11 @@ import lombok.Data;
     this.apk = extractApk();
   }
 
-  public boolean hasMainObb() {
-    return mainObb != null;
-  }
-
-  public boolean hasPatchObb() {
-    return patchObb != null;
-  }
-
-
   public List<FileInfo> getFiles() {
-    //List<FileInfo> fileInfos = new LinkedList<>();
-    //
-    //fileInfos.add(apk);
-    //
-    //if (hasMainObb()) {
-    //  fileInfos.add(mainObb);
-    //}
-    //
-    //if (hasMainObb()) {
-    //  fileInfos.add(patchObb);
-    //}
-
     return fileInfos;
   }
 
   public long getFilesSize() {
-    //long total = apk.getSize();
-    //
-    //if (hasMainObb()) {
-    //  total += mainObb.getSize();
-    //}
-    //
-    //if (hasPatchObb()) {
-    //  total += patchObb.getSize();
-    //}
-    //
-    //return total;
     long total=0;
     if(fileInfos!=null){
       for(int i=0;i<fileInfos.size();i++){
