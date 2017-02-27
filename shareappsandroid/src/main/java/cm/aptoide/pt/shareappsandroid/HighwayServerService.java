@@ -79,7 +79,7 @@ public class HighwayServerService extends Service {
       }
 
       @Override public void onFinishReceiving(AndroidAppInfo androidAppInfo) {
-        System.out.println(" Finished receiving ");
+        System.out.println(" Finished receiving " + androidAppInfo);
 
         finishReceiveNotification(androidAppInfo.getApk().getFilePath());
 
@@ -95,7 +95,7 @@ public class HighwayServerService extends Service {
 
       @Override
       public void onProgressChanged(float progress) {//todo add AndroidAPpInfo - to get appname
-        System.out.println("onProgressChanged() called with: " + "progress = [" + progress + "]");
+        //System.out.println("onProgressChanged() called with: " + "progress = [" + progress + "]");
 
         int actualProgress = Math.round(progress * 100);
         showReceiveProgress(receivingAppName, actualProgress);
@@ -123,7 +123,7 @@ public class HighwayServerService extends Service {
       }
 
       @Override public void onFinishSending(AndroidAppInfo androidAppInfo) {
-        System.out.println("Server : finished sending");
+        System.out.println("Server : finished sending " + androidAppInfo);
 
         finishSendNotification();
 
@@ -145,7 +145,7 @@ public class HighwayServerService extends Service {
 
 
       @Override public void onProgressChanged(float progress) {
-        System.out.println("onProgressChanged() called with: progress = [" + progress + "]");
+        //System.out.println("onProgressChanged() called with: progress = [" + progress + "]");
         int actualProgress = Math.round(progress * 100);
         showSendProgress(sendingAppName, actualProgress);
       }

@@ -82,7 +82,7 @@ public class HighwayClientService extends Service {
       }
 
       @Override public void onFinishReceiving(AndroidAppInfo androidAppInfo) {
-        System.out.println(" Finished receiving ");
+        System.out.println(" Finished receiving " + androidAppInfo);
 
         finishReceiveNotification(androidAppInfo.getApk().getFilePath());
 
@@ -124,7 +124,7 @@ public class HighwayClientService extends Service {
       }
 
       @Override public void onFinishSending(AndroidAppInfo o) {
-        System.out.println(" Finished sending ");
+        System.out.println(" Finished sending " + o);
 
         finishSendNotification();
 
