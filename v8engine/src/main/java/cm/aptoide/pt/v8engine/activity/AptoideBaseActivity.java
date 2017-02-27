@@ -322,7 +322,8 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
 
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    Fragment fragment = getSupportFragmentManager().findFragmentByTag("AddressBookFragment_1");
+    Fragment fragment = getSupportFragmentManager().findFragmentByTag(
+        getSupportFragmentManager().getBackStackEntryAt(0).getName());
     if (fragment != null) {
       fragment.onActivityResult(requestCode, resultCode, data);
     } else {
