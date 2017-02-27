@@ -91,7 +91,7 @@ public class DisplayablesFactory {
                 new Event().setName(Event.Name.getAds)));
             widget.setActions(actions);
             StoreGridHeaderDisplayable storeGridHeaderDisplayable =
-                new StoreGridHeaderDisplayable(widget, null, widget.getTag(), StoreContext.store);
+                new StoreGridHeaderDisplayable(widget, null, widget.getTag(), StoreContext.meta);
             displayables.add(storeGridHeaderDisplayable);
             displayables.add(ads);
             return Observable.from(displayables);

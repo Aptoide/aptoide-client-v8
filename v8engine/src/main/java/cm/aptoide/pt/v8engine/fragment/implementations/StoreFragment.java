@@ -78,7 +78,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   public static StoreFragment newInstance(long userId, String storeTheme, Event.Name defaultTab) {
     Bundle args = new Bundle();
     args.putLong(BundleCons.USER_ID, userId);
-    args.putSerializable(BundleCons.STORE_CONTEXT, StoreContext.store);
+    args.putSerializable(BundleCons.STORE_CONTEXT, StoreContext.meta);
     args.putString(BundleCons.STORE_THEME, storeTheme);
     args.putSerializable(BundleCons.DEFAULT_TAB_TO_OPEN, defaultTab);
     StoreFragment fragment = new StoreFragment();
@@ -96,7 +96,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   public static StoreFragment newInstance(String storeName, String storeTheme) {
     Bundle args = new Bundle();
     args.putString(BundleCons.STORE_NAME, storeName);
-    args.putSerializable(BundleCons.STORE_CONTEXT, StoreContext.store);
+    args.putSerializable(BundleCons.STORE_CONTEXT, StoreContext.meta);
     args.putString(BundleCons.STORE_THEME, storeTheme);
     StoreFragment fragment = new StoreFragment();
     fragment.setArguments(args);
@@ -162,7 +162,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   }
 
   @Override public void onDestroyView() {
-    if (storeTheme != null && !storeContext.equals(StoreContext.store)) {
+    if (storeTheme != null && !storeContext.equals(StoreContext.meta)) {
       ThemeUtils.setAptoideTheme(getActivity());
     }
     super.onDestroyView();
