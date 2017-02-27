@@ -11,7 +11,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.Preference;
 import android.text.TextUtils;
@@ -27,7 +26,7 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 /**
  * Created by rmateus on 07-03-2014.
  */
-public class AdultDialog extends DialogFragment {
+public class AdultDialog extends BaseDialog {
 
   /**
    * @param activity using activity instead of context allow us to show the snack bar when pin is

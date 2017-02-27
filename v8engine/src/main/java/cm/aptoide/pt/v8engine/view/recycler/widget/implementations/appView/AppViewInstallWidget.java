@@ -206,7 +206,7 @@ import rx.android.schedulers.AndroidSchedulers;
         //App not installed
         setDownloadBarInvisible();
         setupInstallOrBuyButton(displayable, getApp);
-        ((AppMenuOptions) fragmentShower.getLast()).setUnInstallMenuOptionVisible(null);
+        ((AppMenuOptions) getNavigationManager().peekLast()).setUnInstallMenuOptionVisible(null);
         break;
       case AppViewInstallDisplayable.ACTION_DOWNGRADE:
         //downgrade

@@ -22,7 +22,6 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.CheckUserCredentialsRequest;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.v8engine.account.ErrorsMapper;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.SetStoreRequest;
@@ -36,6 +35,8 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.account.ErrorsMapper;
+import cm.aptoide.pt.v8engine.view.MainActivity;
 import com.jakewharton.rxbinding.view.RxView;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.TimeUnit;
@@ -125,16 +126,6 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
     setupThemeListeners();
   }
 
-  @Override protected void onDestroy() {
-    super.onDestroy();
-    mSubscriptions.clear();
-    if (progressDialog != null) {
-      if (progressDialog.isShowing()) {
-        progressDialog.dismiss();
-      }
-    }
-  }
-
   @Override public String getActivityTitle() {
     if (!from.equals("store")) {
       return getString(R.string.create_store_title);
@@ -147,16 +138,26 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
     return R.layout.activity_create_store;
   }
 
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    mSubscriptions.clear();
+    if (progressDialog != null) {
+      if (progressDialog.isShowing()) {
+        progressDialog.dismiss();
+      }
+    }
+  }
+
+  @Override public void loadImage(Uri imagePath) {
+    ImageLoader.with(this).loadWithCircleTransform(imagePath, mStoreAvatar, false);
+  }
+
   @Override public void showIconPropertiesError(String errors) {
     mSubscriptions.add(GenericDialogs.createGenericOkMessage(this,
         getString(R.string.image_requirements_error_popup_title), errors)
         .subscribe(__ -> {/* does nothing */}, err -> {
           CrashReport.getInstance().log(err);
         }));
-  }
-
-  @Override public void loadImage(Uri imagePath) {
-    ImageLoader.with(this).loadWithCircleTransform(imagePath, mStoreAvatar, false);
   }
 
   private void getData() {
@@ -286,7 +287,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
                         ErrorsMapper.getWebServiceErrorMessageFromCode(answer.getErrors().get(0).code))
                         .subscribe(visibility -> {
                           if (visibility == ShowMessage.DISMISSED) {
-                            finish();
+                            goToMainActivity();
                           }
                         });
                   }
@@ -300,7 +301,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
                       mSubscriptions.add(accountManager.syncCurrentAccount().subscribe(() -> {
                       }, Throwable::printStackTrace));
                       if (visibility == ShowMessage.DISMISSED) {
-                        finish();
+                        goToMainActivity();
                       }
                     });
               }
@@ -316,7 +317,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
                 storeDescription, true, storeId).observe().subscribe(answer -> {
               accountManager.syncCurrentAccount().subscribe(() -> {
                 progressDialog.dismiss();
-                finish();
+                goToMainActivity();
               }, Throwable::printStackTrace);
             }, throwable -> {
               if (((AptoideWsV7Exception) throwable).getBaseResponse()
@@ -328,7 +329,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
                 ShowMessage.asObservableSnack(this, cm.aptoide.accountmanager.R.string.ws_error_API_1)
                     .subscribe(visibility -> {
                       if (visibility == ShowMessage.DISMISSED) {
-                        finish();
+                        goToMainActivity();
                       }
                     });
               } else {
@@ -349,7 +350,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
                   accountManager.syncCurrentAccount().subscribe(() -> {
                     progressDialog.dismiss();
                     accountManager.sendLoginBroadcast();
-                    finish();
+                    goToMainActivity();
                   }, Throwable::printStackTrace);
                 }, throwable -> {
                   onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
@@ -362,9 +363,9 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
     mSubscriptions.add(RxView.clicks(mSkip)
         .flatMap(click -> accountManager.syncCurrentAccount().andThen(Observable.just(true)))
         .subscribe(refreshed -> {
-          finish();
+          goToMainActivity();
         }, throwable -> {
-          finish();
+          goToMainActivity();
         }));
   }
 
@@ -543,6 +544,12 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
     return CREATE_STORE_REQUEST_CODE;
   }
 
+  private void goToMainActivity() {
+    Intent i = new Intent(this, MainActivity.class);
+    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    startActivity(i);
+  }
+
   private void onCreateSuccess(ProgressDialog progressDialog) {
     ShowMessage.asSnack(this, cm.aptoide.accountmanager.R.string.create_store_store_created);
     if (CREATE_STORE_REQUEST_CODE == 1) {
@@ -558,7 +565,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
             accountManager.syncCurrentAccount().subscribe(() -> {
               progressDialog.dismiss();
               accountManager.sendLoginBroadcast();
-              finish();
+              goToMainActivity();
             }, throwable -> throwable.printStackTrace());
           }, throwable -> {
             if (throwable.getClass().equals(SocketTimeoutException.class)) {
@@ -567,7 +574,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
                   cm.aptoide.accountmanager.R.string.store_upload_photo_failed)
                   .subscribe(visibility -> {
                     if (visibility == ShowMessage.DISMISSED) {
-                      finish();
+                      goToMainActivity();
                     }
                   });
             } else if (throwable.getClass().equals(TimeoutException.class)) {
@@ -576,7 +583,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
                   cm.aptoide.accountmanager.R.string.store_upload_photo_failed)
                   .subscribe(visibility -> {
                     if (visibility == ShowMessage.DISMISSED) {
-                      finish();
+                      goToMainActivity();
                     }
                   });
             } else if (((AptoideWsV7Exception) throwable).getBaseResponse()
@@ -588,7 +595,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
               ShowMessage.asLongObservableSnack(this,
                   cm.aptoide.accountmanager.R.string.ws_error_API_1).subscribe(visibility -> {
                 if (visibility == ShowMessage.DISMISSED) {
-                  finish();
+                  goToMainActivity();
                 }
               });
             } else {
@@ -597,14 +604,14 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
                   ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()))
                   .subscribe(visibility -> {
                     if (visibility == ShowMessage.DISMISSED) {
-                      finish();
+                      goToMainActivity();
                     }
                   });
             }
             accountManager.syncCurrentAccount().subscribe(() -> {
               progressDialog.dismiss();
               accountManager.sendLoginBroadcast();
-              finish();
+              goToMainActivity();
             }, throwable1 -> throwable1.printStackTrace());
           }));
     } else if (CREATE_STORE_REQUEST_CODE == 2 || CREATE_STORE_REQUEST_CODE == 3) {
@@ -617,7 +624,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
         accountManager.syncCurrentAccount().subscribe(() -> {
           progressDialog.dismiss();
           accountManager.sendLoginBroadcast();
-          finish();
+          goToMainActivity();
         }, Throwable::printStackTrace);
       }, throwable -> {
         onCreateFail(ErrorsMapper.getWebServiceErrorMessageFromCode(throwable.getMessage()));
@@ -630,22 +637,6 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
 
   private void onCreateFail(@StringRes int reason) {
     ShowMessage.asSnack(content, reason);
-  }
-
-  private String getRepoName() {
-    return storeName == null ? "" : mStoreName.getText().toString();
-  }
-
-  private String getRepoTheme() {
-    return storeTheme == null ? "" : storeTheme;
-  }
-
-  private String getRepoAvatar() {
-    return storeAvatarPath == null ? "" : storeAvatarPath;
-  }
-
-  private String getRepoDescription() {
-    return storeDescription == null ? "" : mStoreDescription.getText().toString();
   }
 
   /**
@@ -663,6 +654,22 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
     if (storeDescription.equals("")) {
       storeDescription = null;
     }
+  }
+
+  private String getRepoTheme() {
+    return storeTheme == null ? "" : storeTheme;
+  }
+
+  private String getRepoDescription() {
+    return storeDescription == null ? "" : mStoreDescription.getText().toString();
+  }
+
+  private String getRepoAvatar() {
+    return storeAvatarPath == null ? "" : storeAvatarPath;
+  }
+
+  private String getRepoName() {
+    return storeName == null ? "" : mStoreName.getText().toString();
   }
 
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {

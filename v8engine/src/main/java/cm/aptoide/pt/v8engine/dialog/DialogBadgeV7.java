@@ -24,7 +24,7 @@ import static cm.aptoide.pt.model.v7.Malware.Reason.Status;
 /**
  * Created by hsousa on 18/11/15.
  */
-public class DialogBadgeV7 extends DialogFragment {
+public class DialogBadgeV7 extends BaseDialog {
 
   protected Malware malware;
   protected String appName;
@@ -47,6 +47,13 @@ public class DialogBadgeV7 extends DialogFragment {
       setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Dialog);
     }
     setRetainInstance(true);
+  }
+
+  @Override public void onStart() {
+    super.onStart();
+    getDialog().getWindow()
+        .setBackgroundDrawable(
+            new ColorDrawable(getResources().getColor(android.R.color.transparent)));
   }
 
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -126,12 +133,5 @@ public class DialogBadgeV7 extends DialogFragment {
     }
 
     return builder;
-  }
-
-  @Override public void onStart() {
-    super.onStart();
-    getDialog().getWindow()
-        .setBackgroundDrawable(
-            new ColorDrawable(getResources().getColor(android.R.color.transparent)));
   }
 }

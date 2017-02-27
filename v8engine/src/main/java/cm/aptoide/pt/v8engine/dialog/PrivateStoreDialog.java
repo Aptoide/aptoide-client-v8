@@ -12,7 +12,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -38,7 +37,7 @@ import cm.aptoide.pt.v8engine.util.StoreUtils;
  * use File | Settings |
  * File Templates.
  */
-public class PrivateStoreDialog extends DialogFragment {
+public class PrivateStoreDialog extends BaseDialog {
 
   public static final String TAG = "PrivateStoreDialog";
   private AptoideClientUUID aptoideClientUUID;
@@ -71,11 +70,20 @@ public class PrivateStoreDialog extends DialogFragment {
     super.onCreate(savedInstanceState);
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
-    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     final Bundle args = getArguments();
     if (args != null) {
       storeName = args.getString(BundleArgs.STORE_NAME.name());
     }
+  }
+
+  @Override public void onDestroyView() {
+    Dialog dialog = getDialog();
+
+    // Work around to the bug... : http://code.google.com/p/android/issues/detail?id=17423
+    if ((dialog != null) && getRetainInstance()) dialog.setDismissMessage(null);
+
+    super.onDestroyView();
   }
 
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -135,15 +143,6 @@ public class PrivateStoreDialog extends DialogFragment {
     super.onSaveInstanceState(outState);
 
     outState.putString(BundleArgs.STORE_NAME.name(), storeName);
-  }
-
-  @Override public void onDestroyView() {
-    Dialog dialog = getDialog();
-
-    // Work around to the bug... : http://code.google.com/p/android/issues/detail?id=17423
-    if ((dialog != null) && getRetainInstance()) dialog.setDismissMessage(null);
-
-    super.onDestroyView();
   }
 
   private GetStoreMetaRequest buildRequest() {

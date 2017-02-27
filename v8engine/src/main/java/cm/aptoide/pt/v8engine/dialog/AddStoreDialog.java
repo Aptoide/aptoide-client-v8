@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 17/06/2016.
- */
-
 package cm.aptoide.pt.v8engine.dialog;
 
 import android.app.Activity;
@@ -14,6 +9,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +26,7 @@ import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -49,11 +47,12 @@ import rx.subscriptions.CompositeSubscription;
  * use File | Settings |
  * File Templates.
  */
-public class AddStoreDialog extends DialogFragment {
+public class AddStoreDialog extends BaseDialog {
 
-  private static StoreAutoCompleteWebSocket storeAutoCompleteWebSocket;
   public static final int PRIVATE_STORE_INVALID_CREDENTIALS_CODE = 21;
   public static final int PRIVATE_STORE_ERROR_CODE = 22;
+  private static final String TAG = AddStoreDialog.class.getName();
+  private static StoreAutoCompleteWebSocket storeAutoCompleteWebSocket;
   private final int PRIVATE_STORE_REQUEST_CODE = 20;
   private AptoideClientUUID aptoideClientUUID;
   private AptoideAccountManager accountManager;
@@ -68,8 +67,60 @@ public class AddStoreDialog extends DialogFragment {
   private TextView topStoreText2;
   private String givenStoreName;
 
-  public void attachFragmentManager(NavigationManagerV4 navigationManager) {
+  public AddStoreDialog attachFragmentManager(NavigationManagerV4 navigationManager) {
     this.navigationManager = navigationManager;
+    return this;
+  }
+
+  @Override public void show(FragmentManager manager, String tag) {
+    if (navigationManager == null) {
+      Logger.w(TAG, NavigationManagerV4.class.getName() + " is null.");
+    }
+    super.show(manager, tag);
+  }
+
+  @Override public int show(FragmentTransaction transaction, String tag) {
+    if (navigationManager == null) {
+      Logger.w(TAG, NavigationManagerV4.class.getName() + " is null.");
+    }
+    return super.show(transaction, tag);
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putString(BundleArgs.STORE_NAME.name(), storeName);
+  }
+
+  @Override public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+    mSubscriptions = new CompositeSubscription();
+    if (savedInstanceState != null) {
+      storeName = savedInstanceState.getString(BundleArgs.STORE_NAME.name());
+    }
+  }
+
+  @Override public void onViewCreated(final View view, Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    bindViews(view);
+    setupSearchView(view);
+    setupStoreSearch(searchView);
+    mSubscriptions.add(RxView.clicks(addStoreButton).subscribe(click -> {
+      addStoreAction();
+    }));
+    mSubscriptions.add(RxView.clicks(topStoresButton).subscribe(click -> topStoresAction()));
+    mSubscriptions.add(RxView.clicks(topStoreText1).subscribe(click -> topStoresAction()));
+    mSubscriptions.add(RxView.clicks(topStoreText2).subscribe(click -> topStoresAction()));
+  }
+
+  @Override public void onDetach() {
+    super.onDetach();
+    mSubscriptions.clear();
+    if (storeAutoCompleteWebSocket != null) {
+      storeAutoCompleteWebSocket.disconnect();
+    }
   }
 
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -96,19 +147,6 @@ public class AddStoreDialog extends DialogFragment {
       getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
     }
     return inflater.inflate(R.layout.dialog_add_store, container, false);
-  }
-
-  @Override public void onViewCreated(final View view, Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    bindViews(view);
-    setupSearchView(view);
-    setupStoreSearch(searchView);
-    mSubscriptions.add(RxView.clicks(addStoreButton).subscribe(click -> {
-      addStoreAction();
-    }));
-    mSubscriptions.add(RxView.clicks(topStoresButton).subscribe(click -> topStoresAction()));
-    mSubscriptions.add(RxView.clicks(topStoreText1).subscribe(click -> topStoresAction()));
-    mSubscriptions.add(RxView.clicks(topStoreText2).subscribe(click -> topStoresAction()));
   }
 
   private void addStoreAction() {
@@ -212,58 +250,35 @@ public class AddStoreDialog extends DialogFragment {
     final IdsRepositoryImpl clientUuid =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
 
-    new StoreUtilsProxy(clientUuid, accountManager).subscribeStore(getStoreMetaRequest, getStoreMeta1 -> {
-      ShowMessage.asSnack(getView(),
-          AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
+    new StoreUtilsProxy(clientUuid, accountManager).subscribeStore(getStoreMetaRequest,
+        getStoreMeta1 -> {
+          ShowMessage.asSnack(getView(),
+              AptoideUtils.StringU.getFormattedString(R.string.store_followed, storeName));
 
-      dismissLoadingDialog();
-      dismiss();
-    }, e -> {
-      dismissLoadingDialog();
-      if (e instanceof AptoideWsV7Exception) {
-        BaseV7Response baseResponse = ((AptoideWsV7Exception) e).getBaseResponse();
-        BaseV7Response.Error error = baseResponse.getError();
-        switch (StoreUtils.getErrorType(error.getCode())) {
-          case PRIVATE_STORE_ERROR:
-            DialogFragment dialogFragment = PrivateStoreDialog.newInstance(AddStoreDialog
-                .this, PRIVATE_STORE_REQUEST_CODE, storeName, false);
-            dialogFragment.show(getFragmentManager(), PrivateStoreDialog.class.getName());
-            break;
-          default:
-            ShowMessage.asSnack(getActivity(), error.getDescription());
-        }
-      } else {
-        ShowMessage.asSnack(getActivity(), R.string.error_occured);
-      }
-    }, storeName, accountManager);
+          dismissLoadingDialog();
+          dismiss();
+        }, e -> {
+          dismissLoadingDialog();
+          if (e instanceof AptoideWsV7Exception) {
+            BaseV7Response baseResponse = ((AptoideWsV7Exception) e).getBaseResponse();
+            BaseV7Response.Error error = baseResponse.getError();
+            switch (StoreUtils.getErrorType(error.getCode())) {
+              case PRIVATE_STORE_ERROR:
+                DialogFragment dialogFragment = PrivateStoreDialog.newInstance(AddStoreDialog
+                    .this, PRIVATE_STORE_REQUEST_CODE, storeName, false);
+                dialogFragment.show(getFragmentManager(), PrivateStoreDialog.class.getName());
+                break;
+              default:
+                ShowMessage.asSnack(getActivity(), error.getDescription());
+            }
+          } else {
+            ShowMessage.asSnack(getActivity(), R.string.error_occured);
+          }
+        }, storeName, accountManager);
   }
 
   void dismissLoadingDialog() {
     loadingDialog.dismiss();
-  }
-
-  @Override public void onDetach() {
-    super.onDetach();
-    mSubscriptions.clear();
-    if (storeAutoCompleteWebSocket != null) {
-      storeAutoCompleteWebSocket.disconnect();
-    }
-  }
-
-  @Override public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
-    aptoideClientUUID =  new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
-    mSubscriptions = new CompositeSubscription();
-    if (savedInstanceState != null) {
-      storeName = savedInstanceState.getString(BundleArgs.STORE_NAME.name());
-    }
-  }
-
-  @Override public void onSaveInstanceState(Bundle outState) {
-    super.onSaveInstanceState(outState);
-    outState.putString(BundleArgs.STORE_NAME.name(), storeName);
   }
 
   private enum BundleArgs {

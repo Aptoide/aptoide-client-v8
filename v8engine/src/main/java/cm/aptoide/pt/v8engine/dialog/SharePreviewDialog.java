@@ -13,13 +13,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.v8engine.activity.AccountBaseActivity;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.activity.AccountBaseActivity;
 import cm.aptoide.pt.v8engine.customviews.LikeButtonView;
 import cm.aptoide.pt.v8engine.repository.SocialRepository;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -46,7 +46,7 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created by jdandrade on 09/12/2016.
  */
-
+// FIXME: 27/2/2017 convert into a class that extends "BaseDialog"
 public class SharePreviewDialog {
 
   private final AptoideAccountManager accountManager;
@@ -377,8 +377,7 @@ public class SharePreviewDialog {
             .loadWithShadowCircleTransform(accountManager.getAccount().getStoreAvatar(),
                 storeAvatar);
         ImageLoader.with(context)
-            .loadWithShadowCircleTransform(accountManager.getAccount().getAvatar(),
-                userAvatar);
+            .loadWithShadowCircleTransform(accountManager.getAccount().getAvatar(), userAvatar);
         storeName.setText(accountManager.getAccount().getStore());
         userName.setText(accountManager.getAccount().getNickname());
       } else {
@@ -388,8 +387,7 @@ public class SharePreviewDialog {
             .loadWithShadowCircleTransform(accountManager.getAccount().getStoreAvatar(),
                 storeAvatar);
         ImageLoader.with(context)
-            .loadWithShadowCircleTransform(accountManager.getAccount().getAvatar(),
-                userAvatar);
+            .loadWithShadowCircleTransform(accountManager.getAccount().getAvatar(), userAvatar);
         storeName.setText(accountManager.getAccount().getStore());
         userName.setText(accountManager.getAccount().getNickname());
         userName.setVisibility(View.GONE);
@@ -399,8 +397,7 @@ public class SharePreviewDialog {
           ManagerPreferences.getUserAccess())) {
         storeAvatar.setVisibility(View.VISIBLE);
         ImageLoader.with(context)
-            .loadWithShadowCircleTransform(accountManager.getAccount().getAvatar(),
-                storeAvatar);
+            .loadWithShadowCircleTransform(accountManager.getAccount().getAvatar(), storeAvatar);
         userAvatar.setVisibility(View.INVISIBLE);
         storeName.setText(accountManager.getAccount().getNickname());
         userName.setVisibility(View.GONE);
@@ -411,7 +408,8 @@ public class SharePreviewDialog {
   private void setSharedByText(Context context, TextView sharedBy) {
     sharedBy.setVisibility(View.VISIBLE);
 
-    if (AccountBaseActivity.UserAccessState.PUBLIC.toString().equals(ManagerPreferences.getUserAccess())) {
+    if (AccountBaseActivity.UserAccessState.PUBLIC.toString()
+        .equals(ManagerPreferences.getUserAccess())) {
       sharedBy.setText(String.format(context.getString(R.string.social_timeline_shared_by),
           accountManager.getAccount().getNickname()));
     } else {

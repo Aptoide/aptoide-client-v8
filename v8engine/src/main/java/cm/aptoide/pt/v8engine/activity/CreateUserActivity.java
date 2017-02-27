@@ -67,12 +67,9 @@ public class CreateUserActivity extends AccountPermissionsBaseActivity {
     accountManager = ((V8Engine) getApplicationContext()).getAccountManager();
     subscriptions = new CompositeSubscription();
     toolbar = (Toolbar) findViewById(R.id.toolbar);
-    userAvatar =
-        (RelativeLayout) findViewById(R.id.create_user_image_action);
-    nameEditText =
-        (EditText) findViewById(R.id.create_user_username_inserted);
-    createUserButton =
-        (Button) findViewById(R.id.create_user_create_profile);
+    userAvatar = (RelativeLayout) findViewById(R.id.create_user_image_action);
+    nameEditText = (EditText) findViewById(R.id.create_user_username_inserted);
+    createUserButton = (Button) findViewById(R.id.create_user_create_profile);
     avatarImage = (ImageView) findViewById(R.id.create_user_image);
     content = findViewById(android.R.id.content);
     progressAvatarUploadDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
@@ -91,29 +88,39 @@ public class CreateUserActivity extends AccountPermissionsBaseActivity {
     subscriptions.clear();
   }
 
+  @Override public void loadImage(Uri imagePath) {
+    ImageLoader.with(this).loadWithCircleTransform(imagePath, avatarImage, false);
+  }
+
   @Override public void showIconPropertiesError(String errors) {
     subscriptions.add(GenericDialogs.createGenericOkMessage(this,
         getString(cm.aptoide.accountmanager.R.string.image_requirements_error_popup_title), errors)
         .subscribe());
   }
 
-  @Override public void loadImage(Uri imagePath) {
-    ImageLoader.with(this).loadWithCircleTransform(imagePath, avatarImage, false);
-  }
-
   private void setupListeners() {
     subscriptions.add(RxView.clicks(userAvatar).subscribe(click -> chooseAvatarSource()));
     subscriptions.add(RxView.clicks(createUserButton)
         .doOnNext(click -> hideKeyboardAndShowProgressDialog())
-        .flatMap(click -> accountManager.updateAccount(nameEditText.getText().toString(), avatarPath)
-            .toObservable()
-            .timeout(90, TimeUnit.SECONDS)
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnError(throwable -> showError(throwable))
-            .doOnTerminate(() -> dismissProgressDialog())
-            .doOnCompleted(() -> showSuccessMessageAndNavigateToLoggedInView()))
+        .flatMap(
+            click -> accountManager.updateAccount(nameEditText.getText().toString(), avatarPath)
+                .toObservable()
+                .timeout(90, TimeUnit.SECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnError(throwable -> showError(throwable))
+                .doOnTerminate(() -> dismissProgressDialog())
+                .doOnCompleted(() -> showSuccessMessageAndNavigateToLoggedInView()))
         .retry()
         .subscribe());
+  }
+
+  private void hideKeyboardAndShowProgressDialog() {
+    AptoideUtils.SystemU.hideKeyboard(this);
+    if (isAvatarSelected()) {
+      progressAvatarUploadDialog.show();
+    } else {
+      progressDialog.show();
+    }
   }
 
   private void showError(Throwable throwable) {
@@ -141,15 +148,6 @@ public class CreateUserActivity extends AccountPermissionsBaseActivity {
     }
   }
 
-  private void hideKeyboardAndShowProgressDialog() {
-    AptoideUtils.SystemU.hideKeyboard(this);
-    if (isAvatarSelected()) {
-      progressAvatarUploadDialog.show();
-    } else {
-      progressDialog.show();
-    }
-  }
-
   private void showSuccessMessageAndNavigateToLoggedInView() {
     ShowMessage.asSnack(content, cm.aptoide.accountmanager.R.string.user_created);
     if (Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
@@ -161,12 +159,12 @@ public class CreateUserActivity extends AccountPermissionsBaseActivity {
     finish();
   }
 
-  private void showErrorMessage(@StringRes int reason) {
-    ShowMessage.asSnack(content, reason);
-  }
-
   private boolean isAvatarSelected() {
     return !TextUtils.isEmpty(avatarPath);
+  }
+
+  private void showErrorMessage(@StringRes int reason) {
+    ShowMessage.asSnack(content, reason);
   }
 
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {

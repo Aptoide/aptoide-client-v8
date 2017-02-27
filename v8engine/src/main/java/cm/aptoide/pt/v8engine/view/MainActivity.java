@@ -247,8 +247,7 @@ public class MainActivity extends BaseActivity implements MainView, FragmentShow
   private void setMainPagerPosition(Event.Name name) {
     if (handler != null) {
       handler.post(() -> {
-        //final Fragment fragment = getCurrentFragment();
-        final Fragment fragment = getLast();
+        final Fragment fragment = getNavigationManager().peekLast();
         if (fragment != null && (fragment instanceof HomeFragment)) {
           ((HomeFragment) fragment).setDesiredViewPagerItem(name);
         } else {
