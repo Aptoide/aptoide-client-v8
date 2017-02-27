@@ -59,6 +59,7 @@ import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
+import cm.aptoide.pt.v8engine.interfaces.Payments;
 import cm.aptoide.pt.v8engine.receivers.AppBoughtReceiver;
 import cm.aptoide.pt.v8engine.repository.SocialRepository;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
@@ -240,10 +241,10 @@ import rx.android.schedulers.AndroidSchedulers;
     //check if the app is paid
     if (app.isPaid() && !app.getPay().isPaid()) {
       actionButton.setText(
-          getContext().getString(R.string.buy) + " (" + app.getPay().getCurrencySymbol() + " " + app
+          getContext().getString(R.string.buy) + " (" + app.getPay().getSymbol() + " " + app
               .getPay()
-              .getAmount() + ")");
-      actionButton.setOnClickListener(v -> displayable.buyApp(getContext(), app));
+              .getPrice() + ")");
+      actionButton.setOnClickListener(v -> buyApp(app));
       AppBoughtReceiver receiver = new AppBoughtReceiver() {
         @Override public void appBought(long appId, String path) {
           if (app.getId() == appId) {
@@ -269,6 +270,13 @@ import rx.android.schedulers.AndroidSchedulers;
           }
         }, 1000);
       }
+    }
+  }
+
+  private void buyApp(GetAppMeta.App app) {
+    Fragment fragment = getNavigationManager().peekLast();
+    if (fragment!=null && Payments.class.isAssignableFrom(fragment.getClass())) {
+      ((Payments) fragment).buyApp(app);
     }
   }
 

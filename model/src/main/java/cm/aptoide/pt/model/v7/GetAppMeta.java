@@ -39,7 +39,7 @@ import lombok.EqualsAndHashCode;
     private Pay pay;
 
     public boolean isPaid() {
-      return (pay != null && pay.getAmount() > 0.0f);
+      return (pay != null && pay.getPrice() > 0.0f);
     }
 
     public String getMd5() {
@@ -50,9 +50,9 @@ import lombok.EqualsAndHashCode;
   @Data public static class Pay {
 
     private int productId;
-    private double amount;
+    private double price;
     private String currency;
-    private String currencySymbol;
+    private String symbol;
     private double taxRate;
     private String status;
 
