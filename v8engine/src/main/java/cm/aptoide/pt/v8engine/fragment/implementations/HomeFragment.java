@@ -81,9 +81,10 @@ public class HomeFragment extends StoreFragment {
     return fragment;
   }
 
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    updateRepository = RepositoryFactory.getUpdateRepository(getContext());
+  @Override public void onResume() {
+    super.onResume();
+    setUserDataOnHeader();
+    getToolbar().setTitle("");
   }
 
   @Nullable @Override
@@ -275,14 +276,9 @@ public class HomeFragment extends StoreFragment {
   }
 
   @Override public void setupToolbarDetails(Toolbar toolbar) {
-    toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
+    toolbar.setTitle("");
     toolbar.setNavigationIcon(R.drawable.ic_drawer);
     toolbar.setNavigationOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
-  }
-
-  @Override public void onResume() {
-    super.onResume();
-    setUserDataOnHeader();
   }
 
   private void setUserDataOnHeader() {

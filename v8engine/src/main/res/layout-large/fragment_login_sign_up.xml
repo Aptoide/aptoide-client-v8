@@ -47,7 +47,7 @@ android:fitsSystemWindows="true"
           android:layout_height="50dp"
           android:layout_gravity="center"
           android:layout_margin="20dp"
-          android:src="@drawable/wizard_aptoide_logo"
+          android:src="@drawable/logo_aptoide"
           android:tint="@android:color/white"
           />
 

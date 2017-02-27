@@ -81,7 +81,7 @@ public class FragmentTopStores extends AptoideBaseFragment<BaseAdapter> implemen
 
   @Override public void setupToolbarDetails(Toolbar toolbar) {
     toolbar.setTitle(R.string.top_stores_fragment_title);
-    toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
+    toolbar.setLogo(R.drawable.logo_toolbar);
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {

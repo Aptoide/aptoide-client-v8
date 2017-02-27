@@ -122,7 +122,8 @@ public class LoginSignUpFragment extends FragmentView implements JoinCommunityVi
 
   private void setupToolbar(View view) {
     Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-    toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
+    toolbar.setLogo(R.drawable.logo_toolbar);
+    
     toolbar.setTitle(getString(R.string.my_account));
     ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
