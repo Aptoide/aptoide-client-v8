@@ -83,8 +83,9 @@ public abstract class GoogleLoginFragment extends GooglePlayServicesFragment
     }
   }
 
-  @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-    super.onActivityCreated(savedInstanceState);
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+
     googleLoginSubject = PublishRelay.create();
 
     final GoogleSignInOptions options =

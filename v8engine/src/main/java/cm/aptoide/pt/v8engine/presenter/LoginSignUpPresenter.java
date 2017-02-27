@@ -1,13 +1,13 @@
 package cm.aptoide.pt.v8engine.presenter;
 
 import android.os.Bundle;
-import cm.aptoide.pt.v8engine.view.JoinCommunityView;
+import cm.aptoide.pt.v8engine.view.LoginSignUpView;
 
 public class LoginSignUpPresenter implements Presenter {
 
-  private final JoinCommunityView view;
+  private final LoginSignUpView view;
 
-  public LoginSignUpPresenter(JoinCommunityView view) {
+  public LoginSignUpPresenter(LoginSignUpView view) {
     this.view = view;
   }
 

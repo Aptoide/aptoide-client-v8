@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.fragment.FragmentView;
 import cm.aptoide.pt.v8engine.presenter.LoginSignUpPresenter;
-import cm.aptoide.pt.v8engine.view.JoinCommunityView;
+import cm.aptoide.pt.v8engine.view.LoginSignUpView;
 
 /**
  * This fragment has too much code equal to {@link LoginSignUpCredentialsFragment} due to Google /
@@ -22,7 +22,7 @@ import cm.aptoide.pt.v8engine.view.JoinCommunityView;
  * login functionality. Further code refactoring is needed to migrate external source login into
  * their own fragment and include the fragment inside the necessary login / sign up views.
  */
-public class LoginSignUpFragment extends FragmentView implements JoinCommunityView {
+public class LoginSignUpFragment extends FragmentView implements LoginSignUpView {
 
   private static final String DISMISS_TO_NAVIGATE_TO_MAIN_VIEW = "dismiss_to_navigate_to_main_view";
   private static final String BOTTOM_SHEET_WITH_BOTTOM_BAR = "bottom_sheet_expanded";
@@ -123,7 +123,7 @@ public class LoginSignUpFragment extends FragmentView implements JoinCommunityVi
   private void setupToolbar(View view) {
     Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
     toolbar.setLogo(R.drawable.logo_toolbar);
-    
+
     toolbar.setTitle(getString(R.string.my_account));
     ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 

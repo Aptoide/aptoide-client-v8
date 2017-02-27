@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.v8engine.view.LoginSignUpView;
+import cm.aptoide.pt.v8engine.view.LoginSignUpCredentialsView;
 import cm.aptoide.pt.v8engine.view.View;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
@@ -30,12 +30,12 @@ import rx.subscriptions.Subscriptions;
 
 public class LoginSignUpCredentialsPresenter implements Presenter {
 
-  private final LoginSignUpView view;
+  private final LoginSignUpCredentialsView view;
   private final AptoideAccountManager accountManager;
   private final Collection<String> facebookRequiredPermissions;
   private boolean dimissToNavigateToMainView;
 
-  public LoginSignUpCredentialsPresenter(LoginSignUpView view, AptoideAccountManager accountManager,
+  public LoginSignUpCredentialsPresenter(LoginSignUpCredentialsView view, AptoideAccountManager accountManager,
       Collection<String> facebookRequiredPermissions, boolean dimissToNavigateToMainView) {
     this.view = view;
     this.accountManager = accountManager;

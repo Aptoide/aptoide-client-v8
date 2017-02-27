@@ -31,10 +31,9 @@ import cm.aptoide.pt.v8engine.account.ErrorsMapper;
 import cm.aptoide.pt.v8engine.activity.CreateUserActivity;
 import cm.aptoide.pt.v8engine.fragment.GoogleLoginFragment;
 import cm.aptoide.pt.v8engine.presenter.LoginSignUpCredentialsPresenter;
-import cm.aptoide.pt.v8engine.view.LoginSignUpView;
+import cm.aptoide.pt.v8engine.view.LoginSignUpCredentialsView;
 import cm.aptoide.pt.v8engine.viewModel.AptoideAccountViewModel;
 import cm.aptoide.pt.v8engine.viewModel.FacebookAccountViewModel;
-import cm.aptoide.pt.v8engine.viewModel.GoogleAccountViewModel;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -49,7 +48,8 @@ import java.util.Arrays;
 import java.util.List;
 import rx.Observable;
 
-public class LoginSignUpCredentialsFragment extends GoogleLoginFragment implements LoginSignUpView {
+public class LoginSignUpCredentialsFragment extends GoogleLoginFragment implements
+    LoginSignUpCredentialsView {
 
   private static final String DISMISS_TO_NAVIGATE_TO_MAIN_VIEW = "dismiss_to_navigate_to_main_view";
   private ProgressDialog progressDialog;
@@ -144,6 +144,8 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment implemen
     hideShowAptoidePasswordButton = (Button) view.findViewById(R.id.btn_show_hide_pass);
 
     facebookLoginButton = (LoginButton) view.findViewById(R.id.fb_login_button);
+    facebookLoginButton.setFragment(this);
+
     callbackManager = CallbackManager.Factory.create();
     facebookLoginManager = LoginManager.getInstance();
     facebookLoginSubject = PublishRelay.create();
@@ -332,20 +334,6 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment implemen
 
   @Override protected SignInButton getGoogleButton() {
     return googleLoginButton;
-  }
-
-  @Override public void showGoogleLogin() {
-    super.showGoogleLogin();
-    googleLoginButton.setVisibility(View.VISIBLE);
-  }
-
-  @Override public void hideGoogleLogin() {
-    super.hideGoogleLogin();
-    googleLoginButton.setVisibility(View.GONE);
-  }
-
-  @Override public Observable<GoogleAccountViewModel> googleLoginClick() {
-    return Observable.empty();
   }
 
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
