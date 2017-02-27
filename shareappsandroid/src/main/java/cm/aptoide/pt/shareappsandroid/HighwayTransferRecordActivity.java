@@ -631,9 +631,7 @@ public class HighwayTransferRecordActivity extends ActivityView
   }
 
   private void sendDisconnectMessage() {
-    Intent disconnect = new Intent(this, HighwayClientComm.class);
-    disconnect.putExtra("disconnectMessage", "disconnectMessageFromClientCode");
-    disconnect.putExtra("disconnectNickname", nickname);
+    Intent disconnect = new Intent(this, HighwayClientService.class);
     disconnect.setAction("DISCONNECT");
     startService(disconnect);
   }

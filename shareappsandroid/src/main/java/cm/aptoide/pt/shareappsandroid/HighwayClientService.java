@@ -319,10 +319,10 @@ public class HighwayClientService extends Service {
           aptoideMessageController.send(
               new RequestPermissionToSend(aptoideMessageController.getLocalhost(), appInfo));
         }
+      } else if(intent.getAction() != null && intent.getAction().equals("DISCONNECT")){
+        System.out.println("Requested to disconnect !");
+        aptoideMessageController.exit();
       }
-
-      // TODO create new action to disconnect from server
-      //aptoideMessageClientController.exit();
 
     }
 
