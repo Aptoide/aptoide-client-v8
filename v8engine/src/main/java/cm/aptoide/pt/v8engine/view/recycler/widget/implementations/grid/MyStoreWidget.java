@@ -51,7 +51,7 @@ public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
   @Override public void bindView(MyStoreDisplayable displayable) {
 
     final FragmentActivity context = getContext();
-    Store store = displayable.getMeta().getData();
+    Store store = displayable.getMeta().getData().getStore();
     suggestionMessage.setText(displayable.getSuggestionMessage(context));
     createStoreText.setText(displayable.getCreateStoreText());
     createStoreText.setVisibility(displayable.getCreateStoreTextViewVisibility());

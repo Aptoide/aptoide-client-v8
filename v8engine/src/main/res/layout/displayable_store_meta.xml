@@ -16,7 +16,7 @@
       >
 
     <ImageView
-        android:id="@+id/image"
+        android:id="@+id/main_icon"
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:layout_alignParentLeft="true"
@@ -47,52 +47,75 @@
         tools:textColor="@color/black"
         />
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/image"
-        android:layout_toRightOf="@+id/image"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_toEndOf="@+id/main_icon"
+        android:layout_toRightOf="@+id/main_icon"
+        android:drawableLeft="@drawable/icon_store"
+        android:drawablePadding="5dp"
+        android:drawableStart="@drawable/icon_store"
         android:orientation="vertical"
         android:paddingEnd="16dp"
-        android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:paddingStart="16dp"
         android:paddingTop="16dp"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        tools:text="Sameveda store"
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/name"
+        android:layout_toEndOf="@+id/main_icon"
+        android:layout_toLeftOf="@id/follow_btn"
+        android:layout_toRightOf="@+id/main_icon"
+        android:layout_toStartOf="@id/follow_btn"
+        android:orientation="horizontal"
+        android:paddingEnd="16dp"
+        android:paddingRight="16dp"
+        android:weightSum="3"
         >
-
-      <TextView
-          android:id="@+id/name"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:textColor="@color/white"
-          android:textSize="16sp"
-          android:textStyle="bold"
-          tools:text="Sameveda store"
-          />
-
-      <TextView
-          android:id="@+id/subscribers"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:drawableLeft="@drawable/user_shape_mini_icon"
-          android:drawablePadding="4dp"
-          android:drawableStart="@drawable/user_shape_mini_icon"
-          android:textColor="@color/white"
-          android:textSize="10sp"
-          tools:text="214"
-          />
-
       <TextView
           android:id="@+id/apps"
-          android:layout_width="wrap_content"
+          android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:drawableLeft="@drawable/app_count_mini_icon"
+          android:layout_weight="1"
           android:drawablePadding="4dp"
-          android:drawableStart="@drawable/app_count_mini_icon"
+          android:gravity="center"
+          android:text="@string/store_meta_apps"
           android:textColor="@color/white"
           android:textSize="10sp"
-          tools:text="4678"
+          />
+
+      <TextView
+          android:id="@+id/followers"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:drawablePadding="4dp"
+          android:gravity="center"
+          android:text="@string/store_meta_followers"
+          android:textColor="@color/white"
+          android:textSize="10sp"
+          />
+
+      <TextView
+          android:id="@+id/following"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:drawablePadding="4dp"
+          android:gravity="center"
+          android:text="@string/store_meta_following"
+          android:textColor="@color/white"
+          android:textSize="10sp"
           />
 
       <TextView

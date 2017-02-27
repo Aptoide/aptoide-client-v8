@@ -9,7 +9,7 @@ import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.V7Url;
-import cm.aptoide.pt.model.v7.store.GetStoreMeta;
+import cm.aptoide.pt.model.v7.store.GetHomeMeta;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import okhttp3.OkHttpClient;
@@ -20,7 +20,7 @@ import rx.Observable;
  * Created by neuro on 19-04-2016.
  */
 @Data @EqualsAndHashCode(callSuper = true) public class GetStoreMetaRequest
-    extends BaseRequestWithStore<GetStoreMeta, GetStoreMetaRequest.Body> {
+    extends BaseRequestWithStore<GetHomeMeta, GetStoreMetaRequest.Body> {
 
   private String url;
 
@@ -60,7 +60,7 @@ import rx.Observable;
         (Body) decorator.decorate(new Body(storeCredentials), accessToken));
   }
 
-  @Override protected Observable<GetStoreMeta> loadDataFromNetwork(Interfaces interfaces,
+  @Override protected Observable<GetHomeMeta> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
     return interfaces.getStoreMeta(url != null ? url : "", body, bypassCache);
   }

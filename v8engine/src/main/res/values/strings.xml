@@ -414,5 +414,8 @@
   <string name="add_store_dialog_title">You can find exclusive taylored content made just for you in different stores</string>
   <string name="add_store_dialog_top_stores">DISCOVER TOP STORES</string>
   <string name="add_store_dialog_top_stores_small_text">and find exclusive content!</string>
+  <string name="store_meta_apps">Apps\n%s</string>
+  <string name="store_meta_following">Following\n%s</string>
+  <string name="store_meta_followers">Followers\n%s</string>
 
 </resources>

@@ -34,6 +34,7 @@ import cm.aptoide.pt.model.v7.TimelineStats;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
 import cm.aptoide.pt.model.v7.store.GetHome;
+import cm.aptoide.pt.model.v7.store.GetHomeMeta;
 import cm.aptoide.pt.model.v7.store.GetStore;
 import cm.aptoide.pt.model.v7.store.GetStoreDisplays;
 import cm.aptoide.pt.model.v7.store.GetStoreMeta;
@@ -208,7 +209,7 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
         @Path(value = "url", encoded = true) String path, @Body ListStoresRequest.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("home/getMeta{url}") Observable<GetStoreMeta> getStoreMeta(
+    @POST("home/getMeta{url}") Observable<GetHomeMeta> getStoreMeta(
         @Path(value = "url", encoded = true) String path, @Body GetStoreMetaRequest.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 

@@ -17,6 +17,7 @@ import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.ListComments;
 import cm.aptoide.pt.model.v7.Type;
+import cm.aptoide.pt.model.v7.store.GetHomeMeta;
 import java.util.LinkedList;
 import java.util.List;
 import rx.Observable;
@@ -124,7 +125,13 @@ public class WSWidgetsUtils {
         case MY_STORE_META:
           return GetMyStoreMetaRequest.of(accessToken, aptoideClientUuid)
               .observe(refresh)
-              .observeOn(Schedulers.io())
+              .observeOn(Schedulers.io()).map(getStoreMeta -> {
+                GetHomeMeta.Data data = new GetHomeMeta.Data();
+                data.setStore(getStoreMeta.getData());
+                GetHomeMeta homeMeta = new GetHomeMeta();
+                homeMeta.setData(data);
+                return homeMeta;
+              })
               .doOnNext(wsWidget::setViewObject)
               .doOnError(throwable -> {
                 LinkedList<String> errorsList = new LinkedList<>();
