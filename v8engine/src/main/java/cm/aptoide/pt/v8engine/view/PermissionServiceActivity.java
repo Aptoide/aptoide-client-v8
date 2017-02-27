@@ -64,10 +64,7 @@ public abstract class PermissionServiceActivity extends ActivityView implements 
           if (toRunWhenAccessToFileSystemIsDenied != null) {
             toRunWhenAccessToFileSystemIsDenied.call();
           }
-          ShowMessage.asSnack(findViewById(android.R.id.content),
-              "access to read and write to external " +
-                  "storage" +
-                  " was denied");
+          ShowMessage.asSnack(findViewById(android.R.id.content), R.string.permission_access_deny);
         }
         break;
 
@@ -82,8 +79,7 @@ public abstract class PermissionServiceActivity extends ActivityView implements 
           if (toRunWhenAccessToAccountsIsDenied != null) {
             toRunWhenAccessToAccountsIsDenied.call();
           }
-          ShowMessage.asSnack(findViewById(android.R.id.content),
-              "access to get accounts was denied");
+          ShowMessage.asSnack(findViewById(android.R.id.content), R.string.permission_account_deny);
         }
         break;
 

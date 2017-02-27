@@ -145,18 +145,17 @@ android {
   }
 
   applicationVariants.all { variant ->
-    if (variant.buildType.name == buildTypes.release.name) {
+    variant.outputs.each { output ->
+      def project = "vanilla"
+      def SEP = "_"
+      def flavor = variant.productFlavors[0].name
+      def buildType = variant.variantData.variantConfiguration.buildType.name
+      def versionName = variant.versionName
+      def versionCode = variant.versionCode
 
-      variant.outputs.each { output ->
-        project.ext { appName = 'aptoide' }
-        def newName = output.outputFile.name
-        newName = newName.replace("vanilla-", "$project.ext.appName-")
-        //"MyAppName" -> I set my app variables in the root project
-        newName = newName.replace("prod-release", versionName)
-        newName = newName.replace("release", versionName)
-        //noinspection GroovyAssignabilityCheck
-        output.outputFile = new File(output.outputFile.parent, newName)
-      }
+      def newApkName = project + SEP + flavor + SEP + buildType + SEP + versionName + SEP + versionCode + ".apk"
+
+      output.outputFile = new File(output.outputFile.parent, newApkName)
     }
   }
 

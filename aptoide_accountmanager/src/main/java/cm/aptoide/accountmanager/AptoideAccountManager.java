@@ -26,6 +26,7 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.api.GoogleApiClient;
+import java.net.SocketTimeoutException;
 import java.util.List;
 import java.util.concurrent.Executors;
 import rx.Completable;
@@ -273,7 +274,12 @@ public class AptoideAccountManager {
         })
         .doOnCompleted(() -> analytics.login(email))
         .doOnCompleted(() -> sendLoginBroadcast())
-        .onErrorResumeNext(throwable -> login(Account.Type.APTOIDE, email, password, null))
+        .onErrorResumeNext(throwable -> {
+          if (throwable instanceof SocketTimeoutException) {
+            return login(Account.Type.APTOIDE, email, password, null);
+          }
+          return Completable.error(throwable);
+        })
         .doOnCompleted(() -> analytics.signUp());
   }
 

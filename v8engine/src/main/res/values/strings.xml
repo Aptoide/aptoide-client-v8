@@ -434,4 +434,8 @@
   <string name="activity_login_sign_up_button">Sign Up</string>
   <string name="view_credentials_username_hint">Email</string>
   <string name="view_credentials_password_hint">Password</string>
+
+  <string name="permission_access_deny">access to read and write to external storage was denied</string>
+  <string name="permission_account_deny">access to get accounts was denied</string>
+
 </resources>
