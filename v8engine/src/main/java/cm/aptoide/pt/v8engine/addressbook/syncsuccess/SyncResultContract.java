@@ -6,7 +6,7 @@ import cm.aptoide.pt.v8engine.addressbook.data.Contact;
  * Created by jdandrade on 13/02/2017.
  */
 
-public interface SyncSuccessContract {
+public interface SyncResultContract {
   interface View {
 
     void finishView();

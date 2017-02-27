@@ -22,7 +22,7 @@ public interface ContactsRepository {
 
   interface LoadContactsCallback {
 
-    void onContactsLoaded(List<Contact> contacts);
+    void onContactsLoaded(List<Contact> contacts, boolean success);
   }
 
   interface SubmitContactCallback {

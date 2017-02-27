@@ -6,11 +6,11 @@ import cm.aptoide.pt.v8engine.addressbook.data.Contact;
  * Created by jdandrade on 13/02/2017.
  */
 
-public class SyncSuccessPresenter implements SyncSuccessContract.UserActionsListener {
+public class SyncResultPresenter implements SyncResultContract.UserActionsListener {
 
-  private final SyncSuccessContract.View mSyncSuccessView;
+  private final SyncResultContract.View mSyncSuccessView;
 
-  public SyncSuccessPresenter(SyncSuccessContract.View syncSuccessView) {
+  public SyncResultPresenter(SyncResultContract.View syncSuccessView) {
     this.mSyncSuccessView = syncSuccessView;
   }
 

@@ -24,11 +24,11 @@ import java.util.List;
  * Created by jdandrade on 13/02/2017.
  */
 
-public class SyncSuccessFragment extends SupportV4BaseFragment implements SyncSuccessContract.View {
+public class SyncResultFragment extends SupportV4BaseFragment implements SyncResultContract.View {
 
   public static final int SYNCED_LIST_NUMBER_OF_COLUMNS = 2;
   public static final String CONTACTS_JSON = "CONTACTS_JSON";
-  private SyncSuccessContract.UserActionsListener mActionsListener;
+  private SyncResultContract.UserActionsListener mActionsListener;
   ContactItemListener mItemListener = new ContactItemListener() {
     @Override public void onContactClick(Contact clickedContact) {
       mActionsListener.openFriend(clickedContact);
@@ -36,13 +36,13 @@ public class SyncSuccessFragment extends SupportV4BaseFragment implements SyncSu
   };
   private List<Contact> contacts;
   private RecyclerView recyclerView;
-  private SyncSuccessAdapter mListAdapter;
+  private SyncResultAdapter mListAdapter;
   private Button allowFind;
   private Button done;
   private TextView successMessage;
 
   public static Fragment newInstance(List<Contact> contacts) {
-    SyncSuccessFragment syncSuccessFragment = new SyncSuccessFragment();
+    SyncResultFragment syncSuccessFragment = new SyncResultFragment();
     Gson gson = new Gson();
     String contactsJson = gson.toJson(contacts);
     Bundle extras = new Bundle();
@@ -69,8 +69,8 @@ public class SyncSuccessFragment extends SupportV4BaseFragment implements SyncSu
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    mActionsListener = new SyncSuccessPresenter(this);
-    mListAdapter = new SyncSuccessAdapter((ArrayList<Contact>) contacts, mItemListener);
+    mActionsListener = new SyncResultPresenter(this);
+    mListAdapter = new SyncResultAdapter((ArrayList<Contact>) contacts, mItemListener);
   }
 
   @Override public void loadExtras(Bundle args) {

@@ -1,10 +1,13 @@
 package cm.aptoide.pt.v8engine.addressbook.invitefriends;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.SupportV4BaseFragment;
@@ -16,14 +19,19 @@ import com.jakewharton.rxbinding.view.RxView;
  */
 public class InviteFriendsFragment extends SupportV4BaseFragment
     implements InviteFriendsContract.View {
+  public static final String OPEN_MODE = "OPEN_MODE";
   private InviteFriendsContract.UserActionsListener mActionsListener;
+  private InviteFriendsFragmentOpenMode openMode;
+
   private Button share;
   private Button allowFind;
   private Button done;
+  private TextView message;
 
-  public static Fragment newInstance() {
+  public static Fragment newInstance(InviteFriendsFragmentOpenMode openMode) {
     InviteFriendsFragment inviteFriendsFragment = new InviteFriendsFragment();
     Bundle extras = new Bundle();
+    extras.putSerializable(OPEN_MODE, openMode);
     inviteFriendsFragment.setArguments(extras);
     return inviteFriendsFragment;
   }
@@ -33,9 +41,28 @@ public class InviteFriendsFragment extends SupportV4BaseFragment
     mActionsListener = new InviteFriendsPresenter(this);
   }
 
+  @Override public void loadExtras(Bundle args) {
+    super.loadExtras(args);
+    openMode = (InviteFriendsFragmentOpenMode) args.get(OPEN_MODE);
+  }
+
   @Override public void setupViews() {
     RxView.clicks(allowFind).subscribe(click -> mActionsListener.allowFindClicked());
     RxView.clicks(done).subscribe(click -> mActionsListener.doneClicked());
+    setupMessage(openMode);
+  }
+
+  public void setupMessage(@NonNull InviteFriendsFragmentOpenMode openMode) {
+    switch (openMode) {
+      case ERROR:
+        message.setText(getString(R.string.addressbook_insuccess_connection));
+        break;
+      case NO_FRIENDS:
+        message.setText(getString(R.string.we_didn_t_find_any_contacts_that_are_using_aptoide));
+        break;
+      default:
+        Logger.d(this.getClass().getSimpleName(), "Wrong openMode type.");
+    }
   }
 
   @Override public int getContentViewId() {
@@ -46,6 +73,7 @@ public class InviteFriendsFragment extends SupportV4BaseFragment
     share = (Button) view.findViewById(R.id.addressbook_share_social);
     allowFind = (Button) view.findViewById(R.id.addressbook_allow_find);
     done = (Button) view.findViewById(R.id.addressbook_done);
+    message = (TextView) view.findViewById(R.id.addressbook_friends_message);
   }
 
   @Override public void showPhoneInputFragment() {
@@ -55,5 +83,9 @@ public class InviteFriendsFragment extends SupportV4BaseFragment
 
   @Override public void finishView() {
     getActivity().onBackPressed();
+  }
+
+  public enum InviteFriendsFragmentOpenMode {
+    ERROR, NO_FRIENDS
   }
 }

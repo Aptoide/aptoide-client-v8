@@ -9,7 +9,7 @@ import cm.aptoide.pt.v8engine.addressbook.AddressBookFragment;
 import cm.aptoide.pt.v8engine.addressbook.data.Contact;
 import cm.aptoide.pt.v8engine.addressbook.invitefriends.InviteFriendsFragment;
 import cm.aptoide.pt.v8engine.addressbook.phoneinput.PhoneInputFragment;
-import cm.aptoide.pt.v8engine.addressbook.syncsuccess.SyncSuccessFragment;
+import cm.aptoide.pt.v8engine.addressbook.syncsuccess.SyncResultFragment;
 import cm.aptoide.pt.v8engine.configuration.FragmentProvider;
 import cm.aptoide.pt.v8engine.fragment.CommentListFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
@@ -283,14 +283,14 @@ public class FragmentProviderImpl implements FragmentProvider {
   }
 
   @Override public Fragment newSyncSuccessFragment(List<Contact> contacts) {
-    return SyncSuccessFragment.newInstance(contacts);
+    return SyncResultFragment.newInstance(contacts);
   }
 
   @Override public Fragment newPhoneInputFragment() {
     return PhoneInputFragment.newInstance();
   }
 
-  @Override public Fragment newInviteFriendsFragment() {
-    return InviteFriendsFragment.newInstance();
+  @Override public Fragment newInviteFriendsFragment(InviteFriendsFragment.InviteFriendsFragmentOpenMode openMode) {
+    return InviteFriendsFragment.newInstance(openMode);
   }
 }

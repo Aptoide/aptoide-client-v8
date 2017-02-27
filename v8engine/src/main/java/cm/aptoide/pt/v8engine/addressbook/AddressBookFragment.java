@@ -1,8 +1,10 @@
 package cm.aptoide.pt.v8engine.addressbook;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
@@ -15,12 +17,13 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.FacebookModel;
 import cm.aptoide.pt.model.v7.TwitterModel;
 import cm.aptoide.pt.preferences.Application;
-import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.addressbook.data.Contact;
 import cm.aptoide.pt.v8engine.addressbook.data.ContactsRepositoryImpl;
+import cm.aptoide.pt.v8engine.addressbook.invitefriends.InviteFriendsFragment;
 import cm.aptoide.pt.v8engine.fragment.SupportV4BaseFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import com.facebook.CallbackManager;
@@ -57,6 +60,7 @@ public class AddressBookFragment extends SupportV4BaseFragment implements Addres
   private TextView about;
   private ProgressBar addressBookSyncProgress;
   private CallbackManager callbackManager;
+  private ProgressDialog mGenericPleaseWaitDialog;
 
   public AddressBookFragment() {
 
@@ -74,6 +78,7 @@ public class AddressBookFragment extends SupportV4BaseFragment implements Addres
     mActionsListener = new AddressBookPresenter(this, new ContactsRepositoryImpl());
     callbackManager = CallbackManager.Factory.create();
     registerFacebookCallback();
+    mGenericPleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());
   }
 
   @Override public void setupViews() {
@@ -83,17 +88,14 @@ public class AddressBookFragment extends SupportV4BaseFragment implements Addres
     dismissV.setPaintFlags(dismissV.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
     about.setPaintFlags(about.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
     addressBookSyncProgress.setIndeterminate(true);
-    RxView.clicks(addressBookSyncButton).subscribe(click -> {
-      if (!ManagerPreferences.getAddressBookSyncState()) {
-        PermissionManager permissionManager = new PermissionManager();
-        final PermissionRequest permissionRequest = (PermissionRequest) getContext();
-        permissionManager.requestContactsAccess(permissionRequest)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(success -> {
-              mActionsListener.syncAddressBook();
-            }, throwable -> CrashReport.getInstance().log(throwable));
-      }
-    });
+    RxView.clicks(addressBookSyncButton)
+        .flatMap(click -> {
+          PermissionManager permissionManager = new PermissionManager();
+          final PermissionRequest permissionRequest = (PermissionRequest) getContext();
+          return permissionManager.requestContactsAccess(permissionRequest);
+        })
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(permissionGranted -> mActionsListener.syncAddressBook());
     RxView.clicks(facebookSyncButton).subscribe(click -> facebookLoginCallback());
     RxView.clicks(twitterSyncButton).subscribe(click -> twitterLogin());
     RxView.clicks(dismissV).subscribe(click -> mActionsListener.finishViewClick());
@@ -185,16 +187,28 @@ public class AddressBookFragment extends SupportV4BaseFragment implements Addres
         V8Engine.getFragmentProvider().newSyncSuccessFragment(contacts));
   }
 
-  @Override public void showInviteFriendsFragment() {
-    ((FragmentShower) getContext()).pushFragmentV4(
-        V8Engine.getFragmentProvider().newInviteFriendsFragment());
+  @Override public void showInviteFriendsFragment(
+      @NonNull InviteFriendsFragment.InviteFriendsFragmentOpenMode openMode) {
+    switch (openMode) {
+      case ERROR:
+        ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
+            .newInviteFriendsFragment(InviteFriendsFragment.InviteFriendsFragmentOpenMode.ERROR));
+        break;
+      case NO_FRIENDS:
+        ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
+            .newInviteFriendsFragment(
+                InviteFriendsFragment.InviteFriendsFragmentOpenMode.NO_FRIENDS));
+        break;
+      default:
+        Logger.d(this.getClass().getSimpleName(), "Wrong openMode type.");
+    }
   }
 
-  @Override public void setAddressBookProgressIndicator(boolean showProgress) {
+  @Override public void setGenericPleaseWaitDialog(boolean showProgress) {
     if (showProgress) {
-      addressBookSyncProgress.setVisibility(View.VISIBLE);
+      mGenericPleaseWaitDialog.show();
     } else {
-      addressBookSyncButton.setVisibility(View.INVISIBLE);
+      mGenericPleaseWaitDialog.dismiss();
     }
   }
 

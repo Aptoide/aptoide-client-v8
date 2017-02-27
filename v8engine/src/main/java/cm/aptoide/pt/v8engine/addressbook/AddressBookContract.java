@@ -1,8 +1,10 @@
 package cm.aptoide.pt.v8engine.addressbook;
 
+import android.support.annotation.NonNull;
 import cm.aptoide.pt.model.v7.FacebookModel;
 import cm.aptoide.pt.model.v7.TwitterModel;
 import cm.aptoide.pt.v8engine.addressbook.data.Contact;
+import cm.aptoide.pt.v8engine.addressbook.invitefriends.InviteFriendsFragment;
 import java.util.List;
 
 /**
@@ -23,9 +25,10 @@ public interface AddressBookContract {
 
     void showSuccessFragment(List<Contact> contacts);
 
-    void showInviteFriendsFragment();
+    void showInviteFriendsFragment(
+        @NonNull InviteFriendsFragment.InviteFriendsFragmentOpenMode openMode);
 
-    void setAddressBookProgressIndicator(boolean showProgress);
+    void setGenericPleaseWaitDialog(boolean showProgress);
   }
 
   interface UserActionsListener {

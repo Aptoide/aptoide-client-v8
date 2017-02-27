@@ -6,6 +6,7 @@ import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.v8engine.addressbook.data.Contact;
+import cm.aptoide.pt.v8engine.addressbook.invitefriends.InviteFriendsFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.ScheduledDownloadsFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.TimeLineFollowFragment;
@@ -133,5 +134,5 @@ public interface FragmentProvider {
 
   Fragment newPhoneInputFragment();
 
-  Fragment newInviteFriendsFragment();
+  Fragment newInviteFriendsFragment(InviteFriendsFragment.InviteFriendsFragmentOpenMode openMode);
 }

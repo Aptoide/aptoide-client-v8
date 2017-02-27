@@ -18,7 +18,7 @@
       android:src="@drawable/addressbook_graphic" />
 
   <TextView
-      android:id="@+id/addressbook_increase_network"
+      android:id="@+id/addressbook_friends_message"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_below="@+id/addressbook_friends_graphic"
@@ -39,7 +39,7 @@
   <TextView
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_below="@id/addressbook_increase_network"
+      android:layout_below="@id/addressbook_friends_message"
       android:layout_marginTop="10dp"
       android:gravity="center_horizontal"
       android:text="@string/addressbook_invite_friends"

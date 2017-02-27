@@ -15,12 +15,12 @@ import java.util.ArrayList;
 /**
  * Created by jdandrade on 13/02/2017.
  */
-public class SyncSuccessAdapter extends RecyclerView.Adapter<SyncSuccessAdapter.ViewHolder> {
-  private final SyncSuccessFragment.ContactItemListener mItemListener;
+public class SyncResultAdapter extends RecyclerView.Adapter<SyncResultAdapter.ViewHolder> {
+  private final SyncResultFragment.ContactItemListener mItemListener;
   private ArrayList<Contact> mContacts;
 
-  public SyncSuccessAdapter(ArrayList<Contact> contacts,
-      SyncSuccessFragment.ContactItemListener itemListener) {
+  public SyncResultAdapter(ArrayList<Contact> contacts,
+      SyncResultFragment.ContactItemListener itemListener) {
     setList(contacts);
     this.mItemListener = itemListener;
   }
@@ -56,14 +56,14 @@ public class SyncSuccessAdapter extends RecyclerView.Adapter<SyncSuccessAdapter.
   }
 
   class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-    private final SyncSuccessFragment.ContactItemListener mItemListener;
+    private final SyncResultFragment.ContactItemListener mItemListener;
 
     ImageView mMainIcon;
     ImageView mSecondaryIcon;
     TextView mStoreName;
     TextView mUserName;
 
-    ViewHolder(View contactView, SyncSuccessFragment.ContactItemListener itemListener) {
+    ViewHolder(View contactView, SyncResultFragment.ContactItemListener itemListener) {
       super(contactView);
       this.mItemListener = itemListener;
       mMainIcon = (ImageView) contactView.findViewById(R.id.main_icon);

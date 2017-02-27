@@ -55,9 +55,10 @@ public class ContactsRepositoryImpl implements ContactsRepository {
             contact.setPerson(person);
             contactList.add(contact);
           }
-          callback.onContactsLoaded(contactList);
+          callback.onContactsLoaded(contactList, true);
         }, (throwable) -> {
           throwable.printStackTrace();
+          callback.onContactsLoaded(null, false);
         });
   }
 
@@ -79,9 +80,10 @@ public class ContactsRepositoryImpl implements ContactsRepository {
         contact.setPerson(person);
         contactList.add(contact);
       }
-      callback.onContactsLoaded(contactList);
+      callback.onContactsLoaded(contactList, true);
     }, (throwable) -> {
       throwable.printStackTrace();
+      callback.onContactsLoaded(null, false);
     });
   }
 
@@ -103,9 +105,10 @@ public class ContactsRepositoryImpl implements ContactsRepository {
         contact.setPerson(person);
         contactList.add(contact);
       }
-      callback.onContactsLoaded(contactList);
+      callback.onContactsLoaded(contactList, true);
     }, throwable -> {
       throwable.printStackTrace();
+      callback.onContactsLoaded(null, false);
     });
   }
 
