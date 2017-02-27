@@ -8,11 +8,11 @@ import cm.aptoide.pt.shareapps.socket.entities.AndroidAppInfo;
 public class ShareAppsFileServerSocket extends AptoideFileServerSocket<AndroidAppInfo> {
 
   public ShareAppsFileServerSocket(int port, AndroidAppInfo androidAppInfo, int timeout) {
-    super(port, androidAppInfo.getFileInfosList(), timeout);
+    super(port, androidAppInfo.getFiles(), timeout);
   }
 
   public ShareAppsFileServerSocket(int bufferSize, int port, AndroidAppInfo androidAppInfo,
       int timeout) {
-    super(bufferSize, port, androidAppInfo.getFileInfosList(), timeout);
+    super(bufferSize, port, androidAppInfo.getFiles(), timeout);
   }
 }

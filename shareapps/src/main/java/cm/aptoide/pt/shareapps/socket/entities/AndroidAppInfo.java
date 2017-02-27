@@ -14,6 +14,7 @@ import lombok.Data;
   private FileInfo apk, mainObb, patchObb;
   private String appName;
   private String packageName;
+  private List<FileInfo> fileInfos;
 
   public AndroidAppInfo(String appName, String packageName, File apk, File mainObb, File patchObb) {
     this(appName, packageName, apk, mainObb);
@@ -31,20 +32,8 @@ import lombok.Data;
     this.apk = new FileInfo(apk);
   }
 
-  public List<String> getFilesPathsList() {
-    List<String> list = new LinkedList<>();
-    list.add(apk.getFilePath());
 
-    if (hasMainObb()) {
-      list.add(getMainObb().getFilePath());
-    }
 
-    if (hasPatchObb()) {
-      list.add(getPatchObb().getFilePath());
-    }
-
-    return list;
-  }
 
   public boolean hasMainObb() {
     return mainObb != null;
@@ -54,20 +43,6 @@ import lombok.Data;
     return patchObb != null;
   }
 
-  public List<FileInfo> getFileInfosList() {
-    List<FileInfo> list = new LinkedList<>();
-    list.add(apk);
-
-    if (hasMainObb()) {
-      list.add(getMainObb());
-    }
-
-    if (hasPatchObb()) {
-      list.add(getPatchObb());
-    }
-
-    return list;
-  }
 
   public List<FileInfo> getFiles() {
     List<FileInfo> fileInfos = new LinkedList<>();
