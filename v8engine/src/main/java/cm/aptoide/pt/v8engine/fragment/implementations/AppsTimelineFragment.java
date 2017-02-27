@@ -7,10 +7,10 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.GridLayoutManager;
+import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -115,8 +115,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     return fragment;
   }
 
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+  @Override public void bindViews(View view) {
+    super.bindViews(view);
     accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
     accountNavigator = new AccountNavigator(getNavigationManager(), accountManager);
     dateCalculator = new DateCalculator();
@@ -211,7 +211,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
             return displayableDatalist;
           });
         } else {
-          displayableDatalist.getList().add(0, new TimelineLoginDisplayable(accountNavigator));
+          displayableDatalist.getList().add(0, new TimelineLoginDisplayable().setAccountNavigator(accountNavigator));
           return Observable.just(displayableDatalist);
         }
       } else {

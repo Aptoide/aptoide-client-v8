@@ -12,12 +12,7 @@ public class TimelineLoginDisplayable extends Displayable {
 
   private AccountNavigator accountNavigator;
 
-  public TimelineLoginDisplayable() {
-  }
-
-  public TimelineLoginDisplayable(AccountNavigator accountNavigator) {
-    this.accountNavigator = accountNavigator;
-  }
+  public TimelineLoginDisplayable() {}
 
   @Override protected Configs getConfig() {
     return new Configs(1, true);
@@ -29,5 +24,10 @@ public class TimelineLoginDisplayable extends Displayable {
 
   public void login() {
     accountNavigator.navigateToAccountView();
+  }
+
+  public TimelineLoginDisplayable setAccountNavigator(AccountNavigator accountNavigator) {
+    this.accountNavigator = accountNavigator;
+    return this;
   }
 }

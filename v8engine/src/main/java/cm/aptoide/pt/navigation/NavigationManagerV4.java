@@ -25,6 +25,8 @@ public interface NavigationManagerV4 {
 
   Fragment peekLast();
 
+  Fragment peekFirst();
+
   void navigateToWithoutBackSave(Fragment fragment);
 
   //

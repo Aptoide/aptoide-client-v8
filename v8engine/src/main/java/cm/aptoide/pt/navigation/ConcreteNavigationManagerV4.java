@@ -18,9 +18,6 @@ class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
   private static final int EXIT_ANIMATION = android.R.anim.fade_out;
   private static final int ENTER_ANIMATION = android.R.anim.fade_in;
 
-  private static final ConcurrentLinkedQueue<Fragment> fragmentStack =
-      new ConcurrentLinkedQueue<>();
-
   private final WeakReference<FragmentActivity> weakReference;
 
   ConcreteNavigationManagerV4(FragmentActivity fragmentActivity) {
@@ -65,51 +62,7 @@ class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
         .addToBackStack(tag)
         .replace(R.id.fragment_placeholder, fragment, tag)
         .commit();
-
-    fragmentStack.add(fragment);
   }
-
-  /*
-  @Override public void navigateTo(Fragment fragment, @Nullable List<Fragment> newBackStack) {
-    FragmentActivity activity = weakReference.get();
-
-    if (activity == null) {
-      CrashReport.getInstance()
-          .log(new RuntimeException(
-              "Activity is null in " + ConcreteNavigationManagerV4.class.getName()));
-      return;
-    }
-
-    final FragmentManager fragmentManager = activity.getSupportFragmentManager();
-
-    int backStackTag = 0;
-    if (newBackStack != null && newBackStack.size() > 0) {
-      // replace the entire back stack in the current fragment manager
-      cleanBackStack(fragmentManager);
-      fragmentManager.executePendingTransactions();
-      for (Fragment f : newBackStack) {
-        String tag = Integer.toString(backStackTag++);
-        fragmentManager.beginTransaction()
-            .setCustomAnimations(ENTER_ANIMATION, EXIT_ANIMATION, ENTER_ANIMATION, EXIT_ANIMATION)
-            .addToBackStack(tag)
-            .add(R.id.fragment_placeholder, f, tag)
-            .commitNow();
-
-        fragmentStack.add(f);
-      }
-    }
-
-    // add current fragment
-    String tag = Integer.toString(backStackTag);
-    fragmentManager.beginTransaction()
-        .setCustomAnimations(ENTER_ANIMATION, EXIT_ANIMATION, ENTER_ANIMATION, EXIT_ANIMATION)
-        .addToBackStack(tag)
-        .add(R.id.fragment_placeholder, fragment, tag)
-        .commitNow();
-
-    fragmentStack.add(fragment);
-  }
-  */
 
   @Override public void cleanBackStack() {
     FragmentActivity activity = weakReference.get();
@@ -125,7 +78,40 @@ class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
   }
 
   @Override public Fragment peekLast() {
-    return fragmentStack.size() > 0 ? fragmentStack.peek() : null;
+    FragmentActivity activity = weakReference.get();
+
+    if (activity == null) {
+      CrashReport.getInstance()
+          .log(new RuntimeException(
+              "Activity is null in " + ConcreteNavigationManagerV4.class.getName()));
+      return null;
+    }
+
+    final FragmentManager fragmentManager = activity.getSupportFragmentManager();
+    if (fragmentManager.getBackStackEntryCount() > 0) {
+      FragmentManager.BackStackEntry backStackEntry = fragmentManager.getBackStackEntryAt
+          (fragmentManager.getBackStackEntryCount() - 1);
+      return fragmentManager.findFragmentByTag(backStackEntry.getName());
+    }
+    return null;
+  }
+
+  @Override public Fragment peekFirst() {
+    FragmentActivity activity = weakReference.get();
+
+    if (activity == null) {
+      CrashReport.getInstance()
+          .log(new RuntimeException(
+              "Activity is null in " + ConcreteNavigationManagerV4.class.getName()));
+      return null;
+    }
+
+    final FragmentManager fragmentManager = activity.getSupportFragmentManager();
+    if (fragmentManager.getBackStackEntryCount() > 0) {
+      FragmentManager.BackStackEntry backStackEntry = fragmentManager.getBackStackEntryAt(0);
+      return fragmentManager.findFragmentByTag(backStackEntry.getName());
+    }
+    return null;
   }
 
   @Override public void navigateToWithoutBackSave(Fragment fragment) {
@@ -145,15 +131,11 @@ class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
         .setCustomAnimations(ENTER_ANIMATION, EXIT_ANIMATION, ENTER_ANIMATION, EXIT_ANIMATION)
         .replace(R.id.fragment_placeholder, fragment)
         .commit();
-
-    fragmentStack.add(fragment);
   }
 
   private synchronized void cleanBackStack(FragmentManager fragmentManager) {
     for (int i = 0; i < fragmentManager.getBackStackEntryCount(); ++i) {
       fragmentManager.popBackStack();
     }
-
-    fragmentStack.clear();
   }
 }
