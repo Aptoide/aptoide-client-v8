@@ -33,6 +33,8 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.interfaces.UiComponentBasics;
+import com.facebook.AccessToken;
+import com.facebook.FacebookSdk;
 import lombok.Getter;
 import rx.functions.Action0;
 
@@ -46,6 +48,7 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
   private static final int ACCESS_TO_EXTERNAL_FS_REQUEST_ID = 61;
   private static final int ACCESS_TO_ACCOUNTS_REQUEST_ID = 62;
   private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
+  private AccessToken accessToken;
 
   @Getter private boolean _resumed = false;
   @Nullable private Action0 toRunWhenAccessToFileSystemIsGranted;
@@ -82,6 +85,9 @@ public abstract class AptoideBaseActivity extends AppCompatActivity
     bindViews(getWindow().getDecorView().getRootView());
     setupToolbar();
     setupViews();
+    if (!FacebookSdk.isInitialized()) {
+      FacebookSdk.sdkInitialize(getApplicationContext());
+    }
   }
 
   private void setUpAnalytics() {

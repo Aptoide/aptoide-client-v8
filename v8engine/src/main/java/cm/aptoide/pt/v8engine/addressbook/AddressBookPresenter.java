@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.addressbook;
 
+import cm.aptoide.pt.model.v7.FacebookModel;
 import cm.aptoide.pt.model.v7.TwitterModel;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.v8engine.addressbook.data.ContactsRepository;
@@ -50,9 +51,18 @@ public class AddressBookPresenter implements AddressBookContract.UserActionsList
         }));
   }
 
-  @Override public void syncFacebook() {
-    ManagerPreferences.setFacebookAsSynced();
-    mAddressBookView.changeFacebookState(true);
+  @Override public void syncFacebook(FacebookModel facebookModel) {
+    mContactsRepository.getFacebookContacts(facebookModel, contacts -> Observable.just(contacts)
+        .subscribeOn(AndroidSchedulers.mainThread())
+        .subscribe(ignore -> {
+          mAddressBookView.changeFacebookState(true);
+          ManagerPreferences.setFacebookAsSynced();
+          if (!contacts.isEmpty()) {
+            mAddressBookView.showSuccessFragment(contacts);
+          } else {
+            mAddressBookView.showInviteFriendsFragment();
+          }
+        }));
   }
 
   @Override public void getButtonsState() {

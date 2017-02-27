@@ -8,6 +8,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.SetConnectionRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SyncAddressBookRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.Comment;
+import cm.aptoide.pt.model.v7.FacebookModel;
 import cm.aptoide.pt.model.v7.GetFollowers;
 import cm.aptoide.pt.model.v7.TwitterModel;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -80,6 +81,30 @@ public class ContactsRepositoryImpl implements ContactsRepository {
       }
       callback.onContactsLoaded(contactList);
     }, (throwable) -> {
+      throwable.printStackTrace();
+    });
+  }
+
+  @Override public void getFacebookContacts(@NonNull FacebookModel facebookModel,
+      @NonNull LoadContactsCallback callback) {
+    AptoideClientUUID aptoideClientUUID =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext());
+    SyncAddressBookRequest.of(AptoideAccountManager.getAccessToken(),
+        aptoideClientUUID.getAptoideClientUUID(), facebookModel.getId(),
+        facebookModel.getAccessToken()).observe().subscribe(getFriends -> {
+      List<Contact> contactList = new ArrayList<>();
+      for (GetFollowers.TimelineUser user : getFriends.getDatalist().getList()) {
+        Contact contact = new Contact();
+        contact.setStore(user.getStore());
+        Comment.User person = new Comment.User();
+        person.setAvatar(user.getAvatar());
+        person.setName(user.getName());
+        contact.setPerson(person);
+        contactList.add(contact);
+      }
+      callback.onContactsLoaded(contactList);
+    }, throwable -> {
       throwable.printStackTrace();
     });
   }

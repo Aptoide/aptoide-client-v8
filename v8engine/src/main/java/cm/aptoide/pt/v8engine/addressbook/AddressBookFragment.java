@@ -11,6 +11,8 @@ import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionRequest;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.model.v7.FacebookModel;
 import cm.aptoide.pt.model.v7.TwitterModel;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -21,6 +23,11 @@ import cm.aptoide.pt.v8engine.addressbook.data.Contact;
 import cm.aptoide.pt.v8engine.addressbook.data.ContactsRepositoryImpl;
 import cm.aptoide.pt.v8engine.fragment.SupportV4BaseFragment;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.jakewharton.rxbinding.view.RxView;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
@@ -28,6 +35,7 @@ import com.twitter.sdk.android.core.TwitterAuthToken;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterAuthClient;
+import java.util.Arrays;
 import java.util.List;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -37,6 +45,8 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class AddressBookFragment extends SupportV4BaseFragment implements AddressBookContract.View {
 
+  public static final int TWITTER_REQUEST_CODE = 140;
+  public static final int FACEBOOK_REQUEST_CODE = 64206;
   TwitterAuthClient mTwitterAuthClient;
   private AddressBookContract.UserActionsListener mActionsListener;
   private Button addressBookSyncButton;
@@ -46,6 +56,7 @@ public class AddressBookFragment extends SupportV4BaseFragment implements Addres
   private TextView addressbook_2nd_msg;
   private TextView about;
   private ProgressBar addressBookSyncProgress;
+  private CallbackManager callbackManager;
 
   public AddressBookFragment() {
 
@@ -61,6 +72,8 @@ public class AddressBookFragment extends SupportV4BaseFragment implements Addres
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     mActionsListener = new AddressBookPresenter(this, new ContactsRepositoryImpl());
+    callbackManager = CallbackManager.Factory.create();
+    registerFacebookCallback();
   }
 
   @Override public void setupViews() {
@@ -81,17 +94,22 @@ public class AddressBookFragment extends SupportV4BaseFragment implements Addres
             }, throwable -> CrashReport.getInstance().log(throwable));
       }
     });
-    RxView.clicks(facebookSyncButton).subscribe(click -> mActionsListener.syncFacebook());
+    RxView.clicks(facebookSyncButton).subscribe(click -> facebookLoginCallback());
     RxView.clicks(twitterSyncButton).subscribe(click -> twitterLogin());
     RxView.clicks(dismissV).subscribe(click -> mActionsListener.finishViewClick());
     RxView.clicks(about).subscribe(click -> mActionsListener.aboutClick());
+  }
+
+  private void facebookLoginCallback() {
+    LoginManager.getInstance()
+        .logInWithReadPermissions(getActivity(), Arrays.asList("public_profile"));
   }
 
   private void twitterLogin() {
     mTwitterAuthClient = new TwitterAuthClient();
     mTwitterAuthClient.authorize(getActivity(), new Callback<TwitterSession>() {
       @Override public void success(Result<TwitterSession> result) {
-        TwitterModel twitterModel = saveUserData(result);
+        TwitterModel twitterModel = createTwitterModel(result);
         mActionsListener.syncTwitter(twitterModel);
       }
 
@@ -101,7 +119,7 @@ public class AddressBookFragment extends SupportV4BaseFragment implements Addres
     });
   }
 
-  private TwitterModel saveUserData(Result<TwitterSession> result) {
+  private TwitterModel createTwitterModel(Result<TwitterSession> result) {
     TwitterModel twitterModel = new TwitterModel();
     TwitterSession twitterSession = result.data;
     TwitterAuthToken twitterAuthToken = twitterSession.getAuthToken();
@@ -109,6 +127,34 @@ public class AddressBookFragment extends SupportV4BaseFragment implements Addres
     twitterModel.setToken(twitterAuthToken.token);
     twitterModel.setSecret(twitterAuthToken.secret);
     return twitterModel;
+  }
+
+  private void registerFacebookCallback() {
+    LoginManager.getInstance()
+        .registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+          @Override public void onSuccess(LoginResult loginResult) {
+            FacebookModel facebookModel = createFacebookModel(loginResult);
+            mActionsListener.syncFacebook(facebookModel);
+          }
+
+          @Override public void onCancel() {
+          }
+
+          @Override public void onError(FacebookException error) {
+            Logger.e(this.getClass().getName(), error.getMessage());
+          }
+        });
+  }
+
+  private FacebookModel createFacebookModel(LoginResult loginResult) {
+    FacebookModel facebookModel = new FacebookModel();
+    facebookModel.setId(Long.valueOf(loginResult.getAccessToken().getUserId()));
+    facebookModel.setAccessToken(loginResult.getAccessToken().getToken());
+    return facebookModel;
+  }
+
+  @Override public void onResume() {
+    super.onResume();
   }
 
   @Override public void finishView() {
@@ -177,6 +223,10 @@ public class AddressBookFragment extends SupportV4BaseFragment implements Addres
 
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    mTwitterAuthClient.onActivityResult(requestCode, resultCode, data);
+    if (requestCode == TWITTER_REQUEST_CODE) {
+      mTwitterAuthClient.onActivityResult(requestCode, resultCode, data);
+    } else if (requestCode == FACEBOOK_REQUEST_CODE) {
+      callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
   }
 }
