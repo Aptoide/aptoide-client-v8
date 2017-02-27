@@ -54,6 +54,10 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
       StoreContext storeContext) {
     Bundle args = buildBundle(event, title, storeTheme, tag, storeContext);
     Fragment fragment = StoreTabFragmentChooser.choose(event.getName());
+    Bundle arguments = fragment.getArguments();
+    if (arguments != null) {
+      args.putAll(arguments);
+    }
     fragment.setArguments(args);
     return fragment;
   }

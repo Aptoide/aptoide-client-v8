@@ -13,6 +13,7 @@ public class RequestFactory {
   @Delegate private final ListFullReviewsRequestFactory listFullReviewsRequestFactory;
   @Delegate private final GetStoreRequestFactory getStoreRequestFactory;
   @Delegate private final GetStoreWidgetsRequestFactory getStoreWidgetsRequestFactory;
+  @Delegate private final GetUserRequestFactory getUserRequestFactory;
 
   public RequestFactory() {
     listStoresRequestFactory = new ListStoresRequestFactory();
@@ -20,5 +21,6 @@ public class RequestFactory {
     listFullReviewsRequestFactory = new ListFullReviewsRequestFactory();
     getStoreRequestFactory = new GetStoreRequestFactory();
     getStoreWidgetsRequestFactory = new GetStoreWidgetsRequestFactory();
+    getUserRequestFactory = new GetUserRequestFactory();
   }
 }

@@ -125,10 +125,12 @@ public class StoreFragment extends BasePagerToolbarFragment {
           .observe(refresh)
           .observeOn(AndroidSchedulers.mainThread())
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-          .subscribe((getStore) -> {
-            storeName = getStore.getNodes().getMeta().getData().getStore().getName();
-            this.getHome = getStore;
-            getToolbar().setTitle(storeName);
+          .subscribe((getHome) -> {
+            this.getHome = getHome;
+            // TODO: 27/02/2017 trinkes correct the title
+            getToolbar().setTitle(
+                storeName == null ? getHome.getNodes().getMeta().getData().getUser().getName()
+                    : storeName);
             setupViewPager();
           }, (throwable) -> {
             if (throwable instanceof AptoideWsV7Exception) {
@@ -343,7 +345,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
     super.setupToolbar();
     // FIXME: 17/1/2017 sithengineer is this the right place to have this event ?? why ??
     Logger.d(TAG, "LOCALYTICS TESTING - STORES ACTION ENTER " + storeName);
-    Analytics.Stores.enter(storeName);
+    Analytics.Stores.enter(storeName == null ? String.valueOf(userId) : storeName);
   }
 
   @Partners public static class BundleCons {

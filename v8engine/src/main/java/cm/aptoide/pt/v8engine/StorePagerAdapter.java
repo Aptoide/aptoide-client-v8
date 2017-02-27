@@ -30,13 +30,15 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
 
   public StorePagerAdapter(FragmentManager fm, GetHome getHome, StoreContext storeContext) {
     super(fm);
-    storeId = getHome.getNodes().getMeta().getData().getStore().getId();
+    if (getHome.getNodes().getMeta().getData().getStore() != null) {
+      storeId = getHome.getNodes().getMeta().getData().getStore().getId();
+      if (storeId != 15) {
+        storeTheme = getHome.getNodes().getMeta().getData().getStore().getAppearance().getTheme();
+      }
+    }
     tabs = getHome.getNodes().getTabs().getList();
     this.storeContext = storeContext;
     translateTabs(tabs);
-    if (storeId != 15) {
-      storeTheme = getHome.getNodes().getMeta().getData().getStore().getAppearance().getTheme();
-    }
     validateGetStore();
 
     fillAvailableEventsMap(getHome);
