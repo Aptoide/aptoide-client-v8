@@ -2,7 +2,6 @@ package cm.aptoide.pt.shareapps.socket.entities;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.LinkedList;
 import java.util.List;
 import lombok.Data;
 
@@ -32,8 +31,12 @@ import lombok.Data;
     this.apk = new FileInfo(apk);
   }
 
-
-
+  public AndroidAppInfo(String appName, String packageName, List<FileInfo> fileInfos) {
+    this.fileInfos = fileInfos;
+    this.packageName = packageName;
+    this.appName = appName;
+    this.apk = extractApk();
+  }
 
   public boolean hasMainObb() {
     return mainObb != null;
@@ -45,32 +48,48 @@ import lombok.Data;
 
 
   public List<FileInfo> getFiles() {
-    List<FileInfo> fileInfos = new LinkedList<>();
-
-    fileInfos.add(apk);
-
-    if (hasMainObb()) {
-      fileInfos.add(mainObb);
-    }
-
-    if (hasMainObb()) {
-      fileInfos.add(patchObb);
-    }
+    //List<FileInfo> fileInfos = new LinkedList<>();
+    //
+    //fileInfos.add(apk);
+    //
+    //if (hasMainObb()) {
+    //  fileInfos.add(mainObb);
+    //}
+    //
+    //if (hasMainObb()) {
+    //  fileInfos.add(patchObb);
+    //}
 
     return fileInfos;
   }
 
   public long getFilesSize() {
-    long total = apk.getSize();
-
-    if (hasMainObb()) {
-      total += mainObb.getSize();
+    //long total = apk.getSize();
+    //
+    //if (hasMainObb()) {
+    //  total += mainObb.getSize();
+    //}
+    //
+    //if (hasPatchObb()) {
+    //  total += patchObb.getSize();
+    //}
+    //
+    //return total;
+    long total=0;
+    if(fileInfos!=null){
+      for(int i=0;i<fileInfos.size();i++){
+        total += fileInfos.get(i).getSize();
+      }
     }
-
-    if (hasPatchObb()) {
-      total += patchObb.getSize();
-    }
-
     return total;
+  }
+
+  private FileInfo extractApk(){
+    for(int i=0;i<fileInfos.size();i++){
+      if(fileInfos.get(i).getFilePath().endsWith(".apk")){
+        return fileInfos.get(i);
+      }
+    }
+    return null;
   }
 }

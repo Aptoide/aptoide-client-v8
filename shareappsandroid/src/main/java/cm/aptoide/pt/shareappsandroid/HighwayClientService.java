@@ -12,6 +12,7 @@ import android.os.IBinder;
 import android.os.StatFs;
 import android.support.annotation.Nullable;
 import cm.aptoide.pt.shareapps.socket.entities.AndroidAppInfo;
+import cm.aptoide.pt.shareapps.socket.entities.FileInfo;
 import cm.aptoide.pt.shareapps.socket.entities.Host;
 import cm.aptoide.pt.shareapps.socket.interfaces.FileClientLifecycle;
 import cm.aptoide.pt.shareapps.socket.interfaces.FileServerLifecycle;
@@ -22,6 +23,7 @@ import cm.aptoide.pt.shareapps.socket.message.messages.RequestPermissionToSend;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import static android.R.attr.id;
 
@@ -124,7 +126,7 @@ public class HighwayClientService extends Service {
       @Override public void onFinishSending(AndroidAppInfo o) {
         System.out.println(" Finished sending ");
 
-        finishSendNotification();//todo get the right filePath
+        finishSendNotification();
 
         Intent i = new Intent();
         i.putExtra("isSent", true);
@@ -301,14 +303,14 @@ public class HighwayClientService extends Service {
           String packageName = listOfApps.get(i).getPackageName();
           String obbsFilePath = listOfApps.get(i).getObbsFilePath();
 
-          System.out.println(" Filepath from app 0 (test) is:  " + filePath);
-          File apk = new File(filePath);
+          List<FileInfo> fileInfoList = getFileInfo(filePath, obbsFilePath);
 
-          AndroidAppInfo appInfo = new AndroidAppInfo(appName, packageName, apk);
+          AndroidAppInfo appInfo = new AndroidAppInfo(appName, packageName, fileInfoList);
 
           if (!obbsFilePath.equals("noObbs")) {
 
             // TODO: 22-02-2017
+
             //appInfo.setObbsFilePath(obbsFilePath);
 
           }
@@ -329,5 +331,28 @@ public class HighwayClientService extends Service {
 
   @Nullable @Override public IBinder onBind(Intent intent) {
     return null;
+  }
+
+  public List<FileInfo> getFileInfo(String filePath, String obbsFilePath){
+    List<FileInfo> fileInfoList = new ArrayList<>();
+    //getApk
+    File apk = new File(filePath);
+    FileInfo apkFileInfo = new FileInfo(apk);
+    fileInfoList.add(apkFileInfo);
+    //getObbs
+
+    if (!obbsFilePath.equals("noObbs")) {
+      File obbFolder = new File(obbsFilePath);
+      File[] list = obbFolder.listFiles();
+      if (list != null) {
+        if (list.length > 0) {
+          for(int i=0;i<list.length;i++){
+            fileInfoList.add(new FileInfo(list[i]));
+          }
+        }
+      }
+    }
+
+    return fileInfoList;
   }
 }

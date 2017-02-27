@@ -34,6 +34,7 @@ public abstract class AptoideClientSocket extends AptoideSocket {
         socket = new Socket(hostName, port);
       } catch (IOException e) {
         e.printStackTrace(System.out);
+        System.out.println("Failed to connect to " + hostName + ":" + port);
         onError.onError(e);
         try {
           Thread.sleep(1000);

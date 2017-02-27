@@ -12,6 +12,7 @@ import android.os.Environment;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import cm.aptoide.pt.shareapps.socket.entities.AndroidAppInfo;
+import cm.aptoide.pt.shareapps.socket.entities.FileInfo;
 import cm.aptoide.pt.shareapps.socket.entities.Host;
 import cm.aptoide.pt.shareapps.socket.interfaces.FileClientLifecycle;
 import cm.aptoide.pt.shareapps.socket.interfaces.FileServerLifecycle;
@@ -23,6 +24,7 @@ import cm.aptoide.pt.shareapps.socket.message.messages.RequestPermissionToSend;
 import cm.aptoide.pt.shareapps.socket.message.server.AptoideMessageServerSocket;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static android.R.attr.id;
@@ -316,13 +318,9 @@ public class HighwayServerService extends Service {
           File mainObb = null;
           File patchObb = null;
 
-          AndroidAppInfo appInfo;
-          if (!obbsFilePath.equals("noObbs")) {
+          List<FileInfo> fileInfoList = getFileInfo(filePath, obbsFilePath);
 
-            appInfo = new AndroidAppInfo(appName, packageName, apk, mainObb, patchObb);
-          } else {
-            appInfo = new AndroidAppInfo(appName, packageName, apk);
-          }
+          AndroidAppInfo appInfo = new AndroidAppInfo(appName, packageName, fileInfoList);
 
           aptoideMessageClientController.send(
               new RequestPermissionToSend(aptoideMessageClientController.getLocalhost(), appInfo));
@@ -336,4 +334,28 @@ public class HighwayServerService extends Service {
   @Nullable @Override public IBinder onBind(Intent intent) {
     return null;
   }
+
+  public List<FileInfo> getFileInfo(String filePath, String obbsFilePath){
+    List<FileInfo> fileInfoList = new ArrayList<>();
+    //getApk
+    File apk = new File(filePath);
+    FileInfo apkFileInfo = new FileInfo(apk);
+    fileInfoList.add(apkFileInfo);
+    //getObbs
+
+    if (!obbsFilePath.equals("noObbs")) {
+      File obbFolder = new File(obbsFilePath);
+      File[] list = obbFolder.listFiles();
+      if (list != null) {
+        if (list.length > 0) {
+          for(int i=0;i<list.length;i++){
+            fileInfoList.add(new FileInfo(list[i]));
+          }
+        }
+      }
+    }
+
+    return fileInfoList;
+  }
+
 }
