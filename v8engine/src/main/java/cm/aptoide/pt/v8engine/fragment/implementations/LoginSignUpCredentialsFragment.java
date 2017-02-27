@@ -51,6 +51,7 @@ import rx.Observable;
 
 public class LoginSignUpCredentialsFragment extends GoogleLoginFragment implements LoginSignUpView {
 
+  private static final String DISMISS_TO_NAVIGATE_TO_MAIN_VIEW = "dismiss_to_navigate_to_main_view";
   private ProgressDialog progressDialog;
   private CallbackManager callbackManager;
   private PublishRelay<FacebookAccountViewModel> facebookLoginSubject;
@@ -74,9 +75,21 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment implemen
   private boolean isPasswordVisible = false;
   private View credentialsEditTextsArea;
   private BottomSheetBehavior<View> bottomSheetBehavior;
+  private boolean dismissToNavigateToMainView;
 
-  public static LoginSignUpCredentialsFragment newInstance() {
-    return new LoginSignUpCredentialsFragment();
+  public static LoginSignUpCredentialsFragment newInstance(boolean dimissToNavigateToMainView) {
+    final LoginSignUpCredentialsFragment fragment = new LoginSignUpCredentialsFragment();
+
+    final Bundle bundle = new Bundle();
+    bundle.putBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW, dimissToNavigateToMainView);
+    fragment.setArguments(bundle);
+
+    return fragment;
+  }
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    this.dismissToNavigateToMainView = getArguments().getBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW);
   }
 
   @Nullable @Override
@@ -113,8 +126,8 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment implemen
     final AptoideAccountManager accountManager =
         ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     attachPresenter(
-        new LoginSignUpCredentialsPresenter(this, accountManager, facebookRequestedPermissions),
-        savedInstanceState);
+        new LoginSignUpCredentialsPresenter(this, accountManager, facebookRequestedPermissions,
+            dismissToNavigateToMainView), savedInstanceState);
   }
 
   private void bindViews(View view) {
@@ -277,6 +290,10 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment implemen
     final NavigationManagerV4 navManager = getNavigationManager();
     navManager.cleanBackStack();
     navManager.navigateTo(home);
+  }
+
+  @Override public void dismiss() {
+    getActivity().finish();
   }
 
   @Override public void hideKeyboard() {

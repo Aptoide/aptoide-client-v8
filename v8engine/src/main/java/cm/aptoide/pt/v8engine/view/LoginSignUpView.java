@@ -49,6 +49,8 @@ public interface LoginSignUpView extends GoogleLoginView {
 
   void navigateToMainView();
 
+  void dismiss();
+
   void hideKeyboard();
 
   Observable<FacebookAccountViewModel> facebookLoginClick();

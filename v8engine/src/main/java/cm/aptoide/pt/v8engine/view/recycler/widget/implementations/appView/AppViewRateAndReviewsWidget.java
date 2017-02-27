@@ -31,7 +31,6 @@ import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.navigation.AccountNavigator;
-import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
@@ -115,7 +114,7 @@ import rx.functions.Action1;
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     dialogUtils = new DialogUtils(accountManager, aptoideClientUUID,
-        new AccountNavigator(getNavigationManager(), accountManager));
+        new AccountNavigator(getContext(), getNavigationManager(), accountManager));
     appName = app.getName();
     packageName = app.getPackageName();
     storeName = app.getStore().getName();

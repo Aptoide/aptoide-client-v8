@@ -112,7 +112,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     super.onCreate(savedInstanceState);
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     accountNavigator =
-        new AccountNavigator(getNavigationManager(), accountManager);
+        new AccountNavigator(getContext(), getNavigationManager(), accountManager);
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
   }

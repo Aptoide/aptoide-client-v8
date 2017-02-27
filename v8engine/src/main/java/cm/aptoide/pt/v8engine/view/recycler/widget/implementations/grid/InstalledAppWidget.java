@@ -22,7 +22,6 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigation.AccountNavigator;
-import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -77,7 +76,7 @@ import java.util.Locale;
         DataProvider.getContext());
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     final AccountNavigator accountNavigator =
-        new AccountNavigator(getNavigationManager(), accountManager);
+        new AccountNavigator(getContext(), getNavigationManager(), accountManager);
     this.accountNavigator = accountNavigator;
     dialogUtils = new DialogUtils(accountManager, aptoideClientUUID, accountNavigator);
     appName = pojo.getName();

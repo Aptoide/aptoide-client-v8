@@ -100,7 +100,7 @@ import rx.Observable;
 
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     accountNavigator =
-        new AccountNavigator(getNavigationManager(), accountManager);
+        new AccountNavigator(getContext(), getNavigationManager(), accountManager);
     final FragmentActivity context = getContext();
     ImageLoader.with(context)
         .loadWithCircleTransformAndPlaceHolderAvatarSize(review.getUser().getAvatar(), userImage,

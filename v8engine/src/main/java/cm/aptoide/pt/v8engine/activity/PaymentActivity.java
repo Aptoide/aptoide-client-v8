@@ -109,18 +109,18 @@ public class PaymentActivity extends BaseActivity implements PaymentView {
             .create();
 
     final ParcelableProduct product = getIntent().getParcelableExtra(PRODUCT_EXTRA);
-    final AptoideAccountManager instance = ((V8Engine) getApplicationContext()).getAccountManager();
-    final Payer payer =
-        new Payer(this, instance, new AccountNavigator(getNavigationManager(), instance));
+    final AptoideAccountManager accountManager =
+        ((V8Engine) getApplicationContext()).getAccountManager();
+    final Payer payer = new Payer(accountManager);
     attachPresenter(new PaymentPresenter(this,
-            new AptoidePay(RepositoryFactory.getPaymentConfirmationRepository(this, product),
-                RepositoryFactory.getPaymentAuthorizationRepository(this),
-                new PaymentAuthorizationFactory(this),
-                RepositoryFactory.getPaymentRepository(this, product),
-                RepositoryFactory.getProductRepository(this, product), payer), product, payer,
-            new PaymentSelector(PAYPAL_PAYMENT_ID,
-                PreferenceManager.getDefaultSharedPreferences(getApplicationContext()))),
-        savedInstanceState);
+        new AptoidePay(RepositoryFactory.getPaymentConfirmationRepository(this, product),
+            RepositoryFactory.getPaymentAuthorizationRepository(this),
+            new PaymentAuthorizationFactory(this),
+            RepositoryFactory.getPaymentRepository(this, product),
+            RepositoryFactory.getProductRepository(this, product), payer), product, accountManager,
+        new PaymentSelector(PAYPAL_PAYMENT_ID,
+            PreferenceManager.getDefaultSharedPreferences(getApplicationContext())),
+        new AccountNavigator(this, getNavigationManager(), accountManager)), savedInstanceState);
   }
 
   @Override public Observable<PaymentViewModel> paymentSelection() {

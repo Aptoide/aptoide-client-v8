@@ -5,7 +5,10 @@
 
 package cm.aptoide.pt.navigation;
 
+import android.content.Context;
+import android.content.Intent;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.v8engine.activity.LoginActivity;
 import cm.aptoide.pt.v8engine.fragment.implementations.LoginSignUpFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.MyAccountFragment;
 
@@ -14,11 +17,13 @@ import cm.aptoide.pt.v8engine.fragment.implementations.MyAccountFragment;
  */
 public class AccountNavigator {
 
+  private final Context context;
   private final NavigationManagerV4 navigationManager;
   private final AptoideAccountManager accountManager;
 
-  public AccountNavigator(NavigationManagerV4 navigationManager,
+  public AccountNavigator(Context context, NavigationManagerV4 navigationManager,
       AptoideAccountManager accountManager) {
+    this.context = context;
     this.navigationManager = navigationManager;
     this.accountManager = accountManager;
   }
@@ -27,7 +32,11 @@ public class AccountNavigator {
     if (accountManager.isLoggedIn()) {
       navigationManager.navigateTo(MyAccountFragment.newInstance());
     } else {
-      navigationManager.navigateTo(LoginSignUpFragment.newInstance(false));
+      navigationManager.navigateTo(LoginSignUpFragment.newInstance(false, false));
     }
+  }
+
+  public void navigateToLoginView() {
+    context.startActivity(new Intent(context, LoginActivity.class));
   }
 }

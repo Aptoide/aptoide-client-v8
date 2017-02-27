@@ -23,12 +23,9 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.iab.InAppBillingSerializer;
-import cm.aptoide.pt.navigation.AccountNavigator;
-import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.payment.Payer;
 import cm.aptoide.pt.v8engine.payment.PaymentFactory;
 import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.PurchaseFactory;
@@ -86,8 +83,7 @@ public final class RepositoryFactory {
     return new PaymentRepository(getProductRepository(activity, product),
         getPaymentConfirmationRepository(activity, product),
         getPaymentAuthorizationRepository(activity), new PaymentAuthorizationFactory(activity),
-        new PaymentFactory(activity), new Payer(activity, getAccountManager(activity),
-        new AccountNavigator(NavigationManagerV4.Builder.buildWith(activity), getAccountManager(activity))));
+        new PaymentFactory(activity));
   }
 
   public static AppRepository getAppRepository(Context context) {

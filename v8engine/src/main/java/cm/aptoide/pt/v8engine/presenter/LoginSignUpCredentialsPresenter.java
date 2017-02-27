@@ -33,12 +33,14 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
   private final LoginSignUpView view;
   private final AptoideAccountManager accountManager;
   private final Collection<String> facebookRequiredPermissions;
+  private boolean dimissToNavigateToMainView;
 
   public LoginSignUpCredentialsPresenter(LoginSignUpView view, AptoideAccountManager accountManager,
-      Collection<String> facebookRequiredPermissions) {
+      Collection<String> facebookRequiredPermissions, boolean dimissToNavigateToMainView) {
     this.view = view;
     this.accountManager = accountManager;
     this.facebookRequiredPermissions = facebookRequiredPermissions;
+    this.dimissToNavigateToMainView = dimissToNavigateToMainView;
   }
 
   @Override public void present() {
@@ -70,10 +72,18 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
         credentials -> accountManager.login(Account.Type.GOOGLE, credentials.getEmail(),
             credentials.getToken(), credentials.getDisplayName())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnCompleted(() -> view.navigateToMainView())
+            .doOnCompleted(() -> navigateToMainView())
             .doOnTerminate(() -> view.hideLoading())
             .doOnError(throwable -> view.showError(throwable))
             .toObservable()).retry();
+  }
+
+  private void navigateToMainView() {
+    if (dimissToNavigateToMainView) {
+      view.dismiss();
+    } else {
+      view.navigateToMainView();
+    }
   }
 
   private Observable<Void> facebookLoginClick() {
@@ -89,7 +99,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
               username -> accountManager.login(Account.Type.FACEBOOK, username,
                   credentials.getToken().getToken(), null)
                   .observeOn(AndroidSchedulers.mainThread())
-                  .doOnCompleted(() -> view.navigateToMainView())
+                  .doOnCompleted(() -> navigateToMainView())
                   .doOnTerminate(() -> view.hideLoading())
                   .doOnError(throwable -> view.showError(throwable))).toObservable();
         }).retry();
@@ -109,7 +119,7 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
           return accountManager.login(Account.Type.APTOIDE, credentials.getUsername(),
               credentials.getPassword(), null)
               .observeOn(AndroidSchedulers.mainThread())
-              .doOnCompleted(() -> view.navigateToMainView())
+              .doOnCompleted(() -> navigateToMainView())
               .doOnTerminate(() -> view.hideLoading())
               .doOnError(throwable -> view.showError(throwable))
               .toObservable();

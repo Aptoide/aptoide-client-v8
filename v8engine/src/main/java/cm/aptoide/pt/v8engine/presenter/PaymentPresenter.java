@@ -6,6 +6,8 @@
 package cm.aptoide.pt.v8engine.presenter;
 
 import android.os.Bundle;
+import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.navigation.AccountNavigator;
 import cm.aptoide.pt.v8engine.payment.AptoidePay;
 import cm.aptoide.pt.v8engine.payment.Payer;
 import cm.aptoide.pt.v8engine.payment.Payment;
@@ -22,7 +24,6 @@ import rx.Completable;
 import rx.Observable;
 import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by marcelobenites on 8/19/16.
@@ -35,19 +36,22 @@ public class PaymentPresenter implements Presenter {
   private final PaymentView view;
   private final AptoidePay aptoidePay;
   private final Product product;
-  private final Payer payer;
+  private final AptoideAccountManager accountManager;
   private final PaymentSelector paymentSelector;
+  private AccountNavigator accountNavigator;
 
   private boolean processingLogin;
   private List<Payment> payments;
 
-  public PaymentPresenter(PaymentView view, AptoidePay aptoidePay, Product product, Payer payer,
-      PaymentSelector paymentSelector) {
+  public PaymentPresenter(PaymentView view, AptoidePay aptoidePay, Product product,
+      AptoideAccountManager accountManager, PaymentSelector paymentSelector,
+      AccountNavigator accountNavigator) {
     this.view = view;
     this.aptoidePay = aptoidePay;
     this.product = product;
-    this.payer = payer;
+    this.accountManager = accountManager;
     this.paymentSelector = paymentSelector;
+    this.accountNavigator = accountNavigator;
     this.payments = new ArrayList<>();
   }
 
@@ -76,17 +80,16 @@ public class PaymentPresenter implements Presenter {
         .subscribe();
 
     view.getLifecycle()
-        .filter(event -> View.LifecycleEvent.CREATE.equals(event))
-        .flatMap(created -> login())
+        .flatMap(event -> loginLifecycle(event))
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(loggedIn -> view.showLoading())
         .flatMap(loading -> Observable.combineLatest(
             aptoidePay.payments().observeOn(AndroidSchedulers.mainThread()),
             aptoidePay.confirmation(product).observeOn(AndroidSchedulers.mainThread()),
             (payments, confirmation) -> {
-              return showProductAndPayments(payments).<Purchase>andThen(
+              return showProductAndPayments(payments).<Purchase> andThen(
                   treatLoadingAndGetPurchase(confirmation));
-            })).<Purchase>flatMap(observable -> observable).compose(
+            })).<Purchase> flatMap(observable -> observable).compose(
         view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(purchase -> dismiss(purchase), throwable -> dismiss(throwable));
@@ -112,18 +115,30 @@ public class PaymentPresenter implements Presenter {
     this.processingLogin = state.getBoolean(EXTRA_IS_PROCESSING_LOGIN);
   }
 
-  private Observable<Void> login() {
-    return Observable.defer(() -> {
-      if (processingLogin) {
-        return Observable.just(payer.isLoggedIn())
-            .flatMap(loggedIn -> (loggedIn) ? Observable.just(null) : Observable.error(
-                new LoginException("Not logged In. Payment can not be processed!")));
+  private Observable<Void> loginLifecycle(View.LifecycleEvent event) {
+
+    if (event.equals(View.LifecycleEvent.CREATE) || event.equals(View.LifecycleEvent.RESUME)) {
+
+      if (accountManager.isLoggedIn()) {
+        if (processingLogin || event.equals(View.LifecycleEvent.CREATE)) {
+          processingLogin = false;
+          return Observable.just(null);
+        }
+        return Observable.empty();
       }
-      return payer.login().doOnSubscribe(() -> saveLoginState());
-    })
-        .doOnNext(loggedIn -> clearLoginState())
-        .doOnError(throwable -> clearLoginState())
-        .subscribeOn(Schedulers.computation());
+
+      if (processingLogin) {
+        processingLogin = false;
+        return Observable.error(
+            new LoginException("Not logged In. Payment can not be processed!"));
+      }
+
+      if (event.equals(View.LifecycleEvent.RESUME)) {
+        processingLogin = true;
+        accountNavigator.navigateToLoginView();
+      }
+    }
+    return Observable.empty();
   }
 
   private Completable showProductAndPayments(List<Payment> payments) {
@@ -224,13 +239,5 @@ public class PaymentPresenter implements Presenter {
     } else {
       view.showUnknownError();
     }
-  }
-
-  private boolean clearLoginState() {
-    return processingLogin = false;
-  }
-
-  private boolean saveLoginState() {
-    return processingLogin = true;
   }
 }

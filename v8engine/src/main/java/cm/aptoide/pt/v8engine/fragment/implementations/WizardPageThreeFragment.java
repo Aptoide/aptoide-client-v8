@@ -31,7 +31,7 @@ public class WizardPageThreeFragment extends Fragment {
     super.onCreate(savedInstanceState);
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     accountNavigator =
-        new AccountNavigator(NavigationManagerV4.Builder.buildWith(getActivity()), accountManager);
+        new AccountNavigator(getContext(), NavigationManagerV4.Builder.buildWith(getActivity()), accountManager);
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,

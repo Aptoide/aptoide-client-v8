@@ -24,23 +24,30 @@ import cm.aptoide.pt.v8engine.view.JoinCommunityView;
  */
 public class LoginSignUpFragment extends FragmentView implements JoinCommunityView {
 
+  private static final String DISMISS_TO_NAVIGATE_TO_MAIN_VIEW = "dismiss_to_navigate_to_main_view";
   private static final String BOTTOM_SHEET_WITH_BOTTOM_BAR = "bottom_sheet_expanded";
 
   private BottomSheetStateListener bottomSheetStateListener;
   private LoginSignUpCredentialsFragment loginFragment;
   private BottomSheetBehavior<View> bottomSheetBehavior;
+  private boolean withBottomBar;
+  private boolean dismissToNavigateToMainView;
 
-  public static LoginSignUpFragment newInstance() {
-    return new LoginSignUpFragment();
-  }
-
-  public static LoginSignUpFragment newInstance(boolean withBottomBar) {
+  public static LoginSignUpFragment newInstance(boolean withBottomBar,
+      boolean dimissToNavigateToMainView) {
     Bundle args = new Bundle();
     args.putBoolean(BOTTOM_SHEET_WITH_BOTTOM_BAR, withBottomBar);
+    args.putBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW, dimissToNavigateToMainView);
 
     LoginSignUpFragment fragment = new LoginSignUpFragment();
     fragment.setArguments(args);
     return fragment;
+  }
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    withBottomBar = getArguments().getBoolean(BOTTOM_SHEET_WITH_BOTTOM_BAR);
+    dismissToNavigateToMainView = getArguments().getBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW);
   }
 
   @Nullable @Override
@@ -48,7 +55,7 @@ public class LoginSignUpFragment extends FragmentView implements JoinCommunityVi
       @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(getLayoutId(), container, false);
 
-    loginFragment = LoginSignUpCredentialsFragment.newInstance();
+    loginFragment = LoginSignUpCredentialsFragment.newInstance(dismissToNavigateToMainView);
     // nested fragments only work using dynamic fragment addition.
     getActivity().getSupportFragmentManager()
         .beginTransaction()
@@ -78,9 +85,6 @@ public class LoginSignUpFragment extends FragmentView implements JoinCommunityVi
 
   private void bindViews(View view) {
     bottomSheetBehavior = BottomSheetBehavior.from(view.findViewById(R.id.login_signup_layout));
-
-    Bundle args = getArguments();
-    boolean withBottomBar = args != null && args.getBoolean(BOTTOM_SHEET_WITH_BOTTOM_BAR, false);
 
     // pass some of this logic to the presenter
     final View mainContent = view.findViewById(R.id.main_content);

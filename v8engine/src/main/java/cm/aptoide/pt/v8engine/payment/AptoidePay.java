@@ -37,11 +37,11 @@ public class AptoidePay {
   }
 
   public Observable<List<Payment>> payments() {
-    return paymentRepository.getPayments();
+    return paymentRepository.getPayments(payer.getId());
   }
 
   public Observable<Payment> payment(int paymentId) {
-    return paymentRepository.getPayment(paymentId);
+    return paymentRepository.getPayment(paymentId, payer.getId());
   }
 
   public Completable initiate(Payment payment) {
@@ -62,7 +62,7 @@ public class AptoidePay {
   }
 
   public Observable<PaymentConfirmation> confirmation(Product product) {
-    return paymentRepository.getConfirmation(product);
+    return paymentRepository.getConfirmation(product, payer.getId());
   }
 
   public Single<Purchase> purchase(Product product) {

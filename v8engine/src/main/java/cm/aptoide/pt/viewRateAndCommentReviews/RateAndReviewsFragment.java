@@ -224,7 +224,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
     dialogUtils = new DialogUtils(accountManager, aptoideClientUUID,
-        new AccountNavigator(getNavigationManager(), accountManager));
+        new AccountNavigator(getContext(), getNavigationManager(), accountManager));
     storeCredentialsProvider = new StoreCredentialsProviderImpl();
   }
 
