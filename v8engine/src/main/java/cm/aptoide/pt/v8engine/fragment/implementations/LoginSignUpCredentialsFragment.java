@@ -44,6 +44,7 @@ import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.common.SignInButton;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import rx.Observable;
@@ -222,6 +223,8 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment implemen
       final OAuth oAuth = ((OAuthException) throwable).getoAuth();
       message = getString(
           ErrorsMapper.getWebServiceErrorMessageFromCode(oAuth.getErrors().get(0).getCode()));
+    } else if (throwable instanceof IOException) {
+      message = getString(cm.aptoide.accountmanager.R.string.connection_error);
     } else {
       message = getString(cm.aptoide.accountmanager.R.string.unknown_error);
     }
