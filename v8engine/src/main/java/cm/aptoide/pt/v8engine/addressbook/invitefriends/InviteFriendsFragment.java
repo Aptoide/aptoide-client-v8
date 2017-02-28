@@ -48,6 +48,7 @@ public class InviteFriendsFragment extends UIComponentFragment
   @Override public void setupViews() {
     RxView.clicks(allowFind).subscribe(click -> mActionsListener.allowFindClicked());
     RxView.clicks(done).subscribe(click -> mActionsListener.doneClicked());
+    RxView.clicks(share).subscribe(click -> mActionsListener.shareClicked(getContext()));
     setupMessage(openMode);
   }
 

@@ -10,6 +10,7 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -28,7 +29,6 @@ import cm.aptoide.pt.v8engine.activity.ActivityView;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import com.facebook.AccessToken;
 import com.facebook.FacebookSdk;
-import lombok.Getter;
 import rx.functions.Action0;
 
 /**
@@ -52,6 +52,13 @@ public abstract class PermissionServiceActivity extends ActivityView implements 
   @Nullable private Action0 toRunWhenDownloadAccessIsDenied;
   @Nullable private Action0 toRunWhenAccessToContactsIsGranted;
   @Nullable private Action0 toRunWhenAccessToContactsIsDenied;
+
+  @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    if (!FacebookSdk.isInitialized()) {
+      FacebookSdk.sdkInitialize(getApplicationContext());
+    }
+  }
 
   @TargetApi(Build.VERSION_CODES.M) @Override
   public void requestAccessToExternalFileSystem(@Nullable Action0 toRunWhenAccessIsGranted,
@@ -156,7 +163,8 @@ public abstract class PermissionServiceActivity extends ActivityView implements 
     }
   }
 
-  @TargetApi(Build.VERSION_CODES.M) @Override public void requestAccessToContacts(boolean forceShowRationale,
+  @TargetApi(Build.VERSION_CODES.M) @Override
+  public void requestAccessToContacts(boolean forceShowRationale,
       @Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDenied) {
     int hasPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS);
     if (hasPermission != PackageManager.PERMISSION_GRANTED) {

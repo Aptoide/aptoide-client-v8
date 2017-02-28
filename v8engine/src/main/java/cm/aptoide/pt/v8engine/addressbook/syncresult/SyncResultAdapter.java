@@ -1,4 +1,4 @@
-package cm.aptoide.pt.v8engine.addressbook.syncsuccess;
+package cm.aptoide.pt.v8engine.addressbook.syncresult;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
