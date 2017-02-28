@@ -15,6 +15,7 @@ import cm.aptoide.pt.model.v7.Datalist;
 import cm.aptoide.pt.model.v7.TimelineStats;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.model.v7.timeline.TimelineItem;
+import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import rx.Observable;
@@ -42,6 +43,13 @@ public class TimelineRepository {
     return GetUserTimelineRequest.of(action, limit, offset, packageNames,
         accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
         .observe(refresh)
+        .flatMap(response -> {
+          if (response.isOk()) {
+            return Observable.just(response);
+          }
+          return Observable.error(
+              new RepositoryItemNotFoundException("Could not retrieve timeline."));
+        })
         .doOnNext(item -> filter.clear())
         .map(getUserTimeline -> getUserTimeline.getDatalist())
         .flatMap(itemDataList -> Observable.from(getTimelineList(itemDataList))
