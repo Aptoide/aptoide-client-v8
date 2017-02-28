@@ -28,23 +28,25 @@ public class HighwayRadarScan extends View {
   private int raio;
   private int start;
 
-  private int circleColor = Color.parseColor("#e17117");//discutir estas cores
-  private int radarColor = Color.parseColor("#99e17117");
-  private int tailColor = Color.parseColor("#e17117");
+  private int circleColor;
+  private int radarColor;
+  private int tailColor;
+  private boolean enableAnimation;
   private Paint circle;
   private Paint radar;
   private Matrix matrix;
   private Handler handler = new Handler();
-  private Runnable runnable =
-      new Runnable() {//joao disse para meter ca em cima. La em baixo dizia que n tava inciializado
-        @Override public void run() {
-          start = start + 2;
-          matrix = new Matrix();
-          matrix.postRotate(start, cX, cY);
-          postInvalidate();
-          handler.postDelayed(runnable, 10);
-        }
-      };
+  private Runnable runnable = new Runnable() {
+    @Override public void run() {
+      if (enableAnimation) {
+        start = start + 2;
+        matrix = new Matrix();
+        matrix.postRotate(start, cX, cY);
+        postInvalidate();
+      }
+      handler.postDelayed(runnable, 10);
+    }
+  };
 
   public HighwayRadarScan(Context context) {
     super(context);
@@ -54,18 +56,24 @@ public class HighwayRadarScan extends View {
 
   private void init(AttributeSet attributeSet, Context context) {
 
+    circleColor = Color.parseColor("#e17117");
+    radarColor = Color.parseColor("#99e17117");
+    tailColor = Color.parseColor("#e17117");
+    enableAnimation = true;
     if (attributeSet != null) {
-      TypedArray ta = context.obtainStyledAttributes(attributeSet, R.styleable.radarScanStylable);
-      circleColor = ta.getColor(R.styleable.radarScanStylable_circleColor, circleColor);
-      radarColor = ta.getColor(R.styleable.radarScanStylable_radarColor, radarColor);
-      tailColor = ta.getColor(R.styleable.radarScanStylable_tailColor, tailColor);
+      TypedArray ta = context.obtainStyledAttributes(attributeSet, R.styleable.HighwayRadarScan);
+      circleColor =
+          ta.getColor(R.styleable.HighwayRadarScan_circleColor, Color.parseColor("#e17117"));
+      radarColor =
+          ta.getColor(R.styleable.HighwayRadarScan_radarColor, Color.parseColor("#99e17117"));
+      tailColor = ta.getColor(R.styleable.HighwayRadarScan_tailColor, Color.parseColor("#e17117"));
+      enableAnimation = ta.getBoolean(R.styleable.HighwayRadarScan_enableAnimation, true);
       ta.recycle();
     }
 
     setUpPaint();
 
-    screenWidth = converterDipToPx(context,
-        DEFAULT_WIDTH);//obter as cenas do ecra actual, portanto posso tirar o nome default..
+    screenWidth = converterDipToPx(context, DEFAULT_WIDTH);
     screenHeight = converterDipToPx(context, DEFAULT_HEIGHT);
 
     final Handler handler = new Handler();
