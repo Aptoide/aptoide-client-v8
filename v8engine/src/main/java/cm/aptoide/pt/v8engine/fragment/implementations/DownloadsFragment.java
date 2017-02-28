@@ -1,7 +1,9 @@
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
@@ -53,6 +55,7 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
   private DownloadEventConverter downloadConverter;
   private IdsRepositoryImpl idsRepository;
   private AptoideAccountManager accountManager;
+  private View noDownloadsView;
 
   public static DownloadsFragment newInstance() {
     return new DownloadsFragment();
@@ -62,7 +65,13 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
     return R.layout.recycler_fragment_downloads;
   }
 
-  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+  @Override public void bindViews(View view) {
+    super.bindViews(view);
+    noDownloadsView = view.findViewById(R.id.no_apps_downloaded);
+  }
+
+  @SuppressLint("MissingSuperCall") @Override
+  public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     // not calling super on purpose to avoid cleaning displayables
   }
 
@@ -142,10 +151,18 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
 
   private Completable updateUi() {
     return Completable.fromCallable(() -> {
-      clearDisplayables().
-          addDisplayables(downloadingDisplayables, false).
-          addDisplayables(standingByDisplayables, false).
-          addDisplayables(completedDisplayables, true);
+      if (emptyDownloadList()) {
+        clearDisplayables();
+        finishLoading();
+        noDownloadsView.setVisibility(View.VISIBLE);
+      } else {
+        noDownloadsView.setVisibility(View.GONE);
+
+        clearDisplayables().
+            addDisplayables(downloadingDisplayables, false).
+            addDisplayables(standingByDisplayables, false).
+            addDisplayables(completedDisplayables, true);
+      }
       return null;
     });
   }
@@ -161,6 +178,15 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
         || progress.getOverallDownloadStatus() == Download.IN_QUEUE;
   }
 
+  private boolean emptyDownloadList() {
+    return downloadingDisplayables != null
+        && downloadingDisplayables.size() == 0
+        && standingByDisplayables != null
+        && standingByDisplayables.size() == 0
+        && completedDisplayables != null
+        && completedDisplayables.size() == 0;
+  }
+
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     // variables initialization
@@ -172,8 +198,9 @@ public class DownloadsFragment extends GridRecyclerFragmentWithDecorator {
     installManager = new InstallManager(AptoideDownloadManager.getInstance(),
         new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK));
     analytics = Analytics.getInstance();
-    idsRepository = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
-    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
+    idsRepository =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     installConverter = new InstallEventConverter(idsRepository, accountManager);
     downloadConverter = new DownloadEventConverter(idsRepository, accountManager);
   }
