@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.provider.ContactsContract;
 import android.telephony.TelephonyManager;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.addressbook.data.ContactsModel;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
@@ -105,7 +106,7 @@ public class ContactUtils {
    * @param context Context reference to get the TelephonyManager instance from
    * @return country code or null
    */
-  private String getUserCountry(Context context) {
+  public String getUserCountry(Context context) {
     try {
       final TelephonyManager tm =
           (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
@@ -123,5 +124,49 @@ public class ContactUtils {
     } catch (Exception ignored) {
     }
     return null;
+  }
+
+  public String normalizePhoneNumber(String phoneNumber) {
+    if (phoneNumber.startsWith("+")) {
+      return phoneNumber;
+    }
+    return "+" + phoneNumber;
+  }
+
+  public String getCountryCodeForRegion(Context context) {
+    String country = getUserCountry(context);
+
+    if (country == null) {
+      return "";
+    } else {
+      country = country.toUpperCase();
+    }
+
+    final PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
+
+    return String.valueOf(phoneNumberUtil.getCountryCodeForRegion(country));
+  }
+
+  public boolean isValidNumberInE164Format(String number) {
+    String country = getUserCountry(V8Engine.getContext().getApplicationContext());
+
+    if (country == null) {
+      return false;
+    } else {
+      country = country.toUpperCase();
+    }
+
+    final PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
+
+    Phonenumber.PhoneNumber phoneNumber = null;
+
+    try {
+      phoneNumber = phoneNumberUtil.parse(number, country);
+    } catch (NumberParseException e) {
+      e.printStackTrace();
+      return false;
+    }
+
+    return phoneNumberUtil.isValidNumberForRegion(phoneNumber, country);
   }
 }

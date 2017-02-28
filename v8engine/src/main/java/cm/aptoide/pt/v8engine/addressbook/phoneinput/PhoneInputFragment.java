@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.addressbook.phoneinput;
 
+import android.app.ProgressDialog;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,9 +10,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.addressbook.data.ContactsRepositoryImpl;
+import cm.aptoide.pt.v8engine.addressbook.utils.ContactUtils;
 import cm.aptoide.pt.v8engine.fragment.UIComponentFragment;
 import com.jakewharton.rxbinding.view.RxView;
 
@@ -26,6 +29,8 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
   private Button mSaveNumber;
   private EditText mCountryNumber;
   private EditText mPhoneNumber;
+  private ProgressDialog mGenericPleaseWaitDialog;
+  private ContactUtils contactUtils;
 
   public static PhoneInputFragment newInstance() {
     PhoneInputFragment phoneInputFragment = new PhoneInputFragment();
@@ -38,12 +43,20 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
     super.onCreate(savedInstanceState);
     this.mActionsListener = new PhoneInputPresenter(this, new ContactsRepositoryImpl(
         ((V8Engine) getContext().getApplicationContext()).getAccountManager()));
+    mGenericPleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());
+    contactUtils = new ContactUtils();
   }
 
   @Override public void setupViews() {
     mNotNowV.setPaintFlags(mNotNowV.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
     mSharePhoneV.setText(getString(R.string.addressbook_share_phone,
         Application.getConfiguration().getMarketName()));
+
+    String countryCodeE164 = contactUtils.getCountryCodeForRegion(getContext());
+    if (!countryCodeE164.isEmpty()) {
+      mCountryNumber.setHint("+" + countryCodeE164);
+    }
+
     RxView.clicks(mNotNowV).subscribe(click -> this.mActionsListener.notNowClicked());
     RxView.clicks(mSaveNumber)
         .subscribe(click -> this.mActionsListener.submitClicked(
@@ -66,8 +79,12 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
     getActivity().onBackPressed();
   }
 
-  @Override public void showProgressIndicator(boolean active) {
-    // TODO: 14/02/2017 manipulate progress
+  @Override public void setGenericPleaseWaitDialog(boolean showProgress) {
+    if (showProgress) {
+      mGenericPleaseWaitDialog.show();
+    } else {
+      mGenericPleaseWaitDialog.dismiss();
+    }
   }
 
   @Override public void showSubmissionSuccess() {

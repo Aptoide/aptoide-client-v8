@@ -42,12 +42,17 @@ public class SyncResultAdapter extends RecyclerView.Adapter<SyncResultAdapter.Vi
   @Override public void onBindViewHolder(ViewHolder holder, int position) {
     Contact contact = mContacts.get(position);
 
-    ImageLoader.with(mContext)
-        .loadWithShadowCircleTransform(contact.getStore().getAvatar(), holder.mMainIcon);
-    ImageLoader.with(mContext)
-        .loadWithShadowCircleTransform(contact.getPerson().getAvatar(), holder.mSecondaryIcon);
-    holder.mStoreName.setText(contact.getStore().getName());
-    holder.mUserName.setText(contact.getPerson().getName());
+    if (contact.getStore() != null) {
+      ImageLoader.with(mContext)
+          .loadWithShadowCircleTransform(contact.getStore().getAvatar(), holder.mMainIcon);
+      holder.mStoreName.setText(contact.getStore().getName());
+    }
+
+    if (contact.getPerson() != null) {
+      ImageLoader.with(mContext)
+          .loadWithShadowCircleTransform(contact.getPerson().getAvatar(), holder.mSecondaryIcon);
+      holder.mUserName.setText(contact.getPerson().getName());
+    }
   }
 
   @Override public int getItemCount() {
