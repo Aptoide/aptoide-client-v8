@@ -8,7 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
@@ -51,12 +51,11 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
   TwitterAuthClient mTwitterAuthClient;
   private AddressBookContract.UserActionsListener mActionsListener;
   private Button addressBookSyncButton;
-  private Button facebookSyncButton;
-  private Button twitterSyncButton;
+  private RelativeLayout facebookSyncButton;
+  private RelativeLayout twitterSyncButton;
   private TextView dismissV;
   private TextView addressbook_2nd_msg;
   private TextView about;
-  private ProgressBar addressBookSyncProgress;
   private CallbackManager callbackManager;
   private ProgressDialog mGenericPleaseWaitDialog;
 
@@ -86,7 +85,6 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
     mActionsListener.getButtonsState();
     dismissV.setPaintFlags(dismissV.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
     about.setPaintFlags(about.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-    addressBookSyncProgress.setIndeterminate(true);
     RxView.clicks(addressBookSyncButton)
         .flatMap(click -> {
           PermissionManager permissionManager = new PermissionManager();
@@ -163,15 +161,15 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
   }
 
   @Override public void changeAddressBookState(boolean checked) {
-    changeSyncState(checked, addressBookSyncButton);
+    //changeSyncState(checked, addressBookSyncButton);
   }
 
   @Override public void changeTwitterState(boolean checked) {
-    changeSyncState(checked, twitterSyncButton);
+    //changeSyncState(checked, twitterSyncButton);
   }
 
   @Override public void changeFacebookState(boolean checked) {
-    changeSyncState(checked, facebookSyncButton);
+    //changeSyncState(checked, facebookSyncButton);
   }
 
   @Override public void showAboutFragment() {
@@ -210,14 +208,14 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
       mGenericPleaseWaitDialog.dismiss();
     }
   }
-
+/*
   private void changeSyncState(boolean checked, Button button) {
     if (checked) {
       button.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_check, 0);
     } else {
       button.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
     }
-  }
+  }*/
 
   @Override public int getContentViewId() {
     return R.layout.fragment_addressbook;
@@ -225,12 +223,10 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
 
   @Override public void bindViews(@Nullable View view) {
     addressBookSyncButton = (Button) view.findViewById(R.id.addressbook_sync_button);
-    facebookSyncButton = (Button) view.findViewById(R.id.facebook_sync_button);
-    twitterSyncButton = (Button) view.findViewById(R.id.twitter_sync_button);
+    facebookSyncButton = (RelativeLayout) view.findViewById(R.id.facebook_sync_button);
+    twitterSyncButton = (RelativeLayout) view.findViewById(R.id.twitter_sync_button);
     dismissV = (TextView) view.findViewById(R.id.addressbook_not_now);
     about = (TextView) view.findViewById(R.id.addressbook_about);
-    addressBookSyncProgress =
-        (ProgressBar) view.findViewById(R.id.addressbook_addressbook_sync_progress);
     addressbook_2nd_msg = (TextView) view.findViewById(R.id.addressbook_2nd_msg);
   }
 

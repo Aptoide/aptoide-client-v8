@@ -181,4 +181,7 @@
   <!-- Add stores dialog -->
   <color name="add_store_dialog_background">#e7e7e7</color>
 
+
+  <!-- Address book colors -->
+  <color name="twitter_color">#1ccaff</color>
 </resources>

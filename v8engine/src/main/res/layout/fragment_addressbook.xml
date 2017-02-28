@@ -57,52 +57,142 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
+
       <Button
           android:id="@+id/addressbook_sync_button"
           android:layout_width="match_parent"
           android:layout_height="60dp"
-          android:drawableRight="@drawable/ic_check"
+          android:layout_alignParentLeft="true"
+          android:layout_alignParentTop="true"
+          android:background="@drawable/addressbook_button_rectangle_shape"
+          android:drawableRight="@drawable/reload"
           android:padding="10dp"
           android:text="@string/addressbook_sync"
-          style="?attr/customButton"
-          />
-      <ProgressBar
-          android:id="@+id/addressbook_addressbook_sync_progress"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_alignParentEnd="true"
-          android:layout_margin="5dp"
-          android:visibility="invisible"
           />
     </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:gravity="center"
         android:orientation="horizontal"
-        android:weightSum="1"
         >
 
       <!-- TODO make custom button selectors + loading/check animation -->
-      <Button
+      <!--<Button-->
+      <!--android:id="@+id/facebook_sync_button"-->
+      <!--android:layout_width="0dp"-->
+      <!--android:layout_height="wrap_content"-->
+      <!--android:layout_weight="0.5"-->
+      <!--android:padding="5dp"-->
+      <!--android:background="@drawable/addressbook_facebook_button_rectangle_shape"-->
+      <!--android:text="@string/facebook"-->
+      <!--/>-->
+
+      <RelativeLayout
           android:id="@+id/facebook_sync_button"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:layout_marginEnd="9dp"
+          android:layout_marginRight="9dp"
           android:layout_weight="0.5"
+          android:background="@drawable/addressbook_facebook_button_rectangle_shape"
+          android:gravity="center"
           android:padding="5dp"
           android:text="@string/facebook"
-          />
+          android:textColor="@color/facebook"
+          >
+
+        <ImageView
+            android:id="@+id/facebook_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="9dp"
+            android:layout_marginRight="9dp"
+            android:src="@drawable/ic_action_facebook"
+            />
+
+        <ImageView
+            android:id="@+id/check_or_reload_facebook"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="7dp"
+            android:src="@drawable/reload"
+            />
+        <TextView
+            android:id="@+id/address_facebook_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="18dp"
+            android:layout_toLeftOf="@+id/check_or_reload_facebook"
+            android:text="@string/facebook"
+            />
+
+      </RelativeLayout>
 
       <!-- TODO make custom button selectors + loading/check animation -->
-      <Button
+      <!--<Button-->
+      <!--android:id="@+id/twitter_sync_button"-->
+      <!--android:layout_width="0dp"-->
+      <!--android:layout_height="wrap_content"-->
+      <!--android:layout_weight="0.5"-->
+      <!--android:padding="5dp"-->
+      <!--android:background="@drawable/addressbook_twitter_button_rectangle_shape"-->
+      <!--android:text="@string/twitter"-->
+      <!--android:textColor="@color/twitter_color"-->
+      <!--/>-->
+
+      <RelativeLayout
           android:id="@+id/twitter_sync_button"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:layout_marginLeft="9dp"
+          android:layout_marginStart="9dp"
           android:layout_weight="0.5"
+          android:background="@drawable/addressbook_twitter_button_rectangle_shape"
+          android:gravity="center"
           android:padding="5dp"
-          android:text="@string/twitter"
-          />
+          android:textColor="@color/twitter_color"
+          >
+
+        <ImageView
+            android:id="@+id/twitter_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="9dp"
+            android:layout_marginRight="9dp"
+            android:src="@drawable/ic_action_twitter"
+            />
+
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:layout_toRightOf="@+id/twitter_icon"
+            android:text="@string/twitter"
+            />
+
+        <ImageView
+            android:id="@+id/check_or_reload_twitter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="7dp"
+            android:src="@drawable/reload"
+            />
+
+      </RelativeLayout>
 
     </LinearLayout>
 
