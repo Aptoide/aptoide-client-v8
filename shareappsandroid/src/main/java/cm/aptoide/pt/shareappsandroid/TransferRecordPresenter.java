@@ -117,7 +117,7 @@ public class TransferRecordPresenter implements Presenter {
   @Override public void onDestroy() {
     applicationReceiver.stop();
     applicationSender.stop();
-    connectionManager.cleanNetworks();
+    //connectionManager.cleanNetworks();
   }
 
   @Override public void onStop() {

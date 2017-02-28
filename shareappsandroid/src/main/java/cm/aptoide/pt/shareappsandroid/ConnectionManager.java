@@ -358,8 +358,26 @@ public class ConnectionManager {
               "i.networkId " + i.networkId + "\n" + "o net id do add esta a : " + netid);
           System.out.println("o boolean do resetHotspot : " + enab);
 
+          //System.out.println("Correctly joined the network");
+          //return SUCCESSFUL_JOIN;
+          try {
+            Thread.sleep(2000);
+          } catch (InterruptedException e) {
+          }
+          boolean recon = wifimanager.reconnect();
+          System.out.println("O boolean do reconnect ta a : " + recon);
+
+          try {
+            Thread.sleep(2000);
+          } catch (InterruptedException e) {
+          }
+
+          if (recon) {
           System.out.println("Correctly joined the network");
           return SUCCESSFUL_JOIN;
+          } else {
+            return ERROR_ON_RECONNECT;
+          }
         } catch (Exception e) {
           e.printStackTrace();
         }
