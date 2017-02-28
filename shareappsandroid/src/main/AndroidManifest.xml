@@ -23,7 +23,6 @@
 
     <activity
         android:name="cm.aptoide.pt.shareappsandroid.HighwayActivity"
-        android:launchMode="singleTask"
         android:screenOrientation="locked">
       <intent-filter>
         <action android:name="android.intent.action.VIEW" />
@@ -71,8 +70,7 @@
     <activity
         android:name="cm.aptoide.pt.shareappsandroid.HighwayTransferRecordActivity"
 
-        android:configChanges="orientation|keyboardHidden|screenSize"
-        android:launchMode="singleTask">
+        android:configChanges="orientation|keyboardHidden|screenSize">
 
     </activity>
 

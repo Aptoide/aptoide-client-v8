@@ -10,8 +10,8 @@ import java.util.List;
 
 public class TransferRecordPresenter implements Presenter {
 
+  private final ConnectionManager connectionManager;
   private HighwayTransferRecordView view;
-
   private List<HighwayTransferRecordItem> listOfApps;
   private List<Host> connectedClients;
   private ApplicationReceiver applicationReceiver;
@@ -21,12 +21,14 @@ public class TransferRecordPresenter implements Presenter {
 
   public TransferRecordPresenter(HighwayTransferRecordView view,
       ApplicationReceiver applicationReceiver, ApplicationSender applicationSender,
-      TransferRecordManager transferRecordManager, boolean isHotspot) {
+      TransferRecordManager transferRecordManager, boolean isHotspot,
+      ConnectionManager connectionManager) {
     this.view = view;
     this.applicationReceiver = applicationReceiver;
     this.applicationSender = applicationSender;
     this.transferRecordManager = transferRecordManager;
     this.isHotspot = isHotspot;
+    this.connectionManager = connectionManager;
     listOfApps = new ArrayList<>();
   }
 
@@ -115,6 +117,7 @@ public class TransferRecordPresenter implements Presenter {
   @Override public void onDestroy() {
     applicationReceiver.stop();
     applicationSender.stop();
+    connectionManager.cleanNetworks();
   }
 
   @Override public void onStop() {
@@ -233,5 +236,18 @@ public class TransferRecordPresenter implements Presenter {
 
   public void installApp(String filePath) {
     transferRecordManager.installApp(filePath);
+  }
+
+  public void recoverNetworkState() {
+    if (connectionManager != null) {
+      connectionManager.recoverNetworkState();
+      view.showRecoveringWifiStateToast();
+    }
+  }
+
+  public void cleanAPTXNetworks() {
+    if (connectionManager != null) {
+      connectionManager.cleanNetworks();
+    }
   }
 }

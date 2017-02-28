@@ -45,6 +45,8 @@ public interface HighwayTransferRecordView {
 
   void showGeneralErrorToast(boolean isHotspot);
 
+  void showRecoveringWifiStateToast();
+
   interface TransferRecordListener {
     void onInstallApp(HighwayTransferRecordItem item);
 

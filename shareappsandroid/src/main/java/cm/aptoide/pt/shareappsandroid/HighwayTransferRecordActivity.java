@@ -30,6 +30,7 @@ import java.util.List;
 public class HighwayTransferRecordActivity extends ActivityView
     implements HighwayTransferRecordView {
 
+  private static final int SELECT_APPS_REQUEST_CODE = 53110;
   private static List<HighwayTransferRecordItem> listOfItems = new ArrayList<>();
   private String receivedFilePath;
   private PackageManager packageManager;
@@ -143,7 +144,7 @@ public class HighwayTransferRecordActivity extends ActivityView
     transferRecordManager = new TransferRecordManager(applicationsManager);
 
     presenter = new TransferRecordPresenter(this, applicationReceiver, applicationSender,
-        transferRecordManager, isHotspot);
+        transferRecordManager, isHotspot, ConnectionManager.getInstance(this));
     attachPresenter(presenter);
   }
 
@@ -312,30 +313,6 @@ public class HighwayTransferRecordActivity extends ActivityView
       textView.setVisibility(View.GONE);// todo reestructure, this part of repeated code.
       receivedAppListView.setVisibility(View.VISIBLE);
       outsideShare = false;
-
-      //tmpFilePath = getIntent().getStringExtra("receivedFilePath");
-      //System.out.println("The tmpFilePath is : " + tmpFilePath);
-      //received = getIntent().getBooleanExtra("received", true);
-      //nameOfTheApp = getIntent().getStringExtra("nameOfTheApp");
-      //packageName = getIntent().getStringExtra("AppPackageName");
-      //System.out.println("O app package name is : " + packageName);
-      //needReSend = getIntent().getBooleanExtra("needReSend", true);
-      //isSent = getIntent().getBooleanExtra("isSent", false);
-      //positionToReSend = getIntent().getIntExtra("positionToReSend", 100000);
-      //System.out.println("Need Resend BOOLEAN IS AT  :: :: : "
-      //    + needReSend);//se precisar de re send msotra o icone
-      //System.out.println("O received boolean esta a  : : : " + received);
-      //
-      ////pode haver problemas relacionados com a troca de filepath aqui. POde nao estar o (i).
-      //receivedFilePath =
-      //    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-      //        + "/"
-      //        + tmpFilePath;
-      //System.out.println(
-      //    "transfer REcord Activity _: the received file path is :::: " + receivedFilePath);
-      //
-      //getReceivedApps();
-      //handleReceivedApp(received, needReSend, tmpFilePath);//build ReceiveFilePath on the other side.
     }
 
     if (adapter == null) {
@@ -345,83 +322,6 @@ public class HighwayTransferRecordActivity extends ActivityView
       adapter.notifyDataSetChanged();
     }
   }
-
-  //    private String calculateActualIP() {
-  //        String ipAddress = "";
-  //        if (wifimanager == null) {
-  //            wifimanager = (WifiManager) getSystemService(WIFI_SERVICE);
-  //        }
-  //        ipAddress = intToIp(wifimanager.getDhcpInfo().serverAddress);
-  //        return ipAddress;
-  //    }
-  //
-  //
-  //    private String intToIp(int i) {
-  //        return (i & 0xFF) + "." +
-  //                ((i >> 8) & 0xFF) + "." +
-  //                ((i >> 16) & 0xFF) + "." +
-  //                ((i >> 24) & 0xFF);
-  //    }
-
-  //    private void setButtonListeners() {
-  //        send.setOnClickListener(new View.OnClickListener() {
-  //            @Override
-  //            public void onClick(View v) {
-  //                //vai para a appselection activity - so devia apenas se tiver clientes.
-  ////                if(isHotspot==null){
-  ////                    boolean aux= DataHolder.getInstance().isHotspot();
-  ////                    if(aux){
-  ////                        isHotspot=true;
-  ////                    }else{
-  ////                        isHotspot=false;
-  ////                    }
-  ////                }
-  //                if (isHotspot) {
-  //                    connectedClients = DataHolder.getInstance().getConnectedClients();
-  //                    if (connectedClients != null) {
-  //                        if (connectedClients.size() > 0) {
-  //                            Intent appSelection = new Intent().setClass(HighwayTransferRecordActivity.this, HighwayAppSelectionActivity.class);
-  //                            Log.i("TransferRecordActivity ", "going to start the app selection activity");
-  //                            System.out.println("The is hotspot boolean is : " + isHotspot);
-  //                            appSelection.putExtra("isAHotspot", isHotspot);
-  //                            startActivity(appSelection);
-  //                        } else {
-  //                            Toast.makeText(HighwayTransferRecordActivity.this, HighwayTransferRecordActivity.this.getResources().getString(R.string.reSendError_no_friends_in_group), Toast.LENGTH_SHORT).show();
-  //                        }
-  //                    }
-  //                } else {
-  //                    Intent appSelection = new Intent().setClass(HighwayTransferRecordActivity.this, HighwayAppSelectionActivity.class);
-  //                    Log.i("TransferRecordActivity ", "going to start the app selection activity");
-  //                    System.out.println("The is hotspot boolean is : " + isHotspot);
-  //                    appSelection.putExtra("isAHotspot", isHotspot);
-  //                    startActivity(appSelection);
-  //                }
-  //
-  //
-  //            }
-  //        });
-  //
-  //        clearHistory.setOnClickListener(new View.OnClickListener() {
-  //            @Override
-  //            public void onClick(View v) {
-  //                //apaga o history.
-  //                System.out.println(" Deleting history");
-  //
-  //                if (adapter == null || listOfItems == null || listOfItems.isEmpty()) {
-  //                    System.out.println("Trying to delete the emtpy list ! ");
-  ////                    Toast.makeText(HighwayTransferRecordActivity.this, "There are no records to delete",Toast.LENGTH_SHORT );
-  //                    Toast.makeText(Aptoide.getContext(), HighwayTransferRecordActivity.this.getResources().getString(R.string.noRecordsDelete), Toast.LENGTH_SHORT).show();
-  //
-  //                } else {
-  //
-  //                    Dialog d = createDialogToDelete();
-  //                    d.show();
-  //                }
-  //
-  //
-  //            }
-  //        });
-  //    }
 
   public void resendOutside(String name,
       String filePath) {//file to deal with the re-send from outside
@@ -548,20 +448,15 @@ public class HighwayTransferRecordActivity extends ActivityView
           .setPositiveButton(this.getResources().getString(R.string.leave),
               new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                  System.out.println("Pressed leave ");
-
-                  //intent para o mainactivity
-                  //manter estado.
                   setInitialApConfig();
-                  i.setAction("LEAVINGSHAREAPPSCLIENT");
-                  startActivity(i);
+                  presenter.recoverNetworkState();
+                  finish();
                 }
               })
           .setNegativeButton(this.getResources().getString(R.string.cancel),
               new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                   // User cancelled the dialog
-                  System.out.println("Person pressed the CANCEL BUTTON !!!!!!!! ");
                 }
               });
       return builder.create();
@@ -573,21 +468,17 @@ public class HighwayTransferRecordActivity extends ActivityView
           .setPositiveButton(this.getResources().getString(R.string.leave),
               new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                  System.out.println("Client pressed leave button ");
 
                   sendDisconnectMessage();
-                  i.setAction("LEAVINGSHAREAPPSCLIENT");
-                  //send disconnect message antes
-                  DataHolder.getInstance().setHotspot(false);
-                  DataHolder.getInstance().setServiceRunning(false);
-                  startActivity(i);
+                  presenter.recoverNetworkState();
+                  presenter.cleanAPTXNetworks();
+                  finish();
                 }
               })
           .setNegativeButton(this.getResources().getString(R.string.cancel),
               new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                   // User cancelled the dialog
-                  System.out.println("Person pressed the CANCEL BUTTON !!!!!!!! ");
                 }
               });
       return builder.create();
@@ -753,6 +644,12 @@ public class HighwayTransferRecordActivity extends ActivityView
 
   }
 
+  @Override protected void onDestroy() {
+    System.out.println("Called on destroy of the transferRecordActivity !!!!!!!!!!!!");
+    presenter.onDestroy();
+    super.onDestroy();
+  }
+
   //    private void deleteAllApps() {
   //        toRemoveList = new ArrayList<>();
   //
@@ -773,12 +670,6 @@ public class HighwayTransferRecordActivity extends ActivityView
   //            }
   //        }
   //    }
-
-  @Override protected void onDestroy() {
-    System.out.println("Called on destroy of the transferRecordActivity !!!!!!!!!!!!");
-    presenter.onDestroy();
-    super.onDestroy();
-  }
 
   @Override public void setUpSendButtonListener() {
     send.setOnClickListener(new View.OnClickListener() {
@@ -832,7 +723,7 @@ public class HighwayTransferRecordActivity extends ActivityView
     Log.i("TransferRecordActivity ", "going to start the app selection activity");
     System.out.println("The is hotspot boolean is : " + isHotspot);
     appSelection.putExtra("isAHotspot", isHotspot);
-    startActivity(appSelection);
+    startActivityForResult(appSelection, SELECT_APPS_REQUEST_CODE);
   }
 
   @Override public void showNoRecordsToDeleteToast() {
@@ -973,6 +864,11 @@ public class HighwayTransferRecordActivity extends ActivityView
     } else {
       startActivity(i);
     }
+  }
+
+  @Override public void showRecoveringWifiStateToast() {
+    Toast.makeText(this, this.getResources().getString(R.string.recoveringWifiState),
+        Toast.LENGTH_SHORT).show();
   }
 
   private Dialog createDialogToDelete(final HighwayTransferRecordItem item) {

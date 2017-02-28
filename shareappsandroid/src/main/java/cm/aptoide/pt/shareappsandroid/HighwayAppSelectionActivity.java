@@ -1,6 +1,5 @@
 package cm.aptoide.pt.shareappsandroid;
 
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -104,7 +103,6 @@ public class HighwayAppSelectionActivity extends ActivityView implements Highway
 
   @Override public void onBackPressed() {
 
-    gridViewAppItemsList.clear();
     System.out.println("Cleaned the list of apps");
     super.onBackPressed();
   }
@@ -230,10 +228,7 @@ public class HighwayAppSelectionActivity extends ActivityView implements Highway
   }
 
   @Override public void goBackToTransferRecord() {
-    Intent i = new Intent().setClass(HighwayAppSelectionActivity.this,
-        HighwayTransferRecordActivity.class);
-    i.putExtra("isHotspot", isHotspot);
-    startActivity(i);
+    finish();
   }
 
   //    @Override
