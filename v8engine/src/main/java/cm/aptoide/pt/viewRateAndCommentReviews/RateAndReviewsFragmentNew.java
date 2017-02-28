@@ -9,13 +9,18 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Review;
+import cm.aptoide.pt.navigation.AccountNavigator;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.util.schedulers.ConcreteSchedulerProvider;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.R;
@@ -23,7 +28,6 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.adapters.CommentsAdapter;
 import cm.aptoide.pt.v8engine.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.util.DialogUtils;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
@@ -60,6 +64,8 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
   private RatingTotalsLayout ratingTotalsLayout;
   private RatingBarsLayout ratingBarsLayout;
   private FloatingActionButton floatingActionButton;
+  private DialogUtils dialogUtils;
+  private AptoideAccountManager accountManager;
 
   //
   // static constructors
@@ -116,10 +122,15 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    dialogUtils = new DialogUtils(accountManager,
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext()),
+        new AccountNavigator(getContext(), getNavigationManager(), accountManager));
     final RateAndReviewsPresenter presenter =
         new RateAndReviewsPresenter(appId, storeName, packageName, this,
-            ConcreteSchedulerProvider.getInstance());
+            ConcreteSchedulerProvider.getInstance(), accountManager,
+            new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+                DataProvider.getContext()).getUniqueIdentifier());
 
     attachPresenter(presenter, savedInstanceState);
   }
@@ -189,7 +200,7 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
     }
     if (itemId == R.id.menu_install) {
       // todo Navigator n = new Navigator();
-      ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
+      getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
           .newAppViewFragment(packageName, storeName, AppViewFragment.OpenType.OPEN_AND_INSTALL));
       return true;
     }
@@ -209,7 +220,7 @@ public class RateAndReviewsFragmentNew extends AptoideBaseFragment<CommentsAdapt
   }
 
   @Override public Observable<GenericDialogs.EResponse> showRateView() {
-    return DialogUtils.showRateDialog(getActivity(), appName, packageName, storeName);
+    return dialogUtils.showRateDialog(getActivity(), appName, packageName, storeName);
   }
 
   @Override public void showNextReviews(int offset, List<Review> reviews) {

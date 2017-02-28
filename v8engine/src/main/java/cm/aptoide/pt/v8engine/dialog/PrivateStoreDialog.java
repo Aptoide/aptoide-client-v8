@@ -12,7 +12,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -29,8 +28,8 @@ import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 
 /**
@@ -38,20 +37,16 @@ import cm.aptoide.pt.v8engine.util.StoreUtils;
  * use File | Settings |
  * File Templates.
  */
-public class PrivateStoreDialog extends DialogFragment {
+public class PrivateStoreDialog extends BaseDialog {
 
   public static final String TAG = "PrivateStoreDialog";
-  private final AptoideClientUUID aptoideClientUUID;
+  private AptoideClientUUID aptoideClientUUID;
+  private AptoideAccountManager accountManager;
   private ProgressDialog loadingDialog;
   private String storeName;
   private String storeUser;
   private String storePassSha1;
   private boolean isInsideStore;
-
-  public PrivateStoreDialog() {
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
-  }
 
   public static PrivateStoreDialog newInstance(Fragment returnFragment, int requestCode,
       String storeName, boolean isInsideStore) {
@@ -73,10 +68,22 @@ public class PrivateStoreDialog extends DialogFragment {
 
   @Override public void onCreate(final Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     final Bundle args = getArguments();
     if (args != null) {
       storeName = args.getString(BundleArgs.STORE_NAME.name());
     }
+  }
+
+  @Override public void onDestroyView() {
+    Dialog dialog = getDialog();
+
+    // Work around to the bug... : http://code.google.com/p/android/issues/detail?id=17423
+    if ((dialog != null) && getRetainInstance()) dialog.setDismissMessage(null);
+
+    super.onDestroyView();
   }
 
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -101,18 +108,25 @@ public class PrivateStoreDialog extends DialogFragment {
             if (e instanceof AptoideWsV7Exception) {
               BaseV7Response baseResponse = ((AptoideWsV7Exception) e).getBaseResponse();
 
-              if (StoreUtils.PRIVATE_STORE_WRONG_CREDENTIALS.equals(
-                  baseResponse.getError().getCode())) {
-                storeUser = null;
-                storePassSha1 = null;
-                ShowMessage.asSnack(rootView, R.string.ws_error_invalid_grant);
+              switch (StoreUtils.getErrorType(baseResponse.getError().getCode())) {
+                case PRIVATE_STORE_WRONG_CREDENTIALS:
+                  storeUser = null;
+                  storePassSha1 = null;
+                  getTargetFragment().onActivityResult(getTargetRequestCode(),
+                      AddStoreDialog.PRIVATE_STORE_INVALID_CREDENTIALS_CODE, null);
+                  break;
+                default:
+                  getTargetFragment().onActivityResult(getTargetRequestCode(),
+                      AddStoreDialog.PRIVATE_STORE_ERROR_CODE, null);
+                  dismiss();
               }
             } else {
               e.printStackTrace();
-              ShowMessage.asSnack(getView(), R.string.error_occured);
+              getTargetFragment().onActivityResult(getTargetRequestCode(),
+                  AddStoreDialog.PRIVATE_STORE_ERROR_CODE, null);
               dismiss();
             }
-          });
+          }, accountManager);
           showLoadingDialog();
         })
         .create();
@@ -131,19 +145,10 @@ public class PrivateStoreDialog extends DialogFragment {
     outState.putString(BundleArgs.STORE_NAME.name(), storeName);
   }
 
-  @Override public void onDestroyView() {
-    Dialog dialog = getDialog();
-
-    // Work around to the bug... : http://code.google.com/p/android/issues/detail?id=17423
-    if ((dialog != null) && getRetainInstance()) dialog.setDismissMessage(null);
-
-    super.onDestroyView();
-  }
-
   private GetStoreMetaRequest buildRequest() {
     return GetStoreMetaRequest.of(
         new BaseRequestWithStore.StoreCredentials(storeName, storeUser, storePassSha1),
-        AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID());
+        accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier());
   }
 
   private void dismissLoadingDialog() {

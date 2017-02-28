@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2016.
- * Modified by SithEngineer on 02/09/2016.
- */
-
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.content.BroadcastReceiver;
@@ -24,8 +19,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.util.UserCompleteData;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
@@ -33,17 +28,17 @@ import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.Event;
+import cm.aptoide.pt.navigation.AccountNavigator;
+import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.shareappsandroid.HighwayActivity;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.StorePagerAdapter;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.interfaces.DrawerFragment;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.UpdateRepository;
-import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.view.BadgeView;
 import com.trello.rxlifecycle.android.FragmentEvent;
@@ -55,20 +50,25 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created by neuro on 09-05-2016.
  */
-public class HomeFragment extends StoreFragment implements DrawerFragment {
+public class HomeFragment extends StoreFragment {
 
   public static final String APTOIDE_FACEBOOK_LINK = "http://www.facebook.com/aptoide";
   public static final String FACEBOOK_PACKAGE_NAME = "com.facebook.katana";
   public static final String BACKUP_APPS_PACKAGE_NAME = "pt.aptoide.backupapps";
   public static final String TWITTER_PACKAGE_NAME = "com.twitter.android";
   public static final String APTOIDE_TWITTER_URL = "http://www.twitter.com/aptoide";
-  private static final String TAG = HomeFragment.class.getSimpleName();
-  private DrawerLayout mDrawerLayout;
-  private NavigationView mNavigationView;
+
+  //private static final int SPOT_SHARE_PERMISSION_REQUEST_CODE = 6531;
+
+
+  private DrawerLayout drawerLayout;
+  private NavigationView navigationView;
   private BadgeView updatesBadge;
   @Getter @Setter private Event.Name desiredViewPagerItem = null;
   private ChangeTabReceiver receiver;
   private UpdateRepository updateRepository;
+  private AptoideAccountManager accountManager;
+  private AccountNavigator accountNavigator;
 
   public static HomeFragment newInstance(String storeName, StoreContext storeContext,
       String storeTheme) {
@@ -81,74 +81,16 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
     return fragment;
   }
 
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    updateRepository = RepositoryFactory.getUpdateRepository();
-  }
-
-  @Override public void bindViews(View view) {
-    super.bindViews(view);
-    mNavigationView = (NavigationView) view.findViewById(R.id.nav_view);
-    mDrawerLayout = (DrawerLayout) view.findViewById(R.id.drawer_layout);
-
-    Analytics.AppViewViewedFrom.addStepToList("HOME");
-
-    setHasOptionsMenu(true);
-  }
-
   @Override public void onResume() {
     super.onResume();
     setUserDataOnHeader();
-  }
-
-  private void setUserDataOnHeader() {
-    View baseHeaderView = mNavigationView.getHeaderView(0);
-    TextView userEmail = (TextView) baseHeaderView.findViewById(R.id.profile_email_text);
-    TextView userUsername = (TextView) baseHeaderView.findViewById(R.id.profile_name_text);
-    ImageView userAvatarImage = (ImageView) baseHeaderView.findViewById(R.id.profile_image);
-
-    if (AptoideAccountManager.isLoggedIn()) {
-
-      userEmail.setVisibility(View.VISIBLE);
-      userUsername.setVisibility(View.VISIBLE);
-
-      UserCompleteData userCompleteData = AptoideAccountManager.getUserData();
-      userEmail.setText(userCompleteData.getUserEmail());
-      userUsername.setText(userCompleteData.getUserName());
-
-      ImageLoader.loadWithCircleTransformAndPlaceHolder(userCompleteData.getUserAvatar(),
-          userAvatarImage, R.drawable.user_account_white);
-
-      //String userAvatarUri = userInfo.getUserAvatar();
-      //if (URLUtil.isValidUrl(userAvatarUri)) {
-      //  ImageLoader.loadWithCircleTransformAndPlaceHolderAvatarSize(
-      //      userAvatarUri,
-      //      userAvatarImage,
-      //      R.drawable.ic_user_icon
-      //  );
-      //} else {
-      //  userAvatarImage.setImageResource(R.drawable.ic_user_icon);
-      //}
-
-      return;
-    }
-
-    userEmail.setText("");
-    userUsername.setText("");
-
-    userEmail.setVisibility(View.GONE);
-    userUsername.setVisibility(View.GONE);
-
-    ImageLoader.load(R.drawable.user_account_white, userAvatarImage);
+    getToolbar().setTitle("");
   }
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    View view = super.onCreateView(inflater, container, savedInstanceState);
-    receiver = new ChangeTabReceiver();
-    getContext().registerReceiver(receiver, new IntentFilter(ChangeTabReceiver.SET_TAB_EVENT));
-    return view;
+    return super.onCreateView(inflater, container, savedInstanceState);
   }
 
   @Override public void onDestroyView() {
@@ -169,13 +111,6 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
         break;
       }
     }
-
-    //DeprecatedDatabase.UpdatesQ.getAll(realm, false)
-    //    .asObservable()
-    //    .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-    //    .subscribe(updates -> {
-    //      refreshUpdatesBadge(updates.size());
-    //    });
 
     updateRepository.getNonExcludedUpdates()
         .map(updates -> updates.size())
@@ -217,45 +152,51 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
   }
 
   @Override protected void setupSearch(Menu menu) {
-    SearchUtils.setupGlobalSearchView(menu, getActivity());
+    SearchUtils.setupGlobalSearchView(menu, getNavigationManager());
   }
 
   @Override public void setupViews() {
     super.setupViews();
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    accountNavigator = new AccountNavigator(getContext(), getNavigationManager(), accountManager);
     setupNavigationView();
   }
 
   private void setupNavigationView() {
-    if (mNavigationView != null) {
-      mNavigationView.setItemIconTintList(null);
-      mNavigationView.setNavigationItemSelectedListener(menuItem -> {
+    if (navigationView != null) {
+      navigationView.setItemIconTintList(null);
+      navigationView.setNavigationItemSelectedListener(menuItem -> {
 
         int itemId = menuItem.getItemId();
         if (itemId == R.id.navigation_item_my_account) {
-          AptoideAccountManager.openAccountManager(getContext());
-        } else if (itemId == R.id.navigation_item_rollback) {
-          ((FragmentShower) getActivity()).pushFragmentV4(
-              V8Engine.getFragmentProvider().newRollbackFragment());
-        } else if (itemId == R.id.navigation_item_setting_scheduled_downloads) {
-          ((FragmentShower) getActivity()).pushFragmentV4(
-              V8Engine.getFragmentProvider().newScheduledDownloadsFragment());
-        } else if (itemId == R.id.navigation_item_excluded_updates) {
-          ((FragmentShower) getActivity()).pushFragmentV4(
-              V8Engine.getFragmentProvider().newExcludedUpdatesFragment());
-        } else if (itemId == R.id.navigation_item_settings) {
-          ((FragmentShower) getActivity()).pushFragmentV4(
-              V8Engine.getFragmentProvider().newSettingsFragment());
-        } else if (itemId == R.id.navigation_item_facebook) {
-          openFacebook();
-        } else if (itemId == R.id.navigation_item_twitter) {
-          openTwitter();
-        } else if (itemId == R.id.navigation_item_backup_apps) {
-          openBackupApps();
-        } else if (itemId == R.id.send_feedback) {
-          startFeedbackFragment();
+          accountNavigator.navigateToAccountView();
+        } else {
+          final NavigationManagerV4 navigationManager = getNavigationManager();
+          if (itemId == R.id.shareapps) {
+            //requestPermissions();
+            startActivity(new Intent(getContext(), HighwayActivity.class));
+          } else if (itemId == R.id.navigation_item_rollback) {
+            navigationManager.navigateTo(V8Engine.getFragmentProvider().newRollbackFragment());
+          } else if (itemId == R.id.navigation_item_setting_scheduled_downloads) {
+            navigationManager.navigateTo(
+                V8Engine.getFragmentProvider().newScheduledDownloadsFragment());
+          } else if (itemId == R.id.navigation_item_excluded_updates) {
+            navigationManager.navigateTo(
+                V8Engine.getFragmentProvider().newExcludedUpdatesFragment());
+          } else if (itemId == R.id.navigation_item_settings) {
+            navigationManager.navigateTo(V8Engine.getFragmentProvider().newSettingsFragment());
+          } else if (itemId == R.id.navigation_item_facebook) {
+            openFacebook();
+          } else if (itemId == R.id.navigation_item_twitter) {
+            openTwitter();
+          } else if (itemId == R.id.navigation_item_backup_apps) {
+            openBackupApps();
+          } else if (itemId == R.id.send_feedback) {
+            startFeedbackFragment();
+          }
         }
 
-        mDrawerLayout.closeDrawer(mNavigationView);
+        drawerLayout.closeDrawer(navigationView);
 
         return false;
       });
@@ -263,15 +204,9 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
   }
 
   private void openFacebook() {
-    //Installed installedFacebook = DeprecatedDatabase.InstalledQ.get(FACEBOOK_PACKAGE_NAME, realm);
-    //openSocialLink(FACEBOOK_PACKAGE_NAME, APTOIDE_FACEBOOK_LINK,
-    //    getContext().getString(R.string.social_facebook_screen_title), Uri.parse(
-    //        AptoideUtils.SocialLinksU.getFacebookPageURL(
-    //            installedFacebook == null ? 0 : installedFacebook.getVersionCode(),
-    //            APTOIDE_FACEBOOK_LINK)));
     InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
     installedAccessor.get(FACEBOOK_PACKAGE_NAME)
-        .compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW))
+        .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(installedFacebook -> {
           openSocialLink(FACEBOOK_PACKAGE_NAME, APTOIDE_FACEBOOK_LINK,
@@ -291,25 +226,13 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
   }
 
   private void openBackupApps() {
-    //Installed installedBackupApps =
-    //    DeprecatedDatabase.InstalledQ.get(BACKUP_APPS_PACKAGE_NAME, realm);
-    //if (installedBackupApps == null) {
-    //  FragmentUtils.replaceFragmentV4(this.getActivity(),
-    //      V8Engine.getFragmentProvider().newAppViewFragment(BACKUP_APPS_PACKAGE_NAME,
-    //          AppViewFragment.OpenType.OPEN_ONLY));
-    //} else {
-    //  Intent i =
-    //      getContext().getPackageManager().getLaunchIntentForPackage(BACKUP_APPS_PACKAGE_NAME);
-    //  startActivity(i);
-    //}
-
     InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
     installedAccessor.get(BACKUP_APPS_PACKAGE_NAME)
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(LifecycleEvent.DESTROY))
         .subscribe(installed -> {
           if (installed == null) {
-            FragmentUtils.replaceFragmentV4(this.getActivity(), V8Engine.getFragmentProvider()
+            getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
                 .newAppViewFragment(BACKUP_APPS_PACKAGE_NAME, AppViewFragment.OpenType.OPEN_ONLY));
           } else {
             Intent i = getContext().getPackageManager()
@@ -322,31 +245,22 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
   }
 
   private void startFeedbackFragment() {
-    String downloadFolderPath = Application.getConfiguration().getCachePath();
+    String downloadFolderPath = Application.getContext().getCacheDir().getPath();
     String screenshotFileName = getActivity().getClass().getSimpleName() + ".jpg";
     AptoideUtils.ScreenU.takeScreenshot(getActivity(), downloadFolderPath, screenshotFileName);
-    ((FragmentShower) getActivity()).pushFragmentV4(V8Engine.getFragmentProvider()
+    getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
         .newSendFeedbackFragment(downloadFolderPath + screenshotFileName));
   }
 
   private void openSocialLink(String packageName, String socialUrl, String pageTitle,
       Uri uriToOpenApp) {
-    //Installed installedFacebook = DeprecatedDatabase.InstalledQ.get(packageName, realm);
-    //if (installedFacebook == null) {
-    //  ((FragmentShower) getActivity()).pushFragmentV4(
-    //      V8Engine.getFragmentProvider().newSocialFragment(socialUrl, pageTitle));
-    //} else {
-    //  Intent sharingIntent = new Intent(Intent.ACTION_VIEW, uriToOpenApp);
-    //  getContext().startActivity(sharingIntent);
-    //}
-
     InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
     installedAccessor.get(packageName)
         .observeOn(AndroidSchedulers.mainThread())
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(installedFacebook -> {
           if (installedFacebook == null) {
-            ((FragmentShower) getActivity()).pushFragmentV4(
+            getNavigationManager().navigateTo(
                 V8Engine.getFragmentProvider().newSocialFragment(socialUrl, pageTitle));
           } else {
             Intent sharingIntent = new Intent(Intent.ACTION_VIEW, uriToOpenApp);
@@ -362,21 +276,79 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
   }
 
   @Override public void setupToolbarDetails(Toolbar toolbar) {
-    toolbar.setLogo(R.drawable.ic_aptoide_toolbar);
+    toolbar.setTitle("");
     toolbar.setNavigationIcon(R.drawable.ic_drawer);
-    toolbar.setNavigationOnClickListener(v -> mDrawerLayout.openDrawer(GravityCompat.START));
+    toolbar.setNavigationOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
   }
 
-  @Override public boolean isDrawerOpened() {
-    return mDrawerLayout.isDrawerOpen(Gravity.LEFT);
+  private void setUserDataOnHeader() {
+    if (navigationView == null || navigationView.getVisibility() != View.VISIBLE) {
+      // if the navigation view is not visible do nothing
+      return;
+    }
+
+    View baseHeaderView = navigationView.getHeaderView(0);
+    TextView userEmail = (TextView) baseHeaderView.findViewById(R.id.profile_email_text);
+    TextView userUsername = (TextView) baseHeaderView.findViewById(R.id.profile_name_text);
+    ImageView userAvatarImage = (ImageView) baseHeaderView.findViewById(R.id.profile_image);
+
+    if (accountManager.isLoggedIn()) {
+
+      Account account = accountManager.getAccount();
+      if (account != null) {
+        userEmail.setVisibility(View.VISIBLE);
+        userUsername.setVisibility(View.VISIBLE);
+        userEmail.setText(account.getEmail());
+        userUsername.setText(account.getNickname());
+
+        ImageLoader.with(getContext())
+            .loadWithCircleTransformAndPlaceHolder(account.getAvatar(), userAvatarImage,
+                R.drawable.user_account_white);
+      }
+
+      return;
+    }
+
+    userEmail.setText("");
+    userUsername.setText("");
+
+    userEmail.setVisibility(View.GONE);
+    userUsername.setVisibility(View.GONE);
+
+    ImageLoader.with(getContext()).load(R.drawable.user_account_white, userAvatarImage);
   }
 
-  @Override public void openDrawer() {
-    mDrawerLayout.openDrawer(Gravity.LEFT);
+  @Override public void bindViews(View view) {
+    super.bindViews(view);
+
+    updateRepository = RepositoryFactory.getUpdateRepository(getContext());
+
+    navigationView = (NavigationView) view.findViewById(R.id.nav_view);
+    drawerLayout = (DrawerLayout) view.findViewById(R.id.drawer_layout);
+
+    setHasOptionsMenu(true);
+
+    receiver = new ChangeTabReceiver();
+    getContext().registerReceiver(receiver, new IntentFilter(ChangeTabReceiver.SET_TAB_EVENT));
+
+    Analytics.AppViewViewedFrom.addStepToList("HOME");
   }
 
-  @Override public void closeDrawer() {
-    mDrawerLayout.closeDrawers();
+  @Override public boolean onBackPressed() {
+    if (isDrawerOpened()) {
+      closeDrawer();
+      return true;
+    }
+
+    return super.onBackPressed();
+  }
+
+  private boolean isDrawerOpened() {
+    return drawerLayout.isDrawerOpen(Gravity.LEFT);
+  }
+
+  private void closeDrawer() {
+    drawerLayout.closeDrawers();
   }
 
   public class ChangeTabReceiver extends BroadcastReceiver {
@@ -395,4 +367,66 @@ public class HomeFragment extends StoreFragment implements DrawerFragment {
       }
     }
   }
+
+  //private void requestPermissions() {
+  //  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+  //    //check if already has the permissions
+  //    ArrayList<String> permissionsArray = new ArrayList<>();
+  //    if(ContextCompat.checkSelfPermission(getContext(),
+  //        Manifest.permission.READ_PHONE_STATE)!= PackageManager.PERMISSION_GRANTED){
+  //
+  //      permissionsArray.add(Manifest.permission.READ_PHONE_STATE);
+  //
+  //    }
+  //
+  //    if(ContextCompat.checkSelfPermission(getContext(),Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
+  //      permissionsArray.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+  //
+  //    }
+  //
+  //    if(ContextCompat.checkSelfPermission(getContext(),Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED){
+  //
+  //      permissionsArray.add(Manifest.permission.ACCESS_FINE_LOCATION);
+  //    }
+  //
+  //    if(ContextCompat.checkSelfPermission(getContext(),Manifest.permission.WRITE_SETTINGS)!= PackageManager.PERMISSION_GRANTED){//special
+  //      if(Settings.System.canWrite(getContext())){
+  //        permissionsArray.add(Manifest.permission.WRITE_SETTINGS);
+  //        System.out.println("can write settings!");
+  //      }else{
+  //        System.out.println("can not write the settings");
+  //        Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+  //        intent.setData(Uri.parse("package:" + getContext().getPackageName()));
+  //        startActivity(intent);
+  //      }
+  //    }
+  //
+  //    if(permissionsArray.size()>0){
+  //
+  //      String[] missingPermissions = new String[permissionsArray.size()];
+  //      missingPermissions = permissionsArray.toArray(missingPermissions);
+  //
+  //      ActivityCompat.requestPermissions(getActivity(), missingPermissions, SPOT_SHARE_PERMISSION_REQUEST_CODE);
+  //    }
+  //  }
+  //}
+  //
+  //@Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+  //    @NonNull int[] grantResults) {
+  //  switch (requestCode){
+  //    case SPOT_SHARE_PERMISSION_REQUEST_CODE:{
+  //      if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+  //        System.out.println("write settings permission granted ! ");
+  //      }else{
+  //        //in the future show dialog (?)
+  //        System.out.println("write settings permission failed to be granted");
+  //        //finish();
+  //      }
+  //      break;
+  //    }
+  //
+  //  }
+  //  super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+  //
+  //}
 }

@@ -7,7 +7,6 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -19,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
@@ -34,7 +34,6 @@ import cm.aptoide.pt.v8engine.analytics.abtesting.ABTest;
 import cm.aptoide.pt.v8engine.analytics.abtesting.ABTestManager;
 import cm.aptoide.pt.v8engine.analytics.abtesting.SearchTabOptions;
 import cm.aptoide.pt.v8engine.fragment.BasePagerToolbarFragment;
-import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import java.util.List;
@@ -46,7 +45,8 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class SearchFragment extends BasePagerToolbarFragment {
   private static final String TAG = SearchFragment.class.getSimpleName();
-  private final AptoideClientUUID aptoideClientUUID;
+  private AptoideClientUUID aptoideClientUUID;
+  private AptoideAccountManager accountManager;
   private String query;
 
   transient private boolean hasSubscribedResults;
@@ -62,11 +62,6 @@ public class SearchFragment extends BasePagerToolbarFragment {
   private String storeName;
   private boolean onlyTrustedApps;
   private int selectedButton = 0;
-
-  public SearchFragment() {
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
-  }
 
   public static SearchFragment newInstance(String query) {
     return newInstance(query, false);
@@ -92,6 +87,13 @@ public class SearchFragment extends BasePagerToolbarFragment {
     SearchFragment fragment = new SearchFragment();
     fragment.setArguments(args);
     return fragment;
+  }
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+        DataProvider.getContext());
+    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
   }
 
   @Override public void bindViews(View view) {
@@ -121,7 +123,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
         String s = noSearchLayoutSearchQuery.getText().toString();
 
         if (s.length() > 1) {
-          FragmentUtils.replaceFragmentV4(((FragmentActivity) getContext()),
+          getNavigationManager().navigateTo(
               V8Engine.getFragmentProvider().newSearchFragment(s, storeName));
         }
       });
@@ -145,7 +147,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
     }
   }
 
-  protected void subscribedButtonListener() {
+  @Partners protected void subscribedButtonListener() {
     selectedButton = 0;
     viewPager.setCurrentItem(0);
     subscribedButton.setBackgroundResource(R.drawable.search_button_background);
@@ -154,7 +156,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
     everywhereButton.setBackgroundResource(0);
   }
 
-  protected Void everywhereButtonListener(boolean smoothScroll) {
+  @Partners protected Void everywhereButtonListener(boolean smoothScroll) {
     selectedButton = 1;
     viewPager.setCurrentItem(1, smoothScroll);
     everywhereButton.setBackgroundResource(R.drawable.search_button_background);
@@ -188,7 +190,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
       setupViewPager();
       if (create) {
         //only show the search results after choosing the tab to show
-        setupAbTest().compose(bindUntilEvent(LifecycleEvent.DESTROY_VIEW))
+        setupAbTest().compose(bindUntilEvent(LifecycleEvent.DESTROY))
             .subscribe(setup -> finishLoading(), throwable -> {
               CrashReport.getInstance().log(throwable);
               finishLoading();
@@ -218,14 +220,14 @@ public class SearchFragment extends BasePagerToolbarFragment {
     return null;
   }
 
-  protected void executeSearchRequests(String storeName, boolean create) {
+  @Partners protected void executeSearchRequests(String storeName, boolean create) {
     Analytics.Search.searchTerm(query);
 
     if (storeName != null) {
       shouldFinishLoading = true;
       ListSearchAppsRequest of =
           ListSearchAppsRequest.of(query, storeName, StoreUtils.getSubscribedStoresAuthMap(),
-              AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID());
+              accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier());
       of.execute(listSearchApps -> {
         List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
 
@@ -239,7 +241,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
       }, e -> finishLoading());
     } else {
       ListSearchAppsRequest.of(query, true, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(),
-          AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
+          accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
           .execute(listSearchApps -> {
             List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
 
@@ -254,7 +256,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
 
       // Other stores
       ListSearchAppsRequest.of(query, false, onlyTrustedApps, StoreUtils.getSubscribedStoresIds(),
-          AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
+          accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
           .execute(listSearchApps -> {
             List<ListSearchApps.SearchAppsApp> list = listSearchApps.getDatalist().getList();
 
@@ -326,9 +328,9 @@ public class SearchFragment extends BasePagerToolbarFragment {
     inflater.inflate(R.menu.menu_search, menu);
 
     if (storeName != null) {
-      SearchUtils.setupInsideStoreSearchView(menu, getActivity(), storeName);
+      SearchUtils.setupInsideStoreSearchView(menu, getNavigationManager(), storeName);
     } else {
-      SearchUtils.setupGlobalSearchView(menu, getActivity());
+      SearchUtils.setupGlobalSearchView(menu, getNavigationManager());
     }
   }
 
@@ -355,7 +357,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
     return R.id.search_results_layout;
   }
 
-  @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
+  @Partners @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     if (create) {
       executeSearchRequests(storeName, create);
     } else {
@@ -363,7 +365,7 @@ public class SearchFragment extends BasePagerToolbarFragment {
     }
   }
 
-  protected static class BundleCons {
+  @Partners protected static class BundleCons {
 
     public static final String QUERY = "query";
     public static final String STORE_NAME = "storeName";

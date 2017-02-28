@@ -20,14 +20,17 @@ public class TimelineClickEvent extends Event {
   public static final String UPDATE_APP = "UPDATE_APP";
   private final SendEventRequest.Body.Data data;
   private final String eventName;
+  private final AptoideAccountManager accountManager;
 
-  public TimelineClickEvent(SendEventRequest.Body.Data data, String eventName) {
+  public TimelineClickEvent(SendEventRequest.Body.Data data, String eventName,
+      AptoideAccountManager accountManager) {
     this.data = data;
     this.eventName = eventName;
+    this.accountManager = accountManager;
   }
 
   @Override public void send() {
-    SendEventRequest.of(AptoideAccountManager.getAccessToken(), data, eventName)
+    SendEventRequest.of(accountManager.getAccessToken(), data, eventName)
         .observe()
         .observeOn(Schedulers.io())
         .subscribe(baseV7Response -> {

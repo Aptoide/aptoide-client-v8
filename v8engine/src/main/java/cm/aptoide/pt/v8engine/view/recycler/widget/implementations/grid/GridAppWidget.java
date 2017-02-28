@@ -6,24 +6,23 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import com.jakewharton.rxbinding.view.RxView;
 
-/**
- * Created by sithengineer on 28/04/16.
- */
 @Displayables({ GridAppDisplayable.class }) public class GridAppWidget
     extends Widget<GridAppDisplayable> {
 
@@ -35,7 +34,6 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
   private RatingBar ratingBar;
   private TextView tvStoreName;
   private TextView tvAddedTime;
-  private String storeTheme;
 
   public GridAppWidget(View itemView) {
     super(itemView);
@@ -50,37 +48,28 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
     tvAddedTime = (TextView) itemView.findViewById(R.id.added_time);
   }
 
-  @Override public void unbindView() {
-
-  }
-
   @Override public void bindView(GridAppDisplayable displayable) {
     final App pojo = displayable.getPojo();
     final long appId = pojo.getId();
+    final FragmentActivity context = getContext();
 
-    ImageLoader.load(pojo.getIcon(), icon);
+    ImageLoader.with(context).load(pojo.getIcon(), icon);
 
     int downloads = displayable.isTotalDownloads() ? pojo.getStats().getPdownloads()
         : pojo.getStats().getDownloads();
 
     name.setText(pojo.getName());
-    this.downloads.setText(AptoideUtils.StringU.withSuffix(downloads) + V8Engine.getContext()
-        .getString(R.string._downloads));
+    this.downloads.setText(
+        AptoideUtils.StringU.withSuffix(downloads) + context.getString(R.string._downloads));
     ratingBar.setRating(pojo.getStats().getRating().getAvg());
     tvStoreName.setText(pojo.getStore().getName());
-    tvAddedTime.setText(DATE_TIME_U.getTimeDiffString(getContext(), pojo.getAdded().getTime()));
-    /*try {
-      storeTheme = pojo.newStore().getAppearance().getTheme();
-		} catch (NullPointerException e) {
-			storeTheme = "none";
-		}*/
-
-    itemView.setOnClickListener(v -> {
+    tvAddedTime.setText(DATE_TIME_U.getTimeDiffString(context, pojo.getAdded().getTime()));
+    compositeSubscription.add(RxView.clicks(itemView).subscribe(v -> {
       // FIXME
       Analytics.AppViewViewedFrom.addStepToList(displayable.getTag());
-      ((FragmentShower) v.getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
+      getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
           .newAppViewFragment(appId, pojo.getPackageName(),
               pojo.getStore().getAppearance().getTheme(), tvStoreName.getText().toString()));
-    });
+    }, throwable -> CrashReport.getInstance().log(throwable)));
   }
 }

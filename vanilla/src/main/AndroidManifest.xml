@@ -44,7 +44,7 @@
       </intent-filter>
     </activity>
 
-    <activity android:name=".v8engine.MainActivityFragment">
+    <activity android:name=".v8engine.view.MainActivity">
       <intent-filter>
         <data android:scheme="amp${LOCALYTICS_APP_KEY}"/>
         <action android:name="android.intent.action.VIEW"/>
@@ -74,7 +74,7 @@
         android:name="com.facebook.sdk.ApplicationId"
         android:value="@string/facebook_app_id"/>
 
-    <service android:name="cm.aptoide.accountmanager.services.AccountAuthenticatorService">
+    <service android:name=".v8engine.account.AccountAuthenticatorService">
       <intent-filter>
         <action android:name="android.accounts.AccountAuthenticator"/>
       </intent-filter>
@@ -90,8 +90,14 @@
         />
 
     <provider
-        android:name="cm.aptoide.pt.v8engine.provider.SuggestionProvider"
+        android:name="cm.aptoide.pt.v8engine.provider.SearchSuggestionProvider"
         android:authorities="${suggestionProviderAuthority}"
+        android:exported="false"
+        />
+
+    <provider
+        android:name="cm.aptoide.pt.v8engine.provider.StoreSearchSuggestionProvider"
+        android:authorities="${storeSuggestionProviderAuthority}"
         android:exported="false"
         />
 
@@ -149,9 +155,13 @@
       <intent-filter>
         <action android:name="android.content.SyncAdapter"/>
       </intent-filter>
+
       <meta-data
           android:name="android.content.SyncAdapter"
           android:resource="@xml/sync"/>
+      <meta-data
+          android:name="cm.aptoide.pt.imageloader.GlideModifications"
+          android:value="GlideModule"/>
     </service>
   </application>
 

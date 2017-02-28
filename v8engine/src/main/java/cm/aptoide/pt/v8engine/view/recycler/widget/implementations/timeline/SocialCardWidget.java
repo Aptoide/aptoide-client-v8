@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.timeline;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +18,11 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.model.v7.timeline.UserTimeline;
+import cm.aptoide.pt.navigation.AccountNavigator;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.customviews.LikeButtonView;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.SocialCardDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Observable;
@@ -40,6 +41,8 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
   private TextView time;
   private RelativeLayout likePreviewContainer;
   private int marginOfTheNextLikePreview;
+  private AptoideAccountManager accountManager;
+  private AccountNavigator accountNavigator;
 
   SocialCardWidget(View itemView) {
     super(itemView);
@@ -61,6 +64,9 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
 
   @Override @CallSuper public void bindView(T displayable) {
     super.bindView(displayable);
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    accountNavigator =
+        new AccountNavigator(getContext(), getNavigationManager(), accountManager);
 
     if (displayable.getUserSharer() != null) {
       if (displayable.getUserSharer().getName() != null && !displayable.getUser()
@@ -105,8 +111,8 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
             if (!displayable.isLiked()) {
               UserTimeline user = new UserTimeline();
               Store store = new Store();
-              store.setAvatar(AptoideAccountManager.getUserData().getUserAvatarRepo());
-              user.setAvatar(AptoideAccountManager.getUserData().getUserAvatar());
+              store.setAvatar(accountManager.getAccount().getStoreAvatar());
+              user.setAvatar(accountManager.getAccount().getAvatar());
               user.setStore(store);
               addUserToPreview(marginOfTheNextLikePreview, user);
               likePreviewContainer.invalidate();
@@ -140,10 +146,9 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
     showLikesPreview(displayable);
 
     compositeSubscription.add(RxView.clicks(likePreviewContainer)
-        .subscribe(click -> displayable.likesPreviewClick(((FragmentShower) getContext())),
-            (throwable) -> {
-              throwable.printStackTrace();
-            }));
+        .subscribe(click -> displayable.likesPreviewClick(getNavigationManager()), (throwable) -> {
+          throwable.printStackTrace();
+        }));
   }
 
   private Observable<Void> showComments(T displayable) {
@@ -151,7 +156,7 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
       final String elementId = displayable.getTimelineCard().getCardId();
       Fragment fragment = V8Engine.getFragmentProvider()
           .newCommentGridRecyclerFragment(CommentType.TIMELINE, elementId);
-      ((FragmentShower) getContext()).pushFragmentV4(fragment);
+      getNavigationManager().navigateTo(fragment);
       return null;
     });
   }
@@ -161,10 +166,10 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
   }
 
   private boolean likeCard(T displayable, int rating) {
-    if (!AptoideAccountManager.isLoggedIn()) {
+    if (!accountManager.isLoggedIn()) {
       ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> {
-            AptoideAccountManager.openAccountManager(snackView.getContext());
+            accountNavigator.navigateToAccountView();
           });
       return false;
     }
@@ -185,10 +190,13 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
     likeUserPreviewView.requestLayout();
 
     if (user != null) {
+      final FragmentActivity context = getContext();
       if (user.getAvatar() != null) {
-        ImageLoader.loadWithShadowCircleTransform(user.getAvatar(), likeUserPreviewIcon);
+        ImageLoader.with(context)
+            .loadWithShadowCircleTransform(user.getAvatar(), likeUserPreviewIcon);
       } else if (user.getStore().getAvatar() != null) {
-        ImageLoader.loadWithShadowCircleTransform(user.getStore().getAvatar(), likeUserPreviewIcon);
+        ImageLoader.with(context)
+            .loadWithShadowCircleTransform(user.getStore().getAvatar(), likeUserPreviewIcon);
       }
       likePreviewContainer.addView(likeUserPreviewView);
       marginOfTheNextLikePreview -= 20;

@@ -5,9 +5,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.annotation.Partners;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.dialog.AdultDialog;
 import cm.aptoide.pt.v8engine.fragment.BaseLoaderFragment;
@@ -19,6 +22,7 @@ import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
  */
 public class AdultRowWidget extends Widget<AdultRowDisplayable> {
 
+  private AptoideAccountManager accountManager;
   private SwitchCompat adultSwitch;
   private boolean shouldITrackNextChange = true;
 
@@ -26,15 +30,12 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
     super(itemView);
   }
 
-  @Override protected void assignViews(View itemView) {
+  @Partners @Override protected void assignViews(View itemView) {
     adultSwitch = (SwitchCompat) itemView.findViewById(R.id.adult_content);
   }
 
-  @Override public void unbindView() {
-
-  }
-
   @Override public void bindView(AdultRowDisplayable displayable) {
+    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
     adultSwitch.setOnCheckedChangeListener(null);
     adultSwitch.setChecked(SecurePreferences.isAdultSwitchActive());
     adultSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -43,7 +44,7 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
         AdultDialog.buildAreYouAdultDialog(getContext(), (dialog, which) -> {
           if (which == DialogInterface.BUTTON_POSITIVE) {
             //						adultSwitch.setChecked(true);
-            AptoideAccountManager.updateMatureSwitch(true);
+            accountManager.updateMatureSwitch(true);
 
             FragmentManager supportFragmentManager = getContext().getSupportFragmentManager();
             ((BaseLoaderFragment) supportFragmentManager.getFragments()
@@ -63,7 +64,7 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
         FragmentManager supportFragmentManager = getContext().getSupportFragmentManager();
         ((BaseLoaderFragment) supportFragmentManager.getFragments()
             .get(supportFragmentManager.getBackStackEntryCount())).load(true, true, null);
-        AptoideAccountManager.updateMatureSwitch(false);
+        accountManager.updateMatureSwitch(false);
       }
     });
   }

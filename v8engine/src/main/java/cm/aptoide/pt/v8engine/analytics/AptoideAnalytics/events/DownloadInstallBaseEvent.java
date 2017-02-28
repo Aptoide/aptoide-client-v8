@@ -2,13 +2,11 @@ package cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events;
 
 import android.support.annotation.CallSuper;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.DownloadAnalyticsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.Event;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -21,6 +19,7 @@ import lombok.ToString;
 public @EqualsAndHashCode(callSuper = false) @Data @ToString class DownloadInstallBaseEvent
     extends Event {
   private final AptoideClientUUID aptoideClientUUID;
+  private final AptoideAccountManager accountManager;
   private Action action;
   private int versionCode;
   private Origin origin;
@@ -36,9 +35,11 @@ public @EqualsAndHashCode(callSuper = false) @Data @ToString class DownloadInsta
   private DownloadInstallAnalyticsBaseBody.ResultStatus resultStatus;
   private Throwable error;
 
-  public DownloadInstallBaseEvent(Action action, Origin origin, String packageName, String url,
+  public DownloadInstallBaseEvent(AptoideAccountManager accountManager, Action action, Origin origin, String packageName, String url,
       String obbUrl, String patchObbUrl, AppContext context, int versionCode,
-      DownloadInstallEventConverter downloadInstallEventConverter, String eventName) {
+      DownloadInstallEventConverter downloadInstallEventConverter, String eventName,
+      IdsRepositoryImpl aptoideClientUUID) {
+    this.accountManager = accountManager;
     this.action = action;
     this.versionCode = versionCode;
     this.origin = origin;
@@ -51,15 +52,13 @@ public @EqualsAndHashCode(callSuper = false) @Data @ToString class DownloadInsta
     this.name = eventName;
     this.context = context;
     this.downloadInstallEventConverter = downloadInstallEventConverter;
-
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
+    this.aptoideClientUUID = aptoideClientUUID;
   }
 
   @Override public void send() {
     if (isReadyToSend()) {
-      DownloadAnalyticsRequest.of(aptoideClientUUID.getAptoideClientUUID(),
-          AptoideAccountManager.getAccessToken(),
+      DownloadAnalyticsRequest.of(aptoideClientUUID.getUniqueIdentifier(),
+          accountManager.getAccessToken(),
           downloadInstallEventConverter.convert(this, resultStatus, error), action.name(), name,
           context.name())
           .observe()

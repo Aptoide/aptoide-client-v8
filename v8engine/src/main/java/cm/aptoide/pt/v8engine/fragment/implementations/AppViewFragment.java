@@ -22,7 +22,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,7 +31,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.actions.PermissionRequest;
+import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AppAction;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
@@ -45,7 +45,8 @@ import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
-import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
+import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.iab.BillingBinder;
@@ -56,6 +57,7 @@ import cm.aptoide.pt.model.v7.GetAppMeta;
 import cm.aptoide.pt.model.v7.Malware;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.SimpleSubscriber;
@@ -74,7 +76,9 @@ import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.interfaces.AppMenuOptions;
 import cm.aptoide.pt.v8engine.interfaces.Payments;
 import cm.aptoide.pt.v8engine.interfaces.Scrollable;
+import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.payment.ProductFactory;
+import cm.aptoide.pt.v8engine.payment.products.ParcelableProduct;
 import cm.aptoide.pt.v8engine.receivers.AppBoughtReceiver;
 import cm.aptoide.pt.v8engine.repository.AdsRepository;
 import cm.aptoide.pt.v8engine.repository.AppRepository;
@@ -82,6 +86,7 @@ import cm.aptoide.pt.v8engine.repository.InstalledRepository;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.SocialRepository;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
+import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
 import cm.aptoide.pt.v8engine.util.referrer.ReferrerUtils;
@@ -127,7 +132,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   //
   private AppViewHeader header;
   private long appId;
-  private String packageName;
+  @Partners @Getter private String packageName;
   private OpenType openType;
   private Scheduled scheduled;
   private String storeTheme;
@@ -154,12 +159,14 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private String md5;
   private PermissionManager permissionManager;
   private Menu menu;
-  private String appName;
-  private String wUrl;
+  @Partners @Getter private String appName;
+  @Partners @Getter private String wUrl;
   private GetAppMeta.App app;
   private AppAction appAction = AppAction.OPEN;
   private InstalledRepository installedRepository;
   private GetApp getApp;
+  private AptoideAccountManager accountManager;
+  private StoreCredentialsProvider storeCredentialsProvider;
 
   public static AppViewFragment newInstance(String md5) {
     Bundle bundle = new Bundle();
@@ -224,18 +231,19 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
     permissionManager = new PermissionManager();
     Installer installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
     installManager = new InstallManager(AptoideDownloadManager.getInstance(), installer);
 
     productFactory = new ProductFactory();
-    appRepository = new AppRepository(new NetworkOperatorManager(
-        (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE)));
+    appRepository = RepositoryFactory.getAppRepository(getContext());
     adsRepository = new AdsRepository();
     installedRepository = RepositoryFactory.getInstalledRepository();
+    storeCredentialsProvider = new StoreCredentialsProviderImpl();
   }
 
-  @Override public void loadExtras(Bundle args) {
+  @Partners @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
     appId = args.getLong(BundleKeys.APP_ID.name(), -1);
     packageName = args.getString(BundleKeys.PACKAGE_NAME.name(), null);
@@ -256,7 +264,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     return VIEW_ID;
   }
 
-  @Override public void bindViews(View view) {
+  @Partners @Override public void bindViews(View view) {
     super.bindViews(view);
     header = new AppViewHeader(view);
     setHasOptionsMenu(true);
@@ -268,6 +276,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     if (storeTheme != null) {
       ThemeUtils.setStatusBarThemeColor(getActivity(),
           StoreThemeEnum.get(V8Engine.getConfiguration().getDefaultTheme()));
+      ThemeUtils.setAptoideTheme(getActivity());
     }
   }
 
@@ -345,7 +354,8 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   }
 
   public void buyApp(GetAppMeta.App app) {
-    startActivityForResult(PaymentActivity.getIntent(getActivity(), productFactory.create(app)),
+    startActivityForResult(PaymentActivity.getIntent(getActivity(),
+        (ParcelableProduct) productFactory.create(app)),
         PAY_APP_REQUEST_CODE);
   }
 
@@ -386,7 +396,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     super.onCreateOptionsMenu(menu, inflater);
     this.menu = menu;
     inflater.inflate(R.menu.menu_appview_fragment, menu);
-    SearchUtils.setupGlobalSearchView(menu, getActivity());
+    SearchUtils.setupGlobalSearchView(menu, getNavigationManager());
     uninstallMenuItem = menu.findItem(R.id.menu_uninstall);
   }
 
@@ -434,32 +444,45 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
   private void shareApp(String appName, String packageName, String wUrl) {
 
-    GenericDialogs.createGenericShareDialog(getContext(), getString(R.string.share))
-        .subscribe(eResponse -> {
-          if (GenericDialogs.EResponse.SHARE_EXTERNAL == eResponse) {
-            if (wUrl != null) {
-              Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-              sharingIntent.setType("text/plain");
-              sharingIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.install) + " \"" +
-                  appName + "\"");
-              sharingIntent.putExtra(Intent.EXTRA_TEXT, wUrl);
-              startActivity(Intent.createChooser(sharingIntent, getString(R.string.share)));
-            }
-          } else if (GenericDialogs.EResponse.SHARE_TIMELINE == eResponse) {
-            if (AptoideAccountManager.isLoggedIn()
-                && ManagerPreferences.getShowPreview()
-                && Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
-              SharePreviewDialog sharePreviewDialog = new SharePreviewDialog();
-              AlertDialog.Builder alertDialog =
-                  sharePreviewDialog.getCustomRecommendationPreviewDialogBuilder(getContext(),
-                      appName, app.getIcon());
-              SocialRepository socialRepository = new SocialRepository();
+    if (accountManager.isLoggedIn()) {
 
-              sharePreviewDialog.showShareCardPreviewDialog(packageName, "app", getContext(),
-                  sharePreviewDialog, alertDialog, socialRepository);
+      GenericDialogs.createGenericShareDialog(getContext(), getString(R.string.share))
+          .subscribe(eResponse -> {
+            if (GenericDialogs.EResponse.SHARE_EXTERNAL == eResponse) {
+
+              shareDefault(appName, packageName, wUrl);
+            } else if (GenericDialogs.EResponse.SHARE_TIMELINE == eResponse) {
+              if (accountManager.isLoggedIn()
+                  && ManagerPreferences.getShowPreview()
+                  && Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
+                SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(accountManager);
+                AlertDialog.Builder alertDialog =
+                    sharePreviewDialog.getCustomRecommendationPreviewDialogBuilder(getContext(),
+                        appName, app.getIcon());
+                SocialRepository socialRepository = new SocialRepository(accountManager,
+                    new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+                        getContext()));
+
+                sharePreviewDialog.showShareCardPreviewDialog(packageName, "app", getContext(),
+                    sharePreviewDialog, alertDialog, socialRepository);
+              }
             }
-          }
-        }, Throwable::printStackTrace);
+          }, Throwable::printStackTrace);
+    } else {
+
+      shareDefault(appName, packageName, wUrl);
+    }
+  }
+
+  @Partners protected void shareDefault(String appName, String packageName, String wUrl) {
+    if (wUrl != null) {
+      Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+      sharingIntent.setType("text/plain");
+      sharingIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.install) + " \"" +
+          appName + "\"");
+      sharingIntent.putExtra(Intent.EXTRA_TEXT, wUrl);
+      startActivity(Intent.createChooser(sharingIntent, getString(R.string.share)));
+    }
   }
 
   private Observable<GetApp> manageOrganicAds(GetApp getApp) {
@@ -505,7 +528,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
           }
           if (appAction != AppAction.INSTALL) {
             setUnInstallMenuOptionVisible(() -> new PermissionManager().requestDownloadAccess(
-                (PermissionRequest) getContext())
+                (PermissionService) getContext())
                 .flatMap(success -> installManager.uninstall(getContext(), packageName,
                     app.getFile().getVername()))
                 .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
@@ -582,7 +605,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     });
   }
 
-  protected void showHideOptionsMenu(MenuItem item, boolean visible) {
+  @Partners protected void showHideOptionsMenu(MenuItem item, boolean visible) {
     if (item != null) {
       item.setVisible(visible);
     }
@@ -606,7 +629,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
             installedRepository);
     displayables.add(installDisplayable);
     displayables.add(new AppViewStoreDisplayable(getApp));
-    displayables.add(new AppViewRateAndCommentsDisplayable(getApp));
+    displayables.add(new AppViewRateAndCommentsDisplayable(getApp, storeCredentialsProvider));
 
     // only show screen shots / video if the app has them
     if (isMediaAvailable(media)) {
@@ -735,7 +758,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     getLayoutManager().onItemsUpdated(getRecyclerView(), pos, 1);
   }
 
-  private enum BundleKeys {
+  @Partners protected enum BundleKeys {
     APP_ID,
     STORE_NAME,
     MINIMAL_AD,
@@ -807,24 +830,19 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
       String headerImageUrl = app.getGraphic();
       List<GetAppMeta.Media.Screenshot> screenshots = app.getMedia().getScreenshots();
 
-      //			final Drawable colorDrawable = new ColorDrawable(Color.argb(255, 0, 0, 0));
-
+      final Context context = getContext();
       if (!TextUtils.isEmpty(headerImageUrl)) {
-        ImageLoader.load(app.getGraphic(), R.drawable.app_view_header_gradient, featuredGraphic);
-        //				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        //					((FrameLayout)featuredGraphic.getParent()).setForeground(colorDrawable);
-        //				}
+        ImageLoader.with(context)
+            .load(app.getGraphic(), R.drawable.app_view_header_gradient, featuredGraphic);
       } else if (screenshots != null && screenshots.size() > 0 && !TextUtils.isEmpty(
           screenshots.get(0).getUrl())) {
-        ImageLoader.load(screenshots.get(0).getUrl(), R.drawable.app_view_header_gradient,
-            featuredGraphic);
-        //				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        //					((FrameLayout) featuredGraphic.getParent()).setForeground(colorDrawable);
-        //				}
+        ImageLoader.with(context)
+            .load(screenshots.get(0).getUrl(), R.drawable.app_view_header_gradient,
+                featuredGraphic);
       }
 
       if (app.getIcon() != null) {
-        ImageLoader.load(getApp.getNodes().getMeta().getData().getIcon(), appIcon);
+        ImageLoader.with(context).load(getApp.getNodes().getMeta().getData().getIcon(), appIcon);
       }
 
       collapsingToolbar.setTitle(app.getName());
@@ -896,7 +914,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
           break;
       }
 
-      ImageLoader.load(badgeResId, badge);
+      ImageLoader.with(context).load(badgeResId, badge);
       badgeText.setText(badgeMessageId);
 
       Analytics.ViewedApplication.view(app.getPackageName(),

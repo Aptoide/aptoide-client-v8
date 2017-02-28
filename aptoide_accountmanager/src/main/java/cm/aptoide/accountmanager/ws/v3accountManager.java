@@ -18,7 +18,6 @@ import cm.aptoide.pt.networkclient.okhttp.OkHttpClientFactory;
 import cm.aptoide.pt.networkclient.okhttp.UserAgentGenerator;
 import cm.aptoide.pt.networkclient.okhttp.cache.PostCacheInterceptor;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
-import cm.aptoide.pt.preferences.Application;
 import java.io.IOException;
 import lombok.Getter;
 import okhttp3.MultipartBody;
@@ -44,34 +43,39 @@ abstract class v3accountManager<U> extends WebService<v3accountManager.Interface
 
   @Getter protected final BaseBody map;
   private final String INVALID_ACCESS_TOKEN_CODE = "invalid_token";
+  private final AptoideAccountManager accountManager;
   private boolean accessTokenRetry = false;
 
-  v3accountManager() {
+  v3accountManager(AptoideAccountManager accountManager) {
     super(Interfaces.class, OkHttpClientFactory.getSingletonClient(new UserAgentGenerator() {
       @Override public String generateUserAgent() {
-        return AptoideAccountManager.getUserEmail();
+        return accountManager.getUserEmail();
       }
     }, false), WebService.getDefaultConverter(), BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
         + "://"
         + BuildConfig.APTOIDE_WEB_SERVICES_HOST
         + "/webservices/");
+    this.accountManager = accountManager;
     this.map = new BaseBody();
   }
 
-  v3accountManager(OkHttpClient httpClient) {
+  v3accountManager(OkHttpClient httpClient, AptoideAccountManager accountManager) {
     super(Interfaces.class, httpClient, WebService.getDefaultConverter(),
         BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
             + "://"
             + BuildConfig.APTOIDE_WEB_SERVICES_HOST
             + "/webservices/");
+    this.accountManager = accountManager;
     this.map = new BaseBody();
   }
 
-  v3accountManager(OkHttpClient httpClient, Converter.Factory converterFactory) {
+  v3accountManager(OkHttpClient httpClient, Converter.Factory converterFactory,
+      AptoideAccountManager accountManager) {
     super(Interfaces.class, httpClient, converterFactory, BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
         + "://"
         + BuildConfig.APTOIDE_WEB_SERVICES_HOST
         + "/webservices/");
+    this.accountManager = accountManager;
     this.map = new BaseBody();
   }
 
@@ -92,12 +96,11 @@ abstract class v3accountManager<U> extends WebService<v3accountManager.Interface
 
                 if (!accessTokenRetry) {
                   accessTokenRetry = true;
-                  return AptoideAccountManager.invalidateAccessToken(Application.getContext())
-                      .flatMap(s -> {
-                        this.map.setAccess_token(s);
-                        return v3accountManager.this.observe(bypassCache)
-                            .observeOn(AndroidSchedulers.mainThread());
-                      });
+                  return accountManager.refreshAccountToken()
+                      .andThen(v3accountManager.this.observe(bypassCache)
+                          .doOnSubscribe(() -> this.map.setAccess_token(
+                              accountManager.getAccount().getToken()))
+                          .observeOn(AndroidSchedulers.mainThread()));
                 } else {
                   return Observable.error(new NetworkErrorException());
                 }
@@ -110,8 +113,7 @@ abstract class v3accountManager<U> extends WebService<v3accountManager.Interface
             }
           }
           return Observable.error(throwable);
-        })
-        .observeOn(AndroidSchedulers.mainThread());
+        });
   }
 
   interface Interfaces {

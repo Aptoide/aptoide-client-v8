@@ -5,6 +5,7 @@
     android:background="@color/aptoide_orange"
     android:gravity="center_horizontal"
     android:orientation="vertical"
+    android:paddingBottom="@dimen/bottom_skip_bar_height"
     >
 
   <ImageView
@@ -12,7 +13,7 @@
       android:layout_width="200dp"
       android:layout_height="50dp"
       android:layout_margin="20dp"
-      android:src="@drawable/wizard_aptoide_logo"
+      android:src="@drawable/logo_aptoide"
       />
 
   <TextView

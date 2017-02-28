@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.timeline;
 
 import android.graphics.Typeface;
 import android.os.Build;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.Button;
@@ -66,20 +67,23 @@ public class SocialVideoWidget extends SocialCardWidget<SocialVideoDisplayable> 
 
   @Override public void bindView(SocialVideoDisplayable displayable) {
     super.bindView(displayable);
+    final FragmentActivity context = getContext();
     Typeface typeFace =
-        Typeface.createFromAsset(getContext().getAssets(), "fonts/DroidSerif-Regular.ttf");
+        Typeface.createFromAsset(context.getAssets(), "fonts/DroidSerif-Regular.ttf");
     //title.setText(displayable.getTitle());
     //subtitle.setText(displayable.getTimeSinceLastUpdate(getContext()));
     if (displayable.getStore() != null) {
       title.setVisibility(View.VISIBLE);
       title.setText(displayable.getStore().getName());
       storeAvatar.setVisibility(View.VISIBLE);
-      ImageLoader.loadWithShadowCircleTransform(displayable.getStore().getAvatar(), storeAvatar);
+      ImageLoader.with(context)
+          .loadWithShadowCircleTransform(displayable.getStore().getAvatar(), storeAvatar);
       if (displayable.getUser() != null) {
         subtitle.setVisibility(View.VISIBLE);
         subtitle.setText(displayable.getUser().getName());
         userAvatar.setVisibility(View.VISIBLE);
-        ImageLoader.loadWithShadowCircleTransform(displayable.getUser().getAvatar(), userAvatar);
+        ImageLoader.with(context)
+            .loadWithShadowCircleTransform(displayable.getUser().getAvatar(), userAvatar);
       } else {
         subtitle.setVisibility(View.GONE);
         userAvatar.setVisibility(View.GONE);
@@ -91,27 +95,28 @@ public class SocialVideoWidget extends SocialCardWidget<SocialVideoDisplayable> 
         title.setVisibility(View.VISIBLE);
         title.setText(displayable.getUser().getName());
         storeAvatar.setVisibility(View.VISIBLE);
-        ImageLoader.loadWithShadowCircleTransform(displayable.getUser().getAvatar(), storeAvatar);
+        ImageLoader.with(context)
+            .loadWithShadowCircleTransform(displayable.getUser().getAvatar(), storeAvatar);
       }
     }
     videoTitle.setTypeface(typeFace);
     videoTitle.setText(displayable.getVideoTitle());
     setCardViewMargin(displayable, cardView);
-    ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
+    ImageLoader.with(context).load(displayable.getThumbnailUrl(), thumbnail);
     play_button.setVisibility(View.VISIBLE);
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       mediaLayout.setForeground(
-          getContext().getResources().getDrawable(R.color.overlay_black, getContext().getTheme()));
+          context.getResources().getDrawable(R.color.overlay_black, context.getTheme()));
     } else {
-      mediaLayout.setForeground(getContext().getResources().getDrawable(R.color.overlay_black));
+      mediaLayout.setForeground(context.getResources().getDrawable(R.color.overlay_black));
     }
 
     compositeSubscription.add(RxView.clicks(mediaLayout).subscribe(v -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
       Analytics.AppsTimeline.clickOnCard(getCardTypeName(), Analytics.AppsTimeline.BLANK,
           displayable.getVideoTitle(), displayable.getTitle(), Analytics.AppsTimeline.OPEN_VIDEO);
-      displayable.getLink().launch(getContext());
+      displayable.getLink().launch(context);
       displayable.sendOpenVideoEvent(SendEventRequest.Body.Data.builder()
           .cardType(getCardTypeName())
           .source(displayable.getTitle())
@@ -132,19 +137,19 @@ public class SocialVideoWidget extends SocialCardWidget<SocialVideoDisplayable> 
             setAppNameToFirstLinkedApp(displayable);
           }
           if (appName != null) {
-            relatedTo.setText(displayable.getAppRelatedText(getContext(), appName));
+            relatedTo.setText(displayable.getAppRelatedText(context, appName));
           }
         }, throwable -> {
           setAppNameToFirstLinkedApp(displayable);
           if (appName != null) {
-            relatedTo.setText(displayable.getAppRelatedText(getContext(), appName));
+            relatedTo.setText(displayable.getAppRelatedText(context, appName));
           }
           throwable.printStackTrace();
         }));
 
     compositeSubscription.add(RxView.clicks(videoHeader).subscribe(click -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
-      displayable.getBaseLink().launch(getContext());
+      displayable.getBaseLink().launch(context);
       Analytics.AppsTimeline.clickOnCard(getCardTypeName(), Analytics.AppsTimeline.BLANK,
           displayable.getVideoTitle(), displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_VIDEO_HEADER);

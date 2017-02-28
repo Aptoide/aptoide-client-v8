@@ -6,6 +6,7 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.timeline;
 
 import android.graphics.Typeface;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.Button;
@@ -63,18 +64,19 @@ public class ArticleWidget extends CardWidget<ArticleDisplayable> {
   @Override public void bindView(ArticleDisplayable displayable) {
     super.bindView(displayable);
     title.setText(displayable.getTitle());
-    subtitle.setText(displayable.getTimeSinceLastUpdate(getContext()));
+    final FragmentActivity context = getContext();
+    subtitle.setText(displayable.getTimeSinceLastUpdate(context));
     Typeface typeFace =
-        Typeface.createFromAsset(getContext().getAssets(), "fonts/DroidSerif-Regular.ttf");
+        Typeface.createFromAsset(context.getAssets(), "fonts/DroidSerif-Regular.ttf");
     articleTitle.setTypeface(typeFace);
     articleTitle.setText(displayable.getArticleTitle());
     setCardViewMargin(displayable, cardView);
-    ImageLoader.loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
-    ImageLoader.load(displayable.getThumbnailUrl(), thumbnail);
+    ImageLoader.with(context).loadWithShadowCircleTransform(displayable.getAvatarUrl(), image);
+    ImageLoader.with(context).load(displayable.getThumbnailUrl(), thumbnail);
 
     url.setOnClickListener(v -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
-      displayable.getLink().launch(getContext());
+      displayable.getLink().launch(context);
       Analytics.AppsTimeline.clickOnCard(CARD_TYPE_NAME, Analytics.AppsTimeline.BLANK,
           displayable.getArticleTitle(), displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_ARTICLE);
@@ -98,19 +100,19 @@ public class ArticleWidget extends CardWidget<ArticleDisplayable> {
             setAppNameToFirstLinkedApp(displayable);
           }
           if (appName != null) {
-            relatedTo.setText(displayable.getAppRelatedToText(getContext(), appName));
+            relatedTo.setText(displayable.getAppRelatedToText(context, appName));
           }
         }, throwable -> {
           setAppNameToFirstLinkedApp(displayable);
           if (appName != null) {
-            relatedTo.setText(displayable.getAppRelatedToText(getContext(), appName));
+            relatedTo.setText(displayable.getAppRelatedToText(context, appName));
           }
           throwable.printStackTrace();
         }));
 
     compositeSubscription.add(RxView.clicks(articleHeader).subscribe(click -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
-      displayable.getDeveloperLink().launch(getContext());
+      displayable.getDeveloperLink().launch(context);
       Analytics.AppsTimeline.clickOnCard(CARD_TYPE_NAME, Analytics.AppsTimeline.BLANK,
           displayable.getArticleTitle(), displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_ARTICLE_HEADER);

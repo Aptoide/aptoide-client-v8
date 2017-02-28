@@ -18,11 +18,13 @@ import java.util.ArrayList;
 public class SyncResultAdapter extends RecyclerView.Adapter<SyncResultAdapter.ViewHolder> {
   private final SyncResultFragment.ContactItemListener mItemListener;
   private ArrayList<Contact> mContacts;
+  private Context mContext;
 
   public SyncResultAdapter(ArrayList<Contact> contacts,
-      SyncResultFragment.ContactItemListener itemListener) {
+      SyncResultFragment.ContactItemListener itemListener, Context context) {
     setList(contacts);
     this.mItemListener = itemListener;
+    this.mContext = context;
   }
 
   public void setList(ArrayList<Contact> contacts) {
@@ -40,9 +42,10 @@ public class SyncResultAdapter extends RecyclerView.Adapter<SyncResultAdapter.Vi
   @Override public void onBindViewHolder(ViewHolder holder, int position) {
     Contact contact = mContacts.get(position);
 
-    ImageLoader.loadWithShadowCircleTransform(contact.getStore().getAvatar(), holder.mMainIcon);
-    ImageLoader.loadWithShadowCircleTransform(contact.getPerson().getAvatar(),
-        holder.mSecondaryIcon);
+    ImageLoader.with(mContext)
+        .loadWithShadowCircleTransform(contact.getStore().getAvatar(), holder.mMainIcon);
+    ImageLoader.with(mContext)
+        .loadWithShadowCircleTransform(contact.getPerson().getAvatar(), holder.mSecondaryIcon);
     holder.mStoreName.setText(contact.getStore().getName());
     holder.mUserName.setText(contact.getPerson().getName());
   }

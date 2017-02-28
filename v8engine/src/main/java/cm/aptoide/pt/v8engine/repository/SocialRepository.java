@@ -2,8 +2,7 @@ package cm.aptoide.pt.v8engine.repository;
 
 import android.content.Context;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.BaseActivity;
-import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.v8engine.activity.AccountBaseActivity;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.LikeCardRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SetUserRequest;
@@ -13,7 +12,6 @@ import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import rx.schedulers.Schedulers;
 
 /**
@@ -22,21 +20,21 @@ import rx.schedulers.Schedulers;
 public class SocialRepository {
 
   private final AptoideClientUUID aptoideClientUUID;
+  private final AptoideAccountManager accountManager;
 
-  public SocialRepository() {
-
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
+  public SocialRepository(AptoideAccountManager accountManager, AptoideClientUUID aptoideClientUUID) {
+    this.aptoideClientUUID = aptoideClientUUID;
+    this.accountManager = accountManager;
   }
 
   public void share(TimelineCard timelineCard, Context context, boolean privacy) {
-    String accessToken = AptoideAccountManager.getAccessToken();
-    String aptoideClientUUID = this.aptoideClientUUID.getAptoideClientUUID();
+    String accessToken = accountManager.getAccessToken();
+    String aptoideClientUUID = this.aptoideClientUUID.getUniqueIdentifier();
     ShareCardRequest.of(timelineCard, accessToken, aptoideClientUUID)
         .observe()
         .subscribe(baseV7Response -> {
-          final String userAccess = privacy ? BaseActivity.UserAccessState.UNLISTED.toString()
-              : BaseActivity.UserAccessState.PUBLIC.toString();
+          final String userAccess = privacy ? AccountBaseActivity.UserAccessState.UNLISTED.toString()
+              : AccountBaseActivity.UserAccessState.PUBLIC.toString();
           SetUserRequest.of(aptoideClientUUID, userAccess, accessToken, null)
               .observe()
               .subscribe(baseV7Response1 -> Logger.d(this.getClass().getSimpleName(),
@@ -47,9 +45,9 @@ public class SocialRepository {
   }
 
   public void like(TimelineCard timelineCard, String cardType, String ownerHash, int rating) {
-    String accessToken = AptoideAccountManager.getAccessToken();
-    String aptoideClientUUID = this.aptoideClientUUID.getAptoideClientUUID();
-    String email = AptoideAccountManager.getUserEmail();
+    String accessToken = accountManager.getAccessToken();
+    String aptoideClientUUID = this.aptoideClientUUID.getUniqueIdentifier();
+    String email = accountManager.getUserEmail();
     LikeCardRequest.of(timelineCard, cardType, ownerHash, accessToken, aptoideClientUUID, rating)
         .observe()
         .observeOn(Schedulers.io())
@@ -59,13 +57,13 @@ public class SocialRepository {
   }
 
   public void share(String packageName, String shareType, boolean privacy) {
-    String accessToken = AptoideAccountManager.getAccessToken();
-    String aptoideClientUUID = this.aptoideClientUUID.getAptoideClientUUID();
+    String accessToken = accountManager.getAccessToken();
+    String aptoideClientUUID = this.aptoideClientUUID.getUniqueIdentifier();
     ShareInstallCardRequest.of(packageName, accessToken, shareType, aptoideClientUUID)
         .observe()
         .subscribe(baseV7Response -> {
-          final String userAccess = privacy ? BaseActivity.UserAccessState.UNLISTED.toString()
-              : BaseActivity.UserAccessState.PUBLIC.toString();
+          final String userAccess = privacy ? AccountBaseActivity.UserAccessState.UNLISTED.toString()
+              : AccountBaseActivity.UserAccessState.PUBLIC.toString();
           SetUserRequest.of(aptoideClientUUID, userAccess, accessToken, null)
               .observe()
               .subscribe(baseV7Response1 -> Logger.d(this.getClass().getSimpleName(),

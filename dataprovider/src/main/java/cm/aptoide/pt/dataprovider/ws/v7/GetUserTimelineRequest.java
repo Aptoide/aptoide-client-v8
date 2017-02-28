@@ -49,7 +49,7 @@ public class GetUserTimelineRequest extends V7<GetUserTimeline, GetUserTimelineR
     return interfaces.getUserTimeline(url, body, bypassCache);
   }
 
-  @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBody
+  @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBodyWithAlphaBetaKey
       implements Endless {
 
     @Getter private Integer limit;

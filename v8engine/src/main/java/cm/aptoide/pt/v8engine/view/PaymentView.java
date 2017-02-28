@@ -5,8 +5,9 @@
 
 package cm.aptoide.pt.v8engine.view;
 
+import cm.aptoide.pt.v8engine.payment.Product;
 import cm.aptoide.pt.v8engine.payment.Purchase;
-import cm.aptoide.pt.v8engine.payment.products.AptoideProduct;
+import cm.aptoide.pt.v8engine.payment.products.ParcelableProduct;
 import java.util.List;
 import rx.Observable;
 
@@ -15,31 +16,19 @@ import rx.Observable;
  */
 public interface PaymentView extends View {
 
-  Observable<PaymentViewModel> usePaymentSelection();
+  Observable<PaymentViewModel> paymentSelection();
 
   Observable<Void> cancellationSelection();
 
   Observable<Void> buySelection();
 
-  Observable<Void> otherPaymentsSelection();
+  void showLoading();
 
-  Observable<PaymentViewModel> registerPaymentSelection();
+  void showPayments(List<PaymentViewModel> paymentList);
 
-  void showGlobalLoading();
+  void showProduct(Product product);
 
-  void showPaymentsLoading();
-
-  void showOtherPayments(List<PaymentViewModel> paymentList);
-
-  void hideOtherPayments();
-
-  void showProduct(AptoideProduct product);
-
-  void showSelectedPayment(PaymentViewModel selectedPayment);
-
-  void hideGlobalLoading();
-
-  void hidePaymentsLoading();
+  void hideLoading();
 
   void dismiss(Purchase purchase);
 
@@ -47,7 +36,7 @@ public interface PaymentView extends View {
 
   void dismiss();
 
-  void navigateToAuthorizationView(int paymentId, AptoideProduct product);
+  void navigateToAuthorizationView(int paymentId, Product product);
 
   void showPaymentsNotFoundMessage();
 
@@ -62,26 +51,17 @@ public interface PaymentView extends View {
     private final int id;
     private final String name;
     private final String description;
-    private final double price;
-    private final String currency;
-    private final Status status;
+    private final boolean selected;
 
-    public PaymentViewModel(int id, String name, String description, double price, String currency,
-        Status status) {
+    public PaymentViewModel(int id, String name, String description, boolean selected) {
       this.id = id;
       this.name = name;
       this.description = description;
-      this.price = price;
-      this.currency = currency;
-      this.status = status;
+      this.selected = selected;
     }
 
     public int getId() {
       return id;
-    }
-
-    public double getPrice() {
-      return price;
     }
 
     public String getName() {
@@ -92,18 +72,8 @@ public interface PaymentView extends View {
       return description;
     }
 
-    public String getCurrency() {
-      return currency;
-    }
-
-    public Status getStatus() {
-      return status;
-    }
-
-    public enum Status {
-      REGISTER,
-      APPROVING,
-      USE
+    public boolean isSelected() {
+      return selected;
     }
   }
 }

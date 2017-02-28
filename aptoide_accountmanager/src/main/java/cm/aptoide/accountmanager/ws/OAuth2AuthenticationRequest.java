@@ -7,14 +7,14 @@ package cm.aptoide.accountmanager.ws;
 
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import cm.aptoide.accountmanager.Account;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.Application;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-import okhttp3.OkHttpClient;
-import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -25,34 +25,31 @@ public class OAuth2AuthenticationRequest extends v3accountManager<OAuth> {
 
   private String username;
   private String password;
-  private LoginMode mode;
+  private Account.Type mode;
   private String nameForGoogle;
   private String grantType;
   private String refreshToken;
   private String aptoideClientUUID;
 
-  public OAuth2AuthenticationRequest(String aptoideClientUUID) {
+  public OAuth2AuthenticationRequest(String aptoideClientUUID, AptoideAccountManager accountManager) {
+    super(accountManager);
     this.aptoideClientUUID = aptoideClientUUID;
   }
 
-  public OAuth2AuthenticationRequest(OkHttpClient httpClient, Converter.Factory converterFactory,
-      String aptoideClientUUID) {
-    super(httpClient, converterFactory);
-    this.aptoideClientUUID = aptoideClientUUID;
-  }
-
-  public static OAuth2AuthenticationRequest of(String username, String password, LoginMode mode,
-      @Nullable String nameForGoogle, String aptoideClientUUID) {
-    return new OAuth2AuthenticationRequest(aptoideClientUUID).setUsername(username)
+  public static OAuth2AuthenticationRequest of(String username, String password, Account.Type mode,
+      @Nullable String nameForGoogle, String aptoideClientUUID,
+      AptoideAccountManager accountManager) {
+    return new OAuth2AuthenticationRequest(aptoideClientUUID, accountManager).setUsername(username)
         .setPassword(password)
         .setMode(mode)
         .setGrantType("password")
         .setNameForGoogle(nameForGoogle);
   }
 
-  public static OAuth2AuthenticationRequest of(String refreshToken, String aptoideClientUUID) {
+  public static OAuth2AuthenticationRequest of(String refreshToken, String aptoideClientUUID,
+      AptoideAccountManager accountManager) {
 
-    return new OAuth2AuthenticationRequest(aptoideClientUUID).setGrantType("refresh_token")
+    return new OAuth2AuthenticationRequest(aptoideClientUUID, accountManager).setGrantType("refresh_token")
         .setRefreshToken(refreshToken);
   }
 

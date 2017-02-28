@@ -17,10 +17,12 @@ import cm.aptoide.pt.v8engine.V8Engine;
 public class LoginBroadcastReceiver extends BroadcastReceiver {
 
   @Override public void onReceive(Context context, Intent intent) {
+    final AptoideAccountManager accountManager =
+          ((V8Engine) context.getApplicationContext()).getAccountManager();
     if (AptoideAccountManager.LOGIN.equals(intent.getAction())) {
-      V8Engine.loadUserData();
+      V8Engine.loadUserData(accountManager);
     } else if (AptoideAccountManager.LOGOUT.equals(intent.getAction())) {
-      V8Engine.clearUserData();
+      V8Engine.clearUserData(accountManager);
     }
   }
 }

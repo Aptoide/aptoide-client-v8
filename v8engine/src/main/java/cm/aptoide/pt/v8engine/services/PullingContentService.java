@@ -15,22 +15,29 @@ import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.widget.RemoteViews;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.ws.v3.PushNotificationsRequest;
+import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.imageloader.ImageLoader;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v3.GetPushNotificationsResponse;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.install.InstallerFactory;
 import cm.aptoide.pt.v8engine.receivers.DeepLinkIntentReceiver;
 import cm.aptoide.pt.v8engine.receivers.PullingContentReceiver;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.UpdateRepository;
+import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import com.bumptech.glide.request.target.NotificationTarget;
+import java.util.ArrayList;
 import java.util.List;
+import rx.Observable;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -47,9 +54,13 @@ public class PullingContentService extends Service {
   public static final int UPDATE_NOTIFICATION_ID = 123;
   private static final String TAG = PullingContentService.class.getSimpleName();
   private CompositeSubscription subscriptions;
+  private InstallManager installManager;
 
   @Override public void onCreate() {
     super.onCreate();
+    installManager = new InstallManager(AptoideDownloadManager.getInstance(),
+        new InstallerFactory().create(this, InstallerFactory.ROLLBACK));
+
     subscriptions = new CompositeSubscription();
     AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
     if (!isAlarmUp(this, PUSH_NOTIFICATIONS_ACTION)) {
@@ -83,11 +94,11 @@ public class PullingContentService extends Service {
           setUpdatesAction(startId);
           break;
         case PUSH_NOTIFICATIONS_ACTION:
-          setPushNotificationsAction(startId);
+          setPushNotificationsAction(this, startId);
           break;
         case BOOT_COMPLETED_ACTION:
           setUpdatesAction(startId);
-          setPushNotificationsAction(startId);
+          setPushNotificationsAction(this, startId);
           break;
       }
     }
@@ -100,10 +111,19 @@ public class PullingContentService extends Service {
    * @param startId service startid
    */
   private void setUpdatesAction(int startId) {
-    UpdateRepository repository = RepositoryFactory.getUpdateRepository();
-    subscriptions.add(
-        repository.sync(true).andThen(repository.getAll(false)).first().subscribe(updates -> {
-          Logger.d(TAG, "updates refreshed");
+    UpdateRepository repository = RepositoryFactory.getUpdateRepository(this);
+    subscriptions.add(repository.sync(true)
+        .andThen(repository.getAll(false))
+        .first()
+        .observeOn(Schedulers.computation())
+        .flatMap(updates -> autoUpdate(updates).flatMap(autoUpdateRunned -> {
+          if (autoUpdateRunned) {
+            return Observable.empty();
+          } else {
+            return Observable.just(updates);
+          }
+        }))
+        .subscribe(updates -> {
           setUpdatesNotification(updates, startId);
         }, throwable -> {
           throwable.printStackTrace();
@@ -116,8 +136,30 @@ public class PullingContentService extends Service {
    *
    * @param startId service startid
    */
-  private void setPushNotificationsAction(int startId) {
-    PushNotificationsRequest.of().execute(response -> setPushNotification(response, startId));
+  private void setPushNotificationsAction(Context context, int startId) {
+    PushNotificationsRequest.of()
+        .execute(response -> setPushNotification(context, response, startId));
+  }
+
+  /**
+   * @return true if updateList were installed with success, false otherwise
+   */
+  private Observable<Boolean> autoUpdate(List<Update> updateList) {
+    return Observable.just(
+        ManagerPreferences.isAutoUpdateEnable() && ManagerPreferences.allowRootInstallation())
+        .flatMap(shouldAutoUpdateRun -> {
+          if (shouldAutoUpdateRun) {
+            return Observable.just(updateList).observeOn(Schedulers.io()).map(updates -> {
+              ArrayList<Download> downloadList = new ArrayList<>(updates.size());
+              for (Update update : updates) {
+                downloadList.add(new DownloadFactory().create(update));
+              }
+              return downloadList;
+            }).flatMap(downloads -> installManager.startInstalls(downloads, this));
+          } else {
+            return Observable.just(false);
+          }
+        });
   }
 
   private void setUpdatesNotification(List<Update> updates, int startId) {
@@ -163,7 +205,8 @@ public class PullingContentService extends Service {
     stopSelf(startId);
   }
 
-  private void setPushNotification(GetPushNotificationsResponse response, int startId) {
+  private void setPushNotification(Context context, GetPushNotificationsResponse response,
+      int startId) {
     for (final GetPushNotificationsResponse.Notification pushNotification : response.getResults()) {
       Intent resultIntent = new Intent(Application.getContext(), PullingContentReceiver.class);
       resultIntent.setAction(PullingContentReceiver.NOTIFICATION_PRESSED_ACTION);
@@ -207,7 +250,7 @@ public class PullingContentService extends Service {
         NotificationTarget notificationTarget =
             new NotificationTarget(Application.getContext(), expandedView,
                 R.id.PushNotificationImageView, notification, PUSH_NOTIFICATION_ID);
-        ImageLoader.loadImageToNotification(notificationTarget, imageUrl);
+        ImageLoader.with(context).loadImageToNotification(notificationTarget, imageUrl);
       }
 
       if (!response.getResults().isEmpty()) {

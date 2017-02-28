@@ -29,6 +29,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
@@ -42,6 +44,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.dialog.AdultDialog;
 import cm.aptoide.pt.v8engine.filemanager.FileManager;
@@ -66,6 +69,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private Context context;
   private CompositeSubscription subscriptions;
   private FileManager fileManager;
+  private PermissionManager permissionManager;
+  private AptoideAccountManager accountManager;
 
   public static Fragment newInstance() {
     return new SettingsFragment();
@@ -75,6 +80,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
     super.onCreate(savedInstanceState);
     fileManager = FileManager.build();
     subscriptions = new CompositeSubscription();
+    permissionManager = new PermissionManager();
+    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
   }
 
   @Override public void onCreatePreferences(Bundle bundle, String s) {
@@ -90,11 +97,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
   }
 
   @Override public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-    // TODO
-    if (key.equals(ManagedKeys.UPDATES_FILTER_ALPHA_BETA_KEY)) {
+    if (shouldRefreshUpdates(key)) {
       UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(Update.class);
       updateAccessor.removeAll();
-      UpdateRepository repository = RepositoryFactory.getUpdateRepository();
+      UpdateRepository repository = RepositoryFactory.getUpdateRepository(context);
       repository.sync(true)
           .andThen(repository.getAll(false))
           .first()
@@ -102,6 +108,11 @@ public class SettingsFragment extends PreferenceFragmentCompat
             CrashReport.getInstance().log(throwable);
           });
     }
+  }
+
+  private boolean shouldRefreshUpdates(String key) {
+    return key.equals(ManagedKeys.UPDATES_FILTER_ALPHA_BETA_KEY) || key.equals(
+        ManagedKeys.HWSPECS_FILTER) || key.equals(ManagedKeys.UPDATES_SYSTEM_APPS_KEY);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -140,18 +151,23 @@ public class SettingsFragment extends PreferenceFragmentCompat
     });
 
     CheckBoxPreference matureChkBox = (CheckBoxPreference) findPreference("matureChkBox");
-    if (AptoideAccountManager.isMatureSwitchOn()) {
+    if (accountManager.isAccountMature()) {
       matureChkBox.setChecked(true);
     } else {
       matureChkBox.setChecked(false);
     }
 
     //set AppStore name
-    findPreference(SettingsConstants.CHECK_AUTO_UPDATE).setTitle(
+    findPreference(SettingsConstants.CHECK_AUTO_UPDATE_CATEGORY).setTitle(
+        AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate,
+            Application.getConfiguration().getMarketName()));
+
+    Preference autoUpdatepreference = findPreference(SettingsConstants.CHECK_AUTO_UPDATE);
+    autoUpdatepreference.setTitle(
         AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate_title,
             Application.getConfiguration().getMarketName()));
-    findPreference(SettingsConstants.CHECK_AUTO_UPDATE_CATEGORY).setTitle(
-        AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate_title,
+    autoUpdatepreference.setSummary(
+        AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate_message,
             Application.getConfiguration().getMarketName()));
 
     findPreference(SettingsConstants.ADULT_CHECK_BOX).setOnPreferenceClickListener(
@@ -166,14 +182,14 @@ public class SettingsFragment extends PreferenceFragmentCompat
                     @Override public void onClick(DialogInterface dialog, int which) {
                       if (which == DialogInterface.BUTTON_POSITIVE) {
                         cb.setChecked(true);
-                        AptoideAccountManager.updateMatureSwitch(true);
+                        accountManager.updateMatureSwitch(true);
                       }
                     }
                   }).show();
             } else {
               Logger.d(AdultDialog.class.getName(), "FLURRY TESTING : LOCK ADULT CONTENT");
               Analytics.AdultContent.lock();
-              AptoideAccountManager.updateMatureSwitch(false);
+              accountManager.updateMatureSwitch(false);
             }
 
             return true;
@@ -337,6 +353,34 @@ public class SettingsFragment extends PreferenceFragmentCompat
     if (isSetingPIN) {
       dialogSetAdultPin(mp).show();
     }
+
+    CheckBoxPreference autoUpdatePreference =
+        (CheckBoxPreference) findPreference(SettingsConstants.AUTO_UPDATE_ENABLE);
+    findPreference(SettingsConstants.ALLOW_ROOT_INSTALLATION).setOnPreferenceChangeListener(
+        (preference, o) -> {
+          final CheckBoxPreference checkBoxPreference = (CheckBoxPreference) preference;
+          if (checkBoxPreference.isChecked()) {
+            ManagerPreferences.setAutoUpdateEnable(false);
+            autoUpdatePreference.setChecked(false);
+          }
+          return true;
+        });
+
+    PermissionService permissionRequest = (PermissionService) getContext();
+    autoUpdatePreference.setDependency(SettingsConstants.ALLOW_ROOT_INSTALLATION);
+    autoUpdatePreference.setOnPreferenceClickListener(preference -> {
+      final CheckBoxPreference checkBoxPreference = (CheckBoxPreference) preference;
+      if (checkBoxPreference.isChecked()) {
+        checkBoxPreference.setChecked(false);
+        subscriptions.add(permissionManager.requestExternalStoragePermission(permissionRequest)
+            .flatMap(success -> permissionManager.requestDownloadAccess(permissionRequest))
+            .subscribe(success -> {
+              checkBoxPreference.setChecked(true);
+              ManagerPreferences.setAutoUpdateEnable(true);
+            }, throwable -> CrashReport.getInstance().log(throwable)));
+      }
+      return true;
+    });
   }
 
   private void maturePinSetRemoveClick() {

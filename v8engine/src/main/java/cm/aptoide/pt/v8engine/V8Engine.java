@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine;
 
+import android.accounts.AccountManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +18,7 @@ import android.preference.PreferenceManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
 import cm.aptoide.pt.actions.UserData;
+import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.ConsoleLogger;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
@@ -40,8 +42,9 @@ import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
+import cm.aptoide.pt.v8engine.account.ExternalServicesLoginAvailability;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AccountAnalytcsImp;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AccountAnalytcs;
 import cm.aptoide.pt.v8engine.analytics.abtesting.ABTestManager;
 import cm.aptoide.pt.v8engine.configuration.ActivityProvider;
 import cm.aptoide.pt.v8engine.configuration.FragmentProvider;
@@ -54,13 +57,16 @@ import cm.aptoide.pt.v8engine.filemanager.FileManager;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
+import cm.aptoide.pt.v8engine.view.MainActivity;
 import cm.aptoide.pt.v8engine.view.recycler.DisplayableWidgetMapping;
 import com.flurry.android.FlurryAgent;
+import com.google.android.gms.common.GoogleApiAvailability;
 import java.util.Collections;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import rx.Observable;
+import rx.Single;
 import rx.schedulers.Schedulers;
 
 /**
@@ -77,10 +83,11 @@ public abstract class V8Engine extends DataProvider {
   @Setter @Getter private static boolean autoUpdateWasCalled = false;
 
   private static AptoideClientUUID aptoideClientUUID;
+  private AptoideAccountManager accountManager;
 
-  public static void loadStores() {
+  public static void loadStores(AptoideAccountManager accountManager) {
 
-    AptoideAccountManager.getUserRepos().subscribe(subscriptions -> {
+    accountManager.getUserRepos().subscribe(subscriptions -> {
 
       if (subscriptions.size() > 0) {
         for (Subscription subscription : subscriptions) {
@@ -95,7 +102,7 @@ public abstract class V8Engine extends DataProvider {
           ((StoreAccessor) AccessorFactory.getAccessorFor(Store.class)).insert(store);
         }
       } else {
-        addDefaultStore();
+        addDefaultStore(accountManager);
       }
 
       checkUpdates();
@@ -105,7 +112,7 @@ public abstract class V8Engine extends DataProvider {
   }
 
   private static void checkUpdates() {
-    UpdateRepository repository = RepositoryFactory.getUpdateRepository();
+    UpdateRepository repository = RepositoryFactory.getUpdateRepository(DataProvider.getContext());
     repository.sync(true)
         .andThen(repository.getAll(false))
         .first()
@@ -114,29 +121,39 @@ public abstract class V8Engine extends DataProvider {
         });
   }
 
-  public static void loadUserData() {
-    loadStores();
-    regenerateUserAgent();
+  public static void loadUserData(AptoideAccountManager accountManager) {
+    loadStores(accountManager);
+    regenerateUserAgent(accountManager);
   }
 
-  public static void clearUserData() {
+  public static void clearUserData(AptoideAccountManager accountManager) {
     AccessorFactory.getAccessorFor(Store.class).removeAll();
-    StoreUtils.subscribeStore(getConfiguration().getDefaultStore(), null, null);
-    regenerateUserAgent();
+    StoreUtils.subscribeStore(getConfiguration().getDefaultStore(), null, null, accountManager);
+    regenerateUserAgent(accountManager);
   }
 
-  private static void regenerateUserAgent() {
+  private static void regenerateUserAgent(final AptoideAccountManager accountManager) {
     SecurePreferences.setUserAgent(
         AptoideUtils.NetworkUtils.getDefaultUserAgent(aptoideClientUUID, new UserData() {
-          @Override public String getUserEmail() {
-            return AptoideAccountManager.getUserEmail();
+          public String getEmail() {
+            return accountManager.getUserEmail();
           }
         }, AptoideUtils.Core.getDefaultVername(), getConfiguration().getPartnerId()));
   }
 
-  private static void addDefaultStore() {
+  private static void addDefaultStore(AptoideAccountManager accountManager) {
     StoreUtils.subscribeStore(getConfiguration().getDefaultStore(), getStoreMeta -> checkUpdates(),
-        null);
+        null, accountManager);
+  }
+
+  public AptoideAccountManager getAccountManager() {
+    if (accountManager == null) {
+      accountManager = new AptoideAccountManager(this, getConfiguration(), AccountManager.get(this),
+          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this),
+          new ExternalServicesLoginAvailability(this, getConfiguration(),
+              GoogleApiAvailability.getInstance()), new AccountAnalytcs());
+    }
+    return accountManager;
   }
 
   /**
@@ -146,22 +163,30 @@ public abstract class V8Engine extends DataProvider {
     Logger.setDBG(true);
   }
 
-  @Override public void onCreate() {
+  @Partners @Override public void onCreate() {
+    //
+    // apply security fixes
+    //
     try {
       PRNGFixes.apply();
     } catch (Exception e) {
       CrashReport.getInstance().log(e);
     }
-    long l = System.currentTimeMillis();
-    fragmentProvider = createFragmentProvider();
-    activityProvider = createActivityProvider();
-    displayableWidgetMapping = createDisplayableWidgetMapping();
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this);
 
     //
     // super
     //
     super.onCreate();
+
+    //
+    // onCreate
+    //
+
+    long l = System.currentTimeMillis();
+    fragmentProvider = createFragmentProvider();
+    activityProvider = createActivityProvider();
+    displayableWidgetMapping = createDisplayableWidgetMapping();
+    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this);
 
     //if (BuildConfig.DEBUG) {
     //  RxJavaPlugins.getInstance().registerObservableExecutionHook(new RxJavaStackTracer());
@@ -171,7 +196,17 @@ public abstract class V8Engine extends DataProvider {
 
     generateAptoideUUID().subscribe();
 
-    regenerateUserAgent();
+    // this will trigger the migration if needed
+    SQLiteDatabase db = new SQLiteDatabaseHelper(this).getWritableDatabase();
+    db.close();
+
+    final AptoideAccountManager accountManager = getAccountManager();
+    if (SecurePreferences.shouldLogoutUser()) {
+      accountManager.removeAccount();
+      SecurePreferences.setLogoutUser(false);
+    }
+
+    regenerateUserAgent(accountManager);
 
     IntentFilter intentFilter = new IntentFilter(AptoideAccountManager.LOGIN);
     intentFilter.addAction(AptoideAccountManager.LOGOUT);
@@ -189,25 +224,26 @@ public abstract class V8Engine extends DataProvider {
     if (SecurePreferences.isFirstRun()) {
       createShortCut();
       PreferenceManager.setDefaultValues(this, R.xml.settings, false);
-      if (AptoideAccountManager.isLoggedIn() && ManagerPreferences.isFirstRunV7()) {
-        AptoideAccountManager.removeLocalAccount();
+      if (accountManager.isLoggedIn() && ManagerPreferences.isFirstRunV7()) {
+        accountManager.removeAccount();
       }
       loadInstalledApps().doOnNext(o -> {
-        if (AptoideAccountManager.isLoggedIn()) {
+        if (accountManager.isLoggedIn()) {
 
           if (!SecurePreferences.isUserDataLoaded()) {
-            loadUserData();
+            loadUserData(accountManager);
             SecurePreferences.setUserDataLoaded();
           }
         } else {
-          generateAptoideUUID().subscribe(success -> addDefaultStore());
+          generateAptoideUUID().subscribe(success -> addDefaultStore(accountManager), err -> {
+            CrashReport.getInstance().log(err);
+          });
         }
         SecurePreferences.setFirstRun(false);
       }).subscribe();
 
       // load picture, name and email
-      AptoideAccountManager.refreshAndSaveUserInfoData().subscribe(userData -> {
-        Logger.v(TAG, "hello " + userData.getUsername());
+      accountManager.syncCurrentAccount().subscribe(() -> {
       }, e -> {
         CrashReport.getInstance().log(e);
       });
@@ -234,8 +270,8 @@ public abstract class V8Engine extends DataProvider {
         .init(this, new DownloadNotificationActionsActionsInterface(),
             new DownloadManagerSettingsI(), downloadAccessor, CacheHelper.build(),
             new FileUtils(action -> Analytics.File.moveFile(action)),
-            new TokenHttpClient(aptoideClientUUID, () -> AptoideAccountManager.getUserEmail(),
-                getConfiguration().getPartnerId()).customMake(),
+            new TokenHttpClient(aptoideClientUUID, () -> accountManager.getUserEmail(),
+                getConfiguration().getPartnerId(), accountManager).customMake(),
             new DownloadAnalytics(Analytics.getInstance()));
 
     fileManager.purgeCache()
@@ -249,46 +285,45 @@ public abstract class V8Engine extends DataProvider {
     //  setupStrictMode();
     //  Logger.w(TAG, "StrictMode setup")
 
-    // this will trigger the migration if needed
-    // FIXME: 24/08/16 sithengineer the following line should be removed when no more SQLite -> Realm migration is needed
-    SQLiteDatabase db = new SQLiteDatabaseHelper(this).getWritableDatabase();
-    db.close();
-
     ABTestManager.getInstance()
-        .initialize(aptoideClientUUID.getAptoideClientUUID())
+        .initialize(aptoideClientUUID.getUniqueIdentifier())
         .subscribe(success -> {
         }, throwable -> {
           CrashReport.getInstance().log(throwable);
         });
 
-    AptoideAccountManager.setAnalytics(new AccountAnalytcsImp());
     Logger.d(TAG, "onCreate took " + (System.currentTimeMillis() - l) + " millis.");
   }
 
   @Override protected TokenInvalidator getTokenInvalidator() {
-    return AptoideAccountManager::invalidateAccessToken;
+    return new TokenInvalidator() {
+      @Override public Single<String> invalidateAccessToken() {
+        return accountManager.refreshAccountToken()
+            .andThen(Single.just(accountManager.getAccount().getToken()));
+      }
+    };
   }
 
-  protected void setupCrashReports(boolean isDisabled) {
+  @Partners protected void setupCrashReports(boolean isDisabled) {
     CrashReport.getInstance()
         .addLogger(new CrashlyticsCrashLogger(this, isDisabled))
         .addLogger(new ConsoleLogger());
   }
 
-  protected FragmentProvider createFragmentProvider() {
+  @Partners protected FragmentProvider createFragmentProvider() {
     return new FragmentProviderImpl();
   }
 
-  protected ActivityProvider createActivityProvider() {
+  @Partners protected ActivityProvider createActivityProvider() {
     return new ActivityProviderImpl();
   }
 
-  protected DisplayableWidgetMapping createDisplayableWidgetMapping() {
+  @Partners protected DisplayableWidgetMapping createDisplayableWidgetMapping() {
     return DisplayableWidgetMapping.getInstance();
   }
 
   Observable<String> generateAptoideUUID() {
-    return Observable.fromCallable(() -> aptoideClientUUID.getAptoideClientUUID())
+    return Observable.fromCallable(() -> aptoideClientUUID.getUniqueIdentifier())
         .subscribeOn(Schedulers.computation());
   }
 
@@ -379,8 +414,8 @@ public abstract class V8Engine extends DataProvider {
         .build());
   }
 
-  public void createShortCut() {
-    Intent shortcutIntent = new Intent(this, MainActivityFragment.class);
+  @Partners public void createShortCut() {
+    Intent shortcutIntent = new Intent(this, MainActivity.class);
     shortcutIntent.setAction(Intent.ACTION_MAIN);
     Intent intent = new Intent();
     intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);

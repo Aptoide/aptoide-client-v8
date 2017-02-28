@@ -21,4 +21,6 @@ public class SettingsConstants {
   public static final CharSequence ABOUT_DIALOG = "aboutDialog";
   public static final CharSequence CHECK_AUTO_UPDATE = "checkautoupdate";
   public static final CharSequence CHECK_AUTO_UPDATE_CATEGORY = "checkautoupdatecategory";
+  public static final String ALLOW_ROOT_INSTALLATION = "allowRoot";
+  public static final String AUTO_UPDATE_ENABLE = "auto_update";
 }

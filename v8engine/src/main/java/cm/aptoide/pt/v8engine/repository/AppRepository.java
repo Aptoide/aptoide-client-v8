@@ -27,12 +27,13 @@ public class AppRepository {
 
   private final NetworkOperatorManager operatorManager;
   private final AptoideClientUUID aptoideClientUUID;
+  private final AptoideAccountManager accountManager;
 
-  public AppRepository(NetworkOperatorManager operatorManager) {
+  AppRepository(NetworkOperatorManager operatorManager, AptoideAccountManager accountManager,
+      IdsRepositoryImpl idsRepository) {
     this.operatorManager = operatorManager;
-
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
+    this.aptoideClientUUID = idsRepository;
+    this.accountManager = accountManager;
   }
 
   public Observable<GetApp> getApp(long appId, boolean refresh, boolean sponsored, String storeName,
@@ -43,9 +44,9 @@ public class AppRepository {
     //[AN-1160] - [AppView] latest version bug
     return GetAppRequest.of(appId,
         V8Engine.getConfiguration().getPartnerId() == null ? null : storeName,
-        StoreUtils.getStoreCredentials(storeName), AptoideAccountManager.getAccessToken(),
+        StoreUtils.getStoreCredentials(storeName), accountManager.getAccessToken(),
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getAptoideClientUUID(), packageName)
+            DataProvider.getContext()).getUniqueIdentifier(), packageName)
         .observe(refresh)
         .flatMap(response -> {
           if (response != null && response.isOk()) {
@@ -73,10 +74,24 @@ public class AppRepository {
             .getData()
             .getPay()
             .setProductId(paidApp.getPayment().getMetadata().getId());
+        getApp.getNodes().getMeta().getData().getPay().setPrice(paidApp.getPayment().getAmount());
+        getApp.getNodes()
+            .getMeta()
+            .getData()
+            .getPay()
+            .setCurrency(paidApp.getPayment().getPaymentServices().get(0).getCurrency());
+        getApp.getNodes()
+            .getMeta()
+            .getData()
+            .getPay()
+            .setTaxRate(paidApp.getPayment().getPaymentServices().get(0).getTaxRate());
+        getApp.getNodes()
+            .getMeta()
+            .getData()
+            .getPay()
+            .setSymbol(paidApp.getPayment().getSymbol());
+        getApp.getNodes().getMeta().getData().getPay().setStatus(paidApp.getPayment().getStatus());
       }
-      getApp.getNodes().getMeta().getData().getPay().setPrice(paidApp.getPayment().getAmount());
-      getApp.getNodes().getMeta().getData().getPay().setSymbol(paidApp.getPayment().getSymbol());
-      getApp.getNodes().getMeta().getData().getPay().setStatus(paidApp.getPayment().getStatus());
       return getApp;
     }).onErrorResumeNext(throwable -> {
       if (throwable instanceof RepositoryItemNotFoundException) {
@@ -89,7 +104,7 @@ public class AppRepository {
   public Observable<PaidApp> getPaidApp(long appId, boolean sponsored, String storeName,
       boolean refresh) {
     return GetApkInfoRequest.of(appId, operatorManager, sponsored, storeName,
-        AptoideAccountManager.getAccessToken()).observe(refresh).flatMap(response -> {
+        accountManager.getAccessToken()).observe(refresh).flatMap(response -> {
       if (response != null && response.isOk() && response.isPaid()) {
         return Observable.just(response);
       } else {
@@ -102,8 +117,8 @@ public class AppRepository {
 
   public Observable<GetApp> getApp(String packageName, boolean refresh, boolean sponsored,
       String storeName) {
-    return GetAppRequest.of(packageName, storeName, AptoideAccountManager.getAccessToken(),
-        aptoideClientUUID.getAptoideClientUUID()).observe(refresh).flatMap(response -> {
+    return GetAppRequest.of(packageName, storeName, accountManager.getAccessToken(),
+        aptoideClientUUID.getUniqueIdentifier()).observe(refresh).flatMap(response -> {
       if (response != null && response.isOk()) {
         if (response.getNodes().getMeta().getData().isPaid()) {
           return addPayment(sponsored, response, refresh);
@@ -118,8 +133,8 @@ public class AppRepository {
   }
 
   public Observable<GetApp> getAppFromMd5(String md5, boolean refresh, boolean sponsored) {
-    return GetAppRequest.ofMd5(md5, AptoideAccountManager.getAccessToken(),
-        aptoideClientUUID.getAptoideClientUUID()).observe(refresh).flatMap(response -> {
+    return GetAppRequest.ofMd5(md5, accountManager.getAccessToken(),
+        aptoideClientUUID.getUniqueIdentifier()).observe(refresh).flatMap(response -> {
       if (response != null && response.isOk()) {
         if (response.getNodes().getMeta().getData().isPaid()) {
           return addPayment(sponsored, response, refresh);

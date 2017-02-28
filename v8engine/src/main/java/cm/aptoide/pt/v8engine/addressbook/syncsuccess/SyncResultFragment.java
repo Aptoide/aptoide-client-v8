@@ -12,8 +12,7 @@ import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.addressbook.data.Contact;
-import cm.aptoide.pt.v8engine.fragment.SupportV4BaseFragment;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
+import cm.aptoide.pt.v8engine.fragment.UIComponentFragment;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jakewharton.rxbinding.view.RxView;
@@ -24,7 +23,7 @@ import java.util.List;
  * Created by jdandrade on 13/02/2017.
  */
 
-public class SyncResultFragment extends SupportV4BaseFragment implements SyncResultContract.View {
+public class SyncResultFragment extends UIComponentFragment implements SyncResultContract.View {
 
   public static final int SYNCED_LIST_NUMBER_OF_COLUMNS = 2;
   public static final String CONTACTS_JSON = "CONTACTS_JSON";
@@ -70,7 +69,8 @@ public class SyncResultFragment extends SupportV4BaseFragment implements SyncRes
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     mActionsListener = new SyncResultPresenter(this);
-    mListAdapter = new SyncResultAdapter((ArrayList<Contact>) contacts, mItemListener);
+    mListAdapter =
+        new SyncResultAdapter((ArrayList<Contact>) contacts, mItemListener, getContext());
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -104,8 +104,7 @@ public class SyncResultFragment extends SupportV4BaseFragment implements SyncRes
   }
 
   @Override public void showPhoneInputFragment() {
-    ((FragmentShower) getContext()).pushFragmentV4(
-        V8Engine.getFragmentProvider().newPhoneInputFragment());
+    getNavigationManager().navigateTo(V8Engine.getFragmentProvider().newPhoneInputFragment());
   }
 
   @Override public void setProgressIndicator(boolean active) {

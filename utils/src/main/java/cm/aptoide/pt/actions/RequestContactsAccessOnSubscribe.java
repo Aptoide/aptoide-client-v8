@@ -8,9 +8,9 @@ import rx.Subscriber;
  * Created by jdandrade on 23/02/2017.
  */
 public class RequestContactsAccessOnSubscribe implements Observable.OnSubscribe<Void> {
-  private final PermissionRequest permissionRequest;
+  private final PermissionService permissionRequest;
 
-  public RequestContactsAccessOnSubscribe(PermissionRequest permissionRequest) {
+  public RequestContactsAccessOnSubscribe(PermissionService permissionRequest) {
     this.permissionRequest = permissionRequest;
   }
 

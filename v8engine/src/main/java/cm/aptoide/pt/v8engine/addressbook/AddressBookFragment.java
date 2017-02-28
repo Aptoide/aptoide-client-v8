@@ -11,8 +11,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.actions.PermissionRequest;
-import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.FacebookModel;
 import cm.aptoide.pt.model.v7.TwitterModel;
@@ -24,8 +23,7 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.addressbook.data.Contact;
 import cm.aptoide.pt.v8engine.addressbook.data.ContactsRepositoryImpl;
 import cm.aptoide.pt.v8engine.addressbook.invitefriends.InviteFriendsFragment;
-import cm.aptoide.pt.v8engine.fragment.SupportV4BaseFragment;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
+import cm.aptoide.pt.v8engine.fragment.UIComponentFragment;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -46,7 +44,7 @@ import rx.android.schedulers.AndroidSchedulers;
  * Created by jdandrade on 07/02/2017.
  */
 
-public class AddressBookFragment extends SupportV4BaseFragment implements AddressBookContract.View {
+public class AddressBookFragment extends UIComponentFragment implements AddressBookContract.View {
 
   public static final int TWITTER_REQUEST_CODE = 140;
   public static final int FACEBOOK_REQUEST_CODE = 64206;
@@ -75,7 +73,8 @@ public class AddressBookFragment extends SupportV4BaseFragment implements Addres
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    mActionsListener = new AddressBookPresenter(this, new ContactsRepositoryImpl());
+    mActionsListener = new AddressBookPresenter(this, new ContactsRepositoryImpl(
+        ((V8Engine) getContext().getApplicationContext()).getAccountManager()));
     callbackManager = CallbackManager.Factory.create();
     registerFacebookCallback();
     mGenericPleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());
@@ -91,8 +90,8 @@ public class AddressBookFragment extends SupportV4BaseFragment implements Addres
     RxView.clicks(addressBookSyncButton)
         .flatMap(click -> {
           PermissionManager permissionManager = new PermissionManager();
-          final PermissionRequest permissionRequest = (PermissionRequest) getContext();
-          return permissionManager.requestContactsAccess(permissionRequest);
+          final PermissionService permissionService = (PermissionService) getContext();
+          return permissionManager.requestContactsAccess(permissionService);
         })
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(permissionGranted -> mActionsListener.syncAddressBook());
@@ -177,13 +176,13 @@ public class AddressBookFragment extends SupportV4BaseFragment implements Addres
 
   @Override public void showAboutFragment() {
     final String marketName = Application.getConfiguration().getMarketName();
-    ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
+    getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
         .newDescriptionFragment("About Address Book",
             getString(R.string.addressbook_data_about, marketName), "default"));
   }
 
   @Override public void showSuccessFragment(List<Contact> contacts) {
-    ((FragmentShower) getContext()).pushFragmentV4(
+    getNavigationManager().navigateTo(
         V8Engine.getFragmentProvider().newSyncSuccessFragment(contacts));
   }
 
@@ -191,11 +190,11 @@ public class AddressBookFragment extends SupportV4BaseFragment implements Addres
       @NonNull InviteFriendsFragment.InviteFriendsFragmentOpenMode openMode) {
     switch (openMode) {
       case ERROR:
-        ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
+        getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
             .newInviteFriendsFragment(InviteFriendsFragment.InviteFriendsFragmentOpenMode.ERROR));
         break;
       case NO_FRIENDS:
-        ((FragmentShower) getContext()).pushFragmentV4(V8Engine.getFragmentProvider()
+        getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
             .newInviteFriendsFragment(
                 InviteFriendsFragment.InviteFriendsFragmentOpenMode.NO_FRIENDS));
         break;

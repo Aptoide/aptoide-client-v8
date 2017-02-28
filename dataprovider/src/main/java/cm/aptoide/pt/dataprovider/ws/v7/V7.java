@@ -27,6 +27,7 @@ import cm.aptoide.pt.model.v7.ListFullComments;
 import cm.aptoide.pt.model.v7.ListFullReviews;
 import cm.aptoide.pt.model.v7.ListReviews;
 import cm.aptoide.pt.model.v7.ListSearchApps;
+import cm.aptoide.pt.model.v7.SetComment;
 import cm.aptoide.pt.model.v7.TimelineStats;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
@@ -148,7 +149,7 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
 
           if (!accessTokenRetry) {
             accessTokenRetry = true;
-            return DataProvider.invalidateAccessToken().flatMap(s -> {
+            return DataProvider.invalidateAccessToken().flatMapObservable(s -> {
               V7.this.body.setAccessToken(s);
               return V7.this.observe(bypassCache);
             });
@@ -242,11 +243,10 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
         @Body PostCommentForReview.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("setComment") Observable<BaseV7Response> postStoreComment(
-        @Body PostCommentForStore.Body body,
+    @POST("setComment") Observable<SetComment> postStoreComment(@Body PostCommentForStore.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("setComment") Observable<BaseV7Response> postTimelineComment(
+    @POST("setComment") Observable<SetComment> postTimelineComment(
         @Body PostCommentForTimelineArticle.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 

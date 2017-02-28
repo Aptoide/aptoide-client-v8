@@ -14,6 +14,7 @@ import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.PaymentAuthorization;
 import cm.aptoide.pt.database.realm.PaymentConfirmation;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.repository.PaymentAuthorizationFactory;
 import cm.aptoide.pt.v8engine.repository.PaymentConfirmationFactory;
 
@@ -34,7 +35,8 @@ public class AptoideSyncService extends Service {
             new SyncDataConverter(), new NetworkOperatorManager(
             (TelephonyManager) getApplicationContext().getSystemService(TELEPHONY_SERVICE)),
             AccessorFactory.getAccessorFor(PaymentConfirmation.class),
-            AccessorFactory.getAccessorFor(PaymentAuthorization.class));
+            AccessorFactory.getAccessorFor(PaymentAuthorization.class),
+            ((V8Engine) getApplicationContext()).getAccountManager());
       }
     }
   }

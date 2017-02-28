@@ -5,6 +5,8 @@
 
 package cm.aptoide.pt.preferences.secure;
 
+import cm.aptoide.pt.annotation.Partners;
+
 /**
  * Created by neuro on 21-04-2016.
  */
@@ -84,7 +86,7 @@ public class SecurePreferences {
         .getBoolean(SecureKeys.WIZARD_AVAILABLE, true);
   }
 
-  public static void setWizardAvailable(boolean available) {
+  @Partners public static void setWizardAvailable(boolean available) {
     SecurePreferencesImplementation.getInstance()
         .edit()
         .putBoolean(SecureKeys.WIZARD_AVAILABLE, available)
@@ -114,7 +116,7 @@ public class SecurePreferences {
         .apply();
   }
 
-  public static boolean isAdultSwitchActive() {
+  @Partners public static boolean isAdultSwitchActive() {
     return SecurePreferencesImplementation.getInstance()
         .getBoolean(SecureKeys.ADULT_CONTENT_SWITCH, false);
   }
@@ -147,5 +149,17 @@ public class SecurePreferences {
         .edit()
         .putString(SecureKeys.USER_AGENT, userAgent)
         .apply();
+  }
+
+  public static void setLogoutUser(boolean logoutUser) {
+    SecurePreferencesImplementation.getInstance()
+        .edit()
+        .putBoolean(SecureKeys.LOGOUT_USER, logoutUser)
+        .apply();
+  }
+
+  public static boolean shouldLogoutUser() {
+    return SecurePreferencesImplementation.getInstance()
+        .getBoolean(SecureKeys.LOGOUT_USER, true);
   }
 }

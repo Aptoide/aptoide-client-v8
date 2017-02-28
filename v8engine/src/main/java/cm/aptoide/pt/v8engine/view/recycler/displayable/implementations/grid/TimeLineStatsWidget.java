@@ -2,8 +2,8 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.view.View;
 import android.widget.TextView;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
 import com.jakewharton.rxbinding.view.RxView;
 
@@ -31,10 +31,16 @@ public class TimeLineStatsWidget extends Widget<TimeLineStatsDisplayable> {
     followers.setText(displayable.getFollowersText(getContext()));
     following.setText(displayable.getFollowingText(getContext()));
     compositeSubscription.add(RxView.clicks(followers)
-        .subscribe(click -> displayable.followersClick(((FragmentShower) getContext()))));
+        .subscribe(click -> displayable.followersClick(getNavigationManager()), err -> {
+          CrashReport.getInstance().log(err);
+        }));
     compositeSubscription.add(RxView.clicks(following)
-        .subscribe(click -> displayable.followingClick(((FragmentShower) getContext()))));
+        .subscribe(click -> displayable.followingClick(getNavigationManager()), err -> {
+          CrashReport.getInstance().log(err);
+        }));
     compositeSubscription.add(RxView.clicks(followFriends)
-        .subscribe(click -> displayable.followFriendsClick(((FragmentShower) getContext()))));
+        .subscribe(click -> displayable.followFriendsClick(getNavigationManager()), err -> {
+          CrashReport.getInstance().log(err);
+        }));
   }
 }

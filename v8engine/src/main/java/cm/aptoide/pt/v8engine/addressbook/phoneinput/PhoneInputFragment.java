@@ -10,14 +10,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.addressbook.data.ContactsRepositoryImpl;
-import cm.aptoide.pt.v8engine.fragment.SupportV4BaseFragment;
+import cm.aptoide.pt.v8engine.fragment.UIComponentFragment;
 import com.jakewharton.rxbinding.view.RxView;
 
 /**
  * Created by jdandrade on 14/02/2017.
  */
-public class PhoneInputFragment extends SupportV4BaseFragment implements PhoneInputContract.View {
+public class PhoneInputFragment extends UIComponentFragment implements PhoneInputContract.View {
 
   private PhoneInputContract.UserActionsListener mActionsListener;
   private TextView mNotNowV;
@@ -35,7 +36,8 @@ public class PhoneInputFragment extends SupportV4BaseFragment implements PhoneIn
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    this.mActionsListener = new PhoneInputPresenter(this, new ContactsRepositoryImpl());
+    this.mActionsListener = new PhoneInputPresenter(this, new ContactsRepositoryImpl(
+        ((V8Engine) getContext().getApplicationContext()).getAccountManager()));
   }
 
   @Override public void setupViews() {

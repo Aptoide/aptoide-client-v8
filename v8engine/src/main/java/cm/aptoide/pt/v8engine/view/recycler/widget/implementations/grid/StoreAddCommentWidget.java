@@ -1,19 +1,21 @@
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
-import android.app.FragmentManager;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.widget.Button;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.navigation.AccountNavigator;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.StoreAddCommentDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -27,6 +29,8 @@ public class StoreAddCommentWidget extends Widget<StoreAddCommentDisplayable> {
   private static final String TAG = StoreAddCommentWidget.class.getName();
 
   private Button commentStore;
+  private AptoideAccountManager accountManager;
+  private AccountNavigator accountNavigator;
 
   public StoreAddCommentWidget(View itemView) {
     super(itemView);
@@ -40,6 +44,8 @@ public class StoreAddCommentWidget extends Widget<StoreAddCommentDisplayable> {
 
     final Context context = getContext();
 
+    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
+    accountNavigator = new AccountNavigator(getContext(), getNavigationManager(), accountManager);
     @ColorInt int color = getColorOrDefault(displayable.getStoreTheme(), context);
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
       Drawable d = context.getDrawable(R.drawable.dialog_bg_2);
@@ -53,7 +59,7 @@ public class StoreAddCommentWidget extends Widget<StoreAddCommentDisplayable> {
 
     compositeSubscription.add(RxView.clicks(commentStore)
         .flatMap(a -> showStoreCommentFragment(displayable.getStoreId(), displayable.getStoreName(),
-            getContext().getFragmentManager(), commentStore))
+            getContext().getSupportFragmentManager(), commentStore))
         .subscribe(a -> {
           // all done when we get here.
         }, err -> {
@@ -73,7 +79,7 @@ public class StoreAddCommentWidget extends Widget<StoreAddCommentDisplayable> {
       @NonNull final String storeName, @NonNull final FragmentManager fragmentManager,
       @NonNull final View view) {
 
-    return Observable.just(AptoideAccountManager.isLoggedIn()).flatMap(isLoggedIn -> {
+    return Observable.just(accountManager.isLoggedIn()).flatMap(isLoggedIn -> {
 
       if (isLoggedIn) {
         // show fragment CommentDialog
@@ -100,7 +106,7 @@ public class StoreAddCommentWidget extends Widget<StoreAddCommentDisplayable> {
   private Observable<Void> showSignInMessage(@NonNull final View view) {
     return ShowMessage.asObservableSnack(view, R.string.you_need_to_be_logged_in, R.string.login,
         snackView -> {
-          AptoideAccountManager.openAccountManager(view.getContext());
+          accountNavigator.navigateToAccountView();
         }).flatMap(a -> Observable.empty());
   }
 }

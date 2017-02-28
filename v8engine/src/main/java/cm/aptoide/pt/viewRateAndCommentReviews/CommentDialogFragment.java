@@ -26,13 +26,15 @@ import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.fragment.implementations.CommentListFragment;
 import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
-import com.trello.rxlifecycle.components.RxDialogFragment;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
-public class CommentDialogFragment extends RxDialogFragment {
+public class CommentDialogFragment extends
+    com.trello.rxlifecycle.components.support.RxDialogFragment {
 
   private static final String TAG = CommentDialogFragment.class.getName();
 
@@ -41,8 +43,8 @@ public class CommentDialogFragment extends RxDialogFragment {
   private static final String RESOURCE_ID_AS_STRING = "resource_id_as_string";
   private static final String COMMENT_TYPE = "comment_type";
   private static final String PREVIOUS_COMMENT_ID = "previous_comment_id";
-  private final AptoideClientUUID aptoideClientUUID;
-  private final String onEmptyTextError;
+  private AptoideClientUUID aptoideClientUUID;
+  private String onEmptyTextError;
   private String appOrStoreName;
   private long idAsLong;
   private String idAsString;
@@ -51,8 +53,12 @@ public class CommentDialogFragment extends RxDialogFragment {
   private TextInputLayout textInputLayout;
   private Button commentButton;
   private boolean reply;
+  private CommentListFragment commentDialogCallbackContract;
+  private AptoideAccountManager accountManager;
 
-  public CommentDialogFragment() {
+  @Override public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
     onEmptyTextError = AptoideUtils.StringU.getResString(R.string.error_MARG_107);
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
@@ -203,25 +209,19 @@ public class CommentDialogFragment extends RxDialogFragment {
           disableError();
           return true;
         })
-        .flatMap(inputText -> submitComment(inputText).observeOn(AndroidSchedulers.mainThread()))
-        .map(wsResponse -> wsResponse.isOk())
-        .doOnError(e -> {
+        .flatMap(inputText -> submitComment(inputText, idAsLong, previousCommentId,
+            idAsString).observeOn(AndroidSchedulers.mainThread()).doOnError(e -> {
           CrashReport.getInstance().log(e);
-          ShowMessage.asSnack(CommentDialogFragment.this, R.string.error_occured);
-        })
-        .retry()
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(isOk -> {
-          if (isOk) {
-            ManagerPreferences.setForceServerRefreshFlag(true);
+          ShowMessage.asSnack(this, R.string.error_occured);
+        }).retry().compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW)))
+        .subscribe(resp -> {
+          if (resp.isOk()) {
             this.dismiss();
-            ShowMessage.asSnack(this.getActivity(), R.string.comment_submitted);
-            return;
+            commentDialogCallbackContract.okSelected(resp, idAsLong, previousCommentId, idAsString);
+          } else {
+            ShowMessage.asSnack(this, R.string.error_occured);
           }
-          ShowMessage.asSnack(CommentDialogFragment.this, R.string.error_occured);
-        }, err -> {
-          CrashReport.getInstance().log(err);
-        });
+        }, throwable -> CrashReport.getInstance().log(throwable));
   }
 
   private void disableError() {
@@ -239,39 +239,44 @@ public class CommentDialogFragment extends RxDialogFragment {
     textInputLayout.setError(error);
   }
 
-  private Observable<BaseV7Response> submitComment(String inputText) {
-
+  private Observable<? extends BaseV7Response> submitComment(String inputText, long idAsLong,
+      Long previousCommentId, String idAsString) {
     switch (commentType) {
       case REVIEW:
         // new comment on a review
-        return PostCommentForReview.of(idAsLong, inputText, AptoideAccountManager.getAccessToken(),
-            aptoideClientUUID.getAptoideClientUUID()).observe();
+        return PostCommentForReview.of(idAsLong, inputText, accountManager.getAccessToken(),
+            aptoideClientUUID.getUniqueIdentifier()).observe();
 
       case STORE:
         // check if this is a new comment on a store or a reply to a previous one
         if (previousCommentId == null) {
-          return PostCommentForStore.of(idAsLong, inputText, AptoideAccountManager.getAccessToken(),
-              aptoideClientUUID.getAptoideClientUUID()).observe();
+          return PostCommentForStore.of(idAsLong, inputText, accountManager.getAccessToken(),
+              aptoideClientUUID.getUniqueIdentifier()).observe();
         }
 
         return PostCommentForStore.of(idAsLong, previousCommentId, inputText,
-            AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
+            accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
             .observe();
 
       case TIMELINE:
         // check if this is a new comment on a article or a reply to a previous one
         if (previousCommentId == null) {
           return PostCommentForTimelineArticle.of(idAsString, inputText,
-              AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
+              accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
               .observe();
         }
 
+
         return PostCommentForTimelineArticle.of(idAsString, previousCommentId, inputText,
-            AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID())
+            accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
             .observe();
     }
     // default case
-    Logger.e(TAG, "Unable to create reply due to missing comment type");
+    Logger.e(this.getTag(), "Unable to create reply due to missing comment type");
     return Observable.empty();
+  }
+
+  public void setCommentDialogCallbackContract(CommentListFragment commentDialogCallbackContract) {
+    this.commentDialogCallbackContract = commentDialogCallbackContract;
   }
 }

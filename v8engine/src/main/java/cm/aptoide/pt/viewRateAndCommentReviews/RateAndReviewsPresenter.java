@@ -4,11 +4,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.util.schedulers.SchedulerProvider;
 import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.view.View;
@@ -28,21 +26,16 @@ public class RateAndReviewsPresenter implements Presenter {
 
   public RateAndReviewsPresenter(@NonNull long appId, @NonNull String storeName,
       @NonNull String packageName, @NonNull RateAndReviewsView view,
-      @NonNull SchedulerProvider schedulerProvider) {
+      @NonNull SchedulerProvider schedulerProvider, AptoideAccountManager accountManager,
+      String aptoideClientUUID) {
     this.view = view;
     this.schedulerProvider = schedulerProvider;
-
-    String aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext()).getAptoideClientUUID();
-
-    request = ListReviewsRequest.of(storeName, packageName, AptoideAccountManager.getAccessToken(),
-        aptoideClientUUID);
-
-    ratingRequest =
-        GetAppRequest.of(appId, AptoideAccountManager.getAccessToken(), aptoideClientUUID,
+    this.request = ListReviewsRequest.of(storeName, packageName, accountManager.getAccessToken(),
+        aptoideClientUUID, new BaseRequestWithStore.StoreCredentials());
+    this.ratingRequest =
+        GetAppRequest.of(appId, accountManager.getAccessToken(), aptoideClientUUID,
             packageName);
-
-    subscriptions = new CompositeSubscription();
+    this.subscriptions = new CompositeSubscription();
   }
 
   @Override public void present() {
@@ -51,7 +44,7 @@ public class RateAndReviewsPresenter implements Presenter {
         .flatMap(resume -> Observable.merge(showReviews(), showRating()))
         //.subscribeOn(schedulerProvider.io())
         .observeOn(schedulerProvider.ui())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY_VIEW))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(aVoid -> {
         }, err -> {
           view.showError(err);
@@ -71,7 +64,7 @@ public class RateAndReviewsPresenter implements Presenter {
           CrashReport.getInstance().log(exception);
         }
       });
-    }).compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY_VIEW)).subscribe(aVoid -> {
+    }).compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY)).subscribe(aVoid -> {
     }, err -> {
       view.showError(err);
       CrashReport.getInstance().log(err);

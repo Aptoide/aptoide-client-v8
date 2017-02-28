@@ -7,6 +7,8 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
 import android.content.DialogInterface;
 import android.support.annotation.UiThread;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import cm.aptoide.pt.actions.PermissionRequest;
+import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
@@ -29,7 +31,6 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.UpdateRepository;
-import cm.aptoide.pt.v8engine.util.FragmentUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdateDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -37,6 +38,7 @@ import com.jakewharton.rxbinding.view.RxView;
 import rx.Observable;
 import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 
 /**
  * Created by neuro on 17-05-2016.
@@ -76,7 +78,7 @@ import rx.android.schedulers.AndroidSchedulers;
     textUpdateLayout = (TextView) itemView.findViewById(R.id.text_update_layout);
     progressBar = (ProgressBar) itemView.findViewById(R.id.progress_bar);
 
-    updateRepository = RepositoryFactory.getUpdateRepository();
+    updateRepository = RepositoryFactory.getUpdateRepository(getContext());
   }
 
   @Override public void bindView(UpdateDisplayable updateDisplayable) {
@@ -92,14 +94,17 @@ import rx.android.schedulers.AndroidSchedulers;
 
     labelTextView.setText(updateDisplayable.getLabel());
     updateVernameTextView.setText(updateDisplayable.getUpdateVersionName());
-    ImageLoader.load(updateDisplayable.getIcon(), iconImageView);
+    final FragmentActivity context = getContext();
+    ImageLoader.with(context).load(updateDisplayable.getIcon(), iconImageView);
 
-    updateRowRelativeLayout.setOnClickListener(v -> FragmentUtils.replaceFragmentV4(getContext(),
-        V8Engine.getFragmentProvider()
-            .newAppViewFragment(updateDisplayable.getAppId(), updateDisplayable.getPackageName())));
+    compositeSubscription.add(RxView.clicks(updateRowRelativeLayout).subscribe(v -> {
+      final Fragment fragment = V8Engine.getFragmentProvider()
+          .newAppViewFragment(updateDisplayable.getAppId(), updateDisplayable.getPackageName());
+      getNavigationManager().navigateTo(fragment);
+    }, throwable -> throwable.printStackTrace()));
 
-    final View.OnLongClickListener longClickListener = v -> {
-      AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+    final Action1<Void> longClickListener = __ -> {
+      AlertDialog.Builder builder = new AlertDialog.Builder(context);
       builder.setTitle(R.string.ignore_update)
           .setCancelable(true)
           .setNegativeButton(R.string.no, null)
@@ -109,7 +114,7 @@ import rx.android.schedulers.AndroidSchedulers;
                   .subscribe(success -> Logger.d(TAG,
                       String.format("Update with package name %s was excluded", packageName)),
                       throwable -> {
-                        ShowMessage.asSnack(getContext(), R.string.unknown_error);
+                        ShowMessage.asSnack(context, R.string.unknown_error);
                         CrashReport.getInstance().log(throwable);
                       }));
             }
@@ -117,15 +122,13 @@ import rx.android.schedulers.AndroidSchedulers;
           });
 
       builder.create().show();
-
-      return true;
     };
 
-    updateRowRelativeLayout.setOnLongClickListener(longClickListener);
-
+    compositeSubscription.add(RxView.longClicks(updateRowRelativeLayout)
+        .subscribe(longClickListener, throwable -> throwable.printStackTrace()));
     compositeSubscription.add(RxView.clicks(updateButtonLayout)
         .flatMap(
-            click -> displayable.downloadAndInstall(getContext(), (PermissionRequest) getContext()))
+            click -> displayable.downloadAndInstall(context, (PermissionService) context))
         .retry()
         .subscribe(o -> {
         }, throwable -> throwable.printStackTrace()));

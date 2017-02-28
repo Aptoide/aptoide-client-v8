@@ -1,9 +1,13 @@
 package cm.aptoide.pt.v8engine.fragment.implementations.storetab;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.FullReview;
 import cm.aptoide.pt.model.v7.ListFullReviews;
+import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
+import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayableGroup;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.RowReviewDisplayable;
@@ -16,6 +20,13 @@ import rx.functions.Action1;
  */
 
 public class ListReviewsFragment extends GetStoreEndlessFragment<ListFullReviews> {
+
+  private StoreCredentialsProvider storeCredentialsProvider;
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    storeCredentialsProvider = new StoreCredentialsProviderImpl();
+  }
 
   @Override
   protected V7<ListFullReviews, ? extends Endless> buildRequest(boolean refresh, String url) {

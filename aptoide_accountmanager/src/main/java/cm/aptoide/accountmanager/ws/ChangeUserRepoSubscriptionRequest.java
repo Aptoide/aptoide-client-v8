@@ -7,8 +7,6 @@ package cm.aptoide.accountmanager.ws;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.ws.responses.GenericResponseV3;
-import okhttp3.OkHttpClient;
-import retrofit2.Converter;
 import rx.Observable;
 
 /**
@@ -18,18 +16,18 @@ public class ChangeUserRepoSubscriptionRequest extends v3accountManager<GenericR
 
   private String storeName;
   private boolean subscribe;
+  private AptoideAccountManager accountManager;
 
-  ChangeUserRepoSubscriptionRequest() {
+  ChangeUserRepoSubscriptionRequest(AptoideAccountManager accountManager) {
+    super(accountManager);
+    this.accountManager = accountManager;
   }
 
-  ChangeUserRepoSubscriptionRequest(OkHttpClient client, Converter.Factory converterFactory) {
-    super(client, converterFactory);
-  }
-
-  public static ChangeUserRepoSubscriptionRequest of(String storeName, boolean subscribe) {
+  public static ChangeUserRepoSubscriptionRequest of(String storeName, boolean subscribe,
+      AptoideAccountManager accountManager) {
 
     ChangeUserRepoSubscriptionRequest changeUserRepoSubscriptionRequest =
-        new ChangeUserRepoSubscriptionRequest();
+        new ChangeUserRepoSubscriptionRequest(accountManager);
 
     changeUserRepoSubscriptionRequest.storeName = storeName;
     changeUserRepoSubscriptionRequest.subscribe = subscribe;
@@ -44,7 +42,7 @@ public class ChangeUserRepoSubscriptionRequest extends v3accountManager<GenericR
     map.put("repo", storeName);
     map.put("status", subscribe ? "subscribed" : "unsubscribed");
 
-    map.put("access_token", AptoideAccountManager.getAccessToken());
+    map.put("access_token", accountManager.getAccessToken());
 
     return interfaces.changeUserRepoSubscription(map);
   }

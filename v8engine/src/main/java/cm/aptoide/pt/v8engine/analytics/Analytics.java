@@ -317,14 +317,16 @@ public class Analytics {
         Localytics.onActivityResume(activity);
 
         if (isFirstSession) {
-          if (!AptoideAccountManager.isLoggedIn()) {
+          final AptoideAccountManager accountManager =
+              ((V8Engine) activity.getApplicationContext()).getAccountManager();
+          if (!accountManager.isLoggedIn()) {
             Localytics.setCustomDimension(0, "Not Logged In");
           } else {
             Localytics.setCustomDimension(0, "Logged In");
           }
         }
 
-        String cpuid = aptoideClientUuid.getAptoideClientUUID();
+        String cpuid = aptoideClientUuid.getUniqueIdentifier();
 
         Localytics.setCustomerId(cpuid);
 
@@ -608,6 +610,22 @@ public class Analytics {
         map.put(STORE_NAME, storeName);
 
         track(EVENT_NAME, map, LOCALYTICS);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+
+    /**
+     * this method still does nothing...
+     */
+    public static void unSubscribe(String storeName) {
+      try {
+        HashMap<String, String> map = new HashMap<>();
+
+        map.put(ACTION, "Unsubscribe");
+        map.put(STORE_NAME, storeName);
+
+        //track(EVENT_NAME, map, LOCALYTICS);
       } catch (Exception e) {
         e.printStackTrace();
       }

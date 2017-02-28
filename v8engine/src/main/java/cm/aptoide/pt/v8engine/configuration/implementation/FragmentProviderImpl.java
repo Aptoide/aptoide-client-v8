@@ -11,7 +11,7 @@ import cm.aptoide.pt.v8engine.addressbook.invitefriends.InviteFriendsFragment;
 import cm.aptoide.pt.v8engine.addressbook.phoneinput.PhoneInputFragment;
 import cm.aptoide.pt.v8engine.addressbook.syncsuccess.SyncResultFragment;
 import cm.aptoide.pt.v8engine.configuration.FragmentProvider;
-import cm.aptoide.pt.v8engine.fragment.CommentListFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.CommentListFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppsTimelineFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.CreateUserFragment;
@@ -31,6 +31,7 @@ import cm.aptoide.pt.v8engine.fragment.implementations.SearchPagerTabFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.SendFeedbackFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.SettingsFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.SocialFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.SpotSharePreviewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.StoreFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.TimeLineFollowFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.UpdatesFragment;
@@ -138,14 +139,15 @@ public class FragmentProviderImpl implements FragmentProvider {
   }
 
   @Override
-  public Fragment newStoreTabGridRecyclerFragment(Event event, String storeTheme, String tag) {
-    return StoreTabGridRecyclerFragment.newInstance(event, storeTheme, tag);
+  public Fragment newStoreTabGridRecyclerFragment(Event event, String storeTheme, String tag,
+      StoreContext storeContext) {
+    return StoreTabGridRecyclerFragment.newInstance(event, storeTheme, tag, storeContext);
   }
 
   @Override
   public Fragment newStoreTabGridRecyclerFragment(Event event, String title, String storeTheme,
-      String tag) {
-    return StoreTabGridRecyclerFragment.newInstance(event, title, storeTheme, tag);
+      String tag, StoreContext storeContext) {
+    return StoreTabGridRecyclerFragment.newInstance(event, title, storeTheme, tag, storeContext);
   }
 
   @Override public Fragment newListAppsFragment() {
@@ -292,5 +294,9 @@ public class FragmentProviderImpl implements FragmentProvider {
 
   @Override public Fragment newInviteFriendsFragment(InviteFriendsFragment.InviteFriendsFragmentOpenMode openMode) {
     return InviteFriendsFragment.newInstance(openMode);
+  }
+
+  @Override public Fragment newSpotShareFragment() {
+    return SpotSharePreviewFragment.newInstance();
   }
 }

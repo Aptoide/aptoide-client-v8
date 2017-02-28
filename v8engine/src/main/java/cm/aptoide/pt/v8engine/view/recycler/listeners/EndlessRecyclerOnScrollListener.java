@@ -27,10 +27,6 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
   protected final BaseAdapter adapter;
   protected final V7<? extends BaseV7EndlessResponse, ? extends Endless> v7request;
   protected final Action1 successRequestListener;
-
-  private int visibleThreshold;
-  // The minimum amount of items to have below your current scroll position before load
-  private boolean bypassCache;
   protected ErrorRequestListener errorRequestListener;
   protected int total;
   protected int offset;
@@ -40,6 +36,9 @@ public class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListen
   protected boolean endCallbackCalled;
   protected boolean firstCallbackCalled;
   protected boolean loading;
+  private int visibleThreshold;
+  // The minimum amount of items to have below your current scroll position before load
+  private boolean bypassCache;
   private int firstVisibleItem;
   private int totalItemCount;
   private int visibleItemCount;

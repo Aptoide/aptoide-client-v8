@@ -8,6 +8,7 @@
 
   <attr format="reference" name="customButton"/>
   <attr format="reference" name="customButtonWhite"/>
+  <attr format="reference" name="customButtonThinLine"/>
 
   <attr format="reference" name="toolbarTheme"/>
 
@@ -39,6 +40,7 @@
   <attr format="reference" name="icSearchDrawable"/>
   <attr format="reference" name="icRollbackDrawable"/>
   <attr format="reference" name="icScheduledDrawable"/>
+  <attr format="reference" name="icSpotShare"/>
   <attr format="reference" name="icExcludedUpdatesDrawable"/>
   <attr format="reference" name="icSettingsDrawable"/>
   <attr format="reference" name="icSendFeedbackDrawable"/>

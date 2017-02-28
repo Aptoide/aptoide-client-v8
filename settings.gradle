@@ -15,4 +15,7 @@ include ':vanilla',
     ':aptoide_accountmanager',
     ':database',
     ':imageloader',
-    ':downloadmanager'
+    ':downloadmanager',
+    ':emptyapp',
+    ':shareapps',
+    ':shareappsandroid'

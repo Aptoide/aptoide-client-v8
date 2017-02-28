@@ -5,13 +5,11 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.listapp.App;
-import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import java.util.Collections;
 import java.util.List;
 import rx.Completable;
@@ -28,16 +26,17 @@ public class UpdateRepository implements Repository<Update, String> {
   private static final String TAG = UpdateRepository.class.getName();
 
   private final AptoideClientUUID aptoideClientUUID;
+  private final AptoideAccountManager accountManager;
 
   private UpdateAccessor updateAccessor;
   private StoreAccessor storeAccessor;
 
-  UpdateRepository(UpdateAccessor updateAccessor, StoreAccessor storeAccessor) {
+  UpdateRepository(UpdateAccessor updateAccessor, StoreAccessor storeAccessor,
+      AptoideAccountManager accountManager, IdsRepositoryImpl idsRepository) {
     this.updateAccessor = updateAccessor;
     this.storeAccessor = storeAccessor;
-
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
+    this.accountManager = accountManager;
+    this.aptoideClientUUID = idsRepository;
   }
 
   public @NonNull Completable sync(boolean bypassCache) {
@@ -58,8 +57,8 @@ public class UpdateRepository implements Repository<Update, String> {
 
   private Observable<List<App>> getNetworkUpdates(List<Long> storeIds, boolean bypassCache) {
     Logger.d(TAG, String.format("getNetworkUpdates() -> using %d stores", storeIds.size()));
-    return ListAppsUpdatesRequest.of(storeIds, AptoideAccountManager.getAccessToken(),
-        aptoideClientUUID.getAptoideClientUUID()).observe(bypassCache).map(result -> {
+    return ListAppsUpdatesRequest.of(storeIds, accountManager.getAccessToken(),
+        aptoideClientUUID.getUniqueIdentifier()).observe(bypassCache).map(result -> {
       if (result != null && result.isOk()) {
         return result.getList();
       }

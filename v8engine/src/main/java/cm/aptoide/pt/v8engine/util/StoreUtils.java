@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.util;
 
 import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
@@ -30,8 +31,9 @@ import rx.Observable;
 
 public class StoreUtils {
 
-  public static final String PRIVATE_STORE_ERROR = "STORE-3";
-  public static final String PRIVATE_STORE_WRONG_CREDENTIALS = "STORE-4";
+  public static final String PRIVATE_STORE_ERROR_CODE = "STORE-3";
+  public static final String PRIVATE_STORE_WRONG_CREDENTIALS_ERROR_CODE = "STORE-4";
+  public static final String STORE_SUSPENDED_ERROR_CODE = "STORE-7";
 
   private static StoreCredentialsProviderImpl storeCredentialsProvider;
   private static AptoideClientUUID aptoideClientUUID;
@@ -48,7 +50,7 @@ public class StoreUtils {
     return storeCredentialsProvider.get(storeId);
   }
 
-  @Deprecated public static @Nullable
+  @Partners @Deprecated public static @Nullable
   BaseRequestWithStore.StoreCredentials getStoreCredentialsFromUrl(String url) {
     return storeCredentialsProvider.fromUrl(url);
   }
@@ -59,10 +61,10 @@ public class StoreUtils {
    */
   @Deprecated public static void subscribeStore(String storeName,
       @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
-      @Nullable ErrorRequestListener errorRequestListener) {
+      @Nullable ErrorRequestListener errorRequestListener, AptoideAccountManager accountManager) {
     subscribeStore(GetStoreMetaRequest.of(getStoreCredentials(storeName),
-        AptoideAccountManager.getAccessToken(), aptoideClientUUID.getAptoideClientUUID()),
-        successRequestListener, errorRequestListener);
+        accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier()),
+        successRequestListener, errorRequestListener, accountManager);
   }
 
   /**
@@ -71,7 +73,7 @@ public class StoreUtils {
    */
   @Deprecated public static void subscribeStore(GetStoreMetaRequest getStoreMetaRequest,
       @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
-      @Nullable ErrorRequestListener errorRequestListener) {
+      @Nullable ErrorRequestListener errorRequestListener, AptoideAccountManager accountManager) {
     getStoreMetaRequest.execute(getStoreMeta -> {
 
       if (BaseV7Response.Info.Status.OK.equals(getStoreMeta.getInfo().getStatus())) {
@@ -94,8 +96,8 @@ public class StoreUtils {
         }
 
         // TODO: 18-05-2016 neuro private ainda na ta
-        if (AptoideAccountManager.isLoggedIn()) {
-          AptoideAccountManager.subscribeStore(storeData.getName());
+        if (accountManager.isLoggedIn()) {
+          accountManager.subscribeStore(storeData.getName());
         }
 
         storeAccessor.save(store);
@@ -178,11 +180,33 @@ public class StoreUtils {
     return storesAuthMap.size() > 0 ? storesAuthMap : null;
   }
 
-  public static void unsubscribeStore(String name) {
-    if (AptoideAccountManager.isLoggedIn()) {
-      AptoideAccountManager.unsubscribeStore(name);
+  public static void unsubscribeStore(String name, AptoideAccountManager accountManager) {
+    if (accountManager.isLoggedIn()) {
+      accountManager.unsubscribeStore(name);
     }
     StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
     storeAccessor.remove(name);
+  }
+
+  public static StoreError getErrorType(String code) {
+    StoreError error;
+    switch (code) {
+      case PRIVATE_STORE_WRONG_CREDENTIALS_ERROR_CODE:
+        error = StoreError.PRIVATE_STORE_WRONG_CREDENTIALS;
+        break;
+      case PRIVATE_STORE_ERROR_CODE:
+        error = StoreError.PRIVATE_STORE_ERROR;
+        break;
+      case STORE_SUSPENDED_ERROR_CODE:
+        error = StoreError.STORE_SUSPENDED;
+        break;
+      default:
+        error = StoreError.GENERIC_ERROR;
+    }
+    return error;
+  }
+
+  public enum StoreError {
+    PRIVATE_STORE_ERROR, PRIVATE_STORE_WRONG_CREDENTIALS, GENERIC_ERROR, STORE_SUSPENDED;
   }
 }

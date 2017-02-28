@@ -26,7 +26,10 @@ import java.util.List;
 
 public class ContactsRepositoryImpl implements ContactsRepository {
 
-  public ContactsRepositoryImpl() {
+  private final AptoideAccountManager aptoideAccountManager;
+
+  public ContactsRepositoryImpl(AptoideAccountManager aptoideAccountManager) {
+    this.aptoideAccountManager = aptoideAccountManager;
   }
 
   @Override public void getContacts(@NonNull LoadContactsCallback callback) {
@@ -41,8 +44,8 @@ public class ContactsRepositoryImpl implements ContactsRepository {
     AptoideClientUUID aptoideClientUUID =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext());
-    SyncAddressBookRequest.of(AptoideAccountManager.getAccessToken(),
-        aptoideClientUUID.getAptoideClientUUID(), numbers, emails)
+    SyncAddressBookRequest.of(aptoideAccountManager.getAccessToken(),
+        aptoideClientUUID.getUniqueIdentifier(), numbers, emails)
         .observe()
         .subscribe(getFollowers -> {
           List<Contact> contactList = new ArrayList<>();
@@ -67,8 +70,8 @@ public class ContactsRepositoryImpl implements ContactsRepository {
     AptoideClientUUID aptoideClientUUID =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext());
-    SyncAddressBookRequest.of(AptoideAccountManager.getAccessToken(),
-        aptoideClientUUID.getAptoideClientUUID(), twitterModel.getId(), twitterModel.getToken(),
+    SyncAddressBookRequest.of(aptoideAccountManager.getAccessToken(),
+        aptoideClientUUID.getUniqueIdentifier(), twitterModel.getId(), twitterModel.getToken(),
         twitterModel.getSecret()).observe().subscribe(getFollowers -> {
       List<Contact> contactList = new ArrayList<>();
       for (GetFollowers.TimelineUser user : getFollowers.getDatalist().getList()) {
@@ -92,8 +95,8 @@ public class ContactsRepositoryImpl implements ContactsRepository {
     AptoideClientUUID aptoideClientUUID =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
             DataProvider.getContext());
-    SyncAddressBookRequest.of(AptoideAccountManager.getAccessToken(),
-        aptoideClientUUID.getAptoideClientUUID(), facebookModel.getId(),
+    SyncAddressBookRequest.of(aptoideAccountManager.getAccessToken(),
+        aptoideClientUUID.getUniqueIdentifier(), facebookModel.getId(),
         facebookModel.getAccessToken()).observe().subscribe(getFriends -> {
       List<Contact> contactList = new ArrayList<>();
       for (GetFollowers.TimelineUser user : getFriends.getDatalist().getList()) {
@@ -128,8 +131,8 @@ public class ContactsRepositoryImpl implements ContactsRepository {
       AptoideClientUUID aptoideClientUUID =
           new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
               DataProvider.getContext());
-      SetConnectionRequest.of(aptoideClientUUID.getAptoideClientUUID(),
-          AptoideAccountManager.getAccessToken(), hashedPhoneNumber)
+      SetConnectionRequest.of(aptoideClientUUID.getUniqueIdentifier(),
+          aptoideAccountManager.getAccessToken(), hashedPhoneNumber)
           .observe()
           .subscribe(response -> {
             if (response.isOk()) {

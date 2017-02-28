@@ -159,14 +159,6 @@ public class ShowMessage {
     asSnackInternal(activity, msg, Snackbar.LENGTH_LONG).show();
   }
 
-  public static void asSnack(Activity activity, String msg) {
-    asSnackInternal(activity, msg).show();
-  }
-
-  @NonNull private static Snackbar asSnackInternal(Activity activity, String msg) {
-    return asSnackInternal(activity, msg, Snackbar.LENGTH_SHORT);
-  }
-
   @NonNull private static Snackbar asSnackInternal(Activity activity, String msg, int duration) {
     View view = getViewFromActivity(activity);
     return Snackbar.make(view, msg, duration);
@@ -182,6 +174,14 @@ public class ShowMessage {
       return null;
     }
     return view;
+  }
+
+  public static void asSnack(Activity activity, String msg) {
+    asSnackInternal(activity, msg).show();
+  }
+
+  @NonNull private static Snackbar asSnackInternal(Activity activity, String msg) {
+    return asSnackInternal(activity, msg, Snackbar.LENGTH_SHORT);
   }
 
   /**

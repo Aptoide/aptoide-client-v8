@@ -10,14 +10,13 @@ import android.widget.TextView;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.fragment.SupportV4BaseFragment;
-import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
+import cm.aptoide.pt.v8engine.fragment.UIComponentFragment;
 import com.jakewharton.rxbinding.view.RxView;
 
 /**
  * Created by jdandrade on 23/02/2017.
  */
-public class InviteFriendsFragment extends SupportV4BaseFragment
+public class InviteFriendsFragment extends UIComponentFragment
     implements InviteFriendsContract.View {
   public static final String OPEN_MODE = "OPEN_MODE";
   private InviteFriendsContract.UserActionsListener mActionsListener;
@@ -77,8 +76,7 @@ public class InviteFriendsFragment extends SupportV4BaseFragment
   }
 
   @Override public void showPhoneInputFragment() {
-    ((FragmentShower) getContext()).pushFragmentV4(
-        V8Engine.getFragmentProvider().newPhoneInputFragment());
+    getNavigationManager().navigateTo(V8Engine.getFragmentProvider().newPhoneInputFragment());
   }
 
   @Override public void finishView() {

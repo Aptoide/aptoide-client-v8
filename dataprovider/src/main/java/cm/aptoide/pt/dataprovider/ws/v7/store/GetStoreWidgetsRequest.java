@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
+import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
@@ -36,7 +37,7 @@ import rx.Observable;
     this.url = url;
   }
 
-  public static GetStoreWidgetsRequest ofActionFirstInstall(String url,
+  @Partners public static GetStoreWidgetsRequest ofActionFirstInstall(String url,
       StoreCredentials storeCredentials, String accessToken, String storeName,
       String aptoideClientUUID) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);

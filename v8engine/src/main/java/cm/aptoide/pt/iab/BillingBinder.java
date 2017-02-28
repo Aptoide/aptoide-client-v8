@@ -14,6 +14,7 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.model.v3.InAppBillingPurchasesResponse;
 import cm.aptoide.pt.v8engine.activity.PaymentActivity;
 import cm.aptoide.pt.v8engine.payment.ProductFactory;
+import cm.aptoide.pt.v8engine.payment.products.ParcelableProduct;
 import cm.aptoide.pt.v8engine.repository.InAppBillingRepository;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -60,16 +61,19 @@ public class BillingBinder extends AptoideInAppBillingService.Stub {
   private final ErrorCodeFactory errorCodeFactory;
   private final PurchaseErrorCodeFactory purchaseErrorCodeFactory;
   private final ProductFactory productFactory;
+  private final AptoideAccountManager accountManager;
 
   public BillingBinder(Context context, InAppBillingRepository repository,
       InAppBillingSerializer serializer, ErrorCodeFactory errorCodeFactory,
-      PurchaseErrorCodeFactory purchaseErrorCodeFactory, ProductFactory productFactory) {
+      PurchaseErrorCodeFactory purchaseErrorCodeFactory, ProductFactory productFactory,
+      AptoideAccountManager accountManager) {
     this.context = context;
     this.repository = repository;
     this.serializer = serializer;
     this.errorCodeFactory = errorCodeFactory;
     this.purchaseErrorCodeFactory = purchaseErrorCodeFactory;
     this.productFactory = productFactory;
+    this.accountManager = accountManager;
   }
 
   @Override public int isBillingSupported(int apiVersion, String packageName, String type)
@@ -139,11 +143,10 @@ public class BillingBinder extends AptoideInAppBillingService.Stub {
       try {
         final PendingIntent pendingIntent =
             repository.getSKUDetails(apiVersion, packageName, sku, type)
-                .map(response -> productFactory.create(response.getMetadata(), apiVersion,
-                    developerPayload, packageName,
-                    response.getPublisherResponse().getDetailList().get(0)))
+                .map(response -> productFactory.create(apiVersion, developerPayload, packageName,
+                    response))
                 .map(product -> PendingIntent.getActivity(context, 0,
-                    PaymentActivity.getIntent(context, product), PendingIntent.FLAG_UPDATE_CURRENT))
+                    PaymentActivity.getIntent(context, (ParcelableProduct) product), PendingIntent.FLAG_UPDATE_CURRENT))
                 .toBlocking()
                 .first();
 
@@ -167,7 +170,7 @@ public class BillingBinder extends AptoideInAppBillingService.Stub {
       return result;
     }
 
-    if (!AptoideAccountManager.isLoggedIn()) {
+    if (!accountManager.isLoggedIn()) {
       result.putStringArrayList(INAPP_PURCHASE_ITEM_LIST, new ArrayList<>());
       result.putStringArrayList(INAPP_PURCHASE_DATA_LIST, new ArrayList<>());
       result.putStringArrayList(INAPP_DATA_SIGNATURE_LIST, new ArrayList<>());

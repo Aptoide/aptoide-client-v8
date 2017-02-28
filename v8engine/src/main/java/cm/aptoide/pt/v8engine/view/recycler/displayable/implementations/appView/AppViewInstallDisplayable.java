@@ -101,13 +101,6 @@ public class AppViewInstallDisplayable extends AppViewDisplayable {
         installedRepository);
   }
 
-  public void buyApp(Context context, GetAppMeta.App app) {
-    Fragment fragment = ((FragmentShower) context).getLastV4();
-    if (Payments.class.isAssignableFrom(fragment.getClass())) {
-      ((Payments) fragment).buyApp(app);
-    }
-  }
-
   public void startInstallationProcess() {
     if (installButton != null) {
       installButton.performClick();

@@ -8,6 +8,7 @@ package cm.aptoide.pt.dataprovider;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.preferences.Application;
 import rx.Observable;
+import rx.Single;
 
 /**
  * Created by neuro on 20-04-2016.
@@ -15,8 +16,8 @@ import rx.Observable;
 public abstract class DataProvider extends Application {
   private static TokenInvalidator tokenInvalidator;
 
-  public static Observable<String> invalidateAccessToken() {
-    return tokenInvalidator.invalidateAccessToken(getContext());
+  public static Single<String> invalidateAccessToken() {
+    return tokenInvalidator.invalidateAccessToken();
   }
 
   @Override public void onCreate() {

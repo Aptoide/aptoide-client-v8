@@ -7,15 +7,16 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.GridLayoutManager;
+import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.ErrorUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.model.v7.Datalist;
@@ -32,8 +33,11 @@ import cm.aptoide.pt.model.v7.timeline.SocialVideo;
 import cm.aptoide.pt.model.v7.timeline.StoreLatestApps;
 import cm.aptoide.pt.model.v7.timeline.TimelineCard;
 import cm.aptoide.pt.model.v7.timeline.Video;
+import cm.aptoide.pt.navigation.AccountNavigator;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.install.Installer;
@@ -98,6 +102,9 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
   private PermissionManager permissionManager;
   private TimelineMetricsManager timelineMetricsManager;
   private SocialRepository socialRepository;
+  private AptoideAccountManager accountManager;
+  private IdsRepositoryImpl idsRepository;
+  private AccountNavigator accountNavigator;
 
   public static AppsTimelineFragment newInstance(String action, String storeName) {
     AppsTimelineFragment fragment = new AppsTimelineFragment();
@@ -108,8 +115,10 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     return fragment;
   }
 
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+  @Override public void bindViews(View view) {
+    super.bindViews(view);
+    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
+    accountNavigator = new AccountNavigator(getContext(), getNavigationManager(), accountManager);
     dateCalculator = new DateCalculator();
     spannableFactory = new SpannableFactory();
     downloadFactory = new DownloadFactory();
@@ -117,12 +126,13 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     packageRepository = new PackageRepository(getContext().getPackageManager());
     permissionManager = new PermissionManager();
     installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
+    idsRepository = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
     timelineRepository = new TimelineRepository(getArguments().getString(ACTION_KEY),
         new TimelineCardFilter(new TimelineCardFilter.TimelineCardDuplicateFilter(new HashSet<>()),
-            AccessorFactory.getAccessorFor(Installed.class)));
+            AccessorFactory.getAccessorFor(Installed.class)), idsRepository, accountManager);
     installManager = new InstallManager(AptoideDownloadManager.getInstance(), installer);
-    timelineMetricsManager = new TimelineMetricsManager(Analytics.getInstance());
-    socialRepository = new SocialRepository();
+    timelineMetricsManager = new TimelineMetricsManager(accountManager, Analytics.getInstance());
+    socialRepository = new SocialRepository(accountManager, idsRepository);
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
@@ -191,7 +201,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     return getDisplayableList(packages, 0, refresh).doOnNext(
         item -> getAdapter().clearDisplayables()).flatMap(displayableDatalist -> {
       if (!displayableDatalist.getList().isEmpty()) {
-        if (AptoideAccountManager.isLoggedIn()) {
+        if (accountManager.isLoggedIn()) {
           return timelineRepository.getTimelineStats(refresh).map(timelineStats -> {
             displayableDatalist.getList()
                 .add(0, new TimeLineStatsDisplayable(timelineStats, spannableFactory, storeTheme));
@@ -201,7 +211,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
             return displayableDatalist;
           });
         } else {
-          displayableDatalist.getList().add(0, new TimelineLoginDisplayable());
+          displayableDatalist.getList().add(0, new TimelineLoginDisplayable().setAccountNavigator(accountNavigator));
           return Observable.just(displayableDatalist);
         }
       } else {
@@ -357,7 +367,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     } else if (card instanceof AppUpdate) {
       return AppUpdateDisplayable.from((AppUpdate) card, spannableFactory, downloadFactory,
           dateCalculator, installManager, permissionManager, timelineMetricsManager,
-          socialRepository);
+          socialRepository, idsRepository, accountManager);
     } else if (card instanceof Recommendation) {
       return RecommendationDisplayable.from((Recommendation) card, dateCalculator, spannableFactory,
           timelineMetricsManager, socialRepository);

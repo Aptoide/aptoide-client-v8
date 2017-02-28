@@ -31,29 +31,23 @@ public class InstalledIntentService extends IntentService {
 
   private static final String TAG = InstalledIntentService.class.getName();
 
-  private final AdsRepository adsRepository;
-  private final RollbackRepository repository;
-  private final InstalledRepository installedRepository;
-  private final UpdateRepository updatesRepository;
-  private final CompositeSubscription subscriptions;
+  private AdsRepository adsRepository;
+  private RollbackRepository repository;
+  private InstalledRepository installedRepository;
+  private UpdateRepository updatesRepository;
+  private CompositeSubscription subscriptions;
   private Analytics analytics;
 
   public InstalledIntentService() {
-    this("InstalledIntentService");
+    super("InstalledIntentService");
   }
 
-  /**
-   * Creates an IntentService.  Invoked by your subclass's constructor.
-   *
-   * @param name Used to name the worker thread, important only for debugging.
-   */
-  public InstalledIntentService(String name) {
-    super(name);
-
+  @Override public void onCreate() {
+    super.onCreate();
     adsRepository = new AdsRepository();
     repository = RepositoryFactory.getRollbackRepository();
     installedRepository = RepositoryFactory.getInstalledRepository();
-    updatesRepository = RepositoryFactory.getUpdateRepository();
+    updatesRepository = RepositoryFactory.getUpdateRepository(this);
 
     subscriptions = new CompositeSubscription();
     analytics = Analytics.getInstance();
@@ -197,9 +191,8 @@ public class InstalledIntentService extends IntentService {
     if (update != null) {
       if (packageInfo.versionCode >= update.getVersionCode()) {
         // remove old update and on complete insert new app.
-        updatesRepository.remove(update).doOnError(throwable -> {
-          CrashReport.getInstance().log(throwable);
-        }).doOnCompleted(insertApp);
+        updatesRepository.remove(update)
+            .subscribe(insertApp, throwable -> CrashReport.getInstance().log(throwable));
       }
     } else {
       // sync call to insert

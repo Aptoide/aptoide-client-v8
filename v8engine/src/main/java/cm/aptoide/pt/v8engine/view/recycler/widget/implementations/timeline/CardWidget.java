@@ -8,15 +8,17 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.BaseActivity;
-import cm.aptoide.accountmanager.CreateStoreActivity;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.navigation.AccountNavigator;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.activity.AccountBaseActivity;
+import cm.aptoide.pt.v8engine.activity.CreateStoreActivity;
 import cm.aptoide.pt.v8engine.dialog.SharePreviewDialog;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.CardDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -41,6 +43,8 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
   private static final String TAG = CardWidget.class.getName();
 
   TextView shareButton;
+  private AptoideAccountManager accountManager;
+  private AccountNavigator accountNavigator;
 
   CardWidget(View itemView) {
     super(itemView);
@@ -51,6 +55,9 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
   }
 
   @CallSuper @Override public void bindView(T displayable) {
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    accountNavigator =
+        new AccountNavigator(getContext(), getNavigationManager(), accountManager);
     compositeSubscription.add(RxView.clicks(shareButton)
         //.flatMap(a -> {
         //// FIXME: 20/12/2016 sithengineer remove this flatMap
@@ -58,7 +65,7 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
         //  final String elementId = displayable.getTimelineCard().getCardId();
         //  Fragment fragment = V8Engine.getFragmentProvider()
         //      .newCommentGridRecyclerFragment(CommentType.TIMELINE, elementId);
-        //  ((FragmentShower) getContext()).pushFragmentV4(fragment);
+        //  getNavigationManager().navigateTo(fragment);
         //  return null;
         //});
         //})
@@ -70,16 +77,16 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
   }
 
   void shareCard(T displayable) {
-    if (!AptoideAccountManager.isLoggedIn()) {
+    if (!accountManager.isLoggedIn()) {
       ShowMessage.asSnack(getContext(), R.string.you_need_to_be_logged_in, R.string.login,
           snackView -> {
-            AptoideAccountManager.openAccountManager(snackView.getContext());
+            accountNavigator.navigateToAccountView();
           });
       return;
     }
 
-    if (TextUtils.isEmpty(AptoideAccountManager.getUserData().getUserRepo())
-        && !BaseActivity.UserAccessState.PUBLIC.toString()
+    if (TextUtils.isEmpty(accountManager.getAccount().getStore())
+        && !AccountBaseActivity.UserAccessState.PUBLIC.toString()
         .equals(ManagerPreferences.getUserAccess())) {
       ShowMessage.asSnack(getContext(), R.string.private_profile_create_store,
           R.string.create_store_create, snackView -> {
@@ -89,7 +96,7 @@ public abstract class CardWidget<T extends CardDisplayable> extends Widget<T> {
       return;
     }
 
-    SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(displayable);
+    SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(displayable, accountManager);
     AlertDialog.Builder alertDialog = sharePreviewDialog.getPreviewDialogBuilder(getContext());
 
     Observable.create((Subscriber<? super GenericDialogs.EResponse> subscriber) -> {
