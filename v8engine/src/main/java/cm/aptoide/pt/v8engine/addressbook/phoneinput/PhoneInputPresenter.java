@@ -22,19 +22,19 @@ public class PhoneInputPresenter implements PhoneInputContract.UserActionsListen
   }
 
   @Override public void submitClicked(String phoneNumber) {
-    mPhoneInputView.showProgressIndicator(true);
-    mContactsRepository.submitPhoneNumber(success -> {
-      Observable.just(success).subscribeOn(AndroidSchedulers.mainThread()).subscribe(success1 -> {
-        if (success) {
-          mPhoneInputView.showSubmissionSuccess();
-        } else {
+    mPhoneInputView.setGenericPleaseWaitDialog(true);
+    mContactsRepository.submitPhoneNumber(success -> Observable.just(success)
+        .subscribeOn(AndroidSchedulers.mainThread())
+        .subscribe(success1 -> {
+          if (success) {
+            mPhoneInputView.showSubmissionSuccess();
+          } else {
+            mPhoneInputView.showSubmissionError();
+          }
+          mPhoneInputView.setGenericPleaseWaitDialog(false);
+        }, throwable -> {
           mPhoneInputView.showSubmissionError();
-        }
-        mPhoneInputView.showProgressIndicator(false);
-      }, throwable -> {
-        mPhoneInputView.showSubmissionError();
-        mPhoneInputView.showProgressIndicator(false);
-      });
-    }, phoneNumber);
+          mPhoneInputView.setGenericPleaseWaitDialog(false);
+        }), phoneNumber);
   }
 }

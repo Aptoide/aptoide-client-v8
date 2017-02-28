@@ -117,8 +117,12 @@ public class ContactsRepositoryImpl implements ContactsRepository {
 
   @Override
   public void submitPhoneNumber(@NonNull SubmitContactCallback callback, String phoneNumber) {
-
-    // TODO: 23/02/2017 number validaton against libphonenumber
+    ContactUtils contactUtils = new ContactUtils();
+    phoneNumber = contactUtils.normalizePhoneNumber(phoneNumber);
+    if (!contactUtils.isValidNumberInE164Format(phoneNumber)) {
+      callback.onPhoneNumberSubmission(false);
+      return;
+    }
 
     String hashedPhoneNumber = null;
     try {

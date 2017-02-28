@@ -9,7 +9,7 @@ public interface PhoneInputContract {
 
     void finishView();
 
-    void showProgressIndicator(boolean active);
+    void setGenericPleaseWaitDialog(boolean active);
 
     void showSubmissionSuccess();
 

@@ -30,7 +30,8 @@
         android:layout_height="30dp"
         android:layout_marginEnd="5dp"
         android:layout_marginRight="5dp"
-        android:background="@drawable/circle" />
+        android:background="@drawable/circle"
+        android:visibility="invisible" />
 
     <EditText
         android:id="@+id/addressbook_country_number"
@@ -38,7 +39,6 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="5dp"
         android:layout_marginRight="5dp"
-        android:hint="+351"
         android:inputType="phone"
         android:maxEms="5"
         android:maxLength="5" />
