@@ -3,46 +3,84 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/timeline_stats_layout"
     android:layout_width="match_parent"
-    android:layout_height="56dp"
-    android:background="?attr/backgroundMain"
-    android:gravity="center"
-    >
-  <TextView
-      android:id="@+id/followers"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:layout_toLeftOf="@+id/leftSeparator"
-      android:layout_toStartOf="@+id/leftSeparator"
-      android:gravity="center"
-      android:paddingBottom="10dp"
-      android:paddingTop="10dp"
-      android:textColor="?attr/colorPrimary"
-      android:textSize="@dimen/text_size_large"
-      tools:text="following 512"
-      />
+    android:layout_height="70dp"
+    android:background="?attr/backgroundMain">
 
-  <View
-      xmlns:android="http://schemas.android.com/apk/res/android"
-      android:id="@+id/leftSeparator"
-      android:layout_width="1dp"
-      android:layout_height="match_parent"
-      android:layout_centerInParent="true"
-      android:layout_gravity="center"
-      android:background="@color/lighter_custom_gray"
-      />
+  <LinearLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      android:weightSum="1">
 
-  <TextView
-      android:id="@+id/following"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:layout_toEndOf="@+id/leftSeparator"
-      android:layout_toRightOf="@+id/leftSeparator"
-      android:gravity="center"
-      android:paddingBottom="10dp"
-      android:paddingTop="10dp"
-      android:textColor="?attr/colorPrimary"
-      android:textSize="@dimen/text_size_large"
-      tools:text="followers 100"
-      />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.33">
 
+      <TextView
+          android:id="@+id/followers"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_toLeftOf="@+id/leftSeparator"
+          android:layout_toStartOf="@+id/leftSeparator"
+          android:gravity="center"
+          android:paddingBottom="10dp"
+          android:paddingTop="10dp"
+          android:textColor="?attr/colorPrimary"
+          android:textSize="@dimen/text_size_large"
+          tools:text="following 512" />
+
+      <View xmlns:android="http://schemas.android.com/apk/res/android"
+          android:id="@+id/leftSeparator"
+          android:layout_width="1dp"
+          android:layout_height="match_parent"
+          android:layout_centerInParent="true"
+          android:layout_marginBottom="10dp"
+          android:layout_marginTop="10dp"
+          android:background="@color/lighter_custom_gray" />
+
+      <TextView
+          android:id="@+id/following"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_toEndOf="@+id/leftSeparator"
+          android:layout_toRightOf="@+id/leftSeparator"
+          android:gravity="center"
+          android:paddingBottom="10dp"
+          android:paddingTop="10dp"
+          android:textColor="?attr/colorPrimary"
+          android:textSize="@dimen/text_size_large"
+          tools:text="followers 100" />
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="0.67">
+
+      <View xmlns:android="http://schemas.android.com/apk/res/android"
+          android:id="@+id/rightSeparator"
+          android:layout_width="1dp"
+          android:layout_height="match_parent"
+          android:layout_gravity="center"
+          android:layout_marginBottom="10dp"
+          android:layout_marginTop="10dp"
+          android:background="@color/lighter_custom_gray" />
+
+      <TextView
+          android:id="@+id/follow_friends_button"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_toRightOf="@+id/rightSeparator"
+          android:drawableLeft="@drawable/follow_add_icon"
+          android:drawableStart="@drawable/follow_add_icon"
+          android:gravity="center"
+          android:lines="2"
+          android:padding="5dp"
+          android:text="@string/follow_friends"
+          android:textColor="@color/black"
+          android:textSize="@dimen/text_size_large" />
+    </RelativeLayout>
+  </LinearLayout>
 </RelativeLayout>

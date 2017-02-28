@@ -71,4 +71,8 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
             getPojo().getData().getFollowing(), storeTheme));
     return null;
   }
+
+  public void followFriendsClick(NavigationManagerV4 navigationManager) {
+    navigationManager.navigateTo(V8Engine.getFragmentProvider().newAddressBookFragment());
+  }
 }

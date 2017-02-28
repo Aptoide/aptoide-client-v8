@@ -81,7 +81,7 @@ public class LoggedInActivity2ndStep extends AccountBaseActivity {
       pleaseWaitDialog.show();
 
       SetUserRequest.of(aptoideClientUUID.getUniqueIdentifier(), UserAccessState.PUBLIC.toString(),
-          accountManager.getAccessToken()).execute(answer -> {
+          accountManager.getAccessToken(), null).execute(answer -> {
         if (answer.isOk()) {
           Logger.v(TAG, "user is public");
           Toast.makeText(LoggedInActivity2ndStep.this,
@@ -103,7 +103,7 @@ public class LoggedInActivity2ndStep extends AccountBaseActivity {
       pleaseWaitDialog.show();
 
       SetUserRequest.of(aptoideClientUUID.getUniqueIdentifier(),
-          UserAccessState.UNLISTED.toString(), accountManager.getAccessToken())
+          UserAccessState.UNLISTED.toString(), accountManager.getAccessToken(), null)
           .execute(answer -> {
             if (answer.isOk()) {
               Logger.v(TAG, "user is private");

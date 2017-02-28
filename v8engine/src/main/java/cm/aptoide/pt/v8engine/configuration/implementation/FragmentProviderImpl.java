@@ -5,6 +5,11 @@ import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.model.v7.Event;
+import cm.aptoide.pt.v8engine.addressbook.AddressBookFragment;
+import cm.aptoide.pt.v8engine.addressbook.data.Contact;
+import cm.aptoide.pt.v8engine.addressbook.invitefriends.InviteFriendsFragment;
+import cm.aptoide.pt.v8engine.addressbook.phoneinput.PhoneInputFragment;
+import cm.aptoide.pt.v8engine.addressbook.syncresult.SyncResultFragment;
 import cm.aptoide.pt.v8engine.configuration.FragmentProvider;
 import cm.aptoide.pt.v8engine.fragment.implementations.CommentListFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
@@ -40,6 +45,7 @@ import cm.aptoide.pt.v8engine.fragment.implementations.storetab.MyStoresSubscrib
 import cm.aptoide.pt.v8engine.fragment.implementations.storetab.StoreTabGridRecyclerFragment;
 import cm.aptoide.pt.viewRateAndCommentReviews.RateAndReviewsFragment;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by neuro on 10-10-2016.
@@ -272,6 +278,22 @@ public class FragmentProviderImpl implements FragmentProvider {
 
   @Override public Fragment newCommentGridRecyclerFragmentUrl(CommentType commentType, String url) {
     return CommentListFragment.newInstanceUrl(commentType, url);
+  }
+
+  @Override public Fragment newAddressBookFragment() {
+    return AddressBookFragment.newInstance();
+  }
+
+  @Override public Fragment newSyncSuccessFragment(List<Contact> contacts) {
+    return SyncResultFragment.newInstance(contacts);
+  }
+
+  @Override public Fragment newPhoneInputFragment() {
+    return PhoneInputFragment.newInstance();
+  }
+
+  @Override public Fragment newInviteFriendsFragment(InviteFriendsFragment.InviteFriendsFragmentOpenMode openMode) {
+    return InviteFriendsFragment.newInstance(openMode);
   }
 
   @Override public Fragment newSpotShareFragment() {

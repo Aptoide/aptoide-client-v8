@@ -35,5 +35,8 @@ public class ManagedKeys {
   public static final String ACCESS = "access";
   public static final String ACCESS_CONFIRMED = "access_confirmed";
   public static final String FIRST_RUN_V7 = "firstrun";
+  public static final String ADDRESS_BOOK_SYNC = "address_book_sync";
+  public static final String TWITTER_SYNC = "twitter_sync";
+  public static final String FACEBOOK_SYNC = "facebook_sync";
   public static final String AUTO_UPDATE_ENABLE = "auto_update";
 }

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+  <TextView
+      android:id="@+id/addressbook_share_phone_message"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:layout_marginEnd="60dp"
+      android:layout_marginLeft="60dp"
+      android:layout_marginRight="60dp"
+      android:layout_marginStart="60dp"
+      android:layout_marginTop="50dp"
+      android:gravity="center"
+      android:text="@string/addressbook_share_phone"
+      android:textSize="16.9sp" />
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="50dp"
+      android:gravity="center"
+      android:orientation="horizontal">
+
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/circle"
+        android:visibility="invisible" />
+
+    <EditText
+        android:id="@+id/addressbook_country_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
+        android:inputType="phone"
+        android:maxEms="5"
+        android:maxLength="5" />
+
+    <EditText
+        android:id="@+id/addressbook_phone_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/addressbook_phone_number"
+        android:inputType="phone"
+        android:maxEms="15"
+        android:maxLength="15" />
+
+  </LinearLayout>
+
+  <Button
+      android:id="@+id/addressbook_phone_input_save"
+      android:layout_width="match_parent"
+      android:layout_height="60dp"
+      android:layout_marginEnd="30dp"
+      android:layout_marginLeft="30dp"
+      android:layout_marginRight="30dp"
+      android:layout_marginStart="30dp"
+      android:layout_marginTop="10dp"
+      android:text="SAVE" />
+
+
+  <TextView
+      android:id="@+id/addressbook_not_now"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:layout_marginBottom="20dp"
+      android:layout_marginTop="40dp"
+      android:clickable="true"
+      android:text="@string/not_now"
+      android:textAllCaps="true" />
+</LinearLayout>
