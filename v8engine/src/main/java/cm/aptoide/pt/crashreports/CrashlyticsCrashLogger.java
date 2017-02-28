@@ -1,7 +1,7 @@
 package cm.aptoide.pt.crashreports;
 
 import android.content.Context;
-import cm.aptoide.accountmanager.BuildConfig;
+import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.logger.Logger;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
@@ -24,10 +24,11 @@ public class CrashlyticsCrashLogger implements CrashLogger {
   @Setter private String language;
 
   public CrashlyticsCrashLogger(Context context, boolean isDisabled) {
+
     Fabric.with(context,
         new Crashlytics.Builder().core(new CrashlyticsCore.Builder().disabled(isDisabled).build())
-            .build(), new TwitterCore(new TwitterAuthConfig(BuildConfig.TWITTER_KEY_INTERNAL,
-            BuildConfig.TWITTER_SECRET_INTERNAL)));
+            .build(), new TwitterCore(
+            new TwitterAuthConfig(BuildConfig.TWITTER_KEY, BuildConfig.TWITTER_SECRET)));
     Logger.d(TAG, "Setup of " + this.getClass().getSimpleName() + " complete.");
   }
 

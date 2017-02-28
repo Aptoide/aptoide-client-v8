@@ -43,6 +43,9 @@ android {
           "\"" + project.APTOIDE_WEBSOCKETS_SCHEME + "\""
       buildConfigField "String", "APTOIDE_WEBSOCKETS_HOST",
           "\"" + project.APTOIDE_WEBSOCKETS_HOST + "\""
+      buildConfigField "String", "TWITTER_KEY", "\"" + project.TWITTER_KEY_INTERNAL + "\""
+      buildConfigField "String", "TWITTER_SECRET",
+          "\"" + project.TWITTER_KEY_INTERNAL + "\""
     }
     prod {
       buildConfigField "String", "PAYPAL_ENVIRONMENT", "\"" + project.PAYPAL_ENVIRONMENT_LIVE + "\""
@@ -51,6 +54,8 @@ android {
           "\"" + project.APTOIDE_WEBSOCKETS_SCHEME + "\""
       buildConfigField "String", "APTOIDE_WEBSOCKETS_HOST",
           "\"" + project.APTOIDE_WEBSOCKETS_HOST + "\""
+      buildConfigField "String", "TWITTER_KEY", "\"" + project.TWITTER_KEY + "\""
+      buildConfigField "String", "TWITTER_SECRET", "\"" + project.TWITTER_SECRET + "\""
     }
   }
 
@@ -196,7 +201,7 @@ dependencies {
     transitive = true;
   }
 
-  compile ("com.squareup.okhttp3:okhttp:${OKHTTP_VERSION}")
+  compile("com.squareup.okhttp3:okhttp:${OKHTTP_VERSION}")
 
   // Parceler - https://github.com/johncarl81/parceler
   //compile 'org.parceler:parceler-api:1.1.6'
