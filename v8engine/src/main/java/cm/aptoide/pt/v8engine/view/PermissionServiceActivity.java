@@ -27,7 +27,6 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.activity.ActivityView;
 import cm.aptoide.pt.v8engine.interfaces.FragmentShower;
-import com.facebook.AccessToken;
 import com.facebook.FacebookSdk;
 import rx.functions.Action0;
 
@@ -42,7 +41,6 @@ public abstract class PermissionServiceActivity extends ActivityView implements 
   private static final int ACCESS_TO_ACCOUNTS_REQUEST_ID = 62;
 
   private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
-  private AccessToken accessToken;
 
   @Nullable private Action0 toRunWhenAccessToFileSystemIsGranted;
   @Nullable private Action0 toRunWhenAccessToFileSystemIsDenied;
@@ -263,8 +261,7 @@ public abstract class PermissionServiceActivity extends ActivityView implements 
 
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    Fragment fragment = getSupportFragmentManager().findFragmentByTag(
-        getSupportFragmentManager().getBackStackEntryAt(0).getName());
+    Fragment fragment = getNavigationManager().peekLast();
     if (fragment != null) {
       fragment.onActivityResult(requestCode, resultCode, data);
     } else {
