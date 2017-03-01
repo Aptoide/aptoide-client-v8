@@ -41,7 +41,7 @@ public class AppBrickListWidget extends Widget<AppBrickListDisplayable> {
   @Override public void bindView(AppBrickListDisplayable displayable) {
     App app = displayable.getPojo();
 
-    ImageLoader.with(getContext()).load(app.getGraphic(), R.drawable.placeholder_705x345, graphic);
+    ImageLoader.with(getContext()).load(app.getGraphic(), R.drawable.placeholder_brick, graphic);
     name.setText(app.getName());
     ratingBar.setRating(app.getStats().getRating().getAvg());
     compositeSubscription.add(RxView.clicks(itemView).subscribe(v -> {

@@ -37,7 +37,7 @@ import com.jakewharton.rxbinding.view.RxView;
   @Override public void bindView(AppBrickDisplayable displayable) {
     final FragmentActivity context = getContext();
     ImageLoader.with(context)
-        .load(displayable.getPojo().getGraphic(), R.drawable.placeholder_705x345, graphic);
+        .load(displayable.getPojo().getGraphic(), R.drawable.placeholder_brick, graphic);
 
     compositeSubscription.add(RxView.clicks(itemView).subscribe(v -> {
       Analytics.AppViewViewedFrom.addStepToList(displayable.getTag());

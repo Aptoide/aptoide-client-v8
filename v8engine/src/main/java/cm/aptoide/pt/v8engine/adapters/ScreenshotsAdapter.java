@@ -97,7 +97,7 @@ public class ScreenshotsAdapter
       final Context context = itemView.getContext();
 
       ImageLoader.with(context)
-          .load(item.getThumbnail(), R.drawable.placeholder_300x300, screenshot);
+          .load(item.getThumbnail(), R.drawable.placeholder_square, screenshot);
 
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
         media_layout.setForeground(
@@ -137,9 +137,9 @@ public class ScreenshotsAdapter
     private int getPlaceholder(String orient) {
       int id;
       if (orient != null && orient.equals("portrait")) {
-        id = R.drawable.placeholder_144x240;
+        id = R.drawable.placeholder_9_16;
       } else {
-        id = R.drawable.placeholder_256x160;
+        id = R.drawable.placeholder_16_9;
       }
       return id;
     }
