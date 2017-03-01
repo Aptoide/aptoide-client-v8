@@ -172,6 +172,8 @@ public class HighwayPresenter implements Presenter {
 
       @Override public void onError(int result) {
         view.showCreateGroupResult(result);
+        view.hideButtonsProgressBar();
+        view.enableButtons(true);
       }
     });
   }
