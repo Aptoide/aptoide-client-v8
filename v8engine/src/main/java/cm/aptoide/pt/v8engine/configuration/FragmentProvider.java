@@ -158,4 +158,6 @@ public interface FragmentProvider {
   Fragment newInviteFriendsFragment(InviteFriendsFragment.InviteFriendsFragmentOpenMode openMode);
 
   Fragment newSpotShareFragment();
+
+  Fragment newThankYouConnectingFragment();
 }

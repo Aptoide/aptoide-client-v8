@@ -28,6 +28,7 @@ public class PhoneInputPresenter implements PhoneInputContract.UserActionsListen
         .subscribe(success1 -> {
           if (success) {
             mPhoneInputView.showSubmissionSuccess();
+            mPhoneInputView.hideVirtualKeyboard();
           } else {
             mPhoneInputView.showSubmissionError();
           }

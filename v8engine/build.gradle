@@ -208,4 +208,5 @@ dependencies {
   //annotationProcessor 'org.parceler:parceler:1.1.6'
 
   compile project(':shareappsandroid')
+  compile "com.android.support.constraint:constraint-layout:${CONSTRAINT_LAYOUT_VERSION}"
 }

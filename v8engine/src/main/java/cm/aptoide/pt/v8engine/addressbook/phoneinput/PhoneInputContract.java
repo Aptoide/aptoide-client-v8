@@ -14,6 +14,8 @@ public interface PhoneInputContract {
     void showSubmissionSuccess();
 
     void showSubmissionError();
+
+    void hideVirtualKeyboard();
   }
 
   interface UserActionsListener {
