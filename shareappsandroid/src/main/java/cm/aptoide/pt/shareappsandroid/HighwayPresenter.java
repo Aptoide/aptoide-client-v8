@@ -64,7 +64,8 @@ public class HighwayPresenter implements Presenter {
     if (permissionManager.checkPermissions()) {
       deactivateHotspot();
     }
-    //else{
+    //else if(!permissionManager.checkPermissions() ){//already requested the permissions but didn't accept all.
+    //  System.out.println("requesting permissions again, because he didn't accept all. ");
     //  permissionManager.requestPermissions();
     //}
 
@@ -117,11 +118,6 @@ public class HighwayPresenter implements Presenter {
     //if(!permissionManager.checkPermissions()){
     //  permissionManager.requestPermissions();
     //}
-  }
-
-  //should be on the presenter interface?
-  public void onNewIntent() {
-
   }
 
   public void onActivityResult(Group group) {
