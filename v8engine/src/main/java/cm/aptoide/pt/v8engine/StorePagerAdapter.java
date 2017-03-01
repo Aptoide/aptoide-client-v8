@@ -141,7 +141,7 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter {
    * @return returns a positive integer 0...X if there is an Event with requested name, else returns
    * -1.
    */
-  public Integer getEventNamePosition(Event.Name name) {
+  public int getEventNamePosition(Event.Name name) {
     final Integer integer = availableEventsMap.get(name);
     if (integer == null) {
       return -1;

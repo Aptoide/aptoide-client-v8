@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
-import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -15,11 +14,9 @@ import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.navigation.TabNavigator;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.fragment.implementations.HomeFragment;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.UpdatesHeaderDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -79,7 +76,7 @@ public class UpdatesHeaderWidget extends Widget<UpdatesHeaderDisplayable> {
       }, () -> {
       });
 
-      tabNavigator.navigateToDownloads();
+      tabNavigator.navigate(TabNavigator.DOWNLOADS);
       Analytics.Updates.updateAll();
     });
   }

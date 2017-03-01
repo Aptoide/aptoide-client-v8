@@ -1,10 +1,7 @@
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -66,7 +63,6 @@ public class HomeFragment extends StoreFragment {
   private DrawerLayout drawerLayout;
   private NavigationView navigationView;
   private BadgeView updatesBadge;
-  @Getter @Setter private Event.Name desiredViewPagerItem = null;
   private UpdateRepository updateRepository;
   private AptoideAccountManager accountManager;
   private AccountNavigator accountNavigator;
@@ -108,11 +104,26 @@ public class HomeFragment extends StoreFragment {
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    tabNavigator.downloadNavigation()
+    tabNavigator.navigation()
+        .doOnNext(tab -> viewPager.setCurrentItem(
+            ((StorePagerAdapter) viewPager.getAdapter()).getEventNamePosition(getEventName(tab))))
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(downloadNavigationEvent -> viewPager.setCurrentItem(
-            ((StorePagerAdapter) viewPager.getAdapter()).getEventNamePosition(Event.Name
-                .myDownloads)));
+        .subscribe();
+  }
+
+  private Event.Name getEventName(int tab) {
+    switch (tab) {
+      case TabNavigator.DOWNLOADS:
+        return Event.Name.myDownloads;
+      case TabNavigator.STORES:
+        return Event.Name.myStores;
+      case TabNavigator.TIMELINE:
+        return Event.Name.getUserTimeline;
+      case TabNavigator.UPDATES:
+        return Event.Name.myUpdates;
+        default:
+          throw new IllegalArgumentException("Invalid tab.");
+    }
   }
 
   @Override protected void setupViewPager() {
@@ -135,12 +146,6 @@ public class HomeFragment extends StoreFragment {
         .subscribe(size -> refreshUpdatesBadge(size), throwable -> {
           CrashReport.getInstance().log(throwable);
         });
-
-    if (desiredViewPagerItem != null) {
-      if (adapter.containsEventName(desiredViewPagerItem)) {
-        viewPager.setCurrentItem(adapter.getEventNamePosition(desiredViewPagerItem));
-      }
-    }
   }
 
   public void refreshUpdatesBadge(int num) {

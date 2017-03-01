@@ -62,7 +62,7 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created by neuro on 06-05-2016.
  */
-public class MainActivity extends BaseActivity implements MainView, FragmentShower, TabNavigator {
+public class MainActivity extends TabNavigatorActivity implements MainView, FragmentShower {
 
   public final static String FRAGMENT = "FRAGMENT";
 
@@ -70,15 +70,10 @@ public class MainActivity extends BaseActivity implements MainView, FragmentShow
   private StoreUtilsProxy storeUtilsProxy;
   private AptoideAccountManager accountManager;
 
-  private Handler handler;
-  private PublishRelay<Void> downloadNavigationSubject;
-
   @Partners @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    handler = new Handler(Looper.getMainLooper());
     setContentView(R.layout.frame_layout);
 
-    downloadNavigationSubject = PublishRelay.create();
     accountManager = ((V8Engine) getApplicationContext()).getAccountManager();
     final IdsRepositoryImpl clientUuid =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this);
@@ -187,7 +182,7 @@ public class MainActivity extends BaseActivity implements MainView, FragmentShow
               }))
           .toList()
           .subscribe(storeName -> {
-            setMainPagerPosition(Event.Name.myStores);
+            navigate(STORES);
             Logger.d(TAG, "newrepoDeepLink: all stores added");
           }, throwable -> {
             Logger.e(TAG, "newrepoDeepLink: " + throwable);
@@ -199,17 +194,17 @@ public class MainActivity extends BaseActivity implements MainView, FragmentShow
 
   private void downloadNotificationDeepLink(Intent intent) {
     Analytics.ApplicationLaunch.downloadingUpdates();
-    setMainPagerPosition(Event.Name.myDownloads);
+    navigate(DOWNLOADS);
   }
 
   private void fromTimelineDeepLink(Intent intent) {
     Analytics.ApplicationLaunch.timelineNotification();
-    setMainPagerPosition(Event.Name.getUserTimeline);
+    navigate(TIMELINE);
   }
 
   private void newUpdatesDeepLink(Intent intent) {
     Analytics.ApplicationLaunch.newUpdatesNotification();
-    setMainPagerPosition(Event.Name.myUpdates);
+    navigate(UPDATES);
   }
 
   private void genericDeepLink(Uri uri) {
@@ -248,19 +243,6 @@ public class MainActivity extends BaseActivity implements MainView, FragmentShow
     }
   }
 
-  private void setMainPagerPosition(Event.Name name) {
-    if (handler != null) {
-      handler.post(() -> {
-        final Fragment fragment = getNavigationManager().peekLast();
-        if (fragment != null && (fragment instanceof HomeFragment)) {
-          ((HomeFragment) fragment).setDesiredViewPagerItem(name);
-        } else {
-          throw new IllegalStateException("No more fragments available in the back stack");
-        }
-      });
-    }
-  }
-
   private boolean validateDeepLinkRequiredArgs(String queryType, String queryLayout,
       String queryName, String queryAction) {
     return !TextUtils.isEmpty(queryType)
@@ -296,11 +278,4 @@ public class MainActivity extends BaseActivity implements MainView, FragmentShow
     return getNavigationManager().peekLast();
   }
 
-  @Override public void navigateToDownloads() {
-    downloadNavigationSubject.call(null);
-  }
-
-  @Override public Observable<Void> downloadNavigation() {
-    return downloadNavigationSubject;
-  }
 }
