@@ -26,18 +26,21 @@ public class LoginSignUpFragment extends FragmentView implements LoginSignUpView
 
   private static final String DISMISS_TO_NAVIGATE_TO_MAIN_VIEW = "dismiss_to_navigate_to_main_view";
   private static final String BOTTOM_SHEET_WITH_BOTTOM_BAR = "bottom_sheet_expanded";
+  private static final String CLEAN_BACK_STACK = "dismiss_to_navigate_to_main_view";
 
   private BottomSheetStateListener bottomSheetStateListener;
   private LoginSignUpCredentialsFragment loginFragment;
   private BottomSheetBehavior<View> bottomSheetBehavior;
   private boolean withBottomBar;
   private boolean dismissToNavigateToMainView;
+  private boolean cleanBackStack;
 
   public static LoginSignUpFragment newInstance(boolean withBottomBar,
-      boolean dimissToNavigateToMainView) {
+      boolean dimissToNavigateToMainView, boolean cleanBackStack) {
     Bundle args = new Bundle();
     args.putBoolean(BOTTOM_SHEET_WITH_BOTTOM_BAR, withBottomBar);
     args.putBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW, dimissToNavigateToMainView);
+    args.putBoolean(CLEAN_BACK_STACK, cleanBackStack);
 
     LoginSignUpFragment fragment = new LoginSignUpFragment();
     fragment.setArguments(args);
@@ -48,6 +51,7 @@ public class LoginSignUpFragment extends FragmentView implements LoginSignUpView
     super.onCreate(savedInstanceState);
     withBottomBar = getArguments().getBoolean(BOTTOM_SHEET_WITH_BOTTOM_BAR);
     dismissToNavigateToMainView = getArguments().getBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW);
+    cleanBackStack = getArguments().getBoolean(CLEAN_BACK_STACK);
   }
 
   @Nullable @Override
@@ -55,7 +59,7 @@ public class LoginSignUpFragment extends FragmentView implements LoginSignUpView
       @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(getLayoutId(), container, false);
 
-    loginFragment = LoginSignUpCredentialsFragment.newInstance(dismissToNavigateToMainView);
+    loginFragment = LoginSignUpCredentialsFragment.newInstance(dismissToNavigateToMainView, cleanBackStack);
     // nested fragments only work using dynamic fragment addition.
     getActivity().getSupportFragmentManager()
         .beginTransaction()

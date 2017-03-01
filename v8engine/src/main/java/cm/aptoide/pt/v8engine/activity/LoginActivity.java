@@ -14,7 +14,7 @@ public class LoginActivity extends ActivityView {
     setContentView(getLayoutId());
 
     getSupportFragmentManager().beginTransaction()
-        .replace(R.id.replace_fragment, LoginSignUpFragment.newInstance(false, true))
+        .replace(R.id.replace_fragment, LoginSignUpFragment.newInstance(false, true, false))
         .commit();
   }
 

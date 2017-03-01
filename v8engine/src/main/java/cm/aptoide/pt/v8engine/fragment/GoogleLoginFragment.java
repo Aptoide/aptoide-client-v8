@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.Button;
 import cm.aptoide.accountmanager.BuildConfig;
 import cm.aptoide.pt.v8engine.view.GoogleLoginView;
 import cm.aptoide.pt.v8engine.viewModel.GoogleAccountViewModel;
@@ -17,7 +18,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.Scopes;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
 import com.jakewharton.rxrelay.PublishRelay;
@@ -50,7 +50,7 @@ public abstract class GoogleLoginFragment extends GooglePlayServicesFragment
     // does nothing
   }
 
-  protected abstract SignInButton getGoogleButton();
+  protected abstract Button getGoogleButton();
 
   @Override protected void connect() {
     client.connect();
