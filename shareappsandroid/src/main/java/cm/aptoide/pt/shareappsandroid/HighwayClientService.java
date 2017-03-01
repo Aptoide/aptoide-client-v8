@@ -136,14 +136,14 @@ public class HighwayClientService extends Service {
         i.putExtra("positionToReSend", 100000);
         i.setAction("SENDAPP");
         sendBroadcast(i);
-      }      @Override public void onError(IOException e) {
+      }
+
+      @Override public void onError(IOException e) {
         e.printStackTrace();
 
         Intent i = new Intent();
         i.setAction("ERRORSENDING");
       }
-
-
 
       @Override public void onProgressChanged(float progress) {
         //System.out.println("onProgressChanged() called with: progress = [" + progress + "]");
@@ -188,20 +188,6 @@ public class HighwayClientService extends Service {
       mNotifyManager.notify(id, ((Notification.Builder) mBuilderReceive).getNotification());
     }
   }
-
-  //  /**
-  //   * Method to be called after getting the callback of finishSending
-  //   */
-  //
-  //  public void finishedSending(String appName, String packageName) {
-  //    Intent finishedSending = new Intent();
-  //    finishedSending.setAction("SENDAPP");
-  //    finishedSending.putExtra("isSent", false);
-  //    finishedSending.putExtra("needReSend", false);
-  //    finishedSending.putExtra("appName", appName);
-  //    finishedSending.putExtra("packageName", packageName);
-  //    finishedSending.putExtra("positionToReSend", 100000);
-  //  }
 
   private void showReceiveProgress(String receivingAppName, int actual) {
 
@@ -273,7 +259,7 @@ public class HighwayClientService extends Service {
 
         final String externalStoragepath = intent.getStringExtra("ExternalStoragePath");
 
-        StorageCapacity storageCapacity = new StorageCapacity() {//todo nao percebo
+        StorageCapacity storageCapacity = new StorageCapacity() {
           @Override public boolean hasCapacity(long bytes) {
             long availableSpace = -1L;
             StatFs stat = new StatFs(externalStoragepath);
@@ -307,23 +293,14 @@ public class HighwayClientService extends Service {
 
           AndroidAppInfo appInfo = new AndroidAppInfo(appName, packageName, fileInfoList);
 
-          if (!obbsFilePath.equals("noObbs")) {
-
-            // TODO: 22-02-2017
-
-            //appInfo.setObbsFilePath(obbsFilePath);
-
-          }
-
           Host host = aptoideMessageController.getHost();
           aptoideMessageController.send(
               new RequestPermissionToSend(aptoideMessageController.getLocalhost(), appInfo));
         }
-      } else if(intent.getAction() != null && intent.getAction().equals("DISCONNECT")){
+      } else if (intent.getAction() != null && intent.getAction().equals("DISCONNECT")) {
         System.out.println("Requested to disconnect !");
         aptoideMessageController.exit();
       }
-
     }
 
     return START_STICKY;
@@ -333,7 +310,7 @@ public class HighwayClientService extends Service {
     return null;
   }
 
-  public List<FileInfo> getFileInfo(String filePath, String obbsFilePath){
+  public List<FileInfo> getFileInfo(String filePath, String obbsFilePath) {
     List<FileInfo> fileInfoList = new ArrayList<>();
     //getApk
     File apk = new File(filePath);
@@ -346,7 +323,7 @@ public class HighwayClientService extends Service {
       File[] list = obbFolder.listFiles();
       if (list != null) {
         if (list.length > 0) {
-          for(int i=0;i<list.length;i++){
+          for (int i = 0; i < list.length; i++) {
             fileInfoList.add(new FileInfo(list[i]));
           }
         }

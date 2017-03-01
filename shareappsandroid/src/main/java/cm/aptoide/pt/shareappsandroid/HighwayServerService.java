@@ -135,14 +135,14 @@ public class HighwayServerService extends Service {
         i.putExtra("positionToReSend", 100000);
         i.setAction("SENDAPP");
         sendBroadcast(i);
-      }      @Override public void onError(IOException e) {
+      }
+
+      @Override public void onError(IOException e) {
         System.out.println("Fell on error Server !! ");
         e.printStackTrace();
         Intent i = new Intent();
         i.setAction("ERRORSENDING");
       }
-
-
 
       @Override public void onProgressChanged(float progress) {
         //System.out.println("onProgressChanged() called with: progress = [" + progress + "]");
@@ -206,18 +206,6 @@ public class HighwayServerService extends Service {
     }
   }
 
-  /**
-   * Method to be called after getting the callback of finishSending
-   */
-  //  public void finishedSending(String appName, String packageName) {
-  //    Intent finishedSending = new Intent();
-  //    finishedSending.setAction("SENDAPP");
-  //    finishedSending.putExtra("isSent", false);
-  //    finishedSending.putExtra("needReSend", false);
-  //    finishedSending.putExtra("appName", appName);
-  //    finishedSending.putExtra("packageName", packageName);
-  //    finishedSending.putExtra("positionToReSend", 100000);
-  //  }
   private void createSendNotification() {
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -334,7 +322,7 @@ public class HighwayServerService extends Service {
     return null;
   }
 
-  public List<FileInfo> getFileInfo(String filePath, String obbsFilePath){
+  public List<FileInfo> getFileInfo(String filePath, String obbsFilePath) {
     List<FileInfo> fileInfoList = new ArrayList<>();
     //getApk
     File apk = new File(filePath);
@@ -347,7 +335,7 @@ public class HighwayServerService extends Service {
       File[] list = obbFolder.listFiles();
       if (list != null) {
         if (list.length > 0) {
-          for(int i=0;i<list.length;i++){
+          for (int i = 0; i < list.length; i++) {
             fileInfoList.add(new FileInfo(list[i]));
           }
         }
@@ -356,5 +344,4 @@ public class HighwayServerService extends Service {
 
     return fileInfoList;
   }
-
 }
