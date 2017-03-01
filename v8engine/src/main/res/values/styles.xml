@@ -844,4 +844,9 @@
     <item name="android:clickable">false</item>
     <item name="android:focusable">false</item>
   </style>
+
+  <style name="Aptoide.Login.Google" parent="WidgetButtonCustom">
+    <item name="android:background">@drawable/rounded_corners_google</item>
+    <item name="android:textSize">16sp</item>
+  </style>
 </resources>

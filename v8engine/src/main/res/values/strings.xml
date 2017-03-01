@@ -387,7 +387,7 @@
   <string name="login_company">Login %s</string>
   <string name="connect_with_facebook">Connect with Facebook</string>
   <string name="connect_with_google">Connect with Google</string>
-  <string name="accept_terms_signup">By joining Aptoide you agree to Aptoide\'s Terms and Conditions and Content Policy for Developers</string>
+  <string name="accept_terms_signup">By joining Aptoide you agree to Aptoide\'s Terms and Conditions and Content Policy for Developers.</string>
   <string name="recover_password">Recover your password</string>
   <string name="email">Email</string>
   <string name="password">Password</string>

@@ -41,10 +41,9 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
-import com.google.android.gms.common.SignInButton;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
+import com.trello.rxlifecycle.android.FragmentEvent;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -54,14 +53,16 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     implements LoginSignUpCredentialsView {
 
   private static final String DISMISS_TO_NAVIGATE_TO_MAIN_VIEW = "dismiss_to_navigate_to_main_view";
+  private static final String CLEAN_BACK_STACK = "dismiss_to_navigate_to_main_view";
+
   private ProgressDialog progressDialog;
   private CallbackManager callbackManager;
   private PublishRelay<FacebookAccountViewModel> facebookLoginSubject;
   private LoginManager facebookLoginManager;
   private AlertDialog facebookEmailRequiredDialog;
   private List<String> facebookRequestedPermissions;
-  private SignInButton googleLoginButton;
-  private LoginButton facebookLoginButton;
+  private Button googleLoginButton;
+  private View facebookLoginButton;
   private Button hideShowAptoidePasswordButton;
   private View loginArea;
   private View signUpArea;
@@ -78,12 +79,15 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   private View credentialsEditTextsArea;
   private BottomSheetBehavior<View> bottomSheetBehavior;
   private boolean dismissToNavigateToMainView;
+  private boolean cleanBackStack;
 
-  public static LoginSignUpCredentialsFragment newInstance(boolean dimissToNavigateToMainView) {
+  public static LoginSignUpCredentialsFragment newInstance(boolean dimissToNavigateToMainView,
+      boolean cleanBackStack) {
     final LoginSignUpCredentialsFragment fragment = new LoginSignUpCredentialsFragment();
 
     final Bundle bundle = new Bundle();
     bundle.putBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW, dimissToNavigateToMainView);
+    bundle.putBoolean(CLEAN_BACK_STACK, cleanBackStack);
     fragment.setArguments(bundle);
 
     return fragment;
@@ -92,12 +96,14 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     this.dismissToNavigateToMainView = getArguments().getBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW);
+    this.cleanBackStack = getArguments().getBoolean(CLEAN_BACK_STACK);
   }
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     super.onCreateView(inflater, container, savedInstanceState);
+    facebookRequestedPermissions = Arrays.asList("email", "user_friends");
     return inflater.inflate(getLayoutId(), container, false);
   }
 
@@ -171,7 +177,6 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
 
   @Override public void showFacebookLogin() {
     FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
-    facebookLoginButton.setReadPermissions(facebookRequestedPermissions);
     facebookLoginButton.setVisibility(View.VISIBLE);
     facebookLoginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
       @Override public void onSuccess(LoginResult loginResult) {
@@ -204,15 +209,16 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   @Override public void navigateToForgotPasswordView() {
     startActivity(new Intent(Intent.ACTION_VIEW,
         Uri.parse("http://m.aptoide.com/account/password-recovery")));
+    // FIXME: 1/3/2017 sithengineer remove hardcoded links
   }
 
   @Override public void showPassword() {
-    isPasswordVisible = false;
+    isPasswordVisible = true;
     aptoidePasswordEditText.setTransformationMethod(null);
   }
 
   @Override public void hidePassword() {
-    isPasswordVisible = true;
+    isPasswordVisible = false;
     aptoidePasswordEditText.setTransformationMethod(new PasswordTransformationMethod());
   }
 
@@ -230,8 +236,15 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
             V8Engine.getConfiguration().getDefaultTheme());
 
     final NavigationManagerV4 navManager = getNavigationManager();
-    navManager.cleanBackStack();
-    navManager.navigateTo(home);
+    if (cleanBackStack) {
+      navManager.cleanBackStack();
+      navManager.navigateTo(home);
+    } else {
+      // close login / signup bottom sheet
+      onBackPressed();
+      // pop this fragment from stack
+      getActivity().onBackPressed();
+    }
   }
 
   @Override public void dismiss() {
@@ -255,8 +268,8 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   }
 
   @Override public Observable<AptoideAccountViewModel> aptoideSignUpClick() {
-    return RxView.clicks(buttonSignUp).doOnNext(
-        __ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.JOIN_APTOIDE))
+    return RxView.clicks(buttonSignUp)
+        .doOnNext(__ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.JOIN_APTOIDE))
         .map(click -> new AptoideAccountViewModel(aptoideEmailEditText.getText().toString(),
             aptoidePasswordEditText.getText().toString()));
   }
@@ -275,12 +288,12 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     ShowMessage.asToast(getContext(), errorRes);
   }
 
-  @Override protected SignInButton getGoogleButton() {
-    return googleLoginButton;
+  @Override public void googleLoginClicked() {
+    Analytics.Account.clickIn(Analytics.Account.StartupClick.CONNECT_GOOGLE);
   }
 
-  @Override public void googleLoginClicked(){
-    Analytics.Account.clickIn(Analytics.Account.StartupClick.CONNECT_GOOGLE);
+  @Override protected Button getGoogleButton() {
+    return googleLoginButton;
   }
 
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -290,8 +303,6 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-
-    facebookRequestedPermissions = Arrays.asList("email", "user_friends");
 
     bindViews(view);
 
@@ -305,7 +316,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   private void bindViews(View view) {
     forgotPasswordButton = (TextView) view.findViewById(R.id.forgot_password);
 
-    googleLoginButton = (SignInButton) view.findViewById(R.id.g_sign_in_button);
+    googleLoginButton = (Button) view.findViewById(R.id.google_login_button);
 
     buttonLogin = (Button) view.findViewById(R.id.button_login);
     buttonSignUp = (Button) view.findViewById(R.id.button_sign_up);
@@ -315,8 +326,13 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     aptoidePasswordEditText = (EditText) view.findViewById(R.id.password);
     hideShowAptoidePasswordButton = (Button) view.findViewById(R.id.btn_show_hide_pass);
 
-    facebookLoginButton = (LoginButton) view.findViewById(R.id.fb_login_button);
-    facebookLoginButton.setFragment(this);
+    facebookLoginButton = view.findViewById(R.id.fb_login_button);
+    //facebookLoginButton.setFragment(this);
+    //facebookLoginButton.setReadPermissions(facebookRequestedPermissions);
+    RxView.clicks(facebookLoginButton)
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(__ -> facebookLoginManager.logInWithReadPermissions(this,
+            facebookRequestedPermissions));
 
     callbackManager = CallbackManager.Factory.create();
     facebookLoginManager = LoginManager.getInstance();
@@ -337,7 +353,8 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
         cm.aptoide.accountmanager.R.string.facebook_email_permission_regected_message)
         .setPositiveButton(cm.aptoide.accountmanager.R.string.facebook_grant_permission_button,
             (dialog, which) -> {
-              facebookLoginManager.logInWithReadPermissions(getActivity(), Arrays.asList("email"));
+              facebookLoginManager.logInWithReadPermissions(this,
+                  facebookRequestedPermissions);
             })
         .setNegativeButton(android.R.string.cancel, null)
         .create();
