@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -36,6 +37,7 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.account.ErrorsMapper;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.view.MainActivity;
 import com.jakewharton.rxbinding.view.RxView;
 import java.net.SocketTimeoutException;
@@ -301,6 +303,8 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
                       mSubscriptions.add(accountManager.syncCurrentAccount().subscribe(() -> {
                       }, Throwable::printStackTrace));
                       if (visibility == ShowMessage.DISMISSED) {
+                        Analytics.Account.createStore(!TextUtils.isEmpty(storeAvatarPath),
+                            Analytics.Account.CreateStoreAction.CREATE);
                         goToMainActivity();
                       }
                     });
@@ -362,11 +366,9 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
     ));
     mSubscriptions.add(RxView.clicks(mSkip)
         .flatMap(click -> accountManager.syncCurrentAccount().andThen(Observable.just(true)))
-        .subscribe(refreshed -> {
-          goToMainActivity();
-        }, throwable -> {
-          goToMainActivity();
-        }));
+        .doOnNext(__ -> Analytics.Account.createStore(!TextUtils.isEmpty(storeAvatarPath),
+            Analytics.Account.CreateStoreAction.SKIP))
+        .subscribe(__ -> goToMainActivity()));
   }
 
   private void setupThemeListeners() {

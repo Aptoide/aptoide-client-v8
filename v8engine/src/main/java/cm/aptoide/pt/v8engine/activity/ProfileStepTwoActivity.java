@@ -9,6 +9,7 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.widget.Button;
+import android.widget.Toast;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
@@ -17,9 +18,9 @@ import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.subscriptions.CompositeSubscription;
 
@@ -27,24 +28,24 @@ import rx.subscriptions.CompositeSubscription;
  * Created by pedroribeiro on 15/12/16.
  */
 
-public class LoggedInActivity extends AccountBaseActivity {
+public class ProfileStepTwoActivity extends AccountBaseActivity {
 
-  private static final String TAG = LoggedInActivity.class.getSimpleName();
+  private static final String TAG = ProfileStepTwoActivity.class.getSimpleName();
 
-  private AptoideClientUUID aptoideClientUUID;
-  private AptoideAccountManager accountManager;
+  private final AptoideClientUUID aptoideClientUUID =
+      new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+          DataProvider.getContext());
 
-  private Toolbar mToolbar;
   private Button mContinueButton;
-  private Button mMoreInfoButton;
+  private Button mPrivateProfile;
   private CompositeSubscription mSubscriptions;
+  private Toolbar mToolbar;
   private ProgressDialog pleaseWaitDialog;
+  private AptoideAccountManager accountManager;
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(getLayoutId());
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
     accountManager = ((V8Engine) getApplicationContext()).getAccountManager();
     mSubscriptions = new CompositeSubscription();
     bindViews();
@@ -57,13 +58,14 @@ public class LoggedInActivity extends AccountBaseActivity {
   }
 
   @Override public int getLayoutId() {
-    return R.layout.logged_in_first_screen;
+    return R.layout.logged_in_second_screen;
   }
 
   private void bindViews() {
+    mToolbar = (Toolbar) findViewById(R.id.toolbar);
     mContinueButton = (Button) findViewById(R.id.logged_in_continue);
-    mMoreInfoButton =
-        (Button) findViewById(R.id.logged_in_more_info_button);
+    mPrivateProfile =
+        (Button) findViewById(R.id.logged_in_private_button);
     mToolbar = (Toolbar) findViewById(R.id.toolbar);
   }
 
@@ -83,26 +85,51 @@ public class LoggedInActivity extends AccountBaseActivity {
           accountManager.getAccessToken(), null).execute(answer -> {
         if (answer.isOk()) {
           Logger.v(TAG, "user is public");
-          ShowMessage.asSnack(this, cm.aptoide.accountmanager.R.string.successful);
+          Toast.makeText(ProfileStepTwoActivity.this,
+              cm.aptoide.accountmanager.R.string.successful, Toast.LENGTH_SHORT).show();
+          Analytics.Account.accountProfileAction(2, Analytics.Account.ProfileAction.CONTINUE);
         } else {
           Logger.v(TAG, "user is public: error: " + answer.getError().getDescription());
-          ShowMessage.asSnack(this, cm.aptoide.accountmanager.R.string.unknown_error);
+          Toast.makeText(ProfileStepTwoActivity.this,
+              cm.aptoide.accountmanager.R.string.unknown_error, Toast.LENGTH_SHORT).show();
         }
         goTo();
       }, throwable -> {
         goTo();
       });
     }));
-    mSubscriptions.add(RxView.clicks(mMoreInfoButton).subscribe(clicks -> {
-      startActivity(getIntent().setClass(this, LoggedInActivity2ndStep.class));
-      finish();
+    mSubscriptions.add(RxView.clicks(mPrivateProfile).subscribe(clicks -> {
+
+      pleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
+          getApplicationContext().getString(cm.aptoide.accountmanager.R.string.please_wait));
+      pleaseWaitDialog.show();
+
+      SetUserRequest.of(aptoideClientUUID.getUniqueIdentifier(),
+          UserAccessState.UNLISTED.toString(), accountManager.getAccessToken(), null)
+          .execute(answer -> {
+            if (answer.isOk()) {
+              Logger.v(TAG, "user is private");
+              Toast.makeText(ProfileStepTwoActivity.this, R.string.successful, Toast.LENGTH_SHORT)
+                  .show();
+              Analytics.Account.accountProfileAction(2, Analytics.Account.ProfileAction.PRIVATE_PROFILE);
+            } else {
+              Logger.v(TAG, "user is private: error: " + answer.getError().getDescription());
+              Toast.makeText(ProfileStepTwoActivity.this, R.string.unknown_error,
+                  Toast.LENGTH_SHORT).show();
+            }
+
+        goTo();
+      }, throwable -> {
+
+        goTo();
+      });
     }));
   }
 
   private void goTo() {
 
-    if (getIntent() != null && getIntent().getBooleanExtra(
-        AptoideAccountManager.IS_FACEBOOK_OR_GOOGLE, false)) {
+    if (getIntent() != null && getIntent().getBooleanExtra(AptoideAccountManager.IS_FACEBOOK_OR_GOOGLE,
+        false)) {
       updateUserInfo();
     } else {
       if (pleaseWaitDialog != null && pleaseWaitDialog.isShowing()) {
@@ -122,6 +149,3 @@ public class LoggedInActivity extends AccountBaseActivity {
     }, throwable -> throwable.printStackTrace());
   }
 }
-
-
-

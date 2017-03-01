@@ -47,6 +47,7 @@ public class Analytics {
 
   // Constantes globais a todos os eventos.
   public static final String ACTION = "Action";
+  private static final String METHOD = "Method";
   private static final String TAG = Analytics.class.getSimpleName();
   private static final boolean ACTIVATE_FLURRY = true;
   private static final int ALL = Integer.MAX_VALUE;
@@ -75,10 +76,6 @@ public class Analytics {
 
   public Analytics(AnalyticsDataSaver saver) {
     this.saver = saver;
-  }
-
-  public static boolean checkBuildVariant() {
-    return BuildConfig.BUILD_TYPE.contains("release") && BuildConfig.FLAVOR.contains("dev");
   }
 
   private static void track(String event, String key, String attr, int flags) {
@@ -327,23 +324,8 @@ public class Analytics {
         }
 
         String cpuid = aptoideClientUuid.getUniqueIdentifier();
-
         Localytics.setCustomerId(cpuid);
-
-        //                String cpuid = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext())
-        //                        .getString(EnumPreferences.aptoideClientUuid.name(), "NoInfo");
-
-        //                Localytics.setCustomerId(cpuid);
-        //
-        //                if (screenName != null) {
-        //                    Localytics.tagScreen(screenName);
-        //                }
-        //
         Localytics.handleTestMode(activity.getIntent());
-        //
-        //                Logger.d("Analytics", "Event: CPU_ID: " + cpuid);
-        //                Logger.d("Analytics", "Screen: " + screenName);
-
       }
 
       public static void onPause(android.app.Activity activity) {
@@ -377,53 +359,9 @@ public class Analytics {
     }
   }
 
-  public static class Screens {
-
-    public static void tagScreen(String screenName) {
-
-      if (!ACTIVATE_LOCALYTICS) return;
-
-      Logger.d(TAG, "Localytics: Screens: " + screenName);
-
-      Localytics.tagScreen(screenName);
-      Localytics.upload();
-    }
-  }
-
-  // TODO
-  public static class Tutorial {
-    public static final String EVENT_NAME = "Tutorial";
-    public static final String STEP_ACCOMPLISHED = "Step Accomplished";
-
-    public static void finishedTutorial(int lastFragment) {
-      try {
-        track(EVENT_NAME, STEP_ACCOMPLISHED, Integer.toString(lastFragment), ALL);
-      } catch (NullPointerException e) {
-        e.printStackTrace();
-      }
-    }
-  }
-
-  public static class UserRegister {
-
-    public static final String EVENT_NAME = "User Registered";
-
-    public static void registered() {
-      track(EVENT_NAME, ALL);
-    }
-  }
-
-  // Novos
   public static class Rollback {
 
-    private static final String EVENT_NAME = "Rollback";
     private static final String EVENT_NAME_DOWNGRADE_DIALOG = "Downgrade_Dialog";
-    private static final String DOWNGRADED = "Downgraded";
-    private static final String CLEAR = "Clear";
-
-    public static void downgraded() {
-      //            track(EVENT_NAME, ACTION, DOWNGRADED, ALL);
-    }
 
     public static void downgradeDialogContinue() {
       track(EVENT_NAME_DOWNGRADE_DIALOG, ACTION, "Continue", FLURRY);
@@ -432,131 +370,102 @@ public class Analytics {
     public static void downgradeDialogCancel() {
       track(EVENT_NAME_DOWNGRADE_DIALOG, ACTION, "Cancel", FLURRY);
     }
-
-    public static void clear() {
-      //            track(EVENT_NAME, ACTION, CLEAR, ALL);
-    }
   }
 
-  public static class ScheduledDownloads {
-    public static final String EVENT_NAME = "Scheduled Downloads";
-    private static final String CLICK_ON_INSTALL_SELECTED = "Clicked on Install Selected";
-    private static final String CLICK_ON_INVERT_SELECTION = "Clicked on Invert Selection";
-    private static final String CLICK_ON_REMOVE_SELECTED = "Clicked on Remove Selected";
+  public static class Account {
+    private static final String LOGIN_SIGN_UP_START_SCREEN = "Account_Login_Signup_Start_Screen";
+    private static final String SIGNUP_SCREEN = "Account_Signup_Screen";
+    private static final String LOGIN_SCREEN = "Account_Login_Screen";
+    private static final String CREATE_USER_PROFILE = "Account_Create_A_User_Profile_Screen";
+    private static final String PROFILE_SETTINGS = "Account_Profile_Settings_Screen";
+    private static final String CREATE_YOUR_STORE = "Account_Create_Your_Store_Screen";
 
-    public static void clickOnInstallSelected() {
-      //            track(EVENT_NAME, ACTION, CLICK_ON_INSTALL_SELECTED, ALL);
+    public static void clickIn(StartupClick clickEvent) {
+      track(LOGIN_SIGN_UP_START_SCREEN, ACTION, clickEvent.getClickEvent(), ALL);
     }
 
-    public static void clickOnInvertSelection() {
-      //            track(EVENT_NAME, ACTION, CLICK_ON_INVERT_SELECTION, ALL);
+    public static void signInSuccessAptoide() {
+      track(SIGNUP_SCREEN, ALL);
     }
 
-    public static void clickOnRemoveSelected() {
-      //            track(EVENT_NAME, ACTION, CLICK_ON_REMOVE_SELECTED, ALL);
-    }
-  }
-
-  public static class SendFeedback {
-
-    public static final String EVENT_NAME = "Send Feedback";
-    private static final String SEND_FEEDBACK = EVENT_NAME;
-
-    public static void sendFeedback() {
-      track(EVENT_NAME, ACTION, SEND_FEEDBACK, ALL);
-    }
-  }
-
-  public static class ExcludedUpdates {
-    private static final String EVENT_NAME = "Excluded Updates";
-    private static final String RESTORE_UPDATES = "Restore Updates";
-
-    public static void restoreUpdates() {
-      track(EVENT_NAME, ACTION, RESTORE_UPDATES, ALL);
-    }
-  }
-
-  /**
-   * Incomplete
-   */
-  public static class Settings {
-
-    public static final String EVENT_NAME = "Settings";
-    private static final String CHECKED = "Checked";
-
-    public static void onSettingChange(String s) {
-      //            track(EVENT_NAME, ACTION, s, ALL);
+    public static void loginSuccess(LoginMethod loginMethod) {
+      track(LOGIN_SCREEN, METHOD, loginMethod.getMethod(), ALL);
     }
 
-    public static void onSettingChange(String s, boolean checked) {
-      //            track(EVENT_NAME, ACTION, s, ALL);
-      //
-      //            HashMap<String, String> objectObjectHashMap = new HashMap<>();
-      //            objectObjectHashMap.put(ACTION, s);
-      //            objectObjectHashMap.put(CHECKED, Boolean.valueOf(checked).toString());
-    }
-  }
-
-  public static class Facebook {
-
-    public static final String EVENT_NAME = "Facebook";
-
-    public static final String JOIN = "Join";
-    public static final String LOGIN = "Login";
-
-    public static void join() {
-      track(EVENT_NAME, ACTION, JOIN, ALL);
+    public static void createdUserProfile(boolean hasPicture) {
+      track(CREATE_USER_PROFILE, "has_picture", hasPicture ? "True" : "False", ALL);
     }
 
-    public static void login() {
-      track(EVENT_NAME, ACTION, LOGIN, ALL);
-    }
-  }
-
-  public static class BackupApps {
-    public static final String EVENT_NAME = "Opened Backup Apps";
-
-    public static void open() {
-      track(EVENT_NAME, ALL);
-    }
-  }
-
-  public static class Home {
-    public static final String EVENT_NAME = "Home";
-
-    public static final String CLICK_ON_MORE_ = "Click on More ";
-    public static final String CLICK_ON_EDITORS_CHOISE = "Click On Editor's Choise";
-    public static final String CLICK_ON_HIGHLIGHTED = "Click On Highlighted";
-    public static final String CLICK_ON_HIGHLIGHTED_MORE = "Click On Highlighted More";
-    public static final String CLICK_ON_APPLICATIONS = "Click On Applications";
-    public static final String CLICK_ON_APPLICATIONS_MORE = "Click On Applications More";
-    public static final String CLICK_ON_GAMES = "Click On Games";
-    public static final String CLICK_ON_GAMES_MORE = "Click On Games More";
-    public static final String CLICK_ON_REVIEWS = "Click On Reviews";
-    public static final String CLICK_ON_REVIEWS_MORE = "Click On Reviews More";
-    public static final String CLICK_ON_PUBLISHERS = "Click On Publishers";
-    public static final String CLICK_ON_PUBLISHERS_MORE = "Click On Publishers More";
-    public static final String CLICK_ON_APPS_ESSENTIALS = "Click On Apps Essentials";
-    public static final String CLICK_ON_APPS_FOR_KIDS = "Click On Apps For Kids";
-
-    public static void clickOnHighlighted() {
-      //            track(EVENT_NAME, ACTION, CLICK_ON_HIGHLIGHTED_MORE, ALL);
+    public static void accountProfileAction(int screen, ProfileAction action) {
+      HashMap<String, String> map = new HashMap<>();
+      map.put(ACTION, action.getAction());
+      map.put("screen", Integer.toString(screen));
+      track(PROFILE_SETTINGS, map, ALL);
     }
 
-    public static void generic(String s) {
-      track(EVENT_NAME, ACTION, s, ALL);
+    public static void createStore(boolean hasPicture, CreateStoreAction action) {
+      HashMap<String, String> map = new HashMap<>();
+      map.put(ACTION, action.getAction());
+      map.put("has_picture", hasPicture ? "True" : "False");
+      track(CREATE_YOUR_STORE, map, ALL);
     }
 
-    //        public static void clickOnApplicationsMore() {
-    //            track(EVENT_NAME, ACTION, CLICK_ON_APPLICATIONS_MORE, ALL);
-    //        }
+    public enum StartupClick {
+      JOIN_APTOIDE("Join Aptoide"), LOGIN("Login"), CONNECT_FACEBOOK(
+          "Connect with FB"), CONNECT_GOOGLE("Connect with Google");
 
-    public static void clickOnReviewsMore() {
-      //            track(EVENT_NAME, ACTION, CLICK_ON_REVIEWS_MORE, ALL);
+      private final String clickEvent;
+
+      StartupClick(String clickEvent) {
+        this.clickEvent = clickEvent;
+      }
+
+      public String getClickEvent() {
+        return clickEvent;
+      }
     }
 
-    public static void clickOnMoreWidget(String widgetname) {
-      //            track(EVENT_NAME, ACTION, CLICK_ON_MORE_ + widgetname, ALL);
+    public enum LoginMethod {
+      APTOIDE("Aptoide"), FACEBOOK("FB"), GOOGLE("Google");
+
+      private final String method;
+
+      LoginMethod(String method) {
+        this.method = method;
+      }
+
+      public String getMethod() {
+        return method;
+      }
+    }
+
+    public enum ProfileAction {
+      MORE_INFO("More info"), CONTINUE("Continue"), PRIVATE_PROFILE(
+          "Make my profile private"), PUBLIC_PROFILE("Make my profile public");
+
+      private final String action;
+
+      ProfileAction(String action) {
+        this.action = action;
+      }
+
+      public String getAction() {
+        return action;
+      }
+    }
+
+    public enum CreateStoreAction {
+      SKIP("Skip"), CREATE("Create store");
+
+      private final String action;
+
+      CreateStoreAction(String action) {
+        this.action = action;
+      }
+
+      public String getAction() {
+        return action;
+      }
     }
   }
 
@@ -574,14 +483,6 @@ public class Analytics {
     public static void unlock() {
       track(EVENT_NAME, ACTION, UNLOCK, FLURRY);
     }
-  }
-
-  public static class Top {
-    public static final String EVENT_NAME = "Top";
-
-    public static final String CLICK_ON_LOCAL_TOP_APPS_MORE = "Click on Local Top Apps More";
-    public static final String CLICK_ON_TOP_APPLICATIONS_MORE = "Click on Top Applications More";
-    public static final String CLICK_ON_LOCAL_TOP_STORES_MORE = "Click on Local Top Stores More";
   }
 
   public static class Stores {
@@ -652,23 +553,6 @@ public class Analytics {
     }
   }
 
-  // TODO: Não está implementado na v6
-  public static class DownloadManager {
-    public static final String EVENT_NAME = "Download Manager";
-
-    public static void clearDownloadComplete() {
-      //            track(EVENT_NAME, ACTION, "Clear download complete", ALL);
-    }
-
-    public static void clickDownloadComplete() {
-      //            track(EVENT_NAME, ACTION, "Click download complete", ALL);
-    }
-
-    public static void clearTopMenu() {
-      //            track(EVENT_NAME, ACTION, "Clear topmenu", ALL);
-    }
-  }
-
   public static class Search {
     //event names
     public static final String EVENT_NAME_SEARCH_TERM = "Search Term";
@@ -724,10 +608,6 @@ public class Analytics {
 
     public static void replaced(String packageName, String trustedBadge) {
       innerTrack(packageName, REPLACED, trustedBadge, ALL);
-    }
-
-    public static void downgraded(String packageName, String trustedBadge) {
-      innerTrack(packageName, DOWNGRADED_ROLLBACK, trustedBadge, ALL);
     }
   }
 

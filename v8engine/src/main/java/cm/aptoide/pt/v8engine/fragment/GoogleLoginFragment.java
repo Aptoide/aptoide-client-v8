@@ -39,10 +39,15 @@ public abstract class GoogleLoginFragment extends GooglePlayServicesFragment
   @Override public void onResume() {
     super.onResume();
     getGoogleButton().setOnClickListener(v -> {
+      googleLoginClicked();
       connect();
       startActivityForResult(Auth.GoogleSignInApi.getSignInIntent(client),
           RESOLVE_GOOGLE_CREDENTIALS_REQUEST_CODE);
     });
+  }
+
+  public void googleLoginClicked() {
+    // does nothing
   }
 
   protected abstract SignInButton getGoogleButton();
