@@ -84,7 +84,9 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
             //serverSocketTimeoutManager.reserTimeout();
           } catch (IOException e) {
             e.printStackTrace(System.out);
-            onError.onError(e);
+            if (onError != null) {
+              onError.onError(e);
+            }
           } finally {
             try {
               serverSocketTimeoutManager.reserTimeout();

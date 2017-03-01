@@ -35,7 +35,9 @@ public abstract class AptoideClientSocket extends AptoideSocket {
       } catch (IOException e) {
         e.printStackTrace(System.out);
         System.out.println("Failed to connect to " + hostName + ":" + port);
-        onError.onError(e);
+        if (onError != null) {
+          onError.onError(e);
+        }
         try {
           Thread.sleep(1000);
         } catch (InterruptedException e1) {
@@ -45,7 +47,9 @@ public abstract class AptoideClientSocket extends AptoideSocket {
     }
 
     if (socket == null) {
-      onError.onError(new IOException("Couldn't connect to " + hostName + ":" + port));
+      if (onError != null) {
+        onError.onError(new IOException("Couldn't connect to " + hostName + ":" + port));
+      }
       return null;
     }
 
@@ -53,7 +57,9 @@ public abstract class AptoideClientSocket extends AptoideSocket {
       onConnected(socket);
     } catch (IOException e) {
       e.printStackTrace(System.out);
-      onError.onError(e);
+      if (onError != null) {
+        onError.onError(e);
+      }
     } finally {
       try {
         socket.close();
