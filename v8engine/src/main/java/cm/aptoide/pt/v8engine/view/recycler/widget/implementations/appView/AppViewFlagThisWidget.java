@@ -206,7 +206,7 @@ import rx.android.schedulers.AndroidSchedulers;
               }
 
               if (voteSubmitted) {
-                ShowMessage.asSnack(v, R.string.vote_submitted);
+                ShowMessage.asSnack(getRootView(), R.string.vote_submitted);
                 return;
               }
             }
@@ -218,11 +218,11 @@ import rx.android.schedulers.AndroidSchedulers;
             }
 
             setAllButtonsUnPressed(v);
-            ShowMessage.asSnack(v, R.string.unknown_error);
+            ShowMessage.asSnack(getRootView(), R.string.unknown_error);
           }, error -> {
             CrashReport.getInstance().log(error);
             setAllButtonsUnPressed(v);
-            ShowMessage.asSnack(v, R.string.unknown_error);
+            ShowMessage.asSnack(getRootView(), R.string.unknown_error);
           }));
     };
   }
