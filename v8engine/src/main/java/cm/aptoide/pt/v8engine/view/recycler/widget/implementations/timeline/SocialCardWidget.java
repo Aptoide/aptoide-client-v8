@@ -154,7 +154,8 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
           if (displayable.getStore() == null) {
             openStore(displayable.getUser().getId(), "DEFAULT");
           } else {
-            openStore(displayable.getStore().getName(), "DEFAULT");
+            openStore(displayable.getStore().getName(),
+                displayable.getStore().getAppearance().getTheme());
           }
         }));
   }

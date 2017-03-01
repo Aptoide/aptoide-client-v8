@@ -27,8 +27,8 @@ abstract class MetaStoresBaseWidget<T extends Displayable> extends Widget<T> {
     super(itemView);
   }
 
-  void setupSocialLinks(List<Store.SocialChannel> socialChannels) {
-    LinearLayout socialChannelsLayout = getSocialLayout();
+  void setupSocialLinks(List<Store.SocialChannel> socialChannels,
+      LinearLayout socialChannelsLayout) {
     socialChannelsLayout.removeAllViews();
     LayoutInflater layoutInflater = getContext().getLayoutInflater();
     ImageButton imageButton;
@@ -53,11 +53,6 @@ abstract class MetaStoresBaseWidget<T extends Displayable> extends Widget<T> {
       imageButton.setOnClickListener(view -> sendEvent(socialChannel.getUrl()));
     }
   }
-
-  /**
-   * @return the layout where the social buttons will be added
-   */
-  abstract @NonNull LinearLayout getSocialLayout();
 
   private Drawable getDrawable(@DrawableRes int drawable) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

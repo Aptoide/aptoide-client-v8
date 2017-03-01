@@ -34,7 +34,8 @@ public class StoreLatestAppsDisplayable extends CardDisplayable {
 
   public StoreLatestAppsDisplayable(StoreLatestApps storeLatestApps, String storeName,
       String avatarUrl, List<LatestApp> latestApps, String abUrl, DateCalculator dateCalculator,
-      Date date, TimelineMetricsManager timelineMetricsManager, SocialRepository socialRepository) {
+      Date date, TimelineMetricsManager timelineMetricsManager, SocialRepository socialRepository,
+      String storeTheme) {
     super(storeLatestApps);
     this.storeName = storeName;
     this.avatarUrl = avatarUrl;
@@ -44,6 +45,7 @@ public class StoreLatestAppsDisplayable extends CardDisplayable {
     this.date = date;
     this.timelineMetricsManager = timelineMetricsManager;
     this.socialRepository = socialRepository;
+    this.storeTheme = storeTheme;
   }
 
   public static StoreLatestAppsDisplayable from(StoreLatestApps storeLatestApps,
@@ -62,7 +64,8 @@ public class StoreLatestAppsDisplayable extends CardDisplayable {
     }
     return new StoreLatestAppsDisplayable(storeLatestApps, storeLatestApps.getStore().getName(),
         storeLatestApps.getStore().getAvatar(), latestApps, abTestingURL, dateCalculator,
-        storeLatestApps.getLatestUpdate(), timelineMetricsManager, socialRepository);
+        storeLatestApps.getLatestUpdate(), timelineMetricsManager, socialRepository,
+        storeLatestApps.getStore().getAppearance().getTheme());
   }
 
   public String getTimeSinceLastUpdate(Context context) {

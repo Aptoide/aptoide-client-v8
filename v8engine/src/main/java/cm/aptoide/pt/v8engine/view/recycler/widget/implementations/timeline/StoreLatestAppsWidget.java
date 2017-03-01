@@ -109,7 +109,6 @@ public class StoreLatestAppsWidget extends CardWidget<StoreLatestAppsDisplayable
           .specific(
               SendEventRequest.Body.Specific.builder().store(displayable.getStoreName()).build())
           .build(), TimelineClickEvent.OPEN_STORE);
-      // TODO: 23/02/2017 trinkes get theme
       getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
           .newStoreFragment(displayable.getStoreName(), displayable.getStoreTheme()));
     }));
