@@ -25,6 +25,7 @@ import cm.aptoide.pt.v8engine.addressbook.data.Contact;
 import cm.aptoide.pt.v8engine.addressbook.data.ContactsRepositoryImpl;
 import cm.aptoide.pt.v8engine.addressbook.invitefriends.InviteFriendsFragment;
 import cm.aptoide.pt.v8engine.fragment.UIComponentFragment;
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -83,6 +84,18 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
     mGenericPleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());
   }
 
+  // This method is being overriden here because the views are binded in it and changeFacebookState
+  // needs the views binded or the app will crash
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    AccessToken accessToken = AccessToken.getCurrentAccessToken();
+    if (accessToken != null) {
+      if (!accessToken.isExpired()) {
+        changeFacebookState(true);
+      }
+    }
+  }
+
   @Override public void setupViews() {
     addressbook_2nd_msg.setText(
         getString(R.string.addressbook_2nd_msg, V8Engine.getConfiguration().getMarketName()));
@@ -130,6 +143,14 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
     twitterModel.setToken(twitterAuthToken.token);
     twitterModel.setSecret(twitterAuthToken.secret);
     return twitterModel;
+  }
+
+  private void changeSyncState(boolean checked, ImageView imageView) {
+    if (checked) {
+      imageView.setImageResource(R.drawable.check);
+    } else {
+      imageView.setImageResource(R.drawable.reload);
+    }
   }
 
   private void registerFacebookCallback() {
@@ -210,14 +231,6 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
       mGenericPleaseWaitDialog.show();
     } else {
       mGenericPleaseWaitDialog.dismiss();
-    }
-  }
-
-  private void changeSyncState(boolean checked, ImageView imageView) {
-    if (checked) {
-      imageView.setImageResource(R.drawable.check);
-    } else {
-      imageView.setImageResource(R.drawable.reload);
     }
   }
 
