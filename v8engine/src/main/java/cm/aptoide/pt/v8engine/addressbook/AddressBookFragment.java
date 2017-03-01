@@ -49,10 +49,6 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
 
   public static final int TWITTER_REQUEST_CODE = 140;
   public static final int FACEBOOK_REQUEST_CODE = 64206;
-  private static final String TWITTER_EXTRA_TOKEN = "tk";
-  private static final String TWITTER_EXTRA_TOKEN_SECRET = "ts";
-  private static final String TWITTER_EXTRA_SCREEN_NAME = "screen_name";
-  private static final String TWITTER_EXTRA_USER_ID = "user_id";
   TwitterAuthClient mTwitterAuthClient;
   private AddressBookContract.UserActionsListener mActionsListener;
   private Button addressBookSyncButton;
