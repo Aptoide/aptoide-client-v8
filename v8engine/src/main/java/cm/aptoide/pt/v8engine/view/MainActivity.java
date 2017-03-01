@@ -28,6 +28,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.Layout;
+import cm.aptoide.pt.navigation.TabNavigator;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -51,6 +52,7 @@ import cm.aptoide.pt.v8engine.util.ApkFy;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
+import com.jakewharton.rxrelay.PublishRelay;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -60,7 +62,7 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created by neuro on 06-05-2016.
  */
-public class MainActivity extends BaseActivity implements MainView, FragmentShower {
+public class MainActivity extends BaseActivity implements MainView, FragmentShower, TabNavigator {
 
   public final static String FRAGMENT = "FRAGMENT";
 
@@ -69,12 +71,14 @@ public class MainActivity extends BaseActivity implements MainView, FragmentShow
   private AptoideAccountManager accountManager;
 
   private Handler handler;
+  private PublishRelay<Void> downloadNavigationSubject;
 
   @Partners @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     handler = new Handler(Looper.getMainLooper());
     setContentView(R.layout.frame_layout);
 
+    downloadNavigationSubject = PublishRelay.create();
     accountManager = ((V8Engine) getApplicationContext()).getAccountManager();
     final IdsRepositoryImpl clientUuid =
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this);
@@ -290,5 +294,13 @@ public class MainActivity extends BaseActivity implements MainView, FragmentShow
 
   @Override public Fragment getLast() {
     return getNavigationManager().peekLast();
+  }
+
+  @Override public void navigateToDownloads() {
+    downloadNavigationSubject.call(null);
+  }
+
+  @Override public Observable<Void> downloadNavigation() {
+    return downloadNavigationSubject;
   }
 }

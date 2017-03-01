@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.fragment.implementations;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -30,6 +31,7 @@ import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.navigation.AccountNavigator;
 import cm.aptoide.pt.navigation.NavigationManagerV4;
+import cm.aptoide.pt.navigation.TabNavigator;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.shareappsandroid.HighwayActivity;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -65,10 +67,10 @@ public class HomeFragment extends StoreFragment {
   private NavigationView navigationView;
   private BadgeView updatesBadge;
   @Getter @Setter private Event.Name desiredViewPagerItem = null;
-  private ChangeTabReceiver receiver;
   private UpdateRepository updateRepository;
   private AptoideAccountManager accountManager;
   private AccountNavigator accountNavigator;
+  private TabNavigator tabNavigator;
 
   public static HomeFragment newInstance(String storeName, StoreContext storeContext,
       String storeTheme) {
@@ -79,6 +81,17 @@ public class HomeFragment extends StoreFragment {
     HomeFragment fragment = new HomeFragment();
     fragment.setArguments(args);
     return fragment;
+  }
+
+  @Override public void onAttach(Activity activity) {
+    super.onAttach(activity);
+
+    if (activity instanceof TabNavigator) {
+      tabNavigator = (TabNavigator)activity;
+    } else {
+      throw new IllegalStateException("Activity must implement " + TabNavigator.class
+          .getSimpleName());
+    }
   }
 
   @Override public void onResume() {
@@ -93,10 +106,13 @@ public class HomeFragment extends StoreFragment {
     return super.onCreateView(inflater, container, savedInstanceState);
   }
 
-  @Override public void onDestroyView() {
-    getContext().unregisterReceiver(receiver);
-    receiver = null;
-    super.onDestroyView();
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    tabNavigator.downloadNavigation()
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(downloadNavigationEvent -> viewPager.setCurrentItem(
+            ((StorePagerAdapter) viewPager.getAdapter()).getEventNamePosition(Event.Name
+                .myDownloads)));
   }
 
   @Override protected void setupViewPager() {
@@ -328,9 +344,6 @@ public class HomeFragment extends StoreFragment {
 
     setHasOptionsMenu(true);
 
-    receiver = new ChangeTabReceiver();
-    getContext().registerReceiver(receiver, new IntentFilter(ChangeTabReceiver.SET_TAB_EVENT));
-
     Analytics.AppViewViewedFrom.addStepToList("HOME");
   }
 
@@ -351,82 +364,4 @@ public class HomeFragment extends StoreFragment {
     drawerLayout.closeDrawers();
   }
 
-  public class ChangeTabReceiver extends BroadcastReceiver {
-
-    public static final String SET_TAB_EVENT = "SET_TAB_EVENT";
-
-    @Override public void onReceive(Context context, Intent intent) {
-      Event.Name tabToChange = (Event.Name) intent.getSerializableExtra(SET_TAB_EVENT);
-      if (tabToChange != null) {
-        StorePagerAdapter storePagerAdapter = viewPager.getAdapter() instanceof StorePagerAdapter
-            ? ((StorePagerAdapter) viewPager.getAdapter()) : null;
-        if (storePagerAdapter != null) {
-          viewPager.setCurrentItem(
-              ((StorePagerAdapter) viewPager.getAdapter()).getEventNamePosition(tabToChange));
-        }
-      }
-    }
-  }
-
-  //private void requestPermissions() {
-  //  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-  //    //check if already has the permissions
-  //    ArrayList<String> permissionsArray = new ArrayList<>();
-  //    if(ContextCompat.checkSelfPermission(getContext(),
-  //        Manifest.permission.READ_PHONE_STATE)!= PackageManager.PERMISSION_GRANTED){
-  //
-  //      permissionsArray.add(Manifest.permission.READ_PHONE_STATE);
-  //
-  //    }
-  //
-  //    if(ContextCompat.checkSelfPermission(getContext(),Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
-  //      permissionsArray.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-  //
-  //    }
-  //
-  //    if(ContextCompat.checkSelfPermission(getContext(),Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED){
-  //
-  //      permissionsArray.add(Manifest.permission.ACCESS_FINE_LOCATION);
-  //    }
-  //
-  //    if(ContextCompat.checkSelfPermission(getContext(),Manifest.permission.WRITE_SETTINGS)!= PackageManager.PERMISSION_GRANTED){//special
-  //      if(Settings.System.canWrite(getContext())){
-  //        permissionsArray.add(Manifest.permission.WRITE_SETTINGS);
-  //        System.out.println("can write settings!");
-  //      }else{
-  //        System.out.println("can not write the settings");
-  //        Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
-  //        intent.setData(Uri.parse("package:" + getContext().getPackageName()));
-  //        startActivity(intent);
-  //      }
-  //    }
-  //
-  //    if(permissionsArray.size()>0){
-  //
-  //      String[] missingPermissions = new String[permissionsArray.size()];
-  //      missingPermissions = permissionsArray.toArray(missingPermissions);
-  //
-  //      ActivityCompat.requestPermissions(getActivity(), missingPermissions, SPOT_SHARE_PERMISSION_REQUEST_CODE);
-  //    }
-  //  }
-  //}
-  //
-  //@Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-  //    @NonNull int[] grantResults) {
-  //  switch (requestCode){
-  //    case SPOT_SHARE_PERMISSION_REQUEST_CODE:{
-  //      if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-  //        System.out.println("write settings permission granted ! ");
-  //      }else{
-  //        //in the future show dialog (?)
-  //        System.out.println("write settings permission failed to be granted");
-  //        //finish();
-  //      }
-  //      break;
-  //    }
-  //
-  //  }
-  //  super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-  //
-  //}
 }
