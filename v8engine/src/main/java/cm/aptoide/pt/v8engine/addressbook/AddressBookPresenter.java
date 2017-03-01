@@ -103,4 +103,8 @@ public class AddressBookPresenter implements AddressBookContract.UserActionsList
   @Override public void aboutClick() {
     mAddressBookView.showAboutFragment();
   }
+
+  @Override public void allowFindClick() {
+    mAddressBookView.showPhoneInputFragment();
+  }
 }

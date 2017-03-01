@@ -19,6 +19,8 @@ import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import rx.Observable;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by jdandrade on 15/02/2017.
@@ -32,37 +34,38 @@ public class ContactsRepositoryImpl implements ContactsRepository {
     this.aptoideAccountManager = aptoideAccountManager;
   }
 
-  @Override public void getContacts(@NonNull LoadContactsCallback callback) {
+  @Override public void getContacts(@NonNull LoadContactsCallback callback1) {
+    Observable.just(callback1).observeOn(Schedulers.computation()).subscribe(callback -> {
+      ContactUtils contactUtils = new ContactUtils();
 
-    ContactUtils contactUtils = new ContactUtils();
+      ContactsModel contacts = contactUtils.getContacts(V8Engine.getContext());
 
-    ContactsModel contacts = contactUtils.getContacts(V8Engine.getContext());
+      List<String> numbers = contacts.getMobileNumbers();
+      List<String> emails = contacts.getEmails();
 
-    List<String> numbers = contacts.getMobileNumbers();
-    List<String> emails = contacts.getEmails();
-
-    AptoideClientUUID aptoideClientUUID =
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext());
-    SyncAddressBookRequest.of(aptoideAccountManager.getAccessToken(),
-        aptoideClientUUID.getUniqueIdentifier(), numbers, emails)
-        .observe()
-        .subscribe(getFollowers -> {
-          List<Contact> contactList = new ArrayList<>();
-          for (GetFollowers.TimelineUser user : getFollowers.getDatalist().getList()) {
-            Contact contact = new Contact();
-            contact.setStore(user.getStore());
-            Comment.User person = new Comment.User();
-            person.setAvatar(user.getAvatar());
-            person.setName(user.getName());
-            contact.setPerson(person);
-            contactList.add(contact);
-          }
-          callback.onContactsLoaded(contactList, true);
-        }, (throwable) -> {
-          throwable.printStackTrace();
-          callback.onContactsLoaded(null, false);
-        });
+      AptoideClientUUID aptoideClientUUID =
+          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+              DataProvider.getContext());
+      SyncAddressBookRequest.of(aptoideAccountManager.getAccessToken(),
+          aptoideClientUUID.getUniqueIdentifier(), numbers, emails)
+          .observe()
+          .subscribe(getFollowers -> {
+            List<Contact> contactList = new ArrayList<>();
+            for (GetFollowers.TimelineUser user : getFollowers.getDatalist().getList()) {
+              Contact contact = new Contact();
+              contact.setStore(user.getStore());
+              Comment.User person = new Comment.User();
+              person.setAvatar(user.getAvatar());
+              person.setName(user.getName());
+              contact.setPerson(person);
+              contactList.add(contact);
+            }
+            callback.onContactsLoaded(contactList, true);
+          }, (throwable) -> {
+            throwable.printStackTrace();
+            callback.onContactsLoaded(null, false);
+          });
+    });
   }
 
   @Override public void getTwitterContacts(@NonNull TwitterModel twitterModel,

@@ -53,6 +53,7 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
   TwitterAuthClient mTwitterAuthClient;
   private AddressBookContract.UserActionsListener mActionsListener;
   private Button addressBookSyncButton;
+  private Button allowFriendsFindButton;
   private RelativeLayout facebookSyncButton;
   private RelativeLayout twitterSyncButton;
   private TextView dismissV;
@@ -114,6 +115,7 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
     RxView.clicks(twitterSyncButton).subscribe(click -> twitterLogin());
     RxView.clicks(dismissV).subscribe(click -> mActionsListener.finishViewClick());
     RxView.clicks(about).subscribe(click -> mActionsListener.aboutClick());
+    RxView.clicks(allowFriendsFindButton).subscribe(click -> mActionsListener.allowFindClick());
   }
 
   private void facebookLoginCallback() {
@@ -234,6 +236,10 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
     }
   }
 
+  @Override public void showPhoneInputFragment() {
+    getNavigationManager().navigateTo(V8Engine.getFragmentProvider().newPhoneInputFragment());
+  }
+
   private void changeSyncState(boolean checked, Button button) {
     if (checked) {
       button.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.check, 0);
@@ -250,6 +256,7 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
     addressBookSyncButton = (Button) view.findViewById(R.id.addressbook_sync_button);
     facebookSyncButton = (RelativeLayout) view.findViewById(R.id.facebook_sync_button);
     twitterSyncButton = (RelativeLayout) view.findViewById(R.id.twitter_sync_button);
+    allowFriendsFindButton = (Button) view.findViewById(R.id.addressbook_allow_find);
     dismissV = (TextView) view.findViewById(R.id.addressbook_not_now);
     about = (TextView) view.findViewById(R.id.addressbook_about);
     addressbook_2nd_msg = (TextView) view.findViewById(R.id.addressbook_2nd_msg);
