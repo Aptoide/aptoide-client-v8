@@ -3,8 +3,7 @@
     android:id="@+id/addressbook_fragment_id"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:fillViewport="true"
-    >
+    android:fillViewport="true">
 
   <LinearLayout
       android:layout_width="match_parent"
@@ -13,16 +12,14 @@
       android:layout_marginLeft="30dp"
       android:layout_marginRight="30dp"
       android:layout_marginStart="30dp"
-      android:orientation="vertical"
-      >
+      android:orientation="vertical">
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="24.3dp"
-        android:src="@drawable/addressbook_graphic"
-        />
+        android:src="@drawable/addressbook_graphic" />
 
     <TextView
         android:id="@+id/addressbook_increase_network"
@@ -36,8 +33,7 @@
         android:lineSpacingExtra="5dp"
         android:text="@string/addressbook_increase_network_message"
         android:textColor="?android:attr/textColorSecondary"
-        android:textSize="18sp"
-        />
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/addressbook_connect_with_friends"
@@ -50,34 +46,23 @@
         android:lineSpacingExtra="5dp"
         android:text="@string/addressbook_connect_with_friends_message"
         android:textColor="?android:attr/textColorSecondary"
-        android:textSize="18sp"
-        />
+        android:textSize="18sp" />
 
-    <RelativeLayout
+    <Button
+        android:id="@+id/addressbook_sync_button"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
-
-      <Button
-          android:id="@+id/addressbook_sync_button"
-          android:layout_width="match_parent"
-          android:layout_height="60dp"
-          android:layout_alignParentLeft="true"
-          android:layout_alignParentTop="true"
-          android:background="@drawable/addressbook_button_rectangle_shape"
-          android:drawableRight="@drawable/reload"
-          android:padding="10dp"
-          android:text="@string/addressbook_sync"
-          />
-    </RelativeLayout>
+        android:layout_height="50dp"
+        android:background="@drawable/addressbook_button_rectangle_shape"
+        android:drawableRight="@drawable/reload"
+        android:padding="10dp"
+        android:text="@string/addressbook_sync" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:gravity="center"
-        android:orientation="horizontal"
-        >
+        android:orientation="horizontal">
 
       <RelativeLayout
           android:id="@+id/facebook_sync_button"
@@ -91,8 +76,7 @@
           android:gravity="center"
           android:padding="5dp"
           android:text="@string/facebook"
-          android:textColor="@color/facebook"
-          >
+          android:textColor="@color/facebook">
 
         <ImageView
             android:id="@+id/facebook_icon"
@@ -100,8 +84,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="9dp"
             android:layout_marginRight="9dp"
-            android:src="@drawable/ic_action_facebook"
-            />
+            android:src="@drawable/ic_action_facebook" />
 
         <ImageView
             android:id="@+id/check_or_reload_facebook"
@@ -110,8 +93,8 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="7dp"
-            android:src="@drawable/reload"
-            />
+            android:src="@drawable/reload" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -119,8 +102,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="18dp"
             android:layout_toLeftOf="@+id/check_or_reload_facebook"
-            android:text="@string/facebook"
-            />
+            android:text="@string/facebook" />
 
       </RelativeLayout>
 
@@ -135,8 +117,7 @@
           android:background="@drawable/addressbook_twitter_button_rectangle_shape"
           android:gravity="center"
           android:padding="5dp"
-          android:textColor="@color/twitter_color"
-          >
+          android:textColor="@color/twitter_color">
 
         <ImageView
             android:id="@+id/twitter_icon"
@@ -144,8 +125,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="9dp"
             android:layout_marginRight="9dp"
-            android:src="@drawable/ic_action_twitter"
-            />
+            android:src="@drawable/ic_action_twitter" />
 
 
         <TextView
@@ -154,8 +134,7 @@
             android:layout_centerVertical="true"
             android:layout_gravity="center"
             android:layout_toRightOf="@+id/twitter_icon"
-            android:text="@string/twitter"
-            />
+            android:text="@string/twitter" />
 
         <ImageView
             android:id="@+id/check_or_reload_twitter"
@@ -164,12 +143,19 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="7dp"
-            android:src="@drawable/reload"
-            />
+            android:src="@drawable/reload" />
 
       </RelativeLayout>
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/addressbook_allow_find"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/addressbook_button_rectangle_shape"
+        android:text="@string/addressbook_allow_friends_find" />
 
     <TextView
         android:id="@+id/addressbook_not_now"
@@ -180,8 +166,7 @@
         android:layout_marginTop="20dp"
         android:clickable="true"
         android:text="@string/not_now"
-        android:textAllCaps="true"
-        />
+        android:textAllCaps="true" />
 
     <TextView
         android:id="@+id/addressbook_2nd_msg"
@@ -194,8 +179,7 @@
         android:lineSpacingExtra="5dp"
         android:text="@string/addressbook_2nd_msg"
         android:textAlignment="center"
-        android:textColor="?android:attr/textColorSecondary"
-        />
+        android:textColor="?android:attr/textColorSecondary" />
 
     <TextView
         android:id="@+id/addressbook_about"
@@ -205,7 +189,6 @@
         android:layout_marginTop="15dp"
         android:gravity="center"
         android:text="@string/addressbook_3rd_msg"
-        android:textColor="?android:attr/textColorSecondary"
-        />
+        android:textColor="?android:attr/textColorSecondary" />
   </LinearLayout>
 </ScrollView>

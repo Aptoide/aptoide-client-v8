@@ -29,6 +29,8 @@ public interface AddressBookContract {
         @NonNull InviteFriendsFragment.InviteFriendsFragmentOpenMode openMode);
 
     void setGenericPleaseWaitDialog(boolean showProgress);
+
+    void showPhoneInputFragment();
   }
 
   interface UserActionsListener {
@@ -44,5 +46,7 @@ public interface AddressBookContract {
     void finishViewClick();
 
     void aboutClick();
+
+    void allowFindClick();
   }
 }
