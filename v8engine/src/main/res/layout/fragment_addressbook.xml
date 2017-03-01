@@ -79,17 +79,6 @@
         android:orientation="horizontal"
         >
 
-      <!-- TODO make custom button selectors + loading/check animation -->
-      <!--<Button-->
-      <!--android:id="@+id/facebook_sync_button"-->
-      <!--android:layout_width="0dp"-->
-      <!--android:layout_height="wrap_content"-->
-      <!--android:layout_weight="0.5"-->
-      <!--android:padding="5dp"-->
-      <!--android:background="@drawable/addressbook_facebook_button_rectangle_shape"-->
-      <!--android:text="@string/facebook"-->
-      <!--/>-->
-
       <RelativeLayout
           android:id="@+id/facebook_sync_button"
           android:layout_width="0dp"
@@ -124,7 +113,6 @@
             android:src="@drawable/reload"
             />
         <TextView
-            android:id="@+id/address_facebook_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -135,18 +123,6 @@
             />
 
       </RelativeLayout>
-
-      <!-- TODO make custom button selectors + loading/check animation -->
-      <!--<Button-->
-      <!--android:id="@+id/twitter_sync_button"-->
-      <!--android:layout_width="0dp"-->
-      <!--android:layout_height="wrap_content"-->
-      <!--android:layout_weight="0.5"-->
-      <!--android:padding="5dp"-->
-      <!--android:background="@drawable/addressbook_twitter_button_rectangle_shape"-->
-      <!--android:text="@string/twitter"-->
-      <!--android:textColor="@color/twitter_color"-->
-      <!--/>-->
 
       <RelativeLayout
           android:id="@+id/twitter_sync_button"
@@ -173,7 +149,6 @@
 
 
         <TextView
-            android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"

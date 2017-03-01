@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.provider.ContactsContract;
 import android.telephony.TelephonyManager;
-import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.addressbook.data.ContactsModel;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
@@ -148,25 +147,20 @@ public class ContactUtils {
   }
 
   public boolean isValidNumberInE164Format(String number) {
-    String country = getUserCountry(V8Engine.getContext().getApplicationContext());
-
-    if (country == null) {
-      return false;
-    } else {
-      country = country.toUpperCase();
-    }
-
     final PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
 
     Phonenumber.PhoneNumber phoneNumber = null;
 
+    int country;
     try {
-      phoneNumber = phoneNumberUtil.parse(number, country);
+      phoneNumber = phoneNumberUtil.parse(number, "");
+      country = phoneNumber.getCountryCode();
     } catch (NumberParseException e) {
       e.printStackTrace();
       return false;
     }
 
-    return phoneNumberUtil.isValidNumberForRegion(phoneNumber, country);
+    return phoneNumberUtil.isValidNumberForRegion(phoneNumber,
+        phoneNumberUtil.getRegionCodeForCountryCode(country));
   }
 }

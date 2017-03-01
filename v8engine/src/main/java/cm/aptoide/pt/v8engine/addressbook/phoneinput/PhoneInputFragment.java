@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.pt.preferences.Application;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -58,9 +59,16 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
     }
 
     RxView.clicks(mNotNowV).subscribe(click -> this.mActionsListener.notNowClicked());
-    RxView.clicks(mSaveNumber)
-        .subscribe(click -> this.mActionsListener.submitClicked(
-            mCountryNumber.getText().toString().concat(mPhoneNumber.getText().toString())));
+    RxView.clicks(mSaveNumber).subscribe(click -> {
+
+      String countryCode = mCountryNumber.getText().toString();
+
+      if (mCountryNumber.getText().toString().isEmpty()) {
+        countryCode = String.valueOf(mCountryNumber.getHint());
+      }
+
+      this.mActionsListener.submitClicked(countryCode.concat(mPhoneNumber.getText().toString()));
+    });
   }
 
   @Override public int getContentViewId() {
@@ -88,10 +96,15 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
   }
 
   @Override public void showSubmissionSuccess() {
-    Toast.makeText(getContext(), "Success", Toast.LENGTH_SHORT).show();
+    getNavigationManager().navigateTo(
+        V8Engine.getFragmentProvider().newThankYouConnectingFragment());
   }
 
   @Override public void showSubmissionError() {
     Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
+  }
+
+  @Override public void hideVirtualKeyboard() {
+    AptoideUtils.SystemU.hideKeyboard(getActivity());
   }
 }

@@ -45,7 +45,7 @@ android {
           "\"" + project.APTOIDE_WEBSOCKETS_HOST + "\""
       buildConfigField "String", "TWITTER_KEY", "\"" + project.TWITTER_KEY_INTERNAL + "\""
       buildConfigField "String", "TWITTER_SECRET",
-          "\"" + project.TWITTER_KEY_INTERNAL + "\""
+          "\"" + project.TWITTER_SECRET_INTERNAL + "\""
     }
     prod {
       buildConfigField "String", "PAYPAL_ENVIRONMENT", "\"" + project.PAYPAL_ENVIRONMENT_LIVE + "\""
@@ -208,4 +208,5 @@ dependencies {
   //annotationProcessor 'org.parceler:parceler:1.1.6'
 
   compile project(':shareappsandroid')
+  compile "com.android.support.constraint:constraint-layout:${CONSTRAINT_LAYOUT_VERSION}"
 }

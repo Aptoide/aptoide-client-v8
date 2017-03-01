@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionManager;
@@ -24,6 +25,7 @@ import cm.aptoide.pt.v8engine.addressbook.data.Contact;
 import cm.aptoide.pt.v8engine.addressbook.data.ContactsRepositoryImpl;
 import cm.aptoide.pt.v8engine.addressbook.invitefriends.InviteFriendsFragment;
 import cm.aptoide.pt.v8engine.fragment.UIComponentFragment;
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -56,8 +58,11 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
   private TextView dismissV;
   private TextView addressbook_2nd_msg;
   private TextView about;
+  private ImageView checkOrReloadTwitter;
+  private ImageView checkOrReloadFacebook;
   private CallbackManager callbackManager;
   private ProgressDialog mGenericPleaseWaitDialog;
+  private TwitterSession twitterSession;
 
   public AddressBookFragment() {
 
@@ -77,6 +82,18 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
     callbackManager = CallbackManager.Factory.create();
     registerFacebookCallback();
     mGenericPleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());
+  }
+
+  // This method is being overriden here because the views are binded in it and changeFacebookState
+  // needs the views binded or the app will crash
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    AccessToken accessToken = AccessToken.getCurrentAccessToken();
+    if (accessToken != null) {
+      if (!accessToken.isExpired()) {
+        changeFacebookState(true);
+      }
+    }
   }
 
   @Override public void setupViews() {
@@ -113,19 +130,27 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
       }
 
       @Override public void failure(TwitterException exception) {
-        ShowMessage.asLongSnack(getActivity(), "Twitter authorization error");
+        ShowMessage.asLongSnack(getActivity(), getString(R.string.address_book_twitter_error));
       }
     });
   }
 
   private TwitterModel createTwitterModel(Result<TwitterSession> result) {
     TwitterModel twitterModel = new TwitterModel();
-    TwitterSession twitterSession = result.data;
+    twitterSession = result.data;
     TwitterAuthToken twitterAuthToken = twitterSession.getAuthToken();
     twitterModel.setId(twitterSession.getUserId());
     twitterModel.setToken(twitterAuthToken.token);
     twitterModel.setSecret(twitterAuthToken.secret);
     return twitterModel;
+  }
+
+  private void changeSyncState(boolean checked, ImageView imageView) {
+    if (checked) {
+      imageView.setImageResource(R.drawable.check);
+    } else {
+      imageView.setImageResource(R.drawable.reload);
+    }
   }
 
   private void registerFacebookCallback() {
@@ -161,15 +186,15 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
   }
 
   @Override public void changeAddressBookState(boolean checked) {
-    //changeSyncState(checked, addressBookSyncButton);
+    changeSyncState(checked, addressBookSyncButton);
   }
 
   @Override public void changeTwitterState(boolean checked) {
-    //changeSyncState(checked, twitterSyncButton);
+    changeSyncState(checked, checkOrReloadTwitter);
   }
 
   @Override public void changeFacebookState(boolean checked) {
-    //changeSyncState(checked, facebookSyncButton);
+    changeSyncState(checked, checkOrReloadFacebook);
   }
 
   @Override public void showAboutFragment() {
@@ -208,14 +233,14 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
       mGenericPleaseWaitDialog.dismiss();
     }
   }
-/*
+
   private void changeSyncState(boolean checked, Button button) {
     if (checked) {
-      button.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_check, 0);
+      button.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.check, 0);
     } else {
-      button.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+      button.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.reload, 0);
     }
-  }*/
+  }
 
   @Override public int getContentViewId() {
     return R.layout.fragment_addressbook;
@@ -228,6 +253,8 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
     dismissV = (TextView) view.findViewById(R.id.addressbook_not_now);
     about = (TextView) view.findViewById(R.id.addressbook_about);
     addressbook_2nd_msg = (TextView) view.findViewById(R.id.addressbook_2nd_msg);
+    checkOrReloadFacebook = (ImageView) view.findViewById(R.id.check_or_reload_facebook);
+    checkOrReloadTwitter = (ImageView) view.findViewById(R.id.check_or_reload_twitter);
   }
 
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
