@@ -45,7 +45,7 @@ android {
           "\"" + project.APTOIDE_WEBSOCKETS_HOST + "\""
       buildConfigField "String", "TWITTER_KEY", "\"" + project.TWITTER_KEY_INTERNAL + "\""
       buildConfigField "String", "TWITTER_SECRET",
-          "\"" + project.TWITTER_KEY_INTERNAL + "\""
+          "\"" + project.TWITTER_SECRET_INTERNAL + "\""
     }
     prod {
       buildConfigField "String", "PAYPAL_ENVIRONMENT", "\"" + project.PAYPAL_ENVIRONMENT_LIVE + "\""
