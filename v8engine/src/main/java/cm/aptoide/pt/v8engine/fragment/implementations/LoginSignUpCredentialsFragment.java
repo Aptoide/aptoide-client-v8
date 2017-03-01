@@ -29,6 +29,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.account.ErrorsMapper;
 import cm.aptoide.pt.v8engine.activity.CreateUserActivity;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.GoogleLoginFragment;
 import cm.aptoide.pt.v8engine.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.v8engine.view.LoginSignUpCredentialsView;
@@ -48,8 +49,8 @@ import java.util.Arrays;
 import java.util.List;
 import rx.Observable;
 
-public class LoginSignUpCredentialsFragment extends GoogleLoginFragment implements
-    LoginSignUpCredentialsView {
+public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
+    implements LoginSignUpCredentialsView {
 
   private static final String DISMISS_TO_NAVIGATE_TO_MAIN_VIEW = "dismiss_to_navigate_to_main_view";
   private ProgressDialog progressDialog;
@@ -114,70 +115,6 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment implemen
     }
 
     return super.onBackPressed();
-  }
-
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-
-    facebookRequestedPermissions = Arrays.asList("email", "user_friends");
-
-    bindViews(view);
-
-    final AptoideAccountManager accountManager =
-        ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    attachPresenter(
-        new LoginSignUpCredentialsPresenter(this, accountManager, facebookRequestedPermissions,
-            dismissToNavigateToMainView), savedInstanceState);
-  }
-
-  private void bindViews(View view) {
-    forgotPasswordButton = (TextView) view.findViewById(R.id.forgot_password);
-
-    googleLoginButton = (SignInButton) view.findViewById(R.id.g_sign_in_button);
-
-    buttonLogin = (Button) view.findViewById(R.id.button_login);
-    buttonSignUp = (Button) view.findViewById(R.id.button_sign_up);
-    buttonSignUp.setText(String.format(getString(R.string.join_company), getCompanyName()));
-
-    aptoideEmailEditText = (EditText) view.findViewById(R.id.username);
-    aptoidePasswordEditText = (EditText) view.findViewById(R.id.password);
-    hideShowAptoidePasswordButton = (Button) view.findViewById(R.id.btn_show_hide_pass);
-
-    facebookLoginButton = (LoginButton) view.findViewById(R.id.fb_login_button);
-    facebookLoginButton.setFragment(this);
-
-    callbackManager = CallbackManager.Factory.create();
-    facebookLoginManager = LoginManager.getInstance();
-    facebookLoginSubject = PublishRelay.create();
-
-    loginSignupSelectionArea = view.findViewById(R.id.login_signup_selection_layout);
-    credentialsEditTextsArea = view.findViewById(R.id.credentials_edit_texts);
-    signUpSelectionButton = (Button) view.findViewById(R.id.show_join_aptoide_area);
-    loginSelectionButton = (Button) view.findViewById(R.id.show_login_with_aptoide_area);
-    signUpSelectionButton.setText(
-        String.format(getString(R.string.join_company), getCompanyName()));
-    loginArea = view.findViewById(R.id.login_button_area);
-    signUpArea = view.findViewById(R.id.sign_up_button_area);
-
-    final Context context = getContext();
-
-    facebookEmailRequiredDialog = new AlertDialog.Builder(context).setMessage(
-        cm.aptoide.accountmanager.R.string.facebook_email_permission_regected_message)
-        .setPositiveButton(cm.aptoide.accountmanager.R.string.facebook_grant_permission_button,
-            (dialog, which) -> {
-              facebookLoginManager.logInWithReadPermissions(getActivity(), Arrays.asList("email"));
-            })
-        .setNegativeButton(android.R.string.cancel, null)
-        .create();
-
-    progressDialog = GenericDialogs.createGenericPleaseWaitDialog(context);
-
-    bottomSheetBehavior =
-        BottomSheetBehavior.from(view.getRootView().findViewById(R.id.login_signup_layout));
-  }
-
-  public String getCompanyName() {
-    return ((V8Engine) getActivity().getApplication()).createConfiguration().getMarketName();
   }
 
   @Override public Observable<Void> showAptoideLoginAreaClick() {
@@ -303,17 +240,20 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment implemen
   }
 
   @Override public Observable<FacebookAccountViewModel> facebookLoginClick() {
-    return facebookLoginSubject;
+    return facebookLoginSubject.doOnNext(
+        __ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.CONNECT_FACEBOOK));
   }
 
   @Override public Observable<AptoideAccountViewModel> aptoideLoginClick() {
     return RxView.clicks(buttonLogin)
+        .doOnNext(__ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.LOGIN))
         .map(click -> new AptoideAccountViewModel(aptoideEmailEditText.getText().toString(),
             aptoidePasswordEditText.getText().toString()));
   }
 
   @Override public Observable<AptoideAccountViewModel> aptoideSignUpClick() {
-    return RxView.clicks(buttonSignUp)
+    return RxView.clicks(buttonSignUp).doOnNext(
+        __ -> Analytics.Account.clickIn(Analytics.Account.StartupClick.JOIN_APTOIDE))
         .map(click -> new AptoideAccountViewModel(aptoideEmailEditText.getText().toString(),
             aptoidePasswordEditText.getText().toString()));
   }
@@ -336,9 +276,77 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment implemen
     return googleLoginButton;
   }
 
+  @Override public void googleLoginClicked(){
+    Analytics.Account.clickIn(Analytics.Account.StartupClick.CONNECT_GOOGLE);
+  }
+
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     callbackManager.onActivityResult(requestCode, resultCode, data);
+  }
+
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+
+    facebookRequestedPermissions = Arrays.asList("email", "user_friends");
+
+    bindViews(view);
+
+    final AptoideAccountManager accountManager =
+        ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    attachPresenter(
+        new LoginSignUpCredentialsPresenter(this, accountManager, facebookRequestedPermissions,
+            dismissToNavigateToMainView), savedInstanceState);
+  }
+
+  private void bindViews(View view) {
+    forgotPasswordButton = (TextView) view.findViewById(R.id.forgot_password);
+
+    googleLoginButton = (SignInButton) view.findViewById(R.id.g_sign_in_button);
+
+    buttonLogin = (Button) view.findViewById(R.id.button_login);
+    buttonSignUp = (Button) view.findViewById(R.id.button_sign_up);
+    buttonSignUp.setText(String.format(getString(R.string.join_company), getCompanyName()));
+
+    aptoideEmailEditText = (EditText) view.findViewById(R.id.username);
+    aptoidePasswordEditText = (EditText) view.findViewById(R.id.password);
+    hideShowAptoidePasswordButton = (Button) view.findViewById(R.id.btn_show_hide_pass);
+
+    facebookLoginButton = (LoginButton) view.findViewById(R.id.fb_login_button);
+    facebookLoginButton.setFragment(this);
+
+    callbackManager = CallbackManager.Factory.create();
+    facebookLoginManager = LoginManager.getInstance();
+    facebookLoginSubject = PublishRelay.create();
+
+    loginSignupSelectionArea = view.findViewById(R.id.login_signup_selection_layout);
+    credentialsEditTextsArea = view.findViewById(R.id.credentials_edit_texts);
+    signUpSelectionButton = (Button) view.findViewById(R.id.show_join_aptoide_area);
+    loginSelectionButton = (Button) view.findViewById(R.id.show_login_with_aptoide_area);
+    signUpSelectionButton.setText(
+        String.format(getString(R.string.join_company), getCompanyName()));
+    loginArea = view.findViewById(R.id.login_button_area);
+    signUpArea = view.findViewById(R.id.sign_up_button_area);
+
+    final Context context = getContext();
+
+    facebookEmailRequiredDialog = new AlertDialog.Builder(context).setMessage(
+        cm.aptoide.accountmanager.R.string.facebook_email_permission_regected_message)
+        .setPositiveButton(cm.aptoide.accountmanager.R.string.facebook_grant_permission_button,
+            (dialog, which) -> {
+              facebookLoginManager.logInWithReadPermissions(getActivity(), Arrays.asList("email"));
+            })
+        .setNegativeButton(android.R.string.cancel, null)
+        .create();
+
+    progressDialog = GenericDialogs.createGenericPleaseWaitDialog(context);
+
+    bottomSheetBehavior =
+        BottomSheetBehavior.from(view.getRootView().findViewById(R.id.login_signup_layout));
+  }
+
+  public String getCompanyName() {
+    return ((V8Engine) getActivity().getApplication()).createConfiguration().getMarketName();
   }
 
   @Override protected void showGoogleLoginError() {

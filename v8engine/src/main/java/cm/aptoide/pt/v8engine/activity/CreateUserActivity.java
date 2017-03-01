@@ -33,6 +33,7 @@ import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.account.ErrorsMapper;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import com.jakewharton.rxbinding.support.design.widget.RxSnackbar;
 import com.jakewharton.rxbinding.view.RxView;
 import java.net.SocketTimeoutException;
@@ -105,6 +106,8 @@ public class CreateUserActivity extends AccountPermissionsBaseActivity {
         .flatMap(
             click -> accountManager.updateAccount(nameEditText.getText().toString(), avatarPath)
                 .toObservable()
+                .doOnNext(
+                    __ -> Analytics.Account.createdUserProfile(!TextUtils.isEmpty(avatarPath)))
                 .timeout(90, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnError(throwable -> showError(throwable))
@@ -151,7 +154,7 @@ public class CreateUserActivity extends AccountPermissionsBaseActivity {
   private void showSuccessMessageAndNavigateToLoggedInView() {
     ShowMessage.asSnack(content, cm.aptoide.accountmanager.R.string.user_created);
     if (Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
-      startActivity(new Intent(this, LoggedInActivity.class));
+      startActivity(new Intent(this, ProfileStepOneActivity.class));
     } else {
       Toast.makeText(this, cm.aptoide.accountmanager.R.string.create_profile_pub_pri_suc_login,
           Toast.LENGTH_LONG).show();

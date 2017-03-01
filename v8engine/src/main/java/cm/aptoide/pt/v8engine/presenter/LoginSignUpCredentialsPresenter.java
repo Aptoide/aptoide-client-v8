@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.view.LoginSignUpCredentialsView;
 import cm.aptoide.pt.v8engine.view.View;
 import com.facebook.AccessToken;
@@ -72,7 +73,10 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
         credentials -> accountManager.login(Account.Type.GOOGLE, credentials.getEmail(),
             credentials.getToken(), credentials.getDisplayName())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnCompleted(() -> navigateToMainView())
+            .doOnCompleted(() -> {
+              Analytics.Account.loginSuccess(Analytics.Account.LoginMethod.GOOGLE);
+              navigateToMainView();
+            })
             .doOnTerminate(() -> view.hideLoading())
             .doOnError(throwable -> view.showError(throwable))
             .toObservable()).retry();
@@ -99,7 +103,10 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
               username -> accountManager.login(Account.Type.FACEBOOK, username,
                   credentials.getToken().getToken(), null)
                   .observeOn(AndroidSchedulers.mainThread())
-                  .doOnCompleted(() -> navigateToMainView())
+                  .doOnCompleted(() -> {
+                    Analytics.Account.loginSuccess(Analytics.Account.LoginMethod.FACEBOOK);
+                    navigateToMainView();
+                  })
                   .doOnTerminate(() -> view.hideLoading())
                   .doOnError(throwable -> view.showError(throwable))).toObservable();
         }).retry();
@@ -119,7 +126,10 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
           return accountManager.login(Account.Type.APTOIDE, credentials.getUsername(),
               credentials.getPassword(), null)
               .observeOn(AndroidSchedulers.mainThread())
-              .doOnCompleted(() -> navigateToMainView())
+              .doOnCompleted(() -> {
+                Analytics.Account.loginSuccess(Analytics.Account.LoginMethod.APTOIDE);
+                navigateToMainView();
+              })
               .doOnTerminate(() -> view.hideLoading())
               .doOnError(throwable -> view.showError(throwable))
               .toObservable();
@@ -139,7 +149,10 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
           }
           return accountManager.createAccount(credentials.getUsername(), credentials.getPassword())
               .observeOn(AndroidSchedulers.mainThread())
-              .doOnCompleted(() -> view.navigateToCreateProfile())
+              .doOnCompleted(() -> {
+                Analytics.Account.signInSuccessAptoide();
+                view.navigateToCreateProfile();
+              })
               .doOnTerminate(() -> view.hideLoading())
               .doOnError(throwable -> view.showError(throwable))
               .toObservable();

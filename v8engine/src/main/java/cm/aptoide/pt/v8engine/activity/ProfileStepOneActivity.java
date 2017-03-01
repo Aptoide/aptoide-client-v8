@@ -20,6 +20,7 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.subscriptions.CompositeSubscription;
 
@@ -27,9 +28,9 @@ import rx.subscriptions.CompositeSubscription;
  * Created by pedroribeiro on 15/12/16.
  */
 
-public class LoggedInActivity extends AccountBaseActivity {
+public class ProfileStepOneActivity extends AccountBaseActivity {
 
-  private static final String TAG = LoggedInActivity.class.getSimpleName();
+  private static final String TAG = ProfileStepOneActivity.class.getSimpleName();
 
   private AptoideClientUUID aptoideClientUUID;
   private AptoideAccountManager accountManager;
@@ -84,6 +85,7 @@ public class LoggedInActivity extends AccountBaseActivity {
         if (answer.isOk()) {
           Logger.v(TAG, "user is public");
           ShowMessage.asSnack(this, cm.aptoide.accountmanager.R.string.successful);
+          Analytics.Account.accountProfileAction(1, Analytics.Account.ProfileAction.CONTINUE);
         } else {
           Logger.v(TAG, "user is public: error: " + answer.getError().getDescription());
           ShowMessage.asSnack(this, cm.aptoide.accountmanager.R.string.unknown_error);
@@ -94,7 +96,8 @@ public class LoggedInActivity extends AccountBaseActivity {
       });
     }));
     mSubscriptions.add(RxView.clicks(mMoreInfoButton).subscribe(clicks -> {
-      startActivity(getIntent().setClass(this, LoggedInActivity2ndStep.class));
+      Analytics.Account.accountProfileAction(1, Analytics.Account.ProfileAction.MORE_INFO);
+      startActivity(getIntent().setClass(this, ProfileStepTwoActivity.class));
       finish();
     }));
   }

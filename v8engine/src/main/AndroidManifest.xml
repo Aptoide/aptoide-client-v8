@@ -87,13 +87,13 @@
         />
 
     <activity
-        android:name=".activity.LoggedInActivity"
+        android:name=".activity.ProfileStepOneActivity"
         android:screenOrientation="nosensor"
         android:windowSoftInputMode="stateHidden"
         />
 
     <activity
-        android:name=".activity.LoggedInActivity2ndStep"
+        android:name=".activity.ProfileStepTwoActivity"
         android:screenOrientation="nosensor"
         android:windowSoftInputMode="stateHidden"
         />

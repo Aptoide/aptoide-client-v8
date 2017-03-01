@@ -20,6 +20,7 @@ import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.subscriptions.CompositeSubscription;
 
@@ -27,9 +28,9 @@ import rx.subscriptions.CompositeSubscription;
  * Created by pedroribeiro on 15/12/16.
  */
 
-public class LoggedInActivity2ndStep extends AccountBaseActivity {
+public class ProfileStepTwoActivity extends AccountBaseActivity {
 
-  private static final String TAG = LoggedInActivity2ndStep.class.getSimpleName();
+  private static final String TAG = ProfileStepTwoActivity.class.getSimpleName();
 
   private final AptoideClientUUID aptoideClientUUID =
       new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
@@ -84,11 +85,12 @@ public class LoggedInActivity2ndStep extends AccountBaseActivity {
           accountManager.getAccessToken()).execute(answer -> {
         if (answer.isOk()) {
           Logger.v(TAG, "user is public");
-          Toast.makeText(LoggedInActivity2ndStep.this,
+          Toast.makeText(ProfileStepTwoActivity.this,
               cm.aptoide.accountmanager.R.string.successful, Toast.LENGTH_SHORT).show();
+          Analytics.Account.accountProfileAction(2, Analytics.Account.ProfileAction.CONTINUE);
         } else {
           Logger.v(TAG, "user is public: error: " + answer.getError().getDescription());
-          Toast.makeText(LoggedInActivity2ndStep.this,
+          Toast.makeText(ProfileStepTwoActivity.this,
               cm.aptoide.accountmanager.R.string.unknown_error, Toast.LENGTH_SHORT).show();
         }
         goTo();
@@ -107,11 +109,12 @@ public class LoggedInActivity2ndStep extends AccountBaseActivity {
           .execute(answer -> {
             if (answer.isOk()) {
               Logger.v(TAG, "user is private");
-              Toast.makeText(LoggedInActivity2ndStep.this, R.string.successful, Toast.LENGTH_SHORT)
+              Toast.makeText(ProfileStepTwoActivity.this, R.string.successful, Toast.LENGTH_SHORT)
                   .show();
+              Analytics.Account.accountProfileAction(2, Analytics.Account.ProfileAction.PRIVATE_PROFILE);
             } else {
               Logger.v(TAG, "user is private: error: " + answer.getError().getDescription());
-              Toast.makeText(LoggedInActivity2ndStep.this, R.string.unknown_error,
+              Toast.makeText(ProfileStepTwoActivity.this, R.string.unknown_error,
                   Toast.LENGTH_SHORT).show();
             }
 

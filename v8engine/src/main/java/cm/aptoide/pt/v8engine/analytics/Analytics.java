@@ -47,6 +47,7 @@ public class Analytics {
 
   // Constantes globais a todos os eventos.
   public static final String ACTION = "Action";
+  public static final String METHOD = "Method";
   private static final String TAG = Analytics.class.getSimpleName();
   private static final boolean ACTIVATE_FLURRY = true;
   private static final int ALL = Integer.MAX_VALUE;
@@ -377,6 +378,7 @@ public class Analytics {
     }
   }
 
+  /*
   public static class Screens {
 
     public static void tagScreen(String screenName) {
@@ -389,8 +391,10 @@ public class Analytics {
       Localytics.upload();
     }
   }
+  */
 
   // TODO
+  /*
   public static class Tutorial {
     public static final String EVENT_NAME = "Tutorial";
     public static final String STEP_ACCOMPLISHED = "Step Accomplished";
@@ -403,7 +407,9 @@ public class Analytics {
       }
     }
   }
+  */
 
+  /*
   public static class UserRegister {
 
     public static final String EVENT_NAME = "User Registered";
@@ -412,6 +418,7 @@ public class Analytics {
       track(EVENT_NAME, ALL);
     }
   }
+  */
 
   // Novos
   public static class Rollback {
@@ -438,6 +445,7 @@ public class Analytics {
     }
   }
 
+  /*
   public static class ScheduledDownloads {
     public static final String EVENT_NAME = "Scheduled Downloads";
     private static final String CLICK_ON_INSTALL_SELECTED = "Clicked on Install Selected";
@@ -456,7 +464,9 @@ public class Analytics {
       //            track(EVENT_NAME, ACTION, CLICK_ON_REMOVE_SELECTED, ALL);
     }
   }
+  */
 
+  /*
   public static class SendFeedback {
 
     public static final String EVENT_NAME = "Send Feedback";
@@ -466,7 +476,9 @@ public class Analytics {
       track(EVENT_NAME, ACTION, SEND_FEEDBACK, ALL);
     }
   }
+  */
 
+  /*
   public static class ExcludedUpdates {
     private static final String EVENT_NAME = "Excluded Updates";
     private static final String RESTORE_UPDATES = "Restore Updates";
@@ -475,10 +487,12 @@ public class Analytics {
       track(EVENT_NAME, ACTION, RESTORE_UPDATES, ALL);
     }
   }
+  */
 
   /**
    * Incomplete
    */
+  /*
   public static class Settings {
 
     public static final String EVENT_NAME = "Settings";
@@ -496,7 +510,9 @@ public class Analytics {
       //            objectObjectHashMap.put(CHECKED, Boolean.valueOf(checked).toString());
     }
   }
+  */
 
+  /*
   public static class Facebook {
 
     public static final String EVENT_NAME = "Facebook";
@@ -510,6 +526,103 @@ public class Analytics {
 
     public static void login() {
       track(EVENT_NAME, ACTION, LOGIN, ALL);
+    }
+  }
+  */
+
+  public static class Account {
+    private static final String LOGIN_SIGN_UP_START_SCREEN = "Account_Login_Signup_Start_Screen";
+    private static final String SIGNUP_SCREEN = "Account_Signup_Screen";
+    private static final String LOGIN_SCREEN = "Account_Login_Screen";
+    private static final String CREATE_USER_PROFILE = "Account_Create_A_User_Profile_Screen";
+    private static final String PROFILE_SETTINGS = "Account_Profile_Settings_Screen";
+    private static final String CREATE_YOUR_STORE = "Account_Create_Your_Store_Screen";
+
+    public static void clickIn(StartupClick clickEvent) {
+      track(LOGIN_SIGN_UP_START_SCREEN, ACTION, clickEvent.getClickEvent(), ALL);
+    }
+
+    public static void signInSuccessAptoide() {
+      track(SIGNUP_SCREEN, ALL);
+    }
+
+    public static void loginSuccess(LoginMethod loginMethod) {
+      track(LOGIN_SCREEN, METHOD, loginMethod.getMethod(), ALL);
+    }
+
+    public static void createdUserProfile(boolean hasPicture) {
+      track(CREATE_USER_PROFILE, "has_picture", hasPicture ? "True" : "False", ALL);
+    }
+
+    public static void accountProfileAction(int screen, ProfileAction action) {
+      HashMap<String, String> map = new HashMap<>();
+      map.put(ACTION, action.getAction());
+      map.put("screen", Integer.toString(screen));
+      track(PROFILE_SETTINGS, map, ALL);
+    }
+
+    public static void createStore(boolean hasPicture, CreateStoreAction action) {
+      HashMap<String, String> map = new HashMap<>();
+      map.put(ACTION, action.getAction());
+      map.put("has_picture", hasPicture ? "True" : "False");
+      track(CREATE_YOUR_STORE, map, ALL);
+    }
+
+    public enum StartupClick {
+      JOIN_APTOIDE("Join Aptoide"), LOGIN("Login"), CONNECT_FACEBOOK(
+          "Connect with FB"), CONNECT_GOOGLE("Connect with Google");
+
+      private final String clickEvent;
+
+      StartupClick(String clickEvent) {
+        this.clickEvent = clickEvent;
+      }
+
+      public String getClickEvent() {
+        return clickEvent;
+      }
+    }
+
+    public enum LoginMethod {
+      APTOIDE("Aptoide"), FACEBOOK("FB"), GOOGLE("Google");
+
+      private final String method;
+
+      LoginMethod(String method) {
+        this.method = method;
+      }
+
+      public String getMethod() {
+        return method;
+      }
+    }
+
+    public enum ProfileAction {
+      MORE_INFO("More info"), CONTINUE("Continue"), PRIVATE_PROFILE("Make my profile private"), PUBLIC_PROFILE("Make my profile public");
+
+      private final String action;
+
+      ProfileAction(String action) {
+        this.action = action;
+      }
+
+      public String getAction() {
+        return action;
+      }
+    }
+
+    public enum CreateStoreAction {
+      SKIP("Skip"), CREATE("Create store");
+
+      private final String action;
+
+      CreateStoreAction(String action) {
+        this.action = action;
+      }
+
+      public String getAction() {
+        return action;
+      }
     }
   }
 
@@ -653,6 +766,7 @@ public class Analytics {
   }
 
   // TODO: Não está implementado na v6
+  /*
   public static class DownloadManager {
     public static final String EVENT_NAME = "Download Manager";
 
@@ -668,6 +782,7 @@ public class Analytics {
       //            track(EVENT_NAME, ACTION, "Clear topmenu", ALL);
     }
   }
+  */
 
   public static class Search {
     //event names
