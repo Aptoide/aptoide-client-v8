@@ -56,9 +56,9 @@ public abstract class Widget<T extends Displayable> extends RecyclerView.ViewHol
 
   public abstract void bindView(T displayable);
 
-  public View getRootView() {
+  /*public View getRootView() {
     return getNavigationManager().peekLast().getView();
-  }
+  }*/
 
   protected NavigationManagerV4 getNavigationManager() {
     return appNav;
