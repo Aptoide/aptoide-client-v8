@@ -49,30 +49,39 @@
 
   <Button
       android:id="@+id/addressbook_share_social"
-      style="?attr/customButton"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_above="@+id/addressbook_allow_find"
+      android:background="@drawable/addressbook_button_rectangle_shape"
       android:padding="10dp"
-      android:text="@string/share_options_share_external" />
+      android:text="@string/share_options_share_external"
+      style="?attr/customButton"
+      />
 
 
   <Button
       android:id="@+id/addressbook_allow_find"
-      style="?attr/customButton"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_above="@+id/addressbook_done"
+      android:layout_marginTop="5dp"
+      android:background="@drawable/addressbook_button_rectangle_shape"
       android:padding="10dp"
-      android:text="@string/addressbook_allow_friends_find" />
+      android:text="@string/addressbook_allow_friends_find"
+      style="?attr/customButton"
+      />
 
   <Button
       android:id="@+id/addressbook_done"
-      style="?attr/customButton"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_alignParentBottom="true"
       android:layout_marginBottom="10dp"
+      android:layout_marginTop="5dp"
+      android:background="@drawable/addressbook_button_rectangle_orange_border_shape"
       android:padding="10dp"
-      android:text="@string/done" />
+      android:text="@string/done"
+      android:textColor="@color/default_color"
+      style="?attr/customButton"
+      />
 </RelativeLayout>
