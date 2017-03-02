@@ -22,8 +22,6 @@ public interface HighwayView {
 
   void showCreateGroupResult(int result);
 
-  void showEnablingWifiToast();
-
   void showInactivityToast();
 
   void hideButtonsProgressBar();
