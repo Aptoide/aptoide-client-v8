@@ -11,7 +11,6 @@ import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import java.lang.ref.WeakReference;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
 
@@ -43,14 +42,14 @@ class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
     navigateTo(fragment);
   }
 
-  @Override public void navigateTo(Fragment fragment) {
+  @Override public String navigateTo(Fragment fragment) {
     FragmentActivity activity = weakReference.get();
 
     if (activity == null) {
       CrashReport.getInstance()
           .log(new RuntimeException(
               "Activity is null in " + ConcreteNavigationManagerV4.class.getName()));
-      return;
+      return null;
     }
 
     final FragmentManager fragmentManager = activity.getSupportFragmentManager();
@@ -62,6 +61,8 @@ class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
         .addToBackStack(tag)
         .replace(R.id.fragment_placeholder, fragment, tag)
         .commit();
+
+    return tag;
   }
 
   @Override public void cleanBackStack() {
@@ -77,6 +78,19 @@ class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
     cleanBackStack(activity.getSupportFragmentManager());
   }
 
+  @Override public void cleanBackStackUntil(String fragmentTag) {
+    FragmentActivity activity = weakReference.get();
+
+    if (activity == null) {
+      CrashReport.getInstance()
+          .log(new RuntimeException(
+              "Activity is null in " + ConcreteNavigationManagerV4.class.getName()));
+      return;
+    }
+
+    cleanBackStackUntil(fragmentTag, activity.getSupportFragmentManager());
+  }
+
   @Override public Fragment peekLast() {
     FragmentActivity activity = weakReference.get();
 
@@ -89,8 +103,8 @@ class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
 
     final FragmentManager fragmentManager = activity.getSupportFragmentManager();
     if (fragmentManager.getBackStackEntryCount() > 0) {
-      FragmentManager.BackStackEntry backStackEntry = fragmentManager.getBackStackEntryAt
-          (fragmentManager.getBackStackEntryCount() - 1);
+      FragmentManager.BackStackEntry backStackEntry =
+          fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1);
       return fragmentManager.findFragmentByTag(backStackEntry.getName());
     }
     return null;
@@ -131,6 +145,23 @@ class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
         .setCustomAnimations(ENTER_ANIMATION, EXIT_ANIMATION, ENTER_ANIMATION, EXIT_ANIMATION)
         .replace(R.id.fragment_placeholder, fragment)
         .commit();
+  }
+
+  private void cleanBackStackUntil(String fragmentTag, FragmentManager fragmentManager) {
+    if (fragmentManager.getBackStackEntryCount() == 0) {
+      return;
+    }
+
+    boolean popped = false;
+
+    while (fragmentManager.getBackStackEntryCount() > 0 || !popped) {
+      if (fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1)
+          .getName()
+          .equals(fragmentTag)) {
+        popped = true;
+      }
+      fragmentManager.popBackStackImmediate();
+    }
   }
 
   private synchronized void cleanBackStack(FragmentManager fragmentManager) {

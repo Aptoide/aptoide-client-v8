@@ -155,7 +155,8 @@ public interface FragmentProvider {
 
   Fragment newPhoneInputFragment();
 
-  Fragment newInviteFriendsFragment(InviteFriendsFragment.InviteFriendsFragmentOpenMode openMode);
+  Fragment newInviteFriendsFragment(InviteFriendsFragment.InviteFriendsFragmentOpenMode openMode,
+      String tag);
 
   Fragment newSpotShareFragment();
 

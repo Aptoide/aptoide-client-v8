@@ -10,8 +10,6 @@ public interface InviteFriendsContract {
   interface View {
 
     void showPhoneInputFragment();
-
-    void finishView();
   }
 
   interface UserActionsListener {

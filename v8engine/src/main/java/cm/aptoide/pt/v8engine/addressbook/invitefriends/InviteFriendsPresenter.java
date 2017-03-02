@@ -6,24 +6,28 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.addressbook.navigation.AddressBookNavigation;
 
 /**
  * Created by jdandrade on 23/02/2017.
  */
 public class InviteFriendsPresenter implements InviteFriendsContract.UserActionsListener {
 
-  private final InviteFriendsContract.View mInviteFriendsView;
+  private final InviteFriendsContract.View inviteFriendsView;
+  private final AddressBookNavigation addressBookNavigationManager;
 
-  public InviteFriendsPresenter(InviteFriendsContract.View inviteFriendsView) {
-    this.mInviteFriendsView = inviteFriendsView;
+  public InviteFriendsPresenter(InviteFriendsContract.View inviteFriendsView,
+      AddressBookNavigation addressBookNavigationManager) {
+    this.inviteFriendsView = inviteFriendsView;
+    this.addressBookNavigationManager = addressBookNavigationManager;
   }
 
   @Override public void allowFindClicked() {
-    this.mInviteFriendsView.showPhoneInputFragment();
+    this.inviteFriendsView.showPhoneInputFragment();
   }
 
   @Override public void doneClicked() {
-    this.mInviteFriendsView.finishView();
+    this.addressBookNavigationManager.exitAddressBook();
   }
 
   @Override public void shareClicked(Context context) {
