@@ -409,8 +409,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     if (i == R.id.menu_share) {
       shareApp(appName, packageName, wUrl);
       return true;
-    } else
-    if (i == R.id.menu_schedule) {
+    } else if (i == R.id.menu_schedule) {
 
       scheduled = Scheduled.from(app, appAction);
 

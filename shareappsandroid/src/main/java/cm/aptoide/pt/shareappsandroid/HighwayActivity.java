@@ -245,10 +245,8 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
         onRequestPermissionsResult(requestCode, permissions, grantResults);
   }
 
-  private void requestSpecialPermission() {
-    Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
-    intent.setData(Uri.parse("package:" + getPackageName()));
-    startActivityForResult(intent, WRITE_SETTINGS_REQUEST_CODE);
+  @Override public void registerListener(PermissionListener listener) {
+    this.permissionListener = listener;
   }
 
   private void forgetAPTXNetwork() {
@@ -279,9 +277,8 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
 
   }
 
-  private void recoverNetworkState() {
-    //check if wifi was enabled before and re use it.
-    presenter.recoverNetworkState();
+  @Override public void removeListener() {
+    this.permissionListener = null;
   }
 
   @Override public void requestPermissions() {
@@ -405,8 +402,10 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     }
   }
 
-  @Override public void registerListener(PermissionListener listener) {
-    this.permissionListener = listener;
+  private void requestSpecialPermission() {
+    Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+    intent.setData(Uri.parse("package:" + getPackageName()));
+    startActivityForResult(intent, WRITE_SETTINGS_REQUEST_CODE);
   }
 
   private Dialog buildMobileDataDialog() {
@@ -451,12 +450,13 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     Toast.makeText(this, getResources().getString(R.string.noHotspotYet), Toast.LENGTH_LONG).show();
   }
 
-  @Override public void hideButtonsProgressBar() {
-    buttonsProgressBar.setVisibility(View.INVISIBLE);
+  private void recoverNetworkState() {
+    //check if wifi was enabled before and re use it.
+    presenter.recoverNetworkState();
   }
 
-  @Override public void removeListener() {
-    this.permissionListener = null;
+  @Override public void hideButtonsProgressBar() {
+    buttonsProgressBar.setVisibility(View.INVISIBLE);
   }
 
   @Override public void openChatClient(String ipAddress, String deviceName,

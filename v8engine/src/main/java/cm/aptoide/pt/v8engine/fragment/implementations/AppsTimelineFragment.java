@@ -371,8 +371,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
           timelineMetricsManager, socialRepository);
     } else if (card instanceof AppUpdate) {
       return AppUpdateDisplayable.from((AppUpdate) card, spannableFactory, downloadFactory,
-          dateCalculator, installManager, permissionManager, timelineMetricsManager, socialRepository,
-          idsRepository, accountManager);
+          dateCalculator, installManager, permissionManager, timelineMetricsManager,
+          socialRepository, idsRepository, accountManager);
     } else if (card instanceof Recommendation) {
       return RecommendationDisplayable.from((Recommendation) card, dateCalculator, spannableFactory,
           timelineMetricsManager, socialRepository);
@@ -383,8 +383,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
       return SocialInstallDisplayable.from((SocialInstall) card, timelineMetricsManager,
           spannableFactory, socialRepository, dateCalculator);
     } else if (card instanceof SocialRecommendation) {
-      return SocialRecommendationDisplayable.from((SocialRecommendation) card, timelineMetricsManager,
-          spannableFactory, socialRepository, dateCalculator);
+      return SocialRecommendationDisplayable.from((SocialRecommendation) card,
+          timelineMetricsManager, spannableFactory, socialRepository, dateCalculator);
     }
     throw new IllegalArgumentException(
         "Only articles, features, store latest apps, app updates, videos, recommendations and similar cards supported.");
