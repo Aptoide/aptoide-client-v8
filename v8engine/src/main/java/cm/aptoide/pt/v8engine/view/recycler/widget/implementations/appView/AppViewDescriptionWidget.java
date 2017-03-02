@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -49,8 +50,9 @@ import com.jakewharton.rxbinding.view.RxView;
     if (!TextUtils.isEmpty(media.getDescription())) {
       descriptionTextView.setText(AptoideUtils.HtmlU.parse(media.getDescription()));
       compositeSubscription.add(RxView.clicks(readMoreBtn).subscribe(click -> {
-        getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
-            .newDescriptionFragment(app.getName(), media.getDescription(), storeTheme));
+        Fragment fragment = V8Engine.getFragmentProvider()
+            .newDescriptionFragment(app.getName(), media.getDescription(), storeTheme);
+        getNavigationManager().navigateTo(fragment);
       }));
     } else {
       // only show "default" description if the app doesn't have one
@@ -61,8 +63,9 @@ import com.jakewharton.rxbinding.view.RxView;
     if (!TextUtils.isEmpty(media.getDescription())) {
       descriptionTextView.setText(AptoideUtils.HtmlU.parse(media.getDescription()));
       compositeSubscription.add(RxView.clicks(readMoreBtn).subscribe(click -> {
-        getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
-            .newDescriptionFragment(app.getName(), media.getDescription(), storeTheme));
+        Fragment fragment = V8Engine.getFragmentProvider()
+            .newDescriptionFragment(app.getName(), media.getDescription(), storeTheme);
+        getNavigationManager().navigateTo(fragment);
       }));
     } else {
       // only show "default" description if the app doesn't have one

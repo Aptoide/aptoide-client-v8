@@ -9,7 +9,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -52,13 +51,6 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
   private String appName;
   private AptoideAccountManager accountManager;
 
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        getContext());
-    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
-  }
-
   public static DescriptionFragment newInstance(String appName, String description,
       String storeTheme) {
     DescriptionFragment fragment = new DescriptionFragment();
@@ -80,6 +72,13 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
     args.putString(STORE_THEME, storeTheme);
     fragment.setArguments(args);
     return fragment;
+  }
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    aptoideClientUUID =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -199,14 +198,5 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment {
   @Override public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.menu_empty, menu);
-  }
-
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    int itemId = item.getItemId();
-    if (itemId == android.R.id.home) {
-      getActivity().onBackPressed();
-      return true;
-    }
-    return super.onOptionsItemSelected(item);
   }
 }
