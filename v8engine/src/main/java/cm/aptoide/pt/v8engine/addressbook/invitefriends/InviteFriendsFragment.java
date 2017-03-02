@@ -8,8 +8,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.addressbook.navigation.AddressBookNavigationManager;
 import cm.aptoide.pt.v8engine.fragment.UIComponentFragment;
 import com.jakewharton.rxbinding.view.RxView;
 
@@ -19,30 +21,36 @@ import com.jakewharton.rxbinding.view.RxView;
 public class InviteFriendsFragment extends UIComponentFragment
     implements InviteFriendsContract.View {
   public static final String OPEN_MODE = "OPEN_MODE";
+  public static final String TAG = "TAG";
   private InviteFriendsContract.UserActionsListener mActionsListener;
   private InviteFriendsFragmentOpenMode openMode;
+  private String entranceTag;
 
   private Button share;
   private Button allowFind;
   private Button done;
   private TextView message;
 
-  public static Fragment newInstance(InviteFriendsFragmentOpenMode openMode) {
+  public static Fragment newInstance(InviteFriendsFragmentOpenMode openMode, String tag) {
     InviteFriendsFragment inviteFriendsFragment = new InviteFriendsFragment();
     Bundle extras = new Bundle();
     extras.putSerializable(OPEN_MODE, openMode);
+    extras.putString(TAG, tag);
     inviteFriendsFragment.setArguments(extras);
     return inviteFriendsFragment;
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    mActionsListener = new InviteFriendsPresenter(this);
+    mActionsListener = new InviteFriendsPresenter(this,
+        new AddressBookNavigationManager(NavigationManagerV4.Builder.buildWith(getActivity()),
+            entranceTag));
   }
 
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
     openMode = (InviteFriendsFragmentOpenMode) args.get(OPEN_MODE);
+    entranceTag = (String) args.get(TAG);
   }
 
   @Override public void setupViews() {
@@ -78,10 +86,6 @@ public class InviteFriendsFragment extends UIComponentFragment
 
   @Override public void showPhoneInputFragment() {
     getNavigationManager().navigateTo(V8Engine.getFragmentProvider().newPhoneInputFragment());
-  }
-
-  @Override public void finishView() {
-    getActivity().onBackPressed();
   }
 
   public enum InviteFriendsFragmentOpenMode {

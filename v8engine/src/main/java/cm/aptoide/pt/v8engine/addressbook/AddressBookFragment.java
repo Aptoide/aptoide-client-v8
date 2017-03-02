@@ -216,12 +216,13 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
     switch (openMode) {
       case ERROR:
         getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
-            .newInviteFriendsFragment(InviteFriendsFragment.InviteFriendsFragmentOpenMode.ERROR));
+            .newInviteFriendsFragment(InviteFriendsFragment.InviteFriendsFragmentOpenMode.ERROR,
+                getTag()));
         break;
       case NO_FRIENDS:
         getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
             .newInviteFriendsFragment(
-                InviteFriendsFragment.InviteFriendsFragmentOpenMode.NO_FRIENDS));
+                InviteFriendsFragment.InviteFriendsFragmentOpenMode.NO_FRIENDS, getTag()));
         break;
       default:
         Logger.d(this.getClass().getSimpleName(), "Wrong openMode type.");
