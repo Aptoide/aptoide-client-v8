@@ -15,7 +15,7 @@
   <string name="couldNotCreateHotspot">Couldn\'t create the hotspot</string>
   <string name="unkownHotspotError">We are sorry, there was an error while trying to create the hotspot</string>
 
-  <string name="noSelectedHotspot">Please select a hotspot first</string>
+  <string name="noSelectedHotspot">Please select a friends phone in the Spot</string>
   <string name="errorJoiningNetwork">There was an error joining the network </string>
   <string name="unkownJoinNetError">We are sorry, there was an error while joining the network.</string>
 
@@ -57,12 +57,12 @@
   <string name="upperDelete">DELETE </string>
   <string name="upperResend">RESEND</string>
   <string name="deletedMessage">You deleted this file!</string>
-  <string name="noRecords">There are no records available yet! </string>
+  <string name="noRecords">There\'s no Apps shared yet</string>
   <string name="clearHistory">CLEAR HISTORY</string>
-  <string name="noRecordsDelete">"There are no records to delete"</string>
+  <string name="noRecordsDelete">No apps to delete</string>
 
   <string name="reSendError"><b>ERROR ON SENDING</b></string>
-  <string name="reSendError_no_friends_in_group">At the moment you have no friends in this group. Try again later.</string>
+  <string name="reSendError_no_friends_in_group">No friends in the group yet. Please ask them to join.</string>
 
 
   <string name="mobileDataTitle">Mobile data</string>
