@@ -47,6 +47,8 @@ public interface HighwayTransferRecordView {
 
   void showRecoveringWifiStateToast();
 
+  void dismiss();
+
   interface TransferRecordListener {
     void onInstallApp(HighwayTransferRecordItem item);
 
