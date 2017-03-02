@@ -1,9 +1,10 @@
 package cm.aptoide.pt.v8engine.repository;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.ws.v7.AnalyticsEventRequest;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.TimelineEvent;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.AptoideEvent;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by jdandrade on 27/10/2016.
@@ -29,80 +30,124 @@ public class TimelineAnalytics {
     this.uniqueIdentifier = uniqueIdentifier;
   }
 
-  public void sendEvent(TimelineEvent event) {
-    analytics.sendEvent(event);
-  }
-
   public void sendOpenAppEvent(String cardType, String source, String packageName) {
-    String event = OPEN_APP;
-    AnalyticsEventRequest.Body.Specific specificData =
-        AnalyticsEventRequest.Body.Specific.builder().app(packageName).build();
-    analytics.sendEvent(createTimelineEvent(cardType, source, event, specificData));
+    analytics.sendEvent(createEvent(OPEN_APP, createAppData(cardType, source, packageName)));
   }
 
   public void sendStoreOpenAppEvent(String cardType, String source, String packageName,
       String store) {
-    analytics.sendEvent(createTimelineEvent(cardType, source, OPEN_APP,
-        AnalyticsEventRequest.Body.Specific.builder().app(packageName).store(store).build()));
+    analytics.sendEvent(
+        createEvent(OPEN_APP, createStoreAppData(cardType, source, packageName, store)));
   }
 
   public void sendSimilarOpenAppEvent(String cardType, String source, String packageName,
       String similarPackageName) {
-    analytics.sendEvent(createTimelineEvent(source, cardType, OPEN_APP,
-        AnalyticsEventRequest.Body.Specific.builder()
-            .app(packageName)
-            .similarTo(similarPackageName)
-            .build()));
+    analytics.sendEvent(createEvent(OPEN_APP,
+        createSimilarAppData(cardType, source, packageName, similarPackageName)));
   }
 
-  public void sendRecommendedOpenAppEvent(String cardType, String source, String similarPackageName,
+  public void sendRecommendedOpenAppEvent(String cardType, String source, String basedOnPackageName,
       String packageName) {
-    analytics.sendEvent(createTimelineEvent(cardType, source, OPEN_APP,
-        AnalyticsEventRequest.Body.Specific.builder()
-            .basedOn(similarPackageName)
-            .app(packageName)
-            .build()));
+    analytics.sendEvent(createEvent(OPEN_APP,
+        createBasedOnAppData(cardType, source, packageName, basedOnPackageName)));
   }
 
   public void sendUpdateAppEvent(String cardType, String source, String packageName) {
-    analytics.sendEvent(createTimelineEvent(cardType, source, UPDATE_APP,
-        AnalyticsEventRequest.Body.Specific.builder().app(packageName).build()));
+    analytics.sendEvent(createEvent(UPDATE_APP, createAppData(cardType, source, packageName)));
   }
 
   public void sendAppUpdateOpenStoreEvent(String cardType, String source, String packageName,
       String store) {
-    analytics.sendEvent(createTimelineEvent(cardType, source, OPEN_STORE,
-        AnalyticsEventRequest.Body.Specific.builder().app(packageName).store(store).build()));
+    analytics.sendEvent(
+        createEvent(OPEN_STORE, createStoreAppData(cardType, source, packageName, store)));
   }
 
   public void sendOpenStoreEvent(String cardType, String source, String store) {
-    analytics.sendEvent(createTimelineEvent(cardType, source, OPEN_STORE,
-        AnalyticsEventRequest.Body.Specific.builder().store(store).build()));
+    analytics.sendEvent(createEvent(OPEN_STORE, createStoreData(cardType, source, store)));
   }
 
   public void sendOpenArticleEvent(String cardType, String source, String url, String packageName) {
-    analytics.sendEvent(createTimelineEvent(cardType, source, OPEN_ARTICLE,
-        AnalyticsEventRequest.Body.Specific.builder().url(url).app(packageName).build()));
+    analytics.sendEvent(
+        createEvent(OPEN_ARTICLE, createArticleData(cardType, source, url, packageName)));
   }
 
   public void sendOpenBlogEvent(String cardType, String source, String url, String packageName) {
-    analytics.sendEvent(createTimelineEvent(cardType, source, OPEN_BLOG,
-        AnalyticsEventRequest.Body.Specific.builder().url(url).app(packageName).build()));
+    analytics.sendEvent(
+        createEvent(OPEN_BLOG, createArticleData(cardType, source, url, packageName)));
   }
 
   public void sendOpenVideoEvent(String cardType, String source, String url, String packageName) {
-    analytics.sendEvent(createTimelineEvent(cardType, source, OPEN_VIDEO,
-        AnalyticsEventRequest.Body.Specific.builder().url(url).app(packageName).build()));
+    analytics.sendEvent(
+        createEvent(OPEN_VIDEO, createVideoAppData(cardType, source, url, packageName)));
   }
 
   public void sendOpenChannelEvent(String cardType, String source, String url, String packageName) {
-    analytics.sendEvent(createTimelineEvent(cardType, source, OPEN_CHANNEL,
-        AnalyticsEventRequest.Body.Specific.builder().url(url).app(packageName).build()));
+    analytics.sendEvent(
+        createEvent(OPEN_CHANNEL, createVideoAppData(cardType, source, url, packageName)));
   }
 
-  private TimelineEvent createTimelineEvent(String cardType, String source, String event,
-      AnalyticsEventRequest.Body.Specific specificData) {
-    return new TimelineEvent(source, cardType, event, accountManager, uniqueIdentifier,
-        specificData);
+  private AptoideEvent createEvent(String event, Map<String, Object> data) {
+    return new AptoideEvent(accountManager, uniqueIdentifier, data, event, "CLICK", "TIMELINE");
+  }
+
+  private Map<String, Object> createAppData(String cardType, String source, String packageName) {
+    final HashMap<String, String> specific = new HashMap<>();
+    specific.put("app", packageName);
+    return createTimelineCardData(cardType, source, specific);
+  }
+
+  private Map<String, Object> createStoreAppData(String cardType, String source, String packageName,
+      String store) {
+    final HashMap<String, String> specific = new HashMap<>();
+    specific.put("app", packageName);
+    specific.put("store", store);
+    return createTimelineCardData(cardType, source, specific);
+  }
+
+  private Map<String, Object> createStoreData(String cardType, String source, String store) {
+    final HashMap<String, String> specific = new HashMap<>();
+    specific.put("store", store);
+    return createTimelineCardData(cardType, source, specific);
+  }
+
+  private Map<String, Object> createSimilarAppData(String cardType, String source,
+      String packageName, String similarPackageName) {
+    final HashMap<String, String> specific = new HashMap<>();
+    specific.put("app", packageName);
+    specific.put("similarTo", similarPackageName);
+    return createTimelineCardData(cardType, source, specific);
+  }
+
+  private Map<String, Object> createVideoAppData(String cardType, String source, String url,
+      String packageName) {
+    final HashMap<String, String> specific = new HashMap<>();
+    specific.put("app", packageName);
+    specific.put("url", url);
+    return createTimelineCardData(cardType, source, specific);
+  }
+
+  private Map<String, Object> createBasedOnAppData(String cardType, String source,
+      String packageName, String basedOnPackageName) {
+    final HashMap<String, String> specific = new HashMap<>();
+    specific.put("app", packageName);
+    specific.put("basedOn", basedOnPackageName);
+    return createTimelineCardData(cardType, source, specific);
+  }
+
+  private Map<String, Object> createTimelineCardData(String cardType, String source,
+      HashMap<String, String> specific) {
+    final Map<String, Object> result = new HashMap<>();
+    result.put("cardType", cardType);
+    result.put("source", source);
+    result.put("specific", specific);
+    return result;
+  }
+
+  private Map<String, Object> createArticleData(String cardType, String source, String url,
+      String packageName) {
+    final HashMap<String, String> specific = new HashMap<>();
+    specific.put("url", url);
+    specific.put("app", packageName);
+    return createTimelineCardData(cardType, source, specific);
   }
 }
