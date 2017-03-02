@@ -19,6 +19,6 @@ public class AptoideMessageClientController extends AptoideMessageController
       FileServerLifecycle<AndroidAppInfo> serverLifecycle,
       FileClientLifecycle<AndroidAppInfo> fileClientLifecycle) {
     super(HandlersFactory.newDefaultClientHandlersList(rootDir, storageCapacity, serverLifecycle,
-        fileClientLifecycle));
+        fileClientLifecycle), fileClientLifecycle);
   }
 }

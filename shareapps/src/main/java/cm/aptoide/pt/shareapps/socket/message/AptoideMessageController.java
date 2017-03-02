@@ -1,6 +1,7 @@
 package cm.aptoide.pt.shareapps.socket.message;
 
 import cm.aptoide.pt.shareapps.socket.entities.Host;
+import cm.aptoide.pt.shareapps.socket.interfaces.OnError;
 import cm.aptoide.pt.shareapps.socket.message.interfaces.Sender;
 import cm.aptoide.pt.shareapps.socket.message.messages.AckMessage;
 import cm.aptoide.pt.shareapps.socket.message.messages.ExitMessage;
@@ -22,6 +23,7 @@ public abstract class AptoideMessageController implements Sender<Message> {
   public static final long ACK_TIMEOUT = 5000;
 
   private final HashMap<Class, MessageHandler> messageHandlersMap;
+  private final OnError<IOException> onError;
 
   private ObjectOutputStream objectOutputStream;
   private ObjectInputStream objectInputStream;
@@ -30,8 +32,10 @@ public abstract class AptoideMessageController implements Sender<Message> {
   @Getter private Host localhost;
   private Socket socket;
 
-  public AptoideMessageController(List<MessageHandler<? extends Message>> messageHandlers) {
+  public AptoideMessageController(List<MessageHandler<? extends Message>> messageHandlers,
+      OnError<IOException> onError) {
     this.messageHandlersMap = buildMessageHandlersMap(messageHandlers);
+    this.onError = onError;
   }
 
   protected HashMap<Class, MessageHandler> buildMessageHandlersMap(
@@ -66,6 +70,9 @@ public abstract class AptoideMessageController implements Sender<Message> {
       }
     } catch (IOException e) {
       e.printStackTrace();
+      if (onError != null) {
+        onError.onError(e);
+      }
     } catch (ClassNotFoundException e) {
       e.printStackTrace();
     }
