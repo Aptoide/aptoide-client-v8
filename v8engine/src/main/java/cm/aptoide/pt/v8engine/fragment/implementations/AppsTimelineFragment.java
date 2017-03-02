@@ -84,6 +84,7 @@ import rx.android.schedulers.AndroidSchedulers;
 public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwipeFragment<T> {
 
   public static final int SEARCH_LIMIT = 20;
+  private static final String USER_ID_KEY = "USER_ID_KEY";
   private static final String ACTION_KEY = "ACTION";
   private static final String PACKAGE_LIST_KEY = "PACKAGE_LIST";
   private DownloadFactory downloadFactory;
@@ -106,18 +107,21 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
   private IdsRepositoryImpl idsRepository;
   private AccountNavigator accountNavigator;
 
-  public static AppsTimelineFragment newInstance(String action, String storeName) {
+  public static AppsTimelineFragment newInstance(String action, Long userId) {
     AppsTimelineFragment fragment = new AppsTimelineFragment();
 
     final Bundle args = new Bundle();
     args.putString(ACTION_KEY, action);
+    if (userId != null) {
+      args.putLong(USER_ID_KEY, userId);
+    }
     fragment.setArguments(args);
     return fragment;
   }
 
   @Override public void bindViews(View view) {
     super.bindViews(view);
-    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     accountNavigator = new AccountNavigator(getContext(), getNavigationManager(), accountManager);
     dateCalculator = new DateCalculator();
     spannableFactory = new SpannableFactory();
@@ -126,7 +130,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     packageRepository = new PackageRepository(getContext().getPackageManager());
     permissionManager = new PermissionManager();
     installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
-    idsRepository = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
+    idsRepository =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
     timelineRepository = new TimelineRepository(getArguments().getString(ACTION_KEY),
         new TimelineCardFilter(new TimelineCardFilter.TimelineCardDuplicateFilter(new HashSet<>()),
             AccessorFactory.getAccessorFor(Installed.class)), idsRepository, accountManager);
@@ -200,21 +205,20 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
       List<String> packages) {
     return getDisplayableList(packages, 0, refresh).doOnNext(
         item -> getAdapter().clearDisplayables()).flatMap(displayableDatalist -> {
-      if (!displayableDatalist.getList().isEmpty()) {
-        if (accountManager.isLoggedIn()) {
-          return timelineRepository.getTimelineStats(refresh).map(timelineStats -> {
-            displayableDatalist.getList()
-                .add(0, new TimeLineStatsDisplayable(timelineStats, spannableFactory, storeTheme));
-            return displayableDatalist;
-          }).onErrorReturn(throwable -> {
-            CrashReport.getInstance().log(throwable);
-            return displayableDatalist;
-          });
-        } else {
-          displayableDatalist.getList().add(0, new TimelineLoginDisplayable().setAccountNavigator(accountNavigator));
-          return Observable.just(displayableDatalist);
-        }
+      if (accountManager.isLoggedIn()) {
+        Long userId =
+            getArguments().containsKey(USER_ID_KEY) ? getArguments().getLong(USER_ID_KEY) : null;
+        return timelineRepository.getTimelineStats(refresh, userId).map(timelineStats -> {
+          displayableDatalist.getList()
+              .add(0, new TimeLineStatsDisplayable(timelineStats, spannableFactory, storeTheme));
+          return displayableDatalist;
+        }).onErrorReturn(throwable -> {
+          CrashReport.getInstance().log(throwable);
+          return displayableDatalist;
+        });
       } else {
+        displayableDatalist.getList()
+            .add(0, new TimelineLoginDisplayable().setAccountNavigator(accountNavigator));
         return Observable.just(displayableDatalist);
       }
     }).doOnUnsubscribe(() -> finishLoading());

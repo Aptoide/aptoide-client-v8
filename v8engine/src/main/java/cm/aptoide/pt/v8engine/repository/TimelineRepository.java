@@ -83,8 +83,8 @@ public class TimelineRepository {
     return cardDataList;
   }
 
-  public Observable<TimelineStats> getTimelineStats(boolean byPassCache) {
+  public Observable<TimelineStats> getTimelineStats(boolean byPassCache, Long userId) {
     return GetTimelineStatsRequest.of(accountManager.getAccessToken(),
-        aptoideClientUUID.getUniqueIdentifier()).observe(byPassCache);
+        aptoideClientUUID.getUniqueIdentifier(), userId).observe(byPassCache);
   }
 }

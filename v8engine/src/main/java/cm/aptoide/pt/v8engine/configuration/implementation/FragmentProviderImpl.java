@@ -12,9 +12,9 @@ import cm.aptoide.pt.v8engine.addressbook.invitefriends.InviteFriendsFragment;
 import cm.aptoide.pt.v8engine.addressbook.phoneinput.PhoneInputFragment;
 import cm.aptoide.pt.v8engine.addressbook.syncresult.SyncResultFragment;
 import cm.aptoide.pt.v8engine.configuration.FragmentProvider;
-import cm.aptoide.pt.v8engine.fragment.implementations.CommentListFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppsTimelineFragment;
+import cm.aptoide.pt.v8engine.fragment.implementations.CommentListFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.CreateUserFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.DescriptionFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.DownloadsFragment;
@@ -180,8 +180,8 @@ public class FragmentProviderImpl implements FragmentProvider {
     return new ListStoresFragment();
   }
 
-  @Override public Fragment newAppsTimelineFragment(String action, String storeTheme) {
-    return AppsTimelineFragment.newInstance(action, storeTheme);
+  @Override public Fragment newAppsTimelineFragment(String action, Long userId) {
+    return AppsTimelineFragment.newInstance(action, userId);
   }
 
   @Override

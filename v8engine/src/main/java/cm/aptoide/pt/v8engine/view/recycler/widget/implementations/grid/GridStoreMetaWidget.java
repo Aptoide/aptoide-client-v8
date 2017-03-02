@@ -134,6 +134,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
         }
       }
 
+      // TODO: 02/03/2017 trinkes check if user has store
       //check if the user is the store's owner
       if (accountManager.getAccount().getStore().equals(store.getName())) {
         description.setVisibility(View.VISIBLE);
