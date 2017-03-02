@@ -331,8 +331,9 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     //facebookLoginButton.setReadPermissions(facebookRequestedPermissions);
     RxView.clicks(facebookLoginButton)
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(__ -> facebookLoginManager.logInWithReadPermissions(this,
-            facebookRequestedPermissions));
+        .subscribe(
+            __ -> facebookLoginManager.logInWithReadPermissions(LoginSignUpCredentialsFragment.this,
+                facebookRequestedPermissions));
 
     callbackManager = CallbackManager.Factory.create();
     facebookLoginManager = LoginManager.getInstance();
@@ -353,8 +354,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
         cm.aptoide.accountmanager.R.string.facebook_email_permission_regected_message)
         .setPositiveButton(cm.aptoide.accountmanager.R.string.facebook_grant_permission_button,
             (dialog, which) -> {
-              facebookLoginManager.logInWithReadPermissions(this,
-                  facebookRequestedPermissions);
+              facebookLoginManager.logInWithReadPermissions(this, Arrays.asList("email"));
             })
         .setNegativeButton(android.R.string.cancel, null)
         .create();

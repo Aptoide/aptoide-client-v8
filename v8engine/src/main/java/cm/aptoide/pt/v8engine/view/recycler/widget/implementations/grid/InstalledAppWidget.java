@@ -33,6 +33,7 @@ import cm.aptoide.pt.v8engine.util.DialogUtils;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.InstalledAppDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Displayables;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
+import com.jakewharton.rxbinding.view.RxView;
 import java.util.Locale;
 
 /**
@@ -96,10 +97,10 @@ import java.util.Locale;
     final String storeName = pojo.getStoreName();
     if (!TextUtils.isEmpty(storeName)) {
       createReviewLayout.setVisibility(View.VISIBLE);
-      createReviewLayout.setOnClickListener(v -> {
-        Analytics.Updates.createReview();
-        dialogUtils.showRateDialog(getContext(), appName, packageName, storeName);
-      });
+      compositeSubscription.add(RxView.clicks(createReviewLayout)
+          .flatMap(__ -> dialogUtils.showRateDialog(getContext(), appName, packageName, storeName))
+          .subscribe(__ -> Analytics.Updates.createReview(),
+              err -> CrashReport.getInstance().log(err)));
     } else {
       createReviewLayout.setVisibility(View.GONE);
     }

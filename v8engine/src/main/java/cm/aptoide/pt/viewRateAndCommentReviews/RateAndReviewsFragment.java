@@ -28,6 +28,7 @@ import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.adapters.CommentsAdapter;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.v8engine.fragment.implementations.AppViewFragment;
 import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
@@ -41,6 +42,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.Com
 import cm.aptoide.pt.v8engine.view.recycler.listeners.EndlessRecyclerOnScrollListener;
 import cm.aptoide.pt.viewRateAndCommentReviews.layout.RatingBarsLayout;
 import cm.aptoide.pt.viewRateAndCommentReviews.layout.RatingTotalsLayout;
+import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.List;
 import lombok.Getter;
@@ -150,27 +152,11 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     ratingTotalsLayout = new RatingTotalsLayout(view);
     ratingBarsLayout = new RatingBarsLayout(view);
 
-    floatingActionButton.setOnClickListener(v -> {
-      dialogUtils.showRateDialog(getActivity(), appName, packageName, storeName);
-    });
-  }
-
-  private void invalidateReviews() {
-    clearDisplayables();
-    fetchReviews();
-  }
-
-  private void fetchReviews() {
-    ListReviewsRequest reviewsRequest =
-        ListReviewsRequest.of(storeName, packageName, accountManager.getAccessToken(),
-            aptoideClientUUID.getUniqueIdentifier(), storeCredentialsProvider.get(storeName));
-
-    getRecyclerView().removeOnScrollListener(endlessRecyclerOnScrollListener);
-    endlessRecyclerOnScrollListener =
-        new EndlessRecyclerOnScrollListener(this.getAdapter(), reviewsRequest,
-            new ListFullReviewsSuccessRequestListener(this, accountManager, aptoideClientUUID), Throwable::printStackTrace);
-    getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
-    endlessRecyclerOnScrollListener.onLoadMore(false);
+    RxView.clicks(floatingActionButton)
+        .flatMap(__ -> dialogUtils.showRateDialog(getActivity(), appName, packageName, storeName))
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(__ -> Analytics.Updates.createReview(),
+            err -> CrashReport.getInstance().log(err));
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -218,9 +204,28 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     ratingBarsLayout.setup(data);
   }
 
+  private void invalidateReviews() {
+    clearDisplayables();
+    fetchReviews();
+  }
+
+  private void fetchReviews() {
+    ListReviewsRequest reviewsRequest =
+        ListReviewsRequest.of(storeName, packageName, accountManager.getAccessToken(),
+            aptoideClientUUID.getUniqueIdentifier(), storeCredentialsProvider.get(storeName));
+
+    getRecyclerView().removeOnScrollListener(endlessRecyclerOnScrollListener);
+    endlessRecyclerOnScrollListener =
+        new EndlessRecyclerOnScrollListener(this.getAdapter(), reviewsRequest,
+            new ListFullReviewsSuccessRequestListener(this, accountManager, aptoideClientUUID),
+            Throwable::printStackTrace);
+    getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
+    endlessRecyclerOnScrollListener.onLoadMore(false);
+  }
+
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
     dialogUtils = new DialogUtils(accountManager, aptoideClientUUID,
