@@ -175,7 +175,7 @@ public class CreateUserActivity extends AccountPermissionsBaseActivity {
     Uri avatarUrl = null;
     if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
       avatarUrl = getPhotoFileUri(photoAvatar);
-      avatarPath = fileUtils.getPathAlt(avatarUrl, getApplicationContext());
+      avatarPath = fileUtils.getPath(avatarUrl, getApplicationContext());
     } else if (requestCode == GALLERY_CODE && resultCode == RESULT_OK) {
       avatarUrl = data.getData();
       avatarPath = fileUtils.getPath(avatarUrl, getApplicationContext());
