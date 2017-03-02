@@ -443,5 +443,6 @@
   <string name="store_meta_apps">Apps\n%s</string>
   <string name="store_meta_following">Following\n%s</string>
   <string name="store_meta_followers">Followers\n%s</string>
+  <string name="addressbook_about">About Address Book</string>
 
 </resources>

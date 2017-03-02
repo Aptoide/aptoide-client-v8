@@ -45,7 +45,6 @@ import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.Scheduled;
 import cm.aptoide.pt.database.realm.Store;
-import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
@@ -403,20 +402,17 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     int i = item.getItemId();
 
-    if (i == android.R.id.home) {
-      getActivity().onBackPressed();
-      return true;
-    } else if (i == R.id.menu_share) {
+    //if (i == android.R.id.home) {
+    //  getActivity().onBackPressed();
+    //  return true;
+    //} else
+    if (i == R.id.menu_share) {
       shareApp(appName, packageName, wUrl);
       return true;
-    } else if (i == R.id.menu_schedule) {
+    } else
+    if (i == R.id.menu_schedule) {
 
       scheduled = Scheduled.from(app, appAction);
-
-      //@Cleanup Realm realm = DeprecatedDatabase.get();
-      //realm.beginTransaction();
-      //realm.copyToRealmOrUpdate(scheduled);
-      //realm.commitTransaction();
 
       ScheduledAccessor scheduledAccessor = AccessorFactory.getAccessorFor(Scheduled.class);
       scheduledAccessor.insert(scheduled);

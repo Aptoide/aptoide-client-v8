@@ -7,6 +7,7 @@ package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.appView;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -33,6 +34,7 @@ import cm.aptoide.pt.model.v7.Review;
 import cm.aptoide.pt.navigation.AccountNavigator;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.util.DialogUtils;
@@ -129,19 +131,24 @@ import rx.functions.Action1;
     Action1<Throwable> handleError = throwable -> CrashReport.getInstance().log(throwable);
 
     final FragmentActivity context = getContext();
-    Action1<Void> rateOnClickHandler =
-        __ -> dialogUtils.showRateDialog(context, appName, packageName, storeName);
+    Observable<GenericDialogs.EResponse> showRateDialog =
+        dialogUtils.showRateDialog(context, appName, packageName, storeName);
+
     compositeSubscription.add(
-        RxView.clicks(rateThisButton).subscribe(rateOnClickHandler, handleError));
+        RxView.clicks(rateThisButton).flatMap(__ -> showRateDialog).subscribe(__ -> {
+        }, handleError));
     compositeSubscription.add(
-        RxView.clicks(rateThisButtonLarge).subscribe(rateOnClickHandler, handleError));
+        RxView.clicks(rateThisButtonLarge).flatMap(__ -> showRateDialog).subscribe(__ -> {
+        }, handleError));
     compositeSubscription.add(
-        RxView.clicks(ratingLayout).subscribe(rateOnClickHandler, handleError));
+        RxView.clicks(ratingLayout).flatMap(__ -> showRateDialog).subscribe(__ -> {
+        }, handleError));
 
     Action1<Void> commentsOnClickListener = __ -> {
-      getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
+      Fragment fragment = V8Engine.getFragmentProvider()
           .newRateAndReviewsFragment(app.getId(), app.getName(), app.getStore().getName(),
-              app.getPackageName(), app.getStore().getAppearance().getTheme()));
+              app.getPackageName(), app.getStore().getAppearance().getTheme());
+      getNavigationManager().navigateTo(fragment);
     };
     compositeSubscription.add(
         RxView.clicks(readAllButton).subscribe(commentsOnClickListener, handleError));

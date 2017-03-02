@@ -202,7 +202,7 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
   @Override public void showAboutFragment() {
     final String marketName = Application.getConfiguration().getMarketName();
     getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
-        .newDescriptionFragment("About Address Book",
+        .newDescriptionFragment(getString(R.string.addressbook_about),
             getString(R.string.addressbook_data_about, marketName), "default"));
   }
 

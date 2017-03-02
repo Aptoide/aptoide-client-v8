@@ -31,7 +31,8 @@ public class AptoideMessageServerSocket extends AptoideServerSocket {
 
   @Override protected void onNewClient(Socket socket) throws IOException {
     AptoideMessageServerController shareAppsMessageController =
-        new AptoideMessageServerController(this, Host.fromLocalhost(socket), Host.from(socket));
+        new AptoideMessageServerController(this, Host.fromLocalhost(socket), Host.from(socket),
+            onError);
     aptoideMessageControllers.add(shareAppsMessageController);
     shareAppsMessageController.onConnect(socket);
   }

@@ -179,7 +179,7 @@ public class HighwayPresenter implements Presenter {
   }
 
   public void scanNetworks() {
-    view.showEnablingWifiToast();
+    //view.showEnablingWifiToast();
     connectionManager.searchForAPTXNetworks(new ConnectionManager.InactivityListener() {
       @Override public void onInactivity(boolean inactive) {
         view.showInactivityToast();

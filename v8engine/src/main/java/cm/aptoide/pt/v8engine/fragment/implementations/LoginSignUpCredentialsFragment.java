@@ -19,7 +19,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.OAuthException;
+import cm.aptoide.accountmanager.ws.AptoideWsV3Exception;
 import cm.aptoide.accountmanager.ws.responses.OAuth;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -161,16 +163,32 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   }
 
   @Override public void showError(Throwable throwable) {
-    final String message;
-    if (throwable instanceof OAuthException) {
-      final OAuth oAuth = ((OAuthException) throwable).getoAuth();
-      message = getString(
-          ErrorsMapper.getWebServiceErrorMessageFromCode(oAuth.getErrors().get(0).getCode()));
-    } else if (throwable instanceof IOException) {
-      message = getString(cm.aptoide.accountmanager.R.string.connection_error);
-    } else {
-      message = getString(cm.aptoide.accountmanager.R.string.unknown_error);
+    String message = getString(cm.aptoide.accountmanager.R.string.unknown_error);
+    try {
+      if (throwable instanceof OAuthException) {
+        final OAuth oAuth = ((OAuthException) throwable).getoAuth();
+        message = getString(
+            ErrorsMapper.getWebServiceErrorMessageFromCode(oAuth.getErrors().get(0).getCode()));
+      } else if (throwable instanceof AptoideWsV3Exception) {
+        final AptoideWsV3Exception ex = ((AptoideWsV3Exception) throwable);
+        @StringRes int errorId =
+            getResources().getIdentifier("error_" + ex.getBaseResponse().getError(), "string",
+                getContext().getPackageName());
+        message = getString(errorId);
+      } else if (throwable instanceof cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception) {
+        final cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception ex =
+            ((cm.aptoide.pt.dataprovider.exception.AptoideWsV3Exception) throwable);
+        @StringRes int errorId =
+            getResources().getIdentifier("error_" + ex.getBaseResponse().getError(), "string",
+                getContext().getPackageName());
+        message = getString(errorId);
+      } else if (throwable instanceof IOException) {
+        message = getString(cm.aptoide.accountmanager.R.string.connection_error);
+      }
+    } catch (Exception e) {
+      CrashReport.getInstance().log(e);
     }
+
     // FIXME: 23/2/2017 sithengineer find a better solution than this.
     ShowMessage.asToast(getContext(), message);
   }
@@ -331,8 +349,9 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     //facebookLoginButton.setReadPermissions(facebookRequestedPermissions);
     RxView.clicks(facebookLoginButton)
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(__ -> facebookLoginManager.logInWithReadPermissions(this,
-            facebookRequestedPermissions));
+        .subscribe(
+            __ -> facebookLoginManager.logInWithReadPermissions(LoginSignUpCredentialsFragment.this,
+                facebookRequestedPermissions));
 
     callbackManager = CallbackManager.Factory.create();
     facebookLoginManager = LoginManager.getInstance();
@@ -353,8 +372,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
         cm.aptoide.accountmanager.R.string.facebook_email_permission_regected_message)
         .setPositiveButton(cm.aptoide.accountmanager.R.string.facebook_grant_permission_button,
             (dialog, which) -> {
-              facebookLoginManager.logInWithReadPermissions(this,
-                  facebookRequestedPermissions);
+              facebookLoginManager.logInWithReadPermissions(this, Arrays.asList("email"));
             })
         .setNegativeButton(android.R.string.cancel, null)
         .create();

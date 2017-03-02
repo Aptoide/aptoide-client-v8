@@ -871,6 +871,10 @@ public class HighwayTransferRecordActivity extends ActivityView
         Toast.LENGTH_SHORT).show();
   }
 
+  @Override public void dismiss() {
+    finish();
+  }
+
   private Dialog createDialogToDelete(final HighwayTransferRecordItem item) {
 
     String message =
