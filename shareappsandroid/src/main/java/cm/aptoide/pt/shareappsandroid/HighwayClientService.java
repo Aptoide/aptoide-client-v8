@@ -19,6 +19,7 @@ import cm.aptoide.pt.shareapps.socket.message.client.AptoideMessageClientControl
 import cm.aptoide.pt.shareapps.socket.message.client.AptoideMessageClientSocket;
 import cm.aptoide.pt.shareapps.socket.message.interfaces.StorageCapacity;
 import cm.aptoide.pt.shareapps.socket.message.messages.RequestPermissionToSend;
+import cm.aptoide.pt.utils.AptoideUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -301,7 +302,11 @@ public class HighwayClientService extends Service {
         }
       } else if (intent.getAction() != null && intent.getAction().equals("DISCONNECT")) {
         System.out.println("Requested to disconnect !");
-        aptoideMessageController.exit();
+        AptoideUtils.ThreadU.runOnIoThread(new Runnable() {
+          @Override public void run() {
+            aptoideMessageController.exit();
+          }
+        });
       }
     }
 
