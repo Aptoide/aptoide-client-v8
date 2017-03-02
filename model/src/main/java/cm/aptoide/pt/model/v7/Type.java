@@ -20,7 +20,7 @@ public enum Type {
   FOLLOW_STORE(3, false),
   DISPLAYS(2, true),
   ADS(3, false),
-  STORE_META(1, true),
+  HOME_META(1, true),
   COMMENTS_GROUP(1, true),
 
   //Reviews Screen

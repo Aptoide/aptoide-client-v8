@@ -24,6 +24,7 @@ import cm.aptoide.pt.model.v7.ListApps;
 import cm.aptoide.pt.model.v7.ListComments;
 import cm.aptoide.pt.model.v7.ListFullReviews;
 import cm.aptoide.pt.model.v7.listapp.App;
+import cm.aptoide.pt.model.v7.store.GetHomeMeta;
 import cm.aptoide.pt.model.v7.store.GetStoreDisplays;
 import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.model.v7.store.ListStores;
@@ -95,7 +96,7 @@ public class DisplayablesFactory {
                 new Event().setName(Event.Name.getAds)));
             widget.setActions(actions);
             StoreGridHeaderDisplayable storeGridHeaderDisplayable =
-                new StoreGridHeaderDisplayable(widget, null, widget.getTag(), StoreContext.store);
+                new StoreGridHeaderDisplayable(widget, null, widget.getTag(), StoreContext.meta);
             displayables.add(storeGridHeaderDisplayable);
             displayables.add(ads);
             return Observable.from(displayables);
@@ -103,9 +104,9 @@ public class DisplayablesFactory {
             return Observable.empty();
           }
 
-        case STORE_META:
+        case HOME_META:
           return Observable.just(
-              new GridStoreMetaDisplayable((GetStoreMeta) widget.getViewObject()));
+              new GridStoreMetaDisplayable((GetHomeMeta) widget.getViewObject()));
 
         case REVIEWS_GROUP:
           return Observable.from(createReviewsGroupDisplayables(widget));
@@ -306,8 +307,8 @@ public class DisplayablesFactory {
 
   private static List<Displayable> createMyStoreDisplayables(Object viewObject) {
     LinkedList<Displayable> displayables = new LinkedList<>();
-    if (viewObject instanceof GetStoreMeta && ((GetStoreMeta) viewObject).getData() != null) {
-      displayables.add(new MyStoreDisplayable(((GetStoreMeta) viewObject)));
+    if (viewObject instanceof GetHomeMeta && ((GetHomeMeta) viewObject).getData() != null) {
+      displayables.add(new MyStoreDisplayable(((GetHomeMeta) viewObject)));
     } else {
       displayables.add(new CreateStoreDisplayable());
     }

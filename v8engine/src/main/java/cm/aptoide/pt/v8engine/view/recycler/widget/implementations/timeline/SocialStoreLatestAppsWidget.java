@@ -47,8 +47,6 @@ public class SocialStoreLatestAppsWidget
   private TextView sharedStoreSubscribersNumber;
   private TextView sharedStoreAppsNumber;
   private LinearLayout appsContaner;
-  private ImageView storeAvatar;
-  private ImageView userAvatar;
   private ImageView sharedStoreAvatar;
   private View store;
   private Map<View, Long> apps;

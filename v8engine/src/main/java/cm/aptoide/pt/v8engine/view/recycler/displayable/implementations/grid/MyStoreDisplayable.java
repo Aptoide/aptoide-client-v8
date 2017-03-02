@@ -4,7 +4,7 @@ import android.content.Context;
 import android.support.annotation.IntDef;
 import android.text.TextUtils;
 import android.view.View;
-import cm.aptoide.pt.model.v7.store.GetStoreMeta;
+import cm.aptoide.pt.model.v7.store.GetHomeMeta;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
@@ -22,17 +22,17 @@ import lombok.Getter;
  */
 
 public class MyStoreDisplayable extends Displayable {
-  @Getter private GetStoreMeta meta;
+  @Getter private GetHomeMeta meta;
   private boolean isLongTime;
 
   public MyStoreDisplayable() {
   }
 
-  public MyStoreDisplayable(GetStoreMeta meta) {
+  public MyStoreDisplayable(GetHomeMeta meta) {
     this.meta = meta;
     Calendar aWeekBefore = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
     aWeekBefore.add(Calendar.DAY_OF_MONTH, -Calendar.DAY_OF_WEEK);
-    Date added = meta.getData().getAdded();
+    Date added = meta.getData().getStore().getAdded();
     isLongTime = added.before(aWeekBefore.getTime());
   }
 
@@ -54,10 +54,10 @@ public class MyStoreDisplayable extends Displayable {
 
   private String getStoreDescription(Context context) {
     String message;
-    if (TextUtils.isEmpty(meta.getData().getAppearance().getDescription())) {
+    if (TextUtils.isEmpty(meta.getData().getStore().getAppearance().getDescription())) {
       message = context.getString(R.string.create_store_displayable_empty_description_message);
     } else {
-      message = meta.getData().getAppearance().getDescription();
+      message = meta.getData().getStore().getAppearance().getDescription();
     }
     return message;
   }
@@ -83,8 +83,8 @@ public class MyStoreDisplayable extends Displayable {
   }
 
   public List<Store.SocialChannel> getSocialChannels() {
-    return meta.getData().getSocialChannels() == null ? Collections.EMPTY_LIST
-        : meta.getData().getSocialChannels();
+    return meta.getData().getStore().getSocialChannels() == null ? Collections.EMPTY_LIST
+        : meta.getData().getStore().getSocialChannels();
   }
 
   @IntDef({ View.VISIBLE, View.INVISIBLE, View.GONE }) @Retention(RetentionPolicy.SOURCE)

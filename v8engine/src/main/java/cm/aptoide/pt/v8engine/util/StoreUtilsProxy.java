@@ -5,7 +5,8 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.store.GetStoreMeta;
+import cm.aptoide.pt.model.v7.store.GetHome;
+import cm.aptoide.pt.model.v7.store.GetHomeMeta;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
@@ -35,7 +36,7 @@ public class StoreUtilsProxy {
   }
 
   public void subscribeStore(GetStoreMetaRequest getStoreMetaRequest,
-      @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
+      @Nullable SuccessRequestListener<GetHomeMeta> successRequestListener,
       @Nullable ErrorRequestListener errorRequestListener, String storeName,
       AptoideAccountManager accountManager) {
     Logger.d(StoreUtilsProxy.class.getName(),
@@ -46,7 +47,7 @@ public class StoreUtilsProxy {
   }
 
   public void subscribeStore(String storeName,
-      @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
+      @Nullable SuccessRequestListener<GetHomeMeta> successRequestListener,
       @Nullable ErrorRequestListener errorRequestListener,
       AptoideAccountManager accountManager) {
     subscribeStore(GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName),

@@ -109,8 +109,8 @@ public class StoreLatestAppsWidget extends CardWidget<StoreLatestAppsDisplayable
           .specific(
               SendEventRequest.Body.Specific.builder().store(displayable.getStoreName()).build())
           .build(), TimelineClickEvent.OPEN_STORE);
-      getNavigationManager().navigateTo(
-          V8Engine.getFragmentProvider().newStoreFragment(displayable.getStoreName()));
+      getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
+          .newStoreFragment(displayable.getStoreName(), displayable.getStoreTheme()));
     }));
   }
 

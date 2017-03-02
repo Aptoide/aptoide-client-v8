@@ -23,8 +23,6 @@ public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayab
 
   private TextView storeName;
   private TextView userName;
-  private ImageView storeAvatar;
-  private ImageView userAvatar;
   private ImageView appIcon;
   private TextView appName;
   private TextView getApp;

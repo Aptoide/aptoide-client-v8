@@ -6,13 +6,10 @@
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
 import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
-import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.V7Url;
 import cm.aptoide.pt.model.v7.store.GetStore;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 import rx.Observable;
 
 /**
@@ -20,11 +17,11 @@ import rx.Observable;
  */
 
 @EqualsAndHashCode(callSuper = true) public class GetStoreRequest
-    extends BaseRequestWithStore<GetStore, GetStoreRequest.Body> {
+    extends BaseRequestWithStore<GetStore, GetStoreBody> {
 
   private final String url;
 
-  private GetStoreRequest(String url, String baseHost, Body body) {
+  private GetStoreRequest(String url, String baseHost, GetStoreBody body) {
     super(body, baseHost);
     this.url = url;
   }
@@ -33,35 +30,24 @@ import rx.Observable;
       String accessToken, String aptoideClientUUID) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
-    final Body body = new Body(storeCredentials, WidgetsArgs.createDefault());
+    final GetStoreBody body = new GetStoreBody(storeCredentials, WidgetsArgs.createDefault());
     body.setContext(storeContext);
 
-    return new GetStoreRequest("", BASE_HOST, (Body) decorator.decorate(body, accessToken));
+    return new GetStoreRequest("", BASE_HOST, (GetStoreBody) decorator.decorate(body, accessToken));
   }
 
   public static GetStoreRequest ofAction(String url, StoreCredentials storeCredentials,
       String accessToken, String aptoideClientUUID) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
-    final Body body = new Body(storeCredentials, WidgetsArgs.createDefault());
+    final GetStoreBody body = new GetStoreBody(storeCredentials, WidgetsArgs.createDefault());
 
     return new GetStoreRequest(new V7Url(url).remove("getStore").get(), BASE_HOST,
-        (Body) decorator.decorate(body, accessToken));
+        (GetStoreBody) decorator.decorate(body, accessToken));
   }
 
   @Override
   protected Observable<GetStore> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
     return interfaces.getStore(url, body, bypassCache);
-  }
-
-  @EqualsAndHashCode(callSuper = true) public static class Body extends BaseBodyWithStore {
-
-    @Getter private final WidgetsArgs widgetsArgs;
-    @Getter @Setter private StoreContext context;
-
-    public Body(StoreCredentials storeCredentials, WidgetsArgs widgetsArgs) {
-      super(storeCredentials);
-      this.widgetsArgs = widgetsArgs;
-    }
   }
 }

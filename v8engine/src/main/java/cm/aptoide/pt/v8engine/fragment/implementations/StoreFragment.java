@@ -25,13 +25,13 @@ import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.Event;
-import cm.aptoide.pt.model.v7.store.GetStore;
+import cm.aptoide.pt.model.v7.store.GetHome;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.R;
@@ -61,34 +61,35 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private AptoideAccountManager accountManager;
   private String storeName;
   private StoreContext storeContext;
-  private GetStore getStore;
+  private GetHome getHome;
   private String storeTheme;
+  private Event.Name defaultTab;
+  @Nullable private Long userId;
 
-  public static StoreFragment newInstance(String storeName, String storeTheme) {
-    return newInstance(storeName, StoreContext.store, storeTheme);
-  }
 
-  public static StoreFragment newInstance(String storeName, StoreContext storeContext,
-      String storeTheme) {
+  public static StoreFragment newInstance(long userId, String storeTheme, Event.Name defaultTab) {
     Bundle args = new Bundle();
-    args.putString(BundleCons.STORE_NAME, storeName);
-    args.putSerializable(BundleCons.STORE_CONTEXT, storeContext);
+    args.putLong(BundleCons.USER_ID, userId);
+    args.putSerializable(BundleCons.STORE_CONTEXT, StoreContext.meta);
     args.putString(BundleCons.STORE_THEME, storeTheme);
+    args.putSerializable(BundleCons.DEFAULT_TAB_TO_OPEN, defaultTab);
     StoreFragment fragment = new StoreFragment();
     fragment.setArguments(args);
     return fragment;
   }
 
-  //Delete after completing themes implementation
-  public static StoreFragment newInstance(String storeName) {
-    return newInstance(storeName, StoreContext.store);
+  public static StoreFragment newInstance(String storeName, String storeTheme,
+      Event.Name defaultTab) {
+    StoreFragment storeFragment = newInstance(storeName, storeTheme);
+    storeFragment.getArguments().putSerializable(BundleCons.DEFAULT_TAB_TO_OPEN, defaultTab);
+    return storeFragment;
   }
 
-  //Delete after completing themes implementation
-  public static StoreFragment newInstance(String storeName, StoreContext storeContext) {
+  public static StoreFragment newInstance(String storeName, String storeTheme) {
     Bundle args = new Bundle();
     args.putString(BundleCons.STORE_NAME, storeName);
-    args.putSerializable(BundleCons.STORE_CONTEXT, storeContext);
+    args.putSerializable(BundleCons.STORE_CONTEXT, StoreContext.meta);
+    args.putString(BundleCons.STORE_THEME, storeTheme);
     StoreFragment fragment = new StoreFragment();
     fragment.setArguments(args);
     return fragment;
@@ -99,21 +100,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-  }
-
-  @Override public void onDestroy() {
-    super.onDestroy();
-    if (storeTheme != null) {
-      ThemeUtils.setStatusBarThemeColor(getActivity(),
-          StoreThemeEnum.get(V8Engine.getConfiguration().getDefaultTheme()));
-    }
-  }
-
-  @Override public void loadExtras(Bundle args) {
-    super.loadExtras(args);
-    storeName = args.getString(BundleCons.STORE_NAME);
-    storeContext = (StoreContext) args.get(BundleCons.STORE_CONTEXT);
-    storeTheme = args.getString(BundleCons.STORE_THEME);
   }
 
   @CallSuper @Nullable @Override
@@ -132,14 +118,17 @@ public class StoreFragment extends BasePagerToolbarFragment {
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-    if (create || getStore == null) {
-      GetStoreRequest.of(StoreUtils.getStoreCredentials(storeName), storeContext,
+    if (create || getHome == null) {
+      GetHomeRequest.of(StoreUtils.getStoreCredentials(storeName), userId, storeContext,
           accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
           .observe(refresh)
           .observeOn(AndroidSchedulers.mainThread())
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-          .subscribe((getStore) -> {
-            this.getStore = getStore;
+          .subscribe((getHome) -> {
+            this.getHome = getHome;
+            getToolbar().setTitle(
+                storeName == null ? getHome.getNodes().getMeta().getData().getUser().getName()
+                    : storeName);
             setupViewPager();
           }, (throwable) -> {
             if (throwable instanceof AptoideWsV7Exception) {
@@ -173,7 +162,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   }
 
   @Override public void onDestroyView() {
-    if (storeTheme != null && !storeContext.equals(StoreContext.store)) {
+    if (storeTheme != null && !storeContext.equals(StoreContext.meta)) {
       ThemeUtils.setAptoideTheme(getActivity());
     }
     super.onDestroyView();
@@ -217,12 +206,30 @@ public class StoreFragment extends BasePagerToolbarFragment {
         }
       }
     });
-
+    changeToTab(defaultTab);
     finishLoading();
   }
 
   @Override protected PagerAdapter createPagerAdapter() {
-    return new StorePagerAdapter(getChildFragmentManager(), getStore, storeContext);
+    return new StorePagerAdapter(getChildFragmentManager(), getHome, storeContext);
+  }
+  @Override public void onDestroy() {
+    super.onDestroy();
+    if (storeTheme != null) {
+      ThemeUtils.setStatusBarThemeColor(getActivity(),
+          StoreThemeEnum.get(V8Engine.getConfiguration().getDefaultTheme()));
+    }
+  }
+
+  @Override public void loadExtras(Bundle args) {
+    super.loadExtras(args);
+    storeName = args.getString(BundleCons.STORE_NAME);
+    storeContext = (StoreContext) args.get(BundleCons.STORE_CONTEXT);
+    storeTheme = args.getString(BundleCons.STORE_THEME);
+    defaultTab = (Event.Name) args.get(BundleCons.DEFAULT_TAB_TO_OPEN);
+    if (args.containsKey(BundleCons.USER_ID)) {
+      userId = args.getLong(BundleCons.USER_ID);
+    }
   }
 
   @Override public int getContentViewId() {
@@ -255,6 +262,17 @@ public class StoreFragment extends BasePagerToolbarFragment {
     });
   }
 
+  protected void changeToTab(Event.Name tabToChange) {
+    if (tabToChange != null) {
+      StorePagerAdapter storePagerAdapter = viewPager.getAdapter() instanceof StorePagerAdapter
+          ? ((StorePagerAdapter) viewPager.getAdapter()) : null;
+      if (storePagerAdapter != null) {
+        viewPager.setCurrentItem(
+            ((StorePagerAdapter) viewPager.getAdapter()).getEventNamePosition(tabToChange));
+      }
+    }
+  }
+
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.menu_search, menu);
@@ -284,7 +302,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
     super.setupToolbar();
     // FIXME: 17/1/2017 sithengineer is this the right place to have this event ?? why ??
     Logger.d(TAG, "LOCALYTICS TESTING - STORES ACTION ENTER " + storeName);
-    Analytics.Stores.enter(storeName);
+    Analytics.Stores.enter(storeName == null ? String.valueOf(userId) : storeName);
   }
 
   @Partners public static class BundleCons {
@@ -292,5 +310,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
     public static final String STORE_NAME = "storeName";
     public static final String STORE_CONTEXT = "storeContext";
     public static final String STORE_THEME = "storeTheme";
+    public static final String DEFAULT_TAB_TO_OPEN = "default_tab_to_open";
+    public static final String USER_ID = "userId";
   }
 }

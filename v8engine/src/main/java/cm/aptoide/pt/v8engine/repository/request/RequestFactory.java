@@ -7,6 +7,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.ListFullReviewsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7EndlessController;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.GetUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
@@ -23,6 +24,7 @@ public class RequestFactory {
   private final GetStoreRequestFactory getStoreRequestFactory;
   private final GetStoreWidgetsRequestFactory getStoreWidgetsRequestFactory;
   private final StoreCredentialsProvider storeCredentialsProvider;
+  private final GetUserRequestFactory getUserRequestFactory;
 
   public RequestFactory(IdsRepository idsRepository, AptoideAccountManager accountManager,
       StoreCredentialsProvider storeCredentialsProvider) {
@@ -35,6 +37,7 @@ public class RequestFactory {
         new GetStoreRequestFactory(idsRepository, accountManager, storeCredentialsProvider);
     getStoreWidgetsRequestFactory =
         new GetStoreWidgetsRequestFactory(idsRepository, accountManager, storeCredentialsProvider);
+    getUserRequestFactory = new GetUserRequestFactory(idsRepository, accountManager);
   }
 
   public ListStoresRequest newListStoresRequest(int offset, int limit) {
@@ -63,5 +66,9 @@ public class RequestFactory {
 
   public GetStoreWidgetsRequest newStoreWidgets(String url) {
     return this.getStoreWidgetsRequestFactory.newStoreWidgets(url);
+  }
+
+  public GetUserRequest newGetUser(String url) {
+    return this.getUserRequestFactory.newGetUser(url);
   }
 }

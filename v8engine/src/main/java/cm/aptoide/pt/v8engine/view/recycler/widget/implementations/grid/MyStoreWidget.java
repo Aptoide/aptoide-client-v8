@@ -5,7 +5,6 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.ColorInt;
-import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Button;
@@ -51,7 +50,7 @@ public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
   @Override public void bindView(MyStoreDisplayable displayable) {
 
     final FragmentActivity context = getContext();
-    Store store = displayable.getMeta().getData();
+    Store store = displayable.getMeta().getData().getStore();
     suggestionMessage.setText(displayable.getSuggestionMessage(context));
     createStoreText.setText(displayable.getCreateStoreText());
     createStoreText.setVisibility(displayable.getCreateStoreTextViewVisibility());
@@ -76,7 +75,7 @@ public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
         .subscribe(click -> getNavigationManager().navigateTo(
             V8Engine.getFragmentProvider().newStoreFragment(store.getName(), storeTheme))));
 
-    setupSocialLinks(displayable.getSocialChannels());
+    setupSocialLinks(displayable.getSocialChannels(), socialChannelsLayout);
   }
 
   private int getColorOrDefault(StoreThemeEnum theme, Context context) {
@@ -87,7 +86,4 @@ public class MyStoreWidget extends MetaStoresBaseWidget<MyStoreDisplayable> {
     }
   }
 
-  @NonNull @Override LinearLayout getSocialLayout() {
-    return socialChannelsLayout;
-  }
 }

@@ -65,17 +65,14 @@ public class FragmentProviderImpl implements FragmentProvider {
     return StoreFragment.newInstance(storeName, storeTheme);
   }
 
-  @Override public Fragment newStoreFragment(String storeName) {
-    return StoreFragment.newInstance(storeName);
+  @Override
+  public Fragment newStoreFragment(String storeName, String storeTheme, Event.Name defaultTab) {
+    return StoreFragment.newInstance(storeName, storeTheme, defaultTab);
   }
 
   @Override
-  public Fragment newStoreFragment(String storeName, StoreContext storeContext, String storeTheme) {
-    return StoreFragment.newInstance(storeName, storeContext, storeTheme);
-  }
-
-  @Override public Fragment newStoreFragment(String storeName, StoreContext storeContext) {
-    return StoreFragment.newInstance(storeName, storeContext);
+  public Fragment newStoreFragment(long userId, String storeTheme, Event.Name defaultTab) {
+    return StoreFragment.newInstance(userId, storeTheme, defaultTab);
   }
 
   @Override

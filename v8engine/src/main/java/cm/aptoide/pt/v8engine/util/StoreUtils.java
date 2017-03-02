@@ -14,7 +14,8 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
-import cm.aptoide.pt.model.v7.store.GetStoreMeta;
+import cm.aptoide.pt.model.v7.store.GetHomeMeta;
+import cm.aptoide.pt.model.v7.store.HomeUser;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
@@ -60,7 +61,7 @@ public class StoreUtils {
    * instead, else, use this
    */
   @Deprecated public static void subscribeStore(String storeName,
-      @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
+      @Nullable SuccessRequestListener<GetHomeMeta> successRequestListener,
       @Nullable ErrorRequestListener errorRequestListener, AptoideAccountManager accountManager) {
     subscribeStore(GetStoreMetaRequest.of(getStoreCredentials(storeName),
         accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier()),
@@ -72,7 +73,7 @@ public class StoreUtils {
    * instead, else, use this.
    */
   @Deprecated public static void subscribeStore(GetStoreMetaRequest getStoreMetaRequest,
-      @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
+      @Nullable SuccessRequestListener<GetHomeMeta> successRequestListener,
       @Nullable ErrorRequestListener errorRequestListener, AptoideAccountManager accountManager) {
     getStoreMetaRequest.execute(getStoreMeta -> {
 
@@ -82,7 +83,7 @@ public class StoreUtils {
 
         Store store = new Store();
 
-        cm.aptoide.pt.model.v7.store.Store storeData = getStoreMeta.getData();
+        cm.aptoide.pt.model.v7.store.Store storeData = getStoreMeta.getData().getStore();
         store.setStoreId(storeData.getId());
         store.setStoreName(storeData.getName());
         store.setDownloads(storeData.getStats().getDownloads());

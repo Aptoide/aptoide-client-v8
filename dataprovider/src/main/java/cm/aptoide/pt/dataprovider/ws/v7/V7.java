@@ -10,11 +10,13 @@ import cm.aptoide.pt.dataprovider.util.ToRetryThrowable;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppVersionsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetMyStoreListRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreDisplaysRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.GetUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.PostCommentForStore;
 import cm.aptoide.pt.model.v7.BaseV7Response;
@@ -31,6 +33,8 @@ import cm.aptoide.pt.model.v7.SetComment;
 import cm.aptoide.pt.model.v7.TimelineStats;
 import cm.aptoide.pt.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.model.v7.listapp.ListAppsUpdates;
+import cm.aptoide.pt.model.v7.store.GetHome;
+import cm.aptoide.pt.model.v7.store.GetHomeMeta;
 import cm.aptoide.pt.model.v7.store.GetStore;
 import cm.aptoide.pt.model.v7.store.GetStoreDisplays;
 import cm.aptoide.pt.model.v7.store.GetStoreMeta;
@@ -177,8 +181,11 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
         @Body ListAppsUpdatesRequest.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
+    @POST("home/get") Observable<GetHome> getHome(@Body GetHomeBody body,
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
+
     @POST("getStore{url}") Observable<GetStore> getStore(
-        @Path(value = "url", encoded = true) String path, @Body GetStoreRequest.Body body,
+        @Path(value = "url", encoded = true) String path, @Body GetStoreBody body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("getStoreDisplays{url}") Observable<GetStoreDisplays> getStoreDisplays(
@@ -187,6 +194,10 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
 
     @POST("getStoreWidgets{url}") Observable<GetStoreWidgets> getStoreWidgets(
         @Path(value = "url", encoded = true) String path, @Body GetStoreWidgetsRequest.Body body,
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("user/get{url}") Observable<GetStore> getUser(
+        @Path(value = "url", encoded = true) String path, @Body GetUserRequest.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("listStores/sort/{sort}/limit/{limit}") Observable<ListStores> listTopStores(
@@ -198,7 +209,7 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
         @Path(value = "url", encoded = true) String path, @Body ListStoresRequest.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("getStoreMeta{url}") Observable<GetStoreMeta> getStoreMeta(
+    @POST("home/getMeta{url}") Observable<GetHomeMeta> getStoreMeta(
         @Path(value = "url", encoded = true) String path, @Body GetStoreMetaRequest.Body body,
         @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 

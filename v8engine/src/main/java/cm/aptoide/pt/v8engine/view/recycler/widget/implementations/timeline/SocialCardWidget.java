@@ -16,6 +16,7 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.model.v7.timeline.UserTimeline;
 import cm.aptoide.pt.navigation.AccountNavigator;
@@ -32,6 +33,8 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
 
   private static final String TAG = SocialCardWidget.class.getName();
   private final LayoutInflater inflater;
+  protected ImageView userAvatar;
+  protected ImageView storeAvatar;
   private TextView comments;
   private LinearLayout like;
   private LikeButtonView likeButton;
@@ -60,6 +63,8 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
     sharedBy = (TextView) itemView.findViewById(R.id.social_shared_by);
     likePreviewContainer = (RelativeLayout) itemView.findViewById(
         R.id.displayable_social_timeline_likes_preview_container);
+    storeAvatar = (ImageView) itemView.findViewById(R.id.card_image);
+    userAvatar = (ImageView) itemView.findViewById(R.id.card_user_avatar);
   }
 
   @Override @CallSuper public void bindView(T displayable) {
@@ -149,6 +154,16 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
         .subscribe(click -> displayable.likesPreviewClick(getNavigationManager()), (throwable) -> {
           throwable.printStackTrace();
         }));
+
+    compositeSubscription.add(
+        Observable.merge(RxView.clicks(storeAvatar), RxView.clicks(userAvatar)).subscribe(click -> {
+          if (displayable.getStore() == null) {
+            openStore(displayable.getUser().getId(), "DEFAULT");
+          } else {
+            openStore(displayable.getStore().getName(),
+                displayable.getStore().getAppearance().getTheme());
+          }
+        }));
   }
 
   private Observable<Void> showComments(T displayable) {
@@ -216,5 +231,15 @@ abstract class SocialCardWidget<T extends SocialCardDisplayable> extends CardWid
         break;
       }
     }
+  }
+
+  private void openStore(long userId, String storeTheme) {
+    getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
+        .newStoreFragment(userId, storeTheme, Event.Name.getUserTimeline));
+  }
+
+  private void openStore(String storeName, String storeTheme) {
+    getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
+        .newStoreFragment(storeName, storeTheme, Event.Name.getUserTimeline));
   }
 }

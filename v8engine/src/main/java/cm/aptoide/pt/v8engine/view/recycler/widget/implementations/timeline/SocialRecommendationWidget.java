@@ -19,8 +19,6 @@ public class SocialRecommendationWidget extends SocialCardWidget<SocialRecommend
   private final String CARD_TYPE_NAME = "SOCIAL_RECOMMENDATION";
   private TextView storeName;
   private TextView userName;
-  private ImageView storeAvatar;
-  private ImageView userAvatar;
   private ImageView appIcon;
   private TextView appName;
   private TextView getApp;
@@ -35,8 +33,6 @@ public class SocialRecommendationWidget extends SocialCardWidget<SocialRecommend
     super.assignViews(itemView);
     storeName = (TextView) itemView.findViewById(R.id.card_title);
     userName = (TextView) itemView.findViewById(R.id.card_subtitle);
-    storeAvatar = (ImageView) itemView.findViewById(R.id.card_image);
-    userAvatar = (ImageView) itemView.findViewById(R.id.card_user_avatar);
     appName = (TextView) itemView.findViewById(
         R.id.displayable_social_timeline_recommendation_similar_apps);
     appIcon =
