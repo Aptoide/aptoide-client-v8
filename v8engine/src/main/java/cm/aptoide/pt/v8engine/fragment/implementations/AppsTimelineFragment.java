@@ -117,7 +117,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
 
   @Override public void bindViews(View view) {
     super.bindViews(view);
-    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
+    accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     accountNavigator = new AccountNavigator(getContext(), getNavigationManager(), accountManager);
     dateCalculator = new DateCalculator();
     spannableFactory = new SpannableFactory();
@@ -126,7 +126,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     packageRepository = new PackageRepository(getContext().getPackageManager());
     permissionManager = new PermissionManager();
     installer = new InstallerFactory().create(getContext(), InstallerFactory.ROLLBACK);
-    idsRepository = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
+    idsRepository =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
     timelineRepository = new TimelineRepository(getArguments().getString(ACTION_KEY),
         new TimelineCardFilter(new TimelineCardFilter.TimelineCardDuplicateFilter(new HashSet<>()),
             AccessorFactory.getAccessorFor(Installed.class)), idsRepository, accountManager);
@@ -198,8 +199,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
 
   @NonNull private Observable<Datalist<Displayable>> getFreshDisplayables(boolean refresh,
       List<String> packages) {
-    return getDisplayableList(packages, 0, refresh).doOnNext(
-        item -> getAdapter().clearDisplayables()).flatMap(displayableDatalist -> {
+    return getDisplayableList(packages, 0, refresh).doOnSubscribe(
+        () -> getAdapter().clearDisplayables()).flatMap(displayableDatalist -> {
       if (!displayableDatalist.getList().isEmpty()) {
         if (accountManager.isLoggedIn()) {
           return timelineRepository.getTimelineStats(refresh).map(timelineStats -> {
@@ -211,7 +212,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
             return displayableDatalist;
           });
         } else {
-          displayableDatalist.getList().add(0, new TimelineLoginDisplayable().setAccountNavigator(accountNavigator));
+          displayableDatalist.getList()
+              .add(0, new TimelineLoginDisplayable().setAccountNavigator(accountNavigator));
           return Observable.just(displayableDatalist);
         }
       } else {
@@ -366,8 +368,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
           timelineMetricsManager, socialRepository);
     } else if (card instanceof AppUpdate) {
       return AppUpdateDisplayable.from((AppUpdate) card, spannableFactory, downloadFactory,
-          dateCalculator, installManager, permissionManager, timelineMetricsManager,
-          socialRepository, idsRepository, accountManager);
+          dateCalculator, installManager, permissionManager, timelineMetricsManager, socialRepository,
+          idsRepository, accountManager);
     } else if (card instanceof Recommendation) {
       return RecommendationDisplayable.from((Recommendation) card, dateCalculator, spannableFactory,
           timelineMetricsManager, socialRepository);
@@ -378,8 +380,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
       return SocialInstallDisplayable.from((SocialInstall) card, timelineMetricsManager,
           spannableFactory, socialRepository, dateCalculator);
     } else if (card instanceof SocialRecommendation) {
-      return SocialRecommendationDisplayable.from((SocialRecommendation) card,
-          timelineMetricsManager, spannableFactory, socialRepository, dateCalculator);
+      return SocialRecommendationDisplayable.from((SocialRecommendation) card, timelineMetricsManager,
+          spannableFactory, socialRepository, dateCalculator);
     }
     throw new IllegalArgumentException(
         "Only articles, features, store latest apps, app updates, videos, recommendations and similar cards supported.");
