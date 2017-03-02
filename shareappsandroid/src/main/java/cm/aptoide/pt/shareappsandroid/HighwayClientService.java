@@ -66,6 +66,7 @@ public class HighwayClientService extends Service {
         i.setAction("ERRORRECEIVING");
 
         // TODO: 02-03-2017 neuro leaving the group Filipe
+        sendBroadcast(i);
         e.printStackTrace();
       }
 

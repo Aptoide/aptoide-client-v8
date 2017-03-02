@@ -56,6 +56,9 @@ public class TransferRecordPresenter implements Presenter {
       @Override public void onErrorReceiving() {
         //handling error
         view.showGeneralErrorToast(isHotspot);
+        recoverNetworkState();
+        cleanAPTXNetworks();
+        view.dismiss();
       }
     });
     setTransferRecordListener();
@@ -126,6 +129,19 @@ public class TransferRecordPresenter implements Presenter {
 
   @Override public void onStart() {
 
+  }
+
+  public void recoverNetworkState() {
+    if (connectionManager != null) {
+      connectionManager.recoverNetworkState();
+      view.showRecoveringWifiStateToast();
+    }
+  }
+
+  public void cleanAPTXNetworks() {
+    if (connectionManager != null) {
+      connectionManager.cleanNetworks();
+    }
   }
 
   private void setTransferRecordListener() {
@@ -236,18 +252,5 @@ public class TransferRecordPresenter implements Presenter {
 
   public void installApp(String filePath) {
     transferRecordManager.installApp(filePath);
-  }
-
-  public void recoverNetworkState() {
-    if (connectionManager != null) {
-      connectionManager.recoverNetworkState();
-      view.showRecoveringWifiStateToast();
-    }
-  }
-
-  public void cleanAPTXNetworks() {
-    if (connectionManager != null) {
-      connectionManager.cleanNetworks();
-    }
   }
 }
