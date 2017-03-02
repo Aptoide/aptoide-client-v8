@@ -46,6 +46,7 @@
       android:layout_marginLeft="20dp"
       android:layout_marginRight="20dp"
       android:layout_marginStart="20dp"
+      android:background="@drawable/addressbook_button_rectangle_shape"
       android:text="@string/addressbook_allow_friends_find" />
 
   <Button
@@ -57,5 +58,9 @@
       android:layout_marginLeft="20dp"
       android:layout_marginRight="20dp"
       android:layout_marginStart="20dp"
-      android:text="@string/done" />
+      android:layout_marginTop="5dp"
+      android:background="@drawable/addressbook_button_rectangle_orange_border_shape"
+      android:text="@string/done"
+      android:textColor="@color/default_color"
+      />
 </LinearLayout>
