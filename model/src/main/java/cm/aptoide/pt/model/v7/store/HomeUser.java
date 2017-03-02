@@ -9,15 +9,10 @@ import lombok.experimental.Accessors;
  * Created by trinkes on 23/02/2017.
  */
 @Data @Accessors(chain = true) public class HomeUser {
-  Stats stats;
   private long id;
   private String name;
   private String avatar;
   @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", timezone = "UTC") private Date added;
   @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", timezone = "UTC") private Date modified;
 
-  @Data public static class Stats {
-    long followers;
-    long following;
-  }
 }

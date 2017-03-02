@@ -13,5 +13,11 @@ import lombok.EqualsAndHashCode;
   @lombok.Data public static class Data {
     Store store;
     HomeUser user;
+    Stats stats;
+  }
+
+  @lombok.Data public static class Stats {
+    long followers;
+    long following;
   }
 }

@@ -86,9 +86,9 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
     storeUtilsProxy = new StoreUtilsProxy(
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext()),
         accountManager);
-    final GetHomeMeta getStoreMeta = displayable.getPojo();
-    final cm.aptoide.pt.model.v7.store.Store store = getStoreMeta.getData().getStore();
-    HomeUser user = getStoreMeta.getData().getUser();
+    final GetHomeMeta getHomeMeta = displayable.getPojo();
+    final cm.aptoide.pt.model.v7.store.Store store = getHomeMeta.getData().getStore();
+    HomeUser user = getHomeMeta.getData().getUser();
 
     if (store != null) {
       final StoreThemeEnum theme = StoreThemeEnum.get(
@@ -100,8 +100,9 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
           storeAccessor.get(store.getId()).toBlocking().firstOrDefault(null) != null;
 
       setupMainInfo(store.getName(), theme, context, store.getStats().getApps(),
-          store.getStats().getSubscribers(), store.getStats().getSubscribers(), true,
-          store.getAvatar(), R.drawable.ic_avatar_apps, R.drawable.ic_store);
+          getHomeMeta.getData().getStats().getFollowers(),
+          getHomeMeta.getData().getStats().getFollowing(), true, store.getAvatar(),
+          R.drawable.ic_avatar_apps, R.drawable.ic_store);
 
       updateSubscribeButtonText(isStoreSubscribed);
       compositeSubscription.add(RxView.clicks(subscribeButton)
@@ -134,9 +135,10 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
         }
       }
 
-      // TODO: 02/03/2017 trinkes check if user has store
       //check if the user is the store's owner
-      if (accountManager.getAccount().getStore().equals(store.getName())) {
+      if (accountManager.isLoggedIn() && accountManager.getAccount()
+          .getStore()
+          .equals(store.getName())) {
         description.setVisibility(View.VISIBLE);
         backgroundView.setVisibility(View.VISIBLE);
         if (TextUtils.isEmpty(store.getAppearance().getDescription())) {
@@ -159,7 +161,8 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
     } else {
 
       setupMainInfo(user.getName(), StoreThemeEnum.get("default"), getContext(),
-          user.getStats().getFollowers(), user.getStats().getFollowing(), user.getAvatar(),
+          getHomeMeta.getData().getStats().getFollowers(),
+          getHomeMeta.getData().getStats().getFollowing(), user.getAvatar(),
           R.drawable.user_default, R.drawable.user_shape_mini_icon);
       setSecondaryInfoVisibility(false);
       setDescriptionSectionVisibility(false);
