@@ -65,6 +65,7 @@ public class HighwayClientService extends Service {
         Intent i = new Intent();
         i.setAction("ERRORRECEIVING");
 
+        // TODO: 02-03-2017 neuro leaving the group Filipe
         e.printStackTrace();
       }
 
