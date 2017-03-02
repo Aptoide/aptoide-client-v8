@@ -1,7 +1,9 @@
 package cm.aptoide.pt.shareappsandroid;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -23,9 +25,33 @@ import java.util.List;
 public class ApplicationsManager {
 
   private Context context;
+  private BroadcastReceiver installNotificationReceiver;
+  private IntentFilter intentFilter;
 
   public ApplicationsManager(Context context) {
     this.context = context;
+    intentFilter = new IntentFilter();
+    intentFilter.addAction("INSTALL_APP_NOTIFICATION");
+    if (installNotificationReceiver == null) {
+      installNotificationReceiver = new BroadcastReceiver() {
+        @Override public void onReceive(Context context, Intent intent) {
+          if (intent.getAction() != null && intent.getAction().equals("INSTALL_APP_NOTIFICATION")) {
+            String filePath = intent.getStringExtra("filePath");
+            //move obbs
+            installApp(filePath);
+          }
+        }
+      };
+      context.registerReceiver(installNotificationReceiver, intentFilter);
+    }
+  }
+
+  public void installApp(String filePath) {
+
+    File f = new File(filePath);
+    Intent install = new Intent(Intent.ACTION_VIEW).setDataAndType(Uri.fromFile(f),
+        "application/vnd.android.package-archive");
+    context.startActivity(install);
   }
 
   public void deleteAppFile(String filePath) {
@@ -33,16 +59,6 @@ public class ApplicationsManager {
     if (fdelete.exists()) {
       fdelete.delete();
     }
-  }
-
-  public void installApp(String filePath) {
-    System.out.println(
-        "TransferRecordActivity : going to install the app with the following filepath : "
-            + filePath);
-    File f = new File(filePath);
-    Intent install = new Intent(Intent.ACTION_VIEW).setDataAndType(Uri.fromFile(f),
-        "application/vnd.android.package-archive");
-    context.startActivity(install);
   }
 
   public App convertTransferRecordItemToApp(HighwayTransferRecordItem item) {

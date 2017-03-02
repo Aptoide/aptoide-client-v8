@@ -5,7 +5,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -33,6 +32,7 @@ import static android.R.attr.id;
 
 public class HighwayClientService extends Service {
 
+  public static final int INSTALL_APP_NOTIFICATION_REQUEST_CODE = 147;
   private int port;
   private String serverIP;
   private ArrayList<App> listOfApps;
@@ -176,10 +176,12 @@ public class HighwayClientService extends Service {
           .setProgress(0, 0, false)
           .setAutoCancel(true);
 
-      File f = new File(receivedApkFilePath);
-      Intent install = new Intent(Intent.ACTION_VIEW).setDataAndType(Uri.fromFile(f),
-          "application/vnd.android.package-archive");
-      PendingIntent contentIntent = PendingIntent.getActivity(this, 0, install, 0);
+      Intent intent = new Intent();
+      intent.setAction("INSTALL_APP_NOTIFICATION");
+      intent.putExtra("filePath", receivedApkFilePath);
+      PendingIntent contentIntent =
+          PendingIntent.getBroadcast(this, INSTALL_APP_NOTIFICATION_REQUEST_CODE, intent,
+              PendingIntent.FLAG_CANCEL_CURRENT);
 
       ((Notification.Builder) mBuilderReceive).setContentIntent(contentIntent);
       if (mNotifyManager == null) {
