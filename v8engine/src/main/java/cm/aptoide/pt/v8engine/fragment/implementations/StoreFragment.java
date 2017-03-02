@@ -66,7 +66,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private Event.Name defaultTab;
   @Nullable private Long userId;
 
-
   public static StoreFragment newInstance(long userId, String storeTheme, Event.Name defaultTab) {
     Bundle args = new Bundle();
     args.putLong(BundleCons.USER_ID, userId);
@@ -102,6 +101,25 @@ public class StoreFragment extends BasePagerToolbarFragment {
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
   }
 
+  @Override public void onDestroy() {
+    super.onDestroy();
+    if (storeTheme != null) {
+      ThemeUtils.setStatusBarThemeColor(getActivity(),
+          StoreThemeEnum.get(V8Engine.getConfiguration().getDefaultTheme()));
+    }
+  }
+
+  @Override public void loadExtras(Bundle args) {
+    super.loadExtras(args);
+    storeName = args.getString(BundleCons.STORE_NAME);
+    storeContext = (StoreContext) args.get(BundleCons.STORE_CONTEXT);
+    storeTheme = args.getString(BundleCons.STORE_THEME);
+    defaultTab = (Event.Name) args.get(BundleCons.DEFAULT_TAB_TO_OPEN);
+    if (args.containsKey(BundleCons.USER_ID)) {
+      userId = args.getLong(BundleCons.USER_ID);
+    }
+  }
+
   @CallSuper @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
@@ -126,9 +144,12 @@ public class StoreFragment extends BasePagerToolbarFragment {
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .subscribe((getHome) -> {
             this.getHome = getHome;
-            getToolbar().setTitle(
-                storeName == null ? getHome.getNodes().getMeta().getData().getUser().getName()
-                    : storeName);
+            if (storeContext != StoreContext.home) {
+              storeName =
+                  storeName == null ? getHome.getNodes().getMeta().getData().getUser().getName()
+                      : storeName;
+              setupToolbarDetails(getToolbar());
+            }
             setupViewPager();
           }, (throwable) -> {
             if (throwable instanceof AptoideWsV7Exception) {
@@ -212,24 +233,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override protected PagerAdapter createPagerAdapter() {
     return new StorePagerAdapter(getChildFragmentManager(), getHome, storeContext);
-  }
-  @Override public void onDestroy() {
-    super.onDestroy();
-    if (storeTheme != null) {
-      ThemeUtils.setStatusBarThemeColor(getActivity(),
-          StoreThemeEnum.get(V8Engine.getConfiguration().getDefaultTheme()));
-    }
-  }
-
-  @Override public void loadExtras(Bundle args) {
-    super.loadExtras(args);
-    storeName = args.getString(BundleCons.STORE_NAME);
-    storeContext = (StoreContext) args.get(BundleCons.STORE_CONTEXT);
-    storeTheme = args.getString(BundleCons.STORE_THEME);
-    defaultTab = (Event.Name) args.get(BundleCons.DEFAULT_TAB_TO_OPEN);
-    if (args.containsKey(BundleCons.USER_ID)) {
-      userId = args.getLong(BundleCons.USER_ID);
-    }
   }
 
   @Override public int getContentViewId() {
