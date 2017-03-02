@@ -5,7 +5,9 @@
 
 package cm.aptoide.pt.v8engine.view.recycler.widget.implementations.grid;
 
+import android.content.Context;
 import android.content.DialogInterface;
+import android.support.annotation.NonNull;
 import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -13,7 +15,6 @@ import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import cm.aptoide.pt.actions.PermissionService;
@@ -38,7 +39,6 @@ import com.jakewharton.rxbinding.view.RxView;
 import rx.Observable;
 import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 
 /**
  * Created by neuro on 17-05-2016.
@@ -56,8 +56,7 @@ import rx.functions.Action1;
   private TextView updateVernameTextView;
   private TextView textUpdateLayout;
   private ViewGroup updateButtonLayout;
-  private UpdateDisplayable displayable;
-  private LinearLayout updateLayout;
+  //private UpdateDisplayable displayable;
   private ProgressBar progressBar;
 
   private UpdateRepository updateRepository;
@@ -73,86 +72,83 @@ import rx.functions.Action1;
     installedVernameTextView = (TextView) itemView.findViewById(R.id.app_installed_version);
     updateVernameTextView = (TextView) itemView.findViewById(R.id.app_update_version);
     updateButtonLayout = (ViewGroup) itemView.findViewById(R.id.updateButtonLayout);
-    updateLayout = (LinearLayout) itemView.findViewById(R.id.update_layout);
     imgUpdateLayout = (ImageView) itemView.findViewById(R.id.img_update_layout);
     textUpdateLayout = (TextView) itemView.findViewById(R.id.text_update_layout);
-    progressBar = (ProgressBar) itemView.findViewById(R.id.progress_bar);
+    progressBar = (ProgressBar) itemView.findViewById(R.id.row_progress_bar);
 
     updateRepository = RepositoryFactory.getUpdateRepository(getContext());
   }
 
-  @Override public void bindView(UpdateDisplayable updateDisplayable) {
-    this.displayable = updateDisplayable;
-    final String packageName = updateDisplayable.getPackageName();
-    final InstalledAccessor accessor = AccessorFactory.getAccessorFor(Installed.class);
+  @Override public void unbindView() {
+    showProgress(false);
+    super.unbindView();
+  }
 
-    compositeSubscription.add(accessor.get(packageName)
-        .first()
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(installed -> installedVernameTextView.setText(installed.getVersionName()),
-            throwable -> throwable.printStackTrace()));
+  @Override public void bindView(UpdateDisplayable updateDisplayable) {
+    FragmentActivity context = getContext();
 
     labelTextView.setText(updateDisplayable.getLabel());
     updateVernameTextView.setText(updateDisplayable.getUpdateVersionName());
-    final FragmentActivity context = getContext();
+
+    // load row image
     ImageLoader.with(context).load(updateDisplayable.getIcon(), iconImageView);
 
-    compositeSubscription.add(RxView.clicks(updateRowRelativeLayout).subscribe(v -> {
+    final Observable<Void> handleUpdateButtonClick =
+        handleUpdateButtonClick(updateDisplayable, context);
+
+    final Observable<Void> showInstalledVersionName =
+        showInstalledVersionName(updateDisplayable.getPackageName(),
+            AccessorFactory.getAccessorFor(Installed.class));
+
+    final Observable<Void> showProgress =
+        showProgress(updateDisplayable.getInstallManager(), updateDisplayable.getMd5());
+
+    final Observable<Void> handleLongClicks =
+        handleLongClicks(updateDisplayable.getPackageName(), context);
+
+    final Observable<Void> handleUpdateRowClick = handleUpdateRowClick(updateDisplayable);
+
+    compositeSubscription.add(
+        Observable.merge(handleUpdateButtonClick, showInstalledVersionName, showProgress,
+            handleLongClicks, handleUpdateRowClick)
+            .subscribe(__ -> {/* do nothing */}, err -> CrashReport.getInstance().log(err)));
+  }
+
+  private Observable<Void> handleUpdateButtonClick(UpdateDisplayable displayable, Context context) {
+    return RxView.clicks(updateButtonLayout)
+        .flatMap(click -> displayable.downloadAndInstall(context, (PermissionService) context))
+        .retry()
+        .map(__ -> null);
+  }
+
+  private Observable<Void> showInstalledVersionName(String packageName,
+      InstalledAccessor accessor) {
+    return accessor.get(packageName)
+        .first()
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(installed -> installedVernameTextView.setText(installed.getVersionName()))
+        .map(__ -> null);
+  }
+
+  @NonNull private Observable<Void> showProgress(InstallManager installManager, String md5) {
+    return getUpdateProgress(installManager, md5).map(
+        downloadProgress -> isDownloadingOrInstalling(downloadProgress))
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(shouldShow -> showProgress(shouldShow))
+        .map(__ -> null);
+  }
+
+  private Observable<Void> handleLongClicks(String packageName, FragmentActivity context) {
+    return RxView.longClicks(updateRowRelativeLayout)
+        .flatMap(__ -> getLongClickListener(packageName, context));
+  }
+
+  @NonNull private Observable<Void> handleUpdateRowClick(UpdateDisplayable updateDisplayable) {
+    return RxView.clicks(updateRowRelativeLayout).doOnNext(v -> {
       final Fragment fragment = V8Engine.getFragmentProvider()
           .newAppViewFragment(updateDisplayable.getAppId(), updateDisplayable.getPackageName());
       getNavigationManager().navigateTo(fragment);
-    }, throwable -> throwable.printStackTrace()));
-
-    final Action1<Void> longClickListener = __ -> {
-      AlertDialog.Builder builder = new AlertDialog.Builder(context);
-      builder.setTitle(R.string.ignore_update)
-          .setCancelable(true)
-          .setNegativeButton(R.string.no, null)
-          .setPositiveButton(R.string.yes, (dialog, which) -> {
-            if (which == DialogInterface.BUTTON_POSITIVE) {
-              compositeSubscription.add(updateRepository.setExcluded(packageName, true)
-                  .subscribe(success -> Logger.d(TAG,
-                      String.format("Update with package name %s was excluded", packageName)),
-                      throwable -> {
-                        ShowMessage.asSnack(context, R.string.unknown_error);
-                        CrashReport.getInstance().log(throwable);
-                      }));
-            }
-            dialog.dismiss();
-          });
-
-      builder.create().show();
-    };
-
-    compositeSubscription.add(RxView.longClicks(updateRowRelativeLayout)
-        .subscribe(longClickListener, throwable -> throwable.printStackTrace()));
-    compositeSubscription.add(RxView.clicks(updateButtonLayout)
-        .flatMap(
-            click -> displayable.downloadAndInstall(context, (PermissionService) context))
-        .retry()
-        .subscribe(o -> {
-        }, throwable -> throwable.printStackTrace()));
-
-    // FIXME: 24/1/2017 sithengineer do individual progress tracking
-    //compositeSubscription.add(displayable.getUpdates()
-    //    .filter(downloadProgress -> downloadProgress.getRequest()
-    //        .getMd5()
-    //        .equals(displayable.getDownload().getMd5()))
-    //    .map(downloadProgress -> displayable.isDownloadingOrInstalling(downloadProgress))
-    //    .observeOn(AndroidSchedulers.mainThread())
-    //    .subscribe(shouldShow -> showProgress(shouldShow),
-    //        throwable -> throwable.printStackTrace()));
-
-    // create the download object and listen to changes to it...
-
-    final InstallManager installManager = displayable.getInstallManager();
-    final String md5 = displayable.getMd5();
-
-    compositeSubscription.add(
-        getUpdateProgress(installManager, md5).observeOn(AndroidSchedulers.mainThread())
-            .map(downloadProgress -> isDownloadingOrInstalling(downloadProgress))
-            .subscribe(shouldShow -> showProgress(shouldShow),
-                throwable -> throwable.printStackTrace()));
+    });
   }
 
   /**
@@ -192,5 +188,30 @@ import rx.functions.Action1;
       imgUpdateLayout.setVisibility(View.VISIBLE);
       progressBar.setVisibility(View.GONE);
     }
+  }
+
+  @NonNull
+  private Observable<Void> getLongClickListener(String packageName, FragmentActivity context) {
+    return Observable.fromCallable(() -> {
+      AlertDialog.Builder builder = new AlertDialog.Builder(context);
+      builder.setTitle(R.string.ignore_update)
+          .setCancelable(true)
+          .setNegativeButton(R.string.no, null)
+          .setPositiveButton(R.string.yes, (dialog, which) -> {
+            if (which == DialogInterface.BUTTON_POSITIVE) {
+              compositeSubscription.add(updateRepository.setExcluded(packageName, true)
+                  .subscribe(success -> Logger.d(TAG,
+                      String.format("Update with package name %s was excluded", packageName)),
+                      throwable -> {
+                        ShowMessage.asSnack(context, R.string.unknown_error);
+                        CrashReport.getInstance().log(throwable);
+                      }));
+            }
+            dialog.dismiss();
+          });
+
+      builder.create().show();
+      return null;
+    });
   }
 }
