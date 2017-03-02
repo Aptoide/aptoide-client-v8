@@ -46,7 +46,7 @@ import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.repository.PackageRepository;
 import cm.aptoide.pt.v8engine.repository.SocialRepository;
 import cm.aptoide.pt.v8engine.repository.TimelineCardFilter;
-import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
+import cm.aptoide.pt.v8engine.repository.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.repository.TimelineRepository;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
@@ -100,7 +100,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
   private Installer installer;
   private InstallManager installManager;
   private PermissionManager permissionManager;
-  private TimelineMetricsManager timelineMetricsManager;
+  private TimelineAnalytics timelineAnalytics;
   private SocialRepository socialRepository;
   private AptoideAccountManager accountManager;
   private IdsRepositoryImpl idsRepository;
@@ -132,7 +132,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
         new TimelineCardFilter(new TimelineCardFilter.TimelineCardDuplicateFilter(new HashSet<>()),
             AccessorFactory.getAccessorFor(Installed.class)), idsRepository, accountManager);
     installManager = new InstallManager(AptoideDownloadManager.getInstance(), installer);
-    timelineMetricsManager = new TimelineMetricsManager(accountManager, Analytics.getInstance());
+    timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(), accountManager,
+        idsRepository.getUniqueIdentifier());
     socialRepository = new SocialRepository(accountManager, idsRepository);
   }
 
@@ -348,39 +349,39 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
       LinksHandlerFactory linksHandlerFactory) {
     if (card instanceof Article) {
       return ArticleDisplayable.from((Article) card, dateCalculator, spannableFactory,
-          linksHandlerFactory, timelineMetricsManager, socialRepository);
+          linksHandlerFactory, timelineAnalytics, socialRepository);
     } else if (card instanceof Video) {
       return VideoDisplayable.from((Video) card, dateCalculator, spannableFactory,
-          linksHandlerFactory, timelineMetricsManager, socialRepository);
+          linksHandlerFactory, timelineAnalytics, socialRepository);
     } else if (card instanceof SocialArticle) {
       return SocialArticleDisplayable.from(((SocialArticle) card), dateCalculator, spannableFactory,
-          linksHandlerFactory, timelineMetricsManager, socialRepository);
+          linksHandlerFactory, timelineAnalytics, socialRepository);
     } else if (card instanceof SocialVideo) {
       return SocialVideoDisplayable.from(((SocialVideo) card), dateCalculator, spannableFactory,
-          linksHandlerFactory, timelineMetricsManager, socialRepository);
+          linksHandlerFactory, timelineAnalytics, socialRepository);
     } else if (card instanceof SocialStoreLatestApps) {
       return SocialStoreLatestAppsDisplayable.from((SocialStoreLatestApps) card, dateCalculator,
-          timelineMetricsManager, socialRepository, spannableFactory);
+          timelineAnalytics, socialRepository, spannableFactory);
     } else if (card instanceof Feature) {
       return FeatureDisplayable.from((Feature) card, dateCalculator, spannableFactory);
     } else if (card instanceof StoreLatestApps) {
       return StoreLatestAppsDisplayable.from((StoreLatestApps) card, dateCalculator,
-          timelineMetricsManager, socialRepository);
+          timelineAnalytics, socialRepository);
     } else if (card instanceof AppUpdate) {
       return AppUpdateDisplayable.from((AppUpdate) card, spannableFactory, downloadFactory,
-          dateCalculator, installManager, permissionManager, timelineMetricsManager, socialRepository,
+          dateCalculator, installManager, permissionManager, timelineAnalytics, socialRepository,
           idsRepository, accountManager);
     } else if (card instanceof Recommendation) {
       return RecommendationDisplayable.from((Recommendation) card, dateCalculator, spannableFactory,
-          timelineMetricsManager, socialRepository);
+          timelineAnalytics, socialRepository);
     } else if (card instanceof Similar) {
       return SimilarDisplayable.from((Similar) card, dateCalculator, spannableFactory,
-          timelineMetricsManager, socialRepository);
+          timelineAnalytics, socialRepository);
     } else if (card instanceof SocialInstall) {
-      return SocialInstallDisplayable.from((SocialInstall) card, timelineMetricsManager,
+      return SocialInstallDisplayable.from((SocialInstall) card, timelineAnalytics,
           spannableFactory, socialRepository, dateCalculator);
     } else if (card instanceof SocialRecommendation) {
-      return SocialRecommendationDisplayable.from((SocialRecommendation) card, timelineMetricsManager,
+      return SocialRecommendationDisplayable.from((SocialRecommendation) card, timelineAnalytics,
           spannableFactory, socialRepository, dateCalculator);
     }
     throw new IllegalArgumentException(

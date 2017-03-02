@@ -7,14 +7,13 @@ import android.text.Spannable;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.timeline.Article;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.link.Link;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.repository.SocialRepository;
-import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
+import cm.aptoide.pt.v8engine.repository.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.DateCalculator;
 import java.util.ArrayList;
@@ -29,6 +28,7 @@ import rx.schedulers.Schedulers;
  */
 public class ArticleDisplayable extends CardDisplayable {
 
+  public static final String CARD_TYPE_NAME = "ARTICLE";
   @Getter private String cardId;
   @Getter private String articleTitle;
   @Getter private Link link;
@@ -44,7 +44,7 @@ public class ArticleDisplayable extends CardDisplayable {
   private Date date;
   private DateCalculator dateCalculator;
   private SpannableFactory spannableFactory;
-  private TimelineMetricsManager timelineMetricsManager;
+  private TimelineAnalytics timelineAnalytics;
   private SocialRepository socialRepository;
 
   public ArticleDisplayable() {
@@ -53,7 +53,7 @@ public class ArticleDisplayable extends CardDisplayable {
   public ArticleDisplayable(Article article, String cardId, String articleTitle, Link link,
       Link developerLink, String title, String thumbnailUrl, String avatarUrl, long appId,
       String abUrl, List<App> relatedToAppsList, Date date, DateCalculator dateCalculator,
-      SpannableFactory spannableFactory, TimelineMetricsManager timelineMetricsManager,
+      SpannableFactory spannableFactory, TimelineAnalytics timelineAnalytics,
       SocialRepository socialRepository) {
     super(article);
     this.cardId = cardId;
@@ -69,13 +69,13 @@ public class ArticleDisplayable extends CardDisplayable {
     this.date = date;
     this.dateCalculator = dateCalculator;
     this.spannableFactory = spannableFactory;
-    this.timelineMetricsManager = timelineMetricsManager;
+    this.timelineAnalytics = timelineAnalytics;
     this.socialRepository = socialRepository;
   }
 
   public static ArticleDisplayable from(Article article, DateCalculator dateCalculator,
       SpannableFactory spannableFactory, LinksHandlerFactory linksHandlerFactory,
-      TimelineMetricsManager timelineMetricsManager, SocialRepository socialRepository) {
+      TimelineAnalytics timelineAnalytics, SocialRepository socialRepository) {
     long appId = 0;
     //if (article.getApps() != null && article.getApps().size() > 0) {
     //  appName = article.getApps().get(0).getName();
@@ -95,8 +95,7 @@ public class ArticleDisplayable extends CardDisplayable {
         linksHandlerFactory.get(LinksHandlerFactory.CUSTOM_TABS_LINK_TYPE,
             article.getPublisher().getBaseUrl()), article.getPublisher().getName(),
         article.getThumbnailUrl(), article.getPublisher().getLogoUrl(), appId, abTestingURL,
-        article.getApps(), article.getDate(), dateCalculator, spannableFactory,
-        timelineMetricsManager, socialRepository);
+        article.getApps(), article.getDate(), dateCalculator, spannableFactory, timelineAnalytics, socialRepository);
   }
 
   public Observable<List<Installed>> getRelatedToApplication() {
@@ -134,8 +133,9 @@ public class ArticleDisplayable extends CardDisplayable {
         ContextCompat.getColor(context, R.color.appstimeline_grey), appName);
   }
 
-  public void sendOpenArticleEvent(SendEventRequest.Body.Data data, String eventName) {
-    timelineMetricsManager.sendEvent(data, eventName);
+  public void sendOpenArticleEvent(String packageName) {
+    timelineAnalytics.sendOpenArticleEvent(ArticleDisplayable.CARD_TYPE_NAME, getTitle(),
+        getLink().getUrl(), packageName);
   }
 
   @Override public int getViewLayout() {

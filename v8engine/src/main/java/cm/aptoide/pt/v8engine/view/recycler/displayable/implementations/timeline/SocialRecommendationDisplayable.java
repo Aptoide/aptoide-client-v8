@@ -3,15 +3,15 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timelin
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
-import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.model.v7.Comment;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.model.v7.timeline.SocialRecommendation;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.TimelineEvent;
 import cm.aptoide.pt.v8engine.repository.SocialRepository;
-import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
+import cm.aptoide.pt.v8engine.repository.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.DateCalculator;
@@ -31,7 +31,7 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
   @Getter private String appIcon;
   @Getter private String abUrl;
 
-  private TimelineMetricsManager timelineMetricsManager;
+  private TimelineAnalytics timelineAnalytics;
   private SpannableFactory spannableFactory;
   private SocialRepository socialRepository;
 
@@ -41,7 +41,7 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
   public SocialRecommendationDisplayable(SocialRecommendation socialRecommendation,
       int avatarResource, Store store, int titleResource, Comment.User user, long appId,
       String packageName, String appName, String appIcon, String abUrl, long numberOfLikes,
-      long numberOfComments, TimelineMetricsManager timelineMetricsManager,
+      long numberOfComments, TimelineAnalytics timelineAnalytics,
       SpannableFactory spannableFactory, SocialRepository socialRepository,
       DateCalculator dateCalculator) {
     super(socialRecommendation, numberOfLikes, numberOfComments, store,
@@ -56,13 +56,13 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
     this.appName = appName;
     this.appIcon = appIcon;
     this.abUrl = abUrl;
-    this.timelineMetricsManager = timelineMetricsManager;
+    this.timelineAnalytics = timelineAnalytics;
     this.spannableFactory = spannableFactory;
     this.socialRepository = socialRepository;
   }
 
   public static Displayable from(SocialRecommendation socialRecommendation,
-      TimelineMetricsManager timelineMetricsManager, SpannableFactory spannableFactory,
+      TimelineAnalytics timelineAnalytics, SpannableFactory spannableFactory,
       SocialRepository socialRepository, DateCalculator dateCalculator) {
 
     //for (App similarApp : socialRecommendation.getSimilarApps()) {
@@ -85,7 +85,7 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
         socialRecommendation.getApp().getPackageName(), socialRecommendation.getApp().getName(),
         socialRecommendation.getApp().getIcon(), abTestingURL,
         socialRecommendation.getStats().getLikes(), socialRecommendation.getStats().getComments(),
-        timelineMetricsManager, spannableFactory, socialRepository, dateCalculator);
+        timelineAnalytics, spannableFactory, socialRepository, dateCalculator);
   }
 
   public String getTitle() {
@@ -103,8 +103,8 @@ public class SocialRecommendationDisplayable extends SocialCardDisplayable {
     return R.layout.displayable_social_timeline_social_recommendation;
   }
 
-  public void sendClickEvent(SendEventRequest.Body.Data data, String eventName) {
-    timelineMetricsManager.sendEvent(data, eventName);
+  public void sendClickEvent(TimelineEvent event) {
+    timelineAnalytics.sendEvent(event);
   }
 
   @Override public void share(Context context, boolean privacyResult) {
