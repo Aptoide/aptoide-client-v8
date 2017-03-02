@@ -30,8 +30,8 @@ public class HighwayRadarTextView extends FrameLayout
   private int width;
   private int height;
   private int mode = HighwayRadarRippleView.MODE_OUT;
-  private int fontColor = 0xff0000ff;
-  private int shadowColor = 0xdd696969;
+  private int fontColor = getResources().getColor(R.color.aptoide_orange_700);
+  private int shadowColor = getResources().getColor(R.color.aptoide_orange_700);
   private OnRippleViewClickListener onRippleOutViewClickListener;
   private List<HighwayRadarRippleView> listOfHotspot;
   private List<HighwayRadarLowElement> listOfHotspotLow;
@@ -163,8 +163,8 @@ public class HighwayRadarTextView extends FrameLayout
                 }
                 //select o novo
                 activity.setChosenHotspot(keyword);
-                txt.setShadowLayer(1, 1, 1, 0xddff9800);
-                txt.setTextColor(0xffff9800);
+                txt.setShadowLayer(1, 1, 1, 0xdd696969);
+                txt.setTextColor(0xff0000ff);
 
                 if (size == 1) {
                   activity.joinSingleHotspot();

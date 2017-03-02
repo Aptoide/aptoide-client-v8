@@ -4,7 +4,6 @@ import android.animation.ObjectAnimator;
 import android.animation.TypeEvaluator;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.animation.LinearInterpolator;
@@ -18,7 +17,7 @@ public class HighwayRadarRippleView extends TextView {
   public static final int MODE_IN = 1;
   public static final int MODE_OUT = 2;
   private int mode = MODE_OUT;
-  private int effectColor = Color.rgb(0x33, 0x99, 0xcc);
+  private int effectColor = getResources().getColor(R.color.aptoide_orange);
   private int minumumSize = 200;
   private int currentProgress = 0;
   private int numberOfRipples = 4;
