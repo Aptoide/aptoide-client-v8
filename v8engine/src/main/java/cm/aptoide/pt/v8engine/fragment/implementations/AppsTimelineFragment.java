@@ -210,7 +210,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
             getArguments().containsKey(USER_ID_KEY) ? getArguments().getLong(USER_ID_KEY) : null;
         return timelineRepository.getTimelineStats(refresh, userId).map(timelineStats -> {
           displayableDatalist.getList()
-              .add(0, new TimeLineStatsDisplayable(timelineStats, spannableFactory, storeTheme));
+              .add(0, new TimeLineStatsDisplayable(timelineStats, spannableFactory, storeTheme,
+                  userId == null));
           return displayableDatalist;
         }).onErrorReturn(throwable -> {
           CrashReport.getInstance().log(throwable);

@@ -16,6 +16,7 @@ public class TimeLineStatsWidget extends Widget<TimeLineStatsDisplayable> {
   private TextView followers;
   private TextView following;
   private TextView followFriends;
+  private View addFriendsLayout;
 
   public TimeLineStatsWidget(View itemView) {
     super(itemView);
@@ -25,6 +26,7 @@ public class TimeLineStatsWidget extends Widget<TimeLineStatsDisplayable> {
     followers = (TextView) itemView.findViewById(R.id.followers);
     following = (TextView) itemView.findViewById(R.id.following);
     followFriends = (TextView) itemView.findViewById(R.id.follow_friends_button);
+    addFriendsLayout = itemView.findViewById(R.id.add_friends_layout);
   }
 
   @Override public void bindView(TimeLineStatsDisplayable displayable) {
@@ -42,5 +44,8 @@ public class TimeLineStatsWidget extends Widget<TimeLineStatsDisplayable> {
         .subscribe(click -> displayable.followFriendsClick(getNavigationManager()), err -> {
           CrashReport.getInstance().log(err);
         }));
+    if (!displayable.isShouldShowAddFriends()) {
+      addFriendsLayout.setVisibility(View.GONE);
+    }
   }
 }

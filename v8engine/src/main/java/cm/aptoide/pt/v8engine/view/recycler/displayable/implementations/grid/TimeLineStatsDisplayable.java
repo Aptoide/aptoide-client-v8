@@ -12,6 +12,7 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.implementations.TimeLineFollowFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
+import lombok.Getter;
 
 /**
  * Created by trinkes on 15/12/2016.
@@ -21,15 +22,17 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
 
   private SpannableFactory spannableFactory;
   private String storeTheme;
+  @Getter private boolean shouldShowAddFriends;
 
   public TimeLineStatsDisplayable() {
   }
 
   public TimeLineStatsDisplayable(TimelineStats pojo, SpannableFactory spannableFactory,
-      String storeTheme) {
+      String storeTheme, boolean shouldShowAddFriends) {
     super(pojo);
     this.spannableFactory = spannableFactory;
     this.storeTheme = storeTheme;
+    this.shouldShowAddFriends = shouldShowAddFriends;
   }
 
   @Override protected Configs getConfig() {
