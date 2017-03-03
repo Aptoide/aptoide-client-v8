@@ -3,6 +3,9 @@ package cm.aptoide.pt.v8engine.repository;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.AptoideEvent;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.FacebookEvent;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.LocalyticsEvent;
+import com.facebook.appevents.AppEventsLogger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,15 +22,23 @@ public class TimelineAnalytics {
   private static final String OPEN_STORE = "OPEN_STORE";
   private static final String OPEN_APP = "OPEN_APP";
   private static final String UPDATE_APP = "UPDATE_APP";
+  private static final String FOLLOW_FRIENDS = "Apps_Timeline_Follow_Friends";
   private final Analytics analytics;
   private final AptoideAccountManager accountManager;
-  private String uniqueIdentifier;
+  private final AppEventsLogger facebook;
+  private final String uniqueIdentifier;
 
   public TimelineAnalytics(Analytics analytics, AptoideAccountManager accountManager,
-      String uniqueIdentifier) {
+      AppEventsLogger facebook, String uniqueIdentifier) {
     this.analytics = analytics;
     this.accountManager = accountManager;
+    this.facebook = facebook;
     this.uniqueIdentifier = uniqueIdentifier;
+  }
+
+  public void sendFollowFriendsEvent() {
+    analytics.sendEvent(new FacebookEvent(facebook, FOLLOW_FRIENDS));
+    analytics.sendEvent(new LocalyticsEvent(FOLLOW_FRIENDS));
   }
 
   public void sendOpenAppEvent(String cardType, String source, String packageName) {

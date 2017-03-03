@@ -69,6 +69,7 @@ import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.StoreLatestAppsDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.VideoDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.listeners.RxEndlessRecyclerView;
+import com.facebook.appevents.AppEventsLogger;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -133,6 +134,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
             AccessorFactory.getAccessorFor(Installed.class)), idsRepository, accountManager);
     installManager = new InstallManager(AptoideDownloadManager.getInstance(), installer);
     timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(), accountManager,
+        AppEventsLogger.newLogger(getContext().getApplicationContext()),
         idsRepository.getUniqueIdentifier());
     socialRepository = new SocialRepository(accountManager, idsRepository);
   }
@@ -206,7 +208,8 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
         if (accountManager.isLoggedIn()) {
           return timelineRepository.getTimelineStats(refresh).map(timelineStats -> {
             displayableDatalist.getList()
-                .add(0, new TimeLineStatsDisplayable(timelineStats, spannableFactory, storeTheme));
+                .add(0, new TimeLineStatsDisplayable(timelineStats, spannableFactory, storeTheme,
+                    timelineAnalytics));
             return displayableDatalist;
           }).onErrorReturn(throwable -> {
             CrashReport.getInstance().log(throwable);
