@@ -89,7 +89,8 @@ public class HighwayClientService extends Service {
       @Override public void onFinishReceiving(AndroidAppInfo androidAppInfo) {
         System.out.println(" Finished receiving " + androidAppInfo);
 
-        finishReceiveNotification(androidAppInfo.getApk().getFilePath());
+        finishReceiveNotification(androidAppInfo.getApk().getFilePath(),
+            androidAppInfo.getPackageName());
 
         Intent i = new Intent();
         i.putExtra("FinishedReceiving", true);
@@ -171,7 +172,7 @@ public class HighwayClientService extends Service {
     }
   }
 
-  private void finishReceiveNotification(String receivedApkFilePath) {
+  private void finishReceiveNotification(String receivedApkFilePath, String packageName) {
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
       ((Notification.Builder) mBuilderReceive).setContentText(
@@ -184,6 +185,7 @@ public class HighwayClientService extends Service {
       Intent intent = new Intent();
       intent.setAction("INSTALL_APP_NOTIFICATION");
       intent.putExtra("filePath", receivedApkFilePath);
+      intent.putExtra("packageName", packageName);
       PendingIntent contentIntent =
           PendingIntent.getBroadcast(this, INSTALL_APP_NOTIFICATION_REQUEST_CODE, intent,
               PendingIntent.FLAG_CANCEL_CURRENT);

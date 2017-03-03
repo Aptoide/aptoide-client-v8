@@ -157,11 +157,12 @@ public class TransferRecordPresenter implements Presenter {
 
         String appName = item.getAppName();
         String filePath = item.getFilePath();
+        String packageName = item.getPackageName();
         if (filePath.equals("Could not read the original filepath")) {
           view.showInstallErrorDialog(appName);
         } else {
           System.out.println("I will install the app " + appName);
-          view.showDialogToInstall(appName, filePath);
+          view.showDialogToInstall(appName, filePath, packageName);
         }
       }
 
@@ -257,7 +258,7 @@ public class TransferRecordPresenter implements Presenter {
     view.notifyChanged();
   }
 
-  public void installApp(String filePath) {
-    transferRecordManager.installApp(filePath);
+  public void installApp(String filePath, String packageName) {
+    transferRecordManager.installApp(filePath, packageName);
   }
 }

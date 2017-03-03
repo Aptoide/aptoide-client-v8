@@ -813,12 +813,13 @@ public class HighwayTransferRecordActivity extends ActivityView
     return dialog;
   }
 
-  @Override public void showDialogToInstall(String appName, String filePath) {
-    Dialog dialog = createDialogToInstall(appName, filePath);
+  @Override public void showDialogToInstall(String appName, String filePath, String packageName) {
+    Dialog dialog = createDialogToInstall(appName, filePath, packageName);
     dialog.show();
   }
 
-  public Dialog createDialogToInstall(final String appName, final String filePath) {
+  public Dialog createDialogToInstall(final String appName, final String filePath,
+      final String packageName) {
     String message = String.format(getResources().getString(R.string.alertInstallApp), appName);
 
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -828,7 +829,7 @@ public class HighwayTransferRecordActivity extends ActivityView
     builder.setPositiveButton(getResources().getString(R.string.install),
         new DialogInterface.OnClickListener() {
           public void onClick(DialogInterface dialog, int id) {
-            presenter.installApp(filePath);
+            presenter.installApp(filePath, packageName);
           }
         })
         .setNegativeButton(getResources().getString(R.string.cancel),

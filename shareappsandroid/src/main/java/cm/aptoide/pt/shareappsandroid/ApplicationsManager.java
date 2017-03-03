@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.Nullable;
+import cm.aptoide.pt.utils.FileUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,12 +38,37 @@ public class ApplicationsManager {
         @Override public void onReceive(Context context, Intent intent) {
           if (intent.getAction() != null && intent.getAction().equals("INSTALL_APP_NOTIFICATION")) {
             String filePath = intent.getStringExtra("filePath");
+            String packageName = intent.getStringExtra("packageName");
             //move obbs
+
+            moveObbs(filePath, packageName);
+
             installApp(filePath);
           }
         }
       };
       context.registerReceiver(installNotificationReceiver, intentFilter);
+    }
+  }
+
+  public void moveObbs(String filePath, String packageName) {
+
+    FileUtils fileUtils = new FileUtils();
+    String obbsFilePath =
+        Environment.getExternalStoragePublicDirectory("/") + "/Android/Obb/" + packageName + "/";
+    String appFolderPath = getAppFolder(filePath);
+    File appFolder = new File(appFolderPath);
+    File[] filesList = appFolder.listFiles();
+
+    for (File file : filesList) {
+      String fileName = file.getName();
+      if (fileName.endsWith("obb")) {
+        String[] fileNameArray = fileName.split("\\.");
+        String prefix = fileNameArray[0];
+        if (prefix.equalsIgnoreCase("main") || prefix.equalsIgnoreCase("patch")) {
+          fileUtils.copyFile(appFolderPath, obbsFilePath, fileName);
+        }
+      }
     }
   }
 
@@ -52,6 +78,15 @@ public class ApplicationsManager {
     Intent install = new Intent(Intent.ACTION_VIEW).setDataAndType(Uri.fromFile(f),
         "application/vnd.android.package-archive");
     context.startActivity(install);
+  }
+
+  private String getAppFolder(String filePath) {
+    String[] filePathArray = filePath.split("/");
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < filePathArray.length - 1; i++) {
+      sb.append(filePathArray[i] + "/");
+    }
+    return sb.toString();
   }
 
   public void deleteAppFile(String filePath) {

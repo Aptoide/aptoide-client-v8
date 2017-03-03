@@ -33,7 +33,7 @@ public interface HighwayTransferRecordView {
 
   void showInstallErrorDialog(String appName);
 
-  void showDialogToInstall(String appName, String filePath);
+  void showDialogToInstall(String appName, String filePath, String packageName);
 
   void showDialogToDelete(HighwayTransferRecordItem item);
 
