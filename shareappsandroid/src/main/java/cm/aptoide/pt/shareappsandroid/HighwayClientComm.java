@@ -271,7 +271,8 @@ public class HighwayClientComm extends Service {
                 + ":-:"
                 + numberOfObbFiles);
           } catch (IOException e) {
-            AnalyticsLite.transferClick("Send App", "Unsuccessful Send");
+            AnalyticsLite.transferClick(AnalyticsLite.EVENT_NAME_SPOT_SHARE_SEND_APP,
+                AnalyticsLite.ACTION_SPOT_SHARE_SEND_UNSUCCESS);
             e.printStackTrace();
             System.out.println("There was a problem writing the size and the app name");
           }
@@ -387,7 +388,8 @@ public class HighwayClientComm extends Service {
           }
         } catch (IOException e) {
           //todo error while sendingApp - unsuccessfull send - client
-          AnalyticsLite.transferClick("Send App", "Unsuccessful Send");
+          AnalyticsLite.transferClick(AnalyticsLite.EVENT_NAME_SPOT_SHARE_SEND_APP,
+              AnalyticsLite.ACTION_SPOT_SHARE_SEND_UNSUCCESS);
 
           e.printStackTrace();
         }
@@ -411,8 +413,8 @@ public class HighwayClientComm extends Service {
             System.out.println("Didn'checkHello receive confirmation from the app " + name);
 
             //todo unsuccessfull receive - server
-            AnalyticsLite.transferClick("Receive App", "Unsuccessful received");
-
+            AnalyticsLite.transferClick(AnalyticsLite.EVENT_NAME_SPOT_SHARE_RECEIVE_APP,
+                AnalyticsLite.ACTION_SPOT_SHARE_RCV_UNSUCCESS);
             //assume server is not there anymore.
 
             Intent noServer = new Intent(HighwayClientComm.this, HighwayActivity.class);
@@ -473,7 +475,8 @@ public class HighwayClientComm extends Service {
         } catch (IOException e) {
           System.out.println("It is trowing the output exception");
           System.out.println("There was an error sending ! I am on the catch of the write");
-          AnalyticsLite.transferClick("Send App", "Unsuccessful Send");
+          AnalyticsLite.transferClick(AnalyticsLite.EVENT_NAME_SPOT_SHARE_SEND_APP,
+              AnalyticsLite.ACTION_SPOT_SHARE_SEND_UNSUCCESS);
           e.printStackTrace();
         }
 
@@ -493,7 +496,8 @@ public class HighwayClientComm extends Service {
             System.out.println("Didn'checkHello receive confirmation from the app " + name);
 
             //todo unsuccessfull receive - server
-            AnalyticsLite.transferClick("Receive App", "Unsuccessful received");
+            AnalyticsLite.transferClick(AnalyticsLite.EVENT_NAME_SPOT_SHARE_RECEIVE_APP,
+                AnalyticsLite.ACTION_SPOT_SHARE_RCV_UNSUCCESS);
 
             //assume server is not there anymore.
 
@@ -561,7 +565,8 @@ public class HighwayClientComm extends Service {
               System.out.println("Reached the end of the file  !");
               totalReceived++;
 
-              AnalyticsLite.transferClick("Receive App", "Successful received");
+              AnalyticsLite.transferClick(AnalyticsLite.EVENT_NAME_SPOT_SHARE_RECEIVE_APP,
+                  AnalyticsLite.ACTION_SPOT_SHARE_RCV_SUCCESS);
               //todo call successfull receive  - client
             }
           }
@@ -803,7 +808,8 @@ public class HighwayClientComm extends Service {
     @Override public void run() {
       try {
 
-        AnalyticsLite.transferClick("Send App", "Send app");
+        AnalyticsLite.transferClick(AnalyticsLite.EVENT_NAME_SPOT_SHARE_SEND_APP,
+            AnalyticsLite.ACTION_SPOT_SHARE_SEND_APP);
         //todo call localytics send app - client
         System.out.println(
             "Highway client comm, i am here inText the send thread, going to create the outputstream object");
@@ -852,7 +858,8 @@ public class HighwayClientComm extends Service {
         clientH.post(new Runnable() {
           @Override public void run() {
             //todo unsuccessfull receive - server
-            AnalyticsLite.transferClick("Receive App", "Unsuccessful received");
+            AnalyticsLite.transferClick(AnalyticsLite.EVENT_NAME_SPOT_SHARE_RECEIVE_APP,
+                AnalyticsLite.ACTION_SPOT_SHARE_RCV_UNSUCCESS);
             Toast.makeText(context, context.getResources().getString(R.string.hotspotLeft),
                 Toast.LENGTH_LONG).show();
           }
@@ -939,7 +946,8 @@ public class HighwayClientComm extends Service {
                 requestSendApps(positionToRemove + 1);
               }
 
-              AnalyticsLite.transferClick("Send App", "Successful Send");
+              AnalyticsLite.transferClick(AnalyticsLite.EVENT_NAME_SPOT_SHARE_SEND_APP,
+                  AnalyticsLite.ACTION_SPOT_SHARE_SEND_SUCCESS);
               //todo call localytics event send successful - client
             } else {
               System.out.println(
