@@ -27,7 +27,7 @@ public class InviteFriendsPresenter implements InviteFriendsContract.UserActions
   }
 
   @Override public void doneClicked() {
-    this.addressBookNavigationManager.exitAddressBook();
+    this.addressBookNavigationManager.leaveAddressBook();
   }
 
   @Override public void shareClicked(Context context) {
