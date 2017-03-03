@@ -6,13 +6,13 @@
 package cm.aptoide.pt.dataprovider.ws.v3;
 
 import android.text.TextUtils;
-import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v3.GetPushNotificationsResponse;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import rx.Observable;
 
 /**
@@ -32,10 +32,13 @@ public class PushNotificationsRequest extends V3<GetPushNotificationsResponse> {
     this.id = id;
   }
 
-  public static PushNotificationsRequest of(AptoideClientUUID aptoideClientUuid,
-      String versionName) {
+  public static PushNotificationsRequest of(AptoideClientUUID aptoideClientUuid, String versionName,
+      String appId) {
 
-    String id = aptoideClientUuid.getUniqueIdentifier();
+    Random r = new Random();
+    int i1 = r.nextInt(100);
+
+    String id = aptoideClientUuid.getUniqueIdentifier() + "_" + i1;
 
     Map<String, String> options = new HashMap<String, String>();
 
@@ -50,7 +53,7 @@ public class PushNotificationsRequest extends V3<GetPushNotificationsResponse> {
     if (!TextUtils.isEmpty(oemid)) {
       options.put("oem_id", oemid);
     }
-    options.put("aptoide_package", BuildConfig.APPLICATION_ID);
+    options.put("aptoide_package", appId);
 
     return new PushNotificationsRequest(id, options, null);
   }

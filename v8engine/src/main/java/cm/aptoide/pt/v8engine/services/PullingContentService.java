@@ -28,6 +28,7 @@ import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.v8engine.BuildConfig;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
@@ -151,7 +152,7 @@ public class PullingContentService extends Service {
 
     PushNotificationsRequest.of(
         new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this),
-        pInfo == null ? "" : pInfo.versionName)
+        pInfo == null ? "" : pInfo.versionName, BuildConfig.APPLICATION_ID)
         .execute(response -> setPushNotification(context, response, startId));
   }
 
@@ -240,6 +241,7 @@ public class PullingContentService extends Service {
             .setLargeIcon(BitmapFactory.decodeResource(Application.getContext().getResources(),
                 Application.getConfiguration().getIcon()))
             .setContentTitle(pushNotification.getTitle())
+            .setContentText(pushNotification.getBody())
             .build();
 
     notification.flags = Notification.DEFAULT_LIGHTS | Notification.FLAG_AUTO_CANCEL;
@@ -256,6 +258,7 @@ public class PullingContentService extends Service {
           BitmapFactory.decodeResource(Application.getContext().getResources(),
               Application.getConfiguration().getIcon()));
       expandedView.setTextViewText(R.id.text1, pushNotification.getTitle());
+      expandedView.setTextViewText(R.id.description, pushNotification.getBody());
       notification.bigContentView = expandedView;
       NotificationTarget notificationTarget =
           new NotificationTarget(Application.getContext(), expandedView,
@@ -266,11 +269,9 @@ public class PullingContentService extends Service {
     if (response != null) {
       try {
         ManagerPreferences.setLastPushNotificationId(Integer.parseInt(response.getCampaign_id()));
-      }
-      catch(Exception e){
+      } catch (Exception e) {
 
       }
-
     }
     managerNotification.notify(PUSH_NOTIFICATION_ID, notification);
 
