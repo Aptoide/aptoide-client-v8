@@ -199,7 +199,7 @@ public class HighwayTransferRecordActivity extends ActivityView
       //como sou servidor devo meter o firstSender a ""
     } else {
       System.out.println("Send a file from outside - not a hotspot");
-      sendIntent = new Intent(this, HighwayClientComm.class);
+      sendIntent = new Intent(this, HighwayClientService.class);
       sendIntent.putExtra("targetIP", targetIPAddress);
     }
     sendIntent.putExtra("port", porto);
@@ -749,8 +749,10 @@ public class HighwayTransferRecordActivity extends ActivityView
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
     builder.setTitle(this.getResources().getString(R.string.alert))
-        .setMessage(this.getResources().getString(R.string.alertClearApps1) + " \n" +
-            "\n" + this.getResources().getString(R.string.alertClearApps2))
+        .setMessage(this.getResources().getString(R.string.alertClearApps1)
+            + " \n"
+            + "\n"
+            + this.getResources().getString(R.string.alertClearApps2))
         .setPositiveButton(this.getResources().getString(R.string.delete),
             new DialogInterface.OnClickListener() {
               public void onClick(DialogInterface dialog, int id) {
