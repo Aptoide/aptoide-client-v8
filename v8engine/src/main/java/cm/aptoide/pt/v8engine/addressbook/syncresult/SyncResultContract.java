@@ -20,10 +20,6 @@ public interface SyncResultContract {
 
   interface UserActionsListener {
 
-    void loadFriends();
-
-    void openFriend(Contact clickedContact);
-
     void allowFindClicked();
 
     void doneClicked();

@@ -14,6 +14,9 @@ import java.util.Map;
 
 public class AddressBookAnalytics {
 
+  public static final String HAS_NEW_CONNECTIONS_SCREEN = "Has New Connections";
+  public static final String NO_NEW_CONNECTIONS_SCREEN = "No New Connections";
+  public static final String NOT_ABLE_TO_CONNECT_SCREEN = "Not Able to Connect";
   private final Analytics analytics;
   private final AppEventsLogger facebook;
 
@@ -51,15 +54,48 @@ public class AddressBookAnalytics {
   public void sendAllowAptoideAccessToContactsEvent() {
     analytics.sendEvent(new FacebookEvent(facebook, "Follow_Friends_Aptoide_Access",
         createBundleData("action", "Allow")));
-    analytics.sendEvent(new LocalyticsEvent("Follow_Friends_Aptoide_Access", createMapData
-        ("action", "Allow")));
+    analytics.sendEvent(
+        new LocalyticsEvent("Follow_Friends_Aptoide_Access", createMapData("action", "Allow")));
   }
 
   public void sendDenyAptoideAccessToContactsEvent() {
     analytics.sendEvent(new FacebookEvent(facebook, "Follow_Friends_Aptoide_Access",
         createBundleData("action", "Deny")));
-    analytics.sendEvent(new LocalyticsEvent("Follow_Friends_Aptoide_Access", createMapData
-        ("action", "Deny")));
+    analytics.sendEvent(
+        new LocalyticsEvent("Follow_Friends_Aptoide_Access", createMapData("action", "Deny")));
+  }
+
+  public void sendNewConnectionsAllowFriendsToFindYouEvent(String screen) {
+    analytics.sendEvent(new FacebookEvent(facebook, "Follow_Friends_New_Connections",
+        createScreenBundleData("action", "Allow friend to find you", screen)));
+    analytics.sendEvent(new LocalyticsEvent("Follow_Friends_New_Connections",
+        createScreenMapData("action", "Allow friend to find you", screen)));
+  }
+
+  public void sendNewConnectionsDoneEvent(String screen) {
+    analytics.sendEvent(new FacebookEvent(facebook, "Follow_Friends_New_Connections",
+        createScreenBundleData("action", "Done", screen)));
+    analytics.sendEvent(new LocalyticsEvent("Follow_Friends_New_Connections",
+        createScreenMapData("action", "Done", screen)));
+  }
+
+  public void sendNewConnectionsShareEvent(String screen) {
+    analytics.sendEvent(new FacebookEvent(facebook, "Follow_Friends_New_Connections",
+        createScreenBundleData("action", "Share", screen)));
+    analytics.sendEvent(new LocalyticsEvent("Follow_Friends_New_Connections",
+        createScreenMapData("action", "Share", screen)));
+  }
+
+  private Map<String, String> createScreenMapData(String key, String value, String screen) {
+    final Map<String, String> data = createMapData(key, value);
+    data.put("screen", screen);
+    return data;
+  }
+
+  private Bundle createScreenBundleData(String key, String value, String screen) {
+    final Bundle data = createBundleData(key, value);
+    data.putString("screen", screen);
+    return data;
   }
 
   private Bundle createBundleData(String key, String value) {

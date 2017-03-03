@@ -4,7 +4,7 @@ import cm.aptoide.pt.model.v7.FacebookModel;
 import cm.aptoide.pt.model.v7.TwitterModel;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.v8engine.addressbook.data.ContactsRepository;
-import cm.aptoide.pt.v8engine.addressbook.invitefriends.InviteFriendsFragment;
+import cm.aptoide.pt.v8engine.addressbook.invitefriends.InviteFriendsContract;
 import cm.aptoide.pt.v8engine.addressbook.navigation.AddressBookNavigation;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -35,7 +35,7 @@ public class AddressBookPresenter implements AddressBookContract.UserActionsList
         .subscribe(ignore -> {
           if (!success) {
             navigationManager.navigateToInviteFriendsView(
-                InviteFriendsFragment.InviteFriendsFragmentOpenMode.ERROR);
+                InviteFriendsContract.View.OpenMode.ERROR);
             view.setGenericPleaseWaitDialog(false);
           } else {
             view.changeAddressBookState(true);
@@ -45,7 +45,7 @@ public class AddressBookPresenter implements AddressBookContract.UserActionsList
               view.setGenericPleaseWaitDialog(false);
             } else {
               navigationManager.navigateToInviteFriendsView(
-                  InviteFriendsFragment.InviteFriendsFragmentOpenMode.NO_FRIENDS);
+                  InviteFriendsContract.View.OpenMode.NO_FRIENDS);
               view.setGenericPleaseWaitDialog(false);
             }
           }
@@ -60,7 +60,7 @@ public class AddressBookPresenter implements AddressBookContract.UserActionsList
             .subscribe(ignore -> {
               if (!success) {
                 navigationManager.navigateToInviteFriendsView(
-                    InviteFriendsFragment.InviteFriendsFragmentOpenMode.ERROR);
+                    InviteFriendsContract.View.OpenMode.ERROR);
                 view.setGenericPleaseWaitDialog(false);
               } else {
                 view.changeTwitterState(true);
@@ -69,7 +69,7 @@ public class AddressBookPresenter implements AddressBookContract.UserActionsList
                   navigationManager.showSuccessFragment(contacts);
                 } else {
                   navigationManager.navigateToInviteFriendsView(
-                      InviteFriendsFragment.InviteFriendsFragmentOpenMode.NO_FRIENDS);
+                      InviteFriendsContract.View.OpenMode.NO_FRIENDS);
                 }
               }
             }));
@@ -83,7 +83,7 @@ public class AddressBookPresenter implements AddressBookContract.UserActionsList
             .subscribe(ignore -> {
               if (!success) {
                 navigationManager.navigateToInviteFriendsView(
-                    InviteFriendsFragment.InviteFriendsFragmentOpenMode.ERROR);
+                    InviteFriendsContract.View.OpenMode.ERROR);
                 view.setGenericPleaseWaitDialog(false);
               } else {
                 view.changeFacebookState(true);
@@ -92,7 +92,7 @@ public class AddressBookPresenter implements AddressBookContract.UserActionsList
                   navigationManager.showSuccessFragment(contacts);
                 } else {
                   navigationManager.navigateToInviteFriendsView(
-                      InviteFriendsFragment.InviteFriendsFragmentOpenMode.NO_FRIENDS);
+                      InviteFriendsContract.View.OpenMode.NO_FRIENDS);
                 }
               }
             }));
@@ -119,6 +119,6 @@ public class AddressBookPresenter implements AddressBookContract.UserActionsList
 
   @Override public void contactsPermissionDenied() {
     navigationManager.navigateToInviteFriendsView(
-        InviteFriendsFragment.InviteFriendsFragmentOpenMode.CONTACTS_PERMISSION_DENIAL);
+        InviteFriendsContract.View.OpenMode.CONTACTS_PERMISSION_DENIAL);
   }
 }

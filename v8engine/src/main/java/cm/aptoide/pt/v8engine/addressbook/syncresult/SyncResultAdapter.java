@@ -16,14 +16,11 @@ import java.util.ArrayList;
  * Created by jdandrade on 13/02/2017.
  */
 public class SyncResultAdapter extends RecyclerView.Adapter<SyncResultAdapter.ViewHolder> {
-  private final SyncResultFragment.ContactItemListener mItemListener;
   private ArrayList<Contact> mContacts;
   private Context mContext;
 
-  public SyncResultAdapter(ArrayList<Contact> contacts,
-      SyncResultFragment.ContactItemListener itemListener, Context context) {
+  public SyncResultAdapter(ArrayList<Contact> contacts, Context context) {
     setList(contacts);
-    this.mItemListener = itemListener;
     this.mContext = context;
   }
 
@@ -36,7 +33,7 @@ public class SyncResultAdapter extends RecyclerView.Adapter<SyncResultAdapter.Vi
     LayoutInflater inflater = LayoutInflater.from(context);
     View contactView = inflater.inflate(R.layout.addressbook_synced_contacts_item, parent, false);
 
-    return new ViewHolder(contactView, mItemListener);
+    return new ViewHolder(contactView);
   }
 
   @Override public void onBindViewHolder(ViewHolder holder, int position) {
@@ -63,27 +60,19 @@ public class SyncResultAdapter extends RecyclerView.Adapter<SyncResultAdapter.Vi
     return mContacts.get(position);
   }
 
-  class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-    private final SyncResultFragment.ContactItemListener mItemListener;
+  class ViewHolder extends RecyclerView.ViewHolder {
 
     ImageView mMainIcon;
     ImageView mSecondaryIcon;
     TextView mStoreName;
     TextView mUserName;
 
-    ViewHolder(View contactView, SyncResultFragment.ContactItemListener itemListener) {
+    ViewHolder(View contactView) {
       super(contactView);
-      this.mItemListener = itemListener;
       mMainIcon = (ImageView) contactView.findViewById(R.id.main_icon);
       mSecondaryIcon = (ImageView) contactView.findViewById(R.id.secondary_icon);
       mStoreName = (TextView) contactView.findViewById(R.id.store_name);
       mUserName = (TextView) contactView.findViewById(R.id.user_name);
-    }
-
-    @Override public void onClick(View view) {
-      int position = getAdapterPosition();
-      Contact contact = getItem(position);
-      mItemListener.onContactClick(contact);
     }
   }
 }

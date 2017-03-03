@@ -2,7 +2,7 @@ package cm.aptoide.pt.v8engine.addressbook.navigation;
 
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.v8engine.addressbook.data.Contact;
-import cm.aptoide.pt.v8engine.addressbook.invitefriends.InviteFriendsFragment;
+import cm.aptoide.pt.v8engine.addressbook.invitefriends.InviteFriendsContract;
 import java.util.List;
 
 /**
@@ -16,7 +16,7 @@ public interface AddressBookNavigation {
   void navigateToPhoneInputView();
 
   void navigateToInviteFriendsView(
-      @NonNull InviteFriendsFragment.InviteFriendsFragmentOpenMode openMode);
+      @NonNull InviteFriendsContract.View.OpenMode openMode);
 
   void showAboutFragment();
 
