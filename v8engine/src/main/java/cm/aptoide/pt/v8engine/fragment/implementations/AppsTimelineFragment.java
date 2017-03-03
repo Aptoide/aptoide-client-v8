@@ -13,6 +13,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.GridLayoutManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.realm.Installed;
@@ -126,13 +127,20 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     installManager = new InstallManager(AptoideDownloadManager.getInstance(), installer);
     timelineMetricsManager = new TimelineMetricsManager(Analytics.getInstance());
     socialRepository = new SocialRepository();
+    isSocialLoginAvailable = isAnySocialLoginAvailable();
+  }
+
+  /**
+   * @return true if any social login is available
+   */
+  @Partners private boolean isAnySocialLoginAvailable() {
     for (AptoidePreferencesConfiguration.SocialLogin socialLogin : AptoidePreferencesConfiguration.SocialLogin
         .values()) {
       if (Application.getConfiguration().isLoginAvailable(socialLogin)) {
-        isSocialLoginAvailable = true;
+        return true;
       }
     }
-    isSocialLoginAvailable = false;
+    return false;
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
