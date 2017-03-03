@@ -86,6 +86,11 @@ public class AddressBookAnalytics {
         createScreenMapData("action", "Share", screen)));
   }
 
+  public void sendShareYourPhoneSuccessEvent() {
+    analytics.sendEvent(new FacebookEvent(facebook, "Follow_Friends_Set_My_Phonenumber"));
+    analytics.sendEvent(new LocalyticsEvent("Follow_Friends_Set_My_Phonenumber"));
+  }
+
   private Map<String, String> createScreenMapData(String key, String value, String screen) {
     final Map<String, String> data = createMapData(key, value);
     data.put("screen", screen);

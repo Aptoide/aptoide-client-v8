@@ -33,7 +33,7 @@ public class InviteFriendsPresenter implements InviteFriendsContract.UserActions
   }
 
   @Override public void doneClicked() {
-    analytics.sendNewConnectionsShareEvent(screen);
+    analytics.sendNewConnectionsDoneEvent(screen);
     this.addressBookNavigationManager.leaveAddressBook();
   }
 
