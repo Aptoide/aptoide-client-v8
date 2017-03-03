@@ -33,7 +33,7 @@ public interface HighwayTransferRecordView {
 
   void showInstallErrorDialog(String appName);
 
-  void showDialogToInstall(String appName, String filePath);
+  void showDialogToInstall(String appName, String filePath, String packageName);
 
   void showDialogToDelete(HighwayTransferRecordItem item);
 
@@ -48,6 +48,8 @@ public interface HighwayTransferRecordView {
   void showRecoveringWifiStateToast();
 
   void dismiss();
+
+  void showServerLeftMessage();
 
   interface TransferRecordListener {
     void onInstallApp(HighwayTransferRecordItem item);

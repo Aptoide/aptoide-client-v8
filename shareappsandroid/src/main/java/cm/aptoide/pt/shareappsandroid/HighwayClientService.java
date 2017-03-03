@@ -22,6 +22,7 @@ import cm.aptoide.pt.shareapps.socket.message.messages.RequestPermissionToSend;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.io.File;
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,11 +64,12 @@ public class HighwayClientService extends Service {
         System.out.println("Fell on error  Client !! ");
 
         Intent i = new Intent();
-        i.setAction("ERRORRECEIVING");
-
-        // TODO: 02-03-2017 neuro leaving the group Filipe
+        if (e instanceof SocketTimeoutException) {
+          i.setAction("SERVER_LEFT");
+        } else {
+          i.setAction("ERRORRECEIVING");
+        }
         sendBroadcast(i);
-        e.printStackTrace();
       }
 
       @Override public void onStartReceiving(AndroidAppInfo androidAppInfo) {
@@ -87,7 +89,8 @@ public class HighwayClientService extends Service {
       @Override public void onFinishReceiving(AndroidAppInfo androidAppInfo) {
         System.out.println(" Finished receiving " + androidAppInfo);
 
-        finishReceiveNotification(androidAppInfo.getApk().getFilePath());
+        finishReceiveNotification(androidAppInfo.getApk().getFilePath(),
+            androidAppInfo.getPackageName());
 
         Intent i = new Intent();
         i.putExtra("FinishedReceiving", true);
@@ -161,7 +164,7 @@ public class HighwayClientService extends Service {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
       mBuilderReceive = new Notification.Builder(this);
       ((Notification.Builder) mBuilderReceive).setContentTitle(
-          this.getResources().getString(R.string.shareApps) + " - " + this.getResources()
+          this.getResources().getString(R.string.spot_share) + " - " + this.getResources()
               .getString(R.string.receive))
           .setContentText(
               this.getResources().getString(R.string.receiving) + " " + receivingAppName)
@@ -169,7 +172,7 @@ public class HighwayClientService extends Service {
     }
   }
 
-  private void finishReceiveNotification(String receivedApkFilePath) {
+  private void finishReceiveNotification(String receivedApkFilePath, String packageName) {
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
       ((Notification.Builder) mBuilderReceive).setContentText(
@@ -182,6 +185,7 @@ public class HighwayClientService extends Service {
       Intent intent = new Intent();
       intent.setAction("INSTALL_APP_NOTIFICATION");
       intent.putExtra("filePath", receivedApkFilePath);
+      intent.putExtra("packageName", packageName);
       PendingIntent contentIntent =
           PendingIntent.getBroadcast(this, INSTALL_APP_NOTIFICATION_REQUEST_CODE, intent,
               PendingIntent.FLAG_CANCEL_CURRENT);
@@ -216,7 +220,7 @@ public class HighwayClientService extends Service {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
       mBuilderSend = new Notification.Builder(this);
       ((Notification.Builder) mBuilderSend).setContentTitle(
-          this.getResources().getString(R.string.shareApps) + " - " + this.getResources()
+          this.getResources().getString(R.string.spot_share) + " - " + this.getResources()
               .getString(R.string.send))
           .setContentText(this.getResources().getString(R.string.preparingSend))
           .setSmallIcon(R.mipmap.ic_launcher);
