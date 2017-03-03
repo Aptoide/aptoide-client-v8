@@ -60,6 +60,13 @@ public class TransferRecordPresenter implements Presenter {
         cleanAPTXNetworks();
         view.dismiss();
       }
+
+      @Override public void onServerLeft() {
+        view.showServerLeftMessage();
+        recoverNetworkState();
+        cleanAPTXNetworks();
+        view.dismiss();
+      }
     });
     setTransferRecordListener();
     applicationSender.setListener(new ApplicationSender.SendListener() {

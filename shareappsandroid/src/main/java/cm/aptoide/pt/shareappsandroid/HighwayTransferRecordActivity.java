@@ -425,8 +425,6 @@ public class HighwayTransferRecordActivity extends ActivityView
   }
 
   private Dialog createOnBackDialog() {
-    final Intent i = new Intent(this, HighwayActivity.class);
-
     if (listOfItems != null && listOfItems.size() >= 1) {
       listOfItems.clear();
       if (adapter != null) {
@@ -864,15 +862,7 @@ public class HighwayTransferRecordActivity extends ActivityView
   }
 
   @Override public void showGeneralErrorToast(boolean isHotspot) {
-    Toast.makeText(this, R.string.fragment_social_timeline_general_error, Toast.LENGTH_LONG)
-        .show();//string from v8engine
-    Intent i = new Intent(this, HighwayActivity.class);
-    if (isHotspot) {
-      setInitialApConfig();
-      startActivity(i);
-    } else {
-      startActivity(i);
-    }
+    Toast.makeText(this, R.string.generalError, Toast.LENGTH_LONG).show();
   }
 
   @Override public void showRecoveringWifiStateToast() {
@@ -882,6 +872,11 @@ public class HighwayTransferRecordActivity extends ActivityView
 
   @Override public void dismiss() {
     finish();
+  }
+
+  @Override public void showServerLeftMessage() {
+    Toast.makeText(this, this.getResources().getString(R.string.groupCreatorLeft),
+        Toast.LENGTH_SHORT).show();
   }
 
   private Dialog createDialogToDelete(final HighwayTransferRecordItem item) {
