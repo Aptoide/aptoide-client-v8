@@ -51,7 +51,7 @@
 
   <!-- Excluded Updates Fragment -->
   <string name="excluded_updates">Excluded Updates</string>
-    <string name="no_excluded_updates_msg">The new version of an app doesn’t work on your device or some feature is
+  <string name="no_excluded_updates_msg">The new version of an app doesn’t work on your device or some feature is
         missing? Block apps from updating. Go to Updates tab and long press on the app that you want to stop
         updating.</string>
 
@@ -61,7 +61,7 @@
 
   <!-- Rollback Fragment -->
   <string name="rollback">Rollback</string>
-    <string name="no_rollbacks_msg">Quickly downgrade any app to a previous version and solve incompatibility issues. Keep a log of all your installed
+  <string name="no_rollbacks_msg">Quickly downgrade any app to a previous version and solve incompatibility issues. Keep a log of all your installed
         apps (via %s) including version and install date.</string>
 
   <!-- Timeline Fragment -->
@@ -93,7 +93,7 @@
 
   <!-- need translation -->
   <string name="appview_good_app_guaranteed">Good App Guaranteed!</string>
-    <string name="appview_good_app_description">This applications passed the security test for virus, malware and other malicious attacks and doesn\'t
+  <string name="appview_good_app_description">This applications passed the security test for virus, malware and other malicious attacks and doesn\'t
         contain any threats!</string>
   <!-- -->
 
@@ -192,7 +192,7 @@
   <string name="dialog_install_warning_search_for_trusted_app_button">Search for</string>
   <string name="dialog_install_warning_trusted_app_button">Trusted App</string>
   <string name="dialog_install_warning_careful_text">Be careful if you choose to install this app. It may have been tampered with, have viruses or malware.</string>
-    <string name="dialog_install_warning_credibility_text">Before proceeding, check the Store\'s
+  <string name="dialog_install_warning_credibility_text">Before proceeding, check the Store\'s
         credibility and other user comments. Aptoide always recommends that you only install %1$s Trusted apps.</string>
   <string name="dialog_install_warning_trusted_version_button">Trusted Version</string>
   <string name="dialog_install_warning_get_trusted_version_button">Get</string>
@@ -433,7 +433,7 @@
   <string name="addressbook_invite_friends">Invite friends to join you!</string>
   <string name="addressbook_thanks_for_connecting">Thank you for connecting</string>
   <string name="addressbook_success_connected_friends">We successfully connected you with %1$s friends that use %2$s</string>
-  <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">We didn\'t find any contacts that are using Aptoide</string>
+  <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">We didn\'t find any contacts that are using %1$s</string>
   <string name="addressbook_2nd_msg">%1$s will browse your address book for friends and family
     that are using our App Store. To protect your privacy, no private data will be sent out to %1$s
     servers</string>
@@ -441,5 +441,6 @@
   <string name="address_book_twitter_error">Twitter authorization error</string>
   <string name="follow_my_store">Hello, follow my %1$s Store here</string>
   <string name="addressbook_about">About Address Book</string>
+  <string name="addressbook_we_werent_able_to_connect_you">We weren’t able to connect you</string>
 
 </resources>
