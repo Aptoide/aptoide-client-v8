@@ -164,7 +164,7 @@ public class HighwayClientService extends Service {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
       mBuilderReceive = new Notification.Builder(this);
       ((Notification.Builder) mBuilderReceive).setContentTitle(
-          this.getResources().getString(R.string.shareApps) + " - " + this.getResources()
+          this.getResources().getString(R.string.spot_share) + " - " + this.getResources()
               .getString(R.string.receive))
           .setContentText(
               this.getResources().getString(R.string.receiving) + " " + receivingAppName)
@@ -220,7 +220,7 @@ public class HighwayClientService extends Service {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
       mBuilderSend = new Notification.Builder(this);
       ((Notification.Builder) mBuilderSend).setContentTitle(
-          this.getResources().getString(R.string.shareApps) + " - " + this.getResources()
+          this.getResources().getString(R.string.spot_share) + " - " + this.getResources()
               .getString(R.string.send))
           .setContentText(this.getResources().getString(R.string.preparingSend))
           .setSmallIcon(R.mipmap.ic_launcher);

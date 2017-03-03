@@ -50,7 +50,6 @@
 
   <string name="alertDeleteApp">Are you sure you want to delete the %1$s application?</string>
 
-  <string name="shareApps">Spot&amp;Share</string>
   <string name="createGroup">Create Group</string>
   <string name="joinGroup">Join Group</string>
   <string name="upperInstall">INSTALL</string>
