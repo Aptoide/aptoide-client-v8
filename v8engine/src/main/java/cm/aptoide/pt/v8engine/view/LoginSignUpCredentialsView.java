@@ -49,6 +49,8 @@ public interface LoginSignUpCredentialsView extends GoogleLoginView {
 
   void navigateToMainView();
 
+  void goBack();
+
   void dismiss();
 
   void hideKeyboard();

@@ -58,6 +58,7 @@ import rx.android.schedulers.AndroidSchedulers;
   private ViewGroup updateButtonLayout;
   //private UpdateDisplayable displayable;
   private ProgressBar progressBar;
+  private boolean shouldShowProgress = false;
 
   private UpdateRepository updateRepository;
 
@@ -178,18 +179,6 @@ import rx.android.schedulers.AndroidSchedulers;
         || progress.getRequest().getOverallDownloadStatus() == Download.IN_QUEUE;
   }
 
-  @UiThread private void showProgress(boolean showProgress) {
-    if (showProgress) {
-      textUpdateLayout.setVisibility(View.GONE);
-      imgUpdateLayout.setVisibility(View.GONE);
-      progressBar.setVisibility(View.VISIBLE);
-    } else {
-      textUpdateLayout.setVisibility(View.VISIBLE);
-      imgUpdateLayout.setVisibility(View.VISIBLE);
-      progressBar.setVisibility(View.GONE);
-    }
-  }
-
   @NonNull
   private Observable<Void> getLongClickListener(String packageName, FragmentActivity context) {
     return Observable.fromCallable(() -> {
@@ -213,5 +202,17 @@ import rx.android.schedulers.AndroidSchedulers;
       builder.create().show();
       return null;
     });
+  }
+
+  @UiThread private void showProgress(boolean showProgress) {
+    if (showProgress) {
+      textUpdateLayout.setVisibility(View.GONE);
+      imgUpdateLayout.setVisibility(View.GONE);
+      progressBar.setVisibility(View.VISIBLE);
+    } else {
+      textUpdateLayout.setVisibility(View.VISIBLE);
+      imgUpdateLayout.setVisibility(View.VISIBLE);
+      progressBar.setVisibility(View.GONE);
+    }
   }
 }

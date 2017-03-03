@@ -34,7 +34,7 @@ public class MyAccountPresenter implements Presenter {
   private Observable<Void> signOutClick() {
     return view.signOutClick().doOnNext(__ -> {
       signOut();
-      view.navigateToLoginAfterLogout();
+      view.navigateToHome();
     });
   }
 
