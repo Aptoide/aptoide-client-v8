@@ -6,5 +6,5 @@ package cm.aptoide.pt.v8engine.addressbook.navigation;
 
 public interface AddressBookNavigation {
 
-  void exitAddressBook();
+  void leaveAddressBook();
 }
