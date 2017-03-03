@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import cm.aptoide.pt.shareappsandroid.analytics.SpotAndShareAnalyticsInterface;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -69,6 +70,7 @@ public class HighwayTransferRecordActivity extends ActivityView
   private ApplicationReceiver applicationReceiver;
   private ApplicationSender applicationSender;
   private Toolbar mToolbar;
+  private SpotAndShareAnalyticsInterface analytics;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -81,6 +83,7 @@ public class HighwayTransferRecordActivity extends ActivityView
     send = (LinearLayout) findViewById(R.id.TransferRecordSendLayout);
     clearHistory = (LinearLayout) findViewById(R.id.TransferRecordClearLayout);
     mToolbar = (Toolbar) findViewById(R.id.shareAppsToolbar);
+    analytics = ShareApps.getAnalytics();
 
     setUpToolbar();
 
@@ -144,7 +147,7 @@ public class HighwayTransferRecordActivity extends ActivityView
     transferRecordManager = new TransferRecordManager(applicationsManager);
 
     presenter = new TransferRecordPresenter(this, applicationReceiver, applicationSender,
-        transferRecordManager, isHotspot, ConnectionManager.getInstance(this));
+        transferRecordManager, isHotspot, ConnectionManager.getInstance(this), analytics);
     attachPresenter(presenter);
   }
 

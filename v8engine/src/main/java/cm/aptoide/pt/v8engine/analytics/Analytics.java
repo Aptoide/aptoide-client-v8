@@ -133,25 +133,6 @@ public class Analytics {
     }
   }
 
-  private static void logFacebookEvents(String eventName, Map<String, String> map) {
-    if (BuildConfig.BUILD_TYPE.equals("debug") && map == null) {
-      return;
-    }
-    Bundle parameters = new Bundle();
-    for (String s : map.keySet()) {
-      parameters.putString(s, map.get(s));
-    }
-    logFacebookEvents(eventName, parameters);
-  }
-
-  private static void logFacebookEvents(String eventName, Bundle parameters) {
-    if (BuildConfig.BUILD_TYPE.equals("debug")) {
-      return;
-    }
-
-    facebookLogger.logEvent(eventName, parameters);
-  }
-
   private static void logFabricEvent(String event, Map<String, String> map, int flags) {
     if (checkAcceptability(flags, FABRIC)) {
       CustomEvent customEvent = new CustomEvent(event);
@@ -160,21 +141,6 @@ public class Analytics {
       }
       Answers.getInstance().logCustom(customEvent);
       Logger.d(TAG, "Fabric Event: " + event + ", Map: " + map);
-    }
-  }
-
-  private static void track(String event, int flags) {
-
-    try {
-      if (!ACTIVATE_LOCALYTICS && !ACTIVATE_FLURRY) return;
-
-      if (checkAcceptability(flags, LOCALYTICS)) Localytics.tagEvent(event);
-
-      if (checkAcceptability(flags, FLURRY)) FlurryAgent.logEvent(event);
-
-      Logger.d(TAG, "Event: " + event);
-    } catch (Exception e) {
-      e.printStackTrace();
     }
   }
 
@@ -193,6 +159,51 @@ public class Analytics {
 
   private void remove(@NonNull Event event) {
     saver.remove(event);
+  }
+
+  public void sendSpotAndShareEvents(String eventName, Map<String, String> attributes) {
+    logFacebookEvents(eventName, attributes);
+    if (attributes != null) {
+      track(eventName, new HashMap<String, String>(attributes), LOCALYTICS);
+    } else {
+      track(eventName, LOCALYTICS);
+    }
+  }
+
+  private static void logFacebookEvents(String eventName, Map<String, String> map) {
+    if (BuildConfig.BUILD_TYPE.equals("debug") && map == null) {
+      return;
+    }
+    Bundle parameters = new Bundle();
+    if (map != null) {
+      for (String s : map.keySet()) {
+        parameters.putString(s, map.get(s));
+      }
+    }
+    logFacebookEvents(eventName, parameters);
+  }
+
+  private static void track(String event, int flags) {
+
+    try {
+      if (!ACTIVATE_LOCALYTICS && !ACTIVATE_FLURRY) return;
+
+      if (checkAcceptability(flags, LOCALYTICS)) Localytics.tagEvent(event);
+
+      if (checkAcceptability(flags, FLURRY)) FlurryAgent.logEvent(event);
+
+      Logger.d(TAG, "Event: " + event);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  private static void logFacebookEvents(String eventName, Bundle parameters) {
+    if (BuildConfig.BUILD_TYPE.equals("debug")) {
+      return;
+    }
+
+    facebookLogger.logEvent(eventName, parameters);
   }
 
   public static class Lifecycle {
