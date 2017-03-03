@@ -17,7 +17,7 @@ public class AddressBookNavigationManager implements AddressBookNavigation {
     this.exitNavigationFragmentTag = exitNavigatonFragmentTag;
   }
 
-  @Override public void exitAddressBook() {
+  @Override public void leaveAddressBook() {
     this.navigationManager.cleanBackStackUntil(exitNavigationFragmentTag);
   }
 }
