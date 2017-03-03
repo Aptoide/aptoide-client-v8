@@ -95,6 +95,7 @@ public class TransferRecordPresenter implements Presenter {
       @Override
       public void onAppSent(String appName, boolean needReSend, boolean isSent, boolean received,
           int positionToReSend) {
+        analytics.sendApkSuccess();
         if (listOfApps.size() > 0) {
           if (positionToReSend == 100000) {
             for (int i = listOfApps.size() - 1; i >= 0; i--) {
