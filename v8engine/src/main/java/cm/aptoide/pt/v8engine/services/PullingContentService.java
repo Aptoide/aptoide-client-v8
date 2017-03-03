@@ -7,6 +7,8 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.IBinder;
@@ -17,12 +19,14 @@ import android.widget.RemoteViews;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v3.PushNotificationsRequest;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v3.GetPushNotificationsResponse;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.InstallManager;
 import cm.aptoide.pt.v8engine.R;
@@ -137,7 +141,17 @@ public class PullingContentService extends Service {
    * @param startId service startid
    */
   private void setPushNotificationsAction(Context context, int startId) {
-    PushNotificationsRequest.of()
+
+    PackageInfo pInfo = null;
+    try {
+      pInfo = context.getPackageManager().getPackageInfo(getPackageName(), 0);
+    } catch (PackageManager.NameNotFoundException e) {
+      e.printStackTrace();
+    }
+
+    PushNotificationsRequest.of(
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this),
+        pInfo == null ? "" : pInfo.versionName)
         .execute(response -> setPushNotification(context, response, startId));
   }
 
@@ -207,58 +221,59 @@ public class PullingContentService extends Service {
 
   private void setPushNotification(Context context, GetPushNotificationsResponse response,
       int startId) {
-    for (final GetPushNotificationsResponse.Notification pushNotification : response.getResults()) {
-      Intent resultIntent = new Intent(Application.getContext(), PullingContentReceiver.class);
-      resultIntent.setAction(PullingContentReceiver.NOTIFICATION_PRESSED_ACTION);
-      resultIntent.putExtra(PullingContentReceiver.PUSH_NOTIFICATION_TRACK_URL,
-          pushNotification.getTrackUrl());
-      resultIntent.putExtra(PullingContentReceiver.PUSH_NOTIFICATION_TARGET_URL,
-          pushNotification.getTargetUrl());
+    final GetPushNotificationsResponse pushNotification = response;
+    Intent resultIntent = new Intent(Application.getContext(), PullingContentReceiver.class);
+    resultIntent.setAction(PullingContentReceiver.NOTIFICATION_PRESSED_ACTION);
+    resultIntent.putExtra(PullingContentReceiver.PUSH_NOTIFICATION_TRACK_URL,
+        pushNotification.getUrl());
+    resultIntent.putExtra(PullingContentReceiver.PUSH_NOTIFICATION_TARGET_URL,
+        pushNotification.getUrl());
 
-      PendingIntent resultPendingIntent =
-          PendingIntent.getBroadcast(Application.getContext(), 0, resultIntent,
-              PendingIntent.FLAG_UPDATE_CURRENT);
-      Notification notification =
-          new NotificationCompat.Builder(Application.getContext()).setContentIntent(
-              resultPendingIntent)
-              .setOngoing(false)
-              .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
-              .setLargeIcon(BitmapFactory.decodeResource(Application.getContext().getResources(),
-                  Application.getConfiguration().getIcon()))
-              .setContentTitle(pushNotification.getTitle())
-              .setContentText(pushNotification.getMessage())
-              .build();
+    PendingIntent resultPendingIntent =
+        PendingIntent.getBroadcast(Application.getContext(), 0, resultIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT);
+    Notification notification =
+        new NotificationCompat.Builder(Application.getContext()).setContentIntent(
+            resultPendingIntent)
+            .setOngoing(false)
+            .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
+            .setLargeIcon(BitmapFactory.decodeResource(Application.getContext().getResources(),
+                Application.getConfiguration().getIcon()))
+            .setContentTitle(pushNotification.getTitle())
+            .build();
 
-      notification.flags = Notification.DEFAULT_LIGHTS | Notification.FLAG_AUTO_CANCEL;
-      final NotificationManager managerNotification = (NotificationManager) Application.getContext()
-          .getSystemService(Context.NOTIFICATION_SERVICE);
+    notification.flags = Notification.DEFAULT_LIGHTS | Notification.FLAG_AUTO_CANCEL;
+    final NotificationManager managerNotification = (NotificationManager) Application.getContext()
+        .getSystemService(Context.NOTIFICATION_SERVICE);
 
-      if (Build.VERSION.SDK_INT >= 16
-          && Build.VERSION.SDK_INT < 24
-          && pushNotification.getImages() != null
-          && TextUtils.isEmpty(pushNotification.getImages().getIconUrl())) {
+    if (Build.VERSION.SDK_INT >= 16 && Build.VERSION.SDK_INT < 24 && TextUtils.isEmpty(
+        pushNotification.getImg())) {
 
-        String imageUrl = pushNotification.getImages().getBannerUrl();
-        RemoteViews expandedView = new RemoteViews(Application.getContext().getPackageName(),
-            R.layout.pushnotificationlayout);
-        expandedView.setImageViewBitmap(R.id.icon,
-            BitmapFactory.decodeResource(Application.getContext().getResources(),
-                Application.getConfiguration().getIcon()));
-        expandedView.setTextViewText(R.id.text1, pushNotification.getTitle());
-        expandedView.setTextViewText(R.id.description, pushNotification.getMessage());
-        notification.bigContentView = expandedView;
-        NotificationTarget notificationTarget =
-            new NotificationTarget(Application.getContext(), expandedView,
-                R.id.PushNotificationImageView, notification, PUSH_NOTIFICATION_ID);
-        ImageLoader.with(context).loadImageToNotification(notificationTarget, imageUrl);
-      }
-
-      if (!response.getResults().isEmpty()) {
-        ManagerPreferences.setLastPushNotificationId(
-            response.getResults().get(0).getId().intValue());
-      }
-      managerNotification.notify(PUSH_NOTIFICATION_ID, notification);
+      String imageUrl = pushNotification.getImg();
+      RemoteViews expandedView = new RemoteViews(Application.getContext().getPackageName(),
+          R.layout.pushnotificationlayout);
+      expandedView.setImageViewBitmap(R.id.icon,
+          BitmapFactory.decodeResource(Application.getContext().getResources(),
+              Application.getConfiguration().getIcon()));
+      expandedView.setTextViewText(R.id.text1, pushNotification.getTitle());
+      notification.bigContentView = expandedView;
+      NotificationTarget notificationTarget =
+          new NotificationTarget(Application.getContext(), expandedView,
+              R.id.PushNotificationImageView, notification, PUSH_NOTIFICATION_ID);
+      ImageLoader.with(context).loadImageToNotification(notificationTarget, imageUrl);
     }
+
+    if (response != null) {
+      try {
+        ManagerPreferences.setLastPushNotificationId(Integer.parseInt(response.getCampaign_id()));
+      }
+      catch(Exception e){
+
+      }
+
+    }
+    managerNotification.notify(PUSH_NOTIFICATION_ID, notification);
+
     stopSelf(startId);
   }
 

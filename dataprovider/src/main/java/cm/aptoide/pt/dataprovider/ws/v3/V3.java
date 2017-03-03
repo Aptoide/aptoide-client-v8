@@ -27,11 +27,15 @@ import cm.aptoide.pt.networkclient.okhttp.cache.PostCacheInterceptor;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import java.io.IOException;
+import java.util.Map;
 import retrofit2.adapter.rxjava.HttpException;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
+import retrofit2.http.QueryMap;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -121,6 +125,10 @@ public abstract class V3<U> extends WebService<V3.Interfaces, U> {
   }
 
   interface Interfaces {
+
+    @GET("notifications/{id}") Observable<GetPushNotificationsResponse> getPushNotificationsAmazon(
+        @Path("id") String id, @QueryMap Map<String, String> options,
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("getPushNotifications") @FormUrlEncoded
     Observable<GetPushNotificationsResponse> getPushNotifications(@FieldMap BaseBody arg,
