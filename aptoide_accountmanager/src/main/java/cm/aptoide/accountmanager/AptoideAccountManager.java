@@ -54,19 +54,18 @@ public class AptoideAccountManager {
   public static String LOGIN;
   public static String LOGIN_CANCELLED;
   public static String LOGOUT;
-
   private final AptoideClientUUID aptoideClientUuid;
   private final Context applicationContext;
   private final AptoidePreferencesConfiguration configuration;
   private final AccountManager androidAccountManager;
   private final LoginAvailability loginAvailability;
-
   private final Analytics analytics;
+  private FollowStoreService followStoreService;
 
   public AptoideAccountManager(Context applicationContext,
       AptoidePreferencesConfiguration configuration, AccountManager androidAccountManager,
-      AptoideClientUUID aptoideClientUuid, LoginAvailability loginAvailability,
-      Analytics analytics) {
+      AptoideClientUUID aptoideClientUuid, LoginAvailability loginAvailability, Analytics analytics,
+      FollowStoreService followStoreService) {
     this.aptoideClientUuid = aptoideClientUuid;
     this.applicationContext = applicationContext;
     this.configuration = configuration;
@@ -76,6 +75,7 @@ public class AptoideAccountManager {
     LOGIN = configuration.getAppId() + ".accountmanager.broadcast.login";
     LOGIN_CANCELLED = configuration.getAppId() + ".accountmanager.broadcast.LOGIN_CANCELLED";
     LOGOUT = configuration.getAppId() + ".accountmanager.broadcast.logout";
+    this.followStoreService = followStoreService;
   }
 
   public boolean isLoggedIn() {
@@ -379,8 +379,18 @@ public class AptoideAccountManager {
   }
 
   public void subscribeStore(String storeName) {
-    ChangeUserRepoSubscriptionRequest.of(storeName, true, this)
-        .execute(genericResponseV3 -> Logger.d(TAG, "Successfully subscribed " + storeName), true);
+    followStoreService.followStore(storeName, aptoideClientUuid.getUniqueIdentifier(),
+        getAccessToken()).toCompletable().toObservable().toBlocking().first();
+  }
+
+  public String getAccessToken() {
+    final Account account = getAccount();
+    return account == null ? null : account.getToken();
+  }
+
+  public Completable subscribeStore(String storeName, String storeUserName, String storePassword) {
+    return followStoreService.followStore(storeName, aptoideClientUuid.getUniqueIdentifier(),
+        getAccessToken(), storeUserName, storePassword).toCompletable();
   }
 
   public void sendLoginCancelledBroadcast() {
@@ -392,11 +402,6 @@ public class AptoideAccountManager {
         .observe()
         .observeOn(AndroidSchedulers.mainThread())
         .map(getUserRepoSubscription -> getUserRepoSubscription.getSubscription());
-  }
-
-  public String getAccessToken() {
-    final Account account = getAccount();
-    return account == null ? null : account.getToken();
   }
 
   public Account.Type getAccountType() {

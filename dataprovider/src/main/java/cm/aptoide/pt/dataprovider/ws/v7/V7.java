@@ -10,6 +10,7 @@ import cm.aptoide.pt.dataprovider.util.ToRetryThrowable;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppVersionsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.ChangeStoreSubscriptionRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetMyStoreListRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreBody;
@@ -330,6 +331,11 @@ public abstract class V7<U, B extends AccessTokenBody> extends WebService<V7.Int
 
     @POST("user/connections/set") Observable<BaseV7Response> setConnection(
         @Body SetConnectionRequest.Body body);
+
+    @POST("store/subscription/set")
+    Observable<ChangeStoreSubscriptionResponse> changeStoreSubscription(
+        @Header(PostCacheInterceptor.BYPASS_HEADER_KEY) boolean bypassCache,
+        @Body ChangeStoreSubscriptionRequest.Body body);
   }
 }
 

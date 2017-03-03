@@ -43,6 +43,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.SecurityUtils;
 import cm.aptoide.pt.v8engine.account.ExternalServicesLoginAvailability;
+import cm.aptoide.pt.v8engine.account.FollowStoreServiceImp;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.AccountAnalytcs;
 import cm.aptoide.pt.v8engine.analytics.abtesting.ABTestManager;
@@ -148,10 +149,13 @@ public abstract class V8Engine extends DataProvider {
 
   public AptoideAccountManager getAccountManager() {
     if (accountManager == null) {
+      IdsRepositoryImpl aptoideClientUuid =
+          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this);
       accountManager = new AptoideAccountManager(this, getConfiguration(), AccountManager.get(this),
-          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this),
+          aptoideClientUuid,
           new ExternalServicesLoginAvailability(this, getConfiguration(),
-              GoogleApiAvailability.getInstance()), new AccountAnalytcs());
+              GoogleApiAvailability.getInstance()), new AccountAnalytcs(),
+          new FollowStoreServiceImp());
     }
     return accountManager;
   }
