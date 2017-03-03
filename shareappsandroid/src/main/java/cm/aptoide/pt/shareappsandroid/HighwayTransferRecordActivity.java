@@ -448,6 +448,7 @@ public class HighwayTransferRecordActivity extends ActivityView
           .setPositiveButton(this.getResources().getString(R.string.leave),
               new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
+                  sendServerShutdownMessage();
                   setInitialApConfig();
                   presenter.recoverNetworkState();
                   finish();
@@ -483,6 +484,12 @@ public class HighwayTransferRecordActivity extends ActivityView
               });
       return builder.create();
     }
+  }
+
+  private void sendServerShutdownMessage() {
+    Intent shutdown = new Intent(this, HighwayServerService.class);
+    shutdown.setAction("SHUTDOWN_SERVER");
+    startService(shutdown);
   }
 
   private void setInitialApConfig() {
