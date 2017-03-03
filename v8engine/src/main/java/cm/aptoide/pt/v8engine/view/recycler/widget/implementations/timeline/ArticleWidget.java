@@ -12,11 +12,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.TimelineClickEvent;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.ArticleDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.android.schedulers.AndroidSchedulers;
@@ -26,7 +24,6 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class ArticleWidget extends CardWidget<ArticleDisplayable> {
 
-  private final String CARD_TYPE_NAME = "ARTICLE";
   private TextView title;
   private TextView subtitle;
   private ImageView image;
@@ -77,17 +74,10 @@ public class ArticleWidget extends CardWidget<ArticleDisplayable> {
     url.setOnClickListener(v -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
       displayable.getLink().launch(context);
-      Analytics.AppsTimeline.clickOnCard(CARD_TYPE_NAME, Analytics.AppsTimeline.BLANK,
+      Analytics.AppsTimeline.clickOnCard(ArticleDisplayable.CARD_TYPE_NAME, Analytics.AppsTimeline.BLANK,
           displayable.getArticleTitle(), displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_ARTICLE);
-      displayable.sendOpenArticleEvent(SendEventRequest.Body.Data.builder()
-          .cardType(CARD_TYPE_NAME)
-          .source(displayable.getTitle())
-          .specific(SendEventRequest.Body.Specific.builder()
-              .url(displayable.getLink().getUrl())
-              .app(packageName)
-              .build())
-          .build(), TimelineClickEvent.OPEN_ARTICLE);
+      displayable.sendOpenArticleEvent(packageName);
     });
 
     compositeSubscription.add(displayable.getRelatedToApplication()
@@ -113,22 +103,15 @@ public class ArticleWidget extends CardWidget<ArticleDisplayable> {
     compositeSubscription.add(RxView.clicks(articleHeader).subscribe(click -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
       displayable.getDeveloperLink().launch(context);
-      Analytics.AppsTimeline.clickOnCard(CARD_TYPE_NAME, Analytics.AppsTimeline.BLANK,
+      Analytics.AppsTimeline.clickOnCard(ArticleDisplayable.CARD_TYPE_NAME, Analytics.AppsTimeline.BLANK,
           displayable.getArticleTitle(), displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_ARTICLE_HEADER);
-      displayable.sendOpenArticleEvent(SendEventRequest.Body.Data.builder()
-          .cardType(CARD_TYPE_NAME)
-          .source(displayable.getTitle())
-          .specific(SendEventRequest.Body.Specific.builder()
-              .url(displayable.getDeveloperLink().getUrl())
-              .app(packageName)
-              .build())
-          .build(), TimelineClickEvent.OPEN_BLOG);
+      displayable.sendOpenArticleEvent(packageName);
     }));
   }
 
   @Override String getCardTypeName() {
-    return CARD_TYPE_NAME;
+    return ArticleDisplayable.CARD_TYPE_NAME;
   }
 
   private void setAppNameToFirstLinkedApp(ArticleDisplayable displayable) {

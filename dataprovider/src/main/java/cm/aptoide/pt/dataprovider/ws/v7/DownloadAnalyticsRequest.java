@@ -34,6 +34,6 @@ public class DownloadAnalyticsRequest
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.setDownloadAnalyticsEvent(name, action, context, body);
+    return interfaces.addEvent(name, action, context, body);
   }
 }

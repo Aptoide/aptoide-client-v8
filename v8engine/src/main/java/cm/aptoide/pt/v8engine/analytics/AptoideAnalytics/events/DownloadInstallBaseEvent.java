@@ -17,7 +17,7 @@ import lombok.ToString;
  */
 
 public @EqualsAndHashCode(callSuper = false) @Data @ToString class DownloadInstallBaseEvent
-    extends Event {
+    implements Event {
   private final AptoideClientUUID aptoideClientUUID;
   private final AptoideAccountManager accountManager;
   private Action action;

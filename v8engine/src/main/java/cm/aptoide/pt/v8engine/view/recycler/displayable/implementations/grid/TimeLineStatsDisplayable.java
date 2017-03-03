@@ -10,6 +10,7 @@ import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.implementations.TimeLineFollowFragment;
+import cm.aptoide.pt.v8engine.repository.TimelineAnalytics;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 
@@ -21,15 +22,17 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
 
   private SpannableFactory spannableFactory;
   private String storeTheme;
+  private TimelineAnalytics timelineAnalytics;
 
   public TimeLineStatsDisplayable() {
   }
 
   public TimeLineStatsDisplayable(TimelineStats pojo, SpannableFactory spannableFactory,
-      String storeTheme) {
+      String storeTheme, TimelineAnalytics timelineAnalytics) {
     super(pojo);
     this.spannableFactory = spannableFactory;
     this.storeTheme = storeTheme;
+    this.timelineAnalytics = timelineAnalytics;
   }
 
   @Override protected Configs getConfig() {
@@ -73,6 +76,7 @@ public class TimeLineStatsDisplayable extends DisplayablePojo<TimelineStats> {
   }
 
   public void followFriendsClick(NavigationManagerV4 navigationManager) {
+    timelineAnalytics.sendFollowFriendsEvent();
     navigationManager.navigateTo(V8Engine.getFragmentProvider().newAddressBookFragment());
   }
 }
