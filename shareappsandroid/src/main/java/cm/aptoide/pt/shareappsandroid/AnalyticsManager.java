@@ -41,18 +41,22 @@ public class AnalyticsManager {
   }
 
   public void joinGroupSuccess() {
-    AnalyticsLite.groupClick("Join Group", "Success");
+    AnalyticsLite.groupClick(AnalyticsLite.EVENT_NAME_SPOT_SHARE_JOIN,
+        AnalyticsLite.ACTION_SPOT_SHARE_SUCCESS);
   }
 
   public void joinGroupUnsuccess() {
-    AnalyticsLite.groupClick("Join Group", "Unsuccessful");
+    AnalyticsLite.groupClick(AnalyticsLite.EVENT_NAME_SPOT_SHARE_JOIN,
+        AnalyticsLite.ACTION_SPOT_SHARE_UNSUCCESS);
   }
 
   public void createGroupUnsuccess() {
-    AnalyticsLite.groupClick("Create Group", "Unsuccessful");
+    AnalyticsLite.groupClick(AnalyticsLite.EVENT_NAME_SPOT_SHARE_CREATE,
+        AnalyticsLite.ACTION_SPOT_SHARE_UNSUCCESS);
   }
 
   public void createGroupSuccess() {
-    AnalyticsLite.groupClick("Create Group", "Success");
+    AnalyticsLite.groupClick(AnalyticsLite.EVENT_NAME_SPOT_SHARE_CREATE,
+        AnalyticsLite.ACTION_SPOT_SHARE_SUCCESS);
   }
 }

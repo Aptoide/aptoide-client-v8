@@ -9,15 +9,30 @@ import java.util.Map;
 
 public class AnalyticsLite {
 
-  // public static LocalyticsSession localyticsSession;
-  public static final String LITE_CUSTOM_DIMENSION = "lite";
-  public static final int LITE_CUSTOM_DIMENSION_VERTICAL = 2;
+  private static String EVENT_NAME_SPOT_SHARE = "Share_Apps_Click_On_Share_Apps";
+  public static String EVENT_NAME_SPOT_SHARE_JOIN = "Share_Apps_Join_Group";
+  public static String EVENT_NAME_SPOT_SHARE_CREATE = "Share_Apps_Create_Group";
+  public static String EVENT_NAME_SPOT_SHARE_SEND_APP = "Share_Apps_Send_App";
+  public static String EVENT_NAME_SPOT_SHARE_RECEIVE_APP = "Share_Apps_Receive_App";
+
+  public static String ACTION_SPOT_SHARE_SUCCESS = "Success";
+  public static String ACTION_SPOT_SHARE_UNSUCCESS = "Unsuccessful";
+
+  public static String ACTION_SPOT_SHARE_SEND_APP = "Send app";
+  public static String ACTION_SPOT_SHARE_SEND_SUCCESS = "Success send";
+  public static String ACTION_SPOT_SHARE_SEND_UNSUCCESS = "Unsuccessful send";
+
+  public static String ACTION_SPOT_SHARE_RCV_SUCCESS = "Success received";
+  public static String ACTION_SPOT_SHARE_RCV_UNSUCCESS = "Unsuccessful received";
 
   public static void clickShareApps() {
-    trackEvent("Click on Share Apps", null);
+    //TODO THis should be called in v8engine, not here
+    //TODO click on drawer and click on start btn in SpotShare Tab
+    trackEvent(EVENT_NAME_SPOT_SHARE, null);
   }
 
   public static void trackEvent(String eventName, Map<String, String> attributes) {
+
   }
 
   /**
@@ -28,7 +43,7 @@ public class AnalyticsLite {
    */
   public static void groupClick(String eventName, String result) {
     Map<String, String> attributes = new HashMap<>();
-    attributes.put("Result", result);
+    attributes.put("results", result);
     trackEvent(eventName, attributes);
   }
 
@@ -42,8 +57,9 @@ public class AnalyticsLite {
    * received"
    */
   public static void transferClick(String eventName, String action) {
+    //TODO this is called in the wrong place
     Map<String, String> attributes = new HashMap<>();
-    attributes.put("Action", action);
+    attributes.put("action", action);
     trackEvent(eventName, attributes);
   }
 }

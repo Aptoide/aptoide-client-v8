@@ -199,7 +199,7 @@ public class HighwayTransferRecordActivity extends ActivityView
       //como sou servidor devo meter o firstSender a ""
     } else {
       System.out.println("Send a file from outside - not a hotspot");
-      sendIntent = new Intent(this, HighwayClientComm.class);
+      sendIntent = new Intent(this, HighwayClientService.class);
       sendIntent.putExtra("targetIP", targetIPAddress);
     }
     sendIntent.putExtra("port", porto);
@@ -448,6 +448,7 @@ public class HighwayTransferRecordActivity extends ActivityView
           .setPositiveButton(this.getResources().getString(R.string.leave),
               new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
+                  sendServerShutdownMessage();
                   setInitialApConfig();
                   presenter.recoverNetworkState();
                   finish();
@@ -483,6 +484,12 @@ public class HighwayTransferRecordActivity extends ActivityView
               });
       return builder.create();
     }
+  }
+
+  private void sendServerShutdownMessage() {
+    Intent shutdown = new Intent(this, HighwayServerService.class);
+    shutdown.setAction("SHUTDOWN_SERVER");
+    startService(shutdown);
   }
 
   private void setInitialApConfig() {
@@ -742,8 +749,10 @@ public class HighwayTransferRecordActivity extends ActivityView
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
     builder.setTitle(this.getResources().getString(R.string.alert))
-        .setMessage(this.getResources().getString(R.string.alertClearApps1) + " \n" +
-            "\n" + this.getResources().getString(R.string.alertClearApps2))
+        .setMessage(this.getResources().getString(R.string.alertClearApps1)
+            + " \n"
+            + "\n"
+            + this.getResources().getString(R.string.alertClearApps2))
         .setPositiveButton(this.getResources().getString(R.string.delete),
             new DialogInterface.OnClickListener() {
               public void onClick(DialogInterface dialog, int id) {

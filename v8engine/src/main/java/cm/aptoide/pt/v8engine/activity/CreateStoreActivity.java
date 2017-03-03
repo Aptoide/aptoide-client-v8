@@ -168,7 +168,8 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
     storeRemoteUrl = getIntent().getStringExtra("storeAvatar");
     storeTheme = getIntent().getStringExtra("storeTheme") == null ? ""
         : getIntent().getStringExtra("storeTheme");
-    storeDescription = getIntent().getStringExtra("storeDescription");
+    storeDescription = getIntent() != null && getIntent().hasExtra("storeDescription") ? getIntent()
+        .getStringExtra("storeDescription") : "";
   }
 
   private void bindViews() {
@@ -262,7 +263,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
     mSubscriptions.add(RxView.clicks(mCreateStore).subscribe(click -> {
           AptoideUtils.SystemU.hideKeyboard(this);
           storeName = mStoreName.getText().toString().trim().toLowerCase();
-          storeDescription = mStoreDescription.getText().toString();
+          storeDescription = mStoreDescription.getText().toString().trim();
           validateData();
           progressDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
               getApplicationContext().getString(cm.aptoide.accountmanager.R.string.please_wait_upload));
@@ -663,7 +664,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
   }
 
   private String getRepoDescription() {
-    return storeDescription == null ? "" : mStoreDescription.getText().toString();
+    return storeDescription == null ? "" : mStoreDescription.getText().toString().trim();
   }
 
   private String getRepoAvatar() {
@@ -671,7 +672,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
   }
 
   private String getRepoName() {
-    return storeName == null ? "" : mStoreName.getText().toString();
+    return storeName == null ? "" : mStoreName.getText().toString().trim().toLowerCase();
   }
 
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
