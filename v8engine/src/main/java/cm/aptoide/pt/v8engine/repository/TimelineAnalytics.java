@@ -102,28 +102,28 @@ public class TimelineAnalytics {
   }
 
   private Map<String, Object> createAppData(String cardType, String source, String packageName) {
-    final HashMap<String, String> specific = new HashMap<>();
+    final Map<String, String> specific = new HashMap<>();
     specific.put("app", packageName);
     return createTimelineCardData(cardType, source, specific);
   }
 
   private Map<String, Object> createStoreAppData(String cardType, String source, String packageName,
       String store) {
-    final HashMap<String, String> specific = new HashMap<>();
+    final Map<String, String> specific = new HashMap<>();
     specific.put("app", packageName);
     specific.put("store", store);
     return createTimelineCardData(cardType, source, specific);
   }
 
   private Map<String, Object> createStoreData(String cardType, String source, String store) {
-    final HashMap<String, String> specific = new HashMap<>();
+    final Map<String, String> specific = new HashMap<>();
     specific.put("store", store);
     return createTimelineCardData(cardType, source, specific);
   }
 
   private Map<String, Object> createSimilarAppData(String cardType, String source,
       String packageName, String similarPackageName) {
-    final HashMap<String, String> specific = new HashMap<>();
+    final Map<String, String> specific = new HashMap<>();
     specific.put("app", packageName);
     specific.put("similarTo", similarPackageName);
     return createTimelineCardData(cardType, source, specific);
@@ -131,7 +131,7 @@ public class TimelineAnalytics {
 
   private Map<String, Object> createVideoAppData(String cardType, String source, String url,
       String packageName) {
-    final HashMap<String, String> specific = new HashMap<>();
+    final Map<String, String> specific = new HashMap<>();
     specific.put("app", packageName);
     specific.put("url", url);
     return createTimelineCardData(cardType, source, specific);
@@ -139,14 +139,14 @@ public class TimelineAnalytics {
 
   private Map<String, Object> createBasedOnAppData(String cardType, String source,
       String packageName, String basedOnPackageName) {
-    final HashMap<String, String> specific = new HashMap<>();
+    final Map<String, String> specific = new HashMap<>();
     specific.put("app", packageName);
     specific.put("basedOn", basedOnPackageName);
     return createTimelineCardData(cardType, source, specific);
   }
 
   private Map<String, Object> createTimelineCardData(String cardType, String source,
-      HashMap<String, String> specific) {
+      Map<String, String> specific) {
     final Map<String, Object> result = new HashMap<>();
     result.put("cardType", cardType);
     result.put("source", source);
@@ -156,7 +156,7 @@ public class TimelineAnalytics {
 
   private Map<String, Object> createArticleData(String cardType, String source, String url,
       String packageName) {
-    final HashMap<String, String> specific = new HashMap<>();
+    final Map<String, String> specific = new HashMap<>();
     specific.put("url", url);
     specific.put("app", packageName);
     return createTimelineCardData(cardType, source, specific);

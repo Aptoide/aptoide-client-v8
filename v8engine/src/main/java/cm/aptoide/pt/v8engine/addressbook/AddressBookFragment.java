@@ -23,11 +23,13 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.addressbook.data.ContactsRepositoryImpl;
 import cm.aptoide.pt.v8engine.addressbook.navigation.AddressBookNavigationManager;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.UIComponentFragment;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.jakewharton.rxbinding.view.RxView;
@@ -78,6 +80,8 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
     super.onCreate(savedInstanceState);
     mActionsListener = new AddressBookPresenter(this, new ContactsRepositoryImpl(
         ((V8Engine) getContext().getApplicationContext()).getAccountManager()),
+        new AddressBookAnalytics(Analytics.getInstance(),
+            AppEventsLogger.newLogger(getContext().getApplicationContext())),
         new AddressBookNavigationManager(NavigationManagerV4.Builder.buildWith(getActivity()),
             getTag(), getString(R.string.addressbook_about),
             getString(R.string.addressbook_data_about,

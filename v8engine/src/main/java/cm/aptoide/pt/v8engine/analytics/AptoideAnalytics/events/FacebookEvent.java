@@ -19,7 +19,17 @@ public class FacebookEvent implements Event {
     this.name = name;
   }
 
+  public FacebookEvent(AppEventsLogger facebook, String name, Bundle data) {
+    this.facebook = facebook;
+    this.name = name;
+    this.data = data;
+  }
+
   @Override public void send() {
-    facebook.logEvent(name);
+    if (data != null) {
+      facebook.logEvent(name, data);
+    } else {
+      facebook.logEvent(name);
+    }
   }
 }
