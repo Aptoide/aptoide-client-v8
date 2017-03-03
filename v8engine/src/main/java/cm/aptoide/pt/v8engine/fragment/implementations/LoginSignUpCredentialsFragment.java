@@ -249,12 +249,12 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   }
 
   @Override public void navigateToMainView() {
+    final NavigationManagerV4 navManager = getNavigationManager();
     Fragment home =
         HomeFragment.newInstance(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home,
             V8Engine.getConfiguration().getDefaultTheme());
-
-    final NavigationManagerV4 navManager = getNavigationManager();
-    navManager.navigateToWithoutBackSave(home);
+    navManager.cleanBackStack();
+    navManager.navigateTo(home);
   }
 
   @Override public void goBack() {
@@ -307,7 +307,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
 
   @Override public void onResume() {
     super.onResume();
-    if(aptoideEmailEditText!=null) {
+    if (aptoideEmailEditText != null) {
       aptoideEmailEditText.requestFocus();
     }
   }

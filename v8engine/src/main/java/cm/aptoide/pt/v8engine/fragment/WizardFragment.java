@@ -145,7 +145,21 @@ public class WizardFragment extends FragmentView
     if (FragmentView.class.isAssignableFrom(f.getClass())) {
       return ((FragmentView) f).onBackPressed();
     }
+
+    // we do not need to do this since the home fragment is added to the back stack before this
+    // fragment is visible
+    //navigateToMainView()
+
     return super.onBackPressed();
+  }
+
+  private void navigateToMainView() {
+    //final NavigationManagerV4 navManager = getNavigationManager();
+    //Fragment home =
+    //    HomeFragment.newInstance(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home,
+    //        V8Engine.getConfiguration().getDefaultTheme());
+    //navManager.cleanBackStack();
+    //navManager.navigateTo(home);
   }
 
   @Override public void expanded() {

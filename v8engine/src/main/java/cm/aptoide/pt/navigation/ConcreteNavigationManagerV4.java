@@ -11,6 +11,7 @@ import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
 
@@ -104,11 +105,36 @@ class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
     }
 
     final FragmentManager fragmentManager = activity.getSupportFragmentManager();
+
     if (fragmentManager.getBackStackEntryCount() > 0) {
       FragmentManager.BackStackEntry backStackEntry =
           fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1);
       return fragmentManager.findFragmentByTag(backStackEntry.getName());
     }
+
+    return null;
+  }
+
+  /**
+   * Using all the active fragments instead of only the ones in the back stack
+   */
+  @Override public Fragment peekLastFromAll() {
+    FragmentActivity activity = weakReference.get();
+
+    if (activity == null) {
+      CrashReport.getInstance()
+          .log(new RuntimeException(
+              "Activity is null in " + TAG));
+      return null;
+    }
+
+    final FragmentManager fragmentManager = activity.getSupportFragmentManager();
+
+    List<Fragment> fragments = fragmentManager.getFragments();
+    if(fragments!=null && fragments.size()>0) {
+      return fragments.get(fragments.size()-1);
+    }
+
     return null;
   }
 
@@ -123,10 +149,35 @@ class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
     }
 
     final FragmentManager fragmentManager = activity.getSupportFragmentManager();
+
     if (fragmentManager.getBackStackEntryCount() > 0) {
       FragmentManager.BackStackEntry backStackEntry = fragmentManager.getBackStackEntryAt(0);
       return fragmentManager.findFragmentByTag(backStackEntry.getName());
     }
+
+    return null;
+  }
+
+  /**
+   * Using all the active fragments instead of only the ones in the back stack
+   */
+  @Override public Fragment peekFirstFromAll() {
+    FragmentActivity activity = weakReference.get();
+
+    if (activity == null) {
+      CrashReport.getInstance()
+          .log(new RuntimeException(
+              "Activity is null in " + TAG));
+      return null;
+    }
+
+    final FragmentManager fragmentManager = activity.getSupportFragmentManager();
+
+    List<Fragment> fragments = fragmentManager.getFragments();
+    if(fragments!=null && fragments.size()>0) {
+      return fragments.get(0);
+    }
+
     return null;
   }
 

@@ -86,7 +86,7 @@ public class MainActivity extends TabNavigatorActivity implements MainView, Frag
   }
 
   @Override public void showWizard() {
-    getNavigationManager().navigateToWithoutBackSave(new WizardFragment());
+    getNavigationManager().navigateTo(new WizardFragment());
   }
 
   @Override public void showHome() {

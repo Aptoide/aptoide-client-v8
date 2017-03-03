@@ -19,6 +19,7 @@ import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.BuildConfig;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.fragment.GooglePlayServicesFragment;
@@ -65,11 +66,12 @@ public class MyAccountFragment extends GooglePlayServicesFragment implements MyA
   }
 
   @Override public void navigateToHome() {
+    final NavigationManagerV4 navManager = getNavigationManager();
     Fragment home =
         HomeFragment.newInstance(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home,
             V8Engine.getConfiguration().getDefaultTheme());
-    getNavigationManager().cleanBackStack();
-    getNavigationManager().navigateTo(home);
+    navManager.cleanBackStack();
+    navManager.navigateTo(home);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

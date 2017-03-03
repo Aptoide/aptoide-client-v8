@@ -17,7 +17,11 @@ public interface NavigationManagerV4 {
 
   Fragment peekLast();
 
+  Fragment peekLastFromAll();
+
   Fragment peekFirst();
+
+  Fragment peekFirstFromAll();
 
   void navigateToWithoutBackSave(Fragment fragment);
 
