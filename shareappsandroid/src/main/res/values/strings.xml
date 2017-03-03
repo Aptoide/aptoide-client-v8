@@ -26,7 +26,7 @@
 
   <string name="preparingSend">Preparing to send </string>
   <string name="sending">Sending </string>
-  <string name="transfCompleted">Transference Completed</string>
+  <string name="transfCompleted">Transfer Completed</string>
   <string name="receive">Receive</string>
   <string name="receiving">Receiving </string>
 
@@ -50,7 +50,7 @@
 
   <string name="alertDeleteApp">Are you sure you want to delete the %1$s application?</string>
 
-  <string name="shareApps">Share APPS</string>
+  <string name="shareApps">Spot&amp;Share</string>
   <string name="createGroup">Create Group</string>
   <string name="joinGroup">Join Group</string>
   <string name="upperInstall">INSTALL</string>
