@@ -20,7 +20,7 @@ public class PermissionManager {
     return Observable.create(new RequestDownloadAccessOnSubscribe(permissionRequest));
   }
 
-  public Observable<Void> requestContactsAccess(PermissionService permissionRequest) {
+  public Observable<Boolean> requestContactsAccess(PermissionService permissionRequest) {
     return Observable.create(new RequestContactsAccessOnSubscribe(permissionRequest));
   }
 }

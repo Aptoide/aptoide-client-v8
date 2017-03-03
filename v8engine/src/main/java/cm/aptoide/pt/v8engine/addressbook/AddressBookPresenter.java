@@ -5,6 +5,7 @@ import cm.aptoide.pt.model.v7.TwitterModel;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.v8engine.addressbook.data.ContactsRepository;
 import cm.aptoide.pt.v8engine.addressbook.invitefriends.InviteFriendsFragment;
+import cm.aptoide.pt.v8engine.addressbook.navigation.AddressBookNavigation;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -15,11 +16,13 @@ public class AddressBookPresenter implements AddressBookContract.UserActionsList
 
   private final AddressBookContract.View mAddressBookView;
   private final ContactsRepository mContactsRepository;
+  private final AddressBookNavigation addressBookNavigationManager;
 
   public AddressBookPresenter(AddressBookContract.View addressBookView,
-      ContactsRepository contactsRepository) {
+      ContactsRepository contactsRepository, AddressBookNavigation addressBookNavigationManager) {
     this.mAddressBookView = addressBookView;
     this.mContactsRepository = contactsRepository;
+    this.addressBookNavigationManager = addressBookNavigationManager;
   }
 
   @Override public void syncAddressBook() {
@@ -28,17 +31,17 @@ public class AddressBookPresenter implements AddressBookContract.UserActionsList
         .subscribeOn(AndroidSchedulers.mainThread())
         .subscribe(ignore -> {
           if (!success) {
-            mAddressBookView.showInviteFriendsFragment(
+            addressBookNavigationManager.navigateToInviteFriendsView(
                 InviteFriendsFragment.InviteFriendsFragmentOpenMode.ERROR);
             mAddressBookView.setGenericPleaseWaitDialog(false);
           } else {
             mAddressBookView.changeAddressBookState(true);
             ManagerPreferences.setAddressBookAsSynced();
             if (!contacts.isEmpty()) {
-              mAddressBookView.showSuccessFragment(contacts);
+              addressBookNavigationManager.showSuccessFragment(contacts);
               mAddressBookView.setGenericPleaseWaitDialog(false);
             } else {
-              mAddressBookView.showInviteFriendsFragment(
+              addressBookNavigationManager.navigateToInviteFriendsView(
                   InviteFriendsFragment.InviteFriendsFragmentOpenMode.NO_FRIENDS);
               mAddressBookView.setGenericPleaseWaitDialog(false);
             }
@@ -52,16 +55,16 @@ public class AddressBookPresenter implements AddressBookContract.UserActionsList
             .subscribeOn(AndroidSchedulers.mainThread())
             .subscribe(ignore -> {
               if (!success) {
-                mAddressBookView.showInviteFriendsFragment(
+                addressBookNavigationManager.navigateToInviteFriendsView(
                     InviteFriendsFragment.InviteFriendsFragmentOpenMode.ERROR);
                 mAddressBookView.setGenericPleaseWaitDialog(false);
               } else {
                 mAddressBookView.changeTwitterState(true);
                 ManagerPreferences.setTwitterAsSynced();
                 if (!contacts.isEmpty()) {
-                  mAddressBookView.showSuccessFragment(contacts);
+                  addressBookNavigationManager.showSuccessFragment(contacts);
                 } else {
-                  mAddressBookView.showInviteFriendsFragment(
+                  addressBookNavigationManager.navigateToInviteFriendsView(
                       InviteFriendsFragment.InviteFriendsFragmentOpenMode.NO_FRIENDS);
                 }
               }
@@ -74,16 +77,16 @@ public class AddressBookPresenter implements AddressBookContract.UserActionsList
             .subscribeOn(AndroidSchedulers.mainThread())
             .subscribe(ignore -> {
               if (!success) {
-                mAddressBookView.showInviteFriendsFragment(
+                addressBookNavigationManager.navigateToInviteFriendsView(
                     InviteFriendsFragment.InviteFriendsFragmentOpenMode.ERROR);
                 mAddressBookView.setGenericPleaseWaitDialog(false);
               } else {
                 mAddressBookView.changeFacebookState(true);
                 ManagerPreferences.setFacebookAsSynced();
                 if (!contacts.isEmpty()) {
-                  mAddressBookView.showSuccessFragment(contacts);
+                  addressBookNavigationManager.showSuccessFragment(contacts);
                 } else {
-                  mAddressBookView.showInviteFriendsFragment(
+                  addressBookNavigationManager.navigateToInviteFriendsView(
                       InviteFriendsFragment.InviteFriendsFragmentOpenMode.NO_FRIENDS);
                 }
               }
@@ -101,10 +104,15 @@ public class AddressBookPresenter implements AddressBookContract.UserActionsList
   }
 
   @Override public void aboutClick() {
-    mAddressBookView.showAboutFragment();
+    addressBookNavigationManager.showAboutFragment();
   }
 
   @Override public void allowFindClick() {
-    mAddressBookView.showPhoneInputFragment();
+    addressBookNavigationManager.navigateToPhoneInputView();
+  }
+
+  @Override public void contactsPermissionDenied() {
+    addressBookNavigationManager.navigateToInviteFriendsView(
+        InviteFriendsFragment.InviteFriendsFragmentOpenMode.CONTACTS_PERMISSION_DENIAL);
   }
 }
