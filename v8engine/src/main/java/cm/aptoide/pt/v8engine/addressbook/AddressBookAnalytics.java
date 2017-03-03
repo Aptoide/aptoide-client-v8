@@ -48,6 +48,20 @@ public class AddressBookAnalytics {
     analytics.sendEvent(new LocalyticsEvent("Follow_Friends_How_To"));
   }
 
+  public void sendAllowAptoideAccessToContactsEvent() {
+    analytics.sendEvent(new FacebookEvent(facebook, "Follow_Friends_Aptoide_Access",
+        createBundleData("action", "Allow")));
+    analytics.sendEvent(new LocalyticsEvent("Follow_Friends_Aptoide_Access", createMapData
+        ("action", "Allow")));
+  }
+
+  public void sendDenyAptoideAccessToContactsEvent() {
+    analytics.sendEvent(new FacebookEvent(facebook, "Follow_Friends_Aptoide_Access",
+        createBundleData("action", "Deny")));
+    analytics.sendEvent(new LocalyticsEvent("Follow_Friends_Aptoide_Access", createMapData
+        ("action", "Deny")));
+  }
+
   private Bundle createBundleData(String key, String value) {
     final Bundle data = new Bundle();
     data.putString(key, value);

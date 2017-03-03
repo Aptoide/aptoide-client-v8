@@ -64,6 +64,7 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
   private CallbackManager callbackManager;
   private ProgressDialog mGenericPleaseWaitDialog;
   private TwitterSession twitterSession;
+  private AddressBookAnalytics analytics;
 
   public AddressBookFragment() {
 
@@ -78,10 +79,10 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    analytics = new AddressBookAnalytics(Analytics.getInstance(),
+        AppEventsLogger.newLogger(getContext().getApplicationContext()));
     mActionsListener = new AddressBookPresenter(this, new ContactsRepositoryImpl(
-        ((V8Engine) getContext().getApplicationContext()).getAccountManager()),
-        new AddressBookAnalytics(Analytics.getInstance(),
-            AppEventsLogger.newLogger(getContext().getApplicationContext())),
+        ((V8Engine) getContext().getApplicationContext()).getAccountManager()), analytics,
         new AddressBookNavigationManager(NavigationManagerV4.Builder.buildWith(getActivity()),
             getTag(), getString(R.string.addressbook_about),
             getString(R.string.addressbook_data_about,
@@ -110,13 +111,16 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
     dismissV.setPaintFlags(dismissV.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
     about.setPaintFlags(about.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
     RxView.clicks(addressBookSyncButton).flatMap(click -> {
+      analytics.sendSyncAddressBookEvent();
       PermissionManager permissionManager = new PermissionManager();
       final PermissionService permissionService = (PermissionService) getContext();
       return permissionManager.requestContactsAccess(permissionService);
     }).observeOn(AndroidSchedulers.mainThread()).subscribe(permissionGranted -> {
       if (permissionGranted) {
+        analytics.sendAllowAptoideAccessToContactsEvent();
         mActionsListener.syncAddressBook();
       } else {
+        analytics.sendDenyAptoideAccessToContactsEvent();
         mActionsListener.contactsPermissionDenied();
       }
     });

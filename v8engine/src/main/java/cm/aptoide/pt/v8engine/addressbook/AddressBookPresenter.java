@@ -29,7 +29,6 @@ public class AddressBookPresenter implements AddressBookContract.UserActionsList
   }
 
   @Override public void syncAddressBook() {
-    analytics.sendSyncAddressBookEvent();
     view.setGenericPleaseWaitDialog(true);
     contactsRepository.getContacts((contacts, success) -> Observable.just(contacts)
         .subscribeOn(AndroidSchedulers.mainThread())
