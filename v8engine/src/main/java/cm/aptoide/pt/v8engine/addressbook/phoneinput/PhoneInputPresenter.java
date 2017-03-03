@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.addressbook.phoneinput;
 
+import cm.aptoide.pt.v8engine.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.v8engine.addressbook.data.ContactsRepository;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -10,11 +11,13 @@ import rx.android.schedulers.AndroidSchedulers;
 public class PhoneInputPresenter implements PhoneInputContract.UserActionsListener {
   private PhoneInputContract.View mPhoneInputView;
   private ContactsRepository mContactsRepository;
+  private final AddressBookAnalytics analytics;
 
   public PhoneInputPresenter(PhoneInputContract.View phoneInputView,
-      ContactsRepository contactsRepository) {
+      ContactsRepository contactsRepository, AddressBookAnalytics analytics) {
     this.mPhoneInputView = phoneInputView;
     this.mContactsRepository = contactsRepository;
+    this.analytics = analytics;
   }
 
   @Override public void notNowClicked() {
@@ -27,6 +30,7 @@ public class PhoneInputPresenter implements PhoneInputContract.UserActionsListen
         .subscribeOn(AndroidSchedulers.mainThread())
         .subscribe(success1 -> {
           if (success) {
+            analytics.sendShareYourPhoneSuccessEvent();
             mPhoneInputView.showSubmissionSuccess();
             mPhoneInputView.hideVirtualKeyboard();
           } else {

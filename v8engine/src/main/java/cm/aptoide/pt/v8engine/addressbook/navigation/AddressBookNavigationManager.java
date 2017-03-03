@@ -5,7 +5,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.addressbook.data.Contact;
-import cm.aptoide.pt.v8engine.addressbook.invitefriends.InviteFriendsFragment;
+import cm.aptoide.pt.v8engine.addressbook.invitefriends.InviteFriendsContract;
 import java.util.List;
 
 /**
@@ -40,23 +40,23 @@ public class AddressBookNavigationManager implements AddressBookNavigation {
   }
 
   @Override public void navigateToInviteFriendsView(
-      @NonNull InviteFriendsFragment.InviteFriendsFragmentOpenMode openMode) {
+      @NonNull InviteFriendsContract.View.OpenMode openMode) {
     switch (openMode) {
       case ERROR:
         this.navigationManager.navigateTo(V8Engine.getFragmentProvider()
-            .newInviteFriendsFragment(InviteFriendsFragment.InviteFriendsFragmentOpenMode.ERROR,
+            .newInviteFriendsFragment(InviteFriendsContract.View.OpenMode.ERROR,
                 exitNavigationFragmentTag));
         break;
       case NO_FRIENDS:
         this.navigationManager.navigateTo(V8Engine.getFragmentProvider()
             .newInviteFriendsFragment(
-                InviteFriendsFragment.InviteFriendsFragmentOpenMode.NO_FRIENDS,
+                InviteFriendsContract.View.OpenMode.NO_FRIENDS,
                 exitNavigationFragmentTag));
         break;
       case CONTACTS_PERMISSION_DENIAL:
         this.navigationManager.navigateTo(V8Engine.getFragmentProvider()
             .newInviteFriendsFragment(
-                InviteFriendsFragment.InviteFriendsFragmentOpenMode.CONTACTS_PERMISSION_DENIAL,
+                InviteFriendsContract.View.OpenMode.CONTACTS_PERMISSION_DENIAL,
                 exitNavigationFragmentTag));
       default:
         Logger.d(this.getClass().getSimpleName(), "Wrong openMode type.");

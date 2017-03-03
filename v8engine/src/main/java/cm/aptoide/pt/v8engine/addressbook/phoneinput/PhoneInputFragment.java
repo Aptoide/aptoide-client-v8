@@ -14,9 +14,12 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.v8engine.addressbook.data.ContactsRepositoryImpl;
 import cm.aptoide.pt.v8engine.addressbook.utils.ContactUtils;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.UIComponentFragment;
+import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
 
 /**
@@ -43,7 +46,9 @@ public class PhoneInputFragment extends UIComponentFragment implements PhoneInpu
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     this.mActionsListener = new PhoneInputPresenter(this, new ContactsRepositoryImpl(
-        ((V8Engine) getContext().getApplicationContext()).getAccountManager()));
+        ((V8Engine) getContext().getApplicationContext()).getAccountManager()),
+        new AddressBookAnalytics(Analytics.getInstance(),
+            AppEventsLogger.newLogger(getContext().getApplicationContext())));
     mGenericPleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());
     contactUtils = new ContactUtils();
   }

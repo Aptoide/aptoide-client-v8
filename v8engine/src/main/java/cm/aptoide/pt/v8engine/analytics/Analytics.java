@@ -179,7 +179,7 @@ public class Analytics {
   }
 
   public void save(@NonNull String key, @NonNull Event event) {
-    saver.save(key + event.getClass().getName(), event);
+    saver.save(key, event);
   }
 
   public @Nullable Event get(String key, Class<? extends Event> clazz) {
@@ -188,10 +188,6 @@ public class Analytics {
 
   public void sendEvent(Event event) {
     event.send();
-    remove(event);
-  }
-
-  private void remove(@NonNull Event event) {
     saver.remove(event);
   }
 

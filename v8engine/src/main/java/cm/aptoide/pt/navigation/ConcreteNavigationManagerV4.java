@@ -72,9 +72,7 @@ class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
     FragmentActivity activity = weakReference.get();
 
     if (activity == null) {
-      CrashReport.getInstance()
-          .log(new RuntimeException(
-              "Activity is null in " + TAG));
+      CrashReport.getInstance().log(new RuntimeException("Activity is null in " + TAG));
       return;
     }
 
@@ -88,9 +86,7 @@ class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
     FragmentActivity activity = weakReference.get();
 
     if (activity == null) {
-      CrashReport.getInstance()
-          .log(new RuntimeException(
-              "Activity is null in " + TAG));
+      CrashReport.getInstance().log(new RuntimeException("Activity is null in " + TAG));
       return false;
     }
 
@@ -101,9 +97,7 @@ class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
     FragmentActivity activity = weakReference.get();
 
     if (activity == null) {
-      CrashReport.getInstance()
-          .log(new RuntimeException(
-              "Activity is null in " + TAG));
+      CrashReport.getInstance().log(new RuntimeException("Activity is null in " + TAG));
       return null;
     }
 
@@ -125,17 +119,15 @@ class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
     FragmentActivity activity = weakReference.get();
 
     if (activity == null) {
-      CrashReport.getInstance()
-          .log(new RuntimeException(
-              "Activity is null in " + TAG));
+      CrashReport.getInstance().log(new RuntimeException("Activity is null in " + TAG));
       return null;
     }
 
     final FragmentManager fragmentManager = activity.getSupportFragmentManager();
 
     List<Fragment> fragments = fragmentManager.getFragments();
-    if(fragments!=null && fragments.size()>0) {
-      return fragments.get(fragments.size()-1);
+    if (fragments != null && fragments.size() > 0) {
+      return fragments.get(fragments.size() - 1);
     }
 
     return null;
@@ -145,9 +137,7 @@ class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
     FragmentActivity activity = weakReference.get();
 
     if (activity == null) {
-      CrashReport.getInstance()
-          .log(new RuntimeException(
-              "Activity is null in " + TAG));
+      CrashReport.getInstance().log(new RuntimeException("Activity is null in " + TAG));
       return null;
     }
 
@@ -168,16 +158,14 @@ class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
     FragmentActivity activity = weakReference.get();
 
     if (activity == null) {
-      CrashReport.getInstance()
-          .log(new RuntimeException(
-              "Activity is null in " + TAG));
+      CrashReport.getInstance().log(new RuntimeException("Activity is null in " + TAG));
       return null;
     }
 
     final FragmentManager fragmentManager = activity.getSupportFragmentManager();
 
     List<Fragment> fragments = fragmentManager.getFragments();
-    if(fragments!=null && fragments.size()>0) {
+    if (fragments != null && fragments.size() > 0) {
       return fragments.get(0);
     }
 
@@ -188,9 +176,7 @@ class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
     FragmentActivity activity = weakReference.get();
 
     if (activity == null) {
-      CrashReport.getInstance()
-          .log(new RuntimeException(
-              "Activity is null in " + TAG));
+      CrashReport.getInstance().log(new RuntimeException("Activity is null in " + TAG));
       return;
     }
 
