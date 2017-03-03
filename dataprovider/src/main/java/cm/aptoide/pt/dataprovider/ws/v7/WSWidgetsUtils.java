@@ -8,10 +8,10 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 import android.util.Pair;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetMyStoreListRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetMyStoreMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreDisplaysRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
@@ -78,7 +78,7 @@ public class WSWidgetsUtils {
               .map(listApps -> wsWidget);
 
         case HOME_META:
-          return GetStoreMetaRequest.ofAction(url, storeCredentials, accessToken, aptoideClientUuid)
+          return GetHomeMetaRequest.ofAction(url, storeCredentials, accessToken, aptoideClientUuid)
               .observe(refresh)
               .observeOn(Schedulers.io())
               .doOnNext(wsWidget::setViewObject)

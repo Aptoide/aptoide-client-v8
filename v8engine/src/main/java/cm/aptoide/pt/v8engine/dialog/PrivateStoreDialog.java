@@ -22,7 +22,7 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
-import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeMetaRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
@@ -145,8 +145,8 @@ public class PrivateStoreDialog extends BaseDialog {
     outState.putString(BundleArgs.STORE_NAME.name(), storeName);
   }
 
-  private GetStoreMetaRequest buildRequest() {
-    return GetStoreMetaRequest.of(
+  private GetHomeMetaRequest buildRequest() {
+    return GetHomeMetaRequest.of(
         new BaseRequestWithStore.StoreCredentials(storeName, storeUser, storePassSha1),
         accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier());
   }

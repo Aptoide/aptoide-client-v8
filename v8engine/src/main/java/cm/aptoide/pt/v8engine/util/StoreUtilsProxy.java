@@ -2,10 +2,9 @@ package cm.aptoide.pt.v8engine.util;
 
 import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeMetaRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.model.v7.store.GetHome;
 import cm.aptoide.pt.model.v7.store.GetHomeMeta;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
@@ -30,19 +29,19 @@ public class StoreUtilsProxy {
   }
 
   public void subscribeStore(String storeName) {
-    subscribeStore(GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName),
+    subscribeStore(GetHomeMetaRequest.of(StoreUtils.getStoreCredentials(storeName),
         accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier()), null,
         null, storeName, accountManager);
   }
 
-  public void subscribeStore(GetStoreMetaRequest getStoreMetaRequest,
+  public void subscribeStore(GetHomeMetaRequest getHomeMetaRequest,
       @Nullable SuccessRequestListener<GetHomeMeta> successRequestListener,
       @Nullable ErrorRequestListener errorRequestListener, String storeName,
       AptoideAccountManager accountManager) {
     Logger.d(StoreUtilsProxy.class.getName(),
         "LOCALYTICS TESTING - STORES: ACTION SUBSCRIBE " + storeName);
     Analytics.Stores.subscribe(storeName);
-    StoreUtils.subscribeStore(getStoreMetaRequest, successRequestListener, errorRequestListener,
+    StoreUtils.subscribeStore(getHomeMetaRequest, successRequestListener, errorRequestListener,
         accountManager);
   }
 
@@ -50,7 +49,7 @@ public class StoreUtilsProxy {
       @Nullable SuccessRequestListener<GetHomeMeta> successRequestListener,
       @Nullable ErrorRequestListener errorRequestListener,
       AptoideAccountManager accountManager) {
-    subscribeStore(GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName),
+    subscribeStore(GetHomeMetaRequest.of(StoreUtils.getStoreCredentials(storeName),
         accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier()),
         successRequestListener, errorRequestListener, storeName, accountManager);
   }

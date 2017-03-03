@@ -10,12 +10,11 @@ import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
-import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeMetaRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import cm.aptoide.pt.model.v7.store.GetHomeMeta;
-import cm.aptoide.pt.model.v7.store.HomeUser;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
@@ -63,7 +62,7 @@ public class StoreUtils {
   @Deprecated public static void subscribeStore(String storeName,
       @Nullable SuccessRequestListener<GetHomeMeta> successRequestListener,
       @Nullable ErrorRequestListener errorRequestListener, AptoideAccountManager accountManager) {
-    subscribeStore(GetStoreMetaRequest.of(getStoreCredentials(storeName),
+    subscribeStore(GetHomeMetaRequest.of(getStoreCredentials(storeName),
         accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier()),
         successRequestListener, errorRequestListener, accountManager);
   }
@@ -72,10 +71,10 @@ public class StoreUtils {
    * If you want to do event tracking (Analytics) use (v8engine)StoreUtilsProxy.subscribeStore
    * instead, else, use this.
    */
-  @Deprecated public static void subscribeStore(GetStoreMetaRequest getStoreMetaRequest,
+  @Deprecated public static void subscribeStore(GetHomeMetaRequest getHomeMetaRequest,
       @Nullable SuccessRequestListener<GetHomeMeta> successRequestListener,
       @Nullable ErrorRequestListener errorRequestListener, AptoideAccountManager accountManager) {
-    getStoreMetaRequest.execute(getStoreMeta -> {
+    getHomeMetaRequest.execute(getStoreMeta -> {
 
       if (BaseV7Response.Info.Status.OK.equals(getStoreMeta.getInfo().getStatus())) {
 
@@ -91,9 +90,9 @@ public class StoreUtils {
         store.setIconPath(storeData.getAvatar());
         store.setTheme(storeData.getAppearance().getTheme());
 
-        if (isPrivateCredentialsSet(getStoreMetaRequest)) {
-          store.setUsername(getStoreMetaRequest.getBody().getStoreUser());
-          store.setPasswordSha1(getStoreMetaRequest.getBody().getStorePassSha1());
+        if (isPrivateCredentialsSet(getHomeMetaRequest)) {
+          store.setUsername(getHomeMetaRequest.getBody().getStoreUser());
+          store.setPasswordSha1(getHomeMetaRequest.getBody().getStorePassSha1());
         }
 
         // TODO: 18-05-2016 neuro private ainda na ta
@@ -120,9 +119,9 @@ public class StoreUtils {
     return storeCredentialsProvider.get(storeName);
   }
 
-  private static boolean isPrivateCredentialsSet(GetStoreMetaRequest getStoreMetaRequest) {
-    return getStoreMetaRequest.getBody().getStoreUser() != null
-        && getStoreMetaRequest.getBody().getStorePassSha1() != null;
+  private static boolean isPrivateCredentialsSet(GetHomeMetaRequest getHomeMetaRequest) {
+    return getHomeMetaRequest.getBody().getStoreUser() != null
+        && getHomeMetaRequest.getBody().getStorePassSha1() != null;
   }
 
   public static Observable<Boolean> isSubscribedStore(String storeName) {

@@ -12,51 +12,38 @@ import cm.aptoide.pt.dataprovider.ws.v7.V7Url;
 import cm.aptoide.pt.model.v7.store.GetHomeMeta;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import okhttp3.OkHttpClient;
-import retrofit2.Converter;
 import rx.Observable;
 
 /**
  * Created by neuro on 19-04-2016.
  */
-@Data @EqualsAndHashCode(callSuper = true) public class GetStoreMetaRequest
-    extends BaseRequestWithStore<GetHomeMeta, GetStoreMetaRequest.Body> {
+@Data @EqualsAndHashCode(callSuper = true) public class GetHomeMetaRequest
+    extends BaseRequestWithStore<GetHomeMeta, GetHomeMetaRequest.Body> {
 
   private String url;
 
-  private GetStoreMetaRequest(String baseHost, Body body) {
+  private GetHomeMetaRequest(String baseHost, Body body) {
     super(body, baseHost);
   }
 
-  private GetStoreMetaRequest(String url, Body body, String baseHost) {
+  private GetHomeMetaRequest(String url, Body body, String baseHost) {
     super(body, baseHost);
     this.url = url;
   }
 
-  private GetStoreMetaRequest(OkHttpClient httpClient, Converter.Factory converterFactory,
-      String baseHost, Body body) {
-    super(body, httpClient, converterFactory, baseHost);
-  }
-
-  private GetStoreMetaRequest(String url, Body body, OkHttpClient httpClient,
-      Converter.Factory converterFactory, String baseHost) {
-    super(body, httpClient, converterFactory, baseHost);
-    this.url = url;
-  }
-
-  public static GetStoreMetaRequest ofAction(String url, StoreCredentials storeCredentials,
+  public static GetHomeMetaRequest ofAction(String url, StoreCredentials storeCredentials,
       String accessToken, String aptoideClientUUID) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
-    return new GetStoreMetaRequest(new V7Url(url).remove("home/getMeta").get(),
+    return new GetHomeMetaRequest(new V7Url(url).remove("home/getMeta").get(),
         (Body) decorator.decorate(new Body(storeCredentials), accessToken), BASE_HOST);
   }
 
-  public static GetStoreMetaRequest of(StoreCredentials storeCredentials, String accessToken,
+  public static GetHomeMetaRequest of(StoreCredentials storeCredentials, String accessToken,
       String aptoideClientUUID) {
     BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
-    return new GetStoreMetaRequest(BASE_HOST,
+    return new GetHomeMetaRequest(BASE_HOST,
         (Body) decorator.decorate(new Body(storeCredentials), accessToken));
   }
 
