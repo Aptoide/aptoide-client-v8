@@ -81,7 +81,10 @@ class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
     cleanBackStack(activity.getSupportFragmentManager());
   }
 
-  @Override public void cleanBackStackUntil(String fragmentTag) {
+  /**
+   * @inheritDoc - doc in the interface ^
+   */
+  @Override public boolean cleanBackStackUntil(String fragmentTag) {
     FragmentActivity activity = weakReference.get();
 
     if (activity == null) {
@@ -91,7 +94,7 @@ class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
       return;
     }
 
-    cleanBackStackUntil(fragmentTag, activity.getSupportFragmentManager());
+    return cleanBackStackUntil(fragmentTag, activity.getSupportFragmentManager());
   }
 
   @Override public Fragment peekLast() {
@@ -200,14 +203,14 @@ class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
         .commit();
   }
 
-  private void cleanBackStackUntil(String fragmentTag, FragmentManager fragmentManager) {
+  private boolean cleanBackStackUntil(String fragmentTag, FragmentManager fragmentManager) {
     if (fragmentManager.getBackStackEntryCount() == 0) {
-      return;
+      return false;
     }
 
     boolean popped = false;
 
-    while (fragmentManager.getBackStackEntryCount() > 0 || !popped) {
+    while (fragmentManager.getBackStackEntryCount() > 0 && !popped) {
       if (fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1)
           .getName()
           .equals(fragmentTag)) {
@@ -215,6 +218,7 @@ class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
       }
       fragmentManager.popBackStackImmediate();
     }
+    return popped;
   }
 
   private void cleanBackStack(FragmentManager fragmentManager) {

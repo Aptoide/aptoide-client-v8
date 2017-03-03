@@ -49,6 +49,7 @@ public class HighwayServerService extends Service {
 
   private String receivingAppName;
   private String sendingAppName;
+  private AptoideMessageServerSocket aptoideMessageServerSocket;
 
   @Override public void onCreate() {
     super.onCreate();
@@ -257,8 +258,7 @@ public class HighwayServerService extends Service {
       if (intent.getAction() != null && intent.getAction().equals("RECEIVE")) {
         //port = intent.getIntExtra("port", 0);
         System.out.println("Going to start serving");
-        AptoideMessageServerSocket aptoideMessageServerSocket =
-            new AptoideMessageServerSocket(55555, 500000);
+        aptoideMessageServerSocket = new AptoideMessageServerSocket(55555, 500000);
         aptoideMessageServerSocket.setHostsChangedCallbackCallback(new HostsChangedCallback() {
           @Override public void hostsChanged(List<Host> hostList) {
             System.out.println("hostsChanged() called with: " + "hostList = [" + hostList + "]");
@@ -283,6 +283,7 @@ public class HighwayServerService extends Service {
             aptoideMessageClientController)).startAsync();
 
         System.out.println("Connected 342");
+
       } else if (intent.getAction() != null && intent.getAction().equals("SEND")) {
         //read parcelable
         Bundle b = intent.getBundleExtra("bundle");
@@ -313,6 +314,10 @@ public class HighwayServerService extends Service {
 
           aptoideMessageClientController.send(
               new RequestPermissionToSend(aptoideMessageClientController.getLocalhost(), appInfo));
+        }
+      } else if (intent.getAction() != null && intent.getAction().equals("SHUTDOWN_SERVER")) {
+        if (aptoideMessageServerSocket != null) {
+          aptoideMessageServerSocket.shutdown();
         }
       }
     }

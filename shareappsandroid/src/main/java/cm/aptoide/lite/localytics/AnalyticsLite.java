@@ -27,6 +27,7 @@ public class AnalyticsLite {
 
   public static void clickShareApps() {
     //TODO THis should be called in v8engine, not here
+    //TODO click on drawer and click on start btn in SpotShare Tab
     trackEvent(EVENT_NAME_SPOT_SHARE, null);
   }
 
@@ -56,6 +57,7 @@ public class AnalyticsLite {
    * received"
    */
   public static void transferClick(String eventName, String action) {
+    //TODO this is called in the wrong place
     Map<String, String> attributes = new HashMap<>();
     attributes.put("action", action);
     trackEvent(eventName, attributes);

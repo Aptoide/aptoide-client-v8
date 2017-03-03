@@ -22,6 +22,7 @@ import cm.aptoide.pt.shareapps.socket.message.messages.RequestPermissionToSend;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.io.File;
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,11 +64,12 @@ public class HighwayClientService extends Service {
         System.out.println("Fell on error  Client !! ");
 
         Intent i = new Intent();
-        i.setAction("ERRORRECEIVING");
-
-        // TODO: 02-03-2017 neuro leaving the group Filipe
+        if (e instanceof SocketTimeoutException) {
+          i.setAction("SERVER_LEFT");
+        } else {
+          i.setAction("ERRORRECEIVING");
+        }
         sendBroadcast(i);
-        e.printStackTrace();
       }
 
       @Override public void onStartReceiving(AndroidAppInfo androidAppInfo) {

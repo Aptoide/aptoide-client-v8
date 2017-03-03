@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigation.NavigationManagerV4;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.addressbook.navigation.AddressBookNavigationManager;
@@ -44,7 +45,9 @@ public class InviteFriendsFragment extends UIComponentFragment
     super.onCreate(savedInstanceState);
     mActionsListener = new InviteFriendsPresenter(this,
         new AddressBookNavigationManager(NavigationManagerV4.Builder.buildWith(getActivity()),
-            entranceTag));
+            entranceTag, getString(R.string.addressbook_about),
+            getString(R.string.addressbook_data_about,
+                Application.getConfiguration().getMarketName())));
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -66,7 +69,11 @@ public class InviteFriendsFragment extends UIComponentFragment
         message.setText(getString(R.string.addressbook_insuccess_connection));
         break;
       case NO_FRIENDS:
-        message.setText(getString(R.string.we_didn_t_find_any_contacts_that_are_using_aptoide));
+        message.setText(getString(R.string.we_didn_t_find_any_contacts_that_are_using_aptoide,
+            Application.getConfiguration().getMarketName()));
+        break;
+      case CONTACTS_PERMISSION_DENIAL:
+        message.setText(R.string.addressbook_we_werent_able_to_connect_you);
         break;
       default:
         Logger.d(this.getClass().getSimpleName(), "Wrong openMode type.");
@@ -89,6 +96,6 @@ public class InviteFriendsFragment extends UIComponentFragment
   }
 
   public enum InviteFriendsFragmentOpenMode {
-    ERROR, NO_FRIENDS
+    ERROR, CONTACTS_PERMISSION_DENIAL, NO_FRIENDS
   }
 }
