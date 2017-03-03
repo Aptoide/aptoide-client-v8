@@ -91,7 +91,7 @@ class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
       CrashReport.getInstance()
           .log(new RuntimeException(
               "Activity is null in " + TAG));
-      return;
+      return false;
     }
 
     return cleanBackStackUntil(fragmentTag, activity.getSupportFragmentManager());
