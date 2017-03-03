@@ -11,14 +11,6 @@ public interface NavigationManagerV4 {
 
   String navigateTo(Fragment fragment);
 
-  /**
-   * Use this method to replace the back stack and navigate to fragment.
-   *
-   * @param newBackStack New back stack
-   * @param fragment Current fragment to display
-   */
-  //void navigateTo(Fragment fragment, @Nullable List<Fragment> newBackStack);
-
   void cleanBackStack();
 
   void cleanBackStackUntil(String fragmentTag);

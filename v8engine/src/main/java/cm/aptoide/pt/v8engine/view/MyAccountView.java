@@ -5,5 +5,5 @@ import rx.Observable;
 public interface MyAccountView extends View {
   Observable<Void> signOutClick();
 
-  void navigateToLoginAfterLogout();
+  void navigateToHome();
 }

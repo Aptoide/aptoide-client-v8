@@ -64,12 +64,11 @@ public class MyAccountFragment extends GooglePlayServicesFragment implements MyA
     return RxView.clicks(logoutButton);
   }
 
-  @Override public void navigateToLoginAfterLogout() {
-    getNavigationManager().cleanBackStack();
-    //getNavigationManager().navigateTo(LoginSignUpFragment.newInstance(false));
+  @Override public void navigateToHome() {
     Fragment home =
         HomeFragment.newInstance(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home,
             V8Engine.getConfiguration().getDefaultTheme());
+    getNavigationManager().cleanBackStack();
     getNavigationManager().navigateTo(home);
   }
 

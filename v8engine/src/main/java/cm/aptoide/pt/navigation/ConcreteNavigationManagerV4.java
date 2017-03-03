@@ -14,6 +14,8 @@ import java.lang.ref.WeakReference;
 
 class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
 
+  private static final String TAG = ConcreteNavigationManagerV4.class.getName();
+
   private static final int EXIT_ANIMATION = android.R.anim.fade_out;
   private static final int ENTER_ANIMATION = android.R.anim.fade_in;
 
@@ -71,7 +73,7 @@ class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
     if (activity == null) {
       CrashReport.getInstance()
           .log(new RuntimeException(
-              "Activity is null in " + ConcreteNavigationManagerV4.class.getName()));
+              "Activity is null in " + TAG));
       return;
     }
 
@@ -84,7 +86,7 @@ class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
     if (activity == null) {
       CrashReport.getInstance()
           .log(new RuntimeException(
-              "Activity is null in " + ConcreteNavigationManagerV4.class.getName()));
+              "Activity is null in " + TAG));
       return;
     }
 
@@ -97,7 +99,7 @@ class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
     if (activity == null) {
       CrashReport.getInstance()
           .log(new RuntimeException(
-              "Activity is null in " + ConcreteNavigationManagerV4.class.getName()));
+              "Activity is null in " + TAG));
       return null;
     }
 
@@ -116,7 +118,7 @@ class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
     if (activity == null) {
       CrashReport.getInstance()
           .log(new RuntimeException(
-              "Activity is null in " + ConcreteNavigationManagerV4.class.getName()));
+              "Activity is null in " + TAG));
       return null;
     }
 
@@ -134,7 +136,7 @@ class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
     if (activity == null) {
       CrashReport.getInstance()
           .log(new RuntimeException(
-              "Activity is null in " + ConcreteNavigationManagerV4.class.getName()));
+              "Activity is null in " + TAG));
       return;
     }
 
@@ -164,9 +166,10 @@ class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
     }
   }
 
-  private synchronized void cleanBackStack(FragmentManager fragmentManager) {
+  private void cleanBackStack(FragmentManager fragmentManager) {
     for (int i = 0; i < fragmentManager.getBackStackEntryCount(); ++i) {
       fragmentManager.popBackStack();
     }
+    fragmentManager.executePendingTransactions();
   }
 }

@@ -10,8 +10,6 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -28,14 +26,12 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.model.v7.Layout;
-import cm.aptoide.pt.navigation.TabNavigator;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.AutoUpdate;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.activity.BaseActivity;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.FragmentView;
 import cm.aptoide.pt.v8engine.fragment.WizardFragment;
@@ -52,7 +48,6 @@ import cm.aptoide.pt.v8engine.util.ApkFy;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
-import com.jakewharton.rxrelay.PublishRelay;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -91,7 +86,7 @@ public class MainActivity extends TabNavigatorActivity implements MainView, Frag
   }
 
   @Override public void showWizard() {
-    getNavigationManager().navigateTo(new WizardFragment());
+    getNavigationManager().navigateToWithoutBackSave(new WizardFragment());
   }
 
   @Override public void showHome() {

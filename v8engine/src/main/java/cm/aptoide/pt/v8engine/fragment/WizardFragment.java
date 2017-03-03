@@ -66,7 +66,8 @@ public class WizardFragment extends FragmentView
     ArrayList<Fragment> fragmentList = new ArrayList<>();
     fragmentList.add(WizardPageOneFragment.newInstance());
     fragmentList.add(WizardPageTwoFragment.newInstance());
-    fragmentList.add(LoginSignUpFragment.newInstance(true, false, true).registerBottomSheetStateListener(this));
+    fragmentList.add(
+        LoginSignUpFragment.newInstance(true, false, true).registerBottomSheetStateListener(this));
 
     viewPagerAdapter = new DumbEagerFragmentPagerAdapter(getActivity().getSupportFragmentManager());
     viewPagerAdapter.attachFragments(fragmentList);

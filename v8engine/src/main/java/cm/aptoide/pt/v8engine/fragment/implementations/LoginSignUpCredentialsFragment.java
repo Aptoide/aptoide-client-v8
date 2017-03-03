@@ -55,7 +55,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     implements LoginSignUpCredentialsView {
 
   private static final String DISMISS_TO_NAVIGATE_TO_MAIN_VIEW = "dismiss_to_navigate_to_main_view";
-  private static final String CLEAN_BACK_STACK = "dismiss_to_navigate_to_main_view";
+  private static final String CLEAN_BACK_STACK = "clean_back_stack";
 
   private ProgressDialog progressDialog;
   private CallbackManager callbackManager;
@@ -81,14 +81,14 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   private View credentialsEditTextsArea;
   private BottomSheetBehavior<View> bottomSheetBehavior;
   private boolean dismissToNavigateToMainView;
-  private boolean cleanBackStack;
+  private boolean navigateToHome;
 
-  public static LoginSignUpCredentialsFragment newInstance(boolean dimissToNavigateToMainView,
+  public static LoginSignUpCredentialsFragment newInstance(boolean dismissToNavigateToMainView,
       boolean cleanBackStack) {
     final LoginSignUpCredentialsFragment fragment = new LoginSignUpCredentialsFragment();
 
     final Bundle bundle = new Bundle();
-    bundle.putBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW, dimissToNavigateToMainView);
+    bundle.putBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW, dismissToNavigateToMainView);
     bundle.putBoolean(CLEAN_BACK_STACK, cleanBackStack);
     fragment.setArguments(bundle);
 
@@ -98,7 +98,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     this.dismissToNavigateToMainView = getArguments().getBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW);
-    this.cleanBackStack = getArguments().getBoolean(CLEAN_BACK_STACK);
+    this.navigateToHome = getArguments().getBoolean(CLEAN_BACK_STACK);
   }
 
   @Nullable @Override
@@ -254,15 +254,14 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
             V8Engine.getConfiguration().getDefaultTheme());
 
     final NavigationManagerV4 navManager = getNavigationManager();
-    if (cleanBackStack) {
-      navManager.cleanBackStack();
-      navManager.navigateTo(home);
-    } else {
-      // close login / signup bottom sheet
-      onBackPressed();
-      // pop this fragment from stack
-      getActivity().onBackPressed();
-    }
+    navManager.navigateToWithoutBackSave(home);
+  }
+
+  @Override public void goBack() {
+    // close login / signup bottom sheet
+    onBackPressed();
+    // pop this fragment from stack
+    getActivity().onBackPressed();
   }
 
   @Override public void dismiss() {
@@ -306,6 +305,13 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     ShowMessage.asToast(getContext(), errorRes);
   }
 
+  @Override public void onResume() {
+    super.onResume();
+    if(aptoideEmailEditText!=null) {
+      aptoideEmailEditText.requestFocus();
+    }
+  }
+
   @Override public void googleLoginClicked() {
     Analytics.Account.clickIn(Analytics.Account.StartupClick.CONNECT_GOOGLE);
   }
@@ -328,7 +334,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
         ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     attachPresenter(
         new LoginSignUpCredentialsPresenter(this, accountManager, facebookRequestedPermissions,
-            dismissToNavigateToMainView), savedInstanceState);
+            dismissToNavigateToMainView, navigateToHome), savedInstanceState);
   }
 
   private void bindViews(View view) {
