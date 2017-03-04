@@ -195,7 +195,7 @@ public class HighwayServerService extends Service {
 
   private void showReceiveProgress(String receivingAppName, int actual) {
 
-    if (System.currentTimeMillis() - lastTimestampReceive > 1000 / 3) {
+    //if (System.currentTimeMillis() - lastTimestampReceive > 1000 / 3) {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
         ((Notification.Builder) mBuilderReceive).setContentText(
             this.getResources().getString(R.string.receiving) + " " + receivingAppName);
@@ -207,7 +207,7 @@ public class HighwayServerService extends Service {
         mNotifyManager.notify(id, ((Notification.Builder) mBuilderReceive).getNotification());
       }
       lastTimestampReceive = System.currentTimeMillis();
-    }
+    //}
   }
 
   private void createSendNotification() {
@@ -239,7 +239,7 @@ public class HighwayServerService extends Service {
 
   private void showSendProgress(String sendingAppName, int actual) {
 
-    if (System.currentTimeMillis() - lastTimestampSend > 1000 / 3) {
+    //if (System.currentTimeMillis() - lastTimestampSend > 1000 / 3) {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
         ((Notification.Builder) mBuilderSend).setContentText(
             this.getResources().getString(R.string.sending) + " " + sendingAppName);
@@ -250,7 +250,7 @@ public class HighwayServerService extends Service {
         mNotifyManager.notify(id, ((Notification.Builder) mBuilderSend).getNotification());
       }
       lastTimestampSend = System.currentTimeMillis();
-    }
+    //}
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
