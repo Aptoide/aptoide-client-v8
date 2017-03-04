@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/timeline_separator"
     android:orientation="vertical"
     >
 
-
-  <!--<TextView-->
-  <!--android:layout_width="wrap_content"-->
-  <!--android:layout_height="wrap_content"-->
-  <!--android:text="Teste : Hello select the apps you want to transfer please"-->
-  <!--android:textSize="15dp"-->
-  <!--android:textColor="#000000"-->
-  <!--android:background="#FFFFFF"-->
-  <!--/>-->
   <android.support.design.widget.AppBarLayout
       android:id="@+id/shareAppsAppbar"
       android:layout_width="match_parent"
@@ -30,7 +22,7 @@
 
   <RelativeLayout
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
+      android:layout_height="match_parent"
       >
 
     <ProgressBar
@@ -57,21 +49,6 @@
         android:visibility="gone"
         />
 
-    <!--<Button-->
-    <!--android:id="@+id/sendButton"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_alignParentBottom="true"-->
-    <!--android:layout_alignParentRight="true"-->
-    <!--android:layout_centerHorizontal="true"-->
-    <!--android:layout_weight="1"-->
-    <!--android:background="@drawable/roundedbutton"-->
-    <!--android:text="@string/send"-->
-    <!--android:textColor="#000000"-->
-    <!--android:textSize="10sp"-->
-    <!--/>-->
-
-
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/sendButton"
         android:layout_width="wrap_content"
@@ -79,14 +56,11 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="20dp"
+        android:layout_margin="16dp"
         android:src="@drawable/ic_action_send_app"
+        app:elevation="8dp"
         />
-    <!--android:src="@drawable/forma_1"/>-->
-
 
   </RelativeLayout>
-
 
 </LinearLayout>
