@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
@@ -114,7 +115,10 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   }
 
   @Override public boolean onBackPressed() {
+    return tryCloseLoginBottomSheet() || super.onBackPressed();
+  }
 
+  private boolean tryCloseLoginBottomSheet() {
     if (credentialsEditTextsArea.getVisibility() == View.VISIBLE) {
       credentialsEditTextsArea.setVisibility(View.GONE);
       loginSignupSelectionArea.setVisibility(View.VISIBLE);
@@ -122,8 +126,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
       signUpArea.setVisibility(View.GONE);
       return true;
     }
-
-    return super.onBackPressed();
+    return false;
   }
 
   @Override public Observable<Void> showAptoideLoginAreaClick() {
@@ -225,9 +228,9 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   }
 
   @Override public void navigateToForgotPasswordView() {
-    startActivity(new Intent(Intent.ACTION_VIEW,
-        Uri.parse("http://m.aptoide.com/account/password-recovery")));
-    // FIXME: 1/3/2017 sithengineer remove hardcoded links
+    // FIXME: remove hardcoded links
+    Uri mobilePageUri = Uri.parse("http://m.aptoide.com/account/password-recovery");
+    startActivity(new Intent(Intent.ACTION_VIEW, mobilePageUri));
   }
 
   @Override public void showPassword() {
@@ -296,20 +299,14 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   }
 
   @Override public void navigateToCreateProfile() {
-    Intent goToCreateProfile = new Intent(getContext(), CreateUserActivity.class);
-    goToCreateProfile.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    getContext().startActivity(goToCreateProfile);
+    Intent i = new Intent(getContext(), CreateUserActivity.class);
+    FragmentActivity parent = getActivity();
+    parent.startActivity(i);
+    parent.finish();
   }
 
   private void showFacebookLoginError(@StringRes int errorRes) {
     ShowMessage.asToast(getContext(), errorRes);
-  }
-
-  @Override public void onResume() {
-    super.onResume();
-    if (aptoideEmailEditText != null) {
-      aptoideEmailEditText.requestFocus();
-    }
   }
 
   @Override public void googleLoginClicked() {

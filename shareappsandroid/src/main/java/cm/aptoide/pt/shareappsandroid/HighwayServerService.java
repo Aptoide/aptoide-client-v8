@@ -260,7 +260,7 @@ public class HighwayServerService extends Service {
       if (intent.getAction() != null && intent.getAction().equals("RECEIVE")) {
         //port = intent.getIntExtra("port", 0);
         System.out.println("Going to start serving");
-        aptoideMessageServerSocket = new AptoideMessageServerSocket(55555, 500000);
+        aptoideMessageServerSocket = new AptoideMessageServerSocket(55555, Integer.MAX_VALUE);
         aptoideMessageServerSocket.setHostsChangedCallbackCallback(new HostsChangedCallback() {
           @Override public void hostsChanged(List<Host> hostList) {
             System.out.println("hostsChanged() called with: " + "hostList = [" + hostList + "]");
