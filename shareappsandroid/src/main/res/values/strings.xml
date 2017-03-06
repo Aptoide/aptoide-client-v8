@@ -81,6 +81,7 @@
 
   <string name="groupCreatorLeft">Your friend that created the group left</string>
 
+  <string name="hotspotCreationErrorNougat">Please, ask your friends to create a group</string>
 
 </resources>
 
