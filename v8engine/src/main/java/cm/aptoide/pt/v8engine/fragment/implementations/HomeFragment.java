@@ -36,14 +36,13 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.StorePagerAdapter;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.SpotAndShareAnalytics;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.UpdateRepository;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.view.BadgeView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.text.NumberFormat;
-import lombok.Getter;
-import lombok.Setter;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -96,34 +95,47 @@ public class HomeFragment extends StoreFragment {
     getToolbar().setTitle("");
   }
 
+  private void setUserDataOnHeader() {
+    if (navigationView == null || navigationView.getVisibility() != View.VISIBLE) {
+      // if the navigation view is not visible do nothing
+      return;
+    }
+
+    View baseHeaderView = navigationView.getHeaderView(0);
+    TextView userEmail = (TextView) baseHeaderView.findViewById(R.id.profile_email_text);
+    TextView userUsername = (TextView) baseHeaderView.findViewById(R.id.profile_name_text);
+    ImageView userAvatarImage = (ImageView) baseHeaderView.findViewById(R.id.profile_image);
+
+    if (accountManager.isLoggedIn()) {
+
+      Account account = accountManager.getAccount();
+      if (account != null) {
+        userEmail.setVisibility(View.VISIBLE);
+        userUsername.setVisibility(View.VISIBLE);
+        userEmail.setText(account.getEmail());
+        userUsername.setText(account.getNickname());
+
+        ImageLoader.with(getContext())
+            .loadWithCircleTransformAndPlaceHolder(account.getAvatar(), userAvatarImage,
+                R.drawable.user_account_white);
+      }
+
+      return;
+    }
+
+    userEmail.setText("");
+    userUsername.setText("");
+
+    userEmail.setVisibility(View.GONE);
+    userUsername.setVisibility(View.GONE);
+
+    ImageLoader.with(getContext()).load(R.drawable.user_account_white, userAvatarImage);
+  }
+
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     return super.onCreateView(inflater, container, savedInstanceState);
-  }
-
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    tabNavigator.navigation()
-        .doOnNext(tab -> viewPager.setCurrentItem(
-            ((StorePagerAdapter) viewPager.getAdapter()).getEventNamePosition(getEventName(tab))))
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe();
-  }
-
-  private Event.Name getEventName(int tab) {
-    switch (tab) {
-      case TabNavigator.DOWNLOADS:
-        return Event.Name.myDownloads;
-      case TabNavigator.STORES:
-        return Event.Name.myStores;
-      case TabNavigator.TIMELINE:
-        return Event.Name.getUserTimeline;
-      case TabNavigator.UPDATES:
-        return Event.Name.myUpdates;
-        default:
-          throw new IllegalArgumentException("Invalid tab.");
-    }
   }
 
   @Override protected void setupViewPager() {
@@ -195,6 +207,7 @@ public class HomeFragment extends StoreFragment {
           final NavigationManagerV4 navigationManager = getNavigationManager();
           if (itemId == R.id.shareapps) {
             //requestPermissions();
+            SpotAndShareAnalytics.clickShareApps();
             startActivity(new Intent(getContext(), HighwayActivity.class));
           } else if (itemId == R.id.navigation_item_rollback) {
             navigationManager.navigateTo(V8Engine.getFragmentProvider().newRollbackFragment());
@@ -302,41 +315,28 @@ public class HomeFragment extends StoreFragment {
     toolbar.setNavigationOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
   }
 
-  private void setUserDataOnHeader() {
-    if (navigationView == null || navigationView.getVisibility() != View.VISIBLE) {
-      // if the navigation view is not visible do nothing
-      return;
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    tabNavigator.navigation()
+        .doOnNext(tab -> viewPager.setCurrentItem(
+            ((StorePagerAdapter) viewPager.getAdapter()).getEventNamePosition(getEventName(tab))))
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe();
+  }
+
+  private Event.Name getEventName(int tab) {
+    switch (tab) {
+      case TabNavigator.DOWNLOADS:
+        return Event.Name.myDownloads;
+      case TabNavigator.STORES:
+        return Event.Name.myStores;
+      case TabNavigator.TIMELINE:
+        return Event.Name.getUserTimeline;
+      case TabNavigator.UPDATES:
+        return Event.Name.myUpdates;
+      default:
+        throw new IllegalArgumentException("Invalid tab.");
     }
-
-    View baseHeaderView = navigationView.getHeaderView(0);
-    TextView userEmail = (TextView) baseHeaderView.findViewById(R.id.profile_email_text);
-    TextView userUsername = (TextView) baseHeaderView.findViewById(R.id.profile_name_text);
-    ImageView userAvatarImage = (ImageView) baseHeaderView.findViewById(R.id.profile_image);
-
-    if (accountManager.isLoggedIn()) {
-
-      Account account = accountManager.getAccount();
-      if (account != null) {
-        userEmail.setVisibility(View.VISIBLE);
-        userUsername.setVisibility(View.VISIBLE);
-        userEmail.setText(account.getEmail());
-        userUsername.setText(account.getNickname());
-
-        ImageLoader.with(getContext())
-            .loadWithCircleTransformAndPlaceHolder(account.getAvatar(), userAvatarImage,
-                R.drawable.user_account_white);
-      }
-
-      return;
-    }
-
-    userEmail.setText("");
-    userUsername.setText("");
-
-    userEmail.setVisibility(View.GONE);
-    userUsername.setVisibility(View.GONE);
-
-    ImageLoader.with(getContext()).load(R.drawable.user_account_white, userAvatarImage);
   }
 
   @Override public void bindViews(View view) {

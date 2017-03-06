@@ -6,6 +6,7 @@ package cm.aptoide.pt.shareappsandroid;
 
 import android.net.Uri;
 import android.os.Build;
+import cm.aptoide.pt.shareappsandroid.analytics.SpotAndShareAnalyticsInterface;
 import java.util.ArrayList;
 
 /**
@@ -22,23 +23,26 @@ public class HighwayPresenter implements Presenter {
   private boolean mobileDataDialog;
   private boolean outsideShare;
   private boolean joinGroupFlag;//to allow only 1 press of the radar elements
-  private AnalyticsManager analyticsManager;
+  private SpotAndShareAnalyticsInterface analytics;
   private GroupManager groupManager;
   private OutsideShareManager outsideShareManager;
   private boolean isOutsideShare;
   private boolean permissionRequested;
 
+  private SpotAndShareAnalyticsInterface spotAndShareAnalyticsInterface;
+
   public HighwayPresenter(HighwayView view, String deviceName,
       DeactivateHotspotTask deactivateHotspotTask, ConnectionManager connectionManager,
-      AnalyticsManager analyticsManager, GroupManager groupManager,
+      SpotAndShareAnalyticsInterface analytics, GroupManager groupManager,
       PermissionManager permissionManager) {
     this.view = view;
     this.deviceName = deviceName;
     this.deactivateHotspotTask = deactivateHotspotTask;
     this.connectionManager = connectionManager;
-    this.analyticsManager = analyticsManager;
+    this.analytics = analytics;
     this.groupManager = groupManager;
     this.permissionManager = permissionManager;
+    this.spotAndShareAnalyticsInterface = spotAndShareAnalyticsInterface;
   }
 
   @Override public void onCreate() {
@@ -128,12 +132,12 @@ public class HighwayPresenter implements Presenter {
     view.enableButtons(false);
     groupManager.joinGroup(group, new GroupManager.GroupListener() {
       @Override public void onSuccess() {
-        //analyticsManager - track event
+        //analytics - track event
         connectionManager.evaluateWifi(new ConnectionManager.WifiStateListener() {
           @Override public void onStateChanged(boolean enabled) {
             view.hideButtonsProgressBar();
             System.out.println("Inside presenter on Success for join group");
-            analyticsManager.joinGroupSuccess();
+            analytics.joinGroupSuccess();
             view.enableButtons(true);
             String ipAddress = connectionManager.getIPAddress();
             if (outsideShareManager != null) {
@@ -161,7 +165,7 @@ public class HighwayPresenter implements Presenter {
       @Override public void onSuccess() {
         view.hideButtonsProgressBar();
         view.enableButtons(true);
-        analyticsManager.createGroupSuccess();
+        analytics.createGroupSuccess();
         if (outsideShareManager != null) {
           ArrayList<String> pathsFromOutside = outsideShareManager.getPathsFromOutsideShare();
           view.openChatHotspot(pathsFromOutside, deviceName);
@@ -196,26 +200,26 @@ public class HighwayPresenter implements Presenter {
   }
 
   public void tagAnalyticsUnsuccessJoin() {
-    analyticsManager.joinGroupUnsuccess();
+    analytics.joinGroupFailed();
   }
 
   public void tagAnalyticsUnsuccessCreate() {
-    analyticsManager.createGroupUnsuccess();
+    analytics.createGroupFailed();
   }
 
   public void getAppFilePathFromOutside(Uri uri) {
     isOutsideShare = true;
-    generateLocalyticsSettings();
+    //generateLocalyticsSettings();
     outsideShareManager.getApp(uri);
   }
-
-  public void generateLocalyticsSettings() {
-    analyticsManager.generateLocalyticsSettings();
-  }
+  //
+  //public void generateLocalyticsSettings() {
+  //  analytics.generateLocalyticsSettings();
+  //}
 
   public void getMultipleAppFilePathsFromOutside(ArrayList<Uri> list) {
     isOutsideShare = true;
-    generateLocalyticsSettings();
+    //generateLocalyticsSettings();
     outsideShareManager.getMultipleApps(list);
   }
 
