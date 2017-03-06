@@ -449,7 +449,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
               shareDefault(appName, packageName, wUrl);
             } else if (GenericDialogs.EResponse.SHARE_TIMELINE == eResponse) {
               if (accountManager.isLoggedIn()
-                  && ManagerPreferences.getShowPreview()
+                  && ManagerPreferences.isShowPreviewDialog()
                   && Application.getConfiguration().isCreateStoreAndSetUserPrivacyAvailable()) {
                 SharePreviewDialog sharePreviewDialog = new SharePreviewDialog(accountManager);
                 AlertDialog.Builder alertDialog =
