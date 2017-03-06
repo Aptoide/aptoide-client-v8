@@ -133,25 +133,6 @@ public class Analytics {
     }
   }
 
-  private static void logFacebookEvents(String eventName, Map<String, String> map) {
-    if (BuildConfig.BUILD_TYPE.equals("debug") && map == null) {
-      return;
-    }
-    Bundle parameters = new Bundle();
-    for (String s : map.keySet()) {
-      parameters.putString(s, map.get(s));
-    }
-    logFacebookEvents(eventName, parameters);
-  }
-
-  private static void logFacebookEvents(String eventName, Bundle parameters) {
-    if (BuildConfig.BUILD_TYPE.equals("debug")) {
-      return;
-    }
-
-    facebookLogger.logEvent(eventName, parameters);
-  }
-
   private static void logFabricEvent(String event, Map<String, String> map, int flags) {
     if (checkAcceptability(flags, FABRIC)) {
       CustomEvent customEvent = new CustomEvent(event);
@@ -161,6 +142,41 @@ public class Analytics {
       Answers.getInstance().logCustom(customEvent);
       Logger.d(TAG, "Fabric Event: " + event + ", Map: " + map);
     }
+  }
+
+  public void save(@NonNull String key, @NonNull Event event) {
+    saver.save(key, event);
+  }
+
+  public @Nullable Event get(String key, Class<? extends Event> clazz) {
+    return saver.get(key + clazz.getName());
+  }
+
+  public void sendEvent(Event event) {
+    event.send();
+    saver.remove(event);
+  }
+
+  public void sendSpotAndShareEvents(String eventName, Map<String, String> attributes) {
+    logFacebookEvents(eventName, attributes);
+    if (attributes != null) {
+      track(eventName, new HashMap<String, String>(attributes), LOCALYTICS);
+    } else {
+      track(eventName, LOCALYTICS);
+    }
+  }
+
+  private static void logFacebookEvents(String eventName, Map<String, String> map) {
+    if (BuildConfig.BUILD_TYPE.equals("debug") && map == null) {
+      return;
+    }
+    Bundle parameters = new Bundle();
+    if (map != null) {
+      for (String s : map.keySet()) {
+        parameters.putString(s, map.get(s));
+      }
+    }
+    logFacebookEvents(eventName, parameters);
   }
 
   private static void track(String event, int flags) {
@@ -178,21 +194,12 @@ public class Analytics {
     }
   }
 
-  public void save(@NonNull String key, @NonNull Event event) {
-    saver.save(key + event.getClass().getName(), event);
-  }
+  private static void logFacebookEvents(String eventName, Bundle parameters) {
+    if (BuildConfig.BUILD_TYPE.equals("debug")) {
+      return;
+    }
 
-  public @Nullable Event get(String key, Class<? extends Event> clazz) {
-    return saver.get(key + clazz.getName());
-  }
-
-  public void sendEvent(Event event) {
-    event.send();
-    remove(event);
-  }
-
-  private void remove(@NonNull Event event) {
-    saver.remove(event);
+    facebookLogger.logEvent(eventName, parameters);
   }
 
   public static class Lifecycle {

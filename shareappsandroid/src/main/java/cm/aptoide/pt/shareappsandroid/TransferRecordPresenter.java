@@ -1,6 +1,7 @@
 package cm.aptoide.pt.shareappsandroid;
 
 import cm.aptoide.pt.shareapps.socket.entities.Host;
+import cm.aptoide.pt.shareappsandroid.analytics.SpotAndShareAnalyticsInterface;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,11 +19,12 @@ public class TransferRecordPresenter implements Presenter {
   private ApplicationSender applicationSender;
   private TransferRecordManager transferRecordManager;
   private boolean isHotspot;
+  private SpotAndShareAnalyticsInterface analytics;
 
   public TransferRecordPresenter(HighwayTransferRecordView view,
       ApplicationReceiver applicationReceiver, ApplicationSender applicationSender,
       TransferRecordManager transferRecordManager, boolean isHotspot,
-      ConnectionManager connectionManager) {
+      ConnectionManager connectionManager, SpotAndShareAnalyticsInterface anaylitics) {
     this.view = view;
     this.applicationReceiver = applicationReceiver;
     this.applicationSender = applicationSender;
@@ -30,6 +32,7 @@ public class TransferRecordPresenter implements Presenter {
     this.isHotspot = isHotspot;
     this.connectionManager = connectionManager;
     listOfApps = new ArrayList<>();
+    this.analytics = anaylitics;
   }
 
   @Override public void onCreate() {
@@ -50,12 +53,21 @@ public class TransferRecordPresenter implements Presenter {
         if (!listOfApps.contains(item)) {
           listOfApps.add(item);
         }
+        analytics.receiveApkSuccess();
         view.showNewCard(item);
       }
 
       @Override public void onErrorReceiving() {
         //handling error
         view.showGeneralErrorToast(isHotspot);
+        recoverNetworkState();
+        cleanAPTXNetworks();
+        analytics.receiveApkFailed();
+        view.dismiss();
+      }
+
+      @Override public void onServerLeft() {
+        view.showServerLeftMessage();
         recoverNetworkState();
         cleanAPTXNetworks();
         view.dismiss();
@@ -83,6 +95,7 @@ public class TransferRecordPresenter implements Presenter {
       @Override
       public void onAppSent(String appName, boolean needReSend, boolean isSent, boolean received,
           int positionToReSend) {
+        analytics.sendApkSuccess();
         if (listOfApps.size() > 0) {
           if (positionToReSend == 100000) {
             for (int i = listOfApps.size() - 1; i >= 0; i--) {
@@ -104,6 +117,7 @@ public class TransferRecordPresenter implements Presenter {
 
       @Override public void onErrorSendingApp() {
         //handle error
+        analytics.sendApkFailed();
         view.showGeneralErrorToast(isHotspot);
       }
     });
@@ -150,11 +164,12 @@ public class TransferRecordPresenter implements Presenter {
 
         String appName = item.getAppName();
         String filePath = item.getFilePath();
+        String packageName = item.getPackageName();
         if (filePath.equals("Could not read the original filepath")) {
           view.showInstallErrorDialog(appName);
         } else {
           System.out.println("I will install the app " + appName);
-          view.showDialogToInstall(appName, filePath);
+          view.showDialogToInstall(appName, filePath, packageName);
         }
       }
 
@@ -250,7 +265,7 @@ public class TransferRecordPresenter implements Presenter {
     view.notifyChanged();
   }
 
-  public void installApp(String filePath) {
-    transferRecordManager.installApp(filePath);
+  public void installApp(String filePath, String packageName) {
+    transferRecordManager.installApp(filePath, packageName);
   }
 }

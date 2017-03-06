@@ -8,9 +8,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.navigation.NavigationManagerV4;
+import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.addressbook.AddressBookAnalytics;
+import cm.aptoide.pt.v8engine.addressbook.navigation.AddressBookNavigationManager;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.UIComponentFragment;
+import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxbinding.view.RxView;
 
 /**
@@ -19,30 +25,36 @@ import com.jakewharton.rxbinding.view.RxView;
 public class InviteFriendsFragment extends UIComponentFragment
     implements InviteFriendsContract.View {
   public static final String OPEN_MODE = "OPEN_MODE";
+  public static final String TAG = "TAG";
   private InviteFriendsContract.UserActionsListener mActionsListener;
-  private InviteFriendsFragmentOpenMode openMode;
+  private OpenMode openMode;
+  private String entranceTag;
 
   private Button share;
   private Button allowFind;
   private Button done;
   private TextView message;
 
-  public static Fragment newInstance(InviteFriendsFragmentOpenMode openMode) {
+  public static Fragment newInstance(OpenMode openMode, String tag) {
     InviteFriendsFragment inviteFriendsFragment = new InviteFriendsFragment();
     Bundle extras = new Bundle();
     extras.putSerializable(OPEN_MODE, openMode);
+    extras.putString(TAG, tag);
     inviteFriendsFragment.setArguments(extras);
     return inviteFriendsFragment;
   }
 
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    mActionsListener = new InviteFriendsPresenter(this);
-  }
-
   @Override public void loadExtras(Bundle args) {
     super.loadExtras(args);
-    openMode = (InviteFriendsFragmentOpenMode) args.get(OPEN_MODE);
+    openMode = (OpenMode) args.get(OPEN_MODE);
+    entranceTag = (String) args.get(TAG);
+    mActionsListener = new InviteFriendsPresenter(this,
+        new AddressBookNavigationManager(NavigationManagerV4.Builder.buildWith(getActivity()),
+            entranceTag, getString(R.string.addressbook_about),
+            getString(R.string.addressbook_data_about,
+                Application.getConfiguration().getMarketName())), openMode,
+        new AddressBookAnalytics(Analytics.getInstance(),
+            AppEventsLogger.newLogger(getContext().getApplicationContext())));
   }
 
   @Override public void setupViews() {
@@ -52,13 +64,17 @@ public class InviteFriendsFragment extends UIComponentFragment
     setupMessage(openMode);
   }
 
-  public void setupMessage(@NonNull InviteFriendsFragmentOpenMode openMode) {
+  public void setupMessage(@NonNull OpenMode openMode) {
     switch (openMode) {
       case ERROR:
         message.setText(getString(R.string.addressbook_insuccess_connection));
         break;
       case NO_FRIENDS:
-        message.setText(getString(R.string.we_didn_t_find_any_contacts_that_are_using_aptoide));
+        message.setText(getString(R.string.we_didn_t_find_any_contacts_that_are_using_aptoide,
+            Application.getConfiguration().getMarketName()));
+        break;
+      case CONTACTS_PERMISSION_DENIAL:
+        message.setText(R.string.addressbook_we_werent_able_to_connect_you);
         break;
       default:
         Logger.d(this.getClass().getSimpleName(), "Wrong openMode type.");
@@ -78,13 +94,5 @@ public class InviteFriendsFragment extends UIComponentFragment
 
   @Override public void showPhoneInputFragment() {
     getNavigationManager().navigateTo(V8Engine.getFragmentProvider().newPhoneInputFragment());
-  }
-
-  @Override public void finishView() {
-    getActivity().onBackPressed();
-  }
-
-  public enum InviteFriendsFragmentOpenMode {
-    ERROR, NO_FRIENDS
   }
 }

@@ -11,9 +11,11 @@ import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import java.lang.ref.WeakReference;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.List;
 
 class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
+
+  private static final String TAG = ConcreteNavigationManagerV4.class.getName();
 
   private static final int EXIT_ANIMATION = android.R.anim.fade_out;
   private static final int ENTER_ANIMATION = android.R.anim.fade_in;
@@ -43,14 +45,14 @@ class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
     navigateTo(fragment);
   }
 
-  @Override public void navigateTo(Fragment fragment) {
+  @Override public String navigateTo(Fragment fragment) {
     FragmentActivity activity = weakReference.get();
 
     if (activity == null) {
       CrashReport.getInstance()
           .log(new RuntimeException(
               "Activity is null in " + ConcreteNavigationManagerV4.class.getName()));
-      return;
+      return null;
     }
 
     final FragmentManager fragmentManager = activity.getSupportFragmentManager();
@@ -62,37 +64,72 @@ class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
         .addToBackStack(tag)
         .replace(R.id.fragment_placeholder, fragment, tag)
         .commit();
+
+    return tag;
   }
 
   @Override public void cleanBackStack() {
     FragmentActivity activity = weakReference.get();
 
     if (activity == null) {
-      CrashReport.getInstance()
-          .log(new RuntimeException(
-              "Activity is null in " + ConcreteNavigationManagerV4.class.getName()));
+      CrashReport.getInstance().log(new RuntimeException("Activity is null in " + TAG));
       return;
     }
 
     cleanBackStack(activity.getSupportFragmentManager());
   }
 
+  /**
+   * @inheritDoc - doc in the interface ^
+   */
+  @Override public boolean cleanBackStackUntil(String fragmentTag) {
+    FragmentActivity activity = weakReference.get();
+
+    if (activity == null) {
+      CrashReport.getInstance().log(new RuntimeException("Activity is null in " + TAG));
+      return false;
+    }
+
+    return cleanBackStackUntil(fragmentTag, activity.getSupportFragmentManager());
+  }
+
   @Override public Fragment peekLast() {
     FragmentActivity activity = weakReference.get();
 
     if (activity == null) {
-      CrashReport.getInstance()
-          .log(new RuntimeException(
-              "Activity is null in " + ConcreteNavigationManagerV4.class.getName()));
+      CrashReport.getInstance().log(new RuntimeException("Activity is null in " + TAG));
       return null;
     }
 
     final FragmentManager fragmentManager = activity.getSupportFragmentManager();
+
     if (fragmentManager.getBackStackEntryCount() > 0) {
-      FragmentManager.BackStackEntry backStackEntry = fragmentManager.getBackStackEntryAt
-          (fragmentManager.getBackStackEntryCount() - 1);
+      FragmentManager.BackStackEntry backStackEntry =
+          fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1);
       return fragmentManager.findFragmentByTag(backStackEntry.getName());
     }
+
+    return null;
+  }
+
+  /**
+   * Using all the active fragments instead of only the ones in the back stack
+   */
+  @Override public Fragment peekLastFromAll() {
+    FragmentActivity activity = weakReference.get();
+
+    if (activity == null) {
+      CrashReport.getInstance().log(new RuntimeException("Activity is null in " + TAG));
+      return null;
+    }
+
+    final FragmentManager fragmentManager = activity.getSupportFragmentManager();
+
+    List<Fragment> fragments = fragmentManager.getFragments();
+    if (fragments != null && fragments.size() > 0) {
+      return fragments.get(fragments.size() - 1);
+    }
+
     return null;
   }
 
@@ -100,17 +137,38 @@ class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
     FragmentActivity activity = weakReference.get();
 
     if (activity == null) {
-      CrashReport.getInstance()
-          .log(new RuntimeException(
-              "Activity is null in " + ConcreteNavigationManagerV4.class.getName()));
+      CrashReport.getInstance().log(new RuntimeException("Activity is null in " + TAG));
       return null;
     }
 
     final FragmentManager fragmentManager = activity.getSupportFragmentManager();
+
     if (fragmentManager.getBackStackEntryCount() > 0) {
       FragmentManager.BackStackEntry backStackEntry = fragmentManager.getBackStackEntryAt(0);
       return fragmentManager.findFragmentByTag(backStackEntry.getName());
     }
+
+    return null;
+  }
+
+  /**
+   * Using all the active fragments instead of only the ones in the back stack
+   */
+  @Override public Fragment peekFirstFromAll() {
+    FragmentActivity activity = weakReference.get();
+
+    if (activity == null) {
+      CrashReport.getInstance().log(new RuntimeException("Activity is null in " + TAG));
+      return null;
+    }
+
+    final FragmentManager fragmentManager = activity.getSupportFragmentManager();
+
+    List<Fragment> fragments = fragmentManager.getFragments();
+    if (fragments != null && fragments.size() > 0) {
+      return fragments.get(0);
+    }
+
     return null;
   }
 
@@ -118,9 +176,7 @@ class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
     FragmentActivity activity = weakReference.get();
 
     if (activity == null) {
-      CrashReport.getInstance()
-          .log(new RuntimeException(
-              "Activity is null in " + ConcreteNavigationManagerV4.class.getName()));
+      CrashReport.getInstance().log(new RuntimeException("Activity is null in " + TAG));
       return;
     }
 
@@ -133,9 +189,28 @@ class ConcreteNavigationManagerV4 implements NavigationManagerV4 {
         .commit();
   }
 
-  private synchronized void cleanBackStack(FragmentManager fragmentManager) {
+  private boolean cleanBackStackUntil(String fragmentTag, FragmentManager fragmentManager) {
+    if (fragmentManager.getBackStackEntryCount() == 0) {
+      return false;
+    }
+
+    boolean popped = false;
+
+    while (fragmentManager.getBackStackEntryCount() > 0 && !popped) {
+      if (fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1)
+          .getName()
+          .equals(fragmentTag)) {
+        popped = true;
+      }
+      fragmentManager.popBackStackImmediate();
+    }
+    return popped;
+  }
+
+  private void cleanBackStack(FragmentManager fragmentManager) {
     for (int i = 0; i < fragmentManager.getBackStackEntryCount(); ++i) {
       fragmentManager.popBackStack();
     }
+    fragmentManager.executePendingTransactions();
   }
 }

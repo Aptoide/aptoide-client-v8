@@ -55,6 +55,8 @@ public class ApplicationReceiver {
           }
         } else if (intent.getAction() != null && intent.getAction().equals("ERRORRECEIVING")) {
           listener.onErrorReceiving();
+        } else if (intent.getAction() != null && intent.getAction().equals("SERVER_LEFT")) {
+          listener.onServerLeft();
         }
       }
     };
@@ -113,5 +115,7 @@ public class ApplicationReceiver {
     void onReceivedApp(String appName, String filePath, boolean needResend);
 
     void onErrorReceiving();
+
+    void onServerLeft();
   }
 }

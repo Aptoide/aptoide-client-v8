@@ -2,6 +2,7 @@ package cm.aptoide.pt.shareapps.socket;
 
 import cm.aptoide.pt.shareapps.socket.entities.Host;
 import cm.aptoide.pt.shareapps.socket.interfaces.HostsChangedCallback;
+import cm.aptoide.pt.shareapps.socket.interfaces.Stoppable;
 import cm.aptoide.pt.shareapps.socket.interfaces.serveraction.ServerAction;
 import cm.aptoide.pt.shareapps.socket.interfaces.serveraction.ServerActionDispatcher;
 import cm.aptoide.pt.shareapps.socket.util.ServerSocketTimeoutManager;
@@ -11,6 +12,7 @@ import java.net.Socket;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -43,7 +45,8 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
   }
 
   @Override public AptoideSocket start() {
-    executorService.execute(newOrderDispatcherLooper());
+    Stoppable dispatcherLooper = newOrderDispatcherLooper();
+    executorService.execute(dispatcherLooper);
 
     if (serving) {
       System.out.println("ShareApps: AptoideFileServerSocket already serving!");
@@ -102,19 +105,37 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
     } catch (IOException e) {
       // Ignore, when socket is closed during accept() it lands here.
       System.out.println("ShareApps: Server explicitly closed " + this.getClass().getSimpleName());
+      dispatcherLooper.stop();
+      shutdown();
+      try {
+        executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.MILLISECONDS);
+      } catch (InterruptedException e1) {
+        e1.printStackTrace();
+      }
     }
     return this;
   }
 
-  protected Runnable newOrderDispatcherLooper() {
-    return () -> {
-      try {
-        while (true) {
-          ServerAction take = queuedServerActions.take();
-          take.execute();
+  protected Stoppable newOrderDispatcherLooper() {
+    return new Stoppable() {
+
+      private boolean running;
+
+      @Override public void stop() {
+        running = false;
+      }
+
+      @Override public void run() {
+        running = true;
+
+        try {
+          while (running) {
+            ServerAction take = queuedServerActions.take();
+            take.execute();
+          }
+        } catch (InterruptedException e) {
+          e.printStackTrace();
         }
-      } catch (InterruptedException e) {
-        e.printStackTrace();
       }
     };
   }
@@ -154,6 +175,13 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
         } catch (IOException e) {
           e.printStackTrace();
         }
+      }
+
+      try {
+        queuedServerActions.put(() -> {
+        });
+      } catch (InterruptedException e) {
+        e.printStackTrace();
       }
     } else {
       System.out.println("ShareApps: AptoideFileServerSocket already shutdown!");

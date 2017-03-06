@@ -9,11 +9,9 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.TimelineClickEvent;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.SocialVideoDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.android.schedulers.AndroidSchedulers;
@@ -22,8 +20,6 @@ import rx.android.schedulers.AndroidSchedulers;
  * Created by jdandrade on 28/11/2016.
  */
 public class SocialVideoWidget extends SocialCardWidget<SocialVideoDisplayable> {
-
-  private static final String CARD_TYPE_NAME = "SOCIAL_VIDEO";
 
   private TextView title;
   private TextView subtitle;
@@ -115,14 +111,7 @@ public class SocialVideoWidget extends SocialCardWidget<SocialVideoDisplayable> 
       Analytics.AppsTimeline.clickOnCard(getCardTypeName(), Analytics.AppsTimeline.BLANK,
           displayable.getVideoTitle(), displayable.getTitle(), Analytics.AppsTimeline.OPEN_VIDEO);
       displayable.getLink().launch(context);
-      displayable.sendOpenVideoEvent(SendEventRequest.Body.Data.builder()
-          .cardType(getCardTypeName())
-          .source(displayable.getTitle())
-          .specific(SendEventRequest.Body.Specific.builder()
-              .url(displayable.getLink().getUrl())
-              .app(packageName)
-              .build())
-          .build(), TimelineClickEvent.OPEN_VIDEO);
+      displayable.sendOpenVideoEvent(packageName);
     }));
 
     compositeSubscription.add(displayable.getRelatedToApplication()
@@ -151,19 +140,12 @@ public class SocialVideoWidget extends SocialCardWidget<SocialVideoDisplayable> 
       Analytics.AppsTimeline.clickOnCard(getCardTypeName(), Analytics.AppsTimeline.BLANK,
           displayable.getVideoTitle(), displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_VIDEO_HEADER);
-      displayable.sendOpenVideoEvent(SendEventRequest.Body.Data.builder()
-          .cardType(getCardTypeName())
-          .source(displayable.getTitle())
-          .specific(SendEventRequest.Body.Specific.builder()
-              .url(displayable.getBaseLink().getUrl())
-              .app(packageName)
-              .build())
-          .build(), TimelineClickEvent.OPEN_CHANNEL);
+      displayable.sendOpenChannelEvent(packageName);
     }));
   }
 
   @Override String getCardTypeName() {
-    return CARD_TYPE_NAME;
+    return SocialVideoDisplayable.CARD_TYPE_NAME;
   }
 
   private void setAppNameToFirstLinkedApp(SocialVideoDisplayable displayable) {

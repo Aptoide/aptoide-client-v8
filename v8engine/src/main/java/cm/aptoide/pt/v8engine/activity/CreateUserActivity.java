@@ -103,16 +103,15 @@ public class CreateUserActivity extends AccountPermissionsBaseActivity {
     subscriptions.add(RxView.clicks(userAvatar).subscribe(click -> chooseAvatarSource()));
     subscriptions.add(RxView.clicks(createUserButton)
         .doOnNext(click -> hideKeyboardAndShowProgressDialog())
-        .flatMap(
-            click -> accountManager.updateAccount(nameEditText.getText().toString(), avatarPath)
-                .toObservable()
-                .doOnNext(
-                    __ -> Analytics.Account.createdUserProfile(!TextUtils.isEmpty(avatarPath)))
-                .timeout(90, TimeUnit.SECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnError(throwable -> showError(throwable))
-                .doOnTerminate(() -> dismissProgressDialog())
-                .doOnCompleted(() -> showSuccessMessageAndNavigateToLoggedInView()))
+        .flatMap(click -> accountManager.updateAccount(nameEditText.getText().toString().trim(),
+            avatarPath)
+            .toObservable()
+            .doOnNext(__ -> Analytics.Account.createdUserProfile(!TextUtils.isEmpty(avatarPath)))
+            .timeout(90, TimeUnit.SECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnError(throwable -> showError(throwable))
+            .doOnTerminate(() -> dismissProgressDialog())
+            .doOnCompleted(() -> showSuccessMessageAndNavigateToLoggedInView()))
         .retry()
         .subscribe());
   }
@@ -175,7 +174,7 @@ public class CreateUserActivity extends AccountPermissionsBaseActivity {
     Uri avatarUrl = null;
     if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
       avatarUrl = getPhotoFileUri(photoAvatar);
-      avatarPath = fileUtils.getPathAlt(avatarUrl, getApplicationContext());
+      avatarPath = fileUtils.getPath(avatarUrl, getApplicationContext());
     } else if (requestCode == GALLERY_CODE && resultCode == RESULT_OK) {
       avatarUrl = data.getData();
       avatarPath = fileUtils.getPath(avatarUrl, getApplicationContext());

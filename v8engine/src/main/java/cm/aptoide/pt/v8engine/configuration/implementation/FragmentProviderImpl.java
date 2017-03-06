@@ -8,6 +8,7 @@ import cm.aptoide.pt.model.v7.Event;
 import cm.aptoide.pt.v8engine.addressbook.AddressBookFragment;
 import cm.aptoide.pt.v8engine.addressbook.ThankYouConnectingFragment;
 import cm.aptoide.pt.v8engine.addressbook.data.Contact;
+import cm.aptoide.pt.v8engine.addressbook.invitefriends.InviteFriendsContract;
 import cm.aptoide.pt.v8engine.addressbook.invitefriends.InviteFriendsFragment;
 import cm.aptoide.pt.v8engine.addressbook.phoneinput.PhoneInputFragment;
 import cm.aptoide.pt.v8engine.addressbook.syncresult.SyncResultFragment;
@@ -290,8 +291,9 @@ public class FragmentProviderImpl implements FragmentProvider {
     return PhoneInputFragment.newInstance();
   }
 
-  @Override public Fragment newInviteFriendsFragment(InviteFriendsFragment.InviteFriendsFragmentOpenMode openMode) {
-    return InviteFriendsFragment.newInstance(openMode);
+  @Override public Fragment newInviteFriendsFragment(
+      InviteFriendsContract.View.OpenMode openMode, String tag) {
+    return InviteFriendsFragment.newInstance(openMode, tag);
   }
 
   @Override public Fragment newSpotShareFragment() {

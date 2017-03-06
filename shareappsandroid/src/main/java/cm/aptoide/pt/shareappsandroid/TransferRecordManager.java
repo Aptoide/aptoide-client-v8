@@ -47,7 +47,8 @@ public class TransferRecordManager {
     applicationsManager.deleteAppFile(filePath);
   }
 
-  public void installApp(String filePath) {
+  public void installApp(String filePath, String packageName) {
+    applicationsManager.moveObbs(filePath, packageName);
     applicationsManager.installApp(filePath);
   }
 

@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import cm.aptoide.pt.shareappsandroid.analytics.SpotAndShareAnalyticsInterface;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -69,6 +70,7 @@ public class HighwayTransferRecordActivity extends ActivityView
   private ApplicationReceiver applicationReceiver;
   private ApplicationSender applicationSender;
   private Toolbar mToolbar;
+  private SpotAndShareAnalyticsInterface analytics;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -81,6 +83,7 @@ public class HighwayTransferRecordActivity extends ActivityView
     send = (LinearLayout) findViewById(R.id.TransferRecordSendLayout);
     clearHistory = (LinearLayout) findViewById(R.id.TransferRecordClearLayout);
     mToolbar = (Toolbar) findViewById(R.id.shareAppsToolbar);
+    analytics = ShareApps.getAnalytics();
 
     setUpToolbar();
 
@@ -144,7 +147,7 @@ public class HighwayTransferRecordActivity extends ActivityView
     transferRecordManager = new TransferRecordManager(applicationsManager);
 
     presenter = new TransferRecordPresenter(this, applicationReceiver, applicationSender,
-        transferRecordManager, isHotspot, ConnectionManager.getInstance(this));
+        transferRecordManager, isHotspot, ConnectionManager.getInstance(this), analytics);
     attachPresenter(presenter);
   }
 
@@ -199,7 +202,7 @@ public class HighwayTransferRecordActivity extends ActivityView
       //como sou servidor devo meter o firstSender a ""
     } else {
       System.out.println("Send a file from outside - not a hotspot");
-      sendIntent = new Intent(this, HighwayClientComm.class);
+      sendIntent = new Intent(this, HighwayClientService.class);
       sendIntent.putExtra("targetIP", targetIPAddress);
     }
     sendIntent.putExtra("port", porto);
@@ -425,8 +428,6 @@ public class HighwayTransferRecordActivity extends ActivityView
   }
 
   private Dialog createOnBackDialog() {
-    final Intent i = new Intent(this, HighwayActivity.class);
-
     if (listOfItems != null && listOfItems.size() >= 1) {
       listOfItems.clear();
       if (adapter != null) {
@@ -448,6 +449,7 @@ public class HighwayTransferRecordActivity extends ActivityView
           .setPositiveButton(this.getResources().getString(R.string.leave),
               new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
+                  sendServerShutdownMessage();
                   setInitialApConfig();
                   presenter.recoverNetworkState();
                   finish();
@@ -483,6 +485,12 @@ public class HighwayTransferRecordActivity extends ActivityView
               });
       return builder.create();
     }
+  }
+
+  private void sendServerShutdownMessage() {
+    Intent shutdown = new Intent(this, HighwayServerService.class);
+    shutdown.setAction("SHUTDOWN_SERVER");
+    startService(shutdown);
   }
 
   private void setInitialApConfig() {
@@ -742,8 +750,10 @@ public class HighwayTransferRecordActivity extends ActivityView
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
     builder.setTitle(this.getResources().getString(R.string.alert))
-        .setMessage(this.getResources().getString(R.string.alertClearApps1) + " \n" +
-            "\n" + this.getResources().getString(R.string.alertClearApps2))
+        .setMessage(this.getResources().getString(R.string.alertClearApps1)
+            + " \n"
+            + "\n"
+            + this.getResources().getString(R.string.alertClearApps2))
         .setPositiveButton(this.getResources().getString(R.string.delete),
             new DialogInterface.OnClickListener() {
               public void onClick(DialogInterface dialog, int id) {
@@ -806,12 +816,13 @@ public class HighwayTransferRecordActivity extends ActivityView
     return dialog;
   }
 
-  @Override public void showDialogToInstall(String appName, String filePath) {
-    Dialog dialog = createDialogToInstall(appName, filePath);
+  @Override public void showDialogToInstall(String appName, String filePath, String packageName) {
+    Dialog dialog = createDialogToInstall(appName, filePath, packageName);
     dialog.show();
   }
 
-  public Dialog createDialogToInstall(final String appName, final String filePath) {
+  public Dialog createDialogToInstall(final String appName, final String filePath,
+      final String packageName) {
     String message = String.format(getResources().getString(R.string.alertInstallApp), appName);
 
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -821,7 +832,7 @@ public class HighwayTransferRecordActivity extends ActivityView
     builder.setPositiveButton(getResources().getString(R.string.install),
         new DialogInterface.OnClickListener() {
           public void onClick(DialogInterface dialog, int id) {
-            presenter.installApp(filePath);
+            presenter.installApp(filePath, packageName);
           }
         })
         .setNegativeButton(getResources().getString(R.string.cancel),
@@ -855,15 +866,7 @@ public class HighwayTransferRecordActivity extends ActivityView
   }
 
   @Override public void showGeneralErrorToast(boolean isHotspot) {
-    Toast.makeText(this, R.string.fragment_social_timeline_general_error, Toast.LENGTH_LONG)
-        .show();//string from v8engine
-    Intent i = new Intent(this, HighwayActivity.class);
-    if (isHotspot) {
-      setInitialApConfig();
-      startActivity(i);
-    } else {
-      startActivity(i);
-    }
+    Toast.makeText(this, R.string.generalError, Toast.LENGTH_LONG).show();
   }
 
   @Override public void showRecoveringWifiStateToast() {
@@ -873,6 +876,11 @@ public class HighwayTransferRecordActivity extends ActivityView
 
   @Override public void dismiss() {
     finish();
+  }
+
+  @Override public void showServerLeftMessage() {
+    Toast.makeText(this, this.getResources().getString(R.string.groupCreatorLeft),
+        Toast.LENGTH_SHORT).show();
   }
 
   private Dialog createDialogToDelete(final HighwayTransferRecordItem item) {

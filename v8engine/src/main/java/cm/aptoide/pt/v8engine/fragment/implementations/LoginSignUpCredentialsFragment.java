@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
@@ -55,7 +56,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
     implements LoginSignUpCredentialsView {
 
   private static final String DISMISS_TO_NAVIGATE_TO_MAIN_VIEW = "dismiss_to_navigate_to_main_view";
-  private static final String CLEAN_BACK_STACK = "dismiss_to_navigate_to_main_view";
+  private static final String CLEAN_BACK_STACK = "clean_back_stack";
 
   private ProgressDialog progressDialog;
   private CallbackManager callbackManager;
@@ -81,14 +82,14 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   private View credentialsEditTextsArea;
   private BottomSheetBehavior<View> bottomSheetBehavior;
   private boolean dismissToNavigateToMainView;
-  private boolean cleanBackStack;
+  private boolean navigateToHome;
 
-  public static LoginSignUpCredentialsFragment newInstance(boolean dimissToNavigateToMainView,
+  public static LoginSignUpCredentialsFragment newInstance(boolean dismissToNavigateToMainView,
       boolean cleanBackStack) {
     final LoginSignUpCredentialsFragment fragment = new LoginSignUpCredentialsFragment();
 
     final Bundle bundle = new Bundle();
-    bundle.putBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW, dimissToNavigateToMainView);
+    bundle.putBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW, dismissToNavigateToMainView);
     bundle.putBoolean(CLEAN_BACK_STACK, cleanBackStack);
     fragment.setArguments(bundle);
 
@@ -98,7 +99,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     this.dismissToNavigateToMainView = getArguments().getBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW);
-    this.cleanBackStack = getArguments().getBoolean(CLEAN_BACK_STACK);
+    this.navigateToHome = getArguments().getBoolean(CLEAN_BACK_STACK);
   }
 
   @Nullable @Override
@@ -114,7 +115,10 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   }
 
   @Override public boolean onBackPressed() {
+    return tryCloseLoginBottomSheet() || super.onBackPressed();
+  }
 
+  private boolean tryCloseLoginBottomSheet() {
     if (credentialsEditTextsArea.getVisibility() == View.VISIBLE) {
       credentialsEditTextsArea.setVisibility(View.GONE);
       loginSignupSelectionArea.setVisibility(View.VISIBLE);
@@ -122,8 +126,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
       signUpArea.setVisibility(View.GONE);
       return true;
     }
-
-    return super.onBackPressed();
+    return false;
   }
 
   @Override public Observable<Void> showAptoideLoginAreaClick() {
@@ -225,9 +228,9 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   }
 
   @Override public void navigateToForgotPasswordView() {
-    startActivity(new Intent(Intent.ACTION_VIEW,
-        Uri.parse("http://m.aptoide.com/account/password-recovery")));
-    // FIXME: 1/3/2017 sithengineer remove hardcoded links
+    // FIXME: remove hardcoded links
+    Uri mobilePageUri = Uri.parse("http://m.aptoide.com/account/password-recovery");
+    startActivity(new Intent(Intent.ACTION_VIEW, mobilePageUri));
   }
 
   @Override public void showPassword() {
@@ -249,20 +252,19 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   }
 
   @Override public void navigateToMainView() {
+    final NavigationManagerV4 navManager = getNavigationManager();
     Fragment home =
         HomeFragment.newInstance(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home,
             V8Engine.getConfiguration().getDefaultTheme());
+    navManager.cleanBackStack();
+    navManager.navigateTo(home);
+  }
 
-    final NavigationManagerV4 navManager = getNavigationManager();
-    if (cleanBackStack) {
-      navManager.cleanBackStack();
-      navManager.navigateTo(home);
-    } else {
-      // close login / signup bottom sheet
-      onBackPressed();
-      // pop this fragment from stack
-      getActivity().onBackPressed();
-    }
+  @Override public void goBack() {
+    // close login / signup bottom sheet
+    onBackPressed();
+    // pop this fragment from stack
+    getActivity().onBackPressed();
   }
 
   @Override public void dismiss() {
@@ -297,9 +299,10 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
   }
 
   @Override public void navigateToCreateProfile() {
-    Intent goToCreateProfile = new Intent(getContext(), CreateUserActivity.class);
-    goToCreateProfile.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    getContext().startActivity(goToCreateProfile);
+    Intent i = new Intent(getContext(), CreateUserActivity.class);
+    FragmentActivity parent = getActivity();
+    parent.startActivity(i);
+    parent.finish();
   }
 
   private void showFacebookLoginError(@StringRes int errorRes) {
@@ -328,7 +331,7 @@ public class LoginSignUpCredentialsFragment extends GoogleLoginFragment
         ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     attachPresenter(
         new LoginSignUpCredentialsPresenter(this, accountManager, facebookRequestedPermissions,
-            dismissToNavigateToMainView), savedInstanceState);
+            dismissToNavigateToMainView, navigateToHome), savedInstanceState);
   }
 
   private void bindViews(View view) {

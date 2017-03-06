@@ -11,7 +11,9 @@ public interface InviteFriendsContract {
 
     void showPhoneInputFragment();
 
-    void finishView();
+    enum OpenMode {
+      ERROR, CONTACTS_PERMISSION_DENIAL, NO_FRIENDS
+    }
   }
 
   interface UserActionsListener {

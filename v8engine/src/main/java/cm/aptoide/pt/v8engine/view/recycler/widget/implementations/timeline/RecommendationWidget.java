@@ -11,12 +11,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.TimelineClickEvent;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.RecommendationDisplayable;
 import com.jakewharton.rxbinding.view.RxView;
 
@@ -25,7 +23,6 @@ import com.jakewharton.rxbinding.view.RxView;
  */
 public class RecommendationWidget extends CardWidget<RecommendationDisplayable> {
 
-  private static final String CARD_TYPE_NAME = "RECOMMENDATION";
   private TextView title;
   private TextView subtitle;
   private ImageView image;
@@ -83,23 +80,16 @@ public class RecommendationWidget extends CardWidget<RecommendationDisplayable> 
     compositeSubscription.add(RxView.clicks(cardContent).subscribe(a -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
 
-      Analytics.AppsTimeline.clickOnCard(CARD_TYPE_NAME, displayable.getPackageName(),
+      Analytics.AppsTimeline.clickOnCard(RecommendationDisplayable.CARD_TYPE_NAME, displayable.getPackageName(),
           Analytics.AppsTimeline.BLANK, displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_APP_VIEW);
-      displayable.sendClickEvent(SendEventRequest.Body.Data.builder()
-          .cardType(CARD_TYPE_NAME)
-          .source(TimelineClickEvent.SOURCE_APTOIDE)
-          .specific(SendEventRequest.Body.Specific.builder()
-              .app(displayable.getPackageName())
-              .based_on(displayable.getSimilarAppPackageName())
-              .build())
-          .build(), TimelineClickEvent.OPEN_APP);
+      displayable.sendRecommendedOpenAppEvent();
       getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
           .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
     }));
   }
 
   @Override String getCardTypeName() {
-    return CARD_TYPE_NAME;
+    return RecommendationDisplayable.CARD_TYPE_NAME;
   }
 }

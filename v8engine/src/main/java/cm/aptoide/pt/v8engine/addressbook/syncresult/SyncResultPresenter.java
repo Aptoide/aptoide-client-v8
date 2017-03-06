@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.addressbook.syncresult;
 
+import cm.aptoide.pt.v8engine.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.v8engine.addressbook.data.Contact;
 
 /**
@@ -9,26 +10,21 @@ import cm.aptoide.pt.v8engine.addressbook.data.Contact;
 public class SyncResultPresenter implements SyncResultContract.UserActionsListener {
 
   private final SyncResultContract.View mSyncSuccessView;
+  private final AddressBookAnalytics analytics;
 
-  public SyncResultPresenter(SyncResultContract.View syncSuccessView) {
+  public SyncResultPresenter(SyncResultContract.View syncSuccessView,
+      AddressBookAnalytics analytics) {
     this.mSyncSuccessView = syncSuccessView;
-  }
-
-  @Override public void loadFriends() {
-    //todo manipulate loading widget this.mSyncSuccessView.setProgressIndicator(true);
-
-    //todo loadfriends callback and hide loading widget this.mSyncSuccessView.setProgressIndicator(false);
-  }
-
-  @Override public void openFriend(Contact clickedContact) {
-
+    this.analytics = analytics;
   }
 
   @Override public void allowFindClicked() {
+    analytics.sendNewConnectionsAllowFriendsToFindYouEvent(AddressBookAnalytics.HAS_NEW_CONNECTIONS_SCREEN);
     this.mSyncSuccessView.showPhoneInputFragment();
   }
 
   @Override public void doneClicked() {
+    analytics.sendNewConnectionsDoneEvent(AddressBookAnalytics.HAS_NEW_CONNECTIONS_SCREEN);
     this.mSyncSuccessView.finishView();
   }
 }

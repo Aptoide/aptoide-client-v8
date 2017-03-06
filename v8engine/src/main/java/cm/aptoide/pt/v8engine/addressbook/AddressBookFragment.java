@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
@@ -16,19 +15,21 @@ import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.FacebookModel;
 import cm.aptoide.pt.model.v7.TwitterModel;
+import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.addressbook.data.Contact;
 import cm.aptoide.pt.v8engine.addressbook.data.ContactsRepositoryImpl;
-import cm.aptoide.pt.v8engine.addressbook.invitefriends.InviteFriendsFragment;
+import cm.aptoide.pt.v8engine.addressbook.navigation.AddressBookNavigationManager;
+import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.UIComponentFragment;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.jakewharton.rxbinding.view.RxView;
@@ -39,7 +40,6 @@ import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 import java.util.Arrays;
-import java.util.List;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -64,6 +64,7 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
   private CallbackManager callbackManager;
   private ProgressDialog mGenericPleaseWaitDialog;
   private TwitterSession twitterSession;
+  private AddressBookAnalytics analytics;
 
   public AddressBookFragment() {
 
@@ -78,8 +79,14 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    analytics = new AddressBookAnalytics(Analytics.getInstance(),
+        AppEventsLogger.newLogger(getContext().getApplicationContext()));
     mActionsListener = new AddressBookPresenter(this, new ContactsRepositoryImpl(
-        ((V8Engine) getContext().getApplicationContext()).getAccountManager()));
+        ((V8Engine) getContext().getApplicationContext()).getAccountManager()), analytics,
+        new AddressBookNavigationManager(NavigationManagerV4.Builder.buildWith(getActivity()),
+            getTag(), getString(R.string.addressbook_about),
+            getString(R.string.addressbook_data_about,
+                Application.getConfiguration().getMarketName())));
     callbackManager = CallbackManager.Factory.create();
     registerFacebookCallback();
     mGenericPleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());
@@ -103,14 +110,20 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
     mActionsListener.getButtonsState();
     dismissV.setPaintFlags(dismissV.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
     about.setPaintFlags(about.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-    RxView.clicks(addressBookSyncButton)
-        .flatMap(click -> {
-          PermissionManager permissionManager = new PermissionManager();
-          final PermissionService permissionService = (PermissionService) getContext();
-          return permissionManager.requestContactsAccess(permissionService);
-        })
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(permissionGranted -> mActionsListener.syncAddressBook());
+    RxView.clicks(addressBookSyncButton).flatMap(click -> {
+      analytics.sendSyncAddressBookEvent();
+      PermissionManager permissionManager = new PermissionManager();
+      final PermissionService permissionService = (PermissionService) getContext();
+      return permissionManager.requestContactsAccess(permissionService);
+    }).observeOn(AndroidSchedulers.mainThread()).subscribe(permissionGranted -> {
+      if (permissionGranted) {
+        analytics.sendAllowAptoideAccessToContactsEvent();
+        mActionsListener.syncAddressBook();
+      } else {
+        analytics.sendDenyAptoideAccessToContactsEvent();
+        mActionsListener.contactsPermissionDenied();
+      }
+    });
     RxView.clicks(facebookSyncButton).subscribe(click -> facebookLoginCallback());
     RxView.clicks(twitterSyncButton).subscribe(click -> twitterLogin());
     RxView.clicks(dismissV).subscribe(click -> mActionsListener.finishViewClick());
@@ -199,45 +212,12 @@ public class AddressBookFragment extends UIComponentFragment implements AddressB
     changeSyncState(checked, checkOrReloadFacebook);
   }
 
-  @Override public void showAboutFragment() {
-    final String marketName = Application.getConfiguration().getMarketName();
-    getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
-        .newDescriptionFragment(getString(R.string.addressbook_about),
-            getString(R.string.addressbook_data_about, marketName), "default"));
-  }
-
-  @Override public void showSuccessFragment(List<Contact> contacts) {
-    getNavigationManager().navigateTo(
-        V8Engine.getFragmentProvider().newSyncSuccessFragment(contacts));
-  }
-
-  @Override public void showInviteFriendsFragment(
-      @NonNull InviteFriendsFragment.InviteFriendsFragmentOpenMode openMode) {
-    switch (openMode) {
-      case ERROR:
-        getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
-            .newInviteFriendsFragment(InviteFriendsFragment.InviteFriendsFragmentOpenMode.ERROR));
-        break;
-      case NO_FRIENDS:
-        getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
-            .newInviteFriendsFragment(
-                InviteFriendsFragment.InviteFriendsFragmentOpenMode.NO_FRIENDS));
-        break;
-      default:
-        Logger.d(this.getClass().getSimpleName(), "Wrong openMode type.");
-    }
-  }
-
   @Override public void setGenericPleaseWaitDialog(boolean showProgress) {
     if (showProgress) {
       mGenericPleaseWaitDialog.show();
     } else {
       mGenericPleaseWaitDialog.dismiss();
     }
-  }
-
-  @Override public void showPhoneInputFragment() {
-    getNavigationManager().navigateTo(V8Engine.getFragmentProvider().newPhoneInputFragment());
   }
 
   private void changeSyncState(boolean checked, Button button) {

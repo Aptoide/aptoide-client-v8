@@ -34,11 +34,7 @@ public class GroupManager {
       listener.onError(ConnectionManager.ERROR_INVALID_GROUP);
       return;
     }
-    if (connectionManager.isMobileDataOn()) {
-      if (mobileDataDialog) {
-        listener.onError(ConnectionManager.ERROR_MOBILE_DATA_ON_TOAST);
-        return;
-      }
+    if (connectionManager.isMobileDataOn() && !mobileDataDialog) {
       mobileDataDialog = true;
       listener.onError(ConnectionManager.ERROR_MOBILE_DATA_ON_DIALOG);
       return;
@@ -59,16 +55,16 @@ public class GroupManager {
       listener.onError(ConnectionManager.ERROR_INVALID_GROUP);
       return;
     }
-    if (connectionManager.isMobileDataOn()) {
-      joiningGroup = false;
-      if (mobileDataDialog) {
-        listener.onError(ConnectionManager.ERROR_MOBILE_DATA_ON_TOAST);
-        return;
-      }
-      mobileDataDialog = true;
-      listener.onError(ConnectionManager.ERROR_MOBILE_DATA_ON_DIALOG);
-      return;
-    }
+    //if (connectionManager.isMobileDataOn()) {
+    //  joiningGroup = false;
+    //  if (mobileDataDialog) {
+    //    listener.onError(ConnectionManager.ERROR_MOBILE_DATA_ON_TOAST);
+    //    return;
+    //  }
+    //  mobileDataDialog = true;
+    //  listener.onError(ConnectionManager.ERROR_MOBILE_DATA_ON_DIALOG);
+    //  return;
+    //}
     this.joinHotspotTask = new JoinHotspotTask();
     joinTask = joinHotspotTask.execute();
   }

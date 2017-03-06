@@ -6,20 +6,16 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import cm.aptoide.pt.dataprovider.ws.v7.SendEventRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.TimelineClickEvent;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.timeline.SocialInstallDisplayable;
 
 /**
  * Created by jdandrade on 15/12/2016.
  */
 public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayable> {
-
-  private static final String CARD_TYPE_NAME = "SOCIAL_INSTALL";
 
   private TextView storeName;
   private TextView userName;
@@ -98,15 +94,10 @@ public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayab
     cardContent.setOnClickListener(view -> {
       knockWithSixpackCredentials(displayable.getAbUrl());
 
-      Analytics.AppsTimeline.clickOnCard(CARD_TYPE_NAME, displayable.getPackageName(),
+      Analytics.AppsTimeline.clickOnCard(SocialInstallDisplayable.CARD_TYPE_NAME, displayable.getPackageName(),
           Analytics.AppsTimeline.BLANK, displayable.getTitle(),
           Analytics.AppsTimeline.OPEN_APP_VIEW);
-      displayable.sendClickEvent(SendEventRequest.Body.Data.builder()
-          .cardType(CARD_TYPE_NAME)
-          .source(TimelineClickEvent.SOURCE_APTOIDE)
-          .specific(
-              SendEventRequest.Body.Specific.builder().app(displayable.getPackageName()).build())
-          .build(), TimelineClickEvent.OPEN_APP);
+      displayable.sendOpenAppEvent();
       getNavigationManager().navigateTo(V8Engine.getFragmentProvider()
           .newAppViewFragment(displayable.getAppId(), displayable.getPackageName()));
     });
@@ -120,6 +111,6 @@ public class SocialInstallWidget extends SocialCardWidget<SocialInstallDisplayab
   }
 
   @Override String getCardTypeName() {
-    return CARD_TYPE_NAME;
+    return SocialInstallDisplayable.CARD_TYPE_NAME;
   }
 }

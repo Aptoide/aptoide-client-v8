@@ -49,6 +49,7 @@ public class HighwayServerService extends Service {
 
   private String receivingAppName;
   private String sendingAppName;
+  private AptoideMessageServerSocket aptoideMessageServerSocket;
 
   @Override public void onCreate() {
     super.onCreate();
@@ -80,7 +81,8 @@ public class HighwayServerService extends Service {
       @Override public void onFinishReceiving(AndroidAppInfo androidAppInfo) {
         System.out.println(" Finished receiving " + androidAppInfo);
 
-        finishReceiveNotification(androidAppInfo.getApk().getFilePath());
+        finishReceiveNotification(androidAppInfo.getApk().getFilePath(),
+            androidAppInfo.getPackageName());
 
         Intent i = new Intent();
         i.putExtra("FinishedReceiving", true);
@@ -157,7 +159,7 @@ public class HighwayServerService extends Service {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
       mBuilderReceive = new Notification.Builder(this);
       ((Notification.Builder) mBuilderReceive).setContentTitle(
-          this.getResources().getString(R.string.shareApps) + " - " + this.getResources()
+          this.getResources().getString(R.string.spot_share) + " - " + this.getResources()
               .getString(R.string.receive))
           .setContentText(
               this.getResources().getString(R.string.receiving) + " " + receivingAppName)
@@ -165,7 +167,7 @@ public class HighwayServerService extends Service {
     }
   }
 
-  private void finishReceiveNotification(String receivedApkFilePath) {
+  private void finishReceiveNotification(String receivedApkFilePath, String packageName) {
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
       ((Notification.Builder) mBuilderReceive).setContentText(
@@ -178,6 +180,7 @@ public class HighwayServerService extends Service {
       Intent intent = new Intent();
       intent.setAction("INSTALL_APP_NOTIFICATION");
       intent.putExtra("filePath", receivedApkFilePath);
+      intent.putExtra("packageName", packageName);
       PendingIntent contentIntent =
           PendingIntent.getBroadcast(this, INSTALL_APP_NOTIFICATION_REQUEST_CODE, intent,
               PendingIntent.FLAG_CANCEL_CURRENT);
@@ -192,7 +195,7 @@ public class HighwayServerService extends Service {
 
   private void showReceiveProgress(String receivingAppName, int actual) {
 
-    if (System.currentTimeMillis() - lastTimestampReceive > 1000 / 3) {
+    //if (System.currentTimeMillis() - lastTimestampReceive > 1000 / 3) {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
         ((Notification.Builder) mBuilderReceive).setContentText(
             this.getResources().getString(R.string.receiving) + " " + receivingAppName);
@@ -204,7 +207,7 @@ public class HighwayServerService extends Service {
         mNotifyManager.notify(id, ((Notification.Builder) mBuilderReceive).getNotification());
       }
       lastTimestampReceive = System.currentTimeMillis();
-    }
+    //}
   }
 
   private void createSendNotification() {
@@ -212,7 +215,7 @@ public class HighwayServerService extends Service {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
       mBuilderSend = new Notification.Builder(this);
       ((Notification.Builder) mBuilderSend).setContentTitle(
-          this.getResources().getString(R.string.shareApps) + " - " + this.getResources()
+          this.getResources().getString(R.string.spot_share) + " - " + this.getResources()
               .getString(R.string.send))
           .setContentText(this.getResources().getString(R.string.preparingSend))
           .setSmallIcon(R.mipmap.ic_launcher);
@@ -236,7 +239,7 @@ public class HighwayServerService extends Service {
 
   private void showSendProgress(String sendingAppName, int actual) {
 
-    if (System.currentTimeMillis() - lastTimestampSend > 1000 / 3) {
+    //if (System.currentTimeMillis() - lastTimestampSend > 1000 / 3) {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
         ((Notification.Builder) mBuilderSend).setContentText(
             this.getResources().getString(R.string.sending) + " " + sendingAppName);
@@ -247,7 +250,7 @@ public class HighwayServerService extends Service {
         mNotifyManager.notify(id, ((Notification.Builder) mBuilderSend).getNotification());
       }
       lastTimestampSend = System.currentTimeMillis();
-    }
+    //}
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
@@ -257,8 +260,7 @@ public class HighwayServerService extends Service {
       if (intent.getAction() != null && intent.getAction().equals("RECEIVE")) {
         //port = intent.getIntExtra("port", 0);
         System.out.println("Going to start serving");
-        AptoideMessageServerSocket aptoideMessageServerSocket =
-            new AptoideMessageServerSocket(55555, 500000);
+        aptoideMessageServerSocket = new AptoideMessageServerSocket(55555, Integer.MAX_VALUE);
         aptoideMessageServerSocket.setHostsChangedCallbackCallback(new HostsChangedCallback() {
           @Override public void hostsChanged(List<Host> hostList) {
             System.out.println("hostsChanged() called with: " + "hostList = [" + hostList + "]");
@@ -283,6 +285,7 @@ public class HighwayServerService extends Service {
             aptoideMessageClientController)).startAsync();
 
         System.out.println("Connected 342");
+
       } else if (intent.getAction() != null && intent.getAction().equals("SEND")) {
         //read parcelable
         Bundle b = intent.getBundleExtra("bundle");
@@ -313,6 +316,10 @@ public class HighwayServerService extends Service {
 
           aptoideMessageClientController.send(
               new RequestPermissionToSend(aptoideMessageClientController.getLocalhost(), appInfo));
+        }
+      } else if (intent.getAction() != null && intent.getAction().equals("SHUTDOWN_SERVER")) {
+        if (aptoideMessageServerSocket != null) {
+          aptoideMessageServerSocket.shutdown();
         }
       }
     }

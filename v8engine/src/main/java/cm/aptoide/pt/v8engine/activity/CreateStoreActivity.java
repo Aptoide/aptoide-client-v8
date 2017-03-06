@@ -168,7 +168,8 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
     storeRemoteUrl = getIntent().getStringExtra("storeAvatar");
     storeTheme = getIntent().getStringExtra("storeTheme") == null ? ""
         : getIntent().getStringExtra("storeTheme");
-    storeDescription = getIntent().getStringExtra("storeDescription");
+    storeDescription = getIntent() != null && getIntent().hasExtra("storeDescription") ? getIntent()
+        .getStringExtra("storeDescription") : "";
   }
 
   private void bindViews() {
@@ -262,7 +263,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
     mSubscriptions.add(RxView.clicks(mCreateStore).subscribe(click -> {
           AptoideUtils.SystemU.hideKeyboard(this);
           storeName = mStoreName.getText().toString().trim().toLowerCase();
-          storeDescription = mStoreDescription.getText().toString();
+          storeDescription = mStoreDescription.getText().toString().trim();
           validateData();
           progressDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
               getApplicationContext().getString(cm.aptoide.accountmanager.R.string.please_wait_upload));
@@ -547,9 +548,9 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
   }
 
   private void goToMainActivity() {
-    Intent i = new Intent(this, MainActivity.class);
-    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    final Intent i = new Intent(this, MainActivity.class);
     startActivity(i);
+    finish();
   }
 
   private void onCreateSuccess(ProgressDialog progressDialog) {
@@ -663,7 +664,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
   }
 
   private String getRepoDescription() {
-    return storeDescription == null ? "" : mStoreDescription.getText().toString();
+    return storeDescription == null ? "" : mStoreDescription.getText().toString().trim();
   }
 
   private String getRepoAvatar() {
@@ -671,7 +672,7 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
   }
 
   private String getRepoName() {
-    return storeName == null ? "" : mStoreName.getText().toString();
+    return storeName == null ? "" : mStoreName.getText().toString().trim().toLowerCase();
   }
 
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -679,10 +680,10 @@ public class CreateStoreActivity extends AccountPermissionsBaseActivity {
     Uri avatarUrl = null;
     if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
       avatarUrl = getPhotoFileUri(photoAvatar);
-      storeAvatarPath = fileUtils.getPathAlt(avatarUrl, getApplicationContext());
+      storeAvatarPath = fileUtils.getPath(avatarUrl, getApplicationContext());
     } else if (requestCode == GALLERY_CODE && resultCode == RESULT_OK) {
       avatarUrl = data.getData();
-      storeAvatarPath = fileUtils.getPathAlt(avatarUrl, getApplicationContext());
+      storeAvatarPath = fileUtils.getPath(avatarUrl, getApplicationContext());
     }
     checkAvatarRequirements(storeAvatarPath, avatarUrl);
   }

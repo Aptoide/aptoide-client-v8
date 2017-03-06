@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+import cm.aptoide.pt.shareappsandroid.analytics.SpotAndShareAnalyticsInterface;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
   private boolean joinGroupFlag;
   private HighwayPresenter presenter;
   private ConnectionManager connectionManager;
-  private AnalyticsManager analyticsManager;
+  private SpotAndShareAnalyticsInterface analytics;
   private GroupManager groupManager;
   private OutsideShareManager outsideShareManager;
   private PermissionListener permissionListener;
@@ -56,7 +57,7 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
 
     deviceName = getIntent().getStringExtra("deviceName");
     connectionManager = ConnectionManager.getInstance(this);
-    analyticsManager = new AnalyticsManager(getApplicationContext(), getIntent());
+    analytics = ShareApps.getAnalytics();
     groupManager = new GroupManager(connectionManager);
 
     setContentView(R.layout.highway_activity);
@@ -76,7 +77,7 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     //setUpToolbar();
 
     presenter = new HighwayPresenter(this, deviceName, new DeactivateHotspotTask(connectionManager),
-        connectionManager, analyticsManager, groupManager, this);
+        connectionManager, analytics, groupManager, this);
     attachPresenter(presenter);
 
     if (getIntent().getAction() != null && getIntent().getAction().equals(Intent.ACTION_SEND)) {
@@ -183,31 +184,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     }
   }
 
-  @Override public boolean checkPermissions() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
-          != PackageManager.PERMISSION_GRANTED) {
-        return false;
-      }
-
-      if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-          != PackageManager.PERMISSION_GRANTED) {
-        return false;
-      }
-
-      if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-          != PackageManager.PERMISSION_GRANTED) {
-        return false;
-      }
-
-      if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_SETTINGS)
-          != PackageManager.PERMISSION_GRANTED && !Settings.System.canWrite(this)) {//special
-        return false;
-      }
-    }
-    return true;
-  }
-
   @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
       @NonNull int[] grantResults) {
     switch (requestCode) {
@@ -245,8 +221,35 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
         onRequestPermissionsResult(requestCode, permissions, grantResults);
   }
 
-  @Override public void registerListener(PermissionListener listener) {
-    this.permissionListener = listener;
+  private void requestSpecialPermission() {
+    Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+    intent.setData(Uri.parse("package:" + getPackageName()));
+    startActivityForResult(intent, WRITE_SETTINGS_REQUEST_CODE);
+  }
+
+  @Override public boolean checkPermissions() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
+          != PackageManager.PERMISSION_GRANTED) {
+        return false;
+      }
+
+      if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+          != PackageManager.PERMISSION_GRANTED) {
+        return false;
+      }
+
+      if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+          != PackageManager.PERMISSION_GRANTED) {
+        return false;
+      }
+
+      if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_SETTINGS)
+          != PackageManager.PERMISSION_GRANTED && !Settings.System.canWrite(this)) {//special
+        return false;
+      }
+    }
+    return true;
   }
 
   private void forgetAPTXNetwork() {
@@ -277,8 +280,49 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
 
   }
 
-  @Override public void removeListener() {
-    this.permissionListener = null;
+  private void recoverNetworkState() {
+    //check if wifi was enabled before and re use it.
+    presenter.recoverNetworkState();
+  }
+
+  @Override public void showConnections() {
+    presenter.scanNetworks();
+  }
+
+  @Override public void enableButtons(boolean enable) {
+    if (enable) {
+      progressBarLayout.setVisibility(View.GONE);
+      groupButtonsLayout.setVisibility(View.VISIBLE);
+      System.out.println("Activating the buttons !");
+    } else {//disable
+      progressBarLayout.setVisibility(View.VISIBLE);
+      groupButtonsLayout.setVisibility(View.GONE);
+    }
+  }
+
+  @Override public void setUpListeners() {
+    joinGroupButton.setOnClickListener(new View.OnClickListener() {
+
+      @Override public void onClick(View v) {
+        Group g = new Group(chosenHotspot);
+        presenter.clickJoinGroup(g);
+      }
+    });
+
+    createGroupButton.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1) {
+          presenter.clickCreateGroup();
+        } else {
+          showNougatMR1Toast();
+        }
+      }
+    });
+  }
+
+  private void showNougatMR1Toast() {
+    Toast.makeText(this, this.getResources().getString(R.string.hotspotCreationErrorNougat),
+        Toast.LENGTH_SHORT).show();
   }
 
   @Override public void requestPermissions() {
@@ -330,37 +374,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     }
   }
 
-  @Override public void showConnections() {
-    presenter.scanNetworks();
-  }
-
-  @Override public void enableButtons(boolean enable) {
-    if (enable) {
-      progressBarLayout.setVisibility(View.GONE);
-      groupButtonsLayout.setVisibility(View.VISIBLE);
-      System.out.println("Activating the buttons !");
-    } else {//disable
-      progressBarLayout.setVisibility(View.VISIBLE);
-      groupButtonsLayout.setVisibility(View.GONE);
-    }
-  }
-
-  @Override public void setUpListeners() {
-    joinGroupButton.setOnClickListener(new View.OnClickListener() {
-
-      @Override public void onClick(View v) {
-        Group g = new Group(chosenHotspot);
-        presenter.clickJoinGroup(g);
-      }
-    });
-
-    createGroupButton.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        presenter.clickCreateGroup();
-      }
-    });
-  }
-
   @Override public void showMobileDataDialog() {
     Dialog d = buildMobileDataDialog();
     d.show();
@@ -400,12 +413,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
         showMobileDataToast();
         break;
     }
-  }
-
-  private void requestSpecialPermission() {
-    Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
-    intent.setData(Uri.parse("package:" + getPackageName()));
-    startActivityForResult(intent, WRITE_SETTINGS_REQUEST_CODE);
   }
 
   private Dialog buildMobileDataDialog() {
@@ -448,11 +455,6 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
 
   @Override public void showInactivityToast() {
     Toast.makeText(this, getResources().getString(R.string.noHotspotYet), Toast.LENGTH_LONG).show();
-  }
-
-  private void recoverNetworkState() {
-    //check if wifi was enabled before and re use it.
-    presenter.recoverNetworkState();
   }
 
   @Override public void hideButtonsProgressBar() {
@@ -508,6 +510,10 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
     finish();
   }
 
+  @Override public void registerListener(PermissionListener listener) {
+    this.permissionListener = listener;
+  }
+
   @Override public void refreshRadar(ArrayList<String> clients) {
     radarTextView.show(clients);
   }
@@ -532,6 +538,10 @@ public class HighwayActivity extends ActivityView implements HighwayView, Permis
 
   public String getChosenHotspot() {
     return chosenHotspot;
+  }
+
+  @Override public void removeListener() {
+    this.permissionListener = null;
   }
 
   public void setChosenHotspot(String chosenHotspot) {
