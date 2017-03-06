@@ -90,8 +90,9 @@ public class MainActivity extends TabNavigatorActivity implements MainView, Frag
   }
 
   @Override public void showHome() {
-    Fragment home = HomeFragment.newInstance(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home,
-        V8Engine.getConfiguration().getDefaultTheme());
+    Fragment home =
+        HomeFragment.newInstance(V8Engine.getConfiguration().getDefaultStore(), StoreContext.home,
+            V8Engine.getConfiguration().getDefaultTheme());
     getNavigationManager().navigateToWithoutBackSave(home);
   }
 
@@ -272,5 +273,4 @@ public class MainActivity extends TabNavigatorActivity implements MainView, Frag
   @Override public Fragment getLast() {
     return getNavigationManager().peekLast();
   }
-
 }

@@ -1,6 +1,7 @@
 package cm.aptoide.pt.v8engine.presenter;
 
 import android.os.Bundle;
+import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.SpotAndShareAnalytics;
 import cm.aptoide.pt.v8engine.view.SpotSharePreviewView;
 import cm.aptoide.pt.v8engine.view.View;
 import rx.Observable;
@@ -26,7 +27,10 @@ public class SpotSharePreviewPresenter implements Presenter {
   }
 
   private Observable<Void> startSelection() {
-    return view.startSelection().doOnNext(selection -> view.navigateToSpotShareView());
+    return view.startSelection().doOnNext(selection -> {
+      SpotAndShareAnalytics.clickShareApps();
+      view.navigateToSpotShareView();
+    });
   }
 
   @Override public void saveState(Bundle state) {

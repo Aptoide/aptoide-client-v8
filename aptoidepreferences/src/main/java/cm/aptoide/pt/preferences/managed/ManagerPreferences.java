@@ -173,13 +173,13 @@ public class ManagerPreferences {
         .getBoolean(ManagedKeys.PRIVACY_CONFIRMATION, true);
   }
 
-  public static boolean getShowPreview() {
+  public static boolean isShowPreviewDialog() {
     return PreferenceManager.getDefaultSharedPreferences(Application.getContext())
-        .getBoolean(ManagedKeys.SHOW_SHARE_PREVIEW, true);
+        .getBoolean(ManagedKeys.DONT_SHOW_ME_AGAIN, true);
   }
 
-  public static void setShowPreview(boolean previewShower) {
-    Preferences.get().edit().putBoolean(ManagedKeys.SHOW_SHARE_PREVIEW, previewShower).apply();
+  public static void setShowPreviewDialog(boolean showPreviewDialog) {
+    Preferences.get().edit().putBoolean(ManagedKeys.DONT_SHOW_ME_AGAIN, showPreviewDialog).apply();
   }
 
   public static String getUserAccess() {
@@ -230,5 +230,11 @@ public class ManagerPreferences {
 
   public static void setFacebookAsSynced() {
     Preferences.get().edit().putBoolean(ManagedKeys.FACEBOOK_SYNC, true).apply();
+  }
+
+  public static void setAddressBookSyncValues(Boolean value) {
+    Preferences.get().edit().putBoolean(ManagedKeys.ADDRESS_BOOK_SYNC, value).apply();
+    Preferences.get().edit().putBoolean(ManagedKeys.TWITTER_SYNC, value).apply();
+    Preferences.get().edit().putBoolean(ManagedKeys.FACEBOOK_SYNC, value).apply();
   }
 }
