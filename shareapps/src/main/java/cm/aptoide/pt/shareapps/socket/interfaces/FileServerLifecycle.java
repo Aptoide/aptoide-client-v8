@@ -5,7 +5,7 @@ import java.io.IOException;
 /**
  * Created by neuro on 14-02-2017.
  */
-public interface FileServerLifecycle<T> extends ProgressCallback, OnError<IOException> {
+public interface FileServerLifecycle<T> extends ProgressCallback<T>, OnError<IOException> {
 
   void onStartSending(T t);
 

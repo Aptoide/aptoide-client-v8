@@ -43,7 +43,8 @@ public class AptoideFileClientSocket<T> extends AptoideClientSocket {
     }
 
     ProgressAccumulator progressAccumulator =
-        new MultiProgressAccumulator(computeTotalSize(fileInfos), fileClientLifecycle);
+        new MultiProgressAccumulator<T>(computeTotalSize(fileInfos), fileClientLifecycle,
+            fileDescriptor);
 
     for (FileInfo fileInfo : fileInfos) {
       System.out.println(Thread.currentThread().getId() + ": Start receiving " + fileInfo);
