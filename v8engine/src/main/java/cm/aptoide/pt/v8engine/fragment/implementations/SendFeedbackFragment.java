@@ -8,14 +8,18 @@ package cm.aptoide.pt.v8engine.fragment.implementations;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -23,6 +27,7 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -42,6 +47,7 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
 
   public static final String SCREENSHOT_PATH = "SCREENSHOT_PATH";
   public static final String LOGS_FILE_NAME = "logs.txt";
+  private final String EXTERNAL_STORAGE_PERMISSION = "android.permission.WRITE_EXTERNAL_STORAGE";
   private Button sendFeedbackBtn;
   private CheckBox logsAndScreenshotsCb;
   private String screenShotPath;
@@ -73,9 +79,22 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
   @Override public void setupViews() {
     super.setupViews();
     setHasOptionsMenu(true);
-    RxView.clicks(sendFeedbackBtn).subscribe(aVoid -> sendFeedback(), err -> {
+    RxView.clicks(sendFeedbackBtn).subscribe(aVoid -> askPermission(), err -> {
       CrashReport.getInstance().log(err);
     });
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putString("screenShotPath", screenShotPath);
+  }
+
+  @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
+      Bundle savedInstanceState) {
+    if (savedInstanceState != null) {
+      screenShotPath = savedInstanceState.getString("screenShotPath");
+    }
+    return super.onCreateView(inflater, container, savedInstanceState);
   }
 
   @Override protected boolean displayHomeUpAsEnabled() {
@@ -90,87 +109,121 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
     logsAndScreenshotsCb = (CheckBox) view.findViewById(R.id.FeedBackCheckBox);
   }
 
-  private void sendFeedback() {
+  private void askPermission() {
     if (isContentValid()) {
-      Intent emailIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
-      emailIntent.setType("message/rfc822");
+      if (logsAndScreenshotsCb.isChecked() && !(getActivity().checkCallingOrSelfPermission(
+          EXTERNAL_STORAGE_PERMISSION) == PackageManager.PERMISSION_GRANTED)) {
+        requestPermissions(new String[] { EXTERNAL_STORAGE_PERMISSION }, 1);
+      } else {
+        sendFeedback();
+      }
+    } else {
+      ShowMessage.asSnack(getView(), R.string.feedback_not_valid);
+    }
+  }
 
-      emailIntent.putExtra(Intent.EXTRA_EMAIL,
-          new String[] { V8Engine.getConfiguration().getFeedbackEmail() });
+  @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+      @NonNull int[] grantResults) {
+    switch (requestCode) {
+      case 1: {
+        if (grantResults.length > 0
+            && grantResults[0] == PackageManager.PERMISSION_GRANTED
+            && permissions[0].equals(EXTERNAL_STORAGE_PERMISSION)) {
+          sendFeedback();
+        } else {
+          logsAndScreenshotsCb.setChecked(false);
+          sendFeedback();
+        }
+        break;
+      }
+      default:
+        ShowMessage.asSnack(getView(), R.string.unknown_error);
+        break;
+    }
+  }
 
-      //String versionName = "";
-      //Installed installed = DeprecatedDatabase.InstalledQ.get(getContext().getPackageName(), realm);
-      //if (installed != null) {
-      //  versionName = installed.getVersionName();
-      //}
-      //
-      //emailIntent.putExtra(Intent.EXTRA_SUBJECT,
-      //    "[Feedback]-" + versionName + ": " + subgectEdit.getText().toString());
-      //emailIntent.putExtra(Intent.EXTRA_TEXT, messageBodyEdit.getText().toString());
-      ////attach screenshots and logs
-      //if (logsAndScreenshotsCb.isChecked()) {
-      //  ArrayList<Uri> uris = new ArrayList<Uri>();
-      //  File ss = new File(screenShotPath);
-      //  if (ss != null) {
-      //    Uri urifile = Uri.fromFile(ss);
-      //    uris.add(urifile);
-      //  }
-      //
-      //  File logs = AptoideUtils.SystemU.readLogs(Application.getConfiguration().getCachePath(),
-      //      LOGS_FILE_NAME);
-      //  if (logs != null) {
-      //    Uri urifile = Uri.fromFile(logs);
-      //    uris.add(urifile);
-      //  }
-      //  emailIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
-      //}
-      //try {
-      //  startActivity(emailIntent);
-      //  getActivity().onBackPressed();
-      //  //				Analytics.SendFeedback.sendFeedback();
-      //} catch (android.content.ActivityNotFoundException ex) {
-      //  ShowMessage.asSnack(getView(), R.string.feedback_no_email);
-      //}
+  private void sendFeedback() {
+    Intent emailIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+    emailIntent.setType("message/rfc822");
 
-      InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
-      Subscription unManagedSubscription = installedAccessor.get(getContext().getPackageName())
-          .observeOn(AndroidSchedulers.mainThread())
-          .subscribe(installed1 -> {
-            String versionName = "";
-            if (installed1 != null) {
-              versionName = installed1.getVersionName();
-            }
+    emailIntent.putExtra(Intent.EXTRA_EMAIL,
+        new String[] { V8Engine.getConfiguration().getFeedbackEmail() });
 
-            emailIntent.putExtra(Intent.EXTRA_SUBJECT,
-                "[Feedback]-" + versionName + ": " + subgectEdit.getText().toString());
-            emailIntent.putExtra(Intent.EXTRA_TEXT, messageBodyEdit.getText().toString());
-            //attach screenshots and logs
-            if (logsAndScreenshotsCb.isChecked()) {
-              ArrayList<Uri> uris = new ArrayList<Uri>();
+    //String versionName = "";
+    //Installed installed = DeprecatedDatabase.InstalledQ.get(getContext().getPackageName(), realm);
+    //if (installed != null) {
+    //  versionName = installed.getVersionName();
+    //}
+    //
+    //emailIntent.putExtra(Intent.EXTRA_SUBJECT,
+    //    "[Feedback]-" + versionName + ": " + subgectEdit.getText().toString());
+    //emailIntent.putExtra(Intent.EXTRA_TEXT, messageBodyEdit.getText().toString());
+    ////attach screenshots and logs
+    //if (logsAndScreenshotsCb.isChecked()) {
+    //  ArrayList<Uri> uris = new ArrayList<Uri>();
+    //  File ss = new File(screenShotPath);
+    //  if (ss != null) {
+    //    Uri urifile = Uri.fromFile(ss);
+    //    uris.add(urifile);
+    //  }
+    //
+    //  File logs = AptoideUtils.SystemU.readLogs(Application.getConfiguration().getCachePath(),
+    //      LOGS_FILE_NAME);
+    //  if (logs != null) {
+    //    Uri urifile = Uri.fromFile(logs);
+    //    uris.add(urifile);
+    //  }
+    //  emailIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+    //}
+    //try {
+    //  startActivity(emailIntent);
+    //  getActivity().onBackPressed();
+    //  //				Analytics.SendFeedback.sendFeedback();
+    //} catch (android.content.ActivityNotFoundException ex) {
+    //  ShowMessage.asSnack(getView(), R.string.feedback_no_email);
+    //}
+
+    InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(Installed.class);
+    Subscription unManagedSubscription = installedAccessor.get(getContext().getPackageName())
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnError(throwable -> {
+          Logger.e("SendFeedbackFragment", throwable);
+          CrashReport.getInstance().log(throwable);
+        })
+        .subscribe(installed1 -> {
+          String versionName = "";
+          if (installed1 != null) {
+            versionName = installed1.getVersionName();
+          }
+
+          emailIntent.putExtra(Intent.EXTRA_SUBJECT,
+              "[Feedback]-" + versionName + ": " + subgectEdit.getText().toString());
+          emailIntent.putExtra(Intent.EXTRA_TEXT, messageBodyEdit.getText().toString());
+          //attach screenshots and logs
+          if (logsAndScreenshotsCb.isChecked()) {
+            ArrayList<Uri> uris = new ArrayList<Uri>();
+            if (screenShotPath != null) {
               File ss = new File(screenShotPath);
               if (ss != null) {
                 uris.add(getUriFromFile(ss));
               }
+            }
 
-              File logs =
-                  AptoideUtils.SystemU.readLogs(Application.getConfiguration().getCachePath(),
-                      LOGS_FILE_NAME);
-              if (logs != null) {
-                uris.add(getUriFromFile(logs));
-              }
-              emailIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+            File logs = AptoideUtils.SystemU.readLogs(Application.getConfiguration().getCachePath(),
+                LOGS_FILE_NAME);
+            if (logs != null) {
+              uris.add(getUriFromFile(logs));
             }
-            try {
-              startActivity(emailIntent);
-              getActivity().onBackPressed();
-              //				Analytics.SendFeedback.sendFeedback();
-            } catch (ActivityNotFoundException ex) {
-              ShowMessage.asSnack(getView(), R.string.feedback_no_email);
-            }
-          });
-    } else {
-      ShowMessage.asSnack(getView(), R.string.feedback_not_valid);
-    }
+            emailIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+          }
+          try {
+            startActivity(emailIntent);
+            getActivity().onBackPressed();
+            //				Analytics.SendFeedback.sendFeedback();
+          } catch (ActivityNotFoundException ex) {
+            ShowMessage.asSnack(getView(), R.string.feedback_no_email);
+          }
+        });
   }
 
   public boolean isContentValid() {
