@@ -19,6 +19,7 @@ import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -104,6 +105,9 @@ public class StoreUtils {
     });
   }
 
+  /**
+   * @see StoreCredentialsProvider
+   */
   @Deprecated
   public static BaseRequestWithStore.StoreCredentials getStoreCredentials(String storeName) {
     return storeCredentialsProvider.get(storeName);
@@ -188,9 +192,10 @@ public class StoreUtils {
     return storesAuthMap.size() > 0 ? storesAuthMap : null;
   }
 
-  public static void unsubscribeStore(String name, AptoideAccountManager accountManager) {
+  public static void unsubscribeStore(String name, AptoideAccountManager accountManager,
+      StoreCredentialsProvider storeCredentialsProvider) {
     if (accountManager.isLoggedIn()) {
-      accountManager.unsubscribeStore(name);
+      accountManager.unsubscribeStore(name, storeCredentialsProvider.get(name));
     }
     StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
     storeAccessor.remove(name);

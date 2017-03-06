@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 import cm.aptoide.pt.model.v7.store.GetHomeMeta;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablePojo;
 import java.util.Collections;
 import java.util.List;
@@ -12,11 +13,15 @@ import java.util.List;
  */
 public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
 
+  private StoreCredentialsProvider storeCredentialsProvider;
+
   public GridStoreMetaDisplayable() {
   }
 
-  public GridStoreMetaDisplayable(GetHomeMeta pojo) {
+  public GridStoreMetaDisplayable(GetHomeMeta pojo,
+      StoreCredentialsProvider storeCredentialsProvider) {
     super(pojo);
+    this.storeCredentialsProvider = storeCredentialsProvider;
   }
 
   @Override protected Configs getConfig() {
@@ -30,5 +35,9 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
   public List<Store.SocialChannel> getSocialLinks() {
     return getPojo().getData().getStore().getSocialChannels() == null ? Collections.EMPTY_LIST
         : getPojo().getData().getStore().getSocialChannels();
+  }
+
+  public StoreCredentialsProvider getStoreCredentialsProvider() {
+    return storeCredentialsProvider;
   }
 }

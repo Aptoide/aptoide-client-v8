@@ -8,6 +8,7 @@ import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 
 /**
  * This Proxy class was created to solve the issue with calling Analytics tracking events inside
@@ -59,8 +60,9 @@ public class StoreUtilsProxy {
         successRequestListener, errorRequestListener, storeName, accountManager);
   }
 
-  public void unSubscribeStore(String storeName) {
+  public void unSubscribeStore(String storeName,
+      StoreCredentialsProvider storeCredentialsProvider) {
     Analytics.Stores.unSubscribe(storeName);
-    StoreUtils.unsubscribeStore(storeName, accountManager);
+    StoreUtils.unsubscribeStore(storeName, accountManager, storeCredentialsProvider);
   }
 }

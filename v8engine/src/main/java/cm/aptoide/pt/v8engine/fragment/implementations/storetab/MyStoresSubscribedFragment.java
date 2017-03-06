@@ -18,6 +18,7 @@ import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.DisplayablesFactory;
@@ -84,7 +85,8 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
               new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
           storesDisplayables.add(
               new RecommendedStoreDisplayable(list.get(i), storeRepository, accountManager,
-                  new StoreUtilsProxy(idsRepository, accountManager)));
+                  new StoreUtilsProxy(idsRepository, accountManager),
+                  new StoreCredentialsProviderImpl()));
         } else {
           storesDisplayables.add(new GridStoreDisplayable(list.get(i)));
         }

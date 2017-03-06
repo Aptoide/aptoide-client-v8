@@ -146,10 +146,6 @@ abstract class v3accountManager<U> extends WebService<v3accountManager.Interface
     }) Observable<ChangeUserSettingsResponse> changeUserSettings(
         @FieldMap HashMapNotNull<String, String> args);
 
-    @POST("3/changeUserRepoSubscription") @FormUrlEncoded
-    Observable<GenericResponseV3> changeUserRepoSubscription(
-        @FieldMap HashMapNotNull<String, String> args);
-
     @POST("3/getUserRepoSubscription") @FormUrlEncoded
     Observable<GetUserRepoSubscription> getUserRepos(@FieldMap HashMapNotNull<String, String> args);
   }

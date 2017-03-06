@@ -10,7 +10,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.text.TextUtils;
-import cm.aptoide.accountmanager.ws.ChangeUserRepoSubscriptionRequest;
 import cm.aptoide.accountmanager.ws.CheckUserCredentialsRequest;
 import cm.aptoide.accountmanager.ws.CreateUserRequest;
 import cm.aptoide.accountmanager.ws.GetUserRepoSubscriptionRequest;
@@ -18,9 +17,9 @@ import cm.aptoide.accountmanager.ws.OAuth2AuthenticationRequest;
 import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.ChangeStoreSubscriptionResponse;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.AptoidePreferencesConfiguration;
 import cm.aptoide.pt.preferences.managed.ManagedKeys;
 import com.facebook.FacebookSdk;
@@ -373,20 +372,21 @@ public class AptoideAccountManager {
         serverUser.isAccessConfirmed());
   }
 
-  public void unsubscribeStore(String storeName) {
-    ChangeUserRepoSubscriptionRequest.of(storeName, false, this)
-        .execute(genericResponseV3 -> Logger.d(TAG, "Successfully unsubscribed " + storeName),
-            true);
-  }
-
-  public void subscribeStore(String storeName) {
-    followStoreService.followStore(storeName, aptoideClientUuid.getUniqueIdentifier(),
-        getAccessToken()).toCompletable().toObservable().toBlocking().first();
+  public void unsubscribeStore(String storeName,
+      BaseRequestWithStore.StoreCredentials storeCredentials) {
+    followStoreService.unFollowStore(storeName, aptoideClientUuid.getUniqueIdentifier(),
+        getAccessToken(), storeCredentials.getUsername(), storeCredentials.getPasswordSha1())
+        .subscribe();
   }
 
   public String getAccessToken() {
     final Account account = getAccount();
     return account == null ? null : account.getToken();
+  }
+
+  public void subscribeStore(String storeName) {
+    followStoreService.followStore(storeName, aptoideClientUuid.getUniqueIdentifier(),
+        getAccessToken()).toCompletable().toObservable().toBlocking().first();
   }
 
   // TODO: 06/03/2017 trinkes make it return a completable

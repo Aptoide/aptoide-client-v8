@@ -14,4 +14,7 @@ public interface FollowStoreService {
 
   Observable<ChangeStoreSubscriptionResponse> followStore(String storeName,
       String aptoideClientUUID, String accessToken, String storeUserName, String sha1Password);
+
+  Observable<ChangeStoreSubscriptionResponse> unFollowStore(String storeName,
+      String aptoideClientUUID, String accessToken, String storeUserName, String sha1Password);
 }

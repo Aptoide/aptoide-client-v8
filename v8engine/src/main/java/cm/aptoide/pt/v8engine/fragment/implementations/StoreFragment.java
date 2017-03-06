@@ -40,7 +40,9 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.dialog.PrivateStoreDialog;
 import cm.aptoide.pt.v8engine.fragment.BasePagerToolbarFragment;
+import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
+import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
@@ -65,6 +67,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private String storeTheme;
   private Event.Name defaultTab;
   @Nullable private Long userId;
+  private StoreCredentialsProvider storeCredentialsProvider;
 
   public static StoreFragment newInstance(long userId, String storeTheme, Event.Name defaultTab) {
     Bundle args = new Bundle();
@@ -99,6 +102,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    storeCredentialsProvider = new StoreCredentialsProviderImpl();
   }
 
   @Override public void onDestroy() {
@@ -256,7 +260,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
         android.R.string.ok, R.string.unfollow).subscribe(eResponse -> {
       switch (eResponse) {
         case NO:
-          StoreUtils.unsubscribeStore(storeName, accountManager);
+          StoreUtils.unsubscribeStore(storeName, accountManager, storeCredentialsProvider);
         case YES:
         case CANCEL:
           getActivity().onBackPressed();

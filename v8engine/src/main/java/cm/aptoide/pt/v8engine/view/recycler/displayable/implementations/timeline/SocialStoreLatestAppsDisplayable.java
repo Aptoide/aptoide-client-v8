@@ -7,6 +7,7 @@ import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.model.v7.timeline.SocialStoreLatestApps;
 import cm.aptoide.pt.v8engine.R;
+import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.repository.SocialRepository;
 import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -33,6 +34,7 @@ public class SocialStoreLatestAppsDisplayable extends SocialCardDisplayable {
 
   private TimelineMetricsManager timelineMetricsManager;
   private SocialRepository socialRepository;
+  private StoreCredentialsProvider storeCredentialsProvider;
 
   public SocialStoreLatestAppsDisplayable() {
   }
@@ -42,7 +44,7 @@ public class SocialStoreLatestAppsDisplayable extends SocialCardDisplayable {
       String storeName, String avatarUrl, List<LatestApp> latestApps, String abTestingUrl,
       long likes, long comments, DateCalculator dateCalculator,
       TimelineMetricsManager timelineMetricsManager, SocialRepository socialRepository,
-      SpannableFactory spannableFactory) {
+      SpannableFactory spannableFactory, StoreCredentialsProvider storeCredentialsProvider) {
     super(socialStoreLatestApps, likes, comments, socialStoreLatestApps.getOwnerStore(),
         socialStoreLatestApps.getUser(), socialStoreLatestApps.getUserSharer(),
         socialStoreLatestApps.getMy().isLiked(), socialStoreLatestApps.getLikes(),
@@ -59,11 +61,13 @@ public class SocialStoreLatestAppsDisplayable extends SocialCardDisplayable {
     this.user = socialStoreLatestApps.getUser();
     this.userSharer = socialStoreLatestApps.getUserSharer();
     this.spannableFactory = spannableFactory;
+    this.storeCredentialsProvider = storeCredentialsProvider;
   }
 
   public static SocialStoreLatestAppsDisplayable from(SocialStoreLatestApps socialStoreLatestApps,
       DateCalculator dateCalculator, TimelineMetricsManager timelineMetricsManager,
-      SocialRepository socialRepository, SpannableFactory spannableFactory) {
+      SocialRepository socialRepository, SpannableFactory spannableFactory,
+      StoreCredentialsProvider storeCredentialsProvider) {
     final List<SocialStoreLatestAppsDisplayable.LatestApp> latestApps = new ArrayList<>();
     for (App app : socialStoreLatestApps.getApps()) {
       latestApps.add(new SocialStoreLatestAppsDisplayable.LatestApp(app.getId(), app.getIcon(),
@@ -88,7 +92,7 @@ public class SocialStoreLatestAppsDisplayable extends SocialCardDisplayable {
     return new SocialStoreLatestAppsDisplayable(socialStoreLatestApps, ownerStoreName,
         ownerStoreAvatar, latestApps, abTestingURL, socialStoreLatestApps.getStats().getLikes(),
         socialStoreLatestApps.getStats().getComments(), dateCalculator, timelineMetricsManager,
-        socialRepository, spannableFactory);
+        socialRepository, spannableFactory, storeCredentialsProvider);
   }
 
   //public String getTimeSinceLastUpdate(Context context) {
@@ -115,6 +119,10 @@ public class SocialStoreLatestAppsDisplayable extends SocialCardDisplayable {
 
   @Override public void like(Context context, String cardType, int rating) {
     socialRepository.like(getTimelineCard(), cardType, "", rating);
+  }
+
+  public StoreCredentialsProvider getStoreCredentialsProvider() {
+    return storeCredentialsProvider;
   }
 
   @EqualsAndHashCode public static class LatestApp {

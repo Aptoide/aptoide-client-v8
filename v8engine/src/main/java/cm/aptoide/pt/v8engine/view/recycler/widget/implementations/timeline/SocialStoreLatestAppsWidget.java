@@ -209,7 +209,8 @@ public class SocialStoreLatestAppsWidget
           if (isSubscribed) {
             followStore.setText(R.string.followed);
             compositeSubscription.add(RxView.clicks(followStore).subscribe(__ -> {
-              storeUtilsProxy.unSubscribeStore(storeName);
+              storeUtilsProxy.unSubscribeStore(storeName,
+                  displayable.getStoreCredentialsProvider());
               ShowMessage.asSnack(itemView,
                   AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message,
                       storeName));

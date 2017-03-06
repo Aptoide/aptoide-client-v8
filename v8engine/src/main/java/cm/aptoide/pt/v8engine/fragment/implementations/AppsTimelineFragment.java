@@ -42,6 +42,7 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.v8engine.install.Installer;
 import cm.aptoide.pt.v8engine.install.InstallerFactory;
+import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.link.LinksHandlerFactory;
 import cm.aptoide.pt.v8engine.repository.PackageRepository;
 import cm.aptoide.pt.v8engine.repository.SocialRepository;
@@ -49,6 +50,7 @@ import cm.aptoide.pt.v8engine.repository.TimelineCardFilter;
 import cm.aptoide.pt.v8engine.repository.TimelineMetricsManager;
 import cm.aptoide.pt.v8engine.repository.TimelineRepository;
 import cm.aptoide.pt.v8engine.util.DownloadFactory;
+import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.view.recycler.base.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -106,6 +108,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
   private AptoideAccountManager accountManager;
   private IdsRepositoryImpl idsRepository;
   private AccountNavigator accountNavigator;
+  private StoreCredentialsProvider storeCredentialsProvider;
 
   public static AppsTimelineFragment newInstance(String action, Long userId) {
     AppsTimelineFragment fragment = new AppsTimelineFragment();
@@ -138,6 +141,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
     installManager = new InstallManager(AptoideDownloadManager.getInstance(), installer);
     timelineMetricsManager = new TimelineMetricsManager(accountManager, Analytics.getInstance());
     socialRepository = new SocialRepository(accountManager, idsRepository);
+    storeCredentialsProvider = new StoreCredentialsProviderImpl();
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
@@ -363,7 +367,7 @@ public class AppsTimelineFragment<T extends BaseAdapter> extends GridRecyclerSwi
           linksHandlerFactory, timelineMetricsManager, socialRepository);
     } else if (card instanceof SocialStoreLatestApps) {
       return SocialStoreLatestAppsDisplayable.from((SocialStoreLatestApps) card, dateCalculator,
-          timelineMetricsManager, socialRepository, spannableFactory);
+          timelineMetricsManager, socialRepository, spannableFactory, storeCredentialsProvider);
     } else if (card instanceof Feature) {
       return FeatureDisplayable.from((Feature) card, dateCalculator, spannableFactory);
     } else if (card instanceof StoreLatestApps) {

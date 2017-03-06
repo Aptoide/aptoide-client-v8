@@ -7,10 +7,8 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 import android.util.Pair;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
@@ -26,12 +24,12 @@ import cm.aptoide.pt.model.v7.ListFullReviews;
 import cm.aptoide.pt.model.v7.listapp.App;
 import cm.aptoide.pt.model.v7.store.GetHomeMeta;
 import cm.aptoide.pt.model.v7.store.GetStoreDisplays;
-import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.model.v7.store.ListStores;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
+import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.EmptyDisplayable;
@@ -105,8 +103,8 @@ public class DisplayablesFactory {
           }
 
         case HOME_META:
-          return Observable.just(
-              new GridStoreMetaDisplayable((GetHomeMeta) widget.getViewObject()));
+          return Observable.just(new GridStoreMetaDisplayable((GetHomeMeta) widget.getViewObject(),
+              new StoreCredentialsProviderImpl()));
 
         case REVIEWS_GROUP:
           return Observable.from(createReviewsGroupDisplayables(widget));
@@ -328,7 +326,9 @@ public class DisplayablesFactory {
         new StoreGridHeaderDisplayable(wsWidget, storeTheme, wsWidget.getTag(), storeContext));
     for (Store store : stores) {
       if (wsWidget.getData().getLayout() == Layout.LIST) {
-        displayables.add(new RecommendedStoreDisplayable(store, storeRepository, accountManager, storeUtilsProxy));
+        displayables.add(
+            new RecommendedStoreDisplayable(store, storeRepository, accountManager, storeUtilsProxy,
+                new StoreCredentialsProviderImpl()));
       } else {
         displayables.add(new GridStoreDisplayable(store));
       }

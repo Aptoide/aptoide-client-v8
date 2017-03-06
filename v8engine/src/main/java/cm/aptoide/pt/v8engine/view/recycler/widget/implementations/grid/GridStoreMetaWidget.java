@@ -106,9 +106,11 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
 
       updateSubscribeButtonText(isStoreSubscribed);
       compositeSubscription.add(RxView.clicks(subscribeButton)
-          .subscribe(handleSubscriptionLogic(new StoreWrapper(store, isStoreSubscribed)), err -> {
-            CrashReport.getInstance().log(err);
-          }));
+          .subscribe(
+              handleSubscriptionLogic(new StoreWrapper(store, isStoreSubscribed), displayable),
+              err -> {
+                CrashReport.getInstance().log(err);
+              }));
 
       List<cm.aptoide.pt.model.v7.store.Store.SocialChannel> socialChannels =
           displayable.getSocialLinks();
@@ -225,12 +227,14 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
         : itemView.getContext().getString(R.string.follow));
   }
 
-  private Action1<Void> handleSubscriptionLogic(final StoreWrapper storeWrapper) {
+  private Action1<Void> handleSubscriptionLogic(final StoreWrapper storeWrapper,
+      GridStoreMetaDisplayable displayable) {
     return aVoid -> {
       if (storeWrapper.isStoreSubscribed()) {
         storeWrapper.setStoreSubscribed(false);
         if (accountManager.isLoggedIn()) {
-          accountManager.unsubscribeStore(storeWrapper.getStore().getName());
+          accountManager.unsubscribeStore(storeWrapper.getStore().getName(),
+              displayable.getStoreCredentialsProvider().get(storeWrapper.getStore().getName()));
         }
         StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(Store.class);
         storeAccessor.remove(storeWrapper.getStore().getId());

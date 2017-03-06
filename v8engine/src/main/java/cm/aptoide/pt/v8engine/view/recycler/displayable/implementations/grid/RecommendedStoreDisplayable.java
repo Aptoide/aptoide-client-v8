@@ -2,11 +2,11 @@ package cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid;
 
 import android.content.Context;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v7.store.Store;
 import cm.aptoide.pt.navigation.NavigationManagerV4;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.repository.StoreRepository;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
@@ -22,16 +22,19 @@ public class RecommendedStoreDisplayable extends DisplayablePojo<Store> {
   private AptoideAccountManager accountManager;
   private StoreRepository storeRepository;
   private StoreUtilsProxy storeUtilsProxy;
+  private StoreCredentialsProvider storeCredentialsProvider;
 
   public RecommendedStoreDisplayable() {
   }
 
   public RecommendedStoreDisplayable(Store pojo, StoreRepository storeRepository,
-      AptoideAccountManager accountManager, StoreUtilsProxy storeUtilsProxy) {
+      AptoideAccountManager accountManager, StoreUtilsProxy storeUtilsProxy,
+      StoreCredentialsProvider storeCredentialsProvider) {
     super(pojo);
     this.storeRepository = storeRepository;
     this.accountManager = accountManager;
     this.storeUtilsProxy = storeUtilsProxy;
+    this.storeCredentialsProvider = storeCredentialsProvider;
   }
 
   @Override protected Configs getConfig() {
@@ -52,9 +55,10 @@ public class RecommendedStoreDisplayable extends DisplayablePojo<Store> {
 
   void unsubscribeStore() {
     if (accountManager.isLoggedIn()) {
-      accountManager.unsubscribeStore(getPojo().getName());
+      accountManager.unsubscribeStore(getPojo().getName(),
+          storeCredentialsProvider.get(getPojo().getName()));
     }
-    StoreUtils.unsubscribeStore(getPojo().getName(), accountManager);
+    StoreUtils.unsubscribeStore(getPojo().getName(), accountManager, storeCredentialsProvider);
   }
 
   void openStoreFragment(NavigationManagerV4 navigationManager) {
