@@ -10,13 +10,16 @@ import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.ws.v3.GetApkInfoRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.model.v3.PaidApp;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.repository.exception.RepositoryItemNotFoundException;
+import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import rx.Observable;
 
@@ -28,12 +31,17 @@ public class AppRepository {
   private final NetworkOperatorManager operatorManager;
   private final AptoideClientUUID aptoideClientUUID;
   private final AptoideAccountManager accountManager;
+  private final BodyDecorator bodyDecorator;
+  private final StoreCredentialsProvider storeCredentialsProvider;
 
   AppRepository(NetworkOperatorManager operatorManager, AptoideAccountManager accountManager,
-      IdsRepositoryImpl idsRepository) {
+      AptoideClientUUID aptoideClientUUID, BodyDecorator bodyDecorator,
+      StoreCredentialsProviderImpl storeCredentialsProvider) {
     this.operatorManager = operatorManager;
-    this.aptoideClientUUID = idsRepository;
+    this.aptoideClientUUID = aptoideClientUUID;
     this.accountManager = accountManager;
+    this.bodyDecorator = bodyDecorator;
+    this.storeCredentialsProvider = storeCredentialsProvider;
   }
 
   public Observable<GetApp> getApp(long appId, boolean refresh, boolean sponsored, String storeName,
@@ -44,9 +52,8 @@ public class AppRepository {
     //[AN-1160] - [AppView] latest version bug
     return GetAppRequest.of(appId,
         V8Engine.getConfiguration().getPartnerId() == null ? null : storeName,
-        StoreUtils.getStoreCredentials(storeName), accountManager.getAccessToken(),
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-            DataProvider.getContext()).getUniqueIdentifier(), packageName)
+        StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), packageName,
+        bodyDecorator)
         .observe(refresh)
         .flatMap(response -> {
           if (response != null && response.isOk()) {
@@ -117,8 +124,8 @@ public class AppRepository {
 
   public Observable<GetApp> getApp(String packageName, boolean refresh, boolean sponsored,
       String storeName) {
-    return GetAppRequest.of(packageName, storeName, accountManager.getAccessToken(),
-        aptoideClientUUID.getUniqueIdentifier()).observe(refresh).flatMap(response -> {
+    return GetAppRequest.of(packageName, storeName,
+        bodyDecorator).observe(refresh).flatMap(response -> {
       if (response != null && response.isOk()) {
         if (response.getNodes().getMeta().getData().isPaid()) {
           return addPayment(sponsored, response, refresh);
@@ -133,8 +140,8 @@ public class AppRepository {
   }
 
   public Observable<GetApp> getAppFromMd5(String md5, boolean refresh, boolean sponsored) {
-    return GetAppRequest.ofMd5(md5, accountManager.getAccessToken(),
-        aptoideClientUUID.getUniqueIdentifier()).observe(refresh).flatMap(response -> {
+    return GetAppRequest.ofMd5(md5,
+        bodyDecorator).observe(refresh).flatMap(response -> {
       if (response != null && response.isOk()) {
         if (response.getNodes().getMeta().getData().isPaid()) {
           return addPayment(sponsored, response, refresh);

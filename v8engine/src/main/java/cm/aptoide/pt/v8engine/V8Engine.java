@@ -32,6 +32,7 @@ import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
@@ -56,8 +57,10 @@ import cm.aptoide.pt.v8engine.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.v8engine.download.TokenHttpClient;
 import cm.aptoide.pt.v8engine.filemanager.CacheHelper;
 import cm.aptoide.pt.v8engine.filemanager.FileManager;
+import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.repository.UpdateRepository;
+import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.view.MainActivity;
 import cm.aptoide.pt.v8engine.view.recycler.DisplayableWidgetMapping;
@@ -105,7 +108,9 @@ public abstract class V8Engine extends DataProvider {
           ((StoreAccessor) AccessorFactory.getAccessorFor(Store.class)).insert(store);
         }
       } else {
-        addDefaultStore(accountManager);
+        addDefaultStore(accountManager,
+            new BaseBodyDecorator(aptoideClientUUID.getUniqueIdentifier(), accountManager),
+            new StoreCredentialsProviderImpl());
       }
 
       checkUpdates();
@@ -131,7 +136,9 @@ public abstract class V8Engine extends DataProvider {
 
   public static void clearUserData(AptoideAccountManager accountManager) {
     AccessorFactory.getAccessorFor(Store.class).removeAll();
-    StoreUtils.subscribeStore(getConfiguration().getDefaultStore(), null, null, accountManager);
+    StoreUtils.subscribeStore(getConfiguration().getDefaultStore(), null, null, accountManager,
+        new BaseBodyDecorator(aptoideClientUUID.getUniqueIdentifier(), accountManager),
+        new StoreCredentialsProviderImpl());
     regenerateUserAgent(accountManager);
   }
 
@@ -144,17 +151,20 @@ public abstract class V8Engine extends DataProvider {
         }, AptoideUtils.Core.getDefaultVername(), getConfiguration().getPartnerId()));
   }
 
-  private static void addDefaultStore(AptoideAccountManager accountManager) {
+  private static void addDefaultStore(AptoideAccountManager accountManager,
+      BodyDecorator bodyDecorator, StoreCredentialsProvider storeCredentialsProvider) {
     StoreUtils.subscribeStore(getConfiguration().getDefaultStore(), getStoreMeta -> checkUpdates(),
-        null, accountManager);
+        null, accountManager, bodyDecorator, storeCredentialsProvider);
   }
 
   public AptoideAccountManager getAccountManager() {
     if (accountManager == null) {
+      final IdsRepositoryImpl aptoideClientUuid =
+          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this);
       accountManager = new AptoideAccountManager(this, getConfiguration(), AccountManager.get(this),
-          new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), this),
-          new ExternalServicesLoginAvailability(this, getConfiguration(),
-              GoogleApiAvailability.getInstance()), new AccountAnalytcs());
+          aptoideClientUuid, new ExternalServicesLoginAvailability(this, getConfiguration(),
+          GoogleApiAvailability.getInstance()), new AccountAnalytcs(),
+          new BaseBodyDecorator(aptoideClientUuid.getUniqueIdentifier(), accountManager));
     }
     return accountManager;
   }
@@ -239,7 +249,9 @@ public abstract class V8Engine extends DataProvider {
             SecurePreferences.setUserDataLoaded();
           }
         } else {
-          generateAptoideUUID().subscribe(success -> addDefaultStore(accountManager), err -> {
+          generateAptoideUUID().subscribe(success -> addDefaultStore(accountManager,
+              new BaseBodyDecorator(aptoideClientUUID.getUniqueIdentifier(), accountManager),
+              new StoreCredentialsProviderImpl()), err -> {
             CrashReport.getInstance().log(err);
           });
         }

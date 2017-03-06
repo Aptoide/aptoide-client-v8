@@ -9,6 +9,7 @@ import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
@@ -19,6 +20,7 @@ import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,23 +37,14 @@ public class StoreUtils {
   public static final String PRIVATE_STORE_WRONG_CREDENTIALS_ERROR_CODE = "STORE-4";
   public static final String STORE_SUSPENDED_ERROR_CODE = "STORE-7";
 
-  private static StoreCredentialsProviderImpl storeCredentialsProvider;
-  private static AptoideClientUUID aptoideClientUUID;
-
-  static {
-    storeCredentialsProvider = new StoreCredentialsProviderImpl();
-
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
-  }
-
-  @Deprecated
-  public static BaseRequestWithStore.StoreCredentials getStoreCredentials(long storeId) {
+  @Deprecated public static BaseRequestWithStore.StoreCredentials getStoreCredentials(long storeId,
+      StoreCredentialsProvider storeCredentialsProvider) {
     return storeCredentialsProvider.get(storeId);
   }
 
   @Partners @Deprecated public static @Nullable
-  BaseRequestWithStore.StoreCredentials getStoreCredentialsFromUrl(String url) {
+  BaseRequestWithStore.StoreCredentials getStoreCredentialsFromUrl(String url,
+      StoreCredentialsProvider storeCredentialsProvider) {
     return storeCredentialsProvider.fromUrl(url);
   }
 
@@ -61,10 +54,11 @@ public class StoreUtils {
    */
   @Deprecated public static void subscribeStore(String storeName,
       @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
-      @Nullable ErrorRequestListener errorRequestListener, AptoideAccountManager accountManager) {
-    subscribeStore(GetStoreMetaRequest.of(getStoreCredentials(storeName),
-        accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier()),
-        successRequestListener, errorRequestListener, accountManager);
+      @Nullable ErrorRequestListener errorRequestListener, AptoideAccountManager accountManager,
+      BodyDecorator bodyDecorator, StoreCredentialsProvider storeCredentialsProvider) {
+    subscribeStore(GetStoreMetaRequest.of(getStoreCredentials(storeName, storeCredentialsProvider),
+        accountManager.getAccessToken(), bodyDecorator), successRequestListener,
+        errorRequestListener, accountManager);
   }
 
   /**
@@ -115,7 +109,8 @@ public class StoreUtils {
   }
 
   @Deprecated
-  public static BaseRequestWithStore.StoreCredentials getStoreCredentials(String storeName) {
+  public static BaseRequestWithStore.StoreCredentials getStoreCredentials(String storeName,
+      StoreCredentialsProvider storeCredentialsProvider) {
     return storeCredentialsProvider.get(storeName);
   }
 

@@ -2,7 +2,8 @@ package cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.ws.v7.AnalyticsEventRequest;
-import cm.aptoide.pt.model.v7.BaseV7Response;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
+import cm.aptoide.pt.v8engine.BaseBodyDecorator;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.Event;
 import java.util.Map;
 import rx.schedulers.Schedulers;
@@ -13,26 +14,24 @@ import rx.schedulers.Schedulers;
 
 public class AptoideEvent implements Event {
 
-  private final AptoideAccountManager accountManager;
-  private final String uniqueIdentifier;
   private final Map<String, Object> data;
   private final String eventName;
   private final String action;
   private final String context;
+  private BodyDecorator bodyDecorator;
 
-  public AptoideEvent(AptoideAccountManager accountManager, String uniqueIdentifier,
-      Map<String, Object> data, String eventName, String action, String context) {
-    this.accountManager = accountManager;
-    this.uniqueIdentifier = uniqueIdentifier;
+  public AptoideEvent(Map<String, Object> data, String eventName, String action, String context,
+      BodyDecorator bodyDecorator) {
     this.data = data;
     this.eventName = eventName;
     this.action = action;
     this.context = context;
+    this.bodyDecorator = bodyDecorator;
   }
 
   @Override public void send() {
-    AnalyticsEventRequest.of(accountManager.getAccessToken(), eventName, uniqueIdentifier, context,
-        action, data).observe().observeOn(Schedulers.io()).subscribe(baseV7Response -> {
+    AnalyticsEventRequest.of(eventName, context,
+        action, data, bodyDecorator).observe().observeOn(Schedulers.io()).subscribe(baseV7Response -> {
     }, throwable -> throwable.printStackTrace());
   }
 }

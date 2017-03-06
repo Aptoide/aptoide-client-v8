@@ -10,12 +10,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.widget.Button;
+import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
-import cm.aptoide.pt.dataprovider.ws.v7.SetUserRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -23,6 +22,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import com.jakewharton.rxbinding.view.RxView;
+import rx.Completable;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -41,6 +41,7 @@ public class ProfileStepOneActivity extends AccountBaseActivity {
   private Button mMoreInfoButton;
   private CompositeSubscription mSubscriptions;
   private ProgressDialog pleaseWaitDialog;
+  private boolean externalLogin;
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -49,6 +50,9 @@ public class ProfileStepOneActivity extends AccountBaseActivity {
         DataProvider.getContext());
     accountManager = ((V8Engine) getApplicationContext()).getAccountManager();
     mSubscriptions = new CompositeSubscription();
+    pleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
+        getApplicationContext().getString(cm.aptoide.accountmanager.R.string.please_wait));
+    externalLogin = getIntent().getBooleanExtra(AptoideAccountManager.IS_FACEBOOK_OR_GOOGLE, false);
     bindViews();
     setupToolbar();
     setupListeners();
@@ -74,27 +78,16 @@ public class ProfileStepOneActivity extends AccountBaseActivity {
   }
 
   private void setupListeners() {
-    mSubscriptions.add(RxView.clicks(mContinueButton).subscribe(clicks -> {
-
-      pleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
-          getApplicationContext().getString(cm.aptoide.accountmanager.R.string.please_wait));
-      pleaseWaitDialog.show();
-
-      SetUserRequest.of(aptoideClientUUID.getUniqueIdentifier(), UserAccessState.PUBLIC.toString(),
-          accountManager.getAccessToken(), null).execute(answer -> {
-        if (answer.isOk()) {
-          Logger.v(TAG, "user is public");
-          ShowMessage.asSnack(this, cm.aptoide.accountmanager.R.string.successful);
-          Analytics.Account.accountProfileAction(1, Analytics.Account.ProfileAction.CONTINUE);
-        } else {
-          Logger.v(TAG, "user is public: error: " + answer.getError().getDescription());
-          ShowMessage.asSnack(this, cm.aptoide.accountmanager.R.string.unknown_error);
-        }
-        navigateToNextActivity();
-      }, throwable -> {
-        navigateToNextActivity();
-      });
-    }));
+    mSubscriptions.add(RxView.clicks(mContinueButton)
+        .doOnNext(click -> pleaseWaitDialog.show())
+        .flatMap(click -> accountManager.updateAccount(Account.Access.PUBLIC)
+            .doOnCompleted(() -> showContinueSuccessMessage())
+            .doOnError(throwable -> showErrorMessage())
+            .onErrorComplete()
+            .andThen(navigateToCreateStoreView())
+            .toObservable())
+        .retry()
+        .subscribe());
     mSubscriptions.add(RxView.clicks(mMoreInfoButton).subscribe(clicks -> {
       Analytics.Account.accountProfileAction(1, Analytics.Account.ProfileAction.MORE_INFO);
       final Intent i = getIntent();
@@ -104,29 +97,31 @@ public class ProfileStepOneActivity extends AccountBaseActivity {
     }));
   }
 
-  private void navigateToNextActivity() {
-
-    if (getIntent() != null && getIntent().getBooleanExtra(
-        AptoideAccountManager.IS_FACEBOOK_OR_GOOGLE, false)) {
-      updateUserInfo();
+  private Completable navigateToCreateStoreView() {
+    if (externalLogin) {
+      return accountManager.syncCurrentAccount().onErrorComplete().doOnTerminate(() -> {
+        dismiss();
+      });
     } else {
-      if (pleaseWaitDialog != null && pleaseWaitDialog.isShowing()) {
-        pleaseWaitDialog.dismiss();
-      }
-      final Intent i = getIntent();
-      i.setClass(this, CreateStoreActivity.class);
-      startActivity(i);
-      finish();
+      return Completable.fromAction(() -> {
+        startActivity(getIntent().setClass(this, CreateStoreActivity.class));
+        dismiss();
+      });
     }
   }
 
-  private void updateUserInfo() {
-    accountManager.syncCurrentAccount().subscribe(() -> {
-      if (pleaseWaitDialog != null && pleaseWaitDialog.isShowing()) {
-        pleaseWaitDialog.dismiss();
-      }
-      finish();
-    }, throwable -> throwable.printStackTrace());
+  private void dismiss() {
+    pleaseWaitDialog.dismiss();
+    finish();
+  }
+
+  private void showErrorMessage() {
+    ShowMessage.asSnack(this, cm.aptoide.accountmanager.R.string.unknown_error);
+  }
+
+  private void showContinueSuccessMessage() {
+    ShowMessage.asSnack(this, cm.aptoide.accountmanager.R.string.successful);
+    Analytics.Account.accountProfileAction(1, Analytics.Account.ProfileAction.CONTINUE);
   }
 }
 

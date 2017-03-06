@@ -10,6 +10,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.v8engine.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.GetFollowersRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetFollowingRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetUserLikesRequest;
@@ -34,18 +35,20 @@ import rx.functions.Action1;
 
 public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment {
 
-  private AptoideClientUUID aptoideClientUUID;
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
   private TimeLineFollowFragment.FollowFragmentOpenMode openMode;
   @Nullable private String cardUid;
   @Nullable private Long numberOfLikes;
-  private AptoideAccountManager accountManager;
+  private BaseBodyDecorator bodyDecorator;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
+    final AptoideAccountManager accountManager =
+        ((V8Engine) getContext().getApplicationContext()).getAccountManager();
+    final AptoideClientUUID aptoideClientUUID =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext());
+    bodyDecorator = new BaseBodyDecorator(aptoideClientUUID.getUniqueIdentifier(), accountManager);
   }
 
   public static TimeLineFollowFragment newInstance(FollowFragmentOpenMode openMode,
@@ -118,17 +121,16 @@ public class TimeLineFollowFragment extends GridRecyclerSwipeWithToolbarFragment
       V7 request;
       switch (openMode) {
         case FOLLOWERS:
-          request = GetFollowersRequest.of(accountManager.getAccessToken(),
-              aptoideClientUUID.getUniqueIdentifier());
+          request = GetFollowersRequest.of(bodyDecorator);
           break;
         case FOLLOWING:
-          request = GetFollowingRequest.of(accountManager.getAccessToken(),
-              aptoideClientUUID.getUniqueIdentifier());
+          request = GetFollowingRequest.of(bodyDecorator);
           break;
         case LIKE_PREVIEW:
-          request = GetUserLikesRequest.of(accountManager.getAccessToken(),
+          final String uniqueIdentifier =
               new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-                  DataProvider.getContext()).getUniqueIdentifier(), cardUid);
+                  DataProvider.getContext()).getUniqueIdentifier();
+          request = GetUserLikesRequest.of(cardUid, bodyDecorator);
           break;
         default:
           throw new IllegalStateException(

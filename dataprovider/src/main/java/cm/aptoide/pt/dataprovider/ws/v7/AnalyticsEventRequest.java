@@ -1,7 +1,6 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.DataProvider;
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.AnalyticsBaseBody;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import java.util.Map;
@@ -25,14 +24,13 @@ public class AnalyticsEventRequest extends V7<BaseV7Response, AnalyticsEventRequ
     this.context = context;
   }
 
-  public static AnalyticsEventRequest of(String accessToken, String eventName,
-      String uniqueIdentifier, String context, String action, Map<String, Object> data) {
-    final BaseBodyDecorator decorator = new BaseBodyDecorator(uniqueIdentifier);
+  public static AnalyticsEventRequest of(String eventName, String context, String action,
+      Map<String, Object> data, BodyDecorator bodyDecorator) {
     final AnalyticsEventRequest.Body body =
         new AnalyticsEventRequest.Body(DataProvider.getConfiguration().getAppId(), data);
 
-    return new AnalyticsEventRequest((Body) decorator.decorate(body, accessToken), BASE_HOST,
-        action, eventName, context);
+    return new AnalyticsEventRequest((Body) bodyDecorator.decorate(body), BASE_HOST, action,
+        eventName, context);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,

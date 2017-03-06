@@ -9,8 +9,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.Preference;
 import android.text.TextUtils;
@@ -26,7 +24,7 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 /**
  * Created by rmateus on 07-03-2014.
  */
-public class AdultDialog extends BaseDialog {
+public abstract class AdultDialogFactory {
 
   /**
    * @param activity using activity instead of context allow us to show the snack bar when pin is
@@ -90,7 +88,7 @@ public class AdultDialog extends BaseDialog {
     AlertDialog.Builder builder =
         new AlertDialog.Builder(context).setMessage(R.string.are_you_adult)
             .setPositiveButton(R.string.yes, (dialogInterface, i) -> {
-              Logger.d(AdultDialog.class.getName(), "FLURRY TESTING : UNLOCK ADULT CONTENT");
+              Logger.d(AdultDialogFactory.class.getName(), "FLURRY TESTING : UNLOCK ADULT CONTENT");
               Analytics.AdultContent.unlock();
               positiveButtonlistener.onClick(dialogInterface, DialogInterface.BUTTON_POSITIVE);
               dialogInterface.dismiss();
@@ -121,20 +119,5 @@ public class AdultDialog extends BaseDialog {
     } else {
       return buildMaturePinInputDialog(c, positiveButtonlistener);
     }
-  }
-
-  @Override public void onDetach() {
-    super.onDetach();
-  }
-
-  @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
-
-    return buildAreYouAdultDialog(getActivity(), new DialogInterface.OnClickListener() {
-      @Override public void onClick(DialogInterface dialog, int which) {
-        if (which == DialogInterface.BUTTON_POSITIVE) {
-          SecurePreferences.setAdultSwitch(true);
-        }
-      }
-    });
   }
 }

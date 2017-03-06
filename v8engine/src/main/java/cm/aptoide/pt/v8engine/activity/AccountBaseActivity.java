@@ -37,10 +37,4 @@ public abstract class AccountBaseActivity extends AppCompatActivity {
     }
     return super.onOptionsItemSelected(item);
   }
-
-  public enum UserAccessState {
-    PUBLIC,
-    PRIVATE,
-    UNLISTED
-  }
 }

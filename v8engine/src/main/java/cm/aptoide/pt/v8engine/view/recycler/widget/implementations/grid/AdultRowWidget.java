@@ -6,13 +6,12 @@ import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.annotation.Partners;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
-import cm.aptoide.pt.v8engine.dialog.AdultDialog;
+import cm.aptoide.pt.v8engine.dialog.AdultDialogFactory;
 import cm.aptoide.pt.v8engine.fragment.BaseLoaderFragment;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.AdultRowDisplayable;
 import cm.aptoide.pt.v8engine.view.recycler.widget.Widget;
@@ -37,11 +36,11 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
   @Override public void bindView(AdultRowDisplayable displayable) {
     accountManager = ((V8Engine)getContext().getApplicationContext()).getAccountManager();
     adultSwitch.setOnCheckedChangeListener(null);
-    adultSwitch.setChecked(SecurePreferences.isAdultSwitchActive());
+    adultSwitch.setChecked(accountManager.isAccountMature());
     adultSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
 
       if (isChecked) {
-        AdultDialog.buildAreYouAdultDialog(getContext(), (dialog, which) -> {
+        AdultDialogFactory.buildAreYouAdultDialog(getContext(), (dialog, which) -> {
           if (which == DialogInterface.BUTTON_POSITIVE) {
             //						adultSwitch.setChecked(true);
             accountManager.updateMatureSwitch(true);

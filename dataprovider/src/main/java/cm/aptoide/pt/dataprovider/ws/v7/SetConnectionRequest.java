@@ -1,7 +1,6 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.BuildConfig;
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -22,11 +21,9 @@ public class SetConnectionRequest extends V7<BaseV7Response, SetConnectionReques
     super(body, baseHost);
   }
 
-  public static SetConnectionRequest of(String aptoideClientUUID, String accessToken,
-      String userPhone) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+  public static SetConnectionRequest of(String userPhone, BodyDecorator bodyDecorator) {
     Body body = new Body(userPhone);
-    return new SetConnectionRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
+    return new SetConnectionRequest((Body) bodyDecorator.decorate(body), BASE_HOST);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,

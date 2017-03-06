@@ -1,9 +1,9 @@
 package cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events;
 
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.v8engine.BaseBodyDecorator;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -29,10 +29,9 @@ public @EqualsAndHashCode(callSuper = false) @Data @ToString class DownloadEvent
 
   public DownloadEvent(Action action, Origin origin, String packageName, String url, String obbUrl,
       String patchObbUrl, AppContext context, int versionCode,
-      DownloadEventConverter downloadInstallEventConverter, IdsRepositoryImpl aptoideClientUUID,
-      AptoideAccountManager accountManager) {
-    super(accountManager, action, origin, packageName, url, obbUrl, patchObbUrl, context, versionCode,
-        downloadInstallEventConverter, EVENT_NAME, aptoideClientUUID);
+      DownloadEventConverter downloadInstallEventConverter, BodyDecorator bodyDecorator) {
+    super(action, origin, packageName, url, obbUrl, patchObbUrl, context, versionCode,
+        downloadInstallEventConverter, EVENT_NAME, bodyDecorator);
     downloadHadProgress = false;
   }
 

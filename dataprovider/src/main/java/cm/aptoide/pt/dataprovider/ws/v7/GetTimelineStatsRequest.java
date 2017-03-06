@@ -1,6 +1,5 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.TimelineStats;
 import rx.Observable;
 
@@ -14,9 +13,8 @@ public class GetTimelineStatsRequest extends V7<TimelineStats, BaseBody> {
     super(body, baseHost);
   }
 
-  public static GetTimelineStatsRequest of(String accessToken, String aptoideClientUUID) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-    return new GetTimelineStatsRequest(decorator.decorate(new BaseBody(), accessToken), BASE_HOST);
+  public static GetTimelineStatsRequest of(BodyDecorator bodyDecorator) {
+    return new GetTimelineStatsRequest(bodyDecorator.decorate(new BaseBody()), BASE_HOST);
   }
 
   @Override protected Observable<TimelineStats> loadDataFromNetwork(Interfaces interfaces,

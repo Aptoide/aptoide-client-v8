@@ -18,10 +18,12 @@ import android.widget.Button;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.PostReviewRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.BaseV7Response;
+import cm.aptoide.pt.navigation.AccountNavigator;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -29,7 +31,6 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
-import cm.aptoide.pt.navigation.AccountNavigator;
 import java.util.Locale;
 import rx.Observable;
 import rx.Subscriber;
@@ -40,15 +41,15 @@ public class DialogUtils {
 
   private static final String TAG = DialogUtils.class.getSimpleName();
   private final Locale LOCALE = Locale.getDefault();
-  private final AptoideClientUUID aptoideClientUUID;
   private final AptoideAccountManager accountManager;
   private final AccountNavigator accountNavigator;
+  private BodyDecorator bodyDecorator;
 
   public DialogUtils(AptoideAccountManager accountManager, AptoideClientUUID aptoideClientUUID,
-      AccountNavigator accountNavigator) {
-    this.aptoideClientUUID = aptoideClientUUID;
+      AccountNavigator accountNavigator, BodyDecorator bodyDecorator) {
     this.accountManager = accountManager;
     this.accountNavigator = accountNavigator;
+    this.bodyDecorator = bodyDecorator;
   }
 
   public Observable<GenericDialogs.EResponse> showRateDialog(@NonNull Activity activity,
@@ -138,11 +139,9 @@ public class DialogUtils {
         // WS call
         if (storeName != null) {
           PostReviewRequest.of(storeName, packageName, reviewTitle, reviewText, reviewRating,
-              accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
-              .execute(successRequestListener, errorRequestListener);
+              bodyDecorator).execute(successRequestListener, errorRequestListener);
         } else {
-          PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating,
-              accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
+          PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating, bodyDecorator)
               .execute(successRequestListener, errorRequestListener);
         }
       });
@@ -219,11 +218,9 @@ public class DialogUtils {
 
       if (storeName != null) {
         PostReviewRequest.of(storeName, packageName, reviewTitle, reviewText, reviewRating,
-            accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
-            .execute(successRequestListener, errorRequestListener);
+            bodyDecorator).execute(successRequestListener, errorRequestListener);
       } else {
-        PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating,
-            accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
+        PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating, bodyDecorator)
             .execute(successRequestListener, errorRequestListener);
       }
     });

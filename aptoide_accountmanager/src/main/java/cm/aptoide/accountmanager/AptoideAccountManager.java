@@ -18,10 +18,12 @@ import cm.aptoide.accountmanager.ws.OAuth2AuthenticationRequest;
 import cm.aptoide.accountmanager.ws.responses.CheckUserCredentialsJson;
 import cm.aptoide.accountmanager.ws.responses.Subscription;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
+import cm.aptoide.pt.dataprovider.ws.v7.SetUserRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.AptoidePreferencesConfiguration;
-import cm.aptoide.pt.preferences.managed.ManagedKeys;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.Auth;
@@ -38,11 +40,12 @@ import rx.schedulers.Schedulers;
 public class AptoideAccountManager {
 
   public static final String IS_FACEBOOK_OR_GOOGLE = "facebook_google";
+  private static final String ACCESS = "access";
+  private static final String ACCESS_CONFIRMED = "access_confirmed";
   private static final String MATURE_SWITCH = "aptoide_account_manager_mature_switch";
   private static final String LOGIN_MODE = "aptoide_account_manager_login_mode";
   private static final String ACCESS_TOKEN = "access_token";
   private static final String REFRESH_TOKEN = "refresh_token";
-  private static final String USER_EMAIL = "usernameLogin";
   private static final String USER_NICK_NAME = "username";
   private static final String QUEUE_NAME = "queueName";
   private static final String USER_AVATAR = "useravatar";
@@ -62,11 +65,13 @@ public class AptoideAccountManager {
   private final LoginAvailability loginAvailability;
 
   private final Analytics analytics;
+  private final BodyDecorator bodyDecorator;
 
   public AptoideAccountManager(Context applicationContext,
       AptoidePreferencesConfiguration configuration, AccountManager androidAccountManager,
-      AptoideClientUUID aptoideClientUuid, LoginAvailability loginAvailability,
-      Analytics analytics) {
+      AptoideClientUUID aptoideClientUuid, LoginAvailability loginAvailability, Analytics analytics,
+      BodyDecorator baseBodyDecorator) {
+    this.bodyDecorator = baseBodyDecorator;
     this.aptoideClientUuid = aptoideClientUuid;
     this.applicationContext = applicationContext;
     this.configuration = configuration;
@@ -87,45 +92,6 @@ public class AptoideAccountManager {
 
   public Account getAccount() {
     return getAccountAsync().onErrorReturn(throwable -> null).toBlocking().value();
-  }
-
-  private Single<Account> getAccountAsync() {
-    return getAndroidAccountAsync().flatMap(androidAccount -> {
-      String access = androidAccountManager.getUserData(androidAccount, ManagedKeys.ACCESS);
-
-      return Single.just(new Account(androidAccountManager.getUserData(androidAccount, USER_ID),
-          androidAccount.name, androidAccountManager.getUserData(androidAccount, USER_NICK_NAME),
-          androidAccountManager.getUserData(androidAccount, USER_AVATAR),
-          androidAccountManager.getUserData(androidAccount, REFRESH_TOKEN),
-          androidAccountManager.getUserData(androidAccount, ACCESS_TOKEN),
-          androidAccountManager.getPassword(androidAccount),
-          Account.Type.valueOf(androidAccountManager.getUserData(androidAccount, LOGIN_MODE)),
-          androidAccountManager.getUserData(androidAccount, USER_REPO),
-          androidAccountManager.getUserData(androidAccount, REPO_AVATAR),
-          Boolean.valueOf(androidAccountManager.getUserData(androidAccount, MATURE_SWITCH)),
-          access == null ? "UNLISTED" : access, Boolean.valueOf(
-          androidAccountManager.getUserData(androidAccount, ManagedKeys.ACCESS_CONFIRMED))));
-    });
-  }
-
-  private Single<android.accounts.Account> getAndroidAccountAsync() {
-    return Single.defer(() -> {
-      try {
-        return Single.just(getAndroidAccount());
-      } catch (IllegalStateException e) {
-        return Single.error(e);
-      }
-    }).observeOn(Schedulers.from(Executors.newSingleThreadExecutor()));
-  }
-
-  private android.accounts.Account getAndroidAccount() throws IllegalStateException {
-    final android.accounts.Account[] accounts =
-        androidAccountManager.getAccountsByType(Constants.ACCOUNT_TYPE);
-
-    if (accounts.length == 0) {
-      throw new IllegalStateException("No account found.");
-    }
-    return accounts[0];
   }
 
   public void logout(GoogleApiClient client) {
@@ -173,60 +139,8 @@ public class AptoideAccountManager {
             account.isAccessConfirmed()))).onErrorComplete().subscribe();
   }
 
-  private Completable saveAccount(Account account) {
-    return Completable.defer(() -> {
-      final android.accounts.Account[] androidAccounts =
-          androidAccountManager.getAccountsByType(Constants.ACCOUNT_TYPE);
-
-      final android.accounts.Account androidAccount;
-      if (androidAccounts.length == 0) {
-        androidAccount = new android.accounts.Account(account.getEmail(), Constants.ACCOUNT_TYPE);
-        try {
-          androidAccountManager.addAccountExplicitly(androidAccount, account.getPassword(), null);
-        } catch (SecurityException e) {
-          return Completable.error(e);
-        }
-      } else {
-        androidAccount = androidAccounts[0];
-      }
-      androidAccountManager.setUserData(androidAccount, REFRESH_TOKEN, account.getRefreshToken());
-      androidAccountManager.setUserData(androidAccount, ACCESS_TOKEN, account.getToken());
-      androidAccountManager.setUserData(androidAccount, LOGIN_MODE, account.getType().name());
-      androidAccountManager.setUserData(androidAccount, USER_ID, account.getId());
-      androidAccountManager.setUserData(androidAccount, USER_AVATAR, account.getAvatar());
-      androidAccountManager.setUserData(androidAccount, USER_EMAIL, account.getEmail());
-      androidAccountManager.setUserData(androidAccount, USER_NICK_NAME, account.getNickname());
-      androidAccountManager.setUserData(androidAccount, USER_REPO, account.getStore());
-      androidAccountManager.setUserData(androidAccount, REPO_AVATAR, account.getStoreAvatar());
-      androidAccountManager.setUserData(androidAccount, ManagedKeys.ACCESS, account.getAccess());
-      androidAccountManager.setUserData(androidAccount, ManagedKeys.ACCESS_CONFIRMED,
-          String.valueOf(account.isAccessConfirmed()));
-      return Completable.complete();
-    }).subscribeOn(Schedulers.io());
-  }
-
   public Completable refreshAccountToken() {
     return getAccountAsync().flatMapCompletable(account -> refreshToken(account));
-  }
-
-  private Completable refreshToken(Account account) {
-    return OAuth2AuthenticationRequest.of(account.getRefreshToken(),
-        aptoideClientUuid.getUniqueIdentifier(), this)
-        .observe()
-        .subscribeOn(Schedulers.io())
-        .toSingle()
-        .flatMapCompletable(oAuth -> {
-          if (!oAuth.hasErrors()) {
-            return saveAccount(
-                new Account(account.getId(), account.getEmail(), account.getNickname(),
-                    account.getAvatar(), account.getRefreshToken(), oAuth.getAccessToken(),
-                    account.getPassword(), account.getType(), account.getStore(),
-                    account.getStoreAvatar(), account.isMature(), account.getAccess(),
-                    account.isAccessConfirmed()));
-          } else {
-            return Completable.error(new OAuthException(oAuth));
-          }
-        });
   }
 
   public Completable createAccount(String email, String password) {
@@ -252,40 +166,6 @@ public class AptoideAccountManager {
         .doOnCompleted(() -> analytics.signUp());
   }
 
-  private Completable validateCredentials(String email, String password) {
-    return Completable.defer(() -> {
-      if (TextUtils.isEmpty(email) && TextUtils.isEmpty(password)) {
-        return Completable.error(
-            new AccountValidationException(AccountValidationException.EMPTY_EMAIL_AND_PASSWORD));
-      } else if (TextUtils.isEmpty(password)) {
-        return Completable.error(
-            new AccountValidationException(AccountValidationException.EMPTY_PASSWORD));
-      } else if (TextUtils.isEmpty(email)) {
-        return Completable.error(
-            new AccountValidationException(AccountValidationException.EMPTY_EMAIL));
-      } else if (password.length() < 8 || !has1number1letter(password)) {
-        return Completable.error(
-            new AccountValidationException(AccountValidationException.INVALID_PASSWORD));
-      }
-      return Completable.complete();
-    });
-  }
-
-  private Completable syncAccount(String accessToken, String refreshToken, String encryptedPassword,
-      Account.Type type) {
-    return CheckUserCredentialsRequest.of(this, accessToken)
-        .observe()
-        .toSingle()
-        .flatMapCompletable(response -> {
-          if (response.getStatus().equals("OK")) {
-            return saveAccount(
-                mapServerAccountToAccount(response, refreshToken, accessToken, encryptedPassword,
-                    type));
-          }
-          return Completable.error(new IllegalStateException("Failed to refresh account"));
-        });
-  }
-
   public void sendLoginBroadcast() {
     applicationContext.sendBroadcast(new Intent().setAction(LOGIN));
   }
@@ -305,40 +185,6 @@ public class AptoideAccountManager {
         })
         .doOnCompleted(() -> analytics.login(email))
         .doOnCompleted(() -> sendLoginBroadcast());
-  }
-
-  private boolean has1number1letter(String password) {
-    boolean hasLetter = false;
-    boolean hasNumber = false;
-
-    for (char c : password.toCharArray()) {
-      if (!hasLetter && Character.isLetter(c)) {
-        if (hasNumber) return true;
-        hasLetter = true;
-      } else if (!hasNumber && Character.isDigit(c)) {
-        if (hasLetter) return true;
-        hasNumber = true;
-      }
-    }
-    if (password.contains("!")
-        || password.contains("@")
-        || password.contains("#")
-        || password.contains("$")
-        || password.contains("#")
-        || password.contains("*")) {
-      hasNumber = true;
-    }
-
-    return hasNumber && hasLetter;
-  }
-
-  private Account mapServerAccountToAccount(CheckUserCredentialsJson serverUser,
-      String refreshToken, String accessToken, String encryptedPassword, Account.Type accountType) {
-    return new Account(String.valueOf(serverUser.getId()), serverUser.getEmail(),
-        serverUser.getUsername(), serverUser.getAvatar(), refreshToken, accessToken,
-        encryptedPassword, accountType, serverUser.getRepo(), serverUser.getRavatarHd(),
-        serverUser.getSettings().getMatureswitch().equals("active"), serverUser.getAccess(),
-        serverUser.isAccessConfirmed());
   }
 
   public void unsubscribeStore(String storeName) {
@@ -383,10 +229,36 @@ public class AptoideAccountManager {
     return account == null ? false : account.isMature();
   }
 
+  public boolean isAccountAccessConfirmed() {
+    final Account account = getAccount();
+    return account == null ? false : account.isAccessConfirmed();
+  }
+
+  public Account.Access getAccountAccess() {
+    final Account account = getAccount();
+    return account == null ? null : account.getAccess();
+  }
+
   public Completable syncCurrentAccount() {
     return getAccountAsync().flatMapCompletable(
         account -> syncAccount(account.getToken(), account.getRefreshToken(), account.getPassword(),
             account.getType()));
+  }
+
+  public Completable updateAccount(Account.Access access) {
+    return getAccountAsync().flatMapCompletable(account -> {
+      return SetUserRequest.of(access.name(), bodyDecorator)
+          .observe()
+          .toSingle()
+          .flatMapCompletable(response -> {
+            if (response.isOk()) {
+              return syncAccount(account.getToken(), account.getRefreshToken(),
+                  account.getPassword(), account.getType());
+            } else {
+              return Completable.error(new Exception(V7.getErrorMessage(response)));
+            }
+          });
+    });
   }
 
   public Completable updateAccount(String nickname, String avatarPath) {
@@ -404,5 +276,169 @@ public class AptoideAccountManager {
         return Observable.error(new OAuthException(response));
       }
     }).toCompletable();
+  }
+
+  private boolean has1number1letter(String password) {
+    boolean hasLetter = false;
+    boolean hasNumber = false;
+
+    for (char c : password.toCharArray()) {
+      if (!hasLetter && Character.isLetter(c)) {
+        if (hasNumber) return true;
+        hasLetter = true;
+      } else if (!hasNumber && Character.isDigit(c)) {
+        if (hasLetter) return true;
+        hasNumber = true;
+      }
+    }
+    if (password.contains("!")
+        || password.contains("@")
+        || password.contains("#")
+        || password.contains("$")
+        || password.contains("#")
+        || password.contains("*")) {
+      hasNumber = true;
+    }
+
+    return hasNumber && hasLetter;
+  }
+
+  private Account mapServerAccountToAccount(CheckUserCredentialsJson serverUser,
+      String refreshToken, String accessToken, String encryptedPassword, Account.Type accountType) {
+    return new Account(String.valueOf(serverUser.getId()), serverUser.getEmail(),
+        serverUser.getUsername(), serverUser.getAvatar(), refreshToken, accessToken,
+        encryptedPassword, accountType, serverUser.getRepo(), serverUser.getRavatarHd(),
+        serverUser.getSettings().getMatureswitch().equals("active"),
+        Account.Access.valueOf(serverUser.getAccess().toUpperCase()),
+        serverUser.isAccessConfirmed());
+  }
+
+  private Completable validateCredentials(String email, String password) {
+    return Completable.defer(() -> {
+      if (TextUtils.isEmpty(email) && TextUtils.isEmpty(password)) {
+        return Completable.error(
+            new AccountValidationException(AccountValidationException.EMPTY_EMAIL_AND_PASSWORD));
+      } else if (TextUtils.isEmpty(password)) {
+        return Completable.error(
+            new AccountValidationException(AccountValidationException.EMPTY_PASSWORD));
+      } else if (TextUtils.isEmpty(email)) {
+        return Completable.error(
+            new AccountValidationException(AccountValidationException.EMPTY_EMAIL));
+      } else if (password.length() < 8 || !has1number1letter(password)) {
+        return Completable.error(
+            new AccountValidationException(AccountValidationException.INVALID_PASSWORD));
+      }
+      return Completable.complete();
+    });
+  }
+
+  private Completable syncAccount(String accessToken, String refreshToken, String encryptedPassword,
+      Account.Type type) {
+    return CheckUserCredentialsRequest.of(this, accessToken)
+        .observe()
+        .toSingle()
+        .flatMapCompletable(response -> {
+          if (response.getStatus().equals("OK")) {
+            return saveAccount(
+                mapServerAccountToAccount(response, refreshToken, accessToken, encryptedPassword,
+                    type));
+          }
+          return Completable.error(new IllegalStateException("Failed to refresh account"));
+        });
+  }
+
+  private Completable refreshToken(Account account) {
+    return OAuth2AuthenticationRequest.of(account.getRefreshToken(),
+        aptoideClientUuid.getUniqueIdentifier(), this)
+        .observe()
+        .subscribeOn(Schedulers.io())
+        .toSingle()
+        .flatMapCompletable(oAuth -> {
+          if (!oAuth.hasErrors()) {
+            return saveAccount(
+                new Account(account.getId(), account.getEmail(), account.getNickname(),
+                    account.getAvatar(), account.getRefreshToken(), oAuth.getAccessToken(),
+                    account.getPassword(), account.getType(), account.getStore(),
+                    account.getStoreAvatar(), account.isMature(), account.getAccess(),
+                    account.isAccessConfirmed()));
+          } else {
+            return Completable.error(new OAuthException(oAuth));
+          }
+        });
+  }
+
+  private Completable saveAccount(Account account) {
+    return Completable.defer(() -> {
+      final android.accounts.Account[] androidAccounts =
+          androidAccountManager.getAccountsByType(Constants.ACCOUNT_TYPE);
+
+      final android.accounts.Account androidAccount;
+      if (androidAccounts.length == 0) {
+        androidAccount = new android.accounts.Account(account.getEmail(), Constants.ACCOUNT_TYPE);
+        try {
+          androidAccountManager.addAccountExplicitly(androidAccount, account.getPassword(), null);
+        } catch (SecurityException e) {
+          return Completable.error(e);
+        }
+      } else {
+        androidAccount = androidAccounts[0];
+      }
+
+      androidAccountManager.setUserData(androidAccount, USER_ID, account.getId());
+      androidAccountManager.setUserData(androidAccount, USER_NICK_NAME, account.getNickname());
+      androidAccountManager.setUserData(androidAccount, USER_AVATAR, account.getAvatar());
+      androidAccountManager.setUserData(androidAccount, REFRESH_TOKEN, account.getRefreshToken());
+      androidAccountManager.setUserData(androidAccount, ACCESS_TOKEN, account.getToken());
+      androidAccountManager.setUserData(androidAccount, LOGIN_MODE, account.getType().name());
+      androidAccountManager.setUserData(androidAccount, USER_REPO, account.getStore());
+      androidAccountManager.setUserData(androidAccount, REPO_AVATAR, account.getStoreAvatar());
+      androidAccountManager.setUserData(androidAccount, MATURE_SWITCH,
+          String.valueOf(account.isMature()));
+      androidAccountManager.setUserData(androidAccount, ACCESS, account.getAccess().name());
+      androidAccountManager.setUserData(androidAccount, ACCESS_CONFIRMED,
+          String.valueOf(account.isAccessConfirmed()));
+      return Completable.complete();
+    }).subscribeOn(Schedulers.io());
+  }
+
+  private Single<Account> getAccountAsync() {
+    return getAndroidAccountAsync().flatMap(androidAccount -> {
+      final Account.Access access = androidAccountManager.getUserData(androidAccount, ACCESS) ==
+          null
+          ? Account.Access.UNLISTED
+          : Account.Access.valueOf(androidAccountManager.getUserData(androidAccount, ACCESS));
+
+      return Single.just(new Account(androidAccountManager.getUserData(androidAccount, USER_ID),
+          androidAccount.name, androidAccountManager.getUserData(androidAccount, USER_NICK_NAME),
+          androidAccountManager.getUserData(androidAccount, USER_AVATAR),
+          androidAccountManager.getUserData(androidAccount, REFRESH_TOKEN),
+          androidAccountManager.getUserData(androidAccount, ACCESS_TOKEN),
+          androidAccountManager.getPassword(androidAccount),
+          Account.Type.valueOf(androidAccountManager.getUserData(androidAccount, LOGIN_MODE)),
+          androidAccountManager.getUserData(androidAccount, USER_REPO),
+          androidAccountManager.getUserData(androidAccount, REPO_AVATAR),
+          Boolean.valueOf(androidAccountManager.getUserData(androidAccount, MATURE_SWITCH)), access,
+          Boolean.valueOf(androidAccountManager.getUserData(androidAccount, ACCESS_CONFIRMED))));
+    });
+  }
+
+  private Single<android.accounts.Account> getAndroidAccountAsync() {
+    return Single.defer(() -> {
+      try {
+        return Single.just(getAndroidAccount());
+      } catch (IllegalStateException e) {
+        return Single.error(e);
+      }
+    }).observeOn(Schedulers.from(Executors.newSingleThreadExecutor()));
+  }
+
+  private android.accounts.Account getAndroidAccount() throws IllegalStateException {
+    final android.accounts.Account[] accounts =
+        androidAccountManager.getAccountsByType(Constants.ACCOUNT_TYPE);
+
+    if (accounts.length == 0) {
+      throw new IllegalStateException("No account found.");
+    }
+    return accounts[0];
   }
 }

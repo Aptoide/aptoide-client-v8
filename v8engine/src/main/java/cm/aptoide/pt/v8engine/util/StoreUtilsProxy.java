@@ -2,13 +2,14 @@ package cm.aptoide.pt.v8engine.util;
 
 import android.support.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
-import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.networkclient.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.networkclient.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 
 /**
  * This Proxy class was created to solve the issue with calling Analytics tracking events inside
@@ -21,17 +22,20 @@ import cm.aptoide.pt.v8engine.analytics.Analytics;
 public class StoreUtilsProxy {
 
   private final AptoideAccountManager accountManager;
-  private final AptoideClientUUID aptoideClientUUID;
+  private final BodyDecorator bodyDecorator;
+  private final StoreCredentialsProvider storeCredentialsProvider;
 
-  public StoreUtilsProxy(AptoideClientUUID aptoideClientUuid, AptoideAccountManager accountManager) {
-    this.aptoideClientUUID = aptoideClientUuid;
+  public StoreUtilsProxy(AptoideAccountManager accountManager, BodyDecorator bodyDecorator,
+      StoreCredentialsProvider storeCredentialsProvider) {
     this.accountManager = accountManager;
+    this.bodyDecorator = bodyDecorator;
+    this.storeCredentialsProvider = storeCredentialsProvider;
   }
 
   public void subscribeStore(String storeName) {
-    subscribeStore(GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName),
-        accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier()), null,
-        null, storeName, accountManager);
+    subscribeStore(GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName,
+        storeCredentialsProvider),
+        accountManager.getAccessToken(), bodyDecorator), null, null, storeName, accountManager);
   }
 
   public void subscribeStore(GetStoreMetaRequest getStoreMetaRequest,
@@ -47,11 +51,11 @@ public class StoreUtilsProxy {
 
   public void subscribeStore(String storeName,
       @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
-      @Nullable ErrorRequestListener errorRequestListener,
-      AptoideAccountManager accountManager) {
-    subscribeStore(GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName),
-        accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier()),
-        successRequestListener, errorRequestListener, storeName, accountManager);
+      @Nullable ErrorRequestListener errorRequestListener, AptoideAccountManager accountManager) {
+    subscribeStore(GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName,
+        storeCredentialsProvider),
+        accountManager.getAccessToken(), bodyDecorator), successRequestListener,
+        errorRequestListener, storeName, accountManager);
   }
 
   public void unSubscribeStore(String storeName) {

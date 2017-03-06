@@ -25,6 +25,7 @@ import cm.aptoide.pt.annotation.Partners;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.v8engine.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
@@ -40,7 +41,9 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.dialog.PrivateStoreDialog;
 import cm.aptoide.pt.v8engine.fragment.BasePagerToolbarFragment;
+import cm.aptoide.pt.v8engine.interfaces.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
+import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.StoreUtils;
 import cm.aptoide.pt.v8engine.util.ThemeUtils;
@@ -63,6 +66,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   private StoreContext storeContext;
   private GetStore getStore;
   private String storeTheme;
+  private StoreCredentialsProvider storeCredentialsProvider;
 
   public static StoreFragment newInstance(String storeName, String storeTheme) {
     return newInstance(storeName, StoreContext.store, storeTheme);
@@ -96,6 +100,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    storeCredentialsProvider = new StoreCredentialsProviderImpl();
     aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
         DataProvider.getContext());
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
@@ -133,8 +138,9 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     if (create || getStore == null) {
-      GetStoreRequest.of(StoreUtils.getStoreCredentials(storeName), storeContext,
-          accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
+      GetStoreRequest.of(StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), storeContext,
+          accountManager.getAccessToken(),
+          new BaseBodyDecorator(aptoideClientUUID.getUniqueIdentifier(), accountManager))
           .observe(refresh)
           .observeOn(AndroidSchedulers.mainThread())
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))

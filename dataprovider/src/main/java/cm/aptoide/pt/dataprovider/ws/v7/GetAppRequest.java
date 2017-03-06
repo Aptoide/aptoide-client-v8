@@ -6,7 +6,6 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.util.Log;
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.GetApp;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -33,56 +32,44 @@ import rx.Observable;
     super(body, httpClient, converterFactory, baseHost);
   }
 
-  public static GetAppRequest of(String packageName, String storeName, String accessToken,
-      String aptoideClientUUID) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+  public static GetAppRequest of(String packageName, String storeName, BodyDecorator bodyDecorator) {
 
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
     return new GetAppRequest(BASE_HOST,
-        (Body) decorator.decorate(new Body(packageName, storeName, forceServerRefresh),
-            accessToken));
+        (Body) bodyDecorator.decorate(new Body(packageName, storeName, forceServerRefresh)));
   }
 
-  public static GetAppRequest of(long appId, String accessToken, String aptoideClientUUID,
-      String packageName) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+  public static GetAppRequest of(String packageName, BodyDecorator bodyDecorator, long appId) {
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
     return new GetAppRequest(BASE_HOST,
-        (Body) decorator.decorate(new Body(appId, forceServerRefresh, packageName), accessToken));
+        (Body) bodyDecorator.decorate(new Body(appId, forceServerRefresh, packageName)));
   }
 
-  public static GetAppRequest of(long appId, String storeName, String accessToken,
-      String aptoideClientUUID, String packageName) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+  public static GetAppRequest of(long appId, String storeName, String packageName, BodyDecorator bodyDecorator) {
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
     return new GetAppRequest(BASE_HOST,
-        (Body) decorator.decorate(new Body(appId, storeName, forceServerRefresh, packageName),
-            accessToken));
+        (Body) bodyDecorator.decorate(new Body(appId, storeName, forceServerRefresh, packageName)));
   }
 
-  public static GetAppRequest of(long appId, String accessToken, String aptoideClientUUID) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+  public static GetAppRequest of(long appId, BodyDecorator bodyDecorator) {
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
     return new GetAppRequest(BASE_HOST,
-        (Body) decorator.decorate(new Body(appId, forceServerRefresh, null), accessToken));
+        (Body) bodyDecorator.decorate(new Body(appId, forceServerRefresh, null)));
   }
 
-  public static GetAppRequest ofMd5(String md5, String accessToken, String aptoideClientUUID) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+  public static GetAppRequest ofMd5(String md5, BodyDecorator bodyDecorator) {
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
     return new GetAppRequest(BASE_HOST,
-        (Body) decorator.decorate(new Body(forceServerRefresh, md5), accessToken));
+        (Body) bodyDecorator.decorate(new Body(forceServerRefresh, md5)));
   }
 
   public static GetAppRequest of(long appId, String storeName,
-      BaseRequestWithStore.StoreCredentials storeCredentials, String accessToken,
-      String aptoideClientUUID, String packageName) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+      BaseRequestWithStore.StoreCredentials storeCredentials, String packageName, BodyDecorator bodyDecorator) {
 
     boolean forceServerRefresh = ManagerPreferences.getAndResetForceServerRefresh();
 
@@ -90,13 +77,12 @@ import rx.Observable;
     body.setStoreUser(storeCredentials.getUsername());
     body.setStorePassSha1(storeCredentials.getPasswordSha1());
 
-    return new GetAppRequest(BASE_HOST, (Body) decorator.decorate(body, accessToken));
+    return new GetAppRequest(BASE_HOST, (Body) bodyDecorator.decorate(body));
   }
 
-  public static GetAppRequest ofAction(String url, String accessToken, String aptoideClientUUID) {
+  public static GetAppRequest ofAction(String url, BodyDecorator bodyDecorator) {
     final long appId = getAppIdFromUrl(url);
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-    return new GetAppRequest(BASE_HOST, (Body) decorator.decorate(new Body(appId), accessToken));
+    return new GetAppRequest(BASE_HOST, (Body) bodyDecorator.decorate(new Body(appId)));
   }
 
   private static long getAppIdFromUrl(String url) {

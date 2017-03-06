@@ -2,7 +2,9 @@ package cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
+import cm.aptoide.pt.v8engine.BaseBodyDecorator;
 
 /**
  * Created by trinkes on 05/01/2017.
@@ -10,13 +12,10 @@ import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBa
 
 public class DownloadEventConverter extends DownloadInstallEventConverter<DownloadEvent> {
 
-  private final IdsRepositoryImpl aptoideClientUUID;
-  private final AptoideAccountManager accountManager;
+  private final BodyDecorator bodyDecorator;
 
-  public DownloadEventConverter(IdsRepositoryImpl aptoideClientUUID,
-      AptoideAccountManager accountManager) {
-    this.aptoideClientUUID = aptoideClientUUID;
-    this.accountManager = accountManager;
+  public DownloadEventConverter(BodyDecorator bodyDecorator) {
+    this.bodyDecorator = bodyDecorator;
   }
 
   @Override
@@ -37,6 +36,6 @@ public class DownloadEventConverter extends DownloadInstallEventConverter<Downlo
       DownloadInstallBaseEvent.Origin origin, String packageName, String url, String obbUrl,
       String patchObbUrl, DownloadInstallBaseEvent.AppContext context, int versionCode) {
     return new DownloadEvent(action, origin, packageName, url, obbUrl, patchObbUrl, context,
-        versionCode, this, aptoideClientUUID, accountManager);
+        versionCode, this, bodyDecorator);
   }
 }

@@ -3,6 +3,7 @@ package cm.aptoide.pt.v8engine.install;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreMinimalAdAccessor;
@@ -10,10 +11,14 @@ import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Rollback;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.dataprovider.DataProvider;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.dataprovider.util.DataproviderUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.InstallEvent;
 import cm.aptoide.pt.v8engine.repository.AdsRepository;
@@ -44,7 +49,11 @@ public class InstalledIntentService extends IntentService {
 
   @Override public void onCreate() {
     super.onCreate();
-    adsRepository = new AdsRepository();
+    final AptoideAccountManager accountManager =
+        ((V8Engine) getApplicationContext()).getAccountManager();
+    adsRepository = new AdsRepository(
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
+            DataProvider.getContext()), accountManager);
     repository = RepositoryFactory.getRollbackRepository();
     installedRepository = RepositoryFactory.getInstalledRepository();
     updatesRepository = RepositoryFactory.getUpdateRepository(this);
@@ -142,7 +151,7 @@ public class InstalledIntentService extends IntentService {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(
                     minimalAd -> ReferrerUtils.extractReferrer(minimalAd, ReferrerUtils.RETRIES,
-                        true))
+                        true, adsRepository))
                 .onErrorReturn(throwable1 -> null)
                 .subscribe();
           }
@@ -209,6 +218,7 @@ public class InstalledIntentService extends IntentService {
 
   /**
    * @param packageInfo packageInfo.
+   *
    * @return true if packageInfo is null, false otherwise.
    */
   private boolean checkAndLogNullPackageInfo(PackageInfo packageInfo, String packageName) {

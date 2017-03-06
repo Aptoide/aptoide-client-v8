@@ -1,7 +1,6 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.BuildConfig;
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.SetComment;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -23,18 +22,16 @@ public class PostCommentForTimelineArticle
   }
 
   public static PostCommentForTimelineArticle of(String timelineArticleId, String text,
-      String accessToken, String aptoideClientUUID) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+      BodyDecorator bodyDecorator) {
     Body body = new Body(timelineArticleId, text);
-    return new PostCommentForTimelineArticle((Body) decorator.decorate(body, accessToken),
+    return new PostCommentForTimelineArticle((Body) bodyDecorator.decorate(body),
         BASE_HOST);
   }
 
   public static PostCommentForTimelineArticle of(String timelineArticleId, long previousCommentId,
-      String text, String accessToken, String aptoideClientUUID) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+      String text, BodyDecorator bodyDecorator) {
     Body body = new Body(timelineArticleId, text, previousCommentId);
-    return new PostCommentForTimelineArticle((Body) decorator.decorate(body, accessToken),
+    return new PostCommentForTimelineArticle((Body) bodyDecorator.decorate(body),
         BASE_HOST);
   }
 

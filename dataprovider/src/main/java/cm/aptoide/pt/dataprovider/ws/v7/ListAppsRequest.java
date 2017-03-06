@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.ListApps;
 import cm.aptoide.pt.model.v7.Type;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -34,17 +33,14 @@ import rx.Observable;
   }
 
   public static ListAppsRequest ofAction(String url, StoreCredentials storeCredentials,
-      String accessToken, String aptoideClientUUID) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
-
+      BodyDecorator bodyDecorator) {
     V7Url listAppsV7Url = new V7Url(url).remove("listApps");
     if (listAppsV7Url.containsLimit()) {
       return new ListAppsRequest(listAppsV7Url.get(),
-          (Body) decorator.decorate(new Body(storeCredentials), accessToken), BASE_HOST);
+          (Body) bodyDecorator.decorate(new Body(storeCredentials)), BASE_HOST);
     } else {
-      return new ListAppsRequest(listAppsV7Url.get(), (Body) decorator.decorate(
-          new Body(storeCredentials, Type.APPS_GROUP.getPerLineCount() * LINES_PER_REQUEST),
-          accessToken), BASE_HOST);
+      return new ListAppsRequest(listAppsV7Url.get(), (Body) bodyDecorator.decorate(
+          new Body(storeCredentials, Type.APPS_GROUP.getPerLineCount() * LINES_PER_REQUEST)), BASE_HOST);
     }
   }
 

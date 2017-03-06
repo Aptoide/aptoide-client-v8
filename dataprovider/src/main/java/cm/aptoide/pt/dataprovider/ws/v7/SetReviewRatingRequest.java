@@ -6,7 +6,6 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.BuildConfig;
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.BaseV7Response;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -27,15 +26,13 @@ public class SetReviewRatingRequest extends V7<BaseV7Response, SetReviewRatingRe
     super(body, baseHost);
   }
 
-  public static SetReviewRatingRequest of(long reviewId, boolean helpful, String accessToken,
-      String aptoideClientUUID) {
+  public static SetReviewRatingRequest of(long reviewId, boolean helpful, BodyDecorator bodyDecorator) {
     //
     //  http://ws75-primary.aptoide.com/api/7/setReview/package_name/cm.aptoide
     // .pt/store_name/apps/title/Best%20app%20store/rating/5/access_token/ca01ee1e05ab4d82d99ef143e2816e667333c6ef
     //
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
     Body body = new Body(reviewId, helpful ? "up" : "down");
-    return new SetReviewRatingRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
+    return new SetReviewRatingRequest((Body) bodyDecorator.decorate(body), BASE_HOST);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,

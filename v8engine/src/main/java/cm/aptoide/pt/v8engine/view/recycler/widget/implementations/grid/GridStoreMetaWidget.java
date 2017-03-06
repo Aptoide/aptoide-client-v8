@@ -14,21 +14,23 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.Account;
-import cm.aptoide.accountmanager.AccountManagerPreferences;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.interfaces.AptoideClientUUID;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
+import cm.aptoide.pt.v8engine.BaseBodyDecorator;
 import cm.aptoide.pt.v8engine.activity.CreateStoreActivity;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
-import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
+import cm.aptoide.pt.v8engine.util.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.util.StoreThemeEnum;
 import cm.aptoide.pt.v8engine.util.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.implementations.grid.GridStoreMetaDisplayable;
@@ -84,9 +86,11 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
   @Override public void bindView(GridStoreMetaDisplayable displayable) {
 
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    storeUtilsProxy = new StoreUtilsProxy(
-        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext()),
-        accountManager);
+    final AptoideClientUUID aptoideClientUUID = new IdsRepositoryImpl
+        (SecurePreferencesImplementation.getInstance(), getContext());
+    storeUtilsProxy = new StoreUtilsProxy(accountManager,
+        new BaseBodyDecorator(aptoideClientUUID.getUniqueIdentifier(), accountManager),
+        new StoreCredentialsProviderImpl());
     final GetStoreMeta getStoreMeta = displayable.getPojo();
     final cm.aptoide.pt.model.v7.store.Store store = getStoreMeta.getData();
     final StoreThemeEnum theme = StoreThemeEnum.get(store.getAppearance().getTheme());

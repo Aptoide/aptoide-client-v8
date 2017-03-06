@@ -5,9 +5,9 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.V7Url;
 import cm.aptoide.pt.model.v7.store.GetStoreMeta;
 import lombok.Data;
@@ -45,19 +45,17 @@ import rx.Observable;
   }
 
   public static GetStoreMetaRequest ofAction(String url, StoreCredentials storeCredentials,
-      String accessToken, String aptoideClientUUID) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+      BodyDecorator bodyDecorator) {
 
     return new GetStoreMetaRequest(new V7Url(url).remove("getStoreMeta").get(),
-        (Body) decorator.decorate(new Body(storeCredentials), accessToken), BASE_HOST);
+        (Body) bodyDecorator.decorate(new Body(storeCredentials)), BASE_HOST);
   }
 
   public static GetStoreMetaRequest of(StoreCredentials storeCredentials, String accessToken,
-      String aptoideClientUUID) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+      BodyDecorator bodyDecorator) {
 
     return new GetStoreMetaRequest(BASE_HOST,
-        (Body) decorator.decorate(new Body(storeCredentials), accessToken));
+        (Body) bodyDecorator.decorate(new Body(storeCredentials)));
   }
 
   @Override protected Observable<GetStoreMeta> loadDataFromNetwork(Interfaces interfaces,

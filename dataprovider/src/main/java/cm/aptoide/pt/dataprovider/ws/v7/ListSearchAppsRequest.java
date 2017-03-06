@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.ListSearchApps;
 import cm.aptoide.pt.networkclient.util.HashMapNotNull;
 import java.util.Collections;
@@ -32,9 +31,7 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
   }
 
   public static ListSearchAppsRequest of(String query, String storeName,
-      HashMapNotNull<String, List<String>> subscribedStoresAuthMap, String accessToken,
-      String aptoideClientUUID) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+      HashMapNotNull<String, List<String>> subscribedStoresAuthMap, BodyDecorator bodyDecorator) {
 
     List<String> stores = null;
     if (storeName != null) {
@@ -44,44 +41,38 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
     if (subscribedStoresAuthMap != null && subscribedStoresAuthMap.containsKey(storeName)) {
       HashMapNotNull<String, List<String>> storesAuthMap = new HashMapNotNull<>();
       storesAuthMap.put(storeName, subscribedStoresAuthMap.get(storeName));
-      return new ListSearchAppsRequest((Body) decorator.decorate(
-          new Body(Endless.DEFAULT_LIMIT, query, storesAuthMap, stores, false), accessToken),
+      return new ListSearchAppsRequest((Body) bodyDecorator.decorate(
+          new Body(Endless.DEFAULT_LIMIT, query, storesAuthMap, stores, false)),
           BASE_HOST);
     }
     return new ListSearchAppsRequest(
-        (Body) decorator.decorate(new Body(Endless.DEFAULT_LIMIT, query, stores, false),
-            accessToken), BASE_HOST);
+        (Body) bodyDecorator.decorate(new Body(Endless.DEFAULT_LIMIT, query, stores, false)), BASE_HOST);
   }
 
   public static ListSearchAppsRequest of(String query, boolean addSubscribedStores,
       List<Long> subscribedStoresIds, HashMapNotNull<String, List<String>> subscribedStoresAuthMap,
-      String accessToken, String aptoideClientUUID) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+      BodyDecorator bodyDecorator) {
 
     if (addSubscribedStores) {
-      return new ListSearchAppsRequest((Body) decorator.decorate(
+      return new ListSearchAppsRequest((Body) bodyDecorator.decorate(
           new Body(Endless.DEFAULT_LIMIT, query, subscribedStoresIds, subscribedStoresAuthMap,
-              false), accessToken), BASE_HOST);
+              false)), BASE_HOST);
     } else {
       return new ListSearchAppsRequest(
-          (Body) decorator.decorate(new Body(Endless.DEFAULT_LIMIT, query, false), accessToken),
+          (Body) bodyDecorator.decorate(new Body(Endless.DEFAULT_LIMIT, query, false)),
           BASE_HOST);
     }
   }
 
   public static ListSearchAppsRequest of(String query, boolean addSubscribedStores,
-      boolean trustedOnly, List<Long> subscribedStoresIds, String accessToken,
-      String aptoideClientUUID) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+      boolean trustedOnly, List<Long> subscribedStoresIds, BodyDecorator bodyDecorator) {
 
     if (addSubscribedStores) {
-      return new ListSearchAppsRequest((Body) decorator.decorate(
-          new Body(Endless.DEFAULT_LIMIT, query, subscribedStoresIds, null, trustedOnly),
-          accessToken), BASE_HOST);
+      return new ListSearchAppsRequest((Body) bodyDecorator.decorate(
+          new Body(Endless.DEFAULT_LIMIT, query, subscribedStoresIds, null, trustedOnly)), BASE_HOST);
     } else {
       return new ListSearchAppsRequest(
-          (Body) decorator.decorate(new Body(Endless.DEFAULT_LIMIT, query, trustedOnly),
-              accessToken), BASE_HOST);
+          (Body) bodyDecorator.decorate(new Body(Endless.DEFAULT_LIMIT, query, trustedOnly)), BASE_HOST);
     }
   }
 

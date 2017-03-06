@@ -6,7 +6,6 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.ws.Api;
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.ListFullComments;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import lombok.Data;
@@ -31,16 +30,14 @@ public class ListFullCommentsRequest extends V7<ListFullComments, ListFullCommen
     super(body, baseHost);
   }
 
-  public static ListFullCommentsRequest of(long reviewId, int limit, String accessToken,
-      String aptoideClientUUID) {
+  public static ListFullCommentsRequest of(long reviewId, int limit, BodyDecorator bodyDecorator) {
     //
     //
     //
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
 
     Body body = new Body(limit, reviewId, ManagerPreferences.getAndResetForceServerRefresh());
 
-    return new ListFullCommentsRequest((Body) decorator.decorate(body, accessToken), BASE_HOST);
+    return new ListFullCommentsRequest((Body) bodyDecorator.decorate(body), BASE_HOST);
   }
 
   @Override protected Observable<ListFullComments> loadDataFromNetwork(Interfaces interfaces,

@@ -1,7 +1,6 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.BuildConfig;
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.GetFollowers;
 import java.util.List;
 import lombok.Data;
@@ -22,42 +21,35 @@ public class SyncAddressBookRequest extends V7<GetFollowers, SyncAddressBookRequ
     super(body, baseHost);
   }
 
-  public static SyncAddressBookRequest of(String accessToken, String aptoideClientUUID,
-      List<String> numbers, List<String> emails) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+  public static SyncAddressBookRequest of(List<String> numbers, List<String> emails, BodyDecorator bodyDecorator) {
 
-    return new SyncAddressBookRequest(((SyncAddressBookRequest.Body) decorator.decorate(
-        new Body(new Contacts(numbers, emails), null, null),
-            accessToken)), BASE_HOST);
+    return new SyncAddressBookRequest(((SyncAddressBookRequest.Body) bodyDecorator.decorate(
+        new Body(new Contacts(numbers, emails), null, null))), BASE_HOST);
   }
 
   /**
    * This constructor was created in order to send user twitter info
    *
-   * @param accessToken
-   * @param aptoideClientUUID
    * @param id
    * @param token
    * @param secret
+   * @param bodyDecorator
    * @return
    */
-  public static SyncAddressBookRequest of(String accessToken, String aptoideClientUUID, long id,
-      String token, String secret) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+  public static SyncAddressBookRequest of(long id, String token, String secret,
+      BodyDecorator bodyDecorator) {
 
-    return new SyncAddressBookRequest(((SyncAddressBookRequest.Body) decorator.decorate(
-        new Body(null, new Twitter(id, token, secret), null), accessToken)), BASE_HOST);
+    return new SyncAddressBookRequest(((SyncAddressBookRequest.Body) bodyDecorator.decorate(
+        new Body(null, new Twitter(id, token, secret), null))), BASE_HOST);
   }
 
   /**
    * This constructor was created to deal with facebook contacts request
    */
-  public static SyncAddressBookRequest of(String accessToken, String aptoideClientUUID, long id,
-      String token) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+  public static SyncAddressBookRequest of(long id, String token, BodyDecorator bodyDecorator) {
 
-    return new SyncAddressBookRequest(((SyncAddressBookRequest.Body) decorator.decorate(
-        new Body(null, null, new Facebook(id, token)), accessToken)), BASE_HOST);
+    return new SyncAddressBookRequest(((SyncAddressBookRequest.Body) bodyDecorator.decorate(
+        new Body(null, null, new Facebook(id, token)))), BASE_HOST);
   }
 
   @Override protected Observable<GetFollowers> loadDataFromNetwork(Interfaces interfaces,

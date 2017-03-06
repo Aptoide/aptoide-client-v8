@@ -1,8 +1,8 @@
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
 import cm.aptoide.pt.dataprovider.BuildConfig;
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.SetComment;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -23,18 +23,15 @@ public class PostCommentForStore extends V7<SetComment, PostCommentForStore.Body
     super(body, baseHost);
   }
 
-  public static PostCommentForStore of(long storeId, String text, String accessToken,
-      String aptoideClientUUID) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+  public static PostCommentForStore of(long storeId, String text, BodyDecorator bodyDecorator) {
     Body body = new Body(storeId, text);
-    return new PostCommentForStore((Body) decorator.decorate(body, accessToken), BASE_HOST);
+    return new PostCommentForStore((Body) bodyDecorator.decorate(body), BASE_HOST);
   }
 
   public static PostCommentForStore of(long storeId, long previousCommentId, String text,
-      String accessToken, String aptoideClientUUID) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+      BodyDecorator bodyDecorator) {
     Body body = new Body(storeId, text, previousCommentId);
-    return new PostCommentForStore((Body) decorator.decorate(body, accessToken), BASE_HOST);
+    return new PostCommentForStore((Body) bodyDecorator.decorate(body), BASE_HOST);
   }
 
   @Override

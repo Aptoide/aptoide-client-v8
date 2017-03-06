@@ -17,6 +17,8 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
+import cm.aptoide.pt.v8engine.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.PostReviewRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
@@ -57,6 +59,7 @@ import java.util.Locale;
   private String appName;
   private String packageName;
   private AccountNavigator accountNavigator;
+  private BodyDecorator bodyDecorator;
 
   public InstalledAppWidget(View itemView) {
     super(itemView);
@@ -79,7 +82,9 @@ import java.util.Locale;
     final AccountNavigator accountNavigator =
         new AccountNavigator(getContext(), getNavigationManager(), accountManager);
     this.accountNavigator = accountNavigator;
-    dialogUtils = new DialogUtils(accountManager, aptoideClientUUID, accountNavigator);
+    bodyDecorator = new BaseBodyDecorator(aptoideClientUUID.getUniqueIdentifier(), accountManager);
+    dialogUtils =
+        new DialogUtils(accountManager, aptoideClientUUID, accountNavigator, bodyDecorator);
     appName = pojo.getName();
     packageName = pojo.getPackageName();
 
@@ -143,8 +148,7 @@ import java.util.Locale;
       dialog.dismiss();
 
       dialog.dismiss();
-      PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating,
-          accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
+      PostReviewRequest.of(packageName, reviewTitle, reviewText, reviewRating, bodyDecorator)
           .execute(response -> {
             if (response.isOk()) {
               Logger.d(TAG, "review added");

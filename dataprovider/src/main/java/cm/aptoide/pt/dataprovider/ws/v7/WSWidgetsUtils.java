@@ -32,7 +32,8 @@ public class WSWidgetsUtils {
   public static Observable<GetStoreWidgets.WSWidget> loadWidgetNode(
       GetStoreWidgets.WSWidget wsWidget, BaseRequestWithStore.StoreCredentials storeCredentials,
       boolean refresh, String accessToken, String aptoideClientUuid,
-      boolean googlePlayServicesAvailable, String oemid, boolean mature) {
+      boolean googlePlayServicesAvailable, String oemid, boolean mature,
+      BodyDecorator bodyDecorator) {
 
     if (isKnownType(wsWidget.getType())) {
 
@@ -43,7 +44,7 @@ public class WSWidgetsUtils {
       }
       switch (wsWidget.getType()) {
         case APPS_GROUP:
-          return ListAppsRequest.ofAction(url, storeCredentials, accessToken, aptoideClientUuid)
+          return ListAppsRequest.ofAction(url, storeCredentials, bodyDecorator)
               .observe(refresh)
               .observeOn(Schedulers.io())
               .doOnNext(wsWidget::setViewObject)
@@ -51,7 +52,7 @@ public class WSWidgetsUtils {
               .map(listApps -> wsWidget);
 
         case STORES_GROUP:
-          return ListStoresRequest.ofAction(url, accessToken, aptoideClientUuid)
+          return ListStoresRequest.ofAction(url, bodyDecorator)
               .observe(refresh)
               .observeOn(Schedulers.io())
               .doOnNext(wsWidget::setViewObject)
@@ -59,8 +60,7 @@ public class WSWidgetsUtils {
               .map(listApps -> wsWidget);
 
         case DISPLAYS:
-          return GetStoreDisplaysRequest.ofAction(url, storeCredentials, accessToken,
-              aptoideClientUuid)
+          return GetStoreDisplaysRequest.ofAction(url, storeCredentials, bodyDecorator)
               .observe(refresh)
               .observeOn(Schedulers.io())
               .doOnNext(wsWidget::setViewObject)
@@ -77,7 +77,7 @@ public class WSWidgetsUtils {
               .map(listApps -> wsWidget);
 
         case STORE_META:
-          return GetStoreMetaRequest.ofAction(url, storeCredentials, accessToken, aptoideClientUuid)
+          return GetStoreMetaRequest.ofAction(url, storeCredentials, bodyDecorator)
               .observe(refresh)
               .observeOn(Schedulers.io())
               .doOnNext(wsWidget::setViewObject)
@@ -85,8 +85,7 @@ public class WSWidgetsUtils {
               .map(listApps -> wsWidget);
 
         case COMMENTS_GROUP:
-          return ListCommentsRequest.ofStoreAction(url, refresh, storeCredentials, accessToken,
-              aptoideClientUuid)
+          return ListCommentsRequest.ofStoreAction(url, refresh, storeCredentials, bodyDecorator)
               .observe(refresh)
               .observeOn(Schedulers.io())
               .doOnNext(listComments -> wsWidget.setViewObject(
@@ -96,8 +95,8 @@ public class WSWidgetsUtils {
               .map(listApps -> wsWidget);
 
         case REVIEWS_GROUP:
-          return ListFullReviewsRequest.ofAction(url, refresh, accessToken, aptoideClientUuid,
-              storeCredentials)
+          return ListFullReviewsRequest.ofAction(url, refresh, storeCredentials,
+              bodyDecorator)
               .observe(refresh)
               .observeOn(Schedulers.io())
               .doOnNext(wsWidget::setViewObject)
@@ -106,7 +105,7 @@ public class WSWidgetsUtils {
 
         case MY_STORES_SUBSCRIBED:
         case STORES_RECOMMENDED:
-          return GetMyStoreListRequest.of(url, accessToken, aptoideClientUuid)
+          return GetMyStoreListRequest.of(url, bodyDecorator)
               .observe(refresh)
               .observeOn(Schedulers.io())
               .doOnNext(wsWidget::setViewObject)
@@ -122,7 +121,7 @@ public class WSWidgetsUtils {
               .map(listApps -> wsWidget);
 
         case MY_STORE_META:
-          return GetMyStoreMetaRequest.of(accessToken, aptoideClientUuid)
+          return GetMyStoreMetaRequest.of(bodyDecorator)
               .observe(refresh)
               .observeOn(Schedulers.io())
               .doOnNext(wsWidget::setViewObject)
@@ -138,7 +137,7 @@ public class WSWidgetsUtils {
               .map(listApps -> wsWidget);
 
         case APP_META:
-          return GetAppRequest.ofAction(url, accessToken, aptoideClientUuid)
+          return GetAppRequest.ofAction(url, bodyDecorator)
               .observe(refresh)
               .observeOn(Schedulers.io())
               .doOnNext(wsWidget::setViewObject)

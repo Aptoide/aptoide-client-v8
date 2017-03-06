@@ -1,6 +1,8 @@
 package cm.aptoide.pt.v8engine.repository;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
+import cm.aptoide.pt.v8engine.BaseBodyDecorator;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.AptoideEvent;
 import cm.aptoide.pt.v8engine.analytics.AptoideAnalytics.events.FacebookEvent;
@@ -24,16 +26,13 @@ public class TimelineAnalytics {
   private static final String UPDATE_APP = "UPDATE_APP";
   private static final String FOLLOW_FRIENDS = "Apps_Timeline_Follow_Friends";
   private final Analytics analytics;
-  private final AptoideAccountManager accountManager;
   private final AppEventsLogger facebook;
-  private final String uniqueIdentifier;
+  private BodyDecorator bodyDecorator;
 
-  public TimelineAnalytics(Analytics analytics, AptoideAccountManager accountManager,
-      AppEventsLogger facebook, String uniqueIdentifier) {
+  public TimelineAnalytics(Analytics analytics, AppEventsLogger facebook, BodyDecorator bodyDecorator) {
     this.analytics = analytics;
-    this.accountManager = accountManager;
     this.facebook = facebook;
-    this.uniqueIdentifier = uniqueIdentifier;
+    this.bodyDecorator = bodyDecorator;
   }
 
   public void sendFollowFriendsEvent() {
@@ -98,7 +97,7 @@ public class TimelineAnalytics {
   }
 
   private AptoideEvent createEvent(String event, Map<String, Object> data) {
-    return new AptoideEvent(accountManager, uniqueIdentifier, data, event, "CLICK", "TIMELINE");
+    return new AptoideEvent(data, event, "CLICK", "TIMELINE", bodyDecorator);
   }
 
   private Map<String, Object> createAppData(String cardType, String source, String packageName) {

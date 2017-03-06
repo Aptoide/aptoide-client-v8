@@ -21,6 +21,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.v8engine.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
@@ -148,7 +149,8 @@ public class PrivateStoreDialog extends BaseDialog {
   private GetStoreMetaRequest buildRequest() {
     return GetStoreMetaRequest.of(
         new BaseRequestWithStore.StoreCredentials(storeName, storeUser, storePassSha1),
-        accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier());
+        accountManager.getAccessToken(),
+        new BaseBodyDecorator(aptoideClientUUID.getUniqueIdentifier(), accountManager));
   }
 
   private void dismissLoadingDialog() {

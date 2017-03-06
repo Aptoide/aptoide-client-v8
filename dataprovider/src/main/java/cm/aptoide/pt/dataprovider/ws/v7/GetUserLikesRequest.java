@@ -1,6 +1,5 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.model.v7.GetFollowers;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -15,11 +14,9 @@ public class GetUserLikesRequest extends V7<GetFollowers, GetUserLikesRequest.Bo
     super(body, baseHost);
   }
 
-  public static GetUserLikesRequest of(String accessToken, String aptoideClientUUID,
-      String cardUid) {
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUUID);
+  public static GetUserLikesRequest of(String cardUid, BodyDecorator bodyDecorator) {
 
-    return new GetUserLikesRequest(((Body) decorator.decorate(new Body(cardUid), accessToken)),
+    return new GetUserLikesRequest(((Body) bodyDecorator.decorate(new Body(cardUid))),
         BASE_HOST);
   }
 

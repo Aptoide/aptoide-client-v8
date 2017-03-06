@@ -1,7 +1,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7.store;
 
-import cm.aptoide.pt.dataprovider.ws.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.model.v7.store.ListStores;
@@ -24,17 +24,16 @@ public class GetMyStoreListRequest extends V7<ListStores, GetMyStoreListRequest.
     this.url = url;
   }
 
-  public static GetMyStoreListRequest of(String url, String accessToken, String aptoideClientUuid) {
-    return of(url, accessToken, aptoideClientUuid, false);
+  public static GetMyStoreListRequest of(String url, BodyDecorator bodyDecorator) {
+    return of(url, false, bodyDecorator);
   }
 
-  public static GetMyStoreListRequest of(String url, String accessToken, String aptoideClientUuid,
-      boolean useEndless) {
+  public static GetMyStoreListRequest of(String url, boolean useEndless,
+      BodyDecorator bodyDecorator) {
     GetMyStoreListRequest.useEndless = useEndless;
 
-    BaseBodyDecorator decorator = new BaseBodyDecorator(aptoideClientUuid);
     return new GetMyStoreListRequest(url,
-        (EndlessBody) decorator.decorate(new EndlessBody(WidgetsArgs.createDefault()), accessToken),
+        (EndlessBody) bodyDecorator.decorate(new EndlessBody(WidgetsArgs.createDefault())),
         BASE_HOST);
   }
 

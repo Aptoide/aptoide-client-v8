@@ -8,6 +8,8 @@ package cm.aptoide.pt.v8engine.repository;
 import android.support.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
+import cm.aptoide.pt.v8engine.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.GetTimelineStatsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetUserTimelineRequest;
 import cm.aptoide.pt.interfaces.AptoideClientUUID;
@@ -27,21 +29,17 @@ public class TimelineRepository {
 
   private final String action;
   private final TimelineCardFilter filter;
-  private final AptoideClientUUID aptoideClientUUID;
-  private final AptoideAccountManager accountManager;
+  private final BodyDecorator bodyDecorator;
 
-  public TimelineRepository(String action, TimelineCardFilter filter,
-      IdsRepositoryImpl idsRepository, AptoideAccountManager accountManager) {
+  public TimelineRepository(String action, TimelineCardFilter filter, BodyDecorator bodyDecorator) {
     this.action = action;
     this.filter = filter;
-    this.aptoideClientUUID = idsRepository;
-    this.accountManager = accountManager;
+    this.bodyDecorator = bodyDecorator;
   }
 
   public Observable<Datalist<TimelineCard>> getTimelineCards(Integer limit, int offset,
       List<String> packageNames, boolean refresh) {
-    return GetUserTimelineRequest.of(action, limit, offset, packageNames,
-        accountManager.getAccessToken(), aptoideClientUUID.getUniqueIdentifier())
+    return GetUserTimelineRequest.of(action, limit, offset, packageNames, bodyDecorator)
         .observe(refresh)
         .flatMap(response -> {
           if (response.isOk()) {
@@ -84,7 +82,6 @@ public class TimelineRepository {
   }
 
   public Observable<TimelineStats> getTimelineStats(boolean byPassCache) {
-    return GetTimelineStatsRequest.of(accountManager.getAccessToken(),
-        aptoideClientUUID.getUniqueIdentifier()).observe(byPassCache);
+    return GetTimelineStatsRequest.of(bodyDecorator).observe(byPassCache);
   }
 }

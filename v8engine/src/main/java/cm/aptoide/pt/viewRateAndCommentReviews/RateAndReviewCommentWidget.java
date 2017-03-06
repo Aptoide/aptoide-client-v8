@@ -18,6 +18,8 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.DataProvider;
 import cm.aptoide.pt.dataprovider.repository.IdsRepositoryImpl;
+import cm.aptoide.pt.dataprovider.ws.v7.BodyDecorator;
+import cm.aptoide.pt.v8engine.BaseBodyDecorator;
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SetReviewRatingRequest;
 import cm.aptoide.pt.imageloader.ImageLoader;
@@ -49,7 +51,7 @@ import rx.Observable;
   private static final AptoideUtils.DateTimeU DATE_TIME_U = AptoideUtils.DateTimeU.getInstance();
   private static final Locale LOCALE = Locale.getDefault();
   private static final int DEFAULT_LIMIT = 3;
-  private final AptoideClientUUID aptoideClientUUID;
+  private AptoideClientUUID aptoideClientUUID;
   private TextView reply;
   private TextView showHideReplies;
   private TextView flagHelfull;
@@ -68,12 +70,10 @@ import rx.Observable;
   private View helpfullButtonLayout;
   private AptoideAccountManager accountManager;
   private AccountNavigator accountNavigator;
+  private BodyDecorator bodyDecorator;
 
   public RateAndReviewCommentWidget(View itemView) {
     super(itemView);
-
-    aptoideClientUUID = new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(),
-        DataProvider.getContext());
   }
 
   @Override protected void assignViews(View itemView) {
@@ -98,9 +98,11 @@ import rx.Observable;
     final Review review = displayable.getPojo().getReview();
     final String appName = displayable.getPojo().getAppName();
 
+    aptoideClientUUID =
+        new IdsRepositoryImpl(SecurePreferencesImplementation.getInstance(), getContext());
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
-    accountNavigator =
-        new AccountNavigator(getContext(), getNavigationManager(), accountManager);
+    bodyDecorator = new BaseBodyDecorator(aptoideClientUUID.getUniqueIdentifier(), accountManager);
+    accountNavigator = new AccountNavigator(getContext(), getNavigationManager(), accountManager);
     final FragmentActivity context = getContext();
     ImageLoader.with(context)
         .loadWithCircleTransformAndPlaceHolderAvatarSize(review.getUser().getAvatar(), userImage,
@@ -186,8 +188,7 @@ import rx.Observable;
   }
 
   private void loadCommentsForThisReview(long reviewId, int limit, CommentAdder commentAdder) {
-    ListCommentsRequest.of(reviewId, limit, accountManager.getAccessToken(),
-        aptoideClientUUID.getUniqueIdentifier(), true).execute(listComments -> {
+    ListCommentsRequest.of(reviewId, limit, true, bodyDecorator).execute(listComments -> {
       if (listComments.isOk()) {
         List<Comment> comments = listComments.getDatalist().getList();
         commentAdder.addComment(comments);
@@ -205,8 +206,7 @@ import rx.Observable;
     setHelpButtonsClickable(false);
 
     if (accountManager.isLoggedIn()) {
-      SetReviewRatingRequest.of(reviewId, positive, accountManager.getAccessToken(),
-          aptoideClientUUID.getUniqueIdentifier()).execute(response -> {
+      SetReviewRatingRequest.of(reviewId, positive, bodyDecorator).execute(response -> {
         if (response == null) {
           Logger.e(TAG, "empty response");
           return;

@@ -55,7 +55,6 @@ dependencies {
   // inter-projects dependencies
   //
   compile project(path: ':aptoidepreferences', configuration: 'release')
-  compile project(path: ':networkclient', configuration: 'release')
   compile project(path: ':utils', configuration: 'release')
   compile project(path: ':utilsdesign', configuration: 'release')
 
