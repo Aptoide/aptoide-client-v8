@@ -136,15 +136,14 @@ public class LoginSignUpCredentialsPresenter implements Presenter {
   }
 
   private Observable<Void> aptoideSignUpClick() {
-    return view.aptoideSignUpClick().doOnNext(__ -> {
-      view.hideKeyboard();
-      view.showLoading();
-    }).<Void>flatMap(credentials -> {
+    return view.aptoideSignUpClick().<Void>flatMap(credentials -> {
       if (TextUtils.isEmpty(credentials.getPassword()) || TextUtils.isEmpty(
           credentials.getUsername())) {
         view.showCheckAptoideCredentialsMessage();
         return Observable.empty();
       }
+      view.hideKeyboard();
+      view.showLoading();
       return accountManager.createAccount(credentials.getUsername(), credentials.getPassword())
           .observeOn(AndroidSchedulers.mainThread())
           .doOnCompleted(() -> {
