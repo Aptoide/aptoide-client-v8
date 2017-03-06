@@ -84,7 +84,7 @@ public class StoreUtils {
         // TODO: 18-05-2016 neuro private ainda na ta
         if (accountManager.isLoggedIn()) {
           return accountManager.subscribeStore(getStoreMeta.getData().getName(), storeUserName,
-              storePassword).map(success -> getStoreMeta);
+              storePassword).andThen(Observable.just(getStoreMeta));
         } else {
           return Observable.just(getStoreMeta);
         }
