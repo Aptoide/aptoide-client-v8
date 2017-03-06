@@ -86,13 +86,13 @@ public class SendFeedbackFragment extends BaseToolbarFragment {
 
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
-    outState.putString("screenShotPath", screenShotPath);
+    outState.putString(SCREENSHOT_PATH, screenShotPath);
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
     if (savedInstanceState != null) {
-      screenShotPath = savedInstanceState.getString("screenShotPath");
+      screenShotPath = savedInstanceState.getString(SCREENSHOT_PATH);
     }
     return super.onCreateView(inflater, container, savedInstanceState);
   }
