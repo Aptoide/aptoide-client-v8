@@ -53,7 +53,8 @@ public class AptoideFileServerSocket<T> extends AptoideServerSocket {
     }
 
     ProgressAccumulator progressAccumulator =
-        new MultiProgressAccumulator(computeTotalSize(fileInfos), fileServerLifecycle);
+        new MultiProgressAccumulator<T>(computeTotalSize(fileInfos), fileServerLifecycle,
+            fileDescriptor);
 
     InputStream in = null;
 
