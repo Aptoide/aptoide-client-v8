@@ -32,9 +32,7 @@ public abstract class AptoideSocket {
   }
 
   public AptoideSocket startAsync() {
-    executorService.execute(() -> {
-      start();
-    });
+    new Thread(this::start).start();
     System.out.println("ShareApps: Started " + getClass().getSimpleName() + " AptoideSocket.");
     return this;
   }

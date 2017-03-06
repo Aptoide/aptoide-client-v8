@@ -201,17 +201,17 @@ public class HighwayClientService extends Service {
   private void showReceiveProgress(String receivingAppName, int actual) {
 
     //if (System.currentTimeMillis() - lastTimestampReceive > 1000 / 3) {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-        ((Notification.Builder) mBuilderReceive).setContentText(
-            this.getResources().getString(R.string.receiving) + " " + receivingAppName);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+      ((Notification.Builder) mBuilderReceive).setContentText(
+          this.getResources().getString(R.string.receiving) + " " + receivingAppName);
 
-        ((Notification.Builder) mBuilderReceive).setProgress(100, actual, false);
-        if (mNotifyManager == null) {
-          mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        }
-        mNotifyManager.notify(id, ((Notification.Builder) mBuilderReceive).getNotification());
+      ((Notification.Builder) mBuilderReceive).setProgress(100, actual, false);
+      if (mNotifyManager == null) {
+        mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
       }
-      lastTimestampReceive = System.currentTimeMillis();
+      mNotifyManager.notify(id, ((Notification.Builder) mBuilderReceive).getNotification());
+    }
+    lastTimestampReceive = System.currentTimeMillis();
     //}
   }
 
@@ -245,16 +245,16 @@ public class HighwayClientService extends Service {
   private void showSendProgress(String sendingAppName, int actual) {
 
     //if (System.currentTimeMillis() - lastTimestampSend > 1000 / 3) {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-        ((Notification.Builder) mBuilderSend).setContentText(
-            this.getResources().getString(R.string.sending) + " " + sendingAppName);
-        ((Notification.Builder) mBuilderSend).setProgress(100, actual, false);
-        if (mNotifyManager == null) {
-          mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        }
-        mNotifyManager.notify(id, ((Notification.Builder) mBuilderSend).getNotification());
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+      ((Notification.Builder) mBuilderSend).setContentText(
+          this.getResources().getString(R.string.sending) + " " + sendingAppName);
+      ((Notification.Builder) mBuilderSend).setProgress(100, actual, false);
+      if (mNotifyManager == null) {
+        mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
       }
-      lastTimestampSend = System.currentTimeMillis();
+      mNotifyManager.notify(id, ((Notification.Builder) mBuilderSend).getNotification());
+    }
+    lastTimestampSend = System.currentTimeMillis();
     //}
   }
 
@@ -310,7 +310,9 @@ public class HighwayClientService extends Service {
         System.out.println("Requested to disconnect !");
         AptoideUtils.ThreadU.runOnIoThread(new Runnable() {
           @Override public void run() {
-            aptoideMessageController.exit();
+            if (aptoideMessageClientSocket != null) {
+              aptoideMessageController.exit();
+            }
           }
         });
       }
