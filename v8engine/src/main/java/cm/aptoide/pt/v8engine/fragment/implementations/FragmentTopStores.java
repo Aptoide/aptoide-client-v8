@@ -20,7 +20,6 @@ import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.ArrayList;
 import java.util.List;
 import rx.Observable;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by trinkes on 8/25/16.
@@ -32,7 +31,6 @@ public class FragmentTopStores extends AptoideBaseFragment<BaseAdapter> implemen
   private int offset = 0;
   private SuccessRequestListener<ListStores> listener =
       listStores -> Observable.fromCallable(() -> createDisplayables(listStores))
-          .subscribeOn(Schedulers.computation())
           .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
           .subscribe(displayables -> addDisplayables(displayables), err -> {
             CrashReport.getInstance().log(err);

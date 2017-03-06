@@ -106,6 +106,13 @@ public abstract class AptoideServerSocket extends AptoideSocket implements Serve
       // Ignore, when socket is closed during accept() it lands here.
       System.out.println("ShareApps: Server explicitly closed " + this.getClass().getSimpleName());
       dispatcherLooper.stop();
+      try {
+        // Hammered. To unlock queuedServerActions.
+        queuedServerActions.put(() -> {
+        });
+      } catch (InterruptedException e1) {
+        e1.printStackTrace();
+      }
       shutdown();
       try {
         executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.MILLISECONDS);
