@@ -87,27 +87,7 @@ public class AptoideAccountManager {
 
   public Account getAccount() {
     return getAccountAsync().onErrorReturn(throwable -> null).toBlocking().value();
-    //return getAndroidAccountSync();
   }
-
-  //private Account getAccount() {
-  //  return getAndroidAccountAsync().flatMap(androidAccount -> {
-  //    String access = androidAccountManager.getUserData(androidAccount, ManagedKeys.ACCESS);
-  //
-  //    return Single.just(new Account(androidAccountManager.getUserData(androidAccount, USER_ID),
-  //        androidAccount.name, androidAccountManager.getUserData(androidAccount, USER_NICK_NAME),
-  //        androidAccountManager.getUserData(androidAccount, USER_AVATAR),
-  //        androidAccountManager.getUserData(androidAccount, REFRESH_TOKEN),
-  //        androidAccountManager.getUserData(androidAccount, ACCESS_TOKEN),
-  //        androidAccountManager.getPassword(androidAccount),
-  //        Account.Type.valueOf(androidAccountManager.getUserData(androidAccount, LOGIN_MODE)),
-  //        androidAccountManager.getUserData(androidAccount, USER_REPO),
-  //        androidAccountManager.getUserData(androidAccount, REPO_AVATAR),
-  //        Boolean.valueOf(androidAccountManager.getUserData(androidAccount, MATURE_SWITCH)),
-  //        access == null ? "UNLISTED" : access, Boolean.valueOf(
-  //        androidAccountManager.getUserData(androidAccount, ManagedKeys.ACCESS_CONFIRMED))));
-  //  });
-  //}
 
   private Single<Account> getAccountAsync() {
     return getAndroidAccountAsync().flatMap(androidAccount -> {
@@ -176,17 +156,6 @@ public class AptoideAccountManager {
   }
 
   public void removeAccount() {
-    //try {
-    //  android.accounts.Account androidAccount = getAndroidAccountSync();
-    //  if (Build.VERSION.SDK_INT >= 22) {
-    //    androidAccountManager.removeAccountExplicitly(androidAccount);
-    //  } else {
-    //    androidAccountManager.removeAccount(androidAccount, null, null);
-    //  }
-    //} catch (Exception e) {
-    //  CrashReport.getInstance().log(e);
-    //}
-
     getAndroidAccountAsync().doOnSuccess(androidAccount -> {
       if (Build.VERSION.SDK_INT >= 22) {
         androidAccountManager.removeAccountExplicitly(androidAccount);
